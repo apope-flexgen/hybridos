@@ -34,7 +34,7 @@ fi
 
 # iterate through modules
 for i in "${components[@]}"; do
-    echo -e "##### component: $i..."
+    echo -e "\n##### component: $i..."
     if cd "$i" ; then
         # building fims as a submodule for meta-RPMs, we need to install by default
         if [ "$i" == "fims" ]; then
