@@ -56,7 +56,7 @@ echo -e "build_output_meta: $build_output_meta"
 echo -e "package_output_meta: $package_output_meta"
 
 # iterate through modules
-for i in "${components[@]}"; do
+for i in "${submodules[@]}"; do
     echo -e "\n##### packaging: $i..."
     if cd "$i" ; then
         buildroot="$(pwd)/rpmbuild"
@@ -146,6 +146,9 @@ done
 
 echo -e "\n##### packaging hybridos"
 
+echo -e "$commit"
+echo -e "$tag"
+
 for i in "${meta[@]}"; do
     echo -e "\n##### packaging: $i"
     package=$(echo $rpmbuild | sed "s/hybridos/$i/g")
@@ -174,15 +177,16 @@ for i in "${meta[@]}"; do
 
     DEPS=""
     for j in "${deps[@]}"; do
-        DEPS+="$j-$tag"
-        echo -e "$j"
+        DEPS+="$j-$tag "
+        echo -e "$j-$tag"
     done
     DEPS=$(echo $DEPS | sed -r 's/[-]+/ = /g')
+    echo -e "$DEPS"
 
     # build meta-RPM
     rpmbuild --ba --clean \
     --define "_topdir $buildroot" \
-    --define "_name $package" \
+    --define "_name $i" \
     --define "_version $tag" \
     --define "_release $release" \
     --define "_reqs $DEPS" \
