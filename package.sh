@@ -124,8 +124,8 @@ for i in "${components[@]}"; do
             cp -r "$buildroot/RPMS/x86_64/$j" "$package_output_meta"
         done
 
+        # save
         commit_submodule=$(git log --pretty=format:'%h' -n 1)
-        echo -e "commit:\t\t$commit_submodule"
 
         if git describe --match v* --abbrev=0 --tags HEAD &> /dev/null ; then
             tag_long=$(git describe --match "v*" --abbrev=0 --tags HEAD)
@@ -135,7 +135,6 @@ for i in "${components[@]}"; do
         else
             tag_submodule=$commit_submodule # no tag info, use abbreviated commit hash
         fi
-        echo -e "tag:\t\t$tag_submodule"
 
         # put individual commit/tag information into version.txt
         echo "$i|$tag_submodule|$commit_submodule" >> "$build_output_meta/version.txt"
