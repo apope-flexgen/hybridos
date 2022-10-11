@@ -55,3 +55,6 @@
 [submodule "twins"]
 	path = twins
 	url = git@github.com:flexgen-power/twins.git
+[submodule "overwatch"]
+	path = overwatch
+	url = git@github.com:flexgen-power/overwatch.git
