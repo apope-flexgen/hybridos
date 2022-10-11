@@ -22,8 +22,8 @@ source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
 
 # complete checks before proceeding...
 
-if [ ! -n "$name" ]; then
-    error_trap "build_utils.sh does not specify 'name' field."
+if [ ! -n "$components" ]; then
+    error_trap "build_utils.sh does not specify 'components' field."
 fi
 
 # conditionally create build_output directory
@@ -33,8 +33,8 @@ if [ ! -d "$build_output" ]; then
 fi
 
 # iterate through modules
-for i in "${submodules[@]}"; do
-    echo -e "##### building: $i..."
+for i in "${components[@]}"; do
+    echo -e "##### component: $i..."
     if cd "$i" ; then
         # building fims as a submodule for meta-RPMs, we need to install by default
         if [ "$i" == "fims" ]; then
