@@ -4,3 +4,5 @@ git_*
 build
 rpmbuild
 output
+
+*_meta*

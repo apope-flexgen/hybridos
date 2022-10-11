@@ -19,6 +19,8 @@ done
 
 # source build functions (from repository path)
 source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
+name_meta="$name"
+echo -e "name_meta: $name_meta"
 
 # source version from version.sh
 version_path="${script_path}version.sh"
@@ -142,41 +144,53 @@ for i in "${components[@]}"; do
     fi
 done
 
-exit 0 # TODO: test
+echo -e "\n##### packaging hybridos"
 
-echo -e "\n\n##### packaging hybridos"
+for i in "${meta[@]}"; do
+    echo -e "\n##### packaging: $i"
+    package=$(echo $rpmbuild | sed "s/hybridos/$i/g")
+    echo -e "$package"
 
-cp -av "$build_output_meta" "$rpmbuild" # ./build/release -> ./fims-1.7.0-43.local
-tar -czvf "$rpmbuild".tar.gz "$rpmbuild"
-rm -rf "$rpmbuild"
+    cp -av "$build_output_meta" "$package" # ./build/release -> ./fims-1.7.0-43.local
+    tar -czvf "$package".tar.gz "$package"
+    rm -rf "$package"
 
-# create the directory structure
-buildroot="$(pwd)/rpmbuild"
-mkdir -p "$buildroot"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+    # create the directory structure
+    buildroot="$(pwd)/$i/rpmbuild"
+    mkdir -p "$buildroot"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 
-# copy spec and source
-cp "$name_meta".spec "$buildroot"/SPECS
-mv "$name_meta"*.tar.gz "$buildroot"/SOURCES
+    cp "$name_meta".spec "$buildroot"/SPECS/"$i".spec
+    mv "$package"*.tar.gz "$buildroot"/SOURCES
 
-# gather list of dependencies
-DEPS=""
-for i in "${submodules_meta[@]}"; do
-    DEPS+="$i-$tag "
-    echo -e "$i"
-done
-DEPS=$(echo $DEPS | sed -r 's/[-]+/ = /g')
+    if [ "$i" == "ess_controller_meta" ]; then
+        deps=("${ess_controller_meta[@]}")
+    elif [ "$i" == "site_controller_meta" ]; then
+        deps=("${site_controller_meta[@]}")
+    elif [ "$i" == "fleet_manager_meta" ]; then
+        deps=("${fleet_manager_meta[@]}")
+    elif [ "$i" == "twins_meta" ]; then
+        deps=("${twins_meta[@]}")
+    fi
 
-# build meta-RPM
-rpmbuild --ba --clean \
+    DEPS=""
+    for j in "${deps[@]}"; do
+        DEPS+="$j-$tag"
+        echo -e "$j"
+    done
+    DEPS=$(echo $DEPS | sed -r 's/[-]+/ = /g')
+
+    # build meta-RPM
+    rpmbuild --ba --clean \
     --define "_topdir $buildroot" \
-    --define "_name $name_meta" \
+    --define "_name $package" \
     --define "_version $tag" \
     --define "_release $release" \
     --define "_reqs $DEPS" \
-    "${buildroot}/SPECS/${name_meta}".spec || error_trap "failed to build rpm."
+    "${buildroot}/SPECS/${i}".spec || error_trap "failed to build rpm."
 
-output=($(ls $buildroot/RPMS/x86_64/))
-for j in "${output[@]}"; do
-    echo -e "$j"
-    cp -r "$buildroot/RPMS/x86_64/$j" "${cwd}/output/"
+    output=($(ls $buildroot/RPMS/x86_64/))
+    for j in "${output[@]}"; do
+        echo -e "$j"
+        cp -r "$buildroot/RPMS/x86_64/$j" "$package_output_meta"
+    done
 done
