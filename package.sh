@@ -19,12 +19,14 @@ done
 
 # source build functions (from repository path)
 source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
-name_meta="$name"
-submodules_meta=("${submodules[@]}")
 
 # source version from version.sh
 version_path="${script_path}version.sh"
 source $version_path
+if [ $CATCH -eq 1 ]; then
+    echo -e "failed to import version.sh."
+    exit 1
+fi
 
 functions_path="${script_path}functions.sh"
 source $functions_path
@@ -34,17 +36,26 @@ if [ $CATCH -eq 1 ]; then
     exit 1
 fi
 
+# complete checks before proceeding...
+
+if [ ! -n "$components" ]; then
+    error_trap "build_utils.sh does not specify 'components' field."
+fi
+
 # create build directory for meta-RPM
 build_output="${script_path}build/release"
+package_output="${script_path}output"
 mkdir -p "$build_output"
+mkdir -p "$package_output"
 
 build_output_meta=$(readlink -f $build_output)
-mkdir -p "$build_output_meta"
-mkdir -p "${script_path}output"
+package_output_meta=$(readlink -f $package_output)
+echo -e "build_output_meta: $build_output_meta"
+echo -e "package_output_meta: $package_output_meta"
 
 # iterate through modules
-for i in "${submodules[@]}"; do
-    echo -e "##### packaging: $i..."
+for i in "${components[@]}"; do
+    echo -e "\n##### packaging: $i..."
     if cd "$i" ; then
         buildroot="$(pwd)/rpmbuild"
         build_output="$(pwd)/build/release" # package.sh uses 'release' only
@@ -67,12 +78,11 @@ for i in "${submodules[@]}"; do
         fi
 
         # dirty error/warning check
-        #
-        #if [ "$force_flag" == false ]; then
-        #    check_dirty || error_trap "repo is dirty. commit your changes or update your .gitignore file.\n${ERROR}$(git status)"
-        #else
-        #    check_dirty || warning_trap "repo is dirty. commit your changes or update your .gitignore file.\n${WARNING}$(git status)"
-        #fi
+        if [ "$force_flag" == false ]; then
+            check_dirty || error_trap "repo is dirty. commit your changes or update your .gitignore file.\n${ERROR}$(git status)"
+        else
+            check_dirty || warning_trap "repo is dirty. commit your changes or update your .gitignore file.\n${WARNING}$(git status)"
+        fi
 
         # successfully passed all checks, begin...
 
@@ -83,7 +93,7 @@ for i in "${submodules[@]}"; do
 
         rpmname="$i-$tag-$release"
 
-        cp -av "$build_output" "$rpmname" # ./build/release -> ./build/fims-1.7.0-43.local
+        cp -av "$build_output" "$rpmname" # ./build/release -> ./fims-1.7.0-43.local
         tar -czvf "$rpmname".tar.gz "$rpmname"
         rm -rf "$rpmname"
 
@@ -94,7 +104,7 @@ for i in "${submodules[@]}"; do
         cp "$i".spec "$buildroot"/SPECS
         mv "$i"*.tar.gz "$buildroot"/SOURCES
 
-        echo -e "\n##### packaging $i..."
+        # using the version.sh from the monorepo, not submodule
         echo -e "name:\t\t$i"
         echo -e "version:\t$tag"
         echo -e "release:\t$release"
@@ -107,11 +117,11 @@ for i in "${submodules[@]}"; do
             --define "_release $release" \
             "${buildroot}/SPECS/$i".spec || error_trap "failed to build rpm."
 
-        success_trap "$i packaging successful."
+        success_trap "packaging $i successful."
 
         output=($(ls $buildroot/RPMS/x86_64/))
         for j in "${output[@]}"; do
-            cp -r "$buildroot/RPMS/x86_64/$j" "${cwd}/output/"
+            cp -r "$buildroot/RPMS/x86_64/$j" "$package_output_meta"
         done
 
         commit_submodule=$(git log --pretty=format:'%h' -n 1)
@@ -128,12 +138,14 @@ for i in "${submodules[@]}"; do
         echo -e "tag:\t\t$tag_submodule"
 
         # put individual commit/tag information into version.txt
-        echo "$i|$tag_submodule|$commit_submodule" >> "${cwd}/build/release/version.txt"
+        echo "$i|$tag_submodule|$commit_submodule" >> "$build_output_meta/version.txt"
         cd ../
     fi
 done
 
-echo -e "\n\n##### bulding meta-RPM"
+exit 0 # TODO: test
+
+echo -e "\n\n##### packaging hybridos"
 
 cp -av "$build_output_meta" "$rpmbuild" # ./build/release -> ./fims-1.7.0-43.local
 tar -czvf "$rpmbuild".tar.gz "$rpmbuild"
