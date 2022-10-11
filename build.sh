@@ -38,8 +38,6 @@ for i in "${components[@]}"; do
     if cd "$i" ; then
         # building fims as a submodule for meta-RPMs, we need to install by default
         if [ "$i" == "fims" ]; then
-            options_fims="-bi"
-            echo -e "injecting build options: $options_fims"
             ./package_utility/build.sh "-bi" || warning_trap "failed to build submodule $i."
         else
             ./package_utility/build.sh "$@" || warning_trap "failed to build submodule $i."
