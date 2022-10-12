@@ -3,6 +3,9 @@ FROM flexgen/centos7:release
 ARG productName
 ARG dockerName
 ARG verNum
+
+RUN yum clean all
+
 RUN yum install -y $productName-$verNum
 
 # copy over scripts
