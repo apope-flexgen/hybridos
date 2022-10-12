@@ -1,11 +1,12 @@
 FROM flexgen/centos7:release
 
-# install rpms
+ARG productName
+ARG dockerName
 ARG verNum
-RUN yum install -y ess_controller_meta-$verNum
+RUN yum install -y $productName-$verNum
 
 # copy over scripts
-COPY ./scripts/ /home/scripts/
+COPY ./scripts/$dockerName /home/scripts/
 WORKDIR /home/scripts/
 RUN chmod +x *.sh
 WORKDIR /home/
