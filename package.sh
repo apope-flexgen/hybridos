@@ -19,8 +19,6 @@ done
 
 # source build functions (from repository path)
 source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
-name_meta="$name"
-echo -e "name_meta: $name_meta"
 
 # source version from version.sh
 version_path="${script_path}version.sh"
@@ -39,6 +37,12 @@ if [ $CATCH -eq 1 ]; then
 fi
 
 # complete checks before proceeding...
+
+if [ ! -n "$name" ]; then
+    error_trap "build_utils.sh does not specify 'name' field."
+fi
+name_meta="$name"
+echo -e "name_meta: $name_meta"
 
 if [ ! -n "$components" ]; then
     error_trap "build_utils.sh does not specify 'components' field."

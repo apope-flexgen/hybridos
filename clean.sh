@@ -1,13 +1,17 @@
 #!/bin/bash
 
+# source build functions (from repository path)
+source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
+
+if [ ! -n "$components" ]; then
+    error_trap "build_utils.sh does not specify 'components' field."
+fi
+
 sudo git clean -xdf
 
-cd ./package_utility
-
-cd ../dbi/ && sudo git clean -xdf
-cd ../dnp3_interface/ && sudo git clean -xdf
-cd ../ess_controller/ && sudo git clean -xdf
-cd ../events/ && sudo git clean -xdf
-cd ../fims/ && sudo git clean -xdf
-cd ../metrics/ && sudo git clean -xdf
-cd ../modbus_interface/ && sudo git clean -xdf
+for i in "${components[@]}"; do
+    if cd "$i" ; then
+        sudo git clean -xdf
+        cd ../
+    fi
+done
