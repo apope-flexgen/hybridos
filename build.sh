@@ -28,9 +28,8 @@ fi
 
 # conditionally create build_output directory
 build_output="${cwd}/build/release"
-if [ ! -d "$build_output" ]; then
-    mkdir -p "$build_output" || error_trap "failed to create "$build_output" directory."
-fi
+rm -rf "build_output" || error_trap "failed to remove "$build_output" directory."
+mkdir -p "$build_output" || error_trap "failed to create "$build_output" directory."
 
 # iterate through modules
 for i in "${components[@]}"; do

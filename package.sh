@@ -59,6 +59,9 @@ package_output_meta=$(readlink -f $package_output)
 echo -e "build_output_meta: $build_output_meta"
 echo -e "package_output_meta: $package_output_meta"
 
+# clear out the version.txt file
+rm -rf "$build_output_meta/version.txt"
+
 # iterate through modules
 for i in "${components[@]}"; do
     echo -e "\n##### packaging: $i..."
