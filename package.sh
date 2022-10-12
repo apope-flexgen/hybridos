@@ -47,7 +47,7 @@ fi
 # create build directory for meta-RPM
 build_output="${script_path}build/release"
 package_output="${script_path}output"
-mkdir -p "$build_output"
+# mkdir -p "$build_output"
 mkdir -p "$package_output"
 
 build_output_meta=$(readlink -f $build_output)
@@ -56,7 +56,7 @@ echo -e "build_output_meta: $build_output_meta"
 echo -e "package_output_meta: $package_output_meta"
 
 # iterate through modules
-for i in "${submodules[@]}"; do
+for i in "${components[@]}"; do
     echo -e "\n##### packaging: $i..."
     if cd "$i" ; then
         buildroot="$(pwd)/rpmbuild"
@@ -119,7 +119,7 @@ for i in "${submodules[@]}"; do
             --define "_release $release" \
             "${buildroot}/SPECS/$i".spec || error_trap "failed to build rpm."
 
-        success_trap "packaging $i successful."
+        success_trap "$i packaging complete."
 
         output=($(ls $buildroot/RPMS/x86_64/))
         for j in "${output[@]}"; do
@@ -144,6 +144,11 @@ for i in "${submodules[@]}"; do
     fi
 done
 
+if [ ! -f "$build_output_meta/version.txt" ]; then
+    echo -e "$build_output_meta/version.txt was not created, aborting."
+    exit 1
+fi
+
 echo -e "\n##### packaging hybridos"
 
 echo -e "$commit"
@@ -154,7 +159,7 @@ for i in "${meta[@]}"; do
     package=$(echo $rpmbuild | sed "s/hybridos/$i/g")
     echo -e "$package"
 
-    cp -av "$build_output_meta" "$package" # ./build/release -> ./fims-1.7.0-43.local
+    cp -av "$build_output_meta" "$package" # ./build/release/version.txt -> ./ess_controller_meta-10.1.0-1.local
     tar -czvf "$package".tar.gz "$package"
     rm -rf "$package"
 
