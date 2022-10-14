@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# source repo list
-mapfile -t hybridos < hybridos.txt
+cwd=$(pwd)
+
+# source build functions (from repository path)
+source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
 
 function help()
 {
@@ -17,8 +19,8 @@ function help()
 function git_checkout() # $1 - repo; $2 - branch
 {
     # check if directory exists before moving, fatal error
-    if [ ! -d "../$1" ]; then echo "$1 directory does not exist."; exit 1; fi;
-    cd ../"$1"
+    if [ ! -d "$cwd/$1" ]; then echo "$1 directory does not exist."; exit 1; fi;
+    cd "$1"
 
     # abort if repo is dirty, unless force option is specified
     if [ "$force_arg" == false ]; then
@@ -58,10 +60,9 @@ function git_checkout() # $1 - repo; $2 - branch
     fi
 
     # submodule management
-    git submodule init
-    git submodule update
+    git submodule update --init --recursive
 
-    cd ../scripts # reset
+    cd "$cwd" # reset
 }
 
 # option variables
@@ -117,20 +118,18 @@ if [ "$dir_arg" == true ]; then
     elif [ ! -f "$repo_file" ]; then echo "$repo_file does not exist."; exit 1; fi;
     while read repo branch
     do
-        if [[ $repo = "config"* ]] || [[ "$repo" = "scripts" ]] || [[ "$repo" = "twins_pm" ]]; then echo "##### ignoring $repo";
-        else repo_branch_map[$repo]=$branch; fi;
+        repo_branch_map[$repo]=$branch; fi;
     done < $repo_file
 else
-    for i in "${hybridos[@]}"; do
-        if [[ $i = "config"* ]] || [[ "$i" = "scripts" ]] || [[ "$i" = "twins_pm" ]]; then echo "##### ignoring $i";
-        else repo_branch_map[$i]=dev; fi;
+    for i in "${components[@]}"; do
+        repo_branch_map[$i]=dev; fi;
     done
 fi
 
 # track repos that are not found in the file system
 declare -A repos_not_found
 for key in ${!repo_branch_map[@]}; do
-    if [ ! -d "../$key" ]; then
+    if [ ! -d "$cwd/$key" ]; then
         repos_not_found[$key]=$key
     fi
 done
@@ -138,8 +137,8 @@ done
 # checkout designated branch of all repos
 for repo in ${!repo_branch_map[@]}; do
     repo_found=true
-    for unfound_repo in ${!repos_not_found[@]}; do
-        if [[ $repo = $unfound_repo ]]; then
+    for missing_repo in ${!repos_not_found[@]}; do
+        if [[ $repo = $missing_repo ]]; then
             repo_found=false
             break
         fi
@@ -153,6 +152,6 @@ done
 ./git_status.sh
 
 # print a warning for any repos that were not found
-for key in ${!repos_not_found[@]}; do
-    echo "WARNING: repo $key was not found so was skipped"
+for repo in ${!repos_not_found[@]}; do
+    echo "WARNING: repo $repo was not found so was skipped"
 done

@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# source repo list
-mapfile -t hybridos < hybridos.txt
+cwd=$(pwd)
+
+# source build functions (from repository path)
+source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
 
 function help()
 {
@@ -80,8 +82,10 @@ width=80
 printf "$header" "REPO" "BRANCH" "HASH" "STATUS"
 printf "%$width.${width}s\n" "$divider"
 
-for i in "${hybridos[@]}"; do
-    cd ../"$i"
+for i in "${components[@]}"; do
+    # check if directory exists before moving, fatal error
+    if [ ! -d "../$1" ]; then echo "$1 directory does not exist."; exit 1; fi;
+    cd "$i"
     repo=$i
     repo="${repo:0:23}"
     
@@ -92,6 +96,7 @@ for i in "${hybridos[@]}"; do
     # check if repo is detached, if so extract tag instead
     if [[ "$branch" = *"detached"* ]] || [[ "$branch" = *"HEAD"* ]]; then
         branch=$(git describe --tags --always) # extract tag information, or fallback on hash instead
+        branch=`echo $branch | sed 's/-g/-/g'`
     fi;
 
     # get the current SHA
@@ -106,7 +111,7 @@ for i in "${hybridos[@]}"; do
             "$hash" \
             "$status"
 
-    cd ../scripts # reset
+    cd "$cwd" # reset
 
     # if export option is selected, append to repo.txt file
     if [ $export_arg == true ]; then echo "$repo|$branch" >> $repo_file; fi;
