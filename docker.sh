@@ -13,7 +13,7 @@ shortTag=`echo $dockerTag | sed 's/v//g'`
 
 components=("cloud_sync" "dts")
 for componentName in "${components[@]}"; do
-	if cd "$i" ; then
+	if cd "$componentName" ; then
 		docker build . -t flexgen/"${componentName}":"${shortTag}" --build-arg verNum="${shortTag}"
 		docker push flexgen/"${componentName}":"${shortTag}"
 		cd ../
