@@ -111,6 +111,9 @@ declare -A repo_branch_map
 # setup the file separator
 IFS='|'
 
+# recursively update current repo
+git submodule update --init --recursive
+
 # iterate over repos and parse out what branch should be checked out
 # add the repo-branch pair to repo_branch_map
 if [ "$dir_arg" == true ]; then
@@ -118,19 +121,19 @@ if [ "$dir_arg" == true ]; then
     elif [ ! -f "$repo_file" ]; then echo "$repo_file does not exist."; exit 1; fi;
     while read repo branch
     do
-        repo_branch_map[$repo]=$branch; fi;
+        repo_branch_map[$repo]=$branch;
     done < $repo_file
 else
     for i in "${components[@]}"; do
-        repo_branch_map[$i]=dev; fi;
+        repo_branch_map[$i]=dev;
     done
 fi
 
 # track repos that are not found in the file system
 declare -A repos_not_found
-for key in ${!repo_branch_map[@]}; do
-    if [ ! -d "$cwd/$key" ]; then
-        repos_not_found[$key]=$key
+for repo in ${!repo_branch_map[@]}; do
+    if [ ! -d "$cwd/$repo" ]; then
+        repos_not_found[$repo]=$repo
     fi
 done
 
