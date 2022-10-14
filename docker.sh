@@ -10,6 +10,8 @@ for productName in "${products[@]}"; do
 	docker push flexgen/"${dockerName}":"${shortTag}"
 done
 
+echo -e "$cwd"
+
 components=("cloud_sync" "dts")
 for componentName in "${components[@]}"; do
 	if cd "$i" ; then
