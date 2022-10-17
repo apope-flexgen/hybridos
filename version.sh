@@ -60,8 +60,9 @@ objcopy --input binary \
 if git describe --match "v*" --abbrev=0 --tags HEAD &> /dev/null ; then
     tag_long=$(git describe --match "v*" --abbrev=0 --tags HEAD)
     if [[ $tag_long == "v"* ]]; then tag=${tag_long:1}; fi # (v1.0.0) -> (1.0.0)
-    if [[ $tag_long == *"-rc" ]]; then tag=$(echo $tag | cut -d'-' -f 1); rc=".rc"; fi # (v1.0.0-rc) - > (v.1.0.0.rc)
-
+    if [[ $tag_long == *"-"* ]]; then tag=`echo $tag | sed 's/-/./g'`; fi # (1.0.0-rc) - > (1.0.0.rc)
+elif git describe --abbrev=0 --tags HEAD &> /dev/null ; then
+    tag=$(git describe --abbrev=0 --tags HEAD)
 else
     tag=$commit # no tag info, use abbreviated commit hash
 fi
@@ -73,7 +74,6 @@ objcopy --input binary \
             --binary-architecture i386 GIT_TAG git_tag.o
 
 # capture current build number
-# TODO: override BUILD during Jenkins build
 if [ ! -n "$BUILD" ]; then
     BUILD=$(git rev-list --count "$commit")
 fi
@@ -85,7 +85,6 @@ objcopy --input binary \
             --binary-architecture i386 GIT_BUILD git_build.o
 
 # capture environment status
-# TODO: override ENVIRONMENT during Jenkins build
 if [ -n "$ENVIRONMENT" ]; then
     release="$BUILD${rc}" # build occuring in Jenkins
 else

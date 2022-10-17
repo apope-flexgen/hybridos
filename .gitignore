@@ -1,4 +1,5 @@
 GIT_*
+*.o
 
 build
 rpmbuild
