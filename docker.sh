@@ -3,6 +3,7 @@
 set -x
 
 shortTag=`echo $dockerTag | sed 's/v//g'`
+shortTag=`echo $shortTag | sed 's/-/./g'`
 
 products=("ess_controller_meta" "site_controller_meta" "fleet_manager_meta" "twins_meta")
 for productName in "${products[@]}"; do
