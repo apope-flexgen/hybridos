@@ -85,7 +85,7 @@ objcopy --input binary \
             --binary-architecture i386 GIT_BUILD git_build.o
 
 # capture environment status
-if [ -n "$ENVIRONMENT" ]; then
+if [ "$ENVIRONMENT" == "Jenkins" ]; then
     release="$BUILD${rc}" # build occuring in Jenkins
 else
     release="${BUILD}${rc}.local" # build occuring in a local environment

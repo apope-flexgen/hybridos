@@ -59,8 +59,8 @@ package_output_meta=$(readlink -f $package_output)
 echo -e "build_output_meta: $build_output_meta"
 echo -e "package_output_meta: $package_output_meta"
 
-# clear out the version.txt file
-rm -rf "$build_output_meta/version.txt"
+# clear out the repo.txt file
+rm -rf "$build_output_meta/repo.txt"
 
 # iterate through modules
 for i in "${components[@]}"; do
@@ -118,6 +118,15 @@ for i in "${components[@]}"; do
         echo -e "version:\t$tag"
         echo -e "release:\t$release"
 
+        # capture fims dependency for components
+        # fims installed, and we're not building fims
+        if [ "$name" != "fims" ]; then
+            lineno=$(grep -n "Requires" ${i}.spec | grep -Eo '^[^:]+')
+            if [[ "$lineno" != "" ]]; then # component has no 'Requires' dependencies
+                sed -i "${lineno}s/fims/fims\ =\ ${tag}/" "${buildroot}/SPECS/${i}.spec"
+            fi
+        fi
+
         # construct rpmbuild command
         rpmbuild --ba --clean \
             --define "_topdir $buildroot" \
@@ -133,7 +142,7 @@ for i in "${components[@]}"; do
             cp -r "$buildroot/RPMS/x86_64/$j" "$package_output_meta"
         done
 
-        # save
+        # capture the "true" component version
         commit_submodule=$(git log --pretty=format:'%h' -n 1)
 
         if git describe --match v* --abbrev=0 --tags HEAD &> /dev/null ; then
@@ -145,14 +154,14 @@ for i in "${components[@]}"; do
             tag_submodule=$commit_submodule # no tag info, use abbreviated commit hash
         fi
 
-        # put individual commit/tag information into version.txt
-        echo "$i|$tag_submodule|$commit_submodule" >> "$build_output_meta/version.txt"
+        # put individual commit/tag information into repo.txt
+        echo "$i|$tag_submodule|$commit_submodule" >> "$build_output_meta/repo.txt"
         cd ../
     fi
 done
 
-if [ ! -f "$build_output_meta/version.txt" ]; then
-    echo -e "$build_output_meta/version.txt was not created, aborting."
+if [ ! -f "$build_output_meta/repo.txt" ]; then
+    echo -e "$build_output_meta/repo.txt was not created, aborting."
     exit 1
 fi
 
@@ -166,7 +175,7 @@ for i in "${meta[@]}"; do
     package=$(echo $rpmbuild | sed "s/hybridos/$i/g")
     echo -e "$package"
 
-    cp -av "$build_output_meta" "$package" # ./build/release/version.txt -> ./ess_controller_meta-10.1.0-1.local
+    cp -av "$build_output_meta" "$package" # ./build/release/repo.txt -> ./ess_controller_meta-10.1.0-1.local
     tar -czvf "$package".tar.gz "$package"
     rm -rf "$package"
 

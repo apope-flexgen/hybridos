@@ -22,9 +22,9 @@ Install HybridOS %{_name} Product
 
 %install
 install --directory %{buildroot}%{version_dir}
-install -m 0444 version.txt %{buildroot}%{version_dir}
+install -m 0444 repo.txt %{buildroot}%{version_dir}
 
 %files
-%{version_dir}/version.txt
+%{version_dir}/repo.txt
 
 %changelog
