@@ -6,9 +6,9 @@ shortTag=`echo $dockerTag | sed 's/v//g'`
 shortTag=`echo $shortTag | sed 's/-/./g'`
 
 suffix=""
-pattern=^([1-9]|[1-2][0-9]\d*)\.([0-9]|[1-2][0-9]\d*)\.([0-9]|[1-2][0-9]\d*)\.(?!release)([a-zA-Z0-9]*)$
-if [[ "$shortTag" =~ $pattern ]]; then
-	suffix="-snapshot"
+pattern='^([1-9]|[1-2][0-9]\d*)\.([0-9]|[1-2][0-9]\d*)\.([0-9]|[1-2][0-9]\d*)\.([a-zA-Z0-9]*)'
+if [[ "$shortTag" =~ $pattern && "$shortTag" != *"release" ]]; then
+    suffix="-snapshot"
 fi
 
 products=("ess_controller_meta" "site_controller_meta" "fleet_manager_meta" "twins_meta")
