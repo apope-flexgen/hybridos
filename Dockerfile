@@ -1,7 +1,7 @@
 # do not edit this >>>
-ARG baseName
-ARG baseTag
-FROM flexgen/$baseName:$baseTag
+ARG imageName
+ARG imageTag
+FROM flexgen/$imageName:$imageTag
 
 ARG productName
 ARG dockerName
