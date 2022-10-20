@@ -1,10 +1,14 @@
-FROM flexgen/centos7:release
+# do not edit this >>>
+ARG baseName
+ARG baseTag
+FROM flexgen/$baseName:$baseTag
 
 ARG productName
 ARG dockerName
 ARG verNum
 
 RUN yum clean all
+# do not edit this <<<
 
 RUN yum install -y $productName-$verNum
 
