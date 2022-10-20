@@ -14,8 +14,9 @@ shortTag=`echo $shortTag | sed 's/-/./g'`
 suffix=""
 pattern='^([1-9]|[1-2][0-9]\d*)\.([0-9]|[1-2][0-9]\d*)\.([0-9]|[1-2][0-9]\d*)\.([a-zA-Z0-9]*)'
 if [[ "$shortTag" =~ $pattern && "$shortTag" != *"release" ]]; then
-    imageTag="devel" # since we are building a snapshot artifact, we need to pull from the devel image
 	suffix="-snapshot"
+else
+	imageTag=`echo $imageTag | sed 's/devel/release/g'` # pull the correct release container tied to devel (release-10.3.0)
 fi
 
 products=("ess_controller_meta" "site_controller_meta" "fleet_manager_meta" "twins_meta")
