@@ -8,7 +8,7 @@ washer|v1.0.0
 dbi|hotfix/v2.1.0
 scheduler|v1.2.0
 cops|v1.2.0
-ftd|v1.2.0
+ftd|v2.0.0-rc
 cloud_sync|hotfix/v2.0.0-rc
 dts|hotfix/v2.0.0-rc
 twins|hotfix/v2.2.0
