@@ -152,6 +152,7 @@ for repo in ${!repo_branch_map[@]}; do
 done
 
 # report confirmation
+pwd
 ./git_status.sh
 
 # print a warning for any repos that were not found
