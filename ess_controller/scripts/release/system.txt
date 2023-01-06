@@ -1,0 +1,518 @@
+#Add any required envvar overrides to this file, it is sourced from /etc/profile
+#export PATH=/usr/local/bin/fims:$PATH
+fSend=/usr/local/bin/fims_send
+NUM_RACKS=18
+helpSystem()
+{
+    echo "FlexESS System Explorer operations:-"
+    echo "                      Target:          Risen/Sungrow"
+    echo "                      version:         1.1.0_rc1"
+    echo "                      date:            12/28/2021"
+    echo
+    echo
+    echo "showPS:                       show running processes"
+    echo "reset_ess:                    restart the ess_controller with (large) log sent to /home/config/log/ess_controller.log"
+    echo "resetUser:                    reset the user , takes effect on the next container restart"
+    #echo "defRacks:                     set all rack data to some default values"
+    #echo "defBms:                       set Bms data to some default values"
+    #echo "defPcs:                       set Pcs data to some default values"
+    echo
+    
+    echo "showSched                      look at running tasks "
+    
+    echo "showAmap                        look at system (amap) layout "
+    echo "showSystem                     look at system /config /status /controls for an item" 
+
+#    echo "get/setBmsInfo:               get / set bmsInfo values (getBmsInfo foo | jq to see a list of options)"
+#    echo "get/setPcsInfo:               get / set pcsInfo values (getPcsInfo foo | jq to see a list of options)"
+
+    echo
+    #echo "bmsOn:                        set bms state to On"
+    #echo "bmsStarting:                  set bms state to Starting"
+    #echo "bmsFault:                     set bms state to Fault"
+    #echo "bmsCommsOK:                   set bms Comms state to OK"
+    #echo
+    #echo "extract/installBmsOpState:    extract/install bms op state"
+    #echo "resetBmsOpState:              setup bms op sta"
+    #echo "get/setBmsOpState:            get / set bms op state for exercise 1 (0,1,2,3,4)"
+    #echo
+    #echo "resetBmsBauState:             setup bms Bau state for exercise 2"
+    #echo "get/setBmsBauState:           get / set bmsbau state for exercise 2 (0,4,5 6) we add a new one (1) "
+    #echo
+    #echo "addPcsTestSetpoint:           sets up a new feature on the PCS control Panel"
+    #echo "addPcsTestSetpointEnable:     sets up enable  disable  for the new feature on the PCS control Panel"
+    #echo "getPcsTestSetpoint:           show the new value"
+    #echo
+    #echo "runContactorSim:              run/stop the Contactor Sim in the background"
+    #echo "runEnableRackSim:             run/stop the Enable Rack Sim in the background"              
+    #echo "runHbSim:                     run/stop the HB Sim in the background"              
+    #echo "runPcsCtrlSim:                run/stop the pcs control sim in the background"
+    #echo "runPowerCmdSim:               run/stop the pcs command sim in the background"
+    #echo "runChargeDischargeSim:        run/stop the bms charge/discharge sim in the background"
+           
+    
+}
+
+showPS()
+{
+    ps -ax
+}
+# Helper function for doing a fims set
+#
+# $1 = uri and/or variable name (ex.: /components/catl_mbmu_control_r or /components/catl_mbmu_control_r/mbmu_max_cell_voltage)
+# $2 = value to set
+fimsSet()
+{
+    $fSend -m set -u $1 $2 -r /me | jq
+}
+fimsSetNoReply()
+{
+    $fSend -m set -u $1 $2
+}
+# Helper function for doing a fims pub
+#
+# $1 = uri and/or variable name (ex.: /components/catl_mbmu_control_r or /components/catl_mbmu_control_r/mbmu_max_cell_voltage)
+# $2 = value to set
+fimsPub()
+{
+    $fSend -m pub -u $1 $2
+}
+# Helper function for doing a fims get
+#
+# $1 = uri and/or variable name (ex.: /components/catl_mbmu_control_r or /components/catl_mbmu_control_r/mbmu_max_cell_voltage)
+fimsGet()
+{
+    $fSend -m get -u $1 -r /me | jq
+}
+
+showSched ()
+{
+    $fSend -m get -u /ess/full/schlist -r /me | jq
+}
+
+showAmap()
+{
+    if [ $# == 0 ] ; then
+        $fSend -m get -u /ess/full/amap -r /me | jq
+    else
+        $fSend -m get -u /ess/naked/amap/$1 -r /me | jq
+    fi
+}
+
+# #1 is /controls /status /config etc #2 is the amap
+showSystem()
+{
+    if [ $# == 2 ] ; then
+        echo /ess/naked/$1/$2
+        $fSend -m get -u /ess/naked/$1/$2 -r /me | jq
+    elif [ $# == 3 ] ; then
+        echo /ess/full/$1/$2/$3
+        $fSend -m get -u /ess/full/$1/$2/$3 -r /me | jq
+    else
+        $fSend -m get -u /ess/full/amap -r /me | jq
+    fi
+}
+
+
+
+reset_ess()
+{
+    pkill ess_controller
+    mkdir -p /home/config/log
+    /usr/local/bin/ess_controller/ess_controller /usr/local/etc/config/ess_controller/ > /home/config/log/ess_controller.log 2>&1&
+}
+
+#rack_soc rack_soh rack_voltage rack_current rack_max_cell_voltage rack_max_cell_current
+allRacks()
+{
+    racks="
+    rack_01 rack_02 rack_03 rack_04 rack_05 rack_06 rack_07 rack_08 rack_09 rack_10
+    rack_11 rack_12 rack_13 rack_14 rack_15 rack_16 rack_17 rack_18
+    "
+    var=$1
+    for rack in $racks 
+    do
+        #echo "$rack /components/bms_${rack}_info/$var $2"
+        fims_send -m pub -u /components/bms_${rack}_info/$var $2
+    done
+
+}
+
+oneRack()
+{
+    rack=$1
+    var=$2
+    val=$3
+    fims_send -m pub -u /components/bms_${rack}_info/$var $val
+}
+
+getRack()
+{
+    rack=$1
+    fims_send -m get -r /$$ -u /ess/full/components/bms_${rack}_info \
+        | jq > /home/config/examples/bms_$rack.json
+}
+
+setRack()
+{
+    rack=$1 
+    fims_send -f /home/config/examples/bms_$rack.json -m set -u /ess/full/components/bms_${rack}_info \
+        | jq  
+}
+
+resetUser()
+{
+    pkill web_server
+    cp /home/saved_config/web_server/permissions.json /home/config/web_server
+    /usr/local/bin/web_server/web_server /usr/local/bin/web_ui/ /usr/local/etc/config/web_ui /usr > /home/config/log/web_server.log 2>&1 &
+}
+
+defRacks()
+{
+    allRacks rack_soc 56.7
+    allRacks rack_soh 100
+    allRacks rack_voltage 1400
+    allRacks rack_max_cell_voltage 3.5
+    allRacks rack_min_cell_voltage 3.3
+    allRacks rack_avg_voltage 3.432
+    allRacks rack_max_cell_temperature 27.8
+    allRacks rack_min_cell_temperature 22.7
+    allRacks rack_avg_temperature 25.42
+    allRacks rack_current 3000
+    allRacks rack_max_charge_current 3500
+    allRacks rack_max_discharge_current 3500
+     
+}
+
+setBmsInfo() {
+    fims_send -m set -u /ess/components/bms_info/$1 $2
+}
+
+getBmsInfo() {
+    fims_send -m get -r /$$ -u /ess/components/bms_info/$1 
+}
+
+bmsCommsOK() {
+    fims_send -m set -r /$$ -u /ess/status/bms/ComsOK true
+}
+
+bmsOn() {
+    setBmsInfo new_connection_status 2
+}
+
+bmsStarting() {
+    setBmsInfo new_connection_status 1
+}
+bmsFault() {
+    setBmsInfo new_connection_status 3
+}
+
+defBms() {
+    setBmsInfo system_soc 55.6
+    setBmsInfo system_soh 100
+    setBmsInfo system_total_voltage 1400
+    setBmsInfo system_total_current 3000
+    setBmsInfo system_max_cell_voltage 3.45
+    setBmsInfo system_min_cell_voltage 3.32
+    setBmsInfo system_avg_voltage 3.42
+    setBmsInfo system_max_cell_temperature 28.55
+    setBmsInfo system_min_cell_temperature 23.55
+    setBmsInfo system_avg_temperature 24.55
+    setBmsInfo system_max_charge_current 3500
+    setBmsInfo system_max_discharge_current 3500
+    setBmsInfo system_max_charge_power 4000
+    setBmsInfo system_max_discharge_power 4000
+    setBmsInfo number_of_racks_total 18
+    #setBmsInfo number_of_racks_in_service 18
+
+    
+}
+
+setPcsInfo() {
+    fims_send -m set -u /ess/components/pcs_running_info/$1 $2
+}
+
+getPcsInfo() {
+    fims_send -m get -r /$$ -u /ess/components/pcs_running_info/$1 | jq
+}
+
+setPcsCont() {
+    fims_send -m set -u /ess/controls/ess/$1 $2
+}
+
+getPcsCont() {
+    fims_send -m get -r /$$ -u /ess/controls/ess/$1 | jq
+}
+
+setBmsStatus() {
+    fims_send -m set -u /ess/status/bms/$1 $2
+}
+getBmsStatus() {
+    fims_send -m get -r /$$ -u /ess/status/bms/$1
+}
+
+setPcsStatus() {
+    fims_send -m set -u /ess/status/pcs/$1 $2
+}
+getPcsStatus() {
+    fims_send -m get -r /$$ -u /ess/status/pcs/$1
+}
+
+defPcs() {
+    
+    fims_send -m set -r /$$ -u /ess/components/ems_running_info/sys_status 32 | jq
+
+    setPcsInfo nominal_output_power 45000.6
+    setPcsInfo nominal_reactive_output_power 55000.6
+    setPcsInfo max_charging_power 45000.6
+    setPcsInfo max_discharging_power 35000.7
+    setPcsInfo work_state 8
+    setPcsInfo operating_mode 516
+    setPcsCont ActivePowerSetpoint 0
+    setPcsCont ReactivePowerSetpoint 0
+    setPcsCont PowerPriority '{"value":"p"}'
+    setBmsStatus MaxBMSChargeCurrent '{"value":-3000}'
+    setBmsStatus MaxBMSDischargeCurrent '{"value":3000}'
+    setBmsStatus MaxBMSChargePower '{"value":-4000}'
+    setBmsStatus MaxBMSDischargePower '{"value":4000}'
+    setBmsStatus BMSVoltage '{"value":1334}'
+    setBmsStatus BMSCurrentCheckStop '{"value":30}'
+    setPcsStatus MaxPCSActivePower '{"value":100}'
+    setPcsStatus MaxPCSReactivePower '{"value":100}'
+    setPcsStatus MaxPCSApparentPower '{"value":100}'
+    setPcsStatus MaxPCSChargePower '{"value":-100}'
+    setPcsStatus MaxPCSDischargePower '{"value":100}'
+    setPcsStatus DCVoltage '{"value":1269}'
+    # setPcsInfo system_total_voltage 1400
+    # setPcsInfo system_total_current 5123
+    # setPcsInfo system_max_cell_voltage 3.55
+    # setPcsInfo system_min_cell_voltage 3.32
+    # setPcsInfo system_avg_voltage 3.42
+    # setPcsInfo system_max_cell_temperature 28.55
+    # setPcsInfo system_min_cell_temperature 23.55
+    # setPcsInfo system_avg_temperature 24.55
+    # setPcsInfo system_max_charge_current 6000
+    # setPcsInfo system_max_discharge_current 4000
+    # setPcsInfo system_max_charge_power 320034
+    # setPcsInfo system_max_discharge_power 220034
+    # setPcsInfo number_of_racks_total 18
+    # setPcsInfo number_of_racks_in_service 18
+
+    
+}
+
+# exercise 1a BMS system_operation_state
+
+extractBmsOpState () {
+    mkdir -p /home/config/examples
+    fims_send -m get -r /$$ -u  /ess/full/components/bms_info/system_operation_state \
+                                | jq > /home/config/examples/BmsOpState.json
+}
+
+installBmsOpState () {
+    if [ -f /home/config/examples/BmsOpState.json ] ; then
+        fims_send -m set -f /home/config/examples/BmsOpState.json -r /$$ -u  /ess/full/components/bms_info | jq
+    else
+        echo "no modified file /home/config/examples/BmsOpState.json seen "
+    fi
+}
+
+resetBmsOpState () {
+   fims_send -m set -r /$$ -u  "/ess/components/bms_info" '{
+		"system_operation_state": {
+            "value": 0,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 0, "uri":"/assets/bms/summary:system_state", "outValue": "Charge/Discharge Allowed"},
+                        {"inValue": 1, "uri":"/assets/bms/summary:system_state", "outValue": "No Charge"},
+                        {"inValue": 2, "uri":"/assets/bms/summary:system_state", "outValue": "No Discharge"},
+                        {"inValue": 3, "uri":"/assets/bms/summary:system_state", "outValue": "Charge/Discharge Disabled"},
+                        {"inValue": 4, "uri":"/assets/bms/summary:system_state", "outValue": "Fault"},
+                        {"inValue": 5, "uri":"/assets/bms/summary:system_state", "outValue": "Alarm"},
+
+                        {"inValue": 0, "uri":"/status/bms:BMSStatus", "outValue": "Normal"},
+                        {"inValue": 1, "uri":"/status/bms:BMSStatus", "outValue": "Full Discharge"},
+                        {"inValue": 2, "uri":"/status/bms:BMSStatus", "outValue": "Full Charge"},
+                        {"inValue": 3, "uri":"/status/bms:BMSStatus", "outValue": "Initial", "note": "Should be stop"},
+                        {"inValue": 4, "uri":"/status/bms:BMSStatus", "outValue": "Fault"},
+                        {"inValue": 5, "uri":"/status/bms:BMSStatus", "outValue": "Alarm"}
+                    ]
+                }]
+            }
+        }
+	}' | jq
+
+}
+getBmsOpState () {
+   fims_send -m get -r /$$ -u  /ess/components/bms_info/system_operation_state  | jq
+   fims_send -m get -r /$$ -u  /ess/assets/bms/summary/system_state  | jq
+   fims_send -m get -r /$$ -u  /ess/status/bms/BMSStatus  | jq
+    
+}
+setBmsOpState () {
+   fims_send -m set -r /$$ -u  /ess/full/components/bms_info/system_operation_state $1  | jq
+}
+# exercise 1b
+extractBmsBauState () {
+    mkdir -p /home/config/examples
+    fims_send -m get -r /$$ -u  /ess/full/components/bms_info/bau_alarm_state \
+                                | jq > /home/config/examples/BmsBauState_orig.json
+}
+
+installBmsBauState () {
+    if [ -f /home/config/examples/BauAlarmState.json ] ; then
+        fims_send -m set -f /home/config/examples/BmsBauState.json -r /$$ -u  /ess/full/components/bms_info | jq
+    else
+        echo "no modified file /home/config/examples/BmsBauState.json seen "
+    fi
+}
+resetBmsBauState () {
+   fims_send -m set -r /$$ -u  /ess/components/bms_info '{
+		"bau_alarm_state": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/bms:bms_internal_comms_failure", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/bms:bms_internal_comms_failure", "outValue": "Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/bms:racks_vol_diff_over_large", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/bms:racks_vol_diff_over_large", "outValue": "Alarm"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/bms:racks_curr_diff_over_large", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/bms:racks_curr_diff_over_large", "outValue": "Alarm"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/bms:bau_emergency_stop", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/bms:bau_emergency_stop", "outValue": "Triggered"},
+
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/bms:bms_exercise_1b", "outValue": "1b Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/bms:bms_exercise_1b", "outValue": "1b Alarm"},
+                        
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:bms_alarms[0]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:bms_alarms[1]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:bms_alarms[2]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:bms_alarms[3]", "outValue": true},
+
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/site/ess_ls:bms_alarms[4]", "outValue": false},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:bms_alarms[4]", "outValue": true}
+
+                    ]
+                }]
+            }
+        }
+	}' | jq
+fims_send -m set -r /$$ -u  /ess/alarms/bms '
+    {
+    "bms_exercise_1b":
+            {"value": "Normal", "type": "alarm", "actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}}
+	}' | jq
+}
+getBmsBauState () {
+    echo -n " bau_alarm_state: "
+    fims_send -m get -r /$$ -u  /ess/components/bms_info/bau_alarm_state  | jq
+    echo -n " bms_exercise_1b: "
+   fims_send -m get -r /$$ -u  /ess/alarms/bms/bms_exercise_1b  | jq
+    echo -n " bms_alarms: "
+   fims_send -m get -r /$$ -u  /ess/site/ess_ls/bms_alarms  | jq
+    
+}
+setBmsBauState () {
+   fims_send -m set -r /$$ -u  /ess/full/components/bms_info/bau_alarm_state $1  | jq
+    
+}
+
+#exercise 2
+# this goes right in 
+# nothing was previously set up
+addPcsTestSetpoint () {
+   fims_send -m set -r /$$ -u  /assets/pcs/summary '
+   {
+     "maint_test_setpoint": {
+            "name": "Test Setpoint (kW)",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "number",
+            "actions": { 
+                "onSet": [{
+                    "func": [{"func": "LogInfo", "amap": "ess"}],
+                    "remap":[{"ifChanged": false, "uri": "/controls/ess:TestSetpoint"}]
+                }]
+            },
+            "options": []
+        }
+    }' | jq
+    fims_send -m get -r /$$ -u  /ess/full/assets/pcs/summary/maint_test_setpoint \
+                                | jq > /home/config/examples/PcsTestSp_orig.json
+}
+
+addPcsTestSetpointEnable () {
+   fims_send -m set -r /$$ -u  /assets/pcs/summary '
+   {
+     "enable_test_setpoint": {
+            "name": "Enable Test Setpoint",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet": [{
+                    "func": [{"func": "LogInfo", "amap": "ess"}],
+                    "remap":[
+                        {"inValue":true, "ifChanged": false, "uri": "/assets/pcs/summary:maint_test_setpoint@enabled", "outValue":true},
+                        {"inValue":true, "ifChanged": false, "uri": "/assets/pcs/summary:enable_test_setpoint@enabled", "outValue":false},
+                        {"inValue":true, "ifChanged": false, "uri": "/assets/pcs/summary:disable_test_setpoint@enabled", "outValue":true}
+                        ]
+                }]
+            },
+            "new_options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+        "disable_test_setpoint": {
+            "name": "Disable Test Setpoint",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet": [{
+                    "func": [{"func": "LogInfo", "amap": "ess"}],
+                    "remap":[
+                        {"inValue":true, "ifChanged": false, "uri": "/assets/pcs/summary:maint_test_setpoint@enabled",   "outValue":false},
+                        {"inValue":true, "ifChanged": false, "uri": "/assets/pcs/summary:disable_test_setpoint@enabled", "outValue":false},
+                        {"inValue":true, "ifChanged": false, "uri": "/assets/pcs/summary:enable_test_setpoint@enabled",  "outValue":true}
+
+                        ]
+                }]
+            },
+            "new_options": [
+                {"name": "No", "return_value": true},
+                {"name": "Yes","return_value": false}
+            ]
+        }
+
+    }' | jq
+    fims_send -m get -r /$$ -u  /ess/full/assets/pcs/summary/enable_test_setpoint \
+                                | jq > /home/config/examples/PcsEnableTestSp_orig.json
+    fims_send -m get -r /$$ -u  /ess/full/assets/pcs/summary/disable_test_setpoint \
+                                | jq > /home/config/examples/PcsDisableTestSp_orig.json
+
+}
+# note that , with release v1.1.0 we cant see options...
+getPcsTestSetpoint () {
+    echo -n "full :: /assets/pcs/summary/maint_test_setpoint: "
+    fims_send -m get -r /$$ -u  /ess/full/assets/pcs/summary/maint_test_setpoint | jq    
+    echo -n "full :: /assets/pcs/summary/enable_test_setpoint: "
+    fims_send -m get -r /$$ -u  /ess/full/assets/pcs/summary/enable_test_setpoint | jq    
+    echo -n "/controls/ess/TestSetpoint: "
+    fims_send -m get -r /$$ -u  /ess/controls/ess/TestSetpoint | jq    
+}
+
+# exercise 3
+

@@ -1,0 +1,589 @@
+# defs for 800.2_test_dual_bms_modbus.sh
+# p. wilshire
+# 03/15/2022
+#
+# the test script dots in this to run the config set up by 800.1_test_dual_bms.sh
+echo  "the ess controller must be running    ess_controller -n ess -c ess_init1 -x"
+
+echo "the dual bms system must be loaded  sh scripts/dual_bms/load_bms_1.sh"
+
+#
+#
+# test "/assets/ess/ess_1":{
+#  "name": "ESS Summary",
+#    "version":                          {"name": "Version",                  "value": "version", "enabled": true },
+#    "estop_status":                     {"name": "E-Stop Status",            "value": "Off",     "enabled": true },
+#    "disconnect_switch_status":         {"name": "Disconnect Switch Status", "value": "Off","enabled": true},
+#    "door_latch_status":                {"name": "Door Latch Status",        "value": "Off","enabled": true},
+##    "surge_arrester_status":            {"name": "Surge Arrester Status",    "value": "Off","enabled": true},
+#    "fire_alarm_status":                {"name": "Fire Alarm Status",        "value": "Off","enabled": true},
+#    "fuse_monitoring_status":           {"name": "Fuse Monitoring Status",   "value": "Off","enabled": true},
+#    "max_charge_power":                 {"name": "Max Charge Power",         "value": 0,"enabled": false},
+#    "max_discharge_power":              {"name": "Max Discharge Power",      "value": 0,"enabled": false},
+#    "active_power":                     {"name": "Active Power",             "value": 2.5,"enabled": false},
+#    "active_power_setpoint":            {"name": "Active Power Setpoint",    "value": 3.0999999046325684,"enabled": false},
+
+#    "alarms":                           {"name": "Alarms",                   "value": 0,"options": [],"enabled": true},
+#    "soc":                              {"name": "State of Charge",          "value": 76.55913543701172,"enabled": false},
+#    "soh":                              {"name": "State of Health",          "value": 65.7,"enabled": false},
+#    "status":                           {"name": "Status",                   "value": "Status","enabled": true}
+#  },
+  
+#
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+descs=()
+acts=()
+resps=()
+act_res=()
+
+#$1 shift 
+#$2 shiftnum
+#$3 add num
+#xxx=addMask 4  1   1
+
+
+#xxx=`addMask 4  1   1`
+#echo " resut 4 1 1 addmask = $xxx"
+#enable
+#inValue
+#inAv
+#var 
+#func
+
+# setvar $1 
+# value  $2
+# sleep $3
+# desc $4{ "value": "/assets/ess/summary:version",                        "vlink": "/status/ess:build"      
+# setAsset  /status/ess/build   newversion   
+
+
+function setAsset()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u $1 '{
+      "value": "$2"
+}' 
+    | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": "$2"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setAssetValNR()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set  -u $1 '{
+      "value": $2
+}' 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setAssetVal()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u $1 '{
+      "value": $2
+}' 
+    | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+# getAsset  /assets/ess/summary/version   newversion   
+
+function getAsset()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+"$2"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+# getAsset  /assets/ess/summary/version   newversion   
+
+function getAssettoVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+EOF
+)
+  echo "resp = $act_res[$idx]"
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function getAssetVal()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+$2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function runTest()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/controls '
+  {
+      "sendDb":{
+        "value": 3456, 
+        "enabled":true
+      }
+  }' 
+    | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": 3456,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+getAvar ()
+{
+  sys_xxx=`fims_send -m get -r /$$ -u $2`
+  echo "$sys_xxx"
+}
+
+# moved to test definitions
+#setSSHVal()
+#{
+##  descs[idx]=$5
+#
+#  acts[idx]=$(cat<<EOF
+#ssh root@172.17.0.3 "fims_send -m pub  -u $1 '{\"$2\":$3}'"
+#EOF
+#)
+#resps[idx]=$(cat<<EOF
+#EOF
+#)
+#  sleeps[idx]="$4" 
+#  idx=$(($idx+1))
+#}   
+
+#######################################################################
+descs[0]="test dual_bms risen_bms_rack_modbus"
+#######################################################################
+#return 0
+# /components/gpio:Disconnect Switch"
+sys_build=$(getAvar sys_build /ess/status/ess/build)
+echo "sys_build version [$sys_build]"
+diss_switch=$(getAvar sys_build /ess/components/gpio/DisconnectSwitch)
+echo "diss_switch  [$diss_switch]"
+echo "set up a modbus server on 172.10.0.3 configs/modbus_server/bms_1_modbus_server.json"
+echo " make sure ssh-copy-id has been used to set up no password ssh link to 172.17.0.3"
+echo " tests the data contained in risen_bms_manager.json and risen_bms_manager_modbus.json"
+
+getAssetpVal ()
+{
+   descs[idx]=$5
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "$2": $3,
+EOF
+)
+  sleeps[idx]="$4" 
+  idx=$(($idx+1))
+}
+
+
+testFault ()
+{
+    setSSHVal    $1                      $2     $5           1.2      " >>>>>>>>>>>  fault $4 value  $5 expect $6"
+    getAsset  /ess$4                            "$6"          0.1     "        >> get  $4   ->     $6"
+}
+
+testFaultVal ()
+{
+    setSSHVal    $1                      $2     $5           1.2      " >>>>>>>>>>>  fault $4 value  $5 expect $6"
+    getAssetVal  /ess$4                            $6          0.1     "        >> get  $4   ->     $6"
+}
+
+# Hmm { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_01_fss_alarms[0]",         "outValue": true},
+# /components/bms_1_  rack_01 run_rack_state SystemState ,
+
+testRackFault()
+{
+    testFault /components/bms_1_$1_$2      /status/bms/BMSMaxCellVoltage   /status/$1/$3         "$4"        "$5"
+    #getAsset  /ess/faults/$2/$3                            $5          0.1     "        >> get  $2/$3   ->     $5"
+    #setAssetValNR  /ess/site/ess_ls/$2_fss_alarms            0          0.1     "        >> set  $2_fss_alarms   ->     $8"
+    #getAssetVal  /ess/site/ess_ls/$2_fss_alarms            $8          0.1     "        >> get  $2_fss_alarms   ->     $8"
+    
+    #testFault /components/bms_1_ems_running_info $1   /status/bms/BMSMaxCellVoltage    /faults/bms/$2_$3         "$6"        "$7"
+    #getAsset  /ess/faults/$2/$3                            $7          0.1     "        >> get  $2/$3   ->     $7"
+    #getAssetVal  /ess/site/ess_ls/$2_fss_alarms            $9          0.1     "        >> get  $2_fss_alarms   ->     $9"
+ 
+}
+
+function testBmsEnvAlarm()
+{
+
+    testBmsFault $1 $2 temp_alarm                 0  Normal 1  Triggered 0 1
+    testBmsFault $1 $2 temp_sensor_fault          0  Normal 2  Triggered 0 2
+    testBmsFault $1 $2 smoke_alarm                0  Normal 4  Triggered 0 4
+    testBmsFault $1 $2 labyrinth_pollution_fault  0  Normal 8  Triggered 0 8
+    testBmsFault $1 $2 smoke_sensor_failure       0  Normal 16 Triggered 0 16
+    testBmsFault $1 $2 fire_gas_release           0  Normal 32 Triggered 0 32
+
+
+    testBmsFault $1 $3 temp_alarm                 0  Normal 256  Triggered 0 1
+    testBmsFault $1 $3 temp_sensor_fault          0  Normal 512  Triggered 0 2
+    testBmsFault $1 $3 smoke_alarm                0  Normal 1024  Triggered 0 4
+    testBmsFault $1 $3 labyrinth_pollution_fault  0  Normal 2048  Triggered 0 8
+    testBmsFault $1 $3 smoke_sensor_failure       0  Normal 4096 Triggered 0 16
+    testBmsFault $1 $3 fire_gas_release           0  Normal 8192 Triggered 0 32
+
+}
+
+function testRunState ()
+{
+    testFault /components/bms_1_${1} rack_run_state      0 /status/$1/SystemState  0 Normal      
+    testFault /components/bms_1_${1} rack_run_state      1 /status/$1/SystemState  1 "No charge" 
+    testFault /components/bms_1_${1} rack_run_state      2 /status/$1/SystemState  2 "No discharge" 
+    testFault /components/bms_1_${1} rack_run_state      3 /status/$1/SystemState  3 "Standby" 
+    testFault /components/bms_1_${1} rack_run_state      4 /status/$1/SystemState  4 "Stop" 
+
+    testFault /components/bms_1_${1} rack_precharge_phase   0 /status/$1/rack_precharge_phase  0 "Disconnected" 
+    testFault /components/bms_1_${1} rack_precharge_phase   1 /status/$1/rack_precharge_phase  1 "Start connection" 
+    testFault /components/bms_1_${1} rack_precharge_phase   2 /status/$1/rack_precharge_phase  2 "Connecting" 
+    testFault /components/bms_1_${1} rack_precharge_phase   3 /status/$1/rack_precharge_phase  3 "Connected" 
+    testFault /components/bms_1_${1} rack_precharge_phase   4 /status/$1/rack_precharge_phase  4 "Connection fail" 
+
+    testFaultVal /components/bms_1_${1} rack_connection_state   0 /status/$1/pos_contactor_state  0 0 
+    testFaultVal /components/bms_1_${1} rack_connection_state   1 /status/$1/pos_contactor_state  1 1 
+
+    testFault   /components/bms_1_${1} rack_connection_state   0 /status/$1/pre_contactor_state  0 "Opened" 
+    testFault   /components/bms_1_${1} rack_connection_state   2 /status/$1/pre_contactor_state  2 "Closed" 
+
+    testFaultVal /components/bms_1_${1} rack_connection_state   0 /status/$1/neg_contactor_state  0 0 
+    testFaultVal  /components/bms_1_${1} rack_connection_state   4 /status/$1/neg_contactor_state  4 1 
+
+    testFault   /components/bms_1_${1} rack_connection_state   0 /status/$1/disconnector_state  0 "Opened" 
+    testFault   /components/bms_1_${1} rack_connection_state   8 /status/$1/disconnector_state  8 "Closed" 
+
+    testFault   /components/bms_1_${1} rack_alarm_info        0 /faults/$1/bmu_hardware  0 "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm_info        1 /faults/$1/bmu_hardware  1 "Fault" 
+
+    testFault   /components/bms_1_${1} rack_alarm_info        0 /faults/$1/bcu_hardware  0 "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm_info        2 /faults/$1/bcu_hardware  2 "Fault" 
+
+    testFault   /components/bms_1_${1} rack_alarm_info        0 /faults/$1/fuse_protector  0 "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm_info        4 /faults/$1/fuse_protector  4 "Fault" 
+
+    testFault   /components/bms_1_${1} rack_alarm_info        0 /faults/$1/contactor_adhesion  0 "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm_info        8 /faults/$1/contactor_adhesion  8 "Fault" 
+
+
+    testFault   /components/bms_1_${1} rack_alarm_info        0 /faults/$1/bmu_comms          0 "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm_info       16 /faults/$1/bmu_comms          16 "Fault" 
+
+    testFault   /components/bms_1_${1} rack_alarm_info        0 /faults/$1/bau_comms          0 "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm_info       32 /faults/$1/bau_comms          32 "Fault" 
+
+    testFault   /components/bms_1_${1} rack_alarm_info        0 /faults/$1/current_sensor     0 "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm_info       64 /faults/$1/current_sensor     64 "Fault" 
+
+    testFault   /components/bms_1_${1} rack_alarm_info        0 /faults/$1/imd                0 "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm_info       128 /faults/$1/imd                128 "Fault" 
+
+    testFault   /components/bms_1_${1} rack_alarm_info        0  /faults/$1/disconnector_open  0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm_info       256 /faults/$1/disconnector_open 256 "Disconnector Open When Rack Enabled" 
+    testFault   /components/bms_1_${1} rack_alarm_info        0  /faults/$1/disconnector_open  0   "Normal" 
+
+    setAssetValNR  /ess/site/ess_ls/${1}_alarm_info             0          0.1   "  >> set 0   ->     /site/ess_ls/${1}_alarm_info"
+
+    testFaultVal   /components/bms_1_${1} rack_alarm_info        0  /site/ess_ls/${1}_alarm_info  0   0 
+    testFaultVal   /components/bms_1_${1} rack_alarm_info        1  /site/ess_ls/${1}_alarm_info  1   1 
+    testFaultVal   /components/bms_1_${1} rack_alarm_info        2  /site/ess_ls/${1}_alarm_info  2   3 
+    testFaultVal   /components/bms_1_${1} rack_alarm_info        4  /site/ess_ls/${1}_alarm_info  4   7 
+    testFaultVal   /components/bms_1_${1} rack_alarm_info        8  /site/ess_ls/${1}_alarm_info  8   15 
+    testFaultVal   /components/bms_1_${1} rack_alarm_info        16  /site/ess_ls/${1}_alarm_info  16   31 
+    testFaultVal   /components/bms_1_${1} rack_alarm_info        32  /site/ess_ls/${1}_alarm_info  32   63 
+    testFaultVal   /components/bms_1_${1} rack_alarm_info        64  /site/ess_ls/${1}_alarm_info  64   127 
+    
+
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/rack_volt_high_warn  0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        1  /alarms/${1}/rack_volt_high_warn  1   "Warning" 
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/rack_volt_low_warn  0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        2  /alarms/${1}/rack_volt_low_warn  2   "Warning" 
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/cell_volt_high_warn  0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        4  /alarms/${1}/cell_volt_high_warn  4   "Warning" 
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/cell_volt_low_warn   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        8  /alarms/${1}/cell_volt_low_warn   8   "Warning" 
+
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/dsg_over_curr_warn   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        16  /alarms/${1}/dsg_over_curr_warn  16   "Warning" 
+
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/chg_over_curr_warn   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        32  /alarms/${1}/chg_over_curr_warn  32   "Warning" 
+    
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/dsg_temp_high_warn   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        64 /alarms/${1}/dsg_temp_high_warn  64   "Warning" 
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/dsg_temp_low_warn   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        128 /alarms/${1}/dsg_temp_low_warn  128   "Warning" 
+
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/chg_temp_high_warn   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        256 /alarms/${1}/chg_temp_high_warn  256   "Warning" 
+    testFault   /components/bms_1_${1} rack_warning        0  /alarms/${1}/chg_temp_low_warn   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        512 /alarms/${1}/chg_temp_low_warn  512   "Warning" 
+
+    testFault   /components/bms_1_${1} rack_warning        0     /alarms/${1}/insulation_low_warn  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        1024  /alarms/${1}/insulation_low_warn  1024   "Warning" 
+
+    testFault   /components/bms_1_${1} rack_warning        0     /alarms/${1}/terminal_temp_high_warn  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        2048  /alarms/${1}/terminal_temp_high_warn  2048   "Warning" 
+
+    testFault   /components/bms_1_${1} rack_warning        0     /alarms/${1}/hvb_temp_high_warn  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        4096  /alarms/${1}/hvb_temp_high_warn  4096   "Warning" 
+
+    testFault   /components/bms_1_${1} rack_warning        0     /alarms/${1}/cell_volt_diff_high_warn  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        8192  /alarms/${1}/cell_volt_diff_high_warn  8192   "Warning" 
+    testFault   /components/bms_1_${1} rack_warning        0     /alarms/${1}/cell_temp_diff_high_warn  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_warning        16384 /alarms/${1}/cell_temp_diff_high_warn  16384 "Warning" 
+
+    testFault   /components/bms_1_${1} rack_warning        0     /alarms/${1}/cell_temp_diff_high_warn  0      "Normal" 
+    setAssetValNR  /ess/site/ess_ls/${1}_warnings             0          0.1   "  >> set 0   ->     /site/ess_ls/${1}_warnings"
+
+    testFaultVal   /components/bms_1_${1} rack_warning        0    /site/ess_ls/${1}_warnings  0   0 
+    testFaultVal   /components/bms_1_${1} rack_warning        1    /site/ess_ls/${1}_warnings  1   1 
+    testFaultVal   /components/bms_1_${1} rack_warning        2    /site/ess_ls/${1}_warnings  2   3 
+    testFaultVal   /components/bms_1_${1} rack_warning        4    /site/ess_ls/${1}_warnings  4   7 
+    testFaultVal   /components/bms_1_${1} rack_warning        8    /site/ess_ls/${1}_warnings  8   15 
+    testFaultVal   /components/bms_1_${1} rack_warning        16   /site/ess_ls/${1}_warnings  16  31 
+    testFaultVal   /components/bms_1_${1} rack_warning        32   /site/ess_ls/${1}_warnings  32   63
+    testFaultVal   /components/bms_1_${1} rack_warning        64   /site/ess_ls/${1}_warnings  64   127 
+    testFaultVal   /components/bms_1_${1} rack_warning        128  /site/ess_ls/${1}_warnings  128  255 
+    testFaultVal   /components/bms_1_${1} rack_warning        256  /site/ess_ls/${1}_warnings  256  511 
+    testFaultVal   /components/bms_1_${1} rack_warning        512  /site/ess_ls/${1}_warnings  512  1023 
+    testFaultVal   /components/bms_1_${1} rack_warning        1024 /site/ess_ls/${1}_warnings  1024 2047 
+    testFaultVal   /components/bms_1_${1} rack_warning        2048 /site/ess_ls/${1}_warnings  2048 4095 
+    testFaultVal   /components/bms_1_${1} rack_warning        4096 /site/ess_ls/${1}_warnings  4096 8191 
+    testFaultVal   /components/bms_1_${1} rack_warning        8192 /site/ess_ls/${1}_warnings  8192 16383 
+    testFaultVal   /components/bms_1_${1} rack_warning        16384 /site/ess_ls/${1}_warnings 16384 32767 
+
+
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/rack_volt_high_alarm  0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        1  /alarms/${1}/rack_volt_high_alarm  1   "Alarm" 
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/rack_volt_low_alarm  0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        2  /alarms/${1}/rack_volt_low_alarm  2   "Alarm" 
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/cell_volt_high_alarm  0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        4  /alarms/${1}/cell_volt_high_alarm  4   "Alarm" 
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/cell_volt_low_alarm   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        8  /alarms/${1}/cell_volt_low_alarm   8   "Alarm" 
+
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/dsg_over_curr_alarm   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        16  /alarms/${1}/dsg_over_curr_alarm  16   "Alarm" 
+
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/chg_over_curr_alarm   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        32  /alarms/${1}/chg_over_curr_alarm  32   "Alarm" 
+    
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/dsg_temp_high_alarm   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        64 /alarms/${1}/dsg_temp_high_alarm  64   "Alarm" 
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/dsg_temp_low_alarm   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        128 /alarms/${1}/dsg_temp_low_alarm  128   "Alarm" 
+
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/chg_temp_high_alarm   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        256 /alarms/${1}/chg_temp_high_alarm  256   "Alarm" 
+    testFault   /components/bms_1_${1} rack_alarm        0  /alarms/${1}/chg_temp_low_alarm   0   "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        512 /alarms/${1}/chg_temp_low_alarm  512   "Alarm" 
+
+    testFault   /components/bms_1_${1} rack_alarm        0     /alarms/${1}/insulation_low_alarm  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        1024  /alarms/${1}/insulation_low_alarm  1024   "Alarm" 
+
+    testFault   /components/bms_1_${1} rack_alarm        0     /alarms/${1}/terminal_temp_high_alarm  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        2048  /alarms/${1}/terminal_temp_high_alarm  2048   "Alarm" 
+
+    testFault   /components/bms_1_${1} rack_alarm        0     /alarms/${1}/hvb_temp_high_alarm  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        4096  /alarms/${1}/hvb_temp_high_alarm  4096   "Alarm" 
+
+    testFault   /components/bms_1_${1} rack_alarm        0     /alarms/${1}/cell_volt_diff_high_alarm  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        8192  /alarms/${1}/cell_volt_diff_high_alarm  8192   "Alarm" 
+    testFault   /components/bms_1_${1} rack_alarm        0     /alarms/${1}/cell_temp_diff_high_alarm  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_alarm        16384 /alarms/${1}/cell_temp_diff_high_alarm  16384 "Alarm" 
+
+    testFault   /components/bms_1_${1} rack_alarm        0     /alarms/${1}/cell_temp_diff_high_alarm  0      "Normal" 
+    setAssetValNR  /ess/site/ess_ls/${1}_alarms             0          0.1   "  >> set 0   ->     /site/ess_ls/${1}_alarms"
+
+    testFaultVal   /components/bms_1_${1} rack_alarm        0    /site/ess_ls/${1}_alarms  0   0 
+    testFaultVal   /components/bms_1_${1} rack_alarm        1    /site/ess_ls/${1}_alarms  1   1 
+    testFaultVal   /components/bms_1_${1} rack_alarm        2    /site/ess_ls/${1}_alarms  2   3 
+    testFaultVal   /components/bms_1_${1} rack_alarm        4    /site/ess_ls/${1}_alarms  4   7 
+    testFaultVal   /components/bms_1_${1} rack_alarm        8    /site/ess_ls/${1}_alarms  8   15 
+    testFaultVal   /components/bms_1_${1} rack_alarm        16   /site/ess_ls/${1}_alarms  16  31 
+    testFaultVal   /components/bms_1_${1} rack_alarm        32   /site/ess_ls/${1}_alarms  32   63
+    testFaultVal   /components/bms_1_${1} rack_alarm        64   /site/ess_ls/${1}_alarms  64   127 
+    testFaultVal   /components/bms_1_${1} rack_alarm        128  /site/ess_ls/${1}_alarms  128  255 
+    testFaultVal   /components/bms_1_${1} rack_alarm        256  /site/ess_ls/${1}_alarms  256  511 
+    testFaultVal   /components/bms_1_${1} rack_alarm        512  /site/ess_ls/${1}_alarms  512  1023 
+    testFaultVal   /components/bms_1_${1} rack_alarm        1024 /site/ess_ls/${1}_alarms  1024 2047 
+    testFaultVal   /components/bms_1_${1} rack_alarm        2048 /site/ess_ls/${1}_alarms  2048 4095 
+    testFaultVal   /components/bms_1_${1} rack_alarm        4096 /site/ess_ls/${1}_alarms  4096 8191 
+    testFaultVal   /components/bms_1_${1} rack_alarm        8192 /site/ess_ls/${1}_alarms  8192 16383 
+    testFaultVal   /components/bms_1_${1} rack_alarm        16384 /site/ess_ls/${1}_alarms 16384 32767 
+
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/rack_volt_high  0     "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        1  /faults/${1}/rack_volt_high  1     "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/rack_volt_low   0     "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        2  /faults/${1}/rack_volt_low   2     "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/cell_volt_high  0     "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        4  /faults/${1}/cell_volt_high  4     "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/cell_volt_low   0     "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        8  /faults/${1}/cell_volt_low   8     "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/dsg_over_curr   0     "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm       16  /faults/${1}/dsg_over_curr  16     "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/chg_over_curr   0     "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm       32  /faults/${1}/chg_over_curr  32     "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/dsg_temp_high   0     "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm       64  /faults/${1}/dsg_temp_high  64     "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/dsg_temp_low    0    "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm      128  /faults/${1}/dsg_temp_low  128    "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/chg_temp_high   0    "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm      256  /faults/${1}/chg_temp_high 256    "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/chg_temp_low    0    "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm      512  /faults/${1}/chg_temp_low  512    "Critical Alarm" 
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/insulation_low  0    "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm     1024  /faults/${1}/insulation_low 1024  "Critical Alarm" 
+
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/terminal_temp_high  0      "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm     2048  /faults/${1}/terminal_temp_high  2048   "Critical Alarm" 
+
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/hvb_temp_high       0      "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm     4096  /faults/${1}/hvb_temp_high       4096   "Critical Alarm" 
+    
+
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/cell_volt_diff_high       0       "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm     8192  /faults/${1}/cell_volt_diff_high       8192    "Critical Alarm" 
+
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/cell_temp_diff_high       0       "Normal" 
+    testFault   /components/bms_1_${1} rack_critical_alarm    16384  /faults/${1}/cell_temp_diff_high       16384   "Critical Alarm" 
+
+    testFault   /components/bms_1_${1} rack_critical_alarm        0  /faults/${1}/cell_temp_diff_high       0       "Normal" 
+
+    setAssetValNR  /ess/site/ess_ls/${1}_critical_alarms  0          0.1   "  >> set 0   ->     /site/ess_ls/${1}_critical_alarms"
+
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        0    /site/ess_ls/${1}_critical_alarms  0   0 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        1    /site/ess_ls/${1}_critical_alarms  1   1 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        2    /site/ess_ls/${1}_critical_alarms  2   3 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        4    /site/ess_ls/${1}_critical_alarms  4   7 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        8    /site/ess_ls/${1}_critical_alarms  8   15 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        16   /site/ess_ls/${1}_critical_alarms  16  31 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        32   /site/ess_ls/${1}_critical_alarms  32   63
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        64   /site/ess_ls/${1}_critical_alarms  64   127 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        128  /site/ess_ls/${1}_critical_alarms  128  255 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        256  /site/ess_ls/${1}_critical_alarms  256  511 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        512  /site/ess_ls/${1}_critical_alarms  512  1023 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        1024 /site/ess_ls/${1}_critical_alarms  1024 2047 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        2048 /site/ess_ls/${1}_critical_alarms  2048 4095 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        4096 /site/ess_ls/${1}_critical_alarms  4096 8191 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        8192 /site/ess_ls/${1}_critical_alarms  8192 16383 
+    testFaultVal   /components/bms_1_${1} rack_critical_alarm        16384 /site/ess_ls/${1}_critical_alarms 16384 32767 
+
+    testFault   /components/bms_1_${1} rack_step_in_failure        0  /alarms/${1}/rack_vol_diff_large       0       "Normal" 
+    testFault   /components/bms_1_${1} rack_step_in_failure        1  /alarms/${1}/rack_vol_diff_large       1       "Warning" 
+    testFault   /components/bms_1_${1} rack_step_in_failure        0  /alarms/${1}/sms_confirmation_overtime 0       "Normal" 
+    testFault   /components/bms_1_${1} rack_step_in_failure        2  /alarms/${1}/sms_confirmation_overtime 2       "Warning" 
+
+    testFault   /components/bms_1_${1} rack_step_in_failure        0  /alarms/${1}/rack_vol_diff_large       0       "Normal" 
+
+    testFaultVal   /components/bms_1_${1} rack_voltage          1234  /status/${1}/RackVoltage            1234       1234 
+    testFaultVal   /components/bms_1_${1} rack_current           432  /status/${1}/RackCurrent             432        432 
+
+    testFault   /components/bms_1_${1} rack_state                  0  /status/${1}/ChargeDischargeState      0       "Idle" 
+    testFault   /components/bms_1_${1} rack_state                  1  /status/${1}/ChargeDischargeState      1       "Discharging" 
+    testFault   /components/bms_1_${1} rack_state                  2  /status/${1}/ChargeDischargeState      2       "Charging" 
+
+    testFaultVal   /components/bms_1_${1} rack_soc                        43.2  /status/${1}/RackSOC                    43.2       43.2 
+    testFaultVal   /components/bms_1_${1} rack_soh                        98.7  /status/${1}/RackSOH                    98.7       98.7 
+
+    testFaultVal   /components/bms_1_${1} rack_max_charge_current        56  /status/${1}/RackMaxChargeCurrent       56       -6497.6 
+    testFaultVal   /components/bms_1_${1} rack_max_discharge_current     467.0  /status/${1}/RackMaxDischargeCurrent    467       467 
+
+    testFaultVal   /components/bms_1_${1} rack_max_cell_voltage          3.45  /status/${1}/RackMaxCellVoltage          3.45       3.45 
+    testFaultVal   /components/bms_1_${1} rack_min_cell_voltage          2.45  /status/${1}/RackMinCellVoltage          2.45       2.45 
+    testFaultVal   /components/bms_1_${1} rack_max_cell_temperature       3.4  /status/${1}/RackMaxCellTemp             3.4       3.4 
+    testFaultVal   /components/bms_1_${1} rack_min_cell_temperature       5.3  /status/${1}/RackMinCellTemp             5.3       5.3 
+
+    testFaultVal   /components/bms_1_${1} rack_avg_voltage                4.3  /status/${1}/RackAvgCellVoltage          4.3       4.3 
+    testFaultVal   /components/bms_1_${1} rack_avg_temperature            53   /status/${1}/RackAvgCellTemp              53       53 
+
+
+
+}
+
+idx=1
+# test      modbus_uri                       modbus_item               local name                      ui name                              values  
+#                                                                                                                                 
+#test        $1                              $2            $3                              $4                                   $5       $6   
+setAssetVal  /ess/config/bms/enable               true          0.1   "  >> set enable   ->        /config/bms:enable"
+setAssetVal  /ess/config/bms/enum_opt             true          0.1   "  >> set enum_opt   ->     /config/bms:enum_opt"
+
+testRunState rack_01
+
+
+
+
+
+#testRackFault rack_01 run_rack_state SystemState 0  Normal
+#testRackFault rack_01 run_rack_state SystemState 0  "No Charge"
+
+#testBmsEnvAlarm env_alarms_1 rack_01 rack_02 
+
+return 0

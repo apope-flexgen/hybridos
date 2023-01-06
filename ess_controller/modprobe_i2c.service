@@ -1,0 +1,10 @@
+[Unit]
+Description=I2C Bus Process
+
+[Service]
+User=root
+ExecStart=/usr/sbin/modprobe i2c_dev
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,156 @@
+# defs for 300.1_test_avParams.sh
+# p. wilshire
+# 02/24/2022
+#
+# the test script dots in this to run the config set up by 300.1_test_avParams.sh
+# a remap ( or ant other ) action that can have an optional inAv can now specify a Param of that inAv 
+#  to set the action input value
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+descs=()
+acts=()
+resps=()
+
+#$1 shift 
+#$2 shiftnum
+#$3 add num
+#xxx=addMask 4  1   1
+
+
+#xxx=`addMask 4  1   1`
+#echo " resut 4 1 1 addmask = $xxx"
+#enable
+#inValue
+#inAv
+#var 
+#func
+
+
+function setAction()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/components/sel_651r_event '
+  {
+      "some_var": { 
+          "value": 1234,
+          "enabled": false,
+          "actions": {
+              "onSet":[{
+                "remap":[{
+                 "debug":false, 
+                 "uri":"/assets/ess:some_test_var",
+                 "inAv":"/components/sel_651r_event:some_var@sflags"}] 
+          }]}
+      }
+}' | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": 1234,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setAVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /assets/ess/some_test_var '{"value": "init"}' 
+    | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": "init"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setONLINE()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /components/sel_651r_event/some_var '
+  {
+      "value": 3456, 
+      "enabled":true,
+      "sflags":"ONLINE" 
+      }' 
+    | jq | grep sflags
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "sflags": "ONLINE"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function getAVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/full/assets/ess/some_test_var 
+    | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setCOM_LOST()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /components/sel_651r_event/some_var '
+  {
+      "value": 3456, 
+      "sflags":"COM_LOST" 
+      }' 
+    | jq | grep sflags
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "sflags": "COM_LOST"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+#######################################################################
+descs[0]="test invar "
+#######################################################################
+#return 0
+idx=1
+setAVar   some_test_var 0                   0.1 " >> set /assets/ess:some_test_var to init"
+
+setAction some_test_action 0                0.1 " >> setup action for  /components/sel_651r:some_var"
+
+getAVar some_test_action '"init"'           0.1 " >> check value  /assets/ess:some_test_var (init)"
+
+setONLINE some_var  '"ONLINE"'              0.1 " >> set some_var sflags to ONLINE "
+
+getAVar some_test_action '"ONLINE"'         0.1 " >> check value  /assets/ess:some_test_var (ONLINE)"
+
+setCOM_LOST some_var  '"COM_LOST"'          0.1 " >> set some_var sflags to COM_LOST "
+
+getAVar some_test_action '"COM_LOST"'       0.1 " >> check value  /assets/ess:some_test_var (COM_LOST)"

@@ -1,0 +1,43 @@
+ess-capability-test.sh
+#!/bin/bash
+
+ess=(1 3 4)
+
+while (true) do
+    for i in "${ess[@]}"; do
+        chargeable_power=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/clou_ess_"$i"/chargeable_power)
+        dischargeable_power=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/clou_ess_"$i"/dischargeable_power)
+        echo -e "ess_$i\tchargeable_power: $chargeable_power\tdischargeable_power: $dischargeable_power\n"
+    done
+    echo -e "\n\n\n"
+    sleep 3
+cat soc-cycle-test.sh
+#!/bin/bash
+
+ess=(1 2 3 4)
+
+while (true) do
+    for i in "${ess[@]}"; do
+        pcs_running_state=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/clou_ess_"$i"/pcs_state)
+        active_power=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/clou_ess_"$i"/active_power)
+        active_power_setpoint=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/clou_ess_"$i"/active_power_setpoint)
+        racks_in_service=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/clou_ess_"$i"/racks_in_service)
+        circuit_breaker_control_word=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/clou_ess_"$i"/circuit_breaker_control_word)
+        soc=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/clou_ess_"$i"/bms_soc)
+        echo -e "ess_$i pcs_running_state: $pcs_running_state active_power: $active_power active_power_setpoint: $active_power_setpoint racks_in_service: $racks_in_service circuit_breaker_control: $circuit_breaker_control_word bms_soc: $soc\n"
+
+        if [ "$racks_in_service" != 0 ] && [ "$racks_in_service" != 11 ]; then echo -e "##### ERROR: ess_$i racks_in_service is $racks_in_service"; fi;
+        if [ "$circuit_breaker_control_word" != 0 ] && [ "$circuit_breaker_control_word" != 2047 ]; then echo -e "##### ERROR: ess_$i circuit_breaker_control_word is $circuit_breaker_control_word"; fi;
+    done
+    echo -e "\n\n\n"
+    sleep 3
+done
+
+cat sel-735-monitor.sh
+#!/bin/bash
+
+while (true) do
+    active_power=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/sel_735/active_power)
+    reactive_power=$(/usr/local/bin/fims/fims_send -m get -r /$$ -u /components/sel_735/reactive_power)
+    echo -e "sel_735\tactive_power: $active_power\treactive_power: $reactive_power" >> sel_735.log
+    sleep 3

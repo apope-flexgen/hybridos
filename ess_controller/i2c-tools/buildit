@@ -1,0 +1,2 @@
+
+g++ --std=c++11 -o i2c_gpio -I . i2c_main.c i2cbusses.c

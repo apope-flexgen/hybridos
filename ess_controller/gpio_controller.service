@@ -1,0 +1,13 @@
+[Unit]
+Description=Gpio Controller - manage Gpio Monitoring systems
+Requires=fims.service modprobe_i2c.service
+After=fims.service modprobe_i2c.service
+
+[Service]
+User=root
+ExecStart=/usr/local/bin/gpio_controller /usr/local/etc/config/gpio_controller
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,1000 @@
+  106  fims_send -m pub -u /interfaces/hybridos -r /me '{"present_enable_flag":2}'
+  107  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  108  fims_send -m get -u /interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  109  fims_send -m pub -u /interfaces/hybridos -r /me '{"present_enable_flag":2}'
+  110  fims_send -m get -u /interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  111  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  112  fims_send -m get -u /interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  113  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  114  fims_send -m get -u /interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  115  fims_send -m pub -u /interfaces/hybridos -r /me '{"present_enable_flag":2}'
+  116  fims_send -m pub -u /interfaces/hybridos  '{"present_enable_flag":222}'
+  117  fims_send -m get -u /interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  118  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  119  fims_send -m set -u /local/interfaces/hybridos/present_enable_flag -r /me 222 
+  120  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  121  fims_send -m set -u /interfaces/hybridos/present_enable_flag -r /me 222 
+  122  fims_send -m set -u /interfaces/hybridos/present_enable_flag -r /me 223
+  123  fims_send -m pub  -u /interfaces/hybridos/present_enable_flag  1223
+  124  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  125  fims_send -m pub  -u /interfaces/hybridos/present_enable_flag  1223
+  126  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  127  fims_send -m get -u /interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  128  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  129  fims_send -m pub  -u /interfaces/hybridos/present_enable_flag  1223
+  130  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  131  fims_send -m set  -r /me -u /interfaces/hybridos/present_enable_flag  21223
+  132  fims_send -m pub  -u /interfaces/hybridos/present_enable_flag  1223
+  133  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  134  fims_send -m get -u /interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  135  fims_send -m set  -r /me -u /interfaces/hybridos/present_enable_flag  21223
+  136  fims_send -m set  -r /me -u /local/interfaces/hybridos/present_enable_flag  21223
+  137  fims_send -m get -u /interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  138  fims_send -m get -u /local/interfaces/hybridos/present_enable_flag -r /me '{"present_enable_flag":2}'
+  139  git add config/*.json
+  140  git commit -m "local_uri"
+  141  git push
+  142  fims_send -m get -u /components/hybridos_m -r /me 
+  143  fims_send -m get -u /local/components/hybridos_m -r /me 
+  144  fims_send -m set -u /components/hybridos_m/remote_reactive_setpoint_kVAR_cmd  3456 -r /me 
+  145  fims_send -m set -u /local/components/hybridos_m/remote_reactive_setpoint_kVAR_cmd  3456 -r /me 
+  146  fims_send -m set -u /components/hybridos_m/remote_reactive_setpoint_kVAR_cmd  3456 -r /me 
+  147  fims_send -m set -u /components/hybridos_m/remote_reactive_setpoint_kVAR_cmd  3457 -r /me 
+  148  fims_send -m set -u /components/hybridos_m/remote_reactive_setpoint_kVAR_cmd  3456 -r /me 
+  149  fims_send -m set -u /components/hybridos_m/gross_reactive_power  3456 -r /me 
+  150  fims_send -m set -u /interfaces/hybridos/gross_reactive_power  3456 -r /me 
+  151  fims_send -m set -u /local/interfaces/hybridos/gross_reactive_power  3456 -r /me 
+  152  fims_send -m pub -u /interfaces/hybridos/gross_reactive_power  3456.95 -r /me 
+  153  fims_send -m pub -u /interfaces/hybridos/gross_reactive_power  33456.95 -r /me 
+  154  build/release/dnp3_master config/hybridos_storage_master.json 
+  155  make clean all
+  156  echo $LD_LIBRARY_PATH
+  157  build/release/dnp3_master config/hybridos_storage_master.json 
+  158  nano config/hybridos_storage_master.json 
+  159  build/release/dnp3_master config/hybridos_storage_master.json 
+  160  fims_listen
+  161  cd ../
+  162  scp -r master_test pi@pi4004:/tmp
+  163  pwd
+  164  cd master_test/
+  165  cd ../
+  166  scp -r master_test pi@pi4004:/tmp
+  167  git status
+  168  pwd
+  169  cd master_test/
+  170  git pull
+  171  make clean all
+  172  git pull && make clean all
+  173  build/release/dnp3_master config/hybridos_storage_master.json 
+  174  git pull && make clean all
+  175  ip a
+  176  git pull && make clean all
+  177  build/release/dnp3_master config/hybridos_storage_master.json 
+  178  ls /etc/netconfig 
+  179  more /etc/netconfig 
+  180  more /etc/networks 
+  181  man nmtui
+  182  man nmcli
+  183  sudo nmcli help
+  184  sudo nmcli -o n
+  185  sudo nmcli -o d
+  186  sudo nmcli -g d
+  187  nmcli d
+  188  more /etc/sysconfig/network-scripts/
+  189  more /etc/sysconfig/network-scripts/ifcfg-eth0
+  190  more /etc/sysconfig/network-scripts/ifcfg-eth1
+  191  more /etc/sysconfig/network-scripts/ifup-eth
+  192  more /etc/sysconfig/network-scripts/ifcfg-eth1
+  193  ifp
+  194  ifup
+  195  man ifup
+  196  sudo ifup
+  197  sudo ifup --h
+  198  sudo ifup -h
+  199  sudo ifup --help
+  200  git pull && make clean all
+  201  . runit 
+  202  fims_listen 
+  203  git pull && make clean all
+  204  build/release/dnp3_master config/hybridos_storage_master.json 
+  205  git pull && make clean all
+  206  build/release/dnp3_master config/hybridos_storage_master.json 
+  207  git pull && make clean all
+  208  build/release/dnp3_master config/hybridos_storage_master.json 
+  209  git pull && make clean all
+  210  build/release/dnp3_master config/hybridos_storage_master.json 
+  211  git pull && make clean all
+  212  ls notes
+  213  ls
+  214  ls doc
+  215  ls scripts/
+  216  more doc/Notes.txt 
+  217  ls
+  218  ls scripts/
+  219  ls ~/
+  220  ls ~/work/
+  221  ls ~/work/gcc
+  222  ls ~/
+  223  ls ~/work/
+  224  ls ~/work/gcc
+  225  ls ~/work/flexgen-power/
+  226  ls ~/scripts/
+  227  ls doc
+  228  nano doc/buildgcc.txt
+  229  git add  doc/buildgcc.txt
+  230  git commint -m "doc"
+  231  git commit -m "doc"
+  232  git push
+  233  git pull && make clean all
+  234  build/release/dnp3_master config/hybridos_storage_master.json 
+  235  nano config/hybridos_storage_master.json 
+  236  build/release/dnp3_master config/hybridos_storage_master.json 
+  237  nano config/hybridos_storage_master.json 
+  238  build/release/dnp3_master config/hybridos_storage_master.json 
+  239  git pull && make clean all
+  240  build/release/dnp3_master config/hybridos_storage_master.json 
+  241  git add config/hybridos_storage_master.json 
+  242  git commint -m "used idx"
+  243  git commit -m "used idx"
+  244  git oush
+  245  git push
+  246  fims_send -m pub -u /site/power/pv_reactive_power 23
+  247  fims_send -m get -u /site/power/pv_reactive_power -r /me
+  248  fims_send -m get -u /local/site/power/pv_reactive_power -r /me
+  249  build/release/dnp3_master config/hybridos_storage_master.json 
+  250  git pull && make clean all
+  251  build/release/dnp3_master config/hybridos_storage_master.json 
+  252  git pull && make clean all
+  253  build/release/dnp3_master config/hybridos_storage_master.json 
+  254  git pull && make clean all
+  255  build/release/dnp3_master config/hybridos_storage_master.json 
+  256  git pull && make clean all
+  257  sudo yum list installed
+  258  sudo yum list installed | grep python
+  259  sudo yum list installed > vagrant_installed.txt
+  260  sudo yum list installed 
+  261  scp vagrant_installed.txt centos@centos7-01:/tmp
+  262  ls -l /usr/local/lib/python3.6
+  263  build/release/dnp3_master config/hybridos_storage_master.json 
+  264  cp config/hybridos_storage_master.json  config/hybridos_storage_master_new_base.json 
+  265  nano config/hybridos_storage_master_new_base.json 
+  266  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  267  nano config/hybridos_storage_master_new_base.json 
+  268  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  269  nano config/hybridos_storage_master_new_base.json 
+  270  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  271  git pull && make clean all
+  272  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  273  git pull && make clean all
+  274  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  275  nano config/hybridos_storage_master_new_base.json 
+  276  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  277  nano config/hybridos_storage_master_new_base.json 
+  278  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  279  nano config/hybridos_storage_master_new_base.json 
+  280  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  281  nano config/hybridos_storage_master_new_base.json 
+  282  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  283  git pull && make clean all
+  284  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  285  nano config/hybridos_storage_master_new_base.json 
+  286  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  287  nano config/hybridos_storage_master_new_base.json 
+  288  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  289  nano config/hybridos_storage_master_new_base.json 
+  290  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  291  git pull && make clean all
+  292  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  293  cd work/flexgen-power/dnp3_interface/master_test/
+  294  . ./runit 
+  295  fims_listen 
+  296  fims_listen -s /components
+  297  fims_listen 
+  298  fims_listen -s /components -s /site
+  299  fims_listen -s /components 
+  300  cd work/flexgen-power/dnp3_interface/master_test/
+  301  git pull
+  302  make
+  303  git pull
+  304  make
+  305  git pull
+  306  make
+  307  git pull
+  308  make
+  309  git pull
+  310  make
+  311  git pull
+  312  make
+  313  git pull
+  314  make
+  315  git pull
+  316  make
+  317  git pull
+  318  make
+  319  git pukk
+  320  git pull
+  321  make
+  322  git pull
+  323  make
+  324  git pull
+  325  make
+  326  make clean all
+  327  ma asprintf
+  328  man asprintf
+  329  git pull
+  330  make clean all
+  331  git pull
+  332  make clean all
+  333  git pull
+  334  make clean all
+  335  git pull
+  336  make clean all
+  337  git pull
+  338  make clean all
+  339  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  340  more runit
+  341   . ./runit
+  342  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  343  gdb build/release/dnp3_outstation
+  344  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  345  git pull
+  346  make clean all
+  347  git pull
+  348  make clean all
+  349  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  350  git pull
+  351  make clean all
+  352  git pull
+  353  make clean all
+  354  git pull
+  355  make clean all
+  356  git pull
+  357  make clean all
+  358  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  359  git pull
+  360  make clean all
+  361  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  362  git pull
+  363  make clean all
+  364  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  365  git pull
+  366  make clean all
+  367  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  368  git pull
+  369  make clean all
+  370  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  371  git pull
+  372  make clean all
+  373  git pull
+  374  make clean all
+  375  gitk
+  376  git pull
+  377  make clean all
+  378  git pull
+  379  make clean all
+  380  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  381  git pull
+  382  make clean all
+  383  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  384  git pull
+  385  make clean all
+  386  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  387  git pull
+  388  make clean all
+  389  git pull
+  390  make clean all
+  391  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  392  git pull
+  393  make clean all
+  394  git pull
+  395  make clean all
+  396  git pull
+  397  make clean all
+  398  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  399  git pull
+  400  make clean all
+  401  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  402  git pull && make clean all
+  403  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  404  git pull && make clean all
+  405  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  406  git pull && make clean all
+  407  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  408  git pull && make clean all
+  409  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  410  git pull && make clean all
+  411  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  412  fims_server &
+  413  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  414  git pull && make clean all
+  415  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  416  git pull && make clean all
+  417  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  418  ls scripts/
+  419  sh scripts/hybridos_echo_both.sh &
+  420  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  421  more scripts/hybridos_echo_both.sh
+  422  ifconfig
+  423  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  424  git pull && make clean all
+  425  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  426  git pull && make clean all
+  427  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  428  git pull && make clean all
+  429  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  430  git pull && make clean all
+  431  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  432  git pull && make clean all
+  433  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  434  git pull && make clean all
+  435  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  436  git pull && make clean all
+  437  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  438  git pull && make clean all
+  439  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  440  git pull && make clean all
+  441  gdb build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  442  git pull && make clean all
+  443  gdb build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  444  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  445  git pull && make clean all
+  446  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  447  man strncmp
+  448  git pull && make clean all
+  449  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  450  git pull && make clean all
+  451  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  452  git pull && make clean all
+  453  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  454  git pull && make clean all
+  455  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  456  git pull && make clean all
+  457  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  458  git pull && make clean all
+  459  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  460  git pull && make clean all
+  461  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  462  git pull && make clean all
+  463  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  464  gdb build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  465  git pull && make clean all
+  466  gdb build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  467  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  468  git pull && make clean all
+  469  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  470  git pull && make clean all
+  471  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  472  git pull && make clean all
+  473  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  474  git pull && make clean all
+  475  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  476  git pull && make clean all
+  477  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  478  nano config/hybridos_storage_outstation_uri.json 
+  479  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  480  git pull && make clean all
+  481  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  482  git pull && make clean all
+  483  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  484  git pull && make clean all
+  485  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  486  git pull && make clean all
+  487  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  488  git pull && make clean all
+  489  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  490  git pull && make clean all
+  491  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  492  git pull && make clean all
+  493  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  494  git pull && make clean all
+  495  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  496  git pull && make clean all
+  497  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  498  git pull && make clean all
+  499  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  500  git pull && make clean all
+  501  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  502  nano config/hybridos_storage_outstation_uri.json 
+  503  nano config/hybridos_storage_master.json 
+  504  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  505  more Makefile 
+  506  nano config/hybridos_storage_master.json 
+  507  git pull && make clean all
+  508  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  509  git pull && make clean all
+  510  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  511  bg
+  512  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  513  git pull && make clean all
+  514  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  515  git pull && make clean all
+  516  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  517  git pull && make clean all
+  518  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  519  git pull && make clean all
+  520  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  521  git pull && make clean all
+  522  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  523  git pull && make clean all
+  524  gitk
+  525  git pull && make clean all
+  526  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  527  git pull && make clean all
+  528  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  529  git pull && make clean all
+  530  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  531  git pull && make clean all
+  532  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  533  git pull && make clean all
+  534  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  535  git pull && make clean all
+  536  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  537  more config/hybridos_storage_outstation_uri.json 
+  538  nano config/hybridos_storage_outstation_uri.json 
+  539  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  540  git pull && make clean all
+  541  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  542  nano config/hybridos_storage_outstation_uri.json 
+  543  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  544  nano config/hybridos_storage_outstation_uri.json 
+  545  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  546  git pull && make clean all
+  547  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  548  cd work/flexgen-power/dnp3_interface/master_test/
+  549  . runit
+  550  build/release/dnp3_master config/hybridos_storage_master.json 
+  551  gdb build/release/dnp3_master config/hybridos_storage_master.json 
+  552  build/release/dnp3_master config/hybridos_storage_master.json 
+  553  gdb build/release/dnp3_master config/hybridos_storage_master.json 
+  554  git pull && make clean all
+  555  build/release/dnp3_master config/hybridos_storage_master.json 
+  556  nano config/hybridos_storage_master.json 
+  557  build/release/dnp3_master config/hybridos_storage_master.json 
+  558  git pull && make clean all
+  559  build/release/dnp3_master config/hybridos_storage_master.json 
+  560  git pull && make clean all
+  561  build/release/dnp3_master config/hybridos_storage_master.json 
+  562  gdb build/release/dnp3_master config/hybridos_storage_master.json 
+  563  git pull && make clean all
+  564  gdb build/release/dnp3_master config/hybridos_storage_master.json 
+  565  git pull && make clean all
+  566  build/release/dnp3_master config/hybridos_storage_master.json 
+  567  git pull && make clean all
+  568  build/release/dnp3_master config/hybridos_storage_master.json 
+  569  git pull && make clean all
+  570  build/release/dnp3_master config/hybridos_storage_master.json 
+  571  git pull && make clean all
+  572  build/release/dnp3_master config/hybridos_storage_master.json 
+  573  git pull && make clean all
+  574  build/release/dnp3_master config/hybridos_storage_master.json 
+  575  cd ../../
+  576  ls
+  577  cd dnp3_interface/
+  578  git status
+  579  ls
+  580  pwd
+  581  cd ../../
+  582  cd ../
+  583  ls
+  584  cd dnp3_interface/
+  585  ls
+  586  git status
+  587  cp ../work/flexgen-power/dnp3_interface/master_test/src/*.cpp src
+  588  cp ../work/flexgen-power/dnp3_interface/master_test/include/*.h include/
+  589  cp ../work/flexgen-power/dnp3_interface/master_test/config/*.json config/
+  590  cp ../work/flexgen-power/dnp3_interface/master_test/scripts/*.sh scripts/
+  591  git add src*.cpp include/*.h config/*.json scripts/*.h
+  592  git add src*.cpp include/*.h config/*.json scripts/*.sh
+  593  date
+  594  date 06161124
+  595  sudo date 06161124
+  596  git commit -m " update with current work"
+  597  git push
+  598  git pull
+  599  git push
+  600  gitk
+  601  make clean all
+  602  ls build/release
+  603  ls /usr/local/lib
+  604  sudo cp  build/release/libdmap.so /usr/local/lib
+  605  make clean all
+  606  more Makefile 
+  607  echo $LD_LIBRARY_PATH
+  608  export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:
+  609  make clean all
+  610  pwd
+  611  cp ../work/flexgen-power/dnp3_interface/master_test/Makefile .
+  612  make clean all
+  613  more Makefile 
+  614  cp Makefile Makefile.save
+  615  nano Makefile
+  616  make clean all
+  617  more config/hybridos_storage_outstation_uri.json 
+  618  build/release/dnp3_master config/hybridos_storage_master.json 
+  619  pwd
+  620  git status
+  621  git add Makefile
+  622  git commit -m " tweaked Maefile"
+  623  git push
+  624  build/release/dnp3_master config/hybridos_storage_master.json 
+  625  pwd
+  626  fims_listen 
+  627  pwd
+  628  fims_listen 
+  629  pwd
+  630  nano Makefile 
+  631  make clean all
+  632  build/release/dnp3_master config/hybridos_storage_master.json 
+  633  git add Makefile
+  634  date
+  635  cp ../work/flexgen-power/dnp3_interface/master_test/src/*.cpp src
+  636  cp ../work/flexgen-power/dnp3_interface/master_test/include/*.h include
+  637  cp ../work/flexgen-power/dnp3_interface/master_test/config/*.json config
+  638  cp ../work/flexgen-power/dnp3_interface/master_test/scripts/*.sh scripts
+  639  cp ../work/flexgen-power/dnp3_interface/master_test/doc/*.txt doc
+  640  git add doc/*.txt
+  641  git add scripts/*.sh
+  642  git add config/*.json
+  643  git add src/*.cpp
+  644  git add include/*.h
+  645  git commit -m " pubs correct on master "
+  646  git push
+  647  gitk
+  648  fims_send -m set -u /site/power/pv_reastive_power 1234
+  649  fims_send -m get -u /site/power/pv_reastive_power -r /me
+  650  fims_send -m get -u /local/site/power/pv_reastive_power -r /me
+  651  fims_send -m get -u /local/site/power/pv_reactive_power -r /me
+  652  fims_send -m set -u /site/power/pv_reactive_power 1234
+  653  fims_send -m set -u /site/power/pv_reactive_power 1234 -r /me
+  654  fims_send -m get -u /local/site/power/pv_reactive_power -r /me
+  655  fims_send -m get -u /site/power/pv_reactive_power -r /me
+  656  ifconfig
+  657  fims_send -m get -u /site/power/pv_reactive_power -r /me
+  658  fims_send -m get -u /local/site/power/pv_reactive_power -r /me
+  659  fims_send -m set -u /site/power/pv_reactive_power 1234 -r /me
+  660  fims_send -m get -u /site/power/pv_reactive_power -r /me
+  661  fims_send -m set -u /site/power/pv_reactive_power 1234 -r /me
+  662  fims_send -m pub -u /site/power/pv_reactive_power 1234 -r /me
+  663  fims_send -m get -u /fm/master/pv_reactive_power 1234 -r /me
+  664  fims_send -m get -u /fm/master/xxhybridos/pv_reactive_power 1234 -r /me
+  665  fims_send -m get -u /fm_master/xxhybridos/pv_reactive_power 1234 -r /me
+  666  fims_send -m get -u /fm_master/pv_reactive_power 1234 -r /me
+  667  fims_send -m set -u /fm_master/pv_reactive_power 1234 -r /me
+  668  fims_send -m get -u /fm_master/pv_reactive_power 1234 -r /me
+  669  fims_send -m get -u /fm_master/xxhybridos/pv_reactive_power 1234 -r /me
+  670  fims_send -m get -u /fm_master/components/xxhybridos/pv_reactive_power 1234 -r /me
+  671  fims_send -m set -u /fm_master/components/xxhybridos/pv_reactive_power 1234 -r /me
+  672  fims_send -m get -u /fm_master/components/xxhybridos/pv_reactive_power 1234 -r /me
+  673  fims_send -m get -u /fm/master/components/xxhybridos/pv_reactive_power 1234 -r /me
+  674  fims_send -m set -u /fm/master/components/xxhybridos/pv_reactive_power 1234 -r /me
+  675  fims_send -m get -u /fm/master/components/xxhybridos/pv_reactive_power 1234 -r /me
+  676  wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  677  file epel-release-latest-7.noarch.rpm 
+  678  wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/9.0.4+11/c2514751926b4512b076cc82f959763f/jdk-9.0.4_linux-x64_bin.rpm
+  679  wget https://ftp.fau.de/eclipse/technology/epp/downloads/release/2019-03/R/eclipse-cpp-2019-03-R-linux-gtk-x86_64.tar.gz
+  680  wget https://s3.amazonaws.com/static.flexgen.com/dev_vm/eclipse.desktop
+  681  wget https://centos7.iuscommunity.org/ius-release.rpm
+  682  wget https://release.gitkraken.com/linux/gitkraken-amd64.rpm
+  683  wget https://centos7.iuscommunity.org/ius-release.rpm
+  684  pwd
+  685  cp ../work/flexgen-power/dnp3_interface/master_test/doc/*.txt doc
+  686  cp ../work/flexgen-power/dnp3_interface/master_test/scripts/*.sh scripts/
+  687  cp ../work/flexgen-power/dnp3_interface/master_test/config/*.json config
+  688  cp ../work/flexgen-power/dnp3_interface/master_test/src/*.cpp src
+  689  cp ../work/flexgen-power/dnp3_interface/master_test/include/*.h include
+  690  git add src/*.cpp doc/*.txt include/*.h scripts/*.sh config/*.json
+  691  cp -a ../work/flexgen-power/dnp3_interface/tar_files .
+  692  ls tar_files/
+  693  git add tar_files/
+  694  git commit -m " local/base/reply uris now working again"
+  695  git push
+  696  fims_send -m get -u /components/xxhybridos -r /me
+  697  fims_send -m get -u /components/xxhybridos/ess_average_soc -r /me
+  698  fims_send -m set -u /compon/xxhybridos/ess_average_soc 2345 -r /me
+  699  fims_send -m get -u /interfaces/hybridos/ess_average_soc -r /me
+  700  fims_send -m get -u /local/interfaces/hybridos/ess_average_soc -r /me
+  701  fims_send -m set -u /interfaces/hybridos/ess_average_soc 3344 -r /me
+  702  fims_send -m set -u /local/interfaces/hybridos/ess_average_soc 3344 -r /me
+  703  fims_send -m set -u /interfaces/hybridos/ess_average_soc 3344 -r /me
+  704  fims_send -m set -u /local/oustation/interfaces/hybridos/ess_average_soc 3344 -r /me
+  705  fims_send -m set -u /local/outstation/interfaces/hybridos/ess_average_soc 3344 -r /me
+  706  fims_send -m post -u /local/outstation/interfaces/hybridos/ess_average_soc 3344 -r /me
+  707  fims_send -m get -u /local/outstation/interfaces/hybridos/ess_average_soc 3344 -r /me
+  708  fims_send -m get -u /interfaces/hybridos/ess_average_soc 3344 -r /me
+  709  fims_send -m get -u /interfaces/hybridos/ess_average_soc 8888
+  710  fims_send -m get -u /interfaces/hybridos/ess_average_soc  -r /me
+  711  fims_send -m get -u /local/outstation/interfaces/hybridos/ess_average_soc  -r /me
+  712  fims_send -m pub -u /interfaces/hybridos/ess_average_soc 10023 
+  713  fims_send -m get -u /local/outstation/interfaces/hybridos/ess_average_soc  -r /me
+  714  fims_send -m pub -u /interfaces/hybridos '{"ess_average_soc": 10023, "available_ess_num":{"value":4567}}' 
+  715  fims_send -m set -u /local/outstation/interfaces/hybridos -r /m '{"ess_average_soc": 10023, "available_ess_num":{"value":4567}}' 
+  716  fims_send -m set -u /local/outstation/interfaces/hybridos -r /me '{"ess_average_soc": 20023, "available_ess_num":{"value":4567}}' 
+  717  fims_send -m pub -u /interfaces/hybridos '{"ess_average_soc": 10023, "available_ess_num":{"value":4567}}' 
+  718  fims_send -m get -u /local/outstation/interfaces/hybridos/ess_average_soc  -r /me
+  719  fims_send -m get -u /local/outstation/interfaces/hybridos/available_ess_num  -r /me
+  720  fims_send -m pub -u /interfaces/hybridos '{"ess_average_soc": 510023, "available_ess_num":{"value":4567}}' 
+  721  fims_send -m get -u /local/outstation/interfaces/hybridos/available_ess_num  -r /me
+  722  fims_send -m get -u /local/outstation/interfaces/hybridos/ess_average_soc  -r /me
+  723  fims_send -m pub -u /interfaces/hybridos '{"ess_average_soc": 5110023, "available_ess_num":{"value":14567}}' 
+  724  fims_send -m pub -u /interfaces/hybridos '{"ess_average_soc": 5110023, "available_ess_num":{"value":145679}}' 
+  725  fims_send -m pub -u /interfaces/hybridos '{"ess_average_soc": 511002, "available_ess_num":{"value":15679}}' 
+  726  fims_send -m pub -u /interfaces/hybridos '{"ess_average_soc": 11002, "available_ess_num":{"value":1679}}' 
+  727  fims_send -m pub -u /interfaces/hybridos '{"ess_average_soc": 110023, "available_ess_num":{"value":16793}}' 
+  728  fims_send -m pub -u /interfaces/hybridos '{"fault_status_flag": 12, "alarm_status_flag":{"value":16793}}' 
+  729  fims_send -m pub -u /interfaces/hybridos '{"fault_status_flag": 13, "alarm_status_flag":{"value":16793}}' 
+  730  fims_send -m pub -u /interfaces/hybridos '{"fault_status_flag": 132, "alarm_status_flag":{"value":163}}' 
+  731  fims_send -m pub -u /interfaces/hybridos '{"fault_status_flag": 13, "alarm_status_flag":{"value":16793}}' 
+  732  fims_send -m pub -u /interfaces/hybridos '{"fault_status_flag": 132, "alarm_status_flag":{"value":163}}' 
+  733  fims_send -m pub -u /interfaces/hybridos '{"fault_status_flag": 13, "alarm_status_flag":{"value":16793}}' 
+  734  fims_send -m pub -u /interfaces/hybridos '{"fault_status_flag": 132, "alarm_status_flag":{"value":163}}' 
+  735  more config/hybridos_storage_master_new_base.json 
+  736  cd work/flexgen-power/dnp3_interface/master_test/
+  737  . ./runit 
+  738  grep linkback config/*.json
+  739  more config/sample2_master1.json 
+  740  git pull && make clean all
+  741  fims_listen 
+  742  fims_server &
+  743  fims_listen 
+  744  cd work/flexgen-power/dnp3_interface/master_test/
+  745  . ./runit 
+  746  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  747  gdb build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  748  git pull && make clean all
+  749  gdb build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  750  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  751  cd work/flexgen-power/dnp3_interface/master_test/
+  752  . ./runit 
+  753  l. ./runit 
+  754  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  755  nano config/hybridos_storage_outstation_uri.json 
+  756  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  757  nano config/hybridos_storage_outstation_uri.json 
+  758  nano config/hybridos_storage_master_new_base.json 
+  759  nano config/hybridos_storage_outstation_uri.json 
+  760  nano config/hybridos_storage_master_new_base.json 
+  761  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  762  ls scripts/
+  763  sh scripts/hybridos_echo_both.sh &
+  764  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  765  cd work/flexgen-power/dnp3_interface/master_test/
+  766  nano doc/alerts.txt
+  767  . ./runit
+  768  fims_send -m get /site/setpoint -r /me
+  769  fims_send -m get -u /site/setpoint -r /me
+  770  fims_send -m set -u /site/setpoint 3456 -r /me
+  771  fims_send -m set -u /site/setpoint/active_power 3456 -r /me
+  772  fims_send -m get -u /site/setpoint/active_power 3456 -r /me
+  773  fims_send -m set -u /site/setpoint/active_power 3456 -r /me
+  774  fims_send -m get -u /site/setpoint/active_power 3456 -r /me
+  775  fims_send -m set -u /site/setpoint/active_power 3456 -r /me
+  776  fims_send -m pub -u /site/feedback/active_power_fb 34 -r /me
+  777  fims_send -m get -u /site/setpoint/active_power 3456 -r /me
+  778  fims_send -m set -u /site/setpoint/active_power 3456 -r /me
+  779  fims_send -m pub -u /site/feedback/active_power_fb 3420 -r /me
+  780  fims_send -m get -u /site/setpoint/active_power 3456 -r /me
+  781  fims_send -m set -u /site/setpoint 3456 -r /me
+  782  fims_send -m get -u /site/setpoint/active_power 3456 -r /me
+  783  fims_send -m set -u /site/setpoint 3456 -r /me
+  784  fims_send -m get -u /site/setpoint/active_power 3456 -r /me
+  785  fims_send -m pub -u /site/feedback/active_power_fb 34 -r /me
+  786  fims_send -m get -u /site/setpoint/active_power 3456 -r /me
+  787  cd ~/dnp3_interface/
+  788  ls
+  789  cp ../work/flexgen-power/dnp3_interface/master_test/src/*.cpp src
+  790  cp ../work/flexgen-power/dnp3_interface/master_test/include/*.h include
+  791  cp ../work/flexgen-power/dnp3_interface/master_test/config/*.json config
+  792  cp ../work/flexgen-power/dnp3_interface/master_test/scripts/*.sh scripts
+  793  cp ../work/flexgen-power/dnp3_interface/master_test/doc/*.txt doc
+  794  git add src/*.cpp include/*.h config/*.json scripts/*.sh doc/*.txt
+  795  git commit -m " day done"
+  796  git push
+  797  cd ../work/flexgen-power/dnp3_interface/master_test
+  798  . ./runit
+  799  cd work/flexgen-power/dnp3_interface/master_test
+  800  . ./runit
+  801  fims_listen 
+  802  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  803  nano config/hybridos_storage_master_new_base.json 
+  804  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  805  nano config/hybridos_storage_master_new_base.json 
+  806  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  807  nano config/hybridos_storage_master_new_base.json 
+  808  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  809  nano config/hybridos_storage_master_new_base.json 
+  810  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  811  nano config/hybridos_storage_master_new_base.json 
+  812  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  813  git pull && make clean all
+  814  build/release/dnp3_master config/hybridos_storage_master_new_base.json 
+  815  cd work/flexgen-power/dnp3_interface/master_test
+  816  , ./runit 
+  817  . ./runit 
+  818  git pull && make clean all
+  819  ls doc
+  820  git add doc/alerts.txt 
+  821  git commit -m " added alerts"
+  822  git push
+  823  git pull && make clean all
+  824  fims_server &
+  825  fims_listen
+  826  git pull && make clean all
+  827  fims_listen -s /events
+  828  git pull && make clean all
+  829  sh scripts/hybridos_echo_both.sh 
+  830  more config/hybridos_storage_outstation_uri.json 
+  831  fims_listen
+  832  cd work/flexgen-power/dnp3_interface/master_test
+  833  . ./runit
+  834  fims_listen -s /NON_events
+  835  git pull && make clean all
+  836  cd 
+  837  cd dnp3_interface/
+  838  cp ../work/flexgen-power/dnp3_interface/master_test/src/*.cpp src
+  839  cp ../work/flexgen-power/dnp3_interface/master_test/include/*.h include
+  840  cp ../work/flexgen-power/dnp3_interface/master_test/doc/*.txt doc
+  841  cp ../work/flexgen-power/dnp3_interface/master_test/config/*.json config
+  842  git add src/*.cpp include/*.h doc/*.txt config/*.json
+  843  git commit -m " doc update"
+  844  git push
+  845  fims_send -m pub -u /interfaces/hybridos/alarm_status_flag 1
+  846  fims_send -m pub -u /interfaces/hybridos/alarm_status_flag 2
+  847  fims_send -m pub -u /interfaces/hybridos/alarm_status_flag 21
+  848  fims_send -m pub -u /interfaces/hybridos/alarm_status_flag 22
+  849  fims_send -m pub -u /interfaces/hybridos/alarm_status_flag 23
+  850  fims_send -m pub -u /interfaces/hybridos/alarm_status_flag 25
+  851  fims_send -m pub -u /interfaces/hybridos/alarm_status_flag 26
+  852  fims_send -m pub -u /interfaces/hybridos/alarm_status_flag 27
+  853  fims_send -m pub -u /interfaces/hybridos '{"alarm_status_flag": 27, "alarm_status_flag":28}'
+  854  fims_send -m pub -u /interfaces/hybridos/alarm_status_flag 27
+  855  fims_send -m pub -u /interfaces/hybridos '{"alarm_status_flag": 29}'
+  856  fims_send -m pub -u /interfaces/hybridos '{"alarm_status_flag": 27, "alarm_status_flag":28}'
+  857  fims_send -m pub -u /interfaces/hybridos '{"alarm_status_flag": 27, "present_disable_flag":28}'
+  858  fims_send -m pub -u /interfaces/hybridos '{"alarm_status_flag": 27.234, "present_disable_flag":28}'
+  859  fims_send -m pub -u /interfaces/hybridos '{"alarm_status_flag": 28.234, "present_disable_flag":28}'
+  860  fims_send -m pub -u /interfaces/hybridos '{"alarm_status_flag": 128.234, "present_disable_flag":28}'
+  861  fims_send -m pub -u /interfaces/hybridos '{"alarm_status_flag": 1289.234, "present_disable_flag":28}'
+  862  cp ../work/flexgen-power/dnp3_interface/master_test/config/*.json config
+  863  cp ../work/flexgen-power/dnp3_interface/master_test/doc/*.txt doc
+  864  cp ../work/flexgen-power/dnp3_interface/master_test/include/*.h include
+  865  cp ../work/flexgen-power/dnp3_interface/master_test/src/*.cpp src
+  866  cp ../work/flexgen-power/dnp3_interface/master_test/scripts/*.sh scripts/
+  867  git add src/*.cpp include/*.h doc/*.txt config/*.json scripts/*.sh
+  868  git commit -m " reduced debug"
+  869  git push
+  870  cd work/flexgen-power/dnp3_interface/master_test
+  871  . ./runit 
+  872  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  873  nano config/hybridos_storage_outstation_uri.json 
+  874  grep Group config/*.json
+  875  nano config/hybridos_storage_outstation_uri.json 
+  876  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  877  nano config/hybridos_storage_outstation_uri.json 
+  878  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  879  nano config/hybridos_storage_outstation_uri.json 
+  880  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  881  grep Group config/*.json
+  882  nano config/hybridos_storage_outstation_uri.json 
+  883  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  884  more config/hybridos_storage_outstation_uri.json 
+  885  build/release/dnp3_outstation config/hybridos_storage_outstation_uri.json 
+  886  cd fims/
+  887  git branch
+  888  git branch -a
+  889  git pull
+  890  git checkout bugfix/aes_review
+  891  git ststus
+  892  git status
+  893  cd ../dnp3_interface/
+  894  git pull
+  895  ls ../work
+  896  ls
+  897  ls ../
+  898  c rsync_phil rsync_pooli
+  899  cp rsync_phil rsync_pool1
+  900  ssh phil@phil
+  901  sh rsync_pool1
+  902  nano rsync_pool1
+  903  sh rsync_pool1
+  904  gcc -v
+  905  ls 
+  906  cd dnp3_interface/
+  907  git pull
+  908  mv doc/dnp3_libs.txt doc/dnp3_libs_save.txt 
+  909  git pull
+  910  ls doc/buildgcc.txt 
+  911  more doc/buildgcc.txt 
+  912  cd ../work/
+  913  sh ../dnp3_interface/doc/buildgcc.txt 
+  914  cp ../dnp3_interface/doc/buildgcc.txt ../dnp3_interface/doc/buildgcc4.txt 
+  915  nano ../dnp3_interface/doc/buildgcc4.txt 
+  916  sh ../dnp3_interface/doc/buildgcc4.txt 
+  917  ls work/
+  918  ls work/cmake
+  919  ls work/cmake2
+  920  cmake -v
+  921  cmake --version
+  922  ls work/cmake2
+  923  ls work/cmake
+  924  ls work/cmake2
+  925  cd  work/cmake2
+  926  tar cvzf cmake-3.17.2-Linux-x86_64.tar.gz cmake-3.17.2-Linux-x86_64
+  927  ls
+  928  pwd
+  929  ls /usr/bin
+  930  ls /usr/bin/g++
+  931  /usr/bin/g++ -v
+  932  /usr/local/bin/g++ -v
+  933  cd ../
+  934  ls scripts/
+  935  cd scripts/
+  936  sh git_status.sh 
+  937  git pull
+  938  sh git_status.sh 
+  939  git branch
+  940  git checkout dev
+  941  git pull
+  942  sh git_status.sh 
+  943  nano repos.txt
+  944  ./git_checkout.sh -h
+  945  ls
+  946  cp repos.txt repo.txt
+  947  ./git_checkout.sh -d . -f repo.txt
+  948  ./git_checkout.sh -f -d .  repo.txt
+  949  more repo.txt
+  950  nano repo.txt
+  951  ./git_checkout.sh -f -d .  repo.txt
+  952  ls
+  953  ./git_status.sh 
+  954  more README.md 
+  955  which g++
+  956  echo $PATH
+  957  export PATH=/usr/bin:$PATH
+  958  which g++
+  959  g++ -v
+  960  ./hybridos_build.sh 
+  961  rm /usr/local/lib/libfims.so 
+  962  sudo rm /usr/local/lib/libfims.so 
+  963  ./hybridos_build.sh 
+  964  cd ../config/
+  965  git branch
+  966  git status
+  967  ls ../scripts/repo.txt 
+  968  cat ../scripts/repo.txt 
+  969  git branch -a
+  970  git checkout t10/master
+  971  git checkout tx10/master
+  972  git pull
+  973  ls
+  974  cd ../
+  975  cd scripts/
+  976  ./git_status.sh -h
+  977  ./git_status.sh -e -d .
+  978  ./hybridos_config.sh /home/vagrant/config/standalone_storage/
+  979  which g++
+  980  ./hybridos_build.sh 
+  981  ./firewalld_setup.sh 
+  982  ./hybridos_run.sh --twins
+  983  ./hybridos_run.sh --twinsv
+  984  /usr/local/bin/metrics/ /usr/local/etc/config/metrics/
+  985  /usr/local/bin/metrics/metrics /usr/local/etc/config/metrics/
+  986  /usr/local/bin/fims/fims_server
+  987  /usr/local/bin/metrics/metrics /usr/local/etc/config/metrics/
+  988  /usr/local/bin/fims/fims_listener
+  989  /usr/local/bin/fims/fims_listen
+  990  /usr/local/bin/fims/fims_server 
+  991  bg
+  992  /usr/local/bin/fims/fims_listen
+  993  /usr/local/bin/metrics/metrics /usr/local/etc/config/metrics/
+  994  ./hybridos_run.sh --twinsxx
+  995  ./hybridos_run.sh --twins
+  996  ./hybridos_run.sh --twinsv
+  997  ./hybridos_run.sh --twins
+  998  ./hybridos_run.sh --twinsv
+  999  ip a
+ 1000  cd fims/
+ 1001  git pull
+ 1002  git branch
+ 1003  git checkout bugfix/aes_review 
+ 1004  git pull
+ 1005  code
+ 1006  git pull
+ 1007  git add src/libfims.cpp 
+ 1008  git commit -m "merge"
+ 1009  git add src/gofims.cpp 
+ 1010  git add include/gofims.h 
+ 1011  git add Makefile
+ 1012  git commit -m "merge"
+ 1013  git pull
+ 1014  gitk
+ 1015  git status
+ 1016  git add src/gofims.cpp 
+ 1017  git commit -m " merg 2"
+ 1018  gitk
+ 1019  git remote -v
+ 1020  cd ../
+ 1021  git clone git@github.com:flexgen-power/ess_controller.git
+ 1022  git branch
+ 1023  cd ess_controller/
+ 1024  git branch
+ 1025  git branch -a
+ 1026  git checkout features/initial_spec 
+ 1027  git pull
+ 1028  make
+ 1029  gcc -v
+ 1030  /usr/bin/gcc -v
+ 1031  cd ../fims
+ 1032  export PATH=/usr/bin:$PATH
+ 1033  mske clean
+ 1034  make clean
+ 1035  make
+ 1036  sudo make install
+ 1037  cd ../ess_controller/
+ 1038  make clean
+ 1039  make
+ 1040  ./build/release/ess_controller config
+ 1041  /usr/local/bin/fims/fims_server &
+ 1042  ./build/release/ess_controller config
+ 1043  git pull
+ 1044  cd simulator/
+ 1045  python3 test_display.py 
+ 1046  sudo yum install python3-tk
+ 1047  sudo yum install python3
+ 1048  sudo yum install python3_tk
+ 1049  sudo yum install python3-matplotlib
+ 1050  yum install python35u-tkinter
+ 1051  sudo yum install python35u-tkinter
+ 1052  sudo yum install python35u-matplotlib
+ 1053  sudo yum install python3-matplotlib
+ 1054  sudo yum install python-matplotlib
+ 1055  python3 test_display.py 
+ 1056  python test_display.py 
+ 1057  sudo yum install python-tkinter
+ 1058  nano get_mathplot
+ 1059  sudo yum install python35u-matplotlib
+ 1060  sudo yum install python3-tkinter
+ 1061  python3 test_display.py 
+ 1062  sudo yum install python3-matplotlib
+ 1063  sudo yum update
+ 1064  python3 test_display.py 
+ 1065  which python3
+ 1066  python3 
+ 1067  sudo yum install python36-matplotlib
+ 1068  sudo yum install python36u-matplotlib
+ 1069  sudo yum install python36-tkinter
+ 1070  ls
+ 1071  more get_mathplot 
+ 1072  wget https://downloads.sourceforge.net/project/matplotlib/matplotlib/matplotlib-1.4.3/matplotlib-1.4.3.tar.gz
+ 1073  tar xvf matplotlib-1.4.3.tar.gz
+ 1074  cd matplotlib-1.4.3/
+ 1075  more INSTALL 
+ 1076  sudo yum install python-matplotlib
+ 1077  more INSTALL 
+ 1078  more ../get_mathplot 
+ 1079  python3 setup.py build
+ 1080  python setup.py build
+ 1081  sudo yum install libpng
+ 1082  sudo yum install libpng-dev
+ 1083  sudo yum install libpng-devel
+ 1084  python setup.py build
+ 1085  sudo yum install freetype-devel
+ 1086  python setup.py build
+ 1087  sudo yum install python-devel
+ 1088  python setup.py build
+ 1089  more ../get_mathplot 
+ 1090  sudo python setup.py insall
+ 1091  sudo python setup.py install
+ 1092  pip install mock
+ 1093  sudo yum install python-pip
+ 1094  pip install mock
+ 1095  sudo python setup.py install
+ 1096  cd ../
+ 1097  python test_display.py 
+ 1098  sudo yum install python-tkinter
+ 1099  python3 test_display.py 
+ 1100  python3 -pip -U install matplotlib 
+ 1101  python3 -m pip install -U matplotlib 
+ 1102  sudo python3 -m pip install -U matplotlib 
+ 1103  python3 test_display.py 
+ 1104  history > his_sim.txt
+ 1105  history > hist_sim.txt

@@ -1,0 +1,139 @@
+
+Testing ComsCheck with 4 bms units Thu Oct 15 17:06:26 EDT 2020
+
+
+Test 0 - Check reload state on  ess/bms CheckComms... should all be 2
+getting /reload/ess:CheckComms    {"value":2}
+getting /reload/bms_1:CheckAssetComms    {"value":2}
+getting /reload/bms_2:CheckAssetComms    {"value":2}
+getting /reload/bms_3:CheckAssetComms    {"value":2}
+getting /reload/bms_4:CheckAssetComms    {"value":2}
+
+Test 1 - Check state of  lastTimestamp values...
+Expectations: They should all be  Empty
+
+setting /config/ess:testCommsTimeout    {"testCommsTimeout":3.5}
+getting /config/ess:testCommsTimeout 1    {"value":3.5}
+getting /config/ess:testCommsTimeout 2    {"value":3.5}
+setting /config/ess:maxCommsTimeout    {"maxCommsTimeout":4.5}
+getting /config/ess:maxCommsTimeout 1    {"value":4.5}
+getting /config/ess:maxCommsTimeout 2    {"value":4.5}
+getting /status/bms_1:lastTimestamp   {"value":"No VAL"}
+getting /status/bms_2:lastTimestamp   {"value":"No VAL"}
+getting /status/bms_3:lastTimestamp   {"value":"No VAL"}
+getting /status/bms_4:lastTimestamp   {"value":"No VAL"}
+getting /status/ess:AllCommsStatus      {"value":"No VAL"}
+
+Test 2 - Change TimeStamp in each bms unit and check state...
+Expectations: All bms_units will update lastTimestamp indicating a change in  Time Stamp Values.
+
+setting /components/bms_1:Timestamp    {"Timestamp":"test2 value for bms_1"}
+setting /components/bms_2:Timestamp    {"Timestamp":"test2 value for bms_2"}
+setting /components/bms_3:Timestamp    {"Timestamp":"test2 value for bms_3"}
+setting /components/bms_4:Timestamp    {"Timestamp":"test2 value for bms_4"}
+sleep 0.2
+getting /status/bms_1:lastTimestamp  {"value":"No VAL"}
+getting /status/bms_2:lastTimestamp  {"value":"No VAL"}
+getting /status/bms_3:lastTimestamp  {"value":"No VAL"}
+getting /status/bms_4:lastTimestamp  {"value":"No VAL"}
+getting /status/bms_1:CommsState      {"value":"Comms Init"}
+getting /status/bms_2:CommsState      {"value":"Comms Init"}
+getting /status/bms_3:CommsState      {"value":"Comms Init"}
+getting /status/bms_4:CommsState      {"value":"Comms Init"}
+getting /status/bms:CommsState        {"value":"Comms OK"}
+getting /status/ess:AllCommsStatus      {"value":"No VAL"}
+sleep 1
+Test 3 - Change TimeStamp in each bms unit and check state again ...
+Expectations: All bms_units will update lastTimestamp indicating a change in  Time Stamp Values.
+
+setting /components/bms_1:Timestamp            {"Timestamp":"test3 for bms_1"}
+setting /components/bms_2:Timestamp            {"Timestamp":"test3 for bms_2"}
+setting /components/bms_3:Timestamp            {"Timestamp":"test3 for bms_3"}
+setting /components/bms_4:Timestamp            {"Timestamp":"test3 for bms_4"}
+sleep 0.2
+getting /status/bms_1:lastTimestamp          {"value":"test2 value for bms_1"}
+getting /status/bms_2:lastTimestamp          {"value":"test2 value for bms_2"}
+getting /status/bms_3:lastTimestamp          {"value":"test2 value for bms_3"}
+getting /status/bms_4:lastTimestamp          {"value":"test2 value for bms_4"}
+getting /status/bms:CommsState               {"value":"Comms OK"}
+getting /status/bms_1:CommsState             {"value":"Comms OK"}
+getting /status/bms_2:CommsState             {"value":"Comms OK"}
+getting /status/bms_3:CommsState             {"value":"Comms OK"}
+getting /status/bms_4:CommsState             {"value":"Comms OK"}
+
+Test 3.1 - Change TimeStamp in each bms unit  and check state again ...
+Expectations: All bms_units will update lastTimestamp indicating a change in  Time Stamp Values.
+
+setting /components/bms_1:Timestamp           {"Timestamp":"test3.1 for bms_1"}
+setting /components/bms_2:Timestamp           {"Timestamp":"test3.1 for bms_2"}
+setting /components/bms_3:Timestamp           {"Timestamp":"test3.1 for bms_3"}
+setting /components/bms_4:Timestamp           {"Timestamp":"test3.1 for bms_4"}
+sleep 0.2
+getting /status/bms_1:lastTimestamp         {"value":"test3 for bms_1"}
+getting /status/bms_2:lastTimestamp         {"value":"test3.1 for bms_2"}
+getting /status/bms_3:lastTimestamp         {"value":"test3.1 for bms_3"}
+getting /status/bms_4:lastTimestamp         {"value":"test3.1 for bms_4"}
+getting /status/bms:CommsState              {"value":"Comms OK"}
+getting /status/bms_1:CommsState            {"value":"Comms OK"}
+getting /status/bms_2:CommsState            {"value":"Comms OK"}
+getting /status/bms_3:CommsState            {"value":"Comms OK"}
+getting /status/bms_4:CommsState            {"value":"Comms OK"}
+sleep 3
+
+Test 3.2 - Change TimeStamp in each bms unit except bms_2 and check state again ...
+Expectations: All bms_units will except bms_2 update lastTimestamp indicating a change in  Time Stamp Values.
+
+setting /components/bms_1:Timestamp       {"Timestamp":"test 3.2 value for bms_1"}
+setting /components/bms_3:Timestamp     {"Timestamp":"test 3.2 value for bms_3"}
+setting /components/bms_4:Timestamp     {"Timestamp":"test 3.2 value for bms_4"}
+sleep 0.2
+getting /status/bms_1:lastTimestamp    {"value":"test3.1 for bms_1"}
+getting /status/bms_2:lastTimestamp    {"value":"test3.1 for bms_2"}
+getting /status/bms_3:lastTimestamp    {"value":"test3.1 for bms_3"}
+getting /status/bms_4:lastTimestamp    {"value":"test3.1 for bms_4"}
+getting /status/bms:CommsState         {"value":"Comms OK"}
+getting /status/bms_1:CommsState       {"value":"Comms OK"}
+getting /status/bms_2:CommsState       {"value":"Comms OK"}
+getting /status/bms_3:CommsState       {"value":"Comms OK"}
+getting /status/bms_4:CommsState       {"value":"Comms OK"}
+sleep 1
+
+Test 4 - Change active current setpoint in /controls/ess and check state...
+CommsState should indicate a failure in bms_2.
+
+setting /components/bms_1:Timestamp      {"Timestamp":"test 4 value for bms_1"}
+setting /components/bms_3:Timestamp        {"Timestamp":"test 4 value for bms_3"}
+setting /components/bms_4:Timestamp         {"Timestamp":"test 4 value for bms_4"}
+sleep 0.2
+getting /status/bms_1:lastTimestamp  {"value":"test 4 value for bms_1"}
+getting /status/bms_2:lastTimestamp  {"value":"test3.1 for bms_2"}
+getting /status/bms_3:lastTimestamp  {"value":"test 4 value for bms_3"}
+getting /status/bms_4:lastTimestamp  {"value":"test 4 value for bms_4"}
+getting /status/bms:CommsState       {"value":"Comms Errors Detected"}
+getting /status/bms_1:CommsState     {"value":"Comms OK"}
+getting /status/bms_2:CommsState     {"value":"Comms Time Out"}
+getting /status/bms_3:CommsState      {"value":"Comms OK"}
+getting /status/bms_4:CommsState      {"value":"Comms OK"}
+ sleep 1
+Test 5 - Check State then change TimeStamp in each bms unit, wait 0.2 then check state again ...
+Expectations: All bms_units will online with changed Time Stamp Values.
+
+getting /status/bms_1:lastTimestamp  {"value":"test 4 value for bms_1"}
+getting /status/bms_2:lastTimestamp  {"value":"test3.1 for bms_2"}
+getting /status/bms_3:lastTimestamp  {"value":"test 4 value for bms_3"}
+getting /status/bms_3:lastTimestamp  {"value":"test 4 value for bms_4"}
+setting /components/bms_1:Timestamp         {"Timestamp":"test 5 value for bms_1"}
+setting /components/bms_2:Timestamp         {"Timestamp":"test 5 value for bms_2"}
+setting /components/bms_3:Timestamp         {"Timestamp":"test 5 value for bms_3"}
+setting /components/bms_4:Timestamp         {"Timestamp":"test 5 value for bms_4"}
+sleep 0.2
+getting /status/bms_1:lastTimestamp  {"value":"test 5 value for bms_1"}
+getting /status/bms_2:lastTimestamp  {"value":"test 5 value for bms_2"}
+getting /status/bms_3:lastTimestamp  {"value":"test 5 value for bms_3"}
+getting /status/bms_4:lastTimestamp  {"value":"test 5 value for bms_4"}
+getting /status/bms_1:CommsState      {"value":"Comms OK"}
+getting /status/bms_2:CommsState      {"value":"Comms OK"}
+getting /status/bms_3:CommsState      {"value":"Comms OK"}
+getting /status/bms_4:CommsState      {"value":"Comms OK"}
+getting /status/bms:CommsState        {"value":"Comms OK"}
+getting /status/ess:AllCommsStatus      {"value":"No VAL"}

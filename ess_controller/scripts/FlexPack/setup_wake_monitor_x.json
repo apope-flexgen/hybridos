@@ -1,0 +1,35 @@
+{
+    "/schedule/wake_monitor/bms":{
+        "/components/bms_info:max_cell_voltage":     { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:min_cell_voltage":     { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:max_cell_temperature": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:min_cell_temperature": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:soc":                  { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:soh":                  { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"}
+    },
+    "/system/commands":
+        {
+            "run":{"value":"test",
+                "help": "run a schedule var",
+                "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}},
+
+            "runMon":{"value":0,
+                    "help": "load the wake monitor setup system",
+                    "ifChanged":false,"enabled":true, "actions":{"onSet":[{"func":[{"func":"RunMonitor","aname":"ess"}]}]}}
+        
+    },
+
+    "/components/bms_info":{"max_cell_voltage": {"value":26.4}},
+
+    "/xxsystem/commands":{"runMon": {"value":22,"aname":"bms","monitor":"wake_monitor","debug":true}},
+
+    "/xxcomponents/bms_info":{"max_cell_voltage": {"value":28.4}},
+    
+    "/xxxcomponents/bms_info":{"max_cell_voltage": {"value":22.3}},
+    
+    "/xxxsystem/commands":{"runMon": {"value":24,"aname":"bms","monitor":"wake_monitor","debug":true}}
+    
+    
+}
+
+

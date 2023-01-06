@@ -1,0 +1,267 @@
+# defs for 300.1_test_actions.sh
+# p. wilshire
+# 10/22/2021
+#
+# the test script dots in this to run the config set up by 601.0
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+# basic script to test the following actions.
+#"bitfield"
+#"bitset"
+#"enum"
+#"remap"
+#"func"
+#"limits"
+
+FimsDir=/usr/local/bin/
+
+descs=()
+acts=()
+resps=()
+
+#######################################################################
+descs[0]="bitfield actions "
+#######################################################################
+
+
+idx=1
+descs[idx]=" >> setup test actions  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/test/bms '
+{
+    "test_bitfield":{ 
+        "value":0,
+        "debug":1,
+        "actions": {
+            "onSet": [{
+                "bitfield": 
+                    [
+                        {"bit": 0,"uri": "/controls/pcs:oncmd_test","outValue": true},
+                        {"bit": 1,"uri": "/system/controls:kacclosecmd_test","outValue": true},
+                        {"bit": 2,"uri": "/controls/pcs:oncmd_test","outValue": false},
+                        {"bit": 3,"uri": "/system/controls:kacclosecmd_test","outValue": false},
+                        {"bit": 4,"uri": "/system/controls:offcmd_test","outValue": true},
+                        {"bit": 5,"uri": "/system/controls:kacopencmd_test","outValue": true},
+                        {"bit": 6,"uri": "/system/controls:kacopencmd_test","outValue": false}
+                    ]
+                
+            }]
+        }
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+#################################
+descs[idx]=" >> send 0 to test_bitfield  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/test/bms '
+{ "test_bitfield":{ "value":0,"debug":1}}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################################
+descs[idx]=" >> send 1 to test_bitfield  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/test/bms '
+{ "test_bitfield":{ "value":1,"debug":1}}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#################################
+descs[idx]=" >> check pcs oncmd  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$  -u /ess/full/controls/pcs/oncmd_test 
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"oncmd_test":{"value":true}}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################################
+descs[idx]=" >> send 4 to test_bitfield  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/test/bms '
+{ "test_bitfield":{ "value":4,"debug":1}}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################################
+descs[idx]=" >> check pcs oncmd  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$  -u /ess/full/controls/pcs/oncmd_test 
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"oncmd_test":{"value":false}}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################################
+descs[idx]=" >> send 32 to test_bitfield  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/test/bms '
+{ "test_bitfield":{ "value":32,"debug":1}}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################################
+descs[idx]=" >> check kacopencmd  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$  -u /ess/full/system/controls/kacopencmd_test 
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"kacopencmd_test":{"value":true}}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################################
+descs[idx]=" >> send 064 to test_bitfield  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/test/bms '
+{ "test_bitfield":{ "value":64,"debug":1}}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################################
+descs[idx]=" >> check kacopencmd  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$  -u /ess/full/system/controls/kacopencmd_test 
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"kacopencmd_test":{"value":false}}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#################################
+descs[idx]=" >> check system controls "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$  -u /ess/naked/system/controls | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "/system/controls": {
+    "kacopencmd_test": false
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################################
+descs[idx]=" >> send 0 to test_bitfield  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/test/bms '
+{ "test_bitfield":{ "value":0,"debug":1}}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/system/controls/kacopencmd_test`
+
+#!/bin/sh
+ 
+# first test "bitfield"
+#     "inValue", &inValue);
+#            "uri", &uri);
+#            "var", &var);
+#            "outValue", &cjov);
+# 
+#response 
+#exp_resp='{"test_bitfield":{"value":0,"debug":1,"actions":{"onSet":[{"bitfield":[{"bit":0,"outValue":true,"uri":"/controls/pcs:oncmd_test"},{"bit":1,"outValue":true,"uri":"/system/controls:kacclosecmd_test"},{"bit":2,"outValue":false,"uri":"/controls/pcs:oncmd_test"},{"bit":3,"outValue":false,"uri":"/system/controls:kacclosecmd_test"},{"bit":4,"outValue":true,"uri":"/system/controls:offcmd_test"},{"bit":5,"outValue":true,"uri":"/system/controls:kacopencmd_test"},{"bit":6,"outValue":true,"uri":"/system/controls:kacopencmd_test"}]}]}}}'
+#exp_resp='{"test_bitfield":{"value":0,"debug":1,"actions":{"onSet":[{"bitfield":[{"bit":0,"outValue":true,"uri":"/controls/pcs:oncmd_test"},{"bit":1,"outValue":true,"uri":"/system/controls:kacclosecmd_test"},{"bit":2,"outValue":false,"uri":"/controls/pcs:oncmd_test"},{"bit":3,"outValue":false,"uri":"/system/controls:kacclosecmd_test"},{"bit":4,"outValue":true,"uri":"/system/controls:offcmd_test"},{"bit":5,"outValue":true,"uri":"/system/controls:kacopencmd_test"},{"bit":6,"outValue":false,"uri":"/system/controls:kacopencmd_test"}]}]}}}'
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/test/ess/test_bitfield`
+
+#check_resp "setup action" $resp $exp_resp
+
+
+#/usr/local/bin/fims/fims_send -m set  -u /ess/test/ess '
+##{ "test_bitfield":{ "value":0,"debug":1}}'
+
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 1
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/controls/pcs/oncmd_test`
+
+#exp_resp='{"oncmd_test":{"value":true}}'
+
+#$check_resp "send value 1" $resp $exp_resp
+
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 4
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/controls/pcs/oncmd_test`
+#exp_resp='{"oncmd_test":{"value":false}}'
+
+#check_resp "send value 4" $resp $exp_resp
+
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 32
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/system/controls/kacopencmd_test`
+#exp_resp='{"kacopencmd_test":{"value":true}}'
+
+#check_resp "send value 32" $resp $exp_resp
+
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 64
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/system/controls/kacopencmd_test`
+#exp_resp='{"kacopencmd_test":{"value":false}}'
+
+#check_resp "send value 64" $resp $exp_resp
+
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 33
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/system/controls/kacopencmd_test`
+#exp_resp='{"kacopencmd_test":{"value":true}}'
+#check_resp "send value 33.1" $resp $exp_resp
+
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/controls/pcs/oncmd_test`
+#exp_resp='{"oncmd_test":{"value":true}}'
+#check_resp "send value 33.2" $resp $exp_resp
+
+#echo "$0 tests passed" >> tests.out
+
+

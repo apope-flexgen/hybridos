@@ -1,0 +1,594 @@
+    1  sudo hostname bigphil
+    2  xclock
+    3  code
+    4  sudo hostname
+    5  sudo hostname bigphil
+    6  sudo visudo 
+    7  more /etc/hostname
+    8  sudo nano /etc/hostname
+    9  sudo apt-get install xrdp
+   10  ssh
+   11  ls ~/.ssh
+   12  jenkins.config 
+   13  sido visudo
+   14  sudo visudo
+   15  sudo ls
+   16  cat /proc/devices
+   17  dmesg
+   18  dmesg | more
+   19  dmesg
+   20  ifconfig
+   21  sudo apt install net-tools
+   22  sudo apt install ssh=serverd
+   23  sudo apt install ssh-serverd
+   24  sudo apt install ssh-server
+   25  sudo apt install sshd
+   26  sudo apt install openssh-server
+   27  sudo apt install xrdp
+   28  sudo apt install openssh-client
+   29  sudo systemctl enable ssh
+   30  ifconfig
+   31  ifconfig | more
+   32  top
+   33  code
+   34  ls /tmp
+   35  ls -a /tmp
+   36  cp -a /tmp/.ssh/* ~/.ssh 
+   37  ls -l ~/.ssh
+   38  sudo nano /etc/xrdp/xrdp.ini
+   39  sudo ufw allow 3389/tcp
+   40  sudo nano /etc/polkit-1/localauthority.conf.d/02-allow-colord.conf
+   41  sudo /etc/init.d/xrdp restart
+   42  ps ax
+   43  who
+   44  who -u
+   45  kill 1365
+   46  who -u
+   47  htop
+   48  free
+   49  ls ~/Downloads/
+   50  file ~/Downloads/VMware-Workstation-Full-15.5.6-16341506.x86_64.bundle 
+   51  sh  ~/Downloads/VMware-Workstation-Full-15.5.6-16341506.x86_64.bundle 
+   52  sudo sh  ~/Downloads/VMware-Workstation-Full-15.5.6-16341506.x86_64.bundle 
+   53  vmware
+   54  bg
+   55  mkdir -p work/VMS
+   56  sudo apt install libaio
+   57  sudo apt install libaio1
+   58  vmware
+   59  sudo apt install pollkit
+   60  sudo apt install polkit
+   61  systemctl status polkit
+   62  systemctl restart polkit
+   63  systemctl status  polkit.service
+   64  systemctl restart polkit
+   65  sudo systemctl restart polkit
+   66  systemctl status  polkit.service
+   67  vmware
+   68  vmware ==help
+   69  bg
+   70  more /etc/hosts
+   71  suo nano  /etc/hosts
+   72  sudo nano  /etc/hosts
+   73  vmware ==help
+   74  vmware --help
+   75  vmware 
+   76  systemctl status  polkit.service
+   77  sudo systemctl restart polkit
+   78  systemctl status  polkit.service
+   79  ls man polkit
+   80  ls /lib/systemd/system/polkit.service 
+   81  more /lib/systemd/system/polkit.service 
+   82  man 8 polkit
+   83  sudo vmware
+   84  sudo systemctl restart polkit
+   85  systemctl status  polkit.service
+   86  history
+   87  ls /etc/polkit-1/localauthority.d/
+   88  ls /etc/polkit-1/localauthority.conf.d/
+   89  more  /etc/polkit-1/localauthority.conf.d/02-allow-colord.conf 
+   90  sudo mv  /etc/polkit-1/localauthority.conf.d/02-allow-colord.conf /home/phil/work/ 
+   91  sudo systemctl restart polkit
+   92  vmware
+   93  # start pkttyagent for this shell, so pkexec is able to ask for authentication
+   94  _SHPID=$BASHPID
+   95  pkttyagent -p "$_SHPID" &
+   96  _PKPID=$!
+   97  vmware
+   98  systemctl status  polkit.service
+   99  nano foo
+  100  sudo  apt install policykit-1-gnome
+  101  vmware
+  102  sudo visudo
+  103  vmware
+  104  ls /etc/polkit-1/localauthority.conf.d/
+  105  more /etc/polkit-1/localauthority.conf.d/50-localauthority.conf 
+  106  more /etc/polkit-1/localauthority.conf.d/51-ubuntu-admin.conf 
+  107  mangroupadd
+  108  man groupadd
+  109  man groupmod
+  110  man groupadd
+  111  man groupmod 
+  112  usermod -a -D admin phil
+  113  usermod -a -G admin phil
+  114  more /etc/polkit-1/localauthority.conf.d/51-ubuntu-admin.conf 
+  115  groups
+  116  usermod -a -G sudo phil
+  117  sudo usermod -a -G sudo phil
+  118  vmware
+  119  systemctl status  polkit.service
+  120  man polkit
+  121  vmware --console
+  122  vmware --help
+  123  vmware --help-all
+  124  vmware -v
+  125  ls work/
+  126  sudo apt-get install virtualbox
+  127  virtualbox 
+  128  bg
+  129  ping 192.168.122.1
+  130  ping 192.168.1.110
+  131  dmesg
+  132  ls /dev
+  133  sudo fdidk /dev/sdd
+  134  sudo fdisk /dev/sdd
+  135  sudo fdisk /dev/sdb
+  136  ls /dev
+  137  sudo gparted /dev/sda
+  138  sudo yum install gparted
+  139  sudo apt install gparted
+  140  sudo gparted /dev/sda
+  141  gparted /dev/sda
+  142  gparted /dev/sdg1
+  143  gparted /dev/sdd
+  144  gparted /dev/sdb
+  145  gparted /dev/sdc
+  146  gparted /dev/sdd
+  147  dmesg
+  148  gparted /dev/sdd
+  149  gparted /dev/sdc
+  150  gparted /dev/sdb
+  151  gparted /dev/sdd
+  152  ls /dev/sd*
+  153  dmesg
+  154  virtualbox 
+  155  htop
+  156  sudo apt install htop
+  157  htop
+  158  ls ~/Downloads/
+  159  su root
+  160  sudo su root
+  161  vmware &
+  162  cd /usr/share/themes/Adwaita/gtk-3.0/
+  163  ls
+  164  cd ../
+  165  ls gtk-2.0/
+  166  cd gtk-2.0/
+  167  cd apps
+  168  ls
+  169  ls assets/
+  170  sudo apt install adwaita-icon-theme-full
+  171  ip a
+  172  cd 
+  173  ls vmware/
+  174  ls vmware/centos7-03/
+  175  more vmware/centos7-03/vmware.log 
+  176  ifconig
+  177  sudo ifconig
+  178  sudo ip a
+  179  vmwa
+  180  vmware
+  181  vmware-netcfg 
+  182  vmware-networks
+  183  vmware-networks --help
+  184  vmware-networks --status
+  185  vmware-networks --start
+  186  vmware-license-check.sh 
+  187  vmware-license-check.sh  -h
+  188  vmware-netcfg 
+  189  vmware
+  190  bg
+  191  ps ax | grep firefox
+  192  pkill firefox
+  193  ps ax | grep firefox
+  194  firefox
+  195  vmware
+  196  bg
+  197  ip a
+  198  sudo vmware
+  199  vmware
+  200  ls vmware/
+  201  ls -al vmware/
+  202  more /tmp/vmware-phil/vmware-ui-36468.log 
+  203  cd  /tmp/vmware-phil
+  204  vmware
+  205  bg
+  206  ls /var/lib/vmware/Shared\ VMs/cenos7-v01/
+  207  cd  /var/lib/vmware/Shared\ VMs/cenos7-v01/
+  208  ip a
+  209  vmware
+  210  bg
+  211  sudo /bin/vmware-collect-host-support-info 
+  212  dmesg
+  213  sudo gparted /dev/sdc
+  214  gparted /dev/sdc
+  215  gparted /dev/sdd
+  216  ls /dev/sd*
+  217  gparted /dev/sdc
+  218  dmesg
+  219  gparted /dev/sdc
+  220  gparted /dev/sdb
+  221  gparted /dev/sdd
+  222  ping phil
+  223  cd
+  224  ls VirtualBox\ VMs/
+  225  ls VirtualBox\ VMs/centos7-vb01
+  226  ls -l VirtualBox\ VMs/centos7-vb01
+  227  du -h  VirtualBox\ VMs/centos7-vb01
+  228  du -h  VirtualBox\ VMs/centos7-vb02
+  229  du -h  VirtualBox\ VMs/centos7-vb03
+  230  ssh phil@phil
+  231  ls
+  232  ls ~/
+  233  du -h ~/
+  234  cd ../
+  235  cd phil
+  236  nano rsync_phil
+  237  cat rsync_phil
+  238  sh  rsync_phil
+  239  noup sh  rsync_phil > /tmp/rsync 2>&1
+  240  nohup sh  rsync_phil > /tmp/rsync 2>&1
+  241  bg
+  242  tail /tmp/rsync 
+  243  tail -f /tmp/rsync 
+  244  sudo shutdown -h now
+  245  dmesg
+  246  ls /dev/sd*
+  247  gparted /dev/sdd
+  248  ps ax
+  249  df -h
+  250  sudo reboot 
+  251  pwd
+  252  ls
+  253  virtualbox 
+  254  bg
+  255  ip a
+  256  virtualbox 
+  257  virtualbox &
+  258  ls
+  259  cd work/
+  260  ls
+  261  virtualbox 
+  262  bg
+  263  virtualbox &
+  264  fg
+  265  bg
+  266  virtualbox --help
+  267  virtualboxvm --help
+  268  virtualbox
+  269  bg
+  270  df -h
+  271  virtualbox&
+  272  sudo shutdown -h now
+  273  sudo eject
+  274  dmesg
+  275  sudo reboot
+  276  dmesg
+  277  fdisk -l
+  278  sudo fdisk -l
+  279  sudo reboot 
+  280  df -h
+  281  virtualbox 
+  282  vboxmanage --hrlp
+  283  vboxmanage --help
+  284  virtualbox --help
+  285  vboxmanage --help
+  286  vboxmanage list
+  287  vboxmanage list vms
+  288  vboxmanage start help
+  289  vboxmanage startvm help
+  290  vboxmanage list vms
+  291  vboxmanage startvm centos7-vb02 -type headless&
+  292  fg
+  293  vboxmanage startvm centos7-vb02 --type headless
+  294  vboxmanage startvm centos7-vb03 --type headless
+  295  vboxmanage startvm centos7-vb04 --type headless
+  296  vboxmanage startvm "centos7-vb04 " --type headless
+  297  vboxmanage help 
+  298  vboxmanage list vms
+  299  vboxmanage startvm "centos7-vb01_1" 
+  300  virtualbox
+  301  bg
+  302  vboxmanage stopvm "centos7-vb01_1" 
+  303  vboxmanage help
+  304  virtualbox list
+  305  vboxmanage list vms
+  306  vboxmanage list help
+  307  vboxmanage list -l vms
+  308  vboxmanage list vms
+  309  vboxmanage controlvm help
+  310  vboxmanage help
+  311  vboxmanage metrics help
+  312  vboxmanage metrics list *
+  313  vboxmanage list
+  314  vboxmanage list vms
+  315  vboxmanage debugvm centos7-vb01_1 info
+  316  vboxmanage debugvm centos7-vb01_1 log
+  317  vboxmanage debugvm c
+  318  vboxmanage strtvm centos7-vb01_1
+  319  vboxmanage startvm centos7-vb01_1
+  320  vboxmanage controlvm centos7-vb01_1 help
+  321  vboxmanage controlvm centos7-vb01_1 powerof
+  322  vboxmanage controlvm centos7-vb01_1 poweroff
+  323  vboxmanage controlvm centos7-vb01_1 poweron
+  324  vboxmanage startvm centos7-vb01_1 
+  325  vboxmanage startvm centos7-vb01_1 help
+  326  vboxmanage startvm help
+  327  vboxmanage startvm --help
+  328  vboxmanage startvm centos7-vb01_1 --type headless
+  329  vboxmanage list vms
+  330  ping centos7-vb02
+  331  ping centos7-vb03
+  332  ping centos7-vb04
+  333  ps ax
+  334  ping centos7-vb01_1
+  335  ping centos7-vb04
+  336  vboxmanage list
+  337  vboxmanage list runningvms
+  338  vboxmanage help
+  339  vboxmanage list runningvms
+  340  vboxmanage debugvm centos7-vb01_1 info
+  341  vboxmanage debugvm centos7-vb01_1 status
+  342  vboxmanage debugvm centos7-vb01_1 log
+  343  vboxmanage debugvm centos7-vb01_1 info help
+  344  nano showipssh
+  345  sh showipssh
+  346  nano showipssh
+  347  sh showipssh
+  348  nano showipssh
+  349  sh showipssh
+  350  sudo sh showipssh
+  351  nano showipssh
+  352  sudo sh showipssh
+  353  sh showipssh
+  354  VBoxManage guestproperty get <centos7-vb02> "/VirtualBox/GuestInfo/Net/0/V4/IP"
+  355  VBoxManage guestproperty get centos7-vb02"/VirtualBox/GuestInfo/Net/0/V4/IP"
+  356  VBoxManage guestproperty get centos7-vb02 "/VirtualBox/GuestInfo/Net/0/V4/IP"
+  357  VBoxManage guestproperty get centos7-vb02 --verbose
+  358  VBoxManage guestproperty get centos7-vb02 /VirtualBox --verbose
+  359  virtualbox 
+  360  vboxmanage list runningvms
+  361  ping centos7-vb01_1
+  362  ping 192.168.1.241
+  363  ssh centos@192.168.1.241
+  364  ssh centos@192.168.1.234
+  365  ssh centos@192.168.1.179
+  366  ssh centos@192.168.1.136
+  367  ssh centos@192.168.1.24
+  368  ssh centos@192.168.1.234
+  369  telnet 192.168.1.234
+  370  telnet 192.168.1.241
+  371  ssh centos@192.168.1.241
+  372  virtualbox 
+  373  ssh centos@192.168.1.12
+  374  virtualbox
+  375  history | grep vbox
+  376  vboxmanage startvm centos7-vb01_1 --type headless
+  377  ping 192.168.1.110
+  378  vboxmanage list runningvms
+  379  ping 192.168.1.110
+  380  ip a
+  381  telnet 192.168.1.126 5009
+  382  ls
+  383  more driveProbs.txt 
+  384  nano vm_ips.txt
+  385  cat vm_ips.txt
+  386  dmesg
+  387  sudo gparted /dev/sdf
+  388  gparted /dev/sdf
+  389  sudo fdisk /dev/sdf
+  390  dmesg
+  391  ls
+  392  more vm_ips.txt 
+  393  ssh flexgen@192.168.1.101
+  394  ssh -X flexgen@192.168.1.101
+  395  ssh -X root@192.168.1.101
+  396  ssh -X flexgen@192.168.1.101
+  397  ssh -X root@192.168.1.101
+  398  virtualbox
+  399  ssh -X centos@centos7-vb02
+  400  dmesg
+  401  gparded /dev/sdf
+  402  gparted /dev/sdf
+  403  top
+  404  dmesg
+  405  sudo fdisk /dev/sdf
+  406  dmesg
+  407  sudo fdisk /dev/sdf
+  408  dmesg
+  409  sudo fdisk /dev/sdf
+  410  dmesg
+  411  fdisk /dev/sdf
+  412  dmesg
+  413  dmesg  | more
+  414  fdisk /def/sdf
+  415  sudo fdisk /def/sdf
+  416  mount
+  417  dmesg
+  418  df -h
+  419  mount
+  420  mount | grep phil
+  421  mount | grep media
+  422  mount 
+  423  dmesg
+  424  ping pi4001-01\
+  425  ping pi4001-01
+  426  ping 192.168.1.101
+  427  ping 192.168.1.1
+  428  ifconfig
+  429  ping 192.168.1.234
+  430  ifconfig
+  431  ping 192.168.1.1
+  432  ifconfig
+  433  virtualbox 
+  434  vboxmanage list vms
+  435  ping 192.168.1.110
+  436  sudo mkdir /mnt/sde5
+  437  sudo mount /dev/sde5 /mnt/sde5
+  438  ls /mnt/sde5
+  439  history
+  440  nano startvms.sh
+  441  df -h
+  442  ping 192.168.1.101
+  443  ssh centos@192.168.1.110
+  444  nano driveProbs.txt
+  445  ip a
+  446  nano startvms.sh
+  447  ls
+  448  mire vm_ips.txt 
+  449  more vm_ips.txt 
+  450  sh startvms.sh 
+  451  vboxmanage list vms
+  452  vboxmanage list runningvms
+  453  ls
+  454  ore vm_ips.txt 
+  455  more vm_ips.txt 
+  456  xclock
+  457  ls
+  458  cd work
+  459  ls
+  460  mkdir pyhon
+  461  mkdir python
+  462  cd python
+  463  mkdir sims
+  464  cd sims
+  465  nano disp.py
+  466  python3 disp.py
+  467  python3 -m pip insall matplotlib
+  468  sudo apt-get install python-pip
+  469  sudo apt-get update
+  470  sudo apt install python3.8 python3-tk
+  471  sudo apt install matplotlib
+  472  python3 -m pip install matplotlib
+  473  sudo apt-get install python3-matplotlib
+  474  python3 disp.py
+  475  nano pible.py
+  476  python3  pible.py
+  477  sudo apt-get install code
+  478  wgt https://code.visualstudio.com/Download
+  479  wget https://code.visualstudio.com/Download
+  480  more Download 
+  481  sudo snap install --classic code
+  482  code
+  483  code ../sim
+  484  python3  pible.py
+  485  sudo apt-get install python3-pip
+  486  python3 bmsSim.py 
+  487  history > sim_hist.txt
+  488  more sim_hist.txt 
+  489  cd ../../
+  490  cd ../
+  491  cd ess_controller/
+  492  cd ../fims
+  493  make clean
+  494  make
+  495  sudo apt-get install cjson
+  496  sudo apt-get install cJSON
+  497  cd ../
+  498  git clone https://github.com/DaveGamble/cJSON.git
+  499  sudo apt install git
+  500  sudo apt install gitk
+  501  sudo apt install gitkraken
+  502  git clone https://github.com/DaveGamble/cJSON.git
+  503  cd cJSON/
+  504  ls
+  505  make
+  506  make install
+  507  sudo make install
+  508  cd ../fims/
+  509  make
+  510  sudo apt install openssh-dev
+  511  sudo apt install openssh-devel
+  512  sudo apt install openssh
+  513  sudo apt install openssl_dev
+  514  sudo apt install openssl-dev
+  515  sudo apt install openssh-devel
+  516  sudo apt install libssh-devel
+  517  sudo apt install libssl-devel
+  518  sudo apt install libopenssl-devel
+  519  sudo apt install libopenssh-devel
+  520  sudo apt install openssh-devel
+  521  sudo apt install openssh
+  522  sudo apt install openssl-dev
+  523  sudo apt install openssl_dev
+  524  sudo apt install openssh_client
+  525  sudo apt-get install openssh_client
+  526  sudo apt-get update
+  527  sudo apt-get install openssh-server
+  528  sudo apt-get install openssh-client
+  529  sudo apt-get install libssl-dev
+  530  make
+  531  nano Makefile 
+  532  make
+  533  nano Makefile 
+  534  make
+  535  nano Makefile 
+  536  make
+  537  sudo make install
+  538  cd ../ess_controller/
+  539  make clean
+  540  make
+  541  git status
+  542  git rm t
+  543  rm t
+  544  git add scripts/set_freq.sh 
+  545  git commit -m "update test"
+  546  git config --global user.email "pwilshire@flexgen.com"
+  547  git config --global user.name "Phil S Wilshire"
+  548  git commit -m "update test"
+  549  git push
+  550  code ../ess_controller
+  551  make
+  552  more ../fims/Makefile 
+  553  nano Makefile 
+  554  make
+  555  /usr/local/bin/fims/fims_server &
+  556  build/release/ess_controller config
+  557  g++ -v
+  558  /bin/python3 /home/phil/.vscode/extensions/ms-python.python-2020.7.96456/pythonFiles/pyvsc-run-isolated.py pip install -U pylint --user
+  559  code ess_controller/
+  560  cd ess_controller/
+  561  make
+  562  build/release/ess_controller config
+  563  gdb build/release/ess_controller config
+  564  make
+  565  build/release/ess_controller config
+  566  gdb build/release/ess_controller config
+  567  make
+  568  build/release/ess_controller config
+  569  gdb build/release/ess_controller config
+  570  make
+  571  build/release/ess_controller config
+  572  gdb build/release/ess_controller config
+  573  make
+  574  build/release/ess_controller config
+  575  git add include/*h src/*.cpp 
+  576  git add Makefile 
+  577  git commit -m " reverted to object pointers but still keep the maps for parsing"
+  578  git ush
+  579  git push
+  580  ls include/*.h
+  581  make
+  582  make clean
+  583  make
+  584  build/release/ess_controller config
+  585  git add include/*h src/*.cpp 
+  586  git commit -m "rename fimsMap to fimsVarMap"
+  587  git push
+  588  /usr/local/bin/fims/fims_server &
+  589  cd ess_controller/
+  590  ls 
+  591  cd simulator/
+  592  ls
+  593  history
+  594  history > sim_hist2

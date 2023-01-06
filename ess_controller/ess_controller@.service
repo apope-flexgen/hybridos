@@ -1,0 +1,13 @@
+[Unit]
+Description=Ess Controller - manage Ess systems
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/ess_controller -f %I
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

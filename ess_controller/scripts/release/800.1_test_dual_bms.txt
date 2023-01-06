@@ -1,0 +1,468 @@
+# defs for 800.1_test_dual_bms.sh
+# p. wilshire
+# 03/15/2022
+#
+# the test script dots in this to run the config set up by 800.1_test_dual_bms.sh
+echo  "the ess controller must be running    ess_controller -n ess -c ess_init1 -x"
+
+echo "the dual bms system must be loaded  sh scripts/dual_bms/load_bms_1.sh"
+
+#
+#
+# test "/assets/ess/ess_1":{
+#  "name": "ESS Summary",
+#    "version":                          {"name": "Version",                  "value": "version", "enabled": true },
+#    "estop_status":                     {"name": "E-Stop Status",            "value": "Off",     "enabled": true },
+#    "disconnect_switch_status":         {"name": "Disconnect Switch Status", "value": "Off","enabled": true},
+#    "door_latch_status":                {"name": "Door Latch Status",        "value": "Off","enabled": true},
+##    "surge_arrester_status":            {"name": "Surge Arrester Status",    "value": "Off","enabled": true},
+#    "fire_alarm_status":                {"name": "Fire Alarm Status",        "value": "Off","enabled": true},
+#    "fuse_monitoring_status":           {"name": "Fuse Monitoring Status",   "value": "Off","enabled": true},
+#    "max_charge_power":                 {"name": "Max Charge Power",         "value": 0,"enabled": false},
+#    "max_discharge_power":              {"name": "Max Discharge Power",      "value": 0,"enabled": false},
+#    "active_power":                     {"name": "Active Power",             "value": 2.5,"enabled": false},
+#    "active_power_setpoint":            {"name": "Active Power Setpoint",    "value": 3.0999999046325684,"enabled": false},
+
+#    "alarms":                           {"name": "Alarms",                   "value": 0,"options": [],"enabled": true},
+#    "soc":                              {"name": "State of Charge",          "value": 76.55913543701172,"enabled": false},
+#    "soh":                              {"name": "State of Health",          "value": 65.7,"enabled": false},
+#    "status":                           {"name": "Status",                   "value": "Status","enabled": true}
+#  },
+  
+#
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+descs=()
+acts=()
+resps=()
+act_res=()
+
+#$1 shift 
+#$2 shiftnum
+#$3 add num
+#xxx=addMask 4  1   1
+
+
+#xxx=`addMask 4  1   1`
+#echo " resut 4 1 1 addmask = $xxx"
+#enable
+#inValue
+#inAv
+#var 
+#func
+
+# setvar $1 
+# value  $2
+# sleep $3
+# desc $4{ "value": "/assets/ess/summary:version",                        "vlink": "/status/ess:build"      
+# setAsset  /status/ess/build   newversion   
+function setAsset()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u $1 '{
+      "value": "$2"
+}' 
+    | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": "$2"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setAssetVal()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u $1 '{
+      "value": $2
+}' 
+    | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+# getAsset  /assets/ess/summary/version   newversion   
+
+function getAsset()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+"$2"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+# getAsset  /assets/ess/summary/version   newversion   
+
+function getAssettoVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+EOF
+)
+  echo "resp = $act_res[$idx]"
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function getAssetVal()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+$2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function runTest()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/controls '
+  {
+      "sendDb":{
+        "value": 3456, 
+        "enabled":true
+      }
+  }' 
+    | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": 3456,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+getAvar ()
+{
+  sys_xxx=`fims_send -m get -r /$$ -u $2`
+  echo "$sys_xxx"
+}
+
+#######################################################################
+descs[0]="test dual_bms"
+#######################################################################
+#return 0
+# /components/gpio:Disconnect Switch"
+sys_build=$(getAvar sys_build /ess/status/ess/build)
+echo "sys_build version [$sys_build]"
+diss_switch=$(getAvar sys_build /ess/components/gpio/DisconnectSwitch)
+echo "diss_switch  [$diss_switch]"
+
+idx=1
+
+getAssetVal  /ess/assets/ess/summary/version   $sys_build   0.1 " >> get sys_build"
+
+getAssetVal  /ess/assets/ess/ess_1/version   $sys_build   0.1 " >> get  ess_1 sys_build"
+
+getAsset  /ess/assets/ess/ess_1/estop_status   Normal   0.1 " >> get  ess_1 estop_status Normal"
+
+setAssetVal  /ess/components/gpio/EStop   true   0.1 " >> set  /components/gpio "
+getAsset  /ess/assets/ess/ess_1/estop_status   Fault   0.1 " >> get  ess_1 estop/EStop_status"
+
+setAssetVal  /ess/components/gpio/EStop   false   0.1 " >> set  /components/gpio"
+getAsset  /ess/assets/ess/ess_1/estop_status   Normal   0.1 " >> get  ess_1 estop_status"
+
+#   DisconnectSwitch
+#{ "inValue": true, "uri": "/site/ess_ls:xems_alarms[1]", "outValue": true},
+#{ "inValue": true, "uri": "/assets/ess/summary:disconnect_switch_status", "outValue": "Fault"},
+#{ "inValue": true, "uri": "/assets/ess/ess_1:disconnect_switch_status", "outValue": "Fault"},
+#{ "inValue": false, "uri": "/assets/ess/summary:disconnect_switch_status", "outValue": "Normal"},
+#{ "inValue": false, "uri": "/assets/ess/ess_1:disconnect_switch_status", "outValue": "Normal"}
+
+setAssetVal  /ess/site/ess_ls/xems_alarms   0   0.1 " >> clear /ess/site/ess_ls:xems_alarms"
+setAssetVal  /ess/components/gpio/DisconnectSwitch          true   0.1  "  >> set  /components/gpio/DisconnectSwith true"
+getAsset  /ess/assets/ess/ess_1/disconnect_switch_status     Fault  0.1 "                >> get  ess_1 disconnect_switch_status Fault"
+getAsset  /ess/assets/ess/summary/disconnect_switch_status   Fault  0.1 "                >> get  ess disconnect_switch_status Fault"
+getAssetVal  /ess/site/ess_ls/xems_alarms      2                    0.1                  " >> get /ess/site/ess_ls:xems_alarms 2"
+
+setAssetVal  /ess/components/gpio/DisconnectSwitch   false   0.1         " >> set  /components/gpio/DisconnectSwith false"
+getAsset  /ess/assets/ess/ess_1/disconnect_switch_status     Normal  0.1 "                >> get  ess_1 disconnect_switch_status Normal"
+getAsset  /ess/assets/ess/summary/disconnect_switch_status   Normal  0.1 "                >> get  ess disconnect_switch_status Normal"
+getAssetVal  /ess/site/ess_ls/xems_alarms      2                    0.1  "                >> get /ess/site/ess_ls:xems_alarms still 2"
+
+## check ifChanged true 
+setAssetVal  /ess/components/gpio/DisconnectSwitch@ifChanged   true   0.1         " >> set  /components/gpio/DisconnectSwith false"
+
+setAsset  /ess/assets/ess/ess_1/disconnect_switch_status     Fault  0.1 "                >> set  ess_1 disconnect_switch_status Fault"
+setAssetVal  /ess/components/gpio/DisconnectSwitch           false   0.1         " >> set  /components/gpio/DisconnectSwith false"
+getAsset  /ess/assets/ess/ess_1/disconnect_switch_status     Fault  0.1 "                >> get  ess_1 disconnect_switch_status Fault"
+
+setAssetVal  /ess/components/gpio/DisconnectSwitch@ifChanged false   0.1         " >> set  /components/gpio/DisconnectSwith@ifChanged false"
+
+setAsset  /ess/assets/ess/ess_1/disconnect_switch_status     Fault  0.1 "                >> set  ess_1 disconnect_switch_status Fault"
+setAssetVal  /ess/components/gpio/DisconnectSwitch           false   0.1         " >> set  /components/gpio/DisconnectSwith false"
+getAsset  /ess/assets/ess/ess_1/disconnect_switch_status     Normal  0.1 "                >> get  ess_1 disconnect_switch_status Fault"
+
+# check the auto setting of ifChanged to true
+setAsset  /ess/assets/ess/ess_1/disconnect_switch_status     Fault  0.1  "                >> set  ess_1 disconnect_switch_status Fault"
+setAssetVal  /ess/components/gpio/DisconnectSwitch           false   0.1 " >> set  /components/gpio/DisconnectSwith false shoul be ignored"
+getAsset  /ess/assets/ess/ess_1/disconnect_switch_status     Fault  0.1  "                >> get  ess_1 disconnect_switch_status Fault"
+
+#   DoorLatch
+#{ "inValue": true, "uri": "/site/ess_ls:ems_alarms[2]", "outValue": true},
+#{ "inValue": true, "uri": "/assets/ess/summary:door_latch_status", "outValue": "Fault"},
+#{ "inValue": true, "uri": "/assets/ess/ess_1:door_latch_status", "outValue": "Fault"},
+#{ "inValue": false, "uri": "/assets/ess/summary:door_latch_status", "outValue": "Normal"},
+#{ "inValue": false, "uri": "/assets/ess/ess_1:door_latch_status", "outValue": "Normal"}
+
+setAssetVal  /ess/site/ess_ls/ems_alarms   0   0.1 " >> clear /ess/site/ess_ls:ems_alarms"
+setAssetVal  /ess/components/gpio/DoorLatch                  true   0.1  "  >> set  /components/gpio/DoorLatch true"
+getAsset  /ess/assets/ess/ess_1/door_latch_status     Fault  0.1 "                >> get  ess_1 door_latch_status Fault"
+getAsset  /ess/assets/ess/summary/door_latch_status   Fault  0.1 "                >> get  ess door_latch_status Fault"
+getAssetVal  /ess/site/ess_ls/ems_alarms      4                    0.1                  " >> get /ess/site/ess_ls:ems_alarms 4"
+
+setAssetVal  /ess/components/gpio/DoorLatch   false   0.1         " >> set  /components/gpio/DoorLatch false"
+getAsset  /ess/assets/ess/ess_1/door_latch_status     Normal  0.1 "                >> get  ess_1 door_latch_status Normal"
+getAsset  /ess/assets/ess/summary/door_latch_status   Normal  0.1 "                >> get  ess door_latch_status Normal"
+getAssetVal  /ess/site/ess_ls/ems_alarms      4                    0.1  "                >> get /ess/site/ess_ls:ems_alarms still 4"
+
+## check ifChanged true 
+setAssetVal  /ess/components/gpio/DoorLatch@ifChanged   true   0.1        " >> set  /components/gpio/DoorLatch false"
+
+setAsset  /ess/assets/ess/ess_1/door_latch_status     Fault  0.1 "                >> set  ess_1 door_latch_status Fault"
+setAssetVal  /ess/components/gpio/DoorLatch           false   0.1         " >> set  /components/gpio/DoorLatch false"
+getAsset  /ess/assets/ess/ess_1/door_latch_status     Fault  0.1 "                >> get  ess_1 door_latch_status Fault"
+
+setAssetVal  /ess/components/gpio/DoorLatch@ifChanged false   0.1         " >> set  /components/gpio/DoorLatch@ifChanged false"
+
+setAsset  /ess/assets/ess/ess_1/door_latch_status     Fault  0.1 "                >> set  ess_1 door_latch_status Fault"
+setAssetVal  /ess/components/gpio/DoorLatch           false   0.1         " >> set  /components/gpio/DoorLatch false"
+getAsset  /ess/assets/ess/ess_1/door_latch_status     Normal  0.1 "                >> get  ess_1 door_latch_status Fault"
+
+# check the auto setting of ifChanged to true
+setAsset  /ess/assets/ess/ess_1/door_latch_status     Fault  0.1  "                >> set  ess_1 door_latch_status Fault"
+setAssetVal  /ess/components/gpio/DoorLatch           false   0.1 " >> set  /components/gpio/DoorLatch false should be ignored"
+getAsset  /ess/assets/ess/ess_1/door_latch_status     Fault  0.1  "                >> get  ess_1 door_latch_status Fault"
+
+
+#SurgeArrester
+
+
+setAssetVal  /ess/site/ess_ls/xems_alarms   0   0.1 " >> clear /ess/site/ess_ls:ems_alarms"
+setAssetVal  /ess/components/gpio/SurgeArrester                  true   0.1  "  >> set  /components/gpio/SurgeArrester true"
+getAsset  /ess/assets/ess/ess_1/surge_arrester_status     Fault  0.1 "                >> get  ess_1 surge_arrester_status Fault"
+getAsset  /ess/assets/ess/summary/surge_arrester_status   Fault  0.1 "                >> get  ess surge_arrester_status Fault"
+getAssetVal  /ess/site/ess_ls/xems_alarms      8                    0.1                  " >> get /ess/site/ess_ls:ems_alarms 4"
+
+setAssetVal  /ess/components/gpio/SurgeArrester   false   0.1         " >> set  /components/gpio/SurgeArrester false"
+getAsset  /ess/assets/ess/ess_1/surge_arrester_status     Normal  0.1 "                >> get  ess_1 surge_arrester_status Normal"
+getAsset  /ess/assets/ess/summary/surge_arrester_status   Normal  0.1 "                >> get  ess surge_arrester_status Normal"
+getAssetVal  /ess/site/ess_ls/xems_alarms      8                    0.1  "                >> get /ess/site/ess_ls:ems_alarms still 4"
+
+## check ifChanged true 
+setAssetVal  /ess/components/gpio/SurgeArrester@ifChanged   true   0.1        " >> set  /components/gpio/SurgeArrester false"
+
+setAsset  /ess/assets/ess/ess_1/surge_arrester_status     Fault  0.1 "                >> set  ess_1 surge_arrester_status Fault"
+setAssetVal  /ess/components/gpio/SurgeArrester           false   0.1         " >> set  /components/gpio/SurgeArrester false"
+getAsset  /ess/assets/ess/ess_1/surge_arrester_status     Fault  0.1 "                >> get  ess_1 surge_arrester_status Fault"
+
+setAssetVal  /ess/components/gpio/SurgeArrester@ifChanged false   0.1         " >> set  /components/gpio/SurgeArrester@ifChanged false"
+
+setAsset  /ess/assets/ess/ess_1/surge_arrester_status     Fault  0.1 "                >> set  ess_1 surge_arrester_status Fault"
+setAssetVal  /ess/components/gpio/SurgeArrester           false   0.1         " >> set  /components/gpio/SurgeArrester false"
+getAsset  /ess/assets/ess/ess_1/surge_arrester_status     Normal  0.1 "                >> get  ess_1 surge_arrester_status Fault"
+
+# check the auto setting of ifChanged to true
+setAsset  /ess/assets/ess/ess_1/surge_arrester_status     Fault  0.1  "                >> set  ess_1 surge_arrester_status Fault"
+setAssetVal  /ess/components/gpio/SurgeArrester           false   0.1 " >> set  /components/gpio/SurgeArrester false should be ignored"
+getAsset  /ess/assets/ess/ess_1/surge_arrester_status     Fault  0.1  "                >> get  ess_1 surge_arrester_status Fault"
+
+#FireAlarm
+
+
+setAssetVal  /ess/site/ess_ls/ems_alarms   0   0.1 " >> clear /ess/site/ess_ls:ems_alarms"
+setAssetVal  /ess/components/gpio/FireAlarm                  true   0.1  "  >> set  /components/gpio/FireAlarm true"
+getAsset  /ess/assets/ess/ess_1/fire_alarm_status     Fault  0.1 "                >> get  ess_1 fire_alarm_status Fault"
+getAsset  /ess/assets/ess/summary/fire_alarm_status   Fault  0.1 "                >> get  ess fire_alarm_status Fault"
+getAssetVal  /ess/site/ess_ls/ems_alarms      16                   0.1                  " >> get /ess/site/ess_ls:ems_alarms 4"
+
+setAssetVal  /ess/components/gpio/FireAlarm   false   0.1         " >> set  /components/gpio/FireAlarm false"
+getAsset  /ess/assets/ess/ess_1/fire_alarm_status     Normal  0.1 "                >> get  ess_1 fire_alarm_status Normal"
+getAsset  /ess/assets/ess/summary/fire_alarm_status   Normal  0.1 "                >> get  ess fire_alarm_status Normal"
+getAssetVal  /ess/site/ess_ls/ems_alarms      16                    0.1  "                >> get /ess/site/ess_ls:ems_alarms still 4"
+
+## check ifChanged true 
+setAssetVal  /ess/components/gpio/FireAlarm@ifChanged   true   0.1        " >> set  /components/gpio/FireAlarm false"
+
+setAsset  /ess/assets/ess/ess_1/fire_alarm_status     Fault  0.1 "                >> set  ess_1 fire_alarm_status Fault"
+setAssetVal  /ess/components/gpio/FireAlarm           false   0.1         " >> set  /components/gpio/FireAlarm false"
+getAsset  /ess/assets/ess/ess_1/fire_alarm_status     Fault  0.1 "                >> get  ess_1 fire_alarm_status Fault"
+
+setAssetVal  /ess/components/gpio/FireAlarm@ifChanged false   0.1         " >> set  /components/gpio/FireAlarm@ifChanged false"
+
+setAsset  /ess/assets/ess/ess_1/fire_alarm_status     Fault  0.1 "                >> set  ess_1 fire_alarm_status Fault"
+setAssetVal  /ess/components/gpio/FireAlarm           false   0.1         " >> set  /components/gpio/FireAlarm false"
+getAsset  /ess/assets/ess/ess_1/fire_alarm_status     Normal  0.1 "                >> get  ess_1 fire_alarm_status Fault"
+
+# check the auto setting of ifChanged to true
+setAsset  /ess/assets/ess/ess_1/fire_alarm_status     Fault  0.1  "                >> set  ess_1 fire_alarm_status Fault"
+setAssetVal  /ess/components/gpio/FireAlarm           false   0.1 " >> set  /components/gpio/FireAlarm false should be ignored"
+getAsset  /ess/assets/ess/ess_1/fire_alarm_status     Fault  0.1  "                >> get  ess_1 fire_alarm_status Fault"
+
+#FuseMonitoring
+
+
+setAssetVal  /ess/site/ess_ls/xems_alarms   0   0.1 " >> clear /ess/site/ess_ls:xems_alarms"
+setAssetVal  /ess/components/gpio/FuseMonitoring                  true   0.1  "  >> set  /components/gpio/FuseMonitoring true"
+getAsset  /ess/assets/ess/ess_1/fuse_monitoring_status     Fault  0.1 "                >> get  ess_1 fuse_monitoring_status Fault"
+getAsset  /ess/assets/ess/summary/fuse_monitoring_status   Fault  0.1 "                >> get  ess fuse_monitoring_status Fault"
+getAssetVal  /ess/site/ess_ls/xems_alarms      32                   0.1                  " >> get /ess/site/ess_ls:ems_alarms 4"
+
+setAssetVal  /ess/components/gpio/FuseMonitoring   false   0.1         " >> set  /components/gpio/FuseMonitoring false"
+getAsset  /ess/assets/ess/ess_1/fuse_monitoring_status     Normal  0.1 "                >> get  ess_1 fuse_monitoring_status Normal"
+getAsset  /ess/assets/ess/summary/fuse_monitoring_status   Normal  0.1 "                >> get  ess fuse_monitoring_status Normal"
+getAssetVal  /ess/site/ess_ls/xems_alarms      32                    0.1  "                >> get /ess/site/ess_ls:ems_alarms still 4"
+
+## check ifChanged true 
+setAssetVal  /ess/components/gpio/FuseMonitoring@ifChanged   true   0.1        " >> set  /components/gpio/FuseMonitoring false"
+
+setAsset  /ess/assets/ess/ess_1/fuse_monitoring_status     Fault  0.1 "                >> set  ess_1 fuse_monitoring_status Fault"
+setAssetVal  /ess/components/gpio/FuseMonitoring           false   0.1         " >> set  /components/gpio/FuseMonitoring false"
+getAsset  /ess/assets/ess/ess_1/fuse_monitoring_status     Fault  0.1 "                >> get  ess_1 fuse_monitoring_status Fault"
+
+setAssetVal  /ess/components/gpio/FuseMonitoring@ifChanged false   0.1         " >> set  /components/gpio/FuseMonitoring@ifChanged false"
+
+setAsset  /ess/assets/ess/ess_1/fuse_monitoring_status     Fault  0.1 "                >> set  ess_1 fuse_monitoring_status Fault"
+setAssetVal  /ess/components/gpio/FuseMonitoring           false   0.1         " >> set  /components/gpio/FuseMonitoring false"
+getAsset  /ess/assets/ess/ess_1/fuse_monitoring_status     Normal  0.1 "                >> get  ess_1 fuse_monitoring_status Fault"
+
+# check the auto setting of ifChanged to true
+setAsset  /ess/assets/ess/ess_1/fuse_monitoring_status     Fault  0.1  "                >> set  ess_1 fuse_monitoring_status Fault"
+setAssetVal  /ess/components/gpio/FuseMonitoring           false   0.1 " >> set  /components/gpio/FuseMonitoring false should be ignored"
+getAsset  /ess/assets/ess/ess_1/fuse_monitoring_status     Fault  0.1  "                >> get  ess_1 fuse_monitoring_status Fault"
+
+
+#    "max_charge_power":                 {"name": "Max Charge Power",         "value": 0,"enabled": false},
+#"max_charge_power_ess_summary":     { "value": "/assets/ess/summary:max_charge_power",               "vlink": "/status/ess:MaxESSChargePower"                          },
+setAssetVal  /ess/status/ess/MaxESSChargePower             4450   0.1        " >> set  /status/ess:MaxESSChargePower 4450"
+
+getAssetVal  /ess/assets/ess/ess_1/max_charge_power        4450   0.1        "        >> get  /assets/ess/ess_1/max_charge_power 4450"
+getAssetVal  /ess/assets/ess/summary/max_charge_power      4450   0.1        "        >> get  /assets/ess/ess_1/max_charge_power 4450"
+
+setAssetVal  /ess/status/ess/MaxESSChargePower             0   0.1        " >> set  /status/ess:MaxESSChargePower 0"
+getAssetVal  /ess/assets/ess/ess_1/max_charge_power        0   0.1        "        >> get  /assets/ess/ess_1/max_charge_power 0"
+getAssetVal  /ess/assets/ess/summary/max_charge_power      0   0.1        "        >> get  /assets/ess/ess_1/max_charge_power 0"
+
+
+#    "max_discharge_power":                 {"name": "Max Discharge Power",         "value": 0,"enabled": false},
+#"max_discharge_power_ess_summary":     { "value": "/assets/ess/summary:max_discharge_power",               "vlink": "/status/ess:MaxESSDischargePower"                          },
+setAssetVal  /ess/status/ess/MaxESSDischargePower          4450   0.1        " >> set  /status/ess:MaxESSDischargePower 4450"
+
+getAssetVal  /ess/assets/ess/ess_1/max_discharge_power     4450   0.1        "        >> get  /assets/ess/ess_1/max_discharge_power 4450"
+getAssetVal  /ess/assets/ess/summary/max_discharge_power   4450   0.1        "        >> get  /assets/ess/ess_1/max_discharge_power 4450"
+
+setAssetVal  /ess/status/ess/MaxESSDischargePower          0   0.1        " >> set  /status/ess:MaxESSDischargePower 0"
+getAssetVal  /ess/assets/ess/ess_1/max_discharge_power     0   0.1        "        >> get  /assets/ess/ess_1/max_discharge_power 0"
+getAssetVal  /ess/assets/ess/summary/max_discharge_power   0   0.1        "        >> get  /assets/ess/ess_1/max_discharge_power 0"
+
+
+
+#"active_power_ess_1_ui":            { "value": "/assets/ess/ess_1:active_power",                     "vlink": "/components/pcs_1_registers_fast:active_power"          },
+#    "active_power_ess_summary_ui":      { "value": "/assets/ess/summary:active_power",                   "vlink": "/components/pcs_1_registers_fast:active_power"          },
+
+getAssetVal  /ess/components/pcs_1_registers_fast/active_power          0   0.1        " >> get /componentspcs_1_registers_fast/active_power 0"
+
+setAssetVal  /ess/components/pcs_1_registers_fast/active_power          3344   0.1        " >> set  /status/ess:MaxESSDischargePower 4450"
+
+getAssetVal  /ess/assets/ess/ess_1/active_power     3344   0.1        "        >> get  /assets/ess/ess_1/active_power 3344"
+getAssetVal  /ess/assets/ess/summary/active_power   3344   0.1        "        >> get  /assets/ess/summary/active_power 3344"
+
+
+setAssetVal  /ess/components/pcs_1_registers_fast/active_power          0   0.1        " >> set  /status/ess:MaxESSDischargePower 4450"
+
+getAssetVal  /ess/assets/ess/ess_1/active_power     0   0.1        "        >> get  /assets/ess/ess_1/active_power 0"
+getAssetVal  /ess/assets/ess/summary/active_power   0   0.1        "        >> get  /assets/ess/summary/active_power 0"
+
+#    "active_power_setpoint_ess_1_ui":   { "value": "/assets/ess/ess_1:active_power_setpoint",            "vlink": "/controls/ess:ActivePowerSetpoint"                      },
+#    "active_power_setpoint_ess_sum_ui": { "value": "/assets/ess/summary:active_power_setpoint",          "vlink": "/controls/ess:ActivePowerSetpoint"                      },
+
+getAssetVal  /ess/controls/ess/ActivePowerSetpoint          0   0.1                  " >> get  /controls/ess:ActivePowerSetpoint" 
+
+setAssetVal  /ess/controls/ess/ActivePowerSetpoint          3344   0.1                  " >> set  /controls/ess:ActivePowerSetpoint 3344" 
+
+getAssetVal  /ess/assets/ess/ess_1/active_power_setpoint             3344   0.1        "        >> get  /assets/ess/ess_1/active_power 3344"
+getAssetVal  /ess/assets/ess/summary/active_power_setpoint           3344   0.1        "        >> get  /assets/ess/summary/active_power 3344"
+
+
+setAssetVal  /ess/controls/ess/ActivePowerSetpoint          0   0.1                  " >> set  /controls/ess:ActivePowerSetpoint 0" 
+
+getAssetVal  /ess/assets/ess/ess_1/active_power_setpoint             0   0.1        "        >> get  /assets/ess/ess_1/active_power 0"
+getAssetVal  /ess/assets/ess/summary/active_power_setpoint           0   0.1        "        >> get  /assets/ess/summary/active_power 0"
+
+
+# "soc_ess_1_ui":                     { "value": "/assets/ess/ess_1:soc",                              "vlink": "/status/bms:BMSSOC"                                     },
+#    "soc_ess_summary_ui":               { "value": "/assets/ess/summary:soc",                            "vlink": "/status/bms:BMSSOC"                                     },
+#
+
+setSSHVal /components/bms_1_info system_soc        44.5    0.1         " >> set  /components/bms_1_info system_soc   44.5"
+
+#ssh root@172.17.0.3 "fims_send -m pub  -u /components/bms_1_info '{\"system_soc\":44.5}'"
+sleep 0.2
+getAssetVal  /ess/status/bms/BMSSOC          44.5   0.1                  " >> get  /status/bms/BMSSOC     xx" 
+
+#setAssetVal  /ess/status/bms/BMSSOC         56.7   0.1                  " >> set  /status/bms/BMSSOC     56.7" 
+
+getAssetVal  /ess/status/bms/BMSSOC         44.5   0.1                  " >> get  /status/bms/BMSSOC     xx" 
+
+getAssetVal  /ess/assets/ess/ess_1/soc             44.5   0.1        "        >> get  /assets/ess/ess_1/soc 56.7"
+getAssetVal  /ess/assets/ess/summary/soc           44.5   0.1        "        >> get  /assets/ess/summary/soc 56.7"
+
+#    "soh_ess_1_ui":                     { "value": "/assets/ess/ess_1:soh",                              "vlink": "/status/bms:BMSSOH"                                     },
+#    "soh_ess_summary_ui":               { "value": "/assets/ess/summary:soh",                            "vlink": "/status/bms:BMSSOH"                                     },
+
+setSSHVal /components/bms_1_info system_soh        94.5    0.1         " >> set  /components/bms_1_info system_soh   94.5"
+
+#ssh root@172.17.0.3 "fims_send -m pub  -u /components/bms_1_info '{\"system_soh\":94.5}'"
+sleep 0.2
+
+getAssetVal  /ess/status/bms/BMSSOH          94.5   0.1                  " >> get  /status/bms/BMSSOH     xx" 
+
+
+getAssetVal  /ess/assets/ess/ess_1/soh             94.5   0.1        "        >> get  /assets/ess/ess_1/soc 94.5"
+getAssetVal  /ess/assets/ess/summary/soh           94.5   0.1        "        >> get  /assets/ess/summary/soc 94.5"
+
+return 0
+
+

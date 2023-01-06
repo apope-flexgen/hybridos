@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>FlexGen&reg Data Monitor</h2>
+<table>
+    <tr>
+        <td>   version :  1.000</td>
+        <td>   time :</td>
+        <td id = time></td>
+        <td>   count :</td>
+        <td id = count></td>
+        <td>   running :</td>
+        <td id = running></td>
+    </tr>
+</table>
+
+<button type="button" onclick="loadDoc()">Get Table</button>
+<button type="button" id="stopVal" >StopData </button>
+<button type="button" id="getVal"  >StartData</button>
+<button type="button" onclick="forceReload();">Reload Page</button>
+<button type="button" onclick="showUri();">Show Uri</button>
+<p id="tables"></p>
+
+<p id="demoid"></p>
+<p id="uriid"></p>
+
+
+<script>
+
+var runData = false;
+var loadTable = false;
+var showTime = 0;
+//var target = "192.168.114.11"
+var targdb = "brp_northfork"
+var jfile  = "js/bms_data2.js"
+var target = "192.168.112.5"
+
+var myVar = setInterval(myTimer, 250);
+
+function myTimer() {
+    showTime++;
+    if(showTime%4 == 0)
+    {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('time').innerHTML =  h + ":" + m + ":" + s;
+    }
+    if(runData) {
+        if(!loadTable) {
+            loadTable = true;
+            loadDoc();
+        }
+        document.getElementById('count').innerHTML =  showTime;
+        document.getElementById('running').innerHTML =  "Running";
+
+        getData(9);
+    }
+    else
+    {
+        document.getElementById('running').innerHTML =  "Stopped";
+    }
+}
+
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+
+function showUri() {
+    //var url = new URL("js/bms_data2.js",window.location.href);
+    var url = new URL(jfile,window.location.href);
+    alert("The URL of this page is: " + url);
+}
+
+function forceReload() {
+    window.location.replace("http://localhost/bms_data.html");
+
+    //window.location.reload(true);
+}
+ 
+document.getElementById('stopVal').onclick = function() {
+    runData = false;
+    //loadVal("sbmu2_soc",45);
+}
+
+document.getElementById('getVal').onclick = function() {
+    //getData(9);
+    runData = true;
+}
+var tList = {};
+var jsDoc;
+var tables;
+var cols;
+var rows;
+var queries;
+
+var obj, dbParam, xmlhttp, myObj, myCols, x, txt = "";
+obj = { table: "customers", limit: 20 };
+
+dbParam = JSON.stringify(obj);
+// contctors closed == /components/catl_bms_ems_r:bms_poweron 1
+// mbmu_modbus_data
+//xmlhttp = new XMLHttpRequest();
+//xmlhttp.onreadystatechange = function() {
+//  if (this.readyState == 4 && this.status == 200) {
+//    console.log(this.responseText);
+//    myObj = JSON.parse(this.responseText);
+//    console.log(myObj);
+//    console.log(myObj.results[0].series[0]);
+//    myCols = myObj.results[0].series[0];
+//    console.log(myCols);
+//    txt += "<table border='1'>"
+//    for (x in myCols) {
+//      txt += "<tr><td>" + myCols[x] + "</td></tr>";
+//    }
+//    txt += "</table>"    
+//    document.getElementById("demo").innerHTML = txt;
+//  }
+//};
+
+function loadVal(id,val) {
+   //var id = "sbmu2_temp";
+   //var val = 456;
+   document.getElementById(id).innerHTML = val;
+};
+
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      myTables(this.responseText);
+    }
+  };
+  //var url = new URL("js/bms_data2.js",window.location.href);
+  var url = new URL(jfile,window.location.href);
+  //xhttp.open("GET", "js/bms_data.js", true);
+  xhttp.open("GET", url, true);
+  xhttp.send();
+}
+
+function myTables(resp) {
+    var x,t,i,j, tname;
+    jsDoc = JSON.parse(resp);
+    queries = jsDoc.queries;
+    tables = jsDoc.tables;
+    console.log(" found tables length ");
+    console.log(tables.length);
+    var table ="";
+    for (x=0; x<tables.length; x++) {
+    // t = tables x
+        t = tables[x];
+        console.log(" found a table :" + x);
+        for(var key in t) {
+            if(t.hasOwnProperty(key)) {
+                console.log(key);
+                //                 = keys,  left of the ":"
+                // driversCounter[key] = value, right of the ":"
+                tname = key;
+            }
+        }
+
+        //console.log(table[0].keys()[0]);
+        cols = t[tname].cols;
+        rows = t[tname].rows;
+        console.log(cols);
+        console.log(rows);
+    //style="background-color:#F0F8FF"
+        sty = "background-color:#00c0c0";
+        var tbreak = "<h2>"+ tname + "</h2>";
+        table += tbreak + "<table id=" + tname + ">"; 
+        table += "<tr style=\""+ sty+"\" ><th>Data</th>";
+        for (i =0 ; i < cols.length; i++) {
+            table +="<th>"+cols[i].name+"</th>";
+        }
+        table += "</tr>";
+
+        for (j = 0; j < rows.length; j++) {
+            if (j % 2 == 0) {
+                sty = "background-color:#F0F8FF"
+            }
+            else {
+                sty = "background-color:#FFFFFF"
+            }
+            table += "<tr style=\""+ sty +"\" ><td>"+rows[j].name+"</td>";
+            for(i = 0 ; i< cols.length; i++) {
+                table += "<td id=\"" + cols[i].source +"@" + rows[j].sources[cols[i].sdef]+"\">";
+                table += i*j;
+                table += "</td>";
+                tList[cols[i].source+"@"+rows[j].sources[cols[i].sdef]] = i*j;
+            }
+            table+="</tr>";
+        
+        }
+        table += "</table>";
+    }
+    console.log("Here is the table list");
+    console.log(tList);
+    document.getElementById("tables").innerHTML = table;
+}
+
+function handleDbRequest(req) {
+    if (req.readyState == 4 && req.status == 200) {
+        console.log(req.responseText);
+        var myObj = JSON.parse(req.responseText);
+        console.log(myObj);
+        console.log(" Showing results");
+        console.log(myObj.results);
+        console.log(" Showing results[0]");
+        console.log(myObj.results[0]);
+        console.log(" Showing results[0].series");
+        if (myObj.results[0].series == undefined) {
+            console.log(" >>>results[0].series undefined ");
+            return;
+        }
+        console.log(myObj.results[0].series);
+        console.log(" Showing results[0].series.length");
+        console.log(myObj.results[0].series.length);
+        console.log(" Showing results[0].series[0]");
+        console.log(myObj.results[0].series[0]);
+        var myCols = myObj.results[0].series[0];
+        console.log(" Showing myCols columns");
+        console.log(myCols.columns);
+        console.log(" Showing myCols values");
+        console.log(myCols.values[0]);
+
+        console.log(" Showing each");
+        var mySource;
+        for(j in myCols.values) {
+            for (x in myCols.columns) {
+                if (myCols.columns[x] == "source"){
+                    mySource = myCols.values[j][x];
+                    //console.log ( "Source found:"+mySource);
+                }
+            }
+            for (x in myCols.columns) {
+                var key = mySource+"@"+myCols.columns[x];
+                //console.log(key);
+                if (key in tList) {
+                    //console.log(" found it");
+                    document.getElementById(key).innerHTML = myCols.values[j][x];
+                }                
+            }
+        }
+    }
+};
+
+// this gets the data 
+function getData(col) {
+    var data = "SELECT ";
+    for(i = 0 ; i< 1 /*cols.length*/; i++) {
+        for (j = 0; j < rows.length; j++) {
+            data+=rows[j].sources[1];
+            data += ",";
+    
+        }
+    }
+    // we also need stuff from mbmu_modbus_data  and 
+    data += "source"
+    data += " FROM sbmu_modbus_data ";
+    data += " order by time desc LIMIT 9";
+    // foo = encodeURIComponent(data);
+
+    // xmlhttp = new XMLHttpRequest();
+    // xmlhttp.open("GET", "http://192.168.112.5:8086/query?db=brp_northfork&q="+foo, true);
+    // xmlhttp.send();
+    // xmlhttp.onreadystatechange = function() {
+    //     handleDbRequest(this);        
+    // }
+    console.log(" showing queries ...");
+    for (i in queries)
+    {
+
+        var q = queries[i];
+        console.log(q);
+        console.log(q.measurement);
+        console.log(q.sources);
+        console.log(q.fields);
+        var query = "SELECT ";
+        for(j = 0 ; j< q.fields.length; j++) {
+            query+=q.fields[j];
+            query += ",";
+        }
+        query += "source  FROM ";
+        query += q.measurement;
+        query += " order by time  desc LIMIT ";
+        query += q.limit;
+        console.log(" created query ...");
+        console.log(query);
+        var fooenc = encodeURIComponent(query);
+
+        xmlhttp = new XMLHttpRequest();
+        
+        //xmlhttp.open("GET", "http://192.168.112.5:8086/query?db=brp_northfork&q="+fooenc, true);
+        xmlhttp.open("GET", "http://"+target+":8086/query?db="+targdb+"&q="+fooenc, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+            handleDbRequest(this);        
+        }
+    }
+
+};
+
+</script>
+
+
+</body>
+</html> 
+

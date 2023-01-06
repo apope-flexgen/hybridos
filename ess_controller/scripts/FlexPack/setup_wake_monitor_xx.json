@@ -1,0 +1,18 @@
+{
+    "/system/commands":{
+        "runMon": 
+            {"value":22,"aname":"bms","monitor":"wake_monitor","debug":true},
+
+        "run":
+            {    
+                "note":"this will cause runmon to be triggered every .2 secs",
+                "value":22,"uri":"/system/commands:runMon","every":0.2,"offset":0,"debug":false
+            }
+    },
+
+    "/components/bms_info":{"max_cell_voltage": {"value":22.3}},
+    
+    
+}
+
+

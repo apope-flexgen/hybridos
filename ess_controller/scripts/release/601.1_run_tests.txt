@@ -1,0 +1,218 @@
+# defs for 601.1_run_tests.sh
+# p. wilshire
+# 10/21/2021
+#
+# the test script dots in this to run the config set up by 601.0
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+
+FimsDir=/usr/local/bin/
+
+descs=()
+acts=()
+resps=()
+
+#######################################################################
+descs[0]=" >> test activating the scheduler for wake monitor and pubs "
+#######################################################################
+
+
+idx=1
+
+############################################################
+descs[idx]=" >> make sure we have the run command set up"
+############################################################
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/full/system/commands '
+{
+    "run":
+    {
+        "value":"test",
+        "help": "run a schedule var",
+        "ifChanged":false, "enabled":true, 
+        "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"run":{"value":"test","help":"run a schedule var","ifChanged":false,"enabled":true,"actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}}}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+############################################################
+descs[idx]=" >> make sure we have the runMonBms command set up"
+############################################################
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/full/control/bms '
+{   
+    "runMonBms": 
+    {
+        "value":2,"aname":"bms","monitor":"wake_monitor","debug":0,
+        "actions":
+        {
+            "onSet":[{"func":[{"func":"RunMonitor","aname":"bms"}]}]
+        }
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"runMonBms":{"value":2,"aname":"bms","monitor":"wake_monitor","debug":0,"actions":{"onSet":[{"func":[{"func":"RunMonitor","aname":"bms"}]}]}}}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+###############################################################
+descs[idx]=" >> trigger the /control/bms/runMonBms function every 0.1 secs"
+###############################################################
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -u /ess/full/system/commands/run '
+{
+    "value":0,"uri":"/control/bms:runMonBms","every":0.1,"offset":0,"debug":0
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#  schedule pubs  this could be done in the ess_control page
+###############################################################
+descs[idx]=" >> schedule ess_hs pub"
+###############################################################
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -u /ess/full/control/pubs '
+{ 
+    "pubEssHs":
+    {
+        "value":1,"table":"/site/ess_hs",
+        "enabled":true, 
+        "actions":{"onSet":[{"func":[{"func":"RunPub"}]}]}
+    }
+}'
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+###############################################################
+descs[idx]=" >> schedule ess_ls pub"
+###############################################################
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -u /ess/full/control/pubs '
+{ 
+    "pubEssLs":
+    {
+        "value":1,"table":"/site/ess_ls",
+        "enabled":true, 
+        "actions":{"onSet":[{"func":[{"func":"RunPub"}]}]}
+    }
+}'
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+##########################################################
+# now run these two pubs
+##########################################################
+
+###############################################################
+descs[idx]=" >> run  ess_ls pub"
+###############################################################
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -u /ess/full/system/commands/run '
+{ 
+    "value":1, "uri":"/control/pubs:pubSiteLs", "every":1,  "offset":0.05
+}'
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+###############################################################
+descs[idx]=" >> run  ess_hs pub"
+###############################################################
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -u /ess/full/system/commands/run '
+{ 
+    "value":1, "uri":"/control/pubs:pubSiteHs", "every":0.5,  "offset":0.06
+}'
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#${FimsDir}fims_send -m set -r /$$ -u /ess/full/system/commands/run '
+#                    {"value":22,"uri":"/control/pubs:pubEssHs","every":0.2,"offset":0,"debug":0}'
+# 1086  fims_send -m set -r /$$ -u /ess/system/commands '
+#>          {"runMonBms":{"value":4,
+#>                     "help": "load the wake monitor setup system",
+#>                     "ifChanged":false,"enabled":true,
+#>                     "actions":{"onSet":[{"func":[{"func":"RunMonitor","aname":"bms"}]}]}}
+#>    }'
+# 1088  fims_send -m set -r /$$ -u /ess/full/system/commands/runMonBms@aname '"bms"'  | jq
+# 1090  fims_send -m set -r /$$ -u /ess/full/system/commands/runMonBms@monitor '"wake_monitor"'  | jq
+
+#####
+##### this is how ess_final will schedule everything 
+#####
+
+#test99_desc="test99 ess_final for pubs  " 
+#test99_act=$(cat<<EOF
+#${FimsDir}fims_send -m set  -u /ess/full/system/final '
+#{
+# "sched_items":  {
+#            "value": true,
+#            "targfunc":"xRunSched",
+#            "amap":"ess",
+#            "note":"send each option as a uri to RunSched or not",
+#            "debug":false,
+#            "ifChanged": false,
+#            "new_options":[
+#                {"uri":"/system/commands:run", "value": {"value":1, 
+#                   {"uri":"/sched/ess:essSystemInit"}},
+#                {"uri":"/system/commands:run", "value": {"value":1, 
+#                    "uri":"/sched/ess:every100mSP1",   "every":0.1, "offset":0.01}},
+#                {"uri":"/system/commands:run", "value": {"value":1, 
+#                    "uri":"/sched/ess:every100mSP2",   "every":0.1, "offset":0.02}},
+#                {"uri":"/system/commands:run", "value": {"value":1, 
+#                    "uri":"/sched/ess:every100mSP3",   "every":0.1, "offset":0.03}},
+#                {"uri":"/system/commands:run", "value": {"value":1, 
+#                    "uri":"/sched/ess:fastPub",      "every":0.1, "offset":0.04}},
+#                {"uri":"/system/commands:run", "value": {"value":1, 
+#                    "uri":"/sched/ess:slowPub",         "every":1,   "offset":0.05},
+#                {"uri":"/system/commands:run", "value": {"value":1, 
+#                    "uri":"/control/pubs:pubSiteHs", "every":1,  "offset":0.05}}
+#            ],
+#            "actions":  {
+#                "onSet": [{
+#                    "func":     [{"func":     "SchedItemOpts", "amap":     "ess", "initDone":true }]
+#                }]
+#            }
+#        }
+#}' | jq
+##EOF
+#)
+
+#test99_resp=$(cat<<EOF
+#EOF
+#)
+
+#}  

@@ -1,0 +1,2 @@
+python -m SimpleHTTPServer 8080
+sudo -S -k firewall-cmd --zone=public --add-port=8080/tcp

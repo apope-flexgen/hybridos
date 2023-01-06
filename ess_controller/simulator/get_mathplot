@@ -1,0 +1,12 @@
+# get matplotlib
+wget https://downloads.sourceforge.net/project/matplotlib/matplotlib/matplotlib-1.4.3/matplotlib-1.4.3.tar.gz
+
+#uncompress
+tar xvzf matplotlib-1.4.3.tar.gz
+
+# open build install
+# read INSTALL file for more instructions
+cd matplotlib-1.4.3
+python setup.py build
+# actually installing needed superuser privileges
+sudo python setup.py install

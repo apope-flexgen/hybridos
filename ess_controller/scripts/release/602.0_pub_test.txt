@@ -1,0 +1,347 @@
+# defs for 602.0_pub_test.sh
+# p. wilshire
+# 12/13/2021
+#
+# the test script dots in this to test the pubs system (use ess_controller -x)
+
+
+#
+FimsDir=/usr/local/bin/
+
+descs=()
+acts=()
+resps=()
+idx=1
+
+################################################################################
+descs[0]=" >> test the setup of the pubs system "
+#################################################################################
+
+test1_desc="send in a pub definition "
+#fims_send -m set -r /$$ -u /ess/full/config/bms/Pubs '"/assets/bms/summary,/assets/bms/rack_##"' 
+test1_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/config/bms '{
+    "Pubs": {
+        "value" :"/assets/bms/summary,/assets/bms/rack_##"
+    }
+}' | jq
+EOF
+)
+
+#
+test1_resp=$(cat<<EOF
+EOF
+)
+test1_sleep="0.1" 
+
+
+descs[idx]="$test1_desc"
+acts[idx]="$test1_act"
+resps[idx]="$test1_resp"
+sleeps[idx]="$test1_sleep"
+idx=$(($idx+1))
+
+
+
+descs[idx]="# set up some summary data" 
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/full/assets/bms/summary '
+{
+  
+      "name":"Risen BMS Manager",
+      "alarms": {
+        "value": true,
+        "options":[{"value":"Some Alarm","return":2},{"value":"Another Alarm","return":1}]
+      },
+      "ChargeCapacity":{"value":1234},
+      "DischargeCapacity":{"value":1200},
+      "status":{"value":"Running"},
+      "soc":{"value":58.0},
+      "soh":{"value":100}
+  
+
+}' | jq
+EOF
+)
+# here is the response for test2
+#
+resps[idx]=$(cat<<EOF
+{
+  "name": "Risen BMS Manager",
+  "alarms": {
+    "value": true,
+    "options": [
+      {
+        "value": "Some Alarm",
+        "return": 2
+      },
+      {
+        "value": "Another Alarm",
+        "return": 1
+      }
+    ]
+  },
+  "ChargeCapacity": {
+    "value": 1234
+  },
+  "DischargeCapacity": {
+    "value": 1200
+  },
+  "status": {
+    "value": "Running"
+  },
+  "soc": {
+    "value": 58
+  },
+  "soh": {
+    "value": 100
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+descs[idx]="# set up some rack_1 data" 
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/full/assets/bms/rack_1 '
+{
+  
+      "name":"Risen BMS Rack 1",
+      "ChargeCapacity":{"value":1234},
+      "DischargeCapacity":{"value":1200},
+      "status":{"value":"Running"},
+      "soc":{"value":58.0},
+      "soh":{"value":100}
+  
+
+}' | jq
+EOF
+)
+# here is the response for rack_1
+#
+resps[idx]=$(cat<<EOF
+{
+  "name": "Risen BMS Rack 1",
+  "ChargeCapacity": {
+    "value": 1234
+  },
+  "DischargeCapacity": {
+    "value": 1200
+  },
+  "status": {
+    "value": "Running"
+  },
+  "soc": {
+    "value": 58
+  },
+  "soh": {
+    "value": 100
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+
+descs[idx]="# set up some rack_2 data" 
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/full/assets/bms/rack_2 '
+{
+  
+      "name":"Risen BMS Rack 2",
+      "ChargeCapacity":{"value":1234},
+      "DischargeCapacity":{"value":1200},
+      "status":{"value":"Running"},
+      "soc":{"value":58.0},
+      "soh":{"value":100}
+  
+
+}' | jq
+EOF
+)
+# here is the response for rack 2
+#
+resps[idx]=$(cat<<EOF
+{
+  "name": "Risen BMS Rack 2",
+  "ChargeCapacity": {
+    "value": 1234
+  },
+  "DischargeCapacity": {
+    "value": 1200
+  },
+  "status": {
+    "value": "Running"
+  },
+  "soc": {
+    "value": 58
+  },
+  "soh": {
+    "value": 100
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################### test 3 set up run control
+descs[idx]="# set up Run and Stop Commands" 
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/system/commands '
+{
+    "Run":{
+        "value":"test",
+        "help": "run a schedule var",
+        "ifChanged":false, 
+        "enabled":true, 
+        "actions":{"onSet":[{"func":[{"amap":"ess","func":"RunSched"}]}]}
+        },
+    "Stop":{
+        "value":"test",
+        "help": "stop a schedule var",
+        "ifChanged":false, 
+        "enabled":true, 
+        "actions":{"onSet":[{"func":[{"amap":"ess","func":"StopSched"}]}]}
+        }
+}' | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "Run": {
+    "value": "test",
+    "help": "run a schedule var",
+    "ifChanged": false,
+    "enabled": true,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "ess",
+              "func": "RunSched"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Stop": {
+    "value": "test",
+    "help": "stop a schedule var",
+    "ifChanged": false,
+    "enabled": true,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "ess",
+              "func": "StopSched"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#################### test set up pub control vars
+descs[idx]="# set up Control Vars for the Pubs" 
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/control/pubs '
+{
+
+    "pubUIBms":
+    {
+        "value":1,"table":"/config/bms:Pubs", "debug":true,
+        "enabled":true, 
+        "actions":{"onSet":[{"func":[{"debug":true, "amap":"ess","func":"RunPub"}]}]}
+    }
+}' | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "pubUIBms": {
+    "value": 1,
+    "table": "/config/bms:Pubs",
+    "debug": true,
+    "enabled": true,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "debug": true,
+              "amap": "ess",
+              "func": "RunPub"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#################### test set up pub control vars
+descs[idx]="# set up Control Vars for the actions" 
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/system/commands '
+{
+   "Run":
+        {
+            "value":22,"uri":"/control/pubs:pubUIBms","every":2.0, "offset":0.1, "debug":true
+        }
+}' | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "Run": {
+    "value": 22,
+    "uri": "/control/pubs:pubUIBms",
+    "every": 2,
+    "offset": 0.1,
+    "debug": true
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#################### check with fims_listen , use timeout
+descs[idx]="# listen for those pubs" 
+acts[idx]=$(cat<<EOF
+timeout 3 ${FimsDir}fims_listen -u /assets
+| grep -e summary -e rack_1 -e rack_2
+EOF
+)
+resps[idx]=$(cat<<EOF
+Uri:     /assets/bms/summary
+Uri:     /assets/bms/rack_1
+Uri:     /assets/bms/rack_2
+Uri:     /assets/bms/summary
+Uri:     /assets/bms/rack_1
+Uri:     /assets/bms/rack_2
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+

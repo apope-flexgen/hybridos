@@ -1,0 +1,309 @@
+# defs for 800.2_test_dual_bms_modbus.sh
+# p. wilshire
+# 03/15/2022
+#
+# the test script dots in this to run the config set up by 800.1_test_dual_bms.sh
+echo  "the ess controller must be running    ess_controller -n ess -c ess_init1 -x"
+
+echo "the dual bms system must be loaded  sh scripts/dual_bms/load_bms_1.sh"
+
+#
+#
+# test "/assets/ess/ess_1":{
+#  "name": "ESS Summary",
+#    "version":                          {"name": "Version",                  "value": "version", "enabled": true },
+#    "estop_status":                     {"name": "E-Stop Status",            "value": "Off",     "enabled": true },
+#    "disconnect_switch_status":         {"name": "Disconnect Switch Status", "value": "Off","enabled": true},
+#    "door_latch_status":                {"name": "Door Latch Status",        "value": "Off","enabled": true},
+##    "surge_arrester_status":            {"name": "Surge Arrester Status",    "value": "Off","enabled": true},
+#    "fire_alarm_status":                {"name": "Fire Alarm Status",        "value": "Off","enabled": true},
+#    "fuse_monitoring_status":           {"name": "Fuse Monitoring Status",   "value": "Off","enabled": true},
+#    "max_charge_power":                 {"name": "Max Charge Power",         "value": 0,"enabled": false},
+#    "max_discharge_power":              {"name": "Max Discharge Power",      "value": 0,"enabled": false},
+#    "active_power":                     {"name": "Active Power",             "value": 2.5,"enabled": false},
+#    "active_power_setpoint":            {"name": "Active Power Setpoint",    "value": 3.0999999046325684,"enabled": false},
+
+#    "alarms":                           {"name": "Alarms",                   "value": 0,"options": [],"enabled": true},
+#    "soc":                              {"name": "State of Charge",          "value": 76.55913543701172,"enabled": false},
+#    "soh":                              {"name": "State of Health",          "value": 65.7,"enabled": false},
+#    "status":                           {"name": "Status",                   "value": "Status","enabled": true}
+#  },
+  
+#
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+descs=()
+acts=()
+resps=()
+act_res=()
+
+#$1 shift 
+#$2 shiftnum
+#$3 add num
+#xxx=addMask 4  1   1
+
+
+#xxx=`addMask 4  1   1`
+#echo " resut 4 1 1 addmask = $xxx"
+#enable
+#inValue
+#inAv
+#var 
+#func
+
+# setvar $1 
+# value  $2
+# sleep $3
+# desc $4{ "value": "/assets/ess/summary:version",                        "vlink": "/status/ess:build"      
+# setAsset  /status/ess/build   newversion   
+function setAsset()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u $1 '{
+      "value": "$2"
+}' 
+    | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": "$2"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setAssetValNR()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set  -u $1 '{
+      "value": $2
+}' 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setAssetVal()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u $1 '{
+      "value": $2
+}' 
+    | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+# getAsset  /assets/ess/summary/version   newversion   
+
+function getAsset()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+"$2"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+# getAsset  /assets/ess/summary/version   newversion   
+
+function getAssettoVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+EOF
+)
+  echo "resp = $act_res[$idx]"
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function getAssetVal()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+$2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function runTest()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/controls '
+  {
+      "sendDb":{
+        "value": 3456, 
+        "enabled":true
+      }
+  }' 
+    | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": 3456,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+getAvar ()
+{
+  sys_xxx=`fims_send -m get -r /$$ -u $2`
+  echo "$sys_xxx"
+}
+
+# moved to test definitions
+#setSSHVal()
+#{
+##  descs[idx]=$5
+#
+#  acts[idx]=$(cat<<EOF
+#ssh root@172.17.0.3 "fims_send -m pub  -u $1 '{\"$2\":$3}'"
+#EOF
+#)
+#resps[idx]=$(cat<<EOF
+#EOF
+#)
+#  sleeps[idx]="$4" 
+#  idx=$(($idx+1))
+#}   
+
+#######################################################################
+descs[0]="test dual_bms risen_bms_manager_env"
+#######################################################################
+#return 0
+# /components/gpio:Disconnect Switch"
+sys_build=$(getAvar sys_build /ess/status/ess/build)
+echo "sys_build version [$sys_build]"
+diss_switch=$(getAvar sys_build /ess/components/gpio/DisconnectSwitch)
+echo "diss_switch  [$diss_switch]"
+echo "set up a modbus server on 172.10.0.3 configs/modbus_server/bms_1_modbus_server.json"
+echo " make sure ssh-copy-id has been used to set up no password ssh link to 172.17.0.3"
+echo " tests the data contained in risen_bms_manager.json and risen_bms_manager_modbus.json"
+
+getAssetpVal ()
+{
+   descs[idx]=$5
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "$2": $3,
+EOF
+)
+  sleeps[idx]="$4" 
+  idx=$(($idx+1))
+}
+
+
+testFault ()
+{
+    setSSHVal    $1                      $2     $5           1.2      " >>>>>>>>>>>  fault $4 value  $5 expect $6"
+    getAsset  /ess$4                            "$6"          0.1     "        >> get  $4   ->     $6"
+}
+testFaultVal ()
+{
+    setSSHVal    $1                      $2     $5           1.2      " >>>>>>>>>>>  fault $4 value  $5 expect $6"
+    getAssetVal  /ess$4                            $6          0.1     "        >> get  $4   ->     $6"
+}
+# Hmm { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_01_fss_alarms[0]",         "outValue": true},
+testBmsFault()
+{
+    testFault /components/bms_1_ems_running_info $1   /status/bms/BMSMaxCellVoltage    /faults/bms/$2_$3         "$4"        "$5"
+    getAsset  /ess/faults/$2/$3                            $5          0.1     "        >> get  $2/$3   ->     $5"
+    setAssetValNR  /ess/site/ess_ls/$2_fss_alarms            0          0.1     "        >> set  $2_fss_alarms   ->     $8"
+    getAssetVal  /ess/site/ess_ls/$2_fss_alarms            $8          0.1     "        >> get  $2_fss_alarms   ->     $8"
+    
+    testFault /components/bms_1_ems_running_info $1   /status/bms/BMSMaxCellVoltage    /faults/bms/$2_$3         "$6"        "$7"
+    getAsset  /ess/faults/$2/$3                            $7          0.1     "        >> get  $2/$3   ->     $7"
+    getAssetVal  /ess/site/ess_ls/$2_fss_alarms            $9          0.1     "        >> get  $2_fss_alarms   ->     $9"
+ 
+}
+
+function testBmsEnvAlarm()
+{
+
+    testBmsFault $1 $2 temp_alarm                 0  Normal 1  Triggered 0 1
+    testBmsFault $1 $2 temp_sensor_fault          0  Normal 2  Triggered 0 2
+    testBmsFault $1 $2 smoke_alarm                0  Normal 4  Triggered 0 4
+    testBmsFault $1 $2 labyrinth_pollution_fault  0  Normal 8  Triggered 0 8
+    testBmsFault $1 $2 smoke_sensor_failure       0  Normal 16 Triggered 0 16
+    testBmsFault $1 $2 fire_gas_release           0  Normal 32 Triggered 0 32
+
+
+    testBmsFault $1 $3 temp_alarm                 0  Normal 256  Triggered 0 1
+    testBmsFault $1 $3 temp_sensor_fault          0  Normal 512  Triggered 0 2
+    testBmsFault $1 $3 smoke_alarm                0  Normal 1024  Triggered 0 4
+    testBmsFault $1 $3 labyrinth_pollution_fault  0  Normal 2048  Triggered 0 8
+    testBmsFault $1 $3 smoke_sensor_failure       0  Normal 4096 Triggered 0 16
+    testBmsFault $1 $3 fire_gas_release           0  Normal 8192 Triggered 0 32
+
+}
+idx=1
+# test      modbus_uri                       modbus_item               local name                      ui name                              values  
+#                                                                                                                                 
+#test        $1                              $2            $3                              $4                                   $5       $6   
+setAssetVal  /ess/config/bms/enable               true          0.1   "  >> set enable   ->        /config/bms:enable"
+setAssetVal  /ess/config/bms/enum_opt             true          0.1   "  >> set enum_opt   ->     /config/bms:enum_opt"
+
+testBmsEnvAlarm env_alarms_1 rack_01 rack_02 
+testBmsEnvAlarm env_alarms_2 rack_03 rack_04 
+testBmsEnvAlarm env_alarms_3 rack_05 rack_06 
+testBmsEnvAlarm env_alarms_4 rack_07 rack_08 
+testBmsEnvAlarm env_alarms_5 rack_09 rack_10 
+testBmsEnvAlarm env_alarms_6 rack_11 rack_12 
+testBmsEnvAlarm env_alarms_7 rack_13 rack_14 
+testBmsEnvAlarm env_alarms_8 rack_15 rack_16 
+testBmsEnvAlarm env_alarms_9 rack_17 rack_18 
+
+
+#testBmsEnvAlarm env_alarms_9 rack_17 rack_18 
+
+return 0

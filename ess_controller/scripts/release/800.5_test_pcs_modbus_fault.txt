@@ -1,0 +1,303 @@
+# defs for 800.5_test_pcs_modbus_fault.sh
+# p. wilshire
+# 03/23/2022
+#
+# the test script dots in this to run the config set up by 800.1_test_dual_bms.sh
+echo  "the ess controller must be running    ess_controller -n ess -c ess_init1 -x"
+
+echo "the dual bms system must be loaded  sh scripts/dual_bms/load_bms_1.sh"
+
+#
+FimsDir=/usr/local/bin/
+FimsName=/ess
+TargetIp="172.17.0.3"
+LogDir=/home/build/test_results
+TestedBy="Phil Wilshire"
+
+
+
+descs=()
+acts=()
+resps=()
+act_res=()
+
+
+#setSSHListen /components/pcs_0_parameter_setting  off_grid_voltage_setpoint 10  0.1 0.1 /assets/pcs/pcs_1/voltage_command     456    456
+#getSSHListen /components/pcs_0_parameter_setting  off_grid_voltage_setpoint 456 /assets/pcs/pcs_1/voltage_command     456    456
+
+
+#testFault ()
+#{
+#    setSSHVal    $1                      $2     $5           1.2      " >>>>>>>>>>>  fault $4 value  $5 expect $6"
+#    getAsset  /ess$4                            "$6"          0.1     "        >> get  $4   ->     $6"
+#}
+
+#testFaultVal ()
+#{
+#    setSSHVal    $1                      $2     $5           1.2      " >>>>>>>>>>>  fault $4 value  $5 expect $6"
+#    getAssetVal  /ess$4                            $6          0.1     "        >> get  $4   ->     $6"
+#}
+
+# this starts a listener, sets up a local value, waits for the end of the listen and checks the remote capture ... 
+#######################################################################
+descs[0]="test dual_bms pcs_modbus_fault"
+#######################################################################
+#return 0
+
+sys_build=$(getAvar sys_build /ess/status/ess/build)
+echo "sys_build version [$sys_build]"
+
+diss_switch=$(getAvar sys_build /ess/components/gpio/DisconnectSwitch)
+echo "diss_switch  [$diss_switch]"
+
+echo "set up a modbus server on 172.10.0.3 configs/modbus_server/bms_1_modbus_server.json"
+echo " make sure ssh-copy-id has been used to set up no password ssh link to 172.17.0.3"
+echo " tests the data contained in risen_bms_manager.json and risen_bms_manager_modbus.json"
+
+idx=1
+
+# test      modbus_uri                       modbus_item               local name                      ui name                              values  
+#                                                                                                                                 
+#test        $1                              $2            $3                              $4                                   $5       $6   
+
+testFault /components/pcs_0_running_info  overall_working_mode   0       /status/pcs/OnGridChgMode       0    "N/A"      
+testFault /components/pcs_0_running_info  overall_working_mode   1       /status/pcs/OnGridChgMode       1    "Constant current"  
+getAsset /ess/status/pcs/OnGridChgModeAbbrev Current    0.1   " >>> check /status/pcs/OnGridChgModeAbbrev >>>      Current"
+
+#testFault /components/pcs_0_running_info  overall_working_mode   0       /status/pcs/OnGridChgMode       0    "N/A"      
+testFault /components/pcs_0_running_info  overall_working_mode   2       /status/pcs/OnGridChgMode       2    "Constant voltage"      
+getAsset /ess/status/pcs/OnGridChgModeAbbrev Voltage    0.1   " >>> check /status/pcs/OnGridChgModeAbbrev >>>      Voltage"
+
+#testFault /components/pcs_0_running_info  overall_working_mode   0       /status/pcs/OnGridChgMode       0    "N/A"      
+testFault /components/pcs_0_running_info  overall_working_mode   4       /status/pcs/OnGridChgMode       4    "Constant power (AC)"      
+getAsset /ess/status/pcs/OnGridChgModeAbbrev AC-Power    0.1   " >>> check /status/pcs/OnGridChgModeAbbrev >>>      AC-Power"
+
+#testFault /components/pcs_0_running_info  overall_working_mode   0       /status/pcs/OnGridChgMode       0    "N/A"      
+testFault /components/pcs_0_running_info  overall_working_mode   8       /status/pcs/OnGridChgMode     9    "Constant power (DC)"      
+getAsset /ess/status/pcs/OnGridChgModeAbbrev DC-Power    0.1   " >>> check /status/pcs/OnGridChgModeAbbrev >>>      DC-Power"
+
+testFault /components/pcs_0_running_info  overall_working_mode   512     /status/pcs/WorkMode    512    "On-grid"      
+testFault /components/pcs_0_running_info  overall_working_mode   1024     /status/pcs/WorkMode   1024    "Off-grid"      
+testFault /components/pcs_0_running_info  overall_working_mode   2048    /status/pcs/WorkMode    2048    "VSG"      
+
+
+return 0
+
+testFault /components/pcs_0_running_info  overall_fault_state  0        /faults/pcs/door_opening_protection    0    "Normal"      
+testFault /components/pcs_0_running_info  overall_fault_state  2        /faults/pcs/door_opening_protection    2    "Fault"      
+
+testFault /components/pcs_0_running_info  overall_fault_state  0        /faults/pcs/local_estop                0    "Normal"      
+testFault /components/pcs_0_running_info  overall_fault_state  4        /faults/pcs/local_estop                4    "Fault"      
+
+testFault /components/pcs_0_running_info  overall_fault_state  0        /faults/pcs/remote_estop               0    "Normal"      
+testFault /components/pcs_0_running_info  overall_fault_state  8        /faults/pcs/remote_estop               8    "Fault"      
+
+testFault /components/pcs_0_running_info  overall_fault_state   0       /faults/pcs/lv_room_smoke_sensor       0    "Normal"      
+testFault /components/pcs_0_running_info  overall_fault_state  32       /faults/pcs/lv_room_smoke_sensor      32    "Fault"      
+
+return 0
+
+
+sendGetSSH  /components/pcs_0_parameter_setting  off_grid_voltage_setpoint 456  
+getAssetVal /assets/pcs/pcs_1/voltage_command                              456    0.1   " >>> check /assets/pcs/pcs_1/voltage_command 456"
+
+sendGetSSH /components/pcs_0_parameter_setting  off_grid_frequency_setpoint 60.1   
+getAssetVal /assets/pcs/pcs_1/frequency_command                             60.1    0.1   " >>> check /assets/pcs/pcs_1/frequency_command 60.1"
+
+
+sendGetSSH /components/pcs_1_parameter_setting  start_stop    23   
+#getAssetVal /assets/pcs/pcs_1/frequency_command 60.1    0.1   " >>> check /assets/pcs/pcs_1/frequency_command 60.1"
+
+testFault /components/pcs_0_running_info  overall_fault_state 0    /faults/pcs/door_opening_protection            0    "Normal"      
+testFault /components/pcs_0_running_info  overall_fault_state 2    /faults/pcs/door_opening_protection            2    "Fault"   
+
+testFault /components/pcs_0_running_info  overall_working_state     1   /status/pcs/OverallPCSStatusResp         1    "Running"      
+getAsset /ess/status/pcs/OverallSystemState Running    0.1   " >>> check /status/pcs/OverallSystemState Running"
+
+testFault /components/pcs_0_running_info  overall_working_state     8   /status/pcs/OverallPCSStatusResp         8    "Key Stop"      
+getAsset /ess/status/pcs/OverallSystemState Off    0.1   " >>> check /status/pcs/OverallSystemState Off"
+
+testFault /components/pcs_0_running_info  overall_working_state    16   /status/pcs/OverallPCSStatusResp        16    "Standby"      
+getAsset /ess/status/pcs/OverallSystemState Ready    0.1   " >>> check /status/pcs/OverallSystemState Ready"
+
+testFault /components/pcs_0_running_info  overall_working_state    64   /status/pcs/OverallPCSStatusResp        64    "Start in process"      
+getAsset /ess/status/pcs/OverallSystemState Starting    0.1   " >>> check /status/pcs/OverallSystemState Starting"
+
+testFault /components/pcs_0_running_info  overall_working_state   512   /status/pcs/OverallPCSStatusResp       512    "Fault stop"      
+getAsset /ess/status/pcs/OverallSystemState Fault    0.1   " >>> check /status/pcs/OverallSystemState Fault"
+
+
+testFault /components/pcs_0_running_info  overall_working_state  1024   /status/pcs/OverallPCSStatusResp      1024    "Alarm running"      
+getAsset /ess/status/pcs/OverallSystemState Running    0.1   " >>> check /status/pcs/OverallSystemState Running"
+
+testFault /components/pcs_0_running_info  overall_working_state  2048   /status/pcs/OverallPCSStatusResp      2048    "Derating running"      
+getAsset /ess/status/pcs/OverallSystemState Running    0.1   " >>> check /status/pcs/OverallSystemState Running"
+
+
+testFault /components/pcs_0_running_info  overall_working_state  4096   /status/pcs/OverallPCSStatusResp      4096    "Derating running"      
+getAsset /ess/status/pcs/OverallSystemState Running    0.1   " >>> check /status/pcs/OverallSystemState Running"
+
+testFault /components/pcs_0_running_info  overall_working_state  9182   /status/pcs/OverallPCSStatusResp      9182    "Fault stop"      
+testFault /components/pcs_0_running_info  overall_working_state 32768   /status/pcs/OverallPCSStatusResp      32768   "DSP communication error" 
+
+testFault /components/pcs_0_running_info  overall_fault_state  0        /faults/pcs:door_opening_protection    0    "Normal"      
+testFault /components/pcs_0_running_info  overall_fault_state  1        /faults/pcs:door_opening_protection    1    "Fault"      
+
+
+
+testFault /components/pcs_1_running_info  node_state   0          /assets/pcs/pcs_1/dc_aux_switch_2_status     0    "Opened"      
+testFault /components/pcs_1_running_info  node_state   32         /assets/pcs/pcs_1/dc_aux_switch_2_status     32    "Closed"      
+
+return 0
+
+setAssetVal  /ess/config/pcs/enable               true          0.1   "  >> set enable     ->     /config/pcs:enable"
+setAssetVal  /ess/config/pcs/enum_opt             true          0.1   "  >> set enum_opt   ->     /config/pcs:enum_opt"
+testFault /components/pcs_1_running_info  node_state   0          /assets/pcs/pcs_1/dc_aux_switch_1_status     0    "Opened"      
+testFault /components/pcs_1_running_info  node_state   16         /assets/pcs/pcs_1/dc_aux_switch_1_status     16    "Closed"      
+
+testFault /components/pcs_1_running_info  node_state   0          /assets/pcs/pcs_1/dc_aux_switch_2_status     0    "Opened"      
+testFault /components/pcs_1_running_info  node_state   32         /assets/pcs/pcs_1/dc_aux_switch_2_status     32    "Closed"      
+
+
+testFault /components/pcs_1_running_info  charge_state   0          /status/pcs/ChargeDischargeStatus          0    "Charging"      
+testFault /components/pcs_1_running_info  charge_state   1          /status/pcs/ChargeDischargeStatus          1    "Discharging"      
+testFault /components/pcs_1_running_info  charge_state   2          /status/pcs/ChargeDischargeStatus          2    "Non-operating mode"   
+
+
+testFault /components/pcs_1_running_info  node_state   0          /assets/pcs/pcs_1/ac_switch_status          0    "Opened"      
+testFault /components/pcs_1_running_info  node_state   2          /assets/pcs/pcs_1/ac_switch_status          2    "Closed"      
+
+testFault /components/pcs_1_running_info  node_state   0          /assets/pcs/pcs_1/dc_switch_status          0    "Opened"      
+testFault /components/pcs_1_running_info  node_state   4          /assets/pcs/pcs_1/dc_switch_status          4    "Closed"      
+
+testFault /components/pcs_1_running_info  node_state   0          /assets/pcs/pcs_1/dc_fuse_status          0    "Opened"      
+testFault /components/pcs_1_running_info  node_state   8          /assets/pcs/pcs_1/dc_fuse_status           8    "Closed"      
+
+
+
+
+testFault /components/pcs_1_running_info  node_state   0          /assets/pcs/pcs_1/ac_switch_status          0    "Opened"      
+testFault /components/pcs_1_running_info  node_state   2          /assets/pcs/pcs_1/ac_switch_status          2    "Closed"      
+
+testFault /components/pcs_1_running_info  node_state   0          /assets/pcs/pcs_1/dc_switch_status          0    "Opened"      
+testFault /components/pcs_1_running_info  node_state   4          /assets/pcs/pcs_1/dc_switch_status          4    "Closed"      
+
+testFault /components/pcs_1_running_info  node_state   0          /assets/pcs/pcs_1/dc_fuse_status          0    "Opened"      
+testFault /components/pcs_1_running_info  node_state   8          /assets/pcs/pcs_1/dc_fuse_status           8    "Closed"      
+
+return 0
+
+testFault /components/pcs_1_running_info  charge_state   0          /status/pcs/ChargeDischargeStatus          0    "Charging"      
+testFault /components/pcs_1_running_info  charge_state   1          /status/pcs/ChargeDischargeStatus          1    "Discharging"      
+testFault /components/pcs_1_running_info  charge_state   2          /status/pcs/ChargeDischargeStatus          2    "Non-operating mode"   
+
+
+testFault /components/pcs_0_running_info  MV_node_state      0     /alarms/pcs/gas_relay_alarm                     0   "Normal"      
+testFault /components/pcs_0_running_info  MV_node_state      2     /alarms/pcs/gas_relay_alarm                     2   "Alarm"   
+testFault /components/pcs_0_running_info  MV_node_state      0     /alarms/pcs/oil_temp_alarm                      0   "Normal"      
+testFault /components/pcs_0_running_info  MV_node_state      4     /alarms/pcs/oil_temp_alarm                      4   "Alarm"   
+
+testFault /components/pcs_0_running_info  MV_node_state      0     /alarms/pcs/winding_temp_alarm                  0   "Normal"      
+testFault /components/pcs_0_running_info  MV_node_state      32768 /alarms/pcs/winding_temp_alarm              32768   "Alarm"   
+#return 0
+
+testFault /components/pcs_0_running_info  MV_node_state_2      0 /faults/pcs/bms_dry_contact_interface  0 "Normal"      
+testFault /components/pcs_0_running_info  MV_node_state_2      8 /faults/pcs/bms_dry_contact_interface  8 "Fault"      
+testFault /components/pcs_0_running_info  MV_node_state_2      0 /assets/pcs/pcs_1/bms_dry_contact_interface_status  0   "Normal"      
+testFault /components/pcs_0_running_info  MV_node_state_2      8 /assets/pcs/pcs_1/bms_dry_contact_interface_status  8   "Fault"      
+
+
+testFault /components/pcs_0_running_info  MV_node_state_1      0     /assets/pcs/pcs_1/hv_room_door_status           0   "Open"      
+testFault /components/pcs_0_running_info  MV_node_state_1      64    /assets/pcs/pcs_1/hv_room_door_status          64   "Close"   
+testFault /components/pcs_0_running_info  MV_node_state_1      0     /assets/pcs/pcs_1/external_estop_status         0   "Normal"   
+testFault /components/pcs_0_running_info  MV_node_state_1      2048  /assets/pcs/pcs_1/external_estop_status      2048   "Tripping" 
+testFault /components/pcs_0_running_info  MV_node_state_1      0     /assets/pcs/pcs_1/hv_room_smoke_status          0   "Normal"   
+testFault /components/pcs_0_running_info  MV_node_state_1      8192  /assets/pcs/pcs_1/hv_room_smoke_status       8192   "Tripping"   
+testFault /components/pcs_0_running_info  MV_node_state_1      0     /assets/pcs/pcs_1/hv_remote_ctrl_status         0   "Remote"   
+testFault /components/pcs_0_running_info  MV_node_state_1      16384 /assets/pcs/pcs_1/hv_remote_ctrl_status      16384   "Local"   
+
+testFault /components/pcs_1_running_info  node_state        0     /assets/pcs/pcs_1/ac_switch_status            0    "Opened"      
+testFault /components/pcs_1_running_info  node_state        2     /assets/pcs/pcs_1/ac_switch_status            2    "Closed"   
+testFault /components/pcs_1_running_info  node_state        0     /assets/pcs/pcs_1/dc_switch_status            0    "Opened"      
+testFault /components/pcs_1_running_info  node_state        4     /assets/pcs/pcs_1/dc_switch_status            4    "Closed"   
+testFault /components/pcs_1_running_info  node_state        0     /assets/pcs/pcs_1/dc_fuse_status              0    "Opened"      
+testFault /components/pcs_1_running_info  node_state        8     /assets/pcs/pcs_1/dc_fuse_status              8    "Closed"   
+testFault /components/pcs_1_running_info  node_state        0     /assets/pcs/pcs_1/dc_aux_switch_1_status      0    "Opened"      
+testFault /components/pcs_1_running_info  node_state        16    /assets/pcs/pcs_1/dc_aux_switch_1_status     16    "Closed"      
+
+testFault /components/pcs_1_running_info  node_state        0     /assets/pcs/pcs_1/dc_aux_switch_2_status      0    "Opened"      
+testFault /components/pcs_1_running_info  node_state        32    /assets/pcs/pcs_1/dc_aux_switch_2_status      32    "Closed"      
+
+testFault /components/pcs_1_running_info  alarm_running_state_2 0    /alarms/pcs/branch_circuit_board_comms_err     0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_2 1    /alarms/pcs/branch_circuit_board_comms_err     1    "Alarm"      
+
+testFault /components/pcs_1_running_info  alarm_running_state_2 0    /alarms/pcs/ac_switch_abnormal                 0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_2 2    /alarms/pcs/ac_switch_abnormal                 2    "Alarm"    
+  
+testFault /components/pcs_1_running_info  alarm_running_state_2 0    /alarms/pcs/fan_2_abnormal                     0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_2 4    /alarms/pcs/fan_2_abnormal                     4    "Alarm"   
+
+testFault /components/pcs_1_running_info  alarm_running_state_2 0    /alarms/pcs/ac_main_contactor_abnormal         0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_2 8    /alarms/pcs/ac_main_contactor_abnormal         8    "Alarm"   
+
+
+testFault /components/pcs_1_running_info  alarm_running_state_2 0    /alarms/pcs/ac_main_contactor_abnormal         0    "Normal"      
+setAssetValNR  /site/ess_ls/pcs_1_alarm_running_state             0          0.1   "  >> set 0   ->     /site/ess_ls/pcs1_alarm_running_state"
+
+testFaultVal /components/pcs_1_running_info  alarm_running_state_2 1    /site/ess_ls/pcs_1_alarm_running_state          1    2048      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_2 2    /site/ess_ls/pcs_1_alarm_running_state          2    6144     
+testFaultVal /components/pcs_1_running_info  alarm_running_state_2 4    /site/ess_ls/pcs_1_alarm_running_state          4    14336      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_2 8    /site/ess_ls/pcs_1_alarm_running_state          8    30720    
+
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0    /alarms/pcs/temp_abnormal                     0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_1 1    /alarms/pcs/temp_abnormal                     1    "Alarm"      
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0    /alarms/pcs/low_insulation_resistance         0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_1 2    /alarms/pcs/low_insulation_resistance         2    "Alarm"      
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0    /alarms/pcs/gfrt_running                      0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_1 4    /alarms/pcs/gfrt_running                      4    "Alarm"      
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0    /alarms/pcs/dc_fuse_normal                    0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_1 16   /alarms/pcs/dc_fuse_normal                     16    "Alarm"      
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0    /alarms/pcs/dc_sensor_abnormal                  0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_1 64   /alarms/pcs/dc_sensor_abnormal                  64    "Alarm"      
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0    /alarms/pcs/dc_spd_alarm                    0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_1 128   /alarms/pcs/dc_spd_alarm                    128    "Alarm"      
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0     /alarms/pcs/ac_spd_alarm                     0    "Normal"      
+testFault /components/pcs_1_running_info  alarm_running_state_1 256   /alarms/pcs/ac_spd_alarm                    256    "Alarm"   
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0      /alarms/pcs/batt_volt_high                    0    "Normal"
+testFault /components/pcs_1_running_info  alarm_running_state_1 512    /alarms/pcs/batt_volt_high                512    "Alarm"
+testFault /components/pcs_1_running_info  alarm_running_state_1 0      /alarms/pcs/batt_volt_low                    0    "Normal"
+testFault /components/pcs_1_running_info  alarm_running_state_1 1024   /alarms/pcs/batt_volt_low                1024   "Alarm"
+testFault /components/pcs_1_running_info  alarm_running_state_1 0      /alarms/pcs/dc_switch_abnormal               0    "Normal"
+testFault /components/pcs_1_running_info  alarm_running_state_1 4096   /alarms/pcs/dc_switch_abnormal           4096    "Alarm"
+testFault /components/pcs_1_running_info  alarm_running_state_1 0      /alarms/pcs/fan_1_abnormal                   0    "Normal"
+testFault /components/pcs_1_running_info  alarm_running_state_1 8192   /alarms/pcs/fan_1_abnormal               8192    "Alarm"
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0    /alarms/pcs/ac_spd_alarm                    0    "Normal"      
+setAssetValNR  /site/ess_ls/pcs_1_alarm_running_state             0          0.1   "  >> set 0   ->     /site/ess_ls/pcs1_alarm_running_state"
+
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 1    /site/ess_ls/pcs_1_alarm_running_state              1    1     
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 2    /site/ess_ls/pcs_1_alarm_running_state              2    3      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 4    /site/ess_ls/pcs_1_alarm_running_state              4    7      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 16    /site/ess_ls/pcs_1_alarm_running_state            16    15      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 64    /site/ess_ls/pcs_1_alarm_running_state            64    31      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 128    /site/ess_ls/pcs_1_alarm_running_state          128    63      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 256    /site/ess_ls/pcs_1_alarm_running_state          256    127      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 512    /site/ess_ls/pcs_1_alarm_running_state          512    255      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 1024    /site/ess_ls/pcs_1_alarm_running_state        1024    511      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 4096    /site/ess_ls/pcs_1_alarm_running_state        4096    1023      
+testFaultVal /components/pcs_1_running_info  alarm_running_state_1 8192    /site/ess_ls/pcs_1_alarm_running_state        8182    1023      
+
+testFault /components/pcs_1_running_info  alarm_running_state_1 0    /alarms/pcs/ac_spd_alarm                    0    "Normal"      
+setAssetValNR  /site/ess_ls/pcs_1_alarm_running_state             0          0.1   "  >> set 0   ->     /site/ess_ls/pcs1_alarm_running_state"
+
+
+
+return 0

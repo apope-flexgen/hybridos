@@ -1,0 +1,64 @@
+{
+
+    "amname":"bms",
+    "pname":"ess",
+
+    "/components/bms_info":{
+        "max_cell_voltage": {
+            "value": 0, "EnableFaultCheck": true, "EnableMaxValCheck": true,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 1.0,"MaxFaultTimeout": 2.0,"MaxRecoverTimeout": 1.0,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "min_cell_voltage": {
+            "value": 0, "EnableFaultCheck": true, "EnableMinValCheck": true, "MinAlarmThreshold": 25.4,"MinFaultThreshold": 10,"MinResetValue": 30,
+            "MinAlarmTimeout": 1.0,"MinFaultTimeout": 2.0,"MinRecoverTimeout": 1.0,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "avg_cell_voltage": {
+            "value": 0, "EnableFaultCheck": true, "EnableMaxValCheck": false, "MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5, "MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "max_cell_temperature": {
+            "value": 0, "EnableFaultCheck": true, "EnableMaxValCheck": false, "MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"remap":[{"bit":0, "offset": 50,"uri":"/status/bms:BMSMaxCellTemp"}]}]}
+        },
+        "min_cell_temperature": {
+            "value": 0,"EnableFaultCheck": true,"EnableMinValCheck": false, "MinAlarmThreshold": 25.4, "MinFaultThreshold": 10,"MinResetValue": 30,
+            "MinAlarmTimeout": 2.5,"MinFaultTimeout": 5.5,"MinRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"remap":[{"bit":0, "offset": 50,"uri":"/status/bms:BMSMinCellTemp"}]}]}
+        },
+        "avg_cell_temperature": {
+            "value": 0,"EnableFaultCheck": true,"EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"remap":[{"bit":0, "offset": 50,"uri":"/status/bms:BMSAvgCellTemp"}]}]}
+        },
+        "soc": {
+            "value": 0,"EnableFaultCheck": true,"EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "soh": {
+            "value": 0,"EnableFaultCheck": true,"EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        }
+    },
+
+    
+
+    "/xsystem/commands":{"runMon": {"value":22,"aname":"bms","monitor":"wake_monitor","debug":1}},
+    "/xcomponents/bms_info":{"max_cell_voltage": {"value":26.4}},
+    "/xxsystem/commands":{"runMon": {"value":22,"aname":"bms","monitor":"wake_monitor","debug":1}},
+
+    "/xxcomponents/bms_info":{"max_cell_voltage": {"value":28.4}},
+    
+    "/xxxcomponents/bms_info":{"max_cell_voltage": {"value":22.3}},
+    
+    "/xxxsystem/commands":{"runMon": {"value":24,"aname":"bms","monitor":"wake_monitor","debug":1}}
+    
+    
+}
+
+

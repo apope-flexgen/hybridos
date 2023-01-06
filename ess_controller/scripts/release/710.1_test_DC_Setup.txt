@@ -1,0 +1,552 @@
+# defs for 710.1_test_DC_Setup.sh
+# p. wilshire
+# 02/26/2022
+#
+# the test script dots in this to run the config set up by 300.1_test_avParams.sh
+# a remap ( or ant other ) action that can have an optional inAv can now specify a Param of that inAv 
+#  to set the action input value
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+#
+# test a posible DC DC system setup
+# start with setting up a Battery , and allow it to charge / discharge.
+# 
+# then let a PV array and sending that to the grid
+#
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+descs=()
+acts=()
+resps=()
+
+#$1 shift 
+#$2 shiftnum
+#$3 add num
+
+#sets up the  following system
+#  pv         pm       pcs 
+#            dpm
+#  dcs       dcs      dcs
+#  b1 b2 b3  b1 b2 b3 b1 b2 b3
+#
+#  Sets up the main calculate var addd options in the template expansions
+#
+function setupSchedItems()
+{
+  descs[idx]="set up sched items  $4"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/ess '{
+    "runCalcs":	{
+        "value": 0,
+        "debug":true,
+        "enabled":false,
+        "ifChanged": false,
+        "xtargav":"/test/targ:av",
+        "targfunc": "CalculateVar",
+        "amap":	"ess",
+        "new_options":[],
+        "actions":	{
+            "onSet":	[{
+                "func":	[{
+                        "debug":true,
+                        "func":	"SchedItemOpts",
+                        "amap":	"ess",
+                        "initDone":true
+                    }]   
+            }]
+        }
+    }
+}' | jq | grep amap
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "amap": "ess",
+              "amap": "ess",
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+#
+# when the sun shines , set the PowerAvaialble to a positive number
+# we also have an enable, contactor and a state 
+# state = init , start, stop, standby
+# command = 0:init , 1:start 2:stop 3:precharge 4:standby   
+# start in init 
+#
+function setUpPv()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set  -u /ess/cfg/cfile/pv/pv_manager '
+  {
+    "pname":"ess",
+    "amname":"pv",  
+    "/status/pv":{
+        "capacity": { 
+            "value": 388416.0
+        },
+        "enabled": false,
+        "contactor": "open",
+        "state": "init",
+        "prevoltage": 0,
+        "voltage": 1320,
+        "current": 0,
+        "command": {
+          "value": 0,
+          "actions": { "onSet":[{
+                          "enum":[
+                            {"inValue":0,"uri":"/status/pv:state", "outValue":"init"},
+                            {"inValue":0,"uri":"/status/pv:prevoltage", "outValue":0},
+                            {"inValue":0,"uri":"/status/pv:current", "outValue":0},
+                            {"inValue":1,"uri":"/status/pv:state", "outValue":"start"},
+                            {"inValue":2,"uri":"/status/pv:state", "outValue":"stop"},
+                            {"inValue":3,"uri":"/status/pv:state", "outValue":"precharge"},
+                            {"inValue":4,"uri":"/status/pv:state", "outValue":"standby"}
+                            }]
+                      }
+          
+        }
+        "currentPowerMw": 0.0,
+        "powerAvailableMw": 2.0,
+        "dummy":
+        {
+            "value":234,
+            "actions": {
+                "onSet":[{
+                    "func":[{
+                    "debug":true,
+                    "func":"xCalculateVar"
+                    }] 
+                }]
+            }
+        }
+    }
+}' 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+function setUpPCS()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set   -u /ess/cfg/cfile/pcs/pcs_manager '
+  {
+    "pname":"ess",
+    "amname":"pcs",  
+    "/status/pcs":{
+        "capacity": { 
+            "value": 388416.0
+        },
+        "voltage":480,
+        "current":0,
+        "outputLoss":0.005,
+        "inputLoss": 0.003,
+        "CurrentPower":0,
+        "State":"Ready",
+        "dummy":
+        {
+            "value":234,
+            "actions": {
+                "onSet":[{
+                    "func":[{
+                    "debug":true,
+                    "func":"xCalculateVar"
+                    }] 
+                }]
+            }
+        }
+    }
+}' 
+${FimsDir}fims_send -m set  -r /$$  -u /ess/status/pcs 
+| jq | grep voltage
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "voltage": 480,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setUpEssPower()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+
+  ${FimsDir}fims_send -m set   -u /ess/cfg/cfile/ess/power_manager '
+  {
+    "amname":"ess",  
+    "/status/ess/powerManager":{
+        "netPower": { 
+            "value": 388416.0
+        },
+        "bmsPower":480,
+        "pvPower":670,
+        "outputLoss":0.005,
+        "inputLoss": 0.003,
+        "dscPower":0,
+        "State":"Ready",
+        "calcPowerOut":
+        {
+            "value":234,
+            "numVars":2,
+            "variable1":"/status/powerManager:pvPower",
+            "variable2":"/status/powerManager:dcsPower",
+            "operation": "+",
+            "actions": {
+                "onSet":[
+                  {
+                      "func":[
+                        {"debug":true,"func":"CalculateVar"}
+                      ] 
+                  },
+                  {
+                      "remap":[
+                        {"debug":true,"uri":"/status/powerManager:netPower"}
+                      ]
+                  } 
+                ]
+            }
+        },
+        "calcDcsPower":
+        {
+            "value":234,
+            "numVars":2,
+            "variable1":"/status/powerManager:pvPower",
+            "variable2":"/status/powerManager:netPower",
+            "operation": "+",
+            "actions": {
+                "onSet":[
+                  {
+                      "func":[
+                        {"debug":true,"func":"CalculateVar"}
+                      ] 
+                  },
+                  {
+                      "remap":[
+                        {"debug":true,"uri":"/status/powerManager:dcsPower"}
+                      ]
+                  } 
+                ]
+            }
+        }
+    }
+}' 
+
+${FimsDir}fims_send -m get  -r /$$  -u /ess/naked/status/ess/powerManager | jq | grep State
+EOF
+)
+
+resps[idx]=$(cat<<EOF
+    "State": "Ready",
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+
+}
+
+
+function setUpDcsLoad()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set  -u /ess/cfg/cfile/dcs/dcs_manager '
+ {
+    "amname": "dcs",
+    "pname": "ess",
+    "/config/ctmpl": {
+        "bms_tmpl": {
+            "value": false
+        },
+        "dcs_tmpl": {
+            "value": false
+        }
+    },
+    "/config/load": {
+        "dcs_manager": {
+            "value":false,
+            "file":"dcs_manager",
+            "pname":"ess",
+            "aname":"dcs",
+            "new_options":[
+                {
+                    "tmpl":"dcs_tmpl",  "pname":"ess", "type": "am", "amname":"##DCS_ID##",
+                    "from":1, "to":2,
+                    "reps":[
+                        {"replace":"##DCS_ID##",   "with":"dcs_{:01d}"},
+                        {"replace":"##DCS_NUM##",  "with":"{:01d}"}
+                    ]
+                },
+                {
+                    "tmpl":"bms_tmpl",  "pname":"##DCS_ID##", "type": "am", "amname":"##DCS_ID##_##RACK_ID##",
+                    "from":1, "to":3,
+                    "reps":[
+                        {"replace":"##RACK_ID##",   "with":"rack_{:01d}"},
+                        {"replace":"##RACK_NUM##",  "with":"{:01d}"}
+                    ]
+                }
+            ]
+        }
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setUpDcsTmpl()
+{
+  descs[idx]=$4
+# calcDelta will calculate deltaPower from /status/ess:sampleTime * /status/##DCS_ID##:currentPower 
+# calcPower will calculate Capacity from CurrentCapacity plus deltaPower 
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set  -u /ess/cfg/ctmpl/dcs/dcs_tmpl '
+ {
+    "/status/ess":{
+        "sampleTime":0.1
+    },
+    "/system/ess":{
+        "runCalcs":	{
+            "value": true,
+            "options":[
+                {"uri":"/status/##DCS_ID##:calcDelta","value":0}
+            ]
+        }
+    },
+   "/status/##DCS_ID##":{
+        "capacity": { 
+            "value": 388416.0,
+            "max": 388416.0,
+            "min": 416.0
+        },
+        "currentPower":0,
+        "voltage":1320,
+        "current":0,
+        "soc":45.6,
+        "soh":99.6,
+        "deltaPower":0,
+        "calcDelta":
+        {
+            "value":0,
+            "numVars":2,
+            "variable1":"/status/##DCS_ID##:currentPower",
+            "variable2":"/status/ess:sampleTime",
+            "operation": "*",
+            "debug": true,
+            "actions": {
+            "onSet":[{
+                "func":[{
+                    "debug":true,
+                    "func":"CalculateVar"
+                    }] 
+                }]
+            }
+        }
+   }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setUpBmsTmpl()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/cfg/ctmpl/bms/bms_tmpl '
+ {
+   "/status/##DCS_ID##_##RACK_ID##":{
+        "capacity": { 
+            "value": 388416.0
+        },
+        "voltage":1320,
+        "current":0,
+        "soc":45.6,
+        "dummy":
+        {
+            "value":234,
+            "enabled":false,
+            "actions": {
+            "onSet":[{
+                "func":[{
+                    "debug":true,
+                    "func":"xxCalculateVar"
+                    }] 
+                }]
+            }
+        }
+   }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function getBatteryTmpl()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get  -r /$$ -u /ess/full/config/ctmpl | jq | grep md5sum
+EOF
+)
+resps[idx]=$(cat<<EOF
+    "md5sum": "8eb688c9eb1460009e497626a5007a5b",
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+
+}
+
+function setUpOneBattery()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/config/bms_01 '
+  {
+    "capacity": { 
+        "value": 388416.0
+    },
+    "voltage":1320,
+    "current":0,
+    "soc":45.6,
+    "dummy":
+    {
+        "value":234,
+        "actions": {
+            "onSet":[{
+                "func":[{
+                "debug":true,
+                "func":"xCalculateVar"
+                }] 
+            }]
+          }
+      }
+}' | jq | grep voltage
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "voltage": 1320,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function getSendDb()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/full/system/controls/sendDb | jq | grep aVal
+EOF
+)
+  resps[idx]=$(cat<<EOF
+              "aVal": 3456,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setAVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/test/sendDb '{
+      "var1": "var1",
+      "var2": 2,
+      "var3": false,
+      "var4": "this is var4"
+}' 
+    | jq | grep var1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "var1": "var1",
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function runTest()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/controls '
+  {
+      "sendDb":{
+        "value": 3456, 
+        "enabled":true
+      }
+  }' 
+    | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": 3456,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+#######################################################################
+descs[0]="test DC DC"
+#######################################################################
+#return 0
+idx=1
+setupSchedItems some_test_var 0              0.1 " >> setup SchedItems"
+setUpPv      some_test_var 0                 0.1 " >> setup pv input"
+setUpPCS     some_test_var 0                 0.1 " >> setup pcs"
+setUpDcsLoad some_test_var 0                 0.1 " >> setup dcs load"
+setUpDcsTmpl some_test_var 0                 0.1 " >> setup dcs tmpl"
+setUpBmsTmpl some_test_var 0                 0.1 " >> setup bms tmpl"
+setUpEssPower some_test_var 0                 0.1 " >> setup ess power"
+
+#setUpBatteryLoad some_test_var 0                 0.1 " >> setup battery load"
+#setUpBatteryTmpl some_test_var 0                 0.1 " >> setup battery tmpl"
+#getBatteryTmpl some_test_var 0                   0.1 " >> check battery tmpl"
+
+#setAVar some_test_action 0                  0.1 " >> setup table for db"
+
+#runTest some_test_action   0                  0.1 " >> run test"
+
+#getSendDb some_test_action 0           0.1 " >> check aVal result"
+

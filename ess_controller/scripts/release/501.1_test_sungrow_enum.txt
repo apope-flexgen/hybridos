@@ -1,0 +1,288 @@
+#!/bin/sh
+# p. Wilshire
+# 11/24/2021
+# converted to new test format
+
+# needs a running system to operate.
+
+# Tests the HandlePower function (monitoring the state of the active current setpoint) in test_ess.cpp
+# Note: Run test_ess first before running this shell script
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+function test_noval()
+{
+descs[idx]=" >> setup test noval   "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$  -u $FimsName/full/controls/bms '
+{
+        "test_novar":{ 
+        "value":"some_value",
+        "p1":false,
+        "p2":22,
+        "p3":"this is p3"
+    }
+}' | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "test_novar": {
+    "value": "some_value",
+    "p1": false,
+    "p2": 22,
+    "p3": "this is p3"
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+}
+
+function setEnumTest1()
+{
+  descs[idx]="setup Enum  $4"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/components/pcs_running_info '
+  {
+        "operating_mode_1": {
+            "value": 0,
+            "note1": "Bit 00: On-grid constant current",
+            "note2": "Bit 01: On-grid constant voltage",
+            "note3": "Bit 02: On-grid constant power (AC)",
+            "note4": "Bit 03: On-grid constant power (DC)",
+            "note5": "Bit 04-8: Reserved",
+            "note6": "Bit 09: On-grid mode",
+            "note7": "Bit 10: Off-grid mode",
+            "note8": "Bit 11: VSG mode",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0,  "mask": 255,"inValue": 0,  
+                           "uri": "/status/pcs:OnGridChgMode", "outValue": "N/A"},
+                        {"shift": 0,  "mask": 1,  "inValue": 1,  
+                             "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant current"},
+                        {"shift": 1,  "mask": 1,  "inValue": 1,  
+                                 "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant voltage"},
+                        {"shift": 2,  "mask": 1,  "inValue": 1,  
+                                 "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant power AC"},
+                        {"shift": 3,  "mask": 1,  "inValue": 1,  
+                                 "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant power DC"},
+ 
+                        {"shift": 9,  "mask": 1,  "inValue": 1,  
+                                  "uri": "/status/pcs:WorkMode",      "outValue": "On-grid"},
+                        {"shift": 9,  "mask": 1,  "inValue": 1,  
+                                  "uri": "/status/pcs:WorkMode",      "outValue": "On-grid"},
+                        {"shift": 10, "mask": 1,  "inValue": 1,  
+                                  "uri": "/status/pcs:WorkMode",      "outValue": "Off-grid"},
+                        {"shift": 11, "mask": 1, " inValue": 1,  
+                                   "uri": "/status/pcs:WorkMode",      "outValue": "VSG"},
+
+                        {"shift": 0, "mask": 1, "inValue": 1,  
+                             "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Current"},
+                        {"shift": 1, "mask": 1, "inValue": 1,  
+                             "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Voltage"},
+                        {"shift": 2, "mask": 1, "inValue": 1,  
+                             "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "AC-Power"},
+                        {"shift": 3, "mask": 1, "inValue": 1,  
+                                "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "DC-Power"}
+                      ]
+                }]
+            }
+
+        }
+}' | jq | grep $1
+EOF
+)
+ resps[idx]=$(cat<<EOF
+  "$1": {
+EOF
+)
+# sleeps[idx]="$3"
+ sleeps[idx]=0.1
+ idx=$(($idx+1))
+}
+
+
+#                        {"shift": 9,  "mask": 1,  "inValue": 1,  
+#                                  "uri": "/status/pcs:WorkMode",      "outValue": "On-grid"},
+#                        {"shift": 10, "mask": 1,  "inValue": 1,  
+#                                  "uri": "/status/pcs:WorkMode",      "outValue": "Off-grid"},
+#                        {"shift": 11, "mask": 1, " inValue": 1,  
+#                                   "uri": "/status/pcs:WorkMode",      "outValue": "VSG"},
+
+#                        {"shift": 0, "mask": 1, "inValue": 1,  
+#                             "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Current"},
+#                        {"shift": 1, "mask": 1, "inValue": 1,  
+#                             "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Voltage"},
+#                        {"shift": 2, "mask": 1, "inValue": 1,  
+#                             "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "AC-Power"},
+#                        {"shift": 3, "mask": 1, "inValue": 1,  
+#                                "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "DC-Power"}
+
+
+# setEnumTest  operating_mode operating_mode 0.1 "Set up operating mode enum"
+
+function setEnumTest()
+{
+  descs[idx]="setup Enum  $4"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/components/pcs_running_info '
+  {
+        "operating_mode": {
+            "value": 0,
+            "note1": "Bit 00: On-grid constant current",
+            "note2": "Bit 01: On-grid constant voltage",
+            "note3": "Bit 02: On-grid constant power (AC)",
+            "note4": "Bit 03: On-grid constant power (DC)",
+            "note5": "Bit 04-8: Reserved",
+            "note6": "Bit 09: On-grid mode",
+            "note7": "Bit 10: Off-grid mode",
+            "note8": "Bit 11: VSG mode",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0,  "mask": 255,"inValue": 0,  
+                           "uri": "/status/pcs:OnGridChgMode", "outValue": "N/A"},
+                        {"shift": 0,  "mask": 1,  "inValue": 1,  
+                           "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant current"},
+                        {"shift": 1,  "mask": 1,  "inValue": 1,  
+                           "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant voltage"},
+                        {"shift": 2,  "mask": 1,  "inValue": 1,  
+                           "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant power (AC)"},
+                        {"shift": 3,  "mask": 1,  "inValue": 1,  
+                           "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant power (DC)"},
+                        {"shift": 9,  "mask": 1,  "inValue": 1,  
+                            "uri": "/status/pcs:WorkMode",      "outValue": "On-grid"},
+                        {"shift": 10, "mask": 1,  "inValue": 1,  
+                            "uri": "/status/pcs:WorkMode",      "outValue": "Off-grid"},
+                        {"shift": 11, "mask": 1, "inValue": 1,  "debug":true,
+                            "uri": "/status/pcs:WorkMode",      "outValue": "VSG"},
+                        {"shift": 0, "mask": 1, "inValue": 1,  
+                             "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Current"},
+                        {"shift": 1, "mask": 1, "inValue": 1,  
+                             "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Voltage"},
+                        {"shift": 2, "mask": 1, "inValue": 1,  
+                             "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "AC-Power"},
+                        {"shift": 3, "mask": 1, "inValue": 1,  
+                                     "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "DC-Power"}
+                    ]
+                }]
+            }
+        }
+}' | jq | grep $1
+EOF
+)
+ resps[idx]=$(cat<<EOF
+  "$1": {
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+
+function setRunningInfo()
+{
+  descs[idx]=" >> $4 $1-> $2"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/components/pcs_running_info '
+  {
+        "$1": {
+            "value": $2
+        }
+}' | jq 
+EOF
+)
+ resps[idx]=$(cat<<EOF
+{
+  "$1": {
+    "value": $2
+  }
+}
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+
+function getRunningInfo()
+{
+  descs[idx]=" >> $4 $1-> $2"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/components/pcs_running_info/$1 '
+' | jq 
+EOF
+)
+ resps[idx]=$(cat<<EOF
+$2
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+
+function setPcsStatus()
+{
+  descs[idx]=" >> $4 $1-> $2"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/status/pcs '
+  {
+        "$1": {
+            "value": $2
+        }
+}' | jq 
+EOF
+)
+ resps[idx]=$(cat<<EOF
+{
+  "$1": {
+    "value": $2
+  }
+}
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+
+function getPcsStatus()
+{
+  descs[idx]=" >> $4 $1-> $2"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/status/pcs/$1 '
+' | jq 
+EOF
+)
+ resps[idx]=$(cat<<EOF
+$2
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+
+#######################################################################
+descs[0]="validate enum bug "
+#######################################################################
+
+idx=1
+
+test_noval
+getVar test_novar       '"some_value"'    0.1 " >> get test_novar as some_value "
+
+setEnumTest1  operating_mode_1 operating_mode_1 0.1 "Set up test operating mode enum"
+setEnumTest  operating_mode operating_mode 0.1 "Set up operating mode enum"
+setRunningInfo  operating_mode 0 0.1 "Set up operating mode value "
+getRunningInfo  operating_mode 0 0.1 "Get  operating mode value "
+setPcsStatus  WorkMode '"On-grid"'  0.1 "Get  WorkMode value "
+
+getPcsStatus  WorkMode '"On-grid"'  0.1 "Get  WorkMode value "
+getPcsStatus  OnGridChgMode '"N/A"'  0.1 "Get  OnGridChgMode value "
+
+setRunningInfo  operating_mode 516 0.1 "Set operating mode value as 516  "
+
+getPcsStatus  WorkMode '"On-grid"'  0.1 "Get  WorkMode value "
+getPcsStatus  OnGridChgMode '"Constant power (AC)"'  0.1 "Get  OnGridChgMode value "
+
+return 0

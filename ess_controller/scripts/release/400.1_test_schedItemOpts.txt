@@ -1,0 +1,162 @@
+## defs for 402.0_test_dbi.sh
+# p. wilshire
+# 11/15/2021
+# 11/20/2021
+# 11/21/2021
+# 11/22/2021
+#
+# the test script dots in this to run the config set up by 402.2_test_dbi_wake.sh
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+
+#   test_schedItemOPts   not fully running yet but not needed until v1.2.0
+
+#
+# this sets up the demo dbi test vars but in addition adds the wake_monitor layer.
+# and a control function to schedule the monitoring 
+# 
+# runs as part of the wake monitor system and will set the dbi doc if pends > 0 and nextupdatetime has passed
+
+
+function createSchedOpts()
+{
+  descs[idx]="create sched_func  $4"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/test/sched '{
+    "sched_func":	{
+        "value": true,
+        "debug":false,
+        "ifChanged": false,
+        "targav":"/test/targ:av",
+        "targfunc": "HandleSchedItem",
+        "amap":	"ess",
+        "new_options":[ 
+            {"uri":"/sched/ess:essSystemInit", "value":{"value":1234,"state":"start"}},
+            {"uri":"/sched/ess:every100mSP1",  "value":{"value":1235,"state":"stop"}},
+            {"uri":"/sched/ess:every100mSP2",  "value":{"value":1236,"state":"foo1"}},
+            {"uri":"/sched/ess:every100mSP3",   "value":{"value":1237,"state":"foo2"}},
+            {"uri":"/sched/ess:fastPub",       "value":{"value":1238,"state":"pub1"}},
+            {"uri":"/sched/ess:slowPub",       "value":"this is a test","state":"pub2"}
+        ],
+        "actions":	{
+            "onSet":	[{
+                "func":	[{
+                        "debug":false,
+                        "func":	"SchedItemOpts",
+                        "amap":	"ess",
+                        "initDone":true
+                    }]   
+            }]
+        }
+    },
+    "sched_av":	{
+        "value": true,
+        "debug":false,
+        "ifChanged": false,
+        "targav": "/test/av:aTestAv",
+        "new_options":[ 
+            {"value":1,"uri":"/sched/test:essSystemInit"},
+            {"value":2,"uri":"/sched/test:every100mSP1"},
+            {"value":3,"uri":"/sched/test:every100mSP2"},
+            {"value":4,"uri":"/sched/test:every100mSP3"},
+            {"value":5,"uri":"/sched/test:fastPub"},
+            {"value":6,"uri":"/sched/test:slowPub"}
+        ],
+        "actions":	{
+            "onSet":	[{
+                "func":	[{
+                        "debug":false,
+                        "func":	"SchedItemOpts",
+                        "amap":	"ess",
+                        "initDone":true
+                    }]
+        
+            }]
+        }
+    }
+}' | jq | grep -e $1 -e UpdateTime
+EOF
+)
+ resps[idx]=$(cat<<EOF
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+######################################################################
+descs[0]=" test SchedItemOpts "
+#######################################################################
+idx=1
+
+createSchedOpts DemoVoltage                 1325       0.1 " >> DemoVoltage  as 1325 "                   '"DemoVars"'
+return 0
+
+setDbiDoc DemoVars                   '"Init"'    0.1 " >> DemoVars  as Init "          '"/controls/bms"'
+#return 0
+
+setDbiVar DemoChargeCurrent           285        0.1 " >> DemoChargeCurrent  as 285 "              '"DemoVars"'
+setVar    DemoChargeCurrent@default   185        0.1 " >> set DemoChargeCurrent default   as 185 "
+setDbiVar DemoVoltage                 1325       0.1 " >> DemoVoltage  as 1325 "                   '"DemoVars"'
+return 0
+
+fims_send -m set -r /$$ -u /flex/test/sched ' {
+    "sched_func":	{
+        "value": true,
+        "debug":true,
+        "ifChanged": false,
+        "targfunc": "HandleSchedItem",
+        "amap":	"flex",
+        "options":[ 
+            {"uri":"/sched/ess:essSystemInit"},
+            {"uri":"/sched/ess:every100mSP1"},
+            {"uri":"/sched/ess:every100mSP2"},
+            {"uri":"/sched/ess:every100mSP3"},
+            {"uri":"/sched/ess:fastPub"},
+            {"uri":"/sched/ess:slowPub"}
+        ],
+        "actions":	{
+            "onSet":	[{
+                "func":	[{
+                        "debug":true,
+                        "func":	"SchedItemOpts",
+                        "amap":	"flex",
+                        "initDone":true
+                    }]
+        
+            }]
+        }
+    },
+    "sched_av":	{
+        "value": true,
+        "debug":true,
+        "ifChanged": false,
+        "targav": "/test/av:aTestAv",
+        "options":[ 
+            {"value":1,"uri":"/sched/ess:essSystemInit"},
+            {"value":2,"uri":"/sched/ess:every100mSP1"},
+            {"value":3,"uri":"/sched/ess:every100mSP2"},
+            {"value":4,"uri":"/sched/ess:every100mSP3"},
+            {"value":5,"uri":"/sched/ess:fastPub"},
+            {"value":6,"uri":"/sched/ess:slowPub"}
+        ],
+        "actions":	{
+            "onSet":	[{
+                "func":	[{
+                        "debug":true,
+                        "func":	"SchedItemOpts",
+                        "amap":	"flex",
+                        "initDone":true
+                    }]
+        
+            }]
+        }
+    }
+
+}'
+
+fims_send -m set -r /$$ -u /flex/test/sched ' {
+"sched_items2":	{
+    "value": true
+}
+}'

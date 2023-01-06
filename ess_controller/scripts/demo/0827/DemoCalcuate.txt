@@ -1,0 +1,211 @@
+Example Problem.
+
+An Auxilary Power Calculation is required.
+
+
+Paux = Pdc*n - Pac, 
+where 
+n = estimated efficiency of the  pcs. 
+Pdc = DC side power (battery)
+Pac = AC side power
+
+
+
+So we define an output  variable 
+
+/status/pcs:Paux
+
+We have two input variables and a constant
+
+
+/status/pcs:Pdc
+
+/status/pcs:Pac
+
+
+and a constant
+
+/config/pcs:PdcEff
+
+
+At this time we have not designated where these values come from. We do not have to do that just yet.
+
+We also have not defined where the output goes. No need to do that just yet either.
+
+We can give the ess the PcdEff value very simply via a config file or,  with t fims send.
+
+
+
+    fims_send -m set -r /$$ -u /flex/config/pcs '{"PdcEff":{"value":0.85}}'
+
+or 
+
+'{
+    "/config/pcs":
+    {
+        "PdcEff":{"value":0.85}
+    }
+}'
+
+
+We want to trigger the evaluation of /status/pcs:Paux.
+
+This can be done a number of ways. For now lets define a trigger variable to cause this operation
+In fact we can simply write any value to /status/pcs:Paux 
+      to cause it to recalculate its value, ignoring the input value and replacing it with the result of the calculation.
+
+We do this by adding a func "action" to htis variable.
+
+'{
+    "/status/pcs":
+    {
+        "Paux":{
+            "value":0.0,
+            "actions":{"onSet":[{'func":[{"func":"CalculateVar","amap":"pcs"}]}]}}
+            }
+    }
+}'
+
+This sets up the system to react to a write (or Set ) to /status/pcs by running a CalculateVar function.
+
+Without any addtional set up the CalculateVar function will fail.
+
+
+
+fims_send -m set -r /$$ -u /flex/status/pcs '
+ {"Paux":{"value":0.1,"actions":{"onSet":[{"func":[{"func":"CalculateVar","amap":"pcs" }]}]}}}'
+
+{"Paux":{"value":0.1,"actions":{"onSet":[{"func":[{"func":"CalculateVar","amap":"pcs"}]}]}}}
+
+Check the system out so far 
+
+fims_send -m get -r /$$ -u /flex/full/status/pcs  | jq
+{
+  "Paux": {
+    "value": 0.1,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "pcs",
+              "func": "CalculateVar",
+              "initDone": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+try it out 
+
+fims_send -m set -r /$$ -u /flex/full/status/pcs/Paux 123 | jq
+The system response is :
+{
+  "Paux": 123
+}
+
+
+But the Log shows.
+
+
+[369.876s] [info    ] [setupCalculateV] Setting up params for [/status/pcs:Paux]
+[369.876s] [info    ] [checkOperation ] operation [n/a] not defined for assetVar [/status/pcs:Paux]. 
+Supported operations are:
+    Addition           (+)
+    Subtraction        (-)
+    Multiplication     (*)
+    Division           (/)
+    Modulus Division   (%)
+    Average            (avg)
+    Percentage of      (pctOf)
+    Maximum            (max)
+    Minimum            (min)
+    Square Root        (sqrt)
+    Scale              (scale)
+    And                (and)
+    Or                 (or)
+    Greater than       (>)
+    Less than          (<)
+    Value Changed Any  (valChangedAny)
+    Value Changed All  (valChangedAll)
+
+
+So we need to add some sort of a function or equation.
+
+
+fims_send -m set -r /$$ -u /flex/full/status/pcs '
+{
+   
+  "Pac": {
+    "value": 500
+  },
+ "Pdc": {
+    "value": 1000
+  },
+ "PdcEff": {
+    "value": 0.85
+  },
+ "runPaux": {
+    "value": 0.85
+    "ifChanged":false,
+    "debug":true,
+    "actions": {
+      "onSet": [
+        { 
+          "func": [
+            {
+              "inVar":"/status/pcs:Paux",
+              "amap": "flex",
+              "func": "CalculateVar"
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "Paux": {
+    "value": 0.1,
+    "includeCurrVal":true,
+    "useExpr": true,
+    "numVars":3,
+    "variable1":"/status/pcs:Paux",
+    "variable2":"/status/pcs:Pdc",
+    "variable3":"/status/pcs:PdcEff",
+    "variable4":"/status/pcs:Pac",
+    "expression": "{1} = {2} * {3} - {4}",
+    "ifChanged":false,
+    "debug":true,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "pcs",
+              "func": "CalculateVar"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}'
+
+
+[456.804s] [info    ] [getOperands    ] assetVar in parameter [variable1] of assetVar [Paux] does not exist. Skipping calculation
+[456.804s] [info    ] [parseExpr      ] Unable to retrieve list of operands for [/status/pcs:Paux]. Skipping calculations
+
+
+
+fims_send -m set -r /$$ -u /flex/status/pcs/Pdc  1000
+fims_send -m set -r /$$ -u /flex/status/pcs/Pac  1000
+fims_send -m set -r /$$ -u /flex/config/pcs/PdcEff  1000
+fims_send -m set -r /$$ -u /flex/status/pcs/Paux  1235
+
+
+[456.804s] [info    ] [getOperands    ] assetVar in parameter [variable1] of assetVar [Paux] does not exist. Skipping calculation
+[456.804s] [info    ] [parseExpr      ] Unable to retrieve list of operands for [/status/pcs:Paux]. Skipping calculations
+[518.563s] [info    ] [getOperands    ] assetVar in parameter [variable2] of assetVar [Paux] does not exist. Skipping calculation
+[518.563s] [info    ] [parseExpr      ] Unable to retrieve list of operands for [/status/pcs:Paux]. Skipping calculations

@@ -1,0 +1,1668 @@
+# defs for 601.0_loader_test.sh
+# p. wilshire
+# 10/16/2021
+#
+# the test script dots in this to test the config loader 
+# each test has an action and a response 
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in dbi or alpha order.
+
+
+#
+#
+# DBI NOTES
+# note set up a config like this
+
+
+# fims_send -f configs/FlexEss/flex/ess_config_risen_sungrow.json -m set -r /$$ -u /dbi/ess_controller/configs_ess_config_risen_sungrow
+#fims_send -m get -r /$$ -u /dbi/ess_controller/_controls_bms/DemoChargeCurrent | jq
+#{
+#  "value": 1234,
+#  "EnableDbiUpdate": true,
+##  "UpdateTimeCfg": 5,
+#  "UpdateTimeRemain": 0
+#}
+#fims_send -m put -r /$$ -u /dbi/ess_controller/_controls_bms/DemoChargeCurrent/value 55
+#{"_id":"6172195ce1e5d1473c4d7f9a","_controls_bms":{"DemoChargeCurrent":{"value":55,"EnableDbiUpdate":true,"UpdateTimeCfg":5,"UpdateTimeRemain":0}},"createdAt":"2021-10-22T01:52:28.940Z","updatedAt":"2021-10-22T01:53:18.641Z","__v":0}
+#fims_send -m get -r /$$ -u /dbi/ess_controller/_controls_bms/DemoChargeCurrent | jq
+#{
+#  "value": 55,
+#  "EnableDbiUpdate": true,
+##  "UpdateTimeCfg": 5,
+#  "UpdateTimeRemain": 0
+#}
+
+#
+
+FimsDir=/usr/local/bin/
+
+descs=()
+acts=()
+resps=()
+idx=1
+
+################################################################################
+descs[0]=" >> test the operation of the dbi based loader but load files manually "
+#################################################################################
+
+test1_desc="test1 cfile send test_bms_status" 
+test1_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/cfg/cfile/ess/test_bms_status '{
+        "/status/bms": {
+            "test1": {
+                "value" :0.0,
+                "param1":"this is param1",
+                "param2":"this is param2",
+                "pname":"ess",
+                "actions":{
+                    "onSet": [{ "func": 
+                                  [
+                                    { "enabled": true, "ifChanged":true,"func": "xCheckDbiVar", "amap": "bms"}
+                                  ]
+                            }]
+                }
+          }
+        }
+    }'
+EOF
+)
+
+# here is the response for test1
+#
+test1_resp=$(cat<<EOF
+EOF
+)
+test1_sleep="0.1" 
+
+
+descs[idx]="$test1_desc"
+acts[idx]="$test1_act"
+resps[idx]="$test1_resp"
+sleeps[idx]="$test1_sleep"
+idx=$(($idx+1))
+
+
+
+test2_desc="test2 cfile load" 
+test2_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/full/config/cfile/test_bms_status | jq 
+     | grep -v reqResp
+     | grep -v reqCount
+     | grep -v reqTimeout
+EOF
+)
+
+# here is the response for test2
+#
+test2_resp=$(cat<<EOF
+{
+  "test_bms_status": {
+    "value": true,
+    "md5sum": "e82542af3ea0c5a3c111e6bd7c13b87e",
+  }
+}
+EOF
+)
+test2_sleep="0.1" 
+descs[idx]="$test2_desc"
+acts[idx]="$test2_act"
+resps[idx]="$test2_resp"
+sleeps[idx]="$test2_sleep"
+idx=$(($idx+1))
+
+test3_desc="test3 cfile vmap" 
+test3_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/full/status/bms/test1 | jq
+EOF
+)
+
+
+test3_resp=$(cat<<EOF
+{
+  "test1": {
+    "value": 0,
+    "param1": "this is param1",
+    "param2": "this is param2",
+    "pname": "ess",
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "bms",
+              "enabled": true,
+              "func": "xCheckDbiVar",
+              "ifChanged": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+test3_sleep="0.1" 
+descs[idx]="$test3_desc"
+acts[idx]="$test3_act"
+resps[idx]="$test3_resp"
+sleeps[idx]="$test3_sleep"
+idx=$(($idx+1))
+#
+
+test4_desc="test4 loader send" 
+test4_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/cfg/cfile/ess/DemoLoader '{
+        "/config/load": {
+            "test_bms_manager": {
+                "value" :false,
+                "type":"master",
+                "file":"test_bms_file",
+                "pname":"ess",
+                "aname":"bms",
+                "final":"test_bms_final",
+                 "new_options":[
+                { "file":"test_bms_status",      "amname":"bms", "pname":"ess" , "summary":"ess/summary" , "svec":"ess/ess_"  },
+                { "file":"test_bms_controls",    "amname":"bms", "pname":"ess" ,  "summary":"bms/summary" , "svec":"bms/rack_"},
+                { "file":"test_bms_alarms",      "amname":"bms", "pname":"ess"  },
+                { "file":"test_bms_modbus",      "amname":"bms", "pname":"ess"   },
+                {
+                 "tmpl":"test_bms_template",  "pname":"bms", "amname":"##RACK_ID##",
+                  "from":1, "to":5,
+                  "reps":[
+                          {"replace":"##RACK_ID##",   "with":"rack_{:02d}"},
+                          {"replace":"##RACK_NUM##",  "with":"{:02d}"},
+                          {"replace": "##AC_1_ID##",  "with": "hvac_{:02d}", "mult":2         },
+                          {"replace": "##AC_1_NUM##", "with": "{:02d}",      "mult":2         },
+                          {"replace": "##AC_2_ID##",  "with": "hvac_{:02d}", "mult":2, "add":1},
+                          {"replace": "##AC_2_NUM##", "with": "{:02d}",      "mult":2, "add":1}
+                      ]
+                  }
+              ]
+        }
+    }
+}'
+EOF
+)
+test4_sleep="0.1" 
+
+# here is the response for test4
+#
+test4_resp=$(cat<<EOF
+EOF
+)
+descs[idx]="$test4_desc"
+acts[idx]="$test4_act"
+resps[idx]="$test4_resp"
+sleeps[idx]="$test4_sleep"
+idx=$(($idx+1))
+
+test5_desc="test5 loader load" 
+test5_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/full/config/load/test_bms_manager | jq 
+EOF
+)
+
+# here is the response for test5
+#
+test5_resp=$(cat<<EOF
+{
+  "test_bms_manager": {
+    "value": false,
+    "aname": "bms",
+    "file": "test_bms_file",
+    "final": "test_bms_final",
+    "pname": "ess",
+    "type": "master",
+    "options": [
+      {
+        "file": "test_bms_status",
+        "amname": "bms",
+        "pname": "ess",
+        "summary": "ess/summary",
+        "svec": "ess/ess_"
+      },
+      {
+        "file": "test_bms_controls",
+        "amname": "bms",
+        "pname": "ess",
+        "summary": "bms/summary",
+        "svec": "bms/rack_"
+      },
+      {
+        "file": "test_bms_alarms",
+        "amname": "bms",
+        "pname": "ess"
+      },
+      {
+        "file": "test_bms_modbus",
+        "amname": "bms",
+        "pname": "ess"
+      },
+      {
+        "tmpl": "test_bms_template",
+        "pname": "bms",
+        "amname": "##RACK_ID##",
+        "from": 1,
+        "to": 5,
+        "reps": [
+          {
+            "replace": "##RACK_ID##",
+            "with": "rack_{:02d}"
+          },
+          {
+            "replace": "##RACK_NUM##",
+            "with": "{:02d}"
+          },
+          {
+            "replace": "##AC_1_ID##",
+            "with": "hvac_{:02d}",
+            "mult": 2
+          },
+          {
+            "replace": "##AC_1_NUM##",
+            "with": "{:02d}",
+            "mult": 2
+          },
+          {
+            "replace": "##AC_2_ID##",
+            "with": "hvac_{:02d}",
+            "mult": 2,
+            "add": 1
+          },
+          {
+            "replace": "##AC_2_NUM##",
+            "with": "{:02d}",
+            "mult": 2,
+            "add": 1
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+)
+test5_sleep="0.5" 
+descs[idx]="$test5_desc"
+acts[idx]="$test5_act"
+resps[idx]="$test5_resp"
+sleeps[idx]="$test5_sleep"
+idx=$(($idx+1))
+
+test6_desc="test6 loader file requests" 
+test6_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/full/config/load/test_bms_manager | jq 
+     | grep -v reqTimeout
+     | grep -v reqResp 
+     | grep -v reqCount 
+EOF
+)
+
+# here is the response for test6
+#
+test6_resp=$(cat<<EOF
+{
+  "test_bms_manager": {
+    "value": false,
+    "aname": "bms",
+    "file": "test_bms_file",
+    "final": "test_bms_final",
+    "pname": "ess",
+    "type": "master",
+    "options": [
+      {
+        "file": "test_bms_status",
+        "amname": "bms",
+        "pname": "ess",
+        "summary": "ess/summary",
+        "svec": "ess/ess_"
+      },
+      {
+        "file": "test_bms_controls",
+        "amname": "bms",
+        "pname": "ess",
+        "summary": "bms/summary",
+        "svec": "bms/rack_"
+      },
+      {
+        "file": "test_bms_alarms",
+        "amname": "bms",
+        "pname": "ess"
+      },
+      {
+        "file": "test_bms_modbus",
+        "amname": "bms",
+        "pname": "ess"
+      },
+      {
+        "tmpl": "test_bms_template",
+        "pname": "bms",
+        "amname": "##RACK_ID##",
+        "from": 1,
+        "to": 5,
+        "reps": [
+          {
+            "replace": "##RACK_ID##",
+            "with": "rack_{:02d}"
+          },
+          {
+            "replace": "##RACK_NUM##",
+            "with": "{:02d}"
+          },
+          {
+            "replace": "##AC_1_ID##",
+            "with": "hvac_{:02d}",
+            "mult": 2
+          },
+          {
+            "replace": "##AC_1_NUM##",
+            "with": "{:02d}",
+            "mult": 2
+          },
+          {
+            "replace": "##AC_2_ID##",
+            "with": "hvac_{:02d}",
+            "mult": 2,
+            "add": 1
+          },
+          {
+            "replace": "##AC_2_NUM##",
+            "with": "{:02d}",
+            "mult": 2,
+            "add": 1
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+)
+test6_sleep="0.1" 
+descs[idx]="$test6_desc"
+acts[idx]="$test6_act"
+resps[idx]="$test6_resp"
+sleeps[idx]="$test6_sleep"
+idx=$(($idx+1))
+
+# status
+# controls
+# alarms
+# modbus
+test7_desc="test7 cfile send test_bms_file" 
+test7_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/cfg/cfile/ess/test_bms_file '{
+        "/config/ctmpl": {
+            "test_bms_template": {
+                "value": false
+          }
+        },
+        "/system/bms": {
+            "test2": {
+                "value" :0.0,
+                "param1":"this is param1",
+                "param2":"this is param2",
+                "actions":{
+                    "onSet": [{ "func": 
+                                  [
+                                    { "enabled": true, "ifChanged":true,"func": "xCheckDbiVar", "amap": "bms"}
+                                  ]
+                            }]
+                }
+          }
+        }
+    }'
+EOF
+)
+
+# here is the response for test7
+#
+test7_resp=$(cat<<EOF
+EOF
+)
+test7_sleep="0.1" 
+
+descs[idx]="$test7_desc"
+acts[idx]="$test7_act"
+resps[idx]="$test7_resp"
+sleeps[idx]="$test7_sleep"
+idx=$(($idx+1))
+
+test8_desc="test8 cfile load" 
+test8_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/full/config/cfile/test_bms_file | jq 
+     | grep -v reqResp
+     | grep -v reqCount
+     | grep -v reqTimeout
+     | grep -v aname
+     | grep -v pname
+     
+EOF
+)
+
+# here is the response for test8
+#
+test8_resp=$(cat<<EOF
+{
+  "test_bms_file": {
+    "value": true,
+    "md5sum": "a051bdee297220c3adfe625e4ddd150a",
+  }
+}
+EOF
+)
+
+test8_sleep="0.5" 
+descs[idx]="$test8_desc"
+acts[idx]="$test8_act"
+resps[idx]="$test8_resp"
+sleeps[idx]="$test8_sleep"
+idx=$(($idx+1))
+
+test9_desc="test9 loader check results" 
+test9_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/full/config/cfile/DemoLoader | jq
+     | grep -v reqTimeout
+     | grep -v reqResp 
+     | grep -v reqCount 
+     | grep -v aname
+     | grep -v amname
+     | grep -v pname
+EOF
+)
+
+# here is the response for test9
+#
+test9_resp=$(cat<<EOF
+{
+  "DemoLoader": {
+    "value": true,
+    "md5sum": "7b9d6e55ff35505576272a5996417b2e",
+  }
+}
+EOF
+)
+
+test9_sleep="0.1" 
+descs[idx]="$test9_desc"
+acts[idx]="$test9_act"
+resps[idx]="$test9_resp"
+sleeps[idx]="$test9_sleep"
+idx=$(($idx+1))
+
+# status
+# controls
+# alarms
+# modbus
+test10_desc="test10 cfile send test_bms_status" 
+test10_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/cfg/cfile/ess/test_bms_status '{
+        "/status/bms": {
+            "test2": {
+                "value" :0.0,
+                "param1":"this is param1",
+                "param2":"this is param2",
+                "actions":{
+                    "onSet": [{ "func": 
+                                  [
+                                    { "enabled": true, "ifChanged":true,"func": "xCheckDbiVar", "amap": "bms"}
+                                  ]
+                            }]
+                }
+          }
+        }
+    }'
+EOF
+)
+test10_resp=$(cat<<EOF
+EOF
+)
+test10_sleep="0.1" 
+descs[idx]="$test10_desc"
+acts[idx]="$test10_act"
+resps[idx]="$test10_resp"
+sleeps[idx]="$test10_sleep"
+idx=$(($idx+1))
+
+# controls
+# alarms
+# modbus
+test11_desc="test11 cfile send test_bms_controls" 
+test11_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/cfg/cfile/ess/test_bms_controls '{
+        "/controls/bms": {
+            "test2": {
+                "value" :0.0,
+                "param1":"this is param1",
+                "param2":"this is param2",
+                "actions":{
+                    "onSet": [{ "func": 
+                                  [
+                                    { "enabled": true, "ifChanged":true,"func": "xCheckDbiVar", "amap": "bms"}
+                                  ]
+                            }]
+                }
+          }
+        }
+    }'
+EOF
+)
+test11_resp=$(cat<<EOF
+EOF
+)
+test11_sleep="0.1" 
+descs[idx]="$test11_desc"
+acts[idx]="$test11_act"
+resps[idx]="$test11_resp"
+sleeps[idx]="$test11_sleep"
+idx=$(($idx+1))
+
+# alarms
+# modbus
+test12_desc="test12 cfile send test_bms_alarms" 
+test12_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/cfg/cfile/ess/test_bms_alarms '{
+        "/alarms/bms": {
+            "test2": {
+                "value" :0.0,
+                "param1":"this is param1",
+                "param2":"this is param2",
+                "actions":{
+                    "onSet": [{ "func": 
+                                  [
+                                    { "enabled": true, "ifChanged":true,"func": "xCheckDbiVar", "amap": "bms"}
+                                  ]
+                            }]
+                }
+          }
+        }
+    }'
+EOF
+)
+test12_resp=$(cat<<EOF
+EOF
+)
+test12_sleep="0.1" 
+descs[idx]="$test12_desc"
+acts[idx]="$test12_act"
+resps[idx]="$test12_resp"
+sleeps[idx]="$test12_sleep"
+idx=$(($idx+1))
+
+# modbus
+test13_desc="test13 cfile send test_bms_modbus" 
+test13_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/cfg/cfile/ess/test_bms_modbus '{
+        "/config/ctmpl": {
+            "ess_server_config": {
+                "value": false
+          }
+        },
+        "/components/bms": {
+            "test2": {
+                "value" :0.0,
+                "param1":"this is param1",
+                "param2":"this is param2",
+                "actions":{
+                    "onSet": [{ "func": 
+                                  [
+                                    { "enabled": true, "ifChanged":true,"func": "xCheckDbiVar", "amap": "bms"}
+                                  ]
+                            }]
+                }
+          }
+        },
+        "/links/bms" : {
+            "BMStest2":{
+                "value":"/components/bms:test2",
+                "linkvar" : "/status/bms:BMStest2link",
+                "pname":"ess"
+            }
+        },
+        "/assets/bms/summary" : {
+            "bms_test2":{
+                "value":3456,
+                "param1" : "vlink test",
+                "pname":"ess"
+            }
+        },
+        "/vlinks/bms" : {
+            "BMStest2":{
+                "value":"/assets/bms/summary:bms_test2",
+                "vlink" : "/status/bms:BMStest2link",
+                "pname":"ess"
+            }
+        },
+        "/status/bms" : {
+            "BMStest2link":{
+                "value":1234.5
+            }
+        },
+        "/system/commands": {
+             "link":{
+                 "value":"test",
+                 "help": "link two vars",
+                 "ifChanged":false, "enabled":true, 
+                 "actions":{
+                     "onSet":[{"func":
+                                [
+                                    {"func":"RunLinks"}
+                                ]
+                            }]
+                }
+            },
+            "sysvec":{
+              "value":"test",
+              "help":  "fix setup sysVec order for UI presentation ",
+              "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunSysVec"}]}]}
+            },
+            "vlink":{
+                 "value":"test",
+                 "help": "link two var values",
+                 "ifChanged":false, "enabled":true, 
+                 "actions":{
+                     "onSet":[{"func":
+                                [
+                                    {"func":"RunVLinks"}
+                                ]
+                            }]
+                }
+            }
+        }
+    }'
+EOF
+)
+test13_resp=$(cat<<EOF
+EOF
+)
+test13_sleep="0.1" 
+descs[idx]="$test13_desc"
+acts[idx]="$test13_act"
+resps[idx]="$test13_resp"
+sleeps[idx]="$test13_sleep"
+idx=$(($idx+1))
+
+test14_desc="test14 loader check results" 
+test14_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/full/config/cfile/test_bms_manager | jq
+     | grep -v reqTimeout
+     | grep -v reqResp 
+     | grep -v reqCount 
+     | grep -v aname
+     | grep -v amname
+     | grep -v pname
+     | grep -v md5sum
+EOF
+)
+
+# here is the response for test14
+#
+test14_resp=$(cat<<EOF
+{
+  "DemoLoader": {
+    "value": true,
+  },
+  "ess_config_risen_sungrow": {
+    "value": false,
+    "file": "ess_config_risen_sungrow",
+  },
+  "test_bms_alarms": {
+    "value": true,
+  },
+  "test_bms_controls": {
+    "value": true,
+  },
+  "test_bms_file": {
+    "value": true,
+  },
+  "test_bms_modbus": {
+    "value": true,
+  },
+  "test_bms_status": {
+    "value": true,
+  }
+}
+EOF
+)
+test14_sleep="1.0" 
+descs[idx]="$test14_desc"
+acts[idx]="$test14_act"
+resps[idx]="$test14_resp"
+sleeps[idx]="$test14_sleep"
+idx=$(($idx+1))
+
+test15_desc="test15 loader tmpl  check results" 
+test15_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/full/config/ctmpl/foo | jq
+     | grep -v reqTimeout
+     | grep -v reqResp 
+     | grep -v reqCount 
+     | grep -v aname
+     | grep -v amname
+     | grep -v pname
+EOF
+)
+
+# here is the response for test15
+#
+test15_resp=$(cat<<EOF
+{
+  "ess_server_config": {
+    "value": false,
+  },
+  "test_bms_template": {
+    "value": false,
+  }
+}
+EOF
+)
+test15_sleep="0.1" 
+descs[idx]="$test15_desc"
+acts[idx]="$test15_act"
+resps[idx]="$test15_resp"
+sleeps[idx]="$test15_sleep"
+idx=$(($idx+1))
+
+test16_desc="test16 cfile send test_bms_template" 
+test16_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/cfg/ctmpl/ess/test_bms_template '{
+        "/assets/bms/##RACK_ID##": {
+                "status" :"init",
+                "voltage":0
+        },
+        "/system/bms": {
+            "##RACK_ID##": {
+                "value" :0.0,
+                "param1":"rack num ##RACK_NUM##",
+                "param2":"this is param2",
+                "actions":{
+                    "onSet": [{ "func": 
+                                  [
+                                    { "enabled": true, "ifChanged":true,"func": "xCheckDbiVar", "amap": "bms"}
+                                  ]
+                            }]
+                }
+          }
+        }
+    }'
+EOF
+)
+test16_resp=$(cat<<EOF
+EOF
+)
+test16_sleep="2" 
+descs[idx]="$test16_desc"
+acts[idx]="$test16_act"
+resps[idx]="$test16_resp"
+sleeps[idx]="$test16_sleep"
+idx=$(($idx+1))
+
+test17_desc="test17 loader tmpl  check results" 
+test17_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/config/load | jq
+     | grep -v reqTimeout
+     | grep -v reqResp 
+     | grep -v reqCount 
+     | grep -v aname
+     | grep -v amname
+     | grep -v pname
+EOF
+)
+
+# here is the response for test17
+#
+test17_resp=$(cat<<EOF
+{
+  "test_bms_manager": {
+    "value": true
+  }
+}
+EOF
+)
+
+test17_sleep="0.1" 
+descs[idx]="$test17_desc"
+acts[idx]="$test17_act"
+resps[idx]="$test17_resp"
+sleeps[idx]="$test17_sleep"
+idx=$(($idx+1))
+
+# links
+test18_desc="test18 run links for /components/bms/test2" 
+test18_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/system/commands/link '{
+    "value": "test2","amap":"bms"
+}'
+EOF
+)
+
+test18_resp=$(cat<<EOF
+EOF
+)
+test18_sleep="0.1" 
+descs[idx]="$test18_desc"
+acts[idx]="$test18_act"
+resps[idx]="$test18_resp"
+sleeps[idx]="$test18_sleep"
+idx=$(($idx+1))
+
+# test link value
+test19_desc="test19 test set link value for BMStest2link" 
+test19_act=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/status/bms/BMStest2link  2233 
+EOF
+)
+
+test19_resp=$(cat<<EOF
+{"BMStest2link":2233}
+EOF
+)
+test19_sleep="0.1" 
+descs[idx]="$test19_desc"
+acts[idx]="$test19_act"
+resps[idx]="$test19_resp"
+sleeps[idx]="$test19_sleep"
+idx=$(($idx+1))
+
+
+# test get link value
+test20_desc="test20 test get link value for /components" 
+test20_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$ -u /ess/components/bms/test2 
+EOF
+)
+
+test20_resp=$(cat<<EOF
+2233
+EOF
+)
+test20_sleep="0.1" 
+
+descs[idx]="$test20_desc"
+acts[idx]="$test20_act"
+resps[idx]="$test20_resp"
+sleeps[idx]="$test20_sleep"
+idx=$(($idx+1))
+
+# vlinks
+test21_desc="test21 run vlinks for /components/bms/test2" 
+test21_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/system/commands/vlink '{
+    "value": "test2","amap":"bms"
+}'
+EOF
+)
+
+test21_resp=$(cat<<EOF
+EOF
+)
+test21_sleep="1.5" 
+
+descs[idx]="$test21_desc"
+acts[idx]="$test21_act"
+resps[idx]="$test21_resp"
+sleeps[idx]="$test21_sleep"
+idx=$(($idx+1))
+
+# amap
+test22_desc="test22 check amap " 
+test22_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r/$$  -u /ess/amap | jq
+EOF
+)
+
+test22_resp=$(cat<<EOF
+{
+  "aMs": [
+    {
+      "name": "bms",
+      "p-name": "ess",
+      "aMs": 5,
+      "aIs": 0
+    },
+    {
+      "name": "ess",
+      "aMs": 1,
+      "aIs": 0
+    },
+    {
+      "name": "rack_01",
+      "p-name": "bms",
+      "aMs": 0,
+      "aIs": 0
+    },
+    {
+      "name": "rack_02",
+      "p-name": "bms",
+      "aMs": 0,
+      "aIs": 0
+    },
+    {
+      "name": "rack_03",
+      "p-name": "bms",
+      "aMs": 0,
+      "aIs": 0
+    },
+    {
+      "name": "rack_04",
+      "p-name": "bms",
+      "aMs": 0,
+      "aIs": 0
+    },
+    {
+      "name": "rack_05",
+      "p-name": "bms",
+      "aMs": 0,
+      "aIs": 0
+    }
+  ]
+}
+EOF
+)
+test22_sleep="0.1" 
+
+descs[idx]="$test22_desc"
+acts[idx]="$test22_act"
+resps[idx]="$test22_resp"
+sleeps[idx]="$test22_sleep"
+idx=$(($idx+1))
+
+# assets/bms/rack_01
+test23_desc="test23 create assets bms rack_01 " 
+test23_act=$(cat<<EOF
+${FimsDir}fims_send -m set -r/$$  -u /ess/assets/bms/rack_01 '
+{
+  "voltage":1300.2,
+  "current":256.7,
+  "status":"Discharge",
+  "soc":56.7,
+  "test":"Not For Display"
+
+
+}' | jq
+
+EOF
+)
+
+test23_resp=$(cat<<EOF
+{
+  "voltage": 1300.2,
+  "current": 256.7,
+  "status": "Discharge",
+  "soc": 56.7,
+  "test": "Not For Display"
+}
+EOF
+)
+test23_sleep="0.1" 
+descs[idx]="$test23_desc"
+acts[idx]="$test23_act"
+resps[idx]="$test23_resp"
+sleeps[idx]="$test23_sleep"
+idx=$(($idx+1))
+
+test24_desc="test24 view assets bms rack_01 " 
+test24_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r/$$  -u /ess/full/assets/bms/rack_01 | jq
+EOF
+)
+
+test24_resp=$(cat<<EOF
+{
+  "rack_01": {
+    "current": {
+      "value": 256.7
+    },
+    "soc": {
+      "value": 56.7
+    },
+    "status": {
+      "value": "Discharge"
+    },
+    "test": {
+      "value": "Not For Display"
+    },
+    "voltage": {
+      "value": 1300.2
+    }
+  }
+}
+EOF
+)
+test24_sleep="0.1" 
+descs[idx]="$test24_desc"
+acts[idx]="$test24_act"
+resps[idx]="$test24_resp"
+sleeps[idx]="$test24_sleep"
+idx=$(($idx+1))
+
+# create assetList
+test25_desc="test25 create assetList for  rack_01 " 
+test25_act=$(cat<<EOF
+${FimsDir}fims_send -m set   -u /ess/full/assetList  '
+{
+  "/assets/bms/rack_01":{
+     "value":false,
+      "mode":"/ui/full",
+      "name": "Risen Battery Rack rack_01",
+      "new_options":[
+                 {"aV":"/assets/bms/rack_01:status"},
+                 {"aV":"/assets/bms/rack_01:soc"},
+                 {"aV":"/assets/bms/rack_01:voltage"},
+                 {"aV":"/assets/bms/rack_01:current"}
+      ]
+  }
+}'| jq
+EOF
+)
+
+test25_resp=$(cat<<EOF
+EOF
+)
+
+test25_sleep="0.1" 
+descs[idx]="$test25_desc"
+acts[idx]="$test25_act"
+resps[idx]="$test25_resp"
+sleeps[idx]="$test25_sleep"
+idx=$(($idx+1))
+
+# activate assetlist command
+test26_desc="test26 activate assetList for  rack_01 " 
+test26_act=$(cat<<EOF
+${FimsDir}fims_send -m set   -u /ess/system/commands  '
+{
+   "allalist":{
+       "value":"test",
+       "help":  "fix assetlists ",
+       "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunAllALists"}]}]}
+  }
+}' | jq
+EOF
+)
+
+test26_resp=$(cat<<EOF
+EOF
+)
+test26_sleep="0.1" 
+descs[idx]="$test26_desc"
+acts[idx]="$test26_act"
+resps[idx]="$test26_resp"
+sleeps[idx]="$test26_sleep"
+idx=$(($idx+1))
+
+# activate assetlist command
+test27_desc="test27 create all  assetLists " 
+test27_act=$(cat<<EOF
+${FimsDir}fims_send -m set   -u /ess/system/commands  '
+{
+   "allalist":{
+       "value":"test1"
+  }
+}'| jq
+EOF
+)
+
+test27_resp=$(cat<<EOF
+EOF
+)
+test27_sleep="0.1" 
+descs[idx]="$test27_desc"
+acts[idx]="$test27_act"
+resps[idx]="$test27_resp"
+sleeps[idx]="$test27_sleep"
+idx=$(($idx+1))
+
+test28_desc="test28 view ordered assets bms rack_01 " 
+test28_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r/$$  -u /ess/full/assets/bms/rack_01 | jq
+EOF
+)
+
+test28_resp=$(cat<<EOF
+{
+  "rack_01": {
+    "status": {
+      "value": "Discharge"
+    },
+    "soc": {
+      "value": 56.7
+    },
+    "voltage": {
+      "value": 1300.2
+    },
+    "current": {
+      "value": 256.7
+    }
+  }
+}
+EOF
+)
+test28_sleep="0.1" 
+descs[idx]="$test28_desc"
+acts[idx]="$test28_act"
+resps[idx]="$test28_resp"
+sleeps[idx]="$test28_sleep"
+idx=$(($idx+1))
+
+# siteMap
+test29_desc="test29 set up loadSite command  " 
+test29_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/system/commands '
+{
+  "loadSite":{
+      "value":"test",
+      "help": "load a modbus server file",
+      "ifChanged":false,"enabled":true, "actions":{"onSet":[{"func":[{"func":"LoadServer"}]}]}}
+}'
+EOF
+)
+
+test29_resp=$(cat<<EOF
+EOF
+)
+test29_sleep="0.1" 
+descs[idx]="$test29_desc"
+acts[idx]="$test29_act"
+resps[idx]="$test29_resp"
+sleeps[idx]="$test29_sleep"
+idx=$(($idx+1))
+
+#// drop the server into a template
+test30_desc="test30 set up site controller template " 
+test30_act=$(cat<<EOF
+${FimsDir}fims_send  -m set -u /ess/cfg/ctmpl/ess/ess_server_config '{
+    "fileInfo": {"dummy":"test"},
+    "system":
+    {   "name":"FlexGen_ESS_Controller","protocol": "Modbus TCP","id": "/site","ip_address": "0.0.0.0","port": 502},
+    "registers": {
+        "holding_registers": [
+            {"id": "life",      "offset": 1000,"size": 2,"name": "Life", "signed": true, "uri": "/site/ess_ls"},
+            {"id": "start_stop","offset": 1002,          "name": "Control_Command",      "uri": "/site/ess_hs"},
+            {"id": "run_mode",  "offset": 1003,          "name": "Run_mode",             "uri": "/site/ess_hs"}
+        ]
+    }
+} ' 
+EOF
+)
+test30_resp=$(cat<<EOF
+EOF
+)
+test30_sleep="0.1" 
+descs[idx]="$test30_desc"
+acts[idx]="$test30_act"
+resps[idx]="$test30_resp"
+sleeps[idx]="$test30_sleep"
+idx=$(($idx+1))
+
+# send load site command
+test31_desc="test31 set up loadSite command  " 
+test31_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/system/commands '
+{
+  "loadSite":{
+      "value":"/config/ctmpl:ess_server_config"
+}}'
+EOF
+)
+
+test31_resp=$(cat<<EOF
+EOF
+)
+test31_sleep="0.1" 
+descs[idx]="$test31_desc"
+acts[idx]="$test31_act"
+resps[idx]="$test31_resp"
+sleeps[idx]="$test31_sleep"
+idx=$(($idx+1))
+
+# check site  registers
+test32_desc="test32 check site registers  " 
+test32_act=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$  -u /ess/full/site | jq
+EOF
+)
+
+test32_resp=$(cat<<EOF
+{
+  "/site/ess_hs": {
+    "run_mode": {
+      "value": 0
+    },
+    "start_stop": {
+      "value": 0
+    }
+  },
+  "/site/ess_ls": {
+    "life": {
+      "value": 0
+    }
+  }
+}
+EOF
+)
+test32_sleep="0.1" 
+descs[idx]="$test32_desc"
+acts[idx]="$test32_act"
+resps[idx]="$test32_resp"
+sleeps[idx]="$test32_sleep"
+idx=$(($idx+1))
+
+# set up run action
+test33_desc="test33 set up run action  " 
+test33_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/system/commands '
+{
+  "run":{
+    "value":"test",
+    "help": "run a schedule var",
+    "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}}
+}'
+EOF
+)
+test33_resp=$(cat<<EOF
+EOF
+)
+test33_sleep="0.1" 
+descs[idx]="$test33_desc"
+acts[idx]="$test33_act"
+resps[idx]="$test33_resp"
+sleeps[idx]="$test33_sleep"
+idx=$(($idx+1))
+
+# set up pub control var
+test34_desc="test34 set up pub siteHs control var  " 
+test34_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/control/pubs '
+{
+      "pubSiteHs":{
+        "value":1,
+        "table":"/site/ess_hs",
+        "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunPub"}]}]}}
+}'
+EOF
+)
+test34_resp=$(cat<<EOF
+EOF
+)
+test34_sleep="1" 
+descs[idx]="$test34_desc"
+acts[idx]="$test34_act"
+resps[idx]="$test34_resp"
+sleeps[idx]="$test34_sleep"
+idx=$(($idx+1))
+
+descs[idx]="$test22_desc -->retest"
+acts[idx]="$test22_act"
+resps[idx]="$test22_resp"
+sleeps[idx]="$test22_sleep"
+idx=$(($idx+1))
+
+# set up pub control var
+descs[idx]="test$idx set up pub  siteLs control var  " 
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/control/pubs '
+{
+      "pubSiteLs":{
+        "value":1,
+        "table":"/site/ess_ls",
+        "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunPub"}]}]}}
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#### test wake monitor var
+###
+
+descs[idx]="test$idx this action ensures that the CheckMonitorVar process is run whenever a pub or set is received"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/components/bms_info '{
+        "max_cell_voltage": {
+            "value": 0, "EnableFaultCheck": true, "EnableMaxValCheck": true,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 1.0,"MaxFaultTimeout": 2.0,"MaxRecoverTimeout": 1.0,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "min_cell_voltage": {
+            "value": 0, "EnableFaultCheck": true, "EnableMinValCheck": true, "MinAlarmThreshold": 25.4,"MinFaultThreshold": 10,"MinResetValue": 30,
+            "MinAlarmTimeout": 1.0,"MinFaultTimeout": 2.0,"MinRecoverTimeout": 1.0,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "avg_cell_voltage": {
+            "value": 0, "EnableFaultCheck": true, "EnableMaxValCheck": false, "MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5, "MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "max_cell_temperature": {
+            "value": 0, "EnableFaultCheck": true, "EnableMaxValCheck": false, "MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"remap":[{"bit":0, "offset": 50,"uri":"/status/bms:BMSMaxCellTemp"}]}]}
+        },
+        "min_cell_temperature": {
+            "value": 0,"EnableFaultCheck": true,"EnableMinValCheck": false, "MinAlarmThreshold": 25.4, "MinFaultThreshold": 10,"MinResetValue": 30,
+            "MinAlarmTimeout": 2.5,"MinFaultTimeout": 5.5,"MinRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"remap":[{"bit":0, "offset": 50,"uri":"/status/bms:BMSMinCellTemp"}]}]}
+        },
+        "avg_cell_temperature": {
+            "value": 0,"EnableFaultCheck": true,"EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"remap":[{"bit":0, "offset": 50,"uri":"/status/bms:BMSAvgCellTemp"}]}]}
+        },
+        "soc": {
+            "value": 0,"EnableFaultCheck": true,"EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "soh": {
+            "value": 0,"EnableFaultCheck": true,"EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        }
+    }'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#### check on the vars
+descs[idx]="test$idx check the vars have been set up "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$ -u /ess/components/bms_info | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "avg_cell_temperature": {
+    "value": 0
+  },
+  "avg_cell_voltage": {
+    "value": 0
+  },
+  "max_cell_temperature": {
+    "value": 0
+  },
+  "max_cell_voltage": {
+    "value": 0
+  },
+  "min_cell_temperature": {
+    "value": 0
+  },
+  "min_cell_voltage": {
+    "value": 0
+  },
+  "soc": {
+    "value": 0
+  },
+  "soh": {
+    "value": 0
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#### check on the vars
+descs[idx]="test$idx check on one var max_cell_temperature "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$ -u /ess/full/components/bms_info/max_cell_temperature | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "max_cell_temperature": {
+    "value": 0,
+    "EnableFaultCheck": true,
+    "EnableMaxValCheck": false,
+    "MaxAlarmThreshold": 25.4,
+    "MaxAlarmTimeout": 2.5,
+    "MaxFaultThreshold": 28,
+    "MaxFaultTimeout": 5.5,
+    "MaxRecoverTimeout": 1.4,
+    "MaxResetValue": 22.4,
+    "actions": {
+      "onSet": [
+        {
+          "remap": [
+            {
+              "bit": 0,
+              "offset": 50,
+              "uri": "/status/bms:BMSMaxCellTemp"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#echo " add the list to the system"
+#### check on the vars
+descs[idx]="test$idx add the list of vars to the monitor system "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/schedule/wake_monitor/bms '{
+        "/components/bms_info:max_cell_voltage":     { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:min_cell_voltage":     { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:max_cell_temperature": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:min_cell_temperature": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:soc":                  { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/bms_info:soh":                  { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"}
+    }'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+descs[idx]="test$idx next we have to set up a trigger to run the above list "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -u /ess/system/commands '
+         {"runMonBms":{"value":4,
+                    "help": "load the wake monitor setup system",
+                    "ifChanged":false,"enabled":true, 
+                    "actions":{"onSet":[{"func":[{"func":"RunMonitor","aname":"bms"}]}]}}
+   }'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+descs[idx]="test$idx run the Monitor once  for bms wake_monitor"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/system/commands '
+        {"runMonBms": {"value":22,"aname":"bms","monitor":"wake_monitor","debug":1}}
+        }'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+#### check on the vars
+descs[idx]="test$idx check on one var max_cell_temperature "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$ -u /ess/full/components/bms_info/max_cell_temperature | jq | grep -v tLast
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "max_cell_temperature": {
+    "value": 0,
+    "EnableAlert": true,
+    "EnableFaultCheck": true,
+    "EnableMaxValCheck": false,
+    "EnableMinValCheck": false,
+    "FaultShutdownReset": false,
+    "MaxAlarmThreshold": 25.4,
+    "MaxAlarmTime": 2.5,
+    "MaxAlarmTimeout": 2.5,
+    "MaxFaultThreshold": 28,
+    "MaxFaultTime": 5.5,
+    "MaxFaultTimeout": 5.5,
+    "MaxRecoverTime": 1.4,
+    "MaxRecoverTimeout": 1.4,
+    "MaxResetValue": 22.4,
+    "MinAlarmThreshold": 0,
+    "MinAlarmTime": 0,
+    "MinAlarmTimeout": 0,
+    "MinFaultThreshold": 0,
+    "MinFaultTime": 0,
+    "MinFaultTimeout": 0,
+    "MinRecoverTime": 0,
+    "MinRecoverTimeout": 0,
+    "MinResetValue": 0,
+    "seenMaxAlarm": false,
+    "seenMaxFault": false,
+    "seenMaxReset": false,
+    "seenMinAlarm": false,
+    "seenMinFault": false,
+    "seenMinReset": false,
+    "actions": {
+      "onSet": [
+        {
+          "remap": [
+            {
+              "bit": 0,
+              "offset": 50,
+              "uri": "/status/bms:BMSMaxCellTemp"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+# activate sysvec command
+descs[idx]="test$idx create sysvec list " 
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set   -u /ess/system/commands  '
+{
+   "sysvec":{
+       "value":"test1"
+  }
+}'| jq
+EOF
+)
+
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+
+# test sysvec command
+descs[idx]="test$idx test sysvec list " 
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$   -u /ess/sysvec | jq
+EOF
+)
+
+resps[idx]=$(cat<<EOF
+{
+  "sysvec": [
+    "ess/summary",
+    "bms/summary",
+    "bms/rack_01",
+    "bms/rack_02",
+    "bms/rack_03",
+    "bms/rack_04",
+    "bms/rack_05"
+  ]
+}
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+#### end of regular tests
+#see 601.1_run_tests.txt for the kick off of monitorVar and pubs
+
+#echo " Show how to schedule the monitor list checking...."
+#echo " Something like "
+#echo "/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/full/system/commands/run 
+#echo "         {\"value\":0,\"uri\":\"/system/commands:runMonBms\",\"every\":0.1,\"offset\":0,\"debug\":0}"
+ #echo " Fix the destination to be bms or pcs controllers rather than just the \"flex\"" system controller  ...."
+#echo " Fix the routing of the error messages using vLinks ...."
+#  schedule pubs  this could be done in the ess_control page
+#fims_send -m set -r /$$ -u /ess/full/control/pubs '
+#                    { "pubEssHs":{"value":1,"table":"/site/ess_hs",
+#                                  "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunPub"}]}]}}}'
+#fims_send -m set -r /$$ -u  /ess/system/commands '
+#         {"run":{"value":"test",
+#                  "help": "run a schedule var",
+#                   "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}}}'
+
+#${FimsDir}fims_send -m set -r /$$ -u /ess/full/system/commands/run '
+#                    {"value":22,"uri":"/control/pubs:pubEssHs","every":0.2,"offset":0,"debug":0}'
+# 1086  fims_send -m set -r /$$ -u /ess/system/commands '
+#>          {"runMonBms":{"value":4,
+#>                     "help": "load the wake monitor setup system",
+#>                     "ifChanged":false,"enabled":true,
+#>                     "actions":{"onSet":[{"func":[{"func":"RunMonitor","aname":"bms"}]}]}}
+#>    }'
+# 1087  fims_send -m get -r /$$ -u /ess/full/system/commands/runMonBms  | jq
+# 1088  fims_send -m set -r /$$ -u /ess/full/system/commands/runMonBms@aname '"bms"'  | jq
+## 1089  fims_send -m get -r /$$ -u /ess/full/system/commands/runMonBms  | jq
+# 1090  fims_send -m set -r /$$ -u /ess/full/system/commands/runMonBms@monitor '"wake_monitor"'  | jq
+
+test99_desc="test99 ess_final for pubs  " 
+test99_act=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/system/final '
+{
+ "sched_items":  {
+            "value": true,
+            "targfunc":"xRunSched",
+            "amap":"ess",
+            "note":"send each option as a uri to RunSched or not",
+            "debug":false,
+            "ifChanged": false,
+            "new_options":[
+                {"xuri":"/sched/ess:essSystemInit"},
+                {"xuri":"/sched/ess:every100mSP1",   "every":0.1, "offset":0.01},
+                {"xuri":"/sched/ess:every100mSP2",   "every":0.1, "offset":0.02},
+                {"xuri":"/sched/ess:every100mSP3",   "every":0.1, "offset":0.03},
+                {"xuri":"/sched/ess:fastPub",         "every":0.1, "offset":0.04},
+                {"xuri":"/sched/ess:slowPub",         "every":1,   "offset":0.05},
+                {"uri":"/system/commands:run", "value":{"value":1, "uri":"/control/pubs:pubSiteHs", "every":1,  "offset":0.05}}
+            ],
+            "actions":  {
+                "onSet": [{
+                    "func":     [{"func":     "SchedItemOpts", "amap":     "ess", "initDone":true }]
+                }]
+            }
+        }
+}' | jq
+EOF
+)
+
+test99_resp=$(cat<<EOF
+EOF
+)
+
+#}  

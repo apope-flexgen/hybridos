@@ -1,4 +1,3 @@
-ess_controller|v10.1.0
 site_controller|v2.3.0
 fleet_manager|v1.0.0
 modbus_interface|v1.5.2

@@ -1,0 +1,71 @@
+{
+    "/status/bms" : {
+        "ChargeRate": 0,       
+        "Max": 3000,           
+        "Min": 125,             
+        "CurrentCap": 500,      
+        "Status": "Idle",
+        "enable": false,
+
+        "CheckChargeCharging": {
+            "debug": true,
+            "value": false,
+            "enable":"/status/bms:enable",
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/status/bms:ChargeRate",
+            "expression": "{1} > 0",
+            "ifChanged": false,
+            "actions": { 
+                "onSet":[
+                    {
+                    "remap": 
+                        [
+                        { "inValue": true,  "uri": "/status/bms:Status",                "outValue":   "Charging"    },
+                        { "inValue": true,  "uri": "/status/bms:Status", "fims":"set",   "outValue":  "Charging"    }
+                        ]
+                    }
+                ]}
+        },
+        "CheckChargeDischarging": {
+            "debug": true,
+            "value": false,
+            "enable":"/status/bms:enable",
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/status/bms:ChargeRate",
+            "expression": "{1} < 0",
+            "ifChanged": false,
+            "actions": { 
+                "onSet":[
+                    {
+                    "remap": 
+                        [
+                        { "inValue": true, "uri": "/status/bms:Status",                "outValue": "Discharging"   },
+                        { "inValue": true, "uri": "/status/bms:Status", "fims":"set",  "outValue": "Discharging"   }
+                        ]
+                    }
+                ]}
+        },
+        "CheckChargeIdle": {
+            "debug": true,
+            "value": false,
+            "enable":"/status/bms:enable",
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/status/bms:ChargeRate",
+            "expression": "{1} == 0",
+            "ifChanged": false,
+            "actions": { 
+                "onSet":[
+                    {
+                    "remap": 
+                        [
+                        { "inValue": true,  "uri": "/status/bms:Status",                "outValue":   "Idle"    },
+                        { "inValue": true,  "uri": "/status/bms:Status", "fims":"set",   "outValue":  "Idle"    }
+                        ]
+                    }
+                ]}
+        }
+    }
+}

@@ -1,0 +1,147 @@
+# defs for 300.1_test_avParams.sh
+# p. wilshire
+# 02/26/2022
+#
+# the test script dots in this to run the config set up by 300.1_test_avParams.sh
+# a remap ( or ant other ) action that can have an optional inAv can now specify a Param of that inAv 
+#  to set the action input value
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+#
+# test the SendDb function
+# build a table and send it
+#
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+descs=()
+acts=()
+resps=()
+
+#$1 shift 
+#$2 shiftnum
+#$3 add num
+#xxx=addMask 4  1   1
+
+
+#xxx=`addMask 4  1   1`
+#echo " resut 4 1 1 addmask = $xxx"
+#enable
+#inValue
+#inAv
+#var 
+#func
+
+#char *db = aV->getcParam("db");
+#    char *table = aV->getcParam("table");
+#    char *measure = aV->getcParam("measure");
+
+function setSendDb()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/controls '
+  {
+      "sendDb": { 
+          "value": 1234,
+          "db":"testSend",
+          "port":8086,
+          "table":"/test/sendDb",
+          "measure":"MyTest",
+          "enabled": false,
+          "actions": {
+              "onSet":[{
+                "func":[{
+                 "debug":true,
+                 "func":"SendDb"
+                 }] 
+          }]}
+      }
+}' | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": 1234,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function getSendDb()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/full/system/controls/sendDb | jq | grep aVal
+EOF
+)
+  resps[idx]=$(cat<<EOF
+              "aVal": 3456,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setAVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/test/sendDb '{
+      "var1": "var1",
+      "var2": 2,
+      "var3": false,
+      "var4": "this is var4"
+}' 
+    | jq | grep var1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "var1": "var1",
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function runTest()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/controls '
+  {
+      "sendDb":{
+        "value": 3456, 
+        "enabled":true
+      }
+  }' 
+    | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": 3456,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+#######################################################################
+descs[0]="test sendDb"
+#######################################################################
+#return 0
+idx=1
+setSendDb some_test_var 0                   0.1 " >> setup SendDb test"
+
+setAVar some_test_action 0                  0.1 " >> setup table for db"
+
+runTest some_test_action   0                  0.1 " >> run test"
+
+getSendDb some_test_action 0           0.1 " >> check aVal result"
+

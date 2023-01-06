@@ -28,9 +28,6 @@
 [submodule "cops"]
 	path = cops
 	url = git@github.com:flexgen-power/cops.git
-[submodule "ess_controller"]
-	path = ess_controller
-	url = git@github.com:flexgen-power/ess_controller.git
 [submodule "fleet_manager"]
 	path = fleet_manager
 	url = git@github.com:flexgen-power/fleet_manager.git
@@ -57,4 +54,7 @@
 	url = git@github.com:flexgen-power/overwatch.git
 [submodule "fims/package_utility"]
 	path = fims/package_utility
+	url = git@github.com:flexgen-power/package_utility.git
+[submodule "ess_controller/package_utility"]
+	path = ess_controller/package_utility
 	url = git@github.com:flexgen-power/package_utility.git

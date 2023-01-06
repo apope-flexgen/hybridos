@@ -1,0 +1,605 @@
+# defs for 301.1_test_Slew.sh
+# p. wilshire
+# 10/26/2021
+#
+# the test script dots in this to run the config set up by 01.1
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+
+# test outline
+# 1: set up a slew var  entry  /controls/bms/DemoTotalPower with a Slew
+# 2: check the entry
+# 3: set up an assetvar /controls/bms/DemoChargeCurrent with a CheckDbiVar action
+# 4: change value and check transfer to dbi
+# 5: set up /dbi/conrols/bms/DemoChargeCurent with an action to CheckDbiResp
+# 6: manually check #5
+# 7: set up monitor var action to look for dbiStatus "init" in /components/bms/DemoChargeCurrent
+#     this will trigger a call to getDbiVar from CheckDbiVar (use inAv)
+# 8: set up a run task to run the monitor.
+#
+
+FimsDir=/usr/local/bin/
+
+descs=()
+acts=()
+resps=()
+
+
+#runVar DemoChargeCurrent 4321 0.1 " >> run the var trigger"
+
+function runVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/schedule/bms/Test$1 $2 
+    | jq | grep Test$1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "Test$1": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+#setVar DemoTotalPower 4321 0.1 " >> set the controlled var to 4321"
+
+
+function setVar2()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/controls/bms/$1 $2 
+    | jq | grep $1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "$1": $5
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+#setVarTxt DemoTotalPower init 0.1 " >> set the controlled var to 4321"
+
+function setVarTxt()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/controls/bms "{\"$1\":\"$2\"}" 
+    | jq | grep $1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "$1": "$2"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+#getVar DemoTotaPower 4321 0.1 " >> check the controlled value 4321"
+
+
+# hung over from dbiVar
+#setRespVar DemoChargeCurrent 4321 0.1 " >> set the controlled var to 4321"
+
+function setRespVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF 
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/dbi/controls/bms "{\"$1\": $2}" 
+    | jq | grep $1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "$1": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+#getRespVar DemoChargeCurrent 4321 0.1 " >> get the resp var value 4321"
+
+function getRespVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/dbi/controls/bms/$1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+$2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+#delDbiVar DemoChargeCurrent 4321 0.1 " >> delete the  dbi var"
+
+function delDbiVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m del  -u /dbi/ess_controller/dbivars_controls_bms_$1 
+  
+EOF
+)
+  resps[idx]=$(cat<<EOF
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+#setDbiVar DemoChargeCurrent 4321 0.1 " >> set the  dbi var"
+
+function setDbiVar()
+{
+  descs[idx]=$4
+  body="{\"$1\":$2}"
+  #echo "body = '$body'"
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /dbi/ess_controller/dbivars_controls_bms_$1 '$body' | jq | grep $1 |grep -v dbivars 
+    
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "$1": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+#getDbiVar DemoChargeCurrent 4321 0.1 " >> get the  dbi var"
+
+function getDbiVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get  -r /$$ -u /dbi/ess_controller/dbivars_controls_bms_$1
+    
+EOF
+)
+  resps[idx]=$(cat<<EOF
+{"$1":$2}
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+#######################################################################
+descs[0]=" >> test Slew or Ramped var "
+#######################################################################
+
+idx=1
+
+#
+# set up the varsmap entry
+#
+setVar SlewedTotalPower 1234 0.1 " >> set the slewed var to 1234"
+
+descs[idx]=" >> setup varsmap /controls/bms/DemoTotalPower with SlewVal"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/full/controls/bms '
+{
+    "DemoTotalPower":
+    {
+        "value": 4444,
+        "debug":true,
+        "enabled":true,
+        "RatedValue":2400,
+        "LastSlewedTime": -0.1,
+        "SlewedVal":"/controls/bms:SlewedTotalPower",
+        "SlewRate":10,
+        "actions": 
+        {
+            "onSet": [{"func": [{"amap": "ess","func": "SlewVal"}]}]
+        }
+    }
+}' | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "DemoTotalPower": {
+    "value": 4444,
+    "debug": true,
+    "enabled": true,
+    "RatedValue": 2400,
+    "LastSlewedTime": -0.1,
+    "SlewedVal": "/controls/bms:SlewedTotalPower",
+    "SlewRate": 10,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "ess",
+              "func": "SlewVal"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+getVar SlewedTotalPower 1258 0.1 " >> check the slewed var as 1258"
+#
+#    .. set up a control var to run a func to SlewVal
+#
+descs[idx]=" >> setup  set up a control var /schedule/bms:TestTotalPower to run func SlewVal on DemoTotalPower"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/schedule/bms '
+{
+    "TestDemoTotalPower":
+    {
+        "value":-1,
+        "debug":1,
+        "actions": 
+        {
+            "onSet": [{"func": [{"inVar": "/controls/bms:DemoTotalPower", "amap": "ess","func": "SlewVal"}]}]
+        }
+    }
+}' | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "TestDemoTotalPower": {
+    "value": -1,
+    "debug": 1,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "inVar": "/controls/bms:DemoTotalPower",
+              "amap": "ess",
+              "func": "SlewVal"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+setVar DemoTotalPower  4320 0.1 " >> set the controlled var to 4320" 1258
+runVar DemoTotalPower 1 0.1 " >> run the var trigger"
+getVar SlewedTotalPower  1330 0.1 " >> check the slewed var (1330)"
+runVar DemoTotalPower 1 0.1 " >> run the var trigger"
+getVar SlewedTotalPower  1354 0.1 " >> check the slewed var (1354)"
+runVar DemoTotalPower 1 0.1 " >> run the var trigger"
+getVar SlewedTotalPower  1378 0.1 " >> check the slewed var (1378)"
+setVar DemoTotalPower 1350 0.1 " >> set controlled var to 1350"
+runVar DemoTotalPower 1 0.1 " >> run the var trigger"
+getVar SlewedTotalPower  1350 0.1 " >> check the slewed var (1350)"
+setVar DemoTotalPower@enabled false 0.1 " >> disable the slew"
+setVar DemoTotalPower 2350 0.1 " >> set controlled var to 2350"
+runVar DemoTotalPower 1 0.1 " >> run the var trigger"
+getVar SlewedTotalPower  2350 0.1 " >> check the slewed var (2350)"
+
+
+return 0
+
+setVarTxt DemoChargeCurrent@dbiStatus OK 0.1 " >> set the controlled var dbiStatus to OK to bypass init"
+setVar DemoChargeCurrent 4321 0.4 " >> set the controlled var to 4321"
+
+getDbiVar DemoChargeCurrent 4321 0.1 " >>> get  dbivar DemoChargeCurrent 4321"
+
+setVar DemoChargeCurrent 1234 0.1 " >> set the controlled var to 1234"
+getDbiVar DemoChargeCurrent 1234 0.1 " >>> get  dbivar DemoChargeCurrent 1234"
+
+
+
+setRespVar DemoChargeCurrent -1 0.1 " >> set the resp var to -1"
+getRespVar DemoChargeCurrent -1 0.1 " >> check the resp var as -1"
+
+setRespVar DemoChargeCurrent 2345 0.1 " >> set the resp var to 2345"
+getRespVar DemoChargeCurrent 2345 0.1 " >> check the resp var as 2345"
+
+
+#  now set up the response var with action
+#
+#
+
+descs[idx]=" >> setup varsmap /dbi/controls/bms/DemoChargeCurrent with CheckDbiResp action"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/dbi/controls/bms '
+{
+    "DemoChargeCurrent":
+    {
+        "value":-1,
+        "debug":1,
+        "actions": 
+        {
+            "onSet": [{"func": [{"amap": "ess","func": "CheckDbiResp"}]}]
+        }
+    }
+}' | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "value": -1,
+    "debug": 1,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "ess",
+              "func": "CheckDbiResp"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+#
+# now send something to /ess/dbi/controls/bms/DemoChargeCurrnt
+
+setRespVar DemoChargeCurrent 10099 0.1 " >> set the resp var to 10099"
+getRespVar DemoChargeCurrent 10099 0.1 " >> check the resp var as 10099"
+
+getVar DemoChargeCurrent 10099 0.1 " >> check the resp var as 10099"
+
+#return 0
+
+#
+#  almost there  .. set up a control var to run a func to CheckDbiVar
+#
+descs[idx]=" >> setup  set up a control var /schedule/bms:TestDemoChargeCurent to run func CheckDbiVar on DemoChargeCurent"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$ -u /ess/schedule/bms '
+{
+    "TestDemoChargeCurrent":
+    {
+        "value":-1,
+        "debug":1,
+        "actions": 
+        {
+            "onSet": [{"func": [{"inVar": "/controls/bms:DemoChargeCurrent", "amap": "ess","func": "CheckDbiVar"}]}]
+        }
+    }
+}' | jq
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "TestDemoChargeCurrent": {
+    "value": -1,
+    "debug": 1,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "inVar": "/controls/bms:DemoChargeCurrent",
+              "amap": "ess",
+              "func": "CheckDbiVar"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+setDbiVar DemoChargeCurrent 54321 0.1 " >>> set  dbivar DemoChargeCurrent 54321"
+getDbiVar DemoChargeCurrent 54321 0.1 " >>> set  dbivar DemoChargeCurrent 54321"
+
+setVarTxt DemoChargeCurrent@dbiStatus init 0.1 " >> set the controlled var dbiStatus to init"
+
+runVar DemoChargeCurrent 1 1.0 " >> run the var trigger"
+
+getVar DemoChargeCurrent 54321 0.1 " >>> check DemoChargeCurrent 54321"
+
+return 0
+
+#
+
+setVar DemoChargeCurrent 4321 0.1 " >> set the controlled var to 4321"
+getVar DemoChargeCurrent 4321 0.1 " >> check the controlled var value (4321)"
+delDbiVar DemoChargeCurrent 4321 0.1 " >> delete the  dbi var"
+setVarTxt DemoChargeCurrent@dbiStatus init 0.1 " >> set the controlled var status to init"
+
+runVar DemoChargeCurrent 22 0.1 " >> run the var trigger"
+getVar DemoChargeCurrent 4321 0.1 " >> check the controlled var value  still 4321"
+
+
+return 0
+
+
+#here is another test sequence
+# this one will use a control var to trigger CheckDbiVar 
+#put 1234  value into dbi
+#fims_send -m set -r /$$  -u /dbi/ess_controller/dbivars_controls_bms_DemoChargeCurrent 1234
+#fims_send -m get -r /$$  -u /dbi/ess_controller/dbivars_controls_bms_DemoChargeCurrent
+# put the controlled var into "init" state
+##fims_send -m set -r /$$ -u /ess/full/controls/bms/DemoChargeCurrent@dbiStatus '"init"'
+#trigger a test , causes a fetch from dbi
+##fims_send -m set -r /$$ -u /ess/schedule/bms/TestDemoChargeCurrent 23
+#look at the result  should be 1234
+##fims_send -m get -r /$$ -u /ess/full/controls/bms/DemoChargeCurrent  | jq
+
+#here is another test sequence
+# set the var to 4321 
+# check the dbi var
+# then trigger a fetch
+# put the var into init state 
+# give the var an update timeout 
+# then trigger a fetch
+# the var should stay in the init state and retry the fetch every update seconds
+# keep a count of update attempts.
+# repeat the trigger before the update timeout , no increase int dbi fetch counts
+# repeat the trigger after the update timeout , no increase int dbi fetch counts
+# reset the dbi value
+#
+##fims_send -m set -r /$$ -u /ess/controls/bms/DemoChargeCurrent 4321 
+## check the dbi value 
+#fims_send -m get -r /$$  -u /dbi/ess_controller/dbivars_controls_bms_DemoChargeCurrent
+
+#delete the value in dbi
+#fims_send -m del -r /$$  -u /dbi/ess_controller/dbivars_controls_bms_DemoChargeCurrent
+#fims_send -m get -r /$$  -u /dbi/ess_controller/dbivars_controls_bms_DemoChargeCurrent
+# put the controlled var into "init" state
+##fims_send -m set -r /$$ -u /ess/full/controls/bms/DemoChargeCurrent@dbiStatus '"init"'
+#trigger a test , causes a fetch from dbi
+##fims_send -m set -r /$$ -u /ess/schedule/bms/TestDemoChargeCurrent 
+#look at the result  should be 1234
+##fims_send -m get -r /$$ -u /ess/full/controls/bms/DemoChargeCurrent  | jq
+
+
+
+
+descs[idx]=" >> trigger Demo Current "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$  -u /ess/full/controls/bms '
+{
+    "DemoChargeCurrent":
+    {
+        "value": 234
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"DemoChargeCurrent":{"value":234}}
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+descs[idx]=" >> recover Demo Current "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$  -u /ess/full/controls/bms/DemoChargeCurrent | jq | grep -v tLast
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "value": 234
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+
+#allow time for dbi to respond the init status should trigger a dbi read.
+sleeps[idx]="1" 
+idx=$(($idx+1))
+descs[idx]=" >> recover Demo Current after dbi setup  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$  -u /ess/full/controls/bms/DemoChargeCurrent | jq | grep -v tLast
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "value": 234
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+# set this values again to simulate the wake monitor fetch the 0 value should be replaced by the dbi value 5555
+#
+descs[idx]=" >> setup DemoCharge Current force recover from dbase "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$  -u /ess/controls/bms '
+{
+    "DemoChargeCurrent":
+    {
+        "value": 0,
+        "dbiStatus":"init",
+        "debug":1,
+        "actions": 
+        {
+            "onSet": [{"func": [{"amap": "ess","func": "CheckDbiVar"}]}]
+        }
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"DemoChargeCurrent":{"value":0,"dbiStatus":"init","debug":1,"actions":{"onSet":[{"func":[{"amap":"ess","func":"CheckDbiVar"}]}]}}}
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+descs[idx]=" >> inspect  DemoCharge Current recovery from dbase "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$  -u /ess/full/controls/bms/DemoChargeCurrent | jq  
+      | grep -v tLast
+      | grep -v dbiAct
+      | grep -v dbiCnt
+      | grep -v UpdateTimeRemain
+EOF
+)
+resps[idx]=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "value": 5555,
+    "dbiStatus": "OK",
+    "debug": 1,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "ess",
+              "func": "CheckDbiVar"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))

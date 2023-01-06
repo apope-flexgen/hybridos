@@ -1,0 +1,287 @@
+# defs for 800.2_test_dual_bms_modbus.sh
+# p. wilshire
+# 03/15/2022
+#
+# the test script dots in this to run the config set up by 800.1_test_dual_bms.sh
+echo  "the ess controller must be running    ess_controller -n ess -c ess_init1 -x"
+
+echo "the dual bms system must be loaded  sh scripts/dual_bms/load_bms_1.sh"
+
+#
+#
+# test "/assets/ess/ess_1":{
+#  "name": "ESS Summary",
+#    "version":                          {"name": "Version",                  "value": "version", "enabled": true },
+#    "estop_status":                     {"name": "E-Stop Status",            "value": "Off",     "enabled": true },
+#    "disconnect_switch_status":         {"name": "Disconnect Switch Status", "value": "Off","enabled": true},
+#    "door_latch_status":                {"name": "Door Latch Status",        "value": "Off","enabled": true},
+##    "surge_arrester_status":            {"name": "Surge Arrester Status",    "value": "Off","enabled": true},
+#    "fire_alarm_status":                {"name": "Fire Alarm Status",        "value": "Off","enabled": true},
+#    "fuse_monitoring_status":           {"name": "Fuse Monitoring Status",   "value": "Off","enabled": true},
+#    "max_charge_power":                 {"name": "Max Charge Power",         "value": 0,"enabled": false},
+#    "max_discharge_power":              {"name": "Max Discharge Power",      "value": 0,"enabled": false},
+#    "active_power":                     {"name": "Active Power",             "value": 2.5,"enabled": false},
+#    "active_power_setpoint":            {"name": "Active Power Setpoint",    "value": 3.0999999046325684,"enabled": false},
+
+#    "alarms":                           {"name": "Alarms",                   "value": 0,"options": [],"enabled": true},
+#    "soc":                              {"name": "State of Charge",          "value": 76.55913543701172,"enabled": false},
+#    "soh":                              {"name": "State of Health",          "value": 65.7,"enabled": false},
+#    "status":                           {"name": "Status",                   "value": "Status","enabled": true}
+#  },
+  
+#
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+descs=()
+acts=()
+resps=()
+act_res=()
+
+#$1 shift 
+#$2 shiftnum
+#$3 add num
+#xxx=addMask 4  1   1
+
+
+#xxx=`addMask 4  1   1`
+#echo " resut 4 1 1 addmask = $xxx"
+#enable
+#inValue
+#inAv
+#var 
+#func
+
+# setvar $1 
+# value  $2
+# sleep $3
+# desc $4{ "value": "/assets/ess/summary:version",                        "vlink": "/status/ess:build"      
+# setAsset  /status/ess/build   newversion   
+function setAsset()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u $1 '{
+      "value": "$2"
+}' 
+    | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": "$2"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function setAssetVal()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u $1 '{
+      "value": $2
+}' 
+    | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+# getAsset  /assets/ess/summary/version   newversion   
+
+function getAsset()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+"$2"
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+# getAsset  /assets/ess/summary/version   newversion   
+
+function getAssettoVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+EOF
+)
+  echo "resp = $act_res[$idx]"
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function getAssetVal()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 
+    | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+$2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+function runTest()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/controls '
+  {
+      "sendDb":{
+        "value": 3456, 
+        "enabled":true
+      }
+  }' 
+    | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": 3456,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+getAvar ()
+{
+  sys_xxx=`fims_send -m get -r /$$ -u $2`
+  echo "$sys_xxx"
+}
+
+# moved to test definitions
+#setSSHVal()
+#{
+##  descs[idx]=$5
+#
+#  acts[idx]=$(cat<<EOF
+#ssh root@172.17.0.3 "fims_send -m pub  -u $1 '{\"$2\":$3}'"
+#EOF
+#)
+#resps[idx]=$(cat<<EOF
+#EOF
+#)
+#  sleeps[idx]="$4" 
+#  idx=$(($idx+1))
+#}   
+
+#######################################################################
+descs[0]="test dual_bms risen_bms_manager"
+#######################################################################
+#return 0
+# /components/gpio:Disconnect Switch"
+sys_build=$(getAvar sys_build /ess/status/ess/build)
+echo "sys_build version [$sys_build]"
+diss_switch=$(getAvar sys_build /ess/components/gpio/DisconnectSwitch)
+echo "diss_switch  [$diss_switch]"
+echo "set up a modbus server on 172.10.0.3 configs/modbus_server/bms_1_modbus_server.json"
+echo " make sure ssh-copy-id has been used to set up no password ssh link to 172.17.0.3"
+echo " tests the data contained in risen_bms_manager.json and risen_bms_manager_modbus.json"
+
+getAssetpVal ()
+{
+   descs[idx]=$5
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u $1 | jq | grep $2
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "$2": $3,
+EOF
+)
+  sleeps[idx]="$4" 
+  idx=$(($idx+1))
+}
+
+testMaxItem ()
+{
+    setSSHVal    $1                      $2     $7           1    " >>>>>>>>>> max item $3 >> set  $1 $2   mid $7"
+    getAssetVal  /ess$4                         $7          0.1   "        >> get  $4        $7"
+
+    setAssetVal  /ess${3}@EnableMaxValCheck     true        0.1   " >> set  ${3}@EnableMaxValCheck         true"
+    setAssetVal  /ess${3}@seenMaxAlarm          false       0.1   " >> set  ${3}@seenMaxAlarm              false"
+    setSSHVal    $1                      $2     $9          ${10}   " >> set  $1 $2   max $9"
+
+    getAssetpVal /ess/full${3} seenMaxAlarm     false       ${10}   "       >> get  ${3}@seenMaxAlarm               false"
+    getAssetpVal /ess/full${3} seenMaxAlarm     true        0.1   "       >> get  ${3}@seenMaxAlarm               true"
+    setSSHVal    $1                      $2     $7           1    " >> set  $1 $2   mid $7"
+    setAssetVal  /ess${3}@seenMaxAlarm          false       0.1   " >> set  ${3}@seenMaxAlarm              false"
+}
+
+testMinItem ()
+{
+    setSSHVal    $1                      $2     $7           1    " >>>>>>>>>>>  min item  $3 set  $1 $2   mid $7"
+    getAssetVal  /ess$4                         $7          0.1   "        >> get  $4        $7"
+    setAssetVal  /ess${3}@EnableMinValCheck     true        0.1   " >> set  ${3}@EnableMinValCheck         true"
+    setAssetVal  /ess${3}@seenMinAlarm          false       0.1   " >> set  ${3}@seenMinAlarm              false"
+
+    setSSHVal    $1                      $2     $6          ${10}   " >> set  $1 $2   low $6"
+
+    getAssetpVal /ess/full${3} seenMinAlarm     false       ${10}   "       >> get  ${3}@seenMinAlarm               false"
+    getAssetpVal /ess/full${3} seenMinAlarm     true        0.1   "       >> get  ${3}@seenMinAlarm               true"
+
+    setSSHVal    $1                      $2     $7           1    " >> set  $1 $2   mid $7"
+
+    setAssetVal  /ess${3}@seenMinAlarm          false       0.1   " >> set  ${3}@seenMinAlarm              false"
+}
+
+idx=1
+# test      modbus_uri             modbus_item               local name                      ui name                              values  
+#                                                                                                                                 min low  mid  high max  delay
+#test        $1                    $2                        $3                              $4                                    $5   $6   $7   $8   $9  $10
+testMaxItem /components/bms_1_info system_max_cell_voltage   /status/bms/BMSMaxCellVoltage    /assets/bms/bms_1/max_cell_voltage   3.7  2.8  3.3  3.7  4.0  2
+testMinItem /components/bms_1_info system_min_cell_voltage   /status/bms/BMSMinCellVoltage    /assets/bms/bms_1/min_cell_voltage   3.7  2.4  3.3  3.7  4.0  2
+
+testMaxItem /components/bms_1_info system_max_cell_temperature  /status/bms/BMSMaxCellTemp /assets/bms/bms_1/max_cell_temp         10   9.9  40  52  54.0  2
+testMinItem /components/bms_1_info system_min_cell_temperature  /status/bms/BMSMinCellTemp /assets/bms/bms_1/min_cell_temp         10   9.9  40  52  54.0  2
+
+testMinItem /components/bms_1_info system_soh                   /status/bms/BMSSOH /assets/bms/bms_1/soh                           25   20  40  52  54.0  5
+
+setAssetVal  /ess/status/bms/BMSCurrent@MinFaultThreshold       10   0.1    " >>>>>>>>>>>  min Current MinFault Threshold  10"
+setAssetVal  /ess/status/bms/BMSCurrent@MaxFaultThreshold       52   0.1    " >>>>>>>>>>>  min Current MinFault Threshold  10"
+
+testMaxItem /components/bms_1_info system_total_current        /status/bms/BMSCurrent /assets/bms/bms_1/system_current             10   9.9  40  52  54.0  5
+testMinItem /components/bms_1_info system_total_current        /status/bms/BMSCurrent /assets/bms/bms_1/system_current             10   9.9  40  52  54.0  5
+
+return 0
+#
+#                        {"inValue": 0, "uri":"/status/bms:BMSCurrent@EnableMaxValCheck", "outValue": false},
+#                        {"inValue": 1, "uri":"/status/bms:BMSCurrent@EnableMaxValCheck", "outValue": true},
+#                        {"inValue": 0, "uri":"/status/bms:BMSCurrent@EnableMinValCheck", "outValue": false},
+#                        {"inValue": 1, "uri":"/status/bms:BMSCurrent@EnableMinValCheck", "outValue": true},
+#                        {"inValue": 0, "uri":"/status/bms:BMSMaxCellTemp@EnableMaxValCheck", "outValue": false},
+#                        {"inValue": 1, "uri":"/status/bms:BMSMaxCellTemp@EnableMaxValCheck", "outValue": true},
+#                        {"inValue": 0, "uri":"/status/bms:BMSMinCellTemp@EnableMinValCheck", "outValue": false},
+#                        {"inValue": 1, "uri":"/status/bms:BMSMinCellTemp@EnableMinValCheck", "outValue": true},

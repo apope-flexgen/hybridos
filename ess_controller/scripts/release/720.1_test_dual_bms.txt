@@ -1,0 +1,227 @@
+# defs for 720.1_test_dual_bms.sh <test>
+# p. wilshire
+# 03/03/2022
+#
+# the test script dots in this to run the config set up by <test>.sh
+# in this case we actually start up two ess controllers and load some simple variables 
+# Then we stop the running ess controllers.
+#
+# 
+#
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+descs=()
+acts=()
+resps=()
+
+#$1 shift 
+#$2 shiftnum
+#$3 add num
+
+
+#
+#  Sets up the dual bms framework
+#
+#outfile1=configs/ess_controller/ess_1_filex.json
+#outfile2=configs/ess_controller/ess_2_filex.json
+
+function runTest()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/controls '
+  {
+      "sendDb":{
+        "value": 3456, 
+        "enabled":true
+      }
+  }' 
+    | jq | grep value
+EOF
+)
+  resps[idx]=$(cat<<EOF
+    "value": 3456,
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+
+
+
+#First the config definition files 
+#Thse provide  name, initial config file, fims subs list and any blocked uris .
+#
+##This file is read in before fims subs are set up.
+#This is why the "blocked" items are important.
+#
+#Blocked uris are "soft blocked". 
+#
+#We are subscribed to that uri, we get the header, then discard the rest of the message.
+# 
+#This one is for the ess_1 device 
+#It subscribes to 
+#
+#    /components/ess_1
+#    /assets
+#    /system
+#    /site/ess_1
+
+#The /ess_1 prefix can be used to bypass any missing subscriptions.
+
+#Ess_1 also soft blocks , at start up and uris that are subscribed to but are not needed or wanted.
+#These blocks can be modified ( change true to false ) at run time.
+#This stops the system collecting unwanted data.
+#    echo '{
+#        "/sysconfig/default": 
+#        {
+#            "Help": " This is the default system config file",
+#            "Subs":":/components/ess_2:/assets:/system:/site/ess_2:",
+#            "Config":"ess_init_dual_2",
+#            "EssName": "ess_2"
+#        }
+##        ,
+#        "/blockeduris/pub" :
+#        {
+#            "/components/ess_1":true,
+#            "/system/ess_1":true,
+#            "/assets/ess/summary":true,
+#            "/assets/ess_1":true
+#        },
+#        "/blockeduris/set" :
+#        {
+#            "/components/ess_1":true,
+#            "/system/ess_1":true,
+#            "/assets/ess/summary":true,
+#            "/assets/ess_1":true
+#        }
+#    }' > configs/ess_controller/ess_2_filex.json
+##
+##
+#
+#
+#The system can now be started up with a single "-f" argument.
+#(
+#   systemctl enable ess_controller@ess_1_file  
+#)
+#
+#Or you can start them from the command line.
+#
+##
+#function startupEss()
+#{
+
+#    /usr/local/bin/ess_controller -f ess_file         > /tmp/ess_out 2>&1 &
+#    /usr/local/bin/ess_controller -f bms_1_file         > /tmp/bms1_out 2>&1 &
+#    /usr/local/bin/ess_controller -f bms_2_file         > /tmp/bms2_out 2>&1 &
+#    echo "sleeping while the controllers start"
+#    sleep 5
+
+#}
+
+#function stopEss()
+#{
+
+#    fims_send -m set -u /ess_1/system/ess/stopTime 1
+
+#    fims_send -m set -u /ess_2/system/ess/stopTime 1
+    
+#}
+
+## This is a test component
+
+function testMBPubData()
+{
+    descs[idx]=$4
+
+    acts[idx]=$(cat<<EOF 
+    fims_send -m pub -u /components/bms_1/bms_rack_01 '{"temp":34.56}' &&
+    fims_send -m pub -u /components/bms_2/bms_rack_01 '{"temp":14.56}'
+EOF
+)
+    resps[idx]=$(cat<<EOF
+EOF
+)
+    sleeps[idx]="$3" 
+    idx=$(($idx+1))
+}
+
+
+function testMBGetDataEss1()
+{
+    descs[idx]=$4
+
+    acts[idx]=$(cat<<EOF
+    fims_send -m get -r /$$ -u /ess_1/components/ess_1/bms_rack_01 
+EOF
+)
+    resps[idx]=$(cat<<EOF
+{"temp":{"value":34.56}}
+EOF
+)
+    sleeps[idx]="$3" 
+    idx=$(($idx+1))
+}
+
+function testMBGetDataEss2()
+{
+    descs[idx]=$4
+
+    acts[idx]=$(cat<<EOF
+        fims_send -m get -r /$$ -u /ess_2/components/ess_2/bms_rack_01
+EOF
+)
+    resps[idx]=$(cat<<EOF
+{"temp":{"value":14.56}}
+EOF
+)
+    sleeps[idx]="$3" 
+    idx=$(($idx+1))
+}
+
+#
+#
+#Now you can send data to the individual ess controllers.
+#
+#The modbus_clients will be configured to direct their pubs to the correct ess_controllers.
+#
+#sh-4.2# fims_send -m pub -u /components/ess_1/bms_rack_01 '{"temp":34.56}'
+#sh-4.2# fims_send -m pub -u /components/ess_2/bms_rack_01 '{"temp":24.56}'
+#
+#
+#The name> prefix can be used to direct queries to a specific ess_controller
+#(in this case ess_1 or ess_2)
+# 
+#
+#sh-4.2# fims_send -m get -r /$$ -u /ess_1/components/ess_1/bms_rack_01
+#{"temp":{"value":34.56}}
+#
+#sh-4.2# fims_send -m get -r /$$ -u /ess_2/components/ess_2/bms_rack_01 
+#{"temp":{"value":24.56}}
+#
+#
+#But you cannot get data sent to the ess_1 controller from the ess_2 controller.
+#
+#sh-4.2# fims_send -m get -r /$$ -u /ess_2/components/ess_1/bms_rack_01
+#   <<Receive Timeout.>>
+#
+#Other topics 
+#
+#... Sharing data
+#... Handling cross system controls
+#######################################################################
+descs[0]="test Dual bms"
+#######################################################################
+#return 0
+idx=1
+
+#setupFileConfigs  some_test_var 0              0.1 " >> setup file configs"
+#startupEss        some_test_var 0              2.0 " >> startup ess's"
+testMBPubData     some_test_var 0              0.1 " >> send test data"
+testMBGetDataEss1 some_test_var 0              0.1 " >> get ess_1 test data"
+testMBGetDataEss2 some_test_var 0              0.1 " >> get ess_2 test data"
+
+#stopEss          some_test_var 0              0.1 " >> stop ess's"
