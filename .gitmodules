@@ -7,9 +7,6 @@
 [submodule "dnp3_interface"]
 	path = dnp3_interface
 	url = git@github.com:flexgen-power/dnp3_interface.git
-[submodule "dbi"]
-	path = dbi
-	url = git@github.com:flexgen-power/dbi.git
 [submodule "events"]
 	path = events
 	url = git@github.com:flexgen-power/events.git
@@ -52,9 +49,3 @@
 [submodule "overwatch"]
 	path = overwatch
 	url = git@github.com:flexgen-power/overwatch.git
-[submodule "fims/package_utility"]
-	path = fims/package_utility
-	url = git@github.com:flexgen-power/package_utility.git
-[submodule "ess_controller/package_utility"]
-	path = ess_controller/package_utility
-	url = git@github.com:flexgen-power/package_utility.git

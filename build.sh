@@ -36,6 +36,10 @@ for i in "${components[@]}"; do
     echo -e "\n##### component: $i..."
     if cd "$i" ; then
         # building fims as a submodule for meta-RPMs, we need to install by default
+        if [ ! -d "./package_utility" ]; then
+            # we don't have a package utility submodule, use the monorepo package utility
+            cp -R ../package_utility . 
+        fi
         if [ "$i" == "fims" ]; then
             ./package_utility/build.sh "-bi" || warning_trap "failed to build submodule $i."
         else

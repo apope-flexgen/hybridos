@@ -3,7 +3,6 @@ fleet_manager|v1.0.0
 modbus_interface|v1.5.2
 dnp3_interface|v3.0.0
 washer|v1.0.0
-dbi|hotfix/v2.1.0
 scheduler|v1.2.0
 cops|v1.2.0
 ftd|v2.0.0-rc

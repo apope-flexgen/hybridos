@@ -1,0 +1,13 @@
+[Unit]
+Description=General database interface from FIMS to MongoDB or other backends
+Requires=fims.service mongod.service
+After=fims.service mongod.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/dbi /usr/local/etc/config/dbi/
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
