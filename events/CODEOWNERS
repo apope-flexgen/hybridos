@@ -1,0 +1,15 @@
+# default repo owners
+*           @FlexGenJasonPrice
+
+# file system owners
+
+# file type owners
+*.cpp       @jcalcagni-flexgen
+*.h         @jcalcagni-flexgen
+*.js        @FlexGenJasonPrice
+*.go        @FlexGenJasonPrice
+*.py        @FlexGenJasonPrice
+Makefile    @akmuluku
+*.sh        @akmuluku
+*.spec      @akmuluku
+*.service   @akmuluku

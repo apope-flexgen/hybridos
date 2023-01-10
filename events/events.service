@@ -1,0 +1,13 @@
+[Unit]
+Description=HybridOS Events Storage - receive events, store in database, serve to UI with filtering
+Requires=fims.service mongod.service
+After=fims.service mongod.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/events /usr/local/etc/config/events/
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

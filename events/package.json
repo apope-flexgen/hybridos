@@ -1,0 +1,25 @@
+{
+    "name": "events_store",
+    "version": "1.4.0",
+    "description": "HybridOS Events Storage - receive events, store in database, serve to UI with filtering",
+    "main": "src/events.js",
+    "license": "UNLICENSED",
+    "scripts": {
+        "test": "make test",
+        "start-db": "sudo mongod --config /etc/mongod.conf",
+        "start-fims": "../FIMS/fims_server",
+        "lint:js": "eslint . --fix",
+        "doc": "jsdoc -c jsdoc.json"
+    },
+    "author": "Tony Olivo",
+    "dependencies": {
+        "mongoose": "^5.13.14",
+        "pkg": "^5.7.0"
+    },
+    "devDependencies": {
+        "eslint": "^6.8.0",
+        "eslint-config-airbnb-base": "^14.0.0",
+        "eslint-plugin-import": "^2.20.1",
+        "jsdoc": "^3.6.6"
+    }
+}

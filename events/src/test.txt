@@ -1,0 +1,5 @@
+These are some strings you can use as the body for fims_send to test
+
+"{\"source\": \"/assets/ess/ess1\",\"message\": \"Energy Storage System 1 has shut down due to EPO\",\"severity\": 4,\"assert\": true}"
+
+"{\"source\": \"/assets/ess/ess1\",\"message\": \"Energy Storage System 1 has shut down due to EPO\",\"severity\": 4,\"clear\": true,\"assetId\":\"5bd0d069881f5808ef00d713\"}"

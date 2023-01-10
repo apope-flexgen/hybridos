@@ -7,9 +7,6 @@
 [submodule "dnp3_interface"]
 	path = dnp3_interface
 	url = git@github.com:flexgen-power/dnp3_interface.git
-[submodule "events"]
-	path = events
-	url = git@github.com:flexgen-power/events.git
 [submodule "metrics"]
 	path = metrics
 	url = git@github.com:flexgen-power/metrics.git

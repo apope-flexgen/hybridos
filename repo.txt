@@ -11,7 +11,6 @@ dts|hotfix/v2.0.0-rc
 twins|hotfix/v2.2.0
 echo|hotfix/v3.0.0
 overwatch|v1.2.0
-events|hotfix/v1.5.1
 metrics|v1.5.2
 web_server|v1.8.0
 web_ui|v1.8.0
