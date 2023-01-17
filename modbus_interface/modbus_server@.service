@@ -1,0 +1,13 @@
+[Unit]
+Description=HybridOS Modbus Server - injest modbus traffic and route to FIMS
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=root
+ExecStart=/usr/local/bin/modbus_server /usr/local/etc/config/modbus_server/%I
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
