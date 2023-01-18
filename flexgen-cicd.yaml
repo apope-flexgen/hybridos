@@ -1,0 +1,1188 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Flexgen CI/CD Pipeline v1.0
+Parameters:
+  # Repos
+
+  FimsGitHubRepo:
+    Type: String
+    Default: hybridos
+  
+  DbiGitHubRepo:
+    Type: String
+    Default: dbi
+  
+  SiteControllerGitHubRepo:
+    Type: String
+    Default: site_controller
+  
+  EssControllerGitHubRepo:
+    Type: String
+    Default: ess_controller
+  
+  ModbusInterfaceGitHubRepo:
+    Type: String
+    Default: modbus_interface
+  
+  Dnp3InterfaceGitHubRepo:
+    Type: String
+    Default: dnp3_interface
+  
+  WebServerGitHubRepo:
+    Type: String
+    Default: web_server
+
+  # Branches
+
+  FimsGitHubBranch:
+    Type: String
+    Default: dev
+
+  DbiGitHubBranch:
+    Type: String
+    Default: master
+
+  SiteControllerGitHubBranch:
+    Type: String
+    Default: master
+
+  EssControllerGitHubBranch:
+    Type: String
+    Default: master
+
+  ModbusInterfaceGitHubBranch:
+    Type: String
+    Default: master
+
+  Dnp3InterfaceGitHubBranch:
+    Type: String
+    Default: master
+
+  WebServerGitHubBranch:
+    Type: String
+    Default: master
+
+  FimsGitHubBranch:
+    Type: String
+    Default: master
+
+  # Shared
+
+  GitHubToken:
+    Type: String
+
+  GitHubUser:
+    Type: String
+
+Resources:
+  AssetsBucket:
+    Type: AWS::S3::Bucket
+
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: |
+        {
+            "Statement": [{
+                "Effect": "Allow",
+                "Principal": { "Service": [ "codebuild.amazonaws.com" ]},
+                "Action": [ "sts:AssumeRole" ]
+            }]
+        }
+      Policies:
+        - PolicyName: client-code-build-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+              - Resource:
+                  - !Sub arn:aws:s3:::${AssetsBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                  - s3:ListObjects
+
+  CodePipelineServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: |
+        {
+            "Statement": [{
+                "Effect": "Allow",
+                "Principal": { "Service": [ "codepipeline.amazonaws.com" ]},
+                "Action": [ "sts:AssumeRole" ]
+            }]
+        }
+      Policies:
+        - PolicyName: code-pipeline-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource:
+                  - !Sub arn:aws:s3:::${AssetsBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+                  - s3:ListObjects
+              - Resource:
+                  - arn:aws:s3:::*
+                Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                  - iam:PassRole
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - lambda:*
+
+  # Build Projects
+
+  FimsBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            install:
+              commands:
+                - echo Installing packages
+                - pip3 install pandas cython
+            build:
+              commands:
+                - echo Building project
+                - ls -lia
+                - rm -rf fims/package_utility && cp -R ./package_utility fims/package_utility && cd fims/ && ls -lia && cd package_utility && ls -lia && ./build.sh && ls
+                - ls
+                - echo "done" > result.txt
+          artifacts:
+            files:
+              - 'result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-fims-build
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  DbiBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            install:
+              commands:
+                - echo Installing packages
+            build:
+              commands:
+                - echo Building project > result.txt
+          artifacts:
+            files:
+              - 'result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-dbi-build
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  SiteControllerBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            install:
+              commands:
+                - echo Installing packages
+            build:
+              commands:
+                - echo Building project > result.txt
+          artifacts:
+            files:
+              - 'result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-site-controller-build
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  EssControllerBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            install:
+              commands:
+                - echo Installing packages
+            build:
+              commands:
+                - echo Building project > result.txt
+          artifacts:
+            files:
+              - 'result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-ess-controller-build
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  ModbusInterfaceBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            install:
+              commands:
+                - echo Installing packages
+            build:
+              commands:
+                - echo Building project > result.txt
+          artifacts:
+            files:
+              - 'result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-modbus-interface-build
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  Dnp3InterfaceBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            install:
+              commands:
+                - echo Installing packages
+            build:
+              commands:
+                - echo Building project > result.txt
+          artifacts:
+            files:
+              - 'result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-dnp3-interface-build
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  WebServerBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            install:
+              commands:
+                - echo Installing packages
+            build:
+              commands:
+                - echo Building project > result.txt
+          artifacts:
+            files:
+              - 'result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-web-server-build
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  # Unit Test Projects
+
+  FimsUnitTestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Testing project > test_result.txt
+          artifacts:
+            files:
+              - 'test_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-fims-test
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  DbiUnitTestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Testing project > test_result.txt
+          artifacts:
+            files:
+              - 'test_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-dbi-test
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  SiteControllerUnitTestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Testing project > test_result.txt
+          artifacts:
+            files:
+              - 'test_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-site-controller-test
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  EssControllerUnitTestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Testing project > test_result.txt
+          artifacts:
+            files:
+              - 'test_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-ess-controller-test
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  ModbusInterfaceUnitTestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Testing project > test_result.txt
+          artifacts:
+            files:
+              - 'test_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-modbus-interface-test
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  Dnp3InterfaceUnitTestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Testing project > test_result.txt
+          artifacts:
+            files:
+              - 'test_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-dnp3-interface-test
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  WebServerUnitTestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Testing project > test_result.txt
+          artifacts:
+            files:
+              - 'test_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-web-server-test
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  # Integration Test
+
+  IntegrationTestProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Running integration tests > test_result.txt
+          artifacts:
+            files:
+              - 'test_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-integration-tests
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  # Deploy Projects
+
+  FimsDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Deploying project > deployment_result.txt
+          artifacts:
+            files:
+              - 'deployment_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-fims-deploy
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  DbiDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Deploying project > deployment_result.txt
+          artifacts:
+            files:
+              - 'deployment_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-dbi-deploy
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  SiteControllerDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Deploying project > deployment_result.txt
+          artifacts:
+            files:
+              - 'deployment_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-site-controller-deploy
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  EssControllerDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Deploying project > deployment_result.txt
+          artifacts:
+            files:
+              - 'deployment_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-ess-controller-deploy
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  ModbusInterfaceDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Deploying project > deployment_result.txt
+          artifacts:
+            files:
+              - 'deployment_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-modbus-interface-deploy
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  Dnp3InterfaceDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Deploying project > deployment_result.txt
+          artifacts:
+            files:
+              - 'deployment_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-dnp3-interface-deploy
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  WebServerDeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec: |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - echo Deploying project > deployment_result.txt
+          artifacts:
+            files:
+              - 'deployment_result.txt'
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      Name: !Sub ${AWS::StackName}-web-server-deploy
+      ServiceRole: !Ref CodeBuildServiceRole
+
+  # Pipeline
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !GetAtt CodePipelineServiceRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref AssetsBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: Fims
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref FimsGitHubRepo
+                Branch: !Ref FimsGitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: Fims
+              RunOrder: 1
+            - Name: Dbi
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref DbiGitHubRepo
+                Branch: !Ref DbiGitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: Dbi
+              RunOrder: 1
+            - Name: SiteController
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref SiteControllerGitHubRepo
+                Branch: !Ref SiteControllerGitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: SiteController
+              RunOrder: 1
+            - Name: EssController
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref EssControllerGitHubRepo
+                Branch: !Ref EssControllerGitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: EssController
+              RunOrder: 1
+            - Name: ModbusInterface
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref ModbusInterfaceGitHubRepo
+                Branch: !Ref ModbusInterfaceGitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: ModbusInterface
+              RunOrder: 1
+            - Name: Dnp3Interface
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref Dnp3InterfaceGitHubRepo
+                Branch: !Ref Dnp3InterfaceGitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: Dnp3Interface
+              RunOrder: 1
+            - Name: WebServer
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref WebServerGitHubRepo
+                Branch: !Ref WebServerGitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: WebServer
+              RunOrder: 1
+        - Name: Build_Stage_1
+          Actions:
+            - Name: FimsBuildStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref FimsBuildProject
+              InputArtifacts:
+                - Name: Fims
+              OutputArtifacts:
+                - Name: FimsBuild
+              RunOrder: 1
+        - Name: Build_Stage_2
+          Actions:
+            - Name: DbiBuildStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref DbiBuildProject
+                PrimarySource: Dbi
+              InputArtifacts:
+                - Name: FimsBuild
+                - Name: Dbi
+              OutputArtifacts:
+                - Name: DbiBuild
+              RunOrder: 1
+            - Name: SiteControllerBuildStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref SiteControllerBuildProject
+                PrimarySource: SiteController
+              InputArtifacts:
+                - Name: FimsBuild
+                - Name: SiteController
+              OutputArtifacts:
+                - Name: SiteControllerBuild
+              RunOrder: 1
+            - Name: EssControllerBuildStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref EssControllerBuildProject
+                PrimarySource: EssController
+              InputArtifacts:
+                - Name: FimsBuild
+                - Name: EssController
+              OutputArtifacts:
+                - Name: EssControllerBuild
+              RunOrder: 1
+            - Name: ModbusInterfaceBuildStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref ModbusInterfaceBuildProject
+                PrimarySource: ModbusInterface
+              InputArtifacts:
+                - Name: FimsBuild
+                - Name: ModbusInterface
+              OutputArtifacts:
+                - Name: ModbusInterfaceBuild
+              RunOrder: 1
+            - Name: Dnp3InterfaceBuildStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref Dnp3InterfaceBuildProject
+                PrimarySource: Dnp3Interface
+              InputArtifacts:
+                - Name: FimsBuild
+                - Name: Dnp3Interface
+              OutputArtifacts:
+                - Name: Dnp3InterfaceBuild
+              RunOrder: 1
+            - Name: WebServerBuildStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref WebServerBuildProject
+                PrimarySource: WebServer
+              InputArtifacts:
+                - Name: FimsBuild
+                - Name: WebServer
+              OutputArtifacts:
+                - Name: WebServerBuild
+              RunOrder: 1
+        - Name: Test_Stage
+          Actions:
+            - Name: FimsUnitTestStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref FimsUnitTestProject
+              InputArtifacts:
+                - Name: FimsBuild
+              OutputArtifacts:
+                - Name: FimsUTResult
+              RunOrder: 1
+            - Name: DbiUnitTestStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref DbiUnitTestProject
+              InputArtifacts:
+                - Name: DbiBuild
+              OutputArtifacts:
+                - Name: DbiUTResult
+              RunOrder: 1
+            - Name: SiteControllerUnitTestStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref SiteControllerUnitTestProject
+              InputArtifacts:
+                - Name: SiteControllerBuild
+              OutputArtifacts:
+                - Name: SiteControllerUTResult
+              RunOrder: 1
+            - Name: EssControllerUnitTestStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref EssControllerUnitTestProject
+              InputArtifacts:
+                - Name: EssControllerBuild
+              OutputArtifacts:
+                - Name: EssControllerUTResult
+              RunOrder: 1
+            - Name: ModbusInterfaceUnitTestStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref ModbusInterfaceUnitTestProject
+              InputArtifacts:
+                - Name: ModbusInterfaceBuild
+              OutputArtifacts:
+                - Name: ModbusInterfaceUTResult
+              RunOrder: 1
+            - Name: Dnp3InterfaceUnitTestStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref Dnp3InterfaceUnitTestProject
+              InputArtifacts:
+                - Name: Dnp3InterfaceBuild
+              OutputArtifacts:
+                - Name: Dnp3InterfaceUTResult
+              RunOrder: 1
+            - Name: WebServerUnitTestStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref WebServerUnitTestProject
+              InputArtifacts:
+                - Name: WebServerBuild
+              OutputArtifacts:
+                - Name: WebServerUTResult
+              RunOrder: 1
+        - Name: Integration_Test_Stage
+          Actions:
+            - Name: IntegrationTestStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref IntegrationTestProject
+              InputArtifacts:
+                - Name: DbiBuild
+                - Name: SiteControllerBuild
+                - Name: EssControllerBuild
+                - Name: ModbusInterfaceBuild
+                - Name: Dnp3InterfaceBuild
+              OutputArtifacts:
+                - Name: IntegrationTestResult
+              RunOrder: 1
+        - Name: Deployment_Stage
+          Actions:
+            - Name: FimsUnitDeployStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref FimsDeployProject
+              InputArtifacts:
+                - Name: FimsBuild
+              OutputArtifacts:
+                - Name: FimsDeployResult
+              RunOrder: 1
+            - Name: DbiUnitDeployStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref DbiDeployProject
+              InputArtifacts:
+                - Name: DbiBuild
+              OutputArtifacts:
+                - Name: DbiDeployResult
+              RunOrder: 1
+            - Name: SiteControllerUnitDeployStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref SiteControllerDeployProject
+              InputArtifacts:
+                - Name: SiteControllerBuild
+              OutputArtifacts:
+                - Name: SiteControllerDeployResult
+              RunOrder: 1
+            - Name: EssControllerUnitDeployStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref EssControllerDeployProject
+              InputArtifacts:
+                - Name: EssControllerBuild
+              OutputArtifacts:
+                - Name: EssControllerDeployResult
+              RunOrder: 1
+            - Name: ModbusInterfaceUnitDeployStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref ModbusInterfaceDeployProject
+              InputArtifacts:
+                - Name: ModbusInterfaceBuild
+              OutputArtifacts:
+                - Name: ModbusInterfaceDeployResult
+              RunOrder: 1
+            - Name: Dnp3InterfaceUnitDeployStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref Dnp3InterfaceDeployProject
+              InputArtifacts:
+                - Name: Dnp3InterfaceBuild
+              OutputArtifacts:
+                - Name: Dnp3InterfaceDeployResult
+              RunOrder: 1
+            - Name: WebServerUnitDeployStep
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref WebServerDeployProject
+              InputArtifacts:
+                - Name: WebServerBuild
+              OutputArtifacts:
+                - Name: WebServerDeployResult
+              RunOrder: 1
