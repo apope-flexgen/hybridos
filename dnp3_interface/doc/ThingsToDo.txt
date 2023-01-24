@@ -1,0 +1,36 @@
+things to do.
+
+
+link status
+individual reg set outstation
+same from master
+scan classes done and understood
+master for each outstation link definition for one channel
+Done how does outstation set a variable .. no need to do that
+OK ERCOT dnp3 master we are an outstation pubs from outstation sent to local masters then to their outstations
+Auto routing ??
+
+Done .. put fims config 
+D0ne look for only scan changed values ( not needed perhaps)
+Fims assign var to a class
+
+
+ERCOT Site
+1/ setup outstation to receive and send data.
+2/ outstation sends pubs on data updates ( )
+    question 
+            -> can we periodically scan for all outstation data.  no 
+            -> Yes if we can keep a copy of the data items in our syscfg structure. done 
+
+3/ Fleet Manager has  master station or each outstation.
+      -> master will get pubs (from 2) and set data items on the outstations.
+      -> master will issue pubs to update status on Fleet Manager ERCOT outstation.
+
+
+Done all of the above
+6/8/2020
+BaseUrl
+check where the modbus runs the pubs.
+make uri lookup much faster.
+lookup the name then get the uri
+

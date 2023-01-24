@@ -1,0 +1,131 @@
+// binary and analog
+// if it is not in the soe handler we'll have to use configs
+// // Binary Input - Any Variation             Group1Var0
+// // Binary Input - Packed Format             Group1Var1
+// // Binary Input - With Flags                Group1Var2
+
+// // Binary Input Event - Any Variation       Group2Var0
+// // Binary Input Event - Without Time        Group2Var1
+// // Binary Input Event - With Absolute Time  Group2Var2
+// // Binary Input Event - With Relative Time  Group2Var3
+
+// group 3 & 4 DoubleBit binaries
+// group 10 & 11 Binary Output
+// group 20 & 21  counters
+// Binary Input - Any Variation
+// Binary Output - Any Variation  Group10Var0
+// Binary Output - Packed Format  Group10Var1
+
+// Binary Output - Output Status With Flags           Group10Var2
+// Binary Output Event - Any Variation                Group11Var0
+// Binary Output Event - Output Status Without Time   Group11Var1
+// Binary Output Event - Output Status With Time      Group11Var2
+// Octet String - Sized by variation                  Group110Var0
+// Octet String Event - Sized by variation            Group111Var0
+// Virtual Terminal Output Block - Sized by variation  Group112Var0
+// Virtual Terminal Event Data - Sized by variation    Group113Var0
+
+// Binary Command - Any Variation                      Group12Var0
+
+// Binary Command - CROB                              Group12Var1
+
+// Binary Command Event - Without Time                Group13Var1
+// Binary Command Event - With Time                   Group13Var2
+
+// Binary Input Event - Any Variation                  Group2Var0
+// Binary Input Event - Without Time                   Group2Var1
+// Binary Input Event - With Absolute Time             Group2Var2
+// Binary Input Event - With Relative Time             Group2Var3
+// Counter - Any Variation                             Group20Var0
+// Counter - 32-bit With Flag                          Group20Var1
+// Counter - 16-bit With Flag                          Group20Var2
+// Counter - 32-bit Without Flag                       Group20Var5
+// Counter - 16-bit Without Flag                       Group20Var6
+// Frozen Counter - Any Variation                      Group21Var0
+// Frozen Counter - 32-bit With Flag                   Group21Var1
+// Frozen Counter - 16-bit With Flag                   Group21Var2
+// Frozen Counter - 32-bit With Flag and Time          Group21Var5
+// Frozen Counter - 16-bit With Flag and Time          Group21Var6
+// Frozen Counter - 32-bit Without Flag                Group21Var9
+// Frozen Counter - 16-bit Without Flag                Group21Var10
+// Counter Event - Any Variation                       Group22Var0
+// Counter Event - 32-bit With Flag                    Group22Var1
+// Counter Event - 16-bit With Flag                    Group22Var2
+// Counter Event - 32-bit With Flag and Time           Group22Var5
+// Counter Event - 16-bit With Flag and Time           Group22Var6
+// Frozen Counter Event - Any Variation                Group23Var0
+// Frozen Counter Event - 32-bit With Flag             Group23Var1
+// Frozen Counter Event - 16-bit With Flag             Group23Var2
+// Frozen Counter Event - 32-bit With Flag and Time    Group23Var5
+// Frozen Counter Event - 16-bit With Flag and Time    Group23Var6
+// Double-bit Binary Input - Any Variation             Group3Var0
+// Double-bit Binary Input - Packed Format             Group3Var1
+// Double-bit Binary Input - With Flags                Group3Var2
+// Analog Input - Any Variation                        Group30Var0
+// Analog Input - 32-bit With Flag                     Group30Var1
+// Analog Input - 16-bit With Flag                     Group30Var2
+// Analog Input - 32-bit Without Flag                  Group30Var3
+// Analog Input - 16-bit Without Flag                  Group30Var4
+// Analog Input - Single-precision With Flag           Group30Var5
+// Analog Input - Double-precision With Flag           Group30Var6
+// Analog Input Event - Any Variation                  Group32Var0
+// Analog Input Event - 32-bit With Flag               Group32Var1
+// Analog Input Event - 16-bit With Flag               Group32Var2
+// Analog Input Event - 32-bit With Flag and Time      Group32Var3
+// Analog Input Event - 16-bit With Flag and Time      Group32Var4
+// Analog Input Event - Single-precision With Flag     Group32Var5
+// Analog Input Event - Double-precision With Flag     Group32Var6
+// Analog Input Event - Single-precision With Flag and Time Group32Var7
+// Analog Input Event - Double-precision With Flag and Time Group32Var8
+// Double-bit Binary Input Event - Any Variation       Group4Var0
+// Double-bit Binary Input Event - Without Time        Group4Var1
+// Double-bit Binary Input Event - With Absolute Time  Group4Var2
+// Double-bit Binary Input Event - With Relative Time  Group4Var3
+// Analog Output Status - Any Variation                Group40Var0
+// Analog Output Status - 32-bit With Flag             Group40Var1
+// Analog Output Status - 16-bit With Flag             Group40Var2
+// Analog Output Status - Single-precision With Flag   Group40Var3
+// Analog Output Status - Double-precision With Flag   Group40Var4
+// Analog Output - Any Variation                       Group41Var0
+// Analog Output - 32-bit With Flag                    Group41Var1
+// Analog Output - 16-bit With Flag                    Group41Var2
+// Analog Output - Single-precision                    Group41Var3
+// Analog Output - Double-precision                    Group41Var4
+
+// Analog Output Event - Any Variation                 Group42Var0
+// Analog Output Event - 32-bit With Flag              Group42Var1
+// Analog Output Event - 16-bit With Flag              Group42Var2
+// Analog Output Event - 32-bit With Flag and Time     Group42Var3
+// Analog Output Event - 16-bit With Flag and Time     Group42Var4
+// Analog Output Event - Single-precision With Flag    Group42Var5
+// Analog Output Event - Double-precision With Flag    Group42Var6
+// Analog Output Event - Single-precision With Flag and Time  Group42Var7
+// Analog Output Event - Double-precision With Flag and Time  Group42Var8
+
+// Analog Command Event - 32-bit                       Group43Var1
+// Analog Command Event - 16-bit                       Group43Var2
+// Analog Command Event - 32-bit With Time             Group43Var3
+// Analog Command Event - 16-bit With Time             Group43Var4
+// Analog Command Event - Single-precision             Group43Var5
+// Analog Command Event - Double-precision             Group43Var6
+// Analog Command Event - Single-precision With Time   Group43Var7
+// Analog Command Event - Double-precision With Time   Group43Var8
+// Time and Date - Absolute Time                       Group50Var1
+// Time and Date - Absolute Time at last recorded time  Group50Var3
+// Time and Date - Indexed absolute time and long interval Group50Var4
+// Time and Date CTO - Absolute time, synchronized     Group51Var1
+// Time and Date CTO - Absolute time, unsynchronized   Group51Var2
+// Time Delay - Coarse                                 Group52Var1
+// Time Delay - Fine                                   Group52Var2
+// Class Data - Class 0                                Group60Var1
+// Class Data - Class 1                                Group60Var2
+// Class Data - Class 2                                Group60Var3
+// Class Data - Class 3                                Group60Var4
+// File-control - File identifier                      Group70Var1
+// File-control - Authentication                       Group70Var2
+// File-control - File command                         Group70Var3
+// File-control - File command status                  Group70Var4
+// File-control - File transport                       Group70Var5
+// File-control - File transport status                Group70Var6
+// File-control - File descriptor                      Group70Var7
+// File-control - File specification string            Group70Var8

@@ -1,0 +1,38 @@
+Time Event
+p.wilshire
+
+fps Logger ms(1641307663157) <-TL--  master_test_dnp3_client - FIR: 0 FIN: 1 SEQ: 4 LEN: 17
+fps Logger ms(1641307663157) <-AL--  master_test_dnp3_client - FIR: 1 FIN: 1 CON: 1 UNS: 0 SEQ: 3 FUNC: RESPONSE IIN: [0x00, 0x00]
+fps Logger ms(1641307663158) <-AL--  master_test_dnp3_client - 051,001 Time and Date CTO - Absolute time, synchronized, 8-bit count [1]
+fps Logger ms(1641307663158) <-AL--  master_test_dnp3_client - 002,003 Binary Input Event - With Relative Time, 16-bit count and prefix [1]
+fps Logger ms(1641307663159) <-AL--  master_test_dnp3_client - 051,002 Time and Date CTO - Absolute time, unsynchronized, 8-bit count [1]
+fps Logger ms(1641307663159) <-AL--  master_test_dnp3_client - 002,003 Binary Input Event - With Relative Time, 16-bit count and prefix [1]
+fps Logger ms(1641307663159) <-AL--  master_test_dnp3_client - 001,002 Binary Input - With Flags, 8-bit start stop [0, 7]
+fps Logger ms(1641307663160) <-AL--  master_test_dnp3_client - 001,002 Binary Input - With Flags, 8-bit start stop [10, 12]
+fps Logger ms(1641307663160) <-AL--  master_test_dnp3_client - 001,002 Binary Input - With Flags, 8-bit start stop [15, 16]
+fps Logger ms(1641307663160) <-AL--  master_test_dnp3_client - 001,002 Binary Input - With Flags, 8-bit start stop [20, 21]
+fps Logger ms(1641307663161) <-AL--  master_test_dnp3_client - 001,002 Binary Input - With Flags, 8-bit start stop [25, 26]
+fps Logger ms(1641307663161) <-AL--  master_test_dnp3_client - 030,005 Analog Input - Single-precision With Flag, 8-bit start stop [0, 16]
+fps Logger ms(1641307663161) <-AL--  master_test_dnp3_client - 030,005 Analog Input - Single-precision With Flag, 8-bit start stop [20, 20]
+fps Logger ms(1641307663162) <-AL--  master_test_dnp3_client - 030,005 Analog Input - Single-precision With Flag, 8-bit start stop [30, 32]
+fps Logger ms(1641307663162) <-AL--  master_test_dnp3_client - 030,005 Analog Input - Single-precision With Flag, 8-bit start stop [35, 37]
+fps Logger ms(1641307663163) <-AL--  master_test_dnp3_client - 030,005 Analog Input - Single-precision With Flag, 8-bit start stop [40, 42]
+fps Logger ms(1641307663163) <-AL--  master_test_dnp3_client - 030,005 Analog Input - Single-precision With Flag, 8-bit start stop [45, 47]
+>> ******************************Bin:  enum [0203] 
+***************************** bin idx 12 name [running_status_event] value [0] flags [4] q [COMM_LOST] time [9]
+<< ******************************Bin:
+>> ******************************Bin:  enum [0203] 
+***************************** bin idx 12 name [running_status_event] value [0] flags [1] q [ONLINE] time [0]
+<< ******************************Bin:
+>> ******************************Bin:  enum [0102] 
+
+fims_send -m set -r /$$  -u /site/operation '
+{
+    "running_status_event":{"value":0,"flags":4, "time":9},
+    "running_status_event":{"value":1,"flags":1,"time":10}
+}'
+fims_send -m set -r /$$  -u /site/operation '
+{
+    "running_status_event":{"value":0,"flags":4, "time":9},
+    "running_status_event":{"value":0,"flags":4,"time":8}
+}'

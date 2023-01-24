@@ -1,0 +1,13 @@
+[Unit]
+Description=FleetManager dnp3 outstation, talks to dnp3 master in APX
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=fleetman
+ExecStart=/usr/local/bin/dnp3_interface/dnp3_outstation /usr/local/etc/config/dnp3_interface/%I
+Restart=always
+RestartSec=15s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,64 @@
+To run this simple client / server test you need two systems.
+Lets have a remote system at ip address 192.168.112.5
+this unit can run a server that your laptop vagrant VM can connect to.
+
+Note that you cannot connect into your vagrant system (by default) so the test setup has to be 
+
+
+remote target
+192.168.112.5   server  listening on 0.0.0.0 port 20000
+
+local VM
+172.21.70.120    client  connecting to 192.168.112.5:20000
+
+
+Use the config/alvin
+
+
+on the VM 
+
+/usr/local/bin/dnp3_interface/dnp3_client config/alvin_dnp3_client.json
+
+
+on the target
+
+/usr/local/bin/dnp3_interface/dnp3_server config/alvin_dnp3_server.json
+
+
+send some status data from the FlexPak local controller
+[hybridos@ess-01 ~]$  /usr/local/bin/fims/fims_send -m set -r /$$  -u /assets/ess/ess_4/soc 53.4
+
+
+on the server 
+get the debug output (debug 2)
+
+***************************** analog pair idx 45 var idx 45 name [status] uri [/assets/ess/ess_4] value [0.000000]
+***************************** analog pair idx 46 var idx 46 name [soc] uri [/assets/ess/ess_4] value [53.400002]
+***************************** analog pair idx 47 var idx 47 name [racks] uri [/assets/ess/ess_4] value [0.000000]
+<< ******************************An:
+>> ******************************An:
+***************************** analog pair idx 48 No Var Found
+<< ******************************An:
+Running [OnTaskComplete]
+Running [OnReceiveIIN] IINField 0.0
+
+
+on the server (turn off debug , run fims_listen)
+
+
+[vagrant@localhost dnp3_interface]$ /usr/local/bin/fims/fims_listen -s /assets/ess/ess_4
+Method:  pub
+Uri:     /assets/ess/ess_4
+ReplyTo: (null)
+Body:    {"faults":false,"alarms":false,"status":0,"soc":53.4000015258789,"racks":0,"Timestamp":"05-11-2021 13:45:31.327643"}
+Timestamp:   2021-05-11 13:45:31.327732
+
+
+
+We see the sets from hybridos being transferred via dnp3 to  the vagrant VM
+
+
+We should also see pubs from vagrant appearing on hybridos
+
+
+

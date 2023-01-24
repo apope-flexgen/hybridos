@@ -1,0 +1,289 @@
+# defs for 401.0_dbi_test.sh
+# p. wilshire
+# 10/10/2021
+#
+# the test script  dots this in to set up the tests for dbi system.
+# each test has an action and a response 
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in dbi or alpha order.
+
+# set up /controls/bms:DemoChargeCurrent  as a var destined for DBI
+# CheckDbiVar will cause the DBI value to be updated when DemoChargeCurrent has its value changed
+# but .... the value (0.0) will also be updated .. this is a bug , we'll add $novalue in 1.1.0
+#
+test1_act=$(cat<<EOF
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/controls/bms ' {
+        "DemoChargeCurrent": {
+            "value" :0.0,
+            "novalue":true,
+            "dbiStatus":"init",
+            "EnableDbiUpdate": true,
+            "UpdateTimeCfg": 5,
+            "debug":1,
+            "enabled": true,
+            "actions":{
+                    "onSet": [{ "func": 
+                                  [
+                                    { "enabled": true, "ifChanged":true,"func": "CheckDbiVar", "amap": "bms"}
+                                  ]
+                            }]
+             }
+          }
+        }' | jq | grep -v novalue
+EOF
+)
+
+# here is the response for test1
+#
+test1_resp=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "value": 0,
+    "dbiStatus": "init",
+    "EnableDbiUpdate": true,
+    "UpdateTimeCfg": 5,
+    "debug": 1,
+    "enabled": true,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "enabled": true,
+              "ifChanged": true,
+              "func": "CheckDbiVar",
+              "amap": "bms"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+test2_act=$(cat<<EOF
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/full/dbi/controls/bms '
+{
+    "DemoChargeCurrent": {
+        "enabled": true,
+        "value" :0.0,
+        "MaxValue":5000,
+        "MinValue":0,
+        "ifChanged":false,
+        "actions":{
+            "onSet": [{ "func": [
+                      { "enabled": true, "ifChanged":true,"func": "CheckDbiResp", "amap": "bms"}
+              ]}]
+        }
+    }
+}' | jq 
+EOF
+)
+
+#echo "test1_resp =[ $test1_resp ]"
+#set up response var
+test2_resp=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "enabled": true,
+    "value": 0,
+    "MaxValue": 5000,
+    "MinValue": 0,
+    "ifChanged": false,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "enabled": true,
+              "ifChanged": true,
+              "func": "CheckDbiResp",
+              "amap": "bms"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+
+#set value to 1234.0 
+test3_act=$(cat<<EOF
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/controls/bms ' {
+        "DemoChargeCurrent": {
+            "value" :1234.0
+        }
+    }' | jq
+EOF
+)
+test3_resp=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "value": 1234
+  }
+}
+EOF
+)
+
+sleep 1
+#check dbi  value should be set immediately
+test4_act=$(cat<<EOF
+/usr/local/bin/fims/fims_send -m get -r /$$\
+    -u /dbi/ess_controller/_controls_bms/DemoChargeCurrent/value
+EOF
+)
+test4_resp=$(cat<<EOF
+1234
+EOF
+)
+#echo "test4_resp =[ $test4_resp ]"
+#set value to 4567.0 
+test5_act=$(cat<<EOF
+/usr/local/bin/fims/fims_send -m set -r /$$\
+    -u /ess/controls/bms ' {
+        "DemoChargeCurrent": {
+            "value" :4567.0
+        }
+    }'| jq 
+EOF
+)
+
+test5_resp=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "value": 4567
+  }
+}
+EOF
+)
+
+test6_act=$(cat<<EOF
+     /usr/local/bin/fims/fims_send -m get -r /$$\
+    -u /dbi/ess_controller/_controls_bms/DemoChargeCurrent/value 
+    | jq 
+EOF
+)
+
+test6_resp=$(cat<<EOF
+1234
+EOF
+)
+
+# get the dbiStatus
+test7_act=$(cat<<EOF
+    /usr/local/bin/fims/fims_send -m get -r /$$ \
+    -u /ess/full/controls/bms/DemoChargeCurrent 
+    | jq | grep dbiStatus
+EOF
+)
+
+test7_resp=$(cat<<EOF
+    "dbiStatus": "OK",
+EOF
+)
+test8_act=$(cat<<EOF
+/usr/local/bin/fims/fims_send -m get -r /$$ \
+    -u /ess/full/dbi/controls/bms/DemoChargeCurrent | jq \
+    | grep -v dbiAct | grep -v dbiCnt | grep -v  dbiSkip \
+    | grep -v tLast | grep -v yactions | grep -v UpdateTimeRemain | grep -v '""' | grep -v novalue
+EOF
+)
+#get the response variable
+test8_resp=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "value": 0,
+    "EnableDbiUpdate": true,
+    "MaxValue": 5000,
+    "MinValue": 0,
+    "UpdateTimeCfg": 5,
+    "dbiStatus": "OK",
+    "debug": 1,
+    "enabled": true,
+    "ifChanged": false,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "bms",
+              "enabled": true,
+              "func": "CheckDbiResp",
+              "ifChanged": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+# check dbi value , should be unchanged well not 7777 anyway 
+test9_act=$(cat<<EOF
+     /usr/local/bin/fims/fims_send -m get -r /$$ \
+     -u /dbi/ess_controller/_controls_bms/DemoChargeCurrent/value | jq
+EOF
+)
+test9_resp=$(cat<<EOF
+7777
+EOF
+)
+#echo "test9_resp =[ $test9_resp ]"
+# check dbi value , should now be  7777  
+test10_act=$(cat<<EOF
+   /usr/local/bin/fims/fims_send -m get -r /$$ \
+   -u /dbi/ess_controller/_controls_bms/DemoChargeCurrent/value | jq
+EOF
+)
+
+test10_resp=$(cat<<EOF
+7777
+EOF
+)
+#echo "test10_resp =[ $test10_resp ]"
+# check we got the value updated 
+
+test11_act=$(cat<<EOF
+    /usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/controls/bms/DemoChargeCurrent | jq\
+    | grep -v dbiAct | grep -v dbiCnt | grep -v  dbiSkip | grep -v tLast | grep -v yactions\
+    | grep -v UpdateTimeRemain | grep -v novalue | grep -v '""'
+
+EOF
+)
+
+test11_resp=$(cat<<EOF
+{
+  "DemoChargeCurrent": {
+    "value": 328,
+    "EnableDbiUpdate": true,
+    "MaxValue": 5000,
+    "MinValue": 0,
+    "UpdateTimeCfg": 5,
+    "dbiStatus": "OK",
+    "debug": 1,
+    "enabled": true,
+    "ifChanged": false,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "amap": "bms",
+              "enabled": false,
+              "func": "CheckDbiResp",
+              "ifChanged": false
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+#echo "test11_resp =[ $test11_resp ]"
+# test config/tests/release/401.0_dbi_test.sh completed

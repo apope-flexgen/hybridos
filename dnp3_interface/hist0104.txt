@@ -1,0 +1,203 @@
+    1  ls /home/build/
+    2  g++ -v
+    3  cd /home/build/
+    4  cmake -v
+    5  cmake version
+    6  yum install cmake
+    7  yum install cmake3
+    8  wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/c/cmake3-3.17.5-1.el7.x86_64.rpm
+    9  yum install wget
+   10  wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/c/cmake3-3.17.5-1.el7.x86_64.rpm
+   11  yum install cmake3-3.17.5-1.el7.x86_64.rpm 
+   12  yum update
+   13  wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm
+   14  rpm -uVh epel-release-7-14.noarch.rpm 
+   15  rpm -Uvh epel-release-7-14.noarch.rpm 
+   16  yum install cmake3
+   17  cmake3
+   18  yum install nano
+   19  mkdir testgcc
+   20  cd testgcc
+   21  nano t1.cpp
+   22  g++ -Wall hello.cc -o hello
+   23  g++ -Wall t1.cc -o hello
+   24  g++ -Wall t1.cpp -o hello
+   25  ./hello 
+   26  nano t2.cpp
+   27  g++ -Wall t2.cpp -o t2
+   28  g++ -Wall t2.cpp -o t2 -pthread
+   29  ./t2
+   30  g++ -v
+   31  cd ../
+   32  mkdir rigtorp
+   33  cd rigtorp
+   34  wget https://github.com/rigtorp/SPSCQueue/archive/refs/tags/v1.1.tar.gz rigtorpv1.1.tar.gz
+   35  ls
+   36  mv v1.1.tar.gz rigtorpv1.1.tar.gz
+   37  tar xvzf rigtorpv1.1.tar.gz
+   38  cd SPSCQueue-1.1/
+   39  mkdir build
+   40  cd build
+   41  cmake3 ../
+   42  ake
+   43  make
+   44  make install
+   45  cd ../../
+   46  cd ../
+   47  ls
+   48  mkdir tscns
+   49  cd  tscns
+   50  git clone https://github.com/MengRao/tscns.git
+   51  yum install git
+   52  git clone https://github.com/MengRao/tscns.git
+   53  cd tscns/
+   54  cp tscns.h /usr/local/include/
+   55  mkdir cjson
+   56  cd cjson
+   57  git clone https://github.com/DaveGamble/cJSON.git
+   58  cd cJSON/
+   59  make
+   60  make install
+   61  cd ../../
+   62  cd ../
+   63  mkdir pmap
+   64  cd pmap
+   65  wget https://github.com/greg7mdp/parallel-hashmap/archive/refs/tags/1.33.tar.gz
+   66  mv 1.33.tar.gz pmap_1.33.tar.gz
+   67  tar xvzf pmap_1.33.tar.gz
+   68  cd parallel-hashmap-1.33/
+   69  mkdir build
+   70  cd build
+   71  cmake3 ../
+   72  make
+   73  make install
+   74  cd ../../
+   75  cd ../
+   76  wget https://github.com/gabime/spdlog/archive/refs/tags/v1.9.2.tar.gz
+   77  mv v1.9.2.tar.gz spdlog_v1.9.2.tar.gz 
+   78  tar xvzf spdlog_v1.9.2.tar.gz 
+   79  cd spdlog
+   80  cd spdlog-1.9.2/
+   81  mkdir build
+   82  cd build
+   83  cmake3 ../
+   84  make
+   85  make install
+   86  cd ../
+   87  cd ../
+   88  ls
+   89  cd ../
+   90  ls
+   91  mkdir spdlog
+   92  mv tscns/spdlog_v1.9.2.tar.gz  spdlog
+   93  mv tscns/spdlog-1.9.2  spdlog
+   94  ls spdlog
+   95  mkdir simdjson && cd simdjson && wget https://github.com/simdjson/simdjson/archive/refs/tags/v1.0.2.tar.gz
+   96  mv  v1.0.2.tar.gz simdjson-v1.0.2.tar.gz
+   97  tar xvzf simdjson-v1.0.2.tar.gz 
+   98  cd simdjson-1.0.2/
+   99  mkdir build
+  100  cd build
+  101  cmake3 ../
+  102  make
+  103  make install
+  104  cd ../../../
+  105  ls
+  106  mkdir openssl
+  107  cd  openssl
+  108  openssl 
+  109  wget https://www.openssl.org/source/openssl-1.1.0i.tar.gz
+  110  ls
+  111  tsr xvzf openssl-1.1.0i.tar.gz 
+  112  tar xvzf openssl-1.1.0i.tar.gz 
+  113  cd openssl-1.1.0i
+  114  ./config
+  115  make
+  116  make install
+  117  openssl version
+  118  LD_LIBRARY_PATH=/usr/lib64  openssl version
+  119  LD_LIBRARY_PATH=/usr/local/lib64  openssl version
+  120  cd ../
+  121  cd ../
+  122  mkdir opendnp3
+  123  cd opendnp3/
+  124  wget https://github.com/dnp3/opendnp3/archive/refs/tags/3.1.1.tar.gz
+  125  ls
+  126  mv 3.1.1.tar.gz opendnp3_3.1.1.tar.gz 
+  127  tar xvzf opendnp3_3.1.1.tar.gz 
+  128  ls
+  129  cd opendnp3-3.1.1/
+  130  ls
+  131  more README.md 
+  132  ls
+  133  mkdir build
+  134  cd build/
+  135  more ../CMakeLists.txt 
+  136  cmake3 -DDNP3_TLS=ON ../
+  137  cd ../../../
+  138  ls
+  139  cd openssl/
+  140  ls
+  141  wget https://www.openssl.org/source/openssl-1.1.1.tar.gz
+  142  ls 
+  143  tar xvzf openssl-1.1.1.tar.gz 
+  144  cd openssl-1.1.1
+  145  ls
+  146  ./config
+  147  make
+  148  make install
+  149  LD_LIBRARY_PATH=/usr/local/lib64  openssl version
+  150  cd ../../../
+  151  cd build/
+  152  ls
+  153  cd opendnp3/opendnp3-3.1.1/
+  154  cd build/
+  155  cmake3 -DDNP3_TLS=ON ../
+  156  make
+  157  mak install
+  158  make install
+  159  cd ../../../
+  160  ls
+  161  history
+  162  history > history_all_installed.out
+  163  ls
+  164  ls artifactory/
+  165  mv  artifactory/hybridos-rpm-centos7-devel.repo.txt  artifactory/hybridos-rpm-centos7-devel.repo
+  166  mv  artifactory/hybridos-rpm-centos7-release.repo.txt  artifactory/hybridos-rpm-centos7-release.repo
+  167  cp artifactory/hybridos-rpm-centos7-* /etc/yum.repos.d/
+  168  yum update -y
+  169  yum install fims_devel fims_tools gmock gmock-devel gtest gtest-devel nodejs
+  170  yum install libmodbus
+  171  rpm -qf  libmodbus
+  172  rpm -qa  libmodbus
+  173  history
+  174  cd /home/build/git_save/dnp3_interface/
+  175  . scripts/benv.sh 
+  176  make
+  177  export CPPFLAGS=-g
+  178  make clean all install
+  179  gdb build/release/dnp3_client 
+  180  make clean all install
+  181  make clean all install
+  182  build/release/dnp3_client  config/test_dnp3_client.json 
+  183  make clean all install
+  184  git status
+  185  rm doc/Gruops.txt 
+  186  ls tests
+  187  ls tests/release/
+  188  build/release/dnp3_client  config/test_dnp3_client.json  > master.out 2>&1
+  189  make
+  190  make
+  191  make
+  192  make
+  193  make clean all install
+  194  build/release/dnp3_client  config/test_dnp3_client.json  > master.out 2>&1
+  195  make
+  196  make
+  197  make
+  198  make
+  199  make clean all install 
+  200  build/release/dnp3_client  config/test_dnp3_client.json  > master.out 2>&1
+  201  mv doc/Time\ Event.txt doc/Time_Event.txt 
+  202  history
+  203  history > hist0104.txt

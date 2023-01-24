@@ -1,6 +1,5 @@
 site_controller|v2.3.0
 fleet_manager|v1.0.0
-dnp3_interface|v3.0.0
 washer|v1.0.0
 scheduler|v1.2.0
 cops|v1.2.0

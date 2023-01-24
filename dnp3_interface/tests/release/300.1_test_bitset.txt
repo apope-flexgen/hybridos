@@ -1,0 +1,112 @@
+# defs for 300.1_test_actions.sh
+# p. wilshire
+# 10/22/2021
+#
+# the test script dots in this to run the config set up by 601.0
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+# basic script to test the following actions.
+#"bitfield"
+#"bitset"
+#"enum"
+#"remap"
+#"func"
+#"limits"
+
+FimsDir=/usr/local/bin/
+
+descs=()
+acts=()
+resps=()
+
+#######################################################################
+descs[0]="bitset actions "
+#######################################################################
+# bit  uri , soloBit, var , debug , ifChanged, enable, enabled 
+# var:-  get the in value from here
+# uri : var to set or clear suggested bit
+# 
+idx=1
+
+setVar bitset_one 0 0.1 " >> send 0 to bitset_one "
+setVar bitset_three 0 0.1 " >> send 0 to bitset_three "
+
+descs[idx]=" >> setup test bitset actions  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/controls/bms '
+{
+    "test_bitset":{ 
+        "value":false,
+        "debug":false,
+        "actions": {
+            "onSet": [{
+                "bitset": 
+                    [
+                        {"bit": 1,"uri": "/controls/bms:bitset_one"},
+                        {"bit": 3,"uri": "/controls/bms:bitset_three"}
+                    ]
+            }]
+        }
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+descs[idx]=" >> setup test bitset soloBit actions clears whole value  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/controls/bms '
+{
+    "test_bitset_solo":{ 
+        "value":false,
+        "debug":false,
+        "actions": {
+            "onSet": [{
+                "bitset": 
+                    [
+                        {"bit": 1,"uri": "/controls/bms:bitset_one", "soloBit":true},
+                        {"bit": 3,"uri": "/controls/bms:bitset_three"}
+                    ]
+            }]
+        }
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+#################################
+setVar test_bitset    true 0.1     " >> send true to test_bitset sets bitset_one, three "
+getVar bitset_one     1    0.1     " >> test bitset_one  1"
+getVar bitset_three   4    0.1     " >> test bitset_three 4"
+
+setVar test_bitset false 0.1 " >> send false to test_bitset clears bitset_one, three "
+getVar bitset_one 0 0.1 " >> test bitset_one 0 "
+getVar bitset_three 0 0.1 " >> test bitset_three 0"
+
+
+setVar bitset_one 15 0.1 " >> set bitset_one 15 "
+setVar bitset_three 15 0.1 " >> set  bitset_three 15"
+
+setVar test_bitset_solo true 0.1 " >> send true to test_bitset_solo sets bitset_one, three "
+getVar bitset_one 1 0.1 " >> test bitset_one 1 "
+getVar bitset_three 15 0.1 " >> test bitset_three 15"
+
+setVar bitset_one 15 0.1 " >> set bitset_one 15 again "
+setVar test_bitset_solo false 0.1 " >> send false to test_bitset_solo sets bitset_one, three "
+getVar bitset_one 0 0.1 " >> test bitset_one 0 "
+getVar bitset_three 11 0.1 " >> test bitset_three 11"
+
+
+return 0
+
+
+

@@ -1,0 +1,147 @@
+# defs for 200.1_test_client_send.sh
+# p. wilshire
+# 01/12/2022
+#
+# the test script dots in this to run the config set up by 200.1
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+
+FimsDir=/usr/local/bin/
+
+descs=()
+acts=()
+resps=()
+
+#######################################################################
+# basic script to test the following actions.
+# fims_send -m set -u /site/operation/test_int16  1,2 etc then overflow 
+
+descs[0]="check set / get for outputs"
+#######################################################################
+
+
+idx=1
+
+descs[idx]="set test_int16 1"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /site/operation/test_int16 1 
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+descs[idx]="set test_int16 2"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /site/operation '{"test_int16": 2 }'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+descs[idx]="set test_int16 -2"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /site/operation '{"test_int16": -2 }'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+
+descs[idx]="set test_signed_int16 2"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /site/operation '{"test_signed_int16": 2 }'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+descs[idx]="set test_signed_int16 2"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /site/operation '{"test_signed_int16": 2 }'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+descs[idx]="set test_signed_int16 2000"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /site/operation '{"test_signed_int16": 2000 }'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+descs[idx]="set test_signed_int16 -22"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /site/operation '{"test_signed_int16": -22 }' 
+${FimsDir}fims_send -m set  -u /site/operation '{"test_signed_int16": -23 }' 
+${FimsDir}fims_send -m set  -u /site/operation '{"test_signed_int16": -24 }' 
+${FimsDir}fims_send -m set  -u /site/operation '{"test_signed_int16": -25 }' 
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+
+return  0
+
+descs[idx]="get flags fr_OF_active_kW_cmd"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$ -u /local_client/flags/features/active_power/fr_OF_active_kW_cmd 
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"fr_OF_active_kW_cmd":{"value":24,"flags":"Init"}}
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+descs[idx]="get basic fr_OF_active_kW_cmd"
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get  -r /$$ -u /local_client/features/active_power/fr_OF_active_kW_cmd 
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"fr_OF_active_kW_cmd":24}
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+#return 0
+
+#################################
+descs[idx]="get remote  fr_OF_active_kW_cmd"
+acts[idx]=$(cat<<EOF
+ssh root@172.17.0.3 "LD_LIBRARY_PATH=/usr/local/lib64 /usr/local/bin/fims_send -m get -r /$$ -u /local_server/flags/features/active_power/fr_OF_active_kW_cmd | jq | grep -e active -e value -e flags"
+
+EOF
+)
+resps[idx]=$(cat<<EOF
+  "fr_OF_active_kW_cmd": {
+    "value": 24,
+    "flags": "SUCCESS"
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
