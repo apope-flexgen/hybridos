@@ -40,3 +40,6 @@
 [submodule "overwatch"]
 	path = overwatch
 	url = git@github.com:flexgen-power/overwatch.git
+[submodule "bootstrap"]
+	path = bootstrap
+	url = git@github.com:flexgen-power/bootstrap.git
