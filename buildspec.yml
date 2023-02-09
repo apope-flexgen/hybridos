@@ -3,13 +3,12 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
+      - echo Starting build...
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...          
-      - docker run --rm -it -v "$(pwd):/hybridos/src" flexgen/centos7:devel-10.3.0 bash 
+      - echo running build.sh ...          
+      - ./build.sh
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the Docker image...
