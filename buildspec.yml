@@ -2,16 +2,16 @@ version: 0.2
 
 env:
   parameter-store:
-    ssh_key: id_rsa
-    ssh_pub: id_rsa.pub
+    ssh_key: id_ed25519
+    ssh_pub: id_ed25519.pub
 phases:
   install:
     commands:
       - echo Start set ssh agent...
       - mkdir -p ~/.ssh
-      - echo "$ssh_key" > ~/.ssh/id_rsa   
-      - echo "$ssh_pub" > ~/.ssh/id_rsa.pub
-      - chmod 600 ~/.ssh/id_rsa
+      - echo "$ssh_key" > ~/.ssh/id_ed25519 
+      - echo "$ssh_pub" > ~/.ssh/id_ed25519.pub
+      - chmod 600 ~/.ssh/id_ed25519
       - ssh-keygen -F github.com || ssh-keyscan github.com >>~/.ssh/known_hosts
       - git config --global url."git@github.com:".insteadOf "https://github.com/"
       - echo SSH Agent set...
