@@ -3,6 +3,9 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - echo Start clone submodules...
+      - git clone https://github.com/flexgen-power/web_ui.git
+      - echo Finished clone submodules...
       - echo Starting build...
   build:
     commands:
