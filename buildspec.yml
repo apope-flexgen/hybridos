@@ -4,6 +4,8 @@ env:
   parameter-store:
     ssh_key: "id_ed25519"
     ssh_pub: "id_ed25519.pub"
+    github_user: "github_user"
+    github_token: "github_token"
 phases:
   install:
     commands:
@@ -16,7 +18,7 @@ phases:
   pre_build:
     commands:
       - echo Start clone submodules in pre_build...
-      - git clone https://LuisRamos10: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@github.com/flexgen-power/web_ui.git
+      - git clone https://$github_user:$github_token@github.com/flexgen-power/web_ui.git
       - echo Finished clone submodules...
       - echo Starting build...
   build:
