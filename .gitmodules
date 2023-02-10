@@ -1,45 +1,45 @@
 [submodule "site_controller"]
 	path = site_controller
-	url = ../site_controller.git
+	url = https://github.com/flexgen-power/site_controller.git
 [submodule "dnp3_interface"]
 	path = dnp3_interface
-	url = ../dnp3_interface.git
+	url = https://github.com/flexgen-power/dnp3_interface.git
 [submodule "metrics"]
 	path = metrics
-	url = ../metrics.git
+	url = https://github.com/flexgen-power/metrics.git
 [submodule "web_server"]
 	path = web_server
-	url = ../web_server.git
+	url = https://github.com/flexgen-power/web_server.git
 [submodule "web_ui"]
 	path = web_ui
-	url = ../web_ui.git
+	url = https://github.com/flexgen-power/web_ui.git
 [submodule "scheduler"]
 	path = scheduler
-	url = ../scheduler.git
+	url = https://github.com/flexgen-power/scheduler.git
 [submodule "cops"]
 	path = cops
-	url = ../cops.git
+	url = https://github.com/flexgen-power/cops.git
 [submodule "fleet_manager"]
 	path = fleet_manager
-	url = ../fleet_manager.git
+	url = https://github.com/flexgen-power/fleet_manager.git
 [submodule "washer"]
 	path = washer
-	url = ../washer.git
+	url = https://github.com/flexgen-power/washer.git
 [submodule "ftd"]
 	path = ftd
-	url = ../ftd.git
+	url = https://github.com/flexgen-power/ftd.git
 [submodule "cloud_sync"]
 	path = cloud_sync
-	url = ../cloud_sync.git
+	url = https://github.com/flexgen-power/cloud_sync.git
 [submodule "dts"]
 	path = dts
-	url = ../dts.git
+	url = https://github.com/flexgen-power/dts.git
 [submodule "echo"]
 	path = echo
-	url = ../echo.git
+	url = https://github.com/flexgen-power/echo.git
 [submodule "twins"]
 	path = twins
-	url = ../twins.git
+	url = https://github.com/flexgen-power/twins.git
 [submodule "overwatch"]
 	path = overwatch
-	url = ../overwatch.git
+	url = https://github.com/flexgen-power/overwatch.git
