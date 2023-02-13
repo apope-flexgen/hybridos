@@ -16,7 +16,7 @@ phases:
       - chmod 600 ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa.pub
       - eval "$(ssh-agent -s)"
-      - ssh-add ~/.ssh/id_rsa.pub
+      - ssh-add ~/.ssh/id_rsa
       - echo SSH Agent set...
       - echo Check SSH github connection ...
       - ssh -T git@github.com
