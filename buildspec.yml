@@ -14,6 +14,7 @@ phases:
       - echo $ssh_key > ~/.ssh/id_rsa 
       - echo $ssh_pub > ~/.ssh/id_rsa.pub
       - chmod 600 ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa.pub
       - eval "$(ssh-agent -s)"
       - ssh-add ~/.ssh/id_rsa.pub
       - echo SSH Agent set...
