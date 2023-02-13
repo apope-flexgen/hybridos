@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   parameter-store:
-    ssh_key: "id_rsa"
-    ssh_pub: "id_rsa.pub"
+    ssh_key: id_rsa
+    ssh_pub: id_rsa.pub
     github_user: "github_user"
     github_token: "github_token"
 phases:
@@ -11,8 +11,8 @@ phases:
     commands:
       - echo Start set ssh agent...
       - mkdir -p ~/.ssh
-      - echo $ssh_key > ~/.ssh/id_rsa 
-      - echo $ssh_pub > ~/.ssh/id_rsa.pub
+      - echo "$ssh_key" > ~/.ssh/id_rsa 
+      - echo "$ssh_pub" > ~/.ssh/id_rsa.pub
       - chmod 600 ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa.pub
       - eval "$(ssh-agent -s)"
