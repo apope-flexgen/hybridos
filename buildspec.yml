@@ -1,6 +1,7 @@
 version: 0.2
 
 env:
+  git-credential-helper: yes
   parameter-store:
     ssh_key: "id_rsa"
     ssh_pub: "id_rsa.pub"
@@ -11,10 +12,8 @@ phases:
   install:
     commands:
       - echo Get submodules...
-      # - git init
-      # - git submodule update --init --recursive
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
+      - git clone https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/dnp3_interface.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/washer.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/scheduler.git
@@ -32,9 +31,9 @@ phases:
       - echo Starting build...
   pre_build:
     commands:
-      - echo Delete all submodules package-utility folders in pre-build...
+      - echo Cleanup all submodules package_utility folders in pre-build...
       # - rm -r ./site_controller/package_utility
-      # - rm -r ./fleet_manager/package_utility
+      - rm -r ./fleet_manager/package_utility
       # - rm -r ./dnp3_interface/package_utility
       # - rm -r ./washer/package_utility
       # - rm -r ./scheduler/package_utility
@@ -48,6 +47,7 @@ phases:
       # - rm -r ./metrics/package_utility
       # - rm -r ./web_server/package_utility
       - rm -r ./web_ui/package_utility
+      - git submodule update --init --recursive
       - echo All package_utility deleted, ready for build...
   build:
     commands:
