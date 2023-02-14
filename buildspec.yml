@@ -1,7 +1,6 @@
 version: 0.2
 
 env:
-  git-credential-helper: yes
   parameter-store:
     ssh_key: "id_rsa"
     ssh_pub: "id_rsa.pub"
@@ -47,7 +46,6 @@ phases:
       # - rm -r ./metrics/package_utility
       # - rm -r ./web_server/package_utility
       - rm -r ./web_ui/package_utility
-      - git submodule update --init --recursive
       - echo All package_utility deleted, ready for build...
   build:
     commands:
