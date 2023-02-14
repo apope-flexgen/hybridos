@@ -8,7 +8,22 @@ phases:
     commands:
       - echo Get submodules...
       - git init
+      - git clone https://github.com/flexgen-power/web_ui.git
       - git submodule update --init --recursive
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/dnp3_interface.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/washer.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/scheduler.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/cops.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/ftd.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/cloud_sync.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/dts.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/twins.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/echo.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/overwatch.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/metrics.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/web_server.git
       - echo Finished clone submodules...
       - echo Starting build...
   pre_build:
@@ -28,7 +43,7 @@ phases:
       # - rm -r ./overwatch/package_utility
       # - rm -r ./metrics/package_utility
       # - rm -r ./web_server/package_utility
-      # - rm -r ./web_ui/package_utility
+      - rm -r ./web_ui/package_utility
       - echo All package_utility deleted, ready for build...
   build:
     commands:
