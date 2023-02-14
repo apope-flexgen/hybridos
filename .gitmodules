@@ -1,45 +1,45 @@
 [submodule "site_controller"]
 	path = site_controller
-	url = git@github.com:flexgen-power/site_controller.git
+	url = https://github.com/flexgen-power/site_controller.git
 [submodule "dnp3_interface"]
 	path = dnp3_interface
-	url = git@github.com:flexgen-power/dnp3_interface.git
+	url = https://github.com/flexgen-power/dnp3_interface.git
 [submodule "metrics"]
 	path = metrics
-	url = git@github.com:flexgen-power/metrics.git
+	url = https://github.com/flexgen-power/metrics.git
 [submodule "web_server"]
 	path = web_server
-	url = git@github.com:flexgen-power/web_server.git
+	url = https://github.com/flexgen-power/web_server.git
 [submodule "web_ui"]
 	path = web_ui
-	url = git@github.com:flexgen-power/web_ui.git
+	url = https://github.com/flexgen-power/web_ui.git
 [submodule "scheduler"]
 	path = scheduler
-	url = git@github.com:flexgen-power/scheduler.git
+	url = https://github.com/flexgen-power/scheduler.git
 [submodule "cops"]
 	path = cops
-	url = git@github.com:flexgen-power/cops.git
+	url = https://github.com/flexgen-power/cops.git
 [submodule "fleet_manager"]
 	path = fleet_manager
-	url = git@github.com:flexgen-power/fleet_manager.git
+	url = https://github.com/flexgen-power/fleet_manager.git
 [submodule "washer"]
 	path = washer
-	url = git@github.com:flexgen-power/washer.git
+	url = https://github.com/flexgen-power/washer.git
 [submodule "ftd"]
 	path = ftd
-	url = git@github.com:flexgen-power/ftd.git
+	url = https://github.com/flexgen-power/ftd.git
 [submodule "cloud_sync"]
 	path = cloud_sync
-	url = git@github.com:flexgen-power/cloud_sync.git
+	url = https://github.com/flexgen-power/cloud_sync.git
 [submodule "dts"]
 	path = dts
-	url = git@github.com:flexgen-power/dts.git
+	url = https://github.com/flexgen-power/dts.git
 [submodule "echo"]
 	path = echo
-	url = git@github.com:flexgen-power/echo.git
+	url = https://github.com/flexgen-power/echo.git
 [submodule "twins"]
 	path = twins
-	url = git@github.com:flexgen-power/twins.git
+	url = https://github.com/flexgen-power/twins.git
 [submodule "overwatch"]
 	path = overwatch
-	url = git@github.com:flexgen-power/overwatch.git
+	url = https://github.com/flexgen-power/overwatch.git
