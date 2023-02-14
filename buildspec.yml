@@ -2,13 +2,14 @@ version: 0.2
 
 env:
   git-credential-helper: yes
+  github_user: "github_user"
+  github_token: "github_token"
 
 phases:
   install:
     commands:
       - echo Get submodules...
       - git init
-      - git clone https://github.com/flexgen-power/web_ui.git
       - git submodule update --init --recursive
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
@@ -24,6 +25,7 @@ phases:
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/overwatch.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/metrics.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/web_server.git
+      - git clone https://$github_user:$github_token@github.com/flexgen-power/web_ui.git
       - echo Finished clone submodules...
       - echo Starting build...
   pre_build:
@@ -43,7 +45,7 @@ phases:
       # - rm -r ./overwatch/package_utility
       # - rm -r ./metrics/package_utility
       # - rm -r ./web_server/package_utility
-      - rm -r ./web_ui/package_utility
+      # - rm -r ./web_ui/package_utility
       - echo All package_utility deleted, ready for build...
   build:
     commands:
