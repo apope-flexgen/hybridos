@@ -1,7 +1,7 @@
 version: 0.2
 
 env:
-  git-credential-helper: yes
+  # git-credential-helper: yes
   github_user: "github_user"
   github_token: "github_token"
 
@@ -9,8 +9,8 @@ phases:
   install:
     commands:
       - echo Get submodules...
-      - git init
-      - git submodule update --init --recursive
+      # - git init
+      # - git submodule update --init --recursive
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/dnp3_interface.git
