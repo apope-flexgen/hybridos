@@ -2,11 +2,12 @@ version: 0.2
 
 env:
   git-credential-helper: yes
-  
+
 phases:
   pre_build:
     commands:
       - echo Get submodules...
+      - git init
       - git submodule update --init --recursive
       - echo Finished clone submodules...
       - echo Starting build...
