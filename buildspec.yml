@@ -14,20 +14,20 @@ phases:
   pre_build:
     commands:
       - echo Delete all submodules package-utility folders in pre-build...
-      - rm -r ./site_controller/package_utility
-      - rm -r ./fleet_manager/package_utility
-      - rm -r ./dnp3_interface/package_utility
-      - rm -r ./washer/package_utility
-      - rm -r ./scheduler/package_utility
-      - rm -r ./cops/package_utility
-      - rm -r ./ftd/package_utility
-      - rm -r ./cloud_sync/package_utility
-      - rm -r ./dts/package_utility
-      - rm -r ./twins/package_utility
-      - rm -r ./echo/package_utility
-      - rm -r ./overwatch/package_utility
-      - rm -r ./metrics/package_utility
-      - rm -r ./web_server/package_utility
+      # - rm -r ./site_controller/package_utility
+      # - rm -r ./fleet_manager/package_utility
+      # - rm -r ./dnp3_interface/package_utility
+      # - rm -r ./washer/package_utility
+      # - rm -r ./scheduler/package_utility
+      # - rm -r ./cops/package_utility
+      # - rm -r ./ftd/package_utility
+      # - rm -r ./cloud_sync/package_utility
+      # - rm -r ./dts/package_utility
+      # - rm -r ./twins/package_utility
+      # - rm -r ./echo/package_utility
+      # - rm -r ./overwatch/package_utility
+      # - rm -r ./metrics/package_utility
+      # - rm -r ./web_server/package_utility
       - rm -r ./web_ui/package_utility
       - echo All package_utility deleted, ready for build...
   build:
