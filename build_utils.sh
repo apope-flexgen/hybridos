@@ -2,7 +2,7 @@
 
 name=hybridos
 
-components=(fims fleet_manager web_ui)
+components=(fims fleet_manager modbus_interface dnp3_interface washer dbi scheduler cops ftd cloud_sync dts twins echo overwatch events metrics web_server web_ui)
 meta=(ess_controller_meta site_controller_meta fleet_manager_meta twins_meta)
 
 ess_controller_meta=(fims ess_controller modbus_interface dnp3_interface dbi ftd cloud_sync overwatch events metrics web_server web_ui)
