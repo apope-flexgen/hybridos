@@ -2,11 +2,10 @@ version: 0.2
 
 env:
   parameter-store:
-    ssh_key: id_rsa
-    ssh_pub: id_rsa.pub
+    ssh_key: "id_rsa"
+    ssh_pub: "id_rsa.pub"
     github_user: "github_user"
     github_token: "github_token"
-  git-credential-helper: yes
 
 phases:
   install:
