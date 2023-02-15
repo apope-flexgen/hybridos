@@ -1,18 +1,27 @@
 version: 0.2
 
 env:
+  git-credential-helper: yes
   parameter-store:
-    ssh_key: "id_rsa"
-    ssh_pub: "id_rsa.pub"
+    ssh_key: id_rsa
+    ssh_pub: id_rsa.pub
     github_user: "github_user"
     github_token: "github_token"
 
 phases:
   install:
     commands:
+      - echo Set Agent...
+      - mkdir -p ~/.ssh
+      - echo "$ssh_key" > ~/.ssh/id_rsa   
+      - echo "$ssh_pub" > ~/.ssh/id_rsa.pub
+      - chmod 600 ~/.ssh/id_rsa
+      - eval "$(ssh-agent -s)"
       - echo Get submodules...
+      - git init
+      - git submodule update --recursive
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
-      - git clone https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
+      # - git clone https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/dnp3_interface.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/washer.git
       # - git clone https://$github_user:$github_token@github.com/flexgen-power/scheduler.git
@@ -30,9 +39,9 @@ phases:
       - echo Starting build...
   pre_build:
     commands:
-      - echo Cleanup all submodules package_utility folders in pre-build...
+      - echo Delete all submodules package-utility folders in pre-build...
       # - rm -r ./site_controller/package_utility
-      - rm -r ./fleet_manager/package_utility
+      # - rm -r ./fleet_manager/package_utility
       # - rm -r ./dnp3_interface/package_utility
       # - rm -r ./washer/package_utility
       # - rm -r ./scheduler/package_utility
@@ -45,12 +54,12 @@ phases:
       # - rm -r ./overwatch/package_utility
       # - rm -r ./metrics/package_utility
       # - rm -r ./web_server/package_utility
-      - rm -r ./web_ui/package_utility
+      # - rm -r ./web_ui/package_utility
       - echo All package_utility deleted, ready for build...
   build:
     commands:
       - echo Build started on `date`
-      - echo running build.sh ...          
+      - echo running build.sh ...
       - ./build.sh
   post_build:
     commands:
