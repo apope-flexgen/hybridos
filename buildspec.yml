@@ -40,7 +40,7 @@ phases:
     commands:
       - echo Delete all submodules package-utility folders in pre-build...
       # - rm -r ./site_controller/package_utility
-      # - rm -r ./fleet_manager/package_utility
+      - rm -r ./fleet_manager/package_utility
       # - rm -r ./dnp3_interface/package_utility
       # - rm -r ./washer/package_utility
       # - rm -r ./scheduler/package_utility
