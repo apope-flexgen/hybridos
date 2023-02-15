@@ -21,40 +21,40 @@ phases:
       - echo Get submodules...
       - git init
       - git submodule update --recursive
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
       - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/dnp3_interface.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/washer.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/scheduler.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/cops.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/ftd.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/cloud_sync.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/dts.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/twins.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/echo.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/overwatch.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/metrics.git
-      # - git clone https://$github_user:$github_token@github.com/flexgen-power/web_server.git
-      - git clone https://$github_user:$github_token@github.com/flexgen-power/web_ui.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/dnp3_interface.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/washer.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/scheduler.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/cops.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/ftd.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/cloud_sync.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/dts.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/twins.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/echo.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/overwatch.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/metrics.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/web_server.git
+      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/web_ui.git
       - echo Finished clone submodules...
       - echo Starting build...
   pre_build:
     commands:
       - echo Delete all submodules package-utility folders in pre-build...
-      # - rm -r ./site_controller/package_utility
+      - rm -r ./site_controller/package_utility
       - rm -r ./fleet_manager/package_utility
-      # - rm -r ./dnp3_interface/package_utility
-      # - rm -r ./washer/package_utility
-      # - rm -r ./scheduler/package_utility
-      # - rm -r ./cops/package_utility
-      # - rm -r ./ftd/package_utility
-      # - rm -r ./cloud_sync/package_utility
-      # - rm -r ./dts/package_utility
-      # - rm -r ./twins/package_utility
-      # - rm -r ./echo/package_utility
-      # - rm -r ./overwatch/package_utility
-      # - rm -r ./metrics/package_utility
-      # - rm -r ./web_server/package_utility
+      - rm -r ./dnp3_interface/package_utility
+      - rm -r ./washer/package_utility
+      - rm -r ./scheduler/package_utility
+      - rm -r ./cops/package_utility
+      - rm -r ./ftd/package_utility
+      - rm -r ./cloud_sync/package_utility
+      - rm -r ./dts/package_utility
+      - rm -r ./twins/package_utility
+      - rm -r ./echo/package_utility
+      - rm -r ./overwatch/package_utility
+      - rm -r ./metrics/package_utility
+      - rm -r ./web_server/package_utility
       - rm -r ./web_ui/package_utility
       - echo All package_utility deleted, ready for build...
   build:
