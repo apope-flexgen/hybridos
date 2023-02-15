@@ -53,7 +53,7 @@ phases:
       # - rm -r ./overwatch/package_utility
       # - rm -r ./metrics/package_utility
       # - rm -r ./web_server/package_utility
-      # - rm -r ./web_ui/package_utility
+      - rm -r ./web_ui/package_utility
       - echo All package_utility deleted, ready for build...
   build:
     commands:
