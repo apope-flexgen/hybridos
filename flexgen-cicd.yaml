@@ -17,6 +17,22 @@ Parameters:
     Type: String
     Default: arn:aws:secretsmanager:us-east-1:625828042324:secret:dockerhub-q1Fhdb
 
+  GitHubUserSsmParamName:
+    Type: String
+    Default: github_user
+
+  GitHubTokenSsmParamName:
+    Type: String
+    Default: github_token
+
+  SshPrivateKeySsmParamName:
+    Type: String
+    Default: id_rsa
+
+  SshPublicKeySsmParamName:
+    Type: String
+    Default: id_rsa.pub
+
 Resources:
   AssetsBucket:
     Type: AWS::S3::Bucket
@@ -67,6 +83,42 @@ Resources:
                 Effect: Allow
                 Action:
                   - ecs:* # should scope this down to only necessary actions for `docker compose up`
+              - Resource: !Ref DockerHubSecretArn
+                Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+              - Resource:
+                  - !Sub
+                    - arn:${Partition}:ssm:${Region}:${AccountId}:parameter/${ParamName}
+                    - Partition: !Ref AWS::Partition
+                      Region: !Ref AWS::Region
+                      AccountId: !Ref AWS::AccountId
+                      ParamName: !Ref GitHubUserSsmParamName
+                  - !Sub
+                    - arn:${Partition}:ssm:${Region}:${AccountId}:parameter/${ParamName}
+                    - Partition: !Ref AWS::Partition
+                      Region: !Ref AWS::Region
+                      AccountId: !Ref AWS::AccountId
+                      ParamName: !Ref GitHubTokenSsmParamName
+                  - !Sub
+                    - arn:${Partition}:ssm:${Region}:${AccountId}:parameter/${ParamName}
+                    - Partition: !Ref AWS::Partition
+                      Region: !Ref AWS::Region
+                      AccountId: !Ref AWS::AccountId
+                      ParamName: !Ref SshPrivateKeySsmParamName
+                  - !Sub
+                    - arn:${Partition}:ssm:${Region}:${AccountId}:parameter/${ParamName}
+                    - Partition: !Ref AWS::Partition
+                      Region: !Ref AWS::Region
+                      AccountId: !Ref AWS::AccountId
+                      ParamName: !Ref SshPublicKeySsmParamName
+                Effect: Allow
+                Action:
+                  - ssm:GetParameters
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
 
   CodePipelineServiceRole:
     Type: AWS::IAM::Role
@@ -84,7 +136,7 @@ Resources:
       Policies:
         - PolicyName: code-pipeline-policy
           PolicyDocument:
-            Version: 2012-10-17
+            Version: "2012-10-17"
             Statement:
               - Resource:
                   - !Sub arn:${AWS::Partition}:s3:::${AssetsBucket}/*
@@ -134,7 +186,19 @@ Resources:
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
-      Name: !Sub ${AWS::StackName}-hybridos-build
+          - Name: GITHUB_USER
+            Type: PARAMETER_STORE
+            Value: !Ref GitHubUserSsmParamName
+          - Name: GITHUB_TOKEN
+            Type: PARAMETER_STORE
+            Value: !Ref GitHubTokenSsmParamName
+          - Name: SSH_KEY
+            Type: PARAMETER_STORE
+            Value: !Ref SshPrivateKeySsmParamName
+          - Name: SSH_PUB
+            Type: PARAMETER_STORE
+            Value: !Ref SshPublicKeySsmParamName
+      Name: !Sub ${AWS::StackName}-build
       ServiceRole: !Ref CodeBuildServiceRole
 
   TestProject:
@@ -147,33 +211,51 @@ Resources:
         BuildSpec: |
           version: 0.1
           phases:
-            prebuild:
+            install:
+              commands:
+                - echo Installing AWS CLI...
+                - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                - unzip awscliv2.zip
+                - sudo ./aws/install
+
+                - echo Installing Docker...
+                - sudo yum install -y yum-utils
+                - sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+                - sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            pre_build:
               commands:
                 - echo Getting container credentials...
                 - STS_RESPONSE=$(curl 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI)
                 - export AWS_ACCESS_KEY_ID=$(echo $STS_RESPONSE | jq .AccessKeyId | tr -d \")
                 - export AWS_SECRET_ACCESS_KEY=$(echo $STS_RESPONSE | jq .SecretAccessKey | tr -d \")
                 - export AWS_SESSION_TOKEN=$(echo $STS_RESPONSE | jq .Token | tr -d \")
+                - aws sts get-caller-identity
                 
-                - echo Creating and activating Docker ECS context...
-                - docker context create ecs hybridos-test --from-env
-                - docker context use hybridos-test
+                # - echo Creating and activating Docker ECS context...
+                # - docker context create ecs hybridos-test --from-env
+                # - docker context use hybridos-test
                 
-                - echo Standing up hybridos in ECS via Docker Compose...
-                - docker compose up
+                # - echo Standing up hybridos in ECS via Docker Compose...
+                # - docker compose up
             build:
               commands:
-                - echo Running test scripts...
-            postbuild:
+                # - echo Running test scripts...
+                - echo No-op
+            post_build:
               commands:
-                - echo Spinning down hybridos ECS environment...
-                - docker compose down
+                # - echo Spinning down hybridos ECS environment...
+                # - docker compose down
+                - echo No-op
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: "aws/codebuild/standard:6.0"
+        Image: "flexgen/centos7:devel-10.3.0"
+        ImagePullCredentialsType: SERVICE_ROLE
+        RegistryCredential:
+          Credential: !Ref DockerHubSecretArn
+          CredentialProvider: SECRETS_MANAGER
         Type: LINUX_CONTAINER
         PrivilegedMode: true
-      Name: !Sub ${AWS::StackName}-hybridos-test
+      Name: !Sub ${AWS::StackName}-test
       ServiceRole: !Ref CodeBuildServiceRole
   
   PackageProject:
@@ -195,9 +277,13 @@ Resources:
               - ./output/**/*
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: "aws/codebuild/standard:6.0"
+        Image: "flexgen/centos7:devel-10.3.0"
+        ImagePullCredentialsType: SERVICE_ROLE
+        RegistryCredential:
+          Credential: !Ref DockerHubSecretArn
+          CredentialProvider: SECRETS_MANAGER
         Type: LINUX_CONTAINER
-      Name: !Sub ${AWS::StackName}-hybridos-package
+      Name: !Sub ${AWS::StackName}-package
       ServiceRole: !Ref CodeBuildServiceRole
 
   DockerProject:
@@ -216,24 +302,40 @@ Resources:
               repoName: hybridos
               dockerTag: v10.3.0
           phases:
+            install:
+              commands:
+                - echo Installing AWS CLI...
+                - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                - unzip awscliv2.zip
+                - sudo ./aws/install
+
+                - echo Installing Docker...
+                - sudo yum install -y yum-utils
+                - sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+                - sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             pre_build:
               commands:
                 - echo Logging in to Amazon ECR...
                 - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
             build:
               commands:
-                - echo Running Docker script...
-                - ./docker.sh
+                # - echo Running Docker script...
+                # - ./docker.sh
+                - echo No-op
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: "aws/codebuild/standard:6.0"
+        Image: "flexgen/centos7:devel-10.3.0"
+        ImagePullCredentialsType: SERVICE_ROLE
+        RegistryCredential:
+          Credential: !Ref DockerHubSecretArn
+          CredentialProvider: SECRETS_MANAGER
         Type: LINUX_CONTAINER
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
           - Name: AWS_ACCOUNT_ID
             Value: !Ref AWS::AccountId
-      Name: !Sub ${AWS::StackName}-hybridos-docker
+      Name: !Sub ${AWS::StackName}-docker
       ServiceRole: !Ref CodeBuildServiceRole
 
   Pipeline:
