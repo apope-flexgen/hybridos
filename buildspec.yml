@@ -67,4 +67,5 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - build
+    - '**/*'
+  name: build-$(date +%Y-%m-%d)
