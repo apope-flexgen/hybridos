@@ -174,6 +174,7 @@ for i in "${meta[@]}"; do
     echo -e "\n##### packaging: $i"
     package=$(echo $rpmbuild | sed "s/hybridos/$i/g")
     echo -e "$package"
+    echo -e "build_output_meta: $build_output_meta"
 
     cp -av "$build_output_meta" "$package" # ./build/release/repo.txt -> ./ess_controller_meta-10.1.0-1.local
     tar -czvf "$package".tar.gz "$package"
