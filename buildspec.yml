@@ -62,7 +62,7 @@ phases:
       - ./build.sh
   post_build:
     commands:
-      - ./package.sh
+      - echo Build completed on `date`
 artifacts:
   files:
     - '**/*'
