@@ -60,6 +60,8 @@ phases:
       - echo Build started on `date`
       - echo running build.sh ...
       - ./build.sh
+      - cd $CODEBUILD_SRC_DIR
+      - ./package.shj
   post_build:
     commands:
       - echo Build completed on `date`
