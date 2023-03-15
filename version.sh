@@ -39,8 +39,10 @@ else
 fi
 
 # capture working branch
+echo "current directory:"
+pwd
 echo "git branch output:"
-git branch
+git branch 2>&1
 pwd
 branch=$(git branch | grep \* | cut -d ' ' -f2)
 echo -e "branch:\t\t$branch"

@@ -3,6 +3,7 @@
 # capture script and build relative paths
 cwd="$(pwd)"
 echo $cwd
+git branch 2>&1
 substr=""
 IFS_bak=$IFS  # backup the existing IFS
 IFS='/'
