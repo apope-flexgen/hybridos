@@ -95,6 +95,7 @@ if [ $CATCH -eq 1 ]; then
 fi
 
 # source build functions (from repository path)
+pwd
 source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
 
 # complete checks before proceeding...
