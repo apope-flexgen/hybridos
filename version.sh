@@ -39,6 +39,9 @@ else
 fi
 
 # capture working branch
+echo "git branch output:"
+git branch
+pwd
 branch=$(git branch | grep \* | cut -d ' ' -f2)
 echo -e "branch:\t\t$branch"
 rm -f GIT_BRANCH
