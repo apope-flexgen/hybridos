@@ -2,6 +2,7 @@
 
 # capture script and build relative paths
 cwd="$(pwd)"
+echo $cwd
 substr=""
 IFS_bak=$IFS  # backup the existing IFS
 IFS='/'
