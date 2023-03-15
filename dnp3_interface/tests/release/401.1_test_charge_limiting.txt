@@ -1,0 +1,160 @@
+
+#!/bin/sh 
+# p. wilshire
+# 11/24/2021
+# converted to new test format
+
+# needs a running system to operate.
+
+# Tests the HandlePower function (monitoring the state of the active current setpoint) in test_ess.cpp
+# Note: Run test_ess first before running this shell script
+
+# setbmsVar bms_status 1 0.1 "setbmsStatus to Running" bms_1
+function setbmsVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/variables/$5 '{"$1": $2}' 
+    | jq | grep $1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "$1": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+# getbmsVar bms_status 1 0.1 "setbmsStatus to Running" bms_1
+function getbmsVar()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/variables/$5 '{"$1": $2}' 
+    | jq | grep $1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "$1": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+#echo -n "setting /controls/ess:ActivePowerSetpoint           " && /usr/local/bin/fims/fims_send -r /$$ -m set -u /controls/ess '{"ActivePowerSetpoint":1350}'
+# setEssCtrl ActivePowerSetpoint 1350 0.1 "set ess control " 
+function setEssCtrl()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/controls/ess '{"$1": $2}' 
+    | jq | grep $1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "$1": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+# getEssCtrl ActivePowerSetpoint 1350 0.1 "set ess control " 
+function getEssCtrl()
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/controls/ess/$1 | jq 
+EOF
+)
+  resps[idx]=$(cat<<EOF
+$2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+
+#getbmsStat numActiveBms 4 0.1 "getBmsVar " bms_4
+function getbmsStat()   
+{
+  descs[idx]=$4
+
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/full/status/bms/$1 | jq | grep $1
+EOF
+)
+  resps[idx]=$(cat<<EOF
+  "$1": $2
+EOF
+)
+  sleeps[idx]="$3" 
+  idx=$(($idx+1))
+}
+######################################################################
+descs[0]=" test Charge Limiting "
+#######################################################################
+idx=1
+# Initialize  
+setbmsVar bms_status 1 0.1 "set bms 1 Status to Running" bms_1
+setbmsVar bms_status 1 0.1 "set bms 2 Status to Running" bms_2
+setbmsVar bms_status 1 0.1 "set bms 3 Status to Running" bms_3
+setbmsVar bms_status 1 0.1 "set bms 4 Status to Running" bms_4
+
+getbmsVar bms_status 1 0.1 "get bms 4 Status as 1 " bms_4
+
+#return 0
+
+setEssCtrl ActivePowerSetpoint 1350 0.1 "set ess ActivePowerSetpoint 1350 " 
+
+setbmsVar bmsMaxDischargePower 400 0.1 "setbmsStatus to Running" bms_1
+setbmsVar bmsMaxDischargePower 340 0.1 "setbmsStatus to Running" bms_2
+setbmsVar bmsMaxDischargePower 380 0.1 "setbmsStatus to Running" bms_3
+setbmsVar bmsMaxDischargePower 360 0.1 "setbmsStatus to Running" bms_4
+
+setbmsVar bmsMaxChargePower 400 0.1 "setbmsStatus to Running" bms_1
+setbmsVar bmsMaxChargePower 340 0.1 "setbmsStatus to Running" bms_1
+setbmsVar bmsMaxChargePower 380 0.1 "setbmsStatus to Running" bms_1
+setbmsVar bmsMaxChargePower 360 0.1 "setbmsStatus to Running" bms_1
+
+#sleep 5  # give enough time for wakeups
+getEssCtrl ActivePowerSetpoint 1350 0.1 "get ess control ActivePowerSetpoint" 
+getbmsVar bms_max_p_discharge 400 0.1 "getBmsVar " bms_1
+getbmsVar bms_max_p_discharge 400 0.1 "getBmsVar " bms_2
+getbmsVar bms_max_p_discharge 400 0.1 "getBmsVar " bms_3
+getbmsVar bms_max_p_discharge 400 0.1 "getBmsVar " bms_4
+
+return 0
+
+getbmsStat NumActiveBms 4 0.2 "getBmsStatus " 
+getEssCtrl ActivePowerCmd 1350 0.2 "check active powerCmd " 
+
+
+
+# Set a new active power value and check the state
+setEssCtrl ActivePowerSetpoint 1361 5 "set active power setpoint 1361" 
+getEssCtrl ActivePowerCmd 1360 5 "set active power setpoint 1361" 
+
+#echo "Test 4 - Set bms_2 to faulted"
+setbmsVar bms_status 5 0.1 "setbms 2 Status to Faulted" bms_2
+getbmsStat NumActiveBms 3 0.2 "getBmsStatus " 
+getEssCtrl ActivePowerCmd 1080 0.2 "check active powerCmd " 
+
+#echo "Test 5 - Charge limited power command"
+#echo -e "Expecting ActivePowerCmd = -1080 -(360 * 3)"
+setEssCtrl ActivePowerSetpoint -1081 0.2 "set active powerSetpoint " 
+getbmsStat NumActiveBms 3 0.2 "getBmsStatus " 
+getEssCtrl ActivePowerCmd -1080 0.2 "check active powerCmd " 
+
+
+#echo "Test 6 - Charge command. Expect -1079"
+setEssCtrl ActivePowerSetpoint -1079 0.2 "set active powerSetpoint -1079" 
+getbmsStat NumActiveBms 3 0.2 "getBmsStatus " 
+getEssCtrl ActivePowerCmd -1079 0.2 "check active powerCmd -1079 " 
+

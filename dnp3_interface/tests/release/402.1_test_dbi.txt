@@ -1,0 +1,160 @@
+## defs for 402.0_test_dbi.sh
+# p. wilshire
+# 11/15/2021
+# 11/20/2021
+#
+# the test script dots in this to run the config set up by 402.0_test_dbi.sh
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+
+#   dbi_test
+
+#
+# this will update dbi every time the value is written with a change
+# dbiStatus == "init" to also force a dbiWrite
+# once that has been processes that value will change to "OK"
+# EnableDbiUpdate must also be set to true
+# if dbiStatus == "once"
+#   EnableDbiUpdate will be set to false after a single update.
+
+# init do nothing
+# get  run a get from the dbi puts it into "wait" state , after respTime time pull the default value for each var 
+# set  increments the "pend" count sets nextUpdateTime to tNow + UpdateTimeCfg
+# runs as part of the wake monitor system and will set the dbi doc if pends > 0 and nextupdatetime has passed
+
+function setDbiDoc()
+{
+  descs[idx]="create DbiDoc  $4"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/controls/bms '{
+    "$1": { "value":$2,
+    "_dbiStatus":"init",
+    "_dbiPend":0,
+    "_EnableDbiUpdate": true,
+    "_UpdateTimeCfg": 5,
+    "_RespTimeCfg": 2,
+    "_comp":$5,
+    "debug":false,
+    "actions":{
+        "onSet": [
+            { "func": [
+                {"enabled":true,"ifChanged":false, "func": "SendDbiVar", "amap": "ess"}
+            ]}]
+          }
+    }
+}' | jq | grep $1
+EOF
+)
+ resps[idx]=$(cat<<EOF
+  "$1": {
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+
+
+# this creates a var and sets it up to contribute to DbiDoc $5
+function setDbiVar()
+{
+  descs[idx]="create var $4  Doc $5"
+  #
+  # this runs DbiDoc .. I think we want to do this 
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/controls/bms '{
+    "$1": {
+    "value":$2,
+    "DbiDoc":$5,
+    "debug":false,
+    "actions":{
+        "onSet": [
+            { "func": [
+                {"enabled":true,"func": "SetDbiDoc", "amap": "ess","debug":false}
+            ]}]
+          }
+    }
+}' | jq | grep $1
+EOF
+)
+ resps[idx]=$(cat<<EOF
+  "$1": {
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+
+}
+
+#
+# DemoVars holds the document (DbiDoc) it has an func action of  SendDbiVar
+#    the vars are all collected as Params
+
+# You can send it commands to "set" and "get" the document from dbi database 
+#     the DbiCmd also holds the required action.
+
+
+# Each DbiVar holds a value it also has an func action of SendDbVar
+#   a "Set" on the DbiVar with a  value also updates the value in the DemoVars Param designated object
+#   to do this it must have a DbiDoc param it sets the dbiDoc param from the new value and sets the update param count
+
+# The  DbiDoc is added to the check monitor vars sys the tem.
+# this runs every 100mS (or faster when needed)
+
+# The DbiVar  
+# each DbiVar has a default Param a DbiDoc param and a DbiCmd Param
+# setting a value on the DbiVar will cause the DbiVar Param to be set in the DbiDoc also  trigger a "pend" in the DbiDoc state Param
+#  the action in the DbiVar cmd param will be "updatevar"
+
+#######################################################################
+descs[0]=" test dbi DemoVars "
+#######################################################################
+idx=1
+setDbiVar DemoVoltage                 1325       0.1 " >> DemoVoltage  as 1325 "                   '"DemoVars"'
+#return 0
+
+setDbiDoc DemoVars                   '"Init"'    0.1 " >> DemoVars  as Init "          '"/controls/bms"'
+#return 0
+
+setDbiVar DemoChargeCurrent           285        0.1 " >> DemoChargeCurrent  as 285 "              '"DemoVars"'
+setVar    DemoChargeCurrent@default   185        0.1 " >> set DemoChargeCurrent default   as 185 "
+setDbiVar DemoVoltage                 1325       0.1 " >> DemoVoltage  as 1325 "                   '"DemoVars"'
+setVar    DemoChargeCurrent@default   185        0.1 " >> set DemoChargeCurrent default   as 185 "
+setDbiVar DemoState                   '"Run"'    0.1 " >> DemoState  as Run "                      '"DemoVars"'
+setVar    DemoState@default           '"Stop"'   0.1 " >> set DemoState default   as "Stop"  " 
+#return 0
+
+setVar    DemoVars                    '"set"'    0.1 " >> Send DemoVars to Dbi"
+#return 0
+
+setVar    DemoVars                    '"get"'    0.5 " >> Get DemoVars from Dbi"
+getVar    DemoChargeCurrent            285       0.1 " >>  DemoChargeCurrent back at 285 "  DemoVars
+setVar    DemoChargeCurrent            28        0.1 " >>  DemoChargeCurrent set to 28 "  DemoVars
+getVar    DemoChargeCurrent            28        0.1 " >>  DemoChargeCurrent checked as  28 "  DemoVars
+setVar    DemoVars                    '"dummy"'    0.1 " >> Dummy set  DemoVars from Dbi"
+setVar    DemoVars                    '"get"'    0.5 " >> Get DemoVars from Dbi"
+getVar    DemoChargeCurrent            285       0.1 " >>  DemoChargeCurrent back at 285 "  DemoVars
+
+#return 0
+# this will fail update too early unless we add an update option to allow sets to be immediate.
+#setVar    DemoVars@_UpdateTime         0    0.5 " >> bypass  dbi update time"
+# 
+setVar    DemoChargeCurrent            300       0.1 " >> set DemoChargeCurrent  as 300 "
+setVar    DemoVars                    '"set"'    0.1 " >> Send DemoVars to Dbi but its too soon to update"
+setVar    DemoChargeCurrent            30        0.1 " >> set DemoChargeCurrent  as 30 "
+getVar    DemoChargeCurrent            30        0.1 " >> get DemoChargeCurrent  as 30 "
+
+setVar    DemoVars                    '"get"'    0.5 " >> Get DemoVars back from  Dbi"
+getVar    DemoChargeCurrent            285       0.1 " >>  DemoChargeCurrent back at 285 "  DemoVars
+
+setVar    DemoVars@_UpdateTime         0    0.1 " >> bypass  dbi update time"
+setVar    DemoVars                    '"set"'    0.1 " >> Send DemoVars to Dbi this time it updates"
+
+
+setVar    DemoChargeCurrent            350       0.1 " >> set DemoChargeCurrent  as 350 " 
+getVar    DemoChargeCurrent            350       0.1 " >> get DemoChargeCurrent  as 350 " 
+setVar    DemoVars                    '"get"'    0.5 " >> Get DemoVars from Dbi"
+getVar    DemoChargeCurrent            285       0.1 " >> get DemoChargeCurrent  restored to  285 "  DemoVars
+
+return 0
+

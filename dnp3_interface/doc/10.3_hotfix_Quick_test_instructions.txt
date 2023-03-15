@@ -1,0 +1,48 @@
+10.3 hotfix Quick test instructions
+
+repo
+dnp3 hotfix/fix_naked_server_output
+
+build 
+flexgen::centos7/dev container
+
+path
+echo $PATH
+/opt/rh/devtoolset-9/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/golang/bin
+
+
+run both on the same container
+
+
+dnp3_client config/dnp3_client_test_40.json
+
+dnp3_server config/dnp3_server_test_40.json
+
+
+basic tests 
+fims_listen -u /testsrv/testop
+
+fims_send -m set -r /$$ -u /testcli/testop '{"breaker_close": "LATCH_OFF"}'
+{"breaker_close":"LATCH_OFF"}
+fims_send -m set -r /$$ -u /testcli/testop '{"breaker_closeCl": "LATCH_OFF"}'
+{"breaker_close":"LATCH_OFF"} (edited) 
+
+
+listen output 
+Method:       set
+Uri:          /testsrv/testop/breaker_closeCl
+ReplyTo:      (null)
+Process Name: DNP3_O_hoth
+Username:     root
+Body:         {"value":false}
+Timestamp:    2022-11-30 21:34:41.415159
+
+Method:       set
+Uri:          /testsrv/testop/breaker_close
+ReplyTo:      (null)
+Process Name: DNP3_O_hoth
+Username:     root
+Body:         false
+Timestamp:    2022-11-30 21:34:47.988867
+
+

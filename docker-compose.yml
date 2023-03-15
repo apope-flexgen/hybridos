@@ -1,0 +1,20 @@
+version: "3.3"
+
+services:
+  hybridos_build:
+    image: flexgen/centos7:${DEVEL_TAG}
+    container_name: hybridos_build
+    entrypoint: /home/hybridos/entrypoint.sh
+    networks:
+      localnet:
+        ipv4_address: 172.16.1.81
+    tty: true
+    volumes:
+      - ../hybridos/:/home/hybridos
+
+networks:
+  localnet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.0.0/16

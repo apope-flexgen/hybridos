@@ -1,0 +1,693 @@
+## defs for 402.0_test_dbi.sh
+# p. wilshire
+# 11/15/2021
+# 11/20/2021
+# 11/21/2021
+# 11/22/2021
+#
+# the test script dots in this to run the config set up by 402.2_test_dbi_wake.sh
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+
+#   test_dbi_wake
+
+#
+# this sets up the demo dbi test vars but in addition adds the wake_monitor layer.
+# and a control function to schedule the monitoring 
+# 
+# runs as part of the wake monitor system and will set the dbi doc if pends > 0 and nextupdatetime has passed
+
+function setDbiDoc()
+{
+  descs[idx]="create DbiDoc  $4"
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/controls/bms '{
+    "$1": { "value":$2,
+    "_dbiStatus":"init",
+    "_dbiPend":0,
+    "_TestStuff":21,
+    "_EnableDbiUpdate": true,
+    "_UpdateTimeCfg": 5,
+    "_RespTimeCfg": 2,
+    "_comp":$5,
+    "debug":false,
+    "actions":{
+        "onSet": [
+            { "func": [
+                {"enabled":true,"ifChanged":false, "func": "SendDbiVar", "amap": "ess"}
+            ]}]
+          }
+    }
+}' | jq | grep -e $1 -e UpdateTime
+EOF
+)
+ resps[idx]=$(cat<<EOF
+  "$1": {
+    "_UpdateTimeCfg": 5,
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+
+
+# this creates a var and sets it up to contribute to DbiDoc $5
+function setDbiVar()
+{
+  descs[idx]="create var $4  Doc $5"
+  #
+  # this runs DbiDoc .. I think we want to do this 
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/controls/bms '{
+    "$1": {
+    "value":$2,
+    "DbiDoc":$5,
+    "actions":{
+        "onSet": [
+            { "func": [
+                {"enabled":true,"func": "SetDbiDoc", "amap": "ess","debug":true}
+            ]}]
+          }
+    }
+}' | jq | grep $1
+EOF
+)
+ resps[idx]=$(cat<<EOF
+  "$1": {
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+
+}
+
+# setBmsWakeVar /controls/bms:DemoVars SetDbiVar 0.1 "Set up Wake Monitor to run SetDbiVar on DemoVars" 
+function setBmsWakeVar()
+{
+  descs[idx]="create wake monitor $4  "
+  #
+  # this runs DbiDoc .. I think we want to do this 
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/schedule/wake_monitor/bms '{
+    "$1": {
+    "value":true,
+    "enable": true,
+    "rate": 0.1,
+    "amap": "bms",
+    "func": "$2"
+    }
+}' | jq | grep $1
+EOF
+)
+ resps[idx]=$(cat<<EOF
+  "$1": {
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+
+}
+
+function getBmsWakeVar()
+{
+  descs[idx]=" check wake monitor $4  "
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/full/schedule/wake_monitor/bms   | jq 
+EOF
+)
+ resps[idx]=$(cat<<EOF
+{
+  "/controls/bms:DemoVars": {
+    "value": true,
+    "amap": "bms",
+    "enable": true,
+    "func": "SendDbiVar",
+    "rate": 0.1
+  },
+  "/controls/bms:SystemCurrent": {
+    "value": true,
+    "amap": "bms",
+    "enable": true,
+    "func": "CheckMonitorVar",
+    "rate": 0.1
+  }
+}
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+
+}
+
+# setCmd run RunSched 0.1 "Run sched command"
+function setCmd()
+{
+  descs[idx]=" set up command  $1 as $2  , $4 "
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/system/commands '{
+    "$1":{"value":"test",
+        "help": "$4",
+        "ifChanged":false, 
+        "enabled":true, 
+        "actions":{"onSet":[{"func":[{"func":"$2"}]}]}
+        }
+  }'   | jq 
+EOF
+)
+ resps[idx]=$(cat<<EOF
+{
+  "$1": {
+    "value": "test",
+    "help": "$4",
+    "ifChanged": false,
+    "enabled": true,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "func": "$2"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+
+}
+# setBMSWakeVar wakeMonitorBms RunMonitorList 0.1 "Run monitor"
+function setBMSWakeVar()
+{
+  descs[idx]=" set up scheduled var  $1 for $2  , $4 "
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/schedule/wake '{
+    "$1":{"value":"test",
+        "help": "$4",
+        "ifChanged":false, 
+        "amname":"bms",
+        "enabled":true, 
+        "actions":{"onSet":[{"func":[{"func":"$2","amap":"ess"}]}]}
+        }
+  }'   | jq 
+EOF
+)
+ resps[idx]=$(cat<<EOF
+{
+  "$1": {
+    "value": "test",
+    "help": "$4",
+    "ifChanged": false,
+    "amname": "bms",
+    "enabled": true,
+    "actions": {
+      "onSet": [
+        {
+          "func": [
+            {
+              "func": "$2",
+              "amap": "ess"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+
+}
+# getWakeVar wakeMonitorBms RunSched 0.1 "Run sched command"
+function getWakeVar()
+{
+  descs[idx]=" set up command  $1 as $2  , $4 "
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/full/schedule/wake    | jq | grep -e func
+EOF
+)
+ resps[idx]=$(cat<<EOF
+          "func": [
+              "func": "$2"
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+
+# getCmd run RunSched 0.1 "Run sched command"
+function getCmd()
+{
+  descs[idx]=" set up command  $1 as $2  , $4 "
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /ess/full/system/commands    | jq  | grep -e $1 -e $2
+EOF
+)
+ resps[idx]=$(cat<<EOF
+  "$1": {
+              "func": "$2"
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+
+# runWake run /schedule/wake/wakeMonitorBms  0.1 "Run sched command" 0.2
+function runWake()
+{
+  descs[idx]=" run action    $1 on $2  , $4 "
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m set -r /$$ -u /ess/full/system/commands '{
+      "$1":{"value":"run","uri":"$2","every":$5}
+  }'    | jq 
+EOF
+)
+ resps[idx]=$(cat<<EOF
+{
+  "$1": {
+    "value": "$1",
+    "uri": "$2",
+    "every": $5
+  }
+}
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+# fims_send -m get -r /$$ -u /dbi/ess_controller/dbivars_controls_bms_DemoVars | jq
+#getValFromDbi  DemoVoltage 4567      1 " check #1 Dbi Value for DemoVoltage 4567" DemoVars
+
+function getValFromDbi()
+{
+  descs[idx]=" run action    $1 on $5  , $4 "
+  acts[idx]=$(cat<<EOF
+  ${FimsDir}fims_send -m get -r /$$ -u /dbi/ess_controller/dbivars_controls_bms_$5 | jq | grep $1
+EOF
+)
+ resps[idx]=$(cat<<EOF
+  "$1": $2,
+EOF
+)
+ sleeps[idx]="$3"
+ idx=$(($idx+1))
+}
+# "/schedule/wake_monitor/bms":{
+#        "/components/catl_mbmu_summary_r:mbmu_max_cell_voltage": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+#
+#// the scheduled var must have an func action calling RunMonitorList
+# DemoVars holds the document (DbiDoc) it has an func action of  SendDbiVar
+#    the vars are all collected as Params
+
+# You can send it commands to "set" and "get" the document from dbi database 
+#     the DbiCmd also holds the required action.
+
+
+# Each DbiVar holds a value it also has an func action of SendDbVar
+#   a "Set" on the DbiVar with a  value also updates the value in the DemoVars Param designated object
+#   to do this it must have a DbiDoc param it sets the dbiDoc param from the new value and sets the update param count
+
+# The  DbiDoc is added to the check monitor vars sys the tem.
+# this runs every 100mS (or faster when needed)
+
+# The DbiVar  
+# each DbiVar has a default Param a DbiDoc param and a DbiCmd Param
+# setting a value on the DbiVar will cause the DbiVar Param to be set in the DbiDoc also  trigger a "pend" in the DbiDoc state Param
+#  the action in the DbiVar cmd param will be "updatevar"
+# extended test 
+# fims_send -m get -r /$$ -u /dbi/ess_controller/dbivars_controls_bms_DemoVars | jq
+# fims_send -m set -r /17332 -u /ess/full/controls/bms/DemoVoltage  5566 | jq
+
+#######################################################################
+descs[0]=" test dbi DemoVars "
+#######################################################################
+idx=1
+setVar    DemoVoltage                  7654      0.1 " >> set DemoVoltage  to 7654 "
+setDbiDoc DemoVars                   '"Init"'    0.1 " >> DemoVars  as Init "          '"/controls/bms"'
+setDbiVar DemoVoltage                 1325       0.1 " >> DemoVoltage  as 1325 "                   '"DemoVars"'
+
+
+setVar SystemCurrent  1234  0.1  "Setup SystemCurrentVar"
+setBmsWakeVar /controls/bms:DemoVars SendDbiVar 0.1 "Set up Wake Monitor to run SetDbiVar on DemoVars" 
+setBmsWakeVar /controls/bms:SystemCurrent CheckMonitorVar 0.1 "Set up Wake Monitor to run CheckMonitorVar on SystemCurrnt" 
+getBmsWakeVar /controls/bms:SystemVoltage CheckMonitorVar 0.1 "Get Wake Monitor vars" 
+
+setCmd run    RunSched           0.1 "Run sched command"
+setCmd stop   StopSched          0.1 "Stop sched command"
+getCmd run    RunSched           0.1 "Get run System Command"
+getCmd stop   StopSched          0.1 "Get stop System Command"
+
+setBMSWakeVar wakeMonitorBms RunMonitorList 0.1 "Run monitor set"
+getWakeVar wakeMonitorBms RunMonitorList 0.1 "Run monitor get "
+
+runWake run /schedule/wake:wakeMonitorBms  0.5 "Run wake command" 0.2
+getWakeVar wakeMonitorBms RunMonitorList 0.1 "Run monitor get again"
+
+setVar    DemoVoltage                  4567      5 " >> set DemoVoltage  as 4567 wait 5 "
+
+#getValFromDbi  DemoVoltage              567      3 " check #1 Dbi Value for DemoVoltage 567" DemoVars
+getValFromDbi  DemoVoltage             4567      1 " check #2 Dbi Value for DemoVoltage 4567" DemoVars
+getValFromDbi  DemoVoltage             4567      1 " check #3 Dbi Value for DemoVoltage 4567" DemoVars
+#getValFromDbi  DemoVoltage             4567      1 " check #4 Dbi Value for DemoVoltage 4567" DemoVars
+#getValFromDbi  DemoVoltage             4567      1 " check #5 Dbi Value for DemoVoltage 4567" DemoVars
+#getValFromDbi  DemoVoltage             4567      1 " check #6 Dbi Value for DemoVoltage 4567" DemoVars
+
+setVar    DemoVoltage                  567      5 " >> set DemoVoltage  as 567 wait 5"
+
+#getValFromDbi  DemoVoltage             4567     4 " check #1 Dbi Value for DemoVoltage 4567" DemoVars
+getValFromDbi  DemoVoltage             567      1 " check #2 Dbi Value for DemoVoltage 567" DemoVars
+getValFromDbi  DemoVoltage             567      1 " check #3 Dbi Value for DemoVoltage 567" DemoVars
+#getValFromDbi  DemoVoltage             567      1 " check #4 Dbi Value for DemoVoltage 567" DemoVars
+#getValFromDbi  DemoVoltage             567      1 " check #5 Dbi Value for DemoVoltage 567" DemoVars
+#getValFromDbi  DemoVoltage             567      1 " check #6 Dbi Value for DemoVoltage 567" DemoVars
+
+return 0
+
+setDbiVar DemoVoltage                 1325       0.1 " >> DemoVoltage  as 1325 "                   '"DemoVars"'
+#return 0
+
+setDbiDoc DemoVars                   '"Init"'    0.1 " >> DemoVars  as Init "          '"/controls/bms"'
+# run WakeMonitor on /schedule/wake_monitor/bms every 0.1
+
+#return 0
+
+setDbiVar DemoChargeCurrent           285        0.1 " >> DemoChargeCurrent  as 285 "              '"DemoVars"'
+setVar    DemoChargeCurrent@default   185        0.1 " >> set DemoChargeCurrent default   as 185 "
+setDbiVar DemoVoltage                 1325       0.1 " >> DemoVoltage  as 1325 "                   '"DemoVars"'
+setVar    DemoChargeCurrent@default   185        0.1 " >> set DemoChargeCurrent default   as 185 "
+setDbiVar DemoState                   '"Run"'    0.1 " >> DemoState  as Run "                      '"DemoVars"'
+setVar    DemoState@default           '"Stop"'   0.1 " >> set DemoState default   as "Stop"  " 
+#return 0
+
+setVar    DemoVars                    '"set"'    0.1 " >> Send DemoVars to Dbi"
+#return 0
+
+setVar    DemoVars                    '"get"'    0.5 " >> Get DemoVars from Dbi"
+getVar    DemoChargeCurrent            285       0.1 " >>  DemoChargeCurrent back at 285 "  DemoVars
+setVar    DemoChargeCurrent            28        0.1 " >>  DemoChargeCurrent set to 28 "  DemoVars
+getVar    DemoChargeCurrent            28        0.1 " >>  DemoChargeCurrent checked as  28 "  DemoVars
+setVar    DemoVars                    '"dummy"'    0.1 " >> Dummy set  DemoVars from Dbi"
+setVar    DemoVars                    '"get"'    0.5 " >> Get DemoVars from Dbi"
+getVar    DemoChargeCurrent            285       0.1 " >>  DemoChargeCurrent back at 285 "  DemoVars
+
+#return 0
+# this will fail update too early unless we add an update option to allow sets to be immediate.
+#setVar    DemoVars@_UpdateTime         0    0.5 " >> bypass  dbi update time"
+# 
+setVar    DemoChargeCurrent            300       0.1 " >> set DemoChargeCurrent  as 300 "
+setVar    DemoVars                    '"set"'    0.1 " >> Send DemoVars to Dbi but its too soon to update"
+setVar    DemoChargeCurrent            30        0.1 " >> set DemoChargeCurrent  as 30 "
+getVar    DemoChargeCurrent            30        0.1 " >> get DemoChargeCurrent  as 30 "
+
+setVar    DemoVars                    '"get"'    0.5 " >> Get DemoVars back from  Dbi"
+getVar    DemoChargeCurrent            285       0.1 " >>  DemoChargeCurrent back at 285 "  DemoVars
+
+setVar    DemoVars@_UpdateTime         0    0.1 " >> bypass  dbi update time"
+setVar    DemoVars                    '"set"'    0.1 " >> Send DemoVars to Dbi this time it updates"
+
+
+setVar    DemoChargeCurrent            350       0.1 " >> set DemoChargeCurrent  as 350 " 
+getVar    DemoChargeCurrent            350       0.1 " >> get DemoChargeCurrent  as 350 " 
+setVar    DemoVars                    '"get"'    0.5 " >> Get DemoVars from Dbi"
+getVar    DemoChargeCurrent            285       0.1 " >> get DemoChargeCurrent  restored to  285 "  DemoVars
+
+return 0
+
+descs[idx]=" >> setup DemoChargeCurrent Dbi Action"
+acts[idx]=$(cat<<EOF
+/usr/local/bin/fims_send -m set  -u /ess/controls/bms ' {
+        "DemoChargeCurrent": {
+            "value" :"$$",
+            "dbiStatus":"init",
+            "dbiDoc":"DemoVars",
+            "EnableDbiUpdate": true,
+            "UpdateTimeCfg": 30,
+            "debug":1,
+            "actions":{
+                    "onSet": [{ "func": [
+                        {"enabled":true,"ifChanged":true, "func": "CheckDbiVar", "amap": "ess"}
+              ]}]
+          }
+        }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+descs[idx]=" >> check DemoChargeCurrent dbiStatus"
+acts[idx]=$(cat<<EOF
+/usr/local/bin/fims/fims_send -m get -r /$$  -u /ess/full/controls/bms/DemoChargeCurrent | jq | grep dbiStatus
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+return 0
+
+descs[idx]=" >> setup DemoChargeCurrent "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m pub  -u /components/cell_01 '
+{
+    "Voltage": 0,
+    "Current": 0,
+    "enabled": false,
+    "State": "On"
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1"
+idx=$(($idx+1))
+
+
+
+
+echo -n " >>>>>>>>>" > $outfile
+check_resp "test1 setup DemoChargeCurrent" "$act_resp" "$test1_resp" >> $outfile
+
+#
+# set up response var
+echo  "set up response var" 
+#echo  "#set up response var" >> $outfile
+
+act_resp=$(eval $test2_act)    
+
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test2 setup DemoChargeCurrent resp" "$act_resp" "$test2_resp" >> $outfile
+
+## set value to 1234 
+echo " set value to 1234.0 "
+#echo "#set value to 1234.0 " >> $outfile
+#echo 'test3_resp=$(cat<<EOF' >> $outfile
+# act_resp=$(/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/controls/bms ' {
+#         "DemoChargeCurrent": {
+#             "value" :1234.0
+#         }
+#     }' | jq
+#     )
+act_resp=$(eval $test3_act)    
+#echo $act_resp     >> $outfile
+#echo 'EOF'         >> $outfile
+#echo ')'           >> $outfile
+#echo 'echo "test3_resp =[ $test3_resp ]"'>> $outfile
+
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test3 set DemoChargeCurrent value 1234" "$act_resp" "$test3_resp" >> $outfile
+
+## check dbi  value like this
+echo "check dbi  value"
+#echo "#check dbi  value" >> $outfile
+
+act_resp=$(eval $test4_act)    
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test4 set check dbi response" "$act_resp" "$test4_resp" >> $outfile
+
+
+# expect 1234
+
+## set value to 4567 
+echo " set value to 4567.0 "
+act_resp=$(eval $test5_act)    
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test5 set check dbi response" "$act_resp" "$test5_resp" >> $outfile
+
+
+## check dbi  value like this
+echo " check dbi  value"
+echo "# check dbi  value" >> $outfile
+
+act_resp=$(eval $test6_act)    
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test6 set check dbi value" "$act_resp" "$test6_resp" >> $outfile
+
+# expect 4567
+
+# this is a simple check for dbiStatus 
+echo " get the dbiStatus"
+echo "# get the dbiStatus" >> $outfile
+#echo 'test7_resp=$(cat<<EOF' >> $outfile
+
+# act_resp=$(\
+#     /usr/local/bin/fims/fims_send -m get -r /$$ \
+#     -u /ess/full/controls/bms/DemoChargeCurrent | jq | grep dbiStatus)
+
+#echo $act_resp  >> $outfile
+#echo 'EOF' >> $outfile
+#echo ')' >> $outfile
+#echo 'echo "test7_resp =[ $test7_resp ]"'>> $outfile
+act_resp=$(eval $test7_act)    
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test7 get dbi status" "$act_resp" "$test7_resp" >> $outfile
+
+echo " get the response variable"
+echo "#get the response variable" >> $outfile
+# this is a check for the response variable
+#echo 'test8_resp=$(cat<<EOF' >> $outfile
+# act_resp=$(/usr/local/bin/fims/fims_send -m get -r /$$ \
+#     -u /ess/full/dbi/controls/bms/DemoChargeCurrent | jq \
+#     | grep -v dbiAct | grep -v dbiCnt | grep -v  dbiSkip | grep -v tLast | grep -v yactions
+#     )
+#echo $act_resp  >> $outfile
+
+#echo 'EOF' >> $outfile
+#echo ')' >> $outfile
+#echo 'echo "test8_resp =[ $test8_resp ]"'>> $outfile
+act_resp=$(eval $test8_act)    
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test8 get dbi resp var" "$act_resp" "$test8_resp" >> $outfile
+
+
+# now reset the variable and disable the actions 
+# dbi should no longer be updated
+echo " disable actions on controls var"
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/controls/bms ' {
+        "DemoChargeCurrent": {
+            "value" :0.0,
+            "dbiStatus":"init",
+            "EnableDbiUpdate": true,
+            "UpdateTimeCfg": 30,
+            "debug":1,
+            "actions":{
+                    "onSet": [{ "func": [
+                        {"enabled":false,"ifChanged":true,"func": "CheckDbiVar", "amap": "bms"}
+              ]}]
+          }
+        }
+    }'
+# same for the response var
+echo " disable actions on response var"
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/full/dbi/controls/bms '
+{
+    "DemoChargeCurrent": {
+        "value" :0.0,
+        "debug":1,
+        "ifChanged":false,
+        "actions":{
+            "onSet": [{ "func": [
+                      {"enabled":false, "ifChanged":false,"func": "CheckDbiResp", "amap": "bms"}
+              ]}]
+        }
+    }
+}'
+
+
+## set value to 4567 
+echo " set value to 7777.0 "
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/controls/bms ' {
+        "DemoChargeCurrent": {
+            "value" :7777.0
+        }
+    }'
+
+
+## check dbi  value like this
+echo " check dbi value , should be unchanged well not 7777 anyway "
+echo "# check dbi value , should be unchanged well not 7777 anyway " >> $outfile
+#echo 'test9_resp=$(cat<<EOF' >> $outfile
+# act_resp=$(\
+#      /usr/local/bin/fims/fims_send -m get -r /$$ \
+#      -u /dbi/ess_controller/_controls_bms/DemoChargeCurrent/value | jq
+#      )
+#echo $act_resp >> $outfile
+
+#echo 'EOF' >> $outfile
+#echo ')' >> $outfile
+#echo 'echo "test9_resp =[ $test9_resp ]"'>> $outfile
+act_resp=$(eval $test9_act)    
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test9 get dbi value" "$act_resp" "$test9_resp" >> $outfile
+
+## now set up the wake_monitor value.
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/schedule/wake_monitor/bms '{
+    "/controls/bms:DemoChargeCurrent": { "enable": true, "rate":0.1, "amap": "bms", "func":"CheckDbiVar"}
+}'
+sleep 0.2
+## check dbi 
+echo " check dbi value , should now be  7777  "
+echo "# check dbi value , should now be  7777  " >> $outfile
+#echo 'test10_resp=$(cat<<EOF' >> $outfile
+# act_resp=$(
+#    /usr/local/bin/fims/fims_send -m get -r /$$ \
+#    -u /dbi/ess_controller/_controls_bms/DemoChargeCurrent/value | jq
+#    )
+#echo $act_resp >> $outfile
+#echo 'EOF' >> $outfile
+#echo ')' >> $outfile
+#echo 'echo "test10_resp =[ $test10_resp ]"'>> $outfile
+act_resp=$(eval $test10_act)    
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test10 get dbi value" "$act_resp" "$test10_resp" >> $outfile
+
+
+echo " set up check for dbi resp"
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/schedule/wake_monitor/bms '{
+    "/dbi/controls/bms:DemoChargeCurrent": { "enable": true, "rate":0.1, "amap": "bms", "func":"CheckDbiResp"}
+}'
+
+
+echo " change the dbi value" 
+ /usr/local/bin/fims/fims_send -m set -r /$$ -u /dbi/ess_controller/_controls_bms '
+{"DemoChargeCurrent":
+    {"value":328,
+      "EnableDbiUpdate":true,
+      "UpdateTimeCfg":5,"UpdateTimeRemain":0
+    }
+}'
+
+echo " trigger a refetch"
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/controls/bms ' {
+        "DemoChargeCurrent": {
+            "value" :0.0,
+            "dbiStatus":"init",
+            "EnableDbiUpdate": true,
+            "UpdateTimeCfg": 5
+        }
+    }'
+
+echo " wait for refetch"
+sleep 1
+echo " check we got the value updated "
+echo "# check we got the value updated " >> $outfile
+
+act_resp=$(eval $test11_act)    
+echo -n " >>>>>>>>>" >> $outfile
+check_resp "test11 get dbi value" "$act_resp" "$test11_resp" >> $outfile
+
+echo "# test $0 completed" >> $outfile
+

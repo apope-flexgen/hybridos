@@ -1,0 +1,13 @@
+libasiodnp3.so
+libasiodnp3.so.2
+libasiodnp3.so.2.3.3
+libasiopal.so
+libasiopal.so.2
+libasiopal.so.2.3.3
+libdmap.so
+libopendnp3.so
+libopendnp3.so.2
+libopendnp3.so.2.3.3
+libopenpal.so
+libopenpal.so.2
+

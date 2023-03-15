@@ -1,0 +1,279 @@
+# defs for 300.1_test_remap.sh
+# p. wilshire
+# 10/28/2021
+#
+# the test script dots in this to run the config set up by 300.1
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+# basic script to test the following actions.
+#"bitset"
+#"enum"
+#"remap"
+#"func"
+#"limits"
+
+FimsDir=/usr/local/bin/
+FimsName=/ess
+
+descs=()
+acts=()
+resps=()
+
+#$1 shift 
+#$2 shiftnum
+#$3 add num
+#xxx=addMask 4  1   1
+
+
+#xxx=`addMask 4  1   1`
+#echo " resut 4 1 1 addmask = $xxx"
+
+#######################################################################
+descs[0]="remap actions "
+#######################################################################
+#return 0
+idx=1
+setVar remap_inAv         '"testinAv"'    0.1 " >> set remap_inAv to testinAv"
+getVar remap_inAv         '"testinAv"'    0.1 " >> test remap_inAv as testinAv"
+
+setVar test_remap    '"setup"'     0.1 " >> init test_remap"
+
+descs[idx]=" >> setup test actions  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u $FimsName/full/controls/bms '
+{
+    "test_remap":{ 
+        "value":"$$",
+        "debug":false,
+        "actions": {
+            "onSet": [{
+                "remap": 
+                    [
+                        {"uri": "/controls/bms:remap_testall","debug":false                             },
+                        {"uri": "/controls/bms:remap_testparam@myparam"                                },
+                        {"uri": "/controls/bms:remap_testval",  "outValue": "testval"                  },
+                        {"enable":"/controls/bms:remap_enable",
+                                    "uri": "/controls/bms:remap_testenable" },
+                        {"inAv":"/controls/bms:remap_inAv", "debug":true,
+                                    "uri": "/controls/bms:remap_testinvar"   },
+                        {"ifChanged":true,
+                            "uri": "/controls/bms:remap_ifchanged_true",  "outValue": "testtrue"        },
+                        {"ifChanged":false,
+                            "uri": "/controls/bms:remap_ifchanged_false",  "outValue": "testfalse"      }
+
+                    ]                
+            }]
+        }
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+setVar test_enum2    0     0.1 " >> init test_enum2 add actions later"
+
+descs[idx]=" >> setup test actions  "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u $FimsName/full/controls/bms '
+{
+    "test_enum2":{ 
+        "value":"$$",
+        "debug":false,
+        "defVal":"default",
+        "defUri":"/controls/bms:enum_test3",
+        "actions": {
+            "onSet": [{
+                "enum": 
+                    [
+                        {"mask":15,"inValue": 0,"uri": "/controls/bms:enum_test3","outValue": "zero" },
+                        {"enable":"/controls/bms:enum_enable",
+                         "mask":15,"inValue": 1,"uri": "/controls/bms:enum_test3","outValue": "one"   },
+                        {"mask":15,"inValue": 2,"uri": "/controls/bms:enum_test3","outValue": "two"   },
+                        {"ifChanged":true,
+                          "mask":15,"inValue": 3,"uri": "/controls/bms:enum_test3","outValue": "three" },
+                        {"ifChanged":false,
+                          "mask":15,"inValue": 4,"uri": "/controls/bms:enum_test3","outValue": "four"  },
+                        {"mask":15,"inValue": 5,"uri": "/controls/bms:enum_test3","outValue": "five"  },
+                        {"mask":15,"inValue": 6,"uri": "/controls/bms:enum_test3","outValue": "six"   },
+                        {"mask":15,"inValue": 7,"uri": "/controls/bms:enum_test3","outValue": "seven" },
+                        {"mask":15,"inVar":"/controls/bms:test_invar", "inValue":9
+                                                              ,"uri": "/controls/bms:enum_invar" }
+                    ]                
+            }]
+        }
+    }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="0.1" 
+idx=$(($idx+1))
+
+# test invar
+setVar remap_inAv         '"testinAv"'    0.1 " >> set remap_inAv to testinAv"
+getVar remap_inAv         '"testinAv"'    0.1 " >> test remap_inAv as testinAv"
+setVar test_remap         '"testagain"'    0.1 " >> set test_remap to testagain"
+getVar remap_testinvar    '"testinAv"'    0.1 " >> get remap_testinvar should be  testinAv "
+#return 0
+#return 0
+setVar remap_testparam    '"testparam"'  0.1 " >> set remap_testparam as testparam "
+setVar remap_testparam@myparam    '"pval"'  0.1 " >> set remap_testparam@myparam as pval "
+#getVar remap_testparam@myparam    '"pval"'    0.1 " >> get remap_testparam@myparam as pval "
+setVar test_remap@debug   1              0.1 " >> set test_remap debug to  1"
+setVar test_remap         '"testing"'    0.1 " >> set test_remap to testing"
+getVar test_remap         '"testing"'    0.1 " >> get test_remap as testing "
+getVar remap_testall      '"testing"'    0.1 " >> get remap_testall as testing "
+getVar remap_testval      '"testval"'    0.1 " >> get remap_testval as testval "
+#getVar remap_testparam@myparam      '"testval"'    0.1 " >> get remap_testparam as testval "
+
+
+getVar remap_testenable   '"testing"'    0.1 " >> get remap_testenable as testval "
+setVar remap_enable        true       0.1 " >> set remap_enable to true"
+setVar test_remap         '"testagain"'    0.1 " >> set test_remap to testagain"
+getVar remap_testenable   '"testagain"'    0.1 " >> get remap_testenable as testagain "
+
+setVar remap_enable        false       0.1 " >> set remap_enable to false"
+setVar test_remap         '"testback"'    0.1 " >> set test_remap to testback"
+getVar remap_testall      '"testback"'    0.1 " >> get remap_testall as testback "
+getVar remap_testenable   '"testagain"'    0.1 " >> get remap_testenable still testagain "
+setVar remap_enable        true       0.1 " >> set remap_enable to true"
+
+# test invar
+setVar remap_inAv         '"test inAv"'    0.1 " >> set remap_inAv to test inAv"
+getVar remap_inAv         '"test inAv"'    0.1 " >> test remap_inAv to test inAv"
+setVar test_remap         '"testagain"'    0.1 " >> set test_remap to testagain"
+getVar remap_testinvar    '"test inAv"'    0.1 " >> get remap_testinvar should be  test inAv "
+#return 0
+getVar remap_ifchanged_true    '"testtrue"'    0.1 " >> get remap_ifchanged_true should be  testtrue "
+getVar remap_ifchanged_false    '"testfalse"'    0.1 " >> get remap_ifchanged_false should be  testflse "
+setVar remap_ifchanged_true    '"nottrue"'    0.1 " >> get remap_ifchanged_true should be  nottrue "
+setVar remap_ifchanged_false    '"notfalse"'    0.1 " >> get remap_ifchanged_false should be  notfalse "
+getVar remap_ifchanged_true    '"nottrue"'    0.1 " >> get remap_ifchanged_true should be  nottrue "
+getVar remap_ifchanged_false    '"notfalse"'    0.1 " >> get remap_ifchanged_false should be  notfalse "
+setVar test_remap         '"testagain"'    0.1 " >> set test_remap to testagain"
+
+getVar remap_ifchanged_true    '"nottrue"'    0.1 " >> get remap_ifchanged_true should be  nottrue "
+getVar remap_ifchanged_false    '"testfalse"'    0.1 " >> get remap_ifchanged_false should be  testfalse "
+
+return 0
+
+setVar test_enum       0           0.1 " >> set test_enum to 0"
+getVar enum_test       '"zero"'    0.1 " >> get enum_test as zero "
+getVar enum_test1      '"zero_1"'  0.1 " >> get enum_test1 as zero_1 "
+getVar enum_test2      '"outrange"' 0.1 " >> get enum_test2 as outrange "
+setVar test_enum       1           0.1 " >> set test_enum to 1"
+getVar enum_test       '"one"'     0.1 " >> get enum_test as one"
+getVar enum_test1      '"zero_1"'  0.1 " >> get enum_test1 as zero_1 "
+#return 0
+setVar test_enum       2           0.1 " >> set test_enum to 2"
+getVar enum_test       '"two"'     0.1 " >> get enum_test as two"
+getVar enum_test1      '"zero_1"'  0.1 " >> get enum_test1 as zero_1 "
+
+#return 0
+xxx=`addMask 4  1   1`
+setVar test_enum       $xxx        0.1 " >> set test_enum to 0"
+getVar enum_test       '"one"'     0.1 " >> get enum_test as one "
+getVar enum_test1      '"one_1"'   0.1 " >> get enum_test1 as one_1 "
+
+xxx=`addMask 4  1   0`
+setVar test_enum       $xxx        0.1 " >> set test_enum to 0"
+getVar enum_test       '"zero"'    0.1 " >> get enum_test as zero "
+getVar enum_test1      '"one_1"'   0.1 " >> get enum_test1 as one_1 "
+
+setVar test_enum       7           0.1 " >> set test_enum to 7"
+getVar enum_test2      '"inrange"' 0.1 " >> get enum_test2 as inrange "
+getVar enum_test       '"seven"'   0.1 " >> get enum_test as seven "
+
+
+
+setVar test_enum       -1        0.1 " >> set test_enum to -1"
+getVar enum_test2      '"outrange"' 0.1 " >> get enum_test2 as outrange "
+getVar enum_test       '"seven"'   0.1 " >> get enum_test as seven "
+
+
+setVar enum_test3       '"test"'   0.1 " >> set enum_test3 as test "
+setVar test_enum2       0        0.1 " >> set test_enum2 to 0"
+getVar enum_test3       '"zero"'   0.1 " >> get enum_test3 as zero "
+setVar test_enum2       1        0.1 " >> set test_enum2 to 1"
+getVar enum_test3       '"one"'   0.1 " >> get enum_test3 as one "
+setVar test_enum2       10        0.1 " >> set test_enum2 to 10"
+getVar enum_test3       '"default"'   0.1 " >> get enum_test3 as default "
+
+# with test_invar set to 9 pass inval to enum_invar
+setVar test_invar       9       0.1 " >> set test_invar to 9"
+setVar test_enum2       1        0.1 " >> set test_enum2 to 1"
+getVar enum_invar       1        0.1 " >> get enum_invar as ?? default "
+
+setVar enum_enable      true       0.1 " >> set enum_enable to true"
+
+setVar test_enum2       2   0.1 " >> set test_enum2 to 2 "
+getVar enum_test3       '"two"'   0.1 " >> get enum_test3 as two "
+setVar test_enum2       1   0.1 " >> set test_enum2 to 1 "
+getVar enum_test3       '"one"'   0.1 " >> get enum_test3 as one "
+
+setVar test_enum2       2   0.1 " >> set test_enum2 to 2 "
+getVar enum_test3       '"two"'   0.1 " >> get enum_test3 as two "
+
+setVar enum_enable      false       0.1 " >> set enum_enable to true"
+setVar test_enum2       1   0.1 " >> set test_enum2 to 1 "
+getVar enum_test3       '"two"'   0.1 " >> get enum_test3 as still two"
+
+setVar enum_enable      true       0.1 " >> set enum_enable to true"
+
+
+# test ifChanged  should single shot the value
+
+# set the value 
+setVar test_enum2       3   0.1 " >> set test_enum2 to 3 "
+getVar enum_test3       '"three"'   0.1 " >> get enum_test3 as three "
+
+setVar enum_test3       '"dummy"'   0.1 " >> set enum_test3 as dummy "
+# set value again after no change 
+setVar test_enum2       3   0.1 " >> set test_enum2 to 3 "
+
+# this should be dummy
+getVar enum_test3       '"dummy"'   0.1 " >> get enum_test3 as three "
+
+
+setVar test_enum2       4   0.1 " >> set test_enum2 to 4 "
+getVar enum_test3       '"four"'   0.1 " >> get enum_test3 as four "
+
+setVar enum_test3       '"dummy"'   0.1 " >> set enum_test3 as dummy "
+getVar enum_test3       '"dummy"'   0.1 " >> get enum_test3 as dummy "
+# set value again after no change 
+setVar test_enum2       4   0.1 " >> set test_enum2 to 4 "
+
+# this should be dummy
+getVar enum_test3       '"four"'   0.1 " >> get enum_test3 as four "
+
+#ignoreValue
+
+return 0
+
+
+                        {"inValue": 1,"uri": "/controls/bms:remap_test1","outValue": "test1" },
+                        {"mask":15,"inValue": 1,"uri": "/controls/bms:enum_test","outValue": "one", "debug":false },
+                        {"mask":15,"inValue": 2,"uri": "/controls/bms:enum_test","outValue": "two" },
+                        {"mask":15,"inValue": 3,"uri": "/controls/bms:enum_test","outValue": "three" },
+                        {"mask":15,"inValue": 4,"uri": "/controls/bms:enum_test","outValue": "four" },
+                        {"mask":15,"inValue": 5,"uri": "/controls/bms:enum_test","outValue": "five" },
+                        {"mask":15,"inValue": 6,"uri": "/controls/bms:enum_test","outValue": "six" },
+                        {"mask":15,"inValue": 7,"uri": "/controls/bms:enum_test","outValue": "seven" },
+                        {"shift":4, "mask":15,"inValue": 0,"uri": "/controls/bms:enum_test1","outValue": "zero_1" },
+                        {"shift":4, "mask":15,"inValue": 1,"uri": "/controls/bms:enum_test1","outValue": "one_1" },
+                        {"shift":4, "mask":15,"inValue": 2,"uri": "/controls/bms:enum_test1","outValue": "two_1" },
+                        {"shift":4, "mask":15,"inValue": 3,"uri": "/controls/bms:enum_test1","outValue": "three_1" },
+                        {"shift":4, "mask":15,"inValue": 4,"uri": "/controls/bms:enum_test1","outValue": "four_1" },
+                        {"shift":4, "mask":15,"inValue": 5,"uri": "/controls/bms:enum_test1","outValue": "five_1" },
+                        {"shift":4, "mask":15,"inValue": 6,"uri": "/controls/bms:enum_test1","outValue": "six_1" },
+                        { "inValue+":1,"useRange":true,
+                             "mask":15,"inValue": 6,"uri": "/controls/bms:enum_test2","outValue": "inrange" },
+                        { "inValue+":5,"inValue-":2, "useRange":true,
+                             "mask":15,"inValue": 0,"uri": "/controls/bms:enum_test2","outValue": "outrange" }

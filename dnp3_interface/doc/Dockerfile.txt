@@ -1,0 +1,15 @@
+# This is the base docker file for the modbus_clieet and the dnp3_interface builds
+# you have to add a whole bunch of tools into this base image
+#
+FROM centos:7 AS env
+
+RUN yum update -y
+RUN yum install -y centos-release-scl
+RUN yum install -y devtoolset-9
+
+RUN echo "source /opt/rh/devtoolset-9/enable" >> /etc/bashrc
+SHELL ["/bin/bash", "--login", "-c"]
+RUN gcc --version
+# you have to check out the repos under windows and then volume mount like this 
+#docker run  -it -v //c/Users/17576/flexgen/dockerbuild/gcctest2:/home/build -d gcc930
+#docker build -t gcc930 .	

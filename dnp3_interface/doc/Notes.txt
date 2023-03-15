@@ -1,0 +1,1146 @@
+
+pwilshire
+sept 27, 2022
+
+Issues with Flags, Timeouts and initial gets.
+
+The 3.0 release introduced Flags and Time into the DNP3 messages.
+These options are availble only in the Server.
+
+The Flags can have several values if they are used in OpenDnp3
+
+            "ONLINE"                  server has received a value update
+            "RESTART"                 no update recieved or value timeout set to 0 
+            "COMM_LOST"               no update in between value updates in the timeout period
+            "REMOTE_FORCED"           not used in OpenDnp3
+            "LOCAL_FORCED"            not used in OpenDnp3
+            "OVERRANGE"               not used in OpenDnp3
+            "REFERENCE_ERR"           not used in OpenDnp3
+            "RESERVED"                not used in OpenDnp3
+
+The Time Value is also set in the Server variable to be the time of the last update.
+
+To enable timeouts the "system" config must have a non zero timeout value 
+
+```
+ "system": {
+        "name": "SEL 351",
+        "connection name": "SEL 351",
+        "protocol": "DNP3",
+        "version": "0.3",
+        "id": "sel_351",
+        "ip_address": "192.168.1.132",
+        "port": 20002,
+        "timeout":5,
+        "debug": 0,
+        "local_uri": "/local",
+        "master_address": 1,
+        "station_address": 0,
+        "frequency": 500
+    },
+```
+
+The individual items can then turn this value off to disable the COMMS_LOST testing.
+
+```
+"registers": [
+        {
+            "type": "analog",
+            "starting_offset": 0,
+            "number_of_registers": 12,
+            "map": [
+                {
+                    "id": "site_active_power",
+                    "offset": 0,
+                    "name": "Site Load Active Power",
+                    "signed": true,
+                    "timeout":0,
+                    "uri": "/components/sel_351"
+                },
+```
+Under these conditions the "site_active_power" variable will alwaus remain "online" regardless of the frequency of updates.
+
+If a non zero timeout is specified, the server records the time when each variable gets an update and will 
+transition the variable into a COMMS_LOST state if no vlue update is received before the timeout expires.
+
+The fims output from the client will not show the extra details unless a "clothed" format is specified.
+
+## Naked format ##
+
+Method:       pub
+Uri:          /components/sel_351
+ReplyTo:      (null)
+Process Name: DNP3_M_sel_351
+Username:     root
+Body:         {"grid_recovery":{"value":true,"flags":132,"sflags":"STATE,COMM_LOST","stime":"2022-09-27 16:47:36.750","etime":"2022-09-27 16:47:36.750"},"grid_fail":{"value":false,"flags":1,"sflags":"ONLINE","stime":"2022-09-27 16:47:36.750","etime":"2022-09-27 16:47:36.750"},"main_breaker_status":{"value":false,"flags":1,"sflags":"ONLINE","stime":"2022-09-27 16:47:36.750","etime":"2022-09-27 16:47:36.750"},"Timestamp":"09-27-2022 16:47:36.750717"}
+Timestamp:    2022-09-27 16:47:36.750892
+
+
+## Clothed Format ##
+
+
+Method:       pub
+Uri:          /components/sel_351
+ReplyTo:      (null)
+Process Name: DNP3_M_sel_351
+Username:     root
+Body:         {
+    "grid_recovery":{"value":true,"flags":132,"sflags":"STATE,COMM_LOST","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "grid_fail":{"value":false,"flags":1,"sflags":"ONLINE","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "main_breaker_status":{"value":false,"flags":1,"sflags":"ONLINE","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "site_active_power":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "site_reactive_power":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "site_current_ia":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "site_current_ib":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "site_current_ic":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "site_current_va":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "site_current_vb":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "site_current_vc":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.249","etime":"2022-09-27 16:47:39.249"},
+    "site_frequency":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.250","etime":"2022-09-27 16:47:39.250"},
+    "site_energy_delivered":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.250","etime":"2022-09-27 16:47:39.250"},
+    "site_energy_received":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.250","etime":"2022-09-27 16:47:39.250"},
+    "site_pf":{"value":0,"flags":2,"sflags":"RESTART","stime":"2022-09-27 16:47:39.250","etime":"2022-09-27 16:47:39.250"},
+    "Timestamp":"09-27-2022 16:47:39.250081"}
+Timestamp:    2022-09-27 16:47:39.250480
+```
+In this example the flags and string flags (sflags) are shown. 
+The stime is the system time when the  system received the data , the etime is the time embedded in the dnp3 message.
+
+
+## Initail value "gets" ##
+
+The Dnp3 server now handles the responses to the initial "get" requests.
+
+On start up the server issues the following fims message for each of the coponent uris read from the config file..
+```
+Method:       get
+Uri:          /components/sel_351
+ReplyTo:      /interfaces/sel_351/reply/components/sel_351
+Process Name: DNP3_O_sel_351
+Username:     root
+Body:         (null)
+Timestamp:    2022-09-27 17:39:57.775061
+```
+
+The system should respond with "set" messages for all the requseted components.
+
+Note that the "replyto" field has been set to a special value.
+
+```
+ReplyTo:      /interfaces/sel_351/reply/components/sel_351
+```
+
+A "set" message from that replyto has the prefix "/interfaces/sel_351/reply" removed and is then handled as a set to the 
+"/components/sel_351" uri.
+
+The Server does not normally accept "set" messages directly into the "/components/sel_351" uri.
+
+
+## Events ## 
+
+All the DNP3 Event messages have been removed. The OnStateChange" events still remain.
+```
+Method:       post
+Uri:          /events
+ReplyTo:      (null)
+Process Name: DNP3_M_sel_351
+Username:     root
+Body:         {"source":"OnStateChange","message":"DNP3  sel_351 state change [OPEN]\n","severity":1}
+Timestamp:    2022-09-27 17:40:02.292162
+```
+
+
+
+
+
+june 29 , 2020
+
+The dnp3_interface fleetmanager/tx10 branch is starting to look good. I still have the binary 0/1 false/true encode / decode problem. I'll look at that this morning.
+The big issue is picking the compiler . This is done by setting the PATH to pick a more recent compiler first.
+Set the path back and the rest of the system can be built.
+You may also have to set up the correct LD_LIBRARY_PATH
+for example :/usr/local/gcc-9.2.0/lib64
+the following config options  trigger a range scan in the master:
+   "frequency": 0,     << - turn off any regular scan
+      "rangeFreq": 5000,  <<-- range scan every 5 seconds ( can be much faster)
+      "rangeAStart": 600, <<-- start index for analog values
+      "rangeAStop": 620, <<-- stop index for analog values
+      "rangeBStart": 600, <<-- start index for binary values
+      "rangeBStop": 610 <<-- stop index for binary values
+The range scan covers all group 1 and 30 variables. You may see duplicate variables  in the scan if the outstation received more than one update (pub) since the last scan.
+The big fix , over this weekend, is to allow the start OFFSET to non zero . The system must have idx set for each variable.
+Not a big problem for outstation outputs but thereturn from the outstation will return all the values from 0 to the first idx unless a rage scan is used.
+Not really sure how the ERCOT master station is going to expect things to be laid out. If thy want to start at idx of 600, say but expect the data to be from a point index of 0 then just reset the idx values to match their expectations. 
+The offsets can remain as specified just the idx is used to pick the actual point.index (edited
+
+pwilshire
+june 18, 2020
+
+Following a detailed 3 way demo and more understanding on the role in the ERCOT BRP domain the following changes have been made to the 
+system design.
+
+1/ URI/Varname Combination
+Original assumption ... all variables are unique has been modified.
+The unique identifier is the uri / var name combination.
+
+so a variable called "sel_active_power"
+could be present on "sel_735" and "sel_761"
+Here are two possible definitions:
+
+
+            "id": "active_power",
+            "name": "Sel 735 Active Power",
+            "variation":"Group30Var5",
+            "evariation":"Group32Var7",
+            "uri":"/metrics/misc/sel_735",
+            "signed": true
+
+            "id": "active_power",
+            "name": "Sel 761 Active Power",
+            "variation":"Group30Var5",
+            "evariation":"Group32Var7",
+            "uri":"/metrics/misc/sel_761",
+            "signed": true
+
+Each of these represents the same value but from two different sites.
+The uri allows the variable to be accessed individually.
+
+This also means that , with careful uri naming , the system can provide "flow through" routing where needed.
+The uri name can be changed for different uses (outstation or master) of the same varible .
+
+Consider telemtry back from a site haaded directly to the control master (ERCOT)
+
+Site 735  outstation
+<default uri>
+gets a pub 
+   /interfaces/site_735/active_power 2345
+
+                Fleet Manager Site 735 Master
+                < uri /components/site_735 active_power>
+                issues a pub 
+                /components/site_735/active_power 2345
+
+                                     Fleet Manager ERCOT outstation renames the var to 
+                                         sel_735_active_power
+                                     <uri /components/site_735]
+                                     sends it to ERCOT master
+
+
+                                             ERCOT Master
+                                                    recieves value in analogs at the designated point index 
+
+The data flow in the opposite direction could look like this.
+
+ERCOT Master 
+sets a variable 
+   /components/site/site_735_voltage_setpoint 240
+
+                Fleet Manager ERCOT outstation recieved the output request 
+                    as type/index AnOutInt32/23  value 240
+                            voltage_setpoint
+                            <uri /interfaces/site_735>
+                            issues a set /interfaces/site_735/voltage_setpoint 240 
+                                     sends it to Site 735 outstation  
+                                    renames it to voltage_setpoint
+
+                                                Site 735  outstation
+                                                creates a set 
+                                                /interfaces/site_735/voltage_setpoint 240
+
+
+
+
+
+
+default uri
+===========
+
+If no uri is specified for an individual variable it will assume the default url.
+
+
+for master 
+  /components/<system_id>
+for outstation
+  /interfaces/<system_id>
+
+if the base_uri is defined this will be used.
+NOTE the base_uri Must have a leading '/'
+
+<base_url>/<system_id>
+
+These values can be defined in the system set up of the config file.
+    "system": {
+        "ip_address2": "127.0.0.1",
+        "port2": 502,
+        "id": "fm_master",
+        "ip_address": "127.0.0.1",
+        "port": 12502,
+        "local_uri": "/fm_master_local",
+        "base_uri": "/comp/master",
+        "frequency":1000
+    },
+
+
+local uri
+
+Normally the outstation will only respond to "pubs" (and not "posts", yet)
+
+The outstation does contain a copy of the full variable database. 
+
+The local_uri is used to permit access to that data
+"system": {
+        "id": "hybridos",
+        "id": "hybridos",
+        "ip_address": "127.0.0.1",
+        "port": 12502,
+        "local_uri":"/local/outstation"
+    },
+
+$ fims_send -m set -u /interfaces/hybridos/ess_average_soc 3344 -r /me
+Receive Timeout.
+
+$ fims_send -m get -u /interfaces/hybridos/ess_average_soc  -r /me
+Receive Timeout.
+
+$ fims_send -m set -u /local/outstation/interfaces/hybridos/ess_average_soc 3344 -r /me
+{"ess_average_soc":3344}
+
+$ fims_send -m get -u /local/outstation/interfaces/hybridos/ess_average_soc  -r /me
+{"ess_average_soc":3344}
+
+The outstation will set its local variables frpm a pub uri 
+
+$ fims_send -m get -u /local/outstation/interfaces/hybridos/ess_average_soc  -r /me
+{"ess_average_soc":3344}
+
+$ fims_send -m pub -u /interfaces/hybridos/ess_average_soc 10023
+
+$ fims_send -m get -u /local/outstation/interfaces/hybridos/ess_average_soc  -r /me
+{"ess_average_soc":10023}
+
+
+
+The local_uri option is also available on the master but there is no similar restriction on the get and set uris on the master
+
+
+
+Variables
+=========
+
+Variables are defined in the config file.
+
+There are two major classes of variables those collected by the outstation and those sent to the outstation.
+The outstation has a local copy of all its variables. The master can initiate a scan of these variables to get the current or "Static" values.
+
+The second major class is the master output variables.
+Unlike the outstation variables these are not kept in any local database (by DNP3) and there is no way (within DNP3) of getting the current values.
+
+HybridOS manitains a state database of all the variables being used.
+The database is almost identical for both outstation and master systems. Methods are available to get the current values of all types of data for both systems.
+In general use the outstation will listen for pubs and update its values from the pub data.
+
+Within DNP3 data is only referenced b data type and point index.
+An Analog value is set in the outstation and sent to the master as a value / index combination.
+The real world needs the tag or name of the data point to recognise the data.
+The DNP3 system maintains an identical ordered data base of data points in both systems to relate the data transferred between the outstation and master to actual 
+tagged or named data points.
+In addition data can be sent as integer or floating point values. This data formtting is known as a variation.
+
+Currently the definition of a data point in the config file has the following options :
+
+
+        // note that id translates to name
+        id         = cJSON_GetObjectItem(obj, "id");               the name used to define the data point
+        cjidx      = cJSON_GetObjectItem(obj, "idx");              used for forcing an index into the data type array
+        offset     = cJSON_GetObjectItem(obj, "offset");           the original modbus offset not used by DNP3
+        rsize      = cJSON_GetObjectItem(obj, "size");             th size variable used mainly for MODBUS systems
+        variation  = cJSON_GetObjectItem(obj, "variation");        This is the DNP3 variation. More later
+        evariation = cJSON_GetObjectItem(obj, "evariation");       This is the DNP3 event variation again more later
+        uri        = cJSON_GetObjectItem(obj, "uri");              THis is the uri used to group daa items to a system or function ., If not defined the default will be used 
+        bf         = cJSON_GetObjectItem(obj, "bit_field");        This is the MODBUS bit field. Not yet fully developed for DNP3
+        bits       = cJSON_GetObjectItem(obj, "bit_strings");      These are the strings associated with the bit_field (not yet fully developed for DNP3)
+        linkback   = cJSON_GetObjectItem(obj, "linkback");         See description  Feedback for an output variable
+        linkuri    = cJSON_GetObjectItem(obj, "linkuri");          See description 
+        clazz      = cJSON_GetObjectItem(obj, "clazz");            Add this variable to a DNP3 event  class 1, 2 or 3  
+        sign       = cJSON_GetObjectItem(obj, "signed");           This indicicates that the system will treat this value as a signed number
+        scale      = cJSON_GetObjectItem(obj, "scale");            Not used 
+        opvar      = cJSON_GetObjectItem(obj, "OPvar");            Define the data type for an outstation output  //1 = 16 bit , 2 = 32 bit , 3 float32,  4 coil.
+
+
+
+        idx/OPvar  operation.
+
+        The variable array can be used with self indexing.
+        As variables ae added to each data type , the order in the config file can be used to determine the index used by DNP3 to transmit the data.
+        The problem comes when interfacing to a Real Hardware system.
+        The SEL systems for example ignored hte data type and indexed All the different data types under a single index.
+        DNP3 has to define a "point index"  and a data type for each variable.
+        The idx and OPvar fields are used to do this.
+        These fields allow the used to state that a 32 bit output variable is present at index xxx.
+
+        The idx field can also be used for outstation sourced variables. If the sequence in the json config file cannot be guarenteed to be always the same and the point index needs to be 
+        fixed then the idx field should be used.
+        (TODO NOte we may allow OPvar values of 5(analog) and 6(binary) for these cases)
+
+
+        here is a typical use of the idx/OPvar fields
+
+
+                {
+                    "idx":0,
+                    "id": "remote_enable_flag",
+                    "offset": 0,
+                    "OPvar": 2,
+                    "name": "Start Flag"
+                },
+                {
+                    "idx":10,
+                    "id": "open_main_breaker",
+                    "offset": 10,
+                    "OPvar": 1,
+                    "name": "Open Main Breaker"
+                },
+
+        In this case the two sequential data point definitions will not result in sequential index assignemnts.
+
+        The actual assignemnts used are shown as the system starts up.
+
+    assignIdx Assign DbVar idx ===>
+
+    Assign dnp3 type [AnOPInt16]
+    idx set [AnOPInt16.0] ->name :[remote_enable_flag] offset : [0] ===>
+    idx set [AnOPInt16.1] ->name :[remote_disable_flag] offset : [1] ===>
+    idx set [AnOPInt16.2] ->name :[remote_standby_flag] offset : [2] ===>
+    idx set [AnOPInt16.3] ->name :[remote_features_kW_mode_cmd] offset : [3] ===>
+    idx set [AnOPInt16.4] ->name :[remote_features_kVAR_mode_cmd] offset : [4] ===>
+    idx set [AnOPInt16.7] ->name :[feeder_kW_slew_rate] offset : [7] ===>
+    idx set [AnOPInt16.8] ->name :[remote_ess_charge_control_target_soc] offset : [8] ===>
+    idx set [AnOPInt16.15] ->name :[remote_active_voltage_cmd] offset : [15] ===>
+    idx set [AnOPInt16.16] ->name :[remote_reactive_setpoint_kVAR_cmd] offset : [16] ===>
+    idx set [AnOPInt16.17] ->name :[remote_power_factor_cmd] offset : [17] ===>
+    idx set [AnOPInt16.6] ->name :[heartbeat] offset : [18] ===>
+    Assign dnp3 type [AnOPInt32]
+    idx set [AnOPInt32.5] ->name :[rated_active_power] offset : [5] ===>
+    idx set [AnOPInt32.9] ->name :[remote_export_target_kW_cmd] offset : [9] ===>
+    idx set [AnOPInt32.11] ->name :[remote_manual_ess_kW_cmd] offset : [11] ===>
+    idx set [AnOPInt32.13] ->name :[remote_manual_solar_kW_cmd] offset : [13] ===>
+    idx set [AnOPInt32.19] ->name :[substation_active_power] offset : [19] ===>
+    Assign dnp3 type [analog]
+    idx set [analog.0] ->name :[present_enable_flag] offset : [0] ===>
+    idx set [analog.1] ->name :[present_disable_flag] offset : [1] ===>
+    idx set [analog.2] ->name :[present_standby_flag] offset : [2] ===>
+    idx set [analog.3] ->name :[site_state] offset : [3] ===>
+    idx set [analog.4] ->name :[alarm_status_flag] offset : [4] ===>
+
+
+
+LinkBack  -- output fedback 
+========
+
+        linkback   = cJSON_GetObjectItem(obj, "linkback");         See description  Feedback for an output variable
+        linkuri    = cJSON_GetObjectItem(obj, "linkuri");          See description 
+
+        config examples
+
+"analog":   [
+            {
+                "id": "site_voltageSP",
+                "offset": 20,
+                "name": "site_voltageSP",
+                "unit": "kV",
+                "signed": true,
+                "linkback":"voltageSP",
+                "linkuri":"/site/voltage",
+                "uri":"/site/data"
+                
+            }
+            ]
+"AnOPInt32": 
+            [
+                {
+                    "id": "voltageSP",
+                    "offset": 3,
+                    "name": "voltageSP",
+                    "unit": "MW",
+                    "signed": true,
+                    "uri": "/site/voltage",
+                    "linkback":"site_voltageSP"
+                    "linkuri":"/site/data"
+
+                }
+            ]
+
+The master will get a set for /site/voltage/voltageSP valu 480
+The outstation will issue a set for /site/data/voltageSP  480
+This value will be sent to the hardware 
+
+The outstation wll receive feedback as a pub on site_voltageSP.
+                    pub /site/voltage/site_voltageSP 440
+this will be returned to the master.
+When an application reads the master value
+   get /site/data/voltageSP 
+      the linkback value of 440 wil be read , The original request of 480  will be overwritten by the linkback value returned from the outstation.
+
+Note that the feedback variable will return the outstation value at all times and will overwrite the master output variable with that value.
+Ideally we would hold off on the overwrite until there was an update to the feedback variable from the outstation.
+We could use an event scan on that variable to detect the status change.
+Until then the sequence is 
+Master                         Outstation
+                                site_voltageSP = 1234
+write 456 to voltageSP 
+                                sets voltageSP output as 456
+scans outstation 
+       gets site_voltageSP as 1234
+       overwrites voltageSP with 1234
+                                sees pub on site_voltageSP as 412
+scana outstation
+       gets site_voltageSP as 412
+       overwrites voltageSP with 412 ( but does not send to outstation)
+
+So not ideal but at least its something.
+
+
+Data format
+===========
+
+The data from Master to Oustation is in one of 4 forms.
+16-bit integer
+32-bit integer
+32-bit float32
+8-bit ControlRelayOutputBlock
+
+a fifth has not yet been included in this design but is easy to add.
+64-bit float64
+
+The data designations in the config file currently reflect the DNP3 designations.
+
+const char* dreg_types[] = { "AnOPInt16", "AnOPInt32", "AnOPF32", "CROB", "analog", "binary", "analogOS","binaryOS", 0 };
+
+These are mapped to defines as follows.
+
+enum Type_of_Var{
+    AnIn16,
+    AnIn32,
+    AnF32,
+    Type_Crob,        // write master
+    Type_Analog,      // write outstation
+    Type_Binary,      // write outstation
+    Type_AnalogOS,    // auto write outstation **
+    Type_BinaryOS,    // write outstation      **
+    NumTypes
+};
+
+** These are not fully developed yet.
+
+The Control Relay Output Block will be discussd in its own section.
+DNP3 has no concept of a signed value so that code has been addded to the flexGen driver.
+NOTE Currently there are no out of range protections or warnings for data overflow with signed values.
+
+A key word is used in the data definition to trigger signed data handling.
+
+                    "signed": true,
+
+
+The data handling from Master to outstation is quite basic. 
+
+The data collected by the outstation is a whole different story.
+There are 9 different data types.
+    Binary             **
+    DoubleBitBinary
+    Analog             **
+    Counter 
+    FrozenCounter 
+    BinaryOutputStatus 
+    AnalogOutputStatus 
+    OctetString
+    TimeAndInterval
+
+Note ** only these data types are in the current design.
+
+
+Thses are defined in the outstation code as follows.OutstationStackConfig OSconfig(DatabaseSizes( 
+                                                sys->getTypSize(Type_Binary),
+                                                0,                               // no double binaries
+                                                sys->getTypSize(Type_Analog),
+                                                0,                               // no counters
+                                                0,                               // no frozen counters
+                                                sys->getTypSize(Type_BinaryOS),
+                                                sys->getTypSize(Type_AnalogyOS),
+                                                0,                               // no octetString
+                                                0                                // no timeandinterval
+                                                )); 
+
+However each data type is subject to "variants" , loads of them.
+These variants dictate how the data is handled and the data format.
+The only a small  subset of these variants are currently handled.
+It seems that the variant information is dynamic and can change after setup if needed.
+
+There are two types of variation for a variable.
+Static and Event
+
+Here is the current subset.
+int variation_decode(const char* ivar)
+{
+    if(ivar)
+    {
+        if (strcmp(ivar, "Group30Var1") == 0)
+            return Group30Var1;
+        else if (strcmp(ivar, "Group30Var2") == 0)
+            return Group30Var2;
+        else if (strcmp(ivar, "Group30Var3") == 0)
+            return Group30Var3;
+        else if (strcmp(ivar, "Group30Var4") == 0)
+            return Group30Var4;
+        else if (strcmp(ivar, "Group30Var5") == 0)
+            return Group30Var5;
+        else if (strcmp(ivar, "Group32Var7") == 0)
+            return Group32Var7;
+        else if (strcmp(ivar, "Group32Var8") == 0)
+            return Group32Var8;
+    }
+    return GroupUndef;
+}
+
+Group30Var1  Analog Input 32 bit with flags
+Group30Var2  Analog Input 16 bit with flags
+Group30Var3  Analog Input 32 bit without flags
+Group30Var4  Analog Input 16 bit without flags
+Group30Var5  Analog Input single precision with flags (Float) << these allow floating point numbers
+Group30Var6  Analog Input double precision with flags (Double)
+
+Note that only Group30Var1 and Group30Var5 seem to be handled differently. More research needed.
+If incoming outstation data is 123.45 Group30Var1 will cause 123 to be sent to the Master. The floating value is truncated.
+Group30Var5 will send the full floating point value.
+
+Group32 is a litle different 
+
+Group32Var0  Analog Input Event - Any Variation  ** not used at the moment
+Group32Var1  Analog Input Event - 32 bit with flag
+Group32Var2  Analog Input Event - 16 bit with flag
+Group32Var3  Analog Input Event - 32 bit with flag and time
+Group32Var4  Analog Input Event - 16 bit with flag and time
+Group32Var5  Analog Input Event - single precision with flag (Float)
+Group32Var6  Analog Input Event - double precision with flag (Double)
+Group32Var7  Analog Input Event - single precision with flag and time (Float)
+Group32Var8  Analog Input Event - double precision with flag and time (Double)
+
+The outstation function performs the update in this function.
+
+    void ConfigureDatabase(DatabaseConfig& config, sysCfg* sys)
+
+All these event variations do not take effect under default conditions.
+The data point has to be assigned to class 1, 2 or 3  using the "clazz" option.
+Then the data point value has to change. 
+The Master must then do a specific class scan and all the changes to the data point will be relayed to the master.
+The  "freq1" "freq2" and "freq3" options to schedule these scans in the master system config.
+NOTE These features have not been fully developed, explored at this time , but the basis for a more responsive system is in place.
+
+      "freq1": 2000,        // every 2 seconds do the freq scan
+
+Data Class
+==========
+
+It's spelled clazz because class means something else in c++
+
+The system used two types of data scan. 
+The Static scan (on Class 0) gets everything in the Outstation variable database.
+
+This is set up in the "frequency" system option. This value is defaulted to once a second (1000 mS) but "can" be tured off by setting it to 0 in the master config.
+
+            "frequency":0,
+
+
+This gets all the data regardless of any changes.
+
+Individual data points may be added to  different class, the numbers have no inherent significance.
+    "clazz":1,
+
+When the system performs a scan on that class. the data point will be included in that scan. If the value has changed.
+TODO fully test this in more detail.
+Not only that, the event scan will include all chnges in value with a timestamp attached. So the same data point may be repeated in a single scan with different values.
+Not really used in FlexGen .. yet but we may get customer data in that format.
+
+
+
+
+Fims interface.
+================
+  
+
+The Master will receive data from the outstation as one of two data types.
+
+Analog and Binary.
+
+This outstation listens to pubs on the registered uris.
+It also checks that the data items in the pubs have been defined in the config file.
+If a match is found the value in the outstation dtabase  is updated and a message sent to the master with the new data.
+More than one data item can be changed at the same time by specifing a list of items and values in the body of the pub message.
+
+$ fims_send -m pub -u /interfaces/hybridos '{"ess_average_soc": 510023, "available_ess_num":{"value":4567}}'
+$ fims_send -m get -u /local/outstation/interfaces/hybridos/available_ess_num  -r /me
+{"available_ess_num":4567}
+$ fims_send -m get -u /local/outstation/interfaces/hybridos/ess_average_soc  -r /me
+{"ess_average_soc":510023}
+
+When sent to the master DNP3 ONLY sends a point index and a value to the master.
+
+After a data update the master will issue a pub with the new data
+
+
+Unsolicited data
+================
+
+In addition to the scheduled data scans the DNP3 outstation can send unsolicited data back to the Master.
+Not that the Master ALWAYS sends its data to the outstation whenver a FIMS set with one or more data values is sent to the system.
+The master must be enabled to get unsolicited data. A system configuration option "unsol" allows this.
+
+                "unsol": true,
+
+
+Events
+======
+DNP3 sends out copious event data. Currently flxgen only really wants 
+The emit_events system will filter out the unwanted Events
+
+Master Connection Made to outstation 
+Master Connection Dropped from outstation 
+Outstation received connection from Master
+Outstation dropped connection from Master
+
+{"source":"DNP3","message":"DNP3  hybridos message [INFO   ] --[fps Logger ms(1592449037729) INFO    server - Listening on: 127.0.0.1:12502]\n","severity":1}
+{"source":"DNP3","message":"DNP3  xxhybridos message [INFO   ] --[fps Logger ms(1592449067320) INFO    xxhybridos - Connecting to: 127.0.0.1, port 12502]\n","severity":1}
+{"source":"DNP3","message":"DNP3  xxhybridos message [INFO   ] --[fps Logger ms(1592449067321) INFO    xxhybridos - Connected to: 127.0.0.1, port 12502]\n","severity":1}
+{"source":"DNP3","message":"DNP3  xxhybridos message [WARN   ] --[fps Logger ms(1592449007315) WARN    xxhybridos - Error Connecting: Connection refused]\n","severity":1}
+
+
+
+
+Interestingly enough, when you enable floating point format in a data item you also have to enable it in the event data.
+The "evariation" config option allows this.
+
+                {
+                    "id": "alarm_status_flag",
+                    "offset": 4,
+                    "clazz":1,
+                    "name": "Alarm Status",
+                    "variation":"Group30Var5",
+                    "evariation":"Group32Var7"
+                },
+
+
+June 1, 2020
+
+Linkback
+A link back means update one of your local variables when the remote system sends you a value o a different variable.
+For example a linkback setup like this for 
+     "AnOPInt32": [
+             {
+                "id": "voltageSP",
+                "offset": 3,
+                "name": "voltageSP",
+                "unit": "MW",
+                "signed": true,
+                "uri": "/site/uri",
+                "linkback":"site_voltageSP" << causes voltageSP to be updated in the master from a incoming value for site_voltageSP
+            } (edited) 
+
+
+
+A linkback test would look like this....
+
+set VoltageSPto 550 on master
+
+
+fims_send -m set -u /components/dnp3_master/voltageSP 550 -r /me
+    #expect {"voltageSP":550}
+
+
+
+this will send the value to the outstation resulting in a 
+   set /site/uri/voltageSP 550 
+
+on the outstation.
+
+outstation will respond with a modified value ( for example 450)
+
+       pub /outstation/site_voltageSP 450
+
+fims_send -m pub -u /components/dnp3_outstation/site_voltageSP 450 -r /me
+ #expect {"site_voltageSP":450}
+
+the linkback option causes the value of the incoming site_voltageSP variable on the master (from the outstation) 
+to also set the value of voltageSP on the master.
+
+
+This can be verified using a check of VoltageSP on the master
+
+fims_send -m get -u /components/dnp3_master/voltageSP -r /me
+
+#expect {"voltageSP":450}
+
+
+#But Note if the master does a "set" to "voltageSP" on the outstation 
+   then also does a outstation scan before the /site/outstation updates the value of site_voltageSP
+   we will ge the old value of site_voltageSP when getting the value of voltageSP on the master    
+   this is an out of sync situation.
+
+here is the out of syc sequence.
+Tell the master to set the new voltageSP value.
+
+
+fims_send -m set -u /components/dnp3_master/voltageSP 550 -r /me
+
+master runs scan of outstation before the outstation system reacts to the new request to set voltageSP from the master.
+the query to the master gets old value of site_voltageSP (say 400)
+
+fims_send -m get -u /components/dnp3_master/voltageSP -r /me
+{"voltageSP 400"}
+
+Eventually the outstation recieves the new value from master and updates the site 
+fims_send -m set -u /site/voltageSP  550
+
+This results in an updated value of site_voltageSP being pub'd on the outstation.
+
+fims_send -m pub -u /site/site_voltageSP 450
+
+The outstation receives the new value and sends an update to the master.
+
+once the master receives the message from the outstation it will update thne local voltageSP value on the master
+
+# now this works
+fims_send -m get -u /components/dnp3_master/voltageSP -r /me
+{"voltageSP 450"}
+
+
+
+
+PRINT options
+
+At the fims input command is parsed the value field can be a simple '{"varname":value} or have a value subobject '{"varname":{"value":value}}'
+A flag is created for each object in the parsed bosy which will have a bit set PRINT_VALUE to remember the presence of the "value" object.
+This allows the output reply to return the value in the simple form or as the value subobject.
+This flag is also used to indicate if the value being processed was a readback variable.
+For example a write on the outstation was sent to "voltageSP" the outstation used the readback variable "_voltageSP" but the response to the "set" command should have the original name plus the ew value.
+
+
+CROB readback
+In the Modbus world CROBS are like coils. Crobs, however, have many more options. 
+Modbus treats coils as hving simple on/off values.
+For now the readback variable will be a 16 bit analog reflecting the desired CROB value.
+This will keep the original CROB desigation. The translaion to the Mobus equivalent True/False may have to be defined in the System Setup.
+
+
+pwilshire
+May 31, 2020
+
+More on the output readback system.
+I have distilled this requirement as follows.
+Normally an output from the master to the outstation is write ( and due to local DB read) in the master and read (but no write) on the outstation.
+The readback function is intended to provide a way for the system on the outstation to respond with an actual value in reply to the setpoint. request from the master.
+The setup of this requirement is simply addressed using a "readback" keyword in the config file.
+ For example:
+    "AnOPInt32": [
+
+          {
+                "id": "voltageSP",
+                "offset": 3,
+                "name": "voltageSP",
+                "unit": "MW",
+                "signed": true,
+                "uri": "/home/mystuff/uri",
+                "readback":"analog"
+            }
+
+The readback keyword triggers the creation of a readback var in both master and outstation local databases.
+the name has a "_" prepended.
+Setting a value on the master for voltageSP will send the setpoint to the outstation.
+
+fims_send -m set -r /me -u /components/dnp3_master/voltageSP '{"value":3444}'
+
+The master and outstation can read the voltageSP value.
+
+fims_send -m get -r /me -u /components/dnp3_outstation/voltageSP
+{"voltageSP":3444}
+
+Also read the value from the Master ( local DB)
+fims_send -m get -r /me -u /components/dnp3_master/voltageSP
+{"voltageSP":3444}
+
+With the new readback option, the outstation can now write a value to the same variable
+
+ fims_send -m set -r /me -u /components/dnp3_outstation/voltageSP '{"value":6444}'
+
+This will cause the value "6444" to be returned to the master as a new variable "_voltageSP"
+
+The original value can be read from both master and outstation as "voltageSP" and the readback value can be discovered by reading the value "_voltageSP"
+This outstation behavior is now in the branch.
+
+If required, the master can be modified so that a read of the local value from the original name "voltageSP" will return the readback value.
+Both the  outstation  and master config files will need to have the readback keys in their  config files.
+
+( We need this to maintain the variable / point index tracking).
+There are two options for readback keys "analog" or "binary" ( these may be designated automatically).
+
+The variation for the readback key data item will be worked out automatically.
+We have a number of different output types AnInt16, AnIt32, AnF32, AnF64 and CROB.
+Note I have not worked out what to do about the CROB system yet. I think we need to send simply "on" or "off" commands to it . These could be simply mapped to LATCH_ON and LATCH_OFF.
+I'll review the Modbus system and come up with a plan.
+
+
+
+
+pwilshire
+May 29, 2020
+
+problem ... we stup an output from the master station 
+it gets delivered to the outstation as an ANINT16, AnInt32, AnF32 or a crob.
+There seem to be no other types.
+
+Now the outstation will attemp to set a setpoint at the outstation . A set FIMS message will be sent to cause the periperal to be given a target.
+The peripheral will then provide feedack on the actual value in use.
+master sends value .. outstation set target (set <uri> <value>)
+This means that a value must have been declared as a master output variable AnInt32 or something else.
+The requirement  is for selected variable to have an  feedback path.
+
+THe outstation will respond to a pub function but will normally reject variables that are designated as master variables.
+an attempt to set or pub those on an outstation are normally rejected.
+However if an outstation output var is desired to be automatically linked to a status variable the result of the set should be returned to the master.
+
+Follow this sequence
+master set to a holding register.
+master sends this to outstation,  outstation issues a set to the outstation process via the uri associated with the variable.
+The outstation process issues a Pub to the same uri/var with a response value.
+Te outstation sees that such a pub has to be returned to the master and sets a feeedback  var.
+   1+++> flag the var to return a status.
+The outstation will return the value in the feedback var 
+
+Luckily both master ad outstation use the same config files.
+A var tagged for a feedback is simply marked as such in its data def and now both master and outstation can map it correctly.
+"readback":"analog"  will do the trick.
+Having done this both master and outstation will be able to track the var.
+
+
+
+pwilshire
+May 15, 2020
+
+Discussion Document  on the whole Fleet Manager/DNP3 system.
+
+The Fleet Manager (FM) unit has one customer facing DNP3 Outstation and one or more site facing DNP3 FM Site Master stations.
+Each Site will have a DNP3 Site Outstation connecting to a Modbus Client.
+
+Customer      |  Fleet Manager                                   |   |  Sites
+DNP3 Master<---->FM DNP3 Outstation                              |   |
+              |           |                                      |   |
+              |           --------------->FM Site1 DNP3 Master<---------->Site1 DNP3 Outstation    Site1 Modbus Client
+              |           |                                      |   |
+              |           --------------->FM Site2 DNP3 Master<---------->Site2 DNP3 Outstation    Site2 Modbus Client
+              |           ~
+              |           ~
+              |           |                                      |   |
+              |           --------------->FM SiteN DNP3 Master<---------->SiteN DNP3 Outstation    SiteN Modbus Client
+
+
+The FM DNP3 Outstation will receive output commands and query requests from the Customer DNP3 Master.
+The Customer commands will be passed on to one of the FM Site DNP3 Masters based on the output destination.
+The FM DNP3 Outstation will receive PUBS from each of the FM Site DNP3 Master stations connected to the site units.
+The FM DNP3 Outstation will hold registers containing the values of the system variables designated as inputs.
+
+Question: does the FM DNP3 outstation need to retain the state of the Output commands. 
+        if so we can use the DNP3 status variables for these.
+        The status variables can be set in  the Site DNP3 Outstations after the Output command has been reeived.
+        These variables will be returned to the FM DNP3 Outstation as part of the FM Site Master queries
+
+
+Each FM Site DNP3 Master will issue queries on its assigned Site DNP3 Outstation.
+Ther reults of these queries will be used to update the FM DNP3 Outstation variables,
+
+
+The modbus FIMS message struture is:
+
+set/get/pub /components/sys.cfg_name [{"name": name, "value":value},....] 
+or   
+set/get /components/sys.cfg_name/item {"value":value}
+
+
+The dnp3 scheme is more complex in that a name resolves to :
+
+<type>:index    for outputs and inputs
+types being : 
+    binary,analog, [counters , strings etc ] for DNP3 Site Outstation INPUTS
+and
+   AnalogOutputInt16, AnalogOutputInt32,AnalogOutputFloat32,ControlRelayOutputBlock [AnalogOutputDouble64,] for DNP3 Site Outstation OUTPUTS
+ 
+each of these item types uses an index to define the component.
+
+In addition the outstation INPUTS can define a variant to define to format used for the the value messages.
+
+Lets consider an Output command from the Customer DNP3 Master.
+We want to set the variable "gen_resource_breaker" on Site 21  to LATCH_OFF
+The Customer Database knows this as Site21/gen_resource_breaker, it is of type CROB ( Control Relay Output Block) 
+   and its index in the FM DNP3 Outstation CROB array is 32
+The Customer Database also reads the status of this output as BinaryStatus offset 12.
+
+This is the suggested config file fragment   
+
+not quite sure of the exact systax yet.
+
+"Sites": {
+        "Site21": {
+            "outputs" : {
+                "CROB" : [
+                    {
+                        "id": "gen_resource_breaker",
+                        "dest": "Site21_modbus/gen_resource_breaker",
+                        "status": "Site21_outstation/gen_resource_breaker_status",
+                        "offset": 32,
+                        "name": "Generation Resource Breaker Control"
+                        "initial_value":"LATCH_OFF"
+                        "site_offset: 2
+                    },
+                ] <,>
+            }
+            "inputs" : {
+                "BinaryOutputStatus" : [
+                    {
+                        "id": "gen_resource_breaker_status",
+                        "offset": 12,
+                        "name": "Generation Resource Breaker Control Status"
+                        "site_offset: 1
+                        "variant":"Group10Var2"
+                    },
+                ] ,
+                "Analog" : [
+                    {
+                        "id": "line_flows_MW",
+                        "offset": 4,
+                        "name": "line flows MW"
+                        "site_offset: 2
+                        "variant":"Group30Var1"
+                    },
+                ] <,>
+
+
+            }
+        }<,>
+}
+
+
+Customer Output
+
+So lets create a dummy DNP3 Master to simulate the customer DNP3 master.
+We would congfigure it with the something like the fragment shown above.
+
+Somewhere the sys_config.name of the master is ERCOT_master.
+Also we will have two other site names to consider 
+FM_outstation
+Site21_master
+Site21_outstation
+
+
+The FIMS message to send to this Simulated master would be:
+ERCOT_master <== set /components/ERCOT_master/Site21/gen_resource_breaker "LATCH_ON"
+
+This would cause the FM DNP3 Outstation to receive a LATCH_ON command for CROB index 32.
+It would look up the designated site from the config file and detect that it needs to direct this command to Site1_master.
+
+FM_outstation ==> set /component/Site21_master/gen_resource_breaker "LATCH_ON"
+
+The FM_Site21_master will send the CROB message to CROB:<2> to the Site1 DNP3 Outstation this system will then relay the command to the Site21 Modbus Client
+
+
+This Site21 DNP3 outstation will then issue the Modbus fims message due to the  "dest":"Site21_modbus/gen_resource_breaker" field
+
+    set /component/Site21_modbus/gen_resource_breaker "LATCH_ON" ( or whatever the modbus requires as a 'latch_on' value)
+
+The Site21 DNP3 outstation will  also send a fims message to itself due to the "status":"Site21_outstation/gen_resource_breaker_status" field
+
+    set /component/Site21_outstation/gen_resource_breaker_status "LATCH_ON"
+
+
+Customer inputs
+An Example 
+Our Customer DNP3 Master wants to know what the current value of 
+"line_flows_MW" on Site21 
+
+We'll use the fims command
+ERCOT_master <== get /components/ERCOT_master/Site21/line_flows_MW
+The ERCOTT_master will issue a query to the FM DNP3_outstation which will respond with the current value in its local storage.
+
+The FM DNP3 Site Masters will each issue queries on their outstations and issue pubs when they receive results.
+The pubs will be monitored buy the FM DNP3 outstation and translated into updates to the ERCOTT_master.
+
+
+
+The Site DNP3 outstations will listen to the MODBUS_Client pubs and update their values.
+This will transfer to the FM DNP3 Master
+that will also issue pubs on the current values.
+
+the FM DNP3 Outstation will listen to those pubs and issue updates to its own copies of the variables.
+
+
+Here is the whole path from Site Modbus Client to FM DNP3 Outstation
+
+Site21 MODBUS Client, 
+       pub /comonents/Site21  '[{"name":value},{"name":value}]
+Site21 DNP3 outstation translates names to local variable types and offsets.
+       issues update commands to its DNP3 local Database 
+FM Site21 DNP3  master  queries Site21 DNP3 Outstation and issues a pub when the response is received.
+       pub /comonents/Site21_master  '[{"name":value},{"name":value}]
+
+FM DNP3_outstation listens to these pubs and updates the local database with the modified customer offsets.
+
+The Customer DNP3 master will then get the updated values.
+
+
+How about a demand query ??
+
+I understand that this may be an enhancement. the system may happily depend on scheduled quieries.
+
+This will ripple a query all the way down to the Site Modbus client
+
+Start at the Site DNP3 Outstation.
+
+This is issued with a demand for a list of values (not just a general Class 0 scan) from its FM Site DNP3 Master
+This can be simulated using a "get" for a list of variables sent to the FM Site DNP3 Master
+
+The Site DNP3 Outstation will translate this into a Site modbus client "get" request.
+
+The response (via reply to) to the "get" request will be treated the same as a "set" request placed on the Site DNP3 Outstation.
+This will result in a number of buffer puts relayed to the FM Site DNP3  Master.
+
+Lets assume that we can modify the "pub" issued by the FM DNP3 Site Master into "sets" headed for the FM DNP3 Outstation
+( For example use the indicator for an unsolicitated response)
+
+These "sets" to the FM DNP3 Outstation will result in Buffer pushes to the Customer DNP3 Master
+
+
+This is a diagram of the transaction:
+
+get /components/ERCOTT_master '["name","name"]'
+
+   master creates a variable list and send request to FM DNP3 Outstation
+   since this is not a general class scan FM DNP3 issues "get" fims messages to FM Site DNP3 Masters
+
+   get /components/Sitex_master '["name","name"]'
+
+   FM Sitex DNP3 Master creates and sends a query list to its Site DNP3 outstation
+
+   The site DNP3 outstation notices this is not a general query and sends "get" message to the  Site Modbus Client
+   The Site Modbus Client responds
+   The Site DNP3 Outstation sets it buffers and sends updates to the FM Site DNP3 Master
+   The FM Site DNP3 Master will issue pubs which are received by the FM DNP outstation. 
+   This sets its buffers and causes a response to the Customer DNP3 Master.
+
+
+
+
+
+
+
+
+
+
+
+
+

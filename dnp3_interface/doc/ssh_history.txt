@@ -1,0 +1,30 @@
+  509  ssh root@172.17.0.3
+  510  ssh root@172.17.0.3
+  511  yum install openssh_clinet -y
+  512  yum install openssh_client -y
+  513  yum install openssh_clients -y
+  514  yum install openssh-clients -y
+  515  yum install openssh-server -y
+  516  more /sbin/sshd-keygen 
+  517  more /sbin/sshd-keygen 
+  518  /sbin/sshd-keygen 
+  519  more /sbin/sshd-keygen 
+  520  nano  /sbin/sshd-keygen 
+  521  chpasswd 
+  522  chpasswd -h
+  523  chpasswd root
+  524  passwd
+  525  ssh root@172.17.0.3
+  526  ssh-copy-id root@172.17.0.3
+  527  /usr/bin/ssh-keygen -A
+  528  ssh-copy-id root@172.17.0.3
+  529  ls ~/.ssh
+  530  ssh-keygen -t rsa -b 4096
+  531  ssh-copy-id root@172.17.0.3
+  532  ssh root@172.17.0.3
+  533  history
+  534  history | tail - 10
+  535  history | tail -10
+  536  history | tail -20
+  537  history | tail -30
+  538  history | tail -30 > doc/ssh_history.txt

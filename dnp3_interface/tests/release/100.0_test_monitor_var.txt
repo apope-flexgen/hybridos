@@ -1,0 +1,259 @@
+# defs for 100.0_test_monitor_var.sh
+# p. wilshire
+# 10/22/2021
+#
+# the test script dots in this to run the config set up by 601.0
+# it can be tricky to match exact responses so use grep -v to filter out stuff that changes regardless.
+# also the responses will be in alpha order.
+#
+
+FimsDir=/usr/local/bin/
+
+descs=()
+acts=()
+resps=()
+
+#######################################################################
+descs[0]=" >> test CheckMonitorVar "
+#######################################################################
+
+
+idx=1
+descs[idx]=" >> setup BMSAvgCellTemp "
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set  -u /ess/full/status/bms '
+{
+    "BMSAvgCellTemp":
+    {
+    "value": 0,
+    "EnableAlert": true,
+    "EnableFaultCheck": false,
+    "EnableMaxValCheck": true,
+    "EnableMinValCheck": false,
+    "FaultShutdownReset": true,
+    "MaxAlarmThreshold": 45.6,
+    "MaxAlarmTime": 2,
+    "MaxRecoverTime": 1,
+    "MaxResetValue": 40,
+    "actions": {
+      "onSet": [
+        {
+         "func": [
+            {
+              "debug": true,
+              "amap": "ess",
+              "func": "CheckMonitorVar"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+EOF
+)
+sleeps[idx]="1.5" 
+idx=$(($idx+1))
+
+##################### set value to 32 ###############
+descs[idx]=" >> set BMSAvgCellTemp to 32.0 "
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$  -u /ess/full/status/bms '
+{
+    "BMSAvgCellTemp": 32
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"BMSAvgCellTemp":32}
+EOF
+)
+sleeps[idx]="2" 
+idx=$(($idx+1))
+##################### check alarms  0 ###############
+descs[idx]=" >> set check alarms 0 "
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$  -u /ess/full/status/bms/BMSAvgCellTemp |  jq | grep seen | grep -v MaxReset
+EOF
+)
+resps[idx]=$(cat<<EOF
+    "seenMaxAlarm": false,
+    "seenMaxFault": false,
+    "seenMinAlarm": false,
+    "seenMinFault": false,
+    "seenMinReset": false,
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+##################### set value to 47 ###############
+descs[idx]=" >> set BMSAvgCellTemp to 47.0 "
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$  -u /ess/full/status/bms '
+{
+    "BMSAvgCellTemp": 47
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"BMSAvgCellTemp":47}
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+##################### check alarms  1 ###############
+descs[idx]=" >> set check alarms 1 "
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$  -u /ess/full/status/bms/BMSAvgCellTemp |  jq | grep seen| grep -v MaxReset
+EOF
+)
+resps[idx]=$(cat<<EOF
+    "seenMaxAlarm": false,
+    "seenMaxFault": false,
+    "seenMinAlarm": false,
+    "seenMinFault": false,
+    "seenMinReset": false,
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+##################### set value to 48 ###############
+descs[idx]=" >> set BMSAvgCellTemp to 48.0 "
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$  -u /ess/full/status/bms '
+{
+    "BMSAvgCellTemp": 48
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"BMSAvgCellTemp":48}
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+##################### check alarms  2 ###############
+descs[idx]=" >> set check alarms 2 "
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$  -u /ess/full/status/bms/BMSAvgCellTemp |  jq  | grep seen
+EOF
+)
+resps[idx]=$(cat<<EOF
+    "seenMaxAlarm": true,
+    "seenMaxFault": false,
+    "seenMaxReset": false,
+    "seenMinAlarm": false,
+    "seenMinFault": false,
+    "seenMinReset": false,
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+
+##################### check alarms  3 ###############
+descs[idx]=" >> set check alarms 3 "
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$  -u /ess/full/status/bms/BMSAvgCellTemp |  jq | grep seen
+EOF
+)
+resps[idx]=$(cat<<EOF
+    "seenMaxAlarm": true,
+    "seenMaxFault": false,
+    "seenMaxReset": false,
+    "seenMinAlarm": false,
+    "seenMinFault": false,
+    "seenMinReset": false,
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+##################### set value to 39 ###############
+descs[idx]=" >> set BMSAvgCellTemp to 39.0 should see max reset "
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m set -r /$$  -u /ess/full/status/bms '
+{
+    "BMSAvgCellTemp": 31
+}'
+EOF
+)
+resps[idx]=$(cat<<EOF
+{"BMSAvgCellTemp":31}
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+##################### check alarms  4 ###############
+descs[idx]=" >> set check alarms 4 "
+
+acts[idx]=$(cat<<EOF
+${FimsDir}fims_send -m get -r /$$  -u /ess/full/status/bms/BMSAvgCellTemp |  jq | grep seen
+EOF
+)
+resps[idx]=$(cat<<EOF
+    "seenMaxAlarm": false,
+    "seenMaxFault": false,
+    "seenMaxReset": true,
+    "seenMinAlarm": false,
+    "seenMinFault": false,
+    "seenMinReset": false,
+EOF
+)
+sleeps[idx]="1" 
+idx=$(($idx+1))
+
+#./fims_send -m set -r /$$ -u /ess/full/status/bms '{"BMSAvgCellTemp":{"value":80}}'
+#./fims_send -m set -r /$$ -u /ess/full/status/bms '{"BMSAvgCellTemp":{"value":60}}'
+#exp_resp='"BMSAvgCellTemp":{"value":80,"EnableAlert":true,"EnableFaultCheck":false,
+#"EnableMaxValCheck":false,"EnableMinValCheck":false,"FaultShutdownReset":true,
+#"MaxAlarmThreshold":0,"MaxAlarmTime":0,"MaxAlarmTimeout":0,"MaxFaultThreshold":0,"MaxFaultTime":0,
+#"MaxFaultTimeout":0,"MaxRecoverTime":0,"MaxRecoverTimeout":0,"MaxResetValue":0,"MinAlarmThreshold":0,
+#"MinAlarmTime":0,"MinAlarmTimeout":0,"MinFaultThreshold":0,"MinFaultTime":0,
+#"MinFaultTimeout":0,"MinRecoverTime":0,"MinRecoverTimeout":0,"MinResetValue":0,
+#"seenMaxAlarm":false,"seenMaxFault":false,"seenMaxReset":false,"seenMinAlarm":false,"seenMinFault":false,"seenMinReset":false,
+#"tLast":6926.983320000014,"actions":{"onSet":[{"func":[{"amap": "bms","func":"CheckMonitorVar"}]}]}}'
+#/usr/local/bin/fims/fims_send -m set  -u /ess/test/ess '
+#{ "test_bitfield":{ "value":0,"debug":1}}'
+
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 1
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/controls/pcs/oncmd_test`
+#exp_resp='{"oncmd_test":{"value":true}}'
+#check_resp "send value 1" $resp $exp_resp
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 4
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/controls/pcs/oncmd_test`
+#exp_resp='{"oncmd_test":{"value":false}}'
+#check_resp "send value 4" $resp $exp_resp
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 32
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/system/controls/kacopencmd_test`
+#exp_resp='{"kacopencmd_test":{"value":true}}'
+#check_resp "send value 32" $resp $exp_resp
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 64
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/system/controls/kacopencmd_test`
+#exp_resp='{"kacopencmd_test":{"value":false}}'
+#check_resp "send value 64" $resp $exp_resp
+#/usr/local/bin/fims/fims_send -m set  -u /ess/full/test/ess/test_bitfield 33
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/system/controls/kacopencmd_test`
+#exp_resp='{"kacopencmd_test":{"value":true}}'
+#check_resp "send value 33.1" $resp $exp_resp
+#resp=`/usr/local/bin/fims/fims_send -m get -r /$$ -u /ess/full/controls/pcs/oncmd_test`
+#exp_resp='{"oncmd_test":{"value":true}}'
+#check_resp "send value 33.2" $resp $exp_resp
+#echo "$0 tests passed" >> tests.out
+############################################################

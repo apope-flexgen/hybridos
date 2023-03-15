@@ -1,0 +1,7 @@
+export PATH=/usr/local/bin/fims:/usr/local/bin/dnp3_interface:$PATH
+export LD_LIBRARY_PATH=/usr/local/gcc-9.2.0/lib64
+#sh scripts/sample2_fims_echo_both.sh
+#build/release/dnp3_master  config/sample2_master.json 
+#/usr/local/bin/dnp3_interface/dnp3_master config/FM_CommServer_master.json
+#/usr/local/bin/dnp3_interface/dnp3_outstation config/FM_CommServer_outstation.json
+

@@ -1,0 +1,14 @@
+[Unit]
+Description=FleetManager dnp3 server talks to hybridOS client
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=hybridos
+Environment=LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
+ExecStart=/usr/local/bin/dnp3_server /usr/local/etc/config/dnp3_server/%I.json
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
