@@ -13,9 +13,6 @@
 [submodule "scheduler"]
 	path = scheduler
 	url = https://github.com/flexgen-power/scheduler.git
-[submodule "cops"]
-	path = cops
-	url = https://github.com/flexgen-power/cops.git
 [submodule "fleet_manager"]
 	path = fleet_manager
 	url = https://github.com/flexgen-power/fleet_manager.git
