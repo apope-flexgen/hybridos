@@ -25,9 +25,6 @@
 [submodule "cloud_sync"]
 	path = cloud_sync
 	url = https://github.com/flexgen-power/cloud_sync.git
-[submodule "dts"]
-	path = dts
-	url = https://github.com/flexgen-power/dts.git
 [submodule "echo"]
 	path = echo
 	url = https://github.com/flexgen-power/echo.git
