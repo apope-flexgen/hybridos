@@ -1,0 +1,13 @@
+[Unit]
+Description=FlexGen Central Operating Process Supervisor (COPS)
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=root
+ExecStart=/usr/local/bin/cops --config=/usr/local/etc/config/cops
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
