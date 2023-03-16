@@ -1,0 +1,11 @@
+[Unit]
+Description=Disk to Storage (PowerCloud)
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/dts -c=/usr/local/etc/config/dts/dts.json
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

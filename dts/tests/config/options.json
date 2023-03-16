@@ -1,0 +1,11 @@
+{
+    "input_path"    : "/home/vagrant/data",
+    "failed_validate_path" : "/home/vagrant/.dts_validate_error",
+    "failed_write_path" : "/home/vagrant/.dts_write_error",
+    "forward" : "/home/vagrant/.forward",
+    "ext"     : ".tar.gz",
+    "write_delay"   : 2,
+    "retention" : "",
+    "influx_address" : "172.21.120.195:8086",
+    "mongo_address" : "172.21.120.195:27017"
+}
