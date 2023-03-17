@@ -1,0 +1,1579 @@
+{
+    "fileInfo": {
+        "sourceFileName": "SEL 411L_PRI.xlsx",
+        "sourceFileCreated": "2020-06-26T17:11:50.000Z",
+        "sourceFileLastModified": "2021-04-14T19:03:01.000Z",
+        "sourceFileCreatedBy": "Administrator",
+        "sourceFileLastModifiedBy": "Vinay Baliga",
+        "outputFileName": "sel_411L_dnp3_client.json",
+        "outputFileType": "dnp3",
+        "outputFileCreated": "2021-04-14T19:12:41.195Z"
+    },
+    "system": {
+        "name": "SEL 411L Primary",
+        "protocol": "DNP3",
+        "version": "0.3",
+        "id": "sel_411l_pri",
+        "ip_address": "192.168.114.62",
+        "port": 502,
+        "data_bits": "Columns marked in green are REQUIRED"
+    },
+    "registers": [
+        {
+            "type": "AnOPInt16",
+            "starting_offset": 0,
+            "number_of_registers": 64,
+            "map": [
+                {
+                    "id": "rb01",
+                    "offset": 0,
+                    "name": "RB01",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb02",
+                    "offset": 1,
+                    "name": "RB02",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb03",
+                    "offset": 2,
+                    "name": "RB03",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb04",
+                    "offset": 3,
+                    "name": "RB04",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb05",
+                    "offset": 4,
+                    "name": "RB05",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb06",
+                    "offset": 5,
+                    "name": "RB06",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb07",
+                    "offset": 6,
+                    "name": "RB07",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb08",
+                    "offset": 7,
+                    "name": "RB08",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb09",
+                    "offset": 8,
+                    "name": "RB09",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb10",
+                    "offset": 9,
+                    "name": "RB10",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb11",
+                    "offset": 10,
+                    "name": "RB11",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb12",
+                    "offset": 11,
+                    "name": "RB12",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb13",
+                    "offset": 12,
+                    "name": "RB13",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb14",
+                    "offset": 13,
+                    "name": "RB14",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb15",
+                    "offset": 14,
+                    "name": "RB15",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb16",
+                    "offset": 15,
+                    "name": "RB16",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb17",
+                    "offset": 16,
+                    "name": "RB17",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb18",
+                    "offset": 17,
+                    "name": "RB18",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb19",
+                    "offset": 18,
+                    "name": "RB19",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb20",
+                    "offset": 19,
+                    "name": "RB20",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb21",
+                    "offset": 20,
+                    "name": "RB21",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb22",
+                    "offset": 21,
+                    "name": "RB22",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb23",
+                    "offset": 22,
+                    "name": "RB23",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb24",
+                    "offset": 23,
+                    "name": "RB24",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb25",
+                    "offset": 24,
+                    "name": "RB25",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb26",
+                    "offset": 25,
+                    "name": "RB26",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb27",
+                    "offset": 26,
+                    "name": "RB27",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb28",
+                    "offset": 27,
+                    "name": "RB28",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb29",
+                    "offset": 28,
+                    "name": "RB29",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb30",
+                    "offset": 29,
+                    "name": "RB30",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb31",
+                    "offset": 30,
+                    "name": "RB31",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "rb32",
+                    "offset": 31,
+                    "name": "RB32",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_open_cmd",
+                    "offset": 32,
+                    "name": "OC1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_close_cmd",
+                    "offset": 33,
+                    "name": "CC1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_open_cmd",
+                    "offset": 34,
+                    "name": "OC2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_close_cmd",
+                    "offset": 35,
+                    "name": "CC2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_1",
+                    "offset": 36,
+                    "name": "89OC01",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_1",
+                    "offset": 37,
+                    "name": "89CC01",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_2",
+                    "offset": 38,
+                    "name": "89OC02",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_2",
+                    "offset": 39,
+                    "name": "89CC02",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_3",
+                    "offset": 40,
+                    "name": "89OC03",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_3",
+                    "offset": 41,
+                    "name": "89CC03",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_4",
+                    "offset": 42,
+                    "name": "89OC04",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_4",
+                    "offset": 43,
+                    "name": "89CC04",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_5",
+                    "offset": 44,
+                    "name": "89OC05",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_5",
+                    "offset": 45,
+                    "name": "89CC05",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_6",
+                    "offset": 46,
+                    "name": "89OC06",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_6",
+                    "offset": 47,
+                    "name": "89CC06",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_7",
+                    "offset": 48,
+                    "name": "89OC07",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_7",
+                    "offset": 49,
+                    "name": "89CC07",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_8",
+                    "offset": 50,
+                    "name": "89OC08",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_8",
+                    "offset": 51,
+                    "name": "89CC08",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_9",
+                    "offset": 52,
+                    "name": "89OC09",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_9",
+                    "offset": 53,
+                    "name": "89CC09",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "open_disconnect_sw_cnt_10",
+                    "offset": 54,
+                    "name": "89OC10",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "close_disconnect_sw_cnt_10",
+                    "offset": 55,
+                    "name": "89CC10",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reset_demands",
+                    "offset": 56,
+                    "name": "RST_DEM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reset_demand_peaks",
+                    "offset": 57,
+                    "name": "RST_PDM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reset_energies",
+                    "offset": 58,
+                    "name": "RST_ENE",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reset_bk1_monitor_data",
+                    "offset": 59,
+                    "name": "RST_BK1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reset_bk2_monitor_data",
+                    "offset": 60,
+                    "name": "RST_BK2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reset_targets",
+                    "offset": 61,
+                    "name": "RSTTRGT",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reset_minmax_metering",
+                    "offset": 62,
+                    "name": "RSTMML",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reset_dnp3_event_summary",
+                    "offset": 63,
+                    "name": "RSTDNPE",
+                    "uri": "/metrics/NorthFork"
+                }
+            ]
+        },
+        {
+            "type": "AnOPInt32",
+            "starting_offset": 0,
+            "number_of_registers": 7,
+            "map": [
+                {
+                    "id": "active_settings_group",
+                    "offset": 0,
+                    "name": "ACTGRP",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "actgrp",
+                    "offset": 0,
+                    "name": "ACTGRP",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bkr1_op_phase_a_count",
+                    "offset": 1,
+                    "name": "BKR1OPA",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bkr1_op_phase_b_count",
+                    "offset": 2,
+                    "name": "BKR1OPB",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bkr1_op_phase_c_count",
+                    "offset": 3,
+                    "name": "BKR1OPC",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bkr2_op_phase_a_count",
+                    "offset": 4,
+                    "name": "BKR2OPA",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bkr2_op_phase_b_count",
+                    "offset": 5,
+                    "name": "BKR2OPB",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bkr2_op_phase_c_count",
+                    "offset": 6,
+                    "name": "BKR2OPC",
+                    "uri": "/metrics/NorthFork"
+                }
+            ]
+        },
+        {
+            "type": "analog",
+            "starting_offset": 0,
+            "number_of_registers": 101,
+            "map": [
+                {
+                    "id": "current_a_phase_mag_10_cycle",
+                    "offset": 0,
+                    "name": "LIAFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "current_a_phase_angle_10_cycle",
+                    "offset": 1,
+                    "name": "LIAFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "current_b_phase_mag_10_cycle",
+                    "offset": 2,
+                    "name": "LIBFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "current_b_phase_angle_10_cycle",
+                    "offset": 3,
+                    "name": "LIBFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "current_c_phase_mag_10_cycle",
+                    "offset": 4,
+                    "name": "LICFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "current_c_phase_angle_10_cycle",
+                    "offset": 5,
+                    "name": "LICFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk1_a_phase_current_mag",
+                    "offset": 6,
+                    "name": "B1IAFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk1_a_phase_current_angle",
+                    "offset": 7,
+                    "name": "B1IAFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk1_b_phase_current_mag",
+                    "offset": 8,
+                    "name": "B1IBFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk1_b_phase_current_angle",
+                    "offset": 9,
+                    "name": "B1IBFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk1_c_phase_current_mag",
+                    "offset": 10,
+                    "name": "B1ICFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk1_c_phase_current_angle",
+                    "offset": 11,
+                    "name": "B1ICFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk2_a_phase_current_mag",
+                    "offset": 12,
+                    "name": "B2IAFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk2_a_phase_current_angle",
+                    "offset": 13,
+                    "name": "B2IAFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk2_b_phase_current_mag",
+                    "offset": 14,
+                    "name": "B2IBFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk2_b_phase_current_angle",
+                    "offset": 15,
+                    "name": "B2IBFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk2_c_phase_current_mag",
+                    "offset": 16,
+                    "name": "B2ICFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "bk2_c_phase_current_angle",
+                    "offset": 17,
+                    "name": "B2ICFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "voltage_a_phase_mag",
+                    "offset": 18,
+                    "name": "VAFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "voltage_a_phase_angle",
+                    "offset": 19,
+                    "name": "VAFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "voltage_b_phase_mag",
+                    "offset": 20,
+                    "name": "VBFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "voltage_b_phase_angle",
+                    "offset": 21,
+                    "name": "VBFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "voltage_c_phase_mag",
+                    "offset": 22,
+                    "name": "VCFM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "voltage_c_phase_angle",
+                    "offset": 23,
+                    "name": "VCFA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "polarizing_voltage_magnitude",
+                    "offset": 24,
+                    "name": "VPM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "synchronizing_voltage_1_mag",
+                    "offset": 25,
+                    "name": "NVS1M",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "synchronizing_voltage_2_mag",
+                    "offset": 26,
+                    "name": "NVS2M",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "line_zero_sequence_current_mag",
+                    "offset": 27,
+                    "name": "LIGM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "line_zero_sequence_current_angle",
+                    "offset": 28,
+                    "name": "LIGA",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "line_positive_sequence_current_mag",
+                    "offset": 29,
+                    "name": "LI1M",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "line_positive_sequence_current_angle",
+                    "offset": 30,
+                    "name": "LI1A",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "line_negative_sequence_current_mag",
+                    "offset": 31,
+                    "name": "L3I2M",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "line_negative_sequence_current_angle",
+                    "offset": 32,
+                    "name": "L3I2A",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "zero_sequence_voltage_mag",
+                    "offset": 33,
+                    "name": "3V0M",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "zero_sequence_voltage_angle",
+                    "offset": 34,
+                    "name": "3V0A",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "positive_sequence_voltage_mag",
+                    "offset": 35,
+                    "name": "V1M",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "positive_sequence_voltage_angle",
+                    "offset": 36,
+                    "name": "V1A",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "negative_sequence_voltage_mag",
+                    "offset": 37,
+                    "name": "3V2M",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "negative_sequence_voltage_angle",
+                    "offset": 38,
+                    "name": "3V2A",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "real_power_phase_a",
+                    "offset": 39,
+                    "name": "PA_F",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "real_power_phase_b",
+                    "offset": 40,
+                    "name": "PB_F",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "real_power_phase_c",
+                    "offset": 41,
+                    "name": "PC_F",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "real_power_3_phase",
+                    "offset": 42,
+                    "name": "3P_F",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reactive_power_phase_a",
+                    "offset": 43,
+                    "name": "QA_F",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reactive_power_phase_b",
+                    "offset": 44,
+                    "name": "QB_F",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reactive_power_phase_c",
+                    "offset": 45,
+                    "name": "QC_F",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "reactive_power_3_phase",
+                    "offset": 46,
+                    "name": "3Q_F",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "displacement_pf_a",
+                    "offset": 47,
+                    "name": "DPFA",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "displacement_pf_b",
+                    "offset": 48,
+                    "name": "DPFB",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "displacement_pf_c",
+                    "offset": 49,
+                    "name": "DPFC",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "displacement_pf_3ph",
+                    "offset": 50,
+                    "name": "3DPF",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "dc_battery_1_voltage",
+                    "offset": 51,
+                    "name": "DC1",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "dc_battery_2_voltage",
+                    "offset": 52,
+                    "name": "DC2",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "frequency",
+                    "offset": 53,
+                    "name": "FREQ",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "total_power_in_a",
+                    "offset": 54,
+                    "name": "MWHAIN",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "total_power_out_a",
+                    "offset": 55,
+                    "name": "MWHAOUT",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "total_power_in_b",
+                    "offset": 56,
+                    "name": "MWHBIN",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "total_power_out_b",
+                    "offset": 57,
+                    "name": "MWHBOUT",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "total_power_in_c",
+                    "offset": 58,
+                    "name": "MWHCIN",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "total_power_out_c",
+                    "offset": 59,
+                    "name": "MWHCOUT",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "total_power_in_3ph",
+                    "offset": 60,
+                    "name": "3MWHIN",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "total_power_out_3ph",
+                    "offset": 61,
+                    "name": "3MWHOUT",
+                    "signed": true,
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "phase_a_demand_current",
+                    "offset": 62,
+                    "name": "IAD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "phase_b_demand_current",
+                    "offset": 63,
+                    "name": "IBD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "phase_c_demand_current",
+                    "offset": 64,
+                    "name": "ICD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "demand_zero_sequence_current",
+                    "offset": 65,
+                    "name": "IGD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "demand_negative_sequence_current",
+                    "offset": 66,
+                    "name": "3I2D",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "phase_a_demand_power",
+                    "offset": 67,
+                    "name": "PAD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "phase_b_demand_power",
+                    "offset": 68,
+                    "name": "PBD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "phase_c_demand_power",
+                    "offset": 69,
+                    "name": "PCD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "3_phase_demand_power",
+                    "offset": 70,
+                    "name": "3PD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "peak_phase_a_demand_current",
+                    "offset": 71,
+                    "name": "IAPKD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "peak_phase_b_demand_current",
+                    "offset": 72,
+                    "name": "IBPKD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "peak_phase_c_demand_current",
+                    "offset": 73,
+                    "name": "ICPKD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "peak_zero_sequence_demand_current",
+                    "offset": 74,
+                    "name": "IGPKD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "peak_negative_sequence_demand_current",
+                    "offset": 75,
+                    "name": "3I2PKD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "peak_phase_a_demand_power",
+                    "offset": 76,
+                    "name": "PAPKD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "peak_phase_b_demand_power",
+                    "offset": 77,
+                    "name": "PBPKD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "peak_phase_c_demand_power",
+                    "offset": 78,
+                    "name": "PCPKD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "peak_3_phase_demand_power",
+                    "offset": 79,
+                    "name": "3PPKD",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_contact_wear_phase_a",
+                    "offset": 80,
+                    "name": "B1BCWPA",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_contact_wear_phase_b",
+                    "offset": 81,
+                    "name": "B1BCWPB",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_contact_wear_phase_c",
+                    "offset": 82,
+                    "name": "B1BCWPC",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_contact_wear_phase_a",
+                    "offset": 83,
+                    "name": "B2BCWPA",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_contact_wear_phase_b",
+                    "offset": 84,
+                    "name": "B2BCWPB",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_contact_wear_phase_c",
+                    "offset": 85,
+                    "name": "B2BCWPC",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_type",
+                    "offset": 86,
+                    "name": "FTYPE",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_targets_1",
+                    "offset": 87,
+                    "name": "FTAR1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_targets_2",
+                    "offset": 88,
+                    "name": "FTAR2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_summary_location",
+                    "offset": 89,
+                    "name": "FSLOC",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_current",
+                    "offset": 90,
+                    "name": "FCURR",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_frequency",
+                    "offset": 91,
+                    "name": "FFREQ",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_settings_group",
+                    "offset": 92,
+                    "name": "FGRP",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_time_h",
+                    "offset": 93,
+                    "name": "FTIMEUH",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_time_m",
+                    "offset": 94,
+                    "name": "FTIMEUM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "fault_time_l",
+                    "offset": 95,
+                    "name": "FTIMEUL",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "recloser_single_pole_count",
+                    "offset": 96,
+                    "name": "FSHOT1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "recloser_three_pole_count",
+                    "offset": 97,
+                    "name": "FSHOT2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "unread_fault_summaries",
+                    "offset": 98,
+                    "name": "FUNR",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "3_phase_recloser_shots_issued",
+                    "offset": 99,
+                    "name": "SHOT3_T",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "relay_temp",
+                    "offset": 100,
+                    "name": "RLYTEMP",
+                    "uri": "/metrics/NorthFork"
+                }
+            ]
+        },
+        {
+            "type": "binary",
+            "starting_offset": 0,
+            "number_of_registers": 77,
+            "map": [
+                {
+                    "id": "relay_disabled",
+                    "offset": 0,
+                    "name": "RLYDIS",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "trip_led",
+                    "offset": 1,
+                    "name": "TRIPLED",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "relay_diagnostic_failure",
+                    "offset": 2,
+                    "name": "STFAIL",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "relay_diagnostic_warning",
+                    "offset": 3,
+                    "name": "STWARN",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "settings_change_or_relay_restart",
+                    "offset": 4,
+                    "name": "STSET",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "software_alarm",
+                    "offset": 5,
+                    "name": "SALARM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "hardware_alarm",
+                    "offset": 6,
+                    "name": "HALARM",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "invalid_password",
+                    "offset": 7,
+                    "name": "BADPASS",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "unread_event",
+                    "offset": 8,
+                    "name": "UNRDEV",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "one_or_two_poles_open",
+                    "offset": 9,
+                    "name": "SPO",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "three_poles_open",
+                    "offset": 10,
+                    "name": "3PO",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "breaker_1_ready",
+                    "offset": 11,
+                    "name": "BK1RS",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "breaker_2_ready",
+                    "offset": 12,
+                    "name": "BK2RS",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "breaker_1_lockout",
+                    "offset": 13,
+                    "name": "BK1LO",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "breaker_2_lockout",
+                    "offset": 14,
+                    "name": "BK2LO",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_pole_a_status",
+                    "offset": 15,
+                    "name": "52AA1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_pole_b_status",
+                    "offset": 16,
+                    "name": "52AB1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_pole_c_status",
+                    "offset": 17,
+                    "name": "52AC1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_pole_a_alarm",
+                    "offset": 18,
+                    "name": "52AAL1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_pole_b_alarm",
+                    "offset": 19,
+                    "name": "52BAL1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb1_pole_c_alarm",
+                    "offset": 20,
+                    "name": "52CAL1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_pole_a_status",
+                    "offset": 21,
+                    "name": "52AA2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_pole_b_status",
+                    "offset": 22,
+                    "name": "52AB2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_pole_c_status",
+                    "offset": 23,
+                    "name": "52AC2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_pole_a_alarm",
+                    "offset": 24,
+                    "name": "52AAL2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_pole_b_alarm",
+                    "offset": 25,
+                    "name": "52BAL2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "cb2_pole_c_alarm",
+                    "offset": 26,
+                    "name": "52CAL2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_1",
+                    "offset": 27,
+                    "name": "TLED_1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_2",
+                    "offset": 28,
+                    "name": "TLED_2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_3",
+                    "offset": 29,
+                    "name": "TLED_3",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_4",
+                    "offset": 30,
+                    "name": "TLED_4",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_5",
+                    "offset": 31,
+                    "name": "TLED_5",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_6",
+                    "offset": 32,
+                    "name": "TLED_6",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_7",
+                    "offset": 33,
+                    "name": "TLED_7",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_8",
+                    "offset": 34,
+                    "name": "TLED_8",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_9",
+                    "offset": 35,
+                    "name": "TLED_9",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_10",
+                    "offset": 36,
+                    "name": "TLED_10",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_11",
+                    "offset": 37,
+                    "name": "TLED_11",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_12",
+                    "offset": 38,
+                    "name": "TLED_12",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_13",
+                    "offset": 39,
+                    "name": "TLED_13",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_14",
+                    "offset": 40,
+                    "name": "TLED_14",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_15",
+                    "offset": 41,
+                    "name": "TLED_15",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "target_led_16",
+                    "offset": 42,
+                    "name": "TLED_16",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "pf_leading_true_pha",
+                    "offset": 43,
+                    "name": "LDATPFW",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "pf_leading_true_phb",
+                    "offset": 44,
+                    "name": "LDBTPFW",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "pf_leading_true_phc",
+                    "offset": 45,
+                    "name": "LDCTPFW",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "pf_leading_true_3ph",
+                    "offset": 46,
+                    "name": "LD3TPFW",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "breaker_status",
+                    "offset": 47,
+                    "name": "BREAKER_STATUS",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "in202",
+                    "offset": 48,
+                    "name": "IN202",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "in203",
+                    "offset": 49,
+                    "name": "IN203",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "in204",
+                    "offset": 50,
+                    "name": "IN204",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "in205",
+                    "offset": 51,
+                    "name": "IN205",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "in206",
+                    "offset": 52,
+                    "name": "IN206",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "mod_close",
+                    "offset": 53,
+                    "name": "MOD_CLOSE",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "psv01",
+                    "offset": 54,
+                    "name": "PSV01",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "psv02",
+                    "offset": 55,
+                    "name": "PSV02",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "psv03",
+                    "offset": 56,
+                    "name": "PSV03",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "psv04",
+                    "offset": 57,
+                    "name": "PSV04",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "psv05",
+                    "offset": 58,
+                    "name": "PSV05",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "psv06",
+                    "offset": 59,
+                    "name": "PSV06",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "psv07",
+                    "offset": 60,
+                    "name": "PSV07",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "psv08",
+                    "offset": 61,
+                    "name": "PSV08",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "asv001",
+                    "offset": 62,
+                    "name": "ASV001",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "asv002",
+                    "offset": 63,
+                    "name": "ASV002",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "asv003",
+                    "offset": 64,
+                    "name": "ASV003",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "asv004",
+                    "offset": 65,
+                    "name": "ASV004",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "asv005",
+                    "offset": 66,
+                    "name": "ASV005",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "asv006",
+                    "offset": 67,
+                    "name": "ASV006",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "asv007",
+                    "offset": 68,
+                    "name": "ASV007",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "asv008",
+                    "offset": 69,
+                    "name": "ASV008",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "trip_tc1",
+                    "offset": 70,
+                    "name": "TRIP_TC1",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "trip_tc2",
+                    "offset": 71,
+                    "name": "TRIP_TC2",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "supv_close",
+                    "offset": 72,
+                    "name": "SUPV_CLOSE",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "supv_trip",
+                    "offset": 73,
+                    "name": "SUPV_TRIP",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "out205",
+                    "offset": 74,
+                    "name": "OUT205",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "out206",
+                    "offset": 75,
+                    "name": "OUT206",
+                    "uri": "/metrics/NorthFork"
+                },
+                {
+                    "id": "out207",
+                    "offset": 76,
+                    "name": "OUT207",
+                    "uri": "/metrics/NorthFork"
+                }
+            ]
+        }
+    ]
+}

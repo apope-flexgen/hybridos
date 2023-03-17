@@ -1,0 +1,72 @@
+{
+    "fileInfo": {
+        "sourceFileName": "BMS_Risen_340_Map.xlsx",
+        "sourceFileCreated": "2021-05-27T18:35:59.000Z",
+        "sourceFileLastModified": "2021-07-09T14:32:35.000Z",
+        "sourceFileCreatedBy": "Jimmy Nguyen",
+        "sourceFileLastModifiedBy": "Jimmy Nguyen",
+        "outputFileName": "bms_modbus_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2021-07-09T14:33:44.029Z"
+    },
+    "connection": {
+        "name": "Risen BMS 340",
+        "device name": "Risen BMS 340",
+        "device protocol": "Modbus TCP",
+        "device protocol version": "6.0 WIP",
+        "device id string": "risen_bms_340",
+        "ip_address": "10.1.200.40",
+        "port": 502,
+        "data bits (8 typical)": "Columns marked in green are REQUIRED"
+    },
+    "components": [
+        {
+            "id": "bms_info",
+            "frequency": 1000,
+            "offset_time": 20,
+            "device_id": 0,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 4608,
+                    "number_of_registers": 16,
+                    "map": [
+                        {"id": "connection_status", "offset": 4608, "name": "Status of Connection Process", "echo_id": "/components/bms_1/dccontator" },
+                        {"id": "system_operation_state", "offset": 4609, "name": "System Operation State", "echo_id": "/components/bms_1/on" },
+                        {"id": "rack_warning", "offset": 4610, "name": "Rack Warning", "echo_id": "/components/bms_1/warning" },
+                        {"id": "system_total_voltage", "offset": 4611, "scale": 10, "name": "System Total Voltage", "echo_id": "/components/bms_1/vdc_value" },
+                        {"id": "system_total_current", "offset": 4612, "scale": 10, "name": "System Total Current", "signed": true, "echo_id": "/components/bms_1/idc_value" },
+                        {"id": "system_soc", "offset": 4613, "scale": 10, "name": "System SOC", "echo_id": "/components/bms_1/soc_value" },
+                        {"id": "system_soh", "offset": 4614, "scale": 10, "name": "System SOH", "echo_id": "/components/bms_1/soh"},
+                        {"id": "system_enable_charge_energy", "offset": 4615, "name": "System Enable Charge Energy", "echo_id": "/components/bms_1/echarge" },
+                        {"id": "system_enable_discharge_energy", "offset": 4616, "name": "System Enable Discharge Energy", "echo_id": "/components/bms_1/edischarge" },
+                        {"id": "system_max_charge_current", "offset": 4617, "scale": -10, "name": "System Enable Max Charge Current", "echo_id": "/components/bms_1/icharge" },
+                        {"id": "system_max_discharge_current", "offset": 4618, "scale": 10, "name": "System Enable Max Discharge Current", "signed": true, "echo_id": "/components/bms_1/idischarge" },
+                        {"id": "system_max_cell_voltage", "offset": 4619, "scale": 1000, "name": "System Max Cell Voltage", "echo_id":"/components/bms_1/maxcellvolt_value" },
+                        {"id": "system_min_cell_voltage", "offset": 4620, "scale": 1000, "name": "System Min Cell Voltage", "echo_id": "/components/bms_1/mincellvolt_value" },
+                        {"id": "system_avg_voltage", "offset": 46321, "scale": 1000, "name": "System Average voltage", "echo_id": "/components/bms_1/avgcellvolt" },
+                        {"id": "max_discharge_power", "offset": 4622, "name": "Max discharge power", "echo_id": "/components/bms_1/pdischarge"},
+                        {"id": "max_charge_power", "offset": 4623, "name": "Max charge power", "echo_id": "/components/bms_1/pcharge" }
+                    ]
+                }
+                
+            ]
+        },
+        {
+            "id": "bms_controls",
+            "frequency": 1000,
+            "offset_time": 20,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 4864,
+                    "number_of_registers": 1,
+                    "map": [
+                        {"id": "start_connection", "offset": 4864, "name": "Start Connection", "echo_id": "/components/bms_1/ctrlword1" }
+                    ]
+                }
+            ]
+        }
+    ]
+}

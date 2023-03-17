@@ -1,0 +1,3660 @@
+{
+    "connection": {
+        "name": "Clou_ESS_Controller",
+        "ip_address": "172.16.1.80",
+        "port": 502
+    },
+    "components": [
+        {
+            "id": "clou_ess_1",
+            "frequency": 200,
+            "offset_time": 0,
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 1000,
+            "add_timings":false,
+            "component_heartbeat_timeout_ms": 1000,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 10000,
+                    "number_of_registers": 1,
+                    "map": [
+                        {
+                            "id": "life",
+                            "offset": 10000,
+                            "size": 1,
+                            "name": "Life"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 10100,
+                    "number_of_registers": 27,
+                    "map": [
+                        {
+                            "id": "pcs_mode",
+                            "offset": 10100,
+                            "name": "Run_Mode",
+                            "signed": true
+                        },
+                        {
+                            "id": "start_stop",
+                            "offset": 10101,
+                            "name": "Control_Command",
+                            "signed": true
+                        },
+                        {
+                            "id": "active_power_setpoint",
+                            "offset": 10102,
+                            "scale": 10,
+                            "name": "Power_Set_AC",
+                            "signed": true
+                        },
+                        {
+                            "id": "reactive_power_setpoint",
+                            "offset": 10103,
+                            "scale": 10,
+                            "name": "Active_Set_AC",
+                            "signed": true
+                        },
+                        {
+                            "id": "dc_breaker_control",
+                            "offset": 10110,
+                            "size": 1,
+                            "name": "DC_Circuit_Breaker"
+                        },
+                        {
+                            "id": "dc_contactor_control",
+                            "offset": 10111,
+                            "size": 1,
+                            "name": "Cluster_Contactor"
+                        },
+                        {
+                            "id": "cooling_setpoint",
+                            "offset": 10120,
+                            "scale": 100,
+                            "size": 1,
+                            "name": "Cooling Point"
+                        },
+                        {
+                            "id": "cooling_sensitivity",
+                            "offset": 10121,
+                            "scale": 100,
+                            "size": 1,
+                            "name": "Cooling Sensitivity"
+                        },
+                        {
+                            "id": "heating_setpoint",
+                            "offset": 10122,
+                            "scale": 100,
+                            "size": 1,
+                            "name": "Heating Setpoint"
+                        },
+                        {
+                            "id": "heating_sensitivity",
+                            "offset": 10123,
+                            "scale": 100,
+                            "size": 1,
+                            "name": "Heating Sensitivity"
+                        },
+                        {
+                            "id": "high_temperature_point",
+                            "offset": 10124,
+                            "scale": 100,
+                            "size": 1,
+                            "name": "High Temperature Point"
+                        },
+                        {
+                            "id": "low_temperature_point",
+                            "offset": 10125,
+                            "scale": 100,
+                            "size": 1,
+                            "name": "Low Temperature Point"
+                        },
+                        {
+                            "id": "high_humidity_point",
+                            "offset": 10126,
+                            "scale": 100,
+                            "size": 1,
+                            "name": "High Humidity Point",
+                            "signed": true
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 20000,
+                    "number_of_registers": 27,
+                    "map": [
+                        {
+                            "id": "life_signal",
+                            "offset": 20000,
+                            "name": "life_signal"
+                        },
+                        {
+                            "id": "com_status",
+                            "offset": 20001,
+                            "name": "Com_status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS1 Communication Offline",
+                                "PCS2 Communication Offline",
+                                "BMS1 Communication Offline",
+                                "BMS2 Communication Offline",
+                                "EMMU1 Communication Offline",
+                                "EMMU2 Communication Offline"
+                            ]
+                        },
+                        {
+                            "id": "pcs_under_over_pwr",
+                            "offset": 20003,
+                            "name": "PCS_Under_Over_Power",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS1 Over Power",
+                                "PCS2 Over Power",
+                                "Reserved",
+                                "Reserved",
+                                "Reserved",
+                                "Reserved",
+                                "Reserved",
+                                "Reserved",
+                                "PCS1 Under Power",
+                                "PCS2 Under Power"
+                            ]
+                        },
+                        {
+                            "id": "issued_active_power",
+                            "offset": 20006,
+                            "scale": 10,
+                            "name": "issued_active_power",
+                            "signed": true
+                        },
+                        {
+                            "id": "chargeable_energy",
+                            "offset": 20008,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "chargeable_energy"
+                        },
+                        {
+                            "id": "chargeable_power",
+                            "offset": 20012,
+                            "name": "chargeable_power"
+                        },
+                        {
+                            "id": "dischargeable_energy",
+                            "offset": 20014,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "dischargeable_energy"
+                        },
+                        {
+                            "id": "dischargeable_power",
+                            "offset": 20018,
+                            "name": "dischargeable_power"
+                        },
+                        {
+                            "id": "bms_fault",
+                            "offset": 20021,
+                            "name": "bms_fault"
+                        },
+                        {
+                            "id": "emmu_fault",
+                            "offset": 20022,
+                            "name": "emmu_fault"
+                        },
+                        {
+                            "id": "bms_zero_discharge_limit",
+                            "offset": 20026,
+                            "name": "bms_zero_discharge_limit"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 21000,
+                    "number_of_registers": 34,
+                    "map": [
+                        {
+                            "id": "pcs_voltage_l1_l2",
+                            "offset": 21000,
+                            "scale": 10,
+                            "name": "PCS_Voltage_ab"
+                        },
+                        {
+                            "id": "pcs_voltage_l2_l3",
+                            "offset": 21001,
+                            "scale": 10,
+                            "name": "PCS_Voltage_bc"
+                        },
+                        {
+                            "id": "pcs_voltage_l3_l1",
+                            "offset": 21002,
+                            "scale": 10,
+                            "name": "PCS_Voltage_ca"
+                        },
+                        {
+                            "id": "pcs_current_l1",
+                            "offset": 21003,
+                            "scale": 10,
+                            "name": "PCS_current_l1",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_current_l2",
+                            "offset": 21004,
+                            "scale": 10,
+                            "name": "PCS_current_l2",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_current_l3",
+                            "offset": 21005,
+                            "scale": 10,
+                            "name": "PCS_current_l3",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_frequency",
+                            "offset": 21006,
+                            "scale": 10,
+                            "name": "PCS_Frequency"
+                        },
+                        {
+                            "id": "pcs_active_power",
+                            "offset": 21007,
+                            "scale": 10,
+                            "name": "PCS Active Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_reactive_power",
+                            "offset": 21008,
+                            "scale": 10,
+                            "name": "PCS Reactive Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_pf",
+                            "offset": 21009,
+                            "scale": 100,
+                            "name": "PCS Power Factor"
+                        },
+                        {
+                            "id": "pcs_voltage_dc",
+                            "offset": 21010,
+                            "scale": 10,
+                            "name": "PCS_Overall_voltage_DC"
+                        },
+                        {
+                            "id": "pcs_current_dc",
+                            "offset": 21011,
+                            "scale": 10,
+                            "name": "PCS_Overall_current_DC",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_active_power_dc",
+                            "offset": 21012,
+                            "scale": 10,
+                            "name": "PCS_DC_Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_igbt_temp_a",
+                            "offset": 21013,
+                            "name": "PCS_PhaseA_IGBT_Temp",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_igbt_temp_b",
+                            "offset": 21014,
+                            "name": "PCS_PhaseB_IGBT_Temp",
+                            "signed": true
+                        }, {
+                            "id": "pcs_igbt_temp_c",
+                            "offset": 21015,
+                            "name": "PCS__PhaseC_IGBT_Temp",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_mode",
+                            "offset": 21016,
+                            "name": "PCS_Mode"
+                        },
+                        {
+                            "id": "pcs_working_state",
+                            "offset": 21017,
+                            "name": "PCS_Working State",
+                            "enum": true,
+                            "bit_strings": [
+                                "Init",
+                                "Starting",
+                                "Starting",
+                                "Starting",
+                                "Running",
+                                "Fault",
+                                "Stop"
+                            ]
+                        },
+                        {
+                            "id": "pcs_status_0",
+                            "offset": 21018,
+                            "name": "PCS_System_Status_Reg_0"
+                        },
+                        {
+                            "id": "pcs_status_1",
+                            "offset": 21019,
+                            "name": "PCS_System_Status_Reg_1"
+                        },
+                        {
+                            "id": "pcs_status_2",
+                            "offset": 21020,
+                            "name": "PCS_System_Status_Reg_2"
+                        },
+                        {
+                            "id": "pcs_status_3",
+                            "offset": 21021,
+                            "name": "PCS_System_Status_Reg_3"
+                        },
+                        {
+                            "id": "pcs_status_4",
+                            "offset": 21022,
+                            "name": "PCS_System_Status_Reg_4"
+                        },
+                        {
+                            "id": "pcs_status_5",
+                            "offset": 21023,
+                            "name": "PCS_System_Status_Reg_5"
+                        },
+                        {
+                            "id": "pcs_status_6",
+                            "offset": 21024,
+                            "name": "PCS_System_Status_Reg_6"
+                        },
+                        {
+                            "id": "pcs_status_7",
+                            "offset": 21025,
+                            "name": "PCS_System_Status_Reg_7"
+                        },
+                        {
+                            "id": "pcs_fault_latch_0",
+                            "offset": 21026,
+                            "name": "PCS_Fault_Latch_0"
+                        },
+                        {
+                            "id": "pcs_fault_latch_1",
+                            "offset": 21027,
+                            "name": "PCS_Fault_Latch_1"
+                        },
+                        {
+                            "id": "pcs_fault_latch_2",
+                            "offset": 21028,
+                            "name": "PCS_Fault_Latch_2"
+                        },
+                        {
+                            "id": "pcs_fault_latch_3",
+                            "offset": 21029,
+                            "name": "PCS_Fault_Latch_3"
+                        },
+                        {
+                            "id": "pcs_fault_latch_4",
+                            "offset": 21030,
+                            "name": "PCS_Fault_Latch_4"
+                        },
+                        {
+                            "id": "pcs_fault_latch_5",
+                            "offset": 21031,
+                            "name": "PCS_Fault_Latch_5"
+                        },
+                        {
+                            "id": "pcs_fault_latch_6",
+                            "offset": 21032,
+                            "name": "PCS_Fault_Latch_6"
+                        },
+                        {
+                            "id": "pcs_fault_latch_7",
+                            "offset": 21033,
+                            "name": "PCS_Fault_Latch_7"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 22000,
+                    "number_of_registers": 125,
+                    "map": [
+                        {
+                            "id": "bms_rack_1_voltage",
+                            "offset": 22000,
+                            "scale": 10,
+                            "name": "BMS bus voltage_1"
+                        },
+                        {
+                            "id": "bms_rack_2_voltage",
+                            "offset": 22001,
+                            "scale": 10,
+                            "name": "BMS bus voltage_2"
+                        },
+                        {
+                            "id": "bms_rack_3_voltage",
+                            "offset": 22002,
+                            "scale": 10,
+                            "name": "BMS bus voltage_3"
+                        },
+                        {
+                            "id": "bms_rack_4_voltage",
+                            "offset": 22003,
+                            "scale": 10,
+                            "name": "BMS bus voltage_4"
+                        },
+                        {
+                            "id": "bms_rack_5_voltage",
+                            "offset": 22004,
+                            "scale": 10,
+                            "name": "BMS bus voltage_5"
+                        },
+                        {
+                            "id": "bms_rack_6_voltage",
+                            "offset": 22005,
+                            "scale": 10,
+                            "name": "BMS bus voltage_6"
+                        },
+                        {
+                            "id": "bms_rack_7_voltage",
+                            "offset": 22006,
+                            "scale": 10,
+                            "name": "BMS bus voltage_7"
+                        },
+                        {
+                            "id": "bms_rack_8_voltage",
+                            "offset": 22007,
+                            "scale": 10,
+                            "name": "BMS bus voltage_8"
+                        },
+                        {
+                            "id": "bms_rack_9_voltage",
+                            "offset": 22008,
+                            "scale": 10,
+                            "name": "BMS bus voltage_9"
+                        },
+                        {
+                            "id": "bms_rack_10_voltage",
+                            "offset": 22009,
+                            "scale": 10,
+                            "name": "BMS bus voltage_10"
+                        },
+                        {
+                            "id": "bms_rack_11_voltage",
+                            "offset": 22010,
+                            "scale": 10,
+                            "name": "BMS bus voltage_11"
+                        },
+                        {
+                            "id": "bms_rack_12_voltage",
+                            "offset": 22011,
+                            "scale": 10,
+                            "name": "BMS bus voltage_12"
+                        },
+                        {
+                            "id": "bms_rack_13_voltage",
+                            "offset": 22012,
+                            "scale": 10,
+                            "name": "BMS bus voltage_13"
+                        },
+                        {
+                            "id": "bms_rack_14_voltage",
+                            "offset": 22013,
+                            "scale": 10,
+                            "name": "BMS bus voltage_14"
+                        },
+                        {
+                            "id": "bms_rack_15_voltage",
+                            "offset": 22014,
+                            "scale": 10,
+                            "name": "BMS bus voltage_15"
+                        },
+                        {
+                            "id": "bms_rack_16_voltage",
+                            "offset": 22015,
+                            "scale": 10,
+                            "name": "BMS bus voltage_16"
+                        },
+                        {
+                            "id": "bms_rack_17_voltage",
+                            "offset": 22016,
+                            "scale": 10,
+                            "name": "BMS bus voltage_17"
+                        },
+                        {
+                            "id": "bms_rack_18_voltage",
+                            "offset": 22017,
+                            "scale": 10,
+                            "name": "BMS bus voltage_18"
+                        },
+                        {
+                            "id": "bms_rack_19_voltage",
+                            "offset": 22018,
+                            "scale": 10,
+                            "name": "BMS bus voltage_19"
+                        },
+                        {
+                            "id": "bms_rack_20_voltage",
+                            "offset": 22019,
+                            "scale": 10,
+                            "name": "BMS bus voltage_20"
+                        },
+                        {
+                            "id": "bms_rack_1_current",
+                            "offset": 22020,
+                            "scale": 10,
+                            "name": "BMS bus current_1",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_2_current",
+                            "offset": 22021,
+                            "scale": 10,
+                            "name": "BMS bus current_2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_3_current",
+                            "offset": 22022,
+                            "scale": 10,
+                            "name": "BMS bus current_3",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_4_current",
+                            "offset": 22023,
+                            "scale": 10,
+                            "name": "BMS bus current_4",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_5_current",
+                            "offset": 22024,
+                            "scale": 10,
+                            "name": "BMS bus current_5",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_6_current",
+                            "offset": 22025,
+                            "scale": 10,
+                            "name": "BMS bus current_6",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_7_current",
+                            "offset": 22026,
+                            "scale": 10,
+                            "name": "BMS bus current_7",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_8_current",
+                            "offset": 22027,
+                            "scale": 10,
+                            "name": "BMS bus current_8",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_9_current",
+                            "offset": 22028,
+                            "scale": 10,
+                            "name": "BMS bus current_9",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_10_current",
+                            "offset": 22029,
+                            "scale": 10,
+                            "name": "BMS bus current_10",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_11_current",
+                            "offset": 22030,
+                            "scale": 10,
+                            "name": "BMS bus current_11",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_12_current",
+                            "offset": 22031,
+                            "scale": 10,
+                            "name": "BMS bus current_12",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_13_current",
+                            "offset": 22032,
+                            "scale": 10,
+                            "name": "BMS bus current_13",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_14_current",
+                            "offset": 22033,
+                            "scale": 10,
+                            "name": "BMS bus current_14",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_15_current",
+                            "offset": 22034,
+                            "scale": 10,
+                            "name": "BMS bus current_15",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_16_current",
+                            "offset": 22035,
+                            "scale": 10,
+                            "name": "BMS bus current_16",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_17_current",
+                            "offset": 22036,
+                            "scale": 10,
+                            "name": "BMS bus current_17",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_18_current",
+                            "offset": 22037,
+                            "scale": 10,
+                            "name": "BMS bus current_18",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_19_current",
+                            "offset": 22038,
+                            "scale": 10,
+                            "name": "BMS bus current_19",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_20_current",
+                            "offset": 22039,
+                            "scale": 10,
+                            "name": "BMS bus current_20",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_1_average_cell_voltage",
+                            "offset": 22040,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_1"
+                        },
+                        {
+                            "id": "bms_rack_2_average_cell_voltage",
+                            "offset": 22041,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_2"
+                        },
+                        {
+                            "id": "bms_rack_3_average_cell_voltage",
+                            "offset": 22042,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_3"
+                        },
+                        {
+                            "id": "bms_rack_4_average_cell_voltage",
+                            "offset": 22043,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_4"
+                        },
+                        {
+                            "id": "bms_rack_5_average_cell_voltage",
+                            "offset": 22044,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_5"
+                        },
+                        {
+                            "id": "bms_rack_6_average_cell_voltage",
+                            "offset": 22045,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_6"
+                        },
+                        {
+                            "id": "bms_rack_7_average_cell_voltage",
+                            "offset": 22046,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_7"
+                        },
+                        {
+                            "id": "bms_rack_8_average_cell_voltage",
+                            "offset": 22047,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_8"
+                        },
+                        {
+                            "id": "bms_rack_9_average_cell_voltage",
+                            "offset": 22048,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_9"
+                        },
+                        {
+                            "id": "bms_rack_10_average_cell_voltage",
+                            "offset": 22049,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_10"
+                        },
+                        {
+                            "id": "bms_rack_11_average_cell_voltage",
+                            "offset": 22050,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_11"
+                        },
+                        {
+                            "id": "bms_rack_12_average_cell_voltage",
+                            "offset": 22051,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_12"
+                        },
+                        {
+                            "id": "bms_rack_13_average_cell_voltage",
+                            "offset": 22052,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_13"
+                        },
+                        {
+                            "id": "bms_rack_14_average_cell_voltage",
+                            "offset": 22053,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_14"
+                        },
+                        {
+                            "id": "bms_rack_15_average_cell_voltage",
+                            "offset": 22054,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_15"
+                        },
+                        {
+                            "id": "bms_rack_16_average_cell_voltage",
+                            "offset": 22055,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_16"
+                        },
+                        {
+                            "id": "bms_rack_17_average_cell_voltage",
+                            "offset": 22056,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_17"
+                        },
+                        {
+                            "id": "bms_rack_18_average_cell_voltage",
+                            "offset": 22057,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_18"
+                        },
+                        {
+                            "id": "bms_rack_19_average_cell_voltage",
+                            "offset": 22058,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_19"
+                        },
+                        {
+                            "id": "bms_rack_20_average_cell_voltage",
+                            "offset": 22059,
+                            "scale": 10000,
+                            "name": "BMS bus average_cell_voltage_20"
+                        },
+                        {
+                            "id": "bms_rack_1_soc",
+                            "offset": 22060,
+                            "scale": 10,
+                            "name": "BMS bus soc_1"
+                        },
+                        {
+                            "id": "bms_rack_2_soc",
+                            "offset": 22061,
+                            "scale": 10,
+                            "name": "BMS bus soc_2"
+                        },
+                        {
+                            "id": "bms_rack_3_soc",
+                            "offset": 22062,
+                            "scale": 10,
+                            "name": "BMS bus soc_3"
+                        },
+                        {
+                            "id": "bms_rack_4_soc",
+                            "offset": 22063,
+                            "scale": 10,
+                            "name": "BMS bus soc_4"
+                        },
+                        {
+                            "id": "bms_rack_5_soc",
+                            "offset": 22064,
+                            "scale": 10,
+                            "name": "BMS bus soc_5"
+                        },
+                        {
+                            "id": "bms_rack_6_soc",
+                            "offset": 22065,
+                            "scale": 10,
+                            "name": "BMS bus soc_6"
+                        },
+                        {
+                            "id": "bms_rack_7_soc",
+                            "offset": 22066,
+                            "scale": 10,
+                            "name": "BMS bus soc_7"
+                        },
+                        {
+                            "id": "bms_rack_8_soc",
+                            "offset": 22067,
+                            "scale": 10,
+                            "name": "BMS bus soc_8"
+                        },
+                        {
+                            "id": "bms_rack_9_soc",
+                            "offset": 22068,
+                            "scale": 10,
+                            "name": "BMS bus soc_9"
+                        },
+                        {
+                            "id": "bms_rack_10_soc",
+                            "offset": 22069,
+                            "scale": 10,
+                            "name": "BMS bus soc_10"
+                        },
+                        {
+                            "id": "bms_rack_11_soc",
+                            "offset": 22070,
+                            "scale": 10,
+                            "name": "BMS bus soc_11"
+                        },
+                        {
+                            "id": "bms_rack_12_soc",
+                            "offset": 22071,
+                            "scale": 10,
+                            "name": "BMS bus soc_12"
+                        },
+                        {
+                            "id": "bms_rack_13_soc",
+                            "offset": 22072,
+                            "scale": 10,
+                            "name": "BMS bus soc_13"
+                        },
+                        {
+                            "id": "bms_rack_14_soc",
+                            "offset": 22073,
+                            "scale": 10,
+                            "name": "BMS bus soc_14"
+                        },
+                        {
+                            "id": "bms_rack_15_soc",
+                            "offset": 22074,
+                            "scale": 10,
+                            "name": "BMS bus soc_15"
+                        },
+                        {
+                            "id": "bms_rack_16_soc",
+                            "offset": 22075,
+                            "scale": 10,
+                            "name": "BMS bus soc_16"
+                        },
+                        {
+                            "id": "bms_rack_17_soc",
+                            "offset": 22076,
+                            "scale": 10,
+                            "name": "BMS bus soc_17"
+                        },
+                        {
+                            "id": "bms_rack_18_soc",
+                            "offset": 22077,
+                            "scale": 10,
+                            "name": "BMS bus soc_18"
+                        },
+                        {
+                            "id": "bms_rack_19_soc",
+                            "offset": 22078,
+                            "scale": 10,
+                            "name": "BMS bus soc_19"
+                        },
+                        {
+                            "id": "bms_rack_20_soc",
+                            "offset": 22079,
+                            "scale": 10,
+                            "name": "BMS bus soc_20"
+                        },
+                        {
+                            "id": "bms_rack_1_soh",
+                            "offset": 22080,
+                            "scale": 10,
+                            "name": "BMS bus soh_1"
+                        },
+                        {
+                            "id": "bms_rack_2_soh",
+                            "offset": 22081,
+                            "scale": 10,
+                            "name": "BMS bus soh_2"
+                        },
+                        {
+                            "id": "bms_rack_3_soh",
+                            "offset": 22082,
+                            "scale": 10,
+                            "name": "BMS bus soh_3"
+                        },
+                        {
+                            "id": "bms_rack_4_soh",
+                            "offset": 22083,
+                            "scale": 10,
+                            "name": "BMS bus soh_4"
+                        },
+                        {
+                            "id": "bms_rack_5_soh",
+                            "offset": 22084,
+                            "scale": 10,
+                            "name": "BMS bus soh_5"
+                        },
+                        {
+                            "id": "bms_rack_6_soh",
+                            "offset": 22085,
+                            "scale": 10,
+                            "name": "BMS bus soh_6"
+                        },
+                        {
+                            "id": "bms_rack_7_soh",
+                            "offset": 22086,
+                            "scale": 10,
+                            "name": "BMS bus soh_7"
+                        },
+                        {
+                            "id": "bms_rack_8_soh",
+                            "offset": 22087,
+                            "scale": 10,
+                            "name": "BMS bus soh_8"
+                        },
+                        {
+                            "id": "bms_rack_9_soh",
+                            "offset": 22088,
+                            "scale": 10,
+                            "name": "BMS bus soh_9"
+                        },
+                        {
+                            "id": "bms_rack_10_soh",
+                            "offset": 22089,
+                            "scale": 10,
+                            "name": "BMS bus soh_10"
+                        },
+                        {
+                            "id": "bms_rack_11_soh",
+                            "offset": 22090,
+                            "scale": 10,
+                            "name": "BMS bus soh_11"
+                        },
+                        {
+                            "id": "bms_rack_12_soh",
+                            "offset": 22091,
+                            "scale": 10,
+                            "name": "BMS bus soh_12"
+                        },
+                        {
+                            "id": "bms_rack_13_soh",
+                            "offset": 22092,
+                            "scale": 10,
+                            "name": "BMS bus soh_13"
+                        },
+                        {
+                            "id": "bms_rack_14_soh",
+                            "offset": 22093,
+                            "scale": 10,
+                            "name": "BMS bus soh_14"
+                        },
+                        {
+                            "id": "bms_rack_15_soh",
+                            "offset": 22094,
+                            "scale": 10,
+                            "name": "BMS bus soh_15"
+                        },
+                        {
+                            "id": "bms_rack_16_soh",
+                            "offset": 22095,
+                            "scale": 10,
+                            "name": "BMS bus soh_16"
+                        },
+                        {
+                            "id": "bms_rack_17_soh",
+                            "offset": 22096,
+                            "scale": 10,
+                            "name": "BMS bus soh_17"
+                        },
+                        {
+                            "id": "bms_rack_18_soh",
+                            "offset": 22097,
+                            "scale": 10,
+                            "name": "BMS bus soh_18"
+                        },
+                        {
+                            "id": "bms_rack_19_soh",
+                            "offset": 22098,
+                            "scale": 10,
+                            "name": "BMS bus soh_19"
+                        },
+                        {
+                            "id": "bms_rack_20_soh",
+                            "offset": 22099,
+                            "scale": 10,
+                            "name": "BMS bus soh_20"
+                        },
+                        {
+                            "id": "bms_rack_1_max_cell_voltage",
+                            "offset": 22100,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_1"
+                        },
+                        {
+                            "id": "bms_rack_1_max_cell_voltage_position",
+                            "offset": 22101,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_1"
+                        },
+                        {
+                            "id": "bms_rack_2_max_cell_voltage",
+                            "offset": 22102,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_2"
+                        },
+                        {
+                            "id": "bms_rack_2_max_cell_voltage_position",
+                            "offset": 22103,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_2"
+                        },
+                        {
+                            "id": "bms_rack_3_max_cell_voltage",
+                            "offset": 22104,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_3"
+                        },
+                        {
+                            "id": "bms_rack_3_max_cell_voltage_position",
+                            "offset": 22105,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_3"
+                        },
+                        {
+                            "id": "bms_rack_4_max_cell_voltage",
+                            "offset": 22106,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_4"
+                        },
+                        {
+                            "id": "bms_rack_4_max_cell_voltage_position",
+                            "offset": 22107,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_4"
+                        },
+                        {
+                            "id": "bms_rack_5_max_cell_voltage",
+                            "offset": 22108,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_5"
+                        },
+                        {
+                            "id": "bms_rack_5_max_cell_voltage_position",
+                            "offset": 22109,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_5"
+                        },
+                        {
+                            "id": "bms_rack_6_max_cell_voltage",
+                            "offset": 22110,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_6"
+                        },
+                        {
+                            "id": "bms_rack_6_max_cell_voltage_position",
+                            "offset": 22111,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_6"
+                        },
+                        {
+                            "id": "bms_rack_7_max_cell_voltage",
+                            "offset": 22112,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_7"
+                        },
+                        {
+                            "id": "bms_rack_7_max_cell_voltage_position",
+                            "offset": 22113,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_7"
+                        },
+                        {
+                            "id": "bms_rack_8_max_cell_voltage",
+                            "offset": 22114,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_8"
+                        },
+                        {
+                            "id": "bms_rack_8_max_cell_voltage_position",
+                            "offset": 22115,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_8"
+                        },
+                        {
+                            "id": "bms_rack_9_max_cell_voltage",
+                            "offset": 22116,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_9"
+                        },
+                        {
+                            "id": "bms_rack_9_max_cell_voltage_position",
+                            "offset": 22117,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_9"
+                        },
+                        {
+                            "id": "bms_rack_10_max_cell_voltage",
+                            "offset": 22118,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_10"
+                        },
+                        {
+                            "id": "bms_rack_10_max_cell_voltage_position",
+                            "offset": 22119,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_10"
+                        },
+                        {
+                            "id": "bms_rack_11_max_cell_voltage",
+                            "offset": 22120,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_11"
+                        },
+                        {
+                            "id": "bms_rack_11_max_cell_voltage_position",
+                            "offset": 22121,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_11"
+                        },
+                        {
+                            "id": "bms_rack_12_max_cell_voltage",
+                            "offset": 22122,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_12"
+                        },
+                        {
+                            "id": "bms_rack_12_max_cell_voltage_position",
+                            "offset": 22123,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_12"
+                        },
+                        {
+                            "id": "bms_rack_13_max_cell_voltage",
+                            "offset": 22124,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_13"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 22125,
+                    "number_of_registers": 125,
+                    "map": [
+                        {
+                            "id": "bms_rack_13_max_cell_voltage_position",
+                            "offset": 22125,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_13"
+                        },
+                        {
+                            "id": "bms_rack_14_max_cell_voltage",
+                            "offset": 22126,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_14"
+                        },
+                        {
+                            "id": "bms_rack_14_max_cell_voltage_position",
+                            "offset": 22127,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_14"
+                        },
+                        {
+                            "id": "bms_rack_15_max_cell_voltage",
+                            "offset": 22128,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_15"
+                        },
+                        {
+                            "id": "bms_rack_15_max_cell_voltage_position",
+                            "offset": 22129,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_15"
+                        },
+                        {
+                            "id": "bms_rack_16_max_cell_voltage",
+                            "offset": 22130,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_16"
+                        },
+                        {
+                            "id": "bms_rack_16_max_cell_voltage_position",
+                            "offset": 22131,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_16"
+                        },
+                        {
+                            "id": "bms_rack_17_max_cell_voltage",
+                            "offset": 22132,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_17"
+                        },
+                        {
+                            "id": "bms_rack_17_max_cell_voltage_position",
+                            "offset": 22133,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_17"
+                        },
+                        {
+                            "id": "bms_rack_18_max_cell_voltage",
+                            "offset": 22134,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_18"
+                        },
+                        {
+                            "id": "bms_rack_18_max_cell_voltage_position",
+                            "offset": 22135,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_18"
+                        },
+                        {
+                            "id": "bms_rack_19_max_cell_voltage",
+                            "offset": 22136,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_19"
+                        },
+                        {
+                            "id": "bms_rack_19_max_cell_voltage_position",
+                            "offset": 22137,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_19"
+                        },
+                        {
+                            "id": "bms_rack_20_max_cell_voltage",
+                            "offset": 22138,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_20"
+                        },
+                        {
+                            "id": "bms_rack_20_max_cell_voltage_position",
+                            "offset": 22139,
+                            "scale": 10000,
+                            "name": "BMS bus max_cell_voltage_position_20"
+                        },
+                        {
+                            "id": "bms_rack_1_second_max_cell_voltage",
+                            "offset": 22140,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_1"
+                        },
+                        {
+                            "id": "bms_rack_1_second_max_cell_voltage_position",
+                            "offset": 22141,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_1"
+                        },
+                        {
+                            "id": "bms_rack_2_second_max_cell_voltage",
+                            "offset": 22142,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_2"
+                        },
+                        {
+                            "id": "bms_rack_2_second_max_cell_voltage_position",
+                            "offset": 22143,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_2"
+                        },
+                        {
+                            "id": "bms_rack_3_second_max_cell_voltage",
+                            "offset": 22144,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_3"
+                        },
+                        {
+                            "id": "bms_rack_3_second_max_cell_voltage_position",
+                            "offset": 22145,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_3"
+                        },
+                        {
+                            "id": "bms_rack_4_second_max_cell_voltage",
+                            "offset": 22146,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_4"
+                        },
+                        {
+                            "id": "bms_rack_4_second_max_cell_voltage_position",
+                            "offset": 22147,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_4"
+                        },
+                        {
+                            "id": "bms_rack_5_second_max_cell_voltage",
+                            "offset": 22148,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_5"
+                        },
+                        {
+                            "id": "bms_rack_5_second_max_cell_voltage_position",
+                            "offset": 22149,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_5"
+                        },
+                        {
+                            "id": "bms_rack_6_second_max_cell_voltage",
+                            "offset": 22150,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_6"
+                        },
+                        {
+                            "id": "bms_rack_6_second_max_cell_voltage_position",
+                            "offset": 22151,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_6"
+                        },
+                        {
+                            "id": "bms_rack_7_second_max_cell_voltage",
+                            "offset": 22152,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_7"
+                        },
+                        {
+                            "id": "bms_rack_7_second_max_cell_voltage_position",
+                            "offset": 22153,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_7"
+                        },
+                        {
+                            "id": "bms_rack_8_second_max_cell_voltage",
+                            "offset": 22154,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_8"
+                        },
+                        {
+                            "id": "bms_rack_8_second_max_cell_voltage_position",
+                            "offset": 22155,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_8"
+                        },
+                        {
+                            "id": "bms_rack_9_second_max_cell_voltage",
+                            "offset": 22156,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_9"
+                        },
+                        {
+                            "id": "bms_rack_9_second_max_cell_voltage_position",
+                            "offset": 22157,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_9"
+                        },
+                        {
+                            "id": "bms_rack_10_second_max_cell_voltage",
+                            "offset": 22158,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_10"
+                        },
+                        {
+                            "id": "bms_rack_10_second_max_cell_voltage_position",
+                            "offset": 22159,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_10"
+                        },
+                        {
+                            "id": "bms_rack_11_second_max_cell_voltage",
+                            "offset": 22160,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_11"
+                        },
+                        {
+                            "id": "bms_rack_11_second_max_cell_voltage_position",
+                            "offset": 22161,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_11"
+                        },
+                        {
+                            "id": "bms_rack_12_second_max_cell_voltage",
+                            "offset": 22162,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_12"
+                        },
+                        {
+                            "id": "bms_rack_12_second_max_cell_voltage_position",
+                            "offset": 22163,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_12"
+                        },
+                        {
+                            "id": "bms_rack_13_second_max_cell_voltage",
+                            "offset": 22164,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_13"
+                        },
+                        {
+                            "id": "bms_rack_13_second_max_cell_voltage_position",
+                            "offset": 22165,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_13"
+                        },
+                        {
+                            "id": "bms_rack_14_second_max_cell_voltage",
+                            "offset": 22166,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_14"
+                        },
+                        {
+                            "id": "bms_rack_14_second_max_cell_voltage_position",
+                            "offset": 22167,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_14"
+                        },
+                        {
+                            "id": "bms_rack_15_second_max_cell_voltage",
+                            "offset": 22168,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_15"
+                        },
+                        {
+                            "id": "bms_rack_15_second_max_cell_voltage_position",
+                            "offset": 22169,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_15"
+                        },
+                        {
+                            "id": "bms_rack_16_second_max_cell_voltage",
+                            "offset": 22170,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_16"
+                        },
+                        {
+                            "id": "bms_rack_16_second_max_cell_voltage_position",
+                            "offset": 22171,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_16"
+                        },
+                        {
+                            "id": "bms_rack_17_second_max_cell_voltage",
+                            "offset": 22172,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_17"
+                        },
+                        {
+                            "id": "bms_rack_17_second_max_cell_voltage_position",
+                            "offset": 22173,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_17"
+                        },
+                        {
+                            "id": "bms_rack_18_second_max_cell_voltage",
+                            "offset": 22174,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_18"
+                        },
+                        {
+                            "id": "bms_rack_18_second_max_cell_voltage_position",
+                            "offset": 22175,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_18"
+                        },
+                        {
+                            "id": "bms_rack_19_second_max_cell_voltage",
+                            "offset": 22176,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_19"
+                        },
+                        {
+                            "id": "bms_rack_19_second_max_cell_voltage_position",
+                            "offset": 22177,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_19"
+                        },
+                        {
+                            "id": "bms_rack_20_second_max_cell_voltage",
+                            "offset": 22178,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_20"
+                        },
+                        {
+                            "id": "bms_rack_20_second_max_cell_voltage_position",
+                            "offset": 22179,
+                            "scale": 10000,
+                            "name": "BMS bus second_max_cell_voltage_position_20"
+                        },
+                        {
+                            "id": "bms_rack_1_min_cell_voltage",
+                            "offset": 22180,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_1"
+                        },
+                        {
+                            "id": "bms_rack_1_min_cell_voltage_position",
+                            "offset": 22181,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_1"
+                        },
+                        {
+                            "id": "bms_rack_2_min_cell_voltage",
+                            "offset": 22182,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_2"
+                        },
+                        {
+                            "id": "bms_rack_2_min_cell_voltage_position",
+                            "offset": 22183,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_2"
+                        },
+                        {
+                            "id": "bms_rack_3_min_cell_voltage",
+                            "offset": 22184,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_3"
+                        },
+                        {
+                            "id": "bms_rack_3_min_cell_voltage_position",
+                            "offset": 22185,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_3"
+                        },
+                        {
+                            "id": "bms_rack_4_min_cell_voltage",
+                            "offset": 22186,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_4"
+                        },
+                        {
+                            "id": "bms_rack_4_min_cell_voltage_position",
+                            "offset": 22187,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_4"
+                        },
+                        {
+                            "id": "bms_rack_5_min_cell_voltage",
+                            "offset": 22188,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_5"
+                        },
+                        {
+                            "id": "bms_rack_5_min_cell_voltage_position",
+                            "offset": 22189,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_5"
+                        },
+                        {
+                            "id": "bms_rack_6_min_cell_voltage",
+                            "offset": 22190,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_6"
+                        },
+                        {
+                            "id": "bms_rack_6_min_cell_voltage_position",
+                            "offset": 22191,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_6"
+                        },
+                        {
+                            "id": "bms_rack_7_min_cell_voltage",
+                            "offset": 22192,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_7"
+                        },
+                        {
+                            "id": "bms_rack_7_min_cell_voltage_position",
+                            "offset": 22193,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_7"
+                        },
+                        {
+                            "id": "bms_rack_8_min_cell_voltage",
+                            "offset": 22194,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_8"
+                        },
+                        {
+                            "id": "bms_rack_8_min_cell_voltage_position",
+                            "offset": 22195,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_8"
+                        },
+                        {
+                            "id": "bms_rack_9_min_cell_voltage",
+                            "offset": 22196,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_9"
+                        },
+                        {
+                            "id": "bms_rack_9_min_cell_voltage_position",
+                            "offset": 22197,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_9"
+                        },
+                        {
+                            "id": "bms_rack_10_min_cell_voltage",
+                            "offset": 22198,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_10"
+                        },
+                        {
+                            "id": "bms_rack_10_min_cell_voltage_position",
+                            "offset": 22199,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_10"
+                        },
+                        {
+                            "id": "bms_rack_11_min_cell_voltage",
+                            "offset": 22200,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_11"
+                        },
+                        {
+                            "id": "bms_rack_11_min_cell_voltage_position",
+                            "offset": 22201,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_11"
+                        },
+                        {
+                            "id": "bms_rack_12_min_cell_voltage",
+                            "offset": 22202,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_12"
+                        },
+                        {
+                            "id": "bms_rack_12_min_cell_voltage_position",
+                            "offset": 22203,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_12"
+                        },
+                        {
+                            "id": "bms_rack_13_min_cell_voltage",
+                            "offset": 22204,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_13"
+                        },
+                        {
+                            "id": "bms_rack_13_min_cell_voltage_position",
+                            "offset": 22205,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_13"
+                        },
+                        {
+                            "id": "bms_rack_14_min_cell_voltage",
+                            "offset": 22206,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_14"
+                        },
+                        {
+                            "id": "bms_rack_14_min_cell_voltage_position",
+                            "offset": 22207,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_14"
+                        },
+                        {
+                            "id": "bms_rack_15_min_cell_voltage",
+                            "offset": 22208,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_15"
+                        },
+                        {
+                            "id": "bms_rack_15_min_cell_voltage_position",
+                            "offset": 22209,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_15"
+                        },
+                        {
+                            "id": "bms_rack_16_min_cell_voltage",
+                            "offset": 22210,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_16"
+                        },
+                        {
+                            "id": "bms_rack_16_min_cell_voltage_position",
+                            "offset": 22211,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_16"
+                        },
+                        {
+                            "id": "bms_rack_17_min_cell_voltage",
+                            "offset": 22212,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_17"
+                        },
+                        {
+                            "id": "bms_rack_17_min_cell_voltage_position",
+                            "offset": 22213,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_17"
+                        },
+                        {
+                            "id": "bms_rack_18_min_cell_voltage",
+                            "offset": 22214,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_18"
+                        },
+                        {
+                            "id": "bms_rack_18_min_cell_voltage_position",
+                            "offset": 22215,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_18"
+                        },
+                        {
+                            "id": "bms_rack_19_min_cell_voltage",
+                            "offset": 22216,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_19"
+                        },
+                        {
+                            "id": "bms_rack_19_min_cell_voltage_position",
+                            "offset": 22217,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_19"
+                        },
+                        {
+                            "id": "bms_rack_20_min_cell_voltage",
+                            "offset": 22218,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_20"
+                        },
+                        {
+                            "id": "bms_rack_20_min_cell_voltage_position",
+                            "offset": 22219,
+                            "scale": 10000,
+                            "name": "BMS bus min_cell_voltage_position_20"
+                        },
+                        {
+                            "id": "bms_rack_1_second_min_cell_voltage",
+                            "offset": 22220,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_1"
+                        },
+                        {
+                            "id": "bms_rack_1_second_min_cell_voltage_position",
+                            "offset": 22221,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_1"
+                        },
+                        {
+                            "id": "bms_rack_2_second_min_cell_voltage",
+                            "offset": 22222,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_2"
+                        },
+                        {
+                            "id": "bms_rack_2_second_min_cell_voltage_position",
+                            "offset": 22223,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_2"
+                        },
+                        {
+                            "id": "bms_rack_3_second_min_cell_voltage",
+                            "offset": 22224,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_3"
+                        },
+                        {
+                            "id": "bms_rack_3_second_min_cell_voltage_position",
+                            "offset": 22225,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_3"
+                        },
+                        {
+                            "id": "bms_rack_4_second_min_cell_voltage",
+                            "offset": 22226,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_4"
+                        },
+                        {
+                            "id": "bms_rack_4_second_min_cell_voltage_position",
+                            "offset": 22227,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_4"
+                        },
+                        {
+                            "id": "bms_rack_5_second_min_cell_voltage",
+                            "offset": 22228,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_5"
+                        },
+                        {
+                            "id": "bms_rack_5_second_min_cell_voltage_position",
+                            "offset": 22229,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_5"
+                        },
+                        {
+                            "id": "bms_rack_6_second_min_cell_voltage",
+                            "offset": 22230,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_6"
+                        },
+                        {
+                            "id": "bms_rack_6_second_min_cell_voltage_position",
+                            "offset": 22231,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_6"
+                        },
+                        {
+                            "id": "bms_rack_7_second_min_cell_voltage",
+                            "offset": 22232,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_7"
+                        },
+                        {
+                            "id": "bms_rack_7_second_min_cell_voltage_position",
+                            "offset": 22233,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_7"
+                        },
+                        {
+                            "id": "bms_rack_8_second_min_cell_voltage",
+                            "offset": 22234,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_8"
+                        },
+                        {
+                            "id": "bms_rack_8_second_min_cell_voltage_position",
+                            "offset": 22235,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_8"
+                        },
+                        {
+                            "id": "bms_rack_9_second_min_cell_voltage",
+                            "offset": 22236,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_9"
+                        },
+                        {
+                            "id": "bms_rack_9_second_min_cell_voltage_position",
+                            "offset": 22237,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_9"
+                        },
+                        {
+                            "id": "bms_rack_10_second_min_cell_voltage",
+                            "offset": 22238,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_10"
+                        },
+                        {
+                            "id": "bms_rack_10_second_min_cell_voltage_position",
+                            "offset": 22239,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_10"
+                        },
+                        {
+                            "id": "bms_rack_11_second_min_cell_voltage",
+                            "offset": 22240,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_11"
+                        },
+                        {
+                            "id": "bms_rack_11_second_min_cell_voltage_position",
+                            "offset": 22241,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_11"
+                        },
+                        {
+                            "id": "bms_rack_12_second_min_cell_voltage",
+                            "offset": 22242,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_12"
+                        },
+                        {
+                            "id": "bms_rack_12_second_min_cell_voltage_position",
+                            "offset": 22243,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_12"
+                        },
+                        {
+                            "id": "bms_rack_13_second_min_cell_voltage",
+                            "offset": 22244,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_13"
+                        },
+                        {
+                            "id": "bms_rack_13_second_min_cell_voltage_position",
+                            "offset": 22245,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_13"
+                        },
+                        {
+                            "id": "bms_rack_14_second_min_cell_voltage",
+                            "offset": 22246,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_14"
+                        },
+                        {
+                            "id": "bms_rack_14_second_min_cell_voltage_position",
+                            "offset": 22247,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_14"
+                        },
+                        {
+                            "id": "bms_rack_15_second_min_cell_voltage",
+                            "offset": 22248,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_15"
+                        },
+                        {
+                            "id": "bms_rack_15_second_min_cell_voltage_position",
+                            "offset": 22249,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_15"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 22250,
+                    "number_of_registers": 125,
+                    "map": [
+                        {
+                            "id": "bms_rack_16_second_min_cell_voltage",
+                            "offset": 22250,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_16"
+                        },
+                        {
+                            "id": "bms_rack_16_second_min_cell_voltage_position",
+                            "offset": 22251,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_16"
+                        },
+                        {
+                            "id": "bms_rack_17_second_min_cell_voltage",
+                            "offset": 22252,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_17"
+                        },
+                        {
+                            "id": "bms_rack_17_second_min_cell_voltage_position",
+                            "offset": 22253,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_17"
+                        },
+                        {
+                            "id": "bms_rack_18_second_min_cell_voltage",
+                            "offset": 22254,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_18"
+                        },
+                        {
+                            "id": "bms_rack_18_second_min_cell_voltage_position",
+                            "offset": 22255,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_18"
+                        },
+                        {
+                            "id": "bms_rack_19_second_min_cell_voltage",
+                            "offset": 22256,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_19"
+                        },
+                        {
+                            "id": "bms_rack_19_second_min_cell_voltage_position",
+                            "offset": 22257,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_19"
+                        },
+                        {
+                            "id": "bms_rack_20_second_min_cell_voltage",
+                            "offset": 22258,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_20"
+                        },
+                        {
+                            "id": "bms_rack_20_second_min_cell_voltage_position",
+                            "offset": 22259,
+                            "scale": 10000,
+                            "name": "BMS bus second_min_cell_voltage_position_20"
+                        },
+                        {
+                            "id": "bms_rack_1_max_cell_temp",
+                            "offset": 22260,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_1",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_1_max_cell_temp_position",
+                            "offset": 22261,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_1",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_2_max_cell_temp",
+                            "offset": 22262,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_2_max_cell_temp_position",
+                            "offset": 22263,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_3_max_cell_temp",
+                            "offset": 22264,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_3",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_3_max_cell_temp_position",
+                            "offset": 22265,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_3",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_4_max_cell_temp",
+                            "offset": 22266,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_4",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_4_max_cell_temp_position",
+                            "offset": 22267,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_4",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_5_max_cell_temp",
+                            "offset": 22268,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_5",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_5_max_cell_temp_position",
+                            "offset": 22269,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_5",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_6_max_cell_temp",
+                            "offset": 22270,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_6",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_6_max_cell_temp_position",
+                            "offset": 22271,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_6",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_7_max_cell_temp",
+                            "offset": 22272,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_7",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_7_max_cell_temp_position",
+                            "offset": 22273,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_7",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_8_max_cell_temp",
+                            "offset": 22274,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_8",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_8_max_cell_temp_position",
+                            "offset": 22275,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_8",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_9_max_cell_temp",
+                            "offset": 22276,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_9",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_9_max_cell_temp_position",
+                            "offset": 22277,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_9",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_10_max_cell_temp",
+                            "offset": 22278,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_10",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_10_max_cell_temp_position",
+                            "offset": 22279,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_10",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_11_max_cell_temp",
+                            "offset": 22280,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_11",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_11_max_cell_temp_position",
+                            "offset": 22281,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_11",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_12_max_cell_temp",
+                            "offset": 22282,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_12",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_12_max_cell_temp_position",
+                            "offset": 22283,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_12",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_13_max_cell_temp",
+                            "offset": 22284,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_13",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_13_max_cell_temp_position",
+                            "offset": 22285,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_13",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_14_max_cell_temp",
+                            "offset": 22286,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_14",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_14_max_cell_temp_position",
+                            "offset": 22287,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_14",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_15_max_cell_temp",
+                            "offset": 22288,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_15",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_15_max_cell_temp_position",
+                            "offset": 22289,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_15",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_16_max_cell_temp",
+                            "offset": 22290,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_16",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_16_max_cell_temp_position",
+                            "offset": 22291,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_16",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_17_max_cell_temp",
+                            "offset": 22292,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_17",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_17_max_cell_temp_position",
+                            "offset": 22293,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_17",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_18_max_cell_temp",
+                            "offset": 22294,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_18",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_18_max_cell_temp_position",
+                            "offset": 22295,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_18",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_19_max_cell_temp",
+                            "offset": 22296,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_19",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_19_max_cell_temp_position",
+                            "offset": 22297,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_19",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_20_max_cell_temp",
+                            "offset": 22298,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_20",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_20_max_cell_temp_position",
+                            "offset": 22299,
+                            "scale": 100,
+                            "name": "BMS bus max_cell_temp_position_20",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_1_second_max_cell_temp",
+                            "offset": 22300,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_1",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_1_second_max_cell_temp_position",
+                            "offset": 22301,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_1",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_2_second_max_cell_temp",
+                            "offset": 22302,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_2_second_max_cell_temp_position",
+                            "offset": 22303,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_3_second_max_cell_temp",
+                            "offset": 22304,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_3",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_3_second_max_cell_temp_position",
+                            "offset": 22305,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_3",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_4_second_max_cell_temp",
+                            "offset": 22306,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_4",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_4_second_max_cell_temp_position",
+                            "offset": 22307,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_4",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_5_second_max_cell_temp",
+                            "offset": 22308,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_5",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_5_second_max_cell_temp_position",
+                            "offset": 22309,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_5",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_6_second_max_cell_temp",
+                            "offset": 22310,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_6",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_6_second_max_cell_temp_position",
+                            "offset": 22311,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_6",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_7_second_max_cell_temp",
+                            "offset": 22312,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_7",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_7_second_max_cell_temp_position",
+                            "offset": 22313,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_7",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_8_second_max_cell_temp",
+                            "offset": 22314,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_8",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_8_second_max_cell_temp_position",
+                            "offset": 22315,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_8",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_9_second_max_cell_temp",
+                            "offset": 22316,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_9",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_9_second_max_cell_temp_position",
+                            "offset": 22317,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_9",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_10_second_max_cell_temp",
+                            "offset": 22318,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_10",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_10_second_max_cell_temp_position",
+                            "offset": 22319,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_10",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_11_second_max_cell_temp",
+                            "offset": 22320,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_11",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_11_second_max_cell_temp_position",
+                            "offset": 22321,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_11",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_12_second_max_cell_temp",
+                            "offset": 22322,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_12",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_12_second_max_cell_temp_position",
+                            "offset": 22323,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_12",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_13_second_max_cell_temp",
+                            "offset": 22324,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_13",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_13_second_max_cell_temp_position",
+                            "offset": 22325,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_13",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_14_second_max_cell_temp",
+                            "offset": 22326,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_14",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_14_second_max_cell_temp_position",
+                            "offset": 22327,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_14",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_15_second_max_cell_temp",
+                            "offset": 22328,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_15",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_15_second_max_cell_temp_position",
+                            "offset": 22329,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_15",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_16_second_max_cell_temp",
+                            "offset": 22330,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_16",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_16_second_max_cell_temp_position",
+                            "offset": 22331,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_16",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_17_second_max_cell_temp",
+                            "offset": 22332,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_17",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_17_second_max_cell_temp_position",
+                            "offset": 22333,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_17",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_18_second_max_cell_temp",
+                            "offset": 22334,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_18",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_18_second_max_cell_temp_position",
+                            "offset": 22335,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_18",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_19_second_max_cell_temp",
+                            "offset": 22336,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_19",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_19_second_max_cell_temp_position",
+                            "offset": 22337,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_19",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_20_second_max_cell_temp",
+                            "offset": 22338,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_20",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_20_second_max_cell_temp_position",
+                            "offset": 22339,
+                            "scale": 100,
+                            "name": "BMS bus second_max_cell_temp_position_20",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_1_min_cell_temp",
+                            "offset": 22340,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_1",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_1_min_cell_temp_position",
+                            "offset": 22341,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_1",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_2_min_cell_temp",
+                            "offset": 22342,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_2_min_cell_temp_position",
+                            "offset": 22343,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_3_min_cell_temp",
+                            "offset": 22344,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_3",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_3_min_cell_temp_position",
+                            "offset": 22345,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_3",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_4_min_cell_temp",
+                            "offset": 22346,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_4",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_4_min_cell_temp_position",
+                            "offset": 22347,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_4",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_5_min_cell_temp",
+                            "offset": 22348,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_5",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_5_min_cell_temp_position",
+                            "offset": 22349,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_5",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_6_min_cell_temp",
+                            "offset": 22350,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_6",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_6_min_cell_temp_position",
+                            "offset": 22351,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_6",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_7_min_cell_temp",
+                            "offset": 22352,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_7",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_7_min_cell_temp_position",
+                            "offset": 22353,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_7",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_8_min_cell_temp",
+                            "offset": 22354,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_8",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_8_min_cell_temp_position",
+                            "offset": 22355,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_8",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_9_min_cell_temp",
+                            "offset": 22356,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_9",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_9_min_cell_temp_position",
+                            "offset": 22357,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_9",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_10_min_cell_temp",
+                            "offset": 22358,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_10",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_10_min_cell_temp_position",
+                            "offset": 22359,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_10",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_11_min_cell_temp",
+                            "offset": 22360,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_11",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_11_min_cell_temp_position",
+                            "offset": 22361,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_11",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_12_min_cell_temp",
+                            "offset": 22362,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_12",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_12_min_cell_temp_position",
+                            "offset": 22363,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_12",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_13_min_cell_temp",
+                            "offset": 22364,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_13",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_13_min_cell_temp_position",
+                            "offset": 22365,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_13",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_14_min_cell_temp",
+                            "offset": 22366,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_14",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_14_min_cell_temp_position",
+                            "offset": 22367,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_14",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_15_min_cell_temp",
+                            "offset": 22368,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_15",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_15_min_cell_temp_position",
+                            "offset": 22369,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_15",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_16_min_cell_temp",
+                            "offset": 22370,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_16",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_16_min_cell_temp_position",
+                            "offset": 22371,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_16",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_17_min_cell_temp",
+                            "offset": 22372,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_17",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_17_min_cell_temp_position",
+                            "offset": 22373,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_17",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_18_min_cell_temp",
+                            "offset": 22374,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_18",
+                            "signed": true
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 22375,
+                    "number_of_registers": 125,
+                    "map": [
+                        {
+                            "id": "bms_rack_18_min_cell_temp_position",
+                            "offset": 22375,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_18",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_19_min_cell_temp",
+                            "offset": 22376,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_19",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_19_min_cell_temp_position",
+                            "offset": 22377,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_19",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_20_min_cell_temp",
+                            "offset": 22378,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_20",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_20_min_cell_temp_position",
+                            "offset": 22379,
+                            "scale": 100,
+                            "name": "BMS bus min_cell_temp_position_20",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_1_second_min_cell_temp",
+                            "offset": 22380,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_1",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_1_second_min_cell_temp_position",
+                            "offset": 22381,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_1",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_2_second_min_cell_temp",
+                            "offset": 22382,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_2_second_min_cell_temp_position",
+                            "offset": 22383,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_2",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_3_second_min_cell_temp",
+                            "offset": 22384,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_3",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_3_second_min_cell_temp_position",
+                            "offset": 22385,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_3",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_4_second_min_cell_temp",
+                            "offset": 22386,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_4",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_4_second_min_cell_temp_position",
+                            "offset": 22387,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_4",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_5_second_min_cell_temp",
+                            "offset": 22388,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_5",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_5_second_min_cell_temp_position",
+                            "offset": 22389,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_5",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_6_second_min_cell_temp",
+                            "offset": 22390,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_6",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_6_second_min_cell_temp_position",
+                            "offset": 22391,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_6",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_7_second_min_cell_temp",
+                            "offset": 22392,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_7",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_7_second_min_cell_temp_position",
+                            "offset": 22393,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_7",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_8_second_min_cell_temp",
+                            "offset": 22394,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_8",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_8_second_min_cell_temp_position",
+                            "offset": 22395,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_8",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_9_second_min_cell_temp",
+                            "offset": 22396,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_9",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_9_second_min_cell_temp_position",
+                            "offset": 22397,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_9",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_10_second_min_cell_temp",
+                            "offset": 22398,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_10",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_10_second_min_cell_temp_position",
+                            "offset": 22399,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_10",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_11_second_min_cell_temp",
+                            "offset": 22400,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_11",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_11_second_min_cell_temp_position",
+                            "offset": 22401,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_11",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_12_second_min_cell_temp",
+                            "offset": 22402,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_12",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_12_second_min_cell_temp_position",
+                            "offset": 22403,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_12",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_13_second_min_cell_temp",
+                            "offset": 22404,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_13",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_13_second_min_cell_temp_position",
+                            "offset": 22405,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_13",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_14_second_min_cell_temp",
+                            "offset": 22406,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_14",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_14_second_min_cell_temp_position",
+                            "offset": 22407,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_14",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_15_second_min_cell_temp",
+                            "offset": 22408,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_15",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_15_second_min_cell_temp_position",
+                            "offset": 22409,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_15",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_16_second_min_cell_temp",
+                            "offset": 22410,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_16",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_16_second_min_cell_temp_position",
+                            "offset": 22411,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_16",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_17_second_min_cell_temp",
+                            "offset": 22412,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_17",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_17_second_min_cell_temp_position",
+                            "offset": 22413,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_17",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_18_second_min_cell_temp",
+                            "offset": 22414,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_18",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_18_second_min_cell_temp_position",
+                            "offset": 22415,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_18",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_19_second_min_cell_temp",
+                            "offset": 22416,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_19",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_19_second_min_cell_temp_position",
+                            "offset": 22417,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_19",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_20_second_min_cell_temp",
+                            "offset": 22418,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_20",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_20_second_min_cell_temp_position",
+                            "offset": 22419,
+                            "scale": 100,
+                            "name": "BMS bus second_min_cell_temp_position_20",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_rack_1_alarm",
+                            "offset": 22420,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_1"
+                        },
+                        {
+                            "id": "bms_rack_2_alarm",
+                            "offset": 22422,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_2"
+                        },
+                        {
+                            "id": "bms_rack_3_alarm",
+                            "offset": 22424,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_3"
+                        },
+                        {
+                            "id": "bms_rack_4_alarm",
+                            "offset": 22426,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_4"
+                        },
+                        {
+                            "id": "bms_rack_5_alarm",
+                            "offset": 22428,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_5"
+                        },
+                        {
+                            "id": "bms_rack_6_alarm",
+                            "offset": 22430,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_6"
+                        },
+                        {
+                            "id": "bms_rack_7_alarm",
+                            "offset": 22432,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_7"
+                        },
+                        {
+                            "id": "bms_rack_8_alarm",
+                            "offset": 22434,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_8"
+                        },
+                        {
+                            "id": "bms_rack_9_alarm",
+                            "offset": 22436,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_9"
+                        },
+                        {
+                            "id": "bms_rack_10_alarm",
+                            "offset": 22438,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_10"
+                        },
+                        {
+                            "id": "bms_rack_11_alarm",
+                            "offset": 22440,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_1"
+                        },
+                        {
+                            "id": "bms_rack_12_alarm",
+                            "offset": 22442,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_12"
+                        },
+                        {
+                            "id": "bms_rack_13_alarm",
+                            "offset": 22444,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_13"
+                        },
+                        {
+                            "id": "bms_rack_14_alarm",
+                            "offset": 22446,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_14"
+                        },
+                        {
+                            "id": "bms_rack_15_alarm",
+                            "offset": 22448,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_15"
+                        },
+                        {
+                            "id": "bms_rack_16_alarm",
+                            "offset": 22450,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_16"
+                        },
+                        {
+                            "id": "bms_rack_17_alarm",
+                            "offset": 22452,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_17"
+                        },
+                        {
+                            "id": "bms_rack_18_alarm",
+                            "offset": 22454,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_18"
+                        },
+                        {
+                            "id": "bms_rack_19_alarm",
+                            "offset": 22456,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_19"
+                        },
+                        {
+                            "id": "bms_rack_20_alarm",
+                            "offset": 22458,
+                            "size": 2,
+                            "name": "BMS bus rack_alarm_20"
+                        },
+                        {
+                            "id": "bms_rack_1_fault",
+                            "offset": 22460,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_1"
+                        },
+                        {
+                            "id": "bms_rack_2_fault",
+                            "offset": 22462,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_2"
+                        },
+                        {
+                            "id": "bms_rack_3_fault",
+                            "offset": 22464,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_3"
+                        },
+                        {
+                            "id": "bms_rack_4_fault",
+                            "offset": 22466,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_4"
+                        },
+                        {
+                            "id": "bms_rack_5_fault",
+                            "offset": 22468,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_5"
+                        },
+                        {
+                            "id": "bms_rack_6_fault",
+                            "offset": 22470,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_6"
+                        },
+                        {
+                            "id": "bms_rack_7_fault",
+                            "offset": 22472,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_7"
+                        },
+                        {
+                            "id": "bms_rack_8_fault",
+                            "offset": 22474,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_8"
+                        },
+                        {
+                            "id": "bms_rack_9_fault",
+                            "offset": 22476,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_9"
+                        },
+                        {
+                            "id": "bms_rack_10_fault",
+                            "offset": 22478,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_10"
+                        },
+                        {
+                            "id": "bms_rack_11_fault",
+                            "offset": 22480,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_1"
+                        },
+                        {
+                            "id": "bms_rack_12_fault",
+                            "offset": 22482,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_12"
+                        },
+                        {
+                            "id": "bms_rack_13_fault",
+                            "offset": 22484,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_13"
+                        },
+                        {
+                            "id": "bms_rack_14_fault",
+                            "offset": 22486,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_14"
+                        },
+                        {
+                            "id": "bms_rack_15_fault",
+                            "offset": 22488,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_15"
+                        },
+                        {
+                            "id": "bms_rack_16_fault",
+                            "offset": 22490,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_16"
+                        },
+                        {
+                            "id": "bms_rack_17_fault",
+                            "offset": 22492,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_17"
+                        },
+                        {
+                            "id": "bms_rack_18_fault",
+                            "offset": 22494,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_18"
+                        },
+                        {
+                            "id": "bms_rack_19_fault",
+                            "offset": 22496,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_19"
+                        },
+                        {
+                            "id": "bms_rack_20_fault",
+                            "offset": 22498,
+                            "size": 2,
+                            "name": "BMS bus rack_fault_20"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 22500,
+                    "number_of_registers": 52,
+                    "map": [
+                        {
+                            "id": "bms_max_cell_voltage",
+                            "offset": 22500,
+                            "scale": 10000,
+                            "name": "BMS Maximum Cell Voltage"
+                        },
+                        {
+                            "id": "bms_max_cell_voltage_rack_position",
+                            "offset": 22501,
+                            "name": "BMS Maximum Cell Voltage Rack Position"
+                        },
+                        {
+                            "id": "bms_max_cell_voltage_module_position",
+                            "offset": 22502,
+                            "name": "BMS Maximum Cell Voltage Module Position"
+                        },
+                        {
+                            "id": "bms_min_cell_voltage",
+                            "offset": 22503,
+                            "scale": 10000,
+                            "name": "BMS Minimum Cell Voltage"
+                        },
+                        {
+                            "id": "bms_min_cell_voltage_rack_position",
+                            "offset": 22504,
+                            "name": "BMS Minimum Cell Voltage Rack Position"
+                        },
+                        {
+                            "id": "bms_min_cell_voltage_module_position",
+                            "offset": 22505,
+                            "name": "BMS Minimum Cell Voltage Module Position"
+                        },
+                        {
+                            "id": "bms_max_cell_temp",
+                            "offset": 22506,
+                            "scale": 100,
+                            "name": "BMS Maximum Cell Temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_max_cell_temp_rack_position",
+                            "offset": 22507,
+                            "name": "BMS Maximum Cell Temperature Rack Position"
+                        },
+                        {
+                            "id": "bms_max_cell_temp_module_position",
+                            "offset": 22508,
+                            "name": "BMS Maximum Cell Temperature Module Position"
+                        },
+                        {
+                            "id": "bms_min_cell_temp",
+                            "offset": 22509,
+                            "scale": 100,
+                            "name": "BMS Minimum Cell Temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_min_cell_temp_rack_position",
+                            "offset": 22510,
+                            "name": "BMS Minimum Cell Temperature Rack Position"
+                        },
+                        {
+                            "id": "bms_min_cell_temp_module_position",
+                            "offset": 22511,
+                            "name": "BMS Minimum Cell Temperature Module Position"
+                        },
+                        {
+                            "id": "bms_dc_voltage",
+                            "offset": 22512,
+                            "scale": 10,
+                            "name": "BMS DC Voltage"
+                        },
+                        {
+                            "id": "bms_dc_current",
+                            "offset": 22513,
+                            "scale": 10,
+                            "name": "BMS DC Current",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_soc",
+                            "offset": 22514,
+                            "scale": 10,
+                            "name": "BMS SOC"
+                        },
+                        {
+                            "id": "bms_dc_power",
+                            "offset": 22515,
+                            "scale": 10,
+                            "name": "BMS DC Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_soh",
+                            "offset": 22516,
+                            "scale": 10,
+                            "name": "BMS_1 SOC"
+                        },
+                        {
+                            "id": "bms_status",
+                            "offset": 22517,
+                            "name": "BMS_1 Status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Rest",
+                                "Charge",
+                                "Discharge"
+                            ]
+                        },
+                        {
+                            "id": "bms_chargeable_energy",
+                            "offset": 22518,
+                            "scale": 1000,
+                            "size": 2,
+                            "name": "BMS Chargeable Energy"
+                        },
+                        {
+                            "id": "bms_dischargeable_energy",
+                            "offset": 22520,
+                            "scale": 1000,
+                            "size": 2,
+                            "name": "BMS Dischargeable Energy"
+                        },
+                        {
+                            "id": "bms_power_limit_1",
+                            "offset": 22522,
+                            "size": 2,
+                            "name": "BMS Power Limit High Byte"
+                        },
+                        {
+                            "id": "bms_power_limit_2",
+                            "offset": 22524,
+                            "size": 2,
+                            "name": "BMS Power Limit Low Byte"
+                        },
+                        {
+                            "id": "bms_power_limit_state_res",
+                            "offset": 22526,
+                            "size": 4,
+                            "name": "BMS Power Limit State Res"
+                        },
+                        {
+                            "id": "bms_alarm_state_1",
+                            "offset": 22530,
+                            "size": 2,
+                            "name": "BMS Alarm State High Byte"
+                        },
+                        {
+                            "id": "bms_alarm_state_2",
+                            "offset": 22532,
+                            "size": 2,
+                            "name": "BMS Alarm State Low Byte"
+                        },
+                        {
+                            "id": "bms_alarm_state_res",
+                            "offset": 22534,
+                            "size": 4,
+                            "name": "BMS Alarm State Res"
+                        },
+                        {
+                            "id": "bms_fault_state_1",
+                            "offset": 22538,
+                            "size": 2,
+                            "name": "BMS Fault State High Byte"
+                        },
+                        {
+                            "id": "bms_fault_state_2",
+                            "offset": 22540,
+                            "size": 2,
+                            "name": "BMS Fault State Low Byte"
+                        },
+                        {
+                            "id": "bms_fault_state_res",
+                            "offset": 22542,
+                            "size": 4,
+                            "name": "BMS Fault State Res"
+                        },
+                        {
+                            "id": "bms_num_racks_online",
+                            "offset": 22546,
+                            "name": "BMS Number of Racks Online"
+                        },
+                        {
+                            "id": "bms_contactor_commanded_status",
+                            "offset": 22547,
+                            "name": "BMS Circuit Breaker Control Word",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Rack 1",
+                                "Rack 2",
+                                "Rack 3",
+                                "Rack 4",
+                                "Rack 5",
+                                "Rack 6",
+                                "Rack 7",
+                                "Rack 8",
+                                "Rack 9",
+                                "Rack 10",
+                                "Rack 11",
+                                "Rack 12",
+                                "Rack 13",
+                                "Rack 14"
+                            ]
+                        },
+                        {
+                            "id": "bms_dc_breaker_status",
+                            "offset": 22548,
+                            "name": "BMS DC Breaker Status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Open",
+                                "Closed"
+                            ]
+                        },
+                        {
+                            "id": "bms_charge_power_limit",
+                            "offset": 22549,
+                            "name": "BMS Maximum Charging Power Limit"
+                        },
+                        {
+                            "id": "bms_discharge_power_limit",
+                            "offset": 22550,
+                            "name": "BMS Maximum Discharging Power Limit"
+                        },
+                        {
+                            "id": "bms_dc_breaker_remote",
+                            "offset": 22551,
+                            "name": "BMS DC Breaker Remote Status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Reserved",
+                                "Remote",
+                                "Local"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 24000,
+                    "number_of_registers": 2,
+                    "map": [
+                        {
+                            "id": "rack_1_avg_temp",
+                            "offset": 24000,
+                            "scale": 100,
+                            "name": "rack 1 average temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "rack_1_max_temp",
+                            "offset": 24001,
+                            "scale": 100,
+                            "name": "rack 1 max temperature",
+                            "signed": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,72 @@
+{
+    "fileInfo": {
+        "sourceFileName": "PCS-TI_Sungrow_SC1725UD_Modbus_Map.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2021-10-18T13:40:54.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "Jimmy Nguyen",
+        "outputFileName": "pcs_modbus_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2021-10-18T13:53:17.823Z"
+    },
+    "connection": {
+        "name": "Sungrow PCS SC1200UD",
+        "device protocol": "Modbus TCP",
+        "device protocol version": "6.0 WIP",
+        "device name": "sungrow_pcs_sc1200ud",
+        "device id string": "sungrow_pcs_sc1200ud",
+        "ip_address": "10.1.200.40",
+        "port": 502,
+        "data bits (8 typical)": "Columns marked in green are REQUIRED"
+    },
+    "components": [
+        {
+            "id": "pcs_running_info",
+            "frequency": 1000,
+            "offset_time": 20,
+            "byte_swap": true,
+            "off_by_one": true,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 3288,
+                    "number_of_registers": 9,
+                    "map": [
+                        {"id": "fault_state", "offset": 3288, "name": "Overall Fault State", "echo_id": "/components/pcs_1/fault" },
+                        {"id": "dc_voltage", "offset": 3289, "scale": 10, "name": "DC Voltage", "signed": true, "echo_id": "/components/pcs_1/vdc" },
+                        {"id": "dc_current", "offset": 3290, "scale": 10, "name": "DC Current", "signed": true, "echo_id": "/components/pcs_1/idc" },
+                        {"id": "dc_power", "offset": 3291, "scale": 10, "name": "DC Power", "signed": true, "echo_id": "/components/pcs_1/pdc" },
+                        {"id": "active_power", "offset": 3292, "size": 2, "scale": 10, "name": "Active Power", "signed": true, "echo_id": "/components/pcs_1/p" },
+                        {"id": "reactive_power", "offset": 3293, "size": 2, "scale": 10, "name": "Reactive Power", "signed": true, "echo_id": "/components/pcs_1/q" },
+                        {"id": "grid_status", "offset": 3294, "scale": -1, "name": "Grid Status", "echo_id": "/components/pcs_1/gridforming" },
+                        {"id": "grid_frequency", "offset": 3295, "scale": 100, "name": "Grid Frequency", "echo_id": "/components/pcs_1/f" },
+                        {"id": "power_factor", "offset": 3296, "scale": 1000, "name": "Power Factor", "echo_id": "/components/pcs_1/pf" }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "pcs_parameter_setting",
+            "frequency": 100,
+            "offset_time": 20,
+            "byte_swap": true,
+            "off_by_one": true,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 3256,
+                    "number_of_registers": 4,
+                    "map": [
+                        {"id": "start_stop", "offset": 3256, "name": "Start/Stop/Standby", "echo_id": "/components/pcs_1/ctrlword1"},
+                        {"id": "grid_mode_setting", "offset": 3257, "name": "On/Off-Grid Mode Setting", "echo_id": "/components/pcs_1/ctrlword2" },
+                        {"id": "reactive_power_adj_switch", "offset": 3258, "name": "Reactive Power Adjustment Switch" },
+                        {"id": "control_state", "offset": 3259, "name": "Remote/Local" }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+

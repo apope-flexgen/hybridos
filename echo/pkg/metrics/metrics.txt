@@ -1,0 +1,24 @@
+Common between all metrics objects:
+    id: the last frag of the output component
+    operation: The action that you perform on the input uris
+    inputs: all the uris that you use for the operation, will use the uris from top to bottom
+    Optional fields:
+    value: a single value that allows you to have a constant
+    param: used mainly for bitfield, but contains a map[string][]interface{}
+
+Add:
+    Allows the user to add uris together from top to bottom of the inputs list
+Subtract:
+    Allows the user to subtract uris together from top to bottom of the inputs list
+Multiple:
+    Allows the user to multiple uris together from top to bottom of the inputs list
+Divide:
+    Allows the user to divide uris together from top to bottom of the inputs list
+Not:
+    Inverts the polarity of the boolean value that you pass through, must be boolean
+And:
+    Ands together the boolean values that are provided in the inputs fields
+Or:
+    Ors together the boolean values that are provided in the inputs fields
+Compare:
+    Will compare up to 2 uris in the inputs field, value can be used if there is only one uri in inputs

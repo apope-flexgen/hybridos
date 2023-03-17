@@ -1,0 +1,58 @@
+{
+    "fileInfo": {
+      "sourceFileName": "Catl_ESS_Ref.xlsx",
+      "sourceFileCreated": "2020-07-23T05:59:21.000Z",
+      "sourceFileLastModified": "2020-08-11T18:06:59.000Z",
+      "sourceFileCreatedBy": "17576",
+      "sourceFileLastModifiedBy": "pmiller",
+      "outputFileName": "Catl_ESS_client.json",
+      "outputFileType": "client",
+      "outputFileCreated": "2020-08-12T13:00:45.553Z"
+    },
+    "connection": {
+      "name": "Clou_ESS_Controller",
+      "ip_address": "172.16.1.80",
+      "port": 502
+    },
+    "components":[
+        {
+            "id": "ess_1_example",
+            "frequency": 100,
+            "off_by_one": true,
+            "registers":[
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 896,
+                    "number_of_registers": 6,
+                    "map":[
+                        {
+                            "id": "active_power",
+                            "offset": 896,
+                            "name": "MS heartbeat",
+                            "echo_id": "/components/pcs_1/p"
+                        },
+                        {
+                            "id": "active_power_setpoint",
+                            "offset": 897,
+                            "name": "MS heartbeat1",
+                            "echo_id": "/components/pcs_1/pcmd"
+                        },
+                        {
+                            "id": "dc_active_power",
+                            "offset": 901,
+                            "name": "MS heartbeat1",
+                            "echo_id": "/components/bms_1/p"
+                        },
+                        {
+                            "id": "dc_APS",
+                            "offset": 902,
+                            "name": "MS heartbeat1",
+                            "echo_id": "/components/bms_1/numracks"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+

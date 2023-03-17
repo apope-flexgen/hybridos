@@ -1,0 +1,13 @@
+[Unit]
+Description=Echo
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/echo /usr/local/etc/config/echo/%I
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

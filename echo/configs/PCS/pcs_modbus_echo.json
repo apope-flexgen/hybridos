@@ -1,0 +1,41 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/pcs_running_info",
+			"publishRate": 1000,
+			"inputs": [
+				{
+					"uri": "/components/pcs_1",
+					"registers": {
+						"active_power": "p",
+						"dc_current": "idc",
+						"dc_power": "pdc",
+						"dc_voltage": "vdc",
+						"fault_state": "fault",
+						"grid_frequency": "f",
+						"grid_status": "gridforming",
+						"power_factor": "pf",
+						"reactive_power": "q"
+					}
+				}
+			]
+		},
+		{
+			"uri": "/components/pcs_parameter_setting",
+			"publishRate": 100,
+			"inputs": [
+				{
+					"uri": "/components/pcs_1",
+					"registers": {
+						"grid_mode_setting": "ctrlword2",
+						"start_stop": "ctrlword1"
+					}
+				}
+			],
+			"echo": {
+				"control_state": 0,
+				"reactive_power_adj_switch": 0
+			}
+		}
+	]
+}

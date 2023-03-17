@@ -1,0 +1,54 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/ess_1_example",
+			"publishRate": 100,
+			"inputs": [
+				{
+					"uri": "/components/pcs_1",
+					"registers": {
+						"active_power": "p",
+						"active_power_setpoint": "pcmd",
+						"volt": "dvoltage_percent"
+					}
+				},
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"dc_active_power": "p"
+					}
+				}
+			]
+		},
+		{
+			"uri": "/components/ess_2_example",
+			"publishRate": 230,
+			"inputs": [
+				{
+					"uri": "/components/pcs_1",
+					"registers": {
+						"door": "di",
+						"factive_power": "f",
+						"factive_power_setpoint": "fcmd"
+					}
+				},
+				{
+					"uri": "/components/ess_1_example",
+					"registers": {
+						"needtochange": "active_power"
+					}
+				}
+			]
+		},
+		{
+			"uri": "/components/ess_3_example",
+			"publishRate": 150,
+			"inputs": [],
+			"echo": {
+				"echo_1": 0,
+				"echo_2": 0,
+				"echo_3": 0
+			}
+		}
+	]
+}

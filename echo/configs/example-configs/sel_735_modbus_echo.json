@@ -1,0 +1,42 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/sel_735",
+			"publishRate": 100,
+			"inputs": [
+				{
+					"uri": "/components/feeder",
+					"registers": {
+						"f1": "frequency",
+						"p": "active_power",
+						"pf": "power_factor",
+						"q": "reactive_power",
+						"v": "voltage_l1",
+						"v1": "voltage_l2",
+						"v2": "voltage_l3"
+					}
+				}
+			],
+			"echo": {
+				"apparent_power": 0,
+				"current_l1": 0,
+				"current_l2": 0,
+				"current_l3": 0,
+				"current_n": 0,
+				"kvarh_delivered": 0,
+				"kvarh_received": 0,
+				"kwh_delivered": 0,
+				"kwh_received": 0,
+				"thd_i_l1": 0,
+				"thd_i_l2": 0,
+				"thd_i_l3": 0,
+				"thd_v_l1": 0,
+				"thd_v_l2": 0,
+				"thd_v_l3": 0,
+				"voltage_l1_l2": 0,
+				"voltage_l2_l3": 0,
+				"voltage_l3_l1": 0
+			}
+		}
+	]
+}

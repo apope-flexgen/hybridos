@@ -1,0 +1,75 @@
+{
+    "outputs":
+    [
+        {
+            "uri": "/components/ess_1",
+            "publishRate": 100,
+            "inputs":
+            [
+                {
+                    "uri": "/components/pcs_1",
+                    "registers":
+                    {
+                        "active_power": "p",
+                        "active_power_setpoint": "pcmd",
+                        "FPS": "fcmd"
+                    }
+                },
+                {
+                    "uri": "/components/bms_1",
+                    "registers":
+                    {
+                        "dc_active_power": "p",
+                        "dc_APS": "numracks",
+                        "dc_FPS": "avgcelltemp"
+                    }
+                }
+            ],
+            "echo":
+            {
+                "echo_1": 10,
+                "echo_2": 20,
+                "echo_3": 0
+            },
+            "metrics":
+            [
+                {
+                    "uri": "/components/pcs_1/fcmd",
+                    "operation": ["add", "subtract", "multiply", "divide"],
+                    "inputs":
+                    [
+                        { "uri": "/components/ess_1", "id": "echo_1" },
+                        { "uri": "/components/ess_1", "id": "echo_2" },
+                        { "uri": "/components/ess_1", "id": "echo_1" },
+                        { "uri": "/components/ess_1", "id": "echo_2" },
+                        { "uri": "/components/ess_1", "id": "echo_1" }
+                    ]
+                },
+                {
+                    "uri": "/components/ess_1/dc_APS",
+                    "operation": ["forward"],
+                    "inputs":
+                    [
+                        { "uri": "/components/ess_1", "id": "active_power_setpoint" }
+                    ]
+                },
+                {
+                    "uri": "/components/bms_1/avgcelltemp",
+                    "operation": ["forward"],
+                    "inputs":
+                    [
+                        { "uri": "/components/pcs_1", "id": "fcmd" }
+                    ]
+                },
+                {
+                    "uri": "/components/ess_1/echo_3",
+                    "operation": ["forward"],
+                    "inputs":
+                    [
+                        { "uri": "/components/ess_1", "id": "echo_2" }
+                    ]
+                }
+            ]
+        }
+    ]
+}

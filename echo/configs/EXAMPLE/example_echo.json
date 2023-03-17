@@ -1,0 +1,35 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/ess_1_example",
+			"publishRate": 100,
+			"inputs": [
+				{
+					"uri": "/components/pcs_1",
+					"registers": {
+						"active_power": "p",
+						"active_power_setpoint": "pcmd"
+					}
+				},
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"dc_APS": "numracks",
+						"dc_active_power": "p"
+					}
+				}
+			],
+            "metrics":
+            [
+                {
+                    "uri": "/components/ess_1_example/dc_APS",
+                    "operation": "forward",
+                    "inputs":
+                    [
+                        { "uri": "/components/ess_1_example", "id": "active_power_setpoint" }
+                    ]
+                }
+            ]
+		}
+	]
+}

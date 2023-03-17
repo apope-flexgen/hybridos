@@ -1,0 +1,14 @@
+{
+    "/components/ess_1":{
+        "/components/pcs_1":{
+            "p":"sbmu_2_soh",
+            "qcmd":"sbmu_3_soh"
+        },
+        "/components/bms_1":{
+            "pcmd":"sbmu_2_soh"
+        },
+        "/components/ess_1":{
+            "active_power_setpoint": "sbmu_3_soh"
+        }
+    }
+}

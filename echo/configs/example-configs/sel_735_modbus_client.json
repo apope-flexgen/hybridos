@@ -1,0 +1,210 @@
+{
+    "connection": {
+        "name": "FlexGen_ESS_Controller",
+		"ip_address": "192.168.114.59",
+        "port": 502,
+        "device name": "FlexGen_ESS_Controller",
+        "device id string": "/site"
+    },
+    "components": [
+        {
+            "id": "sel_735",
+            "frequency": 100,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": 
+            [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 1000,
+                    "number_of_registers": 50,
+                    "map":
+                    [
+                        {
+                            "id": "voltage_l1",
+                            "offset": 1000,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true,
+                            "echo_id": "/components/feeder/v"
+                        },
+                        {
+                            "id": "voltage_l2",
+                            "offset": 1002,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true,
+                            "echo_id": "/components/feeder/v1"
+                        },
+                        {
+                            "id": "voltage_l3",
+                            "offset": 1004,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true,
+                            "echo_id": "/components/feeder/v2"
+                        },
+                        {
+                            "id": "current_l1",
+                            "offset": 1006,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true
+                        },
+                        {
+                            "id": "current_l2",
+                            "offset": 1008,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true
+                        },
+                        {
+                            "id": "current_l3",
+                            "offset": 1010,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true
+                        },
+                        {
+                            "id": "current_n",
+                            "offset": 1012,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l1_l2",
+                            "offset": 1014,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l2_l3",
+                            "offset": 1016,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l3_l1",
+                            "offset": 1018,
+                            "size": 2,
+                            "scale":100,
+                            "signed": true
+                        },
+                        {
+                            "id": "active_power",
+                            "offset": 1020,
+                            "size": 2,
+                            "scale":1,
+                            "signed": true,
+                            "echo_id": "/components/feeder/p"
+                        },
+                        {
+                            "id": "reactive_power",
+                            "offset": 1022,
+                            "size": 2,
+                            "scale":1,
+                            "signed": true,
+                            "echo_id": "/components/feeder/q"
+                        },
+                        {
+                            "id": "apparent_power",
+                            "offset": 1024,
+                            "size": 2,
+                            "scale":1,
+                            "signed": true
+                        },				
+                        {
+                            "id": "frequency",
+                            "offset": 1026,
+                            "size": 2,
+                            "scale": 100,
+                            "signed": true,
+                            "echo_id": "/components/feeder/f1"
+                        },
+                        {
+                            "id": "power_factor",
+                            "offset": 1028,
+                            "size": 2,
+                            "scale": 100,
+                            "signed": true,
+                            "echo_id": "/components/feeder/pf"
+                        },
+                        {
+                            "id": "kwh_delivered",
+                            "offset": 1030,
+                            "size": 2,
+                            "scale":1,
+                            "signed":true
+                        },
+                        {
+                            "id": "kwh_received",
+                            "offset": 1032,
+                            "size": 2,
+                            "scale":1,
+                            "signed":true
+                        },
+                        {
+                            "id": "kvarh_delivered",
+                            "offset": 1034,
+                            "size": 2,
+                            "scale":1,
+                            "signed":true
+                        },
+                        {
+                            "id": "kvarh_received",
+                            "offset": 1036,
+                            "size": 2,
+                            "scale":1,
+                            "signed":true
+                        },
+                        {
+                            "id":"thd_i_l1",
+                            "offset":1038,
+                            "size":2,
+                            "scale":100,
+                            "signed":true
+                        },
+                        {
+                            "id":"thd_i_l2",
+                            "offset":1040,
+                            "size":2,
+                            "scale":100,
+                            "signed":true
+                        },
+                        {
+                            "id":"thd_i_l3",
+                            "offset":1042,
+                            "size":2,
+                            "scale":100,
+                            "signed":true
+                        },
+                        {
+                            "id":"thd_v_l1",
+                            "offset":1044,
+                            "size":2,
+                            "scale":100,
+                            "signed":true
+                        },
+                        {
+                            "id":"thd_v_l2",
+                            "offset":1046,
+                            "size":2,
+                            "scale":100,
+                            "signed":true
+                        },
+                        {
+                            "id":"thd_v_l3",
+                            "offset":1048,
+                            "size":2,
+                            "scale":100,
+                            "signed":true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

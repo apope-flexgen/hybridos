@@ -1,0 +1,60 @@
+{
+    "outputs":
+    [
+        {
+            "uri": "/components/ess_1_interim",
+            "publishRate": 0,
+            "metrics":
+            [
+                {
+                    "id": "current_status_bitfield",
+                    "operation": "bitfield",
+                    "type": "mask",
+                    "inputs":
+                    [
+                        { "uri": "/twins/pcs_1", "id": "pcs_1_not_ready" },
+                        { "uri": "/twins/bms_1", "id": "pcs_1_ready" }
+                    ]
+                }
+            ]
+        },
+        {
+            "uri": "/components/ess_1",
+            "publishRate": 100,
+            "inputs":
+            [
+                {
+                    "uri": "/twins/pcs_1",
+                    "registers":
+                    {
+                        "p": "active_power",
+                        "pcmd": "active_power_setpoint",
+                        "dvoltage": null
+                    }
+                },
+                {
+                    "uri": "/twins/bms_1",
+                    "registers":
+                    {
+                        "p": "bms_active_power"
+                    }
+                }
+            ],
+            "echo":
+            {
+                "echo_1": 0,
+                "echo_2": true
+            },
+            "metrics":
+            [
+                {
+                    "inputs":
+                    [
+                        { "uri": "/components/ess_1_interim", "id": "pcs_1_not_ready" },
+                        { "uri": "/twins/bms_1", "id": "pcs_1_ready" }
+                    ]
+                }
+            ]
+        }
+    ]
+}

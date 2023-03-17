@@ -1,0 +1,80 @@
+{
+    "fileInfo": {
+      "sourceFileName": "Catl_ESS_Ref.xlsx",
+      "sourceFileCreated": "2020-07-23T05:59:21.000Z",
+      "sourceFileLastModified": "2020-08-11T18:06:59.000Z",
+      "sourceFileCreatedBy": "17576",
+      "sourceFileLastModifiedBy": "pmiller",
+      "outputFileName": "Catl_ESS_client.json",
+      "outputFileType": "client",
+      "outputFileCreated": "2020-08-12T13:00:45.553Z"
+    },
+    "connection": {
+      "name": "Clou_ESS_Controller",
+      "ip_address": "192.168.1.8",
+      "port": 502
+    },
+    "components":[
+        {
+            "id": "ess_1_example",
+            "frequency": 100,
+            "registers":[
+                {
+                    "type": "Holding Registers",
+                    "map":[
+                        {
+                            "id": "active_power",
+                            "offset": 896,
+                            "name": "MS heartbeat",
+                            "echo_id": "/components/pcs_1/p"
+                        },
+                        {
+                            "id": "active_power_setpoint",
+                            "offset": 897,
+                            "name": "MS heartbeat1",
+                            "echo_id": "/components/pcs_1/pcmd"
+                        },
+                        {
+                            "id": "volt",
+                            "offset": 897,
+                            "name": "MS heartbeat1",
+                            "echo_id": "/components/pcs_1/dvoltage"
+                        },
+                        {
+                            "id": "echo_1",
+                            "offset": 897,
+                            "name": "MS heartbeat1"
+                        },
+                        {
+                            "id": "echo_2",
+                            "offset": 897,
+                            "name": "MS heartbeat1"
+                        },
+                        {
+                            "id": "dc_active_power",
+                            "offset": 897,
+                            "name": "MS heartbeat1",
+                            "echo_id": "/components/bms_1/p"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "ess_2_example",
+            "frequency": 100,
+            "registers":[
+                {
+                    "type": "Holding Registers",
+                    "map":[
+                        {
+                            "id": "echo_1",
+                            "offset": 896,
+                            "name": "MS heartbeat"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

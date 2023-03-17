@@ -1,0 +1,45 @@
+{
+    "fileInfo": {
+      "sourceFileName": "Catl_ESS_Ref.xlsx",
+      "sourceFileCreated": "2020-07-23T05:59:21.000Z",
+      "sourceFileLastModified": "2020-08-11T18:06:59.000Z",
+      "sourceFileCreatedBy": "17576",
+      "sourceFileLastModifiedBy": "pmiller",
+      "outputFileName": "Catl_ESS_client.json",
+      "outputFileType": "client",
+      "outputFileCreated": "2020-08-12T13:00:45.553Z"
+    },
+    "connection": {
+      "name": "Clou_ESS_Controller",
+      "ip_address": "172.16.1.80",
+      "port": 502,
+      "heartbeat_enabled": false
+    },
+    "components":[
+        {
+            "id": "ess_1_example",
+            "frequency": 150,
+            "off_by_one": false,
+            "registers":[
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 750,
+                    "number_of_registers": 2,
+                    "map":[
+                        {
+                            "id": "echo_3",
+                            "offset": 750,
+                            "name": "MS heartbeat1"
+                        },
+                        {
+                            "id": "echo_4",
+                            "offset": 751,
+                            "name": "MS heartbeat1"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+

@@ -1,0 +1,13 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/ess_1_example",
+			"publishRate": 150,
+			"inputs": [],
+			"echo": {
+				"echo_3": 0,
+				"echo_4": 0
+			}
+		}
+	]
+}

@@ -1,0 +1,150 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/flexgen_ess_02_hs",
+			"publishRate": 100,
+			"heartbeat": "life_signal",
+			"inputs": [
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"ctrlword1": "bms_dc_contactors",
+						"faults": "clear_faults",
+						"watchdog": "life"
+					}
+				},
+				{
+					"uri": "/components/pcs_1",
+					"registers": {
+						"ctrlworld1": "start_stop",
+						"ctrlworld2": "run_mode",
+						"gridforming": "on_off_grid_mode",
+						"pcmd": "active_power_setpoint",
+						"qcmd": "reactive_power_setpoint"
+					}
+				}
+			],
+			"echo": {}
+		},
+		{
+			"uri": "/components/flexgen_ess_02_ls",
+			"publishRate": 1000,
+			"heartbeat": "life_signal",
+			"inputs": [
+				{
+					"uri": "/components/pcs_1",
+					"registers": {
+						"ctrlword1": "system_state",
+						"f": "frequency",
+						"fault": "ess_faults",
+						"iac": "current_l3",
+						"idc": "current_dc",
+						"p": "active_power",
+						"pdc": "active_power_dc",
+						"pf": "pf",
+						"q": "reactive_power",
+						"vac": "voltage_l3_l1",
+						"vdc": "voltage_dc",
+						"warning": "ess_alarms"
+					}
+				},
+				{
+					"uri": "/components/bms_1",
+					"registers": {
+						"avgcelltemp": "bms_average_cell_temperature",
+						"avgcellvolt": "bms_average_cell_voltage",
+						"dccontactor": "dc_contactors_closed",
+						"maxcelltemp_value": "bms_maximum_cell_temperature",
+						"maxcellvolt_value": "bms_maximum_cell_voltage",
+						"mincelltemp_value": "bms_minimum_cell_temperature",
+						"mincellvolt_value": "bms_minimum_cell_voltage",
+						"numsmbus": "racks_in_service",
+						"on": "bms_poweron",
+						"soc_value": "bms_soc",
+						"soh": "bms_soh",
+						"status_0_string": "bms_status",
+						"warning": "bms_alarms"
+					}
+				}
+			],
+			"echo": {
+				"apparent_power": 0,
+				"bms_faults": 0,
+				"bms_power": 0,
+				"chargeable_energy": 0,
+				"chargeable_power": 0,
+				"com_status": 0,
+				"derating_active": 0,
+				"dischargeable_energy": 0,
+				"dischargeable_power": 0,
+				"ems_alarms": 0,
+				"life_signal": 0,
+				"module_1_alarms1": 0,
+				"module_1_alarms2": 0,
+				"module_1_faults1": 0,
+				"module_1_faults2": 0,
+				"module_2_alarms1": 0,
+				"module_2_alarms2": 0,
+				"module_2_faults1": 0,
+				"module_2_faults2": 0,
+				"module_3_alarms1": 0,
+				"module_3_alarms2": 0,
+				"module_3_faults1": 0,
+				"module_3_faults2": 0,
+				"module_4_alarms1": 0,
+				"module_4_alarms2": 0,
+				"module_4_faults1": 0,
+				"module_4_faults2": 0,
+				"module_5_alarms1": 0,
+				"module_5_alarms2": 0,
+				"module_5_faults1": 0,
+				"module_5_faults2": 0,
+				"module_6_alarms1": 0,
+				"module_6_alarms2": 0,
+				"module_6_faults1": 0,
+				"module_6_faults2": 0,
+				"pcs1_alarms1": 0,
+				"pcs1_alarms2": 0,
+				"pcs1_alarms3": 0,
+				"pcs1_alarms4": 0,
+				"pcs1_faults1": 0,
+				"pcs1_faults2": 0,
+				"pcs1_faults3": 0,
+				"pcs1_faults4": 0,
+				"pcs_mode": 0,
+				"pcs_modules_in_service": 0,
+				"pcs_state": 0,
+				"sbmu_1_alarms": 0,
+				"sbmu_1_faults1": 0,
+				"sbmu_1_faults2": 0,
+				"sbmu_2_alarms": 0,
+				"sbmu_2_faults1": 0,
+				"sbmu_2_faults2": 0,
+				"sbmu_3_alarms": 0,
+				"sbmu_3_faults1": 0,
+				"sbmu_3_faults2": 0,
+				"sbmu_4_alarms": 0,
+				"sbmu_4_faults1": 0,
+				"sbmu_4_faults2": 0,
+				"sbmu_5_alarms": 0,
+				"sbmu_5_faults1": 0,
+				"sbmu_5_faults2": 0,
+				"sbmu_6_alarms": 0,
+				"sbmu_6_faults1": 0,
+				"sbmu_6_faults2": 0,
+				"sbmu_7_alarms": 0,
+				"sbmu_7_faults1": 0,
+				"sbmu_7_faults2": 0,
+				"sbmu_8_alarms": 0,
+				"sbmu_8_faults1": 0,
+				"sbmu_8_faults2": 0,
+				"sbmu_9_alarms": 0,
+				"sbmu_9_faults1": 0,
+				"sbmu_9_faults2": 0,
+				"voltage_l1_l2_lv": 0,
+				"voltage_l2_l3_lv": 0,
+				"voltage_l3_l1_lv": 0
+			}
+		}
+	]
+}
