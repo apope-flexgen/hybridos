@@ -7,4 +7,3 @@ cloud_sync|hotfix/v2.0.0-rc
 twins|hotfix/v2.2.0
 overwatch|v1.2.0
 metrics|v1.5.2
-web_server|v1.8.0
