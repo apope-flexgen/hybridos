@@ -1,0 +1,10 @@
+This method of setting up linting worked for me. The site I found this at is https://survivejs.com/maintenance/code-quality/linting/  -DM 11/29/19
+
+
+Install eslint like so:
+`npm install eslint eslint-config-airbnb-base eslint-plugin-import babel-eslint --save-dev`
+
+Then do this:
+`npm run lint:js`
+
+Then go back to Visual Studio Code and tidy up the things that could not be automatically fixed. From here on out, VS Code will flag any linting-related problems as you type.

@@ -1,0 +1,17 @@
+Refactoring in February 2020, Desmond Mullen:
+
+* componentWillMount
+A warning shows in the browser's console, "Warning: componentWillMount has been renamed, and is not recommended for use. See https://fb.me/react-unsafe-component-lifecycles for details."
+That link says that "...moving the [componentWillMount stuff] to componentDidMount has no perceptible effect in the vast majority of cases." In our case it blows up the page and requires a workaround to get it to render after we do our componentWillMount stuff that was moved into componentDidMount. Instead of using a workaround, we will - as suggested by React - rename all the componentWillMount to UNSAFE_componentWillMount so it can continue be used into the future indefinitely. Using an experimental thing like Suspense does not make sense at this time. (The reason it is "unsafe" is that a lot of people use it incorrectly. I believe we are using it correctly, and *not* using it blows stuff up, so I believe we should stick with it.)
+
+* Typography variant
+"Warning: Failed prop type: Invalid prop `variant` of value..." I replaced `<Typography variant="title"` with `<Typography variant="subtitle1"` and `<Typography variant="subheading"` with `<Typography variant="subtitle1"`.
+
+* Grid container spacing
+"Warning: Failed prop type: Invalid prop `spacing` of value `16` supplied to `ForwardRef(Grid)`, expected one of [0,1,2,3,4,5,6,7,8,9,10]"
+I changed all `<Grid container spacing={16}>` to `<Grid container>`
+https://stackoverflow.com/questions/57031580/how-to-fix-failed-prop-type-the-property-spacing-of-grid-must-be-used-on
+
+* WebSocket response code 400
+"WebSocket connection to 'ws://localhost/socket.io/?EIO=3&transport=websocket&sid=ihLOkFGNuKFXzIYEAADJ' failed: Error during WebSocket handshake: Unexpected response code: 400"
+I believe this is only seen when developing on localhost and it is caused by socket.io's polling connection not being able to conver to websocket connection because we're not on https. So, the warning is moot in localhost development.
