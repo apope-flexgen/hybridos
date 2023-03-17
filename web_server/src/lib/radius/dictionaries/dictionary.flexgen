@@ -1,0 +1,7 @@
+VENDOR		FlexGen	      4999
+BEGIN-VENDOR	FlexGen
+ATTRIBUTE	FlexGen-Role	9 integer
+VALUE	FlexGen-Role		Admin	    1
+VALUE	FlexGen-Role		User	    2
+VALUE	FlexGen-Role		Observer	3
+END-VENDOR FlexGen

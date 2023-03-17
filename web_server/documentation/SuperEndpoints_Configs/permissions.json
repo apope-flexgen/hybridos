@@ -1,0 +1,124 @@
+{
+    "authentication": {
+        "notes": "",
+        "permissions": [
+            {
+                "roleOrUsername": "user",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
+                "access": [
+                    "/login readWrite",
+                    "/storageConfig readWrite",
+                    "/dashboard readWrite",
+                    "/site readWrite",
+                    "/site/summary readWrite",
+                    "/features readWrite",
+                    "/features/summary readWrite",
+                    "/events readWrite",
+                    "/assets/ess readWrite",
+                    "/assets/generators readWrite",
+                    "/assets/solar readWrite",
+                    "/assets/feeders readWrite",
+                    "/assets/ess/summary readWrite",
+                    "/assets/generators/summary readWrite",
+                    "/assets/solar/summary readWrite",
+                    "/assets/feeders/summary readWrite",
+                    "/control_cabinet readWrite",
+                    "/control_cabinet/control_cabinet readWrite",
+                    "connection readWrite",
+                    "disconnect readWrite",
+                    "updatePropertyValue function readWrite"
+                ]
+            },
+            {
+                "roleOrUsername": "admin",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
+                "access": [
+                    "/login readWrite",
+                    "/storageConfig readWrite",
+                    "/dashboard readWrite",
+                    "/site readWrite",
+                    "/site/summary readWrite",
+                    "/features readWrite",
+                    "/features/summary readWrite",
+                    "/events readWrite",
+                    "/assets/ess readWrite",
+                    "/assets/generators readWrite",
+                    "/assets/solar readWrite",
+                    "/assets/feeders readWrite",
+                    "/assets/ess/summary readWrite",
+                    "/assets/generators/summary readWrite",
+                    "/assets/solar/summary readWrite",
+                    "/assets/feeders/summary readWrite",
+                    "/control_cabinet readWrite",
+                    "/control_cabinet/control_cabinet readWrite",
+                    "/administration/useradministration readWrite",
+                    "connection readWrite",
+                    "disconnect readWrite",
+                    "updatePropertyValue function readWrite",
+                    "createuser function readWrite",
+                    "removeuser function readWrite",
+                    "message readWrite"
+                ]
+            },
+            {
+                "roleOrUsername": "rest",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. For the basic rest role, only read is allowed.",
+                "access": [
+                    "/assets read",
+                    "/assets/ess read",
+                    "/assets/ess/ess_1 read",
+                    "/assets/ess/ess_2 read",
+                    "/assets/ess/ess_3 read",
+                    "/assets/ess/ess_4 read",
+                    "/assets/solar read",
+                    "/assets/feeders read",
+                    "/assets/generators read"
+                ]
+            },
+            {
+                "roleOrUsername": "restreadwrite",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. For this username, readWrite is allowed. This username - when configured as a 'rest' role username - primarly adds writing to '_manual' and '_override' to the basic permissions of the rest role.",
+                "access": []
+            },
+            {
+                "roleOrUsername": "developer",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. NOTE: '/storage/storage/inspector/' must keep the slash at the end, unlike the other uris",
+                "access": [
+                    "/login readWrite",
+                    "/storageConfig readWrite",
+                    "/dashboard readWrite",
+                    "/site readWrite",
+                    "/site/summary readWrite",
+                    "/features readWrite",
+                    "/features/summary readWrite",
+                    "/events readWrite",
+                    "/assets/ess readWrite",
+                    "/assets/generators readWrite",
+                    "/assets/solar readWrite",
+                    "/assets/feeders readWrite",
+                    "/assets/ess/summary readWrite",
+                    "/assets/generators/summary readWrite",
+                    "/assets/solar/summary readWrite",
+                    "/assets/feeders/summary readWrite",
+                    "/control_cabinet readWrite",
+                    "/control_cabinet/control_cabinet readWrite",
+                    "/administration/useradministration readWrite",
+                    "/inspector readWrite",
+                    "/components readWrite",
+                    "/fims readWrite",
+                    "/charts readWrite",
+                    "/inspector/components readWrite",
+                    "/inspector/fims readWrite",
+                    "/inspector/charts readWrite",
+                    "/storage/storage/inspector/ readWrite",
+                    "connection readWrite",
+                    "disconnect readWrite",
+                    "updatePropertyValue function readWrite",
+                    "createuser function readWrite",
+                    "removeuser function readWrite",
+                    "message readWrite"
+                ]
+            }
+        ]
+    }
+}

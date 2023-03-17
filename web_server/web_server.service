@@ -1,0 +1,13 @@
+[Unit]
+Description=FlexGen HybridOS Web Server
+Requires=fims.service mongod.service
+After=fims.service mongod.service
+
+[Service]
+User=root
+ExecStart=/usr/local/bin/web_server /usr/local/bin/web_ui/ /usr/local/etc/config/web_ui /usr/local/etc/config/web_server
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
