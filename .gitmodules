@@ -7,9 +7,6 @@
 [submodule "web_server"]
 	path = web_server
 	url = https://github.com/flexgen-power/web_server.git
-[submodule "web_ui"]
-	path = web_ui
-	url = https://github.com/flexgen-power/web_ui.git
 [submodule "scheduler"]
 	path = scheduler
 	url = https://github.com/flexgen-power/scheduler.git
