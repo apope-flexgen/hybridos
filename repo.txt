@@ -1,6 +1,5 @@
 site_controller|v2.3.0
 fleet_manager|v1.0.0
-scheduler|v1.2.0
 ftd|v2.0.0-rc
 cloud_sync|hotfix/v2.0.0-rc
 twins|hotfix/v2.2.0

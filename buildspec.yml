@@ -23,7 +23,6 @@ phases:
       - git submodule update --recursive
       - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
       - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
-      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/scheduler.git
       - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/ftd.git
       - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/cloud_sync.git
       - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/twins.git
@@ -36,7 +35,6 @@ phases:
       - echo Delete all submodules package-utility folders in pre-build...
       - rm -r ./site_controller/package_utility
       - rm -r ./fleet_manager/package_utility
-      - rm -r ./scheduler/package_utility
       - rm -r ./ftd/package_utility
       - rm -r ./cloud_sync/package_utility
       - rm -r ./twins/package_utility

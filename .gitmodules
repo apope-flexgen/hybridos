@@ -4,9 +4,6 @@
 [submodule "metrics"]
 	path = metrics
 	url = https://github.com/flexgen-power/metrics.git
-[submodule "scheduler"]
-	path = scheduler
-	url = https://github.com/flexgen-power/scheduler.git
 [submodule "fleet_manager"]
 	path = fleet_manager
 	url = https://github.com/flexgen-power/fleet_manager.git
