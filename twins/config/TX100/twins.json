@@ -1,0 +1,195 @@
+{
+    "updateRate": 100,
+    "publishRate": 1000,
+    "timeMultiplier": 1,
+    "manualTick": false,
+    "grids":[
+        {
+            "id": "grid", 
+            "v": 660,
+            "f": 60
+        }
+    ],
+    "feeds":[
+        {
+            "id": "cb_lab",
+            "pmax": 100000,
+            "qmax": 100000,
+            "smax": 100000,
+            "closecmd": true
+        }
+    ],
+    "pcs":[
+        {
+            "id": "pcs_1",
+            "plim": 3500,
+            "qlim": 3500,
+            "idleloss": 1.75,
+            "rte": 95.6,
+            "ctrlword1cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                }
+            ],
+            "ctrlword2cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ],
+            "ctrlword3cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "fault", "value": false },
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ]
+        }
+    ],
+    "bms":[
+        {
+            "id": "bms_1",
+            "cap": 3348,
+            "racks": 9,
+            "soc": 50,
+            "vnom": 1330,
+            "inom": 2517,
+            "vdcprofile": [1282, 1320, 1330],
+            "socprofile": [20, 67, 100],
+            "pmax": 3348,
+            "idleloss": 1.75,
+            "rte": 92,
+            "ctrlword1cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 0,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ],
+            "ctrlword2cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "fault", "value": false },
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ],
+            "sbmu": [
+                {
+                    "maxcellvolt": 3.6,
+                    "mincellvolt": 3.3,
+                    "avgcellvolt": 3.45
+                },
+                {
+                    "maxcellvolt": 3.55,
+                    "mincellvolt": 3.25,
+                    "avgcellvolt": 3.4
+                },
+                {
+                    "maxcellvolt": 3.5,
+                    "mincellvolt": 3.2,
+                    "avgcellvolt": 3.35
+                },
+                {
+                    "maxcellvolt": 3.45,
+                    "mincellvolt": 3.15,
+                    "avgcellvolt": 3.3
+                },
+                {
+                    "maxcellvolt": 3.4,
+                    "mincellvolt": 3.1,
+                    "avgcellvolt": 3.25
+                },
+                {
+                    "maxcellvolt": 3.35,
+                    "mincellvolt": 3.05,
+                    "avgcellvolt": 3.2
+                },
+                {
+                    "maxcellvolt": 3.3,
+                    "mincellvolt": 3.0,
+                    "avgcellvolt": 3.15
+                },
+                {
+                    "maxcellvolt": 3.25,
+                    "mincellvolt": 2.95,
+                    "avgcellvolt": 3.1
+                },
+                {
+                    "maxcellvolt": 3.15,
+                    "mincellvolt": 2.9,
+                    "avgcellvolt": 3.15
+                }
+            ],
+            "nonsense": {
+                "array1": [1, 3, 5],
+                "array2": [2, 4, 6]
+            }
+        }
+    ],
+    "root":{
+        "id": "grid",
+        "children":[
+            {
+                "id": "cb_lab",
+                "children":[
+                    { 
+                        "id": "pcs_1",
+                        "children":[
+                            { 
+                                "id": "bms_1"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
