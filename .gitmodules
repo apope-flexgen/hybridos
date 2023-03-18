@@ -16,9 +16,6 @@
 [submodule "twins"]
 	path = twins
 	url = https://github.com/flexgen-power/twins.git
-[submodule "overwatch"]
-	path = overwatch
-	url = https://github.com/flexgen-power/overwatch.git
 [submodule "bootstrap"]
 	path = bootstrap
 	url = https://github.com/flexgen-power/bootstrap.git
