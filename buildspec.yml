@@ -1,34 +1,6 @@
 version: 0.2
 
-env:
-  parameter-store:
-    ssh_key: "id_rsa"
-    ssh_pub: "id_rsa.pub"
-    github_user: "github_user"
-    github_token: "github_token"
-
 phases:
-  install:
-    commands:
-      - echo Set Agent...
-      - mkdir -p ~/.ssh
-      - echo "$ssh_key" > ~/.ssh/id_rsa   
-      - echo "$ssh_pub" > ~/.ssh/id_rsa.pub
-      - chmod 600 ~/.ssh/id_rsa
-      - ssh-keygen -F github.com || ssh-keyscan github.com >>~/.ssh/known_hosts
-      - git config --global url."git@github.com:".insteadOf "https://github.com/"
-      - eval "$(ssh-agent -s)"
-      - echo Get submodules...
-      - git init
-      - git submodule update --recursive
-      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
-      - echo Finished clone submodules...
-      - echo Starting build...
-  pre_build:
-    commands:
-      - echo Delete all submodules package-utility folders in pre-build...
-      - rm -r ./site_controller/package_utility
-      - echo All package_utility deleted, ready for build...
   build:
     commands:
       - echo Build started on `date`
