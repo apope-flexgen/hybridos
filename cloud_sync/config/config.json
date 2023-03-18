@@ -1,0 +1,24 @@
+{
+    "clients": {
+        "main" : {
+            "directory" : "/home/vagrant/test/data",
+            "private_key" : "/home/vagrant/.ssh/id_rsa",
+            "known_hosts" : "/home/vagrant/.ssh/known_hosts",
+            "extension" : ".tar.gz",
+            "tar_mode" : {
+                "mode" : "tar",
+                "interval_seconds" : 5,
+                "buffer_size" : 20
+            }
+        }
+    },
+    "servers": {
+        "local": {
+            "directory" : "/home/vagrant/local"
+        }
+    },
+    "db_directory" : "/home/vagrant/.cloud_sync/db",
+    "retry_limit" : 1,
+    "sleep_limit_seconds" : 30,
+    "buffer_size" : 100000
+}

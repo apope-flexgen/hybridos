@@ -1,0 +1,28 @@
+{
+    "clients": {
+        "main" : {
+            "directory" : "/home/archives",
+            "private_key" : "/root/.ssh/id_rsa",
+            "known_hosts" : "/root/.ssh/known_hosts",
+            "extension" : ".tar.gz",
+            "tar_mode": {
+                "mode": "tar",
+                "interval_seconds": 1000000,
+                "buffer_size": 50
+            }
+        }
+    },
+    "servers": {
+        "destination": {
+            "ip" : "1.1.1.2",
+            "port": "22",
+            "user": "root",
+            "directory" : "/home/archives",
+            "timeout" : 10
+        }
+    },
+    "db_directory" : "/home/.cloud_sync/db",
+    "retry_limit" : 1,
+    "sleep_limit_seconds" : 1,
+    "buffer_size" : 100000
+}

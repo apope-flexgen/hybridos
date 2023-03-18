@@ -1,0 +1,11 @@
+[Unit]
+Description=Cloud Sync (PowerCloud)
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/cloud_sync -c=/usr/local/etc/config/cloud_sync/cloud_sync.json
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

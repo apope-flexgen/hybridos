@@ -1,0 +1,86 @@
+version: "3.3"
+
+services:
+  cloud_sync_test_network_client:
+    build:
+      context: ./client_node
+      args:
+        imageName: centos7
+        imageTag: devel
+    image:
+      flexgen/cloud_sync/test/network/client_node:test
+    networks:
+      cloud_sync_test_network:
+        ipv4_address: 1.1.1.1
+    tty: true
+    volumes:
+      - ./client_node/config/:/home/config/
+      - /usr/local/bin/cloud_sync:/usr/local/bin/cloud_sync
+      - ../mock_archive/build/producer:/usr/local/bin/mock_archive_producer
+      - ../mock_archive/build/consumer:/usr/local/bin/mock_archive_consumer
+      - ./client_node/run.sh:/home/scripts/run.sh
+    secrets:
+      - client_id_rsa
+      - client_id_rsa.pub
+    cap_add:
+      - NET_ADMIN
+
+  cloud_sync_test_network_router:
+    build:
+      context: ./router_node
+      args:
+        imageName: centos7
+        imageTag: devel
+    image:
+      flexgen/cloud_sync/test/network/router_node:test
+    networks:
+      cloud_sync_test_network:
+        ipv4_address: 1.1.1.2
+    tty: true
+    volumes:
+      - ./router_node/config/:/home/config/
+      - /usr/local/bin/cloud_sync:/usr/local/bin/cloud_sync
+      - ../mock_archive/build/producer:/usr/local/bin/mock_archive_producer
+      - ../mock_archive/build/consumer:/usr/local/bin/mock_archive_consumer
+      - ./router_node/run.sh:/home/scripts/run.sh
+    secrets:
+      - client_id_rsa
+      - client_id_rsa.pub
+    cap_add:
+      - NET_ADMIN
+
+  cloud_sync_test_network_server:
+    build:
+      context: ./server_node
+      args:
+        imageName: centos7
+        imageTag: devel
+    image:
+      flexgen/cloud_sync/test/network/server_node:test
+    networks:
+      cloud_sync_test_network:
+        ipv4_address: 1.1.1.3
+    tty: true
+    volumes:
+      - ./server_node/config/:/home/config/
+      - /usr/local/bin/cloud_sync:/usr/local/bin/cloud_sync
+      - ../mock_archive/build/producer:/usr/local/bin/mock_archive_producer
+      - ../mock_archive/build/consumer:/usr/local/bin/mock_archive_consumer
+      - ./server_node/run.sh:/home/scripts/run.sh
+    secrets:
+      - client_id_rsa.pub
+    cap_add:
+      - NET_ADMIN
+
+networks:
+  cloud_sync_test_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 1.1.1.0/8
+
+secrets:
+  client_id_rsa:
+    file: ./build/client_ssh/id_rsa
+  client_id_rsa.pub:
+    file: ./build/client_ssh/id_rsa.pub

@@ -1,0 +1,23 @@
+{
+    "clients": {
+        "main" : {
+            "directory" : "/home/archives",
+            "private_key" : "/root/.ssh/id_rsa",
+            "known_hosts" : "/root/.ssh/known_hosts",
+            "tar_mode": {
+                "mode": "untar",
+                "extracted_extension": ".tar.gz"
+            }
+        }
+    },
+    "servers": {
+        "local_consumer": {
+            "directory" : "/home/local_consumer",
+            "timeout" : 10
+        }
+    },
+    "db_directory" : "/home/.cloud_sync/db",
+    "retry_limit" : 1,
+    "sleep_limit_seconds" : 1,
+    "buffer_size" : 100000
+}
