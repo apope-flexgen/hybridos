@@ -1,0 +1,12 @@
+ftd
+
+build
+rpmbuild
+
+GIT_*
+git_*
+
+.config/
+.gitconfig
+go/
+.cache/

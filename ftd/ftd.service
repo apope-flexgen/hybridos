@@ -1,0 +1,11 @@
+[Unit]
+Description=FIMS to Disk (PowerCloud)
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/ftd -c=/usr/local/etc/config/ftd/ftd.json
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
