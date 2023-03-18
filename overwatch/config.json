@@ -1,0 +1,69 @@
+{
+    "name" : "test",
+    "destination" : 
+    {
+        "influx" : true,
+        "interval" : 10,
+        "database" : "overwatch",
+        "address": "localhost:8086",
+        "timeout" : 30,
+        "health_check_delay": 10
+    },
+    "mem": 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 2
+        },
+        "stats" : [ "MemAvailable", "MemTotal", "MemFree", "Active", "Dirty" ]
+    },
+    "cpu": 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 2
+        },
+        "loadavg" : 5, 
+        "temperature" : true, 
+        "uptime" : true
+    },
+    "disk": 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 10
+        },
+        "mounts": false, 
+        "directories" : [ "/var/log", "/home/vagrant/race/sink-data" ],
+        "filecount_tracking_max" : 50000,
+        "mb_size_tracking_max" : 5000
+    },
+    "net": 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 5
+        },
+        "fims" : true, 
+        "ports" : true, 
+        "ips" : { "aux1" : "172.24.78.48", "aux2" : "172.24.24.79" }, 
+        "stats" : [ "wmem_max", "rmem_max" ]
+    },
+    "process" : 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 2
+        },
+        "refresh" : 10,
+        "process_names" : [ "influxd::2", "mongod", "overwatch" ],
+        "databases" : {"influx" : "localhost:8086", "mongo" : "127.0.0.1:27017"}
+    },
+    "device" : 
+    {
+        "collection" : {
+            "active" : true,
+            "interval" : 86400
+        }
+    }
+}

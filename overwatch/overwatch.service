@@ -1,0 +1,13 @@
+[Unit]
+Description=Overwatch
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=root
+ExecStart=/usr/local/bin/overwatch -c /usr/local/etc/config/overwatch/config.json
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
