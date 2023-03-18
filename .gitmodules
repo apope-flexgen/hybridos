@@ -7,9 +7,6 @@
 [submodule "cloud_sync"]
 	path = cloud_sync
 	url = https://github.com/flexgen-power/cloud_sync.git
-[submodule "twins"]
-	path = twins
-	url = https://github.com/flexgen-power/twins.git
 [submodule "bootstrap"]
 	path = bootstrap
 	url = https://github.com/flexgen-power/bootstrap.git
