@@ -1,0 +1,6 @@
+{
+    "publishRate": 100,
+    "listenRate": 2,
+    "metricsUri": "/metrics/kpi",
+    "publishUris": []
+}

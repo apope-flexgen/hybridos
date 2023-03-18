@@ -1,0 +1,193 @@
+{
+    "publishRate": 100,
+    "listenRate": 2,
+    "metricsUri": "/metrics/kpi",
+    "publishUris": [
+        {
+            "uri": "/metrics/watchdog",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "heartbeat2watchdog",
+                    "inputs": [
+                        {
+                            "uri": "/site/operation",
+                            "id": "heartbeat_counter"
+                        }
+                    ],
+                    "operation": "echo",
+                    "outputs": [
+                        {
+                            "uri": "/site/operation",
+                            "id": "watchdog_pet"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "uri": "/example",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "off_by_one",
+                    "inputs": [
+                        {
+                            "uri": "/example",
+                            "id": "off_by_one"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 1
+                },
+                {
+                    "id": "load_shed_offset_control",
+                    "inputs": [
+                        {
+                            "uri": "/example",
+                            "id": "load_shed_control"
+                        },
+                        {
+                            "uri": "/example",
+                            "id": "off_by_one"
+                        }
+                    ],
+                    "operation": "sum"
+                },
+                {
+                    "id": "load_setting_0",
+                    "inputs": [
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_0"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": -200
+                },
+                {
+                    "id": "load_setting_1",
+                    "inputs": [
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_1"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": -150
+                },
+                {
+                    "id": "load_setting_2",
+                    "inputs": [
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_2"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": -100
+                },
+                {
+                    "id": "load_setting_3",
+                    "inputs": [
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_3"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": -50
+                },
+                {
+                    "id": "load_setting_4",
+                    "inputs": [
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_4"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_shed_output",
+                    "inputs": [
+                        {
+                            "uri": "/example",
+                            "id": "load_shed_offset_control"
+                        },
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_0"
+                        },
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_1"
+                        },
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_2"
+                        },
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_3"
+                        },
+                        {
+                            "uri": "/example",
+                            "id": "load_setting_4"
+                        }
+                    ],
+                    "operation": "selectn",
+                    "initialInput": 4,
+                    "outputs": [
+                        {
+                            "uri": "/components/load_fixed",
+                            "id": "pcmd"
+                        }
+                    ]
+                },
+                {
+                    "id": "actual_load",
+                    "inputs": [
+                        {
+                            "uri": "/components/load_fixed",
+                            "id": "pcmd"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                }
+            ]
+        },
+        {
+            "uri": "/metrics/timestamp",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "FM_timestamp",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/timestamp",
+                            "id": "FM_timestamp"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "FM_time_UTC",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/timestamp",
+                            "id": "FM_timestamp"
+                        }
+                    ],
+                    "operation": "echo",
+                    "comment": "Change to operation to millisecondsToRFC3339 when a newer version of metrics is deployed",
+                    "param": {
+                        "operation": "zulu"
+                    }
+                }
+            ]
+        }
+    ]
+}

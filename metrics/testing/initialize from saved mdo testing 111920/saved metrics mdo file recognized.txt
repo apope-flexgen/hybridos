@@ -1,0 +1,145 @@
++++++ saved metrics mdo file recognized...
+  +++ file is FRESH. File last modification time: Thu Nov 19 2020 12:23:27 GMT-0500 (Eastern Standard Time), 0.42 minutes old
+------------------ psmap
+{ '/site/operation': { heartbeat_counter: [ [Object] ] },
+  '/components/test_controller':
+   { under_frequency_offset: [ [Object], [Object] ],
+     over_frequency_offset: [ [Object], [Object] ],
+     under_frequency_offset_trigger: [ [Object], [Object] ],
+     over_frequency_offset_trigger: [ [Object], [Object] ] },
+  '/components/brainbox_ed538':
+   { intrusion_detection: [ [Object] ],
+     hvac_normally_open: [ [Object] ],
+     hvac_normally_closed: [ [Object] ] },
+  '/components/apc_ups': { soc: [ [Object] ] },
+  '/components/clou_ess_1_hs':
+   { active_power_setpoint: [ [Object] ],
+     reactive_power_setpoint: [ [Object] ],
+     modbus_heartbeat: [ [Object] ] },
+  '/components/clou_ess_2_hs':
+   { active_power_setpoint: [ [Object] ],
+     reactive_power_setpoint: [ [Object] ],
+     modbus_heartbeat: [ [Object] ] },
+  '/components/clou_ess_3_hs':
+   { active_power_setpoint: [ [Object] ],
+     reactive_power_setpoint: [ [Object] ],
+     modbus_heartbeat: [ [Object] ] },
+  '/components/clou_ess_4_hs':
+   { active_power_setpoint: [ [Object] ],
+     reactive_power_setpoint: [ [Object] ],
+     modbus_heartbeat: [ [Object] ] },
+  '/components/sel_3530_rtac':
+   { frequency_offset: [ [Object], [Object] ],
+     frequency_nominal: [ [Object], [Object] ] } }
+------------------ mdo
+{ '/metrics/watchdog':
+   { heartbeat2watchdog:
+      { operation: 'echo',
+        naked: 'true',
+        outputs: [Array],
+        value: 5097,
+        inputs: [Object],
+        state: [Object] } },
+  '/components/test_controller':
+   { under_frequency_offset:
+      { operation: 'echo',
+        naked: 'true',
+        value: -0.03,
+        inputs: [Object] },
+     over_frequency_offset:
+      { operation: 'echo',
+        naked: 'true',
+        value: 0.03,
+        inputs: [Object] },
+     under_frequency_offset_trigger:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     over_frequency_offset_trigger:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     under_frequency_offset_setter:
+      { operation: 'select',
+        naked: 'true',
+        outputs: [Array],
+        param: [Object],
+        value: 0,
+        inputs: [Object],
+        state: [Object] },
+     over_frequency_offset_setter:
+      { operation: 'select',
+        naked: 'true',
+        outputs: [Array],
+        param: [Object],
+        value: 0,
+        inputs: [Object],
+        state: [Object] } },
+  '/components/feed_1_dummy':
+   { alarms:
+      { name: 'ESS Alarms',
+        ui_type: 'alarm',
+        type: 'enum',
+        options: [],
+        operation: 'bitfield',
+        naked: 'true',
+        param: [Object],
+        value: [Array],
+        inputs: [Object] } },
+  '/components/site_ups_dummy':
+   { soc_check:
+      { operation: 'compare',
+        naked: 'true',
+        outputs: [Array],
+        param: [Object],
+        value: true,
+        inputs: [Object] } },
+  '/metrics/latency_test':
+   { ess_1_active_power_setpoint:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_2_active_power_setpoint:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_3_active_power_setpoint:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_4_active_power_setpoint:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_1_reactive_power_setpoint:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_2_reactive_power_setpoint:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_3_reactive_power_setpoint:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_4_reactive_power_setpoint:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_1_heartbeat:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_2_heartbeat:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_3_heartbeat:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     ess_4_heartbeat:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] } },
+  '/components/sel_3530_rtac_test':
+   { frequency_offset:
+      { operation: 'echo', naked: 'true', value: 0, inputs: [Object] },
+     frequency_nominal:
+      { operation: 'echo', naked: 'true', value: 60, inputs: [Object] },
+     frequency_3:
+      { operation: 'sum',
+        naked: 'true',
+        param: [Object],
+        value: 0,
+        inputs: [Object] } } }
+------------------ about to start psmap subscribes
+------------------ about to start mdo subscribes
+------------------ subscribes
+[ '/site/operation',
+  '/components/test_controller',
+  '/components/brainbox_ed538',
+  '/components/apc_ups',
+  '/components/clou_ess_1_hs',
+  '/components/clou_ess_2_hs',
+  '/components/clou_ess_3_hs',
+  '/components/clou_ess_4_hs',
+  '/components/sel_3530_rtac',
+  '/metrics/watchdog',
+  '/components/feed_1_dummy',
+  '/components/site_ups_dummy',
+  '/metrics/latency_test' ]
+================== done with mdo subscribes

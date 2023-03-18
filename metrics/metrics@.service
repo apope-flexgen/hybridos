@@ -1,0 +1,13 @@
+[Unit]
+Description=Metrics computation from FIMS pubs/sets
+Requires=fims.service influxdb.service
+After=fims.service influxdb.service storage.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/metrics /usr/local/etc/config/metrics/%I
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

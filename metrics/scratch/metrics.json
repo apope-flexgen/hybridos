@@ -1,0 +1,673 @@
+{
+    "publishRate": 1000,
+    "listenRate": 100,
+    "metricsUri": "/metrics/kpi",
+    "publishUris": [
+        {
+            "uri": "/metrics/kpi",
+            "metrics": [
+                {
+                    "id": "system_max_cell_temp",
+                    "name": "System Maximum Cell Temperature",
+                    "scale": 1,
+                    "unit": "°C",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms1_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms2_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms3_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms4_max_cell_temp"
+                        }
+                    ],
+                    "operation": "max"
+                },
+                {
+                    "id": "system_avg_cell_temp",
+                    "name": "System Average Cell Temperature",
+                    "scale": 1,
+                    "unit": "°C",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms1_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms2_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms3_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms4_max_cell_temp"
+                        }
+                    ],
+                    "operation": "average"
+                },
+                {
+                    "id": "system_sum_cell_temp",
+                    "name": "System Sum Cell Temperature",
+                    "scale": 1,
+                    "unit": "°C",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms1_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms2_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms3_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms4_max_cell_temp"
+                        }
+                    ],
+                    "operation": "sum"
+                },
+                {
+                    "id": "accumulate_test",
+                    "name": "Test for accumulation",
+                    "scale": 1,
+                    "unit": "kWh",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/assets/feeders/feed_1",
+                            "id": "ac_active_power"
+                        }
+                    ],
+                    "operation": "integrate",
+                    "param": {}
+                },
+                {
+                    "id": "echo_test",
+                    "name": "Test for echo",
+                    "scale": 1,
+                    "unit": "",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/metrics/kpi",
+                            "id": "echo_test"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "uri": "/dev",
+                            "id": "null"
+                        },
+                        {
+                            "uri": "/dev",
+                            "id": "nil"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "system_sum_diff_cell_temp",
+                    "name": "System Sum/Diff Cell Temperature",
+                    "scale": 1,
+                    "unit": "°C",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms1_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms2_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms3_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms4_max_cell_temp"
+                        }
+                    ],
+                    "operation": "sum",
+                    "param": {
+                        "operations": "+-+-"
+                    }
+                },
+                {
+                    "id": "system_product_cell_temp",
+                    "name": "System Product Cell Temperature",
+                    "scale": 1,
+                    "unit": "°C",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms1_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms2_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms3_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms4_max_cell_temp"
+                        }
+                    ],
+                    "operation": "product"
+                },
+                {
+                    "id": "system_product_quotient_cell_temp",
+                    "name": "System Product/Quotient Cell Temperature",
+                    "scale": 1,
+                    "unit": "°C",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms1_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms2_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms3_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms4_max_cell_temp"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "operations": "*/*/"
+                    }
+                },
+                {
+                    "id": "quotient_big_pos",
+                    "name": "Quotient Big Positive Number",
+                    "scale": 1,
+                    "unit": "°C",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms1_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "divisor_small_pos"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "operations": "*/",
+                        "upperLimit": 1000,
+                        "lowerLimit": -1000
+                    }
+                },
+                {
+                    "id": "quotient_big_neg",
+                    "name": "Quotient Big Negative Number",
+                    "scale": 1,
+                    "unit": "°C",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms1_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "divisor_small_neg"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "operations": "*/",
+                        "upperLimit": 1000,
+                        "lowerLimit": -1000
+                    }
+                },
+                {
+                    "id": "quotient_zero",
+                    "name": "Quotient Div 0",
+                    "scale": 1,
+                    "unit": "°C",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "bms1_max_cell_temp"
+                        },
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "divisor_zero"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "operations": "*/",
+                        "upperLimit": 1000,
+                        "lowerLimit": -1000
+                    }
+                },
+                {
+                    "id": "or_false",
+                    "name": "OR Function - false output",
+                    "inputs": [
+                        {
+                            "uri": "/components/feeders/feed_1",
+                            "id": "boolean_1"
+                        },
+                        {
+                            "uri": "/components/feeders/feed_1",
+                            "id": "boolean_2"
+                        },
+                        {
+                            "uri": "/components/feeders/feed_1",
+                            "id": "boolean_3"
+                        }
+                    ],
+                    "operation": "or"
+                },
+                {
+                    "id": "or_true",
+                    "name": "OR Function - true output",
+                    "inputs": [
+                        {
+                            "uri": "/components/feeders/feed_1",
+                            "id": "boolean_1"
+                        },
+                        {
+                            "uri": "/components/feeders/feed_1",
+                            "id": "boolean_2"
+                        },
+                        {
+                            "uri": "/components/feeders/feed_1",
+                            "id": "boolean_3"
+                        },
+                        {
+                            "uri": "/components/feeders/feed_1",
+                            "id": "boolean_4"
+                        }
+                    ],
+                    "operation": "or"
+                },
+                {
+                    "id": "and_integer",
+                    "name": "AND function - integer output",
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "status"
+                        },
+                        {
+                            "uri": "/components/ess_2",
+                            "id": "status"
+                        }
+                    ],
+                    "operation": "and"
+                },
+                {
+                    "id": "and_bitfield",
+                    "name": "AND function - bitfield output",
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "status"
+                        },
+                        {
+                            "uri": "/components/ess_2",
+                            "id": "status"
+                        }
+                    ],
+                    "operation": "and",
+                    "param": {
+                        "bitfield": true
+                    }
+                },
+                {
+                    "id": "runtime_discharge",
+                    "name": "Runtime Discharge",
+                    "inputs": [
+                        {
+                            "uri": "/metrics",
+                            "id": "charge_energy"
+                        },
+                        {
+                            "uri": "/metrics",
+                            "id": "discharge_energy"
+                        },
+                        {
+                            "uri": "/metrics",
+                            "id": "power"
+                        }
+                    ],
+                    "operation": "runtime",
+                    "param": {
+                        "minP": 50,
+                        "defaultP": 1000
+                    }
+                },
+                {
+                    "id": "runtime_charge",
+                    "name": "Runtime Charge",
+                    "inputs": [
+                        {
+                            "uri": "/metrics",
+                            "id": "charge_energy"
+                        },
+                        {
+                            "uri": "/metrics",
+                            "id": "discharge_energy"
+                        },
+                        {
+                            "uri": "/metrics",
+                            "id": "power2"
+                        }
+                    ],
+                    "operation": "runtime",
+                    "param": {
+                        "gain": 60,
+                        "minP": 50
+                    }
+                },
+                {
+                    "id": "bitfield_count",
+                    "name": "Count bitfield positions",
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "status"
+                        },
+                        {
+                            "uri": "/components/ess_2",
+                            "id": "status"
+                        },
+                        {
+                            "uri": "/components/ess_3",
+                            "id": "status"
+                        }
+                    ],
+                    "operation": "bitfieldpositioncount",
+                    "param": {
+                        "position": 4
+                    }
+                },
+                {
+                    "id": "charge_from_solar",
+                    "name": "Charge power from solar",
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "active_power"
+                        },
+                        {
+                            "uri": "/components/pv_1",
+                            "id": "active_power"
+                        }
+                    ],
+                    "operation": "unicompare",
+                    "param": {
+                        "invert": true
+                    }
+                },
+                {
+                    "id": "charge_from_grid",
+                    "name": "Charge power from grid",
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "active_power"
+                        },
+                        {
+                            "uri": "/components/pv_1",
+                            "id": "active_power"
+                        }
+                    ],
+                    "operation": "unicompare",
+                    "param": {
+                        "invert": true,
+                        "balance": true
+                    }
+                },
+                {
+                    "id": "discharge",
+                    "name": "Discharge from battery",
+                    "inputs": [
+                        {
+                            "uri": "/components/ess_1",
+                            "id": "active_power"
+                        }
+                    ],
+                    "operation": "unicompare"
+                },
+                {
+                    "id": "srff",
+                    "inputs": [
+                        {"uri":"/components/feeders/feed_1","id":"boolean_4"},
+                        {"uri":"/components/feeders/feed_1","id":"boolean_3"}
+                    ],
+                    "operation": "srff"
+                },
+                {
+                    "id": "compare_eq",
+                    "name": "In order compare - equal",
+                    "inputs": [
+                        {"uri":"/components/ess_1","id":"bms2_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms3_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms4_max_cell_temp"}
+                    ],
+                    "operation": "compare"
+                },
+                {
+                    "id": "compare_lt",
+                    "name": "In order compare - less than",
+                    "inputs": [
+                        {"uri":"/components/ess_1","id":"bms2_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms3_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms4_max_cell_temp"}
+                    ],
+                    "operation": "compare",
+                    "param": {"operation":"lt"}
+                },
+                {
+                    "id": "compare_ltref",
+                    "name": "In order compare - less than with reference",
+                    "inputs": [
+                        {"uri":"/components/ess_1","id":"bms2_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms3_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms4_max_cell_temp"}
+                    ],
+                    "operation": "compare",
+                    "param": {"operation":"lt","reference":20}
+                },
+                {
+                    "id": "compareand_eq",
+                    "name": "AND compare - equal",
+                    "inputs": [
+                        {"uri":"/components/ess_1","id":"bms2_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms3_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms4_max_cell_temp"}
+                    ],
+                    "operation": "compareand",
+                    "param":{"reference":16.4}
+                },
+                {
+                    "id": "compareand_lt",
+                    "name": "AND compare - less than",
+                    "inputs": [
+                        {"uri":"/components/ess_1","id":"bms2_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms3_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms4_max_cell_temp"}
+                    ],
+                    "operation": "compareand",
+                    "param": {"operation":"lt","reference":16.5}
+                },
+                {
+                    "id": "compareor_eq",
+                    "name": "OR compare - equal",
+                    "inputs": [
+                        {"uri":"/components/ess_1","id":"bms2_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms3_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms4_max_cell_temp"}
+                    ],
+                    "operation": "compareor",
+                    "param":{"reference":16.4}
+                },
+                {
+                    "id": "compareor_lt",
+                    "name": "OR compare - less than",
+                    "inputs": [
+                        {"uri":"/components/ess_1","id":"bms2_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms3_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms4_max_cell_temp"}
+                    ],
+                    "operation": "compareor",
+                    "param": {"operation":"lt","reference":10}
+                },
+                {
+                    "id": "select",
+                    "name": "Select values from inputs",
+                    "inputs": [
+                        {"uri":"/components/feeders/feed_1","id":"boolean_4"},
+                        {"uri":"/components/ess_1","id":"bms3_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms4_max_cell_temp"}
+                    ],
+                    "operation": "select"
+                },
+                {
+                    "id": "select_ref",
+                    "name": "Select values from reference",
+                    "inputs": [
+                        {"uri":"/components/feeders/feed_1","id":"boolean_4"},
+                        {"uri":"/components/ess_1","id":"bms3_max_cell_temp"},
+                        {"uri":"/components/ess_1","id":"bms4_max_cell_temp"}
+                    ],
+                    "operation": "select",
+                    "param": {"trueCase": "dog", "falseCase": "rat"}
+                }
+            ]
+        },
+        {
+            "uri": "/components/11_f5_sel_351s",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "breaker_relay_faults",
+                    "name": "System Maximum Cell Temperature",
+                    "ui_type": "fault",
+                    "type": "enum",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/11_f5_sel_351s",
+                            "id": "breaker_failure"
+                        },
+                        {
+                            "uri": "/components/11_f5_sel_351s",
+                            "id": "frequency_trip"
+                        },
+                        {
+                            "uri": "/components/11_f5_sel_351s",
+                            "id": "overvoltage_trip"
+                        },
+                        {
+                            "uri": "/components/11_f5_sel_351s",
+                            "id": "undervoltage_trip"
+                        },
+                        {
+                            "uri": "/components/11_f5_sel_351s",
+                            "id": "time_overcurrent_trip"
+                        },
+                        {
+                            "uri": "/components/11_f5_sel_351s",
+                            "id": "instant_definite_overcurrent_trip"
+                        },
+                        {
+                            "uri": "/components/11_f5_sel_351s",
+                            "id": "switch_on_to_fault"
+                        }
+                    ],
+                    "operation": "bitfield",
+                    "param": {
+                        "position": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ],
+                        "string": [
+                            "Breaker Failure",
+                            "Frequency Trip",
+                            "Overvoltage Trip",
+                            "Undervoltage Trip",
+                            "Delayed Overcurrent Trip",
+                            "Instantaneous Overcurrent Trip",
+                            "Switched On to Fault"
+                        ],
+                        "invertMask": [
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            true
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,689 @@
+{
+    "publishRate": 500,
+    "listenRate": 10,
+    "metricsUri": "/metrics/kpi",
+    "publishUris": [
+        {
+            "uri": "/metrics/input_sources",
+            "naked": false,
+            "metrics": [
+                {
+                    "id": "ui",
+                    "inputs": [
+                        {
+                            "uri": "/site/configuration",
+                            "id": "reserved_bool_11"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "uri": "/site/input_sources",
+                            "id": "ui"
+                        }
+                    ],
+                    "operation": "echo"
+                }
+            ]
+        },
+        {
+            "uri": "/metrics/timestamp",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "FM_timestamp",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/timestamp",
+                            "id": "FM_timestamp"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "FM_time_UTC",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/timestamp",
+                            "id": "FM_timestamp"
+                        }
+                    ],
+                    "operation": "echo",
+                    "comment": "Change to operation to millisecondsToRFC3339 when a newer version of metrics is deployed",
+                    "param": {
+                        "operation": "zulu"
+                    }
+                }
+            ]
+        },
+        {
+            "uri": "/components/test_controller",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "under_frequency_offset",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "under_frequency_offset"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": -0.03
+                },
+                {
+                    "id": "over_frequency_offset",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "over_frequency_offset"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0.03
+                },
+                {
+                    "id": "under_frequency_offset_trigger",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "under_frequency_offset_trigger"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "over_frequency_offset_trigger",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "over_frequency_offset_trigger"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "under_frequency_offset_setter",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "under_frequency_offset_trigger"
+                        },
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "under_frequency_offset"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "fr_freq_offset_hz"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 0
+                    }
+                },
+                {
+                    "id": "over_frequency_offset_setter",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "over_frequency_offset_trigger"
+                        },
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "over_frequency_offset"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "fr_freq_offset_hz"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 0
+                    }
+                }
+            ]
+        },
+        {
+            "uri": "/components/feed_1_dummy",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "alarms",
+                    "name": "ESS Alarms",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/brainbox_ed538",
+                            "id": "intrusion_detection"
+                        },
+                        {
+                            "uri": "/components/brainbox_ed538",
+                            "id": "HVAC_normally_open"
+                        },
+                        {
+                            "uri": "/components/brainbox_ed538",
+                            "id": "HVAC_normally_close"
+                        }
+                    ],
+                    "operation": "bitfield",
+                    "param": {
+                        "position": [
+                            0,
+                            1,
+                            2
+                        ],
+                        "string": [
+                            "Door is Open",
+                            "HVAC Alarm - NO",
+                            "HVAC Alarm - NC"
+                        ],
+                        "invertMask": [
+                            false,
+                            true,
+                            false
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "uri": "/components/dummy_ess_01",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "bms_dc_contactors_closed",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_01",
+                            "id": "racks_in_service"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gte",
+                        "reference": 1
+                    }
+                },
+                {
+                    "id": "dc_contactors_closed",
+                    "inputs": [
+                        {
+                            "uri": "/components/dummy_ess_01",
+                            "id": "bms_dc_contactors_closed"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "reference": true
+                    }
+                },
+                {
+                    "id": "total_racks",
+                    "inputs": [
+                        {
+                            "uri": "/components/dummy_ess_01",
+                            "id": "total_racks"
+                        }
+                    ],
+                    "operation": "echo",
+                    "ui_type": "status",
+                    "type": "Int",
+                    "initialInput": 11
+                }
+            ]
+        },
+        {
+            "uri": "/components/dummy_ess_02",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "bms_dc_contactors_closed",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_02",
+                            "id": "racks_in_service"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gte",
+                        "reference": 1
+                    }
+                },
+                {
+                    "id": "dc_contactors_closed",
+                    "inputs": [
+                        {
+                            "uri": "/components/dummy_ess_02",
+                            "id": "bms_dc_contactors_closed"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "reference": true
+                    }
+                },
+                {
+                    "id": "total_racks",
+                    "inputs": [
+                        {
+                            "uri": "/components/dummy_ess_02",
+                            "id": "total_racks"
+                        }
+                    ],
+                    "operation": "echo",
+                    "ui_type": "status",
+                    "type": "Int",
+                    "initialInput": 11
+                }
+            ]
+        },
+        {
+            "uri": "/components/dummy_ess_03",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "bms_dc_contactors_closed",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_03",
+                            "id": "racks_in_service"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gte",
+                        "reference": 1
+                    }
+                },
+                {
+                    "id": "dc_contactors_closed",
+                    "inputs": [
+                        {
+                            "uri": "/components/dummy_ess_03",
+                            "id": "bms_dc_contactors_closed"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "reference": true
+                    }
+                },
+                {
+                    "id": "total_racks",
+                    "inputs": [
+                        {
+                            "uri": "/components/dummy_ess_03",
+                            "id": "total_racks"
+                        }
+                    ],
+                    "operation": "echo",
+                    "ui_type": "status",
+                    "type": "Int",
+                    "initialInput": 11
+                }
+            ]
+        },
+        {
+            "uri": "/components/dummy_ess_04",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "bms_dc_contactors_closed",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_04",
+                            "id": "racks_in_service"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gte",
+                        "reference": 1
+                    }
+                },
+                {
+                    "id": "dc_contactors_closed",
+                    "inputs": [
+                        {
+                            "uri": "/components/dummy_ess_04",
+                            "id": "bms_dc_contactors_closed"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "reference": true
+                    }
+                },
+                {
+                    "id": "total_racks",
+                    "inputs": [
+                        {
+                            "uri": "/components/dummy_ess_04",
+                            "id": "total_racks"
+                        }
+                    ],
+                    "operation": "echo",
+                    "ui_type": "status",
+                    "type": "Int",
+                    "initialInput": 11
+                }
+            ]
+        },
+        {
+            "uri": "/components/site_ups_dummy",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "soc_check",
+                    "inputs": [
+                        {
+                            "uri": "/components/apc_ups",
+                            "id": "soc"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "lt",
+                        "reference": 50
+                    },
+                    "outputs": [
+                        {
+                            "uri": "/site/configuration",
+                            "id": "reserved_bool_15"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "uri": "/metrics/latency_test",
+            "naked": "false",
+            "metrics": [
+                {
+                    "id": "ess_1_active_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_01_hs",
+                            "id": "active_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_2_active_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_02_hs",
+                            "id": "active_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_3_active_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_03_hs",
+                            "id": "active_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_4_active_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_04_hs",
+                            "id": "active_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_1_reactive_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_01_hs",
+                            "id": "reactive_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_2_reactive_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_02_hs",
+                            "id": "reactive_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_3_reactive_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_03_hs",
+                            "id": "reactive_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_4_reactive_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_04_hs",
+                            "id": "reactive_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_1_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_01_hs",
+                            "id": "modbus_heartbeat"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_2_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_02_hs",
+                            "id": "modbus_heartbeat"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_3_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_03_hs",
+                            "id": "modbus_heartbeat"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_4_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_04_hs",
+                            "id": "modbus_heartbeat"
+                        }
+                    ],
+                    "operation": "echo"
+                }
+            ]
+        },
+        {
+            "uri": "/components/test_sel_3530_rtac",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "frequency_offset",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_sel_3530_rtac",
+                            "id": "frequency_offset"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialValue": 0,
+                    "initialInput": 0
+                },
+                {
+                    "id": "frequency_nominal",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_sel_3530_rtac",
+                            "id": "frequency_nominal"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialValue": 60,
+                    "initialInput": 60
+                },
+                {
+                    "id": "frequency_3",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_sel_3530_rtac",
+                            "id": "frequency_nominal"
+                        },
+                        {
+                            "uri": "/components/test_sel_3530_rtac",
+                            "id": "frequency_offset"
+                        }
+                    ],
+                    "operation": "sum",
+                    "param": {
+                        "operations": "++"
+                    }
+                }
+            ]
+        },
+        {
+            "uri": "/metrics/active_power",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "fr_enable_mask",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "fr_enable_mask"
+                        }
+                    ]
+                },
+                {
+                    "id": "fr_baseload_cmd_kw",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "fr_baseload_cmd_kw"
+                        }
+                    ]
+                },
+                {
+                    "id": "uf_ffr_inactive_cmd_kw",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "uf_ffr_inactive_cmd_kw"
+                        }
+                    ]
+                },
+                {
+                    "id": "uf_frrs_inactive_cmd_kw",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "uf_frrs_inactive_cmd_kw"
+                        }
+                    ]
+                },
+                {
+                    "id": "of_frrs_inactive_cmd_kw",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "of_frrs_inactive_cmd_kw"
+                        }
+                    ]
+                },
+                {
+                    "id": "uf_frrs_active_cmd_kw",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "uf_frrs_active_cmd_kw"
+                        }
+                    ]
+                },
+                {
+                    "id": "of_frrs_active_cmd_kw",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "of_frrs_active_cmd_kw"
+                        }
+                    ]
+                },
+                {
+                    "id": "uf_ffr_active_cmd_kw",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "uf_ffr_active_cmd_kw"
+                        }
+                    ]
+                },
+                {
+                    "id": "uf_pfr_active_cmd_kw",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "uf_pfr_active_cmd_kw"
+                        }
+                    ]
+                },
+                {
+                    "id": "of_pfr_active_cmd_kw",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "of_pfr_active_cmd_kw"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
