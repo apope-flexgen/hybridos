@@ -1,9 +1,6 @@
 [submodule "site_controller"]
 	path = site_controller
 	url = https://github.com/flexgen-power/site_controller.git
-[submodule "fleet_manager"]
-	path = fleet_manager
-	url = https://github.com/flexgen-power/fleet_manager.git
 [submodule "bootstrap"]
 	path = bootstrap
 	url = https://github.com/flexgen-power/bootstrap.git

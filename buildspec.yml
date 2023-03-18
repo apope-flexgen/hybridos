@@ -22,14 +22,12 @@ phases:
       - git init
       - git submodule update --recursive
       - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/site_controller.git
-      - git clone --recurse-submodules https://$github_user:$github_token@github.com/flexgen-power/fleet_manager.git
       - echo Finished clone submodules...
       - echo Starting build...
   pre_build:
     commands:
       - echo Delete all submodules package-utility folders in pre-build...
       - rm -r ./site_controller/package_utility
-      - rm -r ./fleet_manager/package_utility
       - echo All package_utility deleted, ready for build...
   build:
     commands:
