@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DispatchBatch batchUID="DISP-12A1D8C0-ADD6-4038-FFFD-AC15E2EC8892" xmlns="http://ads.caiso.com">
+    <marketID>120072117</marketID>
+    <batchStatus>3</batchStatus>
+    <batchReceived>2020-07-21T23:16:04Z</batchReceived>
+    <batchSent>2020-07-21T23:16:04Z</batchSent>
+    <batchExpires>2020-07-21T23:16:04Z</batchExpires>
+    <batchType>0</batchType>
+    <startTime>2020-07-21T23:20:00Z</startTime>
+    <dispatchMode>0</dispatchMode>
+    <bindingFlag>Y</bindingFlag>
+    <revisionNo>2</revisionNo>
+    <instructions>
+         <instruction instructionUID="DISP-12A1ED8C0-ADD6-4038-FFFD-AC15E2EC8892-I1177">
+            <batchUID>DISP-12A1D8C0-ADD6-4038-FFFD-AC15E2EC8892</batchUID>
+            <resourceId>SampleTest1</resourceId>
+            <startTime>2020-07-21T23:22:30Z</startTime>
+            <dot>25.0</dot>
+            <instructionType>0</instructionType>
+            <preGoto>20.0</preGoto>
+            <bidDelay>2</bidDelay>
+            <acceptDot>25.0</acceptDot>
+            <passIndicator>RTED</passIndicator>
+            <revisionNumber>0</revisionNumber>
+            <statusCode>0</statusCode>
+            <hourlyMw>47.0</hourlyMw>
+            <agcFlag>N</agcFlag>
+            <rmrFlag>N</rmrFlag>
+            <baseSchedule>0.0</baseSchedule>
+            <detail>
+                <instructionDetail segNo="1">
+                    <serviceType>SCHD</serviceType>
+                    <mw>47.0</mw>
+                </instructionDetail>
+                <instructionDetail segNo="2">
+                    <serviceType>SUPP</serviceType>
+                    <mw>-22.0</mw>
+                </instructionDetail>
+                <instructionDetail segNo="3">
+                    <serviceType>RMPS</serviceType>
+                    <mw>47.0</mw>
+                </instructionDetail>
+                <instructionDetail segNo="4">
+                    <serviceType>SPIN</serviceType>
+                    <mw>0.0</mw>
+                </instructionDetail>
+                <instructionDetail segNo="5">
+                    <serviceType>NSPN</serviceType>
+                    <mw>0.0</mw>
+                </instructionDetail>
+            </detail>
+        </instruction>
+        <instruction instructionUID="DISP-12ADD1D8C0-ADD6-4038-FFFD-AC15E2EC8892-I2024">
+            <batchUID>DISP-12A1D8C0-ADD6-4038-FFFD-AC15E2EC8892</batchUID>
+            <resourceId>SampleRes2</resourceId>
+            <startTime>2020-07-21T23:22:30Z</startTime>
+            <dot>0.0</dot>
+            <instructionType>0</instructionType>
+            <preGoto>0.0</preGoto>
+            <bidDelay>2</bidDelay>
+            <acceptDot>0.0</acceptDot>
+            <passIndicator>RTED</passIndicator>
+            <revisionNumber>0</revisionNumber>
+            <statusCode>0</statusCode>
+            <hourlyMw>0.39</hourlyMw>
+            <agcFlag>N</agcFlag>
+            <rmrFlag>N</rmrFlag>
+            <baseSchedule>0.0</baseSchedule>
+            <followDotFlag>Y</followDotFlag>
+            <detail>
+                <instructionDetail segNo="1">
+                    <serviceType>SCHD</serviceType>
+                    <mw>0.39</mw>
+                </instructionDetail>
+                <instructionDetail segNo="2">
+                    <serviceType>SUPP</serviceType>
+                    <mw>-0.39</mw>
+                </instructionDetail>
+                <instructionDetail segNo="3">
+                    <serviceType>RMPS</serviceType>
+                    <mw>0.39</mw>
+                </instructionDetail>
+                <instructionDetail segNo="4">
+                    <serviceType>SPIN</serviceType>
+                    <mw>0.0</mw>
+                </instructionDetail>
+                <instructionDetail segNo="5">
+                    <serviceType>NSPN</serviceType>
+                    <mw>0.0</mw>
+                </instructionDetail>
+            </detail>
+        </instruction>
+        <instruction instructionUID="DISP-12AET1D8C0-ADD6-4038-FFFD-AC15E2EC8892-I1178">
+            <batchUID>DISP-12A1D8C0-ADD6-4038-FFFD-AC15E2EC8892</batchUID>
+            <resourceId>SampleRes3</resourceId>
+            <startTime>2020-07-21T23:22:30Z</startTime>
+            <dot>0.0</dot>
+            <instructionType>0</instructionType>
+            <preGoto>0.0</preGoto>
+            <bidDelay>2</bidDelay>
+            <acceptDot>0.0</acceptDot>
+            <passIndicator>RTED</passIndicator>
+            <revisionNumber>0</revisionNumber>
+            <statusCode>0</statusCode>
+            <hourlyMw>0.0</hourlyMw>
+            <agcFlag>N</agcFlag>
+            <rmrFlag>N</rmrFlag>
+            <baseSchedule>0.0</baseSchedule>
+            <detail>
+                <instructionDetail segNo="1">
+                    <serviceType>SCHD</serviceType>
+                    <mw>0.0</mw>
+                </instructionDetail>
+                <instructionDetail segNo="2">
+                    <serviceType>SUPP</serviceType>
+                    <mw>0.0</mw>
+                </instructionDetail>
+                <instructionDetail segNo="3">
+                    <serviceType>RMPS</serviceType>
+                    <mw>0.0</mw>
+                </instructionDetail>
+                <instructionDetail segNo="4">
+                    <serviceType>SPIN</serviceType>
+                    <mw>0.0</mw>
+                </instructionDetail>
+                <instructionDetail segNo="5">
+                    <serviceType>NSPN</serviceType>
+                    <mw>0.0</mw>
+                </instructionDetail>
+            </detail>
+        </instruction>
+    </instructions>
+</DispatchBatch>

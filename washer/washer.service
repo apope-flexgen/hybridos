@@ -1,0 +1,13 @@
+[Unit]
+Description=FlexGen Wsdl Application Service Handler and Extraction Relay (WASHER)
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=root
+ExecStart=/usr/local/bin/washer /usr/local/etc/config/washer/
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

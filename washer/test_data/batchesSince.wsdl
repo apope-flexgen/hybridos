@@ -1,0 +1,71 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Header/>
+    <SOAP-ENV:Body>
+        <v8:getDispatchBatchesSinceUIDResponse xmlns:v8="http://ads.caiso.com/api/webservices/dispatch/v8">
+            <result><?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+            <APIDispatchResponse xmlns="http://ads.caiso.com">
+            <dispatchBatchList>
+            <DispatchBatch batchUID="DISP-58EDF60-7821-4038-8F21-AC18002CA84C">
+            <marketID>120051409</marketID>
+            <batchStatus>3</batchStatus>
+            <batchReceived>2020-05-14T14:56:31Z</batchReceived>
+            <batchSent>2020-05-14T14:56:31Z</batchSent>
+            <batchExpires>2020-05-14T15:44:45Z</batchExpires>
+            <batchType>1</batchType>
+            <startTime>2020-05-14T16:00:00Z</startTime>
+            <dispatchMode>0</dispatchMode>
+            <bindingFlag>Y</bindingFlag>
+            <revisionNo>803</revisionNo>
+            </DispatchBatch>
+            <DispatchBatch batchUID="DISP-19116120-7821-4038-8F21-AC18002CA84C">
+            <marketID>120051409</marketID>
+            <batchStatus>3</batchStatus>
+            <batchReceived>2020-05-14T14:57:04Z</batchReceived>
+            <batchSent>2020-05-14T14:57:05Z</batchSent>
+            <batchExpires>2020-05-14T14:57:05Z</batchExpires>
+            <batchType>0</batchType>
+            <startTime>2020-05-14T16:00:00Z</startTime>
+            <dispatchMode>0</dispatchMode>
+            <bindingFlag>Y</bindingFlag>
+            <revisionNo>0</revisionNo>
+            </DispatchBatch>
+            <DispatchBatch batchUID="DISP-BEF78E00-7823-4038-8F21-AC18002CA84C">
+            <marketID>120051409</marketID>
+            <batchStatus>3</batchStatus>
+            <batchReceived>2020-05-14T15:16:01Z</batchReceived><batchSent>2020-05-14T15:16:01Z</batchSent>
+            <batchExpires>2020-05-14T15:16:01Z</batchExpires>
+            <batchType>2</batchType>
+            <startTime>2020-05-14T15:45:00Z</startTime>
+            <dispatchMode>0</dispatchMode>
+            <bindingFlag>Y</bindingFlag>
+            <revisionNo>0</revisionNo>
+            </DispatchBatch>
+            <DispatchBatch batchUID="DISP-BFCC6A30-7823-4038-8F21-AC18002CA84C">
+            <marketID>120051409</marketID>
+            <batchStatus>3</batchStatus>
+            <batchReceived>2020-05-14T15:16:03Z</batchReceived>
+            <batchSent>2020-05-14T15:16:06Z</batchSent>
+            <batchExpires>2020-05-14T15:16:06Z</batchExpires>
+            <batchType>3</batchType>
+            <startTime>2020-05-14T15:45:00Z</startTime>
+            <dispatchMode>0</dispatchMode>
+            <bindingFlag>Y</bindingFlag>
+            <revisionNo>0</revisionNo>
+            </DispatchBatch>
+            <DispatchBatch batchUID="DISP-8FC0FF70-7825-4038-8F21-AC18002CA84C">
+            <marketID>120051409</marketID>
+            <batchStatus>3</batchStatus>
+            <batchReceived>2020-05-14T15:29:01Z</batchReceived>
+            <batchSent>2020-05-14T15:29:01Z</batchSent>
+            <batchExpires>2020-05-14T15:29:01Z</batchExpires>
+            <batchType>2</batchType>
+            <startTime>2020-05-14T16:00:00Z</startTime>
+            <dispatchMode>0</dispatchMode>
+            <bindingFlag>Y</bindingFlag>
+            <revisionNo>0</revisionNo>
+            </DispatchBatch>
+            </dispatchBatchList>
+            </APIDispatchResponse></result>
+        </v8:getDispatchBatchesSinceUIDResponse>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
