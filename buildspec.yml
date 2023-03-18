@@ -4,8 +4,6 @@ env:
   parameter-store:
     ssh_key: "id_rsa"
     ssh_pub: "id_rsa.pub"
-    github_user: "github_user"
-    github_token: "github_token"
 
 phases:
   install:
