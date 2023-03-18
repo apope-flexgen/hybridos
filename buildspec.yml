@@ -18,10 +18,6 @@ phases:
         - ssh-keygen -F github.com || ssh-keyscan github.com >>~/.ssh/known_hosts
         - git config --global url."git@github.com:".insteadOf "https://github.com/"
         - eval "$(ssh-agent -s)"
-        - echo Get submodules...
-        - git init
-        - git submodule update --recursive
-        - echo Finished clone submodules...
         - echo Starting build...
   build:
     commands:
