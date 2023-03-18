@@ -1,0 +1,13 @@
+[Unit]
+Description=Twins - virtual site model
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/twins /usr/local/etc/config/twins
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
