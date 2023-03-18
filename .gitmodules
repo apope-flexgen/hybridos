@@ -10,9 +10,6 @@
 [submodule "fleet_manager"]
 	path = fleet_manager
 	url = https://github.com/flexgen-power/fleet_manager.git
-[submodule "washer"]
-	path = washer
-	url = https://github.com/flexgen-power/washer.git
 [submodule "ftd"]
 	path = ftd
 	url = https://github.com/flexgen-power/ftd.git
