@@ -1,0 +1,322 @@
+/*
+ * Asset.h
+ *
+ *  Created on: May 9, 2018
+ *      Author: jcalcagni
+ */
+
+#ifndef ASSET_H_
+#define ASSET_H_
+
+/* C Standard Library Dependencies */
+#include <cstdio>
+#include <cmath>
+#include <limits>
+/* C++ Standard Library Dependencies */
+#include <map>
+#include <list>
+#include <unordered_map>
+#include <iterator>
+#include <algorithm>
+/* External Dependencies */
+#include <cjson/cJSON.h>
+/* System Internal Dependencies */
+#include <fims/libfims.h>
+/* Local Internal Dependencies */
+#include <Site_Controller.h>
+#include <Slew_Object.h>
+#include <Value_Object.h>
+#include <Fims_Object.h>
+#include <macros.h>
+#include <Types.h>
+class Type_Configurator;
+
+struct statusData {
+    int64_t* data_int;
+    char** data_str;
+};
+
+// Used for UI controls (i.e. start asset, maintenance active power setpoint, etc.).
+struct fimsCtl {
+    fimsCtl();
+    ~fimsCtl();
+    bool makeJSONObject(fmt::memory_buffer &buf, const char* const var = NULL, bool configurable_asset = false);
+    bool configure(cJSON* varJson, jsonBuildOption cJoption, void* display, valueType numType, displayType uitype, bool varEnabled = true, bool boolStr = false);
+    void* pDisplay;
+    char* varName;
+    char* unit;
+    displayType uiType;
+    bool enabled;
+    bool boolString;
+    valueType vt;
+    jsonBuildOption options;
+    int scaler;
+    char* reg_name;
+    char* obj_name;
+    bool configured;
+};
+
+// TODO: move this section into separate header files
+void build_on_off_option(fmt::memory_buffer&);
+void build_yes_no_option(fmt::memory_buffer&);
+void build_close_option(fmt::memory_buffer&);
+void build_open_option(fmt::memory_buffer&);
+void build_reset_option(fmt::memory_buffer&);
+std::string build_uri( char* comp, char* reg);
+
+class Asset
+{
+public:
+    Asset ();
+    virtual ~Asset ();
+
+    // configuration
+    bool configure(Type_Configurator* configurator);
+
+    // status
+    char* get_name(void);
+    char* get_id(void);
+    const char* get_asset_type(void) const;
+    const char* get_comp_name(int) const;
+
+    bool is_available(void);
+    bool is_running(void);
+    bool is_controllable(void);
+    bool in_maint_mode(void);
+    bool in_standby(void);
+    
+    uint64_t get_status(void) const;
+
+    int get_num_comps(void) const;
+
+    float get_rated_active_power(void) const;
+    float get_rated_reactive_power(void) const;
+    float get_rated_apparent_power(void) const;
+
+    float get_active_power(void) const;
+    float get_reactive_power(void) const;
+    float get_apparent_power(void) const;
+
+    float get_max_potential_active_power(void);
+    float get_min_potential_active_power(void);
+    float get_max_limited_active_power(void);
+    float get_potential_reactive_power(void);
+    int get_active_power_slew_rate(void);
+    float get_active_power_slew_max_target(void);
+    float get_active_power_slew_min_target(void);
+    float get_active_power_slew_target(float target);
+
+    float get_voltage_l1_l2(void) const;
+    float get_voltage_l2_l3(void) const;
+    float get_voltage_l3_l1(void) const;
+    float get_voltage_l1_n(void) const;
+    float get_voltage_l2_n(void) const;
+    float get_voltage_l3_n(void) const;
+    float get_voltage_avg_line_to_line(void) const;
+    float get_voltage_avg_line_to_neutral(void) const;
+    float get_current_l1(void) const;
+    float get_current_l2(void) const;
+    float get_current_l3(void) const;
+    float get_current_avg(void) const;
+    float get_power_factor(void) const;
+    void set_reactive_power_priority(bool priority);
+
+    demandMode get_demand_mode(void) const;
+
+    // internal functions
+    virtual void process_asset(); // process incoming component data
+
+    // pure virtual functions that child classes must implement
+    virtual void update_asset() = 0; // update outgoing component data
+    virtual void send_to_components() = 0; // send data to components (send_to_comp_uri)
+
+    // FIMS
+    bool handle_get(fims_message *pmsg, std::map<std::string, Fims_Object*> *asset_var_map);
+    bool add_asset_data_to_buffer(fmt::memory_buffer &buf, std::map<std::string, Fims_Object*> *asset_var_map, std::map<std::string, Fims_Object*>::iterator &search_it, bool clothed);
+    bool add_variable_to_buffer(std::string uri, const char* variable, fmt::memory_buffer &buf, std::map<std::string, Fims_Object*> *asset_var_map);
+
+    // utility functions
+    void find_first_appearance_in_asset_var_map(const char* variable_id, std::map<std::string, Fims_Object*> *asset_var_map, std::map<std::string, Fims_Object*>::iterator &search_it);
+    virtual bool process_set(std::string uri, cJSON* fimsBody);
+    bool process_status_pub(std::vector<std::string>* names, uint64_t value);
+    virtual bool generate_asset_ui(fmt::memory_buffer &buf, const char* const var = NULL) = 0;
+
+protected:
+    // Indicates whether this is the primary controller (true) or running in shadow mode (false)
+    bool* is_primary;
+    // configuration
+    bool var_maps_insert(cJSON* varJson, char* compID, std::map <std::string, std::vector<Fims_Object*>> * const component_var_map, std::map <std::string, Fims_Object*> * const asset_var_map, bool* is_primary);
+    std::string build_assets_uri(const char* var);
+    bool validate_config(std::map <std::string, Fims_Object*> * const asset_var_map);
+    bool configure_common_asset_instance_vars(Type_Configurator* configurator);
+    bool configure_component_vars(Type_Configurator* configurator);
+    bool configure_common_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map);
+    bool configure_single_fims_var(std::map <std::string, Fims_Object*> * const asset_var_map, Fims_Object** fimsVar, const char* varID, valueType type=Float, float defaultFloat=0.0, int defaultInt=0, bool defaultBool=false, bool comesFromComponent=true, const char* varName="", const char* varUnits="", int varScaler=1);
+    virtual bool configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map) = 0;
+    virtual bool configure_typed_asset_instance_vars(Type_Configurator* configurator) = 0;
+    virtual bool configure_ui_controls(Type_Configurator* configurator) = 0;
+    char* name;
+    char* asset_id;
+    std::list<const char*> required_variables;
+
+    // control points
+    Fims_Object* active_power_setpoint;
+    Fims_Object* reactive_power_setpoint;
+    Fims_Object* active_power;
+    Fims_Object* reactive_power;
+    Fims_Object* apparent_power;
+    // status points
+    Fims_Object* voltage_l1_l2; // Line 1 - Line 2
+    Fims_Object* voltage_l2_l3; // Line 2 - Line 3
+    Fims_Object* voltage_l3_l1; // Line 3 - Line 1
+    Fims_Object* voltage_l1_n; // Line 1 - N
+    Fims_Object* voltage_l2_n; // Line 2 - N
+    Fims_Object* voltage_l3_n; // Line 3 - N
+    Fims_Object* current_l1;
+    Fims_Object* current_l2;
+    Fims_Object* current_l3;
+    Fims_Object* power_factor;
+    Fims_Object* modbus_heartbeat;
+    Fims_Object* component_connected;
+    Fims_Object* modbus_connected;
+
+    char* compNames[MAX_COMPS];
+    const char* statusStrings[MAX_STATUS_BITS];
+    
+    uint32_t numAssetComponents;
+
+    uint64_t running_status_mask;
+    uint64_t standby_status_mask; // Mask indicating the standby status value
+    uint64_t stopped_status_mask;
+
+    int prev_modbus_heartbeat;
+    int watchdog_timeout_ms;
+    bool watchdog_enable;
+    bool fims_timeout;
+    timespec fims_timer;
+    bool check_fims_timeout(void);
+
+    float rated_active_power_kw;
+    float rated_reactive_power_kvar;
+    float rated_apparent_power_kva;
+    float active_power_limit;
+    bool reactive_power_priority;
+    float nominal_voltage;
+    float nominal_frequency;
+    float numPhases;
+    bool watchdog_enabled;
+    bool connected_rising_edge_detect; //Variable that tells if an Asset is connected or disconnect from the modbus_client
+
+    double throttle_timeout_fast_ms;
+    double throttle_timeout_slow_ms;
+    double throttle_deadband_percentage;
+
+    const char* asset_type_id = "";
+    statusType status_type;
+    demandMode assetControl;
+
+    // control
+    fimsCtl maint_mode;
+    fimsCtl lock_mode;
+    Slew_Object active_power_slew;
+
+    // status 
+    bool isAvail;
+    bool isRunning;
+    bool inMaintenance;
+    bool inStandby;
+    bool inLockdown;
+
+    uint64_t status;
+
+    uint64_t raw_status;
+
+    float max_potential_active_power;
+    float min_potential_active_power;
+    float min_limited_active_power; // Active power values limited by reactive power when prioritized to maintain apparent power rating
+    float max_limited_active_power; 
+    float potential_reactive_power;
+
+    // uris
+    char* uri_clear_faults;
+    char* uri_component_connected;
+    char* uri_modbus_connected;
+
+    // internal functions
+    virtual void process_potential_active_power(void);
+    virtual void process_potential_reactive_power(void);
+
+    // component interface functions
+    bool send_to_comp_uri(const char* value, const char* uri);
+    bool send_to_comp_uri(int value, const char* uri);
+    bool send_to_comp_uri(float value, const char* uri);
+    bool send_to_comp_uri(bool value, const char* uri);
+    bool json_object_send(std::string &value, const char* uri);
+
+    bool send_setpoint(std::string uri, cJSON* valueObject);
+
+    fmt::memory_buffer send_FIMS_buf; // Reusable and resizable string buffer for generating FIMS messages
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+    //                                 FAULT & ALARM HANDLING                             //
+    ////////////////////////////////////////////////////////////////////////////////////////
+public:
+    void clear_component_faults(void);
+    int get_num_active_alarms(void) const;
+    int get_num_active_faults(void) const;
+    bool is_newly_faulted(void) const;
+    bool check_alert(std::string& id, uint64_t& mask);
+    bool check_fault(std::string& id, uint64_t& mask);
+    bool check_alarm(std::string& id, uint64_t& mask);
+protected:
+    void clear_alerts(void);
+    // fault values are latched, meaning even if a component starts reporting a previously-active
+    //      fault as inactive, the asset will keep the fault value recorded as active until the
+    //      user acknowledges the fault occurrence by pressing the Clear Faults button on either
+    //      the Site page or the Assets page.
+    // alarm values are saved, meaning the last value reported by the component is remembered and
+    //      compared to the next value reported by the component. This comparison allows for
+    //      keeping track of rising and falling edges.
+    std::map<std::string, uint64_t> latched_faults, saved_alarms;
+    // component_fault/alarm_registers are the Fims_Objects that receive alert statuses directly from components.
+    // if a component starts reporting no alerts, these will be cleared by the component
+    std::vector<Fims_Object*> component_fault_registers, component_alarm_registers;
+    bool clearFaultsControlEnable;
+    bool clear_fault_registers_flag;
+    timespec clear_faults_time;
+    // newly_faulted is true for a single iteration when an asset goes from not having any faults to having at least one fault
+    bool newly_faulted;
+
+protected:
+    // Friend classes
+    friend class ESS_Manager_Mock;
+    friend class Feeder_Manager_Mock;
+    friend class Generator_Manager_Mock;
+    friend class Solar_Manager_Mock;
+};
+
+class Write_Rate_Throttle
+{
+public:
+    Write_Rate_Throttle();
+    virtual ~Write_Rate_Throttle();
+
+    void reset(void);
+    void configure(long timeout, float rated = 0, float deadband = 0);
+    
+    bool command_trigger(void); // time throttle
+    bool setpoint_trigger(float control); // time and deadband throttle
+    long current_timestamp(void);
+
+private:
+    // configuration
+    float rated_power;
+    long throttle_timeout;
+    float deadband_percentage;
+    
+    // previous iteration variables
+    long status_time;
+    float control_feedback;
+};
+
+#endif /* ASSET_H_ */

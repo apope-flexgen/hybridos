@@ -1,0 +1,3 @@
+# Naked sets testing
+
+This folder contains a depreciated test file for testing naked sets. The ouput of some gets has changed to naked output, and the valueParse script has not yet been updated to support this. Assets that still have clothed gets will function as expected. You must run this script while in the current shell directory otherwise valueParse will not be found. Regular g++ should work just fine for compiling valueParse.cpp.

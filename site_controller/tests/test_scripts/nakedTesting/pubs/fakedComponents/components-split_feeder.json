@@ -1,0 +1,10 @@
+{
+  "frequency": 60,
+  "voltage": 95601.3359375,
+  "current": 0,
+  "active_power": -37.80648422241211,
+  "reactive_power": 1.013452410697937,
+  "apparent_power": 67.8902816772461,
+  "power_factor": -0.5568762421607971,
+  "Timestamp": "06-06-2022 12:49:48.786641"
+}

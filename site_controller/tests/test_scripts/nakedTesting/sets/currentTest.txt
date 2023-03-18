@@ -1,0 +1,1 @@
+{"value":true,"name":"Reserved Boolean 16","unit":"","scaler":1,"enabled":true,"type":"enum","ui_type":"none"}

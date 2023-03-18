@@ -1,0 +1,366 @@
+/**
+ * Feeder_Manager.cpp
+ * Source for Feeder-specific Manager class
+ * Refactored from Asset_Manager.cpp
+ * 
+ * Created on Sep 30th, 2020
+ *      Author: Jack Shade (jnshade)
+ */
+
+/* C Standard Library Dependencies */
+/* C++ Standard Library Dependencies */
+/* External Dependencies */
+/* System Internal Dependencies */
+/* Local Internal Dependencies */
+#include <Feeder_Manager.h>
+#include <Configurator.h>
+#include <Site_Controller_Utils.h>
+
+extern fims *p_fims;
+
+/****************************************************************************************/
+Feeder_Manager::Feeder_Manager() : Type_Manager(FEEDERS_TYPE_ID)
+{
+    sync_frequency_offset = 0.0;
+    pPointOfInterConnect = NULL;
+    pSyncFeeder = NULL;
+}
+
+/****************************************************************************************/
+Feeder_Manager::~Feeder_Manager()
+{
+    if (!pFeeder.empty()) for (size_t j = 0; j < pFeeder.size(); j++) if (pFeeder[j] != NULL) delete pFeeder[j];
+}
+
+bool Feeder_Manager::get_poi_feeder_state(void)
+{
+    return pPointOfInterConnect->get_breaker_status();
+}
+
+bool Feeder_Manager::set_poi_feeder_state_open()
+{
+    return pPointOfInterConnect->breaker_open();
+}
+
+bool Feeder_Manager::set_poi_feeder_state_closed()
+{
+    return pPointOfInterConnect->breaker_close();
+}
+
+bool Feeder_Manager::get_poi_feeder_close_permissive_state(void)
+{
+    return (pPointOfInterConnect->get_breaker_status());
+}
+
+float Feeder_Manager::get_poi_gridside_frequency(void)
+{
+    return (pPointOfInterConnect->get_gridside_frequency());
+}
+
+float Feeder_Manager::get_poi_gridside_avg_voltage(void)
+{
+    return (pPointOfInterConnect->get_voltage_avg_line_to_line());
+}
+
+bool Feeder_Manager::get_sync_feeder_status(void)
+{
+    if (pSyncFeeder != NULL)
+    {
+        FPS_DEBUG_LOG("Feeder_Manager::get_sync_feeder_state - get_feeder_status: %d\n", pSyncFeeder->get_breaker_status());
+        return pSyncFeeder->get_breaker_status();
+    }
+    return false;
+}
+
+float Feeder_Manager::get_sync_feeder_gridside_frequency(void)
+{
+    if (pSyncFeeder != NULL)
+    {
+        FPS_DEBUG_LOG("Feeder_Manager::get_sync_feeder_frequency - get_gridside_frequency: %f\n", pSyncFeeder->get_gridside_frequency()); 
+        return pSyncFeeder->get_gridside_frequency();
+    }
+    return -1;
+}
+
+float Feeder_Manager::get_sync_frequency_offset(void)
+{
+    if (pSyncFeeder != NULL)
+    {
+        FPS_DEBUG_LOG("Feeder_Manager::get_sync_feeder_frequency() get_sync_frequency_offset: %f\n", sync_frequency_offset);
+        return sync_frequency_offset;
+    }
+    return -1;
+}
+
+float Feeder_Manager::get_sync_feeder_gridside_avg_voltage(void)
+{
+    if (pSyncFeeder != NULL)
+    {
+        FPS_DEBUG_LOG("Feeder_Manager::get_sync_feeder_voltage - get_gridside_avg_voltage: %f\n", pSyncFeeder->get_gridside_avg_voltage()); 
+        return pSyncFeeder->get_gridside_avg_voltage();
+    }
+    return -1;
+}
+
+bool Feeder_Manager::set_sync_feeder_close_permissive_remove()
+{
+    if (pSyncFeeder != NULL)
+    {
+        //FPS_DEBUG_LOG("Feeder_Manager::set_sync_feeder_open_permissive\n");
+        return pSyncFeeder->breaker_close_permissive_remove();
+    }
+    return false;
+}
+
+bool Feeder_Manager::set_sync_feeder_close_permissive()
+{
+    if (pSyncFeeder != NULL)
+    {
+        FPS_DEBUG_LOG("Feeder_Manager::set_sync_feeder_close_permissive\n");
+        return pSyncFeeder->breaker_close_permissive();
+    }
+    return false;
+}
+
+// NOTE: if the specified feeder_ID is not found in the feeder assets list, this function
+// returns a nullptr instead of an Feeder asset
+Asset_Feeder* Feeder_Manager::validate_feeder_id(const char* feeder_ID) {
+    for (int i = 0; i < numParsed; i++)
+    {
+        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+            return pFeeder[i];
+    }
+    FPS_ERROR_LOG("Could not find specified feeder \n");
+    return nullptr;
+}
+
+bool Feeder_Manager::get_feeder_state(Asset_Feeder *found_feeder)
+{
+    return found_feeder->get_breaker_status();
+}
+
+float Feeder_Manager::get_feeder_active_power(const char* feeder_ID)
+{
+    for (int i = 0; i < numParsed; i++)
+    {
+        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+            return pFeeder[i]->get_active_power();
+    }
+    return 0;
+}
+
+float Feeder_Manager::get_feeder_reactive_power(const char* feeder_ID)
+{
+    for (int i = 0; i < numParsed; i++)
+    {
+        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+            return pFeeder[i]->get_reactive_power();
+    }
+    return 0;
+}
+
+float Feeder_Manager::get_feeder_nameplate_active_power(const char* feeder_ID)
+{
+    for (int i = 0; i < numParsed; i++)
+    {
+        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+            return pFeeder[i]->get_rated_active_power();
+    }
+    return -1; // exit failure
+}
+
+float Feeder_Manager::get_avg_ac_voltage(const char* feeder_ID)
+{
+    for (int i = 0; i < numParsed; i++)
+    {
+        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+            return pFeeder[i]->get_voltage_avg_line_to_line();
+    }
+    return -1; // failure exit
+}
+
+bool Feeder_Manager::set_feeder_state_open(Asset_Feeder *found_feeder)
+{
+    return found_feeder->breaker_close();
+}
+
+bool Feeder_Manager::set_feeder_state_closed(Asset_Feeder *found_feeder)
+{
+    return found_feeder->breaker_open();
+}
+
+void Feeder_Manager::set_poi_target_active_power(float desiredkW)
+{
+    pPointOfInterConnect->set_active_power_setpoint(desiredkW);
+}
+
+bool Feeder_Manager::aggregate_feeder_data(void)
+{
+
+    FPS_DEBUG_LOG("Processing Feeder data; Feeder_Manager::aggregate_feeder_data\n");
+
+    // TODO: no behavior for now
+
+    // uint64_t feedAggFaults = 0;
+
+    return true;
+}
+
+void Feeder_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf, const char* const var)
+{
+    if (var == NULL) bufJSON_StartObject(buf); // summary {
+
+    bufJSON_AddStringCheckVar(buf, "name", "Feeder Summary", var);
+    if (pSyncFeeder != NULL)
+    {
+        bufJSON_AddBoolCheckVar(buf, "sync_feeder_status", pSyncFeeder->get_breaker_status(), var);
+    }
+    for (auto it : pFeeder)
+    {
+        char temp_name[1024];
+        char *feeder_id   = it->get_id();
+
+        sprintf(temp_name, "%s_breaker_status",feeder_id);
+        bufJSON_AddStringCheckVar(buf, temp_name, it->get_breaker_status() ? "Closed" : "Open", var);
+        sprintf(temp_name, "%s_active_power",feeder_id);
+        bufJSON_AddNumberCheckVar(buf, temp_name, it->get_active_power(), var);
+        if (it == pPointOfInterConnect) {
+            sprintf(temp_name, "%s_voltage",feeder_id);
+            bufJSON_AddNumberCheckVar(buf, temp_name, it->get_gridside_avg_voltage(), var);
+        }
+        // Add a binary 1/0 if any alarms/faults are present for each asset
+        sprintf(temp_name, "%s_alarms",feeder_id);
+        bufJSON_AddNumberCheckVar(buf, temp_name, get_num_active_alarms() > 0 ? 1:0, var);
+        sprintf(temp_name, "%s_faults",feeder_id);
+        bufJSON_AddNumberCheckVar(buf, temp_name, get_num_active_faults() > 0 ? 1:0, var);
+    }
+
+    if (var == NULL) bufJSON_EndObjectNoComma(buf); // } summary
+}
+
+// HybridOS Step 2: Process Asset Data
+void Feeder_Manager::process_asset_data(std::map <std::string, Fims_Object*> *asset_var_map)
+{
+    if (numParsed > 0)
+    {
+        // Allow the feeders to update their breaker_status based on the status published from components
+        for (int i = 0; i < numParsed; i++)
+        {
+            // Update the Asset status data based on our map
+            std::string base_uri = "/assets/feeders/" + std::string(pFeeder[i]->get_id());
+            auto feeder_it = asset_var_map->find(base_uri + "/breaker_status");
+            bool* status;
+            if (feeder_it != asset_var_map->end())
+                status = &feeder_it->second->value.value_bool;
+            // Feeder may not have a breaker status (feed_2)
+            else
+                status = NULL;
+
+            pFeeder[i]->process_asset(status);
+        }
+        aggregate_feeder_data();
+    }
+}
+
+const char* Feeder_Manager::get_poi_id(void)
+{
+    return pPointOfInterConnect->get_id();
+}
+
+float Feeder_Manager::get_poi_max_potential_active_power(void)
+{
+    return pPointOfInterConnect->get_max_potential_active_power();
+}
+
+float Feeder_Manager::get_poi_min_potential_active_power(void)
+{
+    return pPointOfInterConnect->get_min_potential_active_power();
+}
+
+float Feeder_Manager::get_poi_rated_kW()
+{
+    return pPointOfInterConnect->get_rated_active_power();
+}
+
+/****************************************************************************************/
+/*
+    Overriding configuration functions
+*/
+void Feeder_Manager::configure_base_class_list()
+{
+    pAssets.assign(pFeeder.begin(), pFeeder.end());
+}
+
+Asset* Feeder_Manager::build_new_asset(void)
+{
+    Asset_Feeder* asset = new Asset_Feeder;
+    if (asset == NULL)
+    {
+        FPS_ERROR_LOG("Feeder_Manager::build_new_asset ~ Feeder %ld: Memory allocation error.\n", pFeeder.size()+1);
+    }
+    numParsed++;
+    return asset;
+}
+
+void Feeder_Manager::append_new_asset(Asset* asset)
+{
+    pFeeder.push_back((Asset_Feeder*)asset);
+}
+
+// After configuring individual asset instances, this function finishes configuring the Feeder Manager
+bool Feeder_Manager::configure_type_manager(Type_Configurator* configurator)
+{
+    cJSON* feederRoot = configurator->assetTypeRoot;
+    /************************* Identify POI feeder, which is required ******************************/
+    cJSON* object = cJSON_HasObjectItem(feederRoot, "poi_feeder") ? cJSON_GetObjectItem(feederRoot, "poi_feeder") : NULL;
+    if (object == NULL)
+    {
+        FPS_ERROR_LOG("Feeder_Manager::configure_type_manager ~ Failed to find poi_feeder in config.\n");
+        return false;
+    }
+    else
+    {
+        uint poiIndex = uint(object->valueint);
+        if (poiIndex >= pFeeder.size())
+        {
+            FPS_ERROR_LOG("Feeder_Manager::configure_type_manager ~ POI Feeder index is outside bounds of parsed feeders.\n");
+            return false;
+        }
+        pPointOfInterConnect = pFeeder[poiIndex];
+        // point configurator at poi feeder's asset instance json object for validation
+        cJSON* feederInstancesArray = cJSON_GetObjectItem(configurator->assetTypeRoot, "asset_instances");
+        configurator->assetConfig.assetInstanceRoot = cJSON_GetArrayItem(feederInstancesArray, poiIndex);
+    }
+    if (pPointOfInterConnect && !pPointOfInterConnect->validate_poi_feeder_configuration(configurator))
+    {
+        FPS_ERROR_LOG("Feeder_Manager::configure_type_manager ~ Validation of POI feeder configuration failed. Failing config\n");
+        return false;
+    }
+
+    /************************* asset type variables ******************************/
+    bool sync_feeder_present = false;
+    object = cJSON_GetObjectItem(feederRoot, "sync_feeder");
+    if (object != NULL)
+    {
+        sync_feeder_present = true;
+        pSyncFeeder = pFeeder[object->valueint];
+        FPS_DEBUG_LOG("Feeder_Manager::configure_type_manager ~  sync_feeder_index: %d\n", object->valueint);
+    }
+
+    object = cJSON_GetObjectItem(feederRoot, "sync_frequency_offset");
+    if (object == NULL)
+    {
+        if (sync_feeder_present)
+        {
+            FPS_ERROR_LOG("Feeder_Manager::configure_type_manager ~ Failed to find sync frequency offset in config, but sync feeder exists.\n");
+            return false; // configuration failure, must set sync frequency offset if sync feeder is present
+        }
+    }
+    else
+    {
+        sync_frequency_offset = object->valuedouble;
+        FPS_DEBUG_LOG("Feeder_Manager::configure_type_manager ~  sync_frequency_offset: %f\n", sync_frequency_offset);
+    }
+    return true;
+}
+/****************************************************************************************/

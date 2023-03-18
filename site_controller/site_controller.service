@@ -1,0 +1,13 @@
+[Unit]
+Description=FlexGen Site Controller
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/site_controller /usr/local/etc/config/site_controller/
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
