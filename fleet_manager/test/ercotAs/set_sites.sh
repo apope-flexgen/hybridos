@@ -1,0 +1,1 @@
+fims_send -m set -u /fleet/sites -f $1

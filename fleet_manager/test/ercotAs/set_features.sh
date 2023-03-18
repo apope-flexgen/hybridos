@@ -1,0 +1,1 @@
+fims_send -m set -u /fleet/features -f $1

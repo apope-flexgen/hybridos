@@ -1,0 +1,23 @@
+{
+    "hoth": 
+    {
+        "name": "Hoth",
+        "feature": "ercotAs"
+    },
+    "mustafar":
+    {
+        "name": "Mustafar",
+        "feature": "ercotAs"
+    },
+    "tatooine":
+    {
+        "name": "Tatooine",
+        "feature": "ercotAs"
+        
+    },
+    "alderaan":
+    {
+        "name": "Alderaan",
+        "feature": "caisoAds"
+    }
+}

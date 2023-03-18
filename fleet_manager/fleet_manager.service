@@ -1,0 +1,13 @@
+[Unit]
+Description=FlexGen Fleet Manager - aggregates sites for control
+Requires=fims.service dbi.service
+After=fims.service dbi.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/fleet_manager
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

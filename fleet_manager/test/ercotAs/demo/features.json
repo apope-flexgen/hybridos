@@ -1,0 +1,59 @@
+{
+    "features": 
+    {
+        "caisoAds": 
+        {
+            "schedulerMode": "Site Export Target",
+            "eventDurationMinutes": 5,
+            "commandId": "kw_cmd",
+            "adsOnFlagId": "adsOnFlag"
+        },
+        "ercotAs":
+        { 
+            "defaultControls":
+            {
+                "locational_marginal_price":
+                {
+                    "gen": 3.40,
+                    "load": 2.5
+                },
+                "normal_down_ramp_rate":
+                {
+                    "gen_override": true
+                },
+                "inactive_kW_cmd_min_limit": -99.9,
+                "inactive_kW_cmd_max_limit": 99.9,
+                "baseload_kW_cmd_min_limit": -99.9,
+                "baseload_kW_cmd_max_limit": 99.9,
+                "PFR_UF_power_command": 0.0,
+                "PFR_OF_power_command": 0.0
+            },
+            "sites":    
+            [
+                {
+                    "id": "hoth", 
+                    "controls":
+                    {
+                        "normal_down_ramp_rate":
+                        {
+                            "gen_override": false
+                        },
+                        "inactive_kW_cmd_min_limit": -9.9,
+                        "inactive_kW_cmd_max_limit": 9.9,
+                        "baseload_kW_cmd_min_limit": -9.9,
+                        "baseload_kW_cmd_max_limit": 9.9,
+                        "PFR_UF_power_command": 0.0,
+                        "PFR_OF_power_command": 0.0
+                    }
+                },
+                {
+                    "id": "mustafar",
+                    "controls": {}
+                },
+                {
+                    "id": "tatooine"
+                } 
+            ]
+        }
+    }
+}

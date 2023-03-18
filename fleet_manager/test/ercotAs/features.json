@@ -1,0 +1,10 @@
+{
+    "features": {
+        "caisoAds": {
+            "schedulerMode": "Target SOC",
+            "eventDurationMinutes": 5,
+            "commandId": "target_soc",
+            "adsOnFlagId": "adsOnFlag"
+        }
+    }
+}

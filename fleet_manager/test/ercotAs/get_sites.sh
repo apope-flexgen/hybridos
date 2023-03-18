@@ -1,0 +1,1 @@
+fims_send -m get -u /fleet/sites -r /me | jq
