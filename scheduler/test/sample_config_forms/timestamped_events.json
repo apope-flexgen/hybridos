@@ -1,0 +1,40 @@
+{
+    "schedule":
+    {
+        "durham":
+        [
+            {
+                "duration": 60,
+                "mode": "Target SOC",
+                "start_timestamp": "2022-02-09T09:00:00-05:00",
+                "variables": {
+                    "target_soc": 100
+                }
+            },
+            {
+                "duration": 60,
+                "mode": "Target SOC",
+                "start_timestamp": "2022-02-09T17:00:00-05:00",
+                "variables": {
+                    "target_soc": 100
+                }
+            },
+            {
+                "duration": 60,
+                "mode": "Target SOC",
+                "start_timestamp": "2022-02-10T09:00:00-05:00",
+                "variables": {
+                    "target_soc": 100
+                }
+            },
+            {
+                "duration": 60,
+                "mode": "Target SOC",
+                "start_timestamp": "2022-02-10T17:00:00-05:00",
+                "variables": {
+                    "target_soc": 100
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,1 @@
+/usr/local/bin/fims_send -m get -u /scheduler/scada -r /me | jq

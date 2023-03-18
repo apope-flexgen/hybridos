@@ -1,0 +1,1 @@
+sudo ntpdate 1.ro.pool.ntp.org

@@ -1,0 +1,6 @@
+{
+    "connection": "SC",
+    "siteId": "austin",
+    "siteName": "Austin",
+    "siteControllerPort": ":9000"
+}

@@ -1,0 +1,1 @@
+/usr/local/bin/fims_send -m get -u /scheduler/modes -r /me | jq

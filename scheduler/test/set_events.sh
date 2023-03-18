@@ -1,0 +1,1 @@
+/usr/local/bin/fims_send -m set -u /scheduler/events -f $1

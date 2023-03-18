@@ -1,0 +1,9 @@
+To change time on a Linux machine:
+sudo date --set="%H:%M:%S" +"%T"
+where %H, %M, and %S are replaced with hours, minutes, and seconds
+
+To show the current time:
+date
+
+To reset the time:
+sudo ntpdate 1.ro.pool.ntp.org

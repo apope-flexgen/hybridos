@@ -1,0 +1,10 @@
+./set_field.sh year 2022
+./set_field.sh month 8
+./set_field.sh day 9
+./set_field.sh mode 0
+./set_field.sh site 0
+./set_field.sh float_1 1000
+./set_field.sh bool_1 false
+./set_field.sh duration 15
+./set_field.sh hour 18
+./set_field.sh minute 48
