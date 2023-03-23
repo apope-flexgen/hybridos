@@ -26,3 +26,4 @@ artifacts:
   files:
     - '**/*'
   name: build-$(date +%Y-%m-%d)
+  enable-symlinks: yes

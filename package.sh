@@ -16,7 +16,7 @@ for i in "${substr[@]}"; do
     script_path+=$i
     script_path+="/"  # optionally add trailing slash
 done
-#echo "script_path: $script_path"
+echo -e "script_path: $script_path"
 
 # source build functions (from repository path)
 source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
