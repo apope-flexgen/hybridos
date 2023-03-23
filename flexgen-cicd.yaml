@@ -7,7 +7,7 @@ Parameters:
 
   GitHubRepo:
     Type: String
-    Default: hybridos
+    Default: flexgen-power/hybridos
 
   GitHubBranch:
     Type: String
@@ -20,14 +20,6 @@ Parameters:
   DockerHubSecretArn:
     Type: String
     Default: arn:aws:secretsmanager:us-east-1:625828042324:secret:dockerhub-q1Fhdb
-
-  GitHubUserSsmParamName:
-    Type: String
-    Default: github_user
-
-  GitHubTokenSsmParamName:
-    Type: String
-    Default: github_token
 
   SshPrivateKeySsmParamName:
     Type: String
@@ -92,18 +84,6 @@ Resources:
                 Action:
                   - secretsmanager:GetSecretValue
               - Resource:
-                  - !Sub
-                    - arn:${Partition}:ssm:${Region}:${AccountId}:parameter/${ParamName}
-                    - Partition: !Ref AWS::Partition
-                      Region: !Ref AWS::Region
-                      AccountId: !Ref AWS::AccountId
-                      ParamName: !Ref GitHubUserSsmParamName
-                  - !Sub
-                    - arn:${Partition}:ssm:${Region}:${AccountId}:parameter/${ParamName}
-                    - Partition: !Ref AWS::Partition
-                      Region: !Ref AWS::Region
-                      AccountId: !Ref AWS::AccountId
-                      ParamName: !Ref GitHubTokenSsmParamName
                   - !Sub
                     - arn:${Partition}:ssm:${Region}:${AccountId}:parameter/${ParamName}
                     - Partition: !Ref AWS::Partition
@@ -190,12 +170,6 @@ Resources:
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
             Value: !Ref AWS::Region
-          - Name: GITHUB_USER
-            Type: PARAMETER_STORE
-            Value: !Ref GitHubUserSsmParamName
-          - Name: GITHUB_TOKEN
-            Type: PARAMETER_STORE
-            Value: !Ref GitHubTokenSsmParamName
           - Name: SSH_KEY
             Type: PARAMETER_STORE
             Value: !Ref SshPrivateKeySsmParamName
