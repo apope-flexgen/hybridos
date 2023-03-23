@@ -4,5 +4,6 @@ GIT_*
 build
 rpmbuild
 output
+!cicd-scripts/*
 
 *_meta*

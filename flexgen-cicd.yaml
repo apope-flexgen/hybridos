@@ -1,13 +1,17 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: HybridOS CI/CD Pipeline v1.0
 Parameters:
+  BuildImage:
+    Type: String
+    Default: "flexgen/centos7:devel"
+
   GitHubRepo:
     Type: String
     Default: hybridos
 
   GitHubBranch:
     Type: String
-    Default: codepipeline
+    Default: develop
 
   CodeStarConnectionArn:
     Type: String
@@ -177,7 +181,7 @@ Resources:
         Type: "CODEPIPELINE"
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: "flexgen/centos7:devel-10.3.0"
+        Image: !Ref BuildImage
         ImagePullCredentialsType: SERVICE_ROLE
         RegistryCredential:
           Credential: !Ref DockerHubSecretArn
@@ -213,42 +217,19 @@ Resources:
           phases:
             install:
               commands:
-                - echo Installing AWS CLI...
-                - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                - unzip awscliv2.zip
-                - sudo ./aws/install
-
-                - echo Installing Docker...
-                - sudo yum install -y yum-utils
-                - sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-                - sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                - ./cicd-scripts/test/install.sh
             pre_build:
               commands:
-                - echo Getting container credentials...
-                - STS_RESPONSE=$(curl 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI)
-                - export AWS_ACCESS_KEY_ID=$(echo $STS_RESPONSE | jq .AccessKeyId | tr -d \")
-                - export AWS_SECRET_ACCESS_KEY=$(echo $STS_RESPONSE | jq .SecretAccessKey | tr -d \")
-                - export AWS_SESSION_TOKEN=$(echo $STS_RESPONSE | jq .Token | tr -d \")
-                - aws sts get-caller-identity
-                
-                # - echo Creating and activating Docker ECS context...
-                # - docker context create ecs hybridos-test --from-env
-                # - docker context use hybridos-test
-                
-                # - echo Standing up hybridos in ECS via Docker Compose...
-                # - docker compose up
+                - ./cicd-scripts/test/pre_build.sh
             build:
               commands:
-                # - echo Running test scripts...
-                - echo No-op
+                - ./cicd-scripts/test/build.sh
             post_build:
               commands:
-                # - echo Spinning down hybridos ECS environment...
-                # - docker compose down
-                - echo No-op
+                - ./cicd-scripts/test/post_build.sh
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: "flexgen/centos7:devel-10.3.0"
+        Image: !Ref BuildImage
         ImagePullCredentialsType: SERVICE_ROLE
         RegistryCredential:
           Credential: !Ref DockerHubSecretArn
@@ -270,14 +251,13 @@ Resources:
           phases:
             build:
               commands:
-                - echo Running Package script...
-                - ./package.sh
+                - ./cicd-scripts/package/build.sh
           artifacts:
             files:
               - ./output/**/*
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: "flexgen/centos7:devel-10.3.0"
+        Image: !Ref BuildImage
         ImagePullCredentialsType: SERVICE_ROLE
         RegistryCredential:
           Credential: !Ref DockerHubSecretArn
@@ -304,27 +284,16 @@ Resources:
           phases:
             install:
               commands:
-                - echo Installing AWS CLI...
-                - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                - unzip awscliv2.zip
-                - sudo ./aws/install
-
-                - echo Installing Docker...
-                - sudo yum install -y yum-utils
-                - sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-                - sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                - ./cicd-scripts/docker/install.sh
             pre_build:
               commands:
-                - echo Logging in to Amazon ECR...
-                - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+                - ./cicd-scripts/docker/pre_build.sh
             build:
               commands:
-                # - echo Running Docker script...
-                # - ./docker.sh
-                - echo No-op
+                - ./cicd-scripts/docker/build.sh
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: "flexgen/centos7:devel-10.3.0"
+        Image: !Ref BuildImage
         ImagePullCredentialsType: SERVICE_ROLE
         RegistryCredential:
           Credential: !Ref DockerHubSecretArn
