@@ -1,0 +1,10 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/site_controller",
+			"args": [ "dbi" ],
+			"max_restarts": -1
+		}
+	]
+}

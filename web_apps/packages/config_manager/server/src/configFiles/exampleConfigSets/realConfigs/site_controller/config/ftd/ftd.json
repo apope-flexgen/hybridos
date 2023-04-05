@@ -1,0 +1,230 @@
+{
+    "db_name": "brp_<site_name>_site_controller",
+    "period" : 300,
+    "num_archive_workers": 1,
+    "archive": "/home/hybridos/powercloud/archives",
+    "uris": [
+        {
+            "uri": "/site",
+            "sources":
+            [
+                "configuration"
+            ],
+            "destination": "influx",
+            "measurement": "site_configuration"
+        },
+        {
+            "uri": "/site",
+            "sources":
+            [
+                "operation"
+            ],
+            "destination": "influx",
+            "measurement": "site_operation"
+        },
+        {
+            "uri": "/site",
+            "sources":
+            [
+                "input_sources"
+            ],
+            "destination": "influx",
+            "measurement": "site_input_sources"
+        },
+        {
+            "uri": "/site",
+            "sources":
+            [
+                "summary"
+            ],
+            "destination": "influx",
+            "measurement": "site_summary"
+        },
+        {
+            "uri": "/features",
+            "sources":
+            [
+                "active_power"
+            ],
+            "destination": "influx",
+            "measurement": "features_active_power"
+        },
+        {
+            "uri": "/features",
+            "sources":
+            [
+                "reactive_power"
+            ],
+            "destination": "influx",
+            "measurement": "features_reactive_power"
+        },
+        {
+            "uri": "/features",
+            "sources":
+            [
+                "standalone_power"
+            ],
+            "destination": "influx",
+            "measurement": "features_standalone_power"
+        },
+        {
+            "uri": "/features",
+            "sources":
+            [
+                "site_operation"
+            ],
+            "destination": "influx",
+            "measurement": "features_site_operation"
+        },
+        {
+            "uri": "/features",
+            "sources":
+            [
+                "summary"
+            ],
+            "destination": "influx",
+            "measurement": "features_summary"
+        },
+        {
+            "uri": "/assets/ess",
+            "sources":
+            [
+                "ess_01", "ess_02", "ess_03", "ess_04"
+            ],
+            "group": "assets_ess_group",
+            "destination": "influx",
+            "measurement": "assets_ess"
+        },
+        {
+            "uri": "/assets/ess",
+            "sources":
+            [
+                "summary"
+            ],
+            "destination": "influx",
+            "measurement": "assets_ess_summary"
+        },
+        {
+            "uri": "/assets/feeders",
+            "sources":
+            [
+                "feed_1", "feed_2", "feed_3"
+            ],
+            "destination": "influx",
+            "measurement": "assets_feeders"
+        },
+        {
+            "uri": "/assets/feeders",
+            "sources":
+            [
+                "summary"
+            ],
+            "destination": "influx",
+            "measurement": "assets_feeders_summary"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "sungrow_ess_01_hs", "sungrow_ess_02_hs", "sungrow_ess_03_hs", "sungrow_ess_04_hs"
+            ],
+            "group": "components_sungrow_ess_hs_group",
+            "destination": "influx",
+            "measurement": "components_sungrow_ess_hs"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "sungrow_ess_01", "sungrow_ess_02", "sungrow_ess_03", "sungrow_ess_04"
+            ],
+            "group": "components_sungrow_ess_group",
+            "destination": "influx",
+            "measurement": "components_sungrow_ess"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "m_bess_aux_acuvim"
+            ],
+            "destination": "influx",
+            "measurement": "components_m_bess_aux_acuvim"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "apc_ups"
+            ],
+            "destination": "influx",
+            "measurement": "components_apc_ups"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "brainbox_ed538"
+            ],
+            "destination": "influx",
+            "measurement": "components_brainbox_ed538"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "sel_651r"
+            ],
+            "destination": "influx",
+            "measurement": "components_sel_651r"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "sel_735"
+            ],
+            "destination": "influx",
+            "measurement": "components_sel_735"
+        },
+        {
+            "uri": "/components",
+            "sources":
+            [
+                "sel_3530_rtac"
+            ],
+            "destination": "influx",
+            "measurement": "components_sel_3530_rtac"
+        },
+        {
+            "uri": "/systemstats/cpu",
+            "destination": "influx",
+            "measurement": "cpustats"
+        },
+        {
+            "uri": "/systemstats/mem",
+            "destination": "influx",
+            "measurement": "memstats"
+        },
+        {
+            "uri": "/systemstats/net",
+            "destination": "influx",
+            "measurement": "netstats"
+        },
+        {
+            "uri": "/systemstats/disk",
+            "destination": "influx",
+            "measurement": "diskstats"
+        },
+        {
+            "uri": "/systemstats/process",
+            "destination": "influx",
+            "measurement": "processstats"
+        },
+        {
+            "uri": "/events",
+            "destination": "mongo",
+            "measurement": "events"
+        }
+    ]
+}

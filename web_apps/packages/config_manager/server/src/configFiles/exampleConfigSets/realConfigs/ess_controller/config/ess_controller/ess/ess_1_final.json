@@ -1,0 +1,69 @@
+{
+    "/doc/ess_final": {
+        "notes01":" This is the end of the loader process",
+        "notes02":" All load management entries are complete for ess_configure ",
+        "notes03":"                                       ess_manager ",
+        "notes04":"                                       bms_manager ",
+        "notes05":"                                       pcs_manager ",
+        "notes06":"                                 and  site_manager ",
+        "notes07":"     the system has loaded these files from dbi and evaluated the templates where needed  ",
+        "notes08":"     this system has to satisfy and links or vlinks",
+        "notes09":"     then it has to start all the scheculed processes",
+        "notes10": "rc = loadEssConfig(&vm, vmap, ess_schedule.json, ess_man, &sched)"
+        
+    },
+    "/system/commands": {
+        "run": {
+            "help": "run a schedule var needs the uri to be set ",
+            "value":0,
+            "ifChanged":false,
+            "enabled":true, 
+            "actions":{"onSet":[{"func":[{"amap": "ess_1", "func":"RunSched"}]}]}
+        },
+        "vlink":{
+            "value":"test",
+            "help": "link two var values",
+            "ifChanged":false,
+            "enabled":true,
+            "actions":{"onSet":[{"func":[{"amap": "ess_1", "func":"RunAllVLinks"}]}]}
+        },
+        "link":{
+            "value":"test",
+            "help": "link two var values",
+            "ifChanged":false,
+            "enabled":true,
+            "actions":{"onSet":[{"func":[{"amap": "ess_1", "func":"RunAllLinks"}]}]}
+        },
+        "runBMSOpts": {
+            "value": true,
+            "enabled": true
+        },
+        "runPCSOpts": {
+            "value": true,
+            "enabled": true
+        },
+        "runRackOpts": {
+            "value": true,
+            "enabled": true
+        },
+        "runModuleOpts": {
+            "value": true,
+            "enabled": true
+        },
+        "runESSOpts": {
+            "value": true,
+            "enabled": true
+        }
+    },
+    "/config/ess_1": {
+        "enable": true
+    },
+    "/config/bms": {
+        "enable": true,
+        "enum_opt":true
+    },
+    "/config/pcs": {
+        "enable": true,
+        "enum_opt":true
+    }
+}

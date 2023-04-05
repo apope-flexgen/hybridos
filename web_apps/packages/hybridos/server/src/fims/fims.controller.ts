@@ -1,0 +1,93 @@
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Inject,
+    Post,
+    Put,
+    Query,
+    Req,
+    UseFilters,
+    UseGuards,
+} from '@nestjs/common'
+import { Throttle } from '@nestjs/throttler'
+
+import { BodyDTO, GetDTO } from './dto/fims.dto'
+import { HttpThrottleExceptionFilter } from './httpthrottler.filter'
+import { HttpThrottlerGuard } from './httpthrottler.guard'
+import { FIMS_SERVICE, FimsMsg, IFimsService } from './interfaces/fims.interface'
+import { ISocketAuthService, SOCKET_AUTH_SERVICE } from './interfaces/socketAuth.service.interface'
+
+// FIXME: these should probably come from a config/db.
+// also, these values are copied directly from old node server,
+// may need to be adjusted.
+const API_TTL = 10000 // 60
+const API_LIMIT = 10000 // 210
+
+@Controller('fims')
+@UseGuards(HttpThrottlerGuard)
+@Throttle(API_LIMIT, API_TTL)
+@UseFilters(new HttpThrottleExceptionFilter())
+export class FimsController {
+    constructor(
+        @Inject(FIMS_SERVICE) private readonly fimsService: IFimsService,
+        @Inject(SOCKET_AUTH_SERVICE)
+        private readonly socketAuthService: ISocketAuthService
+    ) {}
+    @Get('one-time-auth')
+    async oneTimeAuth(@Req() req): Promise<any> {
+        const token = this.socketAuthService.generateToken(req.user)
+        return {
+            token,
+        }
+    }
+    @Get('get')
+    // @UseGuards(FimsHttpPermissionsGuard)
+    async get(@Query() query: GetDTO): Promise<FimsMsg> {
+        const msg: FimsMsg = {
+            method: 'get',
+            uri: query.uri,
+            replyto: query.replyto,
+            body: '',
+            username: '',
+        }
+        return await this.fimsService.send(msg)
+    }
+    @Put('set')
+    // @UseGuards(FimsHttpPermissionsGuard)
+    async set(@Body() body: BodyDTO): Promise<FimsMsg> {
+        const msg: FimsMsg = {
+            method: 'set',
+            uri: body.uri,
+            replyto: body.replyto,
+            body: body.body,
+            username: '',
+        }
+        return await this.fimsService.send(msg)
+    }
+    @Post('post')
+    // @UseGuards(FimsHttpPermissionsGuard)
+    async post(@Body() body: BodyDTO): Promise<FimsMsg> {
+        const msg: FimsMsg = {
+            method: 'post',
+            uri: body.uri,
+            replyto: body.replyto,
+            body: body.body,
+            username: '',
+        }
+        return await this.fimsService.send(msg)
+    }
+    @Delete('delete')
+    // @UseGuards(FimsHttpPermissionsGuard)
+    async delete(@Body() body: BodyDTO): Promise<FimsMsg> {
+        const msg: FimsMsg = {
+            method: 'del',
+            uri: body.uri,
+            replyto: body.replyto,
+            body: body.body,
+            username: '',
+        }
+        return await this.fimsService.send(msg)
+    }
+}

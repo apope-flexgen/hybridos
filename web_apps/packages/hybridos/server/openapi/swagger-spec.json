@@ -1,0 +1,1395 @@
+{
+	"openapi": "3.0.0",
+	"paths": {
+		"/app": {
+			"get": {
+				"operationId": "appInit",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SiteConfigurationResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"app"
+				]
+			}
+		},
+		"/login-info": {
+			"get": {
+				"operationId": "loginInfo",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"app"
+				]
+			}
+		},
+		"/users": {
+			"get": {
+				"operationId": "all",
+				"parameters": [
+					{
+						"name": "role",
+						"required": false,
+						"in": "query",
+						"description": "HybridOS user role.",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AllUsersResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"users"
+				]
+			},
+			"post": {
+				"operationId": "create",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/User"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"users"
+				]
+			}
+		},
+		"/users/{id}": {
+			"put": {
+				"operationId": "update",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/User"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"users"
+				]
+			},
+			"delete": {
+				"operationId": "delete",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeleteUserResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"users"
+				]
+			},
+			"get": {
+				"operationId": "read",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"users"
+				]
+			}
+		},
+		"/app-settings": {
+			"get": {
+				"operationId": "find",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AppSettingsResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"app-settings"
+				]
+			},
+			"post": {
+				"operationId": "create",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateAppSettingsDto"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AppSettingsResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"app-settings"
+				]
+			}
+		},
+		"/app-settings/radius-test": {
+			"post": {
+				"operationId": "radiusTest",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RadiusTestDto"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"app-settings"
+				]
+			}
+		},
+		"/fims/one-time-auth": {
+			"get": {
+				"operationId": "oneTimeAuth",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				}
+			}
+		},
+		"/fims/get": {
+			"get": {
+				"operationId": "get",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				}
+			}
+		},
+		"/fims/set": {
+			"put": {
+				"operationId": "set",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BodyDTO"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				}
+			}
+		},
+		"/fims/post": {
+			"post": {
+				"operationId": "post",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BodyDTO"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": ""
+					}
+				}
+			}
+		},
+		"/fims/delete": {
+			"delete": {
+				"operationId": "delete",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BodyDTO"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				}
+			}
+		},
+		"/permissions": {
+			"get": {
+				"operationId": "findAll",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				}
+			}
+		},
+		"/login": {
+			"post": {
+				"operationId": "login",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiLoginResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				]
+			}
+		},
+		"/login/mfa": {
+			"post": {
+				"operationId": "mfa",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MfaCredentials"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginSuccessResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				]
+			}
+		},
+		"/login/passExp": {
+			"post": {
+				"operationId": "passExpLogin",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PassExpCredentials"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiLoginPassExpResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				]
+			}
+		},
+		"/refresh_token": {
+			"get": {
+				"operationId": "refreshTokens",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"auth"
+				]
+			}
+		},
+		"/superauth": {
+			"post": {
+				"operationId": "superauth",
+				"parameters": [],
+				"responses": {
+					"201": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"auth"
+				]
+			}
+		},
+		"/authenticate-user-token": {
+			"get": {
+				"operationId": "authenticateUserToken",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginSuccessResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				]
+			}
+		},
+		"/logout": {
+			"post": {
+				"operationId": "logout",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Logout"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"auth"
+				]
+			}
+		},
+		"/accessToken-test": {
+			"get": {
+				"operationId": "accessTokenTest",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"auth"
+				]
+			}
+		},
+		"/layouts": {
+			"get": {
+				"operationId": "getLayouts",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LayoutsResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"layouts"
+				]
+			},
+			"post": {
+				"operationId": "postLayouts",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LayoutsResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"layouts"
+				]
+			}
+		},
+		"/assets": {
+			"get": {
+				"operationId": "getAssets",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AssetsResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"assets"
+				]
+			},
+			"post": {
+				"operationId": "postAssets",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AssetsResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"assets"
+				]
+			}
+		},
+		"/dashboards": {
+			"get": {
+				"operationId": "getDashboards",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DashboardsResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"dashboards"
+				]
+			},
+			"post": {
+				"operationId": "postDashboards",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DashboardsResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"dashboards"
+				]
+			}
+		},
+		"/rest/{endpoint}": {
+			"get": {
+				"operationId": "get",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				}
+			}
+		},
+		"/scheduler/events": {
+			"get": {
+				"operationId": "allEvents",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			}
+		},
+		"/scheduler/events/{siteId}/{eventId}": {
+			"delete": {
+				"operationId": "delete",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			},
+			"post": {
+				"operationId": "updateEvent",
+				"parameters": [],
+				"responses": {
+					"201": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			}
+		},
+		"/scheduler/events/{siteId}": {
+			"post": {
+				"operationId": "create",
+				"parameters": [],
+				"responses": {
+					"201": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			}
+		},
+		"/scheduler/events/{siteId}/{eventId}/exceptions": {
+			"post": {
+				"operationId": "addException",
+				"parameters": [],
+				"responses": {
+					"201": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			}
+		},
+		"/scheduler/modes": {
+			"get": {
+				"operationId": "modes",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			},
+			"post": {
+				"operationId": "createModes",
+				"parameters": [],
+				"responses": {
+					"201": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			}
+		},
+		"/scheduler/configuration": {
+			"get": {
+				"operationId": "configuration",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			},
+			"post": {
+				"operationId": "createConfig",
+				"parameters": [],
+				"responses": {
+					"201": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			}
+		},
+		"/scheduler/timezones": {
+			"get": {
+				"operationId": "timezones",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			}
+		},
+		"/scheduler/connected": {
+			"get": {
+				"operationId": "connected",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"scheduler"
+				]
+			}
+		},
+		"/events": {
+			"get": {
+				"operationId": "events",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"events"
+				]
+			}
+		},
+		"/sitestatus": {
+			"get": {
+				"operationId": "getSiteStatus",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				}
+			}
+		},
+		"/variable-override/sites": {
+			"get": {
+				"operationId": "siteNames",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"variable-override"
+				]
+			}
+		},
+		"/variable-override/variable-names": {
+			"get": {
+				"operationId": "variableNames",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"variable-override"
+				]
+			}
+		},
+		"/variable-override/variable-values/{siteId}": {
+			"get": {
+				"operationId": "variableValues",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"variable-override"
+				]
+			}
+		},
+		"/variable-override/override-value/{siteId}/{variableName}": {
+			"post": {
+				"operationId": "editOverride",
+				"parameters": [],
+				"responses": {
+					"201": {
+						"description": ""
+					}
+				},
+				"tags": [
+					"variable-override"
+				]
+			}
+		}
+	},
+	"info": {
+		"title": "HybridOS Web Server",
+		"description": "Web Server REST API Documentation.",
+		"version": "1.0",
+		"contact": {}
+	},
+	"tags": [
+		{
+			"name": "nest_web_server",
+			"description": ""
+		}
+	],
+	"servers": [],
+	"components": {
+		"schemas": {
+			"SiteConfigurationResponse": {
+				"type": "object",
+				"properties": {
+					"siteConfiguration": {
+						"type": "object",
+						"description": "Site Configuration from web ui config file"
+					}
+				},
+				"required": [
+					"siteConfiguration"
+				]
+			},
+			"UserResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "object",
+						"description": "HybridOS user ID."
+					},
+					"username": {
+						"type": "object",
+						"description": "HybridOS username."
+					},
+					"role": {
+						"type": "object",
+						"description": "HybridOS user role."
+					},
+					"password": {
+						"type": "object",
+						"description": "HybridOS user hashed password."
+					},
+					"old_passwords": {
+						"type": "object",
+						"description": "Previous hashed passwords."
+					},
+					"pwdUpdatedDate": {
+						"type": "object",
+						"description": "Date that password was last updated."
+					},
+					"shared_key": {
+						"type": "object",
+						"description": "MFA shared key."
+					},
+					"mfa_enabled": {
+						"type": "object",
+						"description": "Status of MFA for user."
+					},
+					"version": {
+						"type": "object",
+						"description": "Version of User Model."
+					}
+				}
+			},
+			"AllUsersResponse": {
+				"type": "object",
+				"properties": {
+					"users": {
+						"description": "List of HybridOS users.",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/UserResponse"
+						}
+					}
+				},
+				"required": [
+					"users"
+				]
+			},
+			"User": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string",
+						"description": "HybridOS username."
+					},
+					"role": {
+						"type": "string",
+						"description": "HybridOS user role"
+					},
+					"password": {
+						"type": "string",
+						"description": "HybridOS user hashed password."
+					}
+				},
+				"required": [
+					"username",
+					"role",
+					"password"
+				]
+			},
+			"DeleteUserResponse": {
+				"type": "object",
+				"properties": {
+					"userDeleted": {
+						"type": "boolean",
+						"description": "Status of delete request."
+					}
+				},
+				"required": [
+					"userDeleted"
+				]
+			},
+			"PasswordSettingResponse": {
+				"type": "object",
+				"properties": {
+					"multi_factor_authentication": {
+						"type": "boolean",
+						"description": "Determines if multi-factor authentication is used"
+					},
+					"password_expiration": {
+						"type": "boolean",
+						"description": "Determines if password expiration is enabled"
+					},
+					"minimum_password_length": {
+						"type": "number",
+						"description": "Minimum password length"
+					},
+					"maximum_password_length": {
+						"type": "number",
+						"description": "Maximum password length"
+					},
+					"password_expiration_interval": {
+						"type": "string",
+						"description": "Time until password expires"
+					},
+					"old_passwords": {
+						"type": "number",
+						"description": "Number of previous passwords to disallow"
+					},
+					"password_regular_expression": {
+						"type": "string",
+						"description": "Regular expression to create passwords"
+					},
+					"lowercase": {
+						"type": "boolean",
+						"description": "Determines if a lowercase letter is required in the password"
+					},
+					"uppercase": {
+						"type": "boolean",
+						"description": "Determines if a uppercase letter is required in the password"
+					},
+					"digit": {
+						"type": "boolean",
+						"description": "Determines if a digit is required in the password"
+					},
+					"special": {
+						"type": "boolean",
+						"description": "Determines if a special character is required in the password"
+					}
+				},
+				"required": [
+					"multi_factor_authentication",
+					"password_expiration",
+					"minimum_password_length",
+					"maximum_password_length",
+					"password_expiration_interval",
+					"old_passwords",
+					"password_regular_expression",
+					"lowercase",
+					"uppercase",
+					"digit",
+					"special"
+				]
+			},
+			"RadiusSettingResponse": {
+				"type": "object",
+				"properties": {
+					"is_enabled": {
+						"type": "boolean",
+						"description": "Determines if radius authentication is used"
+					},
+					"ip_address": {
+						"type": "string",
+						"description": "Ip address of radius server"
+					},
+					"port": {
+						"type": "string",
+						"description": "Port of radius server"
+					},
+					"secret_phrase": {
+						"type": "string",
+						"description": "Radius server's secret"
+					},
+					"wait_time": {
+						"type": "number",
+						"description": "Timeout length when connecting to radius server"
+					},
+					"is_local_auth_disabled": {
+						"type": "boolean",
+						"description": "Deterimes if local authentication is disabled (only use radius)"
+					}
+				},
+				"required": [
+					"is_enabled",
+					"ip_address",
+					"port",
+					"secret_phrase",
+					"wait_time",
+					"is_local_auth_disabled"
+				]
+			},
+			"AppSettingsResponse": {
+				"type": "object",
+				"properties": {
+					"password": {
+						"description": "Settings for password requirements/expiration",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/PasswordSettingResponse"
+							}
+						]
+					},
+					"radius": {
+						"description": "Settings for radius server connection",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/RadiusSettingResponse"
+							}
+						]
+					}
+				},
+				"required": [
+					"password",
+					"radius"
+				]
+			},
+			"PasswordSettingDto": {
+				"type": "object",
+				"properties": {
+					"multi_factor_authentication": {
+						"type": "boolean",
+						"description": "Determines if multi-factor authentication is used"
+					},
+					"password_expiration": {
+						"type": "boolean",
+						"description": "Determines if password expiration is enabled"
+					},
+					"minimum_password_length": {
+						"type": "number",
+						"description": "Minimum password length"
+					},
+					"maximum_password_length": {
+						"type": "number",
+						"description": "Maximum password length"
+					},
+					"password_expiration_interval": {
+						"type": "string",
+						"description": "Time until password expires"
+					},
+					"old_passwords": {
+						"type": "number",
+						"description": "Number of previous passwords to disallow"
+					},
+					"password_regular_expression": {
+						"type": "string",
+						"description": "Regular expression to create passwords"
+					},
+					"lowercase": {
+						"type": "boolean",
+						"description": "Determines if a lowercase letter is required in the password"
+					},
+					"uppercase": {
+						"type": "boolean",
+						"description": "Determines if a uppercase letter is required in the password"
+					},
+					"digit": {
+						"type": "boolean",
+						"description": "Determines if a digit is required in the password"
+					},
+					"special": {
+						"type": "boolean",
+						"description": "Determines if a special character is required in the password"
+					}
+				},
+				"required": [
+					"multi_factor_authentication",
+					"password_expiration",
+					"minimum_password_length",
+					"maximum_password_length",
+					"password_expiration_interval",
+					"old_passwords",
+					"password_regular_expression",
+					"lowercase",
+					"uppercase",
+					"digit",
+					"special"
+				]
+			},
+			"RadiusSettingDto": {
+				"type": "object",
+				"properties": {
+					"is_enabled": {
+						"type": "boolean",
+						"description": "Determines if radius authentication is used"
+					},
+					"ip_address": {
+						"type": "string",
+						"description": "Ip address of radius server"
+					},
+					"port": {
+						"type": "string",
+						"description": "Port of radius server"
+					},
+					"secret_phrase": {
+						"type": "string",
+						"description": "Radius server's secret"
+					},
+					"wait_time": {
+						"type": "number",
+						"description": "Timeout length when connecting to radius server"
+					},
+					"is_local_auth_disabled": {
+						"type": "boolean",
+						"description": "Deterimes if local authentication is disabled (only use radius)"
+					}
+				},
+				"required": [
+					"is_enabled",
+					"ip_address",
+					"port",
+					"secret_phrase",
+					"wait_time",
+					"is_local_auth_disabled"
+				]
+			},
+			"CreateAppSettingsDto": {
+				"type": "object",
+				"properties": {
+					"password": {
+						"description": "Settings for password requirements/expiration",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/PasswordSettingDto"
+							}
+						]
+					},
+					"radius": {
+						"description": "Settings for radius server connection",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/RadiusSettingDto"
+							}
+						]
+					}
+				},
+				"required": [
+					"password",
+					"radius"
+				]
+			},
+			"RadiusTestDto": {
+				"type": "object",
+				"properties": {}
+			},
+			"BodyDTO": {
+				"type": "object",
+				"properties": {}
+			},
+			"ApiLoginResponse": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string",
+						"description": "HybridOS username."
+					},
+					"role": {
+						"type": "string",
+						"description": "HybridOS user role."
+					},
+					"qrCode": {
+						"type": "string",
+						"description": "URL of a qrcode to allow users to set up mfa"
+					},
+					"mfaRequired": {
+						"type": "boolean",
+						"description": "Denotes whether further authentication steps are required"
+					},
+					"passwordExpired": {
+						"type": "boolean",
+						"description": "Denotes whether the user's password has expired"
+					},
+					"accessToken": {
+						"type": "string",
+						"description": "URL of a qrcode to allow users to set up mfa"
+					}
+				},
+				"required": [
+					"username"
+				]
+			},
+			"MfaCredentials": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string",
+						"description": "HybridOS username."
+					},
+					"totp": {
+						"type": "string",
+						"description": "User's current time based one-time-password"
+					}
+				},
+				"required": [
+					"username",
+					"totp"
+				]
+			},
+			"LoginSuccessResponse": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string",
+						"description": "HybridOS username."
+					},
+					"role": {
+						"type": "string",
+						"description": "HybridOS user role."
+					},
+					"accessToken": {
+						"type": "string",
+						"description": "URL of a qrcode to allow users to set up mfa"
+					}
+				},
+				"required": [
+					"username"
+				]
+			},
+			"PassExpCredentials": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string",
+						"description": "HybridOS username."
+					},
+					"updatedPassword": {
+						"type": "string",
+						"description": "HybridOS user hashed password."
+					}
+				},
+				"required": [
+					"username",
+					"updatedPassword"
+				]
+			},
+			"ApiLoginPassExpResponse": {
+				"type": "object",
+				"properties": {
+					"username": {
+						"type": "string",
+						"description": "HybridOS username."
+					},
+					"role": {
+						"type": "string",
+						"description": "HybridOS user role."
+					},
+					"passwordExpired": {
+						"type": "boolean",
+						"description": "Denotes whether the user's password has expired"
+					}
+				},
+				"required": [
+					"username"
+				]
+			},
+			"Logout": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "object",
+						"description": "Information on whether the logout was successful"
+					}
+				},
+				"required": [
+					"message"
+				]
+			},
+			"LayoutsResponse": {
+				"type": "object",
+				"properties": {
+					"layouts": {
+						"type": "object",
+						"description": "List of layout tabs from dbi."
+					}
+				},
+				"required": [
+					"layouts"
+				]
+			},
+			"AssetsResponse": {
+				"type": "object",
+				"properties": {
+					"assets": {
+						"type": "object",
+						"description": "List of asset tabs from dbi."
+					}
+				},
+				"required": [
+					"assets"
+				]
+			},
+			"DashboardsResponse": {
+				"type": "object",
+				"properties": {
+					"dashboards": {
+						"type": "object",
+						"description": "List of dashboard tabs from dbi."
+					}
+				},
+				"required": [
+					"dashboards"
+				]
+			}
+		}
+	}
+}

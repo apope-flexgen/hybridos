@@ -1,0 +1,27 @@
+{
+    "clients": {
+        "main" : {
+            "directory" : "/home/fleetman/powercloud/fleetman01/data",
+            "private_key" : "/home/fleetman/.ssh/id_rsa",
+            "known_hosts" : "/home/fleetman/.ssh/known_hosts",
+            "extension" : ".tar.gz"
+        }
+    },
+    "servers": {
+        "powercloud02": {
+            "ip" : "10.128.2.30",
+            "port": "22",
+            "user" : "hybridos",
+            "directory" : "/mnt/powercloud/brp/fleetman01/archives",
+            "timeout" : 10
+        },
+        "backup": {
+            "directory" : "/mnt/powercloud/backup",
+            "sorted" : true
+        }
+    },
+    "db_directory" : "/home/hybridos/powercloud/.cloud_sync/db",
+    "retry_limit" : 1,
+    "sleep_limit_seconds" : 30,
+    "buffer_size" : 100000
+}

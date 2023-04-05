@@ -1,0 +1,45 @@
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
+import { PassportStrategy } from '@nestjs/passport'
+import { Strategy } from 'passport-local'
+import { User } from '../../../../shared/types/dtos/auth.dto'
+import { AUTH_SERVICE, IAuthService } from '../interfaces/auth.service.interface'
+import { IMfaService, MFA_SERVICE } from '../interfaces/mfa.service.interface'
+import { IPassExpService, PASS_EXP_SERVICE } from '../interfaces/passExp.service.interface'
+import { IAppSettingsService, APP_SETTINGS_SERVICE } from '../../appSettings/interfaces/appSetting.service.interface'
+
+@Injectable()
+export class LocalStrategy extends PassportStrategy(Strategy) {
+    constructor(
+        @Inject(AUTH_SERVICE)
+        private readonly authService: IAuthService,
+        @Inject(MFA_SERVICE)
+        private readonly mfaService: IMfaService,
+        @Inject(PASS_EXP_SERVICE)
+        private readonly passExpService: IPassExpService,
+        @Inject(APP_SETTINGS_SERVICE)
+        private readonly appSettingService: IAppSettingsService
+    ) {
+        super()
+    }
+    async validate(username: string, password: string): Promise<User> {
+        // get site admin settings
+        const appSettings = await this.appSettingService.find()
+        const { is_enabled, ip_address, port, secret_phrase, wait_time, is_local_auth_disabled } = appSettings.radius
+
+        // only authenticate if radius is enabled
+        if (!is_local_auth_disabled) {
+            const user = await this.authService.validateUser(username, password)
+            if (!user) {
+                throw new UnauthorizedException()
+            }
+
+            await this.passExpService.checkIfPasswordExpired(user)
+            await this.mfaService.checkIfSiteMfaEnabled(user)
+
+            return {
+                username: user.username,
+                role: user.role,
+            }
+        }
+    }
+}

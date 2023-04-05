@@ -1,6 +1,0 @@
-{
-    "aggregatedEndpoints": {
-        "/assets": ["ess", "generators", "solar", "feeders"],
-        "/assets/ess": ["ess_1", "ess_2", "ess_3"]
-    }
-}

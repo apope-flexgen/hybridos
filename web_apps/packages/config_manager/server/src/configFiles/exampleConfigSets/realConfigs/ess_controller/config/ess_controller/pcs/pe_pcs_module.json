@@ -1,0 +1,136 @@
+{
+    "/system/##MODULE_ID##": {
+        "id": "##MODULE_ID##",
+        "name": "PCS Module ##MODULE_NUM##"
+    },
+    "/config/##MODULE_ID##": {
+        "AlarmDestination": "/assets/##PCS_ID##/##MODULE_ID##:alarms",
+        "FaultDestination": "/assets/##PCS_ID##/##MODULE_ID##:faults",
+        "NoFaultMsg": "(NOFLTS) No faults",
+        "NoAlarmMsg": "(NOWRN) No warnings"
+    },
+    "/assets/##PCS_ID##/##MODULE_ID##": {
+        "name": "Module ##MODULE_NUM##",
+        "alarms":                 {"value": 0,       "enabled": true, "options": []},
+        "faults":                 {"value": 0,       "enabled": true, "options": []},
+        "module_status":          {"value": "OFF",   "enabled": true},
+        "current_r":              {"value": 0,       "enabled": true},
+        "current_s":              {"value": 0,       "enabled": true},
+        "current_t":              {"value": 0,       "enabled": true},
+        "dc_current":             {"value": 0,       "enabled": true},
+        "dc_voltage_p":           {"value": 0,       "enabled": true},
+        "dc_voltage_n":           {"value": 0,       "enabled": true},
+        "dc_voltage":             {"value": 0,       "enabled": true},
+        "active_power":           {"value": 0,       "enabled": true},
+        "reactive_power":         {"value": 0,       "enabled": true},
+        "ambient_temp":           {"value": 0,       "enabled": true},
+        "max_temp":               {"value": 0,       "enabled": true},
+        "temp_r1":                {"value": 0,       "enabled": true},
+        "temp_r2":                {"value": 0,       "enabled": true},
+        "temp_r3":                {"value": 0,       "enabled": true},
+        "temp_s1":                {"value": 0,       "enabled": true},
+        "temp_s2":                {"value": 0,       "enabled": true},
+        "temp_s3":                {"value": 0,       "enabled": true},
+        "temp_t1":                {"value": 0,       "enabled": true},
+        "temp_t2":                {"value": 0,       "enabled": true},
+        "temp_t3":                {"value": 0,       "enabled": true},
+        "fan_status":             {"value": "Closed","enabled": true},
+        "ac_main_status":         {"value": "Closed","enabled": true},
+        "ac_softcharge_status":   {"value": "Closed","enabled": true},
+        "lcl_status":             {"value": "Closed","enabled": true},
+        "dc_switch_status":       {"value": "Closed","enabled": true},
+        "thermal_lcl_status":     {"value": "Closed","enabled": true},
+        "fan_feedback":           {"value": "Closed","enabled": true},
+        "ac_main_feedback":       {"value": "Closed","enabled": true},
+        "ac_softcharge_feedback": {"value": "Closed","enabled": true},
+        "lcl_feedback":           {"value": "Closed","enabled": true},
+        "dc_switch_feedback":     {"value": "Closed","enabled": true},
+        "hw_version":             {"value": 0,       "enabled": true},
+        "sw_version":             {"value": 0,       "enabled": true},
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "enabled": true,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri":	"/assets/##PCS_ID##/##MODULE_ID##:clear_faults@enabled"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No",  "return_value": false},
+                {"name": "Yes", "return_value": true}
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value":false,
+            "enabled": false,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue":true, "outValue":"Clear","uri":"/faults/##MODULE_ID##:clear_faults"},
+                        {"inValue":true, "outValue":"Clear","uri":"/alarms/##MODULE_ID##:clear_alarms"},
+
+                        {"inValue":true, "outValue":0,"uri":"/status/##MODULE_ID##:module_current_fault"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": "Clear"
+                }
+            ]
+        }
+    },
+    "/vlinks/##MODULE_ID##": {
+        "ui_##MODULE_ID##_current_r":                { "value": "/assets/##PCS_ID##/##MODULE_ID##:current_r",        "vlink": "/status/##MODULE_ID##:CurrentL1"   },
+        "ui_##MODULE_ID##_current_s":                { "value": "/assets/##PCS_ID##/##MODULE_ID##:current_s",        "vlink": "/status/##MODULE_ID##:CurrentL2"   },
+        "ui_##MODULE_ID##_current_t":                { "value": "/assets/##PCS_ID##/##MODULE_ID##:current_t",        "vlink": "/status/##MODULE_ID##:CurrentL3"   },
+        "ui_##MODULE_ID##_dc_current":               { "value": "/assets/##PCS_ID##/##MODULE_ID##:dc_current",       "vlink": "/status/##MODULE_ID##:CurrentDC"   },
+        "ui_##MODULE_ID##_dc_voltage_p":             { "value": "/assets/##PCS_ID##/##MODULE_ID##:dc_voltage_p",     "vlink": "/status/##MODULE_ID##:VoltageDC_P" },
+        "ui_##MODULE_ID##_dc_voltage_n":             { "value": "/assets/##PCS_ID##/##MODULE_ID##:dc_voltage_n",     "vlink": "/status/##MODULE_ID##:VoltageDC_N" },
+        "ui_##MODULE_ID##_dc_voltage":               { "value": "/assets/##PCS_ID##/##MODULE_ID##:dc_voltage",       "vlink": "/status/##MODULE_ID##:VoltageDC"   },
+        "ui_##MODULE_ID##_active_power":             { "value": "/assets/##PCS_ID##/##MODULE_ID##:active_power",     "vlink": "/status/##MODULE_ID##:ActivePower" },
+        "ui_##MODULE_ID##_reactive_power":           { "value": "/assets/##PCS_ID##/##MODULE_ID##:reactive_power",   "vlink": "/status/##MODULE_ID##:ReactivePower"},
+        "ui_##MODULE_ID##_ambient_temp":             { "value": "/assets/##PCS_ID##/##MODULE_ID##:ambient_temp",     "vlink": "/status/##MODULE_ID##:AmbientTemp" },
+        "ui_##MODULE_ID##_max_temp":                 { "value": "/assets/##PCS_ID##/##MODULE_ID##:max_temp",         "vlink": "/status/##MODULE_ID##:MaxTemp"     },
+        "ui_##MODULE_ID##_hw_version":               { "value": "/assets/##PCS_ID##/##MODULE_ID##:hw_version",       "vlink": "/status/##MODULE_ID##:HWVersion"   },
+        "ui_##MODULE_ID##_sw_version":               { "value": "/assets/##PCS_ID##/##MODULE_ID##:sw_version",       "vlink": "/status/##MODULE_ID##:SWVersion"   },
+        "ui_##MODULE_ID##_temp_r1":                  { "value": "/assets/##PCS_ID##/##MODULE_ID##:temp_r1",          "vlink": "/status/##MODULE_ID##:TempR1"      },
+        "ui_##MODULE_ID##_temp_r2":                  { "value": "/assets/##PCS_ID##/##MODULE_ID##:temp_r2",          "vlink": "/status/##MODULE_ID##:TempR2"      },
+        "ui_##MODULE_ID##_temp_r3":                  { "value": "/assets/##PCS_ID##/##MODULE_ID##:temp_r3",          "vlink": "/status/##MODULE_ID##:TempR3"      },
+        "ui_##MODULE_ID##_temp_s1":                  { "value": "/assets/##PCS_ID##/##MODULE_ID##:temp_s1",          "vlink": "/status/##MODULE_ID##:TempS1"      },
+        "ui_##MODULE_ID##_temp_s2":                  { "value": "/assets/##PCS_ID##/##MODULE_ID##:temp_s2",          "vlink": "/status/##MODULE_ID##:TempS2"      },
+        "ui_##MODULE_ID##_temp_s3":                  { "value": "/assets/##PCS_ID##/##MODULE_ID##:temp_s3",          "vlink": "/status/##MODULE_ID##:TempS3"      },
+        "ui_##MODULE_ID##_temp_t1":                  { "value": "/assets/##PCS_ID##/##MODULE_ID##:temp_t1",          "vlink": "/status/##MODULE_ID##:TempT1"      },
+        "ui_##MODULE_ID##_temp_t2":                  { "value": "/assets/##PCS_ID##/##MODULE_ID##:temp_t2",          "vlink": "/status/##MODULE_ID##:TempT2"      },
+        "ui_##MODULE_ID##_temp_t3":                  { "value": "/assets/##PCS_ID##/##MODULE_ID##:temp_t3",          "vlink": "/status/##MODULE_ID##:TempT3"      }
+    },
+    "/system/commands": {
+        "runModuleOpts": {
+            "value": false,
+            "enabled": false,
+            "targav": "/system/commands:run",
+            "options": [
+                {"uri":"/sched/##MODULE_ID##:pubAssets_##MODULE_ID##",     "aname":"##MODULE_ID##", "value":0, "every":1}
+            ],
+            "actions": {
+                "onSet":[{"func":[{"amap": "##MODULE_ID##", "func":"SchedItemOpts"}]}]
+            }
+        }
+    },
+
+    "/sched/##MODULE_ID##": {
+        "pubAssets_##MODULE_ID##": {
+            "value": 0,
+            "mode": "ui",
+            "table": "/assets/##PCS_ID##/##MODULE_ID##",
+            "actions": {
+                "onSet":[{"func":[{"amap": "##MODULE_ID##", "func":"RunPub"}]}]
+            }
+        }
+    }
+}

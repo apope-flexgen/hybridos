@@ -1,0 +1,68 @@
+{
+  "_doc": "modes",
+  "_id": "636010c163852445f7b69844",
+  "_version": "2022-11-04T12:19:50.937846961-04:00",
+  "modes": {
+    "Frequency Response": {
+      "color_code": "#FF0000",
+      "constants": [
+        {
+          "id": "feature_select",
+          "name": "feature select",
+          "type": "Int",
+          "unit": "",
+          "uri": "/features/active_power/runmode1_kW_mode_cmd_scheduler",
+          "value": 5
+        }
+      ],
+      "variables": [
+        {
+          "id": "enable_mask",
+          "name": "enable mask",
+          "type": "Int",
+          "unit": "",
+          "uri": "/features/active_power/fr_enable_mask_scheduler",
+          "value": 65535
+        },
+        {
+          "id": "baseload_cmd",
+          "name": "baseload cmd",
+          "type": "Float",
+          "unit": "kW",
+          "uri": "/features/active_power/fr_baseload_cmd_kw_scheduler",
+          "value": 2000
+        }
+      ]
+    },
+    "default": {
+      "color_code": "",
+      "constants": [
+        {
+          "id": "baseload_cmd",
+          "name": "baseload cmd",
+          "type": "Float",
+          "unit": "kW",
+          "uri": "/features/active_power/fr_baseload_cmd_kW_scheduler",
+          "value": 0
+        },
+        {
+          "id": "enable_mask",
+          "name": "enable mask",
+          "type": "Int",
+          "unit": "",
+          "uri": "/features/active_power/fr_enable_mask_scheduler",
+          "value": 65535
+        },
+        {
+          "id": "feature_select",
+          "name": "feature select",
+          "type": "Int",
+          "unit": "",
+          "uri": "/features/active_power/runmode1_kW_mode_cmd_scheduler",
+          "value": 8
+        }
+      ],
+      "variables": []
+    }
+  }
+}

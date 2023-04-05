@@ -1,0 +1,47 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/apc_ups",
+			"publishRate": 500,
+			"inputs": [
+				{
+					"uri": "/components/twins_apc_ups",
+					"registers": {
+						"active_power": "p",
+						"apparent_power": "s",
+						"apparent_power_2": "ap2",
+						"output_current": "i",
+						"output_frequency": "f1",
+						"status": "status"
+					}
+				}
+			],
+			"echo": {
+				"active_power_2": 0,
+				"batt_date": 0,
+				"batt_error": 0,
+				"batt_lifetime_status": 0,
+				"batt_test_status": 0,
+				"battery_temperature": 0,
+				"error": 0,
+				"input_status": 0,
+				"input_voltage_ac": 0,
+				"main_outlet_group_status": 0,
+				"output_current_2": 0,
+				"output_engery": 0,
+				"output_voltage_ac": 0,
+				"output_voltage_ac_2": 0,
+				"ps_error": 0,
+				"run_time": 0,
+				"run_time_cal_status": 0,
+				"secondary_group_status": 0,
+				"simple_status": 0,
+				"soc": 0,
+				"status_change_cause": 0,
+				"ui_status": 0,
+				"voltage_dc_neg": 0,
+				"voltage_dc_pos": 0
+			}
+		}
+	]
+}

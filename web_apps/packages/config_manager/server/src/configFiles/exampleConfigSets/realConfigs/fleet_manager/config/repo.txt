@@ -1,0 +1,16 @@
+fims|v3.0.1-rc
+modbus_interface|v2.1.1
+mcp|v1.8.0
+dbi|v2.2.0
+metrics|v1.6.1-rc
+events|v1.6.1-rc
+fleet_manager|v1.0.1-rc
+washer|v1.1.1-rc
+web_server|v1.9.1-rc
+web_ui|v1.9.1-rc
+cops|v1.3.1-rc
+scheduler|v1.4.0-rc
+scripts|v2.2.1-rc
+dnp3_interface|v3.0.3
+echo|v3.0.0
+twins_pm|v10.2.0

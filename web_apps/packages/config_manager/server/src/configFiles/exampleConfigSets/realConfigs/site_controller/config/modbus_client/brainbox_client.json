@@ -1,0 +1,48 @@
+{
+    "fileInfo": {
+        "sourceFileName": "brainbox_client.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2022-10-03T15:04:14.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "Jasen Liu",
+        "outputFileName": "brainbox_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2022-10-04T19:53:34.936Z"
+    },
+    "connection": {
+        "name": "brainbox_ed538",
+        "ip_address": "10.10.1.33",
+        "port": 10002
+    },
+    "components": [
+        {
+            "id": "brainbox_ed538",
+            "frequency": 500,
+            "offset_time": 0,
+            "registers": [
+                {
+                    "type": "Discrete Inputs",
+                    "starting_offset": 0,
+                    "number_of_registers": 3,
+                    "map": [
+                        {
+                            "id": "intrusion_detection",
+                            "offset": 0,
+                            "name": "intrusion_detection"
+                        },
+                        {
+                            "id": "HVAC_normally_open",
+                            "offset": 1,
+                            "name": "HVAC_normally_open"
+                        },
+                        {
+                            "id": "HVAC_normally_close",
+                            "offset": 2,
+                            "name": "HVAC_normally_close"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

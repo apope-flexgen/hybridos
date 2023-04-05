@@ -1,0 +1,112 @@
+{
+    "name": "Operation",
+    "site_state": {
+        "value": "Shutdown",
+        "name": "Site Controller State",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "string",
+        "ui_type": "none"
+    },
+    "site_status": {
+        "value": "Shutdown",
+        "name": "Site Controller Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "string",
+        "ui_type": "status"
+    },
+    "running_status_flag": {
+        "value": false,
+        "name": "Running Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum",
+        "ui_type": "none"
+    },
+    "disable_flag": {
+        "value": false,
+        "name": "Disable Site",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "control",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Disable Site", "return_value": true }
+        ]
+    },
+    "standby_flag": {
+        "value": false,
+        "name": "Standby Site",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Standby Site", "return_value": true }
+        ]
+    },
+    "enable_flag": {
+        "value": false,
+        "name": "Start Site",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_button",
+        "ui_type": "control",
+        "options": [{ "name": "Start Site", "return_value": true }]
+    },
+    "clear_faults_flag": {
+        "value": false,
+        "name": "Clear Faults",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_button",
+        "ui_type": "control",
+        "options": [{ "name": "Clear Faults", "return_value": true }]
+    },
+    "active_faults": {
+        "value": 4,
+        "name": "Site Manager Active Faults",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum",
+        "ui_type": "fault"
+    },
+    "active_alarms": {
+        "value": 0,
+        "name": "Site Manager Active Alarm",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum",
+        "ui_type": "alarm"
+    },
+    "fault_status_flag": {
+        "value": true,
+        "name": "Fault Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum",
+        "ui_type": "none"
+    },
+    "alarm_status_flag": {
+        "value": false,
+        "name": "Alarm Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum",
+        "ui_type": "none"
+    }
+}

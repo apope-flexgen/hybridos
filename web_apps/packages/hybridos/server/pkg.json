@@ -1,0 +1,9 @@
+{
+    "pkg": {
+        "assets": [
+            "node_modules/radius/dictionaries/*",
+            "src/radius/dictionaries/*"
+        ],
+        "scripts": "dist/*.ts"
+    }
+}

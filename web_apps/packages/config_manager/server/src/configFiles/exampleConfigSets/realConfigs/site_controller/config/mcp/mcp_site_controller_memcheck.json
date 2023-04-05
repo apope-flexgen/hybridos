@@ -1,0 +1,11 @@
+{
+    "processes": 
+    [
+        {
+            "name": "/usr/bin/valgrind",
+			"args": ["--tool=memcheck", "--leak-check=yes", "--track-origins=yes", "--log-file=/home/vagrant/git/site_controller/valgrind.log", "/usr/local/bin/site_controller", "dbi" ],
+            "max_restarts": -1
+        }
+    ]
+}
+            

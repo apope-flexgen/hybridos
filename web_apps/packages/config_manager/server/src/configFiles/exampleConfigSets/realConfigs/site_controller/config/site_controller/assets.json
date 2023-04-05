@@ -1,0 +1,723 @@
+{
+	"assets":
+	{
+		"feeders":
+		{
+			"poi_feeder": 0,
+			"sync_feeder": 0,
+			"sync_frequency_offset": 0,
+			"asset_instances":
+			[
+				{
+					"id": "feed_1",
+					"name": "POI",
+					"value_open": 2,
+					"value_close": 1,
+					"value_reset": 7,
+					"rated_active_power_kw": 9950,
+					"slew_rate": 5000000,
+					"demand_control": "Uncontrolled",
+					"components":
+					[
+						{
+							"component_id": "sel_3530_rtac",
+							"variables":
+							{
+								"grid_frequency":
+								{
+									"name": "Frequency (3530)",
+									"register_id": "frequency_3",
+									"scaler": 1,
+									"unit": "Hz"
+								}
+							}
+						},
+						{
+							"component_id": "sel_651r",
+							"variables":
+							{
+								"breaker_status":
+								{
+									"name": "Breaker Status (651)",
+									"register_id": "breaker_status",
+									"type": "Bool",
+									"scaler": 1
+								},
+								"grid_voltage_l1":
+								{
+									"name": "Grid AC Voltage L1 (651)",
+									"register_id": "grid_voltage_l1",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"grid_voltage_l2":
+								{
+									"name": "Grid AC Voltage L2 (651)",
+									"register_id": "grid_voltage_l2",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"grid_voltage_l3":
+								{
+									"name": "Grid AC Voltage L3 (651)",
+									"register_id": "grid_voltage_l3",
+									"scaler": 1,
+									"unit": "V"
+								}
+							},
+							"ui_controls":
+							{
+								"maint_mode":
+								{
+									"name": "Maintenance Mode",
+									"type": "Bool"
+								},
+								"breaker_open":
+								{
+									"name": "Breaker Open (651)",
+									"register_id": "breaker_control"
+								},
+								"breaker_close":
+								{
+									"name": "Breaker Close (651)",
+									"register_id": "breaker_control"
+								},
+								"breaker_reset":
+								{
+									"name": "Breaker Reset (651)",
+									"register_id": "breaker_control"
+								},
+								"watt_var_mode_enable_flag":
+								{
+									"name": "Watt-Var Enable",
+									"register_id": "watt_var_mode_enable_flag",
+									"type": "init",
+									"ui_type":"control"
+								}
+							}
+						},
+						{
+							"component_id": "sel_735",
+							"variables":
+							{
+								"current_l1":
+								{
+									"name": "L1 AC Current (735)",
+									"register_id": "current_l1",
+									"scaler": 1,
+									"unit": "A"
+								},
+								"current_l2":
+								{
+									"name": "L2 AC Current (735)",
+									"register_id": "current_l2",
+									"scaler": 1,
+									"unit": "A"
+								},
+								"current_l3":
+								{
+									"name": "L3 AC Current (735)",
+									"register_id": "current_l3",
+									"scaler": 1,
+									"unit": "A"
+								},
+								"voltage_l1_n":
+								{
+									"name": "L1-N AC Voltage (735)",
+									"register_id": "voltage_l1",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l2_n":
+								{
+									"name": "L2-N AC Voltage (735)",
+									"register_id": "voltage_l2",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l3_n":
+								{
+									"name": "L3-N AC Voltage (735)",
+									"register_id": "voltage_l3",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l1_l2":
+								{
+									"name": "L1-L2 AC Voltage (735)",
+									"register_id": "voltage_l1_l2",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l2_l3":
+								{
+									"name": "L2-L3 AC Voltage (735)",
+									"register_id": "voltage_l2_l3",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l3_l1":
+								{
+									"name": "L3-L1 AC Voltage (735)",
+									"register_id": "voltage_l3_l1",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"active_power":
+								{
+									"name": "AC Active Power (735)",
+									"register_id": "active_power",
+									"scaler": 1000,
+									"unit": "W"
+								},
+								"reactive_power":
+								{
+									"name": "AC Reactive Power (735)",
+									"register_id": "reactive_power",
+									"scaler": 1000,
+									"unit": "VAR"
+								},
+								"apparent_power":
+								{
+									"name": "AC Apparent Power (735)",
+									"register_id": "apparent_power",
+									"scaler": 1000,
+									"unit": "VA"
+								},
+								"power_factor":
+								{
+									"name": "Power Factor (735)",
+									"register_id": "power_factor",
+									"scaler": 1
+								}
+							}	
+						},
+						{
+							"component_id": "feed_1_dummy",
+							"variables":
+							{
+								"alarms":
+								{
+									"name": "Alarms",
+									"register_id": "alarms",
+									"type": "Int",
+									"mask": "0xFFFFFFFFFFFFFFFF",
+									"ui_type": "alarm"
+								},
+								"faults":
+								{
+									"name": "Faults",
+									"register_id": "faults",
+									"type": "Int",
+									"mask": "0xFFFFFFFFFFFFFFFF",
+									"ui_type": "fault"
+								}
+							}
+						}
+					]
+				},
+				{
+					"id": "feed_2",
+					"name": "BESS Aux",
+					"demand_control": "Uncontrolled",
+					"components":
+					[
+						{
+							"component_id": "m_bess_aux_acuvim",
+							"variables":
+							{
+
+								"active_power":
+								{
+									"name": "AC Active Power (acuvim)",
+									"register_id": "active_power",
+									"scaler": 1,
+									"unit": "kW"
+								},
+								"reactive_power":
+								{
+									"name": "AC Reactive Power (acuvim)",
+									"register_id": "reactive_power",
+									"scaler": 1,
+									"unit": "kW"
+								},
+								"voltage_l1_l2":
+								{
+									"name": "L1-LN AC Voltage (acuvim)",
+									"register_id": "voltage_l1_l2",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l2_l3":
+								{
+									"name": "L2-N AC Voltage (acuvim)",
+									"register_id": "voltage_l2_l3",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l3_l1":
+								{
+									"name": "L3-N AC Voltage (acuvim)",
+									"register_id": "voltage_l3_l1",
+									"scaler": 1,
+									"unit": "V"
+								}
+							}
+						}
+					]
+				},
+				{
+					"id": "feed_3",
+					"name": "Control UPS",
+					"demand_control": "Uncontrolled",
+					"components":
+					[
+						{
+							"component_id": "apc_ups",
+							"variables":
+							{
+								"status":
+								{
+									"name": "Operating Status",
+									"register_id": "status",
+									"ui_type": "status"
+								},
+								"status_change_cause":
+								{
+									"name": "Status Change Cause",
+									"register_id": "status_change_cause",
+									"type": "Int",
+									"ui_type": "status"
+								},
+								"batt_lifetime_status":
+								{
+									"name": "Battery Lifetime Status",
+									"register_id": "batt_lifetime_status",
+									"type": "Int",
+									"ui_type": "status"
+								},
+								"output_voltage_ac":
+								{
+									"name": "Output Voltage",
+									"register_id": "output_voltage_ac",
+									"unit": "V",
+									"scaler": 1,
+									"ui_type": "status"
+								},
+								"output_frequency":
+								{
+									"name": "Frequency",
+									"register_id": "output_frequency",
+									"unit": "Hz",
+									"scaler": 1,
+									"ui_type": "status"
+								},
+								"soc":
+								{
+									"name": "State of Charge",
+									"register_id": "soc",
+									"unit": "%",
+									"scaler": 1,
+									"ui_type": "status"
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		"ess":
+		{
+			"soc_balancing_factor": 4.0,
+			"entering_soc_range": 0.1,
+			"leaving_soc_range": 0.5,
+			"far_soc_range": 10.0,
+			"charge_control_divisor": 11.1,
+			"asset_instances":
+			[
+				{
+					"id": "ess_#",
+					"name": "BESS Inverter Block #",
+					"status_type": "random_enum",
+					"watchdog_enable": false,
+					"watchdog_timeout_ms": 3000,
+					"rated_capacity": 9600,
+					"rated_active_power_kw": 2750.0,
+					"rated_reactive_power_kvar": 1000.0,
+					"rated_apparent_power_kva": 2750.0,
+					"slew_rate":12500,
+					"throttle_timeout_fast_ms": 150,
+					"throttle_timeout_slow_ms": 2000,
+					"deadband_percent": 0.1,
+					"running_status_mask": "0x04",
+					"stopped_status_mask": "0x07",
+					"demand_control": "Direct",
+					"nominal_voltage": 550.0,
+					"nominal_frequency": 60.0,
+					"start_value": 1,
+					"stop_value": 2,
+					"enter_standby_value": 170,
+					"exit_standby_value": 85,
+					"DC_contactor_open": 1,
+					"DC_contactor_closed": 2,
+					"DC_contactor_reset": 3,
+					"DC_contactor_restriction": true,
+					"chg_soc_begin": 95.0,
+					"chg_soc_end": 101.0,
+					"dischg_soc_begin": 5.0,
+					"dischg_soc_end": -1.0,
+					"min_raw_soc":4,
+					"max_raw_soc":97,
+					"number_of_instances": 4,
+					"components":
+					[
+						{
+							"component_id": "sungrow_ess_#_hs",
+							"variables":
+							{
+								"active_power_setpoint":
+								{
+									"name": "Active Power Setpoint",
+									"register_id": "active_power_setpoint",
+									"scaler": 1000,
+									"unit": "W"
+								},
+								"reactive_power_setpoint":
+								{
+									"name": "Reactive Power Setpoint",
+									"register_id": "reactive_power_setpoint",
+									"scaler": 1000,
+									"unit": "VAR"
+								},
+								"system_chargeable_power":
+								{
+									"name": "System Chargeable Power",
+									"register_id": "chargeable_power",
+									"scaler": 1000,
+									"unit": "W"
+								},
+								"system_dischargeable_power":
+								{
+									"name": "System Dischargeable Power",
+									"register_id": "dischargeable_power",
+									"scaler": 1000,
+									"unit": "W"
+								},
+								"system_chargeable_energy":
+								{
+									"name": "System Chargeable Energy",
+									"register_id": "chargeable_energy",
+									"scaler": 1000,
+									"unit": "Wh"
+								},
+								"system_dischargeable_energy":
+								{
+									"name": "System Dischargeable Energy",
+									"register_id": "dischargeable_energy",
+									"scaler": 1000,
+									"unit": "Wh"
+								},
+								"status":
+								{
+									"name": "Status",
+									"register_id": "system_state",
+									"type": "Status"
+								},
+								"alarms":
+								{
+									"name": "Alarms",
+									"register_id": "alarms",
+									"type": "Int",
+									"ui_type": "alarm"
+								},
+								"frequency":
+								{
+									"name": "Frequency",
+									"register_id": "frequency",
+									"scaler": 1,
+									"unit": "Hz"
+								},
+								"active_power":
+								{
+									"name": "Active Power",
+									"register_id": "active_power",
+									"scaler": 1000,
+									"unit": "W"
+								},
+								"reactive_power":
+								{
+									"name": "Reactive Power",
+									"register_id": "reactive_power",
+									"scaler": 1000,
+									"unit": "VAR"
+								},
+								"faults":
+								{
+									"name": "Faults",
+									"register_id": "faults",
+									"type": "Int",
+									"ui_type": "fault"
+								},
+								"component_connected":
+								{
+									"name": "Component Connection Status",
+									"register_id": "component_connected",
+									"type": "Bool"
+								}
+							},
+							"ui_controls":
+							{
+								"start":
+								{
+									"name": "Start",
+									"register_id": "start_stop",
+									"type": "Int",
+									"ui_type": "control"
+								},
+								"stop":
+								{
+									"name": "Stop",
+									"register_id": "start_stop",
+									"type": "Int",
+									"ui_type": "control"
+								},
+								"enter_standby":
+								{
+									"name": "Enter Standby",
+									"register_id": "start_stop",
+									"type": "Int",
+									"ui_type": "control"
+								},
+								"exit_standby":
+								{
+									"name": "Exit Standby",
+									"register_id": "start_stop",
+									"type": "Int",
+									"ui_type": "control"
+								},
+								"clear_faults":
+								{
+									"name": "Clear Faults",
+									"register_id": "clear_faults",
+									"type": "Int",
+									"ui_type": "control"
+								},
+								"maint_mode":
+								{
+									"name": "Maintenance Mode",
+									"type": "Bool",
+									"ui_type": "control"
+								},
+								"limits_override":
+								{
+									"name": "Limits Override",
+									"type": "Bool",
+									"ui_type": "control"
+								},
+								"maint_active_power_setpoint":
+								{
+									"name": "Active Power Setpoint",
+									"ui_type": "control",
+									"scaler": 1,
+									"unit": "W"
+								},
+								"maint_reactive_power_setpoint":
+								{
+									"name": "Reactive Power Setpoint",
+									"ui_type": "control",
+									"scaler": 1,
+									"unit": "VAR"
+								},
+								"open_dc_contactors":
+								{
+									"name": "Open DC Contactors",
+									"type": "Bool",
+									"ui_type": "control",
+									"register_id": "bms_close_open_reset"
+								},
+								"close_dc_contactors":
+								{
+									"name": "Close DC Contactors",
+									"type": "Bool",
+									"ui_type": "control",
+									"register_id": "bms_close_open_reset"
+								}
+							}
+                        },
+                        {
+							"component_id": "sungrow_ess_#",
+							"variables":
+							{
+								"bms1_racks_in_service":
+								{
+									"name": "Racks In Service - BMS1",
+									"register_id": "bms1_racks_in_service",
+									"type": "Int"
+								},								
+								"bms2_racks_in_service":
+								{
+									"name": "Racks In Service - BMS2",
+									"register_id": "bms2_racks_in_service",
+									"type": "Int"
+								},
+								"bms1_total_racks":
+								{
+									"name": "Total Racks - BMS1",
+									"register_id": "bms1_total_racks",
+									"type": "Int"
+								},								
+								"bms2_total_racks":
+								{
+									"name": "Total Racks - BMS2",
+									"register_id": "bms2_total_racks",
+									"type": "Int"
+								},
+								"bms1_soc":
+								{
+									"name": "State of Charge - BMS1",
+									"register_id": "bms1_soc",
+									"scaler": 1,
+									"unit": "%"
+								},
+								"bms2_soc":
+								{
+									"name": "State of Charge - BMS2",
+									"register_id": "bms2_soc",
+									"scaler": 1,
+									"unit": "%"
+								},
+								"soc":
+								{
+									"name": "State of Charge",
+									"register_id": "soc",
+									"scaler": 1,
+									"unit": "%"
+								},
+								"soh":
+								{
+									"name": "State of Health",
+									"register_id": "soh",
+									"scaler": 1,
+									"value": 100,
+									"unit": "%"
+								},
+								"voltage_dc":
+								{
+									"name": "DC Voltage",
+									"register_id": "voltage_dc",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l1_l2":
+								{
+									"name": "L1-L2 AC Voltage",
+									"register_id": "voltage_l1_l2",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l2_l3":
+								{
+									"name": "L2-L3 AC Voltage",
+									"register_id": "voltage_l2_l3",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"voltage_l3_l1":
+								{
+									"name": "L3-L1 AC Voltage",
+									"register_id": "voltage_l3_l1",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"current_l1":
+								{
+									"name": "L1 AC Current",
+									"register_id": "current_l1",
+									"scaler": 1,
+									"unit": "A"
+								},
+								"current_l2":
+								{
+									"name": "L2 AC Current",
+									"register_id": "current_l2",
+									"scaler": 1,
+									"unit": "A"
+								},
+								"current_l3":
+								{
+									"name": "L3 AC Current",
+									"register_id": "current_l3",
+									"scaler": 1,
+									"unit": "A"
+								},
+								"bms1_max_temp":
+								{
+									"name": "Current Highest Cell Temp - BMS 1",
+									"register_id": "bms1_max_cell_temp",
+									"scaler": 1,
+									"unit": "C"
+								},
+								"bms1_min_temp":
+								{
+									"name": "Current Lowest Cell Temp - BMS 1",
+									"register_id": "bms1_min_cell_temp",
+									"scaler": 1,
+									"unit": "C"
+								},
+								"bms2_max_temp":
+								{
+									"name": "Current Highest Cell Temp - BMS 2",
+									"register_id": "bms2_max_cell_temp",
+									"scaler": 1,
+									"unit": "C"
+								},
+								"bms2_min_temp":
+								{
+									"name": "Current Lowest Cell Temp - BMS 2 ",
+									"register_id": "bms2_min_cell_temp",
+									"scaler": 1,
+									"unit": "C"
+								},
+								"modbus_heartbeat":
+								{
+									"name": "Modbus Heartbeat",
+									"register_id": "heartbeat",
+									"type": "Int",
+									"ui_type": "none",
+									"scaler": 1
+								},
+								"bsc1_faults":
+								{
+									"name": "bsc1_faults",
+									"register_id": "bsc1_faults",
+									"type": "Int",
+									"mask": "0xEFA",
+									"ui_type": "fault"
+								},
+								"apparent_power":
+								{
+									"name": "Apparent Power",
+									"register_id": "apparent_power",
+									"scaler": 1000,
+									"unit": "VA"
+								}
+							}
+						},
+						{
+							"component_id": "dummy_ess_#",
+							"variables":
+							{
+								"dc_contactors_closed":
+								{
+									"name": "DC Contactors Closed",
+									"register_id": "dc_contactors_closed",
+									"type": "Bool"
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    // be explicit about types included
+    // to avoid clashing with Jest types
+    "types": [
+      "cypress"
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "src/*": [
+          "../src/*"
+      ]
+  }
+  },
+  "include": [
+    "../node_modules/cypress",
+    "./**/*.tsx",
+    "./**/*.ts",
+    "../src/mocks"
+  ]
+}

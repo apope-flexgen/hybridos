@@ -1,0 +1,351 @@
+{
+  "static": {
+    "statusMetadata": {
+      "active_power": {
+        "name": "Active Power",
+        "component": "DataPoint",
+        "props": { "label": "Active Power", "unit": "MW", "divider": true },
+        "items": {}
+      },
+      "active_power_setpoint": {
+        "name": "Active Power Setpoint",
+        "component": "DataPoint",
+        "props": {
+          "label": "Active Power Setpoint",
+          "unit": "MW",
+          "divider": true
+        },
+        "items": {}
+      },
+      "apparent_power": {
+        "name": "Apparent Power",
+        "component": "DataPoint",
+        "props": { "label": "Apparent Power", "unit": "MVA", "divider": true },
+        "items": {}
+      },
+      "autobalancing_status": {
+        "name": "Auto Balancing Status",
+        "component": "DataPoint",
+        "props": {
+          "label": "Auto Balancing Status",
+          "unit": "",
+          "divider": true
+        },
+        "items": {}
+      },
+      "component_connected": {
+        "name": "Component Connection Status",
+        "component": "DataPoint",
+        "props": {
+          "label": "Component Connection Status",
+          "unit": "",
+          "divider": true
+        },
+        "items": {}
+      },
+      "current_l1": {
+        "name": "L1 AC Current",
+        "component": "DataPoint",
+        "props": { "label": "L1 AC Current", "unit": "A", "divider": true },
+        "items": {}
+      },
+      "current_l2": {
+        "name": "L2 AC Current\t",
+        "component": "DataPoint",
+        "props": { "label": "L2 AC Current\t", "unit": "A", "divider": true },
+        "items": {}
+      },
+      "current_l3": {
+        "name": "L3 AC Current",
+        "component": "DataPoint",
+        "props": { "label": "L3 AC Current", "unit": "A", "divider": true },
+        "items": {}
+      },
+      "dc_contactors_closed": {
+        "name": "DC Contactors Closed",
+        "component": "DataPoint",
+        "props": {
+          "label": "DC Contactors Closed",
+          "unit": "",
+          "divider": true
+        },
+        "items": {}
+      },
+      "frequency": {
+        "name": "Frequency",
+        "component": "DataPoint",
+        "props": { "label": "Frequency", "unit": "Hz", "divider": true },
+        "items": {}
+      },
+      "frequency_setpoint": {
+        "name": "Frequency Setpoint",
+        "component": "DataPoint",
+        "props": {
+          "label": "Frequency Setpoint",
+          "unit": "Hz",
+          "divider": true
+        },
+        "items": {}
+      },
+      "grid_mode": {
+        "name": "Grid_mode",
+        "component": "DataPoint",
+        "props": { "label": "Grid_mode", "unit": "", "divider": true },
+        "items": {}
+      },
+      "local_bms_status": {
+        "name": "Racks In Service\t",
+        "component": "DataPoint",
+        "props": { "label": "Racks In Service\t", "unit": "", "divider": true },
+        "items": {}
+      },
+      "max_temp": {
+        "name": "Current Highest Cell Temp\t",
+        "component": "DataPoint",
+        "props": {
+          "label": "Current Highest Cell Temp\t",
+          "unit": "C",
+          "divider": true
+        },
+        "items": {}
+      },
+      "min_temp": {
+        "name": "Current Lowest Cell Temp\t",
+        "component": "DataPoint",
+        "props": {
+          "label": "Current Lowest Cell Temp\t",
+          "unit": "C",
+          "divider": true
+        },
+        "items": {}
+      },
+      "reactive_power": {
+        "name": "Reactive Power",
+        "component": "DataPoint",
+        "props": { "label": "Reactive Power", "unit": "MVAR", "divider": true },
+        "items": {}
+      },
+      "reactive_power_setpoint": {
+        "name": "Reactive Power Setpoint\t",
+        "component": "DataPoint",
+        "props": {
+          "label": "Reactive Power Setpoint\t",
+          "unit": "MVAR",
+          "divider": true
+        },
+        "items": {}
+      },
+      "soc": {
+        "name": "State of Charge\t",
+        "component": "DataPoint",
+        "props": { "label": "State of Charge\t", "unit": "%", "divider": true },
+        "items": {}
+      },
+      "soh": {
+        "name": "State of Health\t",
+        "component": "DataPoint",
+        "props": { "label": "State of Health\t", "unit": "%", "divider": true },
+        "items": {}
+      },
+      "status": {
+        "name": "Status",
+        "component": "DataPoint",
+        "props": { "label": "Status", "unit": "", "divider": true },
+        "items": {}
+      },
+      "system_chargeable_energy": {
+        "name": "System Chargeable Energy\t",
+        "component": "DataPoint",
+        "props": {
+          "label": "System Chargeable Energy\t",
+          "unit": "MWh",
+          "divider": true
+        },
+        "items": {}
+      },
+      "system_chargeable_power": {
+        "name": "System Chargeable Power\t",
+        "component": "DataPoint",
+        "props": {
+          "label": "System Chargeable Power\t",
+          "unit": "MW",
+          "divider": true
+        },
+        "items": {}
+      },
+      "system_dischargeable_energy": {
+        "name": "System Dischargeable Energy\t",
+        "component": "DataPoint",
+        "props": {
+          "label": "System Dischargeable Energy\t",
+          "unit": "MWh",
+          "divider": true
+        },
+        "items": {}
+      },
+      "system_dischargeable_power": {
+        "name": "System Dischargeable Power\t",
+        "component": "DataPoint",
+        "props": {
+          "label": "System Dischargeable Power\t",
+          "unit": "MW",
+          "divider": true
+        },
+        "items": {}
+      },
+      "voltage_l1_l2": {
+        "name": "L1-L2 AC Voltage",
+        "component": "DataPoint",
+        "props": { "label": "L1-L2 AC Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_l2_l3": {
+        "name": "L2-L3 AC Voltage",
+        "component": "DataPoint",
+        "props": { "label": "L2-L3 AC Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_l3_l1": {
+        "name": "L3-L1 AC Voltage",
+        "component": "DataPoint",
+        "props": { "label": "L3-L1 AC Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_max": {
+        "name": "Maximum Voltage",
+        "component": "DataPoint",
+        "props": { "label": "Maximum Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_min": {
+        "name": "Minimum Voltage",
+        "component": "DataPoint",
+        "props": { "label": "Minimum Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_setpoint": {
+        "name": "Voltage Setpoint",
+        "component": "DataPoint",
+        "props": { "label": "Voltage Setpoint", "unit": "V", "divider": true },
+        "items": {}
+      }
+    },
+    "controlMetadata": {
+      "maint_mode": {
+        "name": "Maintenance Mode",
+        "component": "Switch",
+        "props": { "label": "Maintenance Mode" },
+        "items": {}
+      },
+      "start": {
+        "name": "Start",
+        "component": "MuiButton",
+        "props": { "label": "Start" },
+        "items": {}
+      },
+      "stop": {
+        "name": "Stop",
+        "component": "MuiButton",
+        "props": { "label": "Stop" },
+        "items": {}
+      },
+      "enter_standby": {
+        "name": "Enter Standby",
+        "component": "MuiButton",
+        "props": { "label": "Enter Standby" },
+        "items": {}
+      },
+      "exit_standby": {
+        "name": "Exit Standby",
+        "component": "MuiButton",
+        "props": { "label": "Exit Standby" },
+        "items": {}
+      },
+      "clear_faults": {
+        "name": "Clear Faults",
+        "component": "MuiButton",
+        "props": { "label": "Clear Faults" },
+        "items": {}
+      },
+      "limits_override": {
+        "name": "Limits Override",
+        "component": "Switch",
+        "props": { "label": "Limits Override" },
+        "items": {}
+      },
+      "maint_active_power_setpoint": {
+        "name": "Active Power Setpoint",
+        "component": "TextField",
+        "props": {
+          "label": "Active Power Setpoint",
+          "adornment": "end",
+          "TextAdornment": "MW",
+          "disableLabelAnimation": true,
+          "type": "number",
+          "scalar": 1000
+        },
+        "items": {}
+      },
+      "maint_reactive_power_setpoint": {
+        "name": "Reactive Power Setpoint",
+        "component": "TextField",
+        "props": {
+          "label": "Reactive Power Setpoint",
+          "adornment": "end",
+          "TextAdornment": "MW",
+          "disableLabelAnimation": true,
+          "type": "number",
+          "scalar": 1000
+        },
+        "items": {}
+      }
+    }
+  },
+  "state": {
+    "statusInformation": {
+      "active_power": 0,
+      "active_power_setpoint": 0,
+      "apparent_power": 0,
+      "autobalancing_status": false,
+      "component_connected": false,
+      "current_l1": 0,
+      "current_l2": 0,
+      "current_l3": 0,
+      "dc_contactors_closed": false,
+      "frequency": 0,
+      "frequency_setpoint": 60,
+      "grid_mode": 0,
+      "local_bms_status": 0,
+      "max_temp": 0,
+      "min_temp": 0,
+      "reactive_power": 0,
+      "reactive_power_setpoint": 0,
+      "soc": 49.462364196777344,
+      "soh": 0,
+      "status": "Stopped",
+      "system_chargeable_energy": 0,
+      "system_chargeable_power": 5500,
+      "system_dischargeable_energy": 0,
+      "system_dischargeable_power": 5500,
+      "voltage_l1_l2": 95600.234375,
+      "voltage_l2_l3": 0,
+      "voltage_l3_l1": 0,
+      "voltage_max": 0,
+      "voltage_min": 0,
+      "voltage_setpoint": 38333.33203125
+    },
+    "faultInformation": {},
+    "alarmInformation": {},
+    "controlInformation": {
+      "maint_mode": { "enabled": true, "value": false },
+      "start": { "enabled": false },
+      "stop": { "enabled": false },
+      "enter_standby": { "enabled": false },
+      "exit_standby": { "enabled": false },
+      "clear_faults": { "enabled": false },
+      "limits_override": { "enabled": false, "value": false },
+      "maint_active_power_setpoint": { "enabled": false, "value": 0 },
+      "maint_reactive_power_setpoint": { "enabled": false, "value": 0 }
+    }
+  }
+}

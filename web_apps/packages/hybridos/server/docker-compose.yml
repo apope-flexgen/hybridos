@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  db:
+    container_name: "mongo"
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    #environment:
+    #MONGO_INITDB_ROOT_USERNAME: root
+    #MONGO_INITDB_ROOT_PASSWORD: rootpassword         
+    volumes:
+      - "mongodata:/data/db"
+    networks:
+      - net
+  api:
+    container_name: "nest_web_server"
+    build:
+      context: .
+      target: development
+    restart: always
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+      - 9229:9229
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+    env_file:
+      - .env
+    networks:
+      - net
+volumes:
+  mongodata:
+networks:
+  net:

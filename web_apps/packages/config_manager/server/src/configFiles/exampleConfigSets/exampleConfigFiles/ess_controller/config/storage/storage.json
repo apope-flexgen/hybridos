@@ -1,0 +1,398 @@
+{
+    "dbName": "ameresco_sce_anode",
+    "measurements": [
+        {
+            "source": [
+                "pe_pcs_controls",
+                "pe_pcs_info"
+            ],
+            "baseUri": "/components",
+            "measurement": "pcs_modbus_data"
+        },
+        {
+            "source": [
+                "summary"
+            ],
+            "baseUri": "/assets/pcs",
+            "measurement": "pcs_assets_data"
+        },
+        {
+            "source": [
+                "catl_bms_1_controls",
+                "catl_bms_1_info"
+            ],
+            "baseUri": "/components",
+            "measurement": "bms_1_modbus_data"
+        },
+        {
+            "source": [
+                "catl_bms_2_controls",
+                "catl_bms_2_info"
+            ],
+            "baseUri": "/components",
+            "measurement": "bms_2_modbus_data"
+        },
+        {
+            "source": [
+                "summary"
+            ],
+            "baseUri": "/assets/bms/bms_1",
+            "measurement": "bms_1_assets_data"
+        },
+        {
+            "source": [
+                "summary"
+            ],
+            "baseUri": "/assets/bms/bms_2",
+            "measurement": "bms_2_assets_data"
+        },
+        {
+            "source": [
+                "rack_01",
+                "rack_02",
+                "rack_03",
+                "rack_04",
+                "rack_05",
+                "rack_06",
+                "rack_07",
+                "rack_08",
+                "rack_09",
+                "rack_10",
+                "rack_11",
+                "rack_12",
+                "rack_13",
+                "rack_14",
+                "rack_15",
+                "rack_16",
+                "rack_17",
+                "rack_18",
+                "rack_19",
+                "rack_20"
+            ],
+            "baseUri": "/assets/bms_1",
+            "measurement": "bms_1_rack_assets_data"
+        },
+        {
+            "source": [
+                "rack_01",
+                "rack_02",
+                "rack_03",
+                "rack_04",
+                "rack_05",
+                "rack_06",
+                "rack_07",
+                "rack_08",
+                "rack_09",
+                "rack_10",
+                "rack_11",
+                "rack_12",
+                "rack_13",
+                "rack_14",
+                "rack_15",
+                "rack_16",
+                "rack_17",
+                "rack_18",
+                "rack_19",
+                "rack_20"
+            ],
+            "baseUri": "/assets/bms_2",
+            "measurement": "bms_2_rack_assets_data"
+        },
+        {
+            "baseUri": "/components",
+            "measurement": "components"
+        },
+        {
+            "baseUri": "/site",
+            "measurement": "site"
+        },
+        {
+            "baseUri": "/features",
+            "measurement": "features"
+        },
+        {
+            "baseUri": "/metrics",
+            "measurement": "metrics"
+        },
+        {
+            "baseUri": "/storage",
+            "measurement": null
+        }
+    ],
+    "retentionPolicies": [
+        {
+            "name": "autogen",
+            "duration": "0s",
+            "_duration": "INF",
+            "shardGroupDuration": "168h0m0s",
+            "replicaN": 1,
+            "default": false
+        },
+        {
+            "name": "infinite_rp",
+            "duration": "0s",
+            "_duration": "INF",
+            "shardGroupDuration": "168h0m0s",
+            "replicaN": 1,
+            "default": false
+        },
+        {
+            "name": "30_day_rp",
+            "duration": "720h0m0s",
+            "_duration": "30d",
+            "shardGroupDuration": "24h0m0s",
+            "replicaN": 1,
+            "default": true
+        },
+        {
+            "name": "120_day_rp",
+            "duration": "2880h0m0s",
+            "_duration": "120d",
+            "shardGroupDuration": "24h0m0s",
+            "replicaN": 1,
+            "default": false
+        }
+    ],
+    "continuousQueries": [
+        {
+            "name": "components_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "components",
+            "from": "components",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "metrics_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "metrics",
+            "from": "metrics",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "site_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "site",
+            "from": "site",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "features_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "features",
+            "from": "features",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "pcs_modbus_data_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "pcs_modbus_data",
+            "from": "pcs_modbus_data",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "bms_1_modbus_data_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "bms_1_modbus_data",
+            "from": "bms_1_modbus_data",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "bms_2_modbus_data_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "bms_2_modbus_data",
+            "from": "bms_2_modbus_data",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "pcs_assets_data_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "pcs_assets_data",
+            "from": "pcs_assets_data",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "bms_1_assets_data_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "bms_1_assets_data",
+            "from": "bms_1_assets_data",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "bms_2_assets_data_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "bms_2_assets_data",
+            "from": "bms_2_assets_data",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "bms_1_rack_assets_data_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "bms_1_rack_assets_data",
+            "from": "bms_1_rack_assets_data",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "bms_2_rack_assets_data_1min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "120_day_rp",
+            "measurement": "bms_2_rack_assets_data",
+            "from": "bms_2_rack_assets_data",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "components_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "components",
+            "from": "components",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "metrics_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "metrics",
+            "from": "metrics",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "site_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "site",
+            "from": "site",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "features_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "features",
+            "from": "features",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "pcs_modbus_data_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "pcs_modbus_data",
+            "from": "pcs_modbus_data",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "bms_1_modbus_data_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "bms_1_modbus_data",
+            "from": "bms_1_modbus_data",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "bms_2_modbus_data_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "bms_2_modbus_data",
+            "from": "bms_2_modbus_data",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "pcs_assets_data_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "pcs_assets_data",
+            "from": "pcs_assets_data",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "bms_1_assets_data_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "bms_1_assets_data",
+            "from": "bms_1_assets_data",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "bms_2_assets_data_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "bms_2_assets_data",
+            "from": "bms_2_assets_data",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "bms_1_rack_assets_data_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "bms_1_rack_assets_data",
+            "from": "bms_1_rack_assets_data",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "bms_2_rack_assets_data_10min_cq",
+            "db": "ameresco_sce_anode",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "ameresco_sce_anode",
+            "rp": "infinite_rp",
+            "measurement": "bms_2_rack_assets_data",
+            "from": "bms_2_rack_assets_data",
+            "groupBy": "time(10m), *"
+        }
+    ]
+}

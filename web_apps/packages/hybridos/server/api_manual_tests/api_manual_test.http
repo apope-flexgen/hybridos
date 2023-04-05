@@ -1,0 +1,193 @@
+@hostname=https://localhost:3001/api
+// Ensure user_id is an existing user
+# @jwt_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWF0IjoxNjYyNDkwNTcwLCJleHAiOjE2NjI0OTQxNzB9.IqZ4okBBGWLIRvZCAqRYwmjw1MNKt4hWmHSMfblmuns
+
+@jwt_token_login = {{login.response.body.accessToken}}
+@jwt_token_mfa = {{mfa.response.body.accessToken}}
+@jwt_token_passExp = {{passExp.response.body.accessToken}}
+@jwt_token_fims_socket = {{fimsAuth.response.body.accessToken}}
+@username = {{login.response.body.username}}
+###
+
+GET {{hostname}}/permissions
+###
+
+POST {{hostname}}/login
+###
+
+GET {{hostname}}/users/1234
+###
+
+POST {{hostname}}/app-settings/radius-test
+###
+
+
+# @name login
+POST {{hostname}}/login
+Content-Type: application/json
+
+{
+  "username": "fgadmin",
+  "password": "fgadmin1A!"
+}
+###
+
+# @name mfa
+POST {{hostname}}/login/mfa 
+Authorization: {{jwt_token_login}}
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "totp": "101355"
+}
+
+###
+# @name passExp
+POST {{hostname}}/login/passExp
+Authorization: {{jwt_token_login}}
+Content-Type: application/json
+
+{
+  "username": "{{username}}",
+  "updatedPassword": "P@ssw0rd2"
+}
+
+###
+POST {{hostname}}/logout
+
+###
+GET {{hostname}}/authenticate-user-token
+Authorization: {{jwt_token_login}}
+
+###
+GET {{hostname}}/accessToken-test
+Authorization: {{jwt_token_login}}
+# Authorization: {{jwt_token_mfa}}
+# Authorization: {{jwt_token_passExp}}
+
+###
+GET {{hostname}}/app-settings
+Authorization: {{jwt_token_login}}
+###
+
+POST {{hostname}}/app-settings
+Authorization: {{jwt_token_login}}
+Content-Type: application/json
+
+{
+    "password": {
+      "password_expiration": false,
+      "minimum_password_length": 8,
+      "maximum_password_length": 128,
+      "password_expiration_interval": "1m",
+      "old_passwords": 3
+      "password_regular_expression": "/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!"#\$%&'\*\+,\.\/:;=\\?@\^`\|~])/"
+      "multi_factor_authentication": false,
+    },
+    "radius": {
+      "is_enabled": false,
+      "ip_address": "127.0.0.1",
+      "port": "1812",
+      "secret_phrase": "testing123",
+      "wait_time": 5000,
+      "is_local_auth_disabled": false,
+    },
+}
+###
+
+GET {{hostname}}/app-settings/count
+###
+
+###
+POST {{hostname}}/users
+Authorization: {{jwt_token_login}}
+Content-Type: application/json
+
+{
+    "username": "jhall17",
+    "password": "Password!1",
+    "role": "developer"
+}
+###
+
+@user_id=6317aef06dc8713d9050350e
+PUT  {{hostname}}/users/{{user_id}}
+Content-Type: application/json
+
+{
+    "username": "grid_employee33",
+    "password": "1234!2aBE",
+    "role": "admin"
+}
+###
+
+@delete_user_id=6316d0c519e89335842a7cae
+DELETE {{hostname}}/users/{{delete_user_id}}
+Authorization: {{jwt_token_login}}
+###
+
+@read_user_id=631118fdec0291252e0fba15
+GET {{hostname}}/users/{{read_user_id}}
+###
+
+@role=developer
+GET {{hostname}}/users?role={{role}}
+Authorization: {{jwt_token_login}}
+###
+
+GET {{hostname}}/users
+
+###
+GET {{hostname}}/radius
+
+###
+GET {{hostname}}/radius/guard
+Content-Type: application/json
+
+{
+  "username": "fredf@flexgen.com",
+  "password": "wilma"
+}
+
+###
+POST {{hostname}}/login
+Content-Type: application/json
+
+{
+  "username": "fredf@flexgen.com",
+  "password": "wilma"
+}
+
+###
+POST {{hostname}}/app-settings/radius-test
+Content-Type: application/json
+
+{
+  "username": "fredf@flexgen.com",
+  "password": "wilma",
+  "ip_address": "127.0.0.1",
+  "port": "1812",
+  "secret_phrase": "testing123",
+  "wait_time": 5000
+}
+
+
+###
+GET {{hostname}}/timeout
+Authorization: {{jwt_token_login}}
+
+###
+GET {{hostname}}/roles/admin
+Authorization: {{jwt_token_login}}
+
+###
+GET {{hostname}}/roles/user
+Authorization: {{jwt_token_login}}
+
+###
+###
+# @name fimsAuth
+GET {{hostname}}/fims/one-time-auth
+Authorization: {{jwt_token_login}}
+###

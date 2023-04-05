@@ -1,0 +1,321 @@
+{
+   "_doc": "dashboard",
+   "_id": "62068c710495564d92c4f05c",
+   "_version": "2022-02-11T14:39:45.147-05:00",
+   "data": [
+      {
+         "info": {
+            "baseURI": "/summary",
+            "batteryView": false,
+            "batteryViewSourceURI": null,
+            "batteryViewURI": "",
+            "isTemplate": true,
+            "items": [
+               {
+                  "name": "Site Summary",
+                  "uri": "/summary"
+               }
+            ],
+            "name": "Site Summary",
+            "sourceURIs": [
+               "/site"
+            ]
+         },
+         "status": [
+            {
+               "name": "Site Controller Status",
+               "scalar": null,
+               "sourceURI": "/site",
+               "units": "",
+               "uri": "/site_status"
+            },
+            {
+               "name": "ESS Active Power Setpoint",
+               "scalar": 1000,
+               "sourceURI": "/site",
+               "units": "MW",
+               "uri": "/ess_kW_cmd"
+            }
+         ]
+      },
+      {
+         "info": {
+            "baseURI": "/summary",
+            "batteryView": false,
+            "batteryViewSourceURI": null,
+            "batteryViewURI": "",
+            "isTemplate": true,
+            "items": [
+               {
+                  "name": "Features Summary",
+                  "uri": "/summary"
+               }
+            ],
+            "name": "Features Summary",
+            "sourceURIs": [
+               "/features"
+            ]
+         },
+         "status": [
+            {
+               "name": "Active Power Mode",
+               "scalar": null,
+               "sourceURI": "/features",
+               "units": "",
+               "uri": "/runmode1_kW_mode_status"
+            },
+            {
+               "name": "Reactive Power Mode",
+               "scalar": null,
+               "sourceURI": "/features",
+               "units": "",
+               "uri": "/runmode1_kVAR_mode_status"
+            },
+            {
+               "name": "Site Frequency",
+               "scalar": null,
+               "sourceURI": "/features",
+               "units": "Hz",
+               "uri": "/site_frequency"
+            },
+            {
+               "name": "Basepoint (ERCOT SCED)",
+               "scalar": 1000,
+               "sourceURI": "/features",
+               "units": "MW",
+               "uri": "/fr_baseload_cmd_kw"
+            },
+            {
+               "name": "Minimum POI Power Limit",
+               "scalar": 1000,
+               "sourceURI": "/features",
+               "units": "MW",
+               "uri": "/poi_limits_min_kW"
+            },
+            {
+               "name": "Maximum POI Power Limit",
+               "scalar": 1000,
+               "sourceURI": "/features",
+               "units": "MW",
+               "uri": "/poi_limits_max_kW"
+            }
+         ]
+      },
+      {
+         "info": {
+            "baseURI": "/ess/summary",
+            "batteryView": false,
+            "batteryViewSourceURI": null,
+            "batteryViewURI": "",
+            "isTemplate": true,
+            "items": [
+               {
+                  "name": "Storage",
+                  "uri": "/ess/summary"
+               }
+            ],
+            "name": "Storage Summary",
+            "sourceURIs": [
+               "/assets"
+            ]
+         },
+         "status": [
+            {
+               "name": "Units Available",
+               "scalar": null,
+               "sourceURI": "/assets",
+               "units": "",
+               "uri": "/num_ess_available"
+            },
+            {
+               "name": "Units Running",
+               "scalar": null,
+               "sourceURI": "/assets",
+               "units": "",
+               "uri": "/num_ess_running"
+            },
+            {
+               "name": "Active Power",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "MW",
+               "uri": "/ess_total_active_power"
+            },
+            {
+               "name": "Reactive Power",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "MVAR",
+               "uri": "/ess_total_reactive_power"
+            },
+            {
+               "name": "Apparent Power",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "MVA",
+               "uri": "/ess_total_apparent_power"
+            },
+            {
+               "name": "Average State of Charge",
+               "scalar": null,
+               "sourceURI": "/assets",
+               "units": "%",
+               "uri": "/ess_average_soc"
+            },
+            {
+               "name": "Chargeable Power",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "MW",
+               "uri": "/ess_chargeable_power"
+            },
+            {
+               "name": "Dischargeable Power",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "MW",
+               "uri": "/ess_dischargeable_power"
+            },
+            {
+               "name": "Chargeable Energy",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "MWh",
+               "uri": "/ess_chargeable_energy"
+            },
+            {
+               "name": "Dischargeable Energy",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "MWh",
+               "uri": "/ess_dischargeable_energy"
+            },
+            {
+               "name": "Total Alarms",
+               "scalar": null,
+               "sourceURI": "/assets",
+               "units": "",
+               "uri": "/ess_total_alarms"
+            },
+            {
+               "name": "Total Faults",
+               "scalar": null,
+               "sourceURI": "/assets",
+               "units": "",
+               "uri": "/ess_total_faults"
+            },
+            {
+               "name": "Grid Forming Voltage Slew",
+               "scalar": null,
+               "sourceURI": "/assets",
+               "units": "%/s",
+               "uri": "/grid_forming_voltage_slew"
+            }
+         ]
+      },
+      {
+         "info": {
+            "baseURI": "",
+            "batteryView": false,
+            "batteryViewSourceURI": null,
+            "batteryViewURI": "",
+            "isTemplate": true,
+            "items": [
+               {
+                  "name": "POI Summary",
+                  "uri": "/feeders/feed_1"
+               }
+            ],
+            "name": "POI Summary",
+            "sourceURIs": [
+               "/assets"
+            ]
+         },
+         "status": [
+            {
+               "name": "POI Breaker Status",
+               "scalar": null,
+               "sourceURI": "/assets",
+               "units": "",
+               "uri": "/breaker_status"
+            },
+            {
+               "name": "POI Active Power",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "MW",
+               "uri": "/active_power"
+            },
+            {
+               "name": "POI Voltage",
+               "sourceURI": "/assets",
+               "units": "V",
+               "uri": "/grid_voltage_l1"
+            }
+         ]
+      },
+      {
+         "info": {
+            "baseURI": "",
+            "batteryView": false,
+            "batteryViewSourceURI": null,
+            "batteryViewURI": "",
+            "isTemplate": true,
+            "items": [
+               {
+                  "name": "BESS Aux Summary",
+                  "uri": "/feeders/feed_2"
+               }
+            ],
+            "name": "Feeders Summary",
+            "sourceURIs": [
+               "/assets"
+            ]
+         },
+         "status": [
+            {
+               "name": "BESS Aux Active Power",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "MW",
+               "uri": "/active_power"
+            },
+            {
+               "name": "BESS Aux Voltage",
+               "sourceURI": "/assets",
+               "units": "V",
+               "uri": "/voltage_l1_l2"
+            }
+
+         ]
+      },
+      {
+         "info": {
+            "baseURI": "/assets",
+            "batteryView": false,
+            "batteryViewSourceURI": null,
+            "batteryViewURI": "",
+            "isTemplate": true,
+            "items": [
+               {
+                  "name": "UPS Summary",
+                  "uri": "/feeders/feed_3"
+               }
+            ],
+            "name": "Control UPS Summary",
+            "sourceURIs": [
+               "/assets"
+            ]
+         },
+         "status": [
+            {
+               "name": "Control UPS Voltage",
+               "scalar": 1000,
+               "sourceURI": "/assets",
+               "units": "V",
+               "uri": "/output_voltage_ac"
+            }
+         ]
+      }
+   ]
+}

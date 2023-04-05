@@ -1,0 +1,11 @@
+fims-3.0.0
+site_controller-2.4.2
+modbus_interface-2.1.0
+dnp3_interface-3.0.3
+dbi-2.2.0
+events-1.6.0
+metrics-1.6.0
+web_server-1.9.0
+web_ui-1.9.0
+scheduler-1.3.1
+cops-1.3.0

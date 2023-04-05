@@ -1,0 +1,7 @@
+packages:
+  - 'packages/shared'
+  - 'packages/hybridos/server'
+  - 'packages/hybridos/ui'
+  - 'packages/hybridos/shared'
+  # - 'packages/config_manager/server'
+  # - 'packages/config_manager/ui'

@@ -1,0 +1,40 @@
+{
+    "/sysconfig/default": 
+    {
+        "Help": " This is the ess_2 config file",
+        "Subs":":/assets:/site/ess_2_hs:/site/ess_2_ls:/components:",
+        "Config":"ess_2_init",
+        "EssName": "ess_2"
+    }
+    ,
+    "/blockeduris/pub" :
+    {
+        "/assets/ess/summary":true,
+        "/assets/ess/ess":true,
+        "/assets/bms/summary":true,
+        "/assets/pcs/summary":true,
+        "/assets/bms/bms_1":true,
+        "/assets/pcs/pcs_1":true,
+        "/assets/bms_1": true,
+        "/assets/pcs_1":true,
+        "/components/catl_bms_1":true,
+        "/components/pcs_1":true,
+        "/site/ess_hs": true,
+        "/site/ess_ls": true
+    },
+    "/blockeduris/set" :
+    {
+        "/assets/ess/summary":true,
+        "/assets/ess/ess":true,
+        "/assets/bms/summary":true,
+        "/assets/pcs/summary":true,
+        "/assets/bms/bms_1":true,
+        "/assets/pcs/pcs_1":true,
+        "/assets/bms_1": true,
+        "/assets/pcs_1":true,
+        "/components/catl_bms_1":true,
+        "/components/pcs_1":true,
+        "/site/ess_hs": true,
+        "/site/ess_ls": true
+    }
+}

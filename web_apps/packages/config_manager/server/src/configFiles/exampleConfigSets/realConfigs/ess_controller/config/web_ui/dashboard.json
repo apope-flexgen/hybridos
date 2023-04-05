@@ -1,0 +1,627 @@
+{
+  "_doc": "dashboard",
+  "_id": "61aa4b2e3196d866e85e7cb9",
+  "_version": "2021-12-03T18:14:59.934Z",
+  "data": [
+    {
+      "info": {
+        "baseURI": "",
+        "batteryView": false,
+        "batteryViewSourceURI": null,
+        "batteryViewURI": "",
+        "isTemplate": true,
+        "items": [
+          {
+            "name": "ESS Controller 1",
+            "uri": "/ess/ess_1"
+          },
+          {
+            "name": "ESS Controller 2",
+            "uri": "/ess/ess_2"
+          }
+        ],
+        "name": "General Info",
+        "sourceURIs": [
+          "/assets"
+        ]
+      },
+      "status": [
+        {
+          "name": "Version",
+          "scalar": "0",
+          "sourceURI": "/assets",
+          "units": "",
+          "uri": "/version"
+        }
+      ]
+    },
+    {
+      "info": {
+        "baseURI": "",
+        "batteryView": true,
+        "batteryViewSourceURI": "/assets",
+        "batteryViewURI": "/soc",
+        "isTemplate": true,
+        "items": [
+          {
+            "name": "Rack 1",
+            "uri": "/bms_1/sbmu_1"
+          },
+          {
+            "name": "Rack 2",
+            "uri": "/bms_1/sbmu_2"
+          },
+          {
+            "name": "Rack 3",
+            "uri": "/bms_1/sbmu_3"
+          },
+          {
+            "name": "Rack 4",
+            "uri": "/bms_1/sbmu_4"
+          },
+          {
+            "name": "Rack 5",
+            "uri": "/bms_1/sbmu_5"
+          },
+          {
+            "name": "Rack 6",
+            "uri": "/bms_1/sbmu_6"
+          },
+          {
+            "name": "Rack 7",
+            "uri": "/bms_1/sbmu_7"
+          },
+          {
+            "name": "Rack 8",
+            "uri": "/bms_1/sbmu_8"
+          },
+          {
+            "name": "Rack 9",
+            "uri": "/bms_1/sbmu_9"
+          },
+          {
+            "name": "Rack 10",
+            "uri": "/bms_1/sbmu_10"
+          },
+          {
+            "name": "Rack 11",
+            "uri": "/bms_1/sbmu_11"
+          },
+          {
+            "name": "Rack 12",
+            "uri": "/bms_1/sbmu_12"
+          },
+          {
+            "name": "Rack 13",
+            "uri": "/bms_1/sbmu_13"
+          },
+          {
+            "name": "Rack 14",
+            "uri": "/bms_1/sbmu_14"
+          },
+          {
+            "name": "Rack 15",
+            "uri": "/bms_1/sbmu_15"
+          },
+          {
+            "name": "Rack 16",
+            "uri": "/bms_1/sbmu_16"
+          },
+          {
+            "name": "Rack 17",
+            "uri": "/bms_1/sbmu_17"
+          },
+          {
+            "name": "Rack 18",
+            "uri": "/bms_1/sbmu_18"
+          },
+          {
+            "name": "Rack 19",
+            "uri": "/bms_1/sbmu_19"
+          },
+          {
+            "name": "Rack 20",
+            "uri": "/bms_1/sbmu_20"
+          }
+        ],
+        "name": "CATL BMS 1",
+        "sourceURIs": [
+          "/assets"
+        ]
+      },
+      "status": [
+        {
+          "name": "SOC",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "%",
+          "uri": "/soc"
+        },
+        {
+          "name": "SOH",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "%",
+          "uri": "/soh"
+        },
+        {
+          "name": "System Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/system_voltage"
+        },
+        {
+          "name": "System Current",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/system_current"
+        },
+        {
+          "name": "System Power",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "kW",
+          "uri": "/system_power"
+        },
+        {
+          "name": "Max Cell Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/max_cell_voltage"
+        },
+        {
+          "name": "Min Cell Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/min_cell_voltage"
+        },
+        {
+          "name": "Avg Cell Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/avg_cell_voltage"
+        },
+        {
+          "name": "Max Cell Temperature",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "°C",
+          "uri": "/max_cell_temp"
+        },
+        {
+          "name": "Min Cell Temperature",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "°C",
+          "uri": "/min_cell_temp"
+        },
+        {
+          "name": "Avg Cell Temperature",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "°C",
+          "uri": "/avg_cell_temp"
+        },
+        {
+          "name": "Max Charge Current",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/max_charge_current"
+        },
+        {
+          "name": "Max Discharge Current",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/max_discharge_current"
+        },
+        {
+          "name": "Door State",
+          "scalar": null,
+          "sourceURI": "/assets",
+          "units": "",
+          "uri": "/sbmu_door_state_ui"
+        },
+        {
+          "name": "Contactor Status",
+          "scalar": null,
+          "sourceURI": "/assets",
+          "units": "",
+          "uri": "/dc_contactor_status"
+        }
+      ]
+    },
+    {
+      "info": {
+        "baseURI": "",
+        "batteryView": true,
+        "batteryViewSourceURI": "/assets",
+        "batteryViewURI": "/soc",
+        "isTemplate": true,
+        "items": [
+          {
+            "name": "Rack 1",
+            "uri": "/bms_2/sbmu_1"
+          },
+          {
+            "name": "Rack 2",
+            "uri": "/bms_2/sbmu_2"
+          },
+          {
+            "name": "Rack 3",
+            "uri": "/bms_2/sbmu_3"
+          },
+          {
+            "name": "Rack 4",
+            "uri": "/bms_2/sbmu_4"
+          },
+          {
+            "name": "Rack 5",
+            "uri": "/bms_2/sbmu_5"
+          },
+          {
+            "name": "Rack 6",
+            "uri": "/bms_2/sbmu_6"
+          },
+          {
+            "name": "Rack 7",
+            "uri": "/bms_2/sbmu_7"
+          },
+          {
+            "name": "Rack 8",
+            "uri": "/bms_2/sbmu_8"
+          },
+          {
+            "name": "Rack 9",
+            "uri": "/bms_2/sbmu_9"
+          },
+          {
+            "name": "Rack 10",
+            "uri": "/bms_2/sbmu_10"
+          },
+          {
+            "name": "Rack 11",
+            "uri": "/bms_2/sbmu_11"
+          },
+          {
+            "name": "Rack 12",
+            "uri": "/bms_2/sbmu_12"
+          },
+          {
+            "name": "Rack 13",
+            "uri": "/bms_2/sbmu_13"
+          },
+          {
+            "name": "Rack 14",
+            "uri": "/bms_2/sbmu_14"
+          },
+          {
+            "name": "Rack 15",
+            "uri": "/bms_2/sbmu_15"
+          },
+          {
+            "name": "Rack 16",
+            "uri": "/bms_2/sbmu_16"
+          },
+          {
+            "name": "Rack 17",
+            "uri": "/bms_2/sbmu_17"
+          },
+          {
+            "name": "Rack 18",
+            "uri": "/bms_2/sbmu_18"
+          },
+          {
+            "name": "Rack 19",
+            "uri": "/bms_2/sbmu_19"
+          },
+          {
+            "name": "Rack 20",
+            "uri": "/bms_2/sbmu_20"
+          }
+        ],
+        "name": "CATL BMS 2",
+        "sourceURIs": [
+          "/assets"
+        ]
+      },
+      "status": [
+        {
+          "name": "SOC",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "%",
+          "uri": "/soc"
+        },
+        {
+          "name": "SOH",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "%",
+          "uri": "/soh"
+        },
+        {
+          "name": "System Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/system_voltage"
+        },
+        {
+          "name": "System Current",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/system_current"
+        },
+        {
+          "name": "System Power",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "kW",
+          "uri": "/system_power"
+        },
+        {
+          "name": "Max Cell Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/max_cell_voltage"
+        },
+        {
+          "name": "Min Cell Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/min_cell_voltage"
+        },
+        {
+          "name": "Avg Cell Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/avg_cell_voltage"
+        },
+        {
+          "name": "Max Cell Temperature",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "°C",
+          "uri": "/max_cell_temp"
+        },
+        {
+          "name": "Min Cell Temperature",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "°C",
+          "uri": "/min_cell_temp"
+        },
+        {
+          "name": "Avg Cell Temperature",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "°C",
+          "uri": "/avg_cell_temp"
+        },
+        {
+          "name": "Max Charge Current",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/max_charge_current"
+        },
+        {
+          "name": "Max Discharge Current",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/max_discharge_current"
+        },
+        {
+          "name": "Door State",
+          "scalar": null,
+          "sourceURI": "/assets",
+          "units": "",
+          "uri": "/sbmu_door_state_ui"
+        },
+        {
+          "name": "Contactor Status",
+          "scalar": null,
+          "sourceURI": "/assets",
+          "units": "",
+          "uri": "/dc_contactor_status"
+        }
+      ]
+    },
+    {
+      "info": {
+        "baseURI": "",
+        "batteryView": false,
+        "batteryViewSourceURI": null,
+        "batteryViewURI": "",
+        "isTemplate": true,
+        "items": [
+          {
+            "name": "Module 1",
+            "uri": "/pcs_1/module_1"
+          },
+          {
+            "name": "Module 2",
+            "uri": "/pcs_1/module_2"
+          },
+          {
+            "name": "Module 3",
+            "uri": "/pcs_1/module_3"
+          }
+        ],
+        "name": "PE PCS 1",
+        "sourceURIs": [
+          "/assets"
+        ]
+      },
+      "status": [
+        {
+          "name": "Module Status",
+          "scalar": "0",
+          "sourceURI": "/assets",
+          "units": "",
+          "uri": "/module_status"
+        },
+        {
+          "name": "Current R",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/current_r"
+        },
+        {
+          "name": "Current S",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/current_s"
+        },
+        {
+          "name": "Current T",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/current_t"
+        },
+        {
+          "name": "DC Current",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/dc_current"
+        },
+        {
+          "name": "DC Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/dc_voltage"
+        },
+        {
+          "name": "Active Power",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "kW",
+          "uri": "/active_power"
+        },
+        {
+          "name": "Reactive Power",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "kVAr",
+          "uri": "/reactive_power"
+        },
+        {
+          "name": "Max Temperature",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "°C",
+          "uri": "/max_temp"
+        }
+      ]
+    },
+    {
+      "info": {
+        "baseURI": "",
+        "batteryView": false,
+        "batteryViewSourceURI": null,
+        "batteryViewURI": "",
+        "isTemplate": true,
+        "items": [
+          {
+            "name": "Module 4",
+            "uri": "/pcs_2/module_4"
+          },
+          {
+            "name": "Module 5",
+            "uri": "/pcs_2/module_5"
+          },
+          {
+            "name": "Module 6",
+            "uri": "/pcs_2/module_6"
+          }
+        ],
+        "name": "PE PCS 2",
+        "sourceURIs": [
+          "/assets"
+        ]
+      },
+      "status": [
+        {
+          "name": "Module Status",
+          "scalar": "0",
+          "sourceURI": "/assets",
+          "units": "",
+          "uri": "/module_status"
+        },
+        {
+          "name": "Current R",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/current_r"
+        },
+        {
+          "name": "Current S",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/current_s"
+        },
+        {
+          "name": "Current T",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/current_t"
+        },
+        {
+          "name": "DC Current",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "A",
+          "uri": "/dc_current"
+        },
+        {
+          "name": "DC Voltage",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "V",
+          "uri": "/dc_voltage"
+        },
+        {
+          "name": "Active Power",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "kW",
+          "uri": "/active_power"
+        },
+        {
+          "name": "Reactive Power",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "kVAr",
+          "uri": "/reactive_power"
+        },
+        {
+          "name": "Max Temperature",
+          "scalar": "1",
+          "sourceURI": "/assets",
+          "units": "°C",
+          "uri": "/max_temp"
+        }
+      ]
+    }
+  ]
+}

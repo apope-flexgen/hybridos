@@ -1,0 +1,876 @@
+{
+    "fileInfo": {
+        "sourceFileName": "tx10_tx100_fleetmanager_server.xlsx",
+        "sourceFileCreated": "2020-06-26T17:11:50.000Z",
+        "sourceFileLastModified": "2022-11-11T18:32:38.000Z",
+        "sourceFileCreatedBy": "Administrator",
+        "sourceFileLastModifiedBy": "Jasen Liu",
+        "outputFileName": "dnp3_server_pueblo1.json",
+        "outputFileType": "dnp3",
+        "outputFileCreated": "2022-11-11T18:32:44.867Z"
+    },
+    "system": {
+        "name": "FlexGen Fleet Manager",
+        "protocol": "DNP3",
+        "version": "0.6",
+        "id": "outstation",
+        "ip_address": "0.0.0.0",
+        "port": 20000,
+        "debug": 0,
+        "unsol": 0,
+        "frequency": 10000,
+        "local uri": "/local_pueblo1"
+    },
+    "registers": [
+        {
+            "type": "AnOPInt32",
+            "starting_offset": 100,
+            "number_of_registers": 66,
+            "map": [
+                {
+                    "id": "non_spin_gen_responsibility_actual",
+                    "offset": 100,
+                    "scale": 1000,
+                    "name": "Generation Non-Spin Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "non_spin_gen_requirement_actual",
+                    "offset": 101,
+                    "scale": 1000,
+                    "name": "Generation Non-Spin Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "non_spin_gen_scheduled",
+                    "offset": 102,
+                    "scale": 1000,
+                    "name": "Generation Non-Spin Scheduled",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_down_gen_responsibility_actual",
+                    "offset": 103,
+                    "scale": 1000,
+                    "name": "Generation Regulation Down Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_down_gen_requirement_actual",
+                    "offset": 104,
+                    "scale": 1000,
+                    "name": "Generation Regulation Down Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_down_gen_participation",
+                    "offset": 105,
+                    "scale": 1000,
+                    "name": "Generation Regulation Down Participation Factor",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "responsive_reserve_gen_responsibility",
+                    "offset": 106,
+                    "scale": 1000,
+                    "name": "Generation Responsive Reserve Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "responsive_reserve_gen_requirement",
+                    "offset": 107,
+                    "scale": 1000,
+                    "name": "Generation Responsive Reserve Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "responsive_reserve_gen_scheduled",
+                    "offset": 108,
+                    "scale": 1000,
+                    "name": "Generation Responsive Reserve Schedule",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_up_gen_responsibility_actual",
+                    "offset": 109,
+                    "scale": 1000,
+                    "name": "Generation Regulation Up Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_up_gen_requirement_actual",
+                    "offset": 110,
+                    "scale": 1000,
+                    "name": "Generation Regulation Up Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_up_gen_participation",
+                    "offset": 111,
+                    "scale": 1000,
+                    "name": "Generation Regulation Up Participation Factor",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_down_gen_responsibility_actual",
+                    "offset": 112,
+                    "scale": 1000,
+                    "name": "Generation FRRS Down Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_down_gen_requirement_actual",
+                    "offset": 113,
+                    "scale": 1000,
+                    "name": "Generation FRRS Down Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_down_gen_participation",
+                    "offset": 114,
+                    "scale": 1000,
+                    "name": "Generation FRRS Down Participation Factor",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_up_gen_responsibility_actual",
+                    "offset": 115,
+                    "scale": 1000,
+                    "name": "Generation FRRS Up Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_up_gen_requirement_actual",
+                    "offset": 116,
+                    "scale": 1000,
+                    "name": "Generation FRRS Up Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_up_gen_participation",
+                    "offset": 117,
+                    "scale": 1000,
+                    "name": "Generation FRRS Up Participation Factor",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "gen_lmp",
+                    "offset": 118,
+                    "scale": 1000,
+                    "name": "Generation Locational Marginal Pricing",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "basepoint_gen_actual",
+                    "offset": 119,
+                    "scale": 1000,
+                    "name": "Generation Base Point",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "updated_basepoint_gen_actual",
+                    "offset": 120,
+                    "scale": 1000,
+                    "name": "Generation Updated Desired Base Point",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "resource_status_gen_actual",
+                    "offset": 121,
+                    "name": "Generation Resource Status",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "non_spin_load_responsibility_actual",
+                    "offset": 130,
+                    "scale": 1000,
+                    "name": "Controllable Load Non-Spin Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "non_spin_load_requirement_actual",
+                    "offset": 131,
+                    "scale": 1000,
+                    "name": "Controllable Load Non-Spin Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "non_spin_load_scheduled",
+                    "offset": 132,
+                    "scale": 1000,
+                    "name": "Controllable Load Non-Spin Schedule",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_down_load_responsibility_actual",
+                    "offset": 133,
+                    "scale": 1000,
+                    "name": "Controllable Load Regulation Down Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_down_load_requirement_actual",
+                    "offset": 134,
+                    "scale": 1000,
+                    "name": "Controllable Load Regulation Down Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_down_load_participation",
+                    "offset": 135,
+                    "scale": 1000,
+                    "name": "Controllable Load Regulation Down Participation Factor",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "responsive_reserve_load_responsibility",
+                    "offset": 136,
+                    "scale": 1000,
+                    "name": "Controllable Load Responsive Reserve Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "responsive_reserve_load_requirement",
+                    "offset": 137,
+                    "scale": 1000,
+                    "name": "Controllable Load Responsive Reserve Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "responsive_reserve_load_scheduled",
+                    "offset": 138,
+                    "scale": 1000,
+                    "name": "Controllable Load Responsive Reserve Schedule",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_up_load_responsibility_actual",
+                    "offset": 139,
+                    "scale": 1000,
+                    "name": "Controllable Load Regulation Up Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_up_load_requirement_actual",
+                    "offset": 140,
+                    "scale": 1000,
+                    "name": "Controllable Load Regulation Up Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "regulation_up_load_participation",
+                    "offset": 141,
+                    "scale": 1000,
+                    "name": "Controllable Load Regulation Up Participation Factor",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_down_load_responsibility_actual",
+                    "offset": 142,
+                    "scale": 1000,
+                    "name": "Controllable Load FRRS Down Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_down_load_requirement_actual",
+                    "offset": 143,
+                    "scale": 1000,
+                    "name": "Controllable Load FRRS Down Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_down_load_participation",
+                    "offset": 144,
+                    "scale": 1000,
+                    "name": "Controllable Load FRRS Down Participation Factor",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_up_load_responsibility_actual",
+                    "offset": 145,
+                    "scale": 1000,
+                    "name": "Controllable Load FRRS Up Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_up_load_requirement_actual",
+                    "offset": 146,
+                    "scale": 1000,
+                    "name": "Controllable Load FRRS Up Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "frrs_up_load_participation",
+                    "offset": 147,
+                    "scale": 1000,
+                    "name": "Controllable Load FRRS Up Participation Factor",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "load_lmp",
+                    "offset": 148,
+                    "scale": 1000,
+                    "name": "Controllable Load Locational Marginal Pricing",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "basepoint_load_actual",
+                    "offset": 149,
+                    "scale": 1000,
+                    "name": "Controllable Load Base Point",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "updated_basepoint_load_actual",
+                    "offset": 150,
+                    "scale": 1000,
+                    "name": "Controllable Load Updated Desired Base Point",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "resource_status_load_actual",
+                    "offset": 151,
+                    "name": "Controllable Load Resource Status",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "calculated_rurs_gen",
+                    "offset": 152,
+                    "scale": 1000,
+                    "name": "Calculated Generation RURS",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "calculated_rupf_gen",
+                    "offset": 153,
+                    "scale": 1000,
+                    "name": "Calculated Generation RUPF",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "calculated_rdrs_gen",
+                    "offset": 154,
+                    "scale": 1000,
+                    "name": "Calculated Generation RDRS",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "calculated_rdpf_gen",
+                    "offset": 155,
+                    "scale": 1000,
+                    "name": "Calculated Generation RDPF",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "calculated_rurs_load",
+                    "offset": 156,
+                    "scale": 1000,
+                    "name": "Calculated Load RURS",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "calculated_rupf_load",
+                    "offset": 157,
+                    "scale": 1000,
+                    "name": "Calculated Load RUPF",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "calculated_rdrs_load",
+                    "offset": 158,
+                    "scale": 1000,
+                    "name": "Calculated Load RDRS",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "calculated_rdpf_load",
+                    "offset": 159,
+                    "scale": 1000,
+                    "name": "Calculated Load RDPF",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "ffr_gen_responsibility",
+                    "offset": 160,
+                    "scale": 1000,
+                    "name": "Generation Fast Frequency Responsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "ffr_gen_requirement",
+                    "offset": 161,
+                    "scale": 1000,
+                    "name": "Generation Fast Frequency Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "ffr_gen_scheduled",
+                    "offset": 162,
+                    "scale": 1000,
+                    "name": "Generation Fast Frequency Schedule",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "ffr_load_responsibility",
+                    "offset": 163,
+                    "scale": 1000,
+                    "name": "Controllable Load Fast FrequencyResponsibility",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "ffr_load_requirement",
+                    "offset": 164,
+                    "scale": 1000,
+                    "name": "Controllable Load Fast Frequency Requirement",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "ffr_load_scheduled",
+                    "offset": 165,
+                    "scale": 1000,
+                    "name": "Controllable Load Fast Frequency Scheduled",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                }
+            ]
+        },
+        {
+            "type": "analog",
+            "starting_offset": 100,
+            "number_of_registers": 38,
+            "map": [
+                {
+                    "id": "gen_net_mw",
+                    "offset": 100,
+                    "scale": 1000,
+                    "name": "Generation NET Megawatts",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_net_mvar",
+                    "offset": 101,
+                    "scale": 1000,
+                    "name": "Generation NET Megavars",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_gross_mw",
+                    "offset": 102,
+                    "scale": 1000,
+                    "name": "Generation Gross Megawatts",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_gross_mvar",
+                    "offset": 103,
+                    "scale": 1000,
+                    "name": "Generation Gross Megavars",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "normal_up_ramp_rate_gen_select",
+                    "offset": 104,
+                    "scale": 1000,
+                    "name": "Generation Normal Up Ramp Rate",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "normal_down_ramp_rate_gen_select",
+                    "offset": 105,
+                    "scale": 1000,
+                    "name": "Generation Normal Down Ramp Rate",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "emergency_up_ramp_rate_gen_select",
+                    "offset": 106,
+                    "scale": 1000,
+                    "name": "Generation Emergency Up Ramp Rate",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "emergency_down_ramp_rate_gen_select",
+                    "offset": 107,
+                    "scale": 1000,
+                    "name": "Generation Emercency Down Ramp Rate",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "gen_max_operating_soc",
+                    "offset": 108,
+                    "scale": 1000,
+                    "name": "Generation Maximum Operating State of Charge",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_min_operating_soc",
+                    "offset": 109,
+                    "scale": 1000,
+                    "name": "Generation Minimum Operating State of Charge",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_soc",
+                    "offset": 110,
+                    "scale": 1000,
+                    "name": "Generation State of Charge",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_max_discharge_mw_select",
+                    "offset": 111,
+                    "scale": 1000,
+                    "name": "Generation Maximum Operating Discharge Power Limit",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "gen_max_charge_mw_select",
+                    "offset": 112,
+                    "scale": 1000,
+                    "name": "Generation Maximum Operating Charge Power Limit",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "gen_line_flows_mw",
+                    "offset": 113,
+                    "scale": 1000,
+                    "name": "Generation Line Flows MW",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_line_flows_mvar",
+                    "offset": 114,
+                    "scale": 1000,
+                    "name": "Generation Line Flows MVAR",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_voltage",
+                    "offset": 115,
+                    "scale": 1000,
+                    "name": "Generation Voltage",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_aux_mw",
+                    "offset": 116,
+                    "scale": 1000,
+                    "name": "Generation Plant Auxiliary Load MW",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "gen_aux_mvar",
+                    "offset": 117,
+                    "scale": 1000,
+                    "name": "Generation Plant Auxiliary Load MVAR",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "load_net_mw",
+                    "offset": 130,
+                    "scale": 1000,
+                    "name": "Controllable Load Net Load MW",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "load_net_mvar",
+                    "offset": 131,
+                    "scale": 1000,
+                    "name": "Controllable Load Net Load MVAR",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "load_scheduled_mw",
+                    "offset": 132,
+                    "scale": 1000,
+                    "name": "Controllable Load Scheduled Power Consumption",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "load_scheduled_mw_2hr",
+                    "offset": 133,
+                    "scale": 1000,
+                    "name": "Controllable Load Scheduled Power Consumption +2 hours",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "normal_up_ramp_rate_load_select",
+                    "offset": 134,
+                    "scale": 1000,
+                    "name": "Controllable Load Normal Up Ramp Rate",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "normal_down_ramp_rate_load_select",
+                    "offset": 135,
+                    "scale": 1000,
+                    "name": "Controllable Load Normal Down Ramp Rate",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "emergency_up_ramp_rate_load_select",
+                    "offset": 136,
+                    "scale": 1000,
+                    "name": "Controllable Load Emercency Up Ramp Rate",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "emergency_down_ramp_rate_load_select",
+                    "offset": 137,
+                    "scale": 1000,
+                    "name": "Controllable Load Emercency Down Ramp Rate",
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "signed": true,
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                }
+            ]
+        },
+        {
+            "type": "binary",
+            "starting_offset": 100,
+            "number_of_registers": 32,
+            "map": [
+                {
+                    "id": "gen_ds1_status",
+                    "offset": 100,
+                    "name": "Generation Resource Switches",
+                    "uri": "/components/pueblo1"
+                },
+                {
+                    "id": "fr_gen_breaker_status",
+                    "offset": 101,
+                    "name": "Generation Resource Breaker Status",
+                    "uri": "/fleet/sites/pueblo1"
+                },
+                {
+                    "id": "fr_gen_breaker_status",
+                    "offset": 102,
+                    "name": "Generation Virtual Breaker Status - PSEUDO GEN",
+                    "uri": "/fleet/sites/pueblo1"
+                },
+                {
+                    "id": "gen_avr_status",
+                    "offset": 103,
+                    "name": "Generation Voltage Regulator Status",
+                    "uri": "/fleet/sites/pueblo1"
+                },
+                {
+                    "id": "load_pseudo_switch_status_actual",
+                    "offset": 130,
+                    "name": "Controllable Load Virtual Breaker Status - PSEUDO LOAD",
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                },
+                {
+                    "id": "reg_manual_override",
+                    "offset": 131,
+                    "name": "Regulation Manual Override",
+                    "uri": "/fleet/features/ercotAs/pueblo1"
+                }
+            ]
+        },
+        {
+            "type": "CROB",
+            "starting_offset": 100,
+            "number_of_registers": 35,
+            "map": [
+                {
+                    "id": "gen_curtailment_flag",
+                    "offset": 100,
+                    "name": "Generation Curtailment Flag",
+                    "uri": "/components/pueblo1",
+                    "crob_true": "LATCH_ON",
+                    "crob_false": "LATCH_OFF"
+                },
+                {
+                    "id": "gen_scct_flag",
+                    "offset": 101,
+                    "name": "Generation SCCT Mitigation Flag",
+                    "uri": "/components/pueblo1",
+                    "crob_true": "LATCH_ON",
+                    "crob_false": "LATCH_OFF"
+                },
+                {
+                    "id": "gen_ns_deployed_flag",
+                    "offset": 102,
+                    "name": "Generation Non-spin deployed Flag (NDPL)",
+                    "uri": "/components/pueblo1",
+                    "crob_true": "LATCH_ON",
+                    "crob_false": "LATCH_OFF"
+                },
+                {
+                    "id": "load_curtailment_flag",
+                    "offset": 130,
+                    "name": "Controllable Load Curtailment Flag",
+                    "uri": "/components/pueblo1",
+                    "crob_true": "LATCH_ON",
+                    "crob_false": "LATCH_OFF"
+                },
+                {
+                    "id": "load_scct_flag",
+                    "offset": 131,
+                    "name": "Controllable Load SCCT Mitigation Flag",
+                    "uri": "/components/pueblo1",
+                    "crob_true": "LATCH_ON",
+                    "crob_false": "LATCH_OFF"
+                },
+                {
+                    "id": "load_ns_deployed_flag",
+                    "offset": 132,
+                    "name": "Controllable Load Non-spin deployed Flag (NDPL)",
+                    "uri": "/components/pueblo1",
+                    "crob_true": "LATCH_ON",
+                    "crob_false": "LATCH_OFF"
+                },
+                {
+                    "id": "load_rrs_deployed_flag",
+                    "offset": 133,
+                    "name": "Controllable Load Responsive Deployed Flag (RDPL)",
+                    "uri": "/components/pueblo1",
+                    "crob_true": "LATCH_ON",
+                    "crob_false": "LATCH_OFF"
+                },
+                {
+                    "id": "reg_manual_override_feedback",
+                    "offset": 134,
+                    "name": "Regulation Manual Override Feedback",
+                    "uri": "/fleet/features/ercotAs/pueblo1",
+                    "crob_true": "LATCH_ON",
+                    "crob_false": "LATCH_OFF"
+                }
+            ]
+        }
+    ]
+}

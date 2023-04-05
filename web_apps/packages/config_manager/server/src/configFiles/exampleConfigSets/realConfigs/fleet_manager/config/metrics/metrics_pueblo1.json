@@ -1,0 +1,455 @@
+{
+    "publishRate": 1000,
+    "listenRate": 2,
+    "publishUris": [
+        {
+            "uri": "/metrics/pueblo1",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "gen_net_mw",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/internal_pueblo1",
+                            "id": "discharging_flag"
+                        },
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_line_flows_mw"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 0
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_net_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/internal_pueblo1",
+                            "id": "discharging_flag"
+                        },
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_line_flows_mvar"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 0
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_net_mw",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_aux_mw"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_net_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_aux_mvar"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_aux_mw",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/internal_pueblo1",
+                            "id": "discharging_flag"
+                        },
+                        {
+                            "uri": "/metrics/internal_pueblo1",
+                            "id": "gen_line_flows_mw_invert"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "trueCase": 0
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_aux_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/internal_pueblo1",
+                            "id": "discharging_flag"
+                        },
+                        {
+                            "uri": "/metrics/internal_pueblo1",
+                            "id": "gen_line_flows_mvar_invert"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "trueCase": 0
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_gross_mw",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_net_mw"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_gross_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_net_mvar"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_max_operating_soc",
+                    "inputs": [
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "num_ess_available"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": 2.33
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_min_operating_soc",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_min_operating_soc"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_soc",
+                    "inputs": [
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "ess_average_soc"
+                        },
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "num_ess_available"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": 0.0248
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_line_flows_mw",
+                    "inputs": [
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "active_power"
+                        }
+                    ],
+                    "operation": "product",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_line_flows_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "reactive_power"
+                        }
+                    ],
+                    "operation": "product",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_lmp",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_lmp"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_basepoint_deviation",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_net_mw"
+                        },
+                        {
+                            "uri": "/components/pueblo1",
+                            "id": "gen_updated_basepoint"
+                        }
+                    ],
+                    "operation": "sum",
+                    "param": {
+                        "operations": "+-"
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_basepoint_deviation",
+                    "inputs": [
+                        {
+                            "uri": "/components/pueblo1",
+                            "id": "load_net_mw"
+                        },
+                        {
+                            "uri": "/components/pueblo1",
+                            "id": "load_updated_basepoint"
+                        }
+                    ],
+                    "operation": "sum",
+                    "param": {
+                        "operations": "+-"
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_curtailment_flag",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_curtailment_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "gen_scct_flag",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_scct_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "gen_ns_deployed_flag",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_ns_deployed_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_scheduled_mw",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_aux_mw"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_scheduled_mw_2hr",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "gen_aux_mw"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_curtailment_flag",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "load_curtailment_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_scct_flag",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "load_scct_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_ns_deployed_flag",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "load_ns_deployed_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_rrs_deployed_flag",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "load_rrs_deployed_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_lmp",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/pueblo1",
+                            "id": "load_lmp"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_ds1_status",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/internal_pueblo1",
+                            "id": "avg_voltage_kv"
+                        }
+                    ],
+                    "operation": "compareor",
+                    "param": {
+                        "operation": "gt",
+                        "reference": 1
+                    }
+                },
+                {
+                    "id": "gen_voltage",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/internal_pueblo1",
+                            "id": "avg_voltage_kv"
+                        }
+                    ],
+                    "operation": "echo"
+                }
+            ]
+        },
+        
+        {
+            "uri": "/metrics/internal_pueblo1",
+            "naked": true,
+            "metrics": [ 
+                {
+                    "id": "gen_line_flows_mw_invert",
+                    "inputs": [
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "active_power"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": -1
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_line_flows_mvar_invert",
+                    "inputs": [
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "reactive_power"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": -1
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "discharging_flag",
+                    "inputs": [
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "active_power"
+                        }
+                    ],
+                    "operation": "compareor",
+                    "param": {
+                        "reference": 0,
+                        "operation": "gt"
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "avg_voltage_kv",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/internal_pueblo1",
+                            "id": "avg_voltage_v"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": 0.001
+                    }
+                },
+                {
+                    "id": "avg_voltage_v",
+                    "inputs": [
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "grid_voltage_l1_l2"
+                        },
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "grid_voltage_l2_l3"
+                        },
+                        {
+                            "uri": "/sites/pueblo1",
+                            "id": "grid_voltage_l3_l1"
+                        }
+                    ],
+                    "operation": "average"
+                }
+            ]
+        }
+    ]
+}

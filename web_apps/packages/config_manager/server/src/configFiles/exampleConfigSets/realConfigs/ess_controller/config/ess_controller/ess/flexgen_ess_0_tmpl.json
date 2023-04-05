@@ -1,0 +1,106 @@
+{
+    "/master/ess_1_ls": {
+        "pcs_breaker_closed": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/pcs/summary:status_gen_switch", "outValue": "Open"},
+                        {"inValue": true,  "uri": "/assets/pcs/summary:status_gen_switch", "outValue": "Closed"},
+
+                        {"uri": "/site/ess_ls:pcs_breaker_closed"}
+                    ]
+                }]
+            }
+        }
+    },
+    "/status/##ESS_ID##": {
+        "BreakerStatus": false,
+        "BMSDCClosed": false,
+        "DCCharging": false,
+        "DCDischarging": false,
+        "CurrentCheckStopDone": false,
+        "PCSRunning": false,
+        "BMSCommsOK": false,
+        "PCSCommsOK": false,
+        "CloseContactorsEnabled": false,
+        "OpenContactorsEnabled": false,
+        "StartEnabled": false,
+        "ShutdownEnabled": false,
+        "BMSIsFaulted": false,
+        "PCSIsFaulted": false,
+        "ESSIsFaulted": false,
+        "AnyFireFaultActive": false
+    },
+    "/vlinks/ess_0": {
+        "bms_voltage":        	      { "vlink": "/status/ess_0:BMSVoltage",          	         "default": 0, "value": "/master/ess_1_ls:voltage_dc"},
+        "max_cell_voltage":           { "vlink": "/status/ess_0:MaxCellVoltage",        	     "default": 0, "value": "/master/ess_1_ls:bms_maximum_cell_voltage"},
+        "min_cell_voltage":           { "vlink": "/status/ess_0:MinCellVoltage",        	     "default": 0, "value": "/master/ess_1_ls:bms_minimum_cell_voltage"},
+        "avg_cell_voltage":           { "vlink": "/status/ess_0:AvgCellVoltage",        	     "default": 0, "value": "/master/ess_1_ls:bms_average_cell_voltage"},
+        "max_cell_temp":              { "vlink": "/status/ess_0:MaxCellTemp",            	     "default": 0, "value": "/master/ess_1_ls:bms_maximum_cell_temperature"},
+        "min_cell_temp":              { "vlink": "/status/ess_0:MinCellTemp",            	     "default": 0, "value": "/master/ess_1_ls:bms_minimum_cell_temperature"},
+        "avg_cell_temp":              { "vlink": "/status/ess_0:AvgCellTemp",            	     "default": 0, "value": "/master/ess_1_ls:bms_average_cell_temperature"},
+        "bms_poweron":                { "vlink": "/status/ess_0:BMSPowerOn",                     "default": "INIT", "value": "/master/ess_1_ls:bms_poweron"},
+        "bms_status":                 { "vlink": "/status/ess_0:BMSStatus",                    	 "default": "INIT", "value": "/master/ess_1_ls:bms_status"},
+        "bms_dc_charging":            { "vlink": "/status/ess_0:DCCharging",                  	 "default": false, "value": "/master/ess_1_ls:dc_charging"},
+        "bms_dc_discharging":         { "vlink": "/status/ess_0:DCDischarging",                	 "default": false, "value": "/master/ess_1_ls:dc_discharging"},
+
+        "pcs_status":                 { "vlink": "/status/ess_0:PCSStatus",   	                 "default": "INIT", "value": "/master/ess_1_ls:pcs_status"},
+        "pcs_running":                { "vlink": "/status/ess_0:PCSRunning",   	                 "default": false, "value": "/master/ess_1_ls:pcs_running"},
+        "pcs_system_state":           { "vlink": "/status/ess_0:PCSSystemState",   	             "default": 0, "value": "/master/ess_1_ls:system_state"},
+        "pcs_system_state_string":    { "vlink": "/status/ess_0:PCSSystemStateString",   	     "default": "INIT", "value": "/master/ess_1_ls:system_state_string"},
+        
+        "pcs_voltage":                { "vlink": "/status/ess_0:PCSVoltage",   	                 "default": 0, "value": "/master/ess_1_ls:pcs_voltage_dc"},
+        "pf":                         { "vlink": "/status/ess_0:PowerFactor",   	             "default": 0, "value": "/master/ess_1_ls:pf"},
+        "voltage_l1_l2":              { "vlink": "/status/ess_0:VoltageL1L2",   	             "default": 0, "value": "/master/ess_1_ls:voltage_l1_l2"},
+        "voltage_l2_l3":              { "vlink": "/status/ess_0:VoltageL2L3",   	             "default": 0, "value": "/master/ess_1_ls:voltage_l2_l3"},
+        "voltage_l3_l1":              { "vlink": "/status/ess_0:VoltageL3L1",   	             "default": 0, "value": "/master/ess_1_ls:voltage_l3_l1"},
+        "voltage_l1_l2_lv":           { "vlink": "/status/ess_0:VoltageL1L2_lv",   	             "default": 0, "value": "/master/ess_1_ls:voltage_l1_l2_lv"},
+        "voltage_l2_l3_lv":           { "vlink": "/status/ess_0:VoltageL2L3_lv",   	             "default": 0, "value": "/master/ess_1_ls:voltage_l2_l3_lv"},
+        "voltage_l3_l1_lv":           { "vlink": "/status/ess_0:VoltageL3L1_lv",   	             "default": 0, "value": "/master/ess_1_ls:voltage_l3_l1_lv"},
+        "frequency":                  { "vlink": "/status/ess_0:Frequency",   	                 "default": 0, "value": "/master/ess_1_ls:frequency"},
+        "avg_line_voltage":           { "vlink": "/status/ess_0:AverageLineVoltage",             "default": 0, "value": "/master/ess_1_ls:average_line_voltage"}
+    },
+    "/vlinks/##ESS_ID##": {
+        "charge_energy":              { "vlink": "/status/##ESS_ID##:ChargeEnergy",   	         "default": 0, "value": "/master/##ESS_ID##_ls:chargeable_energy"},
+        "discharge_energy":           { "vlink": "/status/##ESS_ID##:DischargeEnergy",	         "default": 0, "value": "/master/##ESS_ID##_ls:dischargeable_energy"},
+        "bms_current":        	      { "vlink": "/status/##ESS_ID##:BMSCurrent",      	         "default": 0, "value": "/master/##ESS_ID##_ls:current_dc"},
+        "bms_power":       	          { "vlink": "/status/##ESS_ID##:BMSPower",        	         "default": 0, "value": "/master/##ESS_ID##_ls:power_dc"},
+        "soc":                        { "vlink": "/status/##ESS_ID##:SOC",                   	 "default": 0, "value": "/master/##ESS_ID##_ls:bms_soc"},
+        "soh":                        { "vlink": "/status/##ESS_ID##:SOH",                   	 "default": 0, "value": "/master/##ESS_ID##_ls:bms_soh"},
+        "num_racks_online":           { "vlink": "/status/##ESS_ID##:NumRacksOnline",          	 "default": 0, "value": "/master/##ESS_ID##_ls:racks_in_service"},
+        "bms_max_charge_current":     { "vlink": "/status/##ESS_ID##:BMSMaxChargeCurrent",     	 "default": 0, "value": "/master/##ESS_ID##_ls:bms_max_charge_current"},
+        "bms_max_discharge_current":  { "vlink": "/status/##ESS_ID##:BMSMaxDischargeCurrent",    "default": 0, "value": "/master/##ESS_ID##_ls:bms_max_discharge_current"},
+        "bms_max_charge_powert":      { "vlink": "/status/##ESS_ID##:BMSMaxChargePower",     	 "default": 0, "value": "/master/##ESS_ID##_ls:bms_max_charge_power"},
+        "bms_max_discharge_power":    { "vlink": "/status/##ESS_ID##:BMSMaxDischargePower",      "default": 0, "value": "/master/##ESS_ID##_ls:bms_max_discharge_power"},
+        "dc_contactors_closed":       { "vlink": "/status/##ESS_ID##:BMSDCClosed",             	 "default": false,  "value": "/master/##ESS_ID##_ls:dc_contactors_closed"},
+        "bms_comms_ok":               { "vlink": "/status/##ESS_ID##:BMSCommsOK",             	 "default": false,  "value": "/master/##ESS_ID##_ls:bms_comms_ok"},
+        "close_contactors_enabled":   { "vlink": "/status/##ESS_ID##:CloseContactorsEnabled",    "default": false, "value": "/master/##ESS_ID##_ls:bms_close_contactors_enabled"},
+        "open_contactors_enabled":    { "vlink": "/status/##ESS_ID##:OpenContactorsEnabled",     "default": false, "value": "/master/##ESS_ID##_ls:bms_open_contactors_enabled"},
+        "bms_fault_active":           { "vlink": "/status/##ESS_ID##:BMSIsFaulted",              "default": false, "value": "/master/##ESS_ID##_ls:bms_fault_active"},
+        "bms_fire_fault_active":      { "vlink": "/status/##ESS_ID##:AnyFireFaultActive",        "default": false, "value": "/master/##ESS_ID##_ls:ess_fire_alarm_active"},
+        "bms_current_check_stop":     { "vlink": "/status/##ESS_ID##:CurrentCheckStopDone",      "default": false, "value": "/master/##ESS_ID##_ls:current_check_stop_done"},
+        
+        "active_power":               { "vlink": "/status/##ESS_ID##:ActivePower",   	         "default": 0, "value": "/master/##ESS_ID##_ls:active_power"},
+        "reactive_power":             { "vlink": "/status/##ESS_ID##:ReactivePower",   	         "default": 0, "value": "/master/##ESS_ID##_ls:reactive_power"},
+        "apparent_power":             { "vlink": "/status/##ESS_ID##:ApparentPower",   	         "default": 0, "value": "/master/##ESS_ID##_ls:apparent_power"},
+        "current_l1":                 { "vlink": "/status/##ESS_ID##:CurrentL1",   	             "default": 0, "value": "/master/##ESS_ID##_ls:current_l1"},
+        "current_l2":                 { "vlink": "/status/##ESS_ID##:CurrentL2",   	             "default": 0, "value": "/master/##ESS_ID##_ls:current_l2"},
+        "current_l3":                 { "vlink": "/status/##ESS_ID##:CurrentL3",   	             "default": 0, "value": "/master/##ESS_ID##_ls:current_l3"},
+        "pcs_power":          	      { "vlink": "/status/##ESS_ID##:PCSPower",        	         "default": 0, "value": "/master/##ESS_ID##_ls:pcs_power_dc"},
+        "pcs_curent":          	      { "vlink": "/status/##ESS_ID##:PCSCurrent",        	     "default": 0, "value": "/master/##ESS_ID##_ls:pcs_current_dc"},
+        "pcs_modules_in_service":     { "vlink": "/status/##ESS_ID##:NumRunningModules",   	     "default": 0, "value": "/master/##ESS_ID##_ls:pcs_modules_in_service"},
+        "pcs_max_active_power":       { "vlink": "/status/##ESS_ID##:PCSMaxActivePower",   	     "default": 0, "value": "/master/##ESS_ID##_ls:pcs_max_active_power"},
+        "pcs_max_charge_power":       { "vlink": "/status/##ESS_ID##:PCSMaxChargePower",   	     "default": 0, "value": "/master/##ESS_ID##_ls:pcs_max_charge_power"},
+        "pcs_max_discharge_power":    { "vlink": "/status/##ESS_ID##:PCSMaxDischargePower",   	 "default": 0, "value": "/master/##ESS_ID##_ls:pcs_max_discharge_power"},
+        "pcs_comms_ok":               { "vlink": "/status/##ESS_ID##:PCSCommsOK",             	 "default": false, "value": "/master/##ESS_ID##_ls:pcs_comms_ok"},
+        "start_enabled":              { "vlink": "/status/##ESS_ID##:StartEnabled",              "default": false, "value": "/master/##ESS_ID##_ls:pcs_start_enabled"},
+        "shutdown_enabled":           { "vlink": "/status/##ESS_ID##:ShutdownEnabled",           "default": false, "value": "/master/##ESS_ID##_ls:pcs_shutdown_enabled"},
+        "pcs_fault_active":           { "vlink": "/status/##ESS_ID##:PCSIsFaulted",              "default": false, "value": "/master/##ESS_ID##_ls:pcs_fault_active"},
+
+        "max_charge_power":           { "vlink": "/status/##ESS_ID##:MaxChargePower",            "default": 0, "value": "/master/##ESS_ID##_ls:chargeable_power"},
+        "max_discharge_power":        { "vlink": "/status/##ESS_ID##:MaxDischargePower",         "default": 0, "value": "/master/##ESS_ID##_ls:dischargeable_power"},
+        "ess_fault_active":           { "vlink": "/status/##ESS_ID##:ESSIsFaulted",              "default": false, "value": "/master/##ESS_ID##_ls:ess_fault_active"},
+        "fault_shutdown":             { "vlink": "/status/##ESS_ID##:FaultShutdown",             "default": false, "value": "/master/##ESS_ID##_ls:fault_shutdown"}
+    }
+}

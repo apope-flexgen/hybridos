@@ -1,0 +1,1193 @@
+{
+    "/config/ess_0": {
+        "LogDir": "/var/log/ess_controller",
+        "EventSourceFormat": {
+            "value": "essName"
+        },
+        "enable": false
+    },
+
+    "/assets/bms/summary": {
+        "name": "CATL BMS Manager (Summary)",
+        "alarms":                       {"name": "Alarms",                 "value": 0,"options": [],"enabled": true},
+        "faults":                       {"name": "Faults",                 "value": 0,"options": [],"enabled": true},
+        "power_state":                  {"name": "Power State",            "value": "OFF","enabled": true},
+        "system_state":                 {"name": "Batteries Status",       "value": "INIT","enabled": true},
+        "com_status":                   {"name": "Communication Status",   "value": "INIT","enabled": true},
+        "soc":                          {"name": "State of Charge",        "value": 0,"enabled": true},
+        "soh":                          {"name": "State of Health",        "value": 0,"enabled": true},
+        "system_voltage":               {"name": "System Voltage",         "value": 0,"enabled": true},
+        "system_current":               {"name": "System Current",         "value": 0,"enabled": true},
+        "system_power":                 {"name": "System Power",           "value": 0,"enabled": true},
+        "max_cell_voltage":             {"name": "Max Cell Voltage",       "value": 0,"enabled": true},
+        "min_cell_voltage":             {"name": "Min Cell Voltage",       "value": 0,"enabled": true},
+        "avg_cell_voltage":             {"name": "Avg Cell Voltage",       "value": 0,"enabled": true},
+        "max_cell_temp":                {"name": "Max Cell Temperature",   "value": 0,"enabled": true},
+        "min_cell_temp":                {"name": "Min Cell Temperature",   "value": 0,"enabled": true},
+        "avg_cell_temp":                {"name": "Avg Cell Temperature",   "value": 0,"enabled": true},
+        "max_charge_current":           {"name": "Max Charge Current",     "value": 0,"enabled": true},
+        "max_discharge_current":        {"name": "Max Discharge Current",  "value": 0,"enabled": true},
+        "max_charge_power":             {"name": "Max Charge Power",       "value": 0,"enabled": true},
+        "max_discharge_power":          {"name": "Max Discharge Power",    "value": 0,"enabled": true},
+        "remain_charge_energy":         {"name": "Chargeable Energy",      "value": 0,"enabled": true},
+        "remain_discharge_energy":      {"name": "Dischargeable Energy",   "value": 0,"enabled": true},
+        "units_connected":              {"name": "Units Connected",        "value": 0,"enabled": true},
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "enabled": true,
+            "actions":	{
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/assets/bms/summary:clear_faults@enabled"},
+                        {"inValue": true, "ifChanged": false, "uri": "/assets/bms/summary:clear_alarms@enabled"},
+
+                        {"fims": "set", "uri": "/assets/bms/bms_1:maint_mode"},
+                        {"fims": "set", "uri": "/assets/bms/bms_2:maint_mode"}
+                    ]
+                }]
+            },
+
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+        "start": {
+            "name": "Close DC Contactor",
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"uri": "/controls/ess_0:CloseContactors@triggerCmd", "outValue": true},
+                        {"uri": "/controls/ess_0:CloseContactors", "outValue": 2}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "stop": {
+            "name": "Open DC Contactor",
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"uri": "/controls/ess_0:OpenContactors@triggerCmd", "outValue": true},
+                        {"uri": "/controls/ess_0:OpenContactors", "outValue": 3}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"fims": "set", "uri": "/assets/bms/bms_1:clear_faults"},
+                        {"fims": "set", "uri": "/assets/bms/bms_2:clear_faults"},
+
+                        {"uri": "/site/ess_ls:com_status[1]", "outValue": false}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "Clear Faults", "return_value": "Clear"}
+            ]
+        }
+    },
+    "/assets/pcs/summary": {
+        "name": "PE PCS Manager (Summary)",
+        "alarms":                        { "name": "Alarms",                       "value": 0,        "enabled": true, "options": [] },
+        "faults":                        { "name": "Faults",                       "value": 0,        "enabled": true, "options": [] },
+        "status":                        { "name": "Status",                       "value": "INIT",   "enabled": true  },
+        "work_mode":                     { "name": "Work Mode",                    "value": "INIT",   "enabled": true  },
+        "status_gen_switch":             { "name": "Breaker Status",               "value": "INIT",   "enabled": true  },
+        "com_status":                    { "name": "Communication Status",         "value": "INIT",   "enabled": true  },
+        "active_power":                  { "name": "Active Power",                 "value": 17,       "enabled": true  },
+        "reactive_power":                { "name": "Reactive Power",               "value": 17.200,   "enabled": true  },
+        "apparent_power":                { "name": "Apparent Power",               "value": 1.299999, "enabled": true  },
+        "power_factor":                  { "name": "Power Factor",                 "value": 0,        "enabled": true  },
+        "active_power_command":          { "name": "Active Power Command",         "value": 0,        "enabled": true  },
+        "reactive_power_command":        { "name": "Reactive Power Command",       "value": 0,        "enabled": true  },
+        "frequency_command":             { "name": "Frequency Command",            "value": 0,        "enabled": true  },
+        "voltage_command":               { "name": "Voltage Command",              "value": 0,        "enabled": true  },
+        "voltage_l1_l2":                 { "name": "L1-L2 AC Voltage",             "value": 573.599,  "enabled": true  },
+        "voltage_l2_l3":                 { "name": "L2-L3 AC Voltage",             "value": 573.5999, "enabled": true  },
+        "voltage_l3_l1":                 { "name": "L3-L1 AC Voltage",             "value": 570.7999, "enabled": true  },
+        "voltage_l1_l2_lv":              { "name": "L1-L2 AC Voltage LV",          "value": 573.599,  "enabled": true  },
+        "voltage_l2_l3_lv":              { "name": "L2-L3 AC Voltage LV",          "value": 573.5999, "enabled": true  },
+        "voltage_l3_l1_lv":              { "name": "L3-L1 AC Voltage LV",          "value": 570.7999, "enabled": true  },
+        "current_l1":                    { "name": "L1 AC Current",                "value": 40.78,    "enabled": true  },
+        "current_l2":                    { "name": "L2 AC Current",                "value": 41.200,   "enabled": true  },
+        "current_l3":                    { "name": "L3 AC Current",                "value": 40,       "enabled": true  },
+        "frequency":                     { "name": "Frequency",                    "value": 59.970,   "enabled": true  },
+        "power_dc":                      { "name": "DC Power",                     "value": 0,        "enabled": true  },
+        "voltage_dc":                    { "name": "DC Voltage",                   "value": 1069.800, "enabled": true  },
+        "current_dc":                    { "name": "DC Current",                   "value": 0,        "enabled": true  },
+        "max_active_power":              { "name": "Max Active Power",             "value": 0,        "enabled": true  },
+        "max_charge_power":              { "name": "Max Charge Power",             "value": 0,        "enabled": true  },
+        "max_discharge_power":           { "name": "Max Discharge Power",          "value": 0,        "enabled": true  },
+        "daily_energy_delivered":        { "name": "Daily Energy Delivered",       "value": 0,        "enabled": true  },
+        "daily_energy_consumed":         { "name": "Daily Energy Consumed",        "value": 0,        "enabled": true  },
+        "total_energy_delivered":        { "name": "Total Energy Delivered",       "value": 0,        "enabled": true  },
+        "total_energy_consumed":         { "name": "Total Energy Consumed",        "value": 0,        "enabled": true  },
+        "num_running_modules":           { "name": "Modules Running",              "value": 0,        "enabled": false },
+        "maint_active_power_setpoint":   {
+            "name": "Active Power Setpoint (kW)",
+            "value": 0,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo",      "amap": "ess_0"},
+                        {"func": "CalculateVar", "amap": "ess_0", "inAv": "/controls/ess_0:SplitActivePowerCmdUI"}
+                    ],
+                    "remap": [
+                        {"uri": "/assets/pcs/summary:active_power_command"}
+                    ]
+                }]
+            }
+        },
+        "maint_reactive_power_setpoint": {
+            "name": "Reactive Power Setpoint (kW)",
+            "value": 0,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo",      "amap": "ess_0"},
+                        {"func": "CalculateVar", "amap": "ess_0", "inAv": "/controls/ess_0:SplitReactivePowerCmdUI"}
+                    ],
+                    "remap": [
+                        {"uri": "/assets/pcs/summary:reactive_power_command"}
+                    ]
+                }]
+            }
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "enabled": true,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "##ESS_ID##"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false,  "uri": "/assets/pcs/summary:clear_faults@enabled"},
+                        {"inValue": true, "ifChanged": false,  "uri": "/assets/pcs/summary:maint_active_power_setpoint@enabled"},
+                        {"inValue": true, "ifChanged": false,  "uri": "/assets/pcs/summary:maint_reactive_power_setpoint@enabled"},
+
+                        {"fims": "set", "uri": "/assets/pcs/pcs_1:maint_mode"},
+                        {"fims": "set", "uri": "/assets/pcs/pcs_2:maint_mode"}
+                    ]
+                }]
+            },
+
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "start": {
+            "name": "Start",
+            "note": "UI control variable for running the PCS. We'll either start the PCS from off or standby, depending on the current state",
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"uri": "/controls/ess_0:Start@triggerCmd", "outValue": true},
+                        {"uri": "/controls/ess_0:Start", "outValue": 1}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "shutdown": {
+            "name": "Shutdown",
+            "note": "UI control variable for shutting down the PCS. 0 kW and 0 kVAr power commands are sent to the PCS and then the shutdown command routine is triggered",
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"fims": "set", "uri": "/ess_1/master/ess_1_hs:active_power_setpoint", "outValue": 0},
+                        {"fims": "set", "uri": "/ess_2/master/ess_2_hs:active_power_setpoint", "outValue": 0},
+                        {"fims": "set", "uri": "/ess_1/master/ess_1_hs:reactive_power_setpoint", "outValue": 0},
+                        {"fims": "set", "uri": "/ess_2/master/ess_2_hs:reactive_power_setpoint", "outValue": 0},
+                        {"uri": "/controls/ess_0:Shutdown@triggerCmd", "outValue": true},
+                        {"uri": "/controls/ess_0:Shutdown", "outValue": 0}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value": false,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "##ESS_ID##"}
+                    ],
+                    "remap": [
+                        {"fims": "set", "uri": "/assets/pcs/pcs_1:clear_faults"},
+                        {"fims": "set", "uri": "/assets/pcs/pcs_2:clear_faults"},
+
+                        {"uri": "/site/ess_ls:com_status[0]", "outValue": false}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "Clear Faults", "return_value": "Clear"}
+            ]
+        },
+        "active_power_gradient": {
+            "name": "Active Power Ramp Rate (%/s)",
+            "value": 10,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "remap":[
+                        {"fims": "set", "uri": "/components/pe_pcs_controls:rise_grad_p"},
+                        {"fims": "set", "uri": "/components/pe_pcs_controls:drop_grad_p"},
+                        {"fims": "set", "uri": "/components/pe_pcs_controls:start_grad_p"},
+                        {"fims": "set", "uri": "/components/pe_pcs_controls:stop_grad_p"}
+                    ]
+                }]
+            },
+            "options": []
+        },
+        "reactive_power_gradient": {
+            "name": "Reactive Power Ramp Rate (%/s)",
+            "value": 10,
+            "enabled": false,
+            "actions": {
+                "onSet": [{
+                    "remap":[
+                        {"fims": "set", "uri": "/components/pe_pcs_controls:rise_grad_q"},
+                        {"fims": "set", "uri": "/components/pe_pcs_controls:drop_grad_q"},
+                        {"fims": "set", "uri": "/components/pe_pcs_controls:start_grad_q"},
+                        {"fims": "set", "uri": "/components/pe_pcs_controls:stop_grad_q"}
+                    ]
+                }]
+            },
+            "options": []
+        },
+        "e-stop": {
+            "name": "Emergency Stop",
+            "note": "UI control variable for shutting down the PCS using estop. 0 kW and 0 kVAr power commands are sent to the PCS and then the estop command routine is triggered",
+            "value": false,
+            "enabled": true,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"fims": "set", "uri": "/assets/pcs/pcs_1:e-stop"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        }
+    },
+
+    "/links/ess_0": {
+        "Heartbeat": {
+            "value": "/site/ess_ls:life_signal"
+        },
+        "life": {
+            "value": "/site/ess_hs:life"
+        }
+    },
+
+    "/vlinks/ess_0": {
+        "power_state_ui":                      { "value": "/assets/bms/summary:power_state",                          "vlink": "/status/ess_0:BMSPowerOn"             },
+        "system_state_ui":                     { "value": "/assets/bms/summary:system_state",                         "vlink": "/status/ess_0:BMSStatus"              },
+        "mbmu_soc_ui":                         { "value": "/assets/bms/summary:soc",                                  "vlink": "/status/ess_0:AvgSOC"                 },
+        "mbmu_soh_ui":                         { "value": "/assets/bms/summary:soh",                                  "vlink": "/status/ess_0:AvgSOH"                 },
+        "mbmu_voltage_ui":                     { "value": "/assets/bms/summary:system_voltage",                       "vlink": "/status/ess_0:BMSVoltage"                },
+        "mbmu_current_ui":                     { "value": "/assets/bms/summary:system_current",                       "vlink": "/status/ess_0:TotalBMSCurrent"           },
+        "mbmu_power_ui":                       { "value": "/assets/bms/summary:system_power",                         "vlink": "/status/ess_0:TotalBMSPower"             },
+        "mbmu_max_cell_voltage_ui":            { "value": "/assets/bms/summary:max_cell_voltage",                     "vlink": "/status/ess_0:MaxCellVoltage"         },
+        "mbmu_min_cell_voltage_ui":            { "value": "/assets/bms/summary:min_cell_voltage",                     "vlink": "/status/ess_0:MinCellVoltage"         },
+        "mbmu_avg_cell_voltage_ui":            { "value": "/assets/bms/summary:avg_cell_voltage",                     "vlink": "/status/ess_0:AvgCellVoltage"         },
+        "mbmu_max_cell_temp_ui":               { "value": "/assets/bms/summary:max_cell_temp",                        "vlink": "/status/ess_0:MaxCellTemp"            },
+        "mbmu_min_cell_temp_ui":               { "value": "/assets/bms/summary:min_cell_temp",                        "vlink": "/status/ess_0:MinCellTemp"            },
+        "mbmu_avg_cell_temp_ui":               { "value": "/assets/bms/summary:avg_cell_temp",                        "vlink": "/status/ess_0:AvgCellTemp"            },
+        "mbmu_max_charge_current_ui":          { "value": "/assets/bms/summary:max_charge_current",                   "vlink": "/status/ess_0:TotalBMSMaxChargeCurrent"},
+        "mbmu_max_discharge_current_ui":       { "value": "/assets/bms/summary:max_discharge_current",                "vlink": "/status/ess_0:TotalBMSMaxDischargeCurrent"},
+        "mbmu_max_charge_power_ui":            { "value": "/assets/bms/summary:max_charge_power",                     "vlink": "/status/ess_0:TotalBMSMaxChargePower"},
+        "mbmu_max_discharge_power_ui":         { "value": "/assets/bms/summary:max_discharge_power",                  "vlink": "/status/ess_0:TotalBMSMaxDischargePower"},
+        "mbmu_chargeable_energy_ui":           { "value": "/assets/bms/summary:remain_charge_energy",                 "vlink": "/status/ess_0:TotalChargeEnergy"    },
+        "mbmu_dischargeable_energy_ui":        { "value": "/assets/bms/summary:remain_discharge_energy",              "vlink": "/status/ess_0:TotalDischargeEnergy" },
+        "bms_units_connected_ui":              { "value": "/assets/bms/summary:units_connected",                      "vlink": "/status/ess_0:TotalNumRacksOnline"  },
+
+        "ui_status":                           { "value": "/assets/pcs/summary:status",                               "vlink": "/status/ess_0:PCSStatus"},
+        "ui_active_power":                     { "value": "/assets/pcs/summary:active_power",                         "vlink": "/status/ess_0:TotalActivePower"},
+        "ui_reactive_power":                   { "value": "/assets/pcs/summary:reactive_power",                       "vlink": "/status/ess_0:TotalReactivePower"},
+        "ui_apparent_power":                   { "value": "/assets/pcs/summary:apparent_power",                       "vlink": "/status/ess_0:TotalApparentPower"},
+        "ui_voltage_l1_l2":                    { "value": "/assets/pcs/summary:voltage_l1_l2",                        "vlink": "/status/ess_0:VoltageL1L2"},
+        "ui_voltage_l2_l3":                    { "value": "/assets/pcs/summary:voltage_l2_l3",                        "vlink": "/status/ess_0:VoltageL2L3"},
+        "ui_voltage_l3_l1":                    { "value": "/assets/pcs/summary:voltage_l3_l1",                        "vlink": "/status/ess_0:VoltageL3L1"},
+        "ui_voltage_l1_l2_lv":                 { "value": "/assets/pcs/summary:voltage_l1_l2_lv",                     "vlink": "/status/ess_0:VoltageL1L2_lv"},
+        "ui_voltage_l2_l3_lv":                 { "value": "/assets/pcs/summary:voltage_l2_l3_lv",                     "vlink": "/status/ess_0:VoltageL2L3_lv"},
+        "ui_voltage_l3_l1_lv":                 { "value": "/assets/pcs/summary:voltage_l3_l1_lv",                     "vlink": "/status/ess_0:VoltageL3L1_lv"},
+        "ui_current_l1":                       { "value": "/assets/pcs/summary:current_l1",                           "vlink": "/status/ess_0:TotalCurrentL1"},
+        "ui_current_l2":                       { "value": "/assets/pcs/summary:current_l2",                           "vlink": "/status/ess_0:TotalCurrentL2"},
+        "ui_current_l3":                       { "value": "/assets/pcs/summary:current_l3",                           "vlink": "/status/ess_0:TotalCurrentL3"},
+        "ui_frequency":                        { "value": "/assets/pcs/summary:frequency",                            "vlink": "/status/ess_0:Frequency"},
+        "ui_power_dc":                         { "value": "/assets/pcs/summary:power_dc",                             "vlink": "/status/ess_0:TotalPCSPower"},
+        "ui_voltage_dc":                       { "value": "/assets/pcs/summary:voltage_dc",                           "vlink": "/status/ess_0:PCSVoltage"},
+        "ui_current_dc":                       { "value": "/assets/pcs/summary:current_dc",                           "vlink": "/status/ess_0:TotalPCSCurrent"},
+        "ui_pf":                               { "value": "/assets/pcs/summary:power_factor",                         "vlink": "/status/ess_0:PowerFactor"},
+        "ui_num_running_modules":              { "value": "/assets/pcs/summary:num_running_modules",                  "vlink": "/status/ess_0:TotalNumRunningModules"},
+        "ui_max_active_power":                 { "value": "/assets/pcs/summary:max_active_power",                     "vlink": "/status/ess_0:TotalPCSMaxActivePower"},
+        "ui_max_charge_power":                 { "value": "/assets/pcs/summary:max_charge_power",                     "vlink": "/status/ess_0:TotalPCSMaxChargePower"},
+        "ui_max_discharge_power":              { "value": "/assets/pcs/summary:max_discharge_power",                  "vlink": "/status/ess_0:TotalPCSMaxDischargePower"},
+
+
+
+        "site_bms_status":                     { "value": "/site/ess_ls:bms_status",                                  "vlink": "/status/ess_0:BMSStatus"                   },
+        "site_bms_poweron":                    { "value": "/site/ess_ls:bms_poweron",                                 "vlink": "/status/ess_0:BMSPowerOn"                  },
+        "site_chargeable_energy":              { "value": "/site/ess_ls:chargeable_energy",                           "vlink": "/status/ess_0:TotalChargeEnergy"    },
+        "site_dischargeable_energy":           { "value": "/site/ess_ls:dischargeable_energy",                        "vlink": "/status/ess_0:TotalDischargeEnergy" },
+        "site_voltage_dc":                     { "value": "/site/ess_ls:voltage_dc",                                  "vlink": "/status/ess_0:BMSVoltage"           },
+        "site_current_dc":                     { "value": "/site/ess_ls:current_dc",                                  "vlink": "/status/ess_0:TotalBMSCurrent"       },
+        "site_bms_max_cell_volt":              { "value": "/site/ess_ls:bms_maximum_cell_voltage",                    "vlink": "/status/ess_0:MaxCellVoltage"  		 },
+        "site_bms_min_cell_volt":              { "value": "/site/ess_ls:bms_minimum_cell_voltage",                    "vlink": "/status/ess_0:MinCellVoltage"  		 },
+        "site_bms_avg_cell_volt":              { "value": "/site/ess_ls:bms_average_cell_voltage",                    "vlink": "/status/ess_0:AvgCellVoltage"  	     },
+        "site_bms_max_cell_temp":              { "value": "/site/ess_ls:bms_maximum_cell_temperature",                "vlink": "/status/ess_0:MaxCellTemp"           },
+        "site_bms_min_cell_temp":              { "value": "/site/ess_ls:bms_minimum_cell_temperature",                "vlink": "/status/ess_0:MinCellTemp"           },
+        "site_bms_avg_cell_temp":              { "value": "/site/ess_ls:bms_average_cell_temperature",                "vlink": "/status/ess_0:AvgCellTemp"            },
+        "site_bms_soc":                        { "value": "/site/ess_ls:bms_soc",                                     "vlink": "/status/ess_0:AvgSOC"                 },
+        "site_bms_soh":                        { "value": "/site/ess_ls:bms_soh",                                     "vlink": "/status/ess_0:AvgSOH"                 },
+        "site_bms_units_connected":            { "value": "/site/ess_ls:racks_in_service",                            "vlink": "/status/ess_0:TotalNumRacksOnline"    },
+        "site_bms_fault_active":               { "value": "/site/ess_ls:bms_fault_active",                            "vlink": "/status/ess_0:BMSIsFaulted"           },
+        "site_dc_contactors_closed":           { "value": "/site/ess_ls:dc_contactors_closed",                        "vlink": "/status/ess_0:BMSDCClosed"     },
+        "site_dc_charging":                    { "value": "/site/ess_ls:dc_charging",                                 "vlink": "/status/ess_0:DCCharging"     },
+        "site_dc_discharging":                 { "value": "/site/ess_ls:dc_discharging",                              "vlink": "/status/ess_0:DCDischarging"     },
+
+        "site_pcs_system_state":               { "value": "/site/ess_ls:system_state",                                "vlink": "/status/ess_0:PCSSystemState"},
+        "site_pcs_running":                    { "value": "/site/ess_ls:pcs_running",                                 "vlink": "/status/ess_0:PCSRunning"},
+        "site_active_power":                   { "value": "/site/ess_ls:active_power",                                "vlink": "/status/ess_0:TotalActivePower"},
+        "site_reactive_power":                 { "value": "/site/ess_ls:reactive_power",                              "vlink": "/status/ess_0:TotalReactivePower"},
+        "site_apparent_power":                 { "value": "/site/ess_ls:apparent_power",                              "vlink": "/status/ess_0:TotalApparentPower"},
+        "site_voltage_l1_l2":                  { "value": "/site/ess_ls:voltage_l1_l2",                               "vlink": "/status/ess_0:VoltageL1L2"},
+        "site_voltage_l2_l3":                  { "value": "/site/ess_ls:voltage_l2_l3",                               "vlink": "/status/ess_0:VoltageL2L3"},
+        "site_voltage_l3_l1":                  { "value": "/site/ess_ls:voltage_l3_l1",                               "vlink": "/status/ess_0:VoltageL3L1"},
+        "site_current_l1":                     { "value": "/site/ess_ls:current_l1",                                  "vlink": "/status/ess_0:TotalCurrentL1"},
+        "site_current_l2":                     { "value": "/site/ess_ls:current_l2",                                  "vlink": "/status/ess_0:TotalCurrentL2"},
+        "site_current_l3":                     { "value": "/site/ess_ls:current_l3",                                  "vlink": "/status/ess_0:TotalCurrentL3"},
+        "site_frequency":                      { "value": "/site/ess_ls:frequency",                                   "vlink": "/status/ess_0:Frequency"},
+        "site_pf":                             { "value": "/site/ess_ls:pf",                                          "vlink": "/status/ess_0:PowerFactor"},
+        "site_num_running_modules":            { "value": "/site/ess_ls:pcs_modules_in_service",                      "vlink": "/status/ess_0:TotalNumRunningModules"},
+        "pcs1_site_power_dc":                  { "value": "/site/ess_ls:pcs_power_dc",                                "vlink": "/status/ess_0:PowerDC"},
+        "pcs1_site_voltage_dc":                { "value": "/site/ess_ls:pcs_voltage_dc",                              "vlink": "/status/ess_0:VoltageDC"},
+        "pcs1_site_current_dc":                { "value": "/site/ess_ls:pcs_current_dc",                              "vlink": "/status/ess_0:CurrentDC"},
+        "site_pcs_fault_active":               { "value": "/site/ess_ls:pcs_fault_active",                            "vlink": "/status/ess_0:PCSIsFaulted"},
+        "site_avg_line_voltage":               { "value": "/site/ess_ls:average_line_voltage",                        "vlink": "/status/ess_0:AverageLineVoltage"},
+        
+        "site_chargeable_power":               { "value": "/site/ess_ls:chargeable_power",                            "vlink": "/status/ess_0:TotalMaxChargePower"},
+        "site_dischargeable_power":            { "value": "/site/ess_ls:dischargeable_power",                         "vlink": "/status/ess_0:TotalMaxDischargePower"},
+        "site_ess_fault_active":               { "value": "/site/ess_ls:ess_fault_active",                            "vlink": "/status/ess_0:ESSIsFaulted"},
+        "site_ess_fire_fault_active":          { "value": "/site/ess_ls:ess_fire_alarm_active",                       "vlink": "/status/ess_0:AnyFireFaultActive"}
+
+    }, 
+
+    "/system/commands": {
+        "runESSOpts": {
+            "value": false,
+            "enabled": false,
+            "targav": "/system/commands:run",
+            "options": [
+                {"uri":"/sched/ess_0:pubESS_hs",      "aname":"ess_0", "value":0, "every":0.2},
+                {"uri":"/sched/ess_0:pubESS_ls",      "aname":"ess_0", "value":0, "every":0.2},
+                {"uri":"/sched/ess_0:pubAssets_bms",  "aname":"ess_0", "value":0, "every":1},
+                {"uri":"/sched/ess_0:pubAssets_pcs",  "aname":"ess_0", "value":0, "every":1},
+                {"uri":"/sched/ess_0:runMonitor_ess", "aname":"ess_0", "value":0, "every":0.1},
+                {"uri":"/sched/ess_0:every100ms_ess", "aname":"ess_0", "value":0, "every":0.1},
+                {"uri":"/sched/ess_0:every1000ms_ess","aname":"ess_0", "value":0, "every":1}
+            ],
+            "actions": {
+                "onSet":[{"func":[{"amap": "ess_0", "func":"SchedItemOpts"}]}]
+            }
+        }
+    },
+    
+    "/sched/ess_0": {
+        "pubESS_hs": {
+            "value": 0,
+            "note": "Publish /site/ess_hs every 200ms",
+            "enable": "/config/ess_0:enable",
+            "mode": "naked",
+            "table": "/site/ess_hs",
+            "actions": {
+                "onSet":[{"func":[{"amap": "ess_0", "func":"RunPub"}]}]
+            }
+        },
+        "pubESS_ls": {
+            "value": 0,
+            "note": "Publish /site/ess_ls every 200ms",
+            "enable": "/config/ess_0:enable",
+            "mode": "naked",
+            "table": "/site/ess_ls",
+            "actions": {
+                "onSet":[{"func":[{"amap": "ess_0", "func":"RunPub"}]}]
+            }
+        },
+        "pubAssets_bms": {
+            "value": 0,
+            "enable": "/config/ess_0:enable",
+            "mode": "ui",
+            "table": "/assets/bms/summary",
+            "actions": {
+                "onSet":[{"func":[{"amap": "ess_0", "func":"RunPub"}]}]
+            }
+        },
+        "pubAssets_pcs": {
+            "value": 0,
+            "enable": "/config/ess_0:enable",
+            "mode": "ui",
+            "table": "/assets/pcs/summary",
+            "actions": {
+                "onSet":[{"func":[{"amap": "ess_0", "func":"RunPub"}]}]
+            }
+        },
+        "runMonitor_ess": {
+            "value":1,
+            "note": "Run list of functions defined in /schedule/wake_monitor/ess_0 every 100ms",
+            "enable": "/config/ess_0:enable",
+            "monitor":"wake_monitor",
+            "aname":"ess_0",
+            "actions":{
+                "onSet":[{"func":[{"amap": "ess_0", "func":"RunMonitor"}]}]
+            }
+        },
+        "every100ms_ess":{
+            "value":1,
+            "note": "Run power command handler and update system time every 100ms",
+            "enable": "/config/ess_0:enable",
+            "actions":{
+                "onSet":[{
+                    "func":[
+                        {"amap": "ess_0", "func":"UpdateSysTime"}
+                    ]
+                }]
+            }
+        },
+        "every1000ms_ess":{
+            "value":1,
+            "note": "Check CPU statistics every second",
+            "enable": "/config/ess_0:enable",
+            "actions":{
+                "onSet":[{
+                    "func":[
+                        {"amap": "ess_0", "func":"Every1000mS"}
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/schedule/wake_monitor/ess_0": {
+        "/site/ess_hs:life":     { "enable": true, "amap": "ess_0", "func":"CheckMonitorVar" },
+
+        "/controls/ess_0:OpenContactorsEnable":     { "enable": true, "amap": "ess_0", "func": "CalculateVar"},
+        "/controls/ess_0:CloseContactorsEnable":    { "enable": true, "amap": "ess_0", "func": "CalculateVar"},
+        "/controls/ess_0:CloseContactors":          { "enable": true, "amap": "ess_0", "func": "HandleCmd"},
+        "/controls/ess_0:OpenContactors":           { "enable": true, "amap": "ess_0", "func": "HandleCmd"},
+
+        "/controls/ess_0:StartEnable":              { "enable": true, "amap": "ess_0", "func":"CalculateVar"},
+        "/controls/ess_0:ShutdownEnable":           { "enable": true, "amap": "ess_0", "func":"CalculateVar"},
+        "/controls/ess_0:Start":                    { "enable": true, "amap": "ess_0", "func":"HandleCmd"},
+        "/controls/ess_0:Shutdown":                 { "enable": true, "amap": "ess_0", "func":"HandleCmd"},
+
+        "/status/ess_0:AvgSOC":                      { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:AvgSOH":                      { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalBMSCurrent":             { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalBMSPower":               { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalBMSMaxChargeCurrent":    { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalBMSMaxDischargeCurrent": { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalBMSMaxChargePower":      { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalBMSMaxDischargePower":   { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalChargeEnergy":           { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalDischargeEnergy":        { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalNumRacksOnline":         { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:BMSDCClosed":                 { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:BMSCommsOK":                  { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:BMSIsFaulted":                { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:CurrentCheckStopDone":        { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+
+        "/status/ess_0:TotalActivePower":            { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalReactivePower":          { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalApparentPower":          { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalCurrentL1":              { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalCurrentL2":              { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalCurrentL3":              { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalPCSPower":               { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalPCSCurrent":             { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalNumRunningModules":      { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalPCSMaxActivePower":      { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalPCSMaxChargePower":      { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalPCSMaxDischargePower":   { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:PCSCommsOK":                  { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:PCSIsFaulted":                { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+
+        "/status/ess_0:TotalMaxChargePower":      { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:TotalMaxDischargePower":   { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:ESSIsFaulted":             { "enable": true, "amap": "ess_0", "func":"CalculateVar" },
+        "/status/ess_0:AnyFireFaultActive":       { "enable": true, "amap": "ess_0", "func":"CalculateVar"},
+        "/status/ess_0:FaultShutdown":            { "enable": true, "amap": "ess_0", "func":"CalculateVar"}
+
+    },
+
+    "/site/ess_hs": {
+        "life": {
+            "value": 0,
+            "EnableStateCheck": false,
+            "EnableCommsCheck": true,
+            "Type": "int",
+            "AlarmTimeout": 5,
+            "FaultTimeout": 10,
+            "RecoverTimeout": 1
+        },
+        "start_stop": {
+            "value": 0,
+            "note": "Log start, stop, or standby command first (LogInfo), then trigger start, stop, or standby routine (remap)",
+            "ifChanged": false,
+            "enable": "/config/ess_0:enable",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"inValue": 1, "uri": "/controls/ess_0:Start@triggerCmd", "outValue": true},
+                        {"inValue": 1, "uri": "/controls/ess_0:Start", "outValue": 1},
+
+                        {"inValue": 0, "fims": "set", "uri": "/ess_1/master/ess_1_hs:active_power_setpoint", "outValue": 0},
+                        {"inValue": 0, "fims": "set", "uri": "/ess_2/master/ess_2_hs:active_power_setpoint", "outValue": 0},
+                        {"inValue": 0, "fims": "set", "uri": "/ess_1/master/ess_1_hs:reactive_power_setpoint", "outValue": 0},
+                        {"inValue": 0, "fims": "set", "uri": "/ess_2/master/ess_2_hs:reactive_power_setpoint", "outValue": 0},
+                        {"inValue": 0, "uri": "/controls/ess_0:Shutdown@triggerCmd", "outValue": true},
+                        {"inValue": 0, "uri": "/controls/ess_0:Shutdown", "outValue": 0}
+                    ]
+                }]
+            }
+        },
+        "bms_dc_contactors": {
+            "value": 0,
+            "note": "Trigger command handler that will open or close BMS DC contactors",
+            "ifChanged": false,
+            "enable": "/config/ess_0:enable",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"inValue": 2, "uri": "/controls/ess_0:CloseContactors@triggerCmd", "outValue": true},
+                        {"inValue": 2, "uri": "/controls/ess_0:CloseContactors", "outValue": 2},
+                        {"inValue": 3, "uri": "/controls/ess_0:OpenContactors@triggerCmd", "outValue": true},
+                        {"inValue": 3, "uri": "/controls/ess_0:OpenContactors", "outValue": 3}
+                    ]
+                }]
+            }
+        },
+        "active_power_setpoint": {
+            "value": 0,
+            "enable": "/config/ess_0:enable",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo",      "amap": "ess_0"},
+                        {"func": "CalculateVar", "amap": "ess_0", "inAv": "/controls/ess_0:SplitActivePowerCmd"}
+                    ],
+                    "remap": [
+                        {"uri": "/assets/pcs/summary:active_power_command"}
+                    ]
+                }]
+            }
+        },
+        "reactive_power_setpoint": {
+            "value": 0,
+            "enable": "/config/ess_0:enable",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo",      "amap": "ess_0"},
+                        {"func": "CalculateVar", "amap": "ess_0", "inAv": "/controls/ess_0:SplitReactivePowerCmd"}
+                    ],
+                    "remap": [
+                        {"uri": "/assets/pcs/summary:reactive_power_command"}
+                    ]
+                }]
+            }
+        },
+        "clear_faults": {
+            "value": 0,
+            "ifChanged": false,
+            "enable": "/config/ess_0:enable",
+            "actions":	{
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"fims": "set", "uri": "/ess_1/master/ess_1_hs:clear_faults"},
+                        {"fims": "set", "uri": "/ess_2/master/ess_2_hs:clear_faults"},
+
+                        {"uri": "/site/ess_ls:com_status[0]", "outValue": false},
+                        {"uri": "/site/ess_ls:com_status[1]", "outValue": false}
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/controls/ess_0": {
+        "OpenContactorsEnable": {
+            "value": false,
+            "enable": "/config/ess_0:enable",
+            "numVars": 1,
+            "variable1": "ess_0:OpenContactorsEnabled",
+            "operation": "or",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri":"/assets/bms/summary:stop@enabled"}
+                    ]
+                }]
+            }
+        },
+        "CloseContactorsEnable": {
+            "value": false,
+            "enable": "/config/ess_0:enable",
+            "numVars": 1,
+            "variable1": "ess_0:CloseContactorsEnabled",
+            "operation": "and",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri":"/assets/bms/summary:start@enabled"}
+                    ]
+                }]
+            }
+        },
+        "CloseContactors": {
+            "value": 2,
+            "note": "Close DC contactors command to send to BMS",
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 2,
+            "numVars": 3,
+            "variable1": "/status/ess_0:BMSDCClosed",
+            "variable2": "/status/ess_0:PCSSystemStateString",
+            "variable3": "/status/ess_0:BMSIsFaulted",
+            "useExpr": true,
+            "enableAlert": true,
+            "expression": "not {1} and ({2} == Off or {2} == Fault or {2} == Starting) and not {3}",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "ess_0"}]},
+                          {"func": [{"func": "LogInfo", "amap": "ess_0"}]}]
+            }
+        },
+        "OpenContactors": {
+            "value": 3,
+            "note": "Open DC contactors command to send to BMS",
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 2,
+            "numVars": 1,
+            "variable1": "/status/ess_0:PCSSystemStateString",
+            "useExpr": true,
+            "expression": "{1} == Off or {1} == Fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "ess_0"}]}]
+            }
+        },
+
+        "StartEnable": {
+            "value": false,
+            "enable": "/config/ess_0:enable",
+            "numVars": 1,
+            "variable1": "ess_0:StartEnabled",
+            "operation": "and",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri":"/assets/pcs/summary:start@enabled"}
+                    ]
+                }]
+            }
+        },
+        "ShutdownEnable": {
+            "value": false,
+            "enable": "/config/ess_0:enable",
+            "numVars": 1,
+            "variable1": "ess_0:ShutdownEnabled",
+            "operation": "and",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri":"/assets/pcs/summary:shutdown@enabled"}
+                    ]
+                }]
+            }
+        },
+        "Start": {
+            "value": 1,
+            "note": "Start command to send to PCS",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 2,
+            "variable1": "/status/ess_0:PCSSystemStateString",
+            "variable2": "/status/ess_0:BMSDCClosed",
+            "useExpr": true,
+            "expression": "({1} == Off or {1} == Ready) and {2}",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "ess_0"}]}]
+            }
+        },
+        "Shutdown": {
+            "value": 0,
+            "note": "Shutdown command to send to PCS",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 10,
+            "sendCmdTimeout": 5,
+            "numVars": 3,
+            "variable1": "/status/ess_0:CurrentCheckStopDone",
+            "variable2": "/status/ess_0:PCSSystemStateString",
+            "variable3": "/status/ess_0:BMSDCClosed",
+            "useExpr": true,
+            "expression": "{1} and ({2} == Ready or {2} == Running or {2} == Starting) and {3}",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "SplitActivePowerCmd": {
+            "value": 0,
+            "enable": "/config/ess_0:enable",
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/site/ess_hs:active_power_setpoint",
+            "expression": "{1} / 2",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo",      "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"fims": "set", "uri": "/ess_1/master/ess_1_hs:active_power_setpoint"},
+                        {"fims": "set", "uri": "/ess_2/master/ess_2_hs:active_power_setpoint"}
+                    ]
+                }]
+            }
+        },
+        "SplitReactivePowerCmd": {
+            "value": 0,
+            "enable": "/config/ess_0:enable",
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/site/ess_hs:reactive_power_setpoint",
+            "expression": "{1} / 2",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo",      "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"fims": "set", "uri": "/ess_1/master/ess_1_hs:reactive_power_setpoint"},
+                        {"fims": "set", "uri": "/ess_2/master/ess_2_hs:reactive_power_setpoint"}
+                    ]
+                }]
+            }
+        },
+
+        "SplitActivePowerCmdUI": {
+            "value": 0,
+            "enable": "/config/ess_0:enable",
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/assets/pcs/summary:maint_active_power_setpoint",
+            "expression": "{1} / 2",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo",      "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"fims": "set", "uri": "/assets/pcs/pcs_1:maint_active_power_setpoint"},
+                        {"fims": "set", "uri": "/assets/pcs/pcs_2:maint_active_power_setpoint"}
+                    ]
+                }]
+            }
+        },
+        "SplitReactivePowerCmdUI": {
+            "value": 0,
+            "enable": "/config/ess_0:enable",
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/assets/pcs/summary:maint_reactive_power_setpoint",
+            "expression": "{1} / 2",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo",      "amap": "ess_0"}
+                    ],
+                    "remap": [
+                        {"fims": "set", "uri": "/assets/pcs/pcs_1:maint_reactive_power_setpoint"},
+                        {"fims": "set", "uri": "/assets/pcs/pcs_2:maint_reactive_power_setpoint"}
+                    ]
+                }]
+            }
+        }
+    },
+    "/status/ess_0": {
+        "ReactivePower": 0,
+        "active_power": 1234.5,
+        "UiStartup": false,
+        "MaxChargePower": 0 ,
+        "MaxDischargePower": 0 ,
+        "MaxESSChargePower": 0 ,
+        "MaxESSDischargePower": 0,
+        "FaultShutdown": {
+            "value": false,
+            "note": "When the ESS faults, we'll shutdown the PCS",
+            "ifChanged": true,
+            "numVars": 1,
+            "variable1": "ess_0:FaultShutdown", 
+            "operation": "or",
+            "actions": { 
+                "onSet":[{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess_0"}
+                    ],
+                    "remap":[
+                        {"inValue": true, "fims": "set", "uri": "/ess_1/master/ess_1_hs:active_power_setpoint", "outValue": 0},
+                        {"inValue": true, "fims": "set", "uri": "/ess_2/master/ess_2_hs:active_power_setpoint", "outValue": 0},
+                        {"inValue": true, "fims": "set", "uri": "/ess_1/master/ess_1_hs:reactive_power_setpoint", "outValue": 0},
+                        {"inValue": true, "fims": "set", "uri": "/ess_2/master/ess_2_hs:reactive_power_setpoint", "outValue": 0},
+                        {"inValue": true, "uri": "/controls/ess_0:Shutdown@triggerCmd", "outValue": true},
+                        {"inValue": true, "uri": "/controls/ess_0:Shutdown", "outValue": 0}
+                    ]
+                }]
+            }
+        },
+        "FaultCnt": 0,
+        "AlarmCnt": 0,
+
+        "AvgSOC": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:SOC", 
+            "operation": "avg"
+        },
+        "AvgSOH": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:SOH", 
+            "operation": "avg"
+        },
+        "TotalBMSCurrent": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:BMSCurrent", 
+            "operation": "+"
+        },
+        "TotalBMSPower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:BMSPower", 
+            "operation": "+"
+        },
+        "TotalBMSMaxChargeCurrent": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:BMSMaxChargeCurrent", 
+            "operation": "+"
+        },
+        "TotalBMSMaxDischargeCurrent": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:BMSMaxDischargeCurrent", 
+            "operation": "+"
+        },
+        "TotalBMSMaxChargePower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:BMSMaxChargePower", 
+            "operation": "+"
+        },
+        "TotalBMSMaxDischargePower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:BMSMaxDischargePower", 
+            "operation": "+"
+        },
+        "TotalChargeEnergy": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:ChargeEnergy", 
+            "operation": "+"
+        },
+        "TotalDischargeEnergy": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:DischargeEnergy", 
+            "operation": "+"
+        },
+        "TotalNumRacksOnline": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:NumRacksOnline", 
+            "operation": "+"
+        },
+        "BMSDCClosed": {
+            "value": false,
+            "numVars": 1,
+            "variable1": "ess_0:BMSDCClosed",
+            "operation": "and"
+        },
+        "BMSCommsOK": {
+            "value": false,
+            "enable": "/config/ess_0:enable",
+            "numVars": 1,
+            "variable1": "ess_0:BMSCommsOK",
+            "operation": "and",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "uri": "/assets/bms/summary:com_status",   "outValue": "ONLINE"},
+                        {"inValue": false, "uri": "/assets/bms/summary:com_status",  "outValue": "OFFLINE"},
+                        {"inValue": false, "uri": "/site/ess_ls:com_status[1]",   "outValue": true, "ifChanged": true}
+                    ]
+                }]
+            }
+        },
+        "BMSIsFaulted": {
+            "value": false,
+            "numVars": 1,
+            "variable1": "ess_0:BMSIsFaulted",
+            "operation": "or"
+        },
+        "CurrentCheckStopDone": {
+            "value": false,
+            "numVars": 1,
+            "variable1": "ess_0:CurrentCheckStopDone", 
+            "operation": "and"
+        },
+
+        "TotalActivePower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:ActivePower", 
+            "operation": "+"
+        },
+        "TotalReactivePower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:ReactivePower", 
+            "operation": "+"
+        },
+        "TotalApparentPower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:ApparentPower", 
+            "operation": "+"
+        },
+        "TotalCurrentL1": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:CurrentL1", 
+            "operation": "+"
+        },
+        "TotalCurrentL2": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:CurrentL2", 
+            "operation": "+"
+        },
+        "TotalCurrentL3": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:CurrentL3", 
+            "operation": "+"
+        },
+        "TotalPCSPower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:PCSPower", 
+            "operation": "+"
+        },
+        "TotalPCSCurrent": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:PCSCurrent", 
+            "operation": "+"
+        },
+        "TotalNumRunningModules": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:NumRunningModules", 
+            "operation": "+"
+        },
+        "TotalPCSMaxActivePower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:PCSMaxActivePower", 
+            "operation": "+"
+        },
+        "TotalPCSMaxChargePower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:PCSMaxChargePower", 
+            "operation": "+"
+        },
+        "TotalPCSMaxDischargePower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:PCSMaxDischargePower", 
+            "operation": "+"
+        },
+        "PCSCommsOK": {
+            "value": false,
+            "enable": "/config/ess_0:enable",
+            "numVars": 1,
+            "variable1": "ess_0:PCSCommsOK",
+            "operation": "and",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "uri": "/assets/pcs/summary:com_status",      "outValue": "ONLINE"},
+                        {"inValue": false, "uri": "/assets/pcs/summary:com_status",     "outValue": "OFFLINE"},
+                        {"inValue": false, "uri": "/site/ess_ls:com_status[0]",   "outValue": true, "ifChanged": true}
+                    ]
+                }]
+            }
+        },
+        "PCSIsFaulted": {
+            "value": false,
+            "numVars": 1,
+            "variable1": "ess_0:PCSIsFaulted",
+            "operation": "or"
+        },
+
+        "TotalMaxChargePower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:MaxChargePower", 
+            "operation": "+" 
+        },
+        "TotalMaxDischargePower": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "ess_0:MaxDischargePower", 
+            "operation": "+" 
+        },
+        "ESSIsFaulted": {
+            "value": false,
+            "numVars": 1,
+            "variable1": "ess_0:ESSIsFaulted",
+            "operation": "or"
+        },
+        "AnyFireFaultActive": {
+            "value": false,
+            "numVars": 1,
+            "variable1": "ess_0:AnyFireFaultActive",
+            "operation": "or"
+        },
+
+        "CloseContactorsSuccess": {
+            "value": false,
+            "note": "If set to true, then send BMS close contactors command to logical ESS Controller processes (ess_1, ess_2)",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "fims": "set", "uri": "/ess_1/master/ess_1_hs:bms_dc_contactors", "outValue": 2},
+                        {"inValue": true,  "ifChanged": false, "fims": "set", "uri": "/ess_2/master/ess_2_hs:bms_dc_contactors", "outValue": 2}
+                    ]
+                }]
+            }
+        },
+        "OpenContactorsSuccess": {
+            "value": false,
+            "note": "If set to true, then send BMS open contactors command to logical ESS Controller processes (ess_1, ess_2)",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "fims": "set", "uri": "/ess_1/master/ess_1_hs:bms_dc_contactors", "outValue": 3},
+                        {"inValue": true,  "ifChanged": false, "fims": "set", "uri": "/ess_2/master/ess_2_hs:bms_dc_contactors", "outValue": 3}
+                    ]
+                }]
+            }
+        },
+        "StartSuccess": {
+            "value": false,
+            "note": "If set to true, then send PCS start command to logical ESS Controller process (ess_1)",
+            "enable": "/config/ess_0:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "fims": "set", "uri": "/ess_1/master/ess_1_hs:start_stop", "outValue": 1}
+                    ]
+                }]
+            }
+        },
+        "ShutdownSuccess": {
+            "value": false,
+            "note": "If set to true, then send PCS shutdown command to logical ESS Controller process (ess_1)",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false,  "fims": "set", "uri": "/ess_1/master/ess_1_hs:start_stop",  "outValue": 0}
+                    ]
+                }]
+            }
+        }
+    }
+}

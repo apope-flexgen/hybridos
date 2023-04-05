@@ -1,0 +1,11 @@
+{
+    "processes": [
+        {
+            "name": "/usr/local/bin/dbi",
+            "args": [
+                "/usr/local/etc/config/dbi/"
+            ],
+            "max_restarts": -1
+        }
+    ]
+}

@@ -1,0 +1,45 @@
+{
+    "controllerName": "controller 1",
+    "heartbeatFrequencyMS": 1000,
+    "patrolFrequencyMS": 1000,
+    "briefingFrequencyMS": 5000,
+    "c2cMsgFrequencyMS": 50,
+    "statsPubFrequencySeconds": 1,
+    "enableRedundantFailover": false,
+    "primaryIP": "192.168.1.1",
+    "thisCtrlrStaticIP": "172.16.1.80",
+    "otherCtrlrStaticIP": "172.16.2.82",
+    "pduIP": "10.0.1.83",
+    "processList": [
+        {
+            "name": "fleet_manager",
+            "uri": "/fleet",
+            "writeOutC2C":
+            [
+                "/cops/fleet/sites",
+                "/cops/fleet/features"
+            ],
+            "killOnHang": true,
+            "requiredForHealthyStatus": true,
+            "hangTimeAllowanceMS": 3000,
+            "configRestart": true
+        },
+        {
+            "name": "scheduler",
+            "uri": "/scheduler",
+            "writeOutC2C":
+            [
+                "/cops/scheduler/modes",
+                "/cops/scheduler/events",
+                "/cops/scheduler/configuration",
+                "/cops/scheduler/lastScheduleModification",
+                "/cops/scheduler/enableSchedulerEvents",
+                "/cops/scheduler/timezones"
+            ],
+            "killOnHang": true,
+            "requiredForHealthyStatus": true,
+            "hangTimeAllowanceMS": 3000,
+            "configRestart": false
+        }
+    ]
+}

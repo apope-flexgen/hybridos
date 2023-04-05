@@ -1,0 +1,172 @@
+{
+    "name": "Reactive Power Management",
+    "available_features_runmode1_kVAR_mode": {
+        "value": "0x24",
+        "name": "Available Feature Modes - Run Mode 1 Reactive Power",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "string",
+        "ui_type": "none",
+        "options": [
+            { "name": "Active Voltage Regulation", "return_value": 0 },
+            { "name": "Watt-VAR", "return_value": 1 },
+            { "name": "Reactive Power Setpoint", "return_value": 2 },
+            { "name": "Power Factor", "return_value": 3 },
+            { "name": "Watt-Power Factor", "return_value": 4 },
+            { "name": "Disabled", "return_value": 5 }
+        ]
+    },
+    "runmode1_kVAR_mode_status": {
+        "value": "Disabled",
+        "name": "Run Mode 1 Reactive Power Mode",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "string",
+        "ui_type": "none"
+    },
+    "runmode1_kVAR_mode_cmd": {
+        "value": 5,
+        "name": "Mode Select - Run Mode 1 Reactive Power",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum",
+        "ui_type": "control",
+        "options": [
+            { "name": "Reactive Power Setpoint", "return_value": 2 },
+            { "name": "Disabled", "return_value": 5 }
+        ]
+    },
+    "reactive_setpoint_mode_enable_flag": {
+        "value": false,
+        "name": "Reactive Power Setpoint Mode Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Reactive Power Setpoint Mode Enable", "return_value": true }
+        ]
+    },
+    "reactive_setpoint_kVAR_cmd": {
+        "value": 0,
+        "name": "Reactive Power Setpoint",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "reactive_setpoint_kVAR_slew_rate": {
+        "value": 250,
+        "name": "Reactive Power Setpoint Slew Rate",
+        "unit": "kVAR/s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "site_kVAR_demand": {
+        "value": 0,
+        "name": "Site Demand Reactive Power",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "ess_kVAR_cmd": {
+        "value": 0,
+        "name": "ESS Reactive Power Setpoint",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "potential_ess_kVAR": {
+        "value": 0,
+        "name": "ESS Potential Reactive Power",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "ess_actual_kVAR": {
+        "value": 0,
+        "name": "ESS Actual Reactive Power",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "gen_kVAR_cmd": {
+        "value": 0,
+        "name": "Generator Reactive Power Setpoint",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "potential_gen_kVAR": {
+        "value": 0,
+        "name": "Generator Potential Reactive Power",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "gen_actual_kVAR": {
+        "value": 0,
+        "name": "Generator Actual Reactive Power",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "feeder_actual_kVAR": {
+        "value": 45.69083786010742,
+        "name": "POI Actual Reactive Power",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "solar_kVAR_cmd": {
+        "value": 0,
+        "name": "Solar Reactive Power Setpoint",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "potential_solar_kVAR": {
+        "value": 2500,
+        "name": "Solar Potential Reactive Power",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "solar_actual_kVAR": {
+        "value": 0,
+        "name": "Solar Actual Reactive Power",
+        "unit": "VAR",
+        "scaler": 1000,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    }
+}

@@ -1,0 +1,218 @@
+{
+  "summary": {
+    "name": "Generator Summary",
+    "num_gen_available": 1,
+    "num_gen_running": 0,
+    "start_gen_countdown": "--:--",
+    "gen_1_active_power": 0,
+    "gen_1_alarms": 0,
+    "gen_1_faults": 0
+  },
+  "gen_1": {
+    "name": "Cat CG170-16",
+    "active_power": {
+      "value": 0,
+      "name": "AC Active Power",
+      "unit": "W",
+      "scaler": 1000,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "active_power_setpoint": {
+      "active_power_setpoint_component_ctrl_cmd": 0,
+      "value": 0,
+      "name": "Active Power Setpoint",
+      "unit": "W",
+      "scaler": 1000,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "alarms": {
+      "value": 0,
+      "name": "Alarms",
+      "unit": "",
+      "scaler": 1,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "apparent_power": {
+      "value": 0,
+      "name": "AC Apparent Power",
+      "unit": "VA",
+      "scaler": 1000,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "current_l1": {
+      "value": 0,
+      "name": "L1 AC Current",
+      "unit": "A",
+      "scaler": 1,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "disable": {
+      "value": 0,
+      "name": "Disable",
+      "unit": "",
+      "scaler": 1,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "faults": {
+      "value": 0,
+      "name": "Faults",
+      "unit": "",
+      "scaler": 1,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "frequency": {
+      "value": 60,
+      "name": "Frequency Avg RMS",
+      "unit": "Hz",
+      "scaler": 1,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "grid_forming": {
+      "value": 0,
+      "name": "Grid Forming",
+      "unit": "",
+      "scaler": 1,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "grid_mode": {
+      "value": 0,
+      "name": "Grid Mode",
+      "unit": "",
+      "scaler": 1,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "reactive_power": {
+      "value": 0,
+      "name": "AC Reactive Power",
+      "unit": "VAR",
+      "scaler": 1000,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "reactive_power_setpoint": {
+      "reactive_power_setpoint_component_ctrl_cmd": 0,
+      "value": 0,
+      "name": "Reactive Power Setpoint",
+      "unit": "VAR",
+      "scaler": 1000,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "status": {
+      "value": "Stopped",
+      "name": "Status",
+      "unit": "",
+      "scaler": 1,
+      "enabled": true,
+      "type": "Status",
+      "ui_type": "status",
+      "options": [{ "name": "Stopped", "return_value": 0 }]
+    },
+    "voltage_l1_l2": {
+      "value": 95598.1015625,
+      "name": "L1-L2 AC Voltage",
+      "unit": "V",
+      "scaler": 1,
+      "enabled": true,
+      "type": "Float",
+      "ui_type": "status"
+    },
+    "maint_mode": {
+      "name": "Maintenance Mode",
+      "unit": "",
+      "scaler": 1,
+      "ui_type": "control",
+      "type": "enum_slider",
+      "value": false,
+      "enabled": true,
+      "options": [
+        { "name": "No", "return_value": false },
+        { "name": "Yes", "return_value": true }
+      ]
+    },
+    "clear_faults": {
+      "name": "Clear Faults",
+      "unit": "",
+      "scaler": 1,
+      "ui_type": "control",
+      "type": "enum_button",
+      "enabled": false,
+      "options": [{ "name": "Clear Faults", "return_value": true }]
+    },
+    "start": {
+      "name": "Start",
+      "unit": "",
+      "scaler": 1,
+      "ui_type": "control",
+      "type": "enum_button",
+      "enabled": false,
+      "options": [
+        { "name": "On", "return_value": true },
+        { "name": "Off", "return_value": false }
+      ]
+    },
+    "stop": {
+      "name": "Stop",
+      "unit": "",
+      "scaler": 1,
+      "ui_type": "control",
+      "type": "enum_button",
+      "enabled": false,
+      "options": [
+        { "name": "On", "return_value": true },
+        { "name": "Off", "return_value": false }
+      ]
+    },
+    "clear_faults": {
+      "name": "Clear Faults",
+      "unit": "",
+      "scaler": 1,
+      "ui_type": "control",
+      "type": "enum_button",
+      "enabled": false,
+      "options": [{ "name": "Clear Faults", "return_value": true }]
+    },
+    "maint_active_power_setpoint": {
+      "name": "Active Power Setpoint",
+      "unit": "W",
+      "scaler": 1000,
+      "ui_type": "control",
+      "type": "number",
+      "value": 0,
+      "enabled": false,
+      "options": []
+    },
+    "maint_reactive_power_setpoint": {
+      "name": "Reactive Power Setpoint",
+      "unit": "VAR",
+      "scaler": 1000,
+      "ui_type": "control",
+      "type": "number",
+      "value": 0,
+      "enabled": false,
+      "options": []
+    }
+  }
+}

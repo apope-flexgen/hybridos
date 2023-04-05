@@ -1,0 +1,238 @@
+{
+	"fileInfo":{},
+	"system":{
+		"device_id": 1,
+		"id": "SEL_735_Power_Meter",
+		"ip_address": "0.0.0.0",
+		"name": "SEL_735_Power_Meter",
+		"port": 10004
+	},
+	"registers":{
+		"holding_registers": [
+			{
+				"id": "frequency",
+				"name": "FREQUENCY",
+				"offset": 900,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "kwh_delivered",
+				"name": "WH3_DEL_UC",
+				"offset": 1000,
+				"scale": 10,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "kwh_received",
+				"name": "WH3_REC_UC",
+				"offset": 1002,
+				"scale": 10,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "kVARh_delivered",
+				"name": "QH3_DEL_UC",
+				"offset": 1004,
+				"scale": 10,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "kVARh_received",
+				"name": "QH3_REC_UC",
+				"offset": 1006,
+				"scale": 10,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "voltage_l1",
+				"name": "VA",
+				"offset": 1008,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "voltage_l2",
+				"name": "VB",
+				"offset": 1010,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "voltage_l3",
+				"name": "VC",
+				"offset": 1012,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "thd_current_l1",
+				"name": "THDIA",
+				"offset": 1014,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "thd_current_l2",
+				"name": "THDIB",
+				"offset": 1016,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "thd_current_l3",
+				"name": "THDIC",
+				"offset": 1018,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "thd_voltage_l1",
+				"name": "THDVA",
+				"offset": 1020,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "thd_voltage_l2",
+				"name": "THDVB",
+				"offset": 1022,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "thd_voltage_l3",
+				"name": "THDVC",
+				"offset": 1024,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "current_l1",
+				"name": "IA",
+				"offset": 1026,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "current_l2",
+				"name": "IB",
+				"offset": 1028,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "current_l3",
+				"name": "IC",
+				"offset": 1030,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "current_n",
+				"name": "IN",
+				"offset": 1032,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "active_power",
+				"name": "W3_UC",
+				"offset": 1034,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "reactive_power",
+				"name": "Q3_UC",
+				"offset": 1036,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "apparent_power",
+				"name": "U3",
+				"offset": 1038,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "voltage_l1_l2",
+				"name": "VAB",
+				"offset": 1040,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "voltage_l2_l3",
+				"name": "VBC",
+				"offset": 1042,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "voltage_l3_l1",
+				"name": "VCA",
+				"offset": 1044,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			},
+			{
+				"id": "power_factor",
+				"name": "PFT3",
+				"offset": 1046,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_735"
+			}
+		]
+	}
+}

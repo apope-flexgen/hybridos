@@ -1,0 +1,9 @@
+fims-3.0.0
+ess_controller-10.2.0
+modbus_interface-2.0.0
+dnp3_interface-3.0.0
+dbi-2.2.0
+events-1.6.0
+metrics-1.6.0
+web_server-1.9.0
+web_ui-1.9.0

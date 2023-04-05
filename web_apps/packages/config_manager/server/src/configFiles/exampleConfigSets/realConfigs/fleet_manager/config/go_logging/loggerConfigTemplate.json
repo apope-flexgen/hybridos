@@ -1,0 +1,5 @@
+{
+    "logToConsole": true,
+    "logToFile": true,
+    "severityThreshold": 1
+}

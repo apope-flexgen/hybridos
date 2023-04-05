@@ -1,0 +1,656 @@
+{
+    "/schedule/wake_monitor/pcs": {
+        "/controls/pcs:StartFromOff":             { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:StartFromStandby":         { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:Start":                    { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:Standby":                  { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:StopBeforeShutdown":       { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:Shutdown":                 { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:EStop":                    { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:ClearFaults":              { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyRunning":            { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyStandby":            { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyShutdown":           { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyEStop":              { "enable": true, "amap": "pcs", "func":"HandleCmd"},
+
+        "/controls/pcs:ActivePowerCalibrationCalc" : { "enable": true, "amap": "pcs", "func": "CalculateVar"},
+        "/controls/pcs:ActivePowerCmdConvert"      : { "enable": true, "amap": "pcs", "func": "CalculateVar"},
+        "/controls/pcs:ReactivePowerCmdConvert"    : { "enable": true, "amap": "pcs", "func": "CalculateVar"}
+    },
+    "/controls/pcs": {
+        "SelectStartMode": {
+            "value": 0,
+            "note": "If the PCS is off, then start using selector status (1). If the PCS is ready, then start using the start register",
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "if (({1} == Off), 1, if (({1} == Ready), 2, 0))",
+            "ifChanged": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": 1, "uri": "/controls/pcs:StartFromOff@triggerCmd",    "outValue": true},
+                        {"inValue": 1, "uri": "/controls/pcs:StartFromOff",               "outValue": 1},
+
+                        {"inValue": 2, "uri": "/controls/pcs:StartFromStandby@triggerCmd",   "outValue": true},
+                        {"inValue": 2, "uri": "/controls/pcs:StartFromStandby",              "outValue": 1}
+                    ]
+                }]
+            }
+        },
+        "SelectShutdownMode": {
+            "value": 0,
+            "note": "If the PCS is running, then put the PCS in standby first before shutdown. If the PCS is ready, then shutdown the PCS",
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "if (({1} == Running), 1, if (({1} == Ready), 2, 0))",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": 1, "ifChanged": false, "uri": "/controls/pcs:StopBeforeShutdown@triggerCmd",          "outValue": true},
+                        {"inValue": 1, "ifChanged": false, "uri": "/controls/pcs:StopBeforeShutdown",                     "outValue": 1},
+
+                        {"inValue": 2, "ifChanged": false, "uri": "/controls/pcs:Shutdown@triggerCmd",         "outValue": true},
+                        {"inValue": 2, "ifChanged": false, "uri": "/controls/pcs:Shutdown",                    "outValue": 0}
+                    ]
+                }]
+            }
+        },
+        "StartFromOff": {
+            "value": 1,
+            "note": "Start command to send to PCS if the PCS is off and the BMS DC contactors are closed",
+            "cmdVar": "/components/pe_pcs_controls:selector_status",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 2,
+            "variable1": "/status/pcs:SystemState",
+            "variable2": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "{1} == Off and {2} == 1",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "StartFromStandby": {
+            "value": 1,
+            "note": "Start command to send to PCS if the PCS is in standby and the BMS DC contactors are closed",
+            "cmdVar": "/components/pe_pcs_controls:start",
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 2,
+            "variable1": "/status/pcs:SystemState",
+            "variable2": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "{1} == Ready and {2} == 1",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "Start": {
+            "value": 1,
+            "note": "Start command to send to PCS if the PCS is Off and the BMS DC contactors are closed",
+            "cmdVar": "/components/pe_pcs_controls:selector_status",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 10,
+            "sendCmdTimeout": 0,
+            "numVars": 2,
+            "variable1": "/status/pcs:SystemState",
+            "variable2": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "{1} == Off and {2} == 1",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "Standby": {
+            "value": 2,
+            "note": "Stop command to send to PCS if the PCS is running and the BMS DC contactors are closed. This should put the PCS in a ready state (standby)",
+            "note2": "Set value = 1 and cmdVar = /components/pe_pcs_controls:stop when deploying on site",
+            "cmdVar": "/components/pe_pcs_controls:selector_status",
+            "checkCmdTimeout": 10,
+            "sendCmdTimeout": 5,
+            "numVars": 3,
+            "variable1": "/status/bms:CurrentCheckStopDone",
+            "variable2": "/status/pcs:SystemState",
+            "variable3": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "{1} and {2} == Running and {3} == 1",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "StopBeforeShutdown": {
+            "value": 1,
+            "note": "Stop the PCS before shutdown (same conditions as /controls/pcs:Standby)",
+            "note2": "Set useExpr to true when deploying on site",
+            "cmdVar": "/components/pe_pcs_controls:stop",
+            "checkCmdTimeout": 10,
+            "sendCmdTimeout": 5,
+            "numVars": 3,
+            "variable1": "/status/bms:CurrentCheckStopDone",
+            "variable2": "/status/pcs:SystemState",
+            "variable3": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "{1} and {2} == Running and {3} == 1",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "Shutdown": {
+            "value": 0,
+            "note": "Set selector status to 0 to shutdown PCS if 0 kW and 0 kVAr are set to the PCS, we're no longer waiting for DC current to decrease, and the PCS is in ready state (standby)",
+            "cmdVar": "/components/pe_pcs_controls:selector_status",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 10,
+            "sendCmdTimeout": 5,
+            "numVars": 2,
+            "variable1": "/status/bms:CurrentCheckStopDone",
+            "variable2": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} and ({2} == Ready or {2} == Running or {2} == Starting)",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "EStop": {
+            "value": 1,
+            "note": "Send emergency stop command to PCS",
+            "cmdVar": "/components/pe_pcs_controls:e_stop",
+            "checkCmdTimeout": 10,
+            "sendCmdTimeout": 5,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} != Off and {1} != Fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "ClearFaults": {
+            "value": 1,
+            "note": "Clear faults command to send to PCS",
+            "cmdVar": "/components/pe_pcs_controls:reset",
+            "checkCmdTimeout": 30,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "VerifyRunning": {
+            "value": 0,
+            "note": "Verify that the PCS is now running after start command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 0.1,
+            "sendCmdTimeout": 10,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Running",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyStandby": {
+            "value": 0,
+            "note": "Verify that the PCS is now in standby after stop command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 0.1,
+            "sendCmdTimeout": 10,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Ready",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyShutdown": {
+            "value": 0,
+            "note": "Verify that the PCS is now off after the shutdown command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 0.1,
+            "sendCmdTimeout": 10,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Off or {1} == Fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyEStop": {
+            "value": 0,
+            "note": "Verify that the PCS is now off after the estop command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 0.1,
+            "sendCmdTimeout": 10,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Off or {1} == Fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "PCSRun": 0,
+        "PMode_I": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 1,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_pmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "PMode_P": {
+            "value": true,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 2,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_pmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "QMode_CosPhi": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 0,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_Q": {
+            "value": true,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 1,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_I": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"bitset": [
+                        {
+                            "bit": 2,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_VQ": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"bitset": [
+                        {
+                            "bit": 3,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "PStartGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "PStopGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "PDropGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QStartGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QStopGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QRiseGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QDropGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "EnPStartGradient": 1,
+        "EnPStopGradient": 1,
+        "EnPRiseGradient": 1,
+        "PRiseGradient": 10,
+        "EnPDropGradient": 1,
+        "EnQStartGradient": 1,
+        "EnQStopGradient": 1,
+        "EnQRiseGradient": 1,
+        "EnQDropGradient": 1,
+        "ctrlword_pmode": 2,
+        "ctrlword_qmode": 1,
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "ActivePowerSetpoint": 0,
+        "ReactivePowerSetpoint": 0,
+        "lastActivePowerSetpoint": 0,
+        "lastReactivePowerSetpoint": 0,
+        "ActivePowerDeadband": 0.0,
+        "ReactivePowerDeadband": 0.0,
+        "oncmd": 0,
+        "offcmd": 0,
+        "test_ctrl": 72,
+        "UncorrectedActivePowerSetpoint": 0,
+        "ActivePowerCalibrationCalc": {
+            "note1": "Due to an error in PE's power command, a small correction factor must be accomodated to properly calibrate power set points.",
+            "note2": "This var calc function facilitates seperate correction factors for charge and discharge setpoints.",
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/controls/pcs:UncorrectedActivePowerSetpoint",
+            "expression": "if (({1} > 0), (({1} * -0.000004 + 1.0037) * {1}), (({1} * -0.000007 + 1.0032) * {1}))",
+            "actions": {
+                "onSet": [
+                    {"remap": [{"uri": "/controls/pcs:ActivePowerSetpoint"}]}
+                ]
+            }
+        },
+        "ActivePowerCmdConvert": {
+            "value": 0,
+            "note": "Convert from kW to percentage",
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/controls/pcs:ActivePowerCmdReal",
+            "variable2": "/limits/pcs:RatedApparentPower",
+            "expression": "{1} / {2} * 100",
+            "actions": {
+                "onSet": [
+                    {"remap": [
+                        {"ifChanged": false, "uri": "/controls/pcs:ActivePowerCmd@triggerCmd", "outValue": true},
+                        {"ifChanged": false, "uri": "/controls/pcs:ActivePowerCmd"}
+                    ]}
+                ]
+            }
+        },
+        "ReactivePowerCmdConvert": {
+            "value": 0,
+            "note": "Convert from kVAr to percentage",
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/controls/pcs:ReactivePowerCmdReal",
+            "variable2": "/limits/pcs:RatedApparentPower",
+            "expression": "{1} / {2} * 100",
+            "actions": {
+                "onSet": [
+                    {"remap": [
+                        {"ifChanged": false, "uri": "/controls/pcs:ReactivePowerCmd@triggerCmd", "outValue": true},
+                        {"ifChanged": false, "uri": "/controls/pcs:ReactivePowerCmd"}
+                    ]}
+                ]
+            }
+        },
+        "ActivePowerCmd": {
+            "value": 0,
+            "note": "Set active power",
+            "xcmdVar": "/components/pe_pcs_controls:p_p_reference",
+            "cmdVar": "/components/pe_pcs_controls:p_ac_reference_##PCS_NUM##",
+            "checkCmdTimeout": 30,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "ReactivePowerCmd": {
+            "value": 0,
+            "note": "Set reactive power",
+            "xcmdVar": "/components/pe_pcs_controls:q_q_reference",
+            "cmdVar": "/components/pe_pcs_controls:q_reference_##PCS_NUM##",
+            "checkCmdTimeout": 30,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        }
+    },
+    
+    "/status/pcs": {
+        "StartFromOffSuccess": {
+            "value": false,
+            "note": "If the start command has been successfully sent to the PCS, verify that the PCS has transitioned to running state. Otherwise, send an alarm",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:StartFromStandby@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:StartFromStandby",            "outValue": 1},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:start_from_off_cmd",         "outValue": "Failed to send/verify command to selector status (1) to start PCS from off"}
+                    ]
+                }]
+            }
+        },
+        "StartFromStandbySuccess": {
+            "value": false,
+            "note": "If the start command has been successfully sent to the PCS, verify that the PCS has transitioned to running state. Otherwise, send an alarm",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyRunning@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyRunning",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:start_from_standby_cmd",     "outValue": "Failed to send/verify start command (1) to start PCS from standby"}
+                    ]
+                }]
+            }
+        },
+        "StandbySuccess": {
+            "value": false,
+            "note": "If the stop command has been successfully sent to the PCS, verify that the PCS has transitioned to standby. Otherwise, send an alarm",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStandby@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStandby",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:standby_cmd",                "outValue": "Failed to send/verify stop command (1) to put PCS in standby"}
+                    ]
+                }]
+            }
+        },
+        "StopBeforeShutdownSuccess": {
+            "value": false,
+            "note": "If standby command was successful, we'll shutdown the PCS. Otherwise, send an e-stop to shutdown the PCS",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:stop_before_shutdown_cmd",   "outValue": "Failed to send/verify stop command (1) to put PCS in standby before shutting down"},
+                        {"inValue": false, "ifChanged": false, "uri": "/controls/pcs:EStop@triggerCmd",         "outValue": true},
+                        {"inValue": false, "ifChanged": false, "uri": "/controls/pcs:EStop",                    "outValue": 1},
+
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:Shutdown@triggerCmd",         "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:Shutdown",                    "outValue": 0}
+                    ]
+                }]
+            }
+        },
+        "ShutdownSuccess": {
+            "value": false,
+            "note": "If the shutdown command has been successfully sent to the PCS, verify that the PCS has shutdown. Otherwise, send an alarm",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyShutdown@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyShutdown",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:shutdown_cmd",                "outValue": "Failed to send/verify command to selector status (0) to shutdown PCS"}
+                    ]
+                }]
+            }
+        },
+        "EStopSuccess": {
+            "value": false,
+            "note": "If the emergency stop command has been successfully sent to the PCS, verify that the PCS has shutdown. Otherwise, send an alarm",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyEStop@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyEStop",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:estop_cmd",                "outValue": "Failed to send/verify estop command (1) to shutdown PCS"}
+                    ]
+                }]
+            }
+        },
+        "ClearFaultsSuccess": {
+            "value": false,
+            "note": "Send an alarm if the clear faults command was not sent to the PCS. Regardless of whether the command is sent or not, clear the faults/alarms currently recorded in ESS Controller",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:clear_faults_cmd", "outValue": "Failed to send/verify clear faults command (1) to BMS"},
+                        {"ifChanged": false, "uri": "/status/pcs:SystemFaultCleared", "outValue": true}
+                    ]
+                }]
+            }
+        },
+
+        "VerifyRunningSuccess": {
+            "value": false,
+            "note": "If the PCS failed to transition to running state after an elasped time, send an alarm",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:run_failure", "outValue": "Failed to verify PCS is running"}
+                    ]
+                }]
+            }
+        },
+        "VerifyStandbySuccess": {
+            "value": false,
+            "note": "If the PCS failed to transition to standby state after an elasped time, send an alarm",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:standby_failure", "outValue": "Failed to verify PCS is in standby"}
+                    ]
+                }]
+            }
+        },
+        "VerifyStopBeforeShutdownSuccess": {
+            "value": false,
+            "note": "If the PCS failed to transition to ready state after an elasped time, send an alarm (and trigger e-stop here?)",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:Shutdown@triggerCmd",        "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:Shutdown",                   "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:stop_before_shutdown_failure", "outValue": "Failed to verify PCS is in standby"}
+                    ]
+                }]
+            }
+        },
+        "VerifyShutdownSuccess": {
+            "value": false,
+            "note": "If the PCS failed the shutdown after an elapsed time, send an alarm",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:shutdown_failure", "outValue": "Failed to verify PCS has shutdown"}
+                    ]
+                }]
+            }
+        },
+        "VerifyEStopSuccess": {
+            "value": false,
+            "note": "If the PCS failed the shutdown due to emergency stop after an elapsed time, send an alarm",
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:estop_failure", "outValue": "Failed to verify PCS has shutdown due to emergency stop"},
+                        {"ifChanged": false, "fims": "set", "uri": "/components/pe_pcs_controls:e_stop", "outValue": 0}
+                    ]
+                }]
+            }
+        }
+    }
+}

@@ -1,0 +1,250 @@
+{
+  "static": {
+    "statusMetadata": {
+      "active_power": {
+        "name": "Active Power",
+        "component": "DataPoint",
+        "props": { "label": "Active Power", "unit": "MW", "divider": true },
+        "items": {}
+      },
+      "active_power_setpoint": {
+        "name": "Active Power Setpoint",
+        "component": "DataPoint",
+        "props": {
+          "label": "Active Power Setpoint",
+          "unit": "MW",
+          "divider": true
+        },
+        "items": {}
+      },
+      "apparent_power": {
+        "name": "Apparent Power",
+        "component": "DataPoint",
+        "props": { "label": "Apparent Power", "unit": "MVA", "divider": true },
+        "items": {}
+      },
+      "component_connected": {
+        "name": "Component Connection Status",
+        "component": "DataPoint",
+        "props": {
+          "label": "Component Connection Status",
+          "unit": "",
+          "divider": true
+        },
+        "items": {}
+      },
+      "current_l1": {
+        "name": "L1 AC Current",
+        "component": "DataPoint",
+        "props": { "label": "L1 AC Current", "unit": "A", "divider": true },
+        "items": {}
+      },
+      "current_l2": {
+        "name": "L2 AC Current",
+        "component": "DataPoint",
+        "props": { "label": "L2 AC Current", "unit": "A", "divider": true },
+        "items": {}
+      },
+      "current_l3": {
+        "name": "L3 AC Current",
+        "component": "DataPoint",
+        "props": { "label": "L3 AC Current", "unit": "A", "divider": true },
+        "items": {}
+      },
+      "modbus_connected": {
+        "name": "Modbus Connection Status",
+        "component": "DataPoint",
+        "props": {
+          "label": "Modbus Connection Status",
+          "unit": "",
+          "divider": true
+        },
+        "items": {}
+      },
+      "power_factor": {
+        "name": "Power Factor",
+        "component": "DataPoint",
+        "props": { "label": "Power Factor", "unit": "", "divider": true },
+        "items": {}
+      },
+      "power_factor_setpoint": {
+        "name": "Power Factor Setpoint",
+        "component": "DataPoint",
+        "props": {
+          "label": "Power Factor Setpoint",
+          "unit": "",
+          "divider": true
+        },
+        "items": {}
+      },
+      "reactive_power": {
+        "name": "Reactive Power",
+        "component": "DataPoint",
+        "props": { "label": "Reactive Power", "unit": "MVAR", "divider": true },
+        "items": {}
+      },
+      "reactive_power_mode": {
+        "name": "Reactive Power Mode",
+        "component": "DataPoint",
+        "props": {
+          "label": "Reactive Power Mode",
+          "unit": "",
+          "divider": true
+        },
+        "items": {}
+      },
+      "reactive_power_setpoint": {
+        "name": "Reactive Power Setpoint",
+        "component": "DataPoint",
+        "props": {
+          "label": "Reactive Power Setpoint",
+          "unit": "MW",
+          "divider": true
+        },
+        "items": {}
+      },
+      "status": {
+        "name": "Status",
+        "component": "DataPoint",
+        "props": { "label": "Status", "unit": "", "divider": true },
+        "items": {}
+      },
+      "voltage_l1_l2": {
+        "name": "L1-L2 AC Voltage",
+        "component": "DataPoint",
+        "props": { "label": "L1-L2 AC Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_l1_n": {
+        "name": "L1 AC Voltage",
+        "component": "DataPoint",
+        "props": { "label": "L1 AC Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_l2_l3": {
+        "name": "L2-L3 AC Voltage",
+        "component": "DataPoint",
+        "props": { "label": "L2-L3 AC Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_l2_n": {
+        "name": "L2 AC Voltage",
+        "component": "DataPoint",
+        "props": { "label": "L2 AC Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_l3_l1": {
+        "name": "L3-L1 AC Voltage",
+        "component": "DataPoint",
+        "props": { "label": "L3-L1 AC Voltage", "unit": "V", "divider": true },
+        "items": {}
+      },
+      "voltage_l3_n": {
+        "name": "L3 AC Voltage",
+        "component": "DataPoint",
+        "props": { "label": "L3 AC Voltage", "unit": "V", "divider": true },
+        "items": {}
+      }
+    },
+    "controlMetadata": {
+      "maint_mode": {
+        "name": "Maintenance Mode",
+        "component": "Switch",
+        "props": { "label": "Maintenance Mode" },
+        "items": {}
+      },
+      "start": {
+        "name": "Start",
+        "component": "MuiButton",
+        "props": { "label": "Start" },
+        "items": {}
+      },
+      "stop": {
+        "name": "Stop",
+        "component": "MuiButton",
+        "props": { "label": "Stop" },
+        "items": {}
+      },
+      "enter_standby": {
+        "name": "Enter Standby",
+        "component": "MuiButton",
+        "props": { "label": "Enter Standby" },
+        "items": {}
+      },
+      "exit_standby": {
+        "name": "Exit Standby",
+        "component": "MuiButton",
+        "props": { "label": "Exit Standby" },
+        "items": {}
+      },
+      "clear_faults": {
+        "name": "Clear Faults",
+        "component": "MuiButton",
+        "props": { "label": "Clear Faults" },
+        "items": {}
+      },
+      "maint_active_power_setpoint": {
+        "name": "Active Power Setpoint",
+        "component": "TextField",
+        "props": {
+          "label": "Active Power Setpoint",
+          "adornment": "end",
+          "TextAdornment": "MW",
+          "disableLabelAnimation": true,
+          "type": "number",
+          "scalar": 1000
+        },
+        "items": {}
+      },
+      "maint_reactive_power_setpoint": {
+        "name": "Reactive Power Setpoint",
+        "component": "TextField",
+        "props": {
+          "label": "Reactive Power Setpoint",
+          "adornment": "end",
+          "TextAdornment": "MVAR",
+          "disableLabelAnimation": true,
+          "type": "number",
+          "scalar": 1000
+        },
+        "items": {}
+      }
+    }
+  },
+  "state": {
+    "statusInformation": {
+      "active_power": "0.00",
+      "active_power_setpoint": "0.00",
+      "apparent_power": "0.00",
+      "component_connected": false,
+      "current_l1": "0.00",
+      "current_l2": "0.00",
+      "current_l3": "0.00",
+      "modbus_connected": false,
+      "power_factor": "0.00",
+      "power_factor_setpoint": "1.00",
+      "reactive_power": "0.00",
+      "reactive_power_mode": "1072.00",
+      "reactive_power_setpoint": "0.00",
+      "status": "Stopped",
+      "voltage_l1_l2": "0.00",
+      "voltage_l1_n": "0.00",
+      "voltage_l2_l3": "0.00",
+      "voltage_l2_n": "0.00",
+      "voltage_l3_l1": "0.00",
+      "voltage_l3_n": "0.00"
+    },
+    "faultInformation": { "faults": { "value": "0.00", "enabled": true } },
+    "alarmInformation": { "alarms": { "value": "0.00", "enabled": true } },
+    "controlInformation": {
+      "maint_mode": { "value": false, "enabled": true },
+      "start": { "enabled": false },
+      "stop": { "enabled": false },
+      "enter_standby": { "enabled": false },
+      "exit_standby": { "enabled": false },
+      "clear_faults": { "enabled": false },
+      "maint_active_power_setpoint": { "value": "0.00", "enabled": false },
+      "maint_reactive_power_setpoint": { "value": "0.00", "enabled": false }
+    }
+  }
+}

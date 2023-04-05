@@ -1,0 +1,26 @@
+{
+    "/doc/ess_1_init": {
+        "notes1":" This is the start of the loader process",
+        "notes2":" This will set up load management entries for ess_configure ",
+        "notes3":"                                       ess_manager ",
+        "notes4":"                                       bms_manager ",
+        "notes5":"                                       pcs_manager ",
+        "notes6":"                                 and  site_manager ",
+        "notes7":"     the system will try and load these files from dbi  ",
+        "notes8":"     after completing a successful load the ess_final file will be requested ",
+        "notes9":"     for now, we have to specify the individual cfile and tmpl loaders as well "
+    },
+
+    "/config/load": {
+        "flexgen_ess_1_controller": {
+            "value":false,
+            "file":"flexgen_ess_1_controller",
+            "aname":"ess_1",
+            "final": "ess_1_final",
+            "new_options": [
+                { "load":"catl_bms_1_init", "aname":"bms", "pname":"ess_1"  },
+                { "load":"pe_pcs_1_init",   "aname":"pcs", "pname":"ess_1"  }
+            ]
+        }
+    }
+}

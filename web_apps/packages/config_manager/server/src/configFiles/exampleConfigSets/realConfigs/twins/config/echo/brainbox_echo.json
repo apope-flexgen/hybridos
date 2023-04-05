@@ -1,0 +1,14 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/brainbox_ed538",
+			"publishRate": 500,
+			"inputs": [],
+			"echo": {
+				"HVAC_normally_close": 0,
+				"HVAC_normally_open": 0,
+				"intrusion_detection": 0
+			}
+		}
+	]
+}

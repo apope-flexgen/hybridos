@@ -1,0 +1,523 @@
+{
+	"fileInfo":{},
+	"system":{
+		"device_id": 1,
+		"id": "SEL_651R_Relay",
+		"ip_address": "0.0.0.0",
+		"name": "SEL_651R_Relay",
+		"port": 10003
+	},
+	"registers":{
+		"holding_registers": [
+			{
+				"id": "breaker_control",
+				"name": "Breaker Control",
+				"offset": 0,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "battery_voltage",
+				"name": "Battery Voltage",
+				"offset": 1,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "battery_temperature",
+				"name": "Battery Temperature",
+				"offset": 2,
+				"scale": 10,
+				"signed": true,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "frequency",
+				"name": "Frequency",
+				"offset": 3,
+				"scale": 100,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "ldpf3",
+				"name": "Power Factor direction",
+				"offset": 4,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "pf",
+				"name": "Power Factor",
+				"offset": 5,
+				"scale": 100,
+				"signed": true,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "current_l1",
+				"name": "Current L1",
+				"offset": 6,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "current_l2",
+				"name": "Current L2",
+				"offset": 7,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "current_l3",
+				"name": "Current L3",
+				"offset": 8,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "current_n",
+				"name": "Current Neutral",
+				"offset": 9,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "voltage_l1",
+				"name": "Voltage L1",
+				"offset": 10,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "voltage_l2",
+				"name": "Voltage L2",
+				"offset": 12,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "voltage_l3",
+				"name": "Voltage L3",
+				"offset": 14,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "grid_voltage_l1",
+				"name": "Grid Voltage L1",
+				"offset": 16,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "grid_voltage_l2",
+				"name": "Grid Voltage L2",
+				"offset": 18,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "grid_voltage_l3",
+				"name": "Grid Voltage L3",
+				"offset": 20,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "active_power",
+				"name": "Active Power",
+				"offset": 22,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "apparent_power",
+				"name": "Apparent Power",
+				"offset": 24,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "reactive_power",
+				"name": "Reactive Power",
+				"offset": 26,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					null,
+					"inst_overcurrent",
+					"inst_overcurrent_l3",
+					"inst_overcurrent_l2",
+					"inst_overcurrent_l1"
+				],
+				"id": "instantaneous_overcurrent_status",
+				"individual_bits": true,
+				"name": "Instantaneous Over Current",
+				"offset": 28,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					"time_overcurrent_l2",
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					"time_overcurrent_l1"
+				],
+				"id": "time_overcurrent_status",
+				"individual_bits": true,
+				"name": "Time Over Current",
+				"offset": 29,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"time_overcurrent",
+					null,
+					null,
+					null,
+					null,
+					"time_overcurrent_l3"
+				],
+				"id": "time_overcurrent_status_2",
+				"individual_bits": true,
+				"name": "Time Over Current 2",
+				"offset": 30,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					null,
+					"ground_fault_overcurrent"
+				],
+				"id": "ground_fault_status",
+				"individual_bits": true,
+				"name": "Ground Fault Over Current",
+				"offset": 31,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					null,
+					"definite_time_overcurrent",
+					"definite_overcurrent_l3",
+					"definite_overcurrent_l2",
+					"definite_overcurrent_l1"
+				],
+				"id": "definite_time_overcurrent",
+				"individual_bits": true,
+				"name": "Definite Time Over Current",
+				"offset": 32,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"single_pole_open",
+					null,
+					null,
+					null,
+					"breaker_status",
+					"status_l3",
+					"status_l2",
+					"status_l1"
+				],
+				"id": "pole_status",
+				"individual_bits": true,
+				"name": "Pole status",
+				"offset": 33,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					"electrical_fault"
+				],
+				"id": "electrical_fault",
+				"individual_bits": true,
+				"name": "Electrical Fault",
+				"offset": 34,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"overvolt_l2",
+					"overvolt_l1"
+				],
+				"id": "overvoltage_relay_1",
+				"individual_bits": true,
+				"name": "Over Voltage 1",
+				"offset": 35,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					"overvolt_l3"
+				],
+				"id": "overvoltage_relay_2",
+				"individual_bits": true,
+				"name": "Over Voltage 2",
+				"offset": 36,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					"overvolt"
+				],
+				"id": "overvoltage_relay_3",
+				"individual_bits": true,
+				"name": "Over Voltage 3",
+				"offset": 37,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"overvolt_grid_l2",
+					"overvolt_grid_l1",
+					null,
+					null,
+					null,
+					"undervolt_grid_l3",
+					"undervolt_grid_l2",
+					"undervolt_grid_l1"
+				],
+				"id": "overvoltage_relay_grid",
+				"individual_bits": true,
+				"name": "Grid Overvoltage",
+				"offset": 38,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					"overvolt_grid_l3"
+				],
+				"id": "overvoltage_relay_grid_2",
+				"individual_bits": true,
+				"name": "Grid Overvoltage 2",
+				"offset": 39,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"grid_overvolt",
+					"grid_undervolt"
+				],
+				"id": "overvoltage_relay_grid_3",
+				"individual_bits": true,
+				"name": "Grid Overvoltage 3",
+				"offset": 40,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"aux_contact_l1",
+					"aux_contact_l2",
+					"aux_contact_l3",
+					"lockout_handle"
+				],
+				"id": "aux_contacts",
+				"individual_bits": true,
+				"name": "Aux Contacts",
+				"offset": 41,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"remote_open_cmd",
+					null,
+					null,
+					null,
+					"remote_close_cmd"
+				],
+				"id": "remote_commands",
+				"individual_bits": true,
+				"name": "Remote commands",
+				"offset": 42,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"trip_status"
+				],
+				"id": "trip_status",
+				"individual_bits": true,
+				"name": "Trip Issued Status",
+				"offset": 43,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"volt_swell",
+					"volt_swell_l3",
+					"volt_swell_l2",
+					"volt_swell_l1",
+					"volt_sag",
+					"volt_sag_l3",
+					"volt_sag_l2",
+					"volt_sag_l1"
+				],
+				"id": "voltage_swell",
+				"individual_bits": true,
+				"name": "Voltage Swell",
+				"offset": 44,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					"test_relay",
+					null,
+					null,
+					null,
+					"volt_int",
+					"volt_int_l3",
+					"volt_int_l2",
+					"volt_int_l1"
+				],
+				"id": "voltage_interruption",
+				"individual_bits": true,
+				"name": "Voltage Interuption",
+				"offset": 45,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					null,
+					null,
+					"open_button_pushed"
+				],
+				"id": "open_push",
+				"individual_bits": true,
+				"name": "Open Push Button Pushed",
+				"offset": 46,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "grid_voltage_l1_l2",
+				"name": "Voltage ABZ",
+				"offset": 47,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "grid_voltage_l2_l3",
+				"name": "Voltage BCZ",
+				"offset": 49,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"id": "grid_voltage_l3_l1",
+				"name": "Voltage CAZ",
+				"offset": 51,
+				"size": 2,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					"overfreq_time_1",
+					"overfreq_time_2",
+					"underfreq_time_1",
+					"underfreq_time_2"
+				],
+				"id": "frequency_timeout",
+				"individual_bits": true,
+				"name": "Relay Row 32",
+				"offset": 53,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					"undervolt_time_1",
+					"undervolt_time_2"
+				],
+				"id": "voltage_timeout_1",
+				"individual_bits": true,
+				"name": "Relay Row 48",
+				"offset": 54,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					"undervolt_time_3",
+					"overvolt_time_1",
+					"overvolt_time_2",
+					"overvolt_time_3"
+				],
+				"id": "voltage_timeout_2",
+				"individual_bits": true,
+				"name": "Relay Row 49",
+				"offset": 55,
+				"uri": "/components/sel_651r"
+			},
+			{
+				"bit_strings": [
+					null,
+					null,
+					null,
+					null,
+					"pos_power_limit",
+					"neg_power_limit"
+				],
+				"id": "power_limit_element",
+				"individual_bits": true,
+				"name": "Relay Row 88",
+				"offset": 56,
+				"uri": "/components/sel_651r"
+			}
+		]
+	}
+}

@@ -1,0 +1,155 @@
+{
+    "timezone": "America/Chicago",
+    "ess": false,
+    "gen": false,
+    "solar": false,
+    "met_station": false,
+    "tracker": false,
+    "feeders": false,
+    "features": false,
+    "site": false,
+    "events": true,
+    "control_cabinet": false,
+    "configuration": true,
+    "fleet_manager_dashboard": true,
+    "essController": false,
+    "primaryStatuses": {
+    },
+    "units": {
+        "W": "M",
+        "Wh": "M",
+        "VAR": "M",
+        "VARh": "M",
+        "VA": "k",
+        "VAh": "M",
+        "W/s": "M"
+    },
+    "inspectorComponentsName": "test_controller",
+    "metadata": {
+        "components": [
+            {
+                "id": "test_controller",
+                "name": "Frequency Test Controller",
+                "statuses": [],
+                "controls": [
+                    {
+                        "id": "under_frequency_offset",
+                        "name": "Under Frequency Value",
+                        "base_uri": "components",
+                        "category": "test_controller",
+                        "api_endpoint": "under_frequency_offset",
+                        "type": "number",
+                        "unit": "Hz",
+                        "scaler": 1,
+                        "value": -0.03
+                    },
+                    {
+                        "id": "over_frequency_offset",
+                        "name": "Over Frequency Value",
+                        "base_uri": "components",
+                        "category": "test_controller",
+                        "api_endpoint": "over_frequency_offset",
+                        "type": "number",
+                        "unit": "Hz",
+                        "scaler": 1,
+                        "value": 0.03
+                    },
+                    {
+                        "id": "under_frequency_offset_trigger",
+                        "name": "Under Frequency Trigger",
+                        "base_uri": "components",
+                        "category": "test_controller",
+                        "api_endpoint": "under_frequency_offset_trigger",
+                        "type": "enum_slider",
+                        "value": false
+                    },
+                    {
+                        "id": "over_frequency_offset_trigger",
+                        "name": "Over Frequency Trigger",
+                        "base_uri": "components",
+                        "category": "test_controller",
+                        "api_endpoint": "over_frequency_offset_trigger",
+                        "type": "enum_slider",
+                        "value": false
+                    }
+                ]
+            }
+        ],
+        "control_cabinet": [
+            {
+                "id": "brainbox_ed538",
+                "name": "Control Cabinet Monitor",
+                "statuses": [
+                    {
+                        "id": "alarms",
+                        "name": "Alarms",
+                        "type": "status",
+                        "value": 0,
+                        "enabled": true
+                    }
+                ],
+                "controls": []
+            },
+            {
+                "id": "apc_ups",
+                "name": "Control UPS",
+                "statuses": [
+                    {
+                        "id": "status",
+                        "name": "Operating Status",
+                        "type": "status",
+                        "value": 0,
+                        "enabled": true
+                    },
+                    {
+                        "id": "status_change_cause",
+                        "name": "Status Change Cause",
+                        "type": "status",
+                        "value": 0,
+                        "enabled": true
+                    },
+                    {
+                        "id": "ps_error",
+                        "name": "Power System Error",
+                        "type": "status",
+                        "value": 0,
+                        "enabled": true
+                    },
+                    {
+                        "id": "batt_error",
+                        "name": "Battery System Error",
+                        "type": "status",
+                        "value": 0,
+                        "enabled": true
+                    },
+                    {
+                        "id": "run_time",
+                        "name": "Runtime",
+                        "type": "number",
+                        "value": 0,
+                        "unit": "min.",
+                        "enabled": true
+                    },
+                    {
+                        "id": "soc",
+                        "name": "State of charge",
+                        "type": "number",
+                        "value": 0,
+                        "unit": "%",
+                        "enabled": true
+                    },
+                    {
+                        "id": "active_power",
+                        "name": "Active Power",
+                        "type": "number",
+                        "value": 0,
+                        "unit": "W",
+                        "scaler": 1000,
+                        "enabled": true
+                    }
+                ],
+                "controls": []
+            }
+        ]
+    }
+}

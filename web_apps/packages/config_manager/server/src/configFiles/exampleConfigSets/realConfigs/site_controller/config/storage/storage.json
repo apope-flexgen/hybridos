@@ -1,0 +1,298 @@
+{
+    "dbName": "pueblo1",
+    "measurements": [
+        {
+            "baseUri": "/assets/ess",
+            "measurement": "ess"
+        },
+        {
+            "baseUri": "/assets/feeders",
+            "measurement": "feeders"
+        },
+        {
+            "source": 
+            [
+                "sungrow_ess_1_hs", "sungrow_ess_2_hs", "sungrow_ess_3_hs", "sungrow_ess_4_hs"
+            ],
+            "baseUri": "/components",
+            "measurement": "sungrow_ess_high_speed"
+        },
+        {
+            "source": 
+            [
+                "sungrow_ess_1", "sungrow_ess_2", "sungrow_ess_3", "sungrow_ess_4"
+            ],
+            "baseUri": "/components",
+            "measurement": "sungrow_ess_low_speed"
+        },
+        {
+            "source": "sel_3530_rtac",
+            "baseUri": "/components",
+            "measurement": "rtac"
+        },
+        {
+            "source": 
+            [
+                "sel_735", "sel_651r", "m_bess_aux_acuvim"
+            ],
+            "baseUri": "/components",
+            "measurement": "meters"
+        },
+        {
+            "baseUri": "/components",
+            "measurement": "components"
+        },
+        {
+            "baseUri": "/site",
+            "measurement": "site"
+        },
+        {
+            "baseUri": "/features",
+            "measurement": "features"
+        },
+        {
+            "baseUri": "/metrics",
+            "measurement": "metrics"
+        },
+        {
+            "baseUri": "/storage",
+            "measurement": null
+        }
+    ],
+    "retentionPolicies": [
+        {
+            "name": "autogen",
+            "duration": "0s",
+            "_duration": "INF",
+            "shardGroupDuration": "168h0m0s",
+            "replicaN": 1,
+            "default": false
+        },
+        {
+            "name": "infinite_rp",
+            "duration": "0s",
+            "_duration": "INF",
+            "shardGroupDuration": "168h0m0s",
+            "replicaN": 1,
+            "default": false
+        },
+        {
+            "name": "30_day_rp",
+            "duration": "720h0m0s",
+            "_duration": "30d",
+            "shardGroupDuration": "24h0m0s",
+            "replicaN": 1,
+            "default": true
+        },
+        {
+            "name": "120_day_rp",
+            "duration": "2880h0m0s",
+            "_duration": "120d",
+            "shardGroupDuration": "24h0m0s",
+            "replicaN": 1,
+            "default": false
+        }
+    ],
+    "continuousQueries": [
+        {
+            "name": "components_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "components",
+            "from": "components",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "ess_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "ess",
+            "from": "ess",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "metrics_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "metrics",
+            "from": "metrics",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "feeders_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "feeders",
+            "from": "feeders",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "site_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "site",
+            "from": "site",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "features_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "features",
+            "from": "features",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "sungrow_ess_high_speed_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "sungrow_ess_high_speed",
+            "from": "sungrow_ess_high_speed",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "sungrow_ess_low_speed_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "sungrow_ess_low_speed",
+            "from": "sungrow_ess_low_speed",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "rtac_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "rtac",
+            "from": "rtac",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "meters_1min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "120_day_rp",
+            "measurement": "meters",
+            "from": "meters",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "components_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "components",
+            "from": "components",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "ess_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "ess",
+            "from": "ess",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "metrics_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "metrics",
+            "from": "metrics",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "feeders_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "feeders",
+            "from": "feeders",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "site_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "site",
+            "from": "site",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "features_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "features",
+            "from": "features",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "sungrow_ess_high_speed_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "sungrow_ess_high_speed",
+            "from": "sungrow_ess_high_speed",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "sungrow_ess_low_speed_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "sungrow_ess_low_speed",
+            "from": "sungrow_ess_low_speed",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "rtac_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "rtac",
+            "from": "rtac",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "meters_10min_cq",
+            "db": "pueblo1",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "pueblo1",
+            "rp": "infinite_rp",
+            "measurement": "meters",
+            "from": "meters",
+            "groupBy": "time(10m), *"
+        }
+    ]
+}

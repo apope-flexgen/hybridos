@@ -1,0 +1,276 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/users": {
+            "get": {
+                "operationId": "UsersController_all",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "operationId": "UsersController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "put": {
+                "operationId": "UsersController_update",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "UsersController_delete",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "get": {
+                "operationId": "UsersController_read",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/app-settings": {
+            "get": {
+                "operationId": "AppSettingsController_find",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "operationId": "AppSettingsController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateAppSettingsDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/app-settings/radius-test": {
+            "post": {
+                "operationId": "AppSettingsController_radiusTest",
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/permissions": {
+            "get": {
+                "operationId": "PermissionsController_findAll",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "operationId": "AuthController_login",
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/superauth": {
+            "post": {
+                "operationId": "AuthController_superauth",
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/authenticate-user-token": {
+            "get": {
+                "operationId": "AuthController_authenticateUserToken",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "operationId": "AuthController_logout",
+                "parameters": [],
+                "responses": {
+                    "201": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    },
+    "info": {
+        "title": "HybridOS Web Server",
+        "description": "Web Server REST API Documentation.",
+        "version": "1.0",
+        "contact": {}
+    },
+    "tags": [
+        {
+            "name": "nest_web_server",
+            "description": ""
+        }
+    ],
+    "servers": [],
+    "components": {
+        "schemas": {
+            "UserDto": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "description": "HybridOS username"
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "HybridOS user role"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "HybridOS user password"
+                    }
+                },
+                "required": [
+                    "username",
+                    "role",
+                    "password"
+                ]
+            },
+            "UserResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "HybridOS user ID."
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "HybridOS username."
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "HybridOS user role."
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "HybridOS user hashed password."
+                    },
+                    "old_passwords": {
+                        "description": "Previous hashed passwords.",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "pwdUpdatedDate": {
+                        "format": "date-time",
+                        "type": "string",
+                        "description": "Date that password was last updated."
+                    },
+                    "shared_key": {
+                        "type": "string",
+                        "description": "MFA shared key."
+                    },
+                    "mfa_enabled": {
+                        "type": "boolean",
+                        "description": "Status of MFA for user."
+                    },
+                    "version": {
+                        "type": "string",
+                        "description": "Version of User Model."
+                    }
+                },
+                "required": [
+                    "id",
+                    "username",
+                    "role",
+                    "password",
+                    "old_passwords",
+                    "pwdUpdatedDate",
+                    "shared_key",
+                    "mfa_enabled",
+                    "version"
+                ]
+            },
+            "CreateAppSettingsDto": {
+                "type": "object",
+                "properties": {}
+            }
+        }
+    }
+}

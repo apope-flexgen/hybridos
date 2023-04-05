@@ -1,0 +1,58 @@
+{
+    "db_name": "brp_fleet_manager",
+    "period" : 300,
+    "num_archive_workers": 1,
+    "archive": "/home/fleetman/powercloud/fleetman01/data",
+    "uris": [
+        {
+            "uri": "/sites",
+            "destination": "influx",
+            "measurement": "sites"
+        },
+        {
+            "uri": "/components",
+            "destination": "influx",
+            "measurement": "components"
+        },
+        {
+            "uri": "/fleet/features/ercotAs",
+            "destination": "influx",
+            "measurement": "fleet_features_ercotAs"
+        },
+        {
+            "uri": "/fleet/sites",
+            "destination": "influx",
+            "measurement": "fleet_sites"
+        },
+        {
+            "uri": "/systemstats/cpu",
+            "destination": "influx",
+            "measurement": "cpustats"
+        },
+        {
+            "uri": "/systemstats/mem",
+            "destination": "influx",
+            "measurement": "memstats"
+        },
+        {
+            "uri": "/systemstats/net",
+            "destination": "influx",
+            "measurement": "netstats"
+        },
+        {
+            "uri": "/systemstats/disk",
+            "destination": "influx",
+            "measurement": "diskstats"
+        },
+        {
+            "uri": "/systemstats/process",
+            "destination": "influx",
+            "measurement": "processstats"
+        },
+        {
+            "uri": "/events",
+            "destination": "mongo",
+            "measurement": "events"
+        }
+    ]
+}

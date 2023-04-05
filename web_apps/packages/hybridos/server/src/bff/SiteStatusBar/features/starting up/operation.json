@@ -1,0 +1,48 @@
+{
+    "name": "Site Operation Features",
+    "watchdog_enable": {
+        "value": false,
+        "name": "Enable Watchdog",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "control"
+    },
+    "watchdog_duration_ms": {
+        "value": 5000,
+        "name": "Watchdog Timer Duration",
+        "unit": "ms",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "watchdog_pet": {
+        "value": 1,
+        "name": "Watchdog Pet",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "heartbeat_counter": {
+        "value": 1,
+        "name": "Heartbeat Counter",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "heartbeat_duration_ms": {
+        "value": 1,
+        "name": "Heartbeat Duration",
+        "unit": "ms",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    }
+}

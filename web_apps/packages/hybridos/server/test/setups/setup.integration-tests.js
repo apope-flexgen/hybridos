@@ -1,0 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const path = require('path');
+
+CONFIG_PATH = path.resolve(__dirname, '../../configs/test-config');
+FIMS = require('../../src/fims/mocks/fims.stubs.ts');
+WORKER_PATH = path.resolve(__dirname, '../../src/fims/mocks/mockWorker.ts');
+USE_TIMEOUT_INTERCEPTOR = false;
+WEB_UI_JSON_CONFIG_PATH = path.resolve(__dirname, '../../configs/web_ui.json');
+RADIUS_DICTIONARY_PATH = path.resolve(__dirname, '../../src/radius/dictionaries/dictionary.flexgen');

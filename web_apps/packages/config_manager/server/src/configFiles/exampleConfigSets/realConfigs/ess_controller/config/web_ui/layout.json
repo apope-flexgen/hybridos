@@ -1,0 +1,20 @@
+{
+    "_doc": "layout",
+    "_id": "6256df142242e464473e31ab",
+    "_version": "2022-04-13T14:34:39.768Z",
+    "data": [
+      {
+        "info": {
+          "key": "bms",
+          "name": "BMS"
+        }
+      },
+      {
+        "info": {
+          "key": "pcs",
+          "name": "PCS"
+        }
+      }
+    ]
+}
+  

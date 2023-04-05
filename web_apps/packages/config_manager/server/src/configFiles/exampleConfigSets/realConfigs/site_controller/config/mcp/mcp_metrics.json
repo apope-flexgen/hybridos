@@ -1,0 +1,10 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/metrics",
+			"args": [ "/usr/local/etc/config/metrics/" ],
+			"max_restarts": -1
+        }
+    ]
+}

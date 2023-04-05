@@ -1,0 +1,12 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/cops",
+			"args": [
+				"--logCfg=/usr/local/etc/config/go_logging/cops/cops_verbose.json"
+			],
+			"max_restarts": -1
+		}
+	]
+}

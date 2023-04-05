@@ -1,0 +1,523 @@
+{
+    "publishRate": 16,
+    "listenRate": 2,
+    "metricsUri": "/metrics/kpi",
+    "publishUris": [
+        {
+            "uri": "/metrics/watchdog",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "heartbeat2watchdog",
+                    "inputs": [
+                        {
+                            "uri": "/site/operation",
+                            "id": "heartbeat_counter"
+                        }
+                    ],
+                    "operation": "echo",
+                    "outputs": [
+                        {
+                            "uri": "/site/operation",
+                            "id": "watchdog_pet"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "uri": "/metrics/timestamp",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "FM_timestamp",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/timestamp",
+                            "id": "FM_timestamp"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "FM_time_UTC",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/timestamp",
+                            "id": "FM_timestamp"
+                        }
+                    ],
+                    "operation": "echo",
+                    "comment": "Change to operation to millisecondsToRFC3339 when a newer version of metrics is deployed",
+                    "param": {
+                        "operation": "zulu"
+                    }
+                }
+            ]
+        },
+        {
+            "uri": "/components/test_controller",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "under_frequency_offset",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "under_frequency_offset"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": -0.03
+                },
+                {
+                    "id": "over_frequency_offset",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "over_frequency_offset"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0.03
+                },
+                {
+                    "id": "under_frequency_offset_trigger",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "under_frequency_offset_trigger"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "over_frequency_offset_trigger",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "over_frequency_offset_trigger"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "under_frequency_offset_setter",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "under_frequency_offset_trigger"
+                        },
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "under_frequency_offset"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "fr_offset_hz"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 0
+                    }
+                },
+                {
+                    "id": "over_frequency_offset_setter",
+                    "inputs": [
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "over_frequency_offset_trigger"
+                        },
+                        {
+                            "uri": "/components/test_controller",
+                            "id": "over_frequency_offset"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "uri": "/features/active_power",
+                            "id": "fr_offset_hz"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 0
+                    }
+                }
+            ]
+        },
+        {
+            "uri": "/components/feed_1_dummy",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "alarms",
+                    "name": "ESS Alarms",
+                    "ui_type": "alarm",
+                    "type": "enum",
+                    "options": [],
+                    "inputs": [
+                        {
+                            "uri": "/components/brainbox_ed538",
+                            "id": "intrusion_detection"
+                        },
+                        {
+                            "uri": "/components/brainbox_ed538",
+                            "id": "hvac_normally_open"
+                        },
+                        {
+                            "uri": "/components/brainbox_ed538",
+                            "id": "hvac_normally_closed"
+                        }
+                    ],
+                    "operation": "bitfield",
+                    "param": {
+                        "position": [
+                            0,
+                            1,
+                            2
+                        ],
+                        "string": [
+                            "Door is Open",
+                            "HVAC Alarm - NO",
+                            "HVAC Alarm - NC"
+                        ],
+                        "invertMask": [
+                            false,
+                            true,
+                            false
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "uri": "/components/clou_ess_1_hs",
+            "naked": "true",
+            "metrics":
+            [
+                {
+                    "id":"chargeable_energy",
+                    "name": "Chargeable Energy",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs" : [
+                        {"uri":"/components/clou_ess_1_hs","id":"bms_soc"}
+                    ],
+                    "operation": "product",
+                    "param": {"gain":96}
+                },
+                {
+                    "id":"dischargeable_energy",
+                    "name": "Dischargeable Energy",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs" : [
+                        {"uri":"/components/clou_ess_1_hs","id":"bms_soc"}
+                    ],
+                    "operation": "product",
+                    "param": {"gain":96}
+                }
+            ]
+        },
+        {
+            "uri": "/components/clou_ess_2_hs",
+            "naked": "true",
+            "metrics":
+            [
+                {
+                    "id":"chargeable_energy",
+                    "name": "Chargeable Energy",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs" : [
+                        {"uri":"/components/clou_ess_2_hs","id":"bms_soc"}
+                    ],
+                    "operation": "product",
+                    "param": {"gain":96}
+                },
+                {
+                    "id":"dischargeable_energy",
+                    "name": "Dischargeable Energy",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs" : [
+                        {"uri":"/components/clou_ess_2_hs","id":"bms_soc"}
+                    ],
+                    "operation": "product",
+                    "param": {"gain":96}
+                }
+            ]
+        },
+        {
+            "uri": "/components/clou_ess_3_hs",
+            "naked": "true",
+            "metrics":
+            [
+                {
+                    "id":"chargeable_energy",
+                    "name": "Chargeable Energy",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs" : [
+                        {"uri":"/components/clou_ess_3_hs","id":"bms_soc"}
+                    ],
+                    "operation": "product",
+                    "param": {"gain":96}
+                },
+                {
+                    "id":"dischargeable_energy",
+                    "name": "Dischargeable Energy",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs" : [
+                        {"uri":"/components/clou_ess_3_hs","id":"bms_soc"}
+                    ],
+                    "operation": "product",
+                    "param": {"gain":96}
+                }
+            ]
+        },
+        {
+            "uri": "/components/clou_ess_4_hs",
+            "naked": "true",
+            "metrics":
+            [
+                {
+                    "id":"chargeable_energy",
+                    "name": "Chargeable Energy",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs" : [
+                        {"uri":"/components/clou_ess_4_hs","id":"bms_soc"}
+                    ],
+                    "operation": "product",
+                    "param": {"gain":96}
+                },
+                {
+                    "id":"dischargeable_energy",
+                    "name": "Dischargeable Energy",
+                    "ui_type": "status",
+                    "type": "number",
+                    "options": [],
+                    "inputs" : [
+                        {"uri":"/components/clou_ess_4_hs","id":"bms_soc"}
+                    ],
+                    "operation": "product",
+                    "param": {"gain":96}
+                }
+            ]
+        },
+        {
+            "uri": "/components/site_ups_dummy",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "soc_check",
+                    "inputs": [
+                        {
+                            "uri": "/components/apc_ups",
+                            "id": "soc"
+                        }
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "lt",
+                        "reference": 50
+                    },
+                    "outputs": [
+                        {
+                            "uri": "/site/configuration",
+                            "id": "reserved_bool_1"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "uri": "/metrics/latency_test",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "ess_1_active_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_1_hs",
+                            "id": "active_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_2_active_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_2_hs",
+                            "id": "active_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_3_active_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_3_hs",
+                            "id": "active_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_4_active_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_4_hs",
+                            "id": "active_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_1_reactive_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_1_hs",
+                            "id": "reactive_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_2_reactive_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_2_hs",
+                            "id": "reactive_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_3_reactive_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_3_hs",
+                            "id": "reactive_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_4_reactive_power_setpoint",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_4_hs",
+                            "id": "reactive_power_setpoint"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_1_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_1_hs",
+                            "id": "modbus_heartbeat"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_2_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_2_hs",
+                            "id": "modbus_heartbeat"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_3_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_3_hs",
+                            "id": "modbus_heartbeat"
+                        }
+                    ],
+                    "operation": "echo"
+                },
+                {
+                    "id": "ess_4_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/components/clou_ess_4_hs",
+                            "id": "modbus_heartbeat"
+                        }
+                    ],
+                    "operation": "echo"
+                }
+            ]
+        },
+        {
+            "uri": "/components/sel_3530_rtac_test",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id": "frequency_offset",
+                    "inputs": [
+                        {
+                            "uri": "/components/sel_3530_rtac",
+                            "id": "frequency_offset"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialValue": 0,
+                    "initialInput": 0
+                },
+                {
+                    "id": "frequency_nominal",
+                    "inputs": [
+                        {
+                            "uri": "/components/sel_3530_rtac",
+                            "id": "frequency_nominal"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialValue": 60,
+                    "initialInput": 60
+                },
+                {
+                    "id": "frequency_3",
+                    "inputs": [
+                        {
+                            "uri": "/components/sel_3530_rtac",
+                            "id": "frequency_nominal"
+                        },
+                        {
+                            "uri": "/components/sel_3530_rtac",
+                            "id": "frequency_offset"
+                        }
+                    ],
+                    "operation": "sum",
+                    "param": {
+                        "operations": "++"
+                    }
+                }
+            ]
+        }
+    ]
+}

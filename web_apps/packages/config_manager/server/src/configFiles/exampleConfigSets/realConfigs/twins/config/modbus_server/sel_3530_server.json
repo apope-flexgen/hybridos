@@ -1,0 +1,256 @@
+{
+	"fileInfo":{},
+	"system":{
+		"device_id": 1,
+		"id": "SEL_3530_RTAC",
+		"ip_address": "0.0.0.0",
+		"name": "SEL_3530_RTAC",
+		"port": 10005
+	},
+	"registers":{
+		"holding_registers": [
+			{
+				"id": "frequency_3",
+				"name": "Frequency 3 Cycle",
+				"offset": 0,
+				"scale": 1000,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "kwh_delivered",
+				"name": "WH3_DEL_UC",
+				"offset": 1000,
+				"scale": 10,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "kwh_received",
+				"name": "WH3_REC_UC",
+				"offset": 1002,
+				"scale": 10,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "kVARh_delivered",
+				"name": "QH3_DEL_UC",
+				"offset": 1004,
+				"scale": 10,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "kVARh_received",
+				"name": "QH3_REC_UC",
+				"offset": 1006,
+				"scale": 10,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "voltage_l1",
+				"name": "VA",
+				"offset": 1008,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "voltage_l2",
+				"name": "VB",
+				"offset": 1010,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "voltage_l3",
+				"name": "VB",
+				"offset": 1012,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "thd_current_l1",
+				"name": "THDIA",
+				"offset": 1014,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "thd_current_l2",
+				"name": "THDIB",
+				"offset": 1016,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "thd_current_l3",
+				"name": "THDIC",
+				"offset": 1018,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "thd_voltage_l1",
+				"name": "THDVA",
+				"offset": 1020,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "thd_voltage_l2",
+				"name": "THDVB",
+				"offset": 1022,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "thd_voltage_l3",
+				"name": "THDVC",
+				"offset": 1024,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "current_l1",
+				"name": "IA",
+				"offset": 1026,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "current_l2",
+				"name": "IB",
+				"offset": 1028,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "current_l3",
+				"name": "IC",
+				"offset": 1030,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "current_n",
+				"name": "IN",
+				"offset": 1032,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "active_power",
+				"name": "W3_UC",
+				"offset": 1034,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "reactive_power",
+				"name": "Q3_UC",
+				"offset": 1036,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "apparent_power",
+				"name": "U3",
+				"offset": 1038,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "voltage_l1_l2",
+				"name": "VAB",
+				"offset": 1040,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "voltage_l2_l3",
+				"name": "VBC",
+				"offset": 1042,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "voltage_l3_l1",
+				"name": "VCA",
+				"offset": 1044,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "power_factor",
+				"name": "PFT3",
+				"offset": 1046,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "frequency_offset",
+				"name": "Frequency Offset",
+				"offset": 1048,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			},
+			{
+				"id": "frequency_nominal",
+				"name": "Frequency Nominal",
+				"offset": 1050,
+				"scale": 100,
+				"signed": true,
+				"size": 2,
+				"uri": "/components/sel_3530_rtac"
+			}
+		]
+	}
+}

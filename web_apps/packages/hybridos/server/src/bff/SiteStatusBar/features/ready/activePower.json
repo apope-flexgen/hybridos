@@ -1,0 +1,1373 @@
+{
+    "name": "Active Power Management",
+    "available_features_runmode1_kW_mode": {
+        "value": "0xFFF",
+        "name": "Available Feature Modes - Run Mode 1 Active Power",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "string",
+        "ui_type": "none",
+        "options": [
+            { "name": "Energy Arbitrage", "return_value": 0 },
+            { "name": "Target SOC", "return_value": 1 },
+            { "name": "Site Export Target", "return_value": 2 },
+            { "name": "Manual", "return_value": 3 },
+            { "name": "Grid Target", "return_value": 4 },
+            { "name": "Frequency Response", "return_value": 5 },
+            { "name": "Absolute ESS", "return_value": 6 },
+            { "name": "ESS Calibration", "return_value": 7 },
+            { "name": "Disabled", "return_value": 8 }
+        ]
+    },
+    "runmode1_kW_mode_status": {
+        "value": "Grid Target",
+        "name": "Run Mode 1 Active Power Mode",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "string",
+        "ui_type": "status"
+    },
+    "runmode1_kW_mode_cmd": {
+        "value": 4,
+        "name": "Mode Select - Run Mode 1 Active Power",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum",
+        "ui_type": "control",
+        "options": [
+            { "name": "Energy Arbitrage", "return_value": 0 },
+            { "name": "Target SOC", "return_value": 1 },
+            { "name": "Site Export Target", "return_value": 2 },
+            { "name": "Manual", "return_value": 3 },
+            { "name": "Grid Target", "return_value": 4 },
+            { "name": "Frequency Response", "return_value": 5 },
+            { "name": "Absolute ESS", "return_value": 6 },
+            { "name": "ESS Calibration", "return_value": 7 },
+            { "name": "Disabled", "return_value": 8 }
+        ]
+    },
+    "energy_arb_enable_flag": {
+        "value": false,
+        "name": "Energy Arbitrage Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "price": {
+        "value": 0,
+        "name": "Current Trading Price",
+        "unit": "$/MWh",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "threshold_charge_1": {
+        "value": 10,
+        "name": "Normal Charge Threshold Price",
+        "unit": "$/MWh",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "threshold_charge_2": {
+        "value": -10,
+        "name": "Max Charge Threshold Price",
+        "unit": "$/MWh",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "threshold_dischg_1": {
+        "value": 30,
+        "name": "Normal Discharge Threshold Price",
+        "unit": "$/MWh",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "threshold_dischg_2": {
+        "value": 100,
+        "name": "Max Discharge Threshold Price",
+        "unit": "$/MWh",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "soc_min_limit": {
+        "value": 15,
+        "name": "Minimum State of Charge Limit for Running ESS",
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "soc_max_limit": {
+        "value": 85,
+        "name": "Maximum State of Charge Limit for Running ESS",
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "max_charge_1": {
+        "value": -5000,
+        "name": "Normal Charge Limit",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "max_charge_2": {
+        "value": -6000,
+        "name": "Max Charge Limit",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "max_dischg_1": {
+        "value": 5000,
+        "name": "Normal Discharge Limit",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "max_dischg_2": {
+        "value": 6000,
+        "name": "Max Discharge Limit",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "target_soc_mode_enable_flag": {
+        "value": false,
+        "name": "Target SOC Mode Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Target SOC Mode Enable", "return_value": true }
+        ]
+    },
+    "target_soc_load_enable_flag": {
+        "value": false,
+        "name": "Target SOC Load Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "control"
+    },
+    "export_target_mode_enable_flag": {
+        "value": false,
+        "name": "Site Export Target Mode Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Site Export Target Mode Enable", "return_value": true }
+        ]
+    },
+    "export_target_load_enable_flag": {
+        "value": false,
+        "name": "Site Export Target Load Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "control"
+    },
+    "export_target_kW_cmd": {
+        "value": 0,
+        "name": "Site Export Target Power Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "export_target_kW_slew_rate": {
+        "value": 1000000,
+        "name": "Export Target Active Power Setpoint Slew Rate",
+        "unit": "kW/s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "manual_mode_enable_flag": {
+        "value": false,
+        "name": "Manual Mode Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Manual Mode Enable", "return_value": true }
+        ]
+    },
+    "manual_solar_kW_cmd": {
+        "value": 650,
+        "name": "Solar Active Power Curtailment Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "manual_ess_kW_cmd": {
+        "value": 0,
+        "name": "ESS Active Power Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "grid_target_mode_enable_flag": {
+        "value": true,
+        "name": "Grid Target Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Grid Target Enable", "return_value": true }
+        ]
+    },
+    "grid_target_kW_cmd": {
+        "value": 500,
+        "name": "Grid Target Power Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "ess_charge_support_enable_flag": {
+        "value": false,
+        "name": "ESS Charge Support Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "ESS Charge Support Enable", "return_value": false }
+        ]
+    },
+    "fr_mode_enable_flag": {
+        "value": false,
+        "name": "Frequency Response Mode Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "fr_target_freq_hz": {
+        "value": 60,
+        "name": "FR Target Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "fr_freq_offset_hz": {
+        "value": 0,
+        "name": "FR Test Frequency Offset",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "fr_enable_mask": {
+        "value": 65535,
+        "name": "FR Components Enable Bitfield",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "fr_baseload_cmd_kw": {
+        "value": 0,
+        "name": "FR Baseload Command",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "fr_total_output_kw": {
+        "value": 0,
+        "name": "Total FR Output",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "uf_pfr_active_cmd_kw": {
+        "value": 100,
+        "name": "UF PFR Active Response Command",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "uf_pfr_inactive_cmd_kw": {
+        "value": 0,
+        "name": "UF PFR Inactive Command",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_trigger_freq_hz": {
+        "value": 59,
+        "name": "UF PFR Trigger Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_trigger_duration_sec": {
+        "value": 86400,
+        "name": "UF PFR Response Duration",
+        "unit": "s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_droop_freq_hz": {
+        "value": 58,
+        "name": "UF PFR Full Response Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_droop_limit_flag": {
+        "value": true,
+        "name": "UF PFR Limit Droop Response",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "uf_pfr_droop_bypass_flag": {
+        "value": false,
+        "name": "UF PFR Droop Bypass",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "uf_pfr_recovery_freq_hz": {
+        "value": 59,
+        "name": "UF PFR Begin Recovery Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_recovery_duration_sec": {
+        "value": 0,
+        "name": "UF PFR Recovery Duration",
+        "unit": "s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_recovery_latch": {
+        "value": false,
+        "name": "UF PFR Recovery Latch Control",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "uf_pfr_instant_recovery_freq_hz": {
+        "value": 59,
+        "name": "UF PFR Instant Recovery Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_cooldown_duration_sec": {
+        "value": 0,
+        "name": "UF PFR Post-Response Cooldown Time",
+        "unit": "s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_slew_rate_kw": {
+        "value": 10000000,
+        "name": "UF PFR Slew Rate",
+        "unit": "W/s",
+        "scaler": 1000,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_ess_slew_override": {
+        "value": false,
+        "name": "UF PFR Slew Override",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "uf_pfr_active_response_status": {
+        "value": false,
+        "name": "UF PFR Active Response Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "uf_pfr_in_cooldown": {
+        "value": false,
+        "name": "UF PFR Post-Response Cooldown Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_in_recovery": {
+        "value": false,
+        "name": "UF PFR In-Recovery Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_pfr_output_kw": {
+        "value": 0,
+        "name": "UF PFR Response Component Output",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "of_pfr_active_cmd_kw": {
+        "value": 100,
+        "name": "OF PFR Active Response Command",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "of_pfr_inactive_cmd_kw": {
+        "value": 0,
+        "name": "OF PFR Inactive Command",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_trigger_freq_hz": {
+        "value": 61,
+        "name": "OF PFR Trigger Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_trigger_duration_sec": {
+        "value": 86400,
+        "name": "OF PFR Response Duration",
+        "unit": "s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_droop_freq_hz": {
+        "value": 62,
+        "name": "OF PFR Full Response Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_droop_limit_flag": {
+        "value": true,
+        "name": "OF PFR Limit Droop Response",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "of_pfr_droop_bypass_flag": {
+        "value": false,
+        "name": "OF PFR Droop Bypass",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "of_pfr_recovery_freq_hz": {
+        "value": 61,
+        "name": "OF PFR Begin Recovery Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_recovery_duration_sec": {
+        "value": 0,
+        "name": "OF PFR Recovery Duration",
+        "unit": "s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_recovery_latch": {
+        "value": false,
+        "name": "OF PFR Recovery Latch Control",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "of_pfr_instant_recovery_freq_hz": {
+        "value": 61,
+        "name": "OF PFR Instant Recovery Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_cooldown_duration_sec": {
+        "value": 0,
+        "name": "OF PFR Post-Response Cooldown Time",
+        "unit": "s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_slew_rate_kw": {
+        "value": 10000000,
+        "name": "OF PFR Slew Rate",
+        "unit": "W/s",
+        "scaler": 1000,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_ess_slew_override": {
+        "value": false,
+        "name": "OF PFR Slew Override",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "of_pfr_active_response_status": {
+        "value": false,
+        "name": "OF PFR Active Response Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "of_pfr_in_cooldown": {
+        "value": false,
+        "name": "OF PFR Post-Response Cooldown Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_in_recovery": {
+        "value": false,
+        "name": "OF PFR In-Recovery Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "of_pfr_output_kw": {
+        "value": 0,
+        "name": "OF PFR Response Component Output",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "uf_ffr_active_cmd_kw": {
+        "value": 100,
+        "name": "UF FFR Active Response Command",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "uf_ffr_inactive_cmd_kw": {
+        "value": 0,
+        "name": "UF FFR Inactive Command",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "uf_ffr_trigger_freq_hz": {
+        "value": 59,
+        "name": "UF FFR Trigger Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_trigger_duration_sec": {
+        "value": 86400,
+        "name": "UF FFR Response Duration",
+        "unit": "s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_droop_freq_hz": {
+        "value": 58,
+        "name": "UF FFR Full Response Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_droop_limit_flag": {
+        "value": true,
+        "name": "UF FFR Limit Droop Response",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "uf_ffr_droop_bypass_flag": {
+        "value": true,
+        "name": "UF FFR Droop Bypass",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "uf_ffr_recovery_freq_hz": {
+        "value": 59,
+        "name": "UF FFR Begin Recovery Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_recovery_duration_sec": {
+        "value": 0,
+        "name": "UF FFR Recovery Duration",
+        "unit": "s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_recovery_latch": {
+        "value": false,
+        "name": "UF FFR Recovery Latch Control",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "uf_ffr_instant_recovery_freq_hz": {
+        "value": 59,
+        "name": "UF FFR Instant Recovery Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_cooldown_duration_sec": {
+        "value": 0,
+        "name": "UF FFR Post-Response Cooldown Time",
+        "unit": "s",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_slew_rate_kw": {
+        "value": 10000000,
+        "name": "UF FFR Slew Rate",
+        "unit": "W/s",
+        "scaler": 1000,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_ess_slew_override": {
+        "value": true,
+        "name": "UF FFR Slew Override",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "uf_ffr_active_response_status": {
+        "value": false,
+        "name": "UF FFR Active Response Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "uf_ffr_in_cooldown": {
+        "value": false,
+        "name": "UF FFR Post-Response Cooldown Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_in_recovery": {
+        "value": false,
+        "name": "UF FFR In-Recovery Status",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "uf_ffr_output_kw": {
+        "value": 0,
+        "name": "UF FFR Response Component Output",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "absolute_ess_enable_flag": {
+        "value": false,
+        "name": "Absolute ESS Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Absolute ESS Enable", "return_value": true }
+        ]
+    },
+    "absolute_ess_kW_cmd": {
+        "value": 0,
+        "name": "Absolute ESS Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "absolute_ess_direction_flag": {
+        "value": false,
+        "name": "Charging when Enabled",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "control",
+        "options": [
+            { "name": "Charge", "return_value": true },
+            { "name": "Discharge", "return_value": false }
+        ]
+    },
+    "ess_calibration_enable_flag": {
+        "value": false,
+        "name": "ESS Calibration Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "ESS Calibration Enable", "return_value": true }
+        ]
+    },
+    "ess_calibration_kW_cmd": {
+        "value": 0,
+        "name": "ESS Calibration Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "ess_calibration_soc_limits_enable": {
+        "value": false,
+        "name": "ESS Calibration SOC Limits Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "control"
+    },
+    "ess_calibration_min_soc_limit": {
+        "value": 0,
+        "name": "ESS Calibration Min SOC Limit",
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "ess_calibration_max_soc_limit": {
+        "value": 0,
+        "name": "ESS Calibration Max SOC Limit",
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "ess_calibration_voltage_limits_enable": {
+        "value": false,
+        "name": "ESS Calibration Cell Voltage Limits Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "control"
+    },
+    "ess_calibration_min_voltage_limit": {
+        "value": 0,
+        "name": "ESS Calibration Min Cell Voltage Limit",
+        "unit": "V",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "ess_calibration_max_voltage_limit": {
+        "value": 0,
+        "name": "ESS Calibration Max Cell Voltage Limit",
+        "unit": "V",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "ess_calibration_num_setpoint": {
+        "value": 2,
+        "name": "# ESS at Full Power Setpoint",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "ess_calibration_num_limited": {
+        "value": 0,
+        "name": "# ESS Derating",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "ess_calibration_num_zero": {
+        "value": 0,
+        "name": "# ESS Limited to 0kW",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "_charge_dispatch_enable_flag": {
+        "value": true,
+        "name": "Charge Dispatch Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Charge Dispatch Enabled", "return_value": true }
+        ]
+    },
+    "charge_dispatch_kW_command": {
+        "value": 0,
+        "name": "Charge Dispatch Power Command",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "charge_dispatch_solar_enable_flag": {
+        "value": true,
+        "name": "Solar Source Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Solar Source Enable", "return_value": true }
+        ]
+    },
+    "charge_dispatch_gen_enable_flag": {
+        "value": true,
+        "name": "Gen Source Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Gen Source Enable", "return_value": true }
+        ]
+    },
+    "charge_dispatch_feeder_enable_flag": {
+        "value": true,
+        "name": "Grid Source Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Feeder Source Enable", "return_value": true }
+        ]
+    },
+    "_ess_charge_control_enable_flag": {
+        "value": false,
+        "name": "ESS Charge Control Enable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none",
+        "options": [
+            { "name": "False Case Not Used", "return_value": false },
+            { "name": "Charge Control Enable", "return_value": true }
+        ]
+    },
+    "ess_charge_control_kW_request": {
+        "value": -0,
+        "name": "ESS Charge Control Power Request",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "ess_charge_control_target_soc": {
+        "value": 90,
+        "name": "Target SOC Setpoint",
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "ess_charge_control_kW_limit": {
+        "value": 10000,
+        "name": "ESS Charge Control Rate Limit",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "ess_charge_control_charge_disable": {
+        "value": false,
+        "name": "ESS Charge Control Charge Disable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "ess_charge_control_discharge_disable": {
+        "value": false,
+        "name": "ESS Charge Control Discharge Disable",
+        "unit": "",
+        "scaler": 1,
+        "enabled": false,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "site_frequency": {
+        "value": 60,
+        "name": "Site Frequency",
+        "unit": "Hz",
+        "scaler": 1,
+        "enabled": false,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "site_kW_load": {
+        "value": 159.80995178222656,
+        "name": "Site Load Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "site_kW_load_inclusion": {
+        "value": false,
+        "name": "Site Load included in Feature",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "enum_slider",
+        "ui_type": "none"
+    },
+    "feature_kW_demand": {
+        "value": 0,
+        "name": "Feature Demand Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "site_kW_demand": {
+        "value": 0,
+        "name": "Site Demand Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "asset_priority_runmode1": {
+        "value": 0,
+        "name": "Asset Priority - Run Mode 1",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "asset_priority_runmode2": {
+        "value": 0,
+        "name": "Asset Priority - Run Mode 2",
+        "unit": "",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "control"
+    },
+    "site_kW_charge_production": {
+        "value": 0,
+        "name": "Charge Production Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "site_kW_discharge_production": {
+        "value": 0,
+        "name": "Discharge Production Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "total_site_kW_rated_charge": {
+        "value": -0,
+        "name": "Total Rated Charge Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "total_site_kW_rated_discharge": {
+        "value": 0,
+        "name": "Total Rated Discharge Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "ess_kW_cmd": {
+        "value": 0,
+        "name": "ESS Active Power Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "max_potential_ess_kW": {
+        "value": 0,
+        "name": "Max ESS Potential Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "min_potential_ess_kW": {
+        "value": 0,
+        "name": "Min ESS Potential Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "rated_ess_kW": {
+        "value": 0,
+        "name": "ESS Rated Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "ess_actual_kW": {
+        "value": 0,
+        "name": "ESS Actual Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "soc_avg_running": {
+        "value": 0,
+        "name": "Average State of Charge for Running ESS",
+        "unit": "%",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "feeder_kW_cmd": {
+        "value": 0,
+        "name": "POI Active Power Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "max_potential_feeder_kW": {
+        "value": 31000,
+        "name": "Max POI Potential Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "min_potential_feeder_kW": {
+        "value": 0,
+        "name": "Min POI Potential Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "rated_feeder_kW": {
+        "value": 31000,
+        "name": "Feeder Rated Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "feeder_actual_kW": {
+        "value": 163.73001098632812,
+        "name": "POI Actual Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "gen_kW_cmd": {
+        "value": 0,
+        "name": "Generator Active Power Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "max_potential_gen_kW": {
+        "value": 0,
+        "name": "Max Generator Potential Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "min_potential_gen_kW": {
+        "value": 0,
+        "name": "Min Generator Potential Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "rated_gen_kW": {
+        "value": 0,
+        "name": "Gen Rated Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "gen_actual_kW": {
+        "value": 0,
+        "name": "Generator Actual Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "solar_kW_cmd": {
+        "value": 0,
+        "name": "Solar Active Power Setpoint",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    },
+    "max_potential_solar_kW": {
+        "value": 0,
+        "name": "Max Solar Potential Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "min_potential_solar_kW": {
+        "value": 0,
+        "name": "Min Solar Potential Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "rated_solar_kW": {
+        "value": 0,
+        "name": "Solar Rated Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "none"
+    },
+    "solar_actual_kW": {
+        "value": 0,
+        "name": "Solar Actual Active Power",
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": true,
+        "type": "number",
+        "ui_type": "status"
+    }
+}
