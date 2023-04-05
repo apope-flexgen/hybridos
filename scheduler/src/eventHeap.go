@@ -220,9 +220,9 @@ func (eHeap *eventHeap) addToList(list *[]interface{}) {
 
 // addToLegacyList adds an eventHeap's events to an existing list.
 // start time is given as mins since midnight
-func (eHeap *eventHeap) addToLegacyList(list *[]interface{}) {
+func (eHeap *eventHeap) addToLegacyList(list *[]interface{}, now, midnightDayOf time.Time) {
 	for _, eventObj := range *eHeap {
-		eventObj.AddToLegacyList(list)
+		eventObj.AddToLegacyList(list, now, midnightDayOf)
 	}
 }
 

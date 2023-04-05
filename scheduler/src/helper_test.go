@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	"time"
 )
 
 // interfaceEquals() method unit test for eventHeap
@@ -44,6 +45,106 @@ func TestInterfaceEquals(t *testing.T) {
 			if interfaceEquals(referenceInterface, comparisonInterface) {
 				t.Errorf("Expected NO match for reference[%d] = %v and comparison[%d][%d] = %v, but they were equal", i, referenceInterface, i, j, comparisonInterface)
 			}
+		}
+	}
+}
+
+type getMidnightInNDaysTest struct {
+	inputNow         time.Time
+	numDays          int
+	expectedMidnight time.Time
+}
+type getMidnightInNDaysTestCases []getMidnightInNDaysTest
+
+func TestGetMidnightInNDays(t *testing.T) {
+	tests := getMidnightInNDaysTestCases{
+		// non-DST tests
+		{
+			inputNow:         time.Date(2023, 2, 23, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          -2,
+			expectedMidnight: time.Date(2023, 2, 21, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{
+			inputNow:         time.Date(2023, 2, 23, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          -1,
+			expectedMidnight: time.Date(2023, 2, 22, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{
+			inputNow:         time.Date(2023, 2, 23, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          0,
+			expectedMidnight: time.Date(2023, 2, 23, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{
+			inputNow:         time.Date(2023, 2, 23, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          1,
+			expectedMidnight: time.Date(2023, 2, 24, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{
+			inputNow:         time.Date(2023, 2, 23, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          2,
+			expectedMidnight: time.Date(2023, 2, 25, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		//
+		// Spring Forward DST tests
+		//
+		{ // day after, going back 2 days
+			inputNow:         time.Date(2023, 3, 13, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          -2,
+			expectedMidnight: time.Date(2023, 3, 11, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{ // day after, going back 1 day
+			inputNow:         time.Date(2023, 3, 13, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          -1,
+			expectedMidnight: time.Date(2023, 3, 12, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{ // day of, getting midnight of same day
+			inputNow:         time.Date(2023, 3, 12, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          0,
+			expectedMidnight: time.Date(2023, 3, 12, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{ // day before, going forward 1 day
+			inputNow:         time.Date(2023, 3, 11, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          1,
+			expectedMidnight: time.Date(2023, 3, 12, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{ // day before, going forward 2 days
+			inputNow:         time.Date(2023, 3, 11, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          2,
+			expectedMidnight: time.Date(2023, 3, 13, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		//
+		// Fall Back DST tests
+		//
+		{ // day after, going back 2 days
+			inputNow:         time.Date(2023, 11, 6, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          -2,
+			expectedMidnight: time.Date(2023, 11, 4, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{ // day after, going back 1 day
+			inputNow:         time.Date(2023, 11, 6, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          -1,
+			expectedMidnight: time.Date(2023, 11, 5, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{ // day of, getting midnight of same day
+			inputNow:         time.Date(2023, 11, 5, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          0,
+			expectedMidnight: time.Date(2023, 11, 5, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{ // day before, going forward 1 day
+			inputNow:         time.Date(2023, 11, 4, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          1,
+			expectedMidnight: time.Date(2023, 11, 5, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+		{ // day before, going forward 2 days
+			inputNow:         time.Date(2023, 11, 4, 9, 30, 00, 00, forceLoadLocation("America/New_York")),
+			numDays:          2,
+			expectedMidnight: time.Date(2023, 11, 6, 0, 0, 0, 0, forceLoadLocation("America/New_York")),
+		},
+	}
+
+	for i, test := range tests {
+		if result := getMidnightInNDays(test.numDays, test.inputNow); !result.Equal(test.expectedMidnight) {
+			t.Errorf("test index %d: %v does not equal %v", i, result, test.expectedMidnight)
 		}
 	}
 }

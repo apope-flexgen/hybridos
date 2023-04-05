@@ -54,11 +54,17 @@ func (e *Event) BuildObj() map[string]interface{} {
 	return eMap
 }
 
+// Returns true if the event's start time has the given calendar day after being
+// shifted to the given time zone.
+func (e *Event) HasCalendarDay(calendarDay int, timezone *time.Location) bool {
+	return e.StartTime.In(timezone).Day() == calendarDay
+}
+
 // BuildLegacyObj converts an event to a map[string]interface{} for easy FIMS sending as a JSON.
 // The timestamp is given in mins since midnight
-func (e *Event) BuildLegacyObj() map[string]interface{} {
+func (e *Event) BuildLegacyObj(now, midnightDayOf time.Time) map[string]interface{} {
 	eMap := make(map[string]interface{})
-	eMap["start_time"] = e.StartTime.Hour()*60 + e.StartTime.Minute()
+	eMap["start_time"] = e.StartTime.Sub(midnightDayOf).Minutes()
 	eMap["duration"] = e.Duration.Minutes()
 	eMap["mode"] = e.Mode
 	varMap := make(map[string]interface{})
@@ -95,8 +101,8 @@ func (e *Event) AddToList(list *[]interface{}) {
 
 // converts an event to a map[string]interface{} and adds it to a list of events for easy FIMS sending
 // start time is given as mins since midnight
-func (e *Event) AddToLegacyList(list *[]interface{}) {
-	eMap := e.BuildLegacyObj()
+func (e *Event) AddToLegacyList(list *[]interface{}, now, midnightDayOf time.Time) {
+	eMap := e.BuildLegacyObj(now, midnightDayOf)
 	*list = append(*list, eMap)
 }
 

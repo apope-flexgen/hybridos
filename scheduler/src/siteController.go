@@ -336,22 +336,34 @@ func (site *siteController) buildObj() *[]interface{} {
 // splits entries across multiple lists, with each list corresponding to a particular day
 // start time is given as mins since midnight
 func (site *siteController) buildLegacyObject() *[]interface{} {
+	now := getCurrentTime().In(site.timezone)
+	midnightToday := getMidnightInNDays(0, now)
+	midnightTomorrow := getMidnightInNDays(1, now)
+
 	var siteSchedule []interface{}
 	todayEventsList := make([]interface{}, 0)
 	tomorrowEventsList := make([]interface{}, 0)
-	site.expiredEvents.addToLegacyList(&todayEventsList)
-	site.addActiveEventToLegacyList(&todayEventsList)
+	site.expiredEvents.addToLegacyList(&todayEventsList, now, midnightToday)
+	site.addActiveEventToLegacyList(&todayEventsList, now, midnightToday)
 
 	// add each day's schedule to the site schedule object
 	for _, sEvent := range *site.scheduledEvents {
 		// position in the list of days per schedule
-		dayIndex := sEvent.StartTime.Day() - getCurrentTime().In(site.timezone).Day()
+		var dayIndex int
+		if sEvent.HasCalendarDay(midnightToday.Day(), site.timezone) {
+			dayIndex = 0
+		} else if sEvent.HasCalendarDay(midnightTomorrow.Day(), site.timezone) {
+			dayIndex = 1
+		} else {
+			// event is outside bounds of legacy visibility so do not include in object
+			continue
+		}
 
 		switch dayIndex {
 		case 0:
-			sEvent.AddToLegacyList(&todayEventsList)
+			sEvent.AddToLegacyList(&todayEventsList, now, midnightToday)
 		case 1:
-			sEvent.AddToLegacyList(&tomorrowEventsList)
+			sEvent.AddToLegacyList(&tomorrowEventsList, now, midnightTomorrow)
 		}
 	}
 	siteSchedule = append(siteSchedule, todayEventsList)
@@ -369,30 +381,46 @@ func (site *siteController) addActiveEventToList(list *[]interface{}) {
 
 // adds site's active event to an event list, if an active site exists
 // start time is given as mins since midnight
-func (site *siteController) addActiveEventToLegacyList(list *[]interface{}) {
+func (site *siteController) addActiveEventToLegacyList(list *[]interface{}, now, midnightToday time.Time) {
 	if site.activeEvent != nil {
-		site.activeEvent.AddToLegacyList(list)
+		site.activeEvent.AddToLegacyList(list, now, midnightToday)
 	}
 }
 
-// copies all events occuring on the opposite day and returns them
-// 0 indicates to get tomorrow's events, and 1 indicates to get today's events
+// Copies all events occuring on the opposite day and returns them.
+// 0 indicates to get tomorrow's events, and 1 indicates to get today's events.
+// A "yesterday" event is considered to belong to "today", so passing a 1 will include "yesterday" in the return.
 func (site *siteController) getOtherDayEvents(day int) *eventHeap {
+	now := getCurrentTime()
+	yesterdayMidnight := getMidnightInNDays(-1, now)
+	tomorrowMidnight := getMidnightInNDays(1, now)
+
 	daySchedule := newEventHeap()
-	for _, event := range *site.expiredEvents {
-		if event.StartTime.Day()-getCurrentTime().In(site.timezone).Day() != day {
-			daySchedule.appendEvent(event)
-		}
-	}
-	if site.hasActiveEvent() && site.activeEvent.StartTime.Day()-getCurrentTime().In(site.timezone).Day() != day {
-		daySchedule.appendEvent(site.activeEvent)
-	}
-	for _, event := range *site.scheduledEvents {
-		if event.StartTime.Day()-getCurrentTime().In(site.timezone).Day() != day {
-			daySchedule.appendEvent(event)
-		}
+
+	if day == 0 {
+		site.addEventsWithCalendarDayXToHeap(tomorrowMidnight.Day(), daySchedule)
+	} else { // day == 1
+		site.addEventsWithCalendarDayXToHeap(yesterdayMidnight.Day(), daySchedule)
+		site.addEventsWithCalendarDayXToHeap(now.Day(), daySchedule)
 	}
 	return daySchedule
+}
+
+// Adds any event with the given calendar day (as opposed to the day_0/day_1 day) to the given heap.
+func (site *siteController) addEventsWithCalendarDayXToHeap(calendarDay int, eHeap *eventHeap) {
+	for _, event := range *site.expiredEvents {
+		if event.HasCalendarDay(calendarDay, site.timezone) {
+			eHeap.appendEvent(event)
+		}
+	}
+	if site.hasActiveEvent() && site.activeEvent.HasCalendarDay(calendarDay, site.timezone) {
+		eHeap.appendEvent(site.activeEvent)
+	}
+	for _, event := range *site.scheduledEvents {
+		if event.HasCalendarDay(calendarDay, site.timezone) {
+			eHeap.appendEvent(event)
+		}
+	}
 }
 
 // editSchedule accepts an input set of events and will edit the schedule
@@ -437,7 +465,7 @@ func (site *siteController) editSchedule(inputEvents *eventHeap, editor editingI
 	}
 
 	// validate the new schedule by checking for overlaps
-	if site.scheduledEvents.hasOverlaps() {
+	if newSchedule.hasOverlaps() {
 		return errors.New("cannot edit schedule as new schedule would have overlapping events")
 	}
 
