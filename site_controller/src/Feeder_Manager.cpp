@@ -181,12 +181,12 @@ float Feeder_Manager::get_avg_ac_voltage(const char* feeder_ID)
 
 bool Feeder_Manager::set_feeder_state_open(Asset_Feeder *found_feeder)
 {
-    return found_feeder->breaker_close();
+    return found_feeder->breaker_open();
 }
 
 bool Feeder_Manager::set_feeder_state_closed(Asset_Feeder *found_feeder)
 {
-    return found_feeder->breaker_open();
+    return found_feeder->breaker_close();
 }
 
 void Feeder_Manager::set_poi_target_active_power(float desiredkW)

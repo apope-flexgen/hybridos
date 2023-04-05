@@ -3132,13 +3132,6 @@ void Site_Manager::shutdown_state(void)
     solar_kVAR_cmd_slew.reset_slew_target();
     reactive_setpoint_kVAR_cmd_slew.reset_slew_target();
 
-    // Reset load shed value to max
-    load_shed_calculator.offset = load_shed_calculator.max_offset;
-    if (load_shed_value.value.value_int != load_shed_calculator.offset) {
-        load_shed_value.value.set(load_shed_calculator.offset);
-        load_shed_value.send_to_component(true);
-    }
-
     // Reset solar shed value to max
     solar_shed_calculator.offset = solar_shed_calculator.max_offset;
     solar_shed_value.value.set(solar_shed_calculator.offset);

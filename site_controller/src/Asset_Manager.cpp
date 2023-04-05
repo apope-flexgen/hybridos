@@ -1104,12 +1104,12 @@ bool Asset_Manager::stop_all_gen(void)
 
 bool Asset_Manager::set_feeder_state_open(Asset_Feeder* found_feeder)
 {
-    return feeder_manager->set_feeder_state_closed(found_feeder);
+    return feeder_manager->set_feeder_state_open(found_feeder);
 }
 
 bool Asset_Manager::set_feeder_state_closed(Asset_Feeder* found_feeder)
 {
-    return feeder_manager->set_feeder_state_open(found_feeder);
+    return feeder_manager->set_feeder_state_closed(found_feeder);
 }
 
 bool Asset_Manager::set_poi_feeder_state_open()
