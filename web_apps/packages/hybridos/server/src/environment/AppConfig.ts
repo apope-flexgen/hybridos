@@ -1,45 +1,13 @@
 import {
-    IsInt,
     IsNotEmpty,
-    IsNumber,
     IsString,
     IsObject,
     IsBoolean,
-    Max,
     Allow,
     IsOptional,
 } from 'class-validator'
 
 export class AppConfig {
-    @IsNumber()
-    APP_SERVER_PORT: number
-
-    @IsNotEmpty()
-    @IsString()
-    MONGO_URL: string
-
-    @IsNotEmpty()
-    @IsString()
-    MONGO_DB_NAME: string
-
-    @IsNotEmpty()
-    @IsInt()
-    HTTP_TIMEOUT: number // milliseconds
-
-    @IsNotEmpty()
-    @IsString()
-    ACCESS_TOKEN_SECRET_FIMS_SOCKET: string
-
-    @IsNotEmpty()
-    @IsNumber()
-    @Max(28800) // equals 8hr
-    REFRESH_TOKEN_TIMEOUT: number // seconds
-
-    @IsNotEmpty()
-    @IsNumber()
-    @Max(1800) // equals 30 min
-    ACCESS_TOKEN_TIMEOUT: number // seconds
-
     @Allow()
     aggregatedEndpoints?: any
 
@@ -75,7 +43,7 @@ export class AppConfig {
     @IsBoolean()
     features: boolean
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsBoolean()
     site: boolean
 
@@ -87,7 +55,7 @@ export class AppConfig {
     @IsBoolean()
     control_cabinet: boolean
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsBoolean()
     fleet_manager_dashboard: boolean
 
@@ -119,22 +87,8 @@ export class AppConfig {
 
     constructor(
         {
-            APP_SERVER_PORT,
-            MONGO_URL,
-            MONGO_DB_NAME,
-            HTTP_TIMEOUT,
-            ACCESS_TOKEN_SECRET_FIMS_SOCKET,
-            ACCESS_TOKEN_TIMEOUT,
-            REFRESH_TOKEN_TIMEOUT,
-            aggregatedEndpoints,
+            aggregatedEndpoints
         }: {
-            APP_SERVER_PORT: number
-            MONGO_URL: string
-            MONGO_DB_NAME: string
-            HTTP_TIMEOUT: number
-            ACCESS_TOKEN_SECRET_FIMS_SOCKET: string
-            ACCESS_TOKEN_TIMEOUT: number
-            REFRESH_TOKEN_TIMEOUT: number
             aggregatedEndpoints: any
         },
         {
@@ -179,26 +133,19 @@ export class AppConfig {
             fleet_name: string
         }
     ) {
-        this.APP_SERVER_PORT = APP_SERVER_PORT
-        this.MONGO_URL = MONGO_URL
-        this.MONGO_DB_NAME = MONGO_DB_NAME
-        this.HTTP_TIMEOUT = HTTP_TIMEOUT
-        this.ACCESS_TOKEN_SECRET_FIMS_SOCKET = ACCESS_TOKEN_SECRET_FIMS_SOCKET
-        this.REFRESH_TOKEN_TIMEOUT = REFRESH_TOKEN_TIMEOUT
-        this.ACCESS_TOKEN_TIMEOUT = ACCESS_TOKEN_TIMEOUT
-        this.aggregatedEndpoints = aggregatedEndpoints
-        ;(this.timezone = timezone),
+        this.aggregatedEndpoints = aggregatedEndpoints;
+        (this.timezone = timezone),
             (this.product = product),
-            (this.ess = ess),
-            (this.gen = gen),
-            (this.solar = solar),
-            (this.met_station = met_station),
-            (this.tracker = tracker),
-            (this.feeders = feeders),
-            (this.features = features),
-            (this.site = site),
+            (this.ess = ess ?? false),
+            (this.gen = gen ?? false),
+            (this.solar = solar ?? false),
+            (this.met_station = met_station ?? false),
+            (this.tracker = tracker ?? false),
+            (this.feeders = feeders ?? false),
+            (this.features = features ?? false),
+            (this.site = site ?? false),
             (this.events = events),
-            (this.control_cabinet = control_cabinet),
+            (this.control_cabinet = control_cabinet ?? false),
             (this.fleet_manager_dashboard = fleet_manager_dashboard),
             (this.scheduler = scheduler),
             (this.units = units),

@@ -1,20 +1,27 @@
 import { Box, MuiButton } from '@flexgen/storybook';
 import { FunctionComponent, useContext, useState } from 'react';
+import { PasswordOptions } from 'shared/types/api/Users/Users.types';
+import { userRowButtonsSx, userRowSx } from 'src/pages/UserAdmin/UserAdmin.styles';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
-import { changingPasswordRequirements } from './UserAdmin.constants';
-import UserRow from './UserRow';
+import UserRow from 'src/pages/UserAdmin/UserRow';
 
 export interface RowContentsProps {
   user: any
   updateUserData: () => void
   setIsLoading: (state: boolean) => void
+  showDeveloper?: boolean
+  passwordOptions: PasswordOptions
+  oldPasswords: number
 }
 
 const EditUserRow: FunctionComponent<RowContentsProps> = ({
   user,
   updateUserData,
   setIsLoading,
+  showDeveloper,
+  passwordOptions,
+  oldPasswords
 }: RowContentsProps) => {
   const axiosInstance = useAxiosWebUIInstance();
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
@@ -79,35 +86,17 @@ const EditUserRow: FunctionComponent<RowContentsProps> = ({
   const cancel = () => setUserData({});
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '12px 12px 12px 3%',
-        gap: '12px',
-        width: '100%',
-        flexGrow: 1,
-      }}
-    >
+    <Box sx={userRowSx}>
       <UserRow
+        showDeveloper={showDeveloper}
         existingUser={user}
-        passwordRequirements={changingPasswordRequirements}
         setUserData={setUserData}
         setValidPassword={setValidPassword}
         userData={userData}
+        passwordOptions={passwordOptions}
+        oldPasswords={oldPasswords}
       />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginRight: 'auto',
-          width: '100%',
-          gap: '12px',
-          flexGrow: 1,
-        }}
-      >
+      <Box sx={userRowButtonsSx}>
         <MuiButton label="update user" onClick={updateUser} variant="contained" />
         <MuiButton label="cancel" onClick={cancel} variant="text" />
         <MuiButton

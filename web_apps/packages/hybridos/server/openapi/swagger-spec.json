@@ -165,7 +165,7 @@
 				]
 			}
 		},
-		"/app-settings": {
+		"/site-admins": {
 			"get": {
 				"operationId": "find",
 				"parameters": [],
@@ -175,14 +175,14 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/AppSettingsResponse"
+									"$ref": "#/components/schemas/SiteAdminsResponse"
 								}
 							}
 						}
 					}
 				},
 				"tags": [
-					"app-settings"
+					"site-admins"
 				]
 			},
 			"post": {
@@ -193,7 +193,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateAppSettingsDto"
+								"$ref": "#/components/schemas/SiteAdminsDto"
 							}
 						}
 					}
@@ -204,18 +204,18 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/AppSettingsResponse"
+									"$ref": "#/components/schemas/SiteAdminsResponse"
 								}
 							}
 						}
 					}
 				},
 				"tags": [
-					"app-settings"
+					"site-admins"
 				]
 			}
 		},
-		"/app-settings/radius-test": {
+		"/site-admins/radius-test": {
 			"post": {
 				"operationId": "radiusTest",
 				"parameters": [],
@@ -235,7 +235,7 @@
 					}
 				},
 				"tags": [
-					"app-settings"
+					"site-admins"
 				]
 			}
 		},
@@ -629,6 +629,24 @@
 				"responses": {
 					"200": {
 						"description": ""
+					}
+				}
+			}
+		},
+		"/rest/{endpoint}/{value}": {
+			"put": {
+				"operationId": "put",
+				"parameters": [],
+				"responses": {
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AggregatedPutResponse"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -1079,7 +1097,7 @@
 					"is_local_auth_disabled"
 				]
 			},
-			"AppSettingsResponse": {
+			"SiteAdminsResponse": {
 				"type": "object",
 				"properties": {
 					"password": {
@@ -1203,7 +1221,7 @@
 					"is_local_auth_disabled"
 				]
 			},
-			"CreateAppSettingsDto": {
+			"SiteAdminsDto": {
 				"type": "object",
 				"properties": {
 					"password": {
@@ -1389,6 +1407,31 @@
 				"required": [
 					"dashboards"
 				]
+			},
+			"AggregatedPutResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "number",
+						"description": "HTTP status code"
+					},
+					"statusString": {
+						"type": "string",
+						"description": "Status desciption"
+					},
+					"method": {
+						"type": "string",
+						"description": "HTTP method"
+					},
+					"uri": {
+						"type": "string",
+						"description": "Target URI"
+					},
+					"value": {
+						"type": "object",
+						"description": "Value set"
+					}
+				}
 			}
 		}
 	}

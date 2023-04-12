@@ -9,6 +9,8 @@ export class EventsRequestParams {
     search?: string
     limit?: number
     page?: number
+    order?: number
+    orderBy?: string
 }
 
 export class Event {

@@ -11,7 +11,7 @@ interface PassExpLoginProps {
 
 const PassExpLogin = (props: PassExpLoginProps) => {
   const { user, onLogin } = props;
-  const axiosInstance = useAxiosWebUIInstance();
+  const axiosInstance = useAxiosWebUIInstance(true);
   const [open, setOpen] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
@@ -61,9 +61,12 @@ const PassExpLogin = (props: PassExpLoginProps) => {
         <div style={{ marginLeft: '8%', marginBottom: '10%' }}>
           <Typography text="Please create a new password to continue." />
         </div>,
-        <div style={{ display: 'flex', flexDirection: 'column', alignContent: 'center', width: '60%', paddingBottom: '5%', margin: 'auto' }}>
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignContent: 'center', width: '60%', paddingBottom: '5%', margin: 'auto',
+        }}
+        >
           <NewPasswordTextfield
-            color="primary"
+            color={error!=='' ? "error" : "primary"}
             key="NewPasswordTextfield"
             label="New Password"
             onChange={(event) => setNewPassword(event.target.value.trim())}
@@ -71,11 +74,14 @@ const PassExpLogin = (props: PassExpLoginProps) => {
           />
           <br />
           <ConfirmPasswordTextfield
-            color="primary"
+            color={error!=='' ? "error" : "primary"}
             helperText={error}
             key="ConfirmPasswordTextfield"
             label="Confirm Password"
             onChange={(event) => setConfirmPassword(event.target.value.trim())}
+            onKeyDown={
+              (event) => { if (event.code === 'Enter') postPassExp(); }
+            }
             type="password"
           />
           <br />

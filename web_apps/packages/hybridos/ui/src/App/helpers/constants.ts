@@ -22,7 +22,7 @@ export const initAppValue = {
   footer: {
     softwareName: '',
     version: '',
-  }
+  },
 };
 
 export const AUTH_USER_TOKEN_URL = '/authenticate-user-token';

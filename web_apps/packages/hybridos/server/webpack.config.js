@@ -8,19 +8,22 @@ const { configs } = require('eslint-plugin-prettier');
 // devTools - use dev tools, such as hot module reload
 // start - autostart after build
 // fims - use real fims
-// use[Prod|Dev|LocalProd] - use production config | development config | local production config
 //
 // Aggregates: use one flag to set multiple options
-// prod - use production config, use fims
-// dev - use development config, use dev tools, autostart after build, use fims (this may change when fims is fully mocked)
-// local - use development config, dev tools, autostart after build, use mocks (currently only mocking fims, other mocks should be added to local options)
+// prod - use fims
+// dev - use dev tools, autostart after build, use fims (this may change when fims is fully mocked)
+// local - dev tools, autostart after build, use mocks (currently only mocking fims, other mocks should be added to local options)
 
 const aggregates = {
   prod: ['fims', 'useProd'],
-  dev: ['devTools', 'start', 'fims', 'useDev'],
-  local: ['devTools', 'start', 'useDev'],
-  debug: ['fims', 'useDev', 'noTimeout'],
+  dev: ['devTools', 'start', 'fims'],
+  local: ['devTools', 'start'],
+  debug: ['fims', 'noTimeout'],
 };
+
+const WEB_UI_BUILD_PATH = '/usr/local/bin/web_ui/'
+const WEB_UI_CONFIG_PATH = '/usr/local/etc/config/web_ui'
+const WEB_SERVER_CONFIG_PATH = '/usr/local/etc/config/web_server'
 
 module.exports = function (options, webpack) {
   const node_env = process.env.NODE_ENV.trim();
@@ -107,38 +110,20 @@ module.exports = function (options, webpack) {
       new RunScriptWebpackPlugin({
         name: options.output.filename,
         autoRestart: false,
-      }),
-    );
-  }
-
-  // use production or development settings
-  if (envArgs.includes('useProd')) {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        CONFIG_PATH: `"/usr/local/etc/config/web_server/web_server.json"`,
-      }),
-    );
-  } else if (envArgs.includes('useLocalProd')) {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        CONFIG_PATH: `"${path.resolve(__dirname, 'configs/localProd-config')}"`,
-      }),
-    );
-  } else if (envArgs.includes('useDev')) {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        CONFIG_PATH: JSON.stringify(
-          path.resolve(__dirname, 'configs/dev-config'),
-        ),
+        args: [WEB_UI_BUILD_PATH, WEB_UI_CONFIG_PATH, WEB_SERVER_CONFIG_PATH]
       }),
     );
   }
 
   config.plugins.push(
     new webpack.DefinePlugin({
-      WEB_UI_JSON_CONFIG_PATH: JSON.stringify(
-        path.resolve(__dirname, 'configs/web_ui.json'),
-      ),
+      CONFIG_PATH: `"${WEB_SERVER_CONFIG_PATH}/web_server.json"`,
+    }),
+  );
+
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      WEB_UI_JSON_CONFIG_PATH: `"${WEB_UI_CONFIG_PATH}/web_ui.json"`,
     }),
   );
 

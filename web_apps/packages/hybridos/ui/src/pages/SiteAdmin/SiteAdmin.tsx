@@ -16,7 +16,7 @@ import {
   useState, useEffect, useContext, useCallback,
 } from 'react';
 import {
-  AppSettings,
+  SiteAdmins,
   PasswordSettings,
   RadiusSettings,
   RadiusTestSettings,
@@ -29,7 +29,7 @@ import RadiusSettingsFields from './RadiusSettings';
 import {
   initialPasswordSettings,
   initialRadiusSettings,
-  initialAppSettings,
+  initialsiteAdmins,
   ConnectionMethods,
   connectionMethodRadios,
   siteAdminLabels,
@@ -51,9 +51,9 @@ const SiteAdmin = () => {
   ] = useState<PasswordSettings>(initialPasswordSettings);
   const [radiusSettings, setRadiusSettings] = useState<RadiusSettings>(initialRadiusSettings);
 
-  const [appSettingsId, setAppSettingsId] = useState<string>('');
-  const [appSettingsVersion, setAppSettingsVersion] = useState<number>(0);
-  const [currentAppSettings, setCurrentAppSettings] = useState<AppSettings>(initialAppSettings);
+  const [siteAdminsId, setsiteAdminsId] = useState<string>('');
+  const [siteAdminsVersion, setsiteAdminsVersion] = useState<number>(0);
+  const [currentsiteAdmins, setCurrentsiteAdmins] = useState<SiteAdmins>(initialsiteAdmins);
 
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -61,8 +61,8 @@ const SiteAdmin = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRadiusTestLoading, setIsRadiusTestLoading] = useState<boolean>(false);
 
-  const updateAppSettings = (data: AppSettings) => {
-    setCurrentAppSettings(data);
+  const updatesiteAdmins = (data: SiteAdmins) => {
+    setCurrentsiteAdmins(data);
     setPasswordSettings(data.password);
     setRadiusSettings(data.radius);
     setPassword('');
@@ -71,13 +71,13 @@ const SiteAdmin = () => {
     if (data.radius.is_local_auth_disabled) setConnectionMethod('onlyRadius');
     else if (data.radius.is_enabled) setConnectionMethod('localAndRadius');
     else setConnectionMethod('onlyLocal');
-    setAppSettingsId(data._id);
-    setAppSettingsVersion(data.__v);
+    setsiteAdminsId(data._id);
+    setsiteAdminsVersion(data.__v);
     setIsLoading(false);
   };
 
   const updateAfterPost = (data: any) => {
-    setCurrentAppSettings(data);
+    setCurrentsiteAdmins(data);
     setPasswordSettings(data.password);
     setRadiusSettings(data.radius);
     setPassword('');
@@ -85,21 +85,21 @@ const SiteAdmin = () => {
     if (data.radius.is_local_auth_disabled) setConnectionMethod('onlyRadius');
     else if (data.radius.is_enabled) setConnectionMethod('localAndRadius');
     else setConnectionMethod('onlyLocal');
-    setAppSettingsId(data._id);
-    setAppSettingsVersion(data.__v);
+    setsiteAdminsId(data._id);
+    setsiteAdminsVersion(data.__v);
     setRadiusTestSuccessful(false);
     setIsLoading(false);
     notifCtx?.notif('success', 'Data successfully saved');
   };
 
-  const postNewAppSettings = async () => {
+  const postNewsiteAdmins = async () => {
     try {
       setIsLoading(true);
-      const newSettings: AppSettings = {
-        _id: appSettingsId,
+      const newSettings: SiteAdmins = {
+        _id: siteAdminsId,
         password: passwordSettings,
         radius: radiusSettings,
-        __v: appSettingsVersion,
+        __v: siteAdminsVersion,
       };
       const res = await axiosInstance.post(APP_SETTINGS_URL, newSettings);
       updateAfterPost(res.data);
@@ -136,7 +136,7 @@ const SiteAdmin = () => {
     try {
       setIsLoading(true);
       const res = await axiosInstance.get(APP_SETTINGS_URL);
-      updateAppSettings(res.data);
+      updatesiteAdmins(res.data);
     } finally {
       setIsLoading(false);
     }
@@ -180,7 +180,7 @@ const SiteAdmin = () => {
             <MuiButton
               color="inherit"
               label="cancel"
-              onClick={() => updateAppSettings(currentAppSettings)}
+              onClick={() => updatesiteAdmins(currentsiteAdmins)}
               variant="text"
             />
             <MuiButton
@@ -191,7 +191,7 @@ const SiteAdmin = () => {
                             }
               id="save_button"
               label="save"
-              onClick={postNewAppSettings}
+              onClick={postNewsiteAdmins}
             />
           </Box>
           {(connectionMethod === 'onlyRadius' || connectionMethod === 'localAndRadius')
@@ -222,34 +222,36 @@ const SiteAdmin = () => {
             variant="bodyLBold"
           />
           {connectionMethodRadios.map((connectionMethodRadio) => (
-            <RadioButton
-              label={connectionMethodRadio.label}
-              labelPlacement="end"
-              onChange={() => {
-                setConnectionMethod(connectionMethodRadio.value);
-                if (connectionMethodRadio.value === 'onlyRadius') {
-                  setRadiusSettings({
-                    ...radiusSettings,
-                    is_enabled: true,
-                    is_local_auth_disabled: true,
-                  });
-                } else if (connectionMethodRadio.value === 'localAndRadius') {
-                  setRadiusSettings({
-                    ...radiusSettings,
-                    is_enabled: true,
-                    is_local_auth_disabled: false,
-                  });
-                } else {
-                  setRadiusSettings({
-                    ...radiusSettings,
-                    is_enabled: false,
-                    is_local_auth_disabled: false,
-                  });
-                }
-              }}
-              size="small"
-              value={connectionMethod === connectionMethodRadio.value}
-            />
+            <Box sx={{paddingTop: '16px'}}>
+              <RadioButton
+                label={connectionMethodRadio.label}
+                labelPlacement="end"
+                onChange={() => {
+                  setConnectionMethod(connectionMethodRadio.value);
+                  if (connectionMethodRadio.value === 'onlyRadius') {
+                    setRadiusSettings({
+                      ...radiusSettings,
+                      is_enabled: true,
+                      is_local_auth_disabled: true,
+                    });
+                  } else if (connectionMethodRadio.value === 'localAndRadius') {
+                    setRadiusSettings({
+                      ...radiusSettings,
+                      is_enabled: true,
+                      is_local_auth_disabled: false,
+                    });
+                  } else {
+                    setRadiusSettings({
+                      ...radiusSettings,
+                      is_enabled: false,
+                      is_local_auth_disabled: false,
+                    });
+                  }
+                }}
+                size="small"
+                value={connectionMethod === connectionMethodRadio.value}
+              />
+            </Box>
           ))}
         </Box>
         <Box

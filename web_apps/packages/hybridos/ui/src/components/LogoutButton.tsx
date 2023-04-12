@@ -4,17 +4,20 @@ import { ErrorContextType } from 'src/contexts/ErrorContext/types';
 import useAuth from 'src/hooks/useAuth';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { ThemeProvider } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const LogoutButton = () => {
   const axiosInstance = useAxiosWebUIInstance(true);
   const { setAuth } = useAuth();
   const LOGOUT_URL = '/logout';
   const { showErrorModal, clearErrorModal } = useErrorContext() as ErrorContextType;
+  const navigate = useNavigate();
 
   const logout = async () => {
     try {
       await axiosInstance.post(LOGOUT_URL, {});
       setAuth({});
+      navigate('/');
       window.location.reload();
     } catch (e) {
       showErrorModal({
@@ -36,7 +39,8 @@ const LogoutButton = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <MuiButton
-        label="LOGOUT"
+        label="LOG OUT"
+        color="inherit"
         onClick={logout}
         sx={{ backgroundColor: 'transparent', ':hover': { backgroundColor: 'transparent' } }}
         variant="text"

@@ -1,8 +1,7 @@
 /* eslint-disable max-lines */
 // TODO: fix lint
-/* eslint-disable max-len */
 import {
-  CardRow, Views, TimeZones, Select, Typography, ThemeType, Box
+  CardRow, Views, TimeZones, Select, Typography, ThemeType, Box, Icon,
 } from '@flexgen/storybook';
 import dayjs, { Dayjs } from 'dayjs';
 import {
@@ -11,6 +10,7 @@ import {
 import {
   Repeat, SchedulerEvent, schedulerEventForAPI,
 } from 'shared/types/dtos/scheduler.dto';
+import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
 import AddEvent from 'src/pages/Scheduler/SchedulerComponents/AddEvent/AddEvent';
@@ -21,7 +21,6 @@ import {
 import { noSelectedItemBoxSx, schedulerLabels } from 'src/pages/Scheduler/SchedulerHelpers';
 import { FleetManagerSite } from 'src/pages/Scheduler/SchedulerTypes';
 import { useTheme } from 'styled-components';
-import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 
 interface EventSchedulerProps {
   setIsLoading: any
@@ -66,13 +65,14 @@ export function useEventSchedulerContext() {
 
 const EventScheduler = ({ setIsLoading, schedulerType }: EventSchedulerProps) => {
   const [view, setView] = useState<Views>(views.week);
+  const [siteSelectorError, setSiteSelectorError] = useState<boolean>(false);
   const [value, setValue] = useState<Dayjs | null>(dayjs());
   const [eventsForUI, setEventsForUI] = useState<SchedulerEvent[]>([]);
   const [selectedSiteName, setSelectedSiteName] = useState<string>('');
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
 
   const {
-    siteId, timezone, events, modes, fmSites, setSiteId,
+    siteId, timezone, events, modes, fmSites, setSiteId, connected,
   } = useSchedulerContext();
 
   const axiosInstance = useAxiosWebUIInstance();
@@ -108,23 +108,23 @@ const EventScheduler = ({ setIsLoading, schedulerType }: EventSchedulerProps) =>
 
   const addEvent = (newEvent: schedulerEventForAPI) => {
     axiosInstance.post(`${schedulerURLS.addEvent}/${siteId}`, newEvent)
-    .then((res)=>{
-      if (res.data.body.error) notifCtx?.notif('error', res.data.body.error); 
-    });
+      .then((res) => {
+        if (res.data.body.error) notifCtx?.notif('error', res.data.body.error);
+      });
   };
 
   const updateEvent = (eventId: string, eventBody: schedulerEventForAPI) => {
     axiosInstance.post(`${schedulerURLS.addEvent}/${siteId}/${eventId}`, eventBody)
-    .then((res)=>{
-      if (res.data.body.error) notifCtx?.notif('error', res.data.body.error); 
-    });
+      .then((res) => {
+        if (res.data.body.error) notifCtx?.notif('error', res.data.body.error);
+      });
   };
 
   const addException = (eventId: string, exception: string) => {
     axiosInstance.post(`${schedulerURLS.addEvent}/${siteId}/${eventId}/exceptions`, { data: exception })
-    .then((res)=>{
-      if (res.data.body.error) notifCtx?.notif('error', res.data.body.error); 
-    });
+      .then((res) => {
+        if (res.data.body.error) notifCtx?.notif('error', res.data.body.error);
+      });
   };
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
@@ -155,7 +155,25 @@ const EventScheduler = ({ setIsLoading, schedulerType }: EventSchedulerProps) =>
   const siteNames: string[] = [];
   fmSites.map((obj: FleetManagerSite) => siteNames.push(obj.name));
 
+  const siteStatuses: { name: string, status: boolean }[] = [];
+  fmSites.map((obj: FleetManagerSite) => siteStatuses.push(
+    { name: obj.name, status: connected !== null ? connected[obj.id] : false },
+  ));
+
+  useEffect(() => {
+    fmSites.map((obj: FleetManagerSite) => siteNames.push(obj.name));
+    fmSites.map((obj: FleetManagerSite) => siteStatuses.push(
+      { name: obj.name, status: connected !== null ? connected[obj.id] : false },
+    ));
+    // TODO: fix lint
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fmSites, connected]);
+
   const changeSite = (siteName: string) => {
+    const selectedSiteStatus = siteStatuses.find((siteStatus) => siteStatus.name === siteName);
+    if (selectedSiteStatus && selectedSiteStatus.status === false) {
+      setSiteSelectorError(true);
+    } else { setSiteSelectorError(false); }
     setSelectedSiteName(siteName);
     const site: any = fmSites.find((obj: FleetManagerSite) => obj.name === siteName);
     if (site) setSiteId(site.id);
@@ -164,7 +182,7 @@ const EventScheduler = ({ setIsLoading, schedulerType }: EventSchedulerProps) =>
   useEffect(() => {
     if (siteId) {
       const site: any = fmSites.find((obj: FleetManagerSite) => obj.id === siteId);
-      if (site) setSelectedSiteName(site.name);
+      if (site) changeSite(site.name);
     }
     // TODO: Fix eslint-ignore
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,21 +192,42 @@ const EventScheduler = ({ setIsLoading, schedulerType }: EventSchedulerProps) =>
     <EventSchedulerContext.Provider value={contextValue}>
       {schedulerType === 'FM'
           && (
-            <div style={{
-              padding: '16px', paddingLeft: '32px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '350px',
+            <Box sx={{
+              padding: '16px',
+              paddingLeft: '32px',
+              alignItems: 'flex-end',
+              display: 'flex',
+              gap: '16px',
+              width: '100%',
             }}
             >
-              <Typography variant="headingS" text="Site Selector" />
-              <Select
-                label={schedulerLabels.fleetManager.siteSelector}
-                menuItems={siteNames}
-                value={selectedSiteName}
-                onChange={(e) => changeSite(e.target.value)}
-              />
-            </div>
+              <Box sx={{ display: 'flex', gap: '8px', flexDirection: 'column' }}>
+                <Typography variant="headingS" text="Site Selector" />
+                <Select
+                  minWidth={160}
+                  error={siteSelectorError}
+                  label={schedulerLabels.fleetManager.siteSelector}
+                  menuItems={siteNames}
+                  value={selectedSiteName}
+                  onChange={(e) => changeSite(e.target.value)}
+                />
+              </Box>
+              {
+                siteSelectorError
+                && (
+                <Box sx={{
+                  display: 'flex', gap: '8px', paddingBottom: '8px', alignItems: 'center',
+                }}
+                >
+                  <Icon color="error" src="CancelFilled" />
+                  <Typography text={schedulerLabels.fleetManager.siteDisconnected} color="error" variant="helperText" />
+                </Box>
+                )
+              }
+            </Box>
           )}
       <CardRow alignItems="flex-start" direction="row">
-        {siteId
+        {siteId && !siteSelectorError
           ? (
             <>
               <AddEvent />
@@ -197,7 +236,11 @@ const EventScheduler = ({ setIsLoading, schedulerType }: EventSchedulerProps) =>
           )
           : (
             <Box sx={noSelectedItemBoxSx(theme)}>
-              <Typography text={schedulerLabels.fleetManager.noSiteSelected} variant="headingM" />
+              {
+                siteSelectorError
+                  ? <Typography text={schedulerLabels.fleetManager.siteDisconnected} variant="headingM" />
+                  : <Typography text={schedulerLabels.fleetManager.noSiteSelected} variant="headingM" />
+              }
             </Box>
           )}
       </CardRow>

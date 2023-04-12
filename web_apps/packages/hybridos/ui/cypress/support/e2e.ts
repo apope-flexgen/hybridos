@@ -20,4 +20,4 @@ import './commands'
 // require('./commands')
 
 // On uncaught exception, do not fail test.
-Cypress.on('uncaught:exception' (, runnable) => false)
+Cypress.on('uncaught:exception', (runnable) => false)

@@ -1,0 +1,12 @@
+{
+    "new_doc_1" : {
+        "string" : "kaufen Sie jede Woche vier gute bequeme Pelze!@#$%^&*.,?/~|<>{}[]()",
+        "int" : 917,
+        "float" : 3.14159,
+        "boolean" : true,
+        "string_array" : ["Welt", "hallo"],
+        "int_array" : [6, 7, 8, 9, 10],
+        "float_array" : [6.78, 7.89, 8.910, 9.1011, 10.1112],
+        "boolean_array" : [false, true, false]
+    }
+}

@@ -6,7 +6,7 @@ import { User } from 'src/users/user.schema';
 import { FimsMsg, FIMS_SERVICE, IFimsService } from '../fims/interfaces/fims.interface';
 import { IDBIService, URIs } from './dbi.interface';
 
-export class DBIService implements IDBIService { 
+export class DBIService implements IDBIService {
     constructor(
         @Inject(FIMS_SERVICE)
         private readonly fimsService: IFimsService,
@@ -29,25 +29,25 @@ export class DBIService implements IDBIService {
 
     private sendToFims = async (
         uri: string,
-        data: { 
-            data?: object[],
-            username?: string
-        },
+        data: { data: object[] },
         user?: User,
     ) => {
         let body: any = { ...data };
+
         if (!body.data) {
             if (user) {
                 body.username = user.username;
                 body.userrole = user.role;
             }
+
             body.created = Date.now();
         }
+
         return this.fimsService.send({
             method: 'post',
-            uri: uri,
+            uri,
             replyto: '',
-            body: body,
+            body,
             username: body.username ?? ''
         });
     }
@@ -76,7 +76,10 @@ export class DBIService implements IDBIService {
         return response.body['layout'];
     }
 
-    postUIConfigAuditLog = async (data): Promise<FimsMsg> => {
-        return this.sendToFims(`/dbi${URIs.UI_Config_Audit_Log}${Date.now()}`, data);
+    postUIConfigAuditLog = async (
+        data,
+        user: User
+    ): Promise<FimsMsg> => {
+        return this.sendToFims(`/dbi${URIs.UI_Config_Audit_Log}${Date.now()}`, data, user);
     }
 }

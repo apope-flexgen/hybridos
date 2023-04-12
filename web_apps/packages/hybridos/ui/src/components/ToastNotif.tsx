@@ -1,4 +1,6 @@
-import { IconButton, NotificationColor, Snackbar, Box } from '@flexgen/storybook';
+import {
+  IconButton, NotificationColor, Snackbar,
+} from '@flexgen/storybook';
 import { useContext } from 'react';
 import { NotifContext, NotifContextType } from 'src/contexts/NotifContext';
 

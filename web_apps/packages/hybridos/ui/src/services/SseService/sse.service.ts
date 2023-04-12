@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable no-constructor-return */
 // FIXME: this should not be here
-const URL = 'https://172.16.1.80:3001'
-let instance: SseService | null = null
+const URL = 'https://172.16.1.80:3001';
+let instance: SseService | null = null;
 class SseService {
   currentEvtSource: EventSource | null = null;
 

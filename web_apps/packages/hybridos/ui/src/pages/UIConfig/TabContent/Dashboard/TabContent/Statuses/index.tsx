@@ -1,14 +1,13 @@
 // TODO: fix lint
 /* eslint-disable react/no-array-index-key */
 import {
-  CardRow, Divider, Label, MuiButton, TextField,
+  Accordion, CardRow, Divider, Label, MuiButton, TextField,
 } from '@flexgen/storybook';
 import { ChangeEvent, useState } from 'react';
 import { Dashboard, Status } from 'shared/types/dtos/dashboards.dto';
-import Accordion from 'src/components/Accordion';
 import { useDashboardsContext } from 'src/pages/UIConfig/TabContent/Dashboard';
 import { ColumnTitles, TextFieldsContainer } from 'src/pages/UIConfig/TabContent/Dashboard/TabContent/styles';
-import { AddItemButtonSX } from 'src/pages/UIConfig/TabContent/styles';
+import { AddItemButtonSX, DeleteButtonContainer } from 'src/pages/UIConfig/TabContent/styles';
 import {
   ADD_STATUS, DELETE_STATUS, items, newStatus, STATUS,
 } from './helpers/constants';
@@ -86,12 +85,11 @@ const Statuses = () => {
       <Divider orientation="horizontal" variant="fullWidth" />
       {selectedDashboard?.status.map((st, index) => (
         <Accordion
-          deleteText={DELETE_STATUS}
           expanded={expanded.includes(index)}
+          expandIcon={!expanded.includes(index) ? 'Edit' : undefined}
+          heading={st.name || ''}
           key={index}
-          name={st.name || ''}
-          onDelete={() => handleDelete(index)}
-          onExpand={(_, exp) => handleExpand(index, exp)}
+          onChange={(exp) => handleExpand(index, exp)}
         >
           <TextFieldsContainer>
             {items.map((item, i) => (
@@ -103,9 +101,18 @@ const Statuses = () => {
                 label={item.label}
                 onChange={(e) => handleTextFieldChange(e, index)}
                 value={st[item.key as keyof Status]}
+                type={item.type as 'number' | undefined}
               />
             ))}
           </TextFieldsContainer>
+          <DeleteButtonContainer>
+            <MuiButton
+              color="error"
+              label={DELETE_STATUS}
+              onClick={() => handleDelete(index)}
+              variant="outlined"
+            />
+          </DeleteButtonContainer>
         </Accordion>
       ))}
       <MuiButton

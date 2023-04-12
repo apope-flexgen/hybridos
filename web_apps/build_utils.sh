@@ -81,11 +81,6 @@ function build_web_server()
     cp ./executable/web_server $build_output
     cp web_server.service $build_output
 
-    # Merge config files
-    jq -s '.[0] * .[1]' $config_dir/web_server.json ./configs/release-config > $config_dir/temp-config.json
-    rm "$config_dir/web_server.json"
-    mv $config_dir/temp-config.json $config_dir/web_server.json
-
     cd $root_dir
 }
 

@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 
-const mockAppSettings = {
+const mocksiteAdmins = {
   password: {
     multi_factor_authentication: false,
     password_expiration: false,
@@ -26,9 +26,9 @@ const mockAppSettings = {
 
 export const radiusTestMock = rest.get('/radius-test', (req, res, ctx) => res(ctx.json({ message: 'Mock test response' })));
 
-export const siteAdminMock = rest.get('/app-settings', (req, res, ctx) => res(ctx.json(mockAppSettings)));
+export const siteAdminMock = rest.get('/site-admins', (req, res, ctx) => res(ctx.json(mocksiteAdmins)));
 
-export const siteAdminPostMock = rest.post('/app-settings', async (req, res, ctx) => {
-  const newAppSettings = await req.json();
-  return res(ctx.json(newAppSettings));
+export const siteAdminPostMock = rest.post('/site-admins', async (req, res, ctx) => {
+  const newsiteAdmins = await req.json();
+  return res(ctx.json(newsiteAdmins));
 });

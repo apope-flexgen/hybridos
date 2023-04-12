@@ -1,4 +1,5 @@
 import { Table } from '@flexgen/storybook';
+import { Order } from '@flexgen/storybook/dist/components/DataDisplay/Table/Table-Sorting';
 import { ChangeEvent, FC } from 'react';
 import { Event } from 'shared/types/dtos/events.dto';
 
@@ -15,6 +16,9 @@ interface EventsTableProps {
   total: number,
   handleChangeRowsPerPage: (event: ChangeEvent<HTMLInputElement>) => void, // eslint-disable-line no-unused-vars
   handleChangePage: (event: unknown, newPage: number) => void, // eslint-disable-line no-unused-vars
+  handleRequestSort: (event: unknown, property: keyof Event) => void, // eslint-disable-line no-unused-vars
+  orderBy: keyof Event,
+  order: Order
   serverSide: boolean,
 }
 
@@ -25,6 +29,9 @@ const EventsTable: FC<EventsTableProps> = ({
   total,
   handleChangeRowsPerPage,
   handleChangePage,
+  handleRequestSort,
+  order,
+  orderBy,
   serverSide,
 }: EventsTableProps) => (
   <Table
@@ -41,7 +48,10 @@ const EventsTable: FC<EventsTableProps> = ({
     tableHeading={tableHeading}
     tableLayout={tableLayout}
     total={total}
-  />
+    handleRequestSort={handleRequestSort}
+    order={order} 
+    orderBy={orderBy}
+    />
 );
 
 export default EventsTable;

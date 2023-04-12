@@ -44,7 +44,7 @@ export default function useScheduler(currentUser: { role: string }, product: str
   } as ModalStateType);
 
   const displayTabs = role === Roles.Admin || role === Roles.Developer;
-  const disableAllFields = role === Roles.Observer
+  const disableAllFields = role === Roles.Observer;
 
   const [configured, setConfigured] = useState(false);
 
@@ -104,7 +104,7 @@ export default function useScheduler(currentUser: { role: string }, product: str
     setModalOpen,
     modalState,
     setModalState,
-    disableAllFields
+    disableAllFields,
   };
 
   /** This checks if the configuration object (if found) is valid */

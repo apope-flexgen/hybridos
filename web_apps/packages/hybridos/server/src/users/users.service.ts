@@ -11,9 +11,9 @@ import { authenticator } from 'otplib'
 import { Roles } from '../../../shared/types/api/Users/Users.types'
 
 import {
-    APP_SETTINGS_SERVICE,
-    IAppSettingsService,
-} from '../appSettings/interfaces/appSetting.service.interface'
+    SITE_ADMINS_SERVICE,
+    ISiteAdminsService,
+} from '../siteAdmins/interfaces/siteAdmin.service.interface'
 import { User as UserDto } from './dtos/user.dto'
 import {
     NegativeOldPasswordCapacityException,
@@ -34,7 +34,7 @@ import { User, UserDocument } from './user.schema'
 export class UsersService implements IUsersService {
     constructor(
         @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-        @Inject(APP_SETTINGS_SERVICE) private readonly appSettingsService: IAppSettingsService,
+        @Inject(SITE_ADMINS_SERVICE) private readonly siteAdminsService: ISiteAdminsService,
         @Inject(forwardRef(() => DEFAULT_USER_SERVICE))
         private readonly defaultUserService: IDefaultUserService
     ) {}
@@ -55,7 +55,7 @@ export class UsersService implements IUsersService {
         if (userDto?.password) {
             const HASH_COST = 10
             userDto.password = await hash(userDto.password, HASH_COST)
-            userDto.old_passwords = new Array<string>()
+            userDto.old_passwords = new Array<string>(userDto.password)
 
             userDto.pwdUpdatedDate = new Date(Date.now())
         }
@@ -190,7 +190,7 @@ export class UsersService implements IUsersService {
     }
 
     public async update(id: string, updateBody: UserDto): Promise<UserResponse> {
-        const appSettings = await this.appSettingsService.find()
+        const siteAdmins = await this.siteAdminsService.find()
         const existingUser = await this.userModel.findById(id)
 
         if (existingUser == null) {
@@ -200,7 +200,7 @@ export class UsersService implements IUsersService {
         const update = await this.buildUserUpdate(
             existingUser,
             updateBody,
-            appSettings.password.old_passwords
+            siteAdmins.password.old_passwords
         )
 
         const result = await this.userModel
@@ -262,7 +262,7 @@ export class UsersService implements IUsersService {
             if (!passwordsMatch) {
                 for (const oldPassword of existingUser.old_passwords) {
                     // TODO: Add compare to auth service.
-                    const match = await compare(newUser.password, oldPassword)
+                    const match = await compare(updateBody.password, oldPassword)
 
                     if (match) {
                         throw new OldPasswordMatchException()
@@ -278,9 +278,9 @@ export class UsersService implements IUsersService {
                         oldPasswordCapacity - 1
                     )
                     existingUser.old_passwords.push(newUser.password)
-                    updateFields['oldpasswords'] = existingUser.old_passwords
+                    updateFields['old_passwords'] = existingUser.old_passwords
                 } else {
-                    updateFields['oldpasswords'] = new Array<string>()
+                    updateFields['old_passwords'] = new Array<string>()
                 }
             }
         }

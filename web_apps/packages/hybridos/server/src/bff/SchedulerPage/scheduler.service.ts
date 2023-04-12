@@ -128,19 +128,11 @@ export class SchedulerService {
         }
 
         // TODO: scheduler/configuration should return something, but it gives a 408 request timeout.
-        // this solution is a bandaide.
+        // this solution is a bandaid.
         this.fimsService.send({
             method: 'set',
             uri: '/scheduler/configuration',
             replyto: '/web_server/scheduler/add_config',
-            body: JSON.stringify(configDto),
-            username: user.sub
-        });
-
-        this.fimsService.send({
-            method: 'pub',
-            uri: '/scheduler/configuration',
-            replyto: '/web_server/scheduler/add_config_pub',
             body: JSON.stringify(configDto),
             username: user.sub
         });

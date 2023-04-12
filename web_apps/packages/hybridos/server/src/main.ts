@@ -4,36 +4,20 @@ import { NestFactory } from '@nestjs/core'
 import { AuthWsAdapter } from './adapters/authWs.adapter'
 // import * as cookieParser from 'cookie-parser';
 import cookieParser from 'cookie-parser'
-import * as fs from 'node:fs'
-import * as path from 'node:path'
 
 import { AppModule } from './app/app.module'
 import { AppEnvService } from './environment/appEnv.service'
 import { NestSwagger } from './openapi/nestswagger'
 import { RequestMethod } from '@nestjs/common'
 import { useContainer } from 'class-validator'
+import { ProcessArgvValidation } from './startup/ProcessArgValidation'
 
 // eslint-disable-next-line max-statements
 async function bootstrap() {
-    const webUIConfigPath = process.argv[3]
-    const configPathArgExists = fs.existsSync(webUIConfigPath)
-
-    let sslPath: string
-    if (configPathArgExists) {
-        sslPath = path.resolve(webUIConfigPath, 'ssl')
-    }
-    const keyFilePath = configPathArgExists
-        ? path.join(sslPath, 'hybridos-key.pem')
-        : './src/certs/key.pem'
-    const certFilePath = configPathArgExists
-        ? path.join(sslPath, 'hybridos-cert.pem')
-        : './src/certs/server.crt'
-
+    const processArgs = new ProcessArgvValidation()
     const httpsOptions = {
-        // key: fs.readFileSync('./src/certs/key.pem'),
-        // cert: fs.readFileSync('./src/certs/server.crt'),
-        key: fs.readFileSync(keyFilePath),
-        cert: fs.readFileSync(certFilePath),
+        key: processArgs.ssl.keyFile,
+        cert: processArgs.ssl.certFile,
     }
     const app = await NestFactory.create(AppModule, {
         httpsOptions,
@@ -41,7 +25,8 @@ async function bootstrap() {
     useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
     const appEnvService = app.get(AppEnvService)
-    const PORT = appEnvService.getAppServerPort()
+    const DEV_MODE_PORT = 3001
+    const PORT = process.env.NODE_ENV === 'dev' ? DEV_MODE_PORT : appEnvService.getAppServerPort()
 
     // Generate OpenAPI Documentation
     const nestSwagger = new NestSwagger(app)
@@ -54,7 +39,7 @@ async function bootstrap() {
         credentials: true,
     })
     app.setGlobalPrefix('api', {
-        exclude: [{ path: 'rest', method: RequestMethod.ALL }],
+        exclude: [{ path: 'rest/:endpoint*', method: RequestMethod.ALL }],
     })
     await app.listen(PORT)
     console.log('nest_web_server listening on port ' + PORT)

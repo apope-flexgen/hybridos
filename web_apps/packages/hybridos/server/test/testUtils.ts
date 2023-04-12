@@ -7,7 +7,7 @@ import request from './testReqAgent'
 import { Roles } from '../../shared/types/api/Users/Users.types'
 import { User } from '../../shared/types/dtos/auth.dto'
 
-import { AppSetting } from '../src/appSettings/interfaces/appSetting.interface'
+import { SiteAdmin } from '../src/siteAdmins/interfaces/siteAdmin.interface'
 
 export const HTTP_TIMEOUT = 15000
 export const ACCESS_TOKEN_SECRET_FIMS_SOCKET = 'test_secret'
@@ -36,7 +36,7 @@ export const FORBIDDEN_RESPONSE = {
 export const createTestApiApplication = (moduleFixture: TestingModule) => {
     const app = moduleFixture.createNestApplication()
     app.setGlobalPrefix('api', {
-        exclude: [{path: 'rest', method: RequestMethod.ALL}]
+        exclude: [{path: 'rest/:endpoint*', method: RequestMethod.ALL}]
     })
     return app
   }
@@ -92,6 +92,15 @@ export const mockAppEnvService = (mongoUri: string, accessTokenGetter?: jest.Moc
         getRefreshTokenTimeout: jest.fn().mockImplementation(() => {
             return REFRESH_TOKEN_TIMEOUT
         }),
+        getThrottleTTL: jest.fn().mockImplementation(() => {
+            return 100
+        }),
+        getThrottleLimit: jest.fn().mockImplementation(() => {
+            return 100
+        }),
+        getAggregatedEndpoints: jest.fn().mockImplementation(() => {
+            return []
+        }),
     }
 }
 
@@ -106,7 +115,7 @@ const userTemplate = async (pwdExpired: boolean, mfaEnabled: boolean, role: Role
     }
 }
 
-export const checkAppSettingsFields = (res, app) => {
+export const checksiteAdminsFields = (res, app) => {
     for (const property in app) {
         expect(res.body[property]).toBeDefined()
         for (const subProperty in app[property]) {
@@ -115,12 +124,12 @@ export const checkAppSettingsFields = (res, app) => {
     }
 }
 
-export const initializeSite = async (uri: string, site: AppSetting) => {
+export const initializeSite = async (uri: string, site: SiteAdmin) => {
     const con = await MongoClient.connect(uri, {})
     const tdb = con.db('integrationTestDb')
 
     expect(tdb).toBeDefined()
-    const col = tdb.collection('appsettings')
+    const col = tdb.collection('siteAdmins')
     const result = await col.insertMany([{ ...site }])
     expect(result.insertedCount).toStrictEqual(1)
     expect(await col.countDocuments({})).toBe(1)

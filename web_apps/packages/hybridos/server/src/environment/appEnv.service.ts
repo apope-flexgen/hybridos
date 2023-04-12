@@ -4,6 +4,7 @@ import * as fs from 'fs'
 import { LoginInfo, SiteConfiguration } from 'src/app/app.interface'
 import { ValidationErrors } from '../exceptions/validationErrors.exception'
 import { AppConfig } from './AppConfig'
+import * as appConsts from './appEnv.constants'
 
 @Injectable()
 export class AppEnvService {
@@ -18,51 +19,51 @@ export class AppEnvService {
     }
 
     getMongoUri(): string {
-        return `${this.appConfig.MONGO_URL}/${this.appConfig.MONGO_DB_NAME}`
+        return `${appConsts.MONGO_URL}/${appConsts.MONGO_DB_NAME}`
     }
 
     getMongoName(): string {
-        return this.appConfig.MONGO_DB_NAME
+        return appConsts.MONGO_DB_NAME
     }
 
     getMongoURL(): string {
-        return this.appConfig.MONGO_URL
+        return appConsts.MONGO_URL
     }
 
     getThrottleTTL(): number {
-        return 60
+        return appConsts.APP_THROTTLE_CONFIG.default_throttle.ttl
     }
 
     getThrottleLimit(): number {
-        return 210
+        return appConsts.APP_THROTTLE_CONFIG.default_throttle.limit
     }
 
     getHTTPTimeout(): number {
-        return this.appConfig.HTTP_TIMEOUT
+        return appConsts.HTTP_TIMEOUT
     }
 
     getHttpTimeout(): number {
-        return this.appConfig.HTTP_TIMEOUT
+        return appConsts.HTTP_TIMEOUT
     }
 
     getAccessTokenSecretFimsSocket(): string {
-        return this.appConfig.ACCESS_TOKEN_SECRET_FIMS_SOCKET
+        return appConsts.ACCESS_TOKEN_SECRET_FIMS_SOCKET
     }
 
     getRefreshTokenTimeout(): number {
-        return this.appConfig.REFRESH_TOKEN_TIMEOUT
+        return appConsts.REFRESH_TOKEN_TIMEOUT
     }
 
     getAccessTokenTimeout(): number {
-        return this.appConfig.ACCESS_TOKEN_TIMEOUT
+        return appConsts.ACCESS_TOKEN_TIMEOUT
     }
 
     getAppServerPort(): number {
-        return this.appConfig.APP_SERVER_PORT
+        return appConsts.APP_SERVER_PORT
     }
 
     getAggregatedEndpoints() {
-        return this.appConfig.aggregatedEndpoints
+        return this.appConfig.aggregatedEndpoints || {}
     }
 
     getLoginInfo(): LoginInfo {

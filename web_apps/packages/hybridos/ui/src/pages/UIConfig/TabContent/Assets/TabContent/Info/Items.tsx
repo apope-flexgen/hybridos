@@ -10,7 +10,6 @@ import { SEPARATE_INPUTS_WITH_COMMA } from 'src/pages/UIConfig/TabContent/helper
 import {
   ADD_UNITS,
   ALARM_FIELDS,
-  ASSET_KEY,
   BASE_URI,
   CUSTOM_REGEX,
   ENABLE_SUMMARY,
@@ -20,7 +19,6 @@ import {
   HOW_MANY_UNITS,
   ITEM_NAME,
   ITEM_NAME_HELPER_TEXT,
-  SELECT_KEY,
 } from './helpers/constants';
 import { ColumnLeft, Row } from './styles';
 
@@ -68,19 +66,6 @@ const Items = () => {
 
   return (
     <>
-      <Row>
-        <ColumnLeft>
-          <Typography text={ASSET_KEY} variant="bodyL" />
-        </ColumnLeft>
-        <TextField
-          color="primary"
-          disableLabelAnimation
-          id="assetKey"
-          label={SELECT_KEY}
-          onChange={handleTextFieldChange}
-          value={selectedAsset?.info.assetKey || ''}
-        />
-      </Row>
       <Divider orientation="horizontal" variant="fullWidth" />
       <Row>
         <ColumnLeft>
@@ -94,6 +79,7 @@ const Items = () => {
           label={ITEM_NAME}
           onChange={handleTextFieldChange}
           value={selectedAsset?.info.name || ''}
+          required
         />
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />

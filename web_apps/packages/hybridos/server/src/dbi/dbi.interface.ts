@@ -18,10 +18,11 @@ export interface IDBIService {
   postUIConfigAssets(data: { data: object[] }, user: User): Promise<AssetsResponse>
   postUIConfigDashboards(data: { data: object[] }, user: User): Promise<DashboardsResponse>
   postUIConfigLayouts(data: { data: object[] }, user: User): Promise<LayoutsResponse>
-  postUIConfigAuditLog(data: {
-    username?: string,
-    userrole?: string,
-    modified_field?: string,
-    modified_value?: boolean | string
-  }): Promise<FimsMsg>
+  postUIConfigAuditLog(
+    data: {
+      modified_field?: string,
+      modified_value?: boolean | string
+    },
+    user: User
+  ): Promise<FimsMsg>
 }

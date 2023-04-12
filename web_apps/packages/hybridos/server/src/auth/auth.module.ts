@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { AppEnvModule } from '../environment/appEnv.module'
-import { AppSettingsModule } from '../appSettings/appSettings.module'
+import { SiteAdminsModule } from '../siteAdmins/siteAdmins.module'
 import { UsersModule } from '../users/users.module'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
@@ -26,6 +26,7 @@ import { ValidAccessTokenService } from './validJWT.service'
 import { DBIModule } from 'src/dbi/dbi.module'
 import { DBI_SERVICE } from 'src/dbi/dbi.constants'
 import { DBIService } from 'src/dbi/dbi.service'
+import { BasicAccessStrategy } from './strategies/basicAccessAuth.strategy'
 
 @Module({
     imports: [
@@ -34,7 +35,7 @@ import { DBIService } from 'src/dbi/dbi.service'
         JwtModule.register({
             secret: 'supersecretkey',
         }),
-        AppSettingsModule,
+        SiteAdminsModule,
         AppEnvModule,
         DBIModule
     ],
@@ -72,6 +73,7 @@ import { DBIService } from 'src/dbi/dbi.service'
             provide: DBI_SERVICE,
             useClass: DBIService,
         },
+        BasicAccessStrategy,
     ],
     // exports: [AuthService],
 })

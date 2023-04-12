@@ -1,15 +1,15 @@
 // TODO: fix lint
 /* eslint-disable max-lines */
 import {
+  Accordion,
   CardRow, Divider, Label, MuiButton, Select, TextField,
 } from '@flexgen/storybook';
 import { SelectChangeEvent } from '@mui/material';
-import { ChangeEvent, Fragment, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { AllControl, Asset } from 'shared/types/dtos/assets.dto';
-import Accordion from 'src/components/Accordion';
 import { useAssetsContext } from 'src/pages/UIConfig/TabContent/Assets';
 import { ColumnTitles, TextFieldsContainer } from 'src/pages/UIConfig/TabContent/Assets/TabContent/styles';
-import { AddItemButtonSX } from 'src/pages/UIConfig/TabContent/styles';
+import { AddItemButtonSX, DeleteButtonContainer } from 'src/pages/UIConfig/TabContent/styles';
 import {
   ADD_ALL_CONTROLS, ALL_CONTROLS, DELETE_ALL_CONTROLS, items, newAllControl,
 } from './helpers/constants';
@@ -104,17 +104,17 @@ const AllControls = () => {
       <Divider orientation="horizontal" variant="fullWidth" />
       {selectedAsset?.allControls.map((allControl, index) => (
         <Accordion
-          deleteText={DELETE_ALL_CONTROLS}
           expanded={expanded.includes(index)}
+          expandIcon={!expanded.includes(index) ? 'Edit' : undefined}
+          heading={allControl.name || ''}
+          // TODO: fix lint
           // eslint-disable-next-line react/no-array-index-key
           key={index}
-          name={allControl.name || ''}
-          onDelete={() => handleDelete(index)}
-          onExpand={(_, exp) => handleExpand(index, exp)}
+          onChange={(exp) => handleExpand(index, exp)}
         >
           <TextFieldsContainer>
             {items.map(({
-              key, label, helperText, select, options,
+              key, label, helperText, select, options, type,
             }) => (
               select ? (
                 <Select
@@ -132,10 +132,19 @@ const AllControls = () => {
                   label={label}
                   onChange={(e) => handleTextFieldChange(e, index)}
                   value={allControl[key as keyof AllControl]}
+                  type={type as 'number' | undefined}
                 />
               )
             ))}
           </TextFieldsContainer>
+          <DeleteButtonContainer>
+            <MuiButton
+              color="error"
+              label={DELETE_ALL_CONTROLS}
+              onClick={() => handleDelete(index)}
+              variant="outlined"
+            />
+          </DeleteButtonContainer>
         </Accordion>
       ))}
       <MuiButton

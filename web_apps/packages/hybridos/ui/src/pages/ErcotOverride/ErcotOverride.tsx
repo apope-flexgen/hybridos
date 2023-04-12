@@ -15,7 +15,9 @@ import {
 import {
   useCallback, useEffect, useState,
 } from 'react';
+import { Roles } from 'shared/types/api/Users/Users.types';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import { PageProps } from 'src/pages/PageTypes';
 import QueryService from 'src/services/QueryService';
 import {
   variableOverrideColumns,
@@ -27,8 +29,6 @@ import {
   UPDATE_VARIABLE_OVERRIDE_URL,
 } from './Constants';
 import UnconfiguredContainer from './UnconfiguredContainer/UnconfiguredContainer';
-import { PageProps } from 'src/pages/PageTypes';
-import { Roles } from 'shared/types/api/Users/Users.types';
 
 const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: PageProps) => {
   const axiosInstance = useAxiosWebUIInstance();
@@ -89,15 +89,16 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
         </Box>
       );
     }
-    else if (role !== Roles.Observer && enableEditValue[variable] && typeof variableValues[`${variable}_actual`] === 'boolean') {
+    if (role !== Roles.Observer && enableEditValue[variable] && typeof variableValues[`${variable}_actual`] === 'boolean') {
       return (
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Select
+            minWidth={160}
             label="Manual Override"
-            menuItems={["true", "false"]}
+            menuItems={['true', 'false']}
             value={overrideEdits[variable].toString()}
             onChange={(e) => {
-              const newValue = e.target.value === 'true' ? true : false
+              const newValue = e.target.value === 'true';
               setOverrideEdits({ ...overrideEdits, [variable]: newValue });
             }}
             width="small"
@@ -139,24 +140,26 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
         variable_name: variable,
         ercot_standard: variableValues[`${variable}_actual`].toString(),
         current_value: variableValues[`${variable}_select`].toString(),
-        enable: 
-        <Switch
-          disabled={role === Roles.Observer}
-          color="primary"
-          onChange={(value) => { handleEnableOverride(siteId, value, variable); }}
-          value={variableValuesFromAPI[`${variable}_override`]}
-        />,
-        edit_override: 
-        role !== Roles.Observer 
-        ? <IconButton
-            color="primary"
-            icon="Edit"
-            onClick={() => {
-              setEnableEdit({ ...enableEdit, [variable]: true });
-            }}
-            size="small"
-          />
-        : <Box/>,
+        enable:
+  <Switch
+    disabled={role === Roles.Observer}
+    color="primary"
+    onChange={(value) => { handleEnableOverride(siteId, value, variable); }}
+    value={variableValuesFromAPI[`${variable}_override`]}
+  />,
+        edit_override:
+        role !== Roles.Observer
+          ? (
+            <IconButton
+              color="primary"
+              icon="Edit"
+              onClick={() => {
+                setEnableEdit({ ...enableEdit, [variable]: true });
+              }}
+              size="small"
+            />
+          )
+          : <Box />,
         manual_override: handleOverride(enableEdit, variable, siteId),
       };
 
@@ -194,6 +197,7 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
       setOverrideEdits(tempOverrideEdits);
       generateRowData(siteId, newVariableNames, newVariableValues);
     } catch (e: any) {
+      // TODO: add error handler
     } finally {
       setIsLoading(false);
     }
@@ -205,6 +209,7 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
       const res = await axiosInstance.get(SITE_NAMES_URL);
       setSiteNames(res.data);
     } catch (e: any) {
+      // TODO: add error handler
     } finally {
       setIsLoading(false);
     }

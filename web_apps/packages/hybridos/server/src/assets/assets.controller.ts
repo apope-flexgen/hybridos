@@ -27,13 +27,14 @@ export class AssetsController {
     @Post()
     async postAssets(@Body() assets, @UserFromAccessToken() user: User): Promise<AssetsResponse> {
         const data: Layout[] = assets.data.reduce((acc, el, index) => {
-            let key = el.info.assetKey.replaceAll(' ', '_')
+            let key = el.info.assetKey || el.info.name.toLowerCase().replaceAll(' ', '_');
             if (acc.some((item) => item.info.key === key)) {
                 key = `${key}_${index}`
             }
+            el.info.assetKey = key;
             acc.push({
                 info: {
-                    name: el.info.assetKey,
+                    name: el.info.name,
                     key
                 }
             })

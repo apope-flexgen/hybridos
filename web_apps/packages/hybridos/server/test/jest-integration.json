@@ -5,6 +5,15 @@
         "ts"
     ],
     "rootDir": "../",
+    "modulePaths": [
+        "<rootDir>",
+        "<rootDir>/src"
+    ],
+    "moduleNameMapper": {
+        "shared/(.*)": [
+            "/home/hybridos/web_apps/packages/hybridos/shared/$1"
+        ]
+    },
     "testEnvironment": "node",
     "testRegex": ".integration.spec.ts$",
     "transform": {

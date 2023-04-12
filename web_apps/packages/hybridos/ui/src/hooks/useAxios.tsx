@@ -9,7 +9,7 @@ import { axiosWebUIInstance } from 'src/services/axios';
 import { useAuth } from './useAuth';
 import useRefreshToken from './useRefresh';
 
-const useAxiosWebUIInstance = (skipGenericError = false) => {
+const useAxiosWebUIInstance = (skipGenericError?: boolean) => {
   const refresh = useRefreshToken();
   const { auth } = useAuth();
   const { showErrorModal } = useErrorContext() as ErrorContextType;

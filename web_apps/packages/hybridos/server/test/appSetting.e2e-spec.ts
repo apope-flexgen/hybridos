@@ -4,13 +4,13 @@ import { Test, TestingModule } from '@nestjs/testing'
 import request from './testReqAgent'
 
 import { createTestApiApplication } from './testUtils'
-import { APP_SETTINGS_SERVICE } from '../src/appSettings/interfaces/appSetting.service.interface'
-import { AppSettingsController } from '../src/appSettings/appSettings.controller'
-import { CreateAppSettingsDto } from '../src/appSettings/dto/create-appSettings.dto'
+import { SITE_ADMINS_SERVICE } from '../src/siteAdmins/interfaces/siteAdmin.service.interface'
+import { SiteAdminsController } from '../src/siteAdmins/siteAdmins.controller'
+import { SiteAdminsDto } from '../src/siteAdmins/dto/create-siteAdmins.dto'
 
-describe('AppSettings (e2e)', () => {
+describe('SiteAdmins (e2e)', () => {
     let app: INestApplication
-    const defaultAppSettings = {
+    const defaultSiteAdmins = {
         password: {
             password_expiration: false,
             minimum_password_length: 8,
@@ -34,14 +34,14 @@ describe('AppSettings (e2e)', () => {
 
     beforeEach(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
-            controllers: [AppSettingsController],
+            controllers: [SiteAdminsController],
             providers: [
                 {
-                    provide: APP_SETTINGS_SERVICE,
+                    provide: SITE_ADMINS_SERVICE,
                     useValue: {
-                        find: jest.fn().mockResolvedValue(defaultAppSettings),
-                        create: jest.fn().mockImplementation((appSetting: CreateAppSettingsDto) => {
-                            return Promise.resolve({ ...appSetting })
+                        find: jest.fn().mockResolvedValue(defaultSiteAdmins),
+                        create: jest.fn().mockImplementation((siteAdmin: SiteAdminsDto) => {
+                            return Promise.resolve({ ...siteAdmin })
                         }),
                     },
                 },
@@ -56,15 +56,15 @@ describe('AppSettings (e2e)', () => {
         return request(app.getHttpServer())
             .get('/app-settings')
             .expect(200)
-            .expect(defaultAppSettings)
+            .expect(defaultSiteAdmins)
     })
 
     it('/POST app-settings', () => {
         return request(app.getHttpServer())
             .post('/app-settings')
-            .send(defaultAppSettings)
+            .send(defaultSiteAdmins)
             .expect(201)
-            .expect(defaultAppSettings)
+            .expect(defaultSiteAdmins)
     })
 
     afterAll(async () => {

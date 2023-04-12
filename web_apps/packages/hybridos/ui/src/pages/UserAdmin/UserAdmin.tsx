@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import {
   Box,
   CardContainer,
@@ -12,16 +11,22 @@ import { useCallback, useEffect, useState } from 'react';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import AddUserRow from './AddUserRow';
 import EditUserRow from './EditUserRow';
+import { PageProps } from 'src/pages/PageTypes';
+import { PasswordOptions, Roles, initialPasswordOptions } from 'shared/types/api/Users/Users.types';
+import { APP_SETTINGS_URL } from 'src/pages/SiteAdmin/SiteAdmin.constants';
+import { dataTableSx, nonDataTableSx, pageSx, titleBoxSx } from 'src/pages/UserAdmin/UserAdmin.styles'
+import { userColumns } from 'src/pages/UserAdmin/UserAdmin.constants';
 
-const UserAdmin = () => {
+const UserAdmin : React.FunctionComponent<PageProps> = ({ currentUser }: PageProps) => {
   const axiosInstance = useAxiosWebUIInstance();
+  const showDeveloper = currentUser.role === Roles.Developer
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [userData, setUserData] = useState<any>([]);
   const [userRows, setUserRows] = useState<any>([]);
-
   const [showAddUser, setShowAddUser] = useState<boolean>(false);
+  const [ passwordSettings, setPasswordSetttings ]  = useState<PasswordOptions>(initialPasswordOptions);
+  const [ oldPasswords, setOldPasswords ]  = useState<number>(1)
 
   const updateUserData = useCallback(async () => {
     try {
@@ -36,10 +41,30 @@ const UserAdmin = () => {
   const editButton = ({ onClickEvent }: any) => (
     <IconButton color="primary" icon="Edit" onClick={onClickEvent} size="small" />
   );
+  
+  const fetchPasswordData = useCallback(async () => {
+    try {
+      const res: any = await axiosInstance.get(APP_SETTINGS_URL)
+
+      const passwordOptions: PasswordOptions = {
+        passwordMinLength: res.data.password.minimum_password_length,
+        passwordMaxLength: res.data.password.maximum_password_length,
+        lowercase: res.data.password.lowercase,
+        uppercase: res.data.password.uppercase,
+        digit: res.data.password.digit,
+        special: res.data.password.special
+      }
+
+      setPasswordSetttings(passwordOptions)
+      setOldPasswords(res.data.password.old_passwords)
+    } finally {
+    }
+  }, [axiosInstance]);
 
   useEffect(() => {
     updateUserData();
-  }, [updateUserData]);
+    fetchPasswordData();
+  }, [updateUserData, fetchPasswordData]);
 
   useEffect(() => {
     const rowData = userData.map((user: any) => ({
@@ -49,54 +74,22 @@ const UserAdmin = () => {
       expandRowButton: editButton,
       expandRowContent: (
         <EditUserRow
+          showDeveloper={showDeveloper}
           setIsLoading={setIsLoading}
           updateUserData={updateUserData}
           user={user}
+          passwordOptions={passwordSettings}
+          oldPasswords={oldPasswords}
         />
       ),
     }));
     setUserRows(rowData);
-  }, [updateUserData, userData]);
-
-  const userColumns = [
-    {
-      id: 'user',
-      label: 'User',
-      minWidth: 70,
-    },
-    {
-      id: 'role',
-      label: 'Role',
-      minWidth: 100,
-    },
-    {
-      id: 'expandRowButton',
-      label: '',
-      minWidth: 15,
-      align: 'right' as const,
-    },
-  ];
+  }, [updateUserData, userData, fetchPasswordData, passwordSettings, oldPasswords]);
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '12px',
-        width: '100%',
-        flexGrow: 1,
-      }}
-    >
+    <Box sx={pageSx}>
       <PageLoadingIndicator isLoading={isLoading} type="primary" />
-      <Box
-        sx={{
-          width: '90%',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={titleBoxSx}>
         <Typography text="User Admin" variant="headingL" />
       </Box>
       <CardContainer
@@ -105,16 +98,10 @@ const UserAdmin = () => {
           width: '90%',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            padding: '12px',
-            gap: '15px',
-            flexDirection: 'column',
-            width: '100%',
-          }}
-        >
+        <Box sx={dataTableSx}>
+          <Box sx={nonDataTableSx}>
           <Typography text="MANAGE USERS" variant="headingS" />
+          </Box>
           <DataTable
             columns={userColumns}
             expandable
@@ -122,6 +109,7 @@ const UserAdmin = () => {
             rowsData={userRows}
             showExpandableRowIcons={false}
           />
+          <Box sx={nonDataTableSx}>
           <MuiButton
             label="Add New User"
             onClick={() => setShowAddUser(!showAddUser)}
@@ -131,11 +119,15 @@ const UserAdmin = () => {
           />
           {showAddUser && (
             <AddUserRow
+              showDeveloper={showDeveloper}
               setIsLoading={setIsLoading}
               setShowAddUser={setShowAddUser}
               updateUserData={updateUserData}
+              passwordOptions={passwordSettings}
+              oldPasswords={oldPasswords}
             />
           )}
+          </Box>
         </Box>
       </CardContainer>
     </Box>

@@ -5,7 +5,7 @@ import { User } from '../../../../shared/types/dtos/auth.dto'
 import { AUTH_SERVICE, IAuthService } from '../interfaces/auth.service.interface'
 import { IMfaService, MFA_SERVICE } from '../interfaces/mfa.service.interface'
 import { IPassExpService, PASS_EXP_SERVICE } from '../interfaces/passExp.service.interface'
-import { IAppSettingsService, APP_SETTINGS_SERVICE } from '../../appSettings/interfaces/appSetting.service.interface'
+import { ISiteAdminsService, SITE_ADMINS_SERVICE } from '../../siteAdmins/interfaces/siteAdmin.service.interface'
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -16,15 +16,15 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         private readonly mfaService: IMfaService,
         @Inject(PASS_EXP_SERVICE)
         private readonly passExpService: IPassExpService,
-        @Inject(APP_SETTINGS_SERVICE)
-        private readonly appSettingService: IAppSettingsService
+        @Inject(SITE_ADMINS_SERVICE)
+        private readonly siteAdminsService: ISiteAdminsService
     ) {
         super()
     }
     async validate(username: string, password: string): Promise<User> {
         // get site admin settings
-        const appSettings = await this.appSettingService.find()
-        const { is_enabled, ip_address, port, secret_phrase, wait_time, is_local_auth_disabled } = appSettings.radius
+        const siteAdmins = await this.siteAdminsService.find()
+        const { is_enabled, ip_address, port, secret_phrase, wait_time, is_local_auth_disabled } = siteAdmins.radius
 
         // only authenticate if radius is enabled
         if (!is_local_auth_disabled) {

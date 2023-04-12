@@ -131,6 +131,7 @@ export const schedulerLabels = {
   },
   fleetManager: {
     siteSelector: 'Select Site',
+    siteDisconnected: 'Selected Site is Disconnected',
     noSiteSelected: 'Select Site to View Event Scheduler',
   },
 };

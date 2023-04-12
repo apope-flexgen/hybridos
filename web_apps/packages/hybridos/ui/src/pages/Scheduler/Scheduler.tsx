@@ -16,10 +16,10 @@ import {
 import { PageProps } from 'src/pages/PageTypes';
 import { ModalStateType } from 'src/pages/Scheduler/SchedulerComponents/Modal/Helpers';
 import SchedulerModal from 'src/pages/Scheduler/SchedulerComponents/Modal/Modal';
-import TabContent from './SchedulerComponents/TabContent';
-import { schedulerTabs } from './SchedulerHelpers';
-import { SchedulerTabs, FleetManagerSite } from './SchedulerTypes';
-import useScheduler from './hooks';
+import TabContent from 'src/pages/Scheduler/SchedulerComponents/TabContent';
+import { schedulerTabs } from 'src/pages/Scheduler/SchedulerHelpers';
+import { SchedulerTabs, FleetManagerSite } from 'src/pages/Scheduler/SchedulerTypes';
+import useScheduler from 'src/pages/Scheduler/hooks';
 
 interface EventSchedulerContextValue {
   siteId: string
@@ -74,7 +74,6 @@ export function useSchedulerContext() {
 }
 
 const Scheduler: React.FunctionComponent<PageProps> = ({ currentUser, product }: PageProps) => {
-  console.log(product);
   const {
     displayTabs,
     contextValue,
@@ -91,7 +90,6 @@ const Scheduler: React.FunctionComponent<PageProps> = ({ currentUser, product }:
     setModalState,
     unsavedChange,
     setUnsavedChange,
-    disableAllFields
   } = useScheduler(currentUser, product);
 
   const handleTabChange = (newValue: any) => {

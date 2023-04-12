@@ -230,6 +230,7 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
           </Box>
           <Box sx={initialOptionsBoxSx}>
             <Select
+              fullWidth
               disabled={disableAllFields}
               label={editEventLabels.eventType.label}
               menuItems={eventTypeItems}

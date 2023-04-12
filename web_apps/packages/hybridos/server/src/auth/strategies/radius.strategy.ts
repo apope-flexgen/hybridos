@@ -3,23 +3,23 @@ import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-local'
 
 import { IRadiusService, RADIUS_SERVICE } from '../interfaces/radius.service.interface'
-import { IAppSettingsService, APP_SETTINGS_SERVICE } from '../../appSettings/interfaces/appSetting.service.interface'
+import { ISiteAdminsService, SITE_ADMINS_SERVICE } from '../../siteAdmins/interfaces/siteAdmin.service.interface'
 
 @Injectable()
 export class RadiusStrategy extends PassportStrategy(Strategy, 'radius') {
     constructor(
         @Inject(RADIUS_SERVICE)
         private readonly radiusService: IRadiusService,
-        @Inject(APP_SETTINGS_SERVICE)
-        private readonly appSettingService: IAppSettingsService
+        @Inject(SITE_ADMINS_SERVICE)
+        private readonly siteAdminsService: ISiteAdminsService
     ) {
         super()
     }
     static key = 'radius'
     async validate(username: string, password: string): Promise<any> {
         // get site admin settings
-        const appSettings = await this.appSettingService.find()
-        const { is_enabled, ip_address, port, secret_phrase, wait_time, is_local_auth_disabled } = appSettings.radius
+        const siteAdmins = await this.siteAdminsService.find()
+        const { is_enabled, ip_address, port, secret_phrase, wait_time, is_local_auth_disabled } = siteAdmins.radius
 
         // only authenticate if radius is enabled
         if (is_enabled) {

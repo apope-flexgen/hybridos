@@ -6,7 +6,7 @@ import { ValidAccessTokenService } from 'src/auth/validJWT.service'
 import { DBI_SERVICE } from 'src/dbi/dbi.constants'
 import { DBIModule } from 'src/dbi/dbi.module'
 import { DBIService } from 'src/dbi/dbi.service'
-import { AppSettingsModule } from '../appSettings/appSettings.module'
+import { SiteAdminsModule } from '../siteAdmins/siteAdmins.module'
 import { DefaultUserService } from './defaultUser.service'
 import { DEFAULT_USER_SERVICE } from './interfaces/defaultUser.service.interface'
 import { USERS_SERVICE } from './interfaces/users.service.interface'
@@ -18,7 +18,7 @@ import { ValidPasswordConstraint } from './validators/IsValidPassword'
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-        AppSettingsModule,
+        SiteAdminsModule,
         JwtModule.register({
             secret: 'supersecretkey',
         }),

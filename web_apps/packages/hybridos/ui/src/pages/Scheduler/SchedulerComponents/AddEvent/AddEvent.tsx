@@ -1,6 +1,8 @@
 // TODO: fix lint
 /* eslint-disable max-lines */
-import { Switch, Select, ThemeType, Typography } from '@flexgen/storybook';
+import {
+  Switch, Select, ThemeType, Typography,
+} from '@flexgen/storybook';
 import { Box, SelectChangeEvent } from '@mui/material';
 import React, {
   useEffect, useReducer, useState, useMemo,
@@ -92,8 +94,8 @@ const AddEvent: React.FC = () => {
       state.modeId,
       startUTC,
       typedVariableValues,
-      recurring ? repeat : undefined
-    )
+      recurring ? repeat : undefined,
+    );
 
     addEvent(newEvent);
     handleClear();
@@ -134,7 +136,7 @@ const AddEvent: React.FC = () => {
           }}
           value={recurring}
         />
-        <Typography text="Make Recurring" variant="bodyL" color={disableAllFields ? 'disabled' : 'primary'}/>
+        <Typography text="Make Recurring" variant="bodyL" color={disableAllFields ? 'disabled' : 'primary'} />
       </Box>
       {recurring && (
         <Box

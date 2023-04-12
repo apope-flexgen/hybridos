@@ -5,7 +5,7 @@ import { hashSync } from 'bcryptjs'
 
 import request from './../testReqAgent'
 
-import { APP_SETTINGS_SERVICE } from '../../src/appSettings/interfaces/appSetting.service.interface'
+import { SITE_ADMINS_SERVICE } from '../../src/siteAdmins/interfaces/siteAdmin.service.interface'
 import { AuthController } from '../../src/auth/auth.controller'
 import { AuthService } from '../../src/auth/auth.service'
 import { AUTH_SERVICE } from '../../src/auth/interfaces/auth.service.interface'
@@ -91,7 +91,7 @@ describe('AuthController Login (e2e)', () => {
                     },
                 },
                 {
-                    provide: APP_SETTINGS_SERVICE,
+                    provide: SITE_ADMINS_SERVICE,
                     useValue: {
                         find: jest.fn().mockResolvedValue(site(false, false, true)),
                     },

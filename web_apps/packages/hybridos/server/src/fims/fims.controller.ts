@@ -12,6 +12,7 @@ import {
     UseGuards,
 } from '@nestjs/common'
 import { Throttle } from '@nestjs/throttler'
+import { FIMS_API_LIMIT, FIMS_API_TTL } from 'src/environment/appEnv.constants'
 
 import { BodyDTO, GetDTO } from './dto/fims.dto'
 import { HttpThrottleExceptionFilter } from './httpthrottler.filter'
@@ -19,15 +20,9 @@ import { HttpThrottlerGuard } from './httpthrottler.guard'
 import { FIMS_SERVICE, FimsMsg, IFimsService } from './interfaces/fims.interface'
 import { ISocketAuthService, SOCKET_AUTH_SERVICE } from './interfaces/socketAuth.service.interface'
 
-// FIXME: these should probably come from a config/db.
-// also, these values are copied directly from old node server,
-// may need to be adjusted.
-const API_TTL = 10000 // 60
-const API_LIMIT = 10000 // 210
-
 @Controller('fims')
 @UseGuards(HttpThrottlerGuard)
-@Throttle(API_LIMIT, API_TTL)
+@Throttle(FIMS_API_LIMIT, FIMS_API_TTL)
 @UseFilters(new HttpThrottleExceptionFilter())
 export class FimsController {
     constructor(

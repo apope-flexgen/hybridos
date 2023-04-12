@@ -45,6 +45,8 @@ export class EventsService {
         const search = query.search
         const limit = query.limit
         const page = query.page
+        const orderBy = query.orderBy
+        const order = query.order
 
         const data = await this.getEventsData(
             startTimeTimestamp,
@@ -53,7 +55,9 @@ export class EventsService {
             this.transformSeverities(severities),
             search,
             limit,
-            page
+            page,
+            order,
+            orderBy
         )
 
         const count = await this.getEventsCount(
@@ -89,7 +93,13 @@ export class EventsService {
         }
         return eventsData
     }
-    async getEventsData(startTime, endTime, source, severities, search, limit, page) {
+    async getEventsData(startTime, endTime, source, severities, search, limit, page, order, orderBy) {
+        const sort = {
+            [orderBy]: parseInt(order)
+        }
+        if (orderBy !== 'timestamp') {
+            sort['timestamp'] = -1
+        }
         let filter: any = {
             severity: severities,
             limit: parseInt(limit),
@@ -98,6 +108,7 @@ export class EventsService {
             source,
             message: search,
             page: page,
+            sort: sort,
         }
 
         const fimsData = await this.fimsService.get('/events', filter)
@@ -120,7 +131,6 @@ export class EventsService {
         const eventsCount = await this.fimsService.get('/events', filter)
 
         const eventsCountFromFims = eventsCount.body as unknown as number
-        console.log('events count: ', eventsCountFromFims)
         return eventsCountFromFims
     }
     transformSeverities(severities: any) {
@@ -135,7 +145,7 @@ export class EventsService {
             severity: severityLookup[data.severity],
             source: data.source,
             message: data.message,
-            timestamp: data.timestamp,
+            timestamp: dayjs(data.timestamp).format('YYYY-MM-DD HH:mm:ss'),
         }
         return transformed
     }

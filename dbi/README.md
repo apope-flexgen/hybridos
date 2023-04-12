@@ -36,7 +36,7 @@ General database interface from FIMS to MongoDB or other backends
 
 ### Identifiers that are in each Document of a collection:
 * "_id": This allows the program know what document it is updating
-* "_doc": This allows the program to know what document it is assigned to when retrieving from mongo, to make sure that local map and mongo are the same
+* "_doc": This allows the program to know what document it is assigned to when retrieving from mongo, to make sure that local map and mongo are the same [DEPREACTED -- just use _id]
 * "_version": This is a time stamp for when it was created
 
 ### These examples are assuming you are starting with an empty database

@@ -1,3 +1,5 @@
+// TODO: fix lint
+/* eslint-disable max-lines */
 import {
   AppBar,
   darkTheme,
@@ -8,12 +10,14 @@ import {
   Menu,
   MenuItem,
   PageLayout,
-  DualIconButton,
+  Typography,
+  Switch,
 } from '@flexgen/storybook';
 import { TextColorType } from '@flexgen/storybook/dist/types/commonTypes';
 import Box from '@mui/material/Box';
 import { useState, ReactNode, MouseEvent } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import LogoutButton from 'src/components/LogoutButton';
 import NotifProvider from 'src/contexts/NotifContext';
 import { ThemeProvider } from 'styled-components';
 import ErrorModal from './ErrorModal';
@@ -36,7 +40,7 @@ const BaseApp = (
   const toggleDarkMode = () => { setDarkMode(!darkMode); };
   const {
     app: {
-      timeZone, 
+      timeZone,
       appBar: {
         appLogo,
         appLogoSize,
@@ -47,8 +51,8 @@ const BaseApp = (
     menuItems,
     footer: {
       softwareName,
-      version
-    }
+      version,
+    },
   } = appInitMock;
 
   // TODO: export AppBar types
@@ -65,14 +69,6 @@ const BaseApp = (
             siteName={appDisplayName}
             timeZone={timeZone}
           >
-            <ThemeProvider theme={darkTheme}>
-              <DualIconButton
-                color={darkMode ? 'info' : 'warning'}
-                onClick={toggleDarkMode}
-                primaryIcon="LightMode"
-                secondaryIcon="DarkMode"
-              />
-            </ThemeProvider>
             <Avatar onClick={handleClick}>
               <Icon src="AccountCircle" />
             </Avatar>
@@ -92,7 +88,6 @@ const BaseApp = (
                   }) => (
                     <MenuItem
                       color={menuItem.color}
-                      dense
                       disableHover={!menuItem.enableHover}
                       divider={menuItem.divider}
                       height={menuItem.height}
@@ -101,6 +96,25 @@ const BaseApp = (
                     </MenuItem>
                   ),
                 )}
+                <MenuItem
+                  disableHover
+                  color="primary"
+                  divider={false}
+                  height="large"
+                >
+                  <Box sx={{minWidth: '180px'}}>
+                    <Switch onChange={toggleDarkMode} value={darkMode} />
+                    <Typography text="Dark Mode" variant="bodyL" />
+                  </Box>
+                </MenuItem>
+                <MenuItem
+                  divider={false}
+                  disableHover={false}
+                  height="large"
+                  color={darkMode ? 'primary' : 'secondary'}
+                >
+                    <LogoutButton />
+                </MenuItem>
               </Menu>
             </Box>
           </AppBar>

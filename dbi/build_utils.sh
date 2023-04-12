@@ -41,7 +41,7 @@ function prebuild()
 
 function build()
 {
-    go build -o "$build_output/$name" src/"$name".go
+    go build -o "$build_output/$name" src/*.go
 }
 
 function postbuild()

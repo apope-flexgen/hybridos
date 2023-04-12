@@ -10,7 +10,9 @@ const testApiRequest = (server: any) => {
     const req = defaults(request(server));
     req.on('request', function (req: any) {
         const url = new URL(req.url)
-        url.pathname = `/api${url.pathname}`
+        if (!url.pathname.startsWith('/rest')){
+            url.pathname = `/api${url.pathname}`
+        }
         req.url = url.toString()
         return req
     });

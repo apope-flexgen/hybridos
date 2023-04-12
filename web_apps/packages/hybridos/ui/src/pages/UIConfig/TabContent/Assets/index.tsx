@@ -101,12 +101,19 @@ const Assets = () => {
   const handleSaveClick = async () => {
     try {
       setIsLoading(true);
-      const data = [...assets];
+      let data = [...assets];
       data.splice(
         selectedAssetIndex !== null ? selectedAssetIndex : -1,
         1,
         selectedAsset || newAsset,
       );
+      data = data.map((item) => ({
+        ...item,
+        info: {
+          ...item.info,
+          name: item.info.name || 'New Item',
+        },
+      }));
       const res = await axiosWebUIInstance.post(
         ASSETS_URL,
         { data },
@@ -157,7 +164,7 @@ const Assets = () => {
     [assets, selectedAsset, selectedAssetIndex],
   );
 
-  const disabledSave = useMemo(() => selectedAsset?.info.assetKey?.trim() === '' || selectedAsset?.info.name?.trim() === '', [selectedAsset]);
+  const disabledSave = useMemo(() => (selectedAsset?.info.name || '').trim() === '', [selectedAsset]);
 
   useEffect(() => {
     fetchData();

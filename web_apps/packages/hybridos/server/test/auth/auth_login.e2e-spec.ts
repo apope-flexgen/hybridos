@@ -5,9 +5,9 @@ import { Test, TestingModule } from '@nestjs/testing'
 import request from './../testReqAgent'
 
 import {
-    APP_SETTINGS_SERVICE,
-    IAppSettingsService,
-} from '../../src/appSettings/interfaces/appSetting.service.interface'
+    SITE_ADMINS_SERVICE,
+    ISiteAdminsService,
+} from '../../src/siteAdmins/interfaces/siteAdmin.service.interface'
 import { AuthController } from '../../src/auth/auth.controller'
 import { AuthService } from '../../src/auth/auth.service'
 import { AUTH_SERVICE } from '../../src/auth/interfaces/auth.service.interface'
@@ -33,7 +33,7 @@ import { AppEnvService } from '../../src/environment/appEnv.service'
 describe('AuthController Login (e2e)', () => {
     let app: INestApplication
     let usersService: IUsersService
-    let appSettingsService: IAppSettingsService
+    let siteAdminsService: ISiteAdminsService
     const NONEXISTENT_USERNAME = 'userDoesNotExist'
     const INCORRECT_PASS = 'incorrectPassword'
 
@@ -83,7 +83,7 @@ describe('AuthController Login (e2e)', () => {
                     },
                 },
                 {
-                    provide: APP_SETTINGS_SERVICE,
+                    provide: SITE_ADMINS_SERVICE,
                     useValue: {
                         find: jest.fn(),
                     },
@@ -123,7 +123,7 @@ describe('AuthController Login (e2e)', () => {
 
         app = testUtils.createTestApiApplication(moduleFixture)
         usersService = moduleFixture.get<IUsersService>(USERS_SERVICE)
-        appSettingsService = moduleFixture.get<IAppSettingsService>(APP_SETTINGS_SERVICE)
+        siteAdminsService = moduleFixture.get<ISiteAdminsService>(SITE_ADMINS_SERVICE)
         await app.init()
     })
 
@@ -136,7 +136,7 @@ describe('AuthController Login (e2e)', () => {
                 password: testUtils.VALID_PASS,
             }
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_NOT_EXPIRED)
-            jest.spyOn(appSettingsService, 'find').mockResolvedValue(testUtils.site(false, false, false))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(false, false, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .send(requestBody)
@@ -201,7 +201,7 @@ describe('AuthController Login (e2e)', () => {
                 password: testUtils.VALID_PASS,
             }
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_MFA_NOT_ENABLED)
-            jest.spyOn(appSettingsService, 'find').mockResolvedValue(testUtils.site(true, false, false))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(true, false, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .send(requestBody)
@@ -221,7 +221,7 @@ describe('AuthController Login (e2e)', () => {
                 password: testUtils.VALID_PASS,
             }
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_MFA_ENABLED)
-            jest.spyOn(appSettingsService, 'find').mockResolvedValue(testUtils.site(true, false, false))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(true, false, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .send(requestBody)
@@ -244,7 +244,7 @@ describe('AuthController Login (e2e)', () => {
             }
 
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_NOT_EXPIRED)
-            jest.spyOn(appSettingsService, 'find').mockResolvedValue(testUtils.site(false, true, false))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(false, true, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .send(requestBody)
@@ -263,7 +263,7 @@ describe('AuthController Login (e2e)', () => {
                 password: testUtils.VALID_PASS,
             }
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_EXPIRED)
-            jest.spyOn(appSettingsService, 'find').mockResolvedValue(testUtils.site(false, true, false))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(false, true, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .send(requestBody)

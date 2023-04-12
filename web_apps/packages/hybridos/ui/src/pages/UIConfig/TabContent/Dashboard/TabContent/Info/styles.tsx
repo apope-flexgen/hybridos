@@ -20,16 +20,6 @@ export const AccordionSX = {
   width: '100%',
 };
 
-export const AccordionSummarySX = {
-  background: '#F7F8F9',
-  display: 'flex',
-  justifyContent: 'space-between',
-  '& .MuiAccordionSummary-content': {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-};
-
 export const AccordionDetailsSX = {
   padding: '16px',
   display: 'flex',

@@ -1,5 +1,7 @@
 /* eslint-disable max-lines */
-import { NumericInput, MuiButton, Select, TextField, IconButton } from '@flexgen/storybook';
+import {
+  NumericInput, MuiButton, Select, TextField, IconButton,
+} from '@flexgen/storybook';
 import {
   Box,
   Typography,
@@ -32,8 +34,8 @@ const SetpointRow: React.FC<SetpointRowProps> = ({
       return (
         <NumericInput
           endTextAdornment={setpoint.unit}
-          // eslint-disable-next-line react/jsx-no-useless-fragment
           // FIXME: remove default end component adornment from NumericInput component in storybook
+          // eslint-disable-next-line react/jsx-no-useless-fragment
           endComponentAdorment={<></>}
           label={labels.modeInfo.setpointRow.value}
           onChange={(event) => updateSetpoint(

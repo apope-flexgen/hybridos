@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import request from './../testReqAgent'
 import { createTestApiApplication } from '../../test/testUtils'
 
-import { AppSettingsService } from '../../src/appSettings/appSettings.service'
+import { SiteAdminsService } from '../../src/siteAdmins/siteAdmins.service'
 import { HttpExceptionFilter } from '../../src/filters/http-expections.filter'
 import { UserNotFoundException } from '../../src/users/exceptions/exceptions'
 import { IUsersService, USERS_SERVICE } from '../../src/users/interfaces/users.service.interface'
@@ -33,9 +33,9 @@ describe('UsersController DELETE (e2e)', () => {
                         deleteOne: jest.fn(),
                     },
                 },
-                AppSettingsService,
+                SiteAdminsService,
                 {
-                    provide: getModelToken('appsettings'),
+                    provide: getModelToken('siteAdmins'),
                     useValue: {
                         findOne: jest.fn(),
                         create: jest.fn(),

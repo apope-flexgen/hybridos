@@ -6,10 +6,9 @@ import { ServeStaticModule } from '@nestjs/serve-static'
 import * as path from 'path'
 import { AppService } from './app.service'
 import { APP_SERVICE } from './app.service.interface'
-import { AppSettingsModule } from '../appSettings/appSettings.module'
+import { SiteAdminsModule } from '../siteAdmins/siteAdmins.module'
 import { AuthModule } from '../auth/auth.module'
 import { AccessTokenAuthGuard } from '../auth/guards/accessTokenAuth.guard'
-import { RolesGuard } from '../auth/guards/roles.guard'
 import { BffModule } from '../bff/bff.module'
 import { AppEnvModule } from '../environment/appEnv.module'
 import { AppEnvService } from '../environment/appEnv.service'
@@ -43,7 +42,7 @@ import { DBIModule } from 'src/dbi/dbi.module'
         }),
         UsersModule,
         PermissionsModule,
-        AppSettingsModule,
+        SiteAdminsModule,
         AuthModule,
         LoggingModule,
         LoggerFilterModule,
@@ -58,15 +57,15 @@ import { DBIModule } from 'src/dbi/dbi.module'
         BffModule,
         ServeStaticModule.forRootAsync({
             useFactory: async () => {
-                const webUiBuildPAth = process.argv[2]
-                if (webUiBuildPAth) {
-                    return [
-                        {
-                            rootPath: path.resolve(webUiBuildPAth, 'build'),
-                        },
-                    ]
+                if (process.env.NODE_ENV === 'dev') {
+                    return [{}]
                 }
-                return [{}]
+                const webUiBuildPAth = process.argv[2]
+                return [
+                    {
+                        rootPath: path.resolve(webUiBuildPAth, 'build'),
+                    },
+                ]
             },
         }),
         JwtModule.register({
@@ -82,14 +81,10 @@ import { DBIModule } from 'src/dbi/dbi.module'
     ],
     controllers: [AppController],
     providers: [
-        // the order of these guards matters, JwtAuthGuard must execute before RolesGuard
+        // the order of these guards matters
         {
             provide: APP_GUARD,
             useClass: AccessTokenAuthGuard,
-        },
-        {
-            provide: APP_GUARD,
-            useClass: RolesGuard,
         },
         {
             provide: APP_PIPE,

@@ -60,3 +60,9 @@ export const MuiButtonSX = {
   width: '70%',
   marginRight: '24px',
 };
+
+export const DeleteButtonContainer = styled.div`
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+`;

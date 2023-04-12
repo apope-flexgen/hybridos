@@ -18,4 +18,9 @@ export class EventsRequest {
     @IsOptional()
     @IsNumberString()
     page: EventsRequestParams['page']
+    @IsOptional()
+    @IsNumberString()
+    order: EventsRequestParams['order']
+    @IsOptional()
+    orderBy: EventsRequestParams['orderBy']
 }

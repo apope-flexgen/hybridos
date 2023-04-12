@@ -88,8 +88,12 @@ export class AssetsPageService {
         // TODO: fix any
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const res: any = await this.dbiService.getUIConfigAssets();
-        this.assetConfig = res.data[0]
-        return this.assetConfig
+        if (res.data) {
+            this.assetConfig = res.data[0]
+            return this.assetConfig
+        }
+        return {} as metadataFromDBI
+        
     }
 
     private getInitialSendData = async (

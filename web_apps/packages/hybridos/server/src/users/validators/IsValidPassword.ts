@@ -7,28 +7,28 @@ import {
 import { User } from '../dtos/user.dto'
 import { validatePassword } from '../../../../shared/functions/passwordValidation'
 import {
-    APP_SETTINGS_SERVICE,
-    IAppSettingsService,
-} from '../../appSettings/interfaces/appSetting.service.interface'
+    SITE_ADMINS_SERVICE,
+    ISiteAdminsService,
+} from '../../siteAdmins/interfaces/siteAdmin.service.interface'
 import { Inject, Injectable } from '@nestjs/common'
 
 @ValidatorConstraint({ async: true })
 @Injectable()
 export class ValidPasswordConstraint implements ValidatorConstraintInterface {
     constructor(
-        @Inject(APP_SETTINGS_SERVICE) private readonly appSettingsService: IAppSettingsService
+        @Inject(SITE_ADMINS_SERVICE) private readonly siteAdminsService: ISiteAdminsService
     ) {}
 
     async validate(password: string) {
-        const appSettings = await this.appSettingsService.find()
+        const siteAdmins = await this.siteAdminsService.find()
 
         return validatePassword(password, {
-            passwordMinLength: appSettings.password.minimum_password_length,
-            passwordMaxLength: appSettings.password.maximum_password_length,
-            lowercase: appSettings.password.lowercase,
-            uppercase: appSettings.password.uppercase,
-            digit: appSettings.password.digit,
-            special: appSettings.password.special,
+            passwordMinLength: siteAdmins.password.minimum_password_length,
+            passwordMaxLength: siteAdmins.password.maximum_password_length,
+            lowercase: siteAdmins.password.lowercase,
+            uppercase: siteAdmins.password.uppercase,
+            digit: siteAdmins.password.digit,
+            special: siteAdmins.password.special,
         })
     }
 

@@ -17,7 +17,7 @@ let VALID_ACCESS_TOKEN: string
 const VALID_USERNAME = 'user1'
 const VALID_PASS = 'P@ssw0rd'
 
-const defaultAppSettings = {
+const defaultsiteAdmins = {
     password: {
         password_expiration: false,
         minimum_password_length: 8,
@@ -39,7 +39,7 @@ const defaultAppSettings = {
     },
 }
 
-const altAppSettings = {
+const altsiteAdmins = {
     password: {
         password_expiration: false,
         minimum_password_length: 15,
@@ -61,7 +61,7 @@ const altAppSettings = {
     },
 }
 
-const invalidAppSettings = {
+const invalidsiteAdmins = {
     password: {
         password_expiration: false,
         minimum_password_length: 2,
@@ -81,11 +81,11 @@ const invalidAppSettings = {
     },
 }
 
-const isAltAppSettings = (res) => {
-    testUtils.checkAppSettingsFields(res, altAppSettings)
+const isAltsiteAdmins = (res) => {
+    testUtils.checksiteAdminsFields(res, altsiteAdmins)
 }
-const isDefaultAppSettings = (res) => {
-    testUtils.checkAppSettingsFields(res, defaultAppSettings)
+const isDefaultsiteAdmins = (res) => {
+    testUtils.checksiteAdminsFields(res, defaultsiteAdmins)
 }
 
 const initializeUser = async (uri: string, user: User) => {
@@ -101,7 +101,7 @@ const initializeUser = async (uri: string, user: User) => {
     await con.close()
 }
 
-describe('AppSettings (Integration)', () => {
+describe('siteAdmins (Integration)', () => {
     let app: INestApplication
     let db: MongoMemoryServer
 
@@ -127,54 +127,53 @@ describe('AppSettings (Integration)', () => {
         VALID_ACCESS_TOKEN = await testUtils.generateAdminAccessToken(app, db)
     })
 
-    it('should return default appSettings with empty db', async () => {
+    it('should return default siteAdmins with empty db', async () => {
         console.log('accessToken: ', VALID_ACCESS_TOKEN)
         return await request(app.getHttpServer())
             .get('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .expect(200)
-            .expect(isDefaultAppSettings)
+            .expect(isDefaultsiteAdmins)
     })
 
-    it('should return updated appSettings', async () => {
+    it('should return updated siteAdmins', async () => {
         return await request(app.getHttpServer())
             .post('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
-            .send(altAppSettings)
+            .send(altsiteAdmins)
             .expect(201)
-            .expect(isAltAppSettings)
+            .expect(isAltsiteAdmins)
     })
 
-    it('should return current appSettings', async () => {
+    it('should return current siteAdmins', async () => {
         await request(app.getHttpServer())
             .get('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .expect(200)
-            .expect(isDefaultAppSettings)
+            .expect(isDefaultsiteAdmins)
 
         await request(app.getHttpServer())
             .post('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
-            .send(altAppSettings)
+            .send(altsiteAdmins)
             .expect(201)
-            .expect(isAltAppSettings)
+            .expect(isAltsiteAdmins)
         const con = await MongoClient.connect(db.getUri(), {})
-        const col = con.db('integrationTestDb').collection('appsettings')
-        console.log('app settings documents num: ', await col.countDocuments({}))
+        const col = con.db('integrationTestDb').collection('siteAdmins')
         await con.close()
 
         return await request(app.getHttpServer())
             .get('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .expect(200)
-            .expect(isAltAppSettings)
+            .expect(isAltsiteAdmins)
     })
 
     it('should fail due to invalid input', async () => {
         return await request(app.getHttpServer())
             .post('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
-            .send(invalidAppSettings)
+            .send(invalidsiteAdmins)
             .expect(400)
             .then((res) => {
                 expect(res.body).toStrictEqual({
@@ -198,33 +197,33 @@ describe('AppSettings (Integration)', () => {
         await request(app.getHttpServer())
             .post('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
-            .send(altAppSettings)
+            .send(altsiteAdmins)
             .expect(201)
-            .expect(isAltAppSettings)
+            .expect(isAltsiteAdmins)
 
         await request(app.getHttpServer())
             .post('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
-            .send(altAppSettings)
+            .send(altsiteAdmins)
             .expect(201)
-            .expect(isAltAppSettings)
+            .expect(isAltsiteAdmins)
 
         await request(app.getHttpServer())
             .post('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
-            .send(altAppSettings)
+            .send(altsiteAdmins)
             .expect(201)
-            .expect(isAltAppSettings)
+            .expect(isAltsiteAdmins)
 
         await request(app.getHttpServer())
             .post('/app-settings')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
-            .send(altAppSettings)
+            .send(altsiteAdmins)
             .expect(201)
-            .expect(isAltAppSettings)
+            .expect(isAltsiteAdmins)
 
         const con = await MongoClient.connect(db.getUri(), {})
-        const col = con.db('integrationTestDb').collection('appsettings')
+        const col = con.db('integrationTestDb').collection('siteAdmins')
         console.log('iscapped: ', await col.isCapped())
         expect(await col.countDocuments({})).toBe(1)
         await con.close()

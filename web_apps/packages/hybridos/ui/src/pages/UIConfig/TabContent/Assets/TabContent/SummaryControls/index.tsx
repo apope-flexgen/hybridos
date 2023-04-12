@@ -1,15 +1,15 @@
 // TODO: fix lint
 /* eslint-disable max-lines */
 import {
+  Accordion,
   CardRow, Divider, Label, MuiButton, Select, TextField,
 } from '@flexgen/storybook';
 import { SelectChangeEvent } from '@mui/material';
 import { ChangeEvent, Fragment, useState } from 'react';
 import { Asset, SummaryControl } from 'shared/types/dtos/assets.dto';
-import Accordion from 'src/components/Accordion';
 import { useAssetsContext } from 'src/pages/UIConfig/TabContent/Assets';
 import { ColumnTitles, TextFieldsContainer } from 'src/pages/UIConfig/TabContent/Assets/TabContent/styles';
-import { AddItemButtonSX } from 'src/pages/UIConfig/TabContent/styles';
+import { AddItemButtonSX, DeleteButtonContainer } from 'src/pages/UIConfig/TabContent/styles';
 import {
   ADD_SUMMARY_CONTROL, DELETE_SUMMARY_CONTROL, items, newSummaryControl, SUMMARY_CONTROLS,
 } from './helpers/constants';
@@ -105,17 +105,17 @@ const SummaryControls = () => {
       <Divider orientation="horizontal" variant="fullWidth" />
       {selectedAsset?.summaryControls.map((summaryControl, index) => (
         <Accordion
-          deleteText={DELETE_SUMMARY_CONTROL}
           expanded={expanded.includes(index)}
+          expandIcon={!expanded.includes(index) ? 'Edit' : undefined}
+          heading={summaryControl.name || ''}
+          // TODO: fix lint
           // eslint-disable-next-line react/no-array-index-key
           key={index}
-          name={summaryControl.name || ''}
-          onDelete={() => handleDelete(index)}
-          onExpand={(_, exp) => handleExpand(index, exp)}
+          onChange={(exp) => handleExpand(index, exp)}
         >
           <TextFieldsContainer>
             {items.map(({
-              key, label, helperText, select, options,
+              key, label, helperText, select, options, type,
             }) => (
               <Fragment key={key}>
                 {select ? (
@@ -130,15 +130,23 @@ const SummaryControls = () => {
                     disableLabelAnimation
                     helperText={helperText}
                     id={key}
-                    key={key}
                     label={label}
                     onChange={(e) => handleTextFieldChange(e, index)}
                     value={summaryControl[key as keyof SummaryControl]}
+                    type={type as 'number' | undefined}
                   />
                 )}
               </Fragment>
             ))}
           </TextFieldsContainer>
+          <DeleteButtonContainer>
+            <MuiButton
+              color="error"
+              label={DELETE_SUMMARY_CONTROL}
+              onClick={() => handleDelete(index)}
+              variant="outlined"
+            />
+          </DeleteButtonContainer>
         </Accordion>
       ))}
       <MuiButton

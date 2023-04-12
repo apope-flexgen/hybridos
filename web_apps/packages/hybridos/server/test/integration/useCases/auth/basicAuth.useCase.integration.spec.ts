@@ -11,8 +11,8 @@ import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
 
-const isDefaultAppSettings = (res) => {
-    testUtils.checkAppSettingsFields(res, testUtils.site(false, false, false))
+const isDefaultsiteAdmins = (res) => {
+    testUtils.checksiteAdminsFields(res, testUtils.site(false, false, false))
 }
 
 describe('Authentication (Integration)', () => {
@@ -76,7 +76,7 @@ describe('Authentication (Integration)', () => {
             .set('Cookie', refreshToken)
             .then((res) => {
                 expect(res.status).toBe(200)
-                expect(isDefaultAppSettings)
+                expect(isDefaultsiteAdmins)
             })
 
         // logout

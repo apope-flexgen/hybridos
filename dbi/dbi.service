@@ -5,7 +5,7 @@ After=fims.service mongod.service
 
 [Service]
 User=hybridos
-ExecStart=/usr/local/bin/dbi /usr/local/etc/config/dbi/
+ExecStart=/usr/local/bin/dbi -c /usr/local/etc/config/dbi/config.json
 Restart=always
 RestartSec=10s
 

@@ -2,10 +2,9 @@ import { getModelToken } from '@nestjs/mongoose'
 import { Test, TestingModule } from '@nestjs/testing'
 import { DeleteResult } from 'mongodb'
 import { Model } from 'mongoose'
-
-import { AppSettingsService } from '../appSettings/appSettings.service'
-import { APP_SETTINGS_SERVICE } from '../appSettings/interfaces/appSetting.service.interface'
-import { AppSettingDocument } from '../appSettings/schemas/appSetting.schema'
+import { SiteAdminsService } from '../siteAdmins/siteAdmins.service'
+import { SITE_ADMINS_SERVICE } from '../siteAdmins/interfaces/siteAdmin.service.interface'
+import { SiteAdminDocument } from '../siteAdmins/schemas/siteAdmins.schema'
 import { DefaultUserService } from './defaultUser.service'
 import { UserNotFoundException } from './exceptions/exceptions'
 import { DEFAULT_USER_SERVICE } from './interfaces/defaultUser.service.interface'
@@ -21,8 +20,8 @@ const mockUser = (id = '631118fdec0291252e0fba15'): UserResponse => ({
 describe('UsersService', () => {
     let usersService: IUsersService
     let userModel: Model<UserDocument>
-    let appSettingModel: Model<AppSettingDocument>
-    const defaultAppSettings = {
+    let siteAdminModel: Model<SiteAdminDocument>
+    const defaultSiteAdmins = {
         password: {
             multi_factor_authentication: false,
             password_expiration: false,
@@ -63,11 +62,11 @@ describe('UsersService', () => {
                     },
                 },
                 {
-                    provide: APP_SETTINGS_SERVICE,
-                    useClass: AppSettingsService,
+                    provide: SITE_ADMINS_SERVICE,
+                    useClass: SiteAdminsService,
                 },
                 {
-                    provide: getModelToken('appsettings'),
+                    provide: getModelToken('siteadmins'),
                     useValue: {
                         findOne: jest.fn(),
                         create: jest.fn(),
@@ -86,7 +85,7 @@ describe('UsersService', () => {
 
         usersService = module.get<UsersService>(UsersService)
         userModel = module.get<Model<UserDocument>>(getModelToken(User.name))
-        appSettingModel = module.get<Model<AppSettingDocument>>(getModelToken('appsettings'))
+        siteAdminModel = module.get<Model<SiteAdminDocument>>(getModelToken('siteadmins'))
     })
 
     describe('create', () => {
@@ -121,7 +120,7 @@ describe('UsersService', () => {
                 username: 'flexgen_user',
             }
 
-            const testAppSettings = {
+            const testSiteAdmins = {
                 password: {
                     password_expiration: false,
                     minimum_password_length: 8,
@@ -169,8 +168,8 @@ describe('UsersService', () => {
                 version: '',
             }
 
-            appSettingModel.findOne = jest.fn().mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValueOnce(testAppSettings),
+            siteAdminModel.findOne = jest.fn().mockImplementation(() => ({
+                exec: jest.fn().mockResolvedValueOnce(testSiteAdmins),
             }))
 
             jest.spyOn(userModel, 'findById').mockResolvedValue(existingUser)
@@ -214,8 +213,8 @@ describe('UsersService', () => {
                 version: '',
             }
 
-            appSettingModel.findOne = jest.fn().mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValueOnce(defaultAppSettings),
+            siteAdminModel.findOne = jest.fn().mockImplementation(() => ({
+                exec: jest.fn().mockResolvedValueOnce(defaultSiteAdmins),
             }))
 
             jest.spyOn(userModel, 'findById').mockResolvedValue(existingUser)
@@ -247,8 +246,8 @@ describe('UsersService', () => {
                 version: '',
             }
 
-            appSettingModel.findOne = jest.fn().mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValueOnce(defaultAppSettings),
+            siteAdminModel.findOne = jest.fn().mockImplementation(() => ({
+                exec: jest.fn().mockResolvedValueOnce(defaultSiteAdmins),
             }))
 
             jest.spyOn(userModel, 'findById').mockResolvedValue(null)
@@ -281,8 +280,8 @@ describe('UsersService', () => {
                 version: '',
             }
 
-            appSettingModel.findOne = jest.fn().mockImplementation(() => ({
-                exec: jest.fn().mockResolvedValueOnce(defaultAppSettings),
+            siteAdminModel.findOne = jest.fn().mockImplementation(() => ({
+                exec: jest.fn().mockResolvedValueOnce(defaultSiteAdmins),
             }))
 
             jest.spyOn(userModel, 'findById').mockResolvedValue(existingUser)

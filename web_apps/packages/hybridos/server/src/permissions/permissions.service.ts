@@ -3,10 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { Permissions, Permission, Role } from './interfaces/permission.interface'
 import * as fs from 'fs'
 import * as path from 'path'
-
-// temporarily hardcoded to get a working version, will be corrected
-// when we decide how we want to read permissions
-const LOCALFILEPATH = './src/permissions/permissions.json'
+import { PermissionsFileError } from './exceptions/PermissionsFileError.exception'
 
 @Injectable()
 export class PermissionsService {
@@ -16,11 +13,7 @@ export class PermissionsService {
     initialized = false
     constructor() {
         const webServerConfigPath = process.argv[4]
-        const configFilePath = fs.existsSync(webServerConfigPath)
-        const filePath = configFilePath
-            ? path.resolve(webServerConfigPath, 'permissions.json')
-            : LOCALFILEPATH
-
+        const filePath = path.resolve(webServerConfigPath, 'permissions.json')
         // read file on init
         this.readToMemory(filePath)
     }
@@ -51,14 +44,12 @@ export class PermissionsService {
     // stores perms in memory, sets initialized flag to true,
     // catches errors from reading file
     readToMemory = async (filePath: string): Promise<boolean> => {
-        // TODO: what do we do on error here?
         try {
             this.permissions = await this.readPermissionsFromFile(filePath)
             this.initialized = true
             return true
         } catch (e) {
-            console.log(e)
-            return false
+            throw new PermissionsFileError(e)
         }
     }
     private accessHelper = (uri: string, roleObj: Role): number[] => {

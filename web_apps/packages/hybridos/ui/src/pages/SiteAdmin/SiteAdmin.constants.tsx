@@ -2,7 +2,7 @@ import { numberValidationEnum } from '@flexgen/storybook';
 import {
   RadiusSettings,
   PasswordSettings,
-  AppSettings,
+  SiteAdmins,
 } from 'shared/types/api/SiteAdmin.types';
 
 export const initialRadiusSettings: RadiusSettings = {
@@ -22,15 +22,28 @@ export const initialPasswordSettings: PasswordSettings = {
   maximum_password_length: 0,
   password_expiration_interval: '',
   old_passwords: 0,
-  password_regular_expression: '',
   multi_factor_authentication: false,
+  lowercase: false,
+  uppercase: false,
+  digit: false,
+  special: false,
 };
 
-export const initialAppSettings: AppSettings = {
+export const initialsiteAdmins: SiteAdmins = {
   _id: '',
   password: initialPasswordSettings,
   radius: initialRadiusSettings,
   __v: 0,
+};
+
+export const AbsoluteMinPasswordLength = 8;
+export const AbsoluteMaxPasswordLength = 128;
+
+export const PasswordContentRequirementsLabels: { [option: string]: string } = {
+  lowercase: 'Lowercase (abc)',
+  uppercase: 'Uppercase (ABC)',
+  digit: 'Number (123)',
+  special: 'Special Character (!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~)',
 };
 
 export type PasswordExpirationIntervalUnits = 'd' | 'm';
@@ -38,8 +51,8 @@ export type PasswordExpirationIntervalUnits = 'd' | 'm';
 export type ConnectionMethods = 'onlyLocal' | 'onlyRadius' | 'localAndRadius';
 
 export const passwordExpirationIntervalRadios: {
-  label: string,
-  value: PasswordExpirationIntervalUnits
+  label: string;
+  value: PasswordExpirationIntervalUnits;
 }[] = [
   {
     label: 'Days',
@@ -51,8 +64,8 @@ export const passwordExpirationIntervalRadios: {
   },
 ];
 
-export const APP_SETTINGS_URL = '/app-settings';
-export const RADIUS_TEST_URL = '/app-settings/radius-test';
+export const APP_SETTINGS_URL = '/site-admins';
+export const RADIUS_TEST_URL = '/site-admins/radius-test';
 export const RADIUS_FAILED_MESSAGE = 'Radius test failed';
 
 export const onArrow = (
@@ -61,7 +74,8 @@ export const onArrow = (
   setPasswordSettings: React.Dispatch<React.SetStateAction<PasswordSettings>>,
   field: keyof PasswordSettings,
 ) => {
-  const newValue = direction === 'up' ? Number(passwordSettings[field]) + 1 : Number(passwordSettings[field]) - 1;
+  const newValue =
+    direction === 'up' ? Number(passwordSettings[field]) + 1 : Number(passwordSettings[field]) - 1;
   const regEx = new RegExp(numberValidationEnum.positiveIntegers);
   if (regEx.test(`${newValue}`)) {
     setPasswordSettings({
@@ -71,7 +85,7 @@ export const onArrow = (
   }
 };
 
-export const connectionMethodRadios: { label: string, value: ConnectionMethods }[] = [
+export const connectionMethodRadios: { label: string; value: ConnectionMethods }[] = [
   {
     label: 'Local Authentication Only',
     value: 'onlyLocal',
@@ -93,8 +107,9 @@ export const siteAdminLabels = {
   localPageTitle: 'Password Settings',
   passwordLengthField: 'Password Length',
   maxLessThanMinErrorMessage: 'Max length must be greater than min',
-  customRegexField: 'Custom Regular Expression',
-  oldPasswordsField: 'Old Passwords Allowed',
+  passwordRequirements: 'Password Content Requirements',
+  oldPasswordsField: 'Old Passwords to Store',
+  oldPasswordsFieldHelper: 'Stored passwords are not repeatable',
   oldPasswordsTextFieldHelper: 'Passwords',
   mfaField: 'Multifactor Authentication',
   mfaSwitch: 'Enable Multifactor Authentication',
@@ -107,7 +122,8 @@ export const siteAdminLabels = {
   radiusTestButton: 'Send Test Request',
   radiusRequirementsTitle: 'Radius Credentials',
   radiusTestConnectionTitle: 'Personal Credentials',
-  radiusTestConnectionHelper: 'Required to process test connection. Personal credentials will not be saved.',
+  radiusTestConnectionHelper:
+    'Required to process test connection. Personal credentials will not be saved.',
   radiusTestBadgeError: 'Test Required',
   radiusTestBadgeSuccess: 'Test Successful',
   ipAddressField: 'IP Address',

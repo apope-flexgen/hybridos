@@ -1,9 +1,9 @@
 import { Switch, RadioButton, Typography } from '@flexgen/storybook';
 import { Box } from '@mui/system';
 import React from 'react';
+import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
 import { ApplyChangesTo } from 'src/pages/Scheduler/SchedulerTypes';
 import { applyChangesRadios } from './EditEventModal-helpers';
-import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
 
 interface ApplyChangesToProps {
   applyChangesTo: ApplyChangesTo
@@ -50,10 +50,10 @@ const ApplyChanges: React.FunctionComponent<ApplyChangesToProps> = ({
           }}
           value={editRecurring}
         />
-        <Typography text='Edit Recurring Settings' color={disableAllFields ? 'disabled' : 'primary'} variant="bodyM" />
+        <Typography text="Edit Recurring Settings" color={disableAllFields ? 'disabled' : 'primary'} variant="bodyM" />
       </Box>
     </Box>
-  )
+  );
 };
 
 export default ApplyChanges;

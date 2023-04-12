@@ -1,12 +1,12 @@
 import {
+  Accordion,
   CardRow, Divider, Label, MuiButton, TextField,
 } from '@flexgen/storybook';
 import { ChangeEvent, useState } from 'react';
 import { Asset, Status } from 'shared/types/dtos/assets.dto';
-import Accordion from 'src/components/Accordion';
 import { useAssetsContext } from 'src/pages/UIConfig/TabContent/Assets';
 import { ColumnTitles, TextFieldsContainer } from 'src/pages/UIConfig/TabContent/Assets/TabContent/styles';
-import { AddItemButtonSX } from 'src/pages/UIConfig/TabContent/styles';
+import { AddItemButtonSX, DeleteButtonContainer } from 'src/pages/UIConfig/TabContent/styles';
 import {
   ADD_STATUS, DELETE_STATUS, items, newStatus, STATUS,
 } from './helpers/constants';
@@ -82,13 +82,13 @@ const Statuses = () => {
       <Divider orientation="horizontal" variant="fullWidth" />
       {selectedAsset?.statuses.map((status, index) => (
         <Accordion
-          deleteText={DELETE_STATUS}
           expanded={expanded.includes(index)}
+          expandIcon={!expanded.includes(index) ? 'Edit' : undefined}
+          heading={status.name || ''}
+          // TODO: fix lint
           // eslint-disable-next-line react/no-array-index-key
           key={index}
-          name={status.name || ''}
-          onDelete={() => handleDelete(index)}
-          onExpand={(_, exp) => handleExpand(index, exp)}
+          onChange={(exp) => handleExpand(index, exp)}
         >
           <TextFieldsContainer>
             {items.map((item) => (
@@ -100,9 +100,18 @@ const Statuses = () => {
                 label={item.label}
                 onChange={(e) => handleTextFieldChange(e, index)}
                 value={status[item.key as keyof Status]}
+                type={item.type as 'number' | undefined}
               />
             ))}
           </TextFieldsContainer>
+          <DeleteButtonContainer>
+            <MuiButton
+              color="error"
+              label={DELETE_STATUS}
+              onClick={() => handleDelete(index)}
+              variant="outlined"
+            />
+          </DeleteButtonContainer>
         </Accordion>
       ))}
       <MuiButton

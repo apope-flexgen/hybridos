@@ -34,6 +34,8 @@ import { DBI_SERVICE } from 'src/dbi/dbi.constants'
 import { IDBIService } from 'src/dbi/dbi.interface'
 import { UserFromAccessToken } from 'src/decorators/userFromAccessToken.decorator'
 import { User } from 'src/users/dtos/user.dto'
+import { Throttle } from '@nestjs/throttler'
+import { LOGIN_API_LIMIT, LOGIN_API_TTL } from 'src/environment/appEnv.constants'
 
 @ApiTags('auth')
 @Controller('/')
@@ -43,25 +45,24 @@ export class AuthController {
         private readonly authService: IAuthService,
         @Inject(DBI_SERVICE)
         private readonly dbiService: IDBIService,
-    ) {}
+    ) { }
     @ApiOkResponse({ type: ApiLoginResponse })
     @Public()
     @Post('login')
     @HttpCode(200)
     @UseGuards(AuthenticationGuard)
+    @Throttle(LOGIN_API_LIMIT, LOGIN_API_TTL)
     @UseFilters(MfaRequiredFilter, PassExpFilter, UserNotFoundFilter)
     async login(
         @Req() req,
         @Res({ passthrough: true }) res,
     ): Promise<LoginSuccessResponse> {
         const { accessToken, refreshToken, ...user } = await this.authService.login(req.user);
-        const data = { 
-            username: user.username,
-            userrole: user.role,
+        const data = {
             modified_field: 'user login',
             modified_value: true
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, user);
         res.cookie('refreshToken', refreshToken, {
             sameSite: true,
             httpOnly: true,
@@ -77,6 +78,7 @@ export class AuthController {
     @Post('login/mfa')
     @HttpCode(200)
     @UseGuards(AccessTokenMfaGuard, TotpGuard)
+    @Throttle(LOGIN_API_LIMIT, LOGIN_API_TTL)
     @UseFilters(IncorrectCodeFilter)
     async mfa(
         @Res({ passthrough: true }) res,
@@ -85,13 +87,11 @@ export class AuthController {
         const { accessToken, refreshToken, ...user } = await this.authService.loginMFA(
             mfaCredentials.username
         )
-        const data = { 
-            username: user.username,
-            userrole: user.role,
+        const data = {
             modified_field: 'user login mfa',
             modified_value: true
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, user);
         res.cookie('refreshToken', refreshToken, {
             sameSite: true,
             httpOnly: true,
@@ -107,6 +107,7 @@ export class AuthController {
     @Post('login/passExp')
     @HttpCode(200)
     @UseGuards(AccessTokenPassExpGuard)
+    @Throttle(LOGIN_API_LIMIT, LOGIN_API_TTL)
     @UseFilters(MfaRequiredFilter, UnchangedPasswordFilter)
     async passExpLogin(
         @Res({ passthrough: true }) res,
@@ -115,13 +116,11 @@ export class AuthController {
         const { accessToken, refreshToken, ...user } = await this.authService.loginPassExp(
             passExpCredentials
         )
-        const data = { 
-            username: user.username,
-            userrole: user.role,
+        const data = {
             modified_field: 'user login pass expired',
             modified_value: true
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, user);
         res.cookie('refreshToken', refreshToken, {
             sameSite: true,
             httpOnly: true,
@@ -145,13 +144,11 @@ export class AuthController {
             req.user.role,
             req.user.refreshToken
         )
-        const data = { 
-            username: req.user.username,
-            userrole: req.user.role,
+        const data = {
             modified_field: 'user login refresh token',
             modified_value: true
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, { username: req.user.username, role: req.user.role });
         res.cookie('refreshToken', refreshToken, {
             sameSite: true,
             httpOnly: true,
@@ -173,13 +170,11 @@ export class AuthController {
     @Get('authenticate-user-token')
     async authenticateUserToken(@Req() req): Promise<LoginSuccessResponse> {
         const response = this.authService.authUserToken(req.user)
-        const data = { 
+        const data = {
             modified_field: 'authentication token login',
             modified_value: true,
-            username: req.user.username,
-            userrole: req.user.role,
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, { username: req.user.username, role: req.user.role });
         return response
     }
     @ApiOkResponse({ type: Logout })
@@ -187,13 +182,11 @@ export class AuthController {
     @HttpCode(200)
     async logout(@Req() request: Request, @UserFromAccessToken() user: User): Promise<Logout> {
         const response = this.authService.logout(request)
-        const data = { 
+        const data = {
             modified_field: 'user logout',
             modified_value: true,
-            username: user.username,
-            userrole: user.role
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, user);
         return response
     }
 

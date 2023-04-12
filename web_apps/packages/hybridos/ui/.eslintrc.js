@@ -18,7 +18,15 @@ module.exports = {
     },
     plugins: ['@typescript-eslint', 'autofix', "react-hooks"],
     root: true,
-    ignorePatterns: ['.eslintrc.js', '.eslintrc-dev.js', 'craco.config.js', 'public/*', 'cypress.config.ts', 'src/**/*.spec.ts', 'src/**/*.spec.tsx'],
+    ignorePatterns: [
+        '.eslintrc.js',
+        '.eslintrc-dev.js',
+        'public/*',
+        'cypress.config.ts',
+        'src/**/*.spec.ts',
+        'src/**/*.spec.tsx',
+        'vite.config.ts'
+    ],
     // ignorePatterns: ['.eslintrc.js', 'support/*', 'e2e/*']
     rules: {
         "react/react-in-jsx-scope": "off",

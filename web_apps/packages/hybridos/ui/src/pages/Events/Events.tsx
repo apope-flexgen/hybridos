@@ -1,4 +1,5 @@
 import { PageLoadingIndicator } from '@flexgen/storybook';
+import { Order } from '@flexgen/storybook/dist/components/DataDisplay/Table/Table-Sorting';
 import { Box } from '@mui/material';
 import { useState, ChangeEvent } from 'react';
 import { Event, EventsRequestParams } from 'shared/types/dtos/events.dto';
@@ -13,6 +14,8 @@ const Events = () => {
   const [displayData, setDisplayData] = useState(initialDisplayData);
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [order, setOrder] = useState<Order>('desc');
+  const [orderBy, setOrderBy] = useState<keyof Event>('timestamp');
   const [total, setTotal] = useState(0);
   const initialFilters: EventsRequestParams = buildInitialFilters();
   const [filters, setFilters] = useState(initialFilters);
@@ -33,6 +36,18 @@ const Events = () => {
       ...filters,
       page: newPage,
     });
+  };
+
+  const handleRequestSort = (event: unknown, property: keyof Event) => {
+    const isAsc = orderBy === property && order === 'asc';
+    const ord = isAsc ? 'desc' : 'asc'
+    setOrder(ord);
+    setOrderBy(property);
+    setFilters({
+      ...filters,
+      order: ord === 'asc' ? 1 : -1,
+      orderBy: property,
+    })
   };
 
   return (
@@ -59,6 +74,9 @@ const Events = () => {
         displayData={displayData}
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
+        handleRequestSort={handleRequestSort}
+        order={order}
+        orderBy={orderBy}
         rowsPerPage={rowsPerPage}
         serverSide
         total={total}

@@ -1,12 +1,11 @@
 // TODO: fix lint
 /* eslint-disable react/no-unstable-nested-components, no-nested-ternary, max-lines */
-import { PageLoadingIndicator, lightTheme } from '@flexgen/storybook';
+import { PageLoadingIndicator, lightTheme, Typography } from '@flexgen/storybook';
 import { useCallback, useEffect, useState } from 'react';
 import { SiteConfiguration } from 'shared/types/dtos/siteConfig.dto';
 import HosControlFinal from 'src/assets/HosControlFinal.svg';
 import HosCoordinateFinal from 'src/assets/HosCoordinate.svg';
 import BaseApp from 'src/components/BaseApp';
-import LogoutButton from 'src/components/LogoutButton';
 import SiteStatusWrapper from 'src/components/SiteStatusWrapper';
 import useAuth from 'src/hooks/useAuth';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
@@ -62,7 +61,7 @@ const App = (): JSX.Element => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [siteConfiguration, setSiteConfiguration] = useState<SiteConfiguration | null>(null);
-  const axiosInstance = useAxiosWebUIInstance();
+  const axiosInstance = useAxiosWebUIInstance(true);
 
   const fetchData = useCallback(async () => {
     try {
@@ -83,12 +82,12 @@ const App = (): JSX.Element => {
           appName: 'Hybridos Control',
           timeZone: newSiteConfiguration.timezone,
           appBar: {
-            appLogo: product === FLEET_MANAGER
+            appLogo: newSiteConfiguration.product === FLEET_MANAGER
               ? HosCoordinateFinal
               : HosControlFinal,
-            appLogoSize: product === FLEET_MANAGER ? 'large' : 'small',
+            appLogoSize: newSiteConfiguration.product === FLEET_MANAGER ? 'large' : 'small',
             // TODO: Figure out what name to display for fleet manager
-            appDisplayName: product === FLEET_MANAGER
+            appDisplayName: newSiteConfiguration.product === FLEET_MANAGER
               ? ''
               : newSiteConfiguration.site_name,
             appIcon: 'tbd', // TODO: should be included in FlexGen Component Lib
@@ -97,31 +96,24 @@ const App = (): JSX.Element => {
         routes: getRoutes(newSiteConfiguration, role, layouts),
         menuItems: [
           {
-            children: username,
+            children: <Typography text={username} variant="bodyL" sx={{paddingLeft: '8px'}} />,
+            divider: false,
+            enableHover: false,
+            color: 'primary',
+            height: 'large',
+          },
+          {
+            children: <Typography text={role.toUpperCase()} variant="bodyS" sx={{paddingLeft: '8px'}} />,
             divider: true,
             enableHover: false,
             color: 'primary',
             height: 'small',
           },
-          {
-            children: role,
-            divider: false,
-            enableHover: false,
-            color: 'primary',
-            height: 'small',
-          },
-          {
-            children: <LogoutButton />,
-            divider: false,
-            enableHover: true,
-            color: 'secondary',
-            height: 'large',
-          },
         ],
         footer: {
-          softwareName: product === FLEET_MANAGER
-          ? FLEET_MANAGER_NAME
-          : SITE_CONTROLLER_NAME,
+          softwareName: newSiteConfiguration.product === FLEET_MANAGER
+            ? FLEET_MANAGER_NAME
+            : SITE_CONTROLLER_NAME,
           version: '11.1.0',
         },
       });
@@ -129,6 +121,8 @@ const App = (): JSX.Element => {
     } finally {
       setLoading(false);
     }
+    // TODO: fix lint
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [axiosInstance]);
 
   useEffect(() => {
@@ -171,31 +165,24 @@ const App = (): JSX.Element => {
             routes: getRoutes(updatedSiteConfiguration, user.role, layouts),
             menuItems: [
               {
-                children: user.username || '',
+                children: <Typography text={user.username || ''} variant="bodyL" sx={{paddingLeft: '8px'}} />,
+                divider: false,
+                enableHover: false,
+                color: 'primary',
+                height: 'large',
+              },
+              {
+                children: <Typography text={user.role.toUpperCase() || ''} variant="bodyS" sx={{paddingLeft: '8px'}} />,
                 divider: true,
                 enableHover: false,
                 color: 'primary',
                 height: 'small',
               },
-              {
-                children: user.role || '',
-                divider: false,
-                enableHover: false,
-                color: 'primary',
-                height: 'small',
-              },
-              {
-                children: <LogoutButton />,
-                divider: false,
-                enableHover: true,
-                color: 'secondary',
-                height: 'large',
-              },
             ],
             footer: {
               softwareName: updatedSiteConfiguration.product === FLEET_MANAGER
-              ? FLEET_MANAGER_NAME
-              : SITE_CONTROLLER_NAME,
+                ? FLEET_MANAGER_NAME
+                : SITE_CONTROLLER_NAME,
               version: '11.1.0',
             },
           });
@@ -212,7 +199,7 @@ const App = (): JSX.Element => {
 
   const siteStatusBar = (siteConfiguration !== null
                           && siteConfiguration.product === SITE_CONTROLLER)
-    ? <SiteStatusWrapper siteName="Horizon Power" />
+    ? <SiteStatusWrapper siteName={siteConfiguration.site_name || ''} />
     : undefined;
 
   // FIXME: where do we get sitename

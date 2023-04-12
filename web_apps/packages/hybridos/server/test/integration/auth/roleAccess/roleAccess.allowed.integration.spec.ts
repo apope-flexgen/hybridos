@@ -43,7 +43,7 @@ describe('Role Access - Allowed (Integration)', () => {
     })
 
     describe('allowed to access protected routes', () => {
-        describe('appSettings routes', () => {
+        describe('siteAdmins routes', () => {
             const URL = '/app-settings'
 
             it('GET /app-settings', async () => {

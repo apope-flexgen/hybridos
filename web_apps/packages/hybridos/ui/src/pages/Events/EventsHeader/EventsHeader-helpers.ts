@@ -26,6 +26,12 @@ export const buildURI = (filters: EventsRequestParams): string => {
   if (filters.limit != null) {
     filtersArray.push(['limit', filters.limit.toString()]);
   }
+  if (filters.order != null) {
+    filtersArray.push(['order', filters.order.toString()]);
+  }
+  if (filters.orderBy != null) {
+    filtersArray.push(['orderBy', filters.orderBy]);
+  }
   if (filters.page != null) {
     const page = (filters.page === 0) ? 1 : (filters.page + 1);
     filtersArray.push(['page', page.toString()]);
@@ -48,6 +54,8 @@ export const buildInitialFilters = (): EventsRequestParams => {
     search: '',
     limit: 10,
     page: 0,
+    order: -1,
+    orderBy: 'timestamp',
   };
 
   return initialFilters;

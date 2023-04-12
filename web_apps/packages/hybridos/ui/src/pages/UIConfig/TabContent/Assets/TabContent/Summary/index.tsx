@@ -1,12 +1,14 @@
+// TODO: fix lint
+/* eslint-disable max-lines */
 import {
+  Accordion,
   CardRow, Divider, Label, MuiButton, TextField,
 } from '@flexgen/storybook';
 import { ChangeEvent, useState } from 'react';
 import { Asset, Summary as SummaryType } from 'shared/types/dtos/assets.dto';
-import Accordion from 'src/components/Accordion';
 import { useAssetsContext } from 'src/pages/UIConfig/TabContent/Assets';
 import { ColumnTitles, TextFieldsContainer } from 'src/pages/UIConfig/TabContent/Assets/TabContent/styles';
-import { AddItemButtonSX } from 'src/pages/UIConfig/TabContent/styles';
+import { AddItemButtonSX, DeleteButtonContainer } from 'src/pages/UIConfig/TabContent/styles';
 import {
   ADD_SUMMARY, DELETE_SUMMARY, items, newSummary, SUMMARY,
 } from './helpers/constants';
@@ -82,16 +84,17 @@ const Summary = () => {
       <Divider orientation="horizontal" variant="fullWidth" />
       {selectedAsset?.summary.map((summ, index) => (
         <Accordion
-          deleteText={DELETE_SUMMARY}
           expanded={expanded.includes(index)}
+          expandIcon={!expanded.includes(index) ? 'Edit' : undefined}
+          heading={summ.name || ''}
           // eslint-disable-next-line react/no-array-index-key
           key={index}
-          name={summ.name || ''}
-          onDelete={() => handleDelete(index)}
-          onExpand={(_, exp) => handleExpand(index, exp)}
+          onChange={(exp) => handleExpand(index, exp)}
         >
           <TextFieldsContainer>
-            {items.map(({ key, label, helperText }) => (
+            {items.map(({
+              key, label, helperText, type,
+            }) => (
               <TextField
                 disableLabelAnimation
                 helperText={helperText}
@@ -100,9 +103,18 @@ const Summary = () => {
                 label={label}
                 onChange={(e) => handleTextFieldChange(e, index)}
                 value={summ[key as keyof SummaryType]}
+                type={type as 'number' | undefined}
               />
             ))}
           </TextFieldsContainer>
+          <DeleteButtonContainer>
+            <MuiButton
+              color="error"
+              label={DELETE_SUMMARY}
+              onClick={() => handleDelete(index)}
+              variant="outlined"
+            />
+          </DeleteButtonContainer>
         </Accordion>
       ))}
       <MuiButton

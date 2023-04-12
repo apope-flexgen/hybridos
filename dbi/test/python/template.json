@@ -1,0 +1,10 @@
+{
+    "string" : "the quick brown fox jumped over the lazy dog!@#$%^&*.,?/~|<>{}[]()",
+    "int" : 42,
+    "float" : 4.2,
+    "boolean" : false,
+    "string_array" : ["hello", "world"],
+    "int_array" : [1, 2, 3, 4, 5],
+    "float_array" : [1.23, 2.34, 3.45, 4.56, 5.67],
+    "boolean_array" : [true, false]
+}

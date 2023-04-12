@@ -2,21 +2,28 @@
 /* eslint-disable no-prototype-builtins */
 import { Box, MuiButton } from '@flexgen/storybook';
 import { FunctionComponent, useContext, useState } from 'react';
+import { PasswordOptions } from 'shared/types/api/Users/Users.types';
+import { addUserRowButtonsSx, addUserRowSx } from 'src/pages/UserAdmin/UserAdmin.styles';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
-import { initialPasswordRequirements } from './UserAdmin.constants';
-import UserRow from './UserRow';
+import UserRow from 'src/pages/UserAdmin/UserRow';
 
 export interface AddUserRowProps {
   updateUserData: () => void
   setIsLoading: (state: boolean) => void
   setShowAddUser: (state: any) => void
+  showDeveloper?: boolean
+  passwordOptions: PasswordOptions
+  oldPasswords: number
 }
 
 const AddUserRow: FunctionComponent<AddUserRowProps> = ({
   updateUserData,
   setIsLoading,
   setShowAddUser,
+  showDeveloper,
+  passwordOptions,
+  oldPasswords
 }: AddUserRowProps) => {
   const axiosInstance = useAxiosWebUIInstance();
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
@@ -64,33 +71,16 @@ const AddUserRow: FunctionComponent<AddUserRowProps> = ({
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '12px',
-        paddingY: '12px',
-        width: '100%',
-        flexGrow: 1,
-      }}
-    >
+    <Box sx={addUserRowSx}>
       <UserRow
-        passwordRequirements={initialPasswordRequirements}
         setUserData={setUserData}
         setValidPassword={setValidPassword}
+        showDeveloper={showDeveloper}
         userData={userData}
+        passwordOptions={passwordOptions}
+        oldPasswords={oldPasswords}
       />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'left',
-          gap: '12px',
-          width: '100%',
-          flexGrow: 1,
-        }}
-      >
+      <Box sx={addUserRowButtonsSx}>
         <MuiButton label="add user" onClick={addUser} variant="contained" />
         <MuiButton label="cancel" onClick={cancel} variant="text" />
       </Box>

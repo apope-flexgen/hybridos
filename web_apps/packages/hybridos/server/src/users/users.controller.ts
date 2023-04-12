@@ -9,9 +9,10 @@ import {
     Put,
     Query,
     UseFilters,
+    UseGuards,
 } from '@nestjs/common'
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
-import { IValidJWTService, VALID_JWT_SERVICE } from 'src/auth/interfaces/validJWT.service.interface'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
 import { DBI_SERVICE } from 'src/dbi/dbi.constants'
 import { IDBIService } from 'src/dbi/dbi.interface'
 import { UserFromAccessToken } from 'src/decorators/userFromAccessToken.decorator'
@@ -32,6 +33,7 @@ import { UserResponse } from './responses/user.response'
 
 @ApiTags('users')
 @Controller('users')
+@UseGuards(RolesGuard)
 @UseFilters(UserNotFoundFilter)
 export class UsersController {
     constructor(
@@ -39,7 +41,7 @@ export class UsersController {
         private usersService: IUsersService,
         @Inject(DBI_SERVICE)
         private readonly dbiService: IDBIService,
-    ) {}
+    ) { }
 
     @ApiOkResponse({ type: AllUsersResponse })
     @Get()
@@ -57,13 +59,11 @@ export class UsersController {
         @UserFromAccessToken() loggedInUser: User,
     ): Promise<UserResponse> {
         const response = await this.usersService.update(params.id, user)
-        const data = { 
+        const data = {
             modified_field: 'user updated',
             modified_value: true,
-            username: loggedInUser.username,
-            userrole: loggedInUser.role,
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, loggedInUser);
         return response
     }
 
@@ -75,13 +75,11 @@ export class UsersController {
         @UserFromAccessToken() user: User,
     ): Promise<DeleteUserResponse> {
         const response = await this.usersService.delete(params.id)
-        const data = { 
+        const data = {
             modified_field: 'user deleted',
             modified_value: true,
-            username: user.username,
-            userrole: user.role,
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, user);
         return response
     }
 
@@ -93,13 +91,11 @@ export class UsersController {
         @UserFromAccessToken() loggedInUser: User,
     ): Promise<UserResponse> {
         const response = await this.usersService.create(user)
-        const data = { 
+        const data = {
             modified_field: 'user created',
             modified_value: true,
-            username: loggedInUser.username,
-            userrole: loggedInUser.role,
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, loggedInUser);
         return response
     }
 
@@ -110,13 +106,11 @@ export class UsersController {
         @UserFromAccessToken() user: User,
     ): Promise<UserResponse> {
         const response = await this.usersService.readById(params.id)
-        const data = { 
+        const data = {
             modified_field: 'user read',
             modified_value: true,
-            username: user.username,
-            userrole: user.role,
         }
-        await this.dbiService.postUIConfigAuditLog(data);
+        await this.dbiService.postUIConfigAuditLog(data, user);
         return response
     }
 }

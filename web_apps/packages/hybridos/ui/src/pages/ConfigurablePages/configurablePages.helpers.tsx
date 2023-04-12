@@ -88,6 +88,8 @@ const generateDataPointComponentFunction: (
       props: {
         label: staticData.label,
         unit: staticData.unit,
+        divider: true,
+        variant: staticData.variant,
       },
     },
     displayGroupID,
@@ -163,7 +165,7 @@ const getControlComponentFunctions: (
 };
 
 export const getUpdatedComponentFunctions: (data: ConfigurablePageDTO['displayGroups']) => {
-  [displayGroupID: string]: DisplayGroupFunctions;
+  [displayGroupID: string]: DisplayGroupFunctions
 } = (data) => {
   const updatedComponentFunctions: { [displayGroupID: string]: DisplayGroupFunctions } = {};
 

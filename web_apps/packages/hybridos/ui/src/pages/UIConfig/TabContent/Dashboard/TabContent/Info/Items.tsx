@@ -2,10 +2,10 @@
 /* eslint-disable max-lines */
 /* eslint-disable react/no-array-index-key */
 import {
+  Accordion,
   Divider, MuiButton, Switch, TextField, Typography,
 } from '@flexgen/storybook';
-import { Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Dashboard } from 'shared/types/dtos/dashboards.dto';
 import { useDashboardsContext } from 'src/pages/UIConfig/TabContent/Dashboard';
 import { SEPARATE_INPUTS_WITH_COMMA } from 'src/pages/UIConfig/TabContent/helpers/constants';
@@ -25,7 +25,7 @@ import {
   DELETE_ITEM,
 } from './helpers/constants';
 import {
-  AccordionDetailsSX, AccordionSummarySX, AccordionSX, ColumnLeft, Item, Row,
+  AccordionDetailsSX, AccordionSX, ColumnLeft, Item, Row,
 } from './styles';
 
 const Items = () => {
@@ -33,6 +33,8 @@ const Items = () => {
     selectedDashboard,
     setSelectedDashboard,
   } = useDashboardsContext();
+
+  const [expanded, setExpanded] = useState(false);
 
   const handleTextFieldChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { target: { id, name, value } } = event;
@@ -123,6 +125,10 @@ const Items = () => {
     } as Dashboard));
   };
 
+  const handleExpand = () => {
+    setExpanded((prevExpanded) => !prevExpanded);
+  };
+
   return (
     <>
       <Row>
@@ -169,17 +175,14 @@ const Items = () => {
         <ColumnLeft>
           <Typography text={ITEMS} variant="bodyL" />
         </ColumnLeft>
-        <Accordion sx={AccordionSX}>
-          <AccordionSummary
-            sx={AccordionSummarySX}
-          >
-            <Typography
-              color="disabled"
-              text={selectedDashboard?.info.items?.length ? ITEMS : NO_ITEMS_YET}
-              variant="bodyMBold"
-            />
-          </AccordionSummary>
-          <AccordionDetails sx={AccordionDetailsSX}>
+        <Accordion
+          accordionStyles={AccordionSX}
+          accordionDetailsStyles={AccordionDetailsSX as React.CSSProperties}
+          expanded={expanded}
+          heading={selectedDashboard?.info.items?.length ? ITEMS : NO_ITEMS_YET}
+          onChange={handleExpand}
+        >
+          <>
             {selectedDashboard?.info.items?.map((item, index) => (
               <Item key={index}>
                 <TextField
@@ -212,7 +215,7 @@ const Items = () => {
               startIcon="Add"
               variant="text"
             />
-          </AccordionDetails>
+          </>
         </Accordion>
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />

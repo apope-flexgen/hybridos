@@ -43,6 +43,7 @@ export class DefaultUserService implements IDefaultUserService, OnApplicationBoo
         }
 
         const { userDeleted } = await this.usersService.delete(this.defaultUser.id)
+        this.defaultUser = null
         return userDeleted
     }
 }

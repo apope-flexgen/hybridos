@@ -1,19 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common'
 
 import {
-    APP_SETTINGS_SERVICE,
-    IAppSettingsService,
-} from '../appSettings/interfaces/appSetting.service.interface'
+    SITE_ADMINS_SERVICE,
+    ISiteAdminsService,
+} from '../siteAdmins/interfaces/siteAdmin.service.interface'
 import { AuthRadius } from '../radius/authRadius'
 
 @Injectable()
 export class RadiusService {
     constructor(
-        @Inject(APP_SETTINGS_SERVICE)
-        private readonly appSettingsService: IAppSettingsService
+        @Inject(SITE_ADMINS_SERVICE)
+        private readonly siteAdminsService: ISiteAdminsService
     ) {}
     async authenticate(username: string, password: string): Promise<string> {
-        const site = await this.appSettingsService.find()
+        const site = await this.siteAdminsService.find()
 
         if (!site.radius.is_enabled) {
             return null

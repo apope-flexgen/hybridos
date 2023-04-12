@@ -4,17 +4,17 @@ import { authenticator } from 'otplib'
 import { toDataURL } from 'qrcode'
 
 import {
-    APP_SETTINGS_SERVICE,
-    IAppSettingsService,
-} from '../appSettings/interfaces/appSetting.service.interface'
+    SITE_ADMINS_SERVICE,
+    ISiteAdminsService,
+} from '../siteAdmins/interfaces/siteAdmin.service.interface'
 import { User } from '../../../shared/types/dtos/auth.dto'
 import { MfaRequiredException } from './exceptions/mfaRequired.exception'
 
 @Injectable()
 export class MfaService {
     constructor(
-        @Inject(APP_SETTINGS_SERVICE)
-        private readonly appSettingsService: IAppSettingsService,
+        @Inject(SITE_ADMINS_SERVICE)
+        private readonly siteAdminsService: ISiteAdminsService,
         private readonly jwtService: JwtService
     ) {}
     generateURL(user: User): string {
@@ -52,7 +52,7 @@ export class MfaService {
     }
 
     async checkIfSiteMfaEnabled(user: User) {
-        const settings = await this.appSettingsService.find()
+        const settings = await this.siteAdminsService.find()
 
         if (settings.password.multi_factor_authentication) {
             throw new MfaRequiredException(user)

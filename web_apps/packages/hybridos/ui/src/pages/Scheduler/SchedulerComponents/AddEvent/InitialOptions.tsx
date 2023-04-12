@@ -6,11 +6,11 @@ import { Box } from '@mui/material';
 import dayjs from 'dayjs';
 import React from 'react';
 
+import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
 import { addEventLabels, isDurationOver24Hours } from 'src/pages/Scheduler/SchedulerComponents/AddEvent/AddEventHelpers';
 import { checkIfStartBeforeEnd } from 'src/pages/Scheduler/SchedulerHelpers';
 import { EditEventState, EventVariables, VariableValues } from 'src/pages/Scheduler/SchedulerTypes';
 import { useTheme } from 'styled-components';
-import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
 
 export interface InitialOptionsProps {
   disableDateField?: boolean
@@ -44,7 +44,7 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
     if (type === 'Bool') {
       return (
         <Select
-          width="fullWidth"
+          fullWidth
           disabled={disableAllFields}
           label={name}
           key={name}
@@ -63,6 +63,7 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
     if (type === 'Int' || type === 'Float') {
       return (
         <NumericInput
+          endComponentAdornment={<></>}
           endTextAdornment={unit}
           disabled={disableAllFields}
           fullWidth

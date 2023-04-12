@@ -11,6 +11,7 @@ export const items = [
     label: 'Scalar',
     helperText: 'Numbers Only',
     key: 'scalar',
+    type: 'number',
   },
   {
     label: 'URI',

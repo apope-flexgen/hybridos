@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 
 import {
-    APP_SETTINGS_SERVICE,
-    IAppSettingsService,
-} from '../appSettings/interfaces/appSetting.service.interface'
+    SITE_ADMINS_SERVICE,
+    ISiteAdminsService,
+} from '../siteAdmins/interfaces/siteAdmin.service.interface'
 import { User } from '../../../shared/types/dtos/auth.dto'
 import { PasswordExpiredException } from './exceptions/passwordExpired.exception'
 
@@ -12,8 +12,8 @@ import { PasswordExpiredException } from './exceptions/passwordExpired.exception
 export class PassExpService {
     constructor(
         private readonly jwtService: JwtService,
-        @Inject(APP_SETTINGS_SERVICE)
-        private readonly appSettingsService: IAppSettingsService
+        @Inject(SITE_ADMINS_SERVICE)
+        private readonly siteAdminsService: ISiteAdminsService
     ) {}
 
     DAY_MS = 86400000
@@ -75,7 +75,7 @@ export class PassExpService {
     }
 
     async checkIfPasswordExpired(user: User) {
-        const settings = await this.appSettingsService.find()
+        const settings = await this.siteAdminsService.find()
 
         if (settings.password.password_expiration) {
             // check if password is expired

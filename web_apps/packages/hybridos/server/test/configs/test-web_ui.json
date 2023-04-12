@@ -1,0 +1,28 @@
+{
+    "timezone": "America/Chicago",
+    "ess": false,
+    "gen": true,
+    "solar": true,
+    "met_station": false,
+    "tracker": false,
+    "feeders": true,
+    "features": true,
+    "site": true,
+    "events": true,
+    "control_cabinet": true,
+    "fleet_manager_dashboard": true,
+    "scheduler": true,
+    "product": "SC",
+    "units": {
+        "W": "M",
+        "Wh": "M",
+        "VAR": "M",
+        "VARh": "M",
+        "VA": "M",
+        "VAh": "M",
+        "W/s": "M"
+    },
+    "inspectorComponentsName": "test_controller",
+    "site_name": "Durham",
+    "fleet_name": "ERCOT"
+}
