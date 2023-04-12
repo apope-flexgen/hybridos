@@ -1,0 +1,13 @@
+[Unit]
+Description=Bounce a failed DNP3 server
+
+[Service]
+Type=simple
+User=root
+TimeoutStartSec=0
+Restart=always
+RestartSec=30
+ExecStart=/home/hybridos/bootstrap/dnp3_bounce/dnp3_bounce.sh %I
+
+[Install]
+WantedBy=multi-user.target

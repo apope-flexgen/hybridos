@@ -1,0 +1,11 @@
+[Unit]
+Description=INIT FLEXGEN
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'mkdir -p /var/run/flexgen/ && chown hybridos:hybridos /var/run/flexgen/'
+ExecStop=/bin/rmdir /var/run/flexgen
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+{
+	"outputs": [
+		{
+			"uri": "/metrics",
+			"publishRate": 1000,
+			"inputs": [],
+			"echo": {
+				"heartbeat": 0
+			}
+		},
+        {
+            "uri": "/features/site_operation",
+			"publishRate": 1000,
+			"inputs": [],
+			"echo": {
+				"heartbeat_counter": 0
+			}
+        }
+	]
+}

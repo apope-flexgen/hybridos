@@ -1,0 +1,57 @@
+- hosts: localhost
+  become: true
+
+  tasks:
+  - name: "Include Vars"
+    include_vars: sce_vars.yml
+    name: sce_vars
+  
+  - name: "Check that SCE Configs Exist"
+    stat:
+      path: "{{ cfg_src_path }}"
+    register: configs
+  
+  - name: "Copy ESS Modbus Client File"
+    copy:
+      src: "{{ cfg_src_path }}/flexgen_ess_modbus_client.json"
+      dest: "{{ cfg_src_path }}/flexgen_ess_{{ item.0.name }}_modbus_client.json"
+    with_together:
+      - "{{ all_ess }}"
+
+  - name: "Edit ESS Modbus Client Files"
+    replace:
+      path: "{{ cfg_src_path }}/flexgen_ess_{{ item.0.name }}_modbus_client.json"
+      regexp: 'NUMREGEX'
+      replace: "{{ item.0.name }}"
+    with_together:
+      - "{{ all_ess }}"
+
+  - name: "Edit ESS Modbus Client Ports"
+    replace:
+      path: "{{ cfg_src_path }}/flexgen_ess_{{ item.0.name }}_modbus_client.json"
+      regexp: 65536
+      replace: "{{ item.0.port }}"
+    with_together:
+      - "{{ all_ess }}"
+
+  - name: "Check Echo"
+    stat:
+      path: /usr/local/bin/echo
+    register: echo_installed
+  
+  - name: "Gather List of Modbus Clients"
+    when: configs.stat.exists
+    find:
+      paths: "{{ cfg_src_path }}"
+      patterns: "flexgen_ess_*_modbus_client.json"
+      file_type: file
+    register: clients
+
+  - name: Setting Modbus Client files as list to Generate Echoes and Servers
+    set_fact:
+      mbclient_list: "{{ clients.files | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
+
+  - name: "Make Modbus Echo and Server Files"
+    shell: "/usr/local/bin/echo -c {{ cfg_src_path }}/{{ item }} -mode modbus -output {{ cfg_path }}"
+    with_items: 
+      - "{{ mbclient_list }}"
