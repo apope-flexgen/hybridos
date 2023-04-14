@@ -2,7 +2,6 @@
 
 # capture script and build relative paths
 cwd="$(pwd)"
-echo $cwd
 substr=""
 IFS_bak=$IFS  # backup the existing IFS
 IFS='/'
@@ -16,7 +15,7 @@ for i in "${substr[@]}"; do
     script_path+=$i
     script_path+="/"  # optionally add trailing slash
 done
-echo -e "script_path: $script_path"
+#echo "script_path: $script_path"
 
 # source build functions (from repository path)
 source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
@@ -147,10 +146,9 @@ for i in "${components[@]}"; do
         commit_submodule=$(git log --pretty=format:'%h' -n 1)
 
         if git describe --match v* --abbrev=0 --tags HEAD &> /dev/null ; then
-            tag_long=$(git describe --match "v*" --abbrev=0 --tags HEAD)
-            if [[ $tag_long == "v"* ]]; then tag_submodule=${tag_long:1}; fi # (v1.0.0) -> (1.0.0)
-            if [[ $tag_long == *"-rc" ]]; then tag_submodule=$(echo $tag | cut -d'-' -f 1); rc=".rc"; fi # (v1.0.0-rc) - > (v.1.0.0.rc)
-
+            tag_submodule=$(git describe --match "v*" --abbrev=0 --tags HEAD)
+            if [[ $tag_submodule == "v"* ]]; then tag_submodule=${tag_submodule:1}; fi # (v1.0.0) -> (1.0.0)
+            if [[ $tag_submodule == *"-rc" ]]; then tag_submodule=$(echo $tag | cut -d'-' -f 1); rc=".rc"; fi # (v1.0.0-rc) - > (v.1.0.0.rc)
         else
             tag_submodule=$commit_submodule # no tag info, use abbreviated commit hash
         fi
@@ -175,7 +173,6 @@ for i in "${meta[@]}"; do
     echo -e "\n##### packaging: $i"
     package=$(echo $rpmbuild | sed "s/hybridos/$i/g")
     echo -e "$package"
-    echo -e "build_output_meta: $build_output_meta"
 
     cp -av "$build_output_meta" "$package" # ./build/release/repo.txt -> ./ess_controller_meta-10.1.0-1.local
     tar -czvf "$package".tar.gz "$package"

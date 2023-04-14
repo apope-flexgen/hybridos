@@ -24,6 +24,8 @@ NONE='\033[0m' # No Color
 
 function error_trap() # error message passed as $1
 {
+    export PATH=$GLOBAL_PATH
+    
     echo -e "\n${ERROR}##### ERROR: $1${NONE}\n"
     exit 1 # hard stop exceution
 }

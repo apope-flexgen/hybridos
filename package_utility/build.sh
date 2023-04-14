@@ -13,6 +13,7 @@ build_flag=true
 install_flag=true
 uninstall_flag=false
 mode_arg=release
+build_output="$(pwd)/build/$mode_arg/"
 help_flag=false
 
 function help()
@@ -23,6 +24,7 @@ function help()
     echo -e "  -i, --install"
     echo -e "  -u, --uninstall"
     echo -e "  -m, --mode\tspecify build mode with [args]"
+    echo -e "  -o, --path\tspecify path to build_output (submodules)"
     echo -e "  -h, --help"
     echo -e "[args]"
     echo -e "  release"
@@ -34,7 +36,7 @@ function help()
 
 # options may be followed by one colon to indicate they have a required argument
 options_sub="$@" # backup input arguments for submodule processing
-if ! options=$(getopt -o bium:h -l build,install,uninstall,mode:,help -- "$@")
+if ! options=$(getopt -o bium:o:h -l build,install,uninstall,mode:,output:,help -- "$@")
 then
     # something went wrong, getopt will put out an error message for us
     "invalid arguments, please run with '--help' to review available options."
@@ -50,6 +52,7 @@ do
         -i|--install) build_flag=false;;
         -u|--uninstall) uninstall_flag=true;;
         -m|--mode) mode_arg="$2"; shift;;
+        -o|--output) build_output="$2"; shift;;
         -h|--help) help_flag=true;;
         (--) shift; break;;
         (-*) echo -e "$0: error - unrecognized option $1" 1>&2; exit 1;;
@@ -65,25 +68,13 @@ if [ "$help_flag" == true ]; then
 fi
 
 # capture script and build relative paths
-substr=""
-IFS_bak=$IFS  # backup the existing IFS
-IFS='/'
-dir=$(dirname "$0")
-read -ra substr <<< "$dir"
-IFS=$IFS_bak # reset IFS
+# $0 is the actual running script, ./package_utility/build.sh
+script_path=$(readlink -f "$(dirname "$0")")/ # this is absolute path to the script, ./package_utility/
+echo -e "script_path: $script_path"
 
-script_path="" # relative path to package_utility directory
-for i in "${substr[@]}"; do
-    if [ index = ${#substr[@]} ]; then break; fi
-    script_path+=$i
-    script_path+="/"  # optionally add trailing slash
-done
-# echo "$script_path"
-
-build_path=$(readlink -f ${substr[0]}) # resolve relative path to build directory
-build_output="$build_path/build/$mode_arg"
-# echo "$build_path"
-# echo "$build_output"
+# resolve relative path to build directory
+# build_output="$(pwd)/build/$mode_arg/" - defined as a global
+echo -e "build_output: $build_output"
 
 # source helper functions (from relative path)
 functions_path="${script_path}functions.sh"
@@ -95,7 +86,6 @@ if [ $CATCH -eq 1 ]; then
 fi
 
 # source build functions (from repository path)
-pwd
 source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
 
 # complete checks before proceeding...
@@ -180,7 +170,7 @@ fi
 # execute submodules
 for i in "${submodules[@]}"; do
     if cd "$i" ; then
-        ../package_utility/build.sh "$options_sub" || warning_trap "failed to build submodule $i."
+        "${script_path}build.sh" "$options_sub" "-o" "$build_output" || error_trap "failed to build submodule $i."
         cd ../
     else
         warning_trap "submodule $i not found."

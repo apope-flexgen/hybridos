@@ -3,6 +3,10 @@
 cwd=$(pwd)
 
 # source build functions (from repository path)
+if ! source functions.sh; then
+    echo -e "failed to import functions.sh"
+    exit 1
+fi
 source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
 
 function help()
@@ -55,8 +59,8 @@ function git_checkout() # $1 - repo; $2 - branch
     # checkout the specified branch, update as needed
     if git checkout "$2"; then echo -e "branch $2 checked out";
     else
-        echo -e "branch $2 not found, defaulting to dev"
-        git checkout dev # default to dev of the specified branch does not exist
+        echo -e "branch $2 not found. cancelling checkout."
+        exit 1
     fi
 
     # submodule management
@@ -152,8 +156,7 @@ for repo in ${!repo_branch_map[@]}; do
 done
 
 # report confirmation
-pwd
-./git_status.sh
+./git_status.sh || error_trap "component tags or branches are not valid"
 
 # print a warning for any repos that were not found
 for repo in ${!repos_not_found[@]}; do

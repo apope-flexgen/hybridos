@@ -2,8 +2,6 @@
 
 # capture script and build relative paths
 cwd="$(pwd)"
-echo $cwd
-git branch 2>&1
 substr=""
 IFS_bak=$IFS  # backup the existing IFS
 IFS='/'
@@ -20,6 +18,14 @@ done
 #echo "script_path: $script_path"
 
 # source build functions (from repository path)
+functions_path="${script_path}functions.sh"
+source $functions_path
+CATCH=$?
+if [ $CATCH -eq 1 ]; then
+    echo -e "failed to import functions.sh."
+    exit 1
+fi
+
 source build_utils.sh || error_trap "failed to import $cwd/build_utils.sh."
 
 # complete checks before proceeding...
@@ -38,14 +44,10 @@ for i in "${components[@]}"; do
     echo -e "\n##### component: $i..."
     if cd "$i" ; then
         # building fims as a submodule for meta-RPMs, we need to install by default
-        if [ ! -d "./package_utility" ]; then
-            # we don't have a package utility submodule, use the monorepo package utility
-            cp -R ../package_utility . 
-        fi
         if [ "$i" == "fims" ]; then
-            ./package_utility/build.sh "-bi" || warning_trap "failed to build submodule $i."
+            ../package_utility/build.sh "-bi" || error_trap "failed to build submodule $i."
         else
-            ./package_utility/build.sh "$@" || warning_trap "failed to build submodule $i."
+            ../package_utility/build.sh "$@" || error_trap "failed to build submodule $i."
         fi
         cd ../
     fi

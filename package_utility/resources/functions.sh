@@ -50,14 +50,12 @@ function gcc_setup()
     IFS=$IFS_bak # reset IFS
     # echo -e "$gcc_ver"
 
-    if [[ "$gcc_ver" -gt 4 ]]; then
-        echo -e "exporting devtoolset-9"
-        export PATH=/opt/rh/devtoolset-9/root/bin:$PATH
-    fi
-
     if [[ "$gcc_ver" -gt 9 ]]; then
         echo -e "exporting devtoolset-11"
         export PATH=/opt/rh/devtoolset-11/root/bin:$PATH
+    elif [[ "$gcc_ver" -gt 4 ]]; then
+        echo -e "exporting devtoolset-9"
+        export PATH=/opt/rh/devtoolset-9/root/bin:$PATH
     fi
 
     # echo $PATH
