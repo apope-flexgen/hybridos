@@ -1,3 +1,6 @@
 #!/bin/bash
+set -e
 
-./package.sh
+build_number=$CODEBUILD_BUILD_NUMBER
+
+BUILD=$build_number ./package.sh

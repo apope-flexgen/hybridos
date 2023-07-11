@@ -39,11 +39,6 @@ else
 fi
 
 # capture working branch
-echo "current directory:"
-pwd
-echo "git branch output:"
-git branch 2>&1
-pwd
 branch=$(git branch | grep \* | cut -d ' ' -f2)
 echo -e "branch:\t\t$branch"
 rm -f GIT_BRANCH
@@ -90,7 +85,12 @@ objcopy --input binary \
             --binary-architecture i386 GIT_BUILD git_build.o
 
 # capture environment status
-release="$BUILD${rc}" # build occuring in CI/CD
+if [ "$ENVIRONMENT" == "Jenkins" ] || [ -n "$AWS_REGION" ]; then
+    release="$BUILD${rc}" # build occuring in Jenkins or CodeBuild
+else
+    release="${BUILD}${rc}.local" # build occuring in a local environment
+fi
+#echo -e "release:\t$release"
 
 rpmbuild="$name-$tag-$release"
 echo -e "rpmbuild:\t$rpmbuild"

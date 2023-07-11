@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo Getting container credentials...
 STS_RESPONSE=$(curl 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI)

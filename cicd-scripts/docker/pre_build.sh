@@ -1,5 +1,5 @@
 #!/bin/bash
+set -e
 
-echo Logging in to Amazon ECR...
-# aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-echo no-op
+echo Logging in to Docker Hub...
+echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
