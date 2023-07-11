@@ -306,6 +306,7 @@ Resources:
       Name: !Sub ${AWS::StackName}-package
       ServiceRole: !Ref CodeBuildServiceRole
 
+
   TestProject:
     Type: AWS::CodeBuild::Project
     Properties:
