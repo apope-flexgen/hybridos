@@ -7,8 +7,7 @@ export const labels = {
   },
   deleteConfirmation: {
     title: 'Are you sure?',
-    description:
-            'All events using this Mode will also be deleted. This action cannot be undone.',
+    description: 'All events using this Mode will also be deleted. This action cannot be undone.',
     secondaryLabel: 'Cancel',
     primaryLabel: 'Delete Mode',
   },
@@ -18,13 +17,23 @@ export const labels = {
     secondaryLabel: 'Discard & Continue',
     primaryLabel: '',
   },
+  addVariableToMode: {
+    title: 'Are you sure?',
+    description: 'Adding new variables or editing a variable type will cause all scheduled events using this Mode to be deleted. This action cannot be undone.',
+    secondaryLabel: 'Discard',
+    primaryLabel: 'Save',
+  },
 };
 
 export type ModalStateType = {
-  type: SchedulerModalTypes,
-  onClose: () => void,
-  primaryActions: any,
-  secondaryActions: any,
+  type: SchedulerModalTypes;
+  onClose: () => void;
+  primaryActions: any;
+  secondaryActions: any;
 };
 
-export type SchedulerModalTypes = 'unsavedChanges' | 'deleteConfirmation' | 'navigateWithoutSaving';
+export type SchedulerModalTypes =
+  | 'unsavedChanges'
+  | 'deleteConfirmation'
+  | 'navigateWithoutSaving'
+  | 'addVariableToMode';

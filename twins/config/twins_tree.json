@@ -1,0 +1,384 @@
+{
+    "root":{
+        "id": "grid",
+        "asset_type": "GRID",
+        "children":[
+            {
+                "id": "transmission_line",
+                "asset_type": "XFMR",
+                "children": [
+                    {
+                        "id": "twins_sel_735",
+                        "asset_type": "FEED",
+                        "children": [
+                            {
+                                "id": "tx_gsu",
+                                "asset_type": "XFMR",
+                                "children":[
+                                    {
+                                        "id": "twins_sel_351_1",
+                                        "asset_type": "FEED",
+                                        "children":[
+                                            {
+                                                "id": "pcs_1",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_1",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_2",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_2",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_3",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_3",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_4",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_4",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_5",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_5",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_6",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_6",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_7",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_7",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_8",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_8",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_9",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_9",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_10",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_10",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_11",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_11",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_12",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_12",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_13",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_13",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_14",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_14",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_15",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_15",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_16",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_16",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "twins_sel_351_2",
+                                        "asset_type": "FEED",
+                                        "children":[
+                                            {
+                                                "id": "pcs_17",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_17",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_18",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_18",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_19",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_19",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_20",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_20",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_21",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_21",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_22",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_22",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_23",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_23",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_24",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_24",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_25",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_25",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_26",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_26",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_27",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_27",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_28",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_28",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_29",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_29",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_30",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_30",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_31",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_31",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_32",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_32",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "pcs_33",
+                                                "asset_type": "PCS",
+                                                "children":[
+                                                    {
+                                                        "id": "bms_33",
+                                                        "asset_type": "BMS"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "twins_sel_487e_pri",
+                                        "asset_type": "FEED",
+                                        "children": [
+                                            {
+                                                "id": "tx_aux",
+                                                "asset_type": "XFMR",
+                                                "children":[
+                                                    {
+                                                        "id": "aux_load",
+                                                        "asset_type": "LOAD"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

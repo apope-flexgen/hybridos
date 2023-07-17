@@ -1,0 +1,29 @@
+{
+   "system":
+   {   "name":"example_notmp",
+       "protocol": "Modbus TCP",
+       "id": "example_notmp",
+       "ip_address": "0.0.0.0",
+       "port": 502 
+   },
+    "registers":
+     {
+      "coils":
+       [
+          { "name":"24_decode_id","id":"24_decode_id","offset":110,"uri":"/components/comp2" }       ],
+      "discrete_inputs":
+       [
+          { "name":"25","id":"25","offset":111,"uri":"/components/comp2" }       ],
+      "input_registers":
+       [
+          { "name":"26","id":"26","offset":109,"uri":"/components/xyz_ip_device_id" }       ],
+      "holding_registers":
+       [
+          { "name":"01","id":"01","offset":100,"uri":"/components/comp1" },
+          { "name":"02","id":"02","offset":101,"size": 2, "uri":"/components/comp1" },
+          { "name":"03","id":"03","offset":103,"size": 4, "uri":"/components/comp1" },
+          { "name":"10","id":"10","offset":107,"signed": true, "uri":"/components/comp1" },
+          { "name":"13","id":"13","offset":108,"uri":"/components/comp1" },
+          { "name":"04","id":"04","offset":110,"scale": 1000.000000, "uri":"/components/comp1" }       ]
+    }
+}

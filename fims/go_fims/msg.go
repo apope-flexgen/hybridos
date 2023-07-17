@@ -18,6 +18,18 @@ type FimsMsg struct {
 	Frags       []string
 }
 
+// Fims message raw (byte array) struct
+type FimsMsgRaw struct {
+	Method      string
+	Uri         string
+	Replyto     string
+	ProcessName string
+	Username    string
+	Body        []byte
+	Nfrags      int
+	Frags       []string
+}
+
 // Function that implements splitting a uri into fragments
 func GetFrags(uri string) ([]string, error) {
 	// Check to make sure our string contains "/"

@@ -50,6 +50,7 @@ public:
     std::string get_decrease_display_timer();
 
     bool regulate_variable_offset(float base_case_input, float regulation_input);
+    void reset();
 
     int offset; // Current offset value
     int default_offset;

@@ -1,0 +1,18 @@
+{    
+    "/alarms/##PCS_ID##": {
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##PCS_ID##"}]}]
+            }
+        },
+        "module_alarm": {
+            "value": "(NOWRN) No warnings",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##PCS_ID##"}]}]
+            }
+        }
+    }
+}

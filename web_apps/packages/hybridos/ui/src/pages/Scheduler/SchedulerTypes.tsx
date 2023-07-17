@@ -2,127 +2,132 @@ import { IconList } from '@flexgen/storybook';
 import { Dayjs } from 'dayjs';
 
 export type FleetManagerSite = {
-  id: string
-  name: string
+  id: string;
+  name: string;
+  fleetSchedule?: boolean;
 };
 
 export type MoveDirections = 'next' | 'prev' | 'today';
 
 export type EditEventState = {
-  startTime: string
-  endTime: string
-  endDate: Dayjs | null
-  date: Dayjs | null
-  mode: string
-  modeId: string
-  variableValues: VariableValues[]
-  repeatEveryValue: string
+  startTime: string;
+  endTime: string;
+  startMinutes: string;
+  endMinutes: string;
+  startHours: string;
+  endHours: string;
+  endDate: Dayjs | null;
+  date: Dayjs | null;
+  mode: string;
+  modeId: string;
+  variableValues: VariableValues[];
+  repeatEveryValue: string;
   repeatEveryIncrement: {
-    Days: boolean
-    Weeks: boolean
-  }
-  daysSelected: DaysSelected
-  endsOption: EndsOnOptions
-  endOnDate: Dayjs | null
-  endAfterOccurrences: string
-  discardClicked: boolean
+    Days: boolean;
+    Weeks: boolean;
+  };
+  daysSelected: DaysSelected;
+  endsOption: EndsOnOptions;
+  endOnDate: Dayjs | null;
+  endAfterOccurrences: string;
+  discardClicked: boolean;
 };
 
 export type Mode = {
-  id: string
-  name: string
-  color: string
-  borderColor: string
-  backgroundColor: string
+  id: string;
+  name: string;
+  color: string;
+  borderColor: string;
+  backgroundColor: string;
 };
 
 export interface EventVariables {
-  id: string
-  name: string
-  type: string
-  unit: string
-  uri: string
-  value: number | boolean
+  id: string;
+  name: string;
+  type: string;
+  unit: string;
+  uri: string;
+  value: number | boolean;
 }
 export interface VariableValues {
-  name: string
-  value: string | boolean | number
+  name: string;
+  value: string | boolean | number;
 }
 
 export interface ApplyChangesTo {
-  thisEventOnly: boolean
-  allInSeries: boolean
+  thisEventOnly: boolean;
+  allInSeries: boolean;
 }
 
 export interface EndsOnOptions {
-  Never: boolean
-  On: boolean
-  After: boolean
+  Never: boolean;
+  On: boolean;
+  After: boolean;
 }
 
 export interface RepeatEveryOptions {
-  Days: boolean
-  Weeks: boolean
+  Days: boolean;
+  Weeks: boolean;
 }
 
 export interface DaysSelected {
-  sun: boolean
-  mon: boolean
-  tues: boolean
-  wed: boolean
-  thurs: boolean
-  fri: boolean
-  sat: boolean
+  sun: boolean;
+  mon: boolean;
+  tues: boolean;
+  wed: boolean;
+  thurs: boolean;
+  fri: boolean;
+  sat: boolean;
 }
 
 export interface Repeat {
-  start: string
-  id: string
-  cycle: 'day' | 'week'
-  frequency: number
-  dayMask?: number | undefined
-  end?: string | number | undefined
-  exceptions?: string[]
+  start: string;
+  id: string;
+  cycle: 'day' | 'week';
+  frequency: number;
+  dayMask?: number | undefined;
+  end?: string | number | undefined;
+  exceptions?: string[];
 }
 
 export type SchedulerUrls =
-    | '/scheduler/events'
-    | '/scheduler/deleteEvent'
-    | '/scheduler/configuration'
-    | '/scheduler/modes'
-    | '/scheduler/timezones'
-    | '/scheduler/connected';
+  | '/scheduler/events'
+  | '/scheduler/deleteEvent'
+  | '/scheduler/configuration'
+  | '/scheduler/modes'
+  | '/scheduler/timezones'
+  | '/scheduler/connected';
 
 export type SchedulerTabs = 'scheduler' | 'scheduler_config' | 'mode_manager';
 export interface Tab {
-  label: string
-  value: string
-  icon?: IconList
+  label: string;
+  value: string;
+  icon?: IconList;
 }
 
 export type ModeColors =
-    | 'orange'
-    | 'lightGreen'
-    | 'teal'
-    | 'lightBlue'
-    | 'indigo'
-    | 'deepPurple'
-    | 'red'
-    | 'pink'
-    | 'deepOrange'
-    | 'gray';
+  | 'orange'
+  | 'lightGreen'
+  | 'teal'
+  | 'lightBlue'
+  | 'indigo'
+  | 'deepPurple'
+  | 'red'
+  | 'pink'
+  | 'deepOrange'
+  | 'gray';
 
 export type ButtonSizes = 'small' | 'medium' | 'large';
 export type ButtonVariants = 'contained' | 'outlined' | 'text';
 export type ButtonColors =
-    | 'inherit'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'error'
-    | 'info'
-    | 'warning'
-    | undefined;
+  | 'inherit'
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'error'
+  | 'info'
+  | 'warning'
+  | undefined;
 
 export type DayCircleLabels = 'S' | 'M' | 'T' | 'W' | 'TH' | 'F' | 'S';
 

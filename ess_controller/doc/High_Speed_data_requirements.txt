@@ -1,0 +1,11 @@
+High Speed data requirements
+What values do we need updating in the high speed data from the ess controller?
+I assume only the value that we make decisions on which would be:
+status,
+chargeable_power,
+dischargeable_power,
+voltage,
+active_power,
+reactive_power,
+frequency,
+soc

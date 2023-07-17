@@ -1,0 +1,40 @@
+{  
+    "/doc/042_bms_init": {
+        "note1":"This is the battery management system (BMS) initial config file for loading Risen BMS controls configuration",
+        "note2":"Specifically, this file is responsible for loading manager and rack controls configurations to the system"
+    },
+
+    "/config/load": {
+        "risen_bms_1_controls_init": {
+            "value":false,
+            "file":"risen_bms_1_controls_init",
+            "pname":"ess",
+            "aname":"bms",
+            "new_options":[
+                {
+                    "tmpl":"risen_bms_manager_controls",
+                    "pname":"ess",
+                    "amname":"bms",
+                    "from":1,
+                    "to":1,
+                    "reps":[
+                        {"replace":"##BMS_ID##", "with":"bms_{:01d}"}
+                    ]
+                },
+                {
+                    "tmpl":"risen_bms_rack_controls",
+                    "pname":"bms",
+                    "ainame":"##RACK_ID##",
+                    "from":1,
+                    "to":18,
+                    "reps":[
+                        {"replace":"##RACK_ID##",   "with":"rack_{:02d}"},
+                        {"replace":"##RACK_NUM##",  "with":"{:01d}"},
+                        {"replace": "##AC_1_ID##",  "with": "hvac_{:02d}", "mult":2         },
+                        {"replace": "##AC_2_ID##",  "with": "hvac_{:02d}", "mult":2, "add":1}
+                    ]
+                }
+            ]
+        }
+    }
+}

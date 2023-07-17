@@ -1,52 +1,61 @@
-declare const module: any
+declare const module: any;
 
-import { NestFactory } from '@nestjs/core'
-import { AuthWsAdapter } from './adapters/authWs.adapter'
+import { NestFactory } from '@nestjs/core';
+import { AuthWsAdapter } from './adapters/authWs.adapter';
 // import * as cookieParser from 'cookie-parser';
-import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser';
 
-import { AppModule } from './app/app.module'
-import { AppEnvService } from './environment/appEnv.service'
-import { NestSwagger } from './openapi/nestswagger'
-import { RequestMethod } from '@nestjs/common'
-import { useContainer } from 'class-validator'
-import { ProcessArgvValidation } from './startup/ProcessArgValidation'
+import { AppModule } from './app.module';
+import { AppEnvService } from './environment/appEnv.service';
+import { NestSwagger } from './openapi/nestswagger';
+import { RequestMethod } from '@nestjs/common';
+import { useContainer } from 'class-validator';
+import { ProcessArgvValidation } from './startup/ProcessArgValidation';
+import { ConfigModule } from './config/config.module';
 
 // eslint-disable-next-line max-statements
 async function bootstrap() {
-    const processArgs = new ProcessArgvValidation()
-    const httpsOptions = {
-        key: processArgs.ssl.keyFile,
-        cert: processArgs.ssl.certFile,
-    }
-    const app = await NestFactory.create(AppModule, {
-        httpsOptions,
-    })
-    useContainer(app.select(AppModule), { fallbackOnErrors: true })
+  require('events').EventEmitter.defaultMaxListeners = 25;
+  const processArgs = new ProcessArgvValidation();
+  const httpsOptions = {
+    key: processArgs.ssl.keyFile,
+    cert: processArgs.ssl.certFile,
+  };
 
-    const appEnvService = app.get(AppEnvService)
-    const DEV_MODE_PORT = 3001
-    const PORT = process.env.NODE_ENV === 'dev' ? DEV_MODE_PORT : appEnvService.getAppServerPort()
+  ConfigModule.setWebUiConfigPath(processArgs.webUIConfigPath);
+  ConfigModule.setWebServerConfigPath(processArgs.webServerConfigPath);
+  ConfigModule.setWebUiBuildPath(processArgs.webUIBuildPath);
 
-    // Generate OpenAPI Documentation
-    const nestSwagger = new NestSwagger(app)
-    nestSwagger.generateDocumentation()
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-    app.use(cookieParser())
-    app.useWebSocketAdapter(new AuthWsAdapter(app))
-    app.enableCors({
-        origin: ['https://172.16.1.80', 'http://localhost'],
-        credentials: true,
-    })
-    app.setGlobalPrefix('api', {
-        exclude: [{ path: 'rest/:endpoint*', method: RequestMethod.ALL }],
-    })
-    await app.listen(PORT)
-    console.log('nest_web_server listening on port ' + PORT)
+  const appEnvService = app.get(AppEnvService);
+  const DEV_MODE_PORT = 3001;
+  const PORT = processArgs.isDev ? DEV_MODE_PORT : appEnvService.getAppServerPort();
 
-    if (module.hot) {
-        module.hot.accept()
-        module.hot.dispose(() => app.close())
-    }
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: 'rest/:endpoint*', method: RequestMethod.ALL }],
+  });
+  // Generate OpenAPI Documentation
+  if (process.env.NODE_ENV === 'dev' || process.env.NODE_ENV === 'test') {
+    const nestSwagger = new NestSwagger(app);
+    nestSwagger.generateDocumentation();
+  }
+
+  app.use(cookieParser());
+  app.useWebSocketAdapter(new AuthWsAdapter(app));
+  app.enableCors({
+    origin: ['https://172.16.1.80', 'http://localhost'],
+    credentials: true,
+  });
+  await app.listen(PORT);
+  console.log('web_server listening on port ' + PORT);
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 }
-bootstrap()
+bootstrap();

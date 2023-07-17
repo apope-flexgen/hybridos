@@ -1,0 +1,294 @@
+
+Ess_controller Amap linking to /assets. /components and /site
+p. wilshire
+12/17/2020
+
+
+The Ess Controller varsmap is  a wonderous thing.
+It will probably have 10's of thousand of map items in it.
+
+For an asset to perform any given function a reduced "view" of the overall mak is required.
+This is know as the amap or asset map
+It is simply a map of names to assetVars.
+
+The names used in the amap are the working or internal names of the variables for functions running in the system.
+
+
+So, for example, the BMS manager needs BMSStatus in its management functions.
+This is actually an input variable arriving on /components/catl_mbmu_stat_r:/bms_status;
+
+The function using this status will need to set up the amap reference. 
+
+Here is the code example...
+
+bms_manager->amap["bmsstatus"]           = am->vm->setLinkVal(*am->vmap, "bms",         "/status", "BMSStatus",      ival);
+
+This will create an internal variable called /status/bms:BMSStatus for use by the function ( and any other functions using the same amap) 
+
+The amap name will be "bmsstatus". The function can use  this variable as follows.
+
+int bmsstatus = bms_manager->amap["bmsstatus"]->getiVal();
+
+bmsstatus = 234;
+bms_manager->amap["bmsstatus"]->setVal(bmsstatus);
+
+So locally the variable is known as bmsstatus and we have an assetVar  called /status/bms/BMSStatus available in the global varsmap.
+
+
+The ESS manager can get to this variable in one of its functions.
+
+//               
+ess_manager->amap["bstatus"]           = am->vm->setLinkVal(*am->vmap, "bms",         "/status", "BMSStatus",      ival);
+
+Note that, in this case , the local name is "bstatus"
+
+
+int bmsstatus = ess_manager->amap["bstatus"]->getiVal();
+
+bmsstatus = 234;
+ess_manager->amap["bstatus"]->setVal(bmsstatus);
+
+
+So different amaps can point to the same variable (in our case  "/status/bms:BMSStatus") using different local ames if needed.
+
+
+However this concept needs to be extended in a few ways.......
+
+
+Consider incoming variables from a modbus connected component.
+
+In this case 
+
+bms_status arrives as  /components/catl_mbmu_stat_r:bms_status
+We really want this value to be used when we refer to /status/bms/BMSStatus.
+
+This is where the links come in to play.
+
+Consider the fact that we have an aname (asset name)  in this case "bms".
+
+When we run 
+am->vm->setLinkVal(*am->vmap, "bms",         "/status", "BMSStatus",      ival)
+This function also looks for an entry called BMSStatus in the "/links/bms" area.
+
+for example:
+
+"/links/bms": {
+    BMSStatus:{"value":"/components/catl_mbmu_stat_r:bms_status"}
+}
+
+The presence of this link will cause a number of things to happen.
+1/ the assetVar "/components/catl_mbmu_stat_r:bms_status" is created if needed.
+2/ the assetVar entry in the vmap called "/status/bms/BMSStatus" will also be created (if not already present)but this will reference (ie be a pointer to) the
+   assetVar "/components/catl_mbmu_stat_r:bms_status"
+
+   This means that wehen we get a pub on assetVar "/components/catl_mbmu_stat_r:bms_status" both the variables 
+
+   /components/catl_mbmu_stat_r:bms_status 
+   and 
+   /status/bms/BMSStatus 
+
+   will contain the new value.
+
+However , since the actual variable is defined as "/components/catl_mbmu_stat_r:bms_status" any actions or functions  associated with the 
+assetVar "/components/catl_mbmu_stat_r:bms_status" will remain in the system.
+
+There is an error in the current system ( easily resolved) in that if you make a mistake like this in two different functions.
+
+MonitorStatusFunc
+ess_manager->amap["bstatus"]           = am->vm->setLinkVal(*am->vmap, "bms",         "/status", "BMSStatus",      ival);
+
+SendCmdFunc
+ess_manager->amap["bstatus"]           = am->vm->setLinkVal(*am->vmap, "bms",         "/config", "BMSStatus",      ival);
+
+The last configured amapping will be used.
+
+Note that this should be OK
+MonitorStatusFunc
+ess_manager->amap["bstatus1"]           = am->vm->setLinkVal(*am->vmap, "bms",         "/status", "BMSStatus",      ival);
+
+SendCmdFunc
+ess_manager->amap["bstatus2"]           = am->vm->setLinkVal(*am->vmap, "bms",         "/config", "BMSStatus",      ival);
+
+However this would allow /config/bms/BMSStatus and /status/bms/BMSStatus to be pointing to the same assetVar ... this may get useful.
+
+
+Question 
+   how do we cascade these links 
+   We want to update /assets/bms/summary as well as /status/bms/BMSStatus ..
+
+
+Here is the remap way to do this.
+
+First link the component into the woking var
+
+"/links/bms": {
+    BMSStatus:{"value":"/components/catl_mbmu_stat_r:mbmu_status"}
+
+}
+
+Then trigger a remap as well.
+
+"/components/catl_mbmu_stat_r": {
+    "mbmu_status": {
+        "value":0,
+        "actions": { 
+            "onSet":[
+                {
+                    "remap":[
+                        {"uri":"/assets/bms/summary:status"}
+                    ]
+                }
+            ],
+            "onPub":[     <<< we may need this sets are the same as pubs at the moment.
+                {
+                    "remap":[
+                        {"uri":"/assets/bms/summary:status"}
+                    ]
+                }
+            ]                
+        }
+    },
+    "bms_heartbeat": {
+        "value":0
+    },
+    "bms_timestamp": {
+        "value":"No Time"
+    }
+}
+
+Now how to manage the  inputs or outputs to the site-Controller
+
+These come in on /site/ess or /site/ess_hs as sets from hte modbus_server.
+ 
+
+
+
+looks like we'll have  to use remap to pump the same var to the UI
+
+This would indicate that we want to extens nah the /assets/bms/summary has param and options junk
+
+
+How to map the site variables 
+Two kinds  inputs and outputs
+
+how about /links/site
+here is the incoming link from modbus
+
+"/links/bms:"{
+    "ems_heartbeat": {
+            "value": "/components/catl_@@BMS_ID@@_ems_bms_rw:ems_heartbeat"
+        }
+}
+
+
+here is the incoming link from site
+
+"/links/ess:"{
+    "StartStop": {
+            "value": "/site/ess_hs:start_stop"
+        }
+}
+
+this means that "StartStop" in the ess_manager amap is a pointer to the 
+incoming  Modbus field.
+
+
+How about an outgoing link from ess to site..
+
+Same thing almost 
+"/links/ess:"{
+    "ActivePower": {
+            "value": "/site/ess:active_power"
+        }
+}
+
+This means that a write to ess amap ["ActivePower]
+Will end up going to /site/ess/active_power
+
+SO far so good..
+What if you also want to send the same data to /assets/ess/summary:active_power.
+
+.. answer, for now ,you will have to set up a remap.
+to send data to the site controller you will have to issue a fims set command.
+The ui interface will issue a get on /assets/ess_summary or it will listen to the pubs.
+
+We cannot use the pointer to the asset var the extras set up for the ui will be lost
+ .... but can we...
+
+Something like values from one assetvar and meta data from another...
+
+could , somehow, the uiassetvar use the linked aVals ????
+
+"/links/ess:"{
+    "ActivePower": {
+            "value": "/site/ess:active_power"
+            "and": "/assets/ess/summary:active_power"
+        }
+}
+( just mark aval/lval as "foreign" which means we will not delete it 
+                       and we are done....)
+
+
+
+
+
+
+
+
+
+
+Question/ is there an overall list of all the amps in the system ??? 
+Answer ; Maybe I'll take a look, .. nah not yet they blong to the assets and asset_managers. 
+           actually yes ....
+           each function defines the links it needs for its operation.
+           these are stored in /links/<aname>.
+           This is effectively the amap.
+
+"/links/ess": {
+    "AcContactor": {
+      "value": "/status/ess:AcContactor"
+    },
+    "AcContactorCloseCmd": {
+      "value": "/controls/ess:AcContactorCloseCmd"
+    },
+ 
+    "MaxCellTemperature": {
+      "value": "/components/catl_mbmu_control_r:mbmu_max_cell_temperature"
+    },
+    "MaxCellVolt": {
+      "value": "/components/catl_mbmu_control_r:mbmu_max_cell_voltage"
+    },
+    "MinCellTemperature": {
+      "value": "/components/catl_mbmu_control_r:mbmu_min_cell_temperature"
+    },
+    "MinCellVolt": {
+      "value": "/components/catl_mbmu_control_r:mbmu_min_cell_voltage"
+    },
+   }
+
+
+// enter the vlinks
+each subsystem can have vlinks or vlauelinks
+This entry  does the following
+
+/usr/local/bin/fims/fims_send -r /$$ -m get -u /ess/full/vlinks/ess/MinCellVolt | jq                    {
+
+"/vlinks/ess":
+{
+
+  "MinCellVolt": {
+    "value": "/site/ess",
+    "vlink": "/components/catl_mbmu_control_r:mbmu_min_cell_voltage"
+  }
+}
+
+find / create the variable /site/ess:MinCellVolt
+make the aVal and lVal pointers point to  the /components/catl_mbmu_control_r:mbmu_min_cell_voltage aVal and lVal fields.
+
+Now we have to make sure that things stay in sync...
+any writes to /vlinks/<ess> will cause  the link to be reevaluated making setValfromCj a little more complicated and 
+
+
+
+           
+

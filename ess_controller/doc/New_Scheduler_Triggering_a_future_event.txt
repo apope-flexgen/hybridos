@@ -1,0 +1,293 @@
+New Scheduler Triggering an event in the future
+p. wilshire
+02/11/2021
+Concepts .........
+I have added some features since 02/10
+
+We have a schedItem whose values are tied to a "schedItem" assetVar.
+By this I mean refTime, runTime, runCnt,, repCnt.
+
+This is the guy that controls the schedule operation.
+So if a cascade of assetVars and / or function executions are triggered by this schedule event the
+reference to the original event is made avalable to each action (vm->schedav)
+
+The other thing that can case a lot of things to happen is a fims message....
+This is related to a fims event.
+Interesting things ... could ... happen here.
+One of them is to turn off this event .. dont tell me about it..
+
+For this to happen we'll need to generate the fims equivalent of the schedItem assetVar.
+This will be passed down to the actions propogated by the fims message.
+This is great since the function will no know if it originated from a schedule event or a fims message.
+In the near future (like this weekend) I'll create a fims SchedEvent for each uri.
+We can then use this for reference in the resulting actions.
+
+Note we'll see some more on this concept when we come to running sequences....
+
+
+02/10/2021
+Consider this call 
+ triggerSchedItem(*sc->am->vmap
+                , sc->am    // gives us the aname am->name.c_str();
+                , "testTriggerEvent" //const char* id     // id of the schedevent. Can be reused
+                , "/sched/ess:testTrigger"  // name of the av to use with the function.
+                , "testTriggerFunc"  // name of the function to use.
+                , "/sched/ess:testTriggerEvent"  // name of the av to use with the function.
+                , 0.0    // if set with repTime , the run time will be adjusted.. 
+                , 1.3   // time to activate after tNow (-ve means absTime) 
+                , 0.2   // how frequently to run this.
+                );
+to this function
+ 
+int triggerSchedItem(varsmap& vmap 
+                    , asset_manager *am    // gives us the aname am->name.c_str();
+                    , const char* id     // id of the schedevent. Can be reused
+                    , const char *avname  // name of the av to use with the function.
+                    , const char* fname  // name of the function to use.
+                    , double refTime     // if set with repTime , the run time will be adjusted.. 
+                    , double runTime   // time to activate after tNow (-ve means absTime) 
+                    , double repTime   // how frequently to run this.
+                    )
+
+
+ This creates a new "triggerEvent" assetvar
+
+/sched/ess:{
+        "testTriggerEvent":     {
+                "value":        0,
+                "id":   "testTriggerEvent",
+                "aname":        "/sched/ess:testTrigger",
+                "enabled":      true,
+                "refTime":      0,
+                "runTime":      16.608169,
+                "repTime":      0.2 
+        }
+
+}
+It then adds an action to the event
+
+/sched/ess:{
+        "testTriggerEvent":     {
+                "value":        0,
+                "actions":      {
+                        "onSet":        [{
+                                        "func": [{
+                                                        "amap": "ess",
+                                                        "func": "testTriggerFunc",
+                                                        "var":  "/sched/ess:testTrigger"
+                                                }]
+                                }]
+                }
+        }
+}]
+
+then it activates the schedItem
+
+set /schedule/ess/add_item
+    {"value":"/sched/ess:testTriggerEvent","var":"/sched/ess:testTriggerEvent"}
+
+This will also work to "reaschedule" the item, runTime being added to tNow
+set /schedule/ess/add_item
+    {"value":"/sched/ess:testTriggerEvent","var":"/sched/ess:testTriggerEvent","runTime":3.5,"repTime":0.2}
+
+
+
+Which causes this operation.
+***** AddSchedItem >> running for  av [/schedule/ess:add_item] am 0x192e9d0 cj (nil) 
+       aV [/sched/ess:testTriggerEvent] value [/sched/ess:testTriggerEvent]
+        action[add_sched_item]
+
+This created a schedItem  and activated it
+
+ sched id [testTriggerEvent] count [   0] aname [     ess] uri [/sched/ess:testTriggerEvent] 
+       refTime 0.000 runTime 16.608169 repTime 0.200
+
+
+Which ran 10 times  and then set its runTime to 0 causing it to stop processing afte the next activation.
+TODO we could cancel it immediately or simply set "enabled" to false to stop it running any more....
+ ~schedItem deleting this sched item 0x7f4ef0001be0
+ sched id [testTriggerEvent] count [   1] 
+    aname [     ess] uri [/sched/ess:testTriggerEvent] 
+        refTime 0.000 runTime 16.608169 repTime 0.200
+
+
+The testTriggerFunc could look like this.
+
+NOte that in this case the /sched/ess:testTriggerEvent  assetVar was used as the trigger source 
+and the var on by the function...
+Therefore the scheduling function can be controlled by this var.
+See the var turning onn the repTime.
+
+Normally the function would want to work on some totally independent var for limit checking  etc.
+/status/bms/active_current.
+
+to make all this really work the function will need access to the schedule item...
+or the var associated with that schedule item.
+
+I'll be working on that once the dust settles from this function.
+I'll probably setup a param in the function target var with the schedId or something like that..
+not sure since we need to have , possibly , many instances if the function working on different vars 
+triggerd by different schedule items. We could put the schedule item d in the function target assetvar and trace back to that 
+point but not today...
+
+
+NOte that in this case the 
+
+extern "C"
+{
+    int  testTriggerFunc(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar* av);
+}
+
+int  testTriggerFunc(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar* av)
+{
+    asset_manager* am = av->am;
+    double tNow = am->vm->get_time_dbl();
+    double runTime = av->getdParam("runTime");
+    int runCnt = av->getiParam("runCnt");
+    FPS_ERROR_PRINT("%s running at time %2.6f for av [%s:%s] runTime %2.6f runCnt %d\n"
+        ,__func__
+        , tNow
+        , av->comp.c_str()
+        , av->name.c_str()
+        , runTime
+        , runCnt
+        );
+    if(runCnt> 10)
+    {
+        av->setParam("repTime", 0.0);
+        FPS_ERROR_PRINT("%s shutting down  at time %2.6f for av [%s:%s] runTime %2.6f runCnt %d\n"
+        ,__func__
+        , tNow
+        , av->comp.c_str()
+        , av->name.c_str()
+        , runTime
+        , runCnt
+        );
+    }
+
+    return 0;
+}
+
+
+
+Here is the full output of the demo system running...
+schedThread >> Created Fims var [/sched/fims:dummy]
+ getePerfAv  new lmap name 0x7f7c9c000fc0  Logging aname [ess_test] lname [WakePerf] data
+schedThread >> Really Adding  Sched Request 0x2181730 id [EssSystemInit]  at 0.226
+EssSystemInit 0.226 >>>>>>>>>>>>>>>>>>>>> running init for ess Manager
+EssSystemInit 0.226 >>>>>>>>>>>>>>>>>>>>> done running init for ess Manager
+ ~schedItem delete sched item 0x2181730  sched id [EssSystemInit] count [   1] aname [     ess] uri [/sched/ess:essSystemInit] refTime 0.200 runTime 0.200000 repTime 0.000
+schedThread >> Really Adding  Sched Request 0x2183ea0 id [EverySecond]  at 0.226
+schedThread >> Really Adding  Sched Request 0x21841b0 id [Every100mS_P1]  at 0.226
+schedThread >> Really Adding  Sched Request 0x217dc60 id [Every100mS_P2]  at 0.226
+schedThread >> Really Adding  Sched Request 0x2184300 id [Every100mS_P3]  at 0.226
+schedThread >> Really Adding  Sched Request 0x2184640 id [FastPub]  at 0.226
+schedThread >> Really Adding  Sched Request 0x21847e0 id [SlowPub]  at 0.226
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 0.255581 elapsed 3.627000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 0.259208 elapsed 0.974000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 2.255634 elapsed 3.849000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 2.259483 elapsed 0.495000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 4.255690 elapsed 4.498000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 4.260188 elapsed 0.701000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 6.255591 elapsed 6.163000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 6.261754 elapsed 0.895000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 8.255680 elapsed 3.972000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 8.259652 elapsed 0.483000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 10.255588 elapsed 3.654000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 10.259242 elapsed 0.471000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 12.255623 elapsed 3.750000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 12.259373 elapsed 0.559000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 14.255626 elapsed 5.464000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 14.261090 elapsed 0.830000mS
+ setupSchedVar >> got res [{
+        "testTriggerEvent":     {
+                "value":        0,
+                "id":   "testTriggerEvent",
+                "aname":        "/sched/ess:testTrigger",
+                "enabled":      false,
+                "refTime":      0,
+                "runTime":      16.30509,
+                "repTime":      0.2
+        }
+}]
+addSaction >> Created Function var [/sched/ess:testTrigger]
+ fims
+ nfrags 2   , fims pfrags [1] [ess] fims method [set] body [{"testTriggerEvent":{"value":0,"actions":{"onSet":[{"func":[{"amap":"ess","func":"testTriggerFunc","var":"/sched/ess:testTriggerEvent"}]}]}}}]
+testTriggerFunc running at time 15.005181 enabled [false] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 16.305090 runCnt 0
+ setupSchedItemActions >> got res [{
+        "testTriggerEvent":     {
+                "value":        0,
+                "actions":      {
+                        "onSet":        [{
+                                        "func": [{
+                                                        "amap": "ess",
+                                                        "func": "testTriggerFunc",
+                                                        "var":  "/sched/ess:testTriggerEvent"
+                                                }]
+                                }]
+                }
+        }
+}]
+activateSchedItem >> cjbuf [{"value":"/sched/ess:testTriggerEvent","var":"/sched/ess:testTriggerEvent"}] rbuf [{"method":"set","uri":"/schedule/ess","body":{"add_item":{"value":"/sched/ess:testTriggerEvent","var":"/sched/ess:testTriggerEvent"}}}]
+
+
+***** AddSchedItem >> running for  av [/schedule/ess:add_item] am 0x21779d0 cj (nil)  aV [/sched/ess:testTriggerEvent] value [/sched/ess:testTriggerEvent] action[add_sched_item]
+
+AddSchedItem >> we added new schedItem 0x7f7c9c004530
+ setUp setup a sched item 0x7f7c9c004530
+ sched id [testTriggerEvent] count [   0] aname [     ess] uri [/sched/ess:testTriggerEvent] refTime 0.000 runTime 16.305090 repTime 0.200
+@@@@@@ AddSchedItem>> activated /sched/ess:testTriggerEvent   avi 0x7f7c9c003a60 runTime 16.305
+
+ activateSchedItem >> got res [{
+        "add_item":     {
+                "value":        "/sched/ess:testTriggerEvent",
+                "var":  "/sched/ess:testTriggerEvent"
+        }
+}]
+schedThread >> Really Adding  Sched Request 0x7f7c9c004530 id [testTriggerEvent]  at 15.005
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 16.255863 elapsed 4.782000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 16.260645 elapsed 0.650000mS
+testTriggerFunc running at time 16.305732 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 16.305090 runCnt 0
+          getSchedDelay >> Response [Still working] from 16.305722 at 16.305765 elapsed mS 0.043000
+testTriggerFunc running at time 16.505720 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 16.505090 runCnt 1
+          getSchedDelay >> Response [Still working] from 16.505713 at 16.505733 elapsed mS 0.020000
+testTriggerFunc running at time 16.705770 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 16.705090 runCnt 2
+          getSchedDelay >> Response [Still working] from 16.705764 at 16.705781 elapsed mS 0.017000
+testTriggerFunc running at time 16.905674 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 16.905090 runCnt 3
+          getSchedDelay >> Response [Still working] from 16.905668 at 16.905686 elapsed mS 0.018000
+testTriggerFunc running at time 17.105714 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.105090 runCnt 4
+          getSchedDelay >> Response [Still working] from 17.105706 at 17.105746 elapsed mS 0.040000
+testTriggerFunc running at time 17.305679 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.305090 runCnt 5
+          getSchedDelay >> Response [Still working] from 17.305672 at 17.305692 elapsed mS 0.020000
+testTriggerFunc running at time 17.505843 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.505090 runCnt 6
+          getSchedDelay >> Response [Still working] from 17.505832 at 17.505899 elapsed mS 0.067000
+testTriggerFunc running at time 17.705960 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.705090 runCnt 7
+          getSchedDelay >> Response [Still working] from 17.705947 at 17.705978 elapsed mS 0.031000
+testTriggerFunc running at time 17.905853 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.905090 runCnt 8
+          getSchedDelay >> Response [Still working] from 17.905844 at 17.905868 elapsed mS 0.023000
+testTriggerFunc running at time 18.105797 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 18.105090 runCnt 9
+          getSchedDelay >> Response [Still working] from 18.105791 at 18.105809 elapsed mS 0.018000
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 18.255634 elapsed 4.034000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 18.259668 elapsed 0.606000mS
+testTriggerFunc running at time 18.305708 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 18.305090 runCnt 10
+          getSchedDelay >> Response [Still working] from 18.305701 at 18.305721 elapsed mS 0.020000
+testTriggerFunc running at time 18.505715 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 18.505090 runCnt 11
+testTriggerFunc shutting down  at time 18.505715 for av [/sched/ess:testTriggerEvent] runTime 18.505090 runCnt 11
+          getSchedDelay >> Response [Shutting down] from 18.505709 at 18.505731 elapsed mS 0.022000
+ ~schedItem delete sched item 0x7f7c9c004530  sched id [testTriggerEvent] count [  12] aname [     ess] uri [/sched/ess:testTriggerEvent] refTime 0.000 runTime 18.505090 repTime 0.200
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 20.255736 elapsed 3.759000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 20.259495 elapsed 0.715000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 22.255630 elapsed 3.474000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 22.259104 elapsed 0.804000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 24.255625 elapsed 4.011000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 24.259636 elapsed 0.600000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 26.255628 elapsed 3.507000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 26.259135 elapsed 0.506000mS
+ write_cjson >> Wrote 400593 bytes to  file run_configs/ess_after_30 seconds.json
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 28.300298 elapsed 3.789000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 28.304087 elapsed 0.526000mS
+SlowPub >> aname [ess] >> publish >>assets<<  RunPub 0x217e920 ->true time 30.255628 elapsed 6.162000mS
+SlowPub >> aname [ess] >> publish >>  site<<  RunPub 0x217e920 ->true time 30.261790 elapsed 1.340000mS
+fimsThread >> fims shutting down
+schedThread >> shutting down at 31.225728
+

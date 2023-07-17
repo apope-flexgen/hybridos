@@ -1,0 +1,51 @@
+I have just spent some time thinking about this problem.
+
+We may be blaming the victim not the culprit.
+
+We can talk to the CATL system, in idle mode, for 24 hours 
+via our Modbus Interface Software without any problems.
+
+We have seen some Can Bus related communicaton problems
+within the CATL system. I am still concerned that this 
+path is still not as reliable as it needs to be.
+Adjusting Can Bus wire lengths seemed to have helped but the 
+Can bus was designed to work in harsh environements but 
+it may need special termination systems to work proprely. 
+
+The Modbus Comms failure comes when the Power Electronics system 
+Starts running.
+
+We have seen some other effects when this unit powers up. 
+For example smoke coming out of light fixtures and arcing across switches.
+
+Cat 7 Ethernet and the Output Transformer did improve the 
+"light fixture smoke" problem but the Power Electronics Unit 
+may be sending out some high energy 
+interference that is affecting the CATL Controller.
+
+I have not seen any evidence of our SuperMicro Units being affected 
+by these emmisions but I still have a concern with the GPIO interface. 
+We are connecting some pretty good antennas right into the SuperMicro system.
+We may still need an isolator on that connector but that is another problem.
+
+So the question becomes what is the Power Electronics System doing when it starts up.
+Can we measure the nature and strength of the energy it produces.
+A quick search indicates that EMP sensors are avaialble and are quite cheap.
+AMTAST and KEDILAKE advertise units on Amazon. 
+Dont know if they will detect what we are experiencing but they are not too expensive.
+
+
+Then we have to see if the CATL controller is sufficiently well protected against 
+this environment.
+
+There are also EMP protection devices that claim to protect equipment.
+http://www.EMPSHIELD.com 
+We may be lucky in that a "simple" EMP protection unit will fix the problem.
+
+Just my 10c
+
+
+
+
+
+

@@ -1,0 +1,425 @@
+{
+    "/doc/05##RACK_NUM##_##RACK_ID##": {
+        "note1":"This is the battery management system (BMS) config template file for Risen",
+        "note1a": "/assets/##BMS_ID##/##RACK_ID##     - defines the web UI for the battery rack. Battery rack-related statuses, controls, and faults/alarms are displayed on the UI",
+        "note1b": "/config/##RACK_ID##                - defines configurable variables used in the ESS Controller source code",
+        "note1d": "/status/##RACK_ID##                - defines the status variables for the battery rack",
+        "note1e": "/components/[id]                   - defines the interface for retrieving data for the battery rack from the BMS hardware and converting the data into a useable format (ex.: scaling, remap, etc.)",
+        "note1f": "/links/##RACK_ID##                 - defines mapping of external interface components to internal variables",
+        "note1g": "/vlinks/##RACK_ID##                - allows two variables to share the same value",
+        "note1i": "/schedule/wake_monitor/##RACK_ID## - periodically runs a function for a particular variable (default to 100ms; wake_monitor to be removed)",
+        "note1j": "/faults/##RACK_ID##                - defines battery rack-related faults reported by the ESS Controller",
+        "note1k": "/alarms/##RACK_ID##                - defines battery rack-related alarms reported by the ESS Controller",
+        "note2":"To retrieve data from the BMS hardware, the modbus communication protocol will be used. To connect via modbus, use the modbus client (bms_modbus_client.json)"
+    },
+    "/system/##RACK_ID##": {
+        "id": "##RACK_ID##",
+        "name": "Risen BMS Rack ##RACK_NUM##"
+    },
+    "/config/##RACK_ID##": {
+        "xPubs": "/assets/bms/##BMS_ID##/##RACK_ID##",
+        "xBlockSets": "/status/ess, /status/bms, /status/##RACK_ID##",
+        "AlarmDestination": "/assets/##BMS_ID##/##RACK_ID##:alarms",
+        "FaultDestination": "/assets/##BMS_ID##/##RACK_ID##:faults",
+        "NoFaultMsg": "Normal",
+        "NoAlarmMsg": "Normal"
+    },
+    "/assets/##BMS_ID##/##RACK_ID##": {
+    "name": "Risen Battery Rack ##RACK_NUM##",
+        "alarms":                   {"name": "Alarms","value": 0,"options": [],"enabled": true},
+        "faults":                   {"name": "Faults","value": 0,"options": [],"enabled": true},
+        "system_state":             {"name": "Battery Status","value": "N/A","enabled": true},
+        "charge_discharge_state":   {"name": "Charge/Discharge Status","value": "N/A","enabled": true},
+        "dc_contactor_status":      {"name": "Contactor Status","value": "Open","enabled": true},
+        "enable_status":            {"name": "Enable Status","value": "N/A","enabled": true},
+        "soc":                      {"name": "State of Charge","value": 0,"enabled": false},
+        "soh":                      {"name": "State of Health","value": 0,"enabled": false},
+        "system_voltage":           {"name": "System Voltage","value": 0,"enabled": true},
+        "system_current":           {"name": "System Current","value": 0,"enabled": true},
+        "system_power":             {"name": "System Power","value": 0,"enabled": true},
+        "max_cell_voltage":         {"name": "Max Cell Voltage","value": 0,"enabled": false},
+        "min_cell_voltage":         {"name": "Min Cell Voltage","value": 0,"enabled": false},
+        "avg_cell_voltage":         {"name": "Avg Cell Voltage","value": 0,"enabled": false},
+        "max_cell_temp":            {"name": "Max Cell Temperature","value": 0,"enabled": false},
+        "min_cell_temp":            {"name": "Min Cell Temperature","value": 0,"enabled": false},
+        "avg_cell_temp":            {"name": "Avg Cell Temperature","value": 0,"enabled": false},
+        "max_charge_current":       {"name": "Max Charge Current Allowed","value": 0,"enabled": true},
+        "max_discharge_current":    {"name": "Max Discharge Current Allowed","value": 0,"enabled": true},
+        "hvac_1_unit_running_status": {"name": "HVAC 1 Unit Running Status","value": "N/A","enabled": true},
+        "hvac_1_temperature":         {"name": "HVAC 1 Temperature","value": 0,"enabled": false},
+        "hvac_2_unit_running_status": {"name": "HVAC 2 Unit Running Status","value": "N/A","enabled": true},
+        "hvac_2_temperature":         {"name": "HVAC 2 Temperature","value": 0,"enabled": false},
+
+        "maint_mode":                {"name": "Maintenance Mode","value": false,"enabled": true,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri":	"/assets/##BMS_ID##/##RACK_ID##:clear_faults@enabled"}
+                    ]
+                }]
+            },
+            "options": [{"name": "No", "return_value": false},{"name": "Yes","return_value": true}]
+        },
+        "enable_rack":              {"name": "Enable Rack","value": false,"enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/##RACK_ID##:EnableRack@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/##RACK_ID##:EnableRack",            "outValue": 1}
+                    ]
+                }]
+            },
+            "options": [{"name": "No", "return_value": false},{"name": "Yes","return_value": true}]
+        },
+        "disable_rack":           {"name": "Disable Rack","value": false,"enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/##RACK_ID##:DisableRack@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/##RACK_ID##:DisableRack",            "outValue": 2}
+                    ]
+                }]
+            },
+            "options": [{"name": "No", "return_value": false},{"name": "Yes","return_value": true}]
+        },
+        "clear_faults":           {"name": "Clear Faults","value": false,"enabled": false,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"ifChanged": false, "outValue":"Clear","uri":"/faults/##RACK_ID##:clear_faults"},
+                        {"ifChanged": false, "outValue":"Clear","uri":"/alarms/##RACK_ID##:clear_alarms"}
+                    ]
+                }]
+            },
+            "options": [{"name": "Clear Faults", "return_value": "Clear"}]
+        }
+    },
+
+    "/vlinks/##RACK_ID##": {
+        "##RACK_ID##_system_state_ui":          { "value": "/assets/##BMS_ID##/##RACK_ID##:system_state",                      "vlink": "/status/##RACK_ID##:SystemState"},
+        "##RACK_ID##_charge_discharge_state_ui":{ "value": "/assets/##BMS_ID##/##RACK_ID##:charge_discharge_state",            "vlink": "/status/##RACK_ID##:ChargeDischargeState"},
+        "##RACK_ID##_soc_ui":                   { "value": "/assets/##BMS_ID##/##RACK_ID##:soc",                               "vlink": "/status/##RACK_ID##:RackSOC"    },
+        "##RACK_ID##_soh_ui":                   { "value": "/assets/##BMS_ID##/##RACK_ID##:soh",                               "vlink": "/status/##RACK_ID##:RackSOH"    },
+        "##RACK_ID##_voltage_ui":               { "value": "/assets/##BMS_ID##/##RACK_ID##:system_voltage",                    "vlink": "/status/##RACK_ID##:RackVoltage"},
+        "##RACK_ID##_current_ui":               { "value": "/assets/##BMS_ID##/##RACK_ID##:system_current",                    "vlink": "/status/##RACK_ID##:RackCurrent"},
+        "##RACK_ID##_power_ui":                 { "value": "/assets/##BMS_ID##/##RACK_ID##:system_power",                      "vlink": "/status/##RACK_ID##:RackPower"},
+        "##RACK_ID##_max_cell_voltage_ui":      { "value": "/assets/##BMS_ID##/##RACK_ID##:max_cell_voltage",                  "vlink": "/status/##RACK_ID##:RackMaxCellVoltage"},
+        "##RACK_ID##_min_cell_voltage_ui":      { "value": "/assets/##BMS_ID##/##RACK_ID##:min_cell_voltage",                  "vlink": "/status/##RACK_ID##:RackMinCellVoltage"},
+        "##RACK_ID##_avg_cell_voltage_ui":      { "value": "/assets/##BMS_ID##/##RACK_ID##:avg_cell_voltage",                  "vlink": "/status/##RACK_ID##:RackAvgCellVoltage"},
+        "##RACK_ID##_max_cell_temp_ui":         { "value": "/assets/##BMS_ID##/##RACK_ID##:max_cell_temp",                     "vlink": "/status/##RACK_ID##:RackMaxCellTemp"},
+        "##RACK_ID##_min_cell_temp_ui":         { "value": "/assets/##BMS_ID##/##RACK_ID##:min_cell_temp",                     "vlink": "/status/##RACK_ID##:RackMinCellTemp"},
+        "##RACK_ID##_avg_cell_temp_ui":         { "value": "/assets/##BMS_ID##/##RACK_ID##:avg_cell_temp",                     "vlink": "/status/##RACK_ID##:RackAvgCellTemp"},
+        "##RACK_ID##_max_charge_current_ui":    { "value": "/assets/##BMS_ID##/##RACK_ID##:max_charge_current",                "vlink": "/status/##RACK_ID##:RackMaxChargeCurrent"},
+        "##RACK_ID##_max_discharge_current_ui": { "value": "/assets/##BMS_ID##/##RACK_ID##:max_discharge_current",             "vlink": "/status/##RACK_ID##:RackMaxDischargeCurrent"}
+    },
+
+    "/schedule/wake_monitor/##RACK_ID##":{
+        "/status/##RACK_ID##:RackPower":          { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:OverCurrentFault":   { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:UnderCurrentFault":  { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:OverCurrentAlarm":   { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:UnderCurrentAlarm":  { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:OverCurrentDerate":  { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:UnderCurrentDerate": { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:DCClosed":           { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:RackCurrentFilt":    { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:EnableRackCtrl":     { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+        "/status/##RACK_ID##:DisableRackCtrl":    { "enable": true,  "amap": "##RACK_ID##", "func":"CalculateVar"},
+
+        "/status/##RACK_ID##:RackCurrent":            { "enable": true,  "amap": "##RACK_ID##", "func":"CheckMonitorVar"},
+        "/status/##RACK_ID##:RackCurrentCheckDerate": { "enable": true,  "amap": "##RACK_ID##", "func":"CheckMonitorVar"}
+    },
+
+    "/sched/##RACK_ID##": {
+        "enable":{ 
+            "value":true,
+            "actions":{
+            "onSet": [{
+                "remap": [
+                    {"inValue":true, "ifChanged": false, "uri":"/sched/##RACK_ID##:pub@enabled"},
+                    {"inValue":true, "ifChanged": false, "uri":"/sched/##RACK_ID##:pub", "outTime":1}
+                    ]
+                }]
+            }
+        },
+        "pub": {
+            "value": "pub_##RACK_ID##",
+            "enabled": true,
+            "uri":   "/sched/##RACK_ID##:pub",
+            "fcn":   "RunPub",
+            "id":    "pub_##RACK_ID##",
+            "table": "/assets/##BMS_ID##/##RACK_ID##",
+            "refTime":  0.220,
+            "runAfter": 0.220,
+            "repTime":  0.100,
+            "endTime":  0.00,
+            "actions":{
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "##RACK_ID##"}]}]
+            }
+        }
+    },
+
+    "/status/##RACK_ID##": {
+        "note": "These are component status vars",
+        "SystemState": "Normal",
+        "FaultCnt": 0,
+        "AlarmCnt": 0,
+        "RackSOC": 0,
+        "RackSOH": 0,
+        "RackVoltage": 0,
+        "RackMaxCellVoltage": 0,
+        "RackMinCellVoltage": 0,
+        "RackAvgCellVoltage": 0,
+        "RackMaxCellTemp": 0,
+        "RackMinCellTemp": 0,
+        "RackAvgCellTemp": 0,
+        "RackMaxChargeCurrent": 0,
+        "RackMaxDischargeCurrent": 0,
+        "rack_precharge_phase": "Normal",
+        "pos_contactor_state": 0,
+        "pre_contactor_state": "Normal",
+        "neg_contactor_state": 0,
+        "disconnector_state": "Normal",
+        "ChargeDischargeState": "Normal",
+        "RackEnableStatus": {
+            "value": false,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"inValue": true, "uri": "/assets/##BMS_ID##/##RACK_ID##:enable_status", "outValue": "Enabled"},
+                        {"inValue": false, "uri": "/assets/##BMS_ID##/##RACK_ID##:enable_status", "outValue": "Disabled"}
+                    ]
+                }]
+            }
+        },
+        "##AC_1_ID##_unit_running_status": "Normal",
+        "##AC_1_ID##_internal_fan_status": "Normal",
+        "##AC_1_ID##_external_fan_status": "Normal",
+        "##AC_1_ID##_compressor_status": "Normal",
+        "##AC_1_ID##_emergency_air_fan_state": "Normal",
+        "##AC_1_ID##_electrical_heating_running_status": "Normal",
+
+        "##AC_2_ID##_unit_running_status": "Normal",
+        "##AC_2_ID##_internal_fan_status": "Normal",
+        "##AC_2_ID##_external_fan_status": "Normal",
+        "##AC_2_ID##_compressor_status": "Normal",
+        "##AC_2_ID##_emergency_air_fan_state": "Normal",
+        "##AC_2_ID##_electrical_heating_running_status": "Normal",
+
+        "RackPower": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/status/##RACK_ID##:RackVoltage",
+            "variable2": "/status/##RACK_ID##:RackCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+        "RackCurrent": {
+            "value": 0,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+            "AlarmTimeout": 0.4,
+            "MinAlarmTimeout": 1.75,
+            "MaxAlarmTimeout": 1.75,
+            "MinRecoverTimeout": 0,
+            "MaxRecoverTimeout": 0,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "##RACK_ID##"}]}]
+            }
+        },
+        "RackCurrentFilt": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 4,
+            "variable1": "/status/##RACK_ID##:DCClosed",
+            "variable2": "/status/##RACK_ID##:RackCurrent",
+            "variable3": "/status/bms:BMSCurrent",
+            "variable4": "/status/bms:NumRacksInService",
+            "expression": "if({1}, {2}, ({3} / {4}))",
+            "actions": {
+                "onSet":[{"remap":[{"uri": "/status/##RACK_ID##:RackCurrentCoerced"}]}]
+            }
+        },
+        "RackCurrentCoerced": 0,
+        "RackCurrentCheckDerate": {
+            "value": 0,
+            "EnableMaxValCheck": true,
+            "EnableMinValCheck": true,
+            "EnableFaultCheck": false,
+            "EnableAlert": false,
+            "AlarmTimeout": 0.5,
+            "MinRecoverTimeout": 1.0,
+            "MaxRecoverTimeout": 1.0,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "##RACK_ID##"}]}]
+            }
+        },
+        "UnderCurrentFault": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1, 
+            "variable1": "/status/##RACK_ID##:RackMaxChargeCurrent",
+            "expression": "{1} * 1.05",
+            "actions": {
+                "onSet":[{"remap":[{"uri": "/status/##RACK_ID##:RackCurrent@MinFaultThreshold"}]}]
+            }
+        },
+        "OverCurrentFault": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1, 
+            "variable1": "/status/##RACK_ID##:RackMaxDischargeCurrent",
+            "expression": "{1} * 1.05",
+            "actions": {
+                "onSet":[{"remap":[{"uri": "/status/##RACK_ID##:RackCurrent@MaxFaultThreshold"}]}]
+            }
+        },
+        "UnderCurrentAlarm": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/##RACK_ID##:RackMaxChargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdHigh",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##RACK_ID##:RackCurrent@MinAlarmThreshold"},
+                        {"uri": "/status/##RACK_ID##:RackCurrent@MinResetValue"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentAlarm": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/##RACK_ID##:RackMaxDischargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdHigh",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##RACK_ID##:RackCurrent@MaxAlarmThreshold"},
+                        {"uri": "/status/##RACK_ID##:RackCurrent@MaxResetValue"}
+                    ]
+                }]
+            }
+        },
+        "UnderCurrentDerate": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/##RACK_ID##:RackMaxChargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdLow",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##RACK_ID##:RackCurrentCheckDerate@MinAlarmThreshold"},
+                        {"uri": "/status/##RACK_ID##:RackCurrentCheckDerate@MinResetValue"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentDerate": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/##RACK_ID##:RackMaxDischargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdLow",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##RACK_ID##:RackCurrentCheckDerate@MaxAlarmThreshold"},
+                        {"uri": "/status/##RACK_ID##:RackCurrentCheckDerate@MaxResetValue"}
+                    ]
+                }]
+            }
+        },
+        "DCClosed": {
+            "value": 0,
+            "resetChange": false,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/##RACK_ID##:pos_contactor_state",
+            "variable2": "/status/##RACK_ID##:neg_contactor_state",
+            "expression": "{1} and {2}",
+            "note": "To modify: enable/disable monitoring check for RackCurrent if bms dc contactors are closed and pcs is running",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 0,  "uri":"/status/##RACK_ID##:RackCurrent@EnableMaxValCheck",            "outValue": false},
+                        {"inValue": 1,  "uri":"/status/##RACK_ID##:RackCurrent@EnableMaxValCheck",            "outValue": true},
+                        {"inValue": 0,  "uri":"/status/##RACK_ID##:RackCurrent@EnableMinValCheck",            "outValue": false},
+                        {"inValue": 1,  "uri":"/status/##RACK_ID##:RackCurrent@EnableMinValCheck",            "outValue": true},
+                        {"inValue": 0,  "uri":"/status/##RACK_ID##:RackCurrentCheckDerate@EnableMaxValCheck", "outValue": false},
+                        {"inValue": 1,  "uri":"/status/##RACK_ID##:RackCurrentCheckDerate@EnableMaxValCheck", "outValue": true},
+                        {"inValue": 0,  "uri":"/status/##RACK_ID##:RackCurrentCheckDerate@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1,  "uri":"/status/##RACK_ID##:RackCurrentCheckDerate@EnableMinValCheck", "outValue": true},
+
+                        {"inValue": 0,  "uri":"/assets/##BMS_ID##/##RACK_ID##:dc_contactor_status",                  "outValue": "Open"},
+                        {"inValue": 1,  "uri":"/assets/##BMS_ID##/##RACK_ID##:dc_contactor_status",                  "outValue": "Closed"}
+                    ]
+                }]
+            }
+        },
+        "ClearFaultsDone": {
+            "value": false,
+            "note": "Set to true if all alarms/faults have been cleared using process_sys_alarm function. If true, reset ESS alarm/fault registers to 0",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_warnings"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_alarms"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_critical_alarms"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_alarm_info"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_hvac_1_alarms1"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_hvac_1_alarms2"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_hvac_2_alarms1"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_hvac_2_alarms2"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_fss_alarms"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:##RACK_ID##_step_in_failure_alarms"}
+                    ]
+                }]
+            }
+        },
+        "EnableRackCtrl": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/status/##RACK_ID##:RackEnableStatus",
+            "variable2": "/assets/##BMS_ID##/##RACK_ID##:maint_mode",
+            "variable3": "/status/bms:DCClosed",
+            "expression": "not {1} and {2} and {3} == 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":false, "uri":"/assets/##BMS_ID##/##RACK_ID##:enable_rack@enabled",   "outValue":false},
+                        {"inValue":true,  "uri":"/assets/##BMS_ID##/##RACK_ID##:enable_rack@enabled",   "outValue":true}
+                    ]
+                }]
+            }
+        },
+        "DisableRackCtrl": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/status/##RACK_ID##:RackEnableStatus",
+            "variable2": "/assets/##BMS_ID##/##RACK_ID##:maint_mode",
+            "variable3": "/status/bms:DCClosed",
+            "expression": "{1} and {2} and {3} == 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":false, "uri":"/assets/##BMS_ID##/##RACK_ID##:disable_rack@enabled",   "outValue":false},
+                        {"inValue":true,  "uri":"/assets/##BMS_ID##/##RACK_ID##:disable_rack@enabled",   "outValue":true}
+                    ]
+                }]
+            }
+        }
+    }
+}

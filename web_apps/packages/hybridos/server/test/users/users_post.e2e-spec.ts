@@ -6,6 +6,12 @@ import request from './../testReqAgent'
 import { UsersController } from '../../src/users/users.controller'
 import { USERS_SERVICE } from '../../src/users/interfaces/users.service.interface'
 import { createTestApiApplication } from '../../test/testUtils'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
+import * as testUtils from '../testUtils'
+import { useContainer } from 'class-validator'
+import { ValidPasswordConstraint } from 'src/users/validators/IsValidPassword'
+import { SITE_ADMINS_SERVICE } from 'src/siteAdmins/interfaces/siteAdmin.service.interface'
 
 describe('UsersController POST (e2e)', () => {
     let app: INestApplication
@@ -25,10 +31,25 @@ describe('UsersController POST (e2e)', () => {
                             .mockImplementation(() => Promise.resolve({ id: 'a uuid' })),
                     },
                 },
+                ValidPasswordConstraint,
+                {
+                    provide: SITE_ADMINS_SERVICE,
+                    useValue: {
+                        find: jest.fn().mockReturnValue(testUtils.site(false, false, false))
+                    }
+                },
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
+                    },
+                },
             ],
-        }).compile()
+        })
+        .overrideGuard(RolesGuard).useValue({ canActivate: () => true }).compile();
 
         app = createTestApiApplication(moduleFixture)
+        useContainer(moduleFixture, { fallbackOnErrors: true })
         app.useGlobalPipes(new ValidationPipe())
         await app.init()
     })
@@ -47,6 +68,7 @@ describe('UsersController POST (e2e)', () => {
 
     it('/users (POST): username empty', () => {
         const requestBody = {
+            username: '',
             role: VALID_ROLE,
             password: VALID_PASS,
         }

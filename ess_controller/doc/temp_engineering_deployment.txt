@@ -1,0 +1,93 @@
+temp engineering deployment
+p. wilshire
+02/20/2021
+
+
+Objective :
+To provide a way of rapidly deploying  ess_controller systems and updates for the initial installations
+
+Note keep it simple. 
+   Deploy to only ONE system for now. Dont think about the mass deployment, the dev_ops team will be doing that.
+   I dont mind having to type in a few passwords at this stage.
+    We just need a simple tool to get the rpms in place. replace the rpms setup and recover configs.
+
+    Once this works we'll get the log files off the target too.
+
+
+
+We will run one or more scripts on the deployment system ( your laptop for example)
+Consider the target system at 192.168.114.11  hybridos.
+
+
+Stage 1 get the deployment environment into the target
+
+We keep everything in an install directory  so this command does it.
+
+    scp -r install hybridos@192.168.114.11:~/
+
+but we want to wrap it in one or more scripts to be  run from the deployment system.
+
+    ess_deploy.sh 192.168.114.11  
+
+Stage 2
+Then we want to selectively install parts of the system
+
+    ess_install.sh 192.168.114.11  third_party  
+    which runs 
+                ssh hybridos@192.168.114.11 ~/install/install_third_party.sh 
+    on the deployment system.
+
+    and on the target system 
+      ~/install/install_third_party.sh will install each rpm in turn.  
+      
+      sudo rpm -Uv ~/install/rpms/third_party/influx.xxxxx.rpm
+      sudo rpm -Uv ~/install/rpms/third_party/openssh.xxxxx.rpm
+      ....
+
+      note you have to install each one on its own, getting the order correct. You could try yum but for now just take the simple path.
+      sudo rpm -Uv ~/install/rpms/third_party/*.rpm fails on the first unsatisfied dep.
+
+    ess_install.sh 192.168.114.11  release/v1.5.0 
+    which runs ( on the deployment system)
+                ssh hybridos@192.168.114.11 ~/install/install_release.sh v1.5.0
+
+
+    and on the target system 
+      ~/install/install_release.sh will install each rpm in turn.
+      Note we may have to use an upgrade option   
+      
+      sudo rpm -Uv ~/install/rpms/release/v1.5.0/fims.xxxxx.rpm
+      but this may have problems due to handling deps you may have to use the --nodeps option with rpm
+      ....
+
+      Note you have to install each one on its own getting the order correct. You could try yum but for now just take the simple path.
+      sudo rpm -Uv ~/install/rpms/third_party/*.rpm fails on the first unsatisfied dep.
+
+
+    ess_install.sh 192.168.114.11  configs/02_23_2021
+
+    The configs are kept in the install/configs/<date> directory on both the deployment and the target system
+
+    we have to make the default config directory on the target 
+
+       sudo mkdir -p /usr/local/etc/configs 
+
+Then link stuff
+
+    ln -s /home/hybridos/install/configs/02_23_2021 /usr/local/etc/config
+    ll /usr/local/etc/config 
+    
+        to feed back the result
+
+
+We also need this on the deployment system
+
+  ess_get_config.sh 192.168.114.11 configs/02_23_2021_123
+
+
+  this will run
+        scp -r hybridos@192.168.114.11:/usr/local/etc/config/* ~/install/configs/02_23_2021_123
+
+  to copy the running configs to a named variant on the deployment system
+
+

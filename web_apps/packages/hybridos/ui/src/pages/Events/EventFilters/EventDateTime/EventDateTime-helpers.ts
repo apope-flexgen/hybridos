@@ -34,6 +34,7 @@ export const handleStartTimeChange = (
   setFilters: (value: React.SetStateAction<EventsRequestParams>) => void,
 ) => {
   const newStartTime = event.target.value;
+
   setStartTime(newStartTime);
 
   setFilters({
@@ -53,14 +54,13 @@ export const checkIfStartBeforeEnd = (startTime: string, endTime: string): boole
 export const handleDateChange = (
   newDate: Dayjs | null,
   setTimeFrame: React.Dispatch<React.SetStateAction<string>>,
-  startTime: string,
   filters: EventsRequestParams,
   setFilters: (value: React.SetStateAction<EventsRequestParams>) => void,
 ) => {
   const now = dayjs();
   if (newDate !== now) setTimeFrame('Custom');
 
-  const currentStartTime = startTime === '' ? '00:00:00' : dayjs(startTime).format('HH:mm:ss');
+  const currentStartTime = filters.startTime === '' ? '00:00:00' : dayjs(filters.startTime).format('HH:mm:ss');
 
   let currentEndTime;
   if (filters.endTime === '') currentEndTime = '00:00:00';
@@ -104,8 +104,10 @@ export const handleTimeFrameChange = (
     newStartTime = now.subtract(10, 'minute').format('YYYY/MM/DD HH:mm:ss');
     newEndTime = now.format('YYYY/MM/DD HH:mm:ss');
   } else {
-    newStartTime = startTime;
-    newEndTime = endTime;
+    const updatedStartTime = startTime || '00:00';
+    const updatedEndTime = endTime !== '' ? endTime : '23:30';
+    newEndTime = `${dayjs(filters.startTime).format('YYYY/MM/DD ')} ${updatedEndTime}:00`;
+    newStartTime = `${dayjs(filters.endTime).format('YYYY/MM/DD ')} ${updatedStartTime}:00`;
   }
   setFilters({
     ...filters,

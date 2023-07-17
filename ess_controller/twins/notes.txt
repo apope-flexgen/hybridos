@@ -1,0 +1,40 @@
+For anyone interested, here are steps I gave dev-ops for running ess with twins
+For the Twins configs I'm using the repo docker_testing, branch temp/preston (in twins_tx100_single)
+For the Twins build, the branch is feature/pcs_bms_modeling (but the binary is in the repo above so you don't 
+have to build it)
+ESS controller and the docker compose file (docker-compose.yml - this includes all the run commands) 
+are in the repo ess_controller_pm, branch twins_tx100
+In that folder, build the images with
+sudo docker-compose up -d --build
+and run with
+sudo docker-compose up
+Install docker compose following the steps here https://docs.docker.com/compose/install/
+But for the "curl" command I had to change it to the latest version, 2.0.1. 
+Let me know if it won't install correctly.
+To run with ESS UI go to your VM’s IP address:8082 in a browser
+Docker DocumentationDocker Documentation
+Install Docker Compose
+How to install Docker Compose
+Yesterday at 12:31 PM (28 kB)
+https://docs.docker.com/compose/install/
+
+:+1:
+1
+
+2 replies
+
+Jimmy Nguyen  2 hours ago
+Looks great. I want to add that sudo docker-compose up -d --build builds the images and runs the containers
+The -d flag means the running containers are detached from your terminal, which means you won't see the 
+console output from the containers
+If you used the -d flag, but you want to see the logs at a later point, you can run 
+docker-compose logs --tail=1000 -f <name_of_container>
+If you run sudo docker-compose up --build, you'll build the images and run the containers 
+while seeing the console output
+If you run sudo docker-compose --build, you'll just build the images
+:+1:
+1
+
+
+Preston Miller  41 minutes ago
+Gotcha. With the 2 lines I gave I do see console output though, from both containers in one window.

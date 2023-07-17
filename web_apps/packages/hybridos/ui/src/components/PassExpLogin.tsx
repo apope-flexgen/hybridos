@@ -5,8 +5,8 @@ import { useState } from 'react';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 
 interface PassExpLoginProps {
-  user: any // TODO: Use Better Type
-  onLogin: any // TODO: Use Better Type
+  user: any; // TODO: Use Better Type
+  onLogin: any; // TODO: Use Better Type
 }
 
 const PassExpLogin = (props: PassExpLoginProps) => {
@@ -37,11 +37,14 @@ const PassExpLogin = (props: PassExpLoginProps) => {
         username: user.username,
         updatedPassword: newPassword,
       };
-      axiosInstance.post(PASS_EXP_URL, body).then((res) => {
-        onLogin(res.data);
-      }).catch((e) => {
-        setError(e.response?.data?.message);
-      });
+      axiosInstance
+        .post(PASS_EXP_URL, body)
+        .then((res) => {
+          onLogin(res.data);
+        })
+        .catch((e) => {
+          setError(e.response?.data?.message);
+        });
     } else {
       setError(INVALID_ENTRY_ERROR);
     }
@@ -61,12 +64,18 @@ const PassExpLogin = (props: PassExpLoginProps) => {
         <div style={{ marginLeft: '8%', marginBottom: '10%' }}>
           <Typography text="Please create a new password to continue." />
         </div>,
-        <div style={{
-          display: 'flex', flexDirection: 'column', alignContent: 'center', width: '60%', paddingBottom: '5%', margin: 'auto',
-        }}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignContent: 'center',
+            width: '60%',
+            paddingBottom: '5%',
+            margin: 'auto',
+          }}
         >
           <NewPasswordTextfield
-            color={error!=='' ? "error" : "primary"}
+            color={error !== '' ? 'error' : 'primary'}
             key="NewPasswordTextfield"
             label="New Password"
             onChange={(event) => setNewPassword(event.target.value.trim())}
@@ -74,14 +83,14 @@ const PassExpLogin = (props: PassExpLoginProps) => {
           />
           <br />
           <ConfirmPasswordTextfield
-            color={error!=='' ? "error" : "primary"}
+            color={error !== '' ? 'error' : 'primary'}
             helperText={error}
             key="ConfirmPasswordTextfield"
             label="Confirm Password"
             onChange={(event) => setConfirmPassword(event.target.value.trim())}
-            onKeyDown={
-              (event) => { if (event.code === 'Enter') postPassExp(); }
-            }
+            onKeyDown={(event) => {
+              if (event.code === 'Enter') postPassExp();
+            }}
             type="password"
           />
           <br />

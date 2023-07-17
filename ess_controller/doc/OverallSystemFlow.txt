@@ -1,0 +1,125 @@
+OverallSystemFlow
+Phil Wilshire
+11/23/2020
+
+System consists of 
+... Overall Monitoring tasks that always run
+... State dependant monitoring tasks that are related to the current state.
+... System Transition Functions that take the system from one state to another
+
+Overall Monitoring
+... Comms 
+... Comms Heartbeat
+... EStop
+... Environment
+.... 
+
+State Dependant Monitoring
+... Init
+... WarmStart
+... Ready
+... Standby
+... Start(on)
+... Fault
+
+
+State Transitions
+
+Init -> WarmStart -> <last state>
+Init-> Ready
+Init-> Fault
+
+Ready -> Fault  (Shutdown)
+Ready -> StandBy (Shutdown)
+Ready -> Start (on)
+
+Fault -> Ready
+Fault -> StandBy 
+Fault -> Start(on)
+
+Standby -> Ready
+Standby -> Fault  (Shutdown)
+Standby -> Start(on) (Shutdown)
+
+Start -> Ready
+Start -> Fault  (Shutdown)
+Start -> Standby (Shutdown)
+
+
+Transition Functions
+
+Shutdown (Fault)
+StartUp (GridFollowing)
+
+
+Transition Operations
+
+Init->ready ( possibly via warm start)
+
+ready->Start
+ready->Standby
+
+
+
+
+ESS_Monitor
+     if Init state -> init all assets  waits for next cycle
+     Check Comms  (Asset) set AssetComms OK ( need x seconds of comms OK)
+     if AssetComsOk Send/Check Heartbeat set HeartBeat OK ( need x seconds of Heartbeat OK)
+
+     if asset Comms OK and HeartBeat OK
+         Check Asset Status  (Allow Skipped assets)
+     if Assets OK 
+                  set state to ready 
+                  allow warm start if requested
+     if AssetFaults
+          if (!ready && !Off &&!Standby) set Shutdown And transition to Fault
+
+     if AssetWarnings
+          check power Limit.
+
+          if (on) PowerAvailable < limit 
+                reduce power     
+
+
+
+Asset_Monitor
+      if(Comms OK and HeartbeatOK)
+     check Temp/Current/Voltage etc
+              send warnings and alarms
+               If error set Asset Fault
+               Asset Manager can 
+                   disable Asset 
+                   or
+                   set system state to Fault
+
+
+
+
+
+
+Startup Operation (if Ready, StandBy, or Off)
+        Set current refs
+        Turn on BMS
+        Wait for Ready
+        Turn on PCS
+        Wait for Power response
+        Set State to on
+
+Shutdown Operation 
+        Reset current refs
+        Wait for Current Refa
+        Turn off PCS
+        Wait for PCS Ready  (Alarm if Failed)
+        Turn off BMS
+        Wait for BMS response
+        Set State to Fault or Standby
+
+EStop
+     reset current refs
+     Turn off PCS ( no wait)
+     Turn off BMS ( no Wait)
+     if PCS not off Repeat
+     if BMS not off Repeat
+     Set State to Fault or Standby
+

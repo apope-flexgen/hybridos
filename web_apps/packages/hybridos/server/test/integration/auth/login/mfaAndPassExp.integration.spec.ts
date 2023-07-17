@@ -10,6 +10,8 @@ import request from './../../../testReqAgent'
 import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
+import { ThrottlerGuard } from '@nestjs/throttler'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 const INCORRECT_PASSWORD = 'incorrectPassword'
 const INCORRECT_USERNAME = 'userDoesntExist'
@@ -18,7 +20,8 @@ describe('Authentication (Integration)', () => {
     let app: INestApplication
     let db: MongoMemoryServer
 
-    beforeAll(async () => {
+    beforeEach(async () => {
+        console.log('running before all')
         const mongoServer = await MongoMemoryServer.create()
 
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -26,6 +29,8 @@ describe('Authentication (Integration)', () => {
         })
             .overrideProvider(AppEnvService)
             .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+            .overrideProvider(PermissionsService)
+            .useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer

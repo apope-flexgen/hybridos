@@ -1,0 +1,240 @@
+{
+    "/notes/gpio": {
+        "note1": "This gpio controller is designed to monitor the system based on consistent input from external sources.",
+        "note2": "If a single pin that is assigned a modbus register is set to 'low' then it interacts with that modbus register.",
+        "note3": "This allows us a separate controller that can manage emergency's separate from the regular ess controller effectively.",
+        "note4": "This gpio controller runs on its own executable and should have its own modbus client to the servers."
+    },
+    "/components/gpio": {
+        "EStop": {
+            "value": false,
+            "pin": 9,
+            "bit": 0,
+            "dir": "input",
+            "desc": "EStop",
+            "enabled": true,
+            "inverted": true
+        },
+        "Disconnect Switch": {
+            "value": false,
+            "pin": 8,
+            "bit": 1,
+            "dir": "input",
+            "desc": "Disconnect Switch",
+            "enabled": true,
+            "inverted": true
+        },
+        "Door Latch": {
+            "value": false,
+            "pin": 7,
+            "bit": 2,
+            "dir": "input",
+            "desc": "Door Latch",
+            "enabled": true,
+            "inverted": true
+        },
+        "Surge Arrester": {
+            "value": false,
+            "status":"working",
+            "pin": 6,
+            "bit": 3,
+            "dir": "input",
+            "desc": "Surge Arrester",
+            "enabled": true,
+            "inverted": true
+        },
+        "Fire Alarm": {
+            "value": false,
+            "status":"working",
+            "pin": 4,
+            "bit": 4,
+            "dir": "input",
+            "desc": "Fire Alarm",
+            "enabled": true,
+            "inverted": false
+        },
+        "Fuse Monitoring": {
+            "value": false,
+            "pin": 3,
+            "bit": 5,
+            "dir": "input",
+            "desc": "Fuse Monitoring",
+            "enabled": true,
+            "inverted": true
+        }
+    },
+    "/config/gpio": {
+        "Subs": "/gpio, /reload, /misc2",
+        "Pubs": "/assets/gpio",
+        "LogDir":"/var/log/gpio_controller",
+        "debug":0,
+        "gpios": {
+            "i2c_bus":"4",
+            "slave_address":"0x26",
+            "scanTime": 0.005,
+            "pubTime": 1.000
+        }
+    },
+    "/control/gpio": {
+        "getPubs": {
+            "value":false,
+            "debug":1,
+            "actions": {
+                "onSet": [{
+                        "func": [
+                            { "func": "GpioRwPub", "amap": "gpio"}
+                        ]}
+                ]
+            }
+        }
+    },
+    "/assets/gpio/summary": {
+        "name": "Ess Gpio",
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "start": {
+            "name": "Start",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "stop": {
+            "name": "Stop",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "enter_standby": {
+            "name": "Enter Standby",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "exit_standby": {
+            "name": "Exit Standby",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": true
+                }
+            ]
+        }
+    },
+    "/sets/blocked": {
+        "/status": {
+            "value": true
+        },
+        "/components": {
+            "value": true
+        }
+    },
+    "/pubs/blocked": {
+        "/assets": {
+            "value": true
+        },
+        "/site": {
+            "value": true
+        }
+    },
+    "/gets/blocked": {
+        "/components": {
+            "value": true
+        }
+    },
+    "/links/gpio": {
+        "EStop": {
+            "value": "/components/gpio:EStop"
+        },
+        "Disconnect Switch": {
+            "value": "/components/gpio:Disconnect Switch"
+        },
+        "Door Latch": {
+            "value": "/components/gpio:Door Latch"
+        },
+        "Surge Arrester": {
+            "value": "/components/gpio:Surge Arrester"
+        },
+        "Fire Alarm": {
+            "value": "/components/gpio:Fire Alarm"
+        },
+        "Fuse Monitoring": {
+            "value": "/components/gpio:Fuse Monitoring"
+        }
+    }
+}

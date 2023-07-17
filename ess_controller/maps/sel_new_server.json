@@ -1,0 +1,26 @@
+{
+   "system":
+   {   "name":"SEL 3530 RTAC",
+       "protocol": "Modbus TCP",
+       "id": "SEL_3530_RTAC",
+       "ip_address": "0.0.0.0",
+       "port": 502 
+   },
+    "registers":
+     {
+      "holding_registers":
+       [
+          { "name":"frequency","id":"frequency","offset":0,"scale": 1000.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"voltage_l1","id":"voltage_l1","offset":2,"scale": 1.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"voltage_l2","id":"voltage_l2","offset":4,"scale": 1.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"voltage_l3","id":"voltage_l3","offset":6,"scale": 1.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"current_l1","id":"current_l1","offset":8,"scale": 1.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"current_l2","id":"current_l2","offset":10,"scale": 1.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"current_l3","id":"current_l3","offset":12,"scale": 1.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"current_n","id":"current_n","offset":14,"scale": 1.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"active_power","id":"active_power","offset":16,"scale": 1000.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"reactive_power","id":"reactive_power","offset":18,"scale": 1000.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"power_factor","id":"power_factor","offset":20,"scale": 100.000000, "size": 2, "signed": true, "uri":"/components/sel_3530_rtac" },
+          { "name":"apparent_power","id":"apparent_power","offset":22,"scale": 1000.000000, "size": 2, "uri":"/components/sel_3530_rtac" }       ]
+    }
+}

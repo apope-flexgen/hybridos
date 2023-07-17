@@ -1,0 +1,41 @@
+{
+    "/notes/flex": {
+        "note1": "This flex controller is designed to be an empty FlexPack controller",
+        "note2": "Make it do what ever you want"
+    },
+    "/config/flex": {
+        "name":{
+            "note": " this will set up flex and the key word",
+            "value":"flex"
+        },
+	    "flex":true,
+        "Subs": "/flex, /components, /site, /reload, /misc2",
+        "Pubs": "/assets/flex",
+        "LogDir":"/var/log/flex_controller",
+        "cfgFile":"flex_config.json",
+        "debug":0
+    },
+
+    
+    "/sets/blocked": {
+        "/status": {
+            "value": true
+        },
+        "/components": {
+            "value": true
+        }
+    },
+    "/pubs/blocked": {
+        "/assets": {
+            "value": true
+        },
+        "/site": {
+            "value": true
+        }
+    },
+    "/gets/blocked": {
+        "/components": {
+            "value": true
+        }
+    }
+}

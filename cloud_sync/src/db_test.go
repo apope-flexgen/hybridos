@@ -7,8 +7,8 @@ import (
 )
 
 func TestDB(t *testing.T) {
-	config.DbDir = "/home/vagrant/cloud_sync/db"
-	err := os.RemoveAll("/home/vagrant/cloud_sync/db")
+	config.DbDir = t.TempDir()
+	err := os.RemoveAll(config.DbDir)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -47,7 +47,7 @@ func TestDB(t *testing.T) {
 }
 
 func TestPopulateThenExtractDB(t *testing.T) {
-	config.DbDir = "/home/vagrant/cloud_sync/db"
+	config.DbDir = t.TempDir()
 	manager := &databaseManager{}
 
 	err := manager.UseDB("test2")

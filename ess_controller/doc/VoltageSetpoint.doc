@@ -1,0 +1,12 @@
+"VoltageSetpoint": {
+        "value": 0,
+        "EnableSlew": false,
+        "SlewRate": 100,
+        "SlewedVal": "/ess/controls/pcs:VoltageCmd"
+    },
+
+
+Set the VoltageSetpoint value and VoltageCmd is slewed to that value at SlewRate.
+So we read VoltageCmd add/subtract slewrate until it gets to VoltageSetpoint.
+ 
+

@@ -1,0 +1,144 @@
+
+12/06/2020  Initial tests 
+
+    Annotated system startup for the Ess Controller
+    Depicting time stamp and heartbeat detection from  PCS and BMS systems.
+
+    BMS Status data Also arrving from addresses 0x0400 and 0x0401
+
+    All status showing "normal" so the status is reported in this debug state but no alarms or faults are raised.
+
+
+
+CheckMonitorVar >> Not set up for [SOH] mname [SOH_reload]
+SetupMonitorVar >>  setup for  ess  mbmu_soh
+SetupMonitorVar >> avEnable 0x7fd9d005a1e0 mname [SOH_Enable]
+HandleManagerCmd >> ess --- Running state 0
+HandleManagerCmd >> ess --- Running
+HandleManagerCmd >> bms --- Running state 0
+HandleManagerCmd >> bms --- Running
+HandleAssetCmd >> sbmu_1 --- Running  state 0
+HandleAssetCmd >> sbmu_2 --- Running  state 0
+HandleAssetCmd >> sbmu_3 --- Running  state 0
+HandleAssetCmd >> sbmu_4 --- Running  state 0
+HandleManagerCmd >> pcs --- Running state 0
+HandleManagerCmd >> pcs --- Running
+HandleAssetCmd >> pcs_1 --- Running  state 0
+
+
+
+
+                                <<< ess Controller start 
+
+HandleESSCmd >> ess ---ssnum 4 --> 0  [System Startup] OnCmd [false] On [false] last set time 0.111737
+CheckAmBmsStatus >> bms  amBmsStatusInit  SEEN ...
+CheckAmBmsStatus >> bms  ParamtoAlarm 2.500000
+
+
+                               <<< heartbeat detected 
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [-1] to [34] tNow 0.306 seenHB [false]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [34] to [35] tNow 1.008 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [35] to [36] tNow 2.011 seenHB [true]
+CheckAmHeartbeat >>  Heartbeat OK for  pcs at 2.713
+CheckAmTimestamp >>  Timestamp OK for  pcs at 2.713
+                              <<< Timestamp verivied after 2.7 seconds 
+
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [36] to [37] tNow 2.913 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [37] to [38] tNow 3.915 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [38] to [39] tNow 5.118 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [39] to [40] tNow 6.020 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [40] to [41] tNow 7.324 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [41] to [42] tNow 8.026 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [42] to [43] tNow 8.928 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [43] to [44] tNow 9.932 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [44] to [45] tNow 10.933 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [45] to [46] tNow 11.935 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [46] to [47] tNow 12.939 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [47] to [48] tNow 13.941 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [48] to [49] tNow 14.850 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [49] to [50] tNow 15.952 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [50] to [51] tNow 16.954 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [51] to [52] tNow 17.857 seenHB [true]
+
+
+ dummy_bms_alarm >>  name [single_cell_overvoltage] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_undervoltage] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_overtemp] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_undertemp] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [SOC_low] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [TMS_fault] value [Normal]  lastValue[noLval]
+
+                                <<< 0x0400   BMS status data received 
+
+ dummy_bms_alarm >> AlarmSent dest [/assets/bms/summary:alarms] msg [TMS_fault alarm  [Normal] at 18.283 ]  am 0x24a04e0
+ dummy_bms_alarm >>  name [charge_overcurrent] value [Normal]  lastValue[noLval]
+ dummy_bms_alarm >> AlarmSent dest [/assets/bms/summary:alarms] msg [charge_overcurrent alarm  [Normal] at 18.283 ]  am 0x24a04e0
+ dummy_bms_alarm >>  name [discharge_overcurrent] value [Normal]  lastValue[noLval]
+ dummy_bms_alarm >> AlarmSent dest [/assets/bms/summary:alarms] msg [discharge_overcurrent alarm  [Normal] at 18.283 ]  am 0x24a04e0
+ dummy_bms_alarm >>  name [temp_diff] value [Normal]  lastValue[noLval]
+ dummy_bms_alarm >> AlarmSent dest [/assets/bms/summary:alarms] msg [temp_diff alarm  [Normal] at 18.283 ]  am 0x24a04e0
+ dummy_bms_fault >>  av 0x7fd9d80db530  av->am 0x24a04e0
+ dummy_bms_fault >>  name [cell_extreme_temp] value [Normal]  lastValue[noLval]
+ dummy_bms_fault >> Fault Sent dest [/assets/bms/summary:faults] msg [cell_extreme_temp fault  [Normal] at 18.283 ]  am 0x24a04e0
+ dummy_bms_fault >>  av 0x7fd9d80dbb80  av->am 0x24a04e0
+ dummy_bms_fault >>  name [cell_voltage_temp] value [Normal]  lastValue[noLval]
+ dummy_bms_fault >> Fault Sent dest [/assets/bms/summary:faults] msg [cell_voltage_temp fault  [Normal] at 18.283 ]  am 0x24a04e0
+
+                            <<< 0x0401 BMS status data received
+
+CheckAmHeartbeat >> bms Heartbeat change detected,  from [-1] to [12] tNow 18.358 seenHB [false]
+
+                            <<< BMS Modbs client started  here.
+
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [52] to [53] tNow 18.761 seenHB [true]
+ dummy_bms_alarm >>  name [single_cell_overvoltage] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_undervoltage] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_overtemp] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_undertemp] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [SOC_low] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [TMS_fault] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [charge_overcurrent] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [discharge_overcurrent] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [temp_diff] value [Normal]  lastValue[Normal]
+ dummy_bms_fault >>  av 0x7fd9d80db530  av->am 0x24a04e0
+ dummy_bms_fault >>  name [cell_extreme_temp] value [Normal]  lastValue[Normal]
+ dummy_bms_fault >>  av 0x7fd9d80dbb80  av->am 0x24a04e0
+ dummy_bms_fault >>  name [cell_voltage_temp] value [Normal]  lastValue[Normal]
+CheckAmHeartbeat >> bms Heartbeat change detected,  from [12] to [0] tNow 19.360 seenHB [true]
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [53] to [54] tNow 19.863 seenHB [true]
+ dummy_bms_alarm >>  name [single_cell_overvoltage] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_undervoltage] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_overtemp] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_undertemp] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [SOC_low] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [TMS_fault] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [charge_overcurrent] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [discharge_overcurrent] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [temp_diff] value [Normal]  lastValue[Normal]
+ dummy_bms_fault >>  av 0x7fd9d80db530  av->am 0x24a04e0
+ dummy_bms_fault >>  name [cell_extreme_temp] value [Normal]  lastValue[Normal]
+ dummy_bms_fault >>  av 0x7fd9d80dbb80  av->am 0x24a04e0
+ dummy_bms_fault >>  name [cell_voltage_temp] value [Normal]  lastValue[Normal]
+CheckAmHeartbeat >> bms Heartbeat change detected,  from [0] to [4] tNow 20.362 seenHB [true]
+CheckAmHeartbeat >>  Heartbeat OK for  bms at 20.762
+CheckAmTimestamp >>  Timestamp OK for  bms at 20.762
+
+                             <<<< BMS time stamp and heartbeat  ( the BMS modbus communitations was started after 18 seconds  )
+
+
+
+CheckAmHeartbeat >> pcs Heartbeat change detected,  from [54] to [55] tNow 20.965 seenHB [true]
+ dummy_bms_alarm >>  name [single_cell_overvoltage] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_undervoltage] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_overtemp] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [single_cell_undertemp] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [SOC_low] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [TMS_fault] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [charge_overcurrent] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [discharge_overcurrent] value [Normal]  lastValue[Normal]
+ dummy_bms_alarm >>  name [temp_diff] value [Normal]  lastValue[Normal]
+ dummy_bms_fault >>  av 0x7fd9d80db530  av->am 0x24a04e0
+ dummy_bms_fault >>  name [cell_extreme_temp] value [Normal]  lastValue[Normal]
+
+
+             <<<<< End of tests

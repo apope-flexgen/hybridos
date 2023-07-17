@@ -8,5 +8,5 @@ myJobPipeline {
     imageNames=["centos7"]
 
     //Does the image need a special tag?
-    imageTag="devel-10.3.0"
+    imageTag="devel-11.1.0"
 }

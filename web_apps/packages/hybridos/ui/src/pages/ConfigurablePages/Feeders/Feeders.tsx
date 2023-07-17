@@ -2,6 +2,6 @@
 /* eslint-disable import/no-cycle */
 import { AssetsPage } from '..';
 
-const Feeders = () => <AssetsPage category="feeders" />;
+const Feeders = () => <AssetsPage assetKey="feeders" />;
 
 export default Feeders;

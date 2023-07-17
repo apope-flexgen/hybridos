@@ -304,9 +304,20 @@ void CheckState(varsmap &vmap, varmap& amap, const char* aname, assetVar* av, T&
     tm *local_tm = vm->get_local_time_now();
     const char* timestamp = strtime(local_tm);
 
-    // Check if the val is changing
-    if (!enableStateCheck) return;
+    if (!enableStateCheck)
+    {
+
+        // Reset alarm/fault/reset states and timers
+        av->setParam("AlarmTime", av->getdParam("AlarmTimeout"));                
+        av->setParam("FaultTime", av->getdParam("FaultTimeout"));                
+        av->setParam("RecoverTime", av->getdParam("RecoverTimeout"));            
+        av->setParam("seenFault", false);                
+        av->setParam("seenAlarm", false);
+        av->setParam("seenReset", false);
+        return;
+    }
     
+    // Check if the val is changing
     if (val == lastVal)
     {
         if (currFaultTime > 0) ESSUtils::decrementTime(av, currFaultTime, tDiff, "FaultTime");
@@ -787,8 +798,18 @@ void CheckCondition(varsmap& vmap, varmap& amap, const char* aname, assetVar* av
     tm *local_tm = vm->get_local_time_now();
     const char* timestamp = strtime(local_tm);
 
-    // If the condition check is disabled, immediately exit this function
-    if (!enableCondCheck) return;
+    // If the condition check is disabled, reset alarm/fault/reset states and timers and then exit
+    if (!enableCondCheck)
+    {
+        av->setParam("AlarmTime", av->getdParam("AlarmTimeout"));                
+        av->setParam("FaultTime", av->getdParam("FaultTimeout"));                
+        av->setParam("RecoverTime", av->getdParam("RecoverTimeout"));            
+        av->setParam("seenFault",false);                
+        av->setParam("seenAlarm", false);
+        av->setParam("seenReset", false);
+        return;
+    }
+
     // Find the condition val. If return value is true, then we have found at least one condition value equal to the condition av value
     bool foundCondVal = Condition::findCondition(amap, av);
     // Find the expected val. If return value is true, then we have found at least one expected value equal to the av value
@@ -1158,6 +1179,18 @@ void CheckLimits(varsmap& vmap, varmap& amap, const char* aname, assetVar* av)
             if (currMaxFaultTime < maxFaultTimeCfg) ESSUtils::incrementTime(av, currMaxFaultTime, tDiff, maxFaultTimeCfg, "MaxFaultTime");
         }
     }
+    else
+    {
+
+        // If max limit monitoring is disabled, then reset the alarm/fault/reset states and timers
+        av->setParam("MaxAlarmTime", av->getdParam("MaxAlarmTimeout"));                
+        av->setParam("MaxFaultTime", av->getdParam("MaxFaultTimeout"));                
+        av->setParam("MaxRecoverTime", av->getdParam("MaxRecoverTimeout"));
+
+        av->setParam("seenMaxFault", false);                
+        av->setParam("seenMaxAlarm", false);
+        av->setParam("seenMaxReset", false);
+    }
         
     // Check if the current value is under the threshold value
     if (enableMinCheck)
@@ -1270,6 +1303,18 @@ void CheckLimits(varsmap& vmap, varmap& amap, const char* aname, assetVar* av)
             if (currMinAlarmTime < minAlarmTimeCfg) ESSUtils::incrementTime(av, currMinAlarmTime, tDiff, minAlarmTimeCfg, "MinAlarmTime");
             if (currMinFaultTime < minFaultTimeCfg) ESSUtils::incrementTime(av, currMinFaultTime, tDiff, minFaultTimeCfg, "MinFaultTime");
         }
+    }
+    else
+    {
+
+        // If min limit monitoring is disabled, then reset the alarm/fault/reset states and timers
+        av->setParam("MinAlarmTime", av->getdParam("MinAlarmTimeout"));                
+        av->setParam("MinFaultTime", av->getdParam("MinFaultTimeout"));                
+        av->setParam("MinRecoverTime", av->getdParam("MinRecoverTimeout"));    
+
+        av->setParam("seenMinFault", false);
+        av->setParam("seenMinAlarm", false);
+        av->setParam("seenMinReset", false);
     }
 }
 

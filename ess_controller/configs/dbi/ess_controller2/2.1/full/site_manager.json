@@ -1,0 +1,123 @@
+{
+    "/config/site": {
+        "AlarmDestination": {
+            "value": "/assets/site/summary:alarms"
+        },
+        "FaultDestination": {
+            "value": "/assets/site/summary:faults"
+        }
+    },
+    "/links/site": {
+        "Heartbeat": {
+            "value": "/site/ess_ls:life_signal"
+        },
+        "life": {
+            "value": "/site/ess_hs:life"
+        }
+    },
+    "/schedule/wake_monitor/site": {
+        "/site/ess_hs:life": { "enable": true, "rate":1, "func":"CheckMonitorVar" }
+    },
+    "/site/ess_hs": {
+        "life": {
+            "value": 0,
+            "EnableStateCheck": false,
+            "EnableCommsCheck": true,
+            "Type": "int",
+            "AlarmTimeout": 5,
+            "FaultTimeout": 10,
+            "RecoverTimeout": 1
+        },
+        "start_stop": {
+            "value": 0,
+            "note": "Log start, stop, or standby command first (LogInfo), then trigger start, stop, or standby routine (remap)",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": 207, "uri": "/controls/pcs:Start@triggerCmd",          "outValue": true},
+                        {"inValue": 207, "uri": "/controls/pcs:Start",                     "outValue": 207},
+                        {"inValue": 207, "uri": "/site/ess_hs:start_stop",                 "outValue": 0, "note": "Set start_stop back to 0 to allow future start_stop commands to be processed"},
+
+                        {"inValue": 206, "uri": "/controls/ess:ActivePowerSetpoint",       "outValue": 0},
+                        {"inValue": 206, "uri": "/controls/ess:ReactivePowerSetpoint",     "outValue": 0},
+                        {"inValue": 206, "uri": "/controls/pcs:Shutdown@triggerCmd",       "outValue": true},
+                        {"inValue": 206, "uri": "/controls/pcs:Shutdown",                  "outValue": 206},
+                        {"inValue": 206, "uri": "/site/ess_hs:start_stop",                 "outValue": 0, "note": "Set start_stop back to 0 to allow future start_stop commands to be processed"},
+
+                        {"inValue": 205, "uri": "/controls/ess:ActivePowerSetpoint",       "outValue": 0},
+                        {"inValue": 205, "uri": "/controls/ess:ReactivePowerSetpoint",     "outValue": 0},
+                        {"inValue": 205, "uri": "/controls/pcs:Standby@triggerCmd",        "outValue": true},
+                        {"inValue": 205, "uri": "/controls/pcs:Standby",                   "outValue": 205},
+                        {"inValue": 205, "uri": "/site/ess_hs:start_stop",                 "outValue": 0, "note": "Set start_stop back to 0 to allow future start_stop commands to be processed"}
+
+                    ]
+                }]
+            }
+        },
+        "bms_dc_contactors": {
+            "value": 0,
+            "note": "Trigger command handler that will open or close BMS DC contactors",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": 1, "uri": "/controls/bms:OpenContactors@triggerCmd",  "outValue": true},
+                        {"inValue": 1, "uri": "/controls/bms:OpenContactors",             "outValue": 3, "note": "Send open contactors command to BMS"},
+                        {"inValue": 1, "uri": "/site/ess_hs:bms_dc_contactors",           "outValue": 0, "note": "Reset DC contactors command from site"},
+
+                        {"inValue": 2, "uri": "/controls/bms:CloseContactors@triggerCmd", "outValue": true},
+                        {"inValue": 2, "uri": "/controls/bms:CloseContactors",            "outValue": 2, "note": "Send close contactors command to BMS"},
+                        {"inValue": 2, "uri": "/site/ess_hs:bms_dc_contactors",           "outValue": 0, "note": "Reset DC contactors command from site"}
+                    ]
+                }]
+            }
+        },
+        "active_power_setpoint": {
+            "value": 0,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri": "/controls/ess:ActivePowerSetpoint"}
+                    ]
+                }]
+            }
+        },
+        "reactive_power_setpoint": {
+            "value": 0,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri": "/controls/ess:ReactivePowerSetpoint"}
+                    ]
+                }]
+            }
+        },
+        "clear_faults": {
+            "value": 0,
+            "actions":	{
+                "onSet":	[{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap":	[
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:ems_alarms"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:ess_faults"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:ess_alarms"},
+                        
+                        {"inValue": 1, "uri": "/controls/bms:ClearFaults@triggerCmd", "outValue": true},
+                        {"inValue": 1, "uri": "/controls/bms:ClearFaults",            "outValue": 1, "note": "Send clear faults command to BMS"},
+                        {"inValue": 1, "uri": "/controls/pcs:ClearFaults@triggerCmd", "outValue": true},
+                        {"inValue": 1, "uri": "/controls/pcs:ClearFaults",            "outValue": 1, "note": "Send clear faults command to PCS"},
+
+                        {"inValue": 1, "uri": "/site/ess_hs:clear_faults",  "outValue": 0, "note": "Reset DC contactors command from site"}
+                    ]
+                }]
+            }
+        }
+    }
+}

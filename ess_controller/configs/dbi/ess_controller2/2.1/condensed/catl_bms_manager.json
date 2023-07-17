@@ -1,0 +1,359 @@
+{
+    "/system/commands": {
+        "runOpts": {
+            "value": false,
+            "enabled": false,
+            "targav": "/system/commands:run",
+            "options": [
+                {"uri":"/sched/bms:pubAssets_bms","aname":"bms","value":0,"every":0.1}
+            ],
+            "actions": {
+                "onSet":[{"func":[{"func":"SchedItemOpts"}]}]
+            }
+        }
+    },
+
+    "/sched/bms": {
+        "pubAssets_bms": {
+            "value": 0,
+            "mode": "ui",
+            "table": "/assets/bms/summary",
+            "actions": {
+                "onSet":[{"func":[{"func":"RunPub"}]}]
+            }
+        }
+    },
+
+    "/config/load": {
+        "catl_bms_manager": {
+            "value": false,
+            "file": "catl_bms_manager",
+            "aname": "bms",
+            "pname": "ess",
+            "new_options": [
+                {
+                    "tmpl": "catl_bms_rack",
+                    "pname": "bms",
+                    "type": "ai", 
+                    "ainame": "##BMS_ID##",
+                    "from": 1,
+                    "to": 9,
+                    "reps": [
+                        {"replace":"##BMS_ID##",   "with":"sbmu_{:01d}"},
+                        {"replace":"##BMS_NUM##",  "with":"{:01d}"}
+                    ]
+                }
+            ]
+        }
+    },
+
+    "/assets/bms/summary": {
+        "name": "BMS Manager",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "power_state": {
+            "name": "Power State",
+            "value": "OFF",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "system_state": {
+            "name": "Batteries Status",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "com_status": {
+            "name": "Communication Status",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "soc": {
+            "name": "State of Charge",
+            "value": 76.55913543701172,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soh": {
+            "name": "State of Health",
+            "value": 0,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_voltage": {
+            "name": "System Voltage",
+            "value": 0,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_current": {
+            "name": "System Current",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_power": {
+            "name": "System Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_voltage": {
+            "name": "Max Cell Voltage",
+            "value": 0,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_voltage": {
+            "name": "Min Cell Voltage",
+            "value": 0,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "avg_cell_voltage": {
+            "name": "Avg Cell Voltage",
+            "value": 0,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_temp": {
+            "name": "Max Cell Temperature",
+            "value": 0,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_temp": {
+            "name": "Min Cell Temperature",
+            "value": 0,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "avg_cell_temp": {
+            "name": "Avg Cell Temperature",
+            "value": 0,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_charge_current": {
+            "name": "Max Charge Current Allowed",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_discharge_current": {
+            "name": "Max Discharge Current Allowed",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_charge_power": {
+            "name": "Max Charge Power Allowed",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_discharge_power": {
+            "name": "Max Discharge Power Allowed",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "remain_charge_energy": {
+            "name": "Remaining Charge Energy",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "remain_discharge_energy": {
+            "name": "Remaining Discharge Energy",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "units_connected": {
+            "name": "Units Connected",
+            "value": 0,
+            "unit": "",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/assets/bms/summary:clear_faults@enabled"},
+                        {"inValue": true, "ifChanged": false, "uri": "/assets/bms/summary:clear_alarms@enabled"},
+                        {"inValue": true, "ifChanged": false, "uri": "/assets/bms/summary:maint_reactive_power_setpoint@enabled"},
+                        {"inValue": true, "ifChanged": false, "uri": "/assets/bms/summary:maint_active_power_setpoint@enabled"}
+                    ]
+                }]
+            },
+
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+        "start": {
+            "name": "Close DC Contactor",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/bms:CloseContactors@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/bms:CloseContactors",            "outValue": 2, "note": "Send close contactors command to BMS"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "stop": {
+            "name": "Open DC Contactor",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/bms:OpenContactors@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/bms:OpenContactors",            "outValue": 3, "note": "Send open contactors command to BMS"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"ifChanged": false, "uri": "/controls/bms:ClearFaults@triggerCmd", "outValue": true},
+                        {"ifChanged": false, "uri": "/controls/bms:ClearFaults",            "outValue": 1, "note": "Send clear faults command to BMS"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "Clear Faults", "return_value": "Clear"}
+            ]
+        }
+    }
+}

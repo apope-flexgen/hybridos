@@ -1,0 +1,9 @@
+## Transfer rpms to supermicro
+scp web_server-1.1.3.FM-50.1.release.x86_64.rpm hybridos@192.168.114.11:~/
+scp web_ui-1.5.2-126.3.release.x86_64.rpm hybridos@192.168.114.11:~/
+## Install rpms
+sudo rpm -iv /tmp/web_server-1.1.3.FM-50.1.release.x86_64.rpm
+sudo rpm -iv /tmp/web_ui-1.5.2-126.3.release.x86_64.rpm
+If dependency error add --nodeps after -iv
+## Change config
+scp permissions.json hybridos@192.168.114.11:/usr/local/etc/config/web_server/

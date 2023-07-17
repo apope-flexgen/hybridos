@@ -5,7 +5,7 @@ After=fims.service
 
 [Service]
 User=root
-ExecStart=/usr/local/bin/cops --config=/usr/local/etc/config/cops
+ExecStart=/usr/local/bin/cops --config=/usr/local/etc/config/cops/configuration.json
 Restart=always
 RestartSec=10s
 

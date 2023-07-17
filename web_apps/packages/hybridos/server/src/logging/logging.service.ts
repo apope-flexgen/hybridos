@@ -1,30 +1,36 @@
 import { ConsoleLogger, Injectable, Scope } from '@nestjs/common'
-import { Logger } from '@nestjs/common'
 import { LoggerFilter } from './logging_filter/logger-filter.service'
 import { LogText } from './log_text/log-text'
 import * as fs from 'fs'
 import * as crypto from 'crypto'
+import * as path from 'path';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class LoggingService extends ConsoleLogger {
-    private readonly logger = new Logger()
     private loggerFilter = new LoggerFilter()
     writeToFileSystem(message: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const filename = '/var/log/web_server/nest_web_server.log'
-            fs.open(filename, 'a', (err, fd) => {
+            const filename = '/var/log/flexgen/web_server/web_server.log'
+            const directory = path.dirname(filename)
+            fs.mkdir(directory, { recursive: true }, (err) => {
                 if (err) {
                     reject()
                 } else {
-                    fs.write(fd, `${message}\n`, (err) => {
+                    fs.open(filename, 'a', (err, fd) => {
                         if (err) {
                             reject()
                         } else {
-                            resolve()
+                            fs.write(fd, `${message}\n`, (err) => {
+                                if (err) {
+                                    reject()
+                                } else {
+                                    resolve()
+                                }
+                            })
                         }
-                    })
+                    });
                 }
-            })
+            });
         })
     }
     makeUuid(): Promise<string> {

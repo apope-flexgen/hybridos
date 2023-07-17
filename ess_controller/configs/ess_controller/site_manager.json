@@ -1,0 +1,110 @@
+{
+    "/config/site": {
+        "AlarmDestination": {
+            "value": "/assets/site/summary:alarms"
+        },
+        "FaultDestination": {
+            "value": "/assets/site/summary:faults"
+        }
+    },
+    "/links/site": {
+        "Heartbeat": {
+            "value": "/site/ess_hs:life_signal"
+        },
+        "life": {
+            "value": "/site/ess_hs:life"
+        }
+    },
+    "/schedule/wake_monitor/site": {
+        "/site/ess_hs:life": { "enable": true, "rate":1, "func":"CheckMonitorVar" }
+    },
+    "/site/ess_hs": {
+        "life": {
+            "value": 0,
+            "EnableStateCheck": false,
+            "EnableCommsCheck": true,
+            "Type": "int",
+            "AlarmTimeout": 5,
+            "FaultTimeout": 10,
+            "RecoverTimeout": 1
+        },
+        "start_stop": {
+            "value": 0,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue": 207, "uri": "/sched/pcs:schedStartupPCS@endTime", "outValue": 0},
+                        {"inValue": 207, "uri": "/sched/pcs:schedStartupPCS", "outValue": "schedStartupPCS"},
+
+                        {"inValue": 206, "uri": "/status/pcs:HardShutdown", "outValue": true},
+                        {"inValue": 206, "uri": "/sched/pcs:schedShutdownPCS@endTime", "outValue": 0},
+                        {"inValue": 206, "uri": "/sched/pcs:schedShutdownPCS", "outValue": "schedShutdownPCS"},
+
+                        {"inValue": 205, "uri":	"/status/pcs:HardShutdown", "outValue": false},
+                        {"inValue": 205, "uri": "/sched/pcs:schedShutdownPCS@endTime", "outValue": 0},
+                        {"inValue": 205, "uri": "/sched/pcs:schedShutdownPCS", "outValue": "schedShutdownPCS"}
+                    ]
+                }]
+            }
+        },
+        "bms_dc_contactors": {
+            "value": 0,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue":true, "fims": "set", "uri":	"/assets/bms/summary:start", "outValue": true},
+
+                        {"inValue":true, "uri":	"/sched/bms:schedStartupBMS@endTime", "outValue": 0},
+                        {"inValue":true, "uri":	"/sched/bms:schedStartupBMS", "outValue": "schedStartupBMS"}
+                    ]
+                }]
+            }
+        },
+        "active_power_setpoint": {
+            "value": 0,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri": "/controls/ess:ActivePowerSetpoint"}
+                    ]
+                }]
+            }
+        },
+        "reactive_power_setpoint": {
+            "value": 0,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri": "/controls/ess:ReactivePowerSetpoint"}
+                    ]
+                }]
+            }
+        },
+        "clear_faults": {
+            "value": 0,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue": 1, "outValue": "Clear", "uri": "/faults/pcs:clear_faults"},
+                        {"inValue": 1, "outValue": "Clear", "uri": "/faults/bms:clear_faults"},
+                        {"inValue": 1, "outValue": "Clear", "uri": "/alarms/pcs:clear_alarms"},
+                        {"inValue": 1, "outValue": "Clear", "uri": "/alarms/bms:clear_alarms"},
+      
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_hs:com_status"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:pcs1_faults1"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:pcs1_faults2"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:pcs1_alarms"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:bms_faults1"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:bms_faults2"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:bms_alarms"},
+      
+                        {"inValue": 1, "uri": "/sched/pcs:schedSendClearFaultCmdpcs@endTime", "amap": "pcs", "outValue": 1},
+                        {"inValue": 1, "uri": "/sched/pcs:schedSendClearFaultCmdpcs", "amap": "pcs", "outValue": "schedSendClearFaultCmdpcs"},
+                        {"inValue": 1, "uri": "/sched/bms:schedSendClearFaultCmdbms@endTime", "outValue": 1},
+                        {"inValue": 1, "uri": "/sched/bms:schedSendClearFaultCmdbms", "outValue": "schedSendClearFaultCmdbms"}
+                    ]
+                }]
+            }
+        }
+    }
+}

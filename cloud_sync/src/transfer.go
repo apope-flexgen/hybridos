@@ -4,6 +4,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -15,6 +16,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	log "github.com/flexgen-power/go_flexgen/logger"
 )
 
@@ -128,7 +131,11 @@ func (serv *server) transfer(cl *client, sendRequests <-chan transferRequest, re
 
 // Services a single transfer request from a client
 func (serv *server) handleTransferRequest(cl *client, request transferRequest) (err error, retryable bool) {
-	if serv.config.IP != "" {
+	if serv.config.Bucket != "" {
+		// S3 transfer
+		log.Debugf("S3 uploading %s to %s from %s.", request.fileName, serv.name, cl.name)
+		return uploadS3(serv.s3Uploader, request.fileName, request.srcDirPath, serv.config.Bucket, serv.config.Dir, time.Second*time.Duration(serv.config.Timeout))
+	} else if serv.config.IP != "" {
 		// remote servers require SCP
 		log.Debugf("SCPing %s to %s from %s.", request.fileName, serv.name, cl.name)
 		return scp(serv.sshPipes[cl.name], request.srcDirPath, serv.config.Dir, request.fileName)
@@ -336,4 +343,39 @@ func parseScpResponse(pipes *sshPipe) error {
 	}
 
 	return fmt.Errorf("remote scp responded with unexpected first byte (expected error code of 0, 1, or 2): %X", buf[0])
+}
+
+// S3 upload transfer:
+//
+// "uploader" is the already connected S3 uploader.
+//
+// "filename" of file and the "srcDir" directory it resides in.
+//
+// "bucket" name of destination bucket and "destDir" directory within bucket.
+//
+// "timeout" duration for hanging requests.
+func uploadS3(uploader *s3manager.Uploader, filename, srcDir, bucket, destDir string, timeout time.Duration) (err error, retryable bool) {
+	if uploader == nil {
+		return fmt.Errorf("s3 uploader does not exist"), true
+	}
+
+	file, err := os.Open(filepath.Join(srcDir, filename))
+	if err != nil {
+		return fmt.Errorf("could not open %s: %w", filename, err), false
+	}
+
+	ctx, cancel := context.WithTimeout(aws.BackgroundContext(), timeout)
+	defer cancel()
+
+	res, err := uploader.UploadWithContext(ctx, &s3manager.UploadInput{
+		Body:   file,
+		Bucket: aws.String(bucket),
+		Key:    aws.String(filepath.Join(destDir, filename)),
+	})
+	if err != nil {
+		return fmt.Errorf("upload failed on %s: %w", filename, err), true
+	}
+
+	log.Tracef("result of S3: %s", res.Location)
+	return err, true
 }

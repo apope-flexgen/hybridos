@@ -11,6 +11,8 @@ import { UserNotFoundException } from '../../src/users/exceptions/exceptions'
 import { IUsersService, USERS_SERVICE } from '../../src/users/interfaces/users.service.interface'
 import { User } from '../../src/users/user.schema'
 import { UsersController } from '../../src/users/users.controller'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
 
 describe('UsersController DELETE (e2e)', () => {
     let app: INestApplication
@@ -35,14 +37,20 @@ describe('UsersController DELETE (e2e)', () => {
                 },
                 SiteAdminsService,
                 {
-                    provide: getModelToken('siteAdmins'),
+                    provide: getModelToken('siteadmins'),
                     useValue: {
                         findOne: jest.fn(),
                         create: jest.fn(),
                     },
                 },
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
+                    },
+                },
             ],
-        }).compile()
+        }).overrideGuard(RolesGuard).useValue({ canActivate: () => true }).compile();
 
         app = createTestApiApplication(moduleFixture)
         app.useGlobalPipes(new ValidationPipe())

@@ -1,0 +1,1 @@
+Body:    {"mbmu_warning_1":7168,"mbmu_warning_2":1048576,"mbmu_warning_2_2":16,"Timestamp":"12-02-2020 10:48:05.485710"}

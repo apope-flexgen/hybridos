@@ -1,0 +1,196 @@
+{
+  "/notes/gpio": {
+    "note1":"Start with this config file, the bms, pcs (and drc) managers are referenced.",
+    "note1a":"The main page of the ui display is outlined in /assets/ess/summay",
+    "note2": " The /config/ess area is still under development",
+    "note3":"The /components/ess table defined the incoming control words from the site controller",
+    "note4":"The /links/<ess> table defines mapping of external interface components to internal variables",
+    "note5":" There are some junk/test fields as well... they will removed soon"
+  },
+  
+  "/site/ess":{
+    "note":"This is the modbus server map",
+    "ess":"configs/ess_site.json"
+  },
+
+  "/assets/gpio": {
+    "gpio_1":{
+      "value":0,
+      "pin":1,
+      "dir":"input",
+      "desc":"E_Stop"
+    },
+    "gpio_2":{
+      "value":0,
+      "pin":2,
+      "dir":"input",
+      "desc":"Fire_Stop"
+    },
+    "gpio_3":{
+      "value":0,
+      "pin":3,
+      "dir":"input",
+      "desc":"Start"
+    },
+    "gpio_4":{
+      "value":0,
+      "pin":4,
+      "dir":"input",
+      "desc":"Stop"
+    },
+    "gpio_5":{
+      "value":0,
+      "pin":5,
+      "dir":"output",
+      "desc":"Op1"
+    },
+    "gpio_6":{
+      "value":0,
+      "pin":6,
+      "dir":"output",
+      "desc":"Op2"
+    },
+    "gpio_7":{
+      "value":0,
+      "pin":7,
+      "dir":"output",
+      "desc":"Op3"
+    },
+    "gpio_8":{
+      "value":0,
+      "pin":8,
+      "dir":"output",
+      "desc":"Op4"
+    }
+
+  },
+
+  "/config/gpio": {
+    "Subs": "/ess, /assets, /params, /status, /controls, /links, /variables, /config, /tests, /default, /reload, /misc2",
+    "Pubs": "/assets/gpio"
+  },
+
+
+  "/assets/gpio/summary": {
+    "name":"Ess Gpio",
+        "maint_mode": {
+          "name": "Maintenance Mode",
+          "value": false,
+          "unit": "",
+          "scaler": 0,
+          "enabled": true,
+          "ui_type": "control",
+          "type": "enum_slider",
+          "options": [
+              {
+              "name": "No",
+              "return_value": false
+              },
+              {
+              "name": "Yes",
+              "return_value": true
+              }
+          ]
+          },
+          "start": {
+          "name": "Start",
+          "unit": "",
+          "scaler": 0,
+          "enabled": false,
+          "ui_type": "control",
+          "type": "enum_button",
+          "options": [
+              {
+              "name": "On",
+              "return_value": true
+              },
+              {
+              "name": "Off",
+              "return_value": false
+              }
+          ]
+          },
+          "stop": {
+          "name": "Stop",
+          "unit": "",
+          "scaler": 0,
+          "enabled": false,
+          "ui_type": "control",
+          "type": "enum_button",
+          "options": [
+              {
+              "name": "On",
+              "return_value": true
+              },
+              {
+              "name": "Off",
+              "return_value": false
+              }
+          ]
+          },
+          "enter_standby": {
+          "name": "Enter Standby",
+          "unit": "",
+          "scaler": 0,
+          "enabled": false,
+          "ui_type": "control",
+          "type": "enum_button",
+          "options": [
+              {
+              "name": "On",
+              "return_value": true
+              },
+              {
+              "name": "Off",
+              "return_value": false
+              }
+          ]
+          },
+          "exit_standby": {
+          "name": "Exit Standby",
+          "unit": "",
+          "scaler": 0,
+          "enabled": false,
+          "ui_type": "control",
+          "type": "enum_button",
+          "options": [
+              {
+              "name": "On",
+              "return_value": true
+              },
+              {
+              "name": "Off",
+              "return_value": false
+              }
+          ]
+          },
+          "clear_faults": {
+          "name": "Clear Faults",
+          "unit": "",
+          "scaler": 0,
+          "enabled": false,
+          "ui_type": "control",
+          "type": "enum_button",
+          "options": [
+              {
+              "name": "Clear Faults",
+              "return_value": true
+              }
+          ]
+          }
+  },
+
+  "/sets/blocked": {
+    "/status": {"value": true},
+    "/components": {"value": true}
+  },
+
+  "/pubs/blocked": {
+    "/assets": { "value": true},
+    "/site": {"value": true}
+  },
+
+  "/gets/blocked": {
+    "/components": {"value": true}
+  }
+}

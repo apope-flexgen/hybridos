@@ -1,0 +1,18 @@
+{
+    "/faults/##PCS_ID##": {
+        "clear_faults": {
+            "value": 0,
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##PCS_ID##"}]}]
+            }
+        },
+        "module_fault": {
+            "value": "(NOFLTS) No faults",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##PCS_ID##"}]}]
+            }
+        }
+    }
+}

@@ -1,0 +1,504 @@
+new scheduler 
+p. wilshire
+02/02/2021
+
+This document describes the new scheduler for the ess_controller. 
+This replaces the "hacked" thing we started out with about 6 months ago.
+
+The objet of the new scheduler is to allow a configuration file to define the opertion of the system where predefined tasks are run on a periodic basis.
+Another requirement was to run functions on demand immediately or at some time in the future.
+This concept is to be highly configurable and dynamically adjusted at run time.
+
+go channels...
+
+The ess_controller object coordination started with a "go" channel concept.
+This allows object to be passed between threads in an ad-hoc manner.
+
+For example one thread could be receiving fims messages.
+
+
+// fims processing thread
+
+void fims_loop(void* data)
+{
+    chan2_data* td = (chan2_data*)data;
+    fims_setup (td, "SchedTest");
+    
+    while (*td->run)
+    {
+        fims_message* msg = td->p_fims->Receive_Timeout(100);  //receive  a fims message 
+        if (msg)
+        {
+            if(*td->run) 
+            {
+                td->fimsChan->put(msg);     // enqueue the message
+                td->wakechan->put(0);   // trigger a wakeup
+                
+            }
+            else
+            {
+                if (td->p_fims)td->p_fims->free_message(msg);
+            }
+        }
+    }
+    if(td->p_fims)delete td->p_fims;
+    td->p_fims = nullptr;
+}
+
+In this code the "->put(xx)" functions are placing objects into a fifo queue
+one of the queues (fimsChan) is receiving fims messages.
+the other ->put()  is sending a signal to another queue to cause a wake up and process this message.
+
+The consumer side of all this can be run in a different thread.
+
+double delay = 0.200;
+int wakeup;
+fims_mesage* msg;
+
+while (running)
+{
+    // this will wake up after delay regardless
+    // the delay is nominally 200mS 
+    wakechan.timedGet(wakeup, delay);
+    
+    // fims
+    // this gets incoming  fims messages
+    if (fimsChan.get(msg, false))
+    {
+        if(msg)
+        {
+            vm.runFimsMsg(vmap, msg, f_data.p_fims);
+            f_data.p_fims->free_message(msg);
+        }
+    }
+
+}
+
+The "Get" operation will run a non blocking wait on the channel to recieve any pending messages 
+The timedGet operation will wait , up to delay mS , for a message to arrive.
+
+the wakechan will be worke up , regardless of the reaminin delay time by 
+
+    wakechan->put(0);   // trigger a wakeup
+
+
+The first function of this "wake" thread is to receive fims messages. 
+The runFimsMsg function will decode the message and  respond with any required replies.
+
+The second function is to wake up anyway reardless of the arrival of fims messages after the delay time.
+
+To use this as a scheduler the delay time is adjusted to be the time when the next scheduled event  is to be run.
+Following a wakeup either caused by a delay timeout of an incoming fims message the delay can be recalculated based on a list of 
+schedule events on a queue stored with the most immediate task at the top of the queue.
+
+The psuedo code for all this would liik like this..
+
+
+waitfor wakeup, or delay.
+ if fims ready run fims.
+ if task ready run task 
+
+ modify task list 
+ recalculate delay.
+
+This operation will need to be adjusted , using other channels , if a change in the list of scheduled operations is required.
+Adding a new operation may require the original delay to be recalculated.
+
+A request channel is added to the loop that allows the schedule list to be recalculated when a new scheduled task arrives.
+Sending  a new task to this list is performed like this.
+
+        compose schedTask
+        schedChan->put(schedTask);     // enqueue the message
+        wakechan->put(0);   // trigger a wakeup
+
+The servicing loop will be changed
+double delay = 0.200;
+int wakeup;
+fims_mesage* msg;
+
+while (running)
+{
+    // this will wake up after delay regardless
+    // the delay is nominally 200mS 
+    wakechan.timedGet(wakeup, delay);
+    
+    // fims
+    // this gets incoming  fims messages
+    if (fimsChan.get(msg, false))
+    {
+        if(msg)
+        {
+            vm.runFimsMsg(vmap, msg, f_data.p_fims);
+            f_data.p_fims->free_message(msg);
+        }
+    }
+    // sched request
+    if (schedChan.get(schedTask, false))
+    {
+        if(schedTask)
+        {
+            insert schedtask in schedlist;
+            f_data.p_fims->free_message(msg);
+        }
+    }
+
+    // check sched list
+    // time to run next schedtask ??
+
+    // if so run task.
+    // is task periodic , if so reinsert task in schedlist
+
+    // get next delay from sched list.
+     
+}
+
+
+This code efficiently manages fims data input and output, task schedulung and task processing.
+The main thread is running in a single context.
+This removes any need to manage locks for data access.
+
+So how is this "wonder" of code design used in the ess controller.
+
+p. wilshire
+02/09/2021
+
+How it works.
+The system uses ScheduleItems as points in time when we need to do something.
+Here is the structure
+    double refTime;     // used to set priority  actual run time is tNow + (refTime *runCnt)
+    double runTime;     // earliest time to run 
+    double repTime;     // if non zero causes repeated runs
+    int runCnt;         // counts how many times this item has run
+    char *id;           // used to identify the schedItem
+    char *aname;        // asset name to use 
+    char* targname;     // the name of the target assetVar
+    char *fcnname;      // (optional) the name of the assetvar to be passed to the function
+    assetVar* targav;   // target assetvar    
+    assetVar* fcnav;    // (optional) asset var to be used by the target   
+
+A list of thse items is kept by the scheduler (schliist) with the first one to run 
+ ( lowest runTime value ) at the head of the list.
+
+The scheduler runs in the main schedule thread. 
+This thread uses channels to get notifications of:
+   fims messages arriving
+   new sched items to be added to the list
+   other messages ( not used yet)
+
+When the scheduler runs, after checking channel deliveries,
+ it looks for the item on the (top of the) schlist.
+
+ If tNow is > as->runTime 
+  it sends the current time to the target av.
+
+It will also set the fcnAV Param if fcnav is specified.
+The target av will get the new time message and run any functions associated with the target aV
+The fcnAv can be used to allow the same target av (and function) to run with different assetVars. 
+
+As each item on the schlist is processed, it is checked for a (repTime) repeat time.
+If specified the repTime is added to the runTime and the schedItem is placed back in the schlist.
+
+As the scheduler works down the list it finally comes to the end, or to a schedItem with a 
+time in the future.
+If there is nothing on the list the sched delay is set to 1 second...
+If there is another item in the list, the sched delay is set to the difference between 
+tNow and the next runTime ( minus a few micro seconds).
+
+The loop is rerun with a channel timedGet using the (double) delay as a max time to wait 
+for an incoming wakeup(on the wake channel) channel.
+If nothing sends a wakeup then the next cycle will run after the delay time.
+
+An external process can add an item to the schlist. 
+It does that by creating the schedItem and 
+sending that to the reqChan together with a wakeup to the wakeChan.
+
+The scheduler will wake up immediately and put the schedItem into the schlist 
+and then run any past due items  or reset the wait delay.
+
+The scheduler owns the schlist so , again , no locking required.
+
+
+A fims thread is also set up to continually read fims messages. 
+As each message is received it is dequeed from the incoming fims socket and sent to the 
+fimsChan together with a wakeReq.
+The wakeReq causse the scheduler to immediately wake up and process the fims message.
+
+All message handling and schedule operations are handled by a single thread. 
+So no locking is required on the variable map or the schlist.
+
+The system sets up its "default" or hard coded configuration before reading in any config files.
+The incoming config files can change this default operation,
+ any incoming fims message can also change the scheduler operation.
+
+There are a number of "helper" functions used to facilitate this setup.
+
+1/ The scheduler runs by sending a message (current time) to a designated target assetVar. 
+   That assetVar needs to be present if the schedule operation wants to do anything.
+2/ Having set up the assetVar it needs to be given some actions to perform when the value is set.
+3/ Having set up the target assetVar the scheduler needs to be told that this is a schedule point  
+   with an expected runTime.
+
+
+Here is the example, default,  sequence using the helper functions.
+
+int SetupDefaultSched(scheduler*sched, asset_manager* am)
+{
+    // register the functions
+    //                         asset,  function name,    function address 
+    am->vm->setFunc(*am->vmap, "ess", "AddSchedItem",    (void*)&AddSchedItem);
+    am->vm->setFunc(*am->vmap, "ess", "CheckMonitorVar", (void*)&CheckMonitorVar);
+    am->vm->setFunc(*am->vmap, "ess", "EssSystemInit",   (void*)&EssSystemInit);
+    am->vm->setFunc(*am->vmap, "ess", "EssSystemInit1",  (void*)&EssSystemInit1);
+    am->vm->setFunc(*am->vmap, "ess", "EssSystemInit2",  (void*)&EssSystemInit2);
+    am->vm->setFunc(*am->vmap, "ess", "Every1000mS",     (void*)&Every1000mS);
+    am->vm->setFunc(*am->vmap, "ess", "Every100mSP1",    (void*)&Every100mSP1);
+    am->vm->setFunc(*am->vmap, "ess", "Every100mSP2",    (void*)&Every100mSP2);
+    am->vm->setFunc(*am->vmap, "ess", "Every100mSP3",    (void*)&Every100mSP3);
+    am->vm->setFunc(*am->vmap, "ess", "FastPub",         (void*)&FastPub);
+    am->vm->setFunc(*am->vmap, "ess", "SlowPub",         (void*)&SlowPub);
+
+    // set up the vars to be used as schedule points
+    //                              asset_manager
+    //                                  comp          name             id                asset ref    run     repeat
+    sched->setupSchedVar(*am->vmap, am, "/sched/ess", "essSystemInit", "EssSystemInit", "ess", 0.200, 0.200 , 0.000);
+    sched->setupSchedVar(*am->vmap, am, "/sched/ess", "every1000mS" ,  "EverySecond",   "ess", 0.250, 0.250 , 1.000);
+    sched->setupSchedVar(*am->vmap, am, "/sched/ess", "every100mSP1" , "Every100mS_P1", "ess", 0.251, 0.251 , 0.100);
+    sched->setupSchedVar(*am->vmap, am, "/sched/ess", "every100mSP2" , "Every100mS_P2", "ess", 0.252, 0.252 , 0.100);
+    sched->setupSchedVar(*am->vmap, am, "/sched/ess", "every100mSP3" , "Every100mS_P3", "ess", 0.253, 0.253 , 0.100);
+    sched->setupSchedVar(*am->vmap, am, "/sched/ess", "fastPub" ,      "FastPub",       "ess", 0.254, 0.254 , 0.050);
+    sched->setupSchedVar(*am->vmap, am, "/sched/ess", "slowPub" ,      "SlowPub",       "ess", 0.255, 0.255 , 2.000);
+
+    cJSON* cja;
+    // load up the default action(s) for the sched target vars
+    //
+    cja = cJSON_CreateArray(); 
+             sched->addSaction(*am->vmap, "ess", "EssSystemInit1", "/status/ess:status",   am, cja);
+             sched->addSaction(*am->vmap, "ess", "EssSystemInit2", "/status/ess:status",   am, cja);
+             sched->setupSchedItemActions(*am->vmap, am, "/sched/ess", "essSystemInit", "onSet", "func", cja); 
+    cJSON_Delete(cja);
+
+    cja = cJSON_CreateArray(); sched->addSaction(*am->vmap, "ess", "Every1000mS", "/status/ess:status",   am, cja);
+    sched->setupSchedItemActions(*am->vmap, am, "/sched/ess", "every1000mS", "onSet", "func", cja); cJSON_Delete(cja);
+
+    cja = cJSON_CreateArray(); sched->addSaction(*am->vmap, "ess", "Every100mS_P1", "/status/ess:status",   am, cja);
+    sched->setupSchedItemActions(*am->vmap, am, "/sched/ess", "every100mSP1", "onSet", "func", cja); cJSON_Delete(cja);
+
+    cja = cJSON_CreateArray(); sched->addSaction(*am->vmap, "ess", "Every100mS_P2", "/status/ess:status",   am, cja);
+    sched->setupSchedItemActions(*am->vmap, am, "/sched/ess", "every100mSP2", "onSet", "func", cja); cJSON_Delete(cja);
+
+    cja = cJSON_CreateArray(); sched->addSaction(*am->vmap, "ess", "Every100mS_P3", "/status/ess:status",   am, cja);
+    sched->setupSchedItemActions(*am->vmap, am, "/sched/ess", "every100mSP3", "onSet", "func", cja); cJSON_Delete(cja);
+
+    cja = cJSON_CreateArray(); sched->addSaction(*am->vmap, "ess", "FastPub", "/status/ess:status",   am, cja);
+    sched->setupSchedItemActions(*am->vmap, am, "/sched/ess", "fastPub", "onSet", "func", cja); cJSON_Delete(cja);
+
+    cja = cJSON_CreateArray(); sched->addSaction(*am->vmap, "ess", "SlowPub", "/status/ess:status",   am, cja);
+    sched->setupSchedItemActions(*am->vmap, am, "/sched/ess", "slowPub", "onSet", "func", cja); cJSON_Delete(cja);
+ 
+    // now set up a system to dynamically create schedItems
+    // this makes /schedule/ess:add_item activate a schedItem when it is sent some details
+    sched->setupSchedFunction(*am->vmap, "/schedule/ess", "add_item", "AddSchedItem", am);
+
+
+    // now use it to create the sched items and activate the schedule vars
+    sched->activateSchedItem(*am->vmap, "/schedule/ess", "/sched/ess", "essSystemInit");
+    sched->activateSchedItem(*am->vmap, "/schedule/ess", "/sched/ess", "every1000mS");
+    sched->activateSchedItem(*am->vmap, "/schedule/ess", "/sched/ess", "every100mSP1");
+    sched->activateSchedItem(*am->vmap, "/schedule/ess", "/sched/ess", "every100mSP2");
+    sched->activateSchedItem(*am->vmap, "/schedule/ess", "/sched/ess", "every100mSP3");
+    sched->activateSchedItem(*am->vmap, "/schedule/ess", "/sched/ess", "fastPub");
+    sched->activateSchedItem(*am->vmap, "/schedule/ess", "/sched/ess", "slowPub");
+    return 0;
+}
+
+This is the resulting stuff in the varsmap.
+
+     
+/sched/ess: {
+
+	"essSystemInit":	{
+		"value:0,"id":	"EssSystemInit", "aname":"ess", "enabled":true,"refTime":0.2,"runTime":0.2, "repTime":0,
+        "actions":{"onSet":	[{"func":[
+            {"amap":	"ess","func":	"EssSystemInit1","var":	"/status/ess:status"},
+            {"amap":	"ess","func":	"EssSystemInit2","var":	"/status/ess:status"}
+            ]}]}},
+
+	"every1000mS":	{
+		"value":0,"id":	"EverySecond","aname":"ess","enabled":true,"refTime":	0.25,"runTime":	0.25,"repTime":	1,
+        "actions":{"onSet":	[{"func":	[
+            {"amap":	"ess","func":	"Every1000mS","var":	"/status/ess:status"}
+            ]}}}},
+
+	"every100mSP1":	{
+		"value":0,"id":	"Every100mS_P1","aname":"ess","enabled":true,"refTime":	0.251,"runTime":0.251,"repTime":0.1,
+        "actions":{"onSet":	[{"func":	[
+            {"amap":	"ess","func":	"Every100mS_P1","var":	"/status/ess:status"}
+            ]}}}},
+
+	"every100mSP2":	{
+		"value":0,"id":	"Every100mS_P2","aname":"ess","enabled":true,"refTime":	0.252,"runTime":0.252,"repTime":0.1,
+        "actions":{"onSet":	[{"func":	[
+            {"amap":	"ess","func":	"Every100mS_P2","var":	"/status/ess:status"}
+            ]}}}},
+
+	"every100mSP3":	{
+		"value":0,"id":	"Every100mS_P3","aname":"ess","enabled":true,"refTime":	0.253,"runTime":0.253,"repTime":0.1,
+        "actions":{"onSet":	[{"func":	[
+            {"amap":	"ess","func":	"Every100mS_P3","var":	"/status/ess:status"}
+            ]}}}},
+
+	"fastPub":	{
+		"value":0,"id":	"FastPub","aname":"ess","enabled":true,"refTime":	0.254,"runTime":0.254,"repTime":0.05,
+        "actions":{"onSet":	[{"func":	[
+            {"amap":	"ess","func":	"FastPub","var":	"/status/ess:status"}
+            ]}}}},
+
+	"slowPub":	{
+		"value":0,"id":	"SlowPub","aname":"ess","enabled":true,"refTime":	0.255,"runTime":0.255,"repTime":2,
+        "actions":{"onSet":	[{"func":	[
+            {"amap":	"ess","func":	"SastPub","var":	"/status/ess:status"}
+            ]}}}}
+    }
+
+ /schedule/ess:{
+	"add_item":	{
+		"value":	"test string",
+		"actions":{"onSet":	[{"func":	[
+            { "func":	"AddSchedItem", "amap":	"ess"}
+            ]}]}}
+    }
+
+Here is the list of sched items generated by the above operations.
+
+ sched id [EssSystemInit] count [0] aname [ess] uri [/sched/ess:essSystemInit] refTime 0.200 runTime 0.200000 repTime 0.000 
+ sched id [EverySecond]   count [0] aname [ess] uri [/sched/ess:every1000mS]   refTime 0.250 runTime 0.250000 repTime 1.000 
+ sched id [Every100mS_P1] count [0] aname [ess] uri [/sched/ess:every100mSP1]  refTime 0.251 runTime 0.251000 repTime 0.100 
+ sched id [Every100mS_P2] count [0] aname [ess] uri [/sched/ess:every100mSP2]  refTime 0.252 runTime 0.252000 repTime 0.100 
+ sched id [Every100mS_P3] count [0] aname [ess] uri [/sched/ess:every100mSP3]  refTime 0.253 runTime 0.253000 repTime 0.100 
+ sched id [ FastPub]      count [0] aname [ess] uri [/sched/ess:fastPub]       refTime 0.254 runTime 0.254000 repTime 0.050 
+ sched id [ slowPub]      count [0] aname [ess] uri [/sched/ess:slowPub]       refTime 0.255 runTime 0.255000 repTime 2.000 
+
+
+
+
+            // other managemnt operations (planned )  are: 
+                set /schedule/ess:del_item   // remove it by ID 
+                set /schedule/ess:edit_item  // change rep time etc
+                get /schedule/ess:show_items  // get current schedule list
+
+    The function associated with a write or set to "/schedule/ess:add_item" 
+    does the following operation.
+
+    assetSchedItem *as = new assetSchedItem();
+    as->setUp("item_id", "item name", "/sched/ess:every100ms", "periodic_scan_100", 0.5, 0.1 );
+    as->func = vm.getFunc(*am->vmap, "ess", "periodic_scan_100");
+    as->av = vm.getVar(*am->vmap, "/sched/ess:every100mS", nullptr);
+
+    which in turn sends the schedule item (as) to the schedule list.
+
+    The function "periodic_scan_100" would be a precompiled built in function.
+
+    A more flexible approach would be to trigger the actions on another assetvar. 
+
+    as->func = vm.getFunc(*am->vmap, "ess", "send_time_to_av");
+
+    The current time will then be sent to the sched/ess/every100ms asset var.
+
+    This assetvar may, in turn , have been setup to run a number of other functions.
+
+
+    "/sched/ess": {
+        "every100mS":{
+            "actions": {
+                "onSet": [
+                    {
+                        "exec": [
+                            { "av":"/components/catl_mbmu_summary_r:mbmu_max_cell_voltage",     "func":"CheckMonitorVar"},
+                            { "av":"/components/catl_mbmu_summary_r:mbmu_min_cell_voltage",     "func":"CheckMonitorVar"},
+                            { "av":"/components/catl_mbmu_summary_r:mbmu_max_cell_temperature", "func":"CheckMonitorVar"},
+                            { "av":"/components/catl_mbmu_summary_r:mbmu_min_cell_temperature", "func":"CheckMonitorVar"},
+                            { "av":"/components/catl_mbmu_summary_r:mbmu_soc",                  "func":"CheckMonitorVar"},
+                            { "av":"/components/catl_mbmu_summary_r:mbmu_soh",                  "func":"CheckMonitorVar"},
+                            { "av":"/components/catl_bms_ems_r:bms_heartbeat",                  "func":"CheckMonitorVar"},
+                            { "av":"/components/catl_bms_ems_r:bms_timestamp",                  "func":"CheckMonitorVar"}
+                        ]}]}
+        }
+    }
+
+another example
+    "/sched/ess": {
+        "UIPublish":{
+            "actions": {
+                "onSet": [
+                    {
+                        "exec": [
+                            { "av":"/assets/ess/summary",     "func":"PublishSummary"},
+                            { "av":"/assets/bms/summary",     "func":"PublishSummary"},
+                            { "av":"/assets/bms",             "func":"PublishAssets"},
+                            { "av":"/assets/pcs/summary",     "func":"PublishSummary"},
+                            { "av":"/assets/pcs",             "func":"PublishAssets"}
+                        ]}]}
+        }
+    }
+
+
+
+
+One other , interesting option with this , in fact one of the requirements that triggered this whole thing off
+( this is under development)
+
+    "/control/bms": {
+        "OnCommand":{
+            "actions": {
+                "onSet": [
+                    {
+                        "exec": [
+                            { "av":"/control/bms/OnCommand",  "func":"ScheduleCmdReset", "runTime":500}
+                        ]}]}
+        }
+
+        This will cause the OnCommand to be returned to the reset value after setting it to a command value.
+        A one time schedule item will be sent to the schedule list to be executed 500mS after sending the command.
+
+
+All of this does lead to the sequencing discussion next...
+
+
+Schedule Priority.
+Normally, control systems use time and priority to mange operations.
+
+Well the refTime operation takes care of this.
+If we schedule things to run at:
+    10.2001
+    10.2002
+    10.2003
+seconds we have implicitly a priority.
+after running 0.2 seconds is added to each item giving us 
+    10.4001
+    10.4002
+    10.4003
+
+    If we want to add an item to run after 10.4001 but before 10.4002 then give it a refTime of 10.40011
+    Its that simple.
+    If we want to run a single shot function in a particular order as the system is running. we can specify a  repRef time.
+    This causes the scheduler to sequene the exact runtime to be at the next correct interval after tNow based in the rest of the refTimes.
+
+
+    Other operations  : 
+     run once at a precise time in the future (tNow + 5 seconds)
+
+     /schedule/ess:add_item '{"value":"/sched/ess:runFuture","refTime":0.51,"runTime":5.0,"repRef":0.5}
+    
+     run once at tNow + 4 seconds in the future (tNow + 4 seconds)
+
+     /schedule/ess:add_item '{"value":"/sched/ess:runFuture","runTime":4.0}
+
+     run every 0.1 secs starting from tNow + 1.5 seconds in the future 
+
+     /schedule/ess:add_item '{"value":"/sched/ess:runFuture","runTime":1.5, "repTime":0.1}
+
+
+
+
+
+

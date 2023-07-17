@@ -6,10 +6,12 @@ import { ApplyChangesTo } from 'src/pages/Scheduler/SchedulerTypes';
 import { applyChangesRadios } from './EditEventModal-helpers';
 
 interface ApplyChangesToProps {
-  applyChangesTo: ApplyChangesTo
-  setApplyChangesTo: React.Dispatch<React.SetStateAction<ApplyChangesTo>>
-  editRecurring: boolean
-  setEditRecurring: React.Dispatch<React.SetStateAction<boolean>>
+  applyChangesTo: ApplyChangesTo;
+  setApplyChangesTo: React.Dispatch<React.SetStateAction<ApplyChangesTo>>;
+  editRecurring: boolean;
+  setEditRecurring: React.Dispatch<React.SetStateAction<boolean>>;
+  pastEvent: boolean;
+  activeEvent: boolean;
 }
 
 const ApplyChanges: React.FunctionComponent<ApplyChangesToProps> = ({
@@ -17,6 +19,8 @@ const ApplyChanges: React.FunctionComponent<ApplyChangesToProps> = ({
   setApplyChangesTo,
   editRecurring,
   setEditRecurring,
+  pastEvent,
+  activeEvent,
 }: ApplyChangesToProps) => {
   const { disableAllFields } = useSchedulerContext();
 
@@ -29,7 +33,7 @@ const ApplyChanges: React.FunctionComponent<ApplyChangesToProps> = ({
     >
       {applyChangesRadios.map((radio) => (
         <RadioButton
-          disabled={disableAllFields}
+          disabled={disableAllFields || pastEvent || activeEvent}
           key={radio.label}
           label={radio.label}
           onChange={() => {
@@ -44,13 +48,17 @@ const ApplyChanges: React.FunctionComponent<ApplyChangesToProps> = ({
       ))}
       <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
         <Switch
-          disabled={applyChangesTo.thisEventOnly || disableAllFields}
+          disabled={applyChangesTo.thisEventOnly || disableAllFields || pastEvent}
           onChange={() => {
             setEditRecurring(!editRecurring);
           }}
           value={editRecurring}
         />
-        <Typography text="Edit Recurring Settings" color={disableAllFields ? 'disabled' : 'primary'} variant="bodyM" />
+        <Typography
+          text="Edit Recurring Settings"
+          color={disableAllFields ? 'disabled' : 'primary'}
+          variant="bodyM"
+        />
       </Box>
     </Box>
   );

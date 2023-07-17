@@ -1,0 +1,10 @@
+{
+"/config/ess":{
+   "maxCharge": 3456,
+   "maxDischarge": 3456,
+   "minsoc": 25,
+   "maxVoltage": 56,
+   "maxPower": 5644
+   }
+}
+

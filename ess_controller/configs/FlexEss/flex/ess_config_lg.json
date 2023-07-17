@@ -1,0 +1,88 @@
+{
+    "amname": "ess",
+    "/config/load": {       
+       "notes1":" This is the start of the loader process",
+       "notes2":" This will set up load management entries for ess_configure ",
+       "notes3":"                                       ess_manager ",
+       "notes4":"                                       bms_manager ",
+       "notes5":"                                       pcs_manager ",
+       "notes6":"                                 and  site_manager ",
+       "notes7":"     the system will try and load these files from dbi  ",
+       "notes8":"     after completing a successfull load the ess_final file will be requested ",
+       "notes9":"     for now we have to specify the individual cfile and tmpl loaders as well ",
+
+       "ess_controller": {
+          "value":false,
+          "type":"master",
+          "file":"ess_controller",
+          "aname":"ess",
+          "final":"ess_final",
+          "new_options":[
+             { "load":"lg_bms_manager",             "aname":"bms",  "pname":"ess", "summary":"bms/summary", "svec":"bms/rack_" },
+             { "load":"lg_bms_modbus_data",         "aname":"bms",  "pname":"ess", "summary":"bms/summary", "svec":"bms/rack_" },
+             { "load":"lg_bms_controls",            "aname":"bms",  "pname":"ess", "summary":"bms/summary", "svec":"bms/rack_" },
+
+             { "file":"lg_pcs_manager",             "aname":"pcs",  "pname":"ess", "summary":"pcs/summary", "svec":"pcs/pcs_" },
+             { "file":"lg_pcs_modbus_data",         "aname":"pcs",  "pname":"ess", "summary":"pcs/summary", "svec":"pcs/pcs_" },
+             { "file":"lg_pcs_controls",            "aname":"pcs",  "pname":"ess", "summary":"pcs/summary", "svec":"pcs/pcs_" }
+          ]
+        }
+    },
+    "/config/cfile": {
+        "ess_controller": {
+            "value":false,
+            "file":"ess_controller",
+            "aname":"ess"
+        },
+        "bms_manager": {
+            "value":false,
+            "file":"lg_bms_manager",
+            "pname":"ess",
+            "aname":"bms"
+        },
+        "bms_modbus_data": {
+            "value":false,
+            "file":"lg_bms_modbus_data",
+            "pname":"ess",
+            "aname":"bms"
+        },
+        "bms_controls": {
+            "value":false,
+            "file":"lg_bms_controls",
+            "pname":"ess",
+            "aname":"bms"
+        },
+        "pcs_manager": {
+            "value":false,
+            "file":"lg_pcs_manager",
+            "pname":"ess",
+            "aname":"pcs"
+        },
+        "pcs_modbus_data": {
+            "value":false,
+            "file":"lg_pcs_modbus_data",
+            "pname":"ess",
+            "aname":"pcs"
+        },
+        "pcs_controls": {
+            "value":false,
+            "file":"lg_pcs_controls",
+            "pname":"ess",
+            "aname":"pcs"
+        }
+    },
+    "/config/ctmpl": {
+        "bms_tmpl": {
+            "value":false,
+            "file":"lg_bms_tmpl",
+            "pname":"ess",
+            "aname":"bms"
+        },
+        "bms_modbus_data_tmpl": {
+            "value":false,
+            "file":"lg_bms_modbus_data_tmpl",
+            "pname":"ess",
+            "aname":"bms"
+        }
+    }
+}

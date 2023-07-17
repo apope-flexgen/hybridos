@@ -6,7 +6,7 @@ myJobPipeline {
     //Which OS would you like to build on?
     imageNames=["centos7"]
     //Does the image need a special tag?
-    imageTag="base"
+    imageTag="devel-10.3.0-fims-3.0.3"
     //Run unit tests?
     unitTestStage=false
     //Run regression Tests?

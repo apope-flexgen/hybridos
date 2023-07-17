@@ -1,0 +1,38 @@
+{  
+    "/doc/catl_bms_t_init": {
+        "note1":"This is the battery management system (BMS) initial config file for CATL",
+        "note2":"Specifically, this file is responsible for loading manager and rack files to the system"
+    },
+
+    "/config/load": {
+        "catl_bms_t_init": {
+            "value":false,
+            "file":"catl_bms_t_init",
+            "pname":"ess",
+            "aname":"bms",
+            "new_options":[
+                {
+                    "tmpls":["catl_bms_t_manager"],
+                    "pname":"ess",
+                    "amname":"##BMS_ID##",
+                    "from":1,
+                    "to":2,
+                    "reps":[
+                        {"replace":"##BMS_ID##",   "with":"bms_{:01d}"}
+                    ]
+                },
+                {
+                    "tmpls":["catl_bms_t_rack"],
+                    "pname":"##BMS_ID##",
+                    "ainame":"##BMS_ID##_##RACK_ID##",
+                    "from":1,
+                    "to":2,
+                    "reps":[
+                        {"replace":"##RACK_ID##",   "with":"sbmu_{:01d}"},
+                        {"replace":"##RACK_NUM##",  "with":"{:01d}"}
+                    ]
+                }
+            ]
+        }
+    }
+}

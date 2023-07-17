@@ -1,0 +1,111 @@
+Ess Calculating tod and sending it to components (assets). 
+
+  "/assets/ess":        {
+                 "bms":"configs/bms_manager.json",
+                 "pcs":"configs/pcs_manager.json",
+                 "drc": "configs/drc_manager.json"
+            },
+
+"/assets/pcs":        {
+                 "pcs_1":   { 
+                                "template":"configs/pcs_pe_template.json",
+                                "subs":[
+                                {"replace":"@@PCS_ID@@","with":"pcs_1"},
+                                {"replace":"@@PCS_NUM@@","with":"01"},
+                                {"replace":"@@PCS_IP@@","with":"192.168.1.14"}
+                                ]
+                            }
+
+            }
+}
+
+Inside the pcs template are all the registers links etc for the pcs_1 unit.
+In this case We are routing a local variable op_todSec to the modbus client
+/components/pcs_1:pcs_tod_sec
+Untitled 
+ 
+    "/links/@@PCS_ID@@":  {
+         "op_todSec": {
+            "value":  "/components/@@PCS_ID@@:pcs_tod_sec"
+
+ 
+
+The Ess controler has a time of day and HeartBeat generator.
+Attached to Wake 1 of the ess COntroller.
+
+
+// the wakeup runs every 100 mS at the moment
+bool run_ess_wakeup(asset_manager*am, int wakeup)
+{
+    char * item3;
+    fims_message * msg;
+    // now process all the events
+
+    //Do the manager first
+    if(wakeup == WAKE_LEVEL1)
+    {
+
+        CheckComms(*am->vmap, am->amap, am->name.c_str(), am->p_fims, am);
+
+        CheckHeartBeat(*am->vmap, am->amap, am->name.c_str(), am->p_fims, am);
+        
+        if(1)std::cout << am->name <<" >>get_state\n";
+        // Sends out heartbeats and TODAY
+        HandleESSHeartBeat(*am->vmap, am->amap, "ess", am->p_fims, am);
+
+The HandleESSHeartBeat application generates the central ToD and Heartbeat for the whole system.
+Towards the end of this code function We send the newly generated heartbeat to all the Asset Managers and any ESS direct  Assets 
+if (am)
+        {
+            am->vm->sendAssetVar(amap["ess_todSec"], p_fims);
+            cascadeAM(vmap, amap, aname,p_fims,am, HandleManagerHeartBeat, HandleAssetHeartBeat);
+        }
+
+The individual HandleAssetHearBeat function will take the ess_tod infomation and, unless modified by a link ,publish on a default uri. IN this case 
+
+/status/pcr_1/op_todSc.
+
+This default output is set up when initializing the function.
+
+This is for the ess_controller default to /status/ess/ess_todSec
+        amap["ess_todSec"]               = vmp->setLinkVal(vmap, aname, "/status",    "ess_todSec",                ival);
+        amap["ess_todMin"]               = vmp->setLinkVal(vmap, aname, "/status",    "ess_todMin",                ival);
+        amap["ess_todHr"]                = vmp->setLinkVal(vmap, aname, "/status",    "ess_todHr",                 ival);
+        amap["ess_todDay"]               = vmp->setLinkVal(vmap, aname, "/status",    "ess_todDay",                ival);
+        am->amap["ess_todMon"]           = vmp->setLinkVal(vmap, aname, "/status",    "ess_todMon",                ival);
+        am->amap["ess_todYr"]            = vmp->setLinkVal(vmap, aname, "/status",    "ess_todYr",                 ival);
+
+This is for the Asset    default to /status/pcs_1/op_todSec
+
+        amap["op_todSec"]           = vmp->setLinkVal(vmap, aname, "/status",    "op_todSec",            ival);
+        amap["op_todMin"]           = vmp->setLinkVal(vmap, aname, "/status",    "op_todMin",                ival);
+        amap["op_todHr"]            = vmp->setLinkVal(vmap, aname, "/status",    "op_todHr",                 ival);
+        amap["op_todDay"]           = vmp->setLinkVal(vmap, aname, "/status",    "op_todDay",                ival);
+        amap["op_todMon"]           = vmp->setLinkVal(vmap, aname, "/status",    "op_todMon",                ival);
+        amap["op_todYr"]            = vmp->setLinkVal(vmap, aname, "/status",    "op_todYr",                 ival);
+
+  
+The optional link in the config pcs_pe_template file overrides the default destination.
+
+/links/@@PCS_ID@@":  {   // this expands to /links/pcs_1
+         "op_todSec": {
+            "value":  "/components/@@PCS_ID@@:pcs_tod_sec"
+
+ 
+This will send this data to /comonents/pcs_1/pcs_toc_sec
+
+This corresponds with an entry in the modbus_client file.
+
+"components": [
+    {
+      "id": "pcs_1",
+       "type": "Holding Registers",
+          "starting_offset": 551,
+
+          "number_of_registers": 7,
+          "map": [
+            {
+              "id": "pcs_tod_sec",
+              "offset": 551,
+              "name": "pcs_tod_sec"
+            },

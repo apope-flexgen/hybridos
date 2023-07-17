@@ -1,0 +1,121 @@
+{
+    "fileInfo": {
+      "sourceFileName": "BRP_FPS_FM_Comm_Server_DM_modified_062620.xlsx",
+      "sourceFileCreated": "2020-06-26T17:11:50.000Z",
+      "sourceFileLastModified": "2020-06-27T00:14:05.000Z",
+      "sourceFileCreatedBy": "Administrator",
+      "sourceFileLastModifiedBy": "Microsoft Office User",
+      "outputFileName": "BRP_FPS_FM_Comm_Server_server.json",
+      "outputFileType": "server",
+      "outputFileCreated": "2020-06-27T00:15:28.100Z"
+    },
+    "system": {
+      "name": "FlexGen Fleet Manager - Odessa",
+      "protocol": "DNP3",
+      "version": "0.2",
+      "id": "master",
+      "ip_address": "127.0.0.1",
+      "local_uri": "/local",
+      "port": 20000,
+      "debug": 0,
+      "xfrequency": 10000,
+      "frequency": 0,
+      "rangeFreq": 5000,
+      "rangeAStart": 600,
+      "rangeAStop": 620,
+      "rangeBStart": 600,
+      "rangeBStop": 610
+
+
+    },
+    "registers": [
+      {
+        "type": "Input Registers",
+        "starting_offset": 600,
+        "starting_idx": 600,
+        "dnp3_type": "analog",
+        "map": [
+          {
+            "id": "net_gen_mw",
+            "idx": 600,
+            "scale": 1,
+            "name": "Generation NET Megawatts",
+            "unit": "MW",
+            "float": true,
+            "uri": "/xxmetrics/misc"
+          }
+        ]
+      },
+      {
+        "type": "Input Registers",
+        "starting_offset": 600,
+        "starting_idx": 600,
+        "dnp3_type": "binary",
+        "map": [
+          {
+            "id": "net_gen_mwb",
+            "idx": 602,
+            "scale": 1,
+            "name": "Generation NET Megawatts",
+            "unit": "MW",
+            "float": true,
+            "uri": "/xxmetrics/misc"
+          }
+        ]
+      },
+      {
+        "type": "Holding Registers",
+        "dnp3_type": "AnOPF32",
+        "starting_offset": 600,
+        "map": [
+          {
+            "id": "Generation_Non-Spin_Responsibility",
+            "idx": 610,
+            "scale": 1,
+            "name": "Generation Non-Spin Responsibility",
+            "unit": "MW",
+            "float": true
+          }
+        ]
+      },
+      {
+        "type": "Holding Registers",
+        "dnp3_type": "AnOPInt16",
+        "starting_offset": 600,
+        "map": [
+          {
+            "id": "Generation_Non-Spin_Command",
+            "idx": 615,
+            "scale": 1,
+            "name": "Generation Non-Spin Command",
+            "unit": "MW",
+            "xxfloat": true
+          }
+        ]
+      },
+      {
+        "type": "Holding Registers",
+        "dnp3_type": "AnOPInt32",
+        "starting_offset": 600,
+        "map": [
+          {
+            "id": "Generation_Non-Spin_Value_F",
+            "idx": 620,
+            "scale": 1,
+            "name": "Generation Non-Spin Value F",
+            "unit": "MW",
+            "float": true
+          },
+          {
+            "id": "Generation_Non-Spin_Value_I",
+            "idx": 622,
+            "scale": 1,
+            "name": "Generation Non-Spin Value I",
+            "unit": "MW",
+            "xxfloat": true
+          }
+        ]
+      }
+    ]
+}
+  

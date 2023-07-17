@@ -1,3 +1,5 @@
+/* eslint-disable */
+// TODO: fix lint
 import {
   Box,
   CardContainer,
@@ -8,25 +10,31 @@ import {
   Typography,
 } from '@flexgen/storybook';
 import { useCallback, useEffect, useState } from 'react';
+import { PasswordOptions, Roles, initialPasswordOptions } from 'shared/types/api/Users/Users.types';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import { PageProps } from 'src/pages/PageTypes';
+import { APP_SETTINGS_URL } from 'src/pages/SiteAdmin/SiteAdmin.constants';
+import {
+  dataTableSx,
+  nonDataTableSx,
+  pageSx,
+  titleBoxSx,
+} from 'src/pages/UserAdmin/UserAdmin.styles';
+import { userColumns } from 'src/pages/UserAdmin/UserAdmin.constants';
 import AddUserRow from './AddUserRow';
 import EditUserRow from './EditUserRow';
-import { PageProps } from 'src/pages/PageTypes';
-import { PasswordOptions, Roles, initialPasswordOptions } from 'shared/types/api/Users/Users.types';
-import { APP_SETTINGS_URL } from 'src/pages/SiteAdmin/SiteAdmin.constants';
-import { dataTableSx, nonDataTableSx, pageSx, titleBoxSx } from 'src/pages/UserAdmin/UserAdmin.styles'
-import { userColumns } from 'src/pages/UserAdmin/UserAdmin.constants';
 
-const UserAdmin : React.FunctionComponent<PageProps> = ({ currentUser }: PageProps) => {
-  const axiosInstance = useAxiosWebUIInstance();
-  const showDeveloper = currentUser.role === Roles.Developer
+const UserAdmin: React.FunctionComponent<PageProps> = ({ currentUser }: PageProps) => {
+  const axiosInstance = useAxiosWebUIInstance(true);
+  const showDeveloper = currentUser.role === Roles.Developer;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>([]);
   const [userRows, setUserRows] = useState<any>([]);
   const [showAddUser, setShowAddUser] = useState<boolean>(false);
-  const [ passwordSettings, setPasswordSetttings ]  = useState<PasswordOptions>(initialPasswordOptions);
-  const [ oldPasswords, setOldPasswords ]  = useState<number>(1)
+  const [passwordSettings, setPasswordSetttings] =
+    useState<PasswordOptions>(initialPasswordOptions);
+  const [oldPasswords, setOldPasswords] = useState<number>(1);
 
   const updateUserData = useCallback(async () => {
     try {
@@ -39,12 +47,12 @@ const UserAdmin : React.FunctionComponent<PageProps> = ({ currentUser }: PagePro
   }, [axiosInstance]);
 
   const editButton = ({ onClickEvent }: any) => (
-    <IconButton color="primary" icon="Edit" onClick={onClickEvent} size="small" />
+    <IconButton color='primary' icon='Edit' onClick={onClickEvent} size='small' />
   );
-  
+
   const fetchPasswordData = useCallback(async () => {
     try {
-      const res: any = await axiosInstance.get(APP_SETTINGS_URL)
+      const res: any = await axiosInstance.get(APP_SETTINGS_URL);
 
       const passwordOptions: PasswordOptions = {
         passwordMinLength: res.data.password.minimum_password_length,
@@ -52,11 +60,11 @@ const UserAdmin : React.FunctionComponent<PageProps> = ({ currentUser }: PagePro
         lowercase: res.data.password.lowercase,
         uppercase: res.data.password.uppercase,
         digit: res.data.password.digit,
-        special: res.data.password.special
-      }
+        special: res.data.password.special,
+      };
 
-      setPasswordSetttings(passwordOptions)
-      setOldPasswords(res.data.password.old_passwords)
+      setPasswordSetttings(passwordOptions);
+      setOldPasswords(res.data.password.old_passwords);
     } finally {
     }
   }, [axiosInstance]);
@@ -88,19 +96,14 @@ const UserAdmin : React.FunctionComponent<PageProps> = ({ currentUser }: PagePro
 
   return (
     <Box sx={pageSx}>
-      <PageLoadingIndicator isLoading={isLoading} type="primary" />
+      <PageLoadingIndicator isLoading={isLoading} type='primary' />
       <Box sx={titleBoxSx}>
-        <Typography text="User Admin" variant="headingL" />
+        <Typography text='User Admin' variant='headingL' />
       </Box>
-      <CardContainer
-        flexDirection="row"
-        styleOverrides={{
-          width: '90%',
-        }}
-      >
+      <CardContainer flexDirection='row'>
         <Box sx={dataTableSx}>
           <Box sx={nonDataTableSx}>
-          <Typography text="MANAGE USERS" variant="headingS" />
+            <Typography text='MANAGE USERS' variant='headingS' />
           </Box>
           <DataTable
             columns={userColumns}
@@ -110,23 +113,23 @@ const UserAdmin : React.FunctionComponent<PageProps> = ({ currentUser }: PagePro
             showExpandableRowIcons={false}
           />
           <Box sx={nonDataTableSx}>
-          <MuiButton
-            label="Add New User"
-            onClick={() => setShowAddUser(!showAddUser)}
-            startIcon="Add"
-            sx={{ width: 'fit-content' }}
-            variant="outlined"
-          />
-          {showAddUser && (
-            <AddUserRow
-              showDeveloper={showDeveloper}
-              setIsLoading={setIsLoading}
-              setShowAddUser={setShowAddUser}
-              updateUserData={updateUserData}
-              passwordOptions={passwordSettings}
-              oldPasswords={oldPasswords}
+            <MuiButton
+              label='Add New User'
+              onClick={() => setShowAddUser(!showAddUser)}
+              startIcon='Add'
+              sx={{ width: 'fit-content' }}
+              variant='outlined'
             />
-          )}
+            {showAddUser && (
+              <AddUserRow
+                showDeveloper={showDeveloper}
+                setIsLoading={setIsLoading}
+                setShowAddUser={setShowAddUser}
+                updateUserData={updateUserData}
+                passwordOptions={passwordSettings}
+                oldPasswords={oldPasswords}
+              />
+            )}
           </Box>
         </Box>
       </CardContainer>

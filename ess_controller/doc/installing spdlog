@@ -1,0 +1,9 @@
+for installing spdlog X.X.X:
+Download spdlog release vX.X.X (get the latest) from the github: https://github.com/gabime/spdlog/releases
+sftp it to your VM
+untar it -> tar -xzf spdlog....tar.gz
+cd into it -> cd spdlog...X.X.X
+mkdir build && cd build
+sudo cmake3 -DCMAKE_BUILD_TYPE=Release --build .. --target install
+
+NOTE: if you don't have cmake3 then do: sudo yum install -y cmake3

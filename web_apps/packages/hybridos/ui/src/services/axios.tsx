@@ -1,5 +1,6 @@
 import axios from 'axios';
-import SocketConnectionManager from './SocketConnectionManager';
+import RealTimeService from 'src/services/RealTimeService/realtime.service';
+import { refreshingTokens, isRefreshingTokens, setRefreshingTokens } from './refreshingTokens';
 
 export default axios.create();
 
@@ -8,21 +9,49 @@ export const axiosWebUIInstance = axios.create({
   withCredentials: true,
 });
 
-export const axiosSocketConnectionManagerInstance = axios.create({
-  transformResponse: async (data) => {
-    // TODO: fix lint
-    // eslint-disable-next-line no-useless-catch
-    try {
-      const transform = JSON.parse(data);
-      if (transform?.message === 'jwt expired') {
-        const refresh = await axios.get('/api/refresh_token', {
-          withCredentials: true,
-        });
-        SocketConnectionManager.setAccessToken(refresh.data.accessToken);
-      }
-      return transform;
-    } catch (e) {
-      throw e;
+export const axiosSocketConnectionManagerInstance = axios.create();
+
+axiosSocketConnectionManagerInstance.interceptors.request.use(
+  async (config) => {
+    if (isRefreshingTokens()) {
+      const response = await refreshingTokens;
+      // eslint-disable-next-line no-param-reassign
+      config.headers.Authorization = response.data.accessToken;
     }
+    return config;
   },
-});
+  (error) => Promise.reject(error),
+);
+
+axiosSocketConnectionManagerInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    try {
+      const realTimeService = RealTimeService.Instance;
+      const prevRequest = error?.config;
+      const errorMessage = (error?.response?.data?.message || '').toString().toLowerCase();
+      const jwtError = errorMessage === 'jwt expired'
+        || errorMessage === 'jwt malformed'
+        || errorMessage === 'no auth token';
+
+      if (!isRefreshingTokens()) {
+        setRefreshingTokens(
+          axios.get('/api/refresh_token', {
+            withCredentials: true,
+          }),
+        );
+      }
+      if (jwtError && !prevRequest?.sent) {
+        prevRequest.sent = true;
+        const response = await refreshingTokens;
+        const { accessToken } = response.data;
+        prevRequest.headers.Authorization = `${accessToken}`;
+        realTimeService.setAccessToken(accessToken);
+        return await axiosSocketConnectionManagerInstance(prevRequest);
+      }
+    } finally {
+      setRefreshingTokens(undefined);
+    }
+    return Promise.reject(error);
+  },
+);

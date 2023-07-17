@@ -8,6 +8,7 @@
 /* OS Includes */
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <sys/uio.h>
 #include <unistd.h>
 #include <arpa/inet.h>  /* htons ntohs */
 /* C Standard Library Dependencies */
@@ -71,6 +72,24 @@ void* decrypt(void* buf, uint32_t &length, uint32_t maxlen)
     return nbuf;
 }
 
+// Nonblocking writev
+ssize_t writev_nonblock(int fd, iovec *iovec, size_t iovec_len)
+{
+    ssize_t rc;
+    struct msghdr  msg;
+    memset(&msg, 0, sizeof(msg)); // Bug fix
+
+    msg.msg_name = nullptr;
+    msg.msg_namelen = 0;
+    msg.msg_iov = iovec;
+    msg.msg_iovlen = iovec_len;
+    msg.msg_control = nullptr;
+    msg.msg_controllen = 0;
+
+    rc = sendmsg(fd, &msg, MSG_DONTWAIT);
+    return rc;
+}
+// NOTE phil https://stackoverflow.com/questions/37669140/unix-domain-sockets-passing-file-descriptor-sendmsg-transport-endpoint-is-not?rq=1
 // NOTE(WALKER): data is generic and therefore we require a contiguous block of memory for it
 // however, if we want to change that for the future we need to think of a good way to
 // get more iovec's into the iovec array for writev so we don't have to memcpy
@@ -88,7 +107,7 @@ bool send_raw_message(int connection,
     iovec bufs[MAX_IOVEC_BUFS];
     bufs[0].iov_base = (void*) &meta_data;
     bufs[0].iov_len  = sizeof(Meta_Data_Info);
-    int bufs_counter = 1;
+    size_t bufs_counter = 1;
     if (method)
     {
         meta_data.method_len        = method_len;
@@ -132,7 +151,7 @@ bool send_raw_message(int connection,
         ++bufs_counter;
     }
     // send data out:
-    const auto bytes_written = writev(connection, bufs, bufs_counter);
+    const auto bytes_written = writev_nonblock(connection, bufs, bufs_counter);
     return bytes_written > 0;
 }
 
@@ -177,25 +196,25 @@ std::size_t Meta_Data_Info::get_total_bytes() const noexcept
 
 fims_message::fims_message()
 {
-    method      = nullptr;
-    uri         = nullptr;
-    replyto     = nullptr;
+    method       = nullptr;
+    uri          = nullptr;
+    replyto      = nullptr;
     process_name = nullptr;
-    username   = nullptr;
-    body        = nullptr;
-    pfrags      = nullptr;
-    nfrags      = 0;
+    username     = nullptr;
+    body         = nullptr;
+    pfrags       = nullptr;
+    nfrags       = 0;
 }
 
 fims_message::~fims_message()
 {
-    if (method)      free(method);
-    if (uri)         free(uri);
-    if (replyto)     free (replyto);
+    if (method)       free(method);
+    if (uri)          free(uri);
+    if (replyto)      free (replyto);
     if (process_name) free(process_name);
-    if (username)   free(username);
-    if (body)        free(body);
-    if (pfrags)      delete[] pfrags;
+    if (username)     free(username);
+    if (body)         free(body);
+    if (pfrags)       delete[] pfrags;
 }
 
 fims::fims()
@@ -316,9 +335,9 @@ bool fims::Connect(const char* process_name)
     handshake.fims_data_layout_version = FIMS_DATA_LAYOUT_VERSION;
 
     // send handshake back to the server:
-    if (writev(connection, handshake_bufs, sizeof(handshake_bufs) / sizeof(*handshake_bufs)) <= 0)
+    if (writev_nonblock(connection, handshake_bufs, sizeof(handshake_bufs) / sizeof(*handshake_bufs)) <= 0)
     {
-        FPS_ERROR_PRINT("%s: Failed to send handshake back to the server.\n", program_invocation_short_name);
+        FPS_ERROR_PRINT("%s: Failed to send handshake back to the server rc %d.\n", program_invocation_short_name, errno);
         close(connection);
         connection = FIMS_CONN_CLOSED;
         return false;
@@ -349,9 +368,12 @@ bool fims::Connect(const char* process_name)
     };
 
     // send out process name after welcome string:
-    if (writev(connection, send_name_bufs, sizeof(send_name_bufs) / sizeof(*send_name_bufs)) <= 0)
+    if (writev_nonblock(connection, send_name_bufs, sizeof(send_name_bufs) / sizeof(*send_name_bufs)) <= 0)
     {
-        FPS_ERROR_PRINT("%s, Could not send name to server.\n", program_invocation_short_name);
+        FPS_ERROR_PRINT("%s, Could not send name to server sock %d.\n", program_invocation_short_name, connection);
+        close(connection);
+        connection = FIMS_CONN_CLOSED;
+
         return false;
     }
 
@@ -412,12 +434,11 @@ bool fims::Subscribe(const char** uri_array, int count, bool* pub_array)
         memcpy(str_ptr + curr_idx, uri_array[i], len);
         curr_idx += len;
     }
-
     if (!aes_send_raw_message(connection, "sub", 3, nullptr, 0, nullptr, 0, p_process_name, p_process_name_len, nullptr, 0, send_data, total_sub_bytes))
     {
+        FPS_ERROR_PRINT("%s: Failed to send subscribe to server. rc %d\n", program_invocation_short_name, errno);
         close(connection);
         connection = FIMS_CONN_CLOSED;
-        FPS_ERROR_PRINT("%s: Failed to send subscribe to server.\n", program_invocation_short_name);
         return false;
     }
 
@@ -431,9 +452,9 @@ bool fims::Subscribe(const char** uri_array, int count, bool* pub_array)
     auto& meta_data = receiver_bufs.meta_data;
     if (!recv_raw_message(connection, receiver_bufs))
     {
+        FPS_ERROR_PRINT("%s: No response from server within 2 seconds. rc %d \n", program_invocation_short_name, errno);
         close(connection);
         connection = FIMS_CONN_CLOSED;
-        FPS_ERROR_PRINT("%s: No response from server within 2 seconds.\n", program_invocation_short_name);
         return false;
     }
 
@@ -515,9 +536,9 @@ bool fims::Subscribe(const std::vector<std::string>& sub_array, bool pub_only)
 
     if (!aes_send_raw_message(connection, "sub", 3, nullptr, 0, nullptr, 0, p_process_name, p_process_name_len, nullptr, 0, send_data, total_sub_bytes))
     {
+        FPS_ERROR_PRINT("%s: Failed to send subscribe to server.rc %d\n", program_invocation_short_name, errno);
         close(connection);
         connection = FIMS_CONN_CLOSED;
-        FPS_ERROR_PRINT("%s: Failed to send subscribe to server.\n", program_invocation_short_name);
         return false;
     }
 
@@ -531,9 +552,9 @@ bool fims::Subscribe(const std::vector<std::string>& sub_array, bool pub_only)
     auto& meta_data = receiver_bufs.meta_data;
     if (!recv_raw_message(connection, receiver_bufs))
     {
+        FPS_ERROR_PRINT("%s: No response from server within 2 seconds. rc %d \n", program_invocation_short_name, errno);
         close(connection);
         connection = FIMS_CONN_CLOSED;
-        FPS_ERROR_PRINT("%s: No response from server within 2 seconds.\n", program_invocation_short_name);
         return false;
     }
 
@@ -612,9 +633,12 @@ bool fims::Send(const char* method, const char* uri, const char* replyto, const 
             FPS_ERROR_PRINT("%s: Message send queue full, Server busy.\n", program_invocation_short_name);
             return false;
         }
-        FPS_ERROR_PRINT("%s: Socket error.\n", program_invocation_short_name);
-        close(connection);
-        connection = FIMS_CONN_CLOSED;
+        FPS_ERROR_PRINT("%s: Socket error. rc %d \n", program_invocation_short_name, errno);
+        if (connection != FIMS_CONN_CLOSED)
+        {
+            close(connection);
+            connection = FIMS_CONN_CLOSED;
+        }
         return false;
     }
     return true;
@@ -658,7 +682,7 @@ bool fims::Send(const str_view method, const str_view uri, const str_view replyt
             FPS_ERROR_PRINT("%s: Message send queue full, Server busy.\n", program_invocation_short_name);
             return false;
         }
-        FPS_ERROR_PRINT("%s: Socket error.\n", program_invocation_short_name);
+        FPS_ERROR_PRINT("%s: Socket error.rc %d \n", program_invocation_short_name, errno);
         close(connection);
         connection = FIMS_CONN_CLOSED;
         return false;
@@ -729,7 +753,7 @@ fims_message* fims::Receive()
             {
                 // check if error is from timeout or socket closed on other end:
                 continue_receiving = true;
-                FPS_ERROR_PRINT("%s: Failed to read anything from socket errno %d.\n", program_invocation_short_name, errno);
+                FPS_ERROR_PRINT("%s: Failed to read anything from socket #2 errno %d.\n", program_invocation_short_name, errno);
                 if (errno != EINTR)
                 {
                     close(connection);
@@ -744,8 +768,10 @@ fims_message* fims::Receive()
         }
     }
 
-    if (has_timed_out) return nullptr; // we timed out on the socket (don't bother extracting out any info)
-
+    if (has_timed_out) {
+        //FPS_ERROR_PRINT("%s: Timed out reading anything from socket errno %d.\n", program_invocation_short_name, errno);
+        return nullptr; // we timed out on the socket (don't bother extracting out any info)
+    }
     // basic data check (did we recv more than we expected):
     if (meta_data.data_len > receiver_bufs.get_max_expected_data_len())
     {

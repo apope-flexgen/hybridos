@@ -1,0 +1,62 @@
+{
+    
+    "/sched/ess":{
+        "essSystemInit":{ 
+            "value":    1,
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"EssSystemInit"}]}]}
+        },
+        "every1000mS":{ 
+            "value":    1,
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"Every1000mS"}]}]}
+        },
+        "every100mSP1":{ 
+            "value":    1,
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"Every100mSP1"}]}]}
+        },
+        "slowPub":{ 
+            "value":1,
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"SlowPub"}]}]}
+        },
+        "fastPub":{ 
+            "value":1,
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"FastPub"}]}]}
+        }     
+    },
+    "/sched/pcs": {
+        "schedStartupPCS":{ 
+            "value":1,
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"StartupPCS"}]}]},
+            "refTime":  0.266,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        },
+        "schedShutdownPCS":{ 
+            "value":1,
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"ShutdownPCS"}]}]},
+            "refTime":  0.266,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        }
+    },
+    "/sched/bms": {
+        "schedStartupBMS":{ 
+            "value":1,
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"StartupBMS"}]}]},
+            "refTime":  0.268,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        },
+        "schedShutdownBMS":{ 
+            "value":1,
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"ShutdownBMS"}]}]},
+            "refTime":  0.267,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        }
+    }
+}
+

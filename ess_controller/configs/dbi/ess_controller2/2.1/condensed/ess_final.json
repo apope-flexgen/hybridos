@@ -1,0 +1,17 @@
+{
+    "/system/commands": {
+        "run": {
+            "help": "run a schedule var needs the uri to be set ",
+            "value":0,
+            "ifChanged":false,
+            "enabled":true, 
+            "actions":{
+                "onSet":[{"func":[{"func":"RunSched"}]}]
+            }
+        },
+        "runOpts": {
+            "value": true,
+            "enabled": true
+        }
+    }
+}

@@ -1,0 +1,252 @@
+{
+    "fileInfo": {
+        "sourceFileName": "my_brain.bat",
+        "sourceFileCreated": "2020-07-16T18:58:39.000Z",
+        "sourceFileLastModified": "2020-07-16T18:58:39.000Z",
+        "sourceFileCreatedBy": "Brad Curry",
+        "sourceFileLastModifiedBy": "Brad Curry",
+        "outputFileName": "a_good_one",
+        "outputFileType": "dnp3",
+        "outputFileCreated": "2021-08-13T08:11:45.597Z"
+    },
+    "system": {
+        "name": "Acuvim Aux meter",
+        "protocol": "DNP3",
+        "version": "0.3",
+        "id": "m_bess_aux_acuvim",
+        "ip_address": "192.168.114.24",
+        "port": 20001,
+        "frequency": 500
+    },
+    "registers": [
+        {
+            "type": "analog",
+            "starting_offset": 0,
+            "number_of_registers": 33,
+            "map": [
+                {
+                    "id": "frequency",
+                    "offset": 0,
+                    "name": "frequency",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "voltage_l1",
+                    "offset": 1,
+                    "name": "voltage_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id":"voltage_l2",
+                    "offset": 2,
+                    "name": "voltage_l2",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "voltage_l3",
+                    "offset": 3,
+                    "name": "voltage_l3",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "voltage_ln_rms",
+                    "offset": 4,
+                    "name": "voltage_ln_rms",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "voltage_l1_l2",
+                    "offset": 5,
+                    "name": "voltage_l1_l2",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "voltage_l2_l3",
+                    "offset": 6,
+                    "name": "voltage_l2_l3",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "voltage_l3_l1",
+                    "offset": 7,
+                    "name": "voltage_l3_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "voltage_ll_rms",
+                    "offset": 8,
+                    "name": "voltage_ll_rms",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "current_l1",
+                    "offset": 9,
+                    "name": "current_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "current_l2",
+                    "offset": 10,
+                    "name": "voltage_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "current_l3",
+                    "offset": 11,
+                    "name": "voltage_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "current_rms",
+                    "offset": 12,
+                    "name": "current_rms",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "current_n",
+                    "offset": 13,
+                    "name": "current_n",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "active_power_l1",
+                    "offset": 14,
+                    "name": "active_power_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "active_power_l2",
+                    "offset": 15,
+                    "name": "active_power_l2",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "active_power_l3",
+                    "offset": 16,
+                    "name": "active_power_l3",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "active_power",
+                    "offset": 17,
+                    "name": "active_power",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "reactive_power_l1",
+                    "offset": 18,
+                    "name": "reactive_power_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "reactive_power_l2",
+                    "offset": 19,
+                    "name": "reactive_power_l2",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "reactive_power_l3",
+                    "offset": 20,
+                    "name": "reactive_power_l3",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "reactive_power",
+                    "offset": 21,
+                    "name": "reactive_power",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "apparent_power_l1",
+                    "offset": 22,
+                    "name": "apparent_power_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "apparent_power_l2",
+                    "offset": 23,
+                    "name": "apparent_power_l2",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "apparent_power_l3",
+                    "offset": 24,
+                    "name": "apparent_power_l3",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "apparent_power",
+                    "offset": 25,
+                    "name": "apparent_power",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "power_factor_l1",
+                    "offset": 26,
+                    "name": "power_factor_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "power_factor_l2",
+                    "offset": 27,
+                    "name": "power_factor_l2",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "power_factor_l3",
+                    "offset": 28,
+                    "name": "power_factor_l3",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "power_factor",
+                    "offset": 29,
+                    "name": "power_factor",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "active_power_demand",
+                    "offset": 30,
+                    "name": "active_power_demand",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "reactive_power_demand",
+                    "offset": 31,
+                    "name": "reactive_power_demand",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "apparent_power_demand",
+                    "offset": 32,
+                    "name": "apparent_power_demand",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "kwh_received",
+                    "offset": 33,
+                    "name": "kwh_received",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "kwh_delivered",
+                    "offset": 35,
+                    "name": "kwh_delivered",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "kvarh_received",
+                    "offset": 36,
+                    "name": "kvarh_received",
+                    "uri": "/components/m_bess_aux_acuvim"
+                },
+                {
+                    "id": "kvarh_delivered",
+                    "offset": 37,
+                    "name": "voltage_l1",
+                    "uri": "/components/m_bess_aux_acuvim"
+                }
+            ]
+        }
+    ]
+}

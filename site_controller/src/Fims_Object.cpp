@@ -462,96 +462,88 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer &buf, bool control2status
         }
     }
 
-    // If clothed, add the auxiliary data
-    // If alarm or fault with options clothed will be true
-    if (clothed) {
-        bufJSON_AddString(buf, "name", name.c_str());
-        bufJSON_AddString(buf, "unit", unit.c_str());
-        bufJSON_AddNumber(buf, "scaler", scaler);
-        bufJSON_AddBool(buf, "enabled", ui_enabled);
-        bufJSON_AddString(buf, "type", type.c_str());
-        if (control2status && ui_type.compare("control") == 0)
-        {
-            bufJSON_AddString(buf, "ui_type", "status");
-        }
-        else
-        {
-            bufJSON_AddString(buf, "ui_type", ui_type.c_str());
-        }
+    // If not clothed, do not need to add auxiliary data
+    if (!clothed) { return; }
+    // Since clothed, add the auxiliary data
+    // Alarm and faults will always be clothed
+    bufJSON_AddString(buf, "name", name.c_str());
+    bufJSON_AddString(buf, "unit", unit.c_str());
+    bufJSON_AddNumber(buf, "scaler", scaler);
+    bufJSON_AddBool(buf, "enabled", ui_enabled);
+    bufJSON_AddString(buf, "type", type.c_str());
+    if (control2status && ui_type.compare("control") == 0)
+    {
+        bufJSON_AddString(buf, "ui_type", "status");
+    }
+    else
+    {
+        bufJSON_AddString(buf, "ui_type", ui_type.c_str());
+    }
 
-        // Add any options arrays
-        if (num_options > 0)
+    // Add any options arrays
+    bufJSON_AddId(buf, "options");
+    bufJSON_StartArray(buf); // JSON_array [
+    // Only add the high bit alarms/faults
+    if (ui_type.compare("alarm") == 0 || ui_type.compare("fault") == 0)
+    {
+        // Check each bit individually
+        for (uint64_t bit_value = 1, pos = 0; pos < MAX_STATUS_BITS; bit_value <<= 1, pos++)
         {
-            bufJSON_AddId(buf, "options");
-            bufJSON_StartArray(buf); // JSON_array [
-            // Only add the high bit alarms/faults
-            if (ui_type.compare("alarm") == 0 || ui_type.compare("fault") == 0)
+            // Ensure valid name and value (use value type to ensure options_value initialization)
+            if (value.value_bit_field & bit_value && !options_name[pos].empty() && options_value[pos].type != Invalid)
             {
-                // Check each bit individually
-                for (uint64_t i = 1, pos = 0; pos < MAX_STATUS_BITS; i <<= 1, pos++)
-                {
-                    // Ensure valid name and value (use value type to ensure options_value initialization)
-                    if (value.value_bit_field & i && !options_name[pos].empty() && options_value[pos].type != Invalid)
-                    {
-                        bufJSON_StartObject(buf); // JSON_options {
-                        bufJSON_AddString(buf, "name", options_name[pos].c_str());
-                        if (options_value[pos].type == Float)
-                            bufJSON_AddNumber(buf, "return_value", options_value[pos].value_float);
-                        else if (options_value[pos].type == Int)
-                            bufJSON_AddNumber(buf, "return_value", options_value[pos].value_int);
-                        else if (options_value[pos].type == Bool)
-                            bufJSON_AddBool(buf, "return_value", options_value[pos].value_bool);
-                        else if (options_value[pos].type == String)
-                            bufJSON_AddString(buf, "return_value", options_value[pos].value_string);
-                        else if (options_value[pos].type == Bit_Field)
-                            bufJSON_AddNumber(buf, "return_value", options_value[pos].value_bit_field);
-                        bufJSON_EndObject(buf); // } JSON_options
-                    }
-                }
+                bufJSON_StartObject(buf); // JSON_options {
+                bufJSON_AddString(buf, "name", options_name[pos].c_str());
+                if (options_value[pos].type == Float)
+                    bufJSON_AddNumber(buf, "return_value", options_value[pos].value_float);
+                else if (options_value[pos].type == Int)
+                    bufJSON_AddNumber(buf, "return_value", options_value[pos].value_int);
+                else if (options_value[pos].type == Bool)
+                    bufJSON_AddBool(buf, "return_value", options_value[pos].value_bool);
+                else if (options_value[pos].type == String)
+                    bufJSON_AddString(buf, "return_value", options_value[pos].value_string);
+                else if (options_value[pos].type == Bit_Field)
+                    bufJSON_AddNumber(buf, "return_value", options_value[pos].value_bit_field);
+                bufJSON_EndObject(buf); // } JSON_options
             }
-            else
-            {
-                for (int i = 0; i < (int) options_name.size(); i++)
-                {
-                    if (!options_name[i].empty() && options_value[i].type != Invalid)
-                    {
-                        bufJSON_StartObject(buf); // JSON_options {
-                        bufJSON_AddString(buf, "name", options_name[i].c_str());
-                        if (options_value[i].type == Float)
-                            bufJSON_AddNumber(buf, "return_value", options_value[i].value_float);
-                        else if (options_value[i].type == Int)
-                            bufJSON_AddNumber(buf, "return_value", options_value[i].value_int);
-                        else if (options_value[i].type == Bool)
-                            bufJSON_AddBool(buf, "return_value", options_value[i].value_bool);
-                        else if (options_value[i].type == String)
-                            bufJSON_AddString(buf, "return_value", options_value[i].value_string);
-                        else if (options_value[i].type == Bit_Field)
-                            bufJSON_AddNumber(buf, "return_value", options_value[i].value_bit_field);
-                        bufJSON_EndObject(buf); // } JSON_options
-                    }
-                }
-            }
-            bufJSON_EndArray(buf); // ] JSON_array
-        }
-        // Status cannot have empty options array, publish the default string value pair instead
-        else if (type.compare("Status") == 0)
-        {
-            // Create the options object
-            bufJSON_AddId(buf, "options");
-            bufJSON_StartArray(buf); // JSON_array [
-            bufJSON_StartObject(buf); // JSON_options {
-            bufJSON_AddString(buf, "name", default_status_name.c_str());
-            bufJSON_AddNumber(buf, "return_value", default_status_value);
-            // Add the options object to the array and the array to the published object
-            bufJSON_EndObject(buf); // } JSON_options
-            bufJSON_EndArray(buf); // ] JSON_array
         }
     }
-        
+    else
+    {
+        for (size_t i = 0; i < options_name.size(); i++)
+        {
+            if (!options_name[i].empty() && options_value[i].type != Invalid)
+            {
+                bufJSON_StartObject(buf); // JSON_options {
+                bufJSON_AddString(buf, "name", options_name[i].c_str());
+                if (options_value[i].type == Float)
+                    bufJSON_AddNumber(buf, "return_value", options_value[i].value_float);
+                else if (options_value[i].type == Int)
+                    bufJSON_AddNumber(buf, "return_value", options_value[i].value_int);
+                else if (options_value[i].type == Bool)
+                    bufJSON_AddBool(buf, "return_value", options_value[i].value_bool);
+                else if (options_value[i].type == String)
+                    bufJSON_AddString(buf, "return_value", options_value[i].value_string);
+                else if (options_value[i].type == Bit_Field)
+                    bufJSON_AddNumber(buf, "return_value", options_value[i].value_bit_field);
+                bufJSON_EndObject(buf); // } JSON_options
+            }
+        }
+    }
+    // Status cannot have empty options array, publish the default string value pair instead
+    if (type.compare("Status") == 0)
+    {
+        // Create the options object
+        bufJSON_StartObject(buf); // JSON_options {
+        bufJSON_AddString(buf, "name", default_status_name.c_str());
+        bufJSON_AddNumber(buf, "return_value", default_status_value);
+        // Add the options object to the array and the array to the published object
+        bufJSON_EndObject(buf); // } JSON_options
+    }
+    // Finish the clothed object because there is an early return for unclothed objects.
+    bufJSON_EndArray(buf); // ] JSON_array
     // If clothed, end the object we started
-    if (clothed) {
-        bufJSON_EndObject(buf); // } JSON_object
-    }
+    bufJSON_EndObject(buf); // } JSON_object
 }
 
 /**
@@ -617,7 +609,7 @@ void Fims_Object::add_to_JSON_buffer(fmt::memory_buffer &buf, const char* const 
         // iterate through each input register and add to object
         for(uint i = 0; i < inputs.size(); ++i) {
             name = real_name + ": " + input_source_settings->get_name_of_input(i);
-            ui_type = input_source_settings->get_ui_type_of_input(i, variable_id);
+            ui_type = input_source_settings->get_ui_type_of_input(i, real_variable_id);
             value.set(inputs[i]);
             ui_enabled = real_ui_enabled && i == input_source_settings->get_selected_input_source_index();
 

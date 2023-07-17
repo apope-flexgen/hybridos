@@ -1,0 +1,754 @@
+
+{
+	"variables":
+	{
+		"defaults":
+		{
+			"name": "Default Variable Types",
+			"unit": "",
+			"ui_type": "status",
+			"type": "number",
+			"var_type": "Float",
+			"value": 0.0,
+			"scaler": 1,
+			"enabled": true,
+			"num_options": 0,
+			"options": []
+		},
+		"local_remote_source_flag":
+		{
+			"name": "Local Controller Source",
+			"ui_type": "control",
+			"type": "enum_slider",
+			"var_type": "Bool",
+			"value": true,
+			"options": 
+			[
+				{
+					"name": "Remote",
+					"value": false
+				},
+				{
+					"name": "Local",
+					"value": true
+				}
+			]
+		},
+		"local_remote_source_status":
+		{
+			"name": "Site Controller Source",
+			"var_type": "String",
+			"type": "string",
+			"value": "Local"
+		},
+		"local_enable_flag":
+		{
+			"name": "Start Site",
+			"ui_type": "control",
+			"type": "enum_button",
+			"var_type": "Bool",
+			"value": false,
+			"options": 
+			[
+				{
+					"name": "Start Site",
+					"value": true
+				}
+			]
+		},
+		"local_disable_flag":
+		{
+			"name": "Disable Site",
+			"ui_type": "control",
+			"type": "enum_slider",
+			"var_type": "Bool",
+			"value": false,
+			"options": 
+			[
+				{
+					"name": "False Case Not Used",
+					"value": false
+				},
+				{
+					"name": "Disable Site",
+					"value": true
+				}
+			]
+		},
+		"local_clear_faults":
+		{
+			"name": "Clear Faults",
+			"ui_type": "control",
+			"type": "enum_button",
+			"var_type": "Bool",
+			"value": false,
+			"options":
+			[
+				{
+					"name": "Clear Faults",
+					"value": true
+				}
+			]
+		},
+		"remote_enable_flag":
+		{
+			"name": "Remote Start Site",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"remote_disable_flag":
+		{
+			"name": "Remote Disable Site",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"remote_clear_faults":
+		{
+			"name": "Remote Clear Faults",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"present_enable_flag":
+		{
+			"name": "Start Site",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"present_disable_flag":
+		{
+			"name": "Disable Site",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"present_clear_faults":
+		{
+			"name": "Clear Faults",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"site_state":
+		{
+			"name": "Site Controller State",
+			"type": "string",
+			"var_type": "String",
+			"value": "Init"
+		},
+		"running_status_flag":
+		{
+			"name": "Running Status",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"alarm_status_flag":
+		{
+			"name": "Alarm Status",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"fault_status_flag":
+		{
+			"name": "Fault Status",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"exit_timer":
+		{
+			"name": "Sequence Failure Exit Timer",
+			"unit": "ms",
+			"ui_type": "none",
+			"var_type": "Int",
+			"value": 90000
+		},		
+		"ESS_instant_discharge":
+		{
+			"name": "ESS Instant Discharge",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"ESS_instant_charge_grid":
+		{
+			"name": "ESS Instant Charge from Grid",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"ESS_instant_charge_pv":
+		{
+			"name": "ESS Instant Charge from Solar",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"ESS_agg_active_power":
+		{
+			"name": "ESS Aggregate Active Power",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"faults":
+		{
+			"name": "Site Manager Fault List",
+			"ui_type": "fault",
+			"type": "enum",
+			"var_type": "Int",
+			"value": 0,
+			"num_options": 64,
+			"options":
+			[
+				{
+					"name": "Site Debug Fault Message",
+					"value": 0
+				},
+				{
+					"name": "Site Sequence Fault Detected",
+					"value": 1
+				},
+				{
+					"name": "Site Sequence Step Timeout",
+					"value": 2
+				}
+			]
+		},
+		"active_faults":
+		{
+			"name": "Site Manager Active Faults",
+			"ui_type": "fault",
+			"type": "enum",
+			"var_type": "Int",
+			"value": 0,
+			"num_options": 64
+		},
+		"alarms":
+		{
+			"name": "Site Manager Alarm List",
+			"ui_type": "alarm",
+			"type": "enum",
+			"var_type": "Int",
+			"value": 0,
+			"num_options": 64,
+			"options":
+			[
+				{
+					"name": "Site Debug Alarm Message",
+					"value": 0
+				},
+				{
+					"name": "Asset Alarm Detected",
+					"value": 1
+				},
+				{
+					"name": "Asset Fault Detected",
+					"value": 2
+				},
+				{
+					"name": "Price Thresholds Invalid",
+					"value": 3
+				}
+			]
+		},
+		"active_alarms":
+		{
+			"name": "Site Manager Active Alarm",
+			"ui_type": "alarm",
+			"type": "enum",
+			"var_type": "Int",
+			"value": 0,
+			"num_options": 64
+		},
+		"price":
+		{
+			"name": "Current Trading Price",
+			"unit": "$/MWh"
+		},
+		"local_threshold_charge_1":
+		{
+			"name": "Normal Charge Threshold Price",
+			"unit": "$/MWh",
+			"ui_type": "control",
+			"value": 10.0
+		},
+		"local_threshold_charge_2":
+		{
+			"name": "Max Charge Threshold Price",
+			"unit": "$/MWh",
+			"ui_type": "control",
+			"value": -10.0
+		},
+		"local_threshold_dischg_1":
+		{
+			"name": "Normal Discharge Threshold Price",
+			"unit": "$/MWh",
+			"ui_type": "control",
+			"value": 30.0
+		},
+		"local_threshold_dischg_2":
+		{
+			"name": "Max Discharge Threshold Price",
+			"unit": "$/MWh",
+			"ui_type": "control",
+			"value": 100.0
+		},
+		"remote_threshold_charge_1":
+		{
+			"name": "Remote Normal Charge Threshold Price",
+			"unit": "$/MWh",
+			"value": 10.0
+		},
+		"remote_threshold_charge_2":
+		{
+			"name": "Remote Max Charge Threshold Price",
+			"unit": "$/MWh",
+			"value": -10.0
+		},
+		"remote_threshold_dischg_1":
+		{
+			"name": "Remote Normal Discharge Threshold Price",
+			"unit": "$/MWh",
+			"value": 30.0
+		},
+		"remote_threshold_dischg_2":
+		{
+			"name": "Remote Max Discharge Threshold Price",
+			"unit": "$/MWh",
+			"value": 100.0
+		},
+		"present_threshold_charge_1":
+		{
+			"name": "Normal Charge Threshold Price",
+			"unit": "$/MWh",
+			"ui_type": "none",
+			"value": 10.0
+		},
+		"present_threshold_charge_2":
+		{
+			"name": "Max Charge Threshold Price",
+			"unit": "$/MWh",
+			"ui_type": "none",
+			"value": -10.0
+		},
+		"present_threshold_dischg_1":
+		{
+			"name": "Normal Discharge Threshold Price",
+			"unit": "$/MWh",
+			"ui_type": "none",
+			"value": 30.0
+		},
+		"present_threshold_dischg_2":
+		{
+			"name": "Max Discharge Threshold Price",
+			"unit": "$/MWh",
+			"ui_type": "none",
+			"value": 100.0
+		},
+		"soc_min_all":
+		{
+			"name": "Minimum State of Charge for All ESS",
+			"unit": "%"
+		},
+		"soc_max_all":
+		{
+			"name": "Maximum State of Charge for All ESS",
+			"unit": "%"
+		},
+		"soc_avg_all":
+		{
+			"name": "Average State of Charge for All ESS",
+			"unit": "%"
+		},
+		"soc_min_online":
+		{
+			"name": "Minimum State of Charge for Online ESS",
+			"unit": "%"
+		},
+		"soc_max_online":
+		{
+			"name": "Maximum State of Charge for Online ESS",
+			"unit": "%"
+		},
+		"soc_avg_online":
+		{
+			"name": "Average State of Charge for Online ESS",
+			"unit": "%"
+		},
+		"soc_min_limit":
+		{
+			"name": "Minimum State of Charge Limit for Online ESS",
+			"unit": "%",
+			"value": 15.0
+		},
+		"soc_max_limit":
+		{
+			"name": "Maximum State of Charge Limit for Online ESS",
+			"unit": "%",
+			"value": 85.0
+		},
+		"max_charge_1":
+		{
+			"name": "Normal Charge Limit",
+			"unit": "W",
+			"value": -9900.0,
+			"scaler": 1000
+		},
+		"max_charge_2":
+		{
+			"name": "Max Charge Limit",
+			"unit": "W",
+			"value": -9900.0,
+			"scaler": 1000
+		},
+		"max_dischg_1":
+		{
+			"name": "Normal Discharge Limit",
+			"unit": "W",
+			"value": 10050.0,
+			"scaler": 1000
+		},
+		"max_dischg_2":
+		{
+			"name": "Max Discharge Limit",
+			"unit": "W",
+			"ui_type": "control",
+			"value": 10050.0,
+			"scaler": 1000
+		},
+		"_energy_arb_power":
+		{
+			"name": "Energy Arbitrage Power",
+			"unit": "W",
+			"ui_type": "none",
+			"value": 0,
+			"scaler": 1000
+		},
+		"local_manual_power":
+		{
+			"name": "Manual Power Setpoint",
+			"unit": "W",
+			"ui_type": "control",
+			"scaler": 1000
+		},
+		"remote_manual_power":
+		{
+			"name": "Remote Manual Power Setpoint",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"present_manual_power":
+		{
+			"name": "Manual Power Setpoint",
+			"unit": "W",
+			"ui_type": "none",
+			"scaler": 1000
+		},
+		"local_manual_flag":
+		{
+			"name": "Manual Override",
+			"ui_type": "control",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": true,
+			"options":
+			[
+				{
+					"name": "Automatic",
+					"value": false
+				},
+				{
+					"name": "Manual",
+					"value": true
+				}
+			]
+		},
+		"local_manual_status":
+		{
+			"name": "Manual Override",
+			"ui_type": "none",
+			"type": "string",
+			"var_type": "String",
+			"value": "Manual"
+		},
+		"local_chg_dischg_flag":
+		{
+			"name": "Manual Override Direction",
+			"ui_type": "control",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false,
+			"options":
+			[
+				{
+					"name": "Charge",
+					"value": false
+				},
+				{
+					"name": "Discharge",
+					"value": true
+				}
+			]
+		},
+		"local_chg_dischg_status":
+		{
+			"name": "Manual Override Direction",
+			"ui_type": "none",
+			"type": "string",
+			"var_type": "String",
+			"value": "Charge"
+		},
+		"remote_manual_flag":
+		{
+			"name": "Remote Manual Override",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"remote_manual_status":
+		{
+			"name": "Remote Manual Override",
+			"type": "string",
+			"var_type": "String",
+			"value": "Automatic"
+		},
+		"remote_chg_dischg_flag":
+		{
+			"name": "Remote Manual Override Direction",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"remote_chg_dischg_status":
+		{
+			"name": "Remote Manual Override Direction",
+			"type": "string",
+			"var_type": "String",
+			"value": "Charge"
+		},
+		"present_manual_flag":
+		{
+			"name": "Manual Override",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": true
+		},
+		"present_manual_status":
+		{
+			"name": "Manual Override",
+			"type": "string",
+			"var_type": "String",
+			"value": "Manual"
+		},
+		"present_chg_dischg_flag":
+		{
+			"name": "Manual Override Direction",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"present_chg_dischg_status":
+		{
+			"name": "Manual Override Direction",
+			"ui_type": "none",
+			"type": "string",
+			"var_type": "String",
+			"value": "Charge"
+		},
+		"avail_ESS_charge_kW":
+		{
+			"name": "Total ESS Available Charge Active Power",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"avail_ESS_dischg_kW":
+		{
+			"name": "Total ESS Available Discharge Active Power",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"ESS_active_power_cmd":
+		{
+			"name": "ESS Active Power Setpoint",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"curtailment_target":
+		{
+			"name": "Curtailment Target Setpoint",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"curtailment_enable_flag":
+		{
+			"name": "Curtailment Enable",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"inverter_output_percent":
+		{
+			"name": "Inverter Output Percent",
+			"unit": "%"
+		},
+		"curtailment_price":
+		{
+			"name": "Curtailment Price",
+			"unit": "$/MWh"
+		},
+		"curtailment_enable_feedback_flag":
+		{
+			"name": "Curtailment Enable Feedback",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"curtailment_status_flag":
+		{
+			"name": "Curtailment Status",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"interconnect_max_power":
+		{
+			"name": "Interconnect Maximum Power Limit",
+			"unit": "W",
+			"value": 180000.0,
+			"scaler": 1000
+		},
+		"interconnect_active_power":
+		{
+			"name": "Interconnect Active Power Output",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"interconnect_avail_power":
+		{
+			"name": "Interconnect Available Active Power",
+			"unit": "W",
+			"ui_type": "none",
+			"scaler": 1000
+		},
+		"slew_rate":
+		{
+			"name": "Free Power Slew Rate",
+			"unit": "kW/s",
+			"ui_type": "none",
+			"var_type": "Int",
+			"value": 200
+		},
+		"_slew_free_power":
+		{
+			"name": "Slewed Free Power",
+			"unit": "W",
+			"ui_type": "none",
+			"value": 0,
+			"scaler": 1000
+		},
+		"frequency_droop_target":
+		{
+			"name": "Frequency Droop Target Setpoint",
+			"ui_type": "none",
+			"unit": "W",
+			"scaler": 1000
+		},
+		"frequency_droop_enable_flag":
+		{
+			"name": "Frequency Droop Enable",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"frequency_droop_enable_feedback_flag":
+		{
+			"name": "Frequency Droop Enable Feedback",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"frequency_droop_status_flag":
+		{
+			"name": "Frequency Droop Status",
+			"ui_type": "none",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"pfr_deadband":
+		{
+			"name": "PFR Deadband",
+			"unit": "Hz",
+			"value": 0.017
+		},
+		"pfr_droop_percent":
+		{
+			"name": "PFR Droop Percent",
+			"unit": "%",
+			"value": 5
+		},
+		"pfr_offset_hz":
+		{
+			"name": "Offset Frequency",
+			"unit": "Hz",
+			"ui_type": "none",
+			"value": 0
+		},
+		"pfr_nominal_hz":
+		{
+			"name": "Nominal Frequency",
+			"unit": "Hz",
+			"value": 60
+		},
+		"pfr_actual_hz":
+		{
+			"name": "Measured Frequency",
+			"unit": "Hz",
+			"value": 60
+		},
+		"pfr_status_flag":
+		{
+			"name": "Frequency Droop Status",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": false
+		},
+		"pfr_enable_flag":
+		{
+			"name": "PFR Enable",
+			"type": "enum",
+			"var_type": "Bool",
+			"value": true
+		},
+		"_pfr_power":
+		{
+			"name": "PFR Power",
+			"unit": "W",
+			"ui_type": "none",
+			"value": 0,
+			"scaler": 1000
+		},
+		"avr_setpoint_voltage":
+		{
+			"name": "AVR Target Voltage",
+			"unit": "V"
+		}
+	}
+}

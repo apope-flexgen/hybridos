@@ -1,41 +1,69 @@
 {
-    "updateRate":10,
-    "publishRate":10,
-    "timeMultiplier":1,
-    "manualTick":false,
-    "grids":[
+    "updateRate": 5000,
+    "publishRate": 5000,
+    "timeMultiplier": 1,
+    "manualTick": false,
+    "grids": [
         {
-            "id":"grid", 
+            "id": "grid",
             "v": 480,
             "f": 60
         }
     ],
+    "feeds":[
+        {
+            "id": "feeder_1",
+            "pmax": 300000,
+            "qmax": 300000,
+            "smax": 300000,
+            "v": 480,
+            "vn": 480,
+            "closecmd": true
+        }
+    ],
     "pcs":[
         {
-            "id":"pcs_1",
-            "plim":990,
-            "qlim":990,
-            "idleloss": 5.5,
-            "rte": 98.0,
+            "id": "pcs_1",
+            "plim": 4000,
+            "qlim": 4000,
+            "idleloss": 1.75,
+            "rte": 95.6,
+            "vdccmd": 480,
             "ctrlword1cfg":[
                 {
                     "value": 1,
                     "controls": [
                         { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
+                        { "field": "offcmd", "value": false },
+                        { "field": "standbycmd", "value": false }
                     ]
                 },
                 {
-                    "value": 0,
+                    "value": 2,
                     "controls": [
                         { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
+                        { "field": "offcmd", "value": true },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                }
+            ],
+            "ctrlword2cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "constdcmodecmd", "value": true }
+                    ]
+                },
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "constdcmodecmd", "value": false }
                     ]
                 }
             ],
             "statuscfg": [
                 {
-                    "value":1,
+                    "value":4,
                     "string":"Running",
                     "field":"on"
                 },
@@ -44,6 +72,46 @@
                     "string":"Stopped",
                     "field":"on",
                     "invert":true
+                }
+            ]
+        }
+    ],
+    "dcdc": [
+        {
+            "id": "dcdc_1",
+            "plim": 3000,
+            "idleloss": 5.5,
+            "rte": 98.0,
+            "vdc2max": 600,
+            "ctrlword1cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value": 1,
+                    "string": "Running",
+                    "field": "on"
+                },
+                {
+                    "value": 0,
+                    "string": "Stopped",
+                    "field": "on",
+                    "invert": true
                 }
             ]
         }
@@ -51,409 +119,146 @@
     "bms":[
         {
             "id": "bms_1",
-            "cap":86,
-            "racks":14,
-            "soc":50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
+            "cap": 5000,
+            "racks": 1,
+            "soc":{
+                "value": 50.0,
+                "faulthighthreshold": 95,
+                "alarmhighthreshold": 90,
+                "alarmlowthreshold": 10,
+                "faultlowthreshold": 5
+            },
+            "vnom": 1330,
+            "inom": 2517,
+            "vdcprofile": [1282, 1320, 1330],
+            "socprofile": [20, 67, 100],
+            "pmax": 4000,
+            "idleloss": 1.75,
+            "rte": 92,
+            "dccontactor": true,
             "ctrlword1cfg":[
                 {
                     "value": 1,
                     "controls": [
+                        { "field": "dccontactorclosecmd", "value": true },
                         { "field": "oncmd", "value": true },
                         { "field": "offcmd", "value": false }
                     ]
                 },
                 {
-                    "value": 0,
+                    "value": 2,
                     "controls": [
+                        { "field": "dccontactoropencmd", "value": true },
                         { "field": "oncmd", "value": false },
                         { "field": "offcmd", "value": true }
                     ]
                 }
             ],
-            "statuscfg": [
+            "faultcfg": [
                 {
                     "value":1,
-                    "string":"Running",
-                    "field":"on"
+                    "string":"SOC High",
+                    "field":"soc_faulthigh"
                 },
                 {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
-                }
-            ]
-        },
-        {
-            "id": "bms_2",
-            "cap":86,
-            "racks":14,
-            "soc":50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
-            "ctrlword1cfg":[
-                {
-                    "value": 1,
-                    "controls": [
-                        { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
-                    ]
+                    "value":2,
+                    "string":"SOC Low",
+                    "field":"soc_faultlow"
                 },
                 {
-                    "value": 0,
-                    "controls": [
-                        { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
-                    ]
+                    "value":8,
+                    "string":"Cell Voltage High",
+                    "field":"maxcellvolt_faulthigh"
                 }
             ],
-            "statuscfg": [
+            "caprange": 0.005,
+            "lossrange": 0.005,
+            "cellvoltrange": 0.005,
+            "sbmu": [
                 {
-                    "value":1,
-                    "string":"Running",
-                    "field":"on"
-                },
-                {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
-                }
-            ]
-        },
-        {
-            "id": "bms_3",
-            "cap":86,
-            "racks":14,
-            "soc":50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
-            "ctrlword1cfg":[
-                {
-                    "value": 1,
-                    "controls": [
-                        { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
                     ]
-                },
-                {
-                    "value": 0,
-                    "controls": [
-                        { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
-                    ]
-                }
-            ],
-            "statuscfg": [
-                {
-                    "value":1,
-                    "string":"Running",
-                    "field":"on"
-                },
-                {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
-                }
-            ]
-        },
-        {
-            "id": "bms_4",
-            "cap": 86,
-            "soc": 50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
-            "ctrlword1cfg":[
-                {
-                    "value": 1,
-                    "controls": [
-                        { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
-                    ]
-                },
-                {
-                    "value": 0,
-                    "controls": [
-                        { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
-                    ]
-                }
-            ],
-            "statuscfg": [
-                {
-                    "value":1,
-                    "string":"Running",
-                    "field":"on"
-                },
-                {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
-                }
-            ]
-        },
-        {
-            "id": "bms_4",
-            "cap":86,
-            "racks":14,
-            "soc":50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
-            "ctrlword1cfg":[
-                {
-                    "value": 1,
-                    "controls": [
-                        { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
-                    ]
-                },
-                {
-                    "value": 0,
-                    "controls": [
-                        { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
-                    ]
-                }
-            ],
-            "statuscfg": [
-                {
-                    "value":1,
-                    "string":"Running",
-                    "field":"on"
-                },
-                {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
-                }
-            ]
-        },
-        {
-            "id": "bms_5",
-            "cap":86,
-            "racks":14,
-            "soc":50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
-            "ctrlword1cfg":[
-                {
-                    "value": 1,
-                    "controls": [
-                        { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
-                    ]
-                },
-                {
-                    "value": 0,
-                    "controls": [
-                        { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
-                    ]
-                }
-            ],
-            "statuscfg": [
-                {
-                    "value":1,
-                    "string":"Running",
-                    "field":"on"
-                },
-                {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
-                }
-            ]
-        },
-        {
-            "id": "bms_6",
-            "cap":86,
-            "racks":14,
-            "soc":50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
-            "ctrlword1cfg":[
-                {
-                    "value": 1,
-                    "controls": [
-                        { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
-                    ]
-                },
-                {
-                    "value": 0,
-                    "controls": [
-                        { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
-                    ]
-                }
-            ],
-            "statuscfg": [
-                {
-                    "value":1,
-                    "string":"Running",
-                    "field":"on"
-                },
-                {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
-                }
-            ]
-        },
-        {
-            "id": "bms_7",
-            "cap":86,
-            "racks":14,
-            "soc":50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
-            "ctrlword1cfg":[
-                {
-                    "value": 1,
-                    "controls": [
-                        { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
-                    ]
-                },
-                {
-                    "value": 0,
-                    "controls": [
-                        { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
-                    ]
-                }
-            ],
-            "statuscfg": [
-                {
-                    "value":1,
-                    "string":"Running",
-                    "field":"on"
-                },
-                {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
-                }
-            ]
-        },
-        {
-            "id": "bms_8",
-            "cap":86,
-            "racks":14,
-            "soc":50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
-            "ctrlword1cfg":[
-                {
-                    "value": 1,
-                    "controls": [
-                        { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
-                    ]
-                },
-                {
-                    "value": 0,
-                    "controls": [
-                        { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
-                    ]
-                }
-            ],
-            "statuscfg": [
-                {
-                    "value":1,
-                    "string":"Running",
-                    "field":"on"
-                },
-                {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
-                }
-            ]
-        },
-        {
-            "id": "bms_9",
-            "cap":86,
-            "racks":14,
-            "soc":50,
-            "vnom": 716,
-            "vmax": 817,
-            "vmin": 627,
-            "pmax": 86,
-            "ctrlword1cfg":[
-                {
-                    "value": 1,
-                    "controls": [
-                        { "field": "oncmd", "value": true },
-                        { "field": "offcmd", "value": false }
-                    ]
-                },
-                {
-                    "value": 0,
-                    "controls": [
-                        { "field": "oncmd", "value": false },
-                        { "field": "offcmd", "value": true }
-                    ]
-                }
-            ],
-            "statuscfg": [
-                {
-                    "value":1,
-                    "string":"Running",
-                    "field":"on"
-                },
-                {
-                    "value":0,
-                    "string":"Stopped",
-                    "field":"on",
-                    "invert":true
                 }
             ]
         }
     ],
-    "root":{
-        "id":"grid",
-        "children":[
+    "pv":[
+        {
+            "id": "pv_1",
+            "PCtrlModeCmd": true,
+            "Pmax": 1000,
+            "maxvlt": 600,
+            "vdcprofile": [0.0, 0.63, 0.68, 0.75, 0.8, 0.85, 0.95, 1.0, 1.1],
+            "idcprofile": [1.0, 0.95, 0.93, 0.87, 0.8, 0.70, 0.40, 0.0, -2],
+            "irrpctbreakpts":[0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00],
+            "irrcurreffect": [0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.32, 0.40, 0.50, 0.70, 1.00],
+            "irrvolteffect": [0.00, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1.00],
+            "irradiationcmd": 1.0
+        }
+    ],
+    "dcbus": [
+        {
+            "id": "dcbus"
+        }
+    ],
+    "root": {
+        "id": "grid",
+        "children": [
             {
-                "id": "pcs_1",
-                "children":[
-                    { "id":"bms_1" },
-                    { "id":"bms_2" },
-                    { "id":"bms_3" },
-                    { "id":"bms_4" },
-                    { "id":"bms_5" },
-                    { "id":"bms_6" },
-                    { "id":"bms_7" },
-                    { "id":"bms_8" },
-                    { "id":"bms_9" }
+                "id": "feeder_1",
+                "children": [
+                    {
+                        "id": "pcs_1",
+                        "children": [
+                            {
+                                "id": "dcbus",
+                                "children": [
+                                    {
+                                        "id": "dcdc_1",
+                                        "children": [
+                                            {
+                                                "id": "bms_1"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "pv_1"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
                 ]
             }
         ]

@@ -1,0 +1,675 @@
+{
+    "fileInfo": {
+        "sourceFileName": "BRP_FPS_FM_Comm_Server_DM_modified_062620.xlsx",
+        "sourceFileCreated": "2020-06-26T17:11:50.000Z",
+        "sourceFileLastModified": "2020-06-27T00:14:05.000Z",
+        "sourceFileCreatedBy": "Administrator",
+        "sourceFileLastModifiedBy": "Microsoft Office User",
+        "outputFileName": "BRP_FPS_FM_Comm_Server_server.json",
+        "outputFileType": "server",
+        "outputFileCreated": "2020-06-27T00:15:28.100Z"
+    },
+    "system": {
+        "name": "FlexGen Fleet Manager - Odessa",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "id": "outstation",
+        "ip_address": "127.0.0.1",
+        "local_uri": "/local",
+        "port": 20000,
+		"frequency": 1000
+    },
+    "registers": [
+		{
+            "type": "Holding Registers",
+            "dnp3_type":"AnOPF32",
+			"starting_offset": 600,
+            "map": [
+				{
+					"id": "Generation_Non-Spin_Responsibility",
+					"idx": 600,
+					"scale": 1,
+					"name": "Generation Non-Spin Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Non-Spin_Requirement",
+					"idx": 601,
+					"scale": 1,
+					"name": "Generation Non-Spin Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Non-Spin_Schedule",
+					"idx": 602,
+					"scale": 1,
+					"name": "Generation Non-Spin Schedule",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Regulation_Down_Responsibility",
+					"idx": 603,
+					"scale": 1,
+					"name": "Generation Regulation Down Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Regulation_Down_Requirement",
+					"idx": 604,
+					"scale": 1,
+					"name": "Generation Regulation Down Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Regulation_Down_Participation_Factor",
+					"idx": 605,
+					"scale": 1,
+					"name": "Generation Regulation Down Participation Factor",
+					"unit": "per unit",
+					"float": true
+				},
+				{
+					"id": "Generation_Responsive_Reserve_Responsibility",
+					"idx": 606,
+					"scale": 1,
+					"name": "Generation Responsive Reserve Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Responsive_Reserve_Requirement",
+					"idx": 607,
+					"scale": 1,
+					"name": "Generation Responsive Reserve Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Responsive_Reserve_Schedule",
+					"idx": 608,
+					"scale": 1,
+					"name": "Generation Responsive Reserve Schedule",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Regulation_Up_Responsibility",
+					"idx": 609,
+					"scale": 1,
+					"name": "Generation Regulation Up Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Regulation_Up_Requirement",
+					"idx": 610,
+					"scale": 1,
+					"name": "Generation Regulation Up Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Regulation_Up_Participation_Factor",
+					"idx": 611,
+					"scale": 1,
+					"name": "Generation Regulation Up Participation Factor",
+					"unit": "per unit",
+					"float": true
+				},
+				{
+					"id": "Generation_FRRS_Down_Responsibility",
+					"idx": 612,
+					"scale": 1,
+					"name": "Generation FRRS Down Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_FRRS_Down_Requirement",
+					"idx": 613,
+					"scale": 1,
+					"name": "Generation FRRS Down Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_FRRS_Down_Participation_Factor",
+					"idx": 614,
+					"scale": 1,
+					"name": "Generation FRRS Down Participation Factor",
+					"unit": "per unit",
+					"float": true
+				},
+				{
+					"id": "Generation_FRRS_Up_Responsibility",
+					"idx": 615,
+					"scale": 1,
+					"name": "Generation FRRS Up Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_FRRS_Up_Requirement",
+					"idx": 616,
+					"scale": 1,
+					"name": "Generation FRRS Up Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_FRRS_Up_Participation_Factor",
+					"idx": 617,
+					"scale": 1,
+					"name": "Generation FRRS Up Participation Factor",
+					"unit": "per unit",
+					"float": true
+				},
+				{
+					"id": "Generation_Locational_Marginal_Pricing",
+					"idx": 618,
+					"scale": 1,
+					"name": "Generation Locational Marginal Pricing",
+					"unit": "USD",
+					"float": true
+				},
+				{
+					"id": "Generation_Base_Point",
+					"idx": 619,
+					"scale": 1,
+					"name": "Generation Base Point",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Updated_Desired_Base_Point",
+					"idx": 620,
+					"scale": 1,
+					"name": "Generation Updated Desired Base Point",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Non-Spin_Responsibility",
+					"idx": 630,
+					"scale": 1,
+					"name": "Controllable Load Non-Spin Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Non-Spin_Requirement",
+					"idx": 631,
+					"scale": 1,
+					"name": "Controllable Load Non-Spin Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Non-Spin_Schedule",
+					"idx": 632,
+					"scale": 1,
+					"name": "Controllable Load Non-Spin Schedule",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Regulation_Down_Responsibility",
+					"idx": 633,
+					"scale": 1,
+					"name": "Controllable Load Regulation Down Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Regulation_Down_Requirement",
+					"idx": 634,
+					"scale": 1,
+					"name": "Controllable Load Regulation Down Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Regulation_Down_Participation_Factor",
+					"idx": 635,
+					"scale": 1,
+					"name": "Controllable Load Regulation Down Participation Factor",
+					"unit": "per unit",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Responsive_Reserve_Responsibility",
+					"idx": 636,
+					"scale": 1,
+					"name": "Controllable Load Responsive Reserve Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Responsive_Reserve_Requirement",
+					"idx": 637,
+					"scale": 1,
+					"name": "Controllable Load Responsive Reserve Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Responsive_Reserve_Schedule",
+					"idx": 638,
+					"scale": 1,
+					"name": "Controllable Load Responsive Reserve Schedule",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Regulation_Up_Responsibility",
+					"idx": 639,
+					"scale": 1,
+					"name": "Controllable Load Regulation Up Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Regulation_Up_Requirement",
+					"idx": 640,
+					"scale": 1,
+					"name": "Controllable Load Regulation Up Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Regulation_Up_Participation_Factor",
+					"idx": 641,
+					"scale": 1,
+					"name": "Controllable Load Regulation Up Participation Factor",
+					"unit": "per unit",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_FRRS_Down_Responsibility",
+					"idx": 642,
+					"scale": 1,
+					"name": "Controllable Load FRRS Down Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_FRRS_Down_Requirement",
+					"idx": 643,
+					"scale": 1,
+					"name": "Controllable Load FRRS Down Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_FRRS_Down_Participation_Factor",
+					"idx": 644,
+					"scale": 1,
+					"name": "Controllable Load FRRS Down Participation Factor",
+					"unit": "per unit",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_FRRS_Up_Responsibility",
+					"idx": 645,
+					"scale": 1,
+					"name": "Controllable Load FRRS Up Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_FRRS_Up_Requirement",
+					"idx": 646,
+					"scale": 1,
+					"name": "Controllable Load FRRS Up Requirement",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_FRRS_Up_Participation_Factor",
+					"idx": 647,
+					"scale": 1,
+					"name": "Controllable Load FRRS Up Participation Factor",
+					"unit": "per unit",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Locational_Marginal_Pricing",
+					"idx": 648,
+					"scale": 1,
+					"name": "Controllable Load Locational Marginal Pricing",
+					"unit": "USD",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Base_Point",
+					"idx": 649,
+					"scale": 1,
+					"name": "Controllable Load Base Point",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Updated_Desired_Base_Point",
+					"idx": 650,
+					"scale": 1,
+					"name": "Controllable Load Updated Desired Base Point",
+					"unit": "MW",
+					"float": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 600,
+			"dnp3_type":"analog",
+			"map": [
+				{
+					"id": "net_gen_mw",
+					"idx": 600,
+					"scale": 1,
+					"name": "Generation NET Megawatts",
+					"unit": "MW",
+					"float": true,
+					"uri": "/metrics/misc"
+				},
+				{
+					"id": "net_gen_mvar",
+					"idx": 601,
+					"scale": 1,
+					"name": "Generation NET Megavars",
+					"unit": "MVAR",
+					"float": true,
+					"uri": "/metrics/misc"
+				},
+				{
+					"id": "gross_gen_mw",
+					"idx": 602,
+					"scale": 1,
+					"name": "Generation Gross Megawatts",
+					"unit": "MW",
+					"float": true,
+					"uri": "/metrics/misc"
+				},
+				{
+					"id": "gross_gen_mvar",
+					"idx": 603,
+					"scale": 1,
+					"name": "Generation Gross Megavars",
+					"unit": "MVAR",
+					"float": true,
+					"uri": "/metrics/misc"
+				},
+				{
+					"id": "Generation_Normal_Up_Ramp_Rate",
+					"idx": 604,
+					"scale": 1,
+					"name": "Generation Normal Up Ramp Rate",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Normal_Down_Ramp_Rate",
+					"idx": 605,
+					"scale": 1,
+					"name": "Generation Normal Down Ramp Rate",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Emergency_Up_Ramp_Rate",
+					"idx": 606,
+					"scale": 1,
+					"name": "Generation Emergency Up Ramp Rate",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Emercency_Down_Ramp_Rate",
+					"idx": 607,
+					"scale": 1,
+					"name": "Generation Emercency Down Ramp Rate",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Maximum_Operating_State_of_Charge",
+					"idx": 608,
+					"scale": 1,
+					"name": "Generation Maximum Operating State of Charge",
+					"unit": "MWh",
+					"float": true
+				},
+				{
+					"id": "Generation_Minimum_Operating_State_of_Charge",
+					"idx": 609,
+					"scale": 1,
+					"name": "Generation Minimum Operating State of Charge",
+					"unit": "MWh",
+					"float": true
+				},
+				{
+					"id": "Generation_State_of_Charge",
+					"idx": 610,
+					"scale": 1,
+					"name": "Generation State of Charge",
+					"unit": "MWh",
+					"float": true
+				},
+				{
+					"id": "Generation_Maximum_Operating_Discharge_Power_Limit",
+					"idx": 611,
+					"scale": 1,
+					"name": "Generation Maximum Operating Discharge Power Limit",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Maximum_Operating_Charge_Power_Limit",
+					"idx": 612,
+					"scale": 1,
+					"name": "Generation Maximum Operating Charge Power Limit",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Voltage",
+					"idx": 613,
+					"scale": 1,
+					"name": "Generation Voltage",
+					"unit": "kV",
+					"float": true
+				},
+				{
+					"id": "Generation_Plant_Auxiliary_Load_MW",
+					"idx": 614,
+					"scale": 1,
+					"name": "Generation Plant Auxiliary Load MW",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Plant_Auxiliary_Load_MVAR",
+					"idx": 615,
+					"scale": 1,
+					"name": "Generation Plant Auxiliary Load MVAR",
+					"unit": "MVAR",
+					"float": true
+				},
+				{
+					"id": "net_load_mw",
+					"idx": 630,
+					"scale": 1,
+					"name": "Controllable Load Net Load MW",
+					"unit": "MW",
+					"float": true,
+					"uri": "/metrics/misc"
+				},
+				{
+					"id": "net_load_mvar",
+					"idx": 631,
+					"scale": 1,
+					"name": "Controllable Load Net Load MVAR",
+					"unit": "MVAR",
+					"float": true,
+					"uri": "/metrics/misc"
+				},
+				{
+					"id": "Controllable_Load_Scheduled_Power_Consumption",
+					"idx": 632,
+					"scale": 1,
+					"name": "Controllable Load Scheduled Power Consumption",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Scheduled_Power_Consumption_+2_hours",
+					"idx": 633,
+					"scale": 1,
+					"name": "Controllable Load Scheduled Power Consumption +2 hours",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Normal_Up_Ramp_Rate",
+					"idx": 634,
+					"scale": 1,
+					"name": "Controllable Load Normal Up Ramp Rate",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Normal_Down_Ramp_Rate",
+					"idx": 635,
+					"scale": 1,
+					"name": "Controllable Load Normal Down Ramp Rate",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Emercency_Up_Ramp_Rate",
+					"idx": 636,
+					"scale": 1,
+					"name": "Controllable Load Emercency Up Ramp Rate",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Emercency_Down_Ramp_Rate",
+					"idx": 637,
+					"scale": 1,
+					"name": "Controllable Load Emercency Down Ramp Rate",
+					"unit": "MW",
+					"float": true
+				}
+			]
+		},
+		{		
+            "type": "Input Registers",
+            "starting_offset": 600,
+            "dnp3_type":"binary",
+            "map": [
+				{
+					"id": "Generation_Resource_Switches_",
+					"idx": 600,
+					"scale": 1,
+					"name": "Generation Resource Switches",
+					"unit": "ST",
+					"bool": true
+				},
+				{
+					"id": "Generation_Resource_Breaker_Status",
+					"idx": 601,
+					"scale": 1,
+					"name": "Generation Resource Breaker Status",
+					"unit": "ST",
+					"bool": true
+				},
+				{
+					"id": "Generation_Virtual_Breaker_Status_-_PSEUDO_GEN",
+					"idx": 602,
+					"scale": 1,
+					"name": "Generation Virtual Breaker Status - PSEUDO GEN",
+					"unit": "ST",
+					"bool": true
+				},
+				{
+					"id": "Controllable_Load_Virtual_Breaker_Status_-_PSEUDO_LOAD",
+					"idx": 630,
+					"scale": 1,
+					"name": "Controllable Load Virtual Breaker Status - PSEUDO LOAD",
+					"unit": "ST",
+					"bool": true
+				}
+			]
+		},
+		{
+            "type": "Holding Registers",
+            "starting_offset": 600,
+            "dnp3_type":"CROB",
+            "number_of_registers": 66,
+            "map": [
+				{
+					"id": "Generation_Curtailment_Flag",
+					"idx": 600,
+					"scale": 1,
+					"name": "Generation Curtailment Flag",
+					"unit": "ST",
+					"float": true
+				},
+				{
+					"id": "Generation_SCCT_Mitigation_Flag",
+					"idx": 601,
+					"scale": 1,
+					"name": "Generation SCCT Mitigation Flag",
+					"unit": "ST",
+					"float": true
+				},
+				{
+					"id": "Generation_Non-spin_deployed_Flag_(NDPL)",
+					"idx": 602,
+					"scale": 1,
+					"name": "Generation Non-spin deployed Flag (NDPL)",
+					"unit": "ST",
+					"float": true
+				},
+				{
+					"id": "Controllable_Load_Curtailment_Flag",
+					"idx": 630,
+					"scale": 1,
+					"name": "Controllable Load Curtailment Flag",
+					"unit": "ST",
+					"bool": true
+				},
+				{
+					"id": "Controllable_Load_SCCT_Mitigation_Flag",
+					"idx": 631,
+					"scale": 1,
+					"name": "Controllable Load SCCT Mitigation Flag",
+					"unit": "ST",
+					"bool": true
+				},
+				{
+					"id": "Controllable_Load_Non-spin_deployed_Flag_(NDPL)",
+					"idx": 632,
+					"scale": 1,
+					"name": "Controllable Load Non-spin deployed Flag (NDPL)",
+					"unit": "ST",
+					"bool": true
+				},
+				{
+					"id": "Controllable_Load_Responsive_Deployed_Flag_(RDPL)",
+					"idx": 633,
+					"scale": 1,
+					"name": "Controllable Load Responsive Deployed Flag (RDPL)",
+					"unit": "ST",
+					"bool": true
+				}
+        	]
+   		}
+	]
+}

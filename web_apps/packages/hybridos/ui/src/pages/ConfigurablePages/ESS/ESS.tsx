@@ -2,6 +2,6 @@
 /* eslint-disable import/no-cycle */
 import { AssetsPage } from '..';
 
-const ESS = () => <AssetsPage category="ess" />;
+const ESS = () => <AssetsPage assetKey="ess" />;
 
 export default ESS;

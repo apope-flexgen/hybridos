@@ -1,0 +1,61 @@
+IMPORTANT:
+    - smoke came out of the gpio during a power surge, appears to be fine now. Still troubling.
+    - occurred when the PCS was turned on (caused a power surge and black screened my monitor)
+    - consider protecting the underlying equipment from power surges (might needs its own tests)
+
+NOTE:
+    - Test should be as close to the real system as possible when intetionally causing these faults.
+    - All of these should put the system into an off state, and most likely a fault state.
+    - Two of these we trigger ourselves, the EStop and the Disconnect Switch, the rest is automatic
+    - 
+
+Setup:
+    - Get personal SuperMicro setup with GPIO manager up and ess controller on.
+    - Make sure switches with LEDs are used to help us simulate environment.
+    - Must be plugged into the system as reasonable and close to the actual thing as possible (safely of course)
+    - Turn system on using startUpSequence function
+    - proceed to test through trigger mechanism
+    - 
+
+Safety:
+    - Make sure we don't get pepper sprayed with the fire extinguisher chemicals when we test the fire Alarm
+    - stay far far away from the racks.
+    - prefer to test EStop first to make sure we have a fall back plan in case other tests go bad.
+    - 
+
+1) EStop:
+Test: Turn system on (both BMS and PCS) -> Press EStop button
+        -> GPIO should alert ESS -> ESS should turn system off (calls shutDownSequence function)
+        -> system should go to fault state? (probably not)
+Results:
+
+2) Disconnect Switch:
+Test: Turn system on (both BMS and PCS) -> Turn disconnect lever clockwise
+        -> GPIO should alert ESS -> ESS should turn system off (calls shutDownSequence function)
+        -> system should go to fault state? (probably not)
+Results:
+
+3) Door Latch:
+Test: Turn system on (both BMS and PCS) -> Open the door while the system is running
+        -> GPIO should alert ESS -> ESS should turn system off (calls shutDownSequence function)
+        -> system should go to fault state? (probably not)
+Results:
+
+4) Surge Arrester:
+Test: Turn system on (both BMS and PCS) -> intetionally cause a power surge? (Vinay has a plan for this)
+        -> GPIO should alert ESS -> ESS should turn system off (calls shutDownSequence function)
+        -> system should go to fault state? (probably not)
+Results:
+
+5) Fire Alarm (NOTE: make sure that we aren't sprayed with the fire extinguisher - if it goes off):
+Test: Turn system on (both BMS and PCS) -> intetionally cause smoke or heat to hit smoke detector and heat detector
+        -> GPIO should alert ESS -> ESS should turn system off (calls shutDownSequence function)
+        -> system should go to fault state? (probably not)
+Results:
+
+6) Fuse Monitoring:
+Test: Turn system on (both BMS and PCS) -> check GPIO to make sure we are getting input from it.
+        -> turn off system -> unplug one fuse (repeat this for all fuses) -> turn system back on
+        -> GPIO should alert ESS -> ESS should turn system off (calls shutDownSequence function)
+        -> system should go to fault state? (probably not)
+Results:

@@ -280,7 +280,10 @@ bool Solar_Manager::aggregate_solar_data(void)
         }
         else
         {
-            solarTotalUncontrollableActivePowerkW += pSolar[i]->get_active_power();
+             // only add to uncontrollable power if solar is uncontrollable for reasons besides a modbus disconnect
+            if (!pSolar[i]->get_watchdog_fault()) {
+                solarTotalUncontrollableActivePowerkW += pSolar[i]->get_active_power();
+            }
         }
         
     }
@@ -299,6 +302,10 @@ void Solar_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf, co
     bufJSON_AddNumberCheckVar(buf, "solar_total_reactive_power", solarTotalReactivePowerkVAR, var);
     bufJSON_AddNumberCheckVar(buf, "solar_total_apparent_power", solarTotalApparentPowerkVA, var);
     bufJSON_AddBoolCheckVar(buf, "solar_curtailment_state", (solar_curtailment_state != 0), var);
+    bufJSON_AddNumberCheckVar(buf, "solar_num_alarmed", get_num_alarmed(), var);
+    bufJSON_AddNumberCheckVar(buf, "solar_num_faulted", get_num_faulted(), var);
+
+    // Marked for deprecation
     bufJSON_AddNumberCheckVar(buf, "solar_total_alarms", get_num_active_alarms(), var);
     bufJSON_AddNumberCheckVar(buf, "solar_total_faults", get_num_active_faults(), var);
 

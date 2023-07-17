@@ -4,10 +4,19 @@ import { DashboardModule } from './ConfigurablePages/Dashboard/dashboard.module'
 import { SchedulerModule } from './SchedulerPage/scheduler.module'
 import { EventsModule } from './Events/events.module'
 import { SiteStatusModule } from './SiteStatusBar/sitestatus.module'
-import { VariableOverrideModule } from './ErcotOverride/ercotOverride.module'
+import { ErcotOverrideModule } from './ErcotOverride/ercotOverride.module'
+import { LayoutsModule } from './Layouts/layouts.module'
 
 @Module({
-    imports: [AssetsPageModule, SchedulerModule, EventsModule, DashboardModule, SiteStatusModule, VariableOverrideModule],
+    imports: [
+        AssetsPageModule,
+        SchedulerModule,
+        EventsModule,
+        DashboardModule,
+        SiteStatusModule,
+        ErcotOverrideModule,
+        LayoutsModule,
+    ],
     controllers: [],
     providers: [],
     exports: [],

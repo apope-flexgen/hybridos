@@ -1,0 +1,29 @@
+{
+  "/system/ident": {
+    "id": "bms_1",
+    "name": "BMS Battery Manager 01"
+  },
+  "/system/time": {
+    "hb": {
+      "value": 0
+    },
+    "sec": {
+      "value": 0
+    },
+    "min": {
+      "value": 0
+    },
+    "hr": {
+      "value": 0
+    },
+    "day": {
+      "value": 0
+    },
+    "mon": {
+      "value": 0
+    },
+    "year": {
+      "value": 0
+    }
+  }
+}

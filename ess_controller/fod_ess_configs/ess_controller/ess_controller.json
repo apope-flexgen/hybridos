@@ -1,0 +1,152 @@
+{
+    "/notes/ess": {
+        "note1": "Start with this config file. The BMS, PCS, and site managers are referenced",
+        "note1a": "/assets/ess/[summary | ess_1] - defines the web UI for the ESS Controller. ESS-related statuses, controls, and faults/alarms are displayed on the UI",
+        "note1b": "/config/ess                   - defines configurable variables used in the ESS Controller source code",
+        "note1c": "/config/ess_server            - loads the ess modbus interface to the ESS Controller",
+        "note1d": "/config/ess/managers          - loads the asset manager config files (ex.: BMS, PCS, site) to the ESS Controller",
+        "note1e": "/controls/ess                 - defines the control variables for the ESS Controller",
+        "note1f": "/status/ess                   - defines the status variables for the ESS Controller",
+        "note1g": "/links/ess                    - defines mapping of external interface components to internal variables",
+        "note1h": "/vlinks/ess                   - allows two variables to share the same value",
+        "note1i": "/sched/ess                    - defines the variables that will run a function on a scheduled basis",
+        "note1j": "/schedule/wake_monitor/ess    - periodically runs a function for a particular variable (default to 100ms; wake_monitor to be removed)",
+        "note1k": "/faults/ess                   - defines faults reported by the ESS Controller (will trigger PCS shutdown; contains only the clear faults variable at the moment)",
+        "note1l": "/[sets | pubs | gets]/blocked - blocks fims set/pub/get for a particular uri"
+    },
+    
+    "/config/ess_server":{
+        "note":"This is the modbus server map",
+        "ess":"flexgen_ess_server.json"
+    },
+    "/config/ess/managers": {
+        "bms": "risen_bms_manager.json",
+        "pcs": "sungrow_pcs_manager.json",
+        "site": "site_manager.json"
+    },
+    "/config/ess": {
+        "Subs": "/ess, /components, /site, /assets, /params, /status, /controls, /links, /variables, /config, /tests, /default, /reload, /misc2",
+        "Pubs": "/assets/ess/summary",
+        "BlockSets": "/status/ess, /status/bms",
+        "BlockPubs": "/assets",
+        "LogDir": "/var/log/ess_controller",
+        "AlarmDestination": "/assets/ess/summary:alarms",
+        "FaultDestination": "/assets/ess/summary:faults"
+    },
+    "/controls/ess": {
+        "ReactivePowerSetpoint": 0,
+        "ActivePowerSetpoint": 0,
+        "PowerPriority": "q"
+    },
+    "/status/ess": {
+        "build": "build number",
+        "ReactivePower": 0,
+        "active_power": 1234.5,
+        "UiStartup": false,
+        "MaxChargePower": 0,
+        "MaxDischargePower": 0,
+        "MaxESSChargePower": 0,
+        "MaxESSDischargePower": 0
+    },
+    "/sets/blocked": {
+        "/status": {"value": true},
+        "/components": {"value": true}
+    },
+    "/pubs/blocked": {
+        "/assets": { "value": true},
+        "/site": {"value": true}
+    },
+    "/gets/blocked": {
+        "/components": {"value": true}
+    },
+    "/schedule/ess":{
+        "addSchedItem": {
+            "value": "None",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleSchedItem", "amap": "ess"}]}]
+            }
+        }
+    },
+
+    "/sched/ess":{
+        "essSystemInit": { 
+            "value": "EssSystemInit",
+            "uri":   "/sched/ess:essSystemInit",
+            "fcn":   "EssSystemInit",
+            "id":    "EssSystemInit",
+            "refTime":  0.200,
+            "runAfter": 0.200,
+            "repTime":  0.00,
+            "endTime":  0.00,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "every1000mS": {
+            "value": "Every1000mS",
+            "uri":   "/sched/ess:every1000mS",
+            "fcn":   "Every1000mS",
+            "id":    "Every1000mS",
+            "refTime":  0.210,
+            "runAfter": 0.210,
+            "repTime":  1.00,
+            "endTime":  0.00,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "every100mSP1": {
+            "value": "Every100mSP1",
+            "uri":   "/sched/ess:every100mSP1",
+            "fcn":   "Every100mSP1",
+            "id":    "Every100mSP1",
+            "refTime":  0.220,
+            "runAfter": 0.220,
+            "repTime":  0.100,
+            "endTime":  0.00,
+            "actions":{
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "slowPub":{
+            "value": "SlowPub",
+            "uri":   "/sched/ess:slowPub",
+            "fcn":   "SlowPub",
+            "id":    "SlowPub",
+            "refTime":  0.250,
+            "runAfter": 0.250,
+            "repTime":  1.000,
+            "endTime":  0.00,
+            "actions":{
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "fastPub":{
+            "value": "FastPub",
+            "uri":   "/sched/ess:fastPub",
+            "fcn":   "FastPub",
+            "id":    "FastPub",
+            "refTime":  0.270,
+            "runAfter": 0.270,
+            "repTime":  0.050,
+            "endTime":  0.00,
+            "actions":{
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "schedSendClearFaultCmdess":{
+            "value":    "schedSendClearFaultCmdess",
+            "uri":      "/sched/ess:schedSendClearFaultCmdess",
+            "fcn":      "SendClearFaultCmd",
+            "id":       "schedSendClearFaultCmdess",
+            "amap":     "ess",
+            "refTime":  0.275,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001,
+            "actions":{
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        }
+    }
+}

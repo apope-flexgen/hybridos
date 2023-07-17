@@ -1,0 +1,4045 @@
+{
+    "fileInfo": {
+        "sourceFileName": "Catl_ESS_Ref.xlsx",
+        "sourceFileCreated": "2020-07-23T05:59:21.000Z",
+        "sourceFileLastModified": "2020-08-11T18:06:59.000Z",
+        "sourceFileCreatedBy": "17576",
+        "sourceFileLastModifiedBy": "pmiller",
+        "outputFileName": "Catl_ESS_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2020-08-12T13:00:45.553Z"
+    },
+    "xsystem": {
+        "name": "CATL BMS",
+        "protocol": "Modbus TCP",
+        "version": "6.0 WIP",
+        "id": "catl_BMU_1",
+        "port": 502,
+        "ip_address": "192.168.1.19",
+        "data_bits": "Columns marked in green are REQUIRED",
+        "frequency": 2000
+    },
+    "connection": {
+        "name": "CATL_bms_01_Controller",
+        "ip_address": "192.168.1.8",
+        "port": 502
+    },
+    "components": [
+        {
+            "id": "catl_bms_1_mbmu_warning_r",
+            "frequency": 1000,
+            "offset_time": 2,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 0,
+                    "number_of_registers": 2,
+                    "note": "MBMU warning messages (read)",
+                    "map": [
+                        {
+                            "id": "mbmu_warning_1",
+                            "offset": 0,
+                            "name": "System warning (with degrees) Detailed in appendix Ⅰ",
+                            "note1": " 000000000000011: 0=norm, 1=cell OV warn 1, 2=cell OV warn 2, 3= cell OV warn 3",
+                            "note2": " 000000000001100: 0=norm, 1=cell UV warn 1, 2=cell UV warn 2, 3= cell UV warn 3",
+                            "note3": " 000000000110000: 0=norm, 1=cell OT warn 1, 2=cell OT warn 2, 3= cell OT warn 3",
+                            "note4": " 000000011000000: 0=norm, 1=cell UT warn 1, 2=cell UT warn 2, 3= cell UT warn 3",
+                            "note5": " 000001100000000: 0=norm, 1=cell Soc warn 1, 2=cell Soc  warn 2, 3= cell Soc  warn 3"
+                        },
+                        {
+                            "id": "mbmu_warning_2",
+                            "offset": 1,
+                            "size": 2,
+                            "name": "System warning (without degrees) Detailed in appendix Ⅱ",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current over limit",
+                                "Single Cell over voltage",
+                                "Single Cell over temp",
+                                "System over voltage",
+                                "System under voltage",
+                                "Inner Comm warn",
+                                "Cell Extreme Temp warn",
+                                "Cell Extreme Volt warn",
+                                "Ems Hearteat Fault",
+                                "Reserve 1-9",
+                                "Reserve 1-10",
+                                "Reserve 1-11",
+                                "Reserve 1-12",
+                                "Reserve 1-13",
+                                "Reserve 1-14",
+                                "Reserve 1-15",
+                                "Reserve 2-0",
+                                "Reserve 2-1",
+                                "Reserve 2-2",
+                                "Reserve 2-3",
+                                "Reserve 2-5",
+                                "Reserve 2-6",
+                                "Reserve 2-7",
+                                "Reserve 2-8",
+                                "Reserve 2-9",
+                                "SOC difference warning",
+                                "Fire Fault level 2",
+                                "Reserve 2-12",
+                                "Reserve 2-13",
+                                "Reserve 2-14",
+                                "Reserve 2-15"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_bms_1_mbmu_status_r",
+            "frequency": 100,
+            "offset_time": 2,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 16,
+                    "number_of_registers": 1,
+                    "note": "MBMU Status messages (read)",
+                    "map": [
+                        {
+                            "id": "mbmu_status",
+                            "offset": 16,
+                            "name": "System status",
+                            "xxenum": true,
+                            "xxbit_strings": [
+                                "Initialize",
+                                "Normal",
+                                "Full Charge",
+                                "Full Discharge",
+                                "Warning Status",
+                                "Fault Status"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_bms_1_mbmu_summary_r",
+            "frequency": 100,
+            "offset_time": 4,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 32,
+                    "number_of_registers": 12,
+                    "hex_offset": "0x0020",
+                    "note": "MBMU Summary messages (read)",
+                    "map": [
+                        {
+                            "id": "mbmu_voltage",
+                            "offset": 32,
+                            "scale": 10,
+                            "name": "System voltage"
+                        },
+                        {
+                            "id": "mbmu_current",
+                            "offset": 33,
+                            "scale": 10,
+                            "signed": true,
+                            "name": "System Current"
+                        },
+                        {
+                            "id": "mbmu_soc",
+                            "offset": 34,
+                            "name": "SOC"
+                        },
+                        {
+                            "id": "mbmu_soh",
+                            "offset": 35,
+                            "name": "SOH"
+                        },
+                        {
+                            "id": "mbmu_max_cell_voltage",
+                            "offset": 36,
+                            "name": "Max cell voltage"
+                        },
+                        {
+                            "id": "mbmu_min_cell_voltage",
+                            "offset": 37,
+                            "name": "Min cell voltage"
+                        },
+                        {
+                            "id": "mbmu_avg_cell_voltage",
+                            "offset": 38,
+                            "name": "Avg. cell voltage"
+                        },
+                        {
+                            "id": "mbmu_max_cell_temperature",
+                            "offset": 39,
+                            "name": "Max cell temperature"
+                        },
+                        {
+                            "id": "mbmu_min_cell_temperature",
+                            "offset": 40,
+                            "name": "Min cell temperature"
+                        },
+                        {
+                            "id": "mbmu_avg_cell_temperature",
+                            "offset": 41,
+                            "name": "Avg. cell temperature"
+                        },
+                        {
+                            "id": "mbmu_max_charge_current",
+                            "offset": 42,
+                            "name": "Max charge current allowed"
+                        },
+                        {
+                            "id": "mbmu_max_dischare_current",
+                            "offset": 43,
+                            "name": "Max discharge current allowed"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_mbmu_stat_r",
+            "frequency": 1000,
+            "offset_time": 200,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 768,
+                    "hex ofset": "0x300",
+                    "number_of_registers": 19,
+                    "note": " BMS->EMS messages(read)",
+                    "map": [
+                        {
+                            "id": "bms_heartbeat",
+                            "offset": 768,
+                            "name": "BMS heartbeat"
+                        },
+                        {
+                            "id": "bms_poweron",
+                            "offset": 769,
+                            "name": "BMS_poweron",
+                            "xxenum": true,
+                            "xxbit_strings": [
+                                "Power off Ready",
+                                "Power on Ready",
+                                "Power on Fault",
+                                "Power off Fault"
+                            ]
+                        },
+                        {
+                            "id": "bms_status",
+                            "offset": 770,
+                            "name": "BMS_status",
+                            "xxenum": true,
+                            "xxbit_strings": [
+                                "Initial status",
+                                "Normal status",
+                                "Full Charge status",
+                                "Full Discharge status",
+                                "Warning status",
+                                "Fault status"
+                            ]
+                        },
+                        {
+                            "id": "num_hv_subsystem",
+                            "offset": 772,
+                            "name": "Number of HV connected subsystem"
+                        },
+                        {
+                            "id": "bms_remain_charge_energy",
+                            "offset": 775,
+                            "name": "System remain charge energy"
+                        },
+                        {
+                            "id": "bms_remain_discharge_energy",
+                            "offset": 776,
+                            "name": "System remain discharge energy"
+                        },
+                        {
+                            "id": "bms_max_discharge_allowed",
+                            "offset": 783,
+                            "name": "Max system discharge power allowed"
+                        },
+                        {
+                            "id": "bms_max_charge_allowed",
+                            "offset": 784,
+                            "name": "Max system charge power allowed"
+                        },
+                        {
+                            "id": "bms_limit_charge_hv",
+                            "offset": 785,
+                            "name": "BMS_limit_charge_hv"
+                        },
+                        {
+                            "id": "bms_limit_discharge_hv",
+                            "offset": 786,
+                            "name": "BMS_limit_discharge_hv"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_ems_to_bms_rw",
+            "frequency": 200,
+            "offset_time": 20,
+            "hex_start": "0x0380",
+            "xheartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 896,
+                    "number_of_registers": 13,
+                    "note": "EMS->BMS (write/read)",
+                    "map": [
+                        {
+                            "id": "ems_heartbeat",
+                            "offset": 896,
+                            "name": "EMS heartbeat"
+                        },
+                        {
+                            "id": "ems_cmd",
+                            "offset": 897,
+                            "name": "EMS_cmd",
+                            "xxenum": true,
+                            "xxbit_strings": [
+                                "Initial",
+                                "Stay Status",
+                                "Power on cmd",
+                                "Power off cmd"
+                            ]
+                        },
+                        {
+                            "id": "ems_status",
+                            "offset": 898,
+                            "name": "EMS_status"
+                        },
+                        {
+                            "id": "ems_rtc_year",
+                            "offset": 900,
+                            "name": "EMS_RTC_year"
+                        },
+                        {
+                            "id": "ems_rtc_month",
+                            "offset": 901,
+                            "name": "EMS_RTC_month"
+                        },
+                        {
+                            "id": "ems_rtc_day",
+                            "offset": 902,
+                            "name": "EMS_RTC_day"
+                        },
+                        {
+                            "id": "ems_rtc_hour",
+                            "offset": 903,
+                            "name": "EMS_RTC_hour"
+                        },
+                        {
+                            "id": "ems_rtc_minute",
+                            "offset": 904,
+                            "name": "EMS_RTC_minute"
+                        },
+                        {
+                            "id": "ems_rtc_second",
+                            "offset": 905,
+                            "name": "EMS_RTC_second"
+                        },
+                        {
+                            "id": "fault_clear_cmd",
+                            "offset": 908,
+                            "name": "Fault_Clear_cmd"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_bms_1_sbmu_warning_r",
+            "frequency": 1000,
+            "offset_time": 200,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1024,
+                    "hex offset": "0x0400",
+                    "number_of_registers": 4,
+                    "note": "SMBU warning message(read)",
+                    "map": [
+                        {
+                            "id": "sbmu1_system_warning_1",
+                            "offset": 1024,
+                            "size":1,
+                            "name": "System warning (with degrees) Detailed in appendix III. Part 1",
+                            "note1": " 000000000000011: 0=norm, 1=single cell Over Volt warn 1, 2=single cell Over Volt warn 2, 3=single cell Over Volt warn 3",
+                            "note2": " 000000000001100: 0=norm, 1=single cell Uunder Volt warn 1, 2=single cell Under Volt warn 2, 3=single cell Under Volt warn 3",
+                            "note3": " 000000000110000: 0=norm, 1=single cell Over Temp warn 1, 2=single cell Over Temp warn 2, 3=single cell Over Temp warn 3",
+                            "note4": " 000000011000000: 0=norm, 1=single cell Under Temp warn 1, 2=single cell Under Temp warn 2, 3=single cell Under Temp warn 3",
+                            "note5": " 000001100000000: 0=norm, 1=single cell low warn 1, 2=single cell low warn 2, 3=single cell low warn 3",
+                            "note6": " 000110000000000: 0=norm, 1=TMS fault level 1, 2=TMS fault level 2, 3=TMS fault level 3"
+                        },
+                        {
+                            "id": "sbmu1_system_warning_2",
+                            "offset": 1025,
+                            "size": 1,
+                            "name": "System warning (with degrees) Detailed in appendix III. Part 2",
+                            "xxbit_field": true,
+                            "xxbit_strings": [
+                                "Charge over-current",
+                                "Discharge over-current",
+                                "Reserve 0x0401-bit2",
+                                "Temperature difference",
+                                "Cell extreme temperature fault",
+                                "Cell extreme voltage fault",
+                                "Extreme total voltage",
+                                "Main positive relay close fail fault",
+                                "Main negative relay close fail fault",
+                                "Main positive relay stuck fault",
+                                "Main negative stuck fault",
+                                "Power loss fault",
+                                "Balance function"
+                            ]
+                        },
+                        {
+                            "id": "sbmu1_system_warning_3",
+                            "offset": 1026,
+                            "size": 1,
+                            "name": "System warning (without degrees) Detailed in appendix IV. Part 2",
+                            "xxbit_field": true,
+                            "xxbit_strings": [
+                                "Inner communcation fault (CCAN)",
+                                "Inner communication fault (SCAN)",
+                                "Reserve 0x0402-bit1",
+                                "Current sensor abnormal fault",
+                                "Single cell voltage sampling abnormal fault",
+                                "Module temperature sampling abnormal fault",
+                                "High voltage circuit open fault",
+                                "MSD fault",
+                                "Rack isolate switch fault",
+                                "Rack fuse fault"
+                            ]
+                        },
+                        {
+                            "id": "sbmu1_system_warning_4",
+                            "offset": 1027,
+                            "size": 1,
+                            "name": "System warning (without degrees) Detailed in appendix IV. Part 3",
+                            "xxbit_field": true,
+                            "xxbit_strings": [
+                                "TMS communication fault",
+                                "TMS mode conflict fault",
+                                "Fire fault level 1",
+                                "Temperature sensor alarm",
+                                "Smoke sensor alarm",
+                                "Aerosol state",
+                                "Aerosol close fault",
+                                "Aerosol open fault",
+                                "Rack switch state",
+                                "Over temperature fault in control box"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_bms_1_sbmu_status_r",
+            "frequency": 1000,
+            "offset_time": 200,
+            "registers": 
+            [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1040,
+                    "hex offset": "0x0400",
+                    "number_of_registers": 5,
+                    "note": "SBMU status message(read)",
+                    "map":
+                    [
+                        {
+                            "id": "sbmu1_precharge",
+                            "offset": 1040,
+                            "name": "Precharge"
+                        },
+                        {
+                            "id": "sbmu1_master_positive",
+                            "offset": 1041,
+                            "name": "Master positive"
+                        },
+                        {
+                            "id": "sbmu1_master_negative",
+                            "offset": 1042,
+                            "name": "Master negative"
+                        },
+                        {
+                            "id": "sbmu1_balance_status",
+                            "offset": 1044,
+                            "name": "Balance status"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_bms_1_sbmu_summary_r",
+            "frequency": 1000,
+            "offset_time": 200,
+            "registers": 
+            [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1056,
+                    "hex offset": "0x0420",
+                    "number_of_registers": 50,
+                    "note": "SBMU summary message(read)",
+                    "map":
+                    [
+                        {
+                            "id": "sbmu1_voltage",
+                            "offset": 1056,
+                            "name": "Battery Subsystem Voltage"
+                        },
+                        {
+                            "id": "sbmu1_current",
+                            "offset": 1058,
+                            "name": "Battery Subsystem Current"
+                        },
+                        {
+                            "id": "sbmu1_soc",
+                            "offset": 1059,
+                            "name": "SOC Battery system"
+                        },
+                        {
+                            "id": "sbmu1_soh",
+                            "offset": 1060,
+                            "name": "SOH Battery system"
+                        },
+                        {
+                            "id": "sbmu1_max_cell_voltage",
+                            "offset": 1061,
+                            "name": "Max single cell voltage"
+                        },
+                        {
+                            "id": "sbmu1_min_cell_voltage",
+                            "offset": 1062,
+                            "name": "Min single cell voltage"
+                        },
+                        {
+                            "id": "sbmu1_avg_cell_voltage",
+                            "offset": 1063,
+                            "name": "Avg. cell voltage"
+                        },
+                        {
+                            "id": "sbmu1_max_cell_temp",
+                            "offset": 1064,
+                            "name": "Max single cell temperature"
+                        },
+                        {
+                            "id": "sbmu1_min_cell_temp",
+                            "offset": 1065,
+                            "name": "Min single cell temperature"
+                        },
+                        {
+                            "id": "sbmu1_avg_cell_temp",
+                            "offset": 1066,
+                            "name": "Avg. single cell temperature"
+                        },
+                        {
+                            "id": "sbmu1_max_charge_current",
+                            "offset": 1067,
+                            "name": "Max allowed charge current"
+                        },
+                        {
+                            "id": "sbmu1_max_discharge_current",
+                            "offset": 1068,
+                            "name": "Max allowed discharge current"
+                        },
+                        {
+                            "id": "sbmu1_max_cell_voltage_positions",
+                            "offset": 1072,
+                            "name": "Max single cell voltage position"
+                        },
+                        {
+                            "id": "sbmu1_min_cell_voltage_positions",
+                            "offset": 1073,
+                            "name": "Min single cell voltage position"
+                        },
+                        {
+                            "id": "sbmu1_max_cell_temp_positions",
+                            "offset": 1074,
+                            "name": "Max single cell temperature position"
+                        },
+                        {
+                            "id": "sbmu1_min_cell_temp_positions",
+                            "offset": 1075,
+                            "name": "Min single cell temperature position"
+                        },
+                        {
+                            "id": "sbmu1_sum_cells",
+                            "offset": 1079,
+                            "name": "Sum of cell voltage"
+                        },
+                        {
+                            "id": "sbmu1_tms_mode_command",
+                            "offset": 1096,
+                            "name": "TMS mode command by BMS",
+                            "xxenum": true,
+                            "xxbit_strings": [
+                                "Power off",
+                                "Cooling Mode",
+                                "Heating Mode",
+                                "Self Circulating Mode"
+                            ]
+                        },
+                        {
+                            "id": "sbmu1_tms_temp_setting",
+                            "offset": 1097,
+                            "name": "TMS temperature value set by BMS"
+                        },
+                        {
+                            "id": "sbmu1_tms_real_mode",
+                            "offset": 1098,
+                            "name": "TMS real mode",
+                            "xxenum": true,
+                            "xxbit_strings": [
+                                "Power off",
+                                "Cooling Mode",
+                                "Heating Mode",
+                                "Self Circulating Mode"
+                            ]
+                        },
+                        {
+                            "id": "sbmu1_rack_inlet_temperature",
+                            "offset": 1099,
+                            "name": "Rack inlet temperature"
+                        },
+                        {
+                            "id": "sbmu1_rack_outlet_temperature",
+                            "offset": 1100,
+                            "name": "Rack outlet temperature"
+                        },
+                        {
+                            "id": "sbmu1_ambient_temp",
+                            "offset": 1101,
+                            "name": "Environment temperature"
+                        },
+                        {
+                            "id": "sbmu1_tms_demand_power",
+                            "offset": 1102,
+                            "name": "TMS demand power"
+                        },
+                        {
+                            "id": "sbmu1_tms_fault_code",
+                            "offset": 1103,
+                            "name": "TMS fault code"
+                        },
+                        {
+                            "id": "sbmu1_door_state",
+                            "offset": 1104,
+                            "name": "Door state"
+                        },
+                        {
+                            "id": "sbmu1_fan_in_boxs",
+                            "offset": 1105,
+                            "name": "Fan state in control box"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_cell_volts_0_8_12",
+            "frequency": 2000,
+            "offset_time": 100,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1152,
+                    "number_of_registers": 96,
+                    "map": [
+                        {
+                            "id": "array_0_rack_0_cell_0",
+                            "offset": 1152
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_1",
+                            "offset": 1153
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_2",
+                            "offset": 1154
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_3",
+                            "offset": 1155
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_4",
+                            "offset": 1156
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_5",
+                            "offset": 1157
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_6",
+                            "offset": 1158
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_7",
+                            "offset": 1159
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_8",
+                            "offset": 1160
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_9",
+                            "offset": 1161
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_10",
+                            "offset": 1162
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_11",
+                            "offset": 1163
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_0",
+                            "offset": 1164
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_1",
+                            "offset": 1165
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_2",
+                            "offset": 1166
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_3",
+                            "offset": 1167
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_4",
+                            "offset": 1168
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_5",
+                            "offset": 1169
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_6",
+                            "offset": 1170
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_7",
+                            "offset": 1171
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_8",
+                            "offset": 1172
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_9",
+                            "offset": 1173
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_10",
+                            "offset": 1174
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_11",
+                            "offset": 1175
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_0",
+                            "offset": 1176
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_1",
+                            "offset": 1177
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_2",
+                            "offset": 1178
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_3",
+                            "offset": 1179
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_4",
+                            "offset": 1180
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_5",
+                            "offset": 1181
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_6",
+                            "offset": 1182
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_7",
+                            "offset": 1183
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_8",
+                            "offset": 1184
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_9",
+                            "offset": 1185
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_10",
+                            "offset": 1186
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_11",
+                            "offset": 1187
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_0",
+                            "offset": 1188
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_1",
+                            "offset": 1189
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_2",
+                            "offset": 1190
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_3",
+                            "offset": 1191
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_4",
+                            "offset": 1192
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_5",
+                            "offset": 1193
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_6",
+                            "offset": 1194
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_7",
+                            "offset": 1195
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_8",
+                            "offset": 1196
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_9",
+                            "offset": 1197
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_10",
+                            "offset": 1198
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_11",
+                            "offset": 1199
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_0",
+                            "offset": 1200
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_1",
+                            "offset": 1201
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_2",
+                            "offset": 1202
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_3",
+                            "offset": 1203
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_4",
+                            "offset": 1204
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_5",
+                            "offset": 1205
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_6",
+                            "offset": 1206
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_7",
+                            "offset": 1207
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_8",
+                            "offset": 1208
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_9",
+                            "offset": 1209
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_10",
+                            "offset": 1210
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_11",
+                            "offset": 1211
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_0",
+                            "offset": 1212
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_1",
+                            "offset": 1213
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_2",
+                            "offset": 1214
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_3",
+                            "offset": 1215
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_4",
+                            "offset": 1216
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_5",
+                            "offset": 1217
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_6",
+                            "offset": 1218
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_7",
+                            "offset": 1219
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_8",
+                            "offset": 1220
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_9",
+                            "offset": 1221
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_10",
+                            "offset": 1222
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_11",
+                            "offset": 1223
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_0",
+                            "offset": 1224
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_1",
+                            "offset": 1225
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_2",
+                            "offset": 1226
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_3",
+                            "offset": 1227
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_4",
+                            "offset": 1228
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_5",
+                            "offset": 1229
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_6",
+                            "offset": 1230
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_7",
+                            "offset": 1231
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_8",
+                            "offset": 1232
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_9",
+                            "offset": 1233
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_10",
+                            "offset": 1234
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_11",
+                            "offset": 1235
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_0",
+                            "offset": 1236
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_1",
+                            "offset": 1237
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_2",
+                            "offset": 1238
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_3",
+                            "offset": 1239
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_4",
+                            "offset": 1240
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_5",
+                            "offset": 1241
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_6",
+                            "offset": 1242
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_7",
+                            "offset": 1243
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_8",
+                            "offset": 1244
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_9",
+                            "offset": 1245
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_10",
+                            "offset": 1246
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_11",
+                            "offset": 1247
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_cell_volts_1_8_12",
+            "frequency": 2000,
+            "offset_time": 200,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1248,
+                    "number_of_registers": 96,
+                    "map": [
+                        {
+                            "id": "array_1_rack_0_cell_0",
+                            "offset": 1248
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_1",
+                            "offset": 1249
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_2",
+                            "offset": 1250
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_3",
+                            "offset": 1251
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_4",
+                            "offset": 1252
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_5",
+                            "offset": 1253
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_6",
+                            "offset": 1254
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_7",
+                            "offset": 1255
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_8",
+                            "offset": 1256
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_9",
+                            "offset": 1257
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_10",
+                            "offset": 1258
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_11",
+                            "offset": 1259
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_0",
+                            "offset": 1260
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_1",
+                            "offset": 1261
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_2",
+                            "offset": 1262
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_3",
+                            "offset": 1263
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_4",
+                            "offset": 1264
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_5",
+                            "offset": 1265
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_6",
+                            "offset": 1266
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_7",
+                            "offset": 1267
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_8",
+                            "offset": 1268
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_9",
+                            "offset": 1269
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_10",
+                            "offset": 1270
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_11",
+                            "offset": 1271
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_0",
+                            "offset": 1272
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_1",
+                            "offset": 1273
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_2",
+                            "offset": 1274
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_3",
+                            "offset": 1275
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_4",
+                            "offset": 1276
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_5",
+                            "offset": 1277
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_6",
+                            "offset": 1278
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_7",
+                            "offset": 1279
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_8",
+                            "offset": 1280
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_9",
+                            "offset": 1281
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_10",
+                            "offset": 1282
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_11",
+                            "offset": 1283
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_0",
+                            "offset": 1284
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_1",
+                            "offset": 1285
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_2",
+                            "offset": 1286
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_3",
+                            "offset": 1287
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_4",
+                            "offset": 1288
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_5",
+                            "offset": 1289
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_6",
+                            "offset": 1290
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_7",
+                            "offset": 1291
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_8",
+                            "offset": 1292
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_9",
+                            "offset": 1293
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_10",
+                            "offset": 1294
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_11",
+                            "offset": 1295
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_0",
+                            "offset": 1296
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_1",
+                            "offset": 1297
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_2",
+                            "offset": 1298
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_3",
+                            "offset": 1299
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_4",
+                            "offset": 1300
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_5",
+                            "offset": 1301
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_6",
+                            "offset": 1302
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_7",
+                            "offset": 1303
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_8",
+                            "offset": 1304
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_9",
+                            "offset": 1305
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_10",
+                            "offset": 1306
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_11",
+                            "offset": 1307
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_0",
+                            "offset": 1308
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_1",
+                            "offset": 1309
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_2",
+                            "offset": 1310
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_3",
+                            "offset": 1311
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_4",
+                            "offset": 1312
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_5",
+                            "offset": 1313
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_6",
+                            "offset": 1314
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_7",
+                            "offset": 1315
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_8",
+                            "offset": 1316
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_9",
+                            "offset": 1317
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_10",
+                            "offset": 1318
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_11",
+                            "offset": 1319
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_0",
+                            "offset": 1320
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_1",
+                            "offset": 1321
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_2",
+                            "offset": 1322
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_3",
+                            "offset": 1323
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_4",
+                            "offset": 1324
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_5",
+                            "offset": 1325
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_6",
+                            "offset": 1326
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_7",
+                            "offset": 1327
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_8",
+                            "offset": 1328
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_9",
+                            "offset": 1329
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_10",
+                            "offset": 1330
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_11",
+                            "offset": 1331
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_0",
+                            "offset": 1332
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_1",
+                            "offset": 1333
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_2",
+                            "offset": 1334
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_3",
+                            "offset": 1335
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_4",
+                            "offset": 1336
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_5",
+                            "offset": 1337
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_6",
+                            "offset": 1338
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_7",
+                            "offset": 1339
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_8",
+                            "offset": 1340
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_9",
+                            "offset": 1341
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_10",
+                            "offset": 1342
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_11",
+                            "offset": 1343
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_cell_volts_2_8_12",
+            "frequency": 2000,
+            "offset_time": 300,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1344,
+                    "number_of_registers": 96,
+                    "map": [
+                        {
+                            "id": "array_2_rack_0_cell_0",
+                            "offset": 1344
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_1",
+                            "offset": 1345
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_2",
+                            "offset": 1346
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_3",
+                            "offset": 1347
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_4",
+                            "offset": 1348
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_5",
+                            "offset": 1349
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_6",
+                            "offset": 1350
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_7",
+                            "offset": 1351
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_8",
+                            "offset": 1352
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_9",
+                            "offset": 1353
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_10",
+                            "offset": 1354
+                        },
+                        {
+                            "id": "array_2_rack_0_cell_11",
+                            "offset": 1355
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_0",
+                            "offset": 1356
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_1",
+                            "offset": 1357
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_2",
+                            "offset": 1358
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_3",
+                            "offset": 1359
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_4",
+                            "offset": 1360
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_5",
+                            "offset": 1361
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_6",
+                            "offset": 1362
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_7",
+                            "offset": 1363
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_8",
+                            "offset": 1364
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_9",
+                            "offset": 1365
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_10",
+                            "offset": 1366
+                        },
+                        {
+                            "id": "array_2_rack_1_cell_11",
+                            "offset": 1367
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_0",
+                            "offset": 1368
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_1",
+                            "offset": 1369
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_2",
+                            "offset": 1370
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_3",
+                            "offset": 1371
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_4",
+                            "offset": 1372
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_5",
+                            "offset": 1373
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_6",
+                            "offset": 1374
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_7",
+                            "offset": 1375
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_8",
+                            "offset": 1376
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_9",
+                            "offset": 1377
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_10",
+                            "offset": 1378
+                        },
+                        {
+                            "id": "array_2_rack_2_cell_11",
+                            "offset": 1379
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_0",
+                            "offset": 1380
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_1",
+                            "offset": 1381
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_2",
+                            "offset": 1382
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_3",
+                            "offset": 1383
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_4",
+                            "offset": 1384
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_5",
+                            "offset": 1385
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_6",
+                            "offset": 1386
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_7",
+                            "offset": 1387
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_8",
+                            "offset": 1388
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_9",
+                            "offset": 1389
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_10",
+                            "offset": 1390
+                        },
+                        {
+                            "id": "array_2_rack_3_cell_11",
+                            "offset": 1391
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_0",
+                            "offset": 1392
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_1",
+                            "offset": 1393
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_2",
+                            "offset": 1394
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_3",
+                            "offset": 1395
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_4",
+                            "offset": 1396
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_5",
+                            "offset": 1397
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_6",
+                            "offset": 1398
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_7",
+                            "offset": 1399
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_8",
+                            "offset": 1400
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_9",
+                            "offset": 1401
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_10",
+                            "offset": 1402
+                        },
+                        {
+                            "id": "array_2_rack_4_cell_11",
+                            "offset": 1403
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_0",
+                            "offset": 1404
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_1",
+                            "offset": 1405
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_2",
+                            "offset": 1406
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_3",
+                            "offset": 1407
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_4",
+                            "offset": 1408
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_5",
+                            "offset": 1409
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_6",
+                            "offset": 1410
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_7",
+                            "offset": 1411
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_8",
+                            "offset": 1412
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_9",
+                            "offset": 1413
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_10",
+                            "offset": 1414
+                        },
+                        {
+                            "id": "array_2_rack_5_cell_11",
+                            "offset": 1415
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_0",
+                            "offset": 1416
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_1",
+                            "offset": 1417
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_2",
+                            "offset": 1418
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_3",
+                            "offset": 1419
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_4",
+                            "offset": 1420
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_5",
+                            "offset": 1421
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_6",
+                            "offset": 1422
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_7",
+                            "offset": 1423
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_8",
+                            "offset": 1424
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_9",
+                            "offset": 1425
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_10",
+                            "offset": 1426
+                        },
+                        {
+                            "id": "array_2_rack_6_cell_11",
+                            "offset": 1427
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_0",
+                            "offset": 1428
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_1",
+                            "offset": 1429
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_2",
+                            "offset": 1430
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_3",
+                            "offset": 1431
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_4",
+                            "offset": 1432
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_5",
+                            "offset": 1433
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_6",
+                            "offset": 1434
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_7",
+                            "offset": 1435
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_8",
+                            "offset": 1436
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_9",
+                            "offset": 1437
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_10",
+                            "offset": 1438
+                        },
+                        {
+                            "id": "array_2_rack_7_cell_11",
+                            "offset": 1439
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_cell_volts_3_8_12",
+            "frequency": 2000,
+            "offset_time": 400,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1440,
+                    "number_of_registers": 96,
+                    "map": [
+                        {
+                            "id": "array_3_rack_0_cell_0",
+                            "offset": 1440
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_1",
+                            "offset": 1441
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_2",
+                            "offset": 1442
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_3",
+                            "offset": 1443
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_4",
+                            "offset": 1444
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_5",
+                            "offset": 1445
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_6",
+                            "offset": 1446
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_7",
+                            "offset": 1447
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_8",
+                            "offset": 1448
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_9",
+                            "offset": 1449
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_10",
+                            "offset": 1450
+                        },
+                        {
+                            "id": "array_3_rack_0_cell_11",
+                            "offset": 1451
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_0",
+                            "offset": 1452
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_1",
+                            "offset": 1453
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_2",
+                            "offset": 1454
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_3",
+                            "offset": 1455
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_4",
+                            "offset": 1456
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_5",
+                            "offset": 1457
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_6",
+                            "offset": 1458
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_7",
+                            "offset": 1459
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_8",
+                            "offset": 1460
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_9",
+                            "offset": 1461
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_10",
+                            "offset": 1462
+                        },
+                        {
+                            "id": "array_3_rack_1_cell_11",
+                            "offset": 1463
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_0",
+                            "offset": 1464
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_1",
+                            "offset": 1465
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_2",
+                            "offset": 1466
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_3",
+                            "offset": 1467
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_4",
+                            "offset": 1468
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_5",
+                            "offset": 1469
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_6",
+                            "offset": 1470
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_7",
+                            "offset": 1471
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_8",
+                            "offset": 1472
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_9",
+                            "offset": 1473
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_10",
+                            "offset": 1474
+                        },
+                        {
+                            "id": "array_3_rack_2_cell_11",
+                            "offset": 1475
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_0",
+                            "offset": 1476
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_1",
+                            "offset": 1477
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_2",
+                            "offset": 1478
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_3",
+                            "offset": 1479
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_4",
+                            "offset": 1480
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_5",
+                            "offset": 1481
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_6",
+                            "offset": 1482
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_7",
+                            "offset": 1483
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_8",
+                            "offset": 1484
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_9",
+                            "offset": 1485
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_10",
+                            "offset": 1486
+                        },
+                        {
+                            "id": "array_3_rack_3_cell_11",
+                            "offset": 1487
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_0",
+                            "offset": 1488
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_1",
+                            "offset": 1489
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_2",
+                            "offset": 1490
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_3",
+                            "offset": 1491
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_4",
+                            "offset": 1492
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_5",
+                            "offset": 1493
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_6",
+                            "offset": 1494
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_7",
+                            "offset": 1495
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_8",
+                            "offset": 1496
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_9",
+                            "offset": 1497
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_10",
+                            "offset": 1498
+                        },
+                        {
+                            "id": "array_3_rack_4_cell_11",
+                            "offset": 1499
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_0",
+                            "offset": 1500
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_1",
+                            "offset": 1501
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_2",
+                            "offset": 1502
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_3",
+                            "offset": 1503
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_4",
+                            "offset": 1504
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_5",
+                            "offset": 1505
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_6",
+                            "offset": 1506
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_7",
+                            "offset": 1507
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_8",
+                            "offset": 1508
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_9",
+                            "offset": 1509
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_10",
+                            "offset": 1510
+                        },
+                        {
+                            "id": "array_3_rack_5_cell_11",
+                            "offset": 1511
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_0",
+                            "offset": 1512
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_1",
+                            "offset": 1513
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_2",
+                            "offset": 1514
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_3",
+                            "offset": 1515
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_4",
+                            "offset": 1516
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_5",
+                            "offset": 1517
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_6",
+                            "offset": 1518
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_7",
+                            "offset": 1519
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_8",
+                            "offset": 1520
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_9",
+                            "offset": 1521
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_10",
+                            "offset": 1522
+                        },
+                        {
+                            "id": "array_3_rack_6_cell_11",
+                            "offset": 1523
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_0",
+                            "offset": 1524
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_1",
+                            "offset": 1525
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_2",
+                            "offset": 1526
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_3",
+                            "offset": 1527
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_4",
+                            "offset": 1528
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_5",
+                            "offset": 1529
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_6",
+                            "offset": 1530
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_7",
+                            "offset": 1531
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_8",
+                            "offset": 1532
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_9",
+                            "offset": 1533
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_10",
+                            "offset": 1534
+                        },
+                        {
+                            "id": "array_3_rack_7_cell_11",
+                            "offset": 1535
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_cell_volts_4_8_12",
+            "frequency": 2000,
+            "offset_time": 500,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1536,
+                    "number_of_registers": 96,
+                    "map": [
+                        {
+                            "id": "array_4_rack_0_cell_0",
+                            "offset": 1536
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_1",
+                            "offset": 1537
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_2",
+                            "offset": 1538
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_3",
+                            "offset": 1539
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_4",
+                            "offset": 1540
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_5",
+                            "offset": 1541
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_6",
+                            "offset": 1542
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_7",
+                            "offset": 1543
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_8",
+                            "offset": 1544
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_9",
+                            "offset": 1545
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_10",
+                            "offset": 1546
+                        },
+                        {
+                            "id": "array_4_rack_0_cell_11",
+                            "offset": 1547
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_0",
+                            "offset": 1548
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_1",
+                            "offset": 1549
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_2",
+                            "offset": 1550
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_3",
+                            "offset": 1551
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_4",
+                            "offset": 1552
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_5",
+                            "offset": 1553
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_6",
+                            "offset": 1554
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_7",
+                            "offset": 1555
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_8",
+                            "offset": 1556
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_9",
+                            "offset": 1557
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_10",
+                            "offset": 1558
+                        },
+                        {
+                            "id": "array_4_rack_1_cell_11",
+                            "offset": 1559
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_0",
+                            "offset": 1560
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_1",
+                            "offset": 1561
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_2",
+                            "offset": 1562
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_3",
+                            "offset": 1563
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_4",
+                            "offset": 1564
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_5",
+                            "offset": 1565
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_6",
+                            "offset": 1566
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_7",
+                            "offset": 1567
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_8",
+                            "offset": 1568
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_9",
+                            "offset": 1569
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_10",
+                            "offset": 1570
+                        },
+                        {
+                            "id": "array_4_rack_2_cell_11",
+                            "offset": 1571
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_0",
+                            "offset": 1572
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_1",
+                            "offset": 1573
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_2",
+                            "offset": 1574
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_3",
+                            "offset": 1575
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_4",
+                            "offset": 1576
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_5",
+                            "offset": 1577
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_6",
+                            "offset": 1578
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_7",
+                            "offset": 1579
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_8",
+                            "offset": 1580
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_9",
+                            "offset": 1581
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_10",
+                            "offset": 1582
+                        },
+                        {
+                            "id": "array_4_rack_3_cell_11",
+                            "offset": 1583
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_0",
+                            "offset": 1584
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_1",
+                            "offset": 1585
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_2",
+                            "offset": 1586
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_3",
+                            "offset": 1587
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_4",
+                            "offset": 1588
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_5",
+                            "offset": 1589
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_6",
+                            "offset": 1590
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_7",
+                            "offset": 1591
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_8",
+                            "offset": 1592
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_9",
+                            "offset": 1593
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_10",
+                            "offset": 1594
+                        },
+                        {
+                            "id": "array_4_rack_4_cell_11",
+                            "offset": 1595
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_0",
+                            "offset": 1596
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_1",
+                            "offset": 1597
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_2",
+                            "offset": 1598
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_3",
+                            "offset": 1599
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_4",
+                            "offset": 1600
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_5",
+                            "offset": 1601
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_6",
+                            "offset": 1602
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_7",
+                            "offset": 1603
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_8",
+                            "offset": 1604
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_9",
+                            "offset": 1605
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_10",
+                            "offset": 1606
+                        },
+                        {
+                            "id": "array_4_rack_5_cell_11",
+                            "offset": 1607
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_0",
+                            "offset": 1608
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_1",
+                            "offset": 1609
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_2",
+                            "offset": 1610
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_3",
+                            "offset": 1611
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_4",
+                            "offset": 1612
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_5",
+                            "offset": 1613
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_6",
+                            "offset": 1614
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_7",
+                            "offset": 1615
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_8",
+                            "offset": 1616
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_9",
+                            "offset": 1617
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_10",
+                            "offset": 1618
+                        },
+                        {
+                            "id": "array_4_rack_6_cell_11",
+                            "offset": 1619
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_0",
+                            "offset": 1620
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_1",
+                            "offset": 1621
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_2",
+                            "offset": 1622
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_3",
+                            "offset": 1623
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_4",
+                            "offset": 1624
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_5",
+                            "offset": 1625
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_6",
+                            "offset": 1626
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_7",
+                            "offset": 1627
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_8",
+                            "offset": 1628
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_9",
+                            "offset": 1629
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_10",
+                            "offset": 1630
+                        },
+                        {
+                            "id": "array_4_rack_7_cell_11",
+                            "offset": 1631
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_cell_volts_5_8_12",
+            "frequency": 2000,
+            "offset_time": 600,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1632,
+                    "number_of_registers": 96,
+                    "map": [
+                        {
+                            "id": "array_5_rack_0_cell_0",
+                            "offset": 1632
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_1",
+                            "offset": 1633
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_2",
+                            "offset": 1634
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_3",
+                            "offset": 1635
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_4",
+                            "offset": 1636
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_5",
+                            "offset": 1637
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_6",
+                            "offset": 1638
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_7",
+                            "offset": 1639
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_8",
+                            "offset": 1640
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_9",
+                            "offset": 1641
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_10",
+                            "offset": 1642
+                        },
+                        {
+                            "id": "array_5_rack_0_cell_11",
+                            "offset": 1643
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_0",
+                            "offset": 1644
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_1",
+                            "offset": 1645
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_2",
+                            "offset": 1646
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_3",
+                            "offset": 1647
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_4",
+                            "offset": 1648
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_5",
+                            "offset": 1649
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_6",
+                            "offset": 1650
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_7",
+                            "offset": 1651
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_8",
+                            "offset": 1652
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_9",
+                            "offset": 1653
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_10",
+                            "offset": 1654
+                        },
+                        {
+                            "id": "array_5_rack_1_cell_11",
+                            "offset": 1655
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_0",
+                            "offset": 1656
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_1",
+                            "offset": 1657
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_2",
+                            "offset": 1658
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_3",
+                            "offset": 1659
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_4",
+                            "offset": 1660
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_5",
+                            "offset": 1661
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_6",
+                            "offset": 1662
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_7",
+                            "offset": 1663
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_8",
+                            "offset": 1664
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_9",
+                            "offset": 1665
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_10",
+                            "offset": 1666
+                        },
+                        {
+                            "id": "array_5_rack_2_cell_11",
+                            "offset": 1667
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_0",
+                            "offset": 1668
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_1",
+                            "offset": 1669
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_2",
+                            "offset": 1670
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_3",
+                            "offset": 1671
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_4",
+                            "offset": 1672
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_5",
+                            "offset": 1673
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_6",
+                            "offset": 1674
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_7",
+                            "offset": 1675
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_8",
+                            "offset": 1676
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_9",
+                            "offset": 1677
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_10",
+                            "offset": 1678
+                        },
+                        {
+                            "id": "array_5_rack_3_cell_11",
+                            "offset": 1679
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_0",
+                            "offset": 1680
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_1",
+                            "offset": 1681
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_2",
+                            "offset": 1682
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_3",
+                            "offset": 1683
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_4",
+                            "offset": 1684
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_5",
+                            "offset": 1685
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_6",
+                            "offset": 1686
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_7",
+                            "offset": 1687
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_8",
+                            "offset": 1688
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_9",
+                            "offset": 1689
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_10",
+                            "offset": 1690
+                        },
+                        {
+                            "id": "array_5_rack_4_cell_11",
+                            "offset": 1691
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_0",
+                            "offset": 1692
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_1",
+                            "offset": 1693
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_2",
+                            "offset": 1694
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_3",
+                            "offset": 1695
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_4",
+                            "offset": 1696
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_5",
+                            "offset": 1697
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_6",
+                            "offset": 1698
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_7",
+                            "offset": 1699
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_8",
+                            "offset": 1700
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_9",
+                            "offset": 1701
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_10",
+                            "offset": 1702
+                        },
+                        {
+                            "id": "array_5_rack_5_cell_11",
+                            "offset": 1703
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_0",
+                            "offset": 1704
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_1",
+                            "offset": 1705
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_2",
+                            "offset": 1706
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_3",
+                            "offset": 1707
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_4",
+                            "offset": 1708
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_5",
+                            "offset": 1709
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_6",
+                            "offset": 1710
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_7",
+                            "offset": 1711
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_8",
+                            "offset": 1712
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_9",
+                            "offset": 1713
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_10",
+                            "offset": 1714
+                        },
+                        {
+                            "id": "array_5_rack_6_cell_11",
+                            "offset": 1715
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_0",
+                            "offset": 1716
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_1",
+                            "offset": 1717
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_2",
+                            "offset": 1718
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_3",
+                            "offset": 1719
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_4",
+                            "offset": 1720
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_5",
+                            "offset": 1721
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_6",
+                            "offset": 1722
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_7",
+                            "offset": 1723
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_8",
+                            "offset": 1724
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_9",
+                            "offset": 1725
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_10",
+                            "offset": 1726
+                        },
+                        {
+                            "id": "array_5_rack_7_cell_11",
+                            "offset": 1727
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_cell_temp_0_8_12",
+            "frequency": 2000,
+            "offset_time": 100,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1728,
+                    "number_of_registers": 96,
+                    "map": [
+                        {
+                            "id": "array_0_rack_0_cell_0_temp",
+                            "offset": 1728
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_1_temp",
+                            "offset": 1729
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_2_temp",
+                            "offset": 1730
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_3_temp",
+                            "offset": 1731
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_4_temp",
+                            "offset": 1732
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_5_temp",
+                            "offset": 1733
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_6_temp",
+                            "offset": 1734
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_7_temp",
+                            "offset": 1735
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_8_temp",
+                            "offset": 1736
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_9_temp",
+                            "offset": 1737
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_10_temp",
+                            "offset": 1738
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_11_temp",
+                            "offset": 1739
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_0_temp",
+                            "offset": 1740
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_1_temp",
+                            "offset": 1741
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_2_temp",
+                            "offset": 1742
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_3_temp",
+                            "offset": 1743
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_4_temp",
+                            "offset": 1744
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_5_temp",
+                            "offset": 1745
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_6_temp",
+                            "offset": 1746
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_7_temp",
+                            "offset": 1747
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_8_temp",
+                            "offset": 1748
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_9_temp",
+                            "offset": 1749
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_10_temp",
+                            "offset": 1750
+                        },
+                        {
+                            "id": "array_0_rack_1_cell_11_temp",
+                            "offset": 1751
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_0_temp",
+                            "offset": 1752
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_1_temp",
+                            "offset": 1753
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_2_temp",
+                            "offset": 1754
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_3_temp",
+                            "offset": 1755
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_4_temp",
+                            "offset": 1756
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_5_temp",
+                            "offset": 1757
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_6_temp",
+                            "offset": 1758
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_7_temp",
+                            "offset": 1759
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_8_temp",
+                            "offset": 1760
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_9_temp",
+                            "offset": 1761
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_10_temp",
+                            "offset": 1762
+                        },
+                        {
+                            "id": "array_0_rack_2_cell_11_temp",
+                            "offset": 1763
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_0_temp",
+                            "offset": 1764
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_1_temp",
+                            "offset": 1765
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_2_temp",
+                            "offset": 1766
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_3_temp",
+                            "offset": 1767
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_4_temp",
+                            "offset": 1768
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_5_temp",
+                            "offset": 1769
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_6_temp",
+                            "offset": 1770
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_7_temp",
+                            "offset": 1771
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_8_temp",
+                            "offset": 1772
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_9_temp",
+                            "offset": 1773
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_10_temp",
+                            "offset": 1774
+                        },
+                        {
+                            "id": "array_0_rack_3_cell_11_temp",
+                            "offset": 1775
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_0_temp",
+                            "offset": 1776
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_1_temp",
+                            "offset": 1777
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_2_temp",
+                            "offset": 1778
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_3_temp",
+                            "offset": 1779
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_4_temp",
+                            "offset": 1780
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_5_temp",
+                            "offset": 1781
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_6_temp",
+                            "offset": 1782
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_7_temp",
+                            "offset": 1783
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_8_temp",
+                            "offset": 1784
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_9_temp",
+                            "offset": 1785
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_10_temp",
+                            "offset": 1786
+                        },
+                        {
+                            "id": "array_0_rack_4_cell_11_temp",
+                            "offset": 1787
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_0_temp",
+                            "offset": 1788
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_1_temp",
+                            "offset": 1789
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_2_temp",
+                            "offset": 1790
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_3_temp",
+                            "offset": 1791
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_4_temp",
+                            "offset": 1792
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_5_temp",
+                            "offset": 1793
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_6_temp",
+                            "offset": 1794
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_7_temp",
+                            "offset": 1795
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_8_temp",
+                            "offset": 1796
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_9_temp",
+                            "offset": 1797
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_10_temp",
+                            "offset": 1798
+                        },
+                        {
+                            "id": "array_0_rack_5_cell_11_temp",
+                            "offset": 1799
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_0_temp",
+                            "offset": 1800
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_1_temp",
+                            "offset": 1801
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_2_temp",
+                            "offset": 1802
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_3_temp",
+                            "offset": 1803
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_4_temp",
+                            "offset": 1804
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_5_temp",
+                            "offset": 1805
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_6_temp",
+                            "offset": 1806
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_7_temp",
+                            "offset": 1807
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_8_temp",
+                            "offset": 1808
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_9_temp",
+                            "offset": 1809
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_10_temp",
+                            "offset": 1810
+                        },
+                        {
+                            "id": "array_0_rack_6_cell_11_temp",
+                            "offset": 1811
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_0_temp",
+                            "offset": 1812
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_1_temp",
+                            "offset": 1813
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_2_temp",
+                            "offset": 1814
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_3_temp",
+                            "offset": 1815
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_4_temp",
+                            "offset": 1816
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_5_temp",
+                            "offset": 1817
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_6_temp",
+                            "offset": 1818
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_7_temp",
+                            "offset": 1819
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_8_temp",
+                            "offset": 1820
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_9_temp",
+                            "offset": 1821
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_10_temp",
+                            "offset": 1822
+                        },
+                        {
+                            "id": "array_0_rack_7_cell_11_temp",
+                            "offset": 1823
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_cell_temp_1_8_12",
+            "frequency": 2000,
+            "offset_time": 200,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1824,
+                    "number_of_registers": 96,
+                    "map": [
+                        {
+                            "id": "array_1_rack_0_cell_0_temp",
+                            "offset": 1824
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_1_temp",
+                            "offset": 1825
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_2_temp",
+                            "offset": 1826
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_3_temp",
+                            "offset": 1827
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_4_temp",
+                            "offset": 1828
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_5_temp",
+                            "offset": 1829
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_6_temp",
+                            "offset": 1830
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_7_temp",
+                            "offset": 1831
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_8_temp",
+                            "offset": 1832
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_9_temp",
+                            "offset": 1833
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_10_temp",
+                            "offset": 1834
+                        },
+                        {
+                            "id": "array_1_rack_0_cell_11_temp",
+                            "offset": 1835
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_0_temp",
+                            "offset": 1836
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_1_temp",
+                            "offset": 1837
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_2_temp",
+                            "offset": 1838
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_3_temp",
+                            "offset": 1839
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_4_temp",
+                            "offset": 1840
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_5_temp",
+                            "offset": 1841
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_6_temp",
+                            "offset": 1842
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_7_temp",
+                            "offset": 1843
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_8_temp",
+                            "offset": 1844
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_9_temp",
+                            "offset": 1845
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_10_temp",
+                            "offset": 1846
+                        },
+                        {
+                            "id": "array_1_rack_1_cell_11_temp",
+                            "offset": 1847
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_0_temp",
+                            "offset": 1848
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_1_temp",
+                            "offset": 1849
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_2_temp",
+                            "offset": 1850
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_3_temp",
+                            "offset": 1851
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_4_temp",
+                            "offset": 1852
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_5_temp",
+                            "offset": 1853
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_6_temp",
+                            "offset": 1854
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_7_temp",
+                            "offset": 1855
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_8_temp",
+                            "offset": 1856
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_9_temp",
+                            "offset": 1857
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_10_temp",
+                            "offset": 1858
+                        },
+                        {
+                            "id": "array_1_rack_2_cell_11_temp",
+                            "offset": 1859
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_0_temp",
+                            "offset": 1860
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_1_temp",
+                            "offset": 1861
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_2_temp",
+                            "offset": 1862
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_3_temp",
+                            "offset": 1863
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_4_temp",
+                            "offset": 1864
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_5_temp",
+                            "offset": 1865
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_6_temp",
+                            "offset": 1866
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_7_temp",
+                            "offset": 1867
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_8_temp",
+                            "offset": 1868
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_9_temp",
+                            "offset": 1869
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_10_temp",
+                            "offset": 1870
+                        },
+                        {
+                            "id": "array_1_rack_3_cell_11_temp",
+                            "offset": 1871
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_0_temp",
+                            "offset": 1872
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_1_temp",
+                            "offset": 1873
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_2_temp",
+                            "offset": 1874
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_3_temp",
+                            "offset": 1875
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_4_temp",
+                            "offset": 1876
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_5_temp",
+                            "offset": 1877
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_6_temp",
+                            "offset": 1878
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_7_temp",
+                            "offset": 1879
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_8_temp",
+                            "offset": 1880
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_9_temp",
+                            "offset": 1881
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_10_temp",
+                            "offset": 1882
+                        },
+                        {
+                            "id": "array_1_rack_4_cell_11_temp",
+                            "offset": 1883
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_0_temp",
+                            "offset": 1884
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_1_temp",
+                            "offset": 1885
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_2_temp",
+                            "offset": 1886
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_3_temp",
+                            "offset": 1887
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_4_temp",
+                            "offset": 1888
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_5_temp",
+                            "offset": 1889
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_6_temp",
+                            "offset": 1890
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_7_temp",
+                            "offset": 1891
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_8_temp",
+                            "offset": 1892
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_9_temp",
+                            "offset": 1893
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_10_temp",
+                            "offset": 1894
+                        },
+                        {
+                            "id": "array_1_rack_5_cell_11_temp",
+                            "offset": 1895
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_0_temp",
+                            "offset": 1896
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_1_temp",
+                            "offset": 1897
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_2_temp",
+                            "offset": 1898
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_3_temp",
+                            "offset": 1899
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_4_temp",
+                            "offset": 1900
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_5_temp",
+                            "offset": 1901
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_6_temp",
+                            "offset": 1902
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_7_temp",
+                            "offset": 1903
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_8_temp",
+                            "offset": 1904
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_9_temp",
+                            "offset": 1905
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_10_temp",
+                            "offset": 1906
+                        },
+                        {
+                            "id": "array_1_rack_6_cell_11_temp",
+                            "offset": 1907
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_0_temp",
+                            "offset": 1908
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_1_temp",
+                            "offset": 1909
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_2_temp",
+                            "offset": 1910
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_3_temp",
+                            "offset": 1911
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_4_temp",
+                            "offset": 1912
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_5_temp",
+                            "offset": 1913
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_6_temp",
+                            "offset": 1914
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_7_temp",
+                            "offset": 1915
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_8_temp",
+                            "offset": 1916
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_9_temp",
+                            "offset": 1917
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_10_temp",
+                            "offset": 1918
+                        },
+                        {
+                            "id": "array_1_rack_7_cell_11_temp",
+                            "offset": 1919
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_cell_bal_0_1_48",
+            "frequency": 2000,
+            "offset_time": 100,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1920,
+                    "number_of_registers": 48,
+                    "map": [
+                        {
+                            "id": "array_0_rack_0_cell_0_temp",
+                            "offset": 1920
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_1_temp",
+                            "offset": 1921
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_2_temp",
+                            "offset": 1922
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_3_temp",
+                            "offset": 1923
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_4_temp",
+                            "offset": 1924
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_5_temp",
+                            "offset": 1925
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_6_temp",
+                            "offset": 1926
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_7_temp",
+                            "offset": 1927
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_8_temp",
+                            "offset": 1928
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_9_temp",
+                            "offset": 1929
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_10_temp",
+                            "offset": 1930
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_11_temp",
+                            "offset": 1931
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_12_temp",
+                            "offset": 1932
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_13_temp",
+                            "offset": 1933
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_14_temp",
+                            "offset": 1934
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_15_temp",
+                            "offset": 1935
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_16_temp",
+                            "offset": 1936
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_17_temp",
+                            "offset": 1937
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_18_temp",
+                            "offset": 1938
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_19_temp",
+                            "offset": 1939
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_20_temp",
+                            "offset": 1940
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_21_temp",
+                            "offset": 1941
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_22_temp",
+                            "offset": 1942
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_23_temp",
+                            "offset": 1943
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_24_temp",
+                            "offset": 1944
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_25_temp",
+                            "offset": 1945
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_26_temp",
+                            "offset": 1946
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_27_temp",
+                            "offset": 1947
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_28_temp",
+                            "offset": 1948
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_29_temp",
+                            "offset": 1949
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_30_temp",
+                            "offset": 1950
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_31_temp",
+                            "offset": 1951
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_32_temp",
+                            "offset": 1952
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_33_temp",
+                            "offset": 1953
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_34_temp",
+                            "offset": 1954
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_35_temp",
+                            "offset": 1955
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_36_temp",
+                            "offset": 1956
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_37_temp",
+                            "offset": 1957
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_38_temp",
+                            "offset": 1958
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_39_temp",
+                            "offset": 1959
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_40_temp",
+                            "offset": 1960
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_41_temp",
+                            "offset": 1961
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_42_temp",
+                            "offset": 1962
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_43_temp",
+                            "offset": 1963
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_44_temp",
+                            "offset": 1964
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_45_temp",
+                            "offset": 1965
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_46_temp",
+                            "offset": 1966
+                        },
+                        {
+                            "id": "array_0_rack_0_cell_47_temp",
+                            "offset": 1967
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

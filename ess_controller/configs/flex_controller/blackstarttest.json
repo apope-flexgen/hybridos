@@ -1,0 +1,271 @@
+{
+  "/system/notes_controls":{
+      "note00":" this is a concept only demo of using FlexPack configs to manage a process",
+      "note01": " open all breakers",
+      "note02": " init ess Blackstart",
+      "note03": " Energize 480v Bus",
+      "note04": " Close Inground Transformer",
+      "note05": " StartGenerator 1",
+      "note06": " StartGenerator 2",
+      "note07": " StartGenerator 3",
+      "note08": " Close BOP Transformer",
+      "note09": " Close A Smart Breaker",
+      "note10": " Connect 480V to 12KV Transformer",
+      "note11": " Close 12kV utility breaker",
+      "note12": " BlackStart Completed"
+  },
+
+  "/controls/ess":{
+            "openAllBreakers":{
+            "value":false,
+            "note00":"This is like an openAllBreakers push button, trigger it by writing a value to it",
+            "note01":" send the open command to each breaker and set a bit to flag an expected response",
+            "note02":" as each breaker responds it will reset the bit",
+            "note03":" if all the breakers respond the flag word will be zero",
+            "note04":"    use that to advance the control to the next step",
+            "note05":"    after a configurable time delay run a task that detects the non responsive breakers",
+            "note06":"    the remain bits set in the flag word are used to indicate which breakers did not respond",
+            "actions": {"onSet": [{"remap": [
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[8]","outValue":true},
+
+                { "inValue":true, "uri": "/controls/ess:breaker_52_M1","outValue":false},
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[0]","outValue":true},
+
+                { "inValue":true, "uri": "/controls/ess:breaker_52_M2","outValue":false},
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[1]","outValue":true},
+
+                { "inValue":true, "uri": "/controls/ess:breaker_52_G1","outValue":false},
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[2]","outValue":true},
+
+                { "inValue":true, "uri": "/controls/ess:breaker_52_G2","outValue":false},
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[3]","outValue":true},
+
+                { "inValue":true, "uri": "/controls/ess:breaker_52_G3","outValue":false},
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[4]","outValue":true},
+
+                { "inValue":true, "uri": "/controls/ess:breaker_52_D1","outValue":false},
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[5]","outValue":true},
+
+                { "inValue":true, "uri": "/controls/ess:breaker_52_D2","outValue":false},
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[6]","outValue":true},
+
+                { "inValue":true, "uri": "/controls/ess:breaker_52_M","outValue":false},
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[7]","outValue":true},
+
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[8]","outValue":false},
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[9]","outValue":false},
+
+                { "inValue":true, "uri": "/controls/ess:runBreakerTimeout","outValue":1},
+
+                { "inValue":true, "uri": "/controls/ess:openAllBreakers","outValue":false}
+
+                ]}
+            ]}
+        },
+        "checkBreakers":{
+            "value":0,
+            "note00":"When triggered this is supposed to test the value of open_all_breakers",
+            "note01":" if the value is 0 then do nothing ",
+            "note02":" if the value is non zero  then use enum to distribute faults ",
+            "debug":1,
+            "actions": {"onSet": [{"enum": [
+                { "shift":0, "mask":1,"inValue":1,"uri":"/alarms/ess:breaker_52_M1","outValue":true},
+                { "shift":1, "mask":1,"inValue":1,"uri":"/alarms/ess:breaker_52_M2","outValue":true},
+                { "shift":2, "mask":1,"inValue":1,"uri":"/alarms/ess:breaker_52_G1","outValue":true},
+                { "shift":3, "mask":1,"inValue":1,"uri":"/alarms/ess:breaker_52_G2","outValue":true},
+                { "shift":4, "mask":1,"inValue":1,"uri":"/alarms/ess:breaker_52_G3","outValue":true},
+                { "shift":5, "mask":1,"inValue":1,"uri":"/alarms/ess:breaker_52_G3","outValue":true},
+                { "shift":6, "mask":1,"inValue":1,"uri":"/alarms/ess:breaker_52_D1","outValue":true},
+                { "shift":7, "mask":1,"inValue":1,"uri":"/alarms/ess:breaker_52_D2","outValue":true},
+                { "shift":8, "mask":1,"inValue":1,"uri":"/alarms/ess:breaker_52_M","outValue":true},
+                ]}
+            ]}
+
+
+        },
+        "runBreakerTimeout":{
+            "value":0,
+            "note00":"This runs to complain about breakers not responding to close commands",
+            "note01":" set a value of 1 to run this ",
+            "note02":" set a value of 2 to stop this ",
+            "note03":" the scheduler just sends tNow to the targ uri ",
+            "note04":" RunScheduler, StopScheduler are new functions in FlexPack ",
+            
+            "uri":"/control/test:TestScheds",
+            "targ":"/control/ess:checkBreakers",
+            "after":5.0, 
+            "every":0.0, 
+            "offset":0.1, 
+            "debug":1,
+            "actions": {"onSet": [{"func": [
+                    { "inValue":1, "func":"RunScheduler","amap":"flex"},
+                    { "inValue":2, "func":"StopScheduler","amap":"flex"}
+                ]}
+            ]}
+        },
+        "InitEssBlackStart":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                { "inValue":true, "uri": "/remap/ess:EssBlackStart","outValue":0},
+                { "inValue":true, "uri": "/controls/ess:InitEssBlackStart","outValue":false}
+                ]}
+            ]}
+        },
+        "Energize480VBus":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                    { "inValue":true, "uri": "/controls/ess:breaker_480VBus","outValue":true},
+                    { "inValue":true, "uri": "/controls/ess:Energize480Bus","outValue":false}
+                    ]}]}
+        },
+        "CloseInGroundTransformer":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                    { "inValue":true, "uri": "/controls/ess:inground_transformer","outValue":true},
+                    { "inValue":true, "uri": "/controls/ess:CloseInGroundTransformer","outValue":false}
+                    ]}]}
+        },
+        "StartGenerator1":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                   { "inValue":true, "uri": "/controls/ess:Generator1Cmd","outValue":true},
+                   { "inValue":true, "uri": "/controls/ess:StartGenerator1","outValue":false}
+                   ]}]}
+        },
+        "StartGenerator2":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                   { "inValue":true, "uri": "/controls/ess:Generator2Cmd","outValue":true},
+                   { "inValue":true, "uri": "/controls/ess:StartGenerator2","outValue":false}
+                   ]}]}
+        },
+        "StartGenerator3":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                   { "inValue":true, "uri": "/controls/ess:Generator3Cmd","outValue":true},
+                   { "inValue":true, "uri": "/controls/ess:StartGenerator3","outValue":false}
+                   ]}]}
+        },
+        "CloseBOPTransformer":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                   { "inValue":true, "uri": "/controls/ess:bop_transformer","outValue":true},
+                   { "inValue":true, "uri": "/controls/ess:CloseBOPTransformer","outValue":false}
+                   ]}]}
+        },
+        "CloseSmartBreaker":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                   { "inValue":true, "uri": "/controls/ess:smart_breaker","outValue":true},
+                   { "inValue":true, "uri": "/controls/ess:CloseSmartBreaker","outValue":false}
+                   ]}]}
+        },
+        "Connect480Vto12kV":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                   { "inValue":true, "uri": "/controls/ess:connect_480_12kV","outValue":true},
+                   { "inValue":true, "uri": "/controls/ess:Connect480Vto12kV","outValue":false}
+                   ]}]}
+        },
+        "Close12kVBreaker":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                   { "inValue":true, "uri": "/controls/ess:12kVbreaker","outValue":true},
+                   { "inValue":true, "uri": "/controls/ess:Close12KbBreaker","outValue":false}
+                   ]}
+                ]}
+        },
+        "BlackStartCompleted":{
+            "value":false
+        },
+        "open_all_breakers":{
+            "value":0,
+            "actions": {"onSet": [{"remap": [
+                { "inValue":0, "uri": "/controls/ess:runBreakerTimeout", "outValue":2},
+                { "inValue":0, "uri": "/controls/ess:InitEssBlackStart","outValue":true},
+                { "inValue":0, "uri": "/notice/ess:OpenAllBreakersCompleted","outValue":true},
+                { "inValue":0, "uri": "/notice/ess:OpenAllBreakersCompleted1"},
+                { "inValue":0, "uri": "/controls/ess:open_all_breakers[9]","outValue":true},
+                { "inValue":512, "uri": "/notice/ess:OpenAllBreakersCompleted2","outValue":true}
+                ]}
+            ]}
+        }
+    },
+    "/status/ess": {
+        "breaker_52_M1_open":{
+        "value":false,
+        "actions": {"onSet": [{"remap": [
+            { "inValue":true, "uri": "/controls/ess:open_all_breakers[0]","outValue":false}
+            ]}]}
+        },
+        "breaker_52_M2_open":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[1]","outValue":false}
+                ]}]}
+        },
+        "breaker_52_G1_open":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[2]","outValue":false}
+                ]}]}
+        },
+        "breaker_52_G2_open":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[3]","outValue":false}
+                ]}]}
+        },
+        "breaker_52_G3_open":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[4]","outValue":false}
+                ]}]}
+        },
+        "breaker_52_D1_open":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[5]","outValue":false}
+                ]}]}
+        },
+        "breaker_52_D2_open":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[6]","outValue":false}
+                ]}]}
+        },
+        "breaker_52_M_open":{
+            "value":false,
+            "actions": {"onSet": [{"remap": [
+                { "inValue":true, "uri": "/controls/ess:open_all_breakers[7]","outValue":false}
+                ]}]}
+        }
+    },
+    "/control/test2":{
+      "TestSched": {
+        "value":22,
+        "targ":"/control/targs:TestTarg",
+        "debug":0
+      }  
+    },    
+    "/system/commands":{
+        "run":{
+            "value":22,
+            "uri":"/control/test:TestSchedss",
+            "targ":"/control/targs:TestTarg",
+            "every":2.0, 
+            "offset":0.1, 
+            "debug":1
+        }
+    },
+    "/control/test":{
+        "TestSched": {
+          "value":22,
+          "targ":"/control/targs:TestTarg",
+          "debug":0
+        }  
+      }    
+
+}
+
+

@@ -1,0 +1,125 @@
+{
+    "/schedule/wake_monitor/##RACK_ID##": {
+        "/controls/##RACK_ID##:EnableRack":           { "enable": true, "rate":0.1, "amap": "##RACK_ID##", "func":"HandleCmd"},
+        "/controls/##RACK_ID##:DisableRack":          { "enable": true, "rate":0.1, "amap": "##RACK_ID##", "func":"HandleCmd"},
+        "/controls/##RACK_ID##:VerifyRackEnabled":    { "enable": true, "rate":0.1, "amap": "##RACK_ID##", "func":"HandleCmd"},
+        "/controls/##RACK_ID##:VerifyRackDisabled":   { "enable": true, "rate":0.1, "amap": "##RACK_ID##", "func":"HandleCmd"}
+    },
+
+    "/controls/##RACK_ID##": {
+        "EnableRack": {
+            "value": 1,
+            "note": "Enable command to send to battery rack if the rack is disabled and the dc contactors are opened",
+            "cmdVar": "/components/##BMS_ID##_##RACK_ID##:rack_enable",
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 3,
+            "variable1": "/status/##RACK_ID##:RackEnableStatus",
+            "variable2": "/status/##RACK_ID##:DCClosed",
+            "variable3": "/status/##RACK_ID##:FaultCnt",
+            "useExpr": true,
+            "expression": "not {1} and not {2} and {3} <= 0",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "##RACK_ID##"}]}]
+            }
+        },
+        "DisableRack": {
+            "value": 2,
+            "note": "Disable command to send to battery rack if the rack is enabled and the dc contactors are opened",
+            "cmdVar": "/components/##BMS_ID##_##RACK_ID##:rack_enable",
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 3,
+            "variable1": "/status/##RACK_ID##:RackEnableStatus",
+            "variable2": "/status/##RACK_ID##:DCClosed",
+            "variable3": "/status/##RACK_ID##:FaultCnt",
+            "useExpr": true,
+            "expression": "{1} and not {2} and {3} <= 0",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "##RACK_ID##"}]}]
+            }
+        },
+
+        "VerifyRackEnabled": {
+            "value": 0,
+            "note": "Verify that the battery rack is now enabled when the enable rack command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/##RACK_ID##:RackEnableStatus",
+            "useExpr": true,
+            "expression": "{1}",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "##RACK_ID##"}]}]
+            }
+        },
+        "VerifyRackDisabled": {
+            "value": 0,
+            "note": "Verify that the battery rack is now disabled when the disable rack command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/##RACK_ID##:RackEnableStatus",
+            "useExpr": true,
+            "expression": "not {1}",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "##RACK_ID##"}]}]
+            }
+        }
+    },
+
+    "/status/##RACK_ID##": {
+        "EnableRackSuccess": {
+            "value": false,
+            "note": "Validation variable is set if the command value in /controls/bms:EnableRack is successfully/unsuccessfully set",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/##RACK_ID##:VerifyRackEnabled@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/##RACK_ID##:VerifyRackEnabled",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/##RACK_ID##:enable_cmd",                     "outValue": "Failed to send/verify enable command (1) to battery rack"}
+                    ]
+                }]
+            }
+        },
+        "DisableRackSuccess": {
+            "value": false,
+            "note": "Validation variable is set if the command value in /controls/bms:DisableRack is successfully/unsuccessfully set",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/##RACK_ID##:VerifyRackDisabled@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/##RACK_ID##:VerifyRackDisabled",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/##RACK_ID##:disable_cmd",                     "outValue": "Failed to send/verify disable command (2) to battery rack"}
+                    ]
+                }]
+            }
+        },
+        "VerifyRackEnabledSuccess": {
+            "value": false,
+            "note": "If the battery rack failed to transition to enabled state after an elasped time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/##RACK_ID##:enable_failure", "outValue": "Failed to enable battery rack"}
+                    ]
+                }]
+            }
+        },
+        "VerifyRackDisabledSuccess": {
+            "value": false,
+            "note": "If the battery rack failed to transition to disabled state after an elasped time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/##RACK_ID##:disable_failure", "outValue": "Failed to disable battery rack"}
+                    ]
+                }]
+            }
+        }
+    }
+}

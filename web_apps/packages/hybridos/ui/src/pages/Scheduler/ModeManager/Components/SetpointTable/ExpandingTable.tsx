@@ -1,6 +1,7 @@
-import { ThemeType, MuiButton } from '@flexgen/storybook';
+/* eslint-disable */
+// TODO: fix lint
+import { ThemeType, MuiButton, Typography } from '@flexgen/storybook';
 import {
-  Typography,
   Table,
   TableBody,
   TableCell,
@@ -9,17 +10,23 @@ import {
   TableHead,
   Paper,
 } from '@mui/material';
-import React from 'react';
-import { headerSx } from 'src/pages/Scheduler/ModeManager/Helpers';
+import React, { useEffect, useState } from 'react';
+import { validateURI } from 'shared/functions/uriValidation';
 import { Setpoints, CreateButtonLabel } from 'src/pages/Scheduler/ModeManager/Types';
 import { useTheme } from 'styled-components';
 import SetpointRow from './SetpointRow';
+import {
+  expandingTableStyles as styles,
+  expandingTableHeaderSx,
+} from 'src/pages/Scheduler/ModeManager/Styles';
 
 export interface ExpandingTableProps {
-  type?: Setpoints
-  setpoint: any
-  updateSetpoint: any
-  addSetpoint: (type: any) => void
+  type?: Setpoints;
+  setpoint: any;
+  updateSetpoint: any;
+  addSetpoint: (type: any) => void;
+  setSetpointError: (newValue: boolean) => void;
+  disableModeManager: boolean;
 }
 
 const ExpandingTable: React.FC<ExpandingTableProps> = ({
@@ -27,23 +34,53 @@ const ExpandingTable: React.FC<ExpandingTableProps> = ({
   setpoint,
   updateSetpoint,
   addSetpoint,
+  setSetpointError,
+  disableModeManager,
 }: ExpandingTableProps) => {
   const theme = useTheme() as ThemeType;
-  const headerStyles = headerSx(theme);
+  const headerStyles = expandingTableHeaderSx(theme);
+  const [duplicateName, setDuplicateName] = useState<boolean>(false);
+
+  useEffect(() => {
+    const nameSet = new Set<string>();
+
+    if (setpoint) {
+      for (const obj of setpoint) {
+        if (nameSet.has(obj.name.toLowerCase())) setDuplicateName(true);
+        else setDuplicateName(false);
+        nameSet.add(obj.name.toLowerCase());
+        if (
+          !obj.name ||
+          !obj.uri ||
+          !obj.type ||
+          obj.value === undefined ||
+          obj.value === '' ||
+          !validateURI(obj.uri) ||
+          duplicateName
+        )
+        setSetpointError(true);
+        else if (!duplicateName && validateURI(obj.uri)) setSetpointError(false);
+      }
+    }
+  }, [setpoint]);
+
   return (
-    <TableContainer component={Paper} sx={{ width: '60%', overflow: 'none' }}>
+    <TableContainer component={Paper} sx={styles.container}>
       <Table>
-        <TableHead style={setpoint?.length > 0 ? undefined : headerStyles}>
+        <TableHead style={headerStyles}>
           <TableCell>
-            <Typography variant="h3">
-              {setpoint?.length > 0 ? `Mode ${type}` : `No ${type} yet`}
-            </Typography>
+            <Typography
+              variant='bodyLBold'
+              text={setpoint?.length > 0 ? `Mode ${type}` : `No ${type} yet`}
+            />
           </TableCell>
           <TableCell />
         </TableHead>
         <TableBody>
           {setpoint?.map((data: any) => (
             <SetpointRow
+              disableModeManager={disableModeManager}
+              duplicateName={duplicateName}
               key={data.id}
               setpoint={data}
               type={type}
@@ -51,14 +88,15 @@ const ExpandingTable: React.FC<ExpandingTableProps> = ({
             />
           ))}
         </TableBody>
-        <TableFooter sx={{ display: 'flex', alignItems: 'center' }}>
-          <TableCell sx={{ borderBottom: 'none' }}>
+        <TableFooter sx={styles.footer.main}>
+          <TableCell sx={styles.footer.cell}>
             <MuiButton
-              color="primary"
+              disabled={disableModeManager}
+              color='primary'
               label={CreateButtonLabel(type)}
               onClick={() => addSetpoint(type)}
-              startIcon="Add"
-              variant="text"
+              startIcon='Add'
+              variant='text'
             />
           </TableCell>
         </TableFooter>

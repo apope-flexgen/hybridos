@@ -6,6 +6,7 @@
 
 #include "site_manager_test.h"
 #include "asset_manager_test.h"
+#include "fims_object_test.h"
 #include "utils_test.h"
 
 int test_main(int argc, char **argv)

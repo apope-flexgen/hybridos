@@ -1,0 +1,56 @@
+{
+    "system":   {   
+    "name":"Sungrow Local Controller",       
+    "protocol": "Modbus TCP",       
+    "id": "Sungrow_Local_Controller_04",       
+    "ip_address": "0.0.0.0",       
+    "port": 513    
+    },    
+    "registers":     {      
+        "input_registers":       
+        [          
+            { 
+                "name":"start_stop","id":"start_stop",
+                "offset":10056,"scale": 10.000000, 
+                "uri":"/components/ess_04_hs" },
+            {
+                "name":"reset","id":"reset",
+                "offset":10057,"scale": 10.000000, 
+                "uri":"/components/ess_04_hs" },
+            {
+                "name":"power_mode","id":"power_mode",
+                "offset":10058,"scale": 10.000000, 
+                "uri":"/components/ess_04_hs" },
+            {
+                "name":"standby_mode","id":"standby_mode",
+                "offset":10059,"scale": 10.000000, 
+                "uri":"/components/ess_04_hs" }
+                        
+            
+        ],
+        "holding_registers":       
+        [          
+            {
+
+                "name":"voltage","id": "voltage",
+                "offset":10053,
+                 "uri":"/components/ess_04_hs" 
+            },   
+            {
+                "name": "frequency","id": "frequency",
+                "offset":10054,
+                 "uri":"/components/ess_04_hs" 
+            },   
+            {
+                "name": "chargeable_power","id": "chargeable_power",
+                "offset":10055,
+                 "uri":"/components/ess_04_hs" 
+            },  
+            {
+                "name":"voltage","id": "voltage",
+                "offset":10056,
+                 "uri":"/components/ess_04_hs" 
+            }
+        ]    
+    }
+}

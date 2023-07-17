@@ -1,0 +1,258 @@
+{
+    "xfileInfo": {
+        "sourceFileName": "TX10_SEL_735_Modbus.xlsx",
+        "sourceFileCreated": "2020-01-02T21:16:38.000Z",
+        "sourceFileLastModified": "2020-07-12T21:17:01.000Z",
+        "sourceFileCreatedBy": "Microsoft Office User",
+        "sourceFileLastModifiedBy": "jcalcagni",
+        "outputFileName": "sel_735.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2020-07-12T21:02:59.884Z"
+    },
+    "xsystem": {
+        "name": "SEL 735 Power Meter",
+        "protocol": "Modbus TCP",
+        "version": "v6.9.02",
+        "id": "sel_735",
+        "ip_address": "192.168.114.21",
+        "port": 502,
+        "device_id": 1
+    },
+    "connection": {
+        "name": "SEL 735 Power Meter",
+        "ip_address": "192.168.114.21",
+        "port": 502,
+        "device_id": 1
+    },
+    "components": [
+        {
+            "id": "sel_735",
+            "frequency": 1000,
+            "offset_time": 0,
+            "xheartbeat_enabled": true,
+            "xcomponent_heartbeat_read_uri": "life_signal",
+            "xcomponent_heartbeat_write_uri": "life",
+            "xmodbus_heartbeat_timeout_ms": 1000,
+            "add_timings":true,
+            "xcomponent_heartbeat_timeout_ms": 1000,
+
+    "registers": [
+        {
+            "type": "Holding Registers",
+            "starting_offset": 900,
+            "number_of_registers": 1,
+            "map": [
+                {
+                    "id": "frequency",
+                    "offset": 900,
+                    "size": 1,
+                    "scale": 100,
+                    "name": "FREQUENCY",
+                    "signed": true
+                }
+            ]
+		},
+		{
+            "type": "Holding Registers",
+            "starting_offset": 1000,
+            "number_of_registers": 48,
+            "map": [
+                {
+                    "id": "kwh_delivered",
+                    "offset": 1000,
+                    "size": 2,
+                    "scale": 10,
+                    "name": "WH3_DEL_UC",
+                    "signed": true
+                },
+                {
+                    "id": "kwh_received",
+                    "offset": 1002,
+                    "size": 2,
+                    "scale": 10,
+                    "name": "WH3_REC_UC",
+                    "signed": true
+                },
+                {
+                    "id": "kVARh_delivered",
+                    "offset": 1004,
+                    "size": 2,
+                    "scale": 10,
+                    "name": "QH3_DEL_UC",
+                    "signed": true
+                },
+                {
+                    "id": "kVARh_received",
+                    "offset": 1006,
+                    "size": 2,
+                    "scale": 10,
+                    "name": "QH3_REC_UC",
+                    "signed": true
+                },
+                {
+                    "id": "voltage_l1",
+                    "offset": 1008,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "VA",
+                    "signed": true
+                },
+                {
+                    "id": "voltage_l2",
+                    "offset": 1010,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "VB",
+                    "signed": true
+                },
+                {
+                    "id": "voltage_l3",
+                    "offset": 1012,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "VB",
+                    "signed": true
+                },
+                {
+                    "id": "thd_current_l1",
+                    "offset": 1014,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "THDIA",
+                    "signed": true
+                },
+                {
+                    "id": "thd_current_l2",
+                    "offset": 1016,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "THDIB",
+                    "signed": true
+                },
+                {
+                    "id": "thd_current_l3",
+                    "offset": 1018,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "THDIC",
+                    "signed": true
+                },
+                {
+                    "id": "thd_voltage_l1",
+                    "offset": 1020,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "THDVA",
+                    "signed": true
+                },
+                {
+                    "id": "thd_voltage_l2",
+                    "offset": 1022,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "THDVB",
+                    "signed": true
+                },
+                {
+                    "id": "thd_voltage_l3",
+                    "offset": 1024,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "THDVC",
+                    "signed": true
+                },
+                {
+                    "id": "current_l1",
+                    "offset": 1026,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "IA",
+                    "signed": true
+                },
+                {
+                    "id": "current_l2",
+                    "offset": 1028,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "IB",
+                    "signed": true
+                },
+                {
+                    "id": "current_l3",
+                    "offset": 1030,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "IC",
+                    "signed": true
+                },
+                {
+                    "id": "current_n",
+                    "offset": 1032,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "IN",
+                    "signed": true
+                },
+                {
+                    "id": "active_power",
+                    "offset": 1034,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "W3_UC",
+                    "signed": true
+                },
+                {
+                    "id": "reactive_power",
+                    "offset": 1036,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "Q3_UC",
+                    "signed": true
+                },
+                {
+                    "id": "apparent_power",
+                    "offset": 1038,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "U3",
+                    "signed": true
+                },
+                {
+                    "id": "voltage_l1_l2",
+                    "offset": 1040,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "VAB",
+                    "signed": true
+                },
+                {
+                    "id": "voltage_l2_l3",
+                    "offset": 1042,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "VBC",
+                    "signed": true
+                },
+                {
+                    "id": "voltage_l3_l1",
+                    "offset": 1044,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "VCA",
+                    "signed": true
+                },
+                {
+                    "id": "power_factor",
+                    "offset": 1046,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "PFT3",
+                    "signed": true
+                }
+            ]
+        }
+    ]
+}
+]
+}
+

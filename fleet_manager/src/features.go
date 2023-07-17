@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fims"
 	"fmt"
-	"strings"
 )
 
 // featureStruct contains a field for each type of feature
@@ -16,7 +15,7 @@ type featureStruct struct {
 // The master object for all features.
 var features featureStruct = featureStruct{
 	caisoAds: nil,
-	ercotAs: ercotAsFeature{},
+	ercotAs:  ercotAsFeature{},
 }
 
 // Configures all features
@@ -86,7 +85,7 @@ func handleFeaturesSet(msg fims.FimsMsg) error {
 	}
 
 	switch msg.Frags[2] {
-	case caisoAdsId: // /fleet/features/caisoAds
+	case caisoAdsId: // /fleet/features/caiso_ads
 		err := handleCaisoSet(msg)
 		if err != nil {
 			return fmt.Errorf("failed to handle CAISO ADS SET: %w", err)
@@ -104,16 +103,21 @@ func handleFeaturesSet(msg fims.FimsMsg) error {
 
 // Endpoint for any GETs to a URI beginning in /fleet/features.
 func handleFeaturesGet(msg fims.FimsMsg) error {
-	switch {
-	//sends all features
-	case msg.Uri == "/fleet/features":
+	if msg.Nfrags < 3 {
 		return f.SendSet(msg.Replyto, "", features.buildObj())
-	//ERCOT Ancillary Services specific
-	case strings.HasPrefix(msg.Uri, "/fleet/features/ercotAs"):
-		return features.ercotAs.handleGet(msg)
-	// CAISO specific
-	case msg.Uri == "/fleet/features/caisoAds/latestBatch":
-		return sendLatestBatchResponse(msg.Replyto)
+	}
+
+	switch msg.Frags[2] {
+	case ercotAsId:
+		if err := features.ercotAs.handleGet(msg); err != nil {
+			return fmt.Errorf("failed to handle ERCOT GET: %w", err)
+		}
+		return nil
+	case caisoAdsId:
+		if err := features.caisoAds.handleGet(msg); err != nil {
+			return fmt.Errorf("failed to handle CAISO GET: %w", err)
+		}
+		return nil
 	default:
 		return fmt.Errorf("URI is not valid GET endpoint; does not correspond to any supported features")
 	}
@@ -152,8 +156,6 @@ func (fStruct *featureStruct) update() {
 }
 
 func publishFeatures() {
-	if features.caisoAds != nil {
-		features.caisoAds.publish()
-	}
+	features.caisoAds.publish()
 	features.ercotAs.publish()
 }

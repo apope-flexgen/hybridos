@@ -1,8 +1,8 @@
 export interface SiteAdmins {
-    _id: string
-    password: PasswordSettings
-    radius: RadiusSettings
-    __v: number
+  _id: string;
+  password: PasswordSettings;
+  radius: RadiusSettings;
+  __v: number;
 }
 
 export interface PasswordSettings {

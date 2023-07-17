@@ -1,0 +1,1142 @@
+{
+    "fileInfo": {
+        "sourceFileName": "BRP_FPS_FM_CommServer.xlsx",
+        "sourceFileCreated": "2020-06-26T17:11:50.000Z",
+        "sourceFileLastModified": "2020-07-01T17:17:32.000Z",
+        "sourceFileCreatedBy": "Administrator",
+        "sourceFileLastModifiedBy": "pmiller",
+        "outputFileName": "BRP_FM_CommServer.json",
+        "outputFileType": "dnp3",
+        "outputFileCreated": "2020-07-01T17:18:16.807Z"
+    },
+    "system": {
+        "name": "FlexGen Fleet Manager",
+        "protocol": "DNP3",
+        "version": "0.4",
+        "id": "outstation",
+        "ip_address2": "10.1.1.5",
+        "ip_address": "0.0.0.0",
+        "local_uri": "/localos",
+        "port": 20000,
+        "frequency": 10000,
+"debug":1,
+        "useVindex":true,
+		"xstation_address": 10,
+		"xmaster_address": 200
+    },
+    "registers": [
+        {
+            "dnp3_type": "AnOPF32",
+            "starting_offset": 100,
+            "number_of_registers": 51,
+            "map": [
+                {
+                    "id": "gen_ns_responsibility",
+                    "offset": 100,
+                    "name": "Generation Non-Spin Responsibility",
+                    "float": true,
+                    "uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_ns_requirement",
+                    "offset": 101,
+                    "name": "Generation Non-Spin Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_ns_schedule",
+                    "offset": 102,
+                    "name": "Generation Non-Spin Schedule",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_reg_down_responsibility",
+                    "offset": 103,
+                    "name": "Generation Regulation Down Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_reg_down_requirement",
+                    "offset": 104,
+                    "name": "Generation Regulation Down Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_reg_down_participation",
+                    "offset": 105,
+                    "name": "Generation Regulation Down Participation Factor",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_rrs_responsibility",
+                    "offset": 106,
+                    "name": "Generation Responsive Reserve Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_rrs_requirement",
+                    "offset": 107,
+                    "name": "Generation Responsive Reserve Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_rrs_schedule",
+                    "offset": 108,
+                    "name": "Generation Responsive Reserve Schedule",
+                    "float": true,
+                    "OPvar": 1,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_reg_up_responsibility",
+                    "offset": 109,
+                    "name": "Generation Regulation Up Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_reg_up_requirement",
+                    "offset": 110,
+                    "name": "Generation Regulation Up Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_reg_up_participation_factor",
+                    "offset": 111,
+                    "name": "Generation Regulation Up Participation Factor",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_frrs_down_resp",
+                    "offset": 112,
+                    "name": "Generation FRRS Down Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_frrs_down_requirement",
+                    "offset": 113,
+                    "name": "Generation FRRS Down Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_frrs_down_participation_factor",
+                    "offset": 114,
+                    "name": "Generation FRRS Down Participation Factor",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_frrs_up_responsibility",
+                    "offset": 115,
+                    "name": "Generation FRRS Up Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_frrs_up_requirment",
+                    "offset": 116,
+                    "name": "Generation FRRS Up Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_frrs_up_participation_factor",
+                    "offset": 117,
+                    "name": "Generation FRRS Up Participation Factor",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_lmp",
+                    "offset": 118,
+                    "name": "Generation Locational Marginal Pricing",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_basepoint",
+                    "offset": 119,
+                    "name": "Generation Base Point",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_updated_basepoint",
+                    "offset": 120,
+                    "name": "Generation Updated Desired Base Point",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_ns_responsibility",
+                    "offset": 130,
+                    "name": "Controllable Load Non-Spin Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_ns_requirement",
+                    "offset": 131,
+                    "name": "Controllable Load Non-Spin Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_ns_schedule",
+                    "offset": 132,
+                    "name": "Controllable Load Non-Spin Schedule",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_reg_down_responsibility",
+                    "offset": 133,
+                    "name": "Controllable Load Regulation Down Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_reg_down_requirement",
+                    "offset": 134,
+                    "name": "Controllable Load Regulation Down Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_reg_down_participation",
+                    "offset": 135,
+                    "name": "Controllable Load Regulation Down Participation Factor",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_rrs_responsibility",
+                    "offset": 136,
+                    "name": "Controllable Load Responsive Reserve Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_rrs_requirement",
+                    "offset": 137,
+                    "name": "Controllable Load Responsive Reserve Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_rrs_schedule",
+                    "offset": 138,
+                    "name": "Controllable Load Responsive Reserve Schedule",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_reg_up_responsibility",
+                    "offset": 139,
+                    "name": "Controllable Load Regulation Up Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_reg_up_requirement",
+                    "offset": 140,
+                    "name": "Controllable Load Regulation Up Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_reg_up_participation_factor",
+                    "offset": 141,
+                    "name": "Controllable Load Regulation Up Participation Factor",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_frrs_down_resp",
+                    "offset": 142,
+                    "name": "Controllable Load FRRS Down Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_frrs_down_requirement",
+                    "offset": 143,
+                    "name": "Controllable Load FRRS Down Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_frrs_down_participation_factor",
+                    "offset": 144,
+                    "name": "Controllable Load FRRS Down Participation Factor",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_frrs_up_responsibility",
+                    "offset": 145,
+                    "name": "Controllable Load FRRS Up Responsibility",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_frrs_up_requirment",
+                    "offset": 146,
+                    "name": "Controllable Load FRRS Up Requirement",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_frrs_up_participation_factor",
+                    "offset": 147,
+                    "name": "Controllable Load FRRS Up Participation Factor",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_lmp",
+                    "offset": 148,
+                    "name": "Controllable Load Locational Marginal Pricing",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_basepoint",
+                    "offset": 149,
+                    "name": "Controllable Load Base Point",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_updated_basepoint",
+                    "offset": 150,
+                    "name": "Controllable Load Updated Desired Base Point",
+                    "float": true,
+					"uri": "/metrics/alvin"
+                }
+            ]
+        },
+        {
+            "dnp3_type": "analog",
+            "starting_offset": 100,
+            "number_of_registers": 38,
+            "map": [
+                {
+                    "id": "gen_net_mw",
+                    "offset": 100,
+                    "name": "Generation NET Megawatts",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_net_mvar",
+                    "offset": 101,
+                    "name": "Generation NET Megavars",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_gross_mw",
+                    "offset": 102,
+                    "name": "Generation Gross Megawatts",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_gross_mvar",
+                    "offset": 103,
+                    "name": "Generation Gross Megavars",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_normal_up_ramp_rate",
+                    "offset": 104,
+                    "name": "Generation Normal Up Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_normal_down_ramp_rate",
+                    "offset": 105,
+                    "name": "Generation Normal Down Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_emergency_up_ramp_rate",
+                    "offset": 106,
+                    "name": "Generation Emergency Up Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_emergency_down_ramp_rate",
+                    "offset": 107,
+                    "name": "Generation Emercency Down Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_max_operating_soc",
+                    "offset": 108,
+                    "name": "Generation Maximum Operating State of Charge",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_min_operating_soc",
+                    "offset": 109,
+                    "name": "Generation Minimum Operating State of Charge",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_soc",
+                    "offset": 110,
+                    "name": "Generation State of Charge",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_max_discharge_mw",
+                    "offset": 111,
+                    "name": "Generation Maximum Operating Discharge Power Limit",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_max_charge_mw",
+                    "offset": 112,
+                    "name": "Generation Maximum Operating Charge Power Limit",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_voltage",
+                    "offset": 115,
+                    "name": "Generation Voltage",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_aux_mw",
+                    "offset": 116,
+                    "name": "Generation Plant Auxiliary Load MW",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_aux_mvar",
+                    "offset": 117,
+                    "name": "Generation Plant Auxiliary Load MVAR",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_net_mw",
+                    "offset": 130,
+                    "name": "Controllable Load Net Load MW",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_net_mvar",
+                    "offset": 131,
+                    "name": "Controllable Load Net Load MVAR",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_scheduled_mw",
+                    "offset": 132,
+                    "name": "Controllable Load Scheduled Power Consumption",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_scheduled_mw_2hr",
+                    "offset": 133,
+                    "name": "Controllable Load Scheduled Power Consumption +2 hours",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_normal_up_ramp_rate",
+                    "offset": 134,
+                    "name": "Controllable Load Normal Up Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_normal_down_ramp_rate",
+                    "offset": 135,
+                    "name": "Controllable Load Normal Down Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_emergency_up_ramp_rate",
+                    "offset": 136,
+                    "name": "Controllable Load Emercency Up Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_emergency_down_ramp_rate",
+                    "offset": 137,
+                    "name": "Controllable Load Emercency Down Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/alvin"
+                }
+            ]
+        },
+        {
+            "dnp3_type": "binary",
+            "starting_offset": 100,
+            "number_of_registers": 31,
+            "map": [
+                {
+                    "id": "gen_ds1_status",
+                    "offset": 100,
+                    "name": "Generation Resource Switches",
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_52m_status",
+                    "offset": 101,
+                    "name": "Generation Resource Breaker Status",
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_pseudo_switch_status",
+                    "offset": 102,
+                    "name": "Generation Virtual Breaker Status - PSEUDO GEN",
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_pseudo_switch_status",
+                    "offset": 130,
+                    "name": "Controllable Load Virtual Breaker Status - PSEUDO LOAD",
+					"uri": "/metrics/alvin"
+                }
+            ]
+        },
+        {
+            "dnp3_type": "CROB",
+            "starting_offset": 100,
+            "number_of_registers": 34,
+            "map": [
+                {
+                    "id": "gen_curtailment_flag",
+                    "offset": 100,
+                    "name": "Generation Curtailment Flag",
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_scct_flag",
+                    "offset": 101,
+                    "name": "Generation SCCT Mitigation Flag",
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "gen_ns_deployed_flag",
+                    "offset": 102,
+                    "name": "Generation Non-spin deployed Flag (NDPL)",
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_curtailment_flag",
+                    "offset": 130,
+                    "name": "Controllable Load Curtailment Flag",
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_scct_flag",
+                    "offset": 131,
+                    "name": "Controllable Load SCCT Mitigation Flag",
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_ns_deployed_flag",
+                    "offset": 132,
+                    "name": "Controllable Load Non-spin deployed Flag (NDPL)",
+					"uri": "/metrics/alvin"
+				},
+                {
+                    "id": "load_rrs_deployed_flag",
+                    "offset": 133,
+                    "name": "Controllable Load Responsive Deployed Flag (RDPL)",
+					"uri": "/metrics/alvin"
+                }
+            ]
+        },
+        {
+            "dnp3_type": "AnOPF32",
+            "starting_offset": 600,
+            "number_of_registers": 51,
+            "map": [
+                {
+                    "id": "gen_ns_responsibility",
+                    "offset": 600,
+                    "name": "Generation Non-Spin Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_ns_requirement",
+                    "offset": 601,
+                    "name": "Generation Non-Spin Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_ns_schedule",
+                    "offset": 602,
+                    "name": "Generation Non-Spin Schedule",
+                    "float": true,
+ 					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_reg_down_responsibility",
+                    "offset": 603,
+                    "name": "Generation Regulation Down Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_reg_down_requirement",
+                    "offset": 604,
+                    "name": "Generation Regulation Down Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_reg_down_participation",
+                    "offset": 605,
+                    "name": "Generation Regulation Down Participation Factor",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_rrs_responsibility",
+                    "offset": 606,
+                    "name": "Generation Responsive Reserve Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_rrs_requirement",
+                    "offset": 607,
+                    "name": "Generation Responsive Reserve Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_rrs_schedule",
+                    "offset": 608,
+                    "name": "Generation Responsive Reserve Schedule",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_reg_up_responsibility",
+                    "offset": 609,
+                    "name": "Generation Regulation Up Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_reg_up_requirement",
+                    "offset": 610,
+                    "name": "Generation Regulation Up Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_reg_up_participation_factor",
+                    "offset": 611,
+                    "name": "Generation Regulation Up Participation Factor",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_frrs_down_resp",
+                    "offset": 612,
+                    "name": "Generation FRRS Down Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_frrs_down_requirement",
+                    "offset": 613,
+                    "name": "Generation FRRS Down Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_frrs_down_participation_factor",
+                    "offset": 614,
+                    "name": "Generation FRRS Down Participation Factor",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_frrs_up_responsibility",
+                    "offset": 615,
+                    "name": "Generation FRRS Up Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_frrs_up_requirment",
+                    "offset": 616,
+                    "name": "Generation FRRS Up Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_frrs_up_participation_factor",
+                    "offset": 617,
+                    "name": "Generation FRRS Up Participation Factor",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_lmp",
+                    "offset": 618,
+                    "name": "Generation Locational Marginal Pricing",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_basepoint",
+                    "offset": 619,
+                    "name": "Generation Base Point",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_updated_basepoint",
+                    "offset": 620,
+                    "name": "Generation Updated Desired Base Point",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_ns_responsibility",
+                    "offset": 630,
+                    "name": "Controllable Load Non-Spin Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_ns_requirement",
+                    "offset": 631,
+                    "name": "Controllable Load Non-Spin Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_ns_schedule",
+                    "offset": 632,
+                    "name": "Controllable Load Non-Spin Schedule",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_reg_down_responsibility",
+                    "offset": 633,
+                    "name": "Controllable Load Regulation Down Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_reg_down_requirement",
+                    "offset": 634,
+                    "name": "Controllable Load Regulation Down Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_reg_down_participation",
+                    "offset": 635,
+                    "name": "Controllable Load Regulation Down Participation Factor",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_rrs_responsibility",
+                    "offset": 636,
+                    "name": "Controllable Load Responsive Reserve Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_rrs_requirement",
+                    "offset": 637,
+                    "name": "Controllable Load Responsive Reserve Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_rrs_schedule",
+                    "offset": 638,
+                    "name": "Controllable Load Responsive Reserve Schedule",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_reg_up_responsibility",
+                    "offset": 639,
+                    "name": "Controllable Load Regulation Up Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_reg_up_requirement",
+                    "offset": 640,
+                    "name": "Controllable Load Regulation Up Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_reg_up_participation_factor",
+                    "offset": 641,
+                    "name": "Controllable Load Regulation Up Participation Factor",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_frrs_down_resp",
+                    "offset": 642,
+                    "name": "Controllable Load FRRS Down Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_frrs_down_requirement",
+                    "offset": 643,
+                    "name": "Controllable Load FRRS Down Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_frrs_down_participation_factor",
+                    "offset": 644,
+                    "name": "Controllable Load FRRS Down Participation Factor",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_frrs_up_responsibility",
+                    "offset": 645,
+                    "name": "Controllable Load FRRS Up Responsibility",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_frrs_up_requirment",
+                    "offset": 646,
+                    "name": "Controllable Load FRRS Up Requirement",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_frrs_up_participation_factor",
+                    "offset": 647,
+                    "name": "Controllable Load FRRS Up Participation Factor",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_lmp",
+                    "offset": 648,
+                    "name": "Controllable Load Locational Marginal Pricing",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_basepoint",
+                    "offset": 649,
+                    "name": "Controllable Load Base Point",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_updated_basepoint",
+                    "offset": 650,
+                    "name": "Controllable Load Updated Desired Base Point",
+                    "float": true,
+					"uri": "/metrics/odessa"
+                }
+            ]
+        },
+        {
+            "dnp3_type": "analog",
+            "starting_offset": 600,
+            "number_of_registers": 38,
+            "map": [
+                {
+                    "id": "gen_net_mw",
+                    "offset": 600,
+                    "name": "Generation NET Megawatts",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_net_mvar",
+                    "offset": 601,
+                    "name": "Generation NET Megavars",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_gross_mw",
+                    "offset": 602,
+                    "name": "Generation Gross Megawatts",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_gross_mvar",
+                    "offset": 603,
+                    "name": "Generation Gross Megavars",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_normal_up_ramp_rate",
+                    "offset": 604,
+                    "name": "Generation Normal Up Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_normal_down_ramp_rate",
+                    "offset": 605,
+                    "name": "Generation Normal Down Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_emergency_up_ramp_rate",
+                    "offset": 606,
+                    "name": "Generation Emergency Up Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_emergency_down_ramp_rate",
+                    "offset": 607,
+                    "name": "Generation Emercency Down Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_max_operating_soc",
+                    "offset": 608,
+                    "name": "Generation Maximum Operating State of Charge",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_min_operating_soc",
+                    "offset": 609,
+                    "name": "Generation Minimum Operating State of Charge",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_soc",
+                    "offset": 610,
+                    "name": "Generation State of Charge",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_max_discharge_mw",
+                    "offset": 611,
+                    "name": "Generation Maximum Operating Discharge Power Limit",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_max_charge_mw",
+                    "offset": 612,
+                    "name": "Generation Maximum Operating Charge Power Limit",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_voltage",
+                    "offset": 615,
+                    "name": "Generation Voltage",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_aux_mw",
+                    "offset": 616,
+                    "name": "Generation Plant Auxiliary Load MW",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_aux_mvar",
+                    "offset": 617,
+                    "name": "Generation Plant Auxiliary Load MVAR",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_net_mw",
+                    "offset": 630,
+                    "name": "Controllable Load Net Load MW",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_net_mvar",
+                    "offset": 631,
+                    "name": "Controllable Load Net Load MVAR",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_scheduled_mw",
+                    "offset": 632,
+                    "name": "Controllable Load Scheduled Power Consumption",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_scheduled_mw_2hr",
+                    "offset": 633,
+                    "name": "Controllable Load Scheduled Power Consumption +2 hours",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_normal_up_ramp_rate",
+                    "offset": 634,
+                    "name": "Controllable Load Normal Up Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_normal_down_ramp_rate",
+                    "offset": 635,
+                    "name": "Controllable Load Normal Down Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_emergency_up_ramp_rate",
+                    "offset": 636,
+                    "name": "Controllable Load Emercency Up Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_emergency_down_ramp_rate",
+                    "offset": 637,
+                    "name": "Controllable Load Emercency Down Ramp Rate",
+                    "float": true,
+					"uri": "/metrics/odessa"
+                }
+            ]
+        },
+        {
+            "dnp3_type": "binary",
+            "starting_offset": 600,
+            "number_of_registers": 31,
+            "map": [
+                {
+                    "id": "gen_ds1_status",
+                    "offset": 600,
+                    "name": "Generation Resource Switches",
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_52m_status",
+                    "offset": 601,
+                    "name": "Generation Resource Breaker Status",
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_pseudo_switch_status",
+                    "offset": 602,
+                    "name": "Generation Virtual Breaker Status - PSEUDO GEN",
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_pseudo_switch_status",
+                    "offset": 630,
+                    "name": "Controllable Load Virtual Breaker Status - PSEUDO LOAD",
+					"uri": "/metrics/odessa"
+                }
+            ]
+        },
+        {
+            "dnp3_type": "CROB",
+            "starting_offset": 600,
+            "number_of_registers": 34,
+            "map": [
+                {
+                    "id": "gen_curtailment_flag",
+                    "offset": 600,
+                    "name": "Generation Curtailment Flag",
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_scct_flag",
+                    "offset": 601,
+                    "name": "Generation SCCT Mitigation Flag",
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "gen_ns_deployed_flag",
+                    "offset": 602,
+                    "name": "Generation Non-spin deployed Flag (NDPL)",
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_curtailment_flag",
+                    "offset": 630,
+                    "name": "Controllable Load Curtailment Flag",
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_scct_flag",
+                    "offset": 631,
+                    "name": "Controllable Load SCCT Mitigation Flag",
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_ns_deployed_flag",
+                    "offset": 632,
+                    "name": "Controllable Load Non-spin deployed Flag (NDPL)",
+					"uri": "/metrics/odessa"
+				},
+                {
+                    "id": "load_rrs_deployed_flag",
+                    "offset": 633,
+                    "name": "Controllable Load Responsive Deployed Flag (RDPL)",
+					"uri": "/metrics/odessa"
+                }
+            ]
+        }
+    ]
+}

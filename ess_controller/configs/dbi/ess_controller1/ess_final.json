@@ -1,0 +1,21 @@
+{
+    "/doc/99ess": {
+        "notes1":" This is the end of the ess loader process",
+        "notes2":" Run the SchedItemOpts list attached to runOpts ",
+        "notes3":" ... ",
+        "notes4":"     you can also add any other required options to the runOpts variable  at this time"
+
+    },
+   "/system/commands":{
+       "runOpts": {
+        "value":false,
+        "enabled":true
+       }
+   },
+   "/sched/ess":{
+        "pubSiteHs":{
+            "value":0,
+            "enabled":false
+        }
+    }
+}

@@ -1,6 +1,7 @@
 // TODO: fix lint
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable max-lines */
+/* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 import {
   ConfigurablePageDTO,
@@ -15,14 +16,18 @@ import {
   ConfigurablePageStateStructure,
   DisplayGroupFunctions,
   DisplayGroupStateStructure,
+  MaintModeState,
 } from './configurablePages.types';
 
 const getStatusStateForDisplayGroup: (
-  status: ConfigurablePageDTO['displayGroups'][string]['status']
-) => DisplayGroupStateStructure['status'] = (status) => {
+  status: ConfigurablePageDTO['displayGroups'][string]['status'],
+  batteryViewStatus: ConfigurablePageDTO['displayGroups'][string]['batteryViewStatus'],
+) => DisplayGroupStateStructure['status'] = (status, batteryViewStatus) => {
   if (status === undefined) return {};
+  // eslint-disable-next-line max-len
+  const combinedStatuses = batteryViewStatus === undefined ? status : { ...status, ...batteryViewStatus };
 
-  return Object.entries(status).reduce(
+  return Object.entries(combinedStatuses).reduce(
     (statusState: DisplayGroupStateStructure['status'], [componentID, component]) => {
       const { state } = component;
       if (state === undefined || state.value === undefined) return statusState;
@@ -35,7 +40,7 @@ const getStatusStateForDisplayGroup: (
 };
 
 const getControlStateForDisplayGroup: (
-  control: ConfigurablePageDTO['displayGroups'][string]['control']
+  control: ConfigurablePageDTO['displayGroups'][string]['control'],
 ) => DisplayGroupStateStructure['control'] = (control) => {
   if (control === undefined) return {};
 
@@ -47,6 +52,7 @@ const getControlStateForDisplayGroup: (
       controlState[componentID] = {
         value: state.value !== undefined ? state.value : '',
         enabled: state.enabled,
+        extraProps: state.extraProps,
       };
       return controlState;
     },
@@ -55,14 +61,15 @@ const getControlStateForDisplayGroup: (
 };
 
 export const getUpdatedStates: (
-  data: ConfigurablePageDTO['displayGroups']
-) => [ConfigurablePageStateStructure, AlertState] = (data) => {
+  data: ConfigurablePageDTO['displayGroups'],
+) => [ConfigurablePageStateStructure, AlertState, MaintModeState] = (data) => {
   const updatedComponentState: ConfigurablePageStateStructure = {};
   const updatedAlertState: AlertState = {};
+  const updatedMaintModeState: MaintModeState = {};
 
   Object.entries(data).forEach(([displayGroupID, displayGroup]) => {
     updatedComponentState[displayGroupID] = {
-      status: getStatusStateForDisplayGroup(displayGroup.status),
+      status: getStatusStateForDisplayGroup(displayGroup.status, displayGroup.batteryViewStatus),
       control: getControlStateForDisplayGroup(displayGroup.control),
     };
 
@@ -70,15 +77,19 @@ export const getUpdatedStates: (
       alarmInformation: displayGroup.alarm || [],
       faultInformation: displayGroup.fault || [],
     };
+
+    updatedMaintModeState[displayGroupID] = {
+      value: Boolean(displayGroup?.control?.maint_mode?.state?.value) || false,
+    };
   });
 
-  return [updatedComponentState, updatedAlertState];
+  return [updatedComponentState, updatedAlertState, updatedMaintModeState];
 };
 
 const generateDataPointComponentFunction: (
   displayGroupID: string,
   componentID: string,
-  staticData: StatusComponentDTO['static']
+  staticData: StatusComponentDTO['static'],
 ) => ConfigurableComponentFunction = (displayGroupID, componentID, staticData) => {
   if (staticData === undefined) return () => <></>;
 
@@ -97,37 +108,76 @@ const generateDataPointComponentFunction: (
   );
 };
 
+const generateBatteryViewReactComponentFunction: (
+  displayGroupID: string,
+  componentID: string,
+  staticData: StatusComponentDTO['static'],
+) => ConfigurableComponentFunction = (displayGroupID, componentID, staticData) => {
+  if (staticData === undefined) return () => <></>;
+  return generateReactComponentFunction(
+    {
+      component: 'Progress',
+      props: {
+        label: staticData.label,
+        showPercentage: true,
+      },
+    },
+    displayGroupID,
+    componentID,
+  );
+};
+
 const getStatusComponentFunctions: (
   status: ConfigurablePageDTO['displayGroups'][string]['status'],
-  displayGroupID: string
-) => ConfigurableComponentFunction[] = (status, displayGroupID) => {
+  displayGroupID: string,
+  batteryViewStatus: ConfigurablePageDTO['displayGroups'][string]['batteryViewStatus'],
+) => ConfigurableComponentFunction[] = (status, displayGroupID, batteryViewStatus) => {
   if (status === undefined) return [];
 
-  return Object.entries(status).reduce(
-    (statusFunctions: ConfigurableComponentFunction[], [componentID, component]) => {
+  let batteryViewComponents: ConfigurableComponentFunction[] = [];
+
+  if (batteryViewStatus !== undefined) {
+    batteryViewComponents = Object.entries(batteryViewStatus).reduce(
+      (batteryViewStatusFunctions: ConfigurableComponentFunction[], [componentID, component]) => {
+        const { static: staticData } = component;
+        if (staticData === undefined) return batteryViewStatusFunctions;
+
+        batteryViewStatusFunctions.push(
+          generateBatteryViewReactComponentFunction(displayGroupID, componentID, staticData),
+        );
+
+        return batteryViewStatusFunctions;
+      },
+      [],
+    );
+  }
+  return Object.entries(status)
+    .reduce((statusFunctions: ConfigurableComponentFunction[], [componentID, component]) => {
       const { static: staticData } = component;
       if (staticData === undefined) return statusFunctions;
 
       statusFunctions.push(
         generateDataPointComponentFunction(displayGroupID, componentID, staticData),
       );
+
       return statusFunctions;
-    },
-    [],
-  );
+    }, [])
+    .concat(batteryViewComponents);
 };
 
 const generateControlComponentFunction: (
   displayGroupID: string,
   componentID: string,
-  staticData: ControlComponentDTO['static']
+  staticData: ControlComponentDTO['static'],
 ) => ConfigurableComponentFunction = (displayGroupID, componentID, staticData) => {
   if (staticData === undefined) return () => <></>;
 
   // FIXME: may want to do this on the backend, or just better on the frontend
   const controlTypeString = staticData.controlType in ControlTypeMap ? staticData.controlType : 'TextField';
 
-  const ReactComponent = ControlTypeMap[controlTypeString];
+  let ReactComponent = ControlTypeMap[controlTypeString];
+  const label = staticData.label.toLowerCase();
+  if (label.includes('start site')) ReactComponent = 'ConfirmCancelButton';
 
   return generateReactComponentFunction(
     {
@@ -136,6 +186,7 @@ const generateControlComponentFunction: (
         label: staticData.label,
         unit: staticData.unit,
         scalar: staticData.scalar,
+        extraProps: staticData.extraProps || undefined,
       },
     },
     displayGroupID,
@@ -146,7 +197,7 @@ const generateControlComponentFunction: (
 
 const getControlComponentFunctions: (
   control: ConfigurablePageDTO['displayGroups'][string]['control'],
-  displayGroupID: string
+  displayGroupID: string,
 ) => ConfigurableComponentFunction[] = (control, displayGroupID) => {
   if (control === undefined) return [];
 
@@ -154,7 +205,6 @@ const getControlComponentFunctions: (
     (controlFunctions: ConfigurableComponentFunction[], [componentID, component]) => {
       const { static: staticData } = component;
       if (staticData === undefined) return controlFunctions;
-
       controlFunctions.push(
         generateControlComponentFunction(displayGroupID, componentID, staticData),
       );
@@ -165,14 +215,18 @@ const getControlComponentFunctions: (
 };
 
 export const getUpdatedComponentFunctions: (data: ConfigurablePageDTO['displayGroups']) => {
-  [displayGroupID: string]: DisplayGroupFunctions
+  [displayGroupID: string]: DisplayGroupFunctions;
 } = (data) => {
   const updatedComponentFunctions: { [displayGroupID: string]: DisplayGroupFunctions } = {};
 
   Object.entries(data).forEach(([displayGroupID, displayGroup]) => {
     updatedComponentFunctions[displayGroupID] = {
       displayName: displayGroup.displayName || displayGroupID,
-      statusFunctions: getStatusComponentFunctions(displayGroup.status, displayGroupID),
+      statusFunctions: getStatusComponentFunctions(
+        displayGroup.status,
+        displayGroupID,
+        displayGroup.batteryViewStatus,
+      ),
       controlFunctions: getControlComponentFunctions(displayGroup.control, displayGroupID),
     };
   });

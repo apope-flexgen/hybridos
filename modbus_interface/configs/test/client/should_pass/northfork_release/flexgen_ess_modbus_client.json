@@ -1,0 +1,2323 @@
+{
+    "fileInfo": {
+        "sourceFileName": "flexgen_ess_controller_modified_05052021.xlsx",
+        "sourceFileCreated": "2019-07-29T16:48:35.000Z",
+        "sourceFileLastModified": "2021-05-05T13:51:24.000Z",
+        "sourceFileCreatedBy": "Vinay Baliga",
+        "sourceFileLastModifiedBy": "Jimmy Nguyen",
+        "outputFileName": "flexgen_ess_modbus_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2021-05-12T21:51:59.784Z"
+    },
+    "connection": {
+        "name": "FlexGen_ESS_Controller",
+        "ip_address": "192.168.114.11",
+        "port": 502,
+        "device name": "FlexGen_ESS_Controller",
+        "device id string": "/site"
+    },
+    "components": [
+        {
+            "id": "flexgen_ess_01_hs",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "frequency": 100,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1000,
+                    "number_of_registers": 13,
+                    "map": [
+                        {
+                            "id": "life",
+                            "offset": 1000,
+                            "size": 2,
+                            "name": "Life",
+                            "signed": true
+                        },
+                        {
+                            "id": "start_stop",
+                            "offset": 1002,
+                            "name": "Control_Command"
+                        },
+                        {
+                            "id": "run_mode",
+                            "offset": 1003,
+                            "name": "Run_mode"
+                        },
+                        {
+                            "id": "on_off_grid_mode",
+                            "offset": 1004,
+                            "name": "On/Off grid mode setting"
+                        },
+                        {
+                            "id": "active_power_setpoint",
+                            "offset": 1005,
+                            "scale": 10,
+                            "name": "Power_Set_AC",
+                            "signed": true
+                        },
+                        {
+                            "id": "reactive_power_setpoint",
+                            "offset": 1006,
+                            "scale": 10,
+                            "name": "Active_Set_AC",
+                            "signed": true
+                        },
+                        {
+                            "id": "active_power_rising_slope",
+                            "offset": 1007,
+                            "scale": 10,
+                            "name": "Active_power_rising_slope"
+                        },
+                        {
+                            "id": "active_power_droop_slope",
+                            "offset": 1008,
+                            "scale": 10,
+                            "name": "Active_power_droop_slope"
+                        },
+                        {
+                            "id": "reactive_power_rising_slope",
+                            "offset": 1009,
+                            "scale": 10,
+                            "name": "Reactive_power_rising_slope"
+                        },
+                        {
+                            "id": "reactive_power_droop_slope",
+                            "offset": 1010,
+                            "scale": 10,
+                            "name": "Reactive_power_droop_slope"
+                        },
+                        {
+                            "id": "bms_dc_contactors",
+                            "offset": 1011,
+                            "name": "BMS_DC_Contactor_Control"
+                        },
+                        {
+                            "id": "clear_faults",
+                            "offset": 1012,
+                            "name": "Clear_Faults_Command",
+                            "uri": "/site/ess_hs",
+                            "individual_bits": true,
+                            "bit_strings": [
+                                "clear_faults"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2000,
+                    "number_of_registers": 44,
+                    "map": [
+                        {
+                            "id": "life_signal",
+                            "offset": 2000,
+                            "size": 2,
+                            "name": "life_signal",
+                            "signed": true
+                        },
+                        {
+                            "id": "chargeable_energy",
+                            "offset": 2002,
+                            "scale": 10,
+                            "name": "Q_charge"
+                        },
+                        {
+                            "id": "dischargeable_energy",
+                            "offset": 2003,
+                            "scale": 10,
+                            "name": "Q_discharge"
+                        },
+                        {
+                            "id": "chargeable_power",
+                            "offset": 2004,
+                            "scale": 10,
+                            "name": "W_charge",
+                            "signed": true
+                        },
+                        {
+                            "id": "dischargeable_power",
+                            "offset": 2005,
+                            "scale": 10,
+                            "name": "W_discharge",
+                            "signed": true
+                        },
+                        {
+                            "id": "system_state",
+                            "offset": 2006,
+                            "name": "System_state",
+                            "uri": "/site/ess_hs",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Stop",
+                                "Run",
+                                "Fault",
+                                "Standby"
+                            ]
+                        },
+                        {
+                            "id": "com_status",
+                            "offset": 2007,
+                            "name": "Com_status",
+                            "uri": "/site/ess_hs",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS Communication Offline",
+                                "BMS Communication Offline",
+                                "EMMU Communication Offline",
+                                "EMS Communication Offline"
+                            ]
+                        },
+                        {
+                            "id": "ems_alarms",
+                            "offset": 2008,
+                            "name": "Environmental management system alarms",
+                            "uri": "/site/ess_hs",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "E-stop Alarm",
+                                "Disconnect Switch",
+                                "Door Latch",
+                                "Surge Arrester",
+                                "Fire Alarm",
+                                "Fuse Monitoring"
+                            ]
+                        },
+                        {
+                            "id": "voltage_l1_l2",
+                            "offset": 2030,
+                            "name": "Uinab_RMS"
+                        },
+                        {
+                            "id": "voltage_l2_l3",
+                            "offset": 2031,
+                            "name": "Uinbc_RMS"
+                        },
+                        {
+                            "id": "voltage_l3_l1",
+                            "offset": 2032,
+                            "name": "Uinca_RMS"
+                        },
+                        {
+                            "id": "current_l1",
+                            "offset": 2033,
+                            "scale": 10,
+                            "name": "Iina_RMS"
+                        },
+                        {
+                            "id": "current_l2",
+                            "offset": 2034,
+                            "scale": 10,
+                            "name": "Iinb_RMS"
+                        },
+                        {
+                            "id": "current_l3",
+                            "offset": 2035,
+                            "scale": 10,
+                            "name": "Iinc_RMS"
+                        },
+                        {
+                            "id": "frequency",
+                            "offset": 2036,
+                            "scale": 100,
+                            "name": "Frequency"
+                        },
+                        {
+                            "id": "active_power",
+                            "offset": 2037,
+                            "scale": 10,
+                            "name": "Active Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "reactive_power",
+                            "offset": 2038,
+                            "scale": 10,
+                            "name": "Reactive Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "apparent_power",
+                            "offset": 2039,
+                            "scale": 10,
+                            "name": "Overall apparent Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "pf",
+                            "offset": 2040,
+                            "scale": 1000,
+                            "name": "Power Factor"
+                        },
+                        {
+                            "id": "voltage_dc",
+                            "offset": 2041,
+                            "scale": 10,
+                            "name": "Ubtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "current_dc",
+                            "offset": 2042,
+                            "scale": 10,
+                            "name": "Ibtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "active_power_dc",
+                            "offset": 2043,
+                            "scale": 10,
+                            "name": "Pbtra",
+                            "signed": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "flexgen_ess_01_ls",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "frequency": 1000,
+            "offset_time": 10,
+            "device_id": 58,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2044,
+                    "number_of_registers": 115,
+                    "map": [
+                        {
+                            "id": "pcs_mode",
+                            "offset": 2044,
+                            "name": "PCS_Mode",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "On-grid constant current (CC)",
+                                "On-grid constant voltage (CV)",
+                                "On-grid constant power (AC)",
+                                "On-grid constant power (DC)",
+                                "Reserved Address:2044 Bit:4",
+                                "Reserved Address:2044 Bit:5",
+                                "Reserved Address:2044 Bit:6",
+                                "Reserved Address:2044 Bit:7",
+                                "Reserved Address:2044 Bit:8",
+                                "On-grid Mode",
+                                "Off-grid Mode"
+                            ]
+                        },
+                        {
+                            "id": "pcs_state",
+                            "offset": 2045,
+                            "size": 2,
+                            "name": "PCS_State1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Off",
+                                "Reserved Address:2045 Bit:1",
+                                "Reserved Address:2045 Bit:2",
+                                "Starting",
+                                "Ready",
+                                "Running",
+                                "Shutdown",
+                                "Fault"
+                            ]
+                        },
+                        {
+                            "id": "bms_poweron",
+                            "offset": 2053,
+                            "name": "BMS Power On",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Power off Ready",
+                                "Power on Ready",
+                                "Power on Fault",
+                                "Power off Fault"
+                            ]
+                        },
+                        {
+                            "id": "bms_status",
+                            "offset": 2054,
+                            "name": "BMS Status",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Initial status",
+                                "Normal Status",
+                                "Full Charge status",
+                                "Full Discharge status",
+                                "Warning status",
+                                "Fault status"
+                            ]
+                        },
+                        {
+                            "id": "dc_contactors_closed",
+                            "offset": 2055,
+                            "name": "DC_Contactors_Closed_Command",
+                            "uri": "/site/ess_ls",
+                            "individual_bits": true,
+                            "bit_strings": [
+                                "dc_contactors_closed"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_voltage_l1_l2",
+                            "offset": 2070,
+                            "scale": 10,
+                            "name": "Unit1_Uinab_RMS"
+                        },
+                        {
+                            "id": "pcs1_voltage_l2_l3",
+                            "offset": 2071,
+                            "scale": 10,
+                            "name": "Unit1_Uinbc_RMS"
+                        },
+                        {
+                            "id": "pcs1_voltage_l3_l1",
+                            "offset": 2072,
+                            "scale": 10,
+                            "name": "Unit1_Uinca_RMS"
+                        },
+                        {
+                            "id": "pcs1_current_l1",
+                            "offset": 2073,
+                            "scale": 10,
+                            "name": "Unit1_Iina_RMS"
+                        },
+                        {
+                            "id": "pcs1_current_l2",
+                            "offset": 2074,
+                            "scale": 10,
+                            "name": "Unit1_Iinb_RMS"
+                        },
+                        {
+                            "id": "pcs1_current_l3",
+                            "offset": 2075,
+                            "scale": 10,
+                            "name": "Unit1_Iinc_RMS"
+                        },
+                        {
+                            "id": "pcs1_active_power",
+                            "offset": 2076,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Unit1_P",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs1_reactive_power",
+                            "offset": 2078,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "Unit1_Q",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs1_voltage_dc",
+                            "offset": 2080,
+                            "scale": 10,
+                            "name": "Unit1_Ubtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs1_current_dc",
+                            "offset": 2081,
+                            "scale": 10,
+                            "name": "Unit1_Ibtra_Ever",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs1_active_power_dc",
+                            "offset": 2082,
+                            "scale": 10,
+                            "name": "Unit1_Pbtra",
+                            "signed": true
+                        },
+                        {
+                            "id": "maximum_charging_power_limit_pcs1",
+                            "offset": 2083,
+                            "scale": 10,
+                            "name": "Maximum charging power limit Unit1",
+                            "signed": true
+                        },
+                        {
+                            "id": "maximum_discharging_power_limit_pcs1",
+                            "offset": 2084,
+                            "scale": 10,
+                            "name": "Maximum discharging power limit Unit1",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs1_alarms1",
+                            "offset": 2085,
+                            "size": 2,
+                            "name": "Unit1_Alarm_state1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(HVAC) High input voltage",
+                                "(LVAC) Low input voltage",
+                                "(HFRQ) High frequency",
+                                "(LFRQ) Low frequency",
+                                "(NSC) No start condition",
+                                "(NOMD) No modules",
+                                "(PLIM) P limit has been reached",
+                                "(QLIM) Q limit has been reached",
+                                "(ISLIM) Is limit has been reached",
+                                "(IDCLIM) Idc limit has been reached",
+                                "(PDVDC) Reduct P - A derating is active",
+                                "(HEAET) Heating is active",
+                                "(NIGHT) Night mode is active",
+                                "(LP) Low P - Active power is lower than the minimum AC power set",
+                                "(LVDC_W) Low Vdc - DC voltage is lower than the minimum DC voltage set",
+                                "(PDT) Derating T - Inverter is limiting power due to high internal temperature",
+                                "(PPF) Power Per Frequency - Power is reduced due to a high frequency",
+                                "(REDUN) Redun warning - description unknown",
+                                "(HVDC_W) High Vdc - DC voltage > 1500 V",
+                                "(UMF) Module fault",
+                                "(TRKNM) warning - description unknown",
+                                "(TRKLV) warning - description unknown",
+                                "(TRKCC) warning - description unknown",
+                                "(TRKOC) warning - description unknown",
+                                "(TRKBF) warning - description unknown",
+                                "(LCFB) LC feedback - LC contactors are not operating adequately in the stop procedure",
+                                "(QFV) Curve Q vs V - Grid support QV ongoing",
+                                "(PFV) Curve P vs V - Grid support PV ongoing",
+                                "(VDCDS) Vdc discordance - Discordance between bus voltage and input voltage"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_alarms2",
+                            "offset": 2087,
+                            "size": 2,
+                            "name": "Unit1_Alarm_state2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(OVP) AC overvoltage",
+                                "(RTC) The RTC is not configured. Set the time",
+                                "(MSWM) Modules version - There are one or more modules with different software versions",
+                                "(VSWM) uP DSP version - Software versions are not compatible",
+                                "(NOSD) SD not present",
+                                "(BMI) Battery module isolated - One or more modules with different software versions",
+                                "(DUIUN) DU I unbalance - Current unbalance in the DU channels",
+                                "(SPRLD) Spring loaded - Some of the circuit break triggers are not loaded",
+                                "(DUVDC) warning - description unknown",
+                                "(DUCOMS_W) Comms lost - There is a problem in the disconnecting unit communications",
+                                "(CHISL) Channel isolated  -DU channel isolated because it is derived, feedback has failed, or it did not measure voltage",
+                                "(INSA) Algorithm on - Derived channels detection algorithm is running, once finished, the warning will automatically disappear",
+                                "(DUOF) Fb open error - Problem with feedback from one of the DU channels in an opening event",
+                                "(DUCF) Fb close error - Problem with feedback from one of the DU channels in a closing event",
+                                "(OVDCP) DC overvoltage - Check the status of the disconnecting unit and J7 connector digital input",
+                                "(ISFLT) Isolation fault - warning not used currently",
+                                "(CHCOM) Acq comms error - Communications problem between the disconnecting unit and acquisition channels",
+                                "(NOCHN) No channel available",
+                                "(GRIDIN) Isolat flt AC grid - Isulation fault has occurred in the AC side",
+                                "(DUBSY) Processing cont - Contactors processing event ongoing",
+                                "(CHSWM) Acq version - DU acquisition channels with different versions have been detected",
+                                "(PCHM) warning - desciption unknown",
+                                "(CHCD) Current detected during DU channels opening event",
+                                "(CHMW) Channel miswired - One or more acquisition channels did not meaure any voltage",
+                                "(OC) Mod. AC overcurrent",
+                                "(UV) Unbal DC Bus - Unbalance between high side and low side of DC bus",
+                                "(DOC) Mod. AC overcurrent",
+                                "(POV) Mod. DC overvoltage (P) - Overvoltage present in DC positive side",
+                                "(NOV) Mod. DC overvoltage (N) - Overvoltage present in DC negative side",
+                                "(DR1) Desat R1 (P) - Desaturation in IGBT driver",
+                                "(DR2P) Desat R2 (P) - Desaturation in IGBT driver",
+                                "(DR2N) Desat R2 (N) - Desaturation in IGBT driver"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_alarms3",
+                            "offset": 2089,
+                            "size": 2,
+                            "name": "Unit1_Alarm_state3",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(DR3) Desat R3 (N) - Desaturation in IGBT driver",
+                                "(DS1) Desat S1 (P) - Desaturation in IGBT driver",
+                                "(DS2P) Desat S2 (P) - Desaturation in IGBT driver",
+                                "(DS2N) Desat S2 (N)  - Desaturation in IGBT driver",
+                                "(DS3) Desat T3 (N) - Desaturation in IGBT driver",
+                                "(DT1) Desat T1 (P) - Desaturation in IGBT driver",
+                                "(DT2P) Desat T2 (P) - Desaturation in IGBT driver",
+                                "(DT2N) Desat T2 (N) - Desaturation in IGBT driver",
+                                "(DT3) Desat T3 (N) - Desaturation in IGBT driver",
+                                "(DMLT) Multiple unlock - Desaturation in more than one IGBT controller at the same time. Could indicate power failure in module control card",
+                                "(COMMS_W) Mod. Comms - Communication between central FPGA and module FPGA, or between module FPGA and DSP, is lost",
+                                "(FBDC) Mod. DC contactor - DC contactor is activated, but did not respond",
+                                "(FBSC) Mod. ACSC contactor - Module AC soft charge contactor is activated, but did not respond",
+                                "(FBAC) Mod. AC contactor - Command to activate the AC contactors of the modules was sent, but did not close in 1s",
+                                "(FBLC) Mod. LCL contactor feedback - LCL contactor is activated, but did not respond",
+                                "(TIGH) Mod. IGBTs Temperature HW - The temperature of any IGBT overcomes 127 degrees, or IGTB temperature sensor is disconnected",
+                                "(GUV) Mod. Great unbal DC - DC bus unbalanced more than 500V",
+                                "(DIS) Mod. Discharge fault - Module FPGA attempts to discharge the module bus and voltage did not drop below 50V in 40s",
+                                "(TLCL) Mod. Thermal LCL - Thermal LCL contactor of a module inductance has been opened",
+                                "(PS) Mod. Power 15V - Internal power supply of the board does not provide the adequate voltage",
+                                "(TAMH) Mod. Amb Temperature HW - The temperature of the module's electronic board has overcome 85 degrees C",
+                                "(IDCD) Mod. Idc derivation",
+                                "(IACD) Mod. Iac derivation",
+                                "(DCOMS_W) Display comms - Communications between display and control board lost",
+                                "(DCF) Mod. DC Fuse - Module DC voltage measure is below the average value of all modules",
+                                "(UC) Unbalance current - A module ouptut current unbalance greater than 30A has been detected for 5s",
+                                "(TIGBT_W) IGBTs temperature - The temperature of one or more IGBTs has overcome the maximum threshold",
+                                "(TAMB_W) Ambient temperature - Ambient temperature is over the maximum threshold",
+                                "(PWUNB_W) Pac/Pdc unbalanced - Unbalance between Pac and Pdc values. They differ a percentage defined (30% by default)",
+                                "(BUSUN_W) Vbus unbalanced - Unbalanced between the high side and low side of DC bus",
+                                "(NRIDC) Iac not reached - Not enough bus voltage, or the 3 AC fuses have blown",
+                                "(HBMX_W) Half bus Vmax"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_alarms4",
+                            "offset": 2091,
+                            "size": 2,
+                            "name": "Unit1_Alarm_state4",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(LMVDC_W) Low module Vdc - Start command has been received but bus voltage is insufficient to start and maintain operation",
+                                "(BACF_W) Blown AC fuse - All AC fuses have blown",
+                                "(RSV_W) Reserved warning",
+                                "(OCACE_W) OCAC emergency - Overcurrent has been detected in communication between module-x and central control",
+                                "(CCHK_W) Comms checksum - Communication error between module-x and central control",
+                                "(MDFN_W) Mod. fans - Feedback has not been received from the module fan",
+                                "(MDSN_W) Mod. sensor - One, or more, of the three current sensors of the module are not measuring properly, there is an offset error",
+                                "(MDSC_W) Mod. disabled DC - Disabled by DSP due to software or module has failed too many times",
+                                "(CMTHR_W) Mod. common thermal - Inductance in a module has overheated",
+                                "(CNBFPS) warning - description unknown",
+                                "(BFBFPS) warning - description unknown",
+                                "(BFPSCM) warning - description unknown",
+                                "(ISODCCM) DC insulation monitor comms - Communication with the DC insulation monitor cannot be established",
+                                "(INSDC) Insulation DC - DC insulation monitor detected an insulation resistance below the threshold",
+                                "(IRTHDC) Insulation resistor high DC - DC insulation monitor has detected a higher insulation resistance than the admissible",
+                                "(ISOACCM) AC insulation monitor comms - Communication with the AC insulation monitor cannot be established",
+                                "(INSAC) Insulation AC  - AC insulation monitor has detected an insulation resistance below the threshold",
+                                "(IRTHAC) Insulation resistor high AC - AC insulation monitor has detected a higher insulation resistance than the admissible",
+                                "(FNIMCM_W) Impulsion fans comms - Communication with the impulsion fans (cyclone) cannot be established",
+                                "(FNIMER_W) Impulsion fans - The impulsion fan (cyclone) has reported an error",
+                                "(FNXCER_W) Extract fans control - Feedback from extraction fans in the low voltage side has not been received",
+                                "(FNXMER_W) Extract fans MV - Feedback from extraction fans in the medium voltage side has not been received",
+                                "(BBON) Blackbox on",
+                                "(DUFB1) DU FB1 error. DC Circuit breaker (Q8) failure",
+                                "(DUFB2) DU FB2 error. DC Circuit breaker (Q9) failure",
+                                "(ACTBAL) Active Balance",
+                                "(BMSA) Battery Manage System is stopped because a BMS alarm is active. Check the BMS active alarms to restart",
+                                "(BMSIA) There is imbalance inside the BMS, some strings are disconnected within one bank. Power reduction is applied",
+                                "(SNTPF) Synchronization of NTP server has failed",
+                                "(EMBD) Battery bank is disabled by MPCSK (IGBTs are stopped and DC breaker is open",
+                                "(BMSCL) MPCSK has lost communication with BMS. Heartbeat time has been exceeded",
+                                "(BMSFE) Fuse Sensor Error BMS"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_alarms5",
+                            "offset": 2093,
+                            "size": 2,
+                            "name": "Unit1_Alarm_state5",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(BMSVSD) Voltage Sensor Error BMS",
+                                "(BMSFSC) Current Sensor Error BMS",
+                                "(BMSFF) Fan fault BMS",
+                                "(BMSSS) System Stop BMS",
+                                "(BMSSD) BMS Status Discordance",
+                                "(BMSWC) BMS Wrong Configuration",
+                                "(HVACNOP_W) HVAC Not Operative",
+                                "(ENCDORCN) ENC Door Contact - container battery enclosure is open",
+                                "(ENCALARTR) ENC Alarm/Trouble",
+                                "(ENCDCDIS) ENC DC Disconnect - One of the container DC switch disconnectors is open",
+                                "(ENCHHUM) ENC High Humidity",
+                                "(ENCUPSBAT) ENC UPS Battery",
+                                "(TRTEMP_W) Transformer over oil temperature detected",
+                                "(TRPRESU_W) Transformer over pressure detected",
+                                "(TROIL_W) Transformer oil low level detected"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_faults1",
+                            "offset": 2095,
+                            "size": 2,
+                            "name": "Unit1_Fault_state1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(WD) Watchdog - Fault in DSP has occurred",
+                                "(HWVBS) HW Vbus - DC overvoltage detected. Threshold: 1520 Vdc",
+                                "(SFTCHR) Softcharge - Wrong configuration (central AC without DU) OR Timeout, one of soft charge processes did not end successfully",
+                                "(DISCHR) Discharge - Timeout, one of the modules has not discharged correctly (< 50 Vdc)",
+                                "(HGHVAC) High Vac - High AC voltage fault",
+                                "(LWVAC) Low Vac - Low AC voltage fault",
+                                "(HGHFRE) High frequency fault",
+                                "(LWFRE) Low frequency fault",
+                                "(FPGACMS) FPGA comms - 2 frames to the central FPGA are wrong",
+                                "(MSTFPGA) Master FPGA  - Central FPGA has not been configured correctly. Check that the 3 joined leds are turned on",
+                                "(ACANTISL) Active anti-island - Fault produced by a variation in the measured frequency",
+                                "(NOMOD) No modules enabled in the enabled busbars",
+                                "(DRVSLT_1) Drive select  - Wrong drive select configuration",
+                                "(SYNC) Synchronization - Wrong equipment configuration",
+                                "(DCMSW) DC miswired - There is a problem with the DC measurement from central control. It occurs when the bus voltage < 100V during 30s",
+                                "(DUFB) DU feedback - The DU is not closing when required",
+                                "(ACSCFB) ACSC feedback - Feedback from the soft charge contactor does not match the order during 5s",
+                                "(ACSCNV) ACSC no voltage - The central soft charge contactor is closed, but buses are not changing at the expected rate (50% of the target value in 4s)",
+                                "(MODFLT) Module fault",
+                                "(DUSTCK) DU stuck - Voltage during soft charge process is anomalous when the DU is open",
+                                "(MVF) Medium V fuse - A medium voltage fuse has been blown",
+                                "(UNBVAC) Unbalanced Vac - Abnormal AC unbalanced voltage",
+                                "(HVDC_F) High Vdc - Overvoltage in the DC bus",
+                                "(LVDC_F) Low Vdc - Voltage is too low",
+                                "(MSF) Modules start fault",
+                                "(PSANTISL) Passive anti-island - Fault produced when the frequency changes abruptly in a certain time",
+                                "(HWIDCDIF) HW Idc Dif - A current derivation has been detected on the panels side",
+                                "(MVCMS) MV comms - Failure in communication with the medium voltage measure board",
+                                "(DIAGTIM) Selfdiagnosis Fault - Triggered while performing auto diagnosis process, e.g.: there is no DU or the bus loading time is excessive",
+                                "(ERMDDIAG) Error Mod Selfdiagnosis - Triggered while performing auto diagnosis process after the equipment has stopped due to special protection",
+                                "(UNREC) Unable Reconnect - Inverter could not restart after the last grid event",
+                                "(HOMDIFLV) Hom Diff LV - A zero-sequence current (earth leakage) has been detected on the low voltage side of the transformer"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_faults2",
+                            "offset": 2097,
+                            "size": 2,
+                            "name": "Unit1_Fault_state2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(MVPRE) MV Premag - There was a problem during MV transformer premagnetization",
+                                "(OVOLIRLV) Ovc Inrush LV - One of the current thresholds (overload, overcurrent, or inrush) has been overcome in the low voltage side of the transformer",
+                                "(OVOLIRMV) Ovc Inrush MV - One of the current thresholds (overload, overcurrent, or inrush) has been overcome in the medium side of the transformer",
+                                "(CUROFFLV) CurrentOff LV - A current measure has been detected in the low voltage side of the transformer while equipment is not running",
+                                "(CUROFFMV) CurrentOff MV - A current measure has been detected in the medium voltage side of the transformer while the equipment is not running",
+                                "(OVTMPACM) AC mod overtemperature",
+                                "(GFDI) GFDI fault - description unknown",
+                                "(DCCNTLCK) DC contactor locked",
+                                "(EMRGSTP) Emergency stop - Stop pushbutton (at the main control cabinet door) has been pushed, or the DC disconnect switch is set to OFF",
+                                "(DRVSLT_2) Drive select - Drive select parameters out of range",
+                                "(INSL) Insulation - Isolation monitor measures an impedance value lower than the one configured",
+                                "(DTFLT) Data fault - Out-of-range parameters detected",
+                                "(WTCHDG) Watchdog uP - Fault in microcontroller",
+                                "(INTCMS) Internal comms",
+                                "(IMISLFT) IMI autotest - Periodic insulation monitoring devices auto test has finished with errors",
+                                "(NODUCNL) Do DU channels - All DU channels have been isolated, and it is not possible to establish a connection with the plant",
+                                "(PPCC) PPC comms - PPC and inverter communication problem",
+                                "(SCDUFB) Softcharge DU feedback - Softcharge timeout has expired and no feedback was received (DU softcharge contactors ordered to close, but did not)",
+                                "(EARTHL) GFDI current leak - GFDI current has exceeded the threshold",
+                                "(DUCNOV) DU channel overcurrent",
+                                "(EXT_OVGR) External fault/OVFR - Problem with external protections associated with DI6. External OVGR relay has tripped",
+                                "(REMRSTP) Remote emergency stop",
+                                "(DUMWR) DU channel miswired - Command to close DU has been received, but one or more channels are measuring negative voltage",
+                                "(SWCMM) Control SW mismatch - Microcontroller and DSP software versions not compatible",
+                                "(MODSWI) Module SW mismatch - Not all modules have the same software version",
+                                "(MODHWI) Module HW mismatch - Not all modules have the same electronic board revision",
+                                "(DUSD) DU smoke detector - DU smoke detector activated",
+                                "(DUCOM_F) DU comms - Communication between DU and central control lost",
+                                "(GRNDCN) Ground connection - Ground contactor closed, but the insulator detector detects that pole is isolated",
+                                "(INVMAC) Invalid MAC address",
+                                "(ACOVCRR) Mod. AC overcurrent",
+                                "(UNBVDC) Unbal DC bus - Unbalance between high side and low side of DC bus"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_faults3",
+                            "offset": 2099,
+                            "size": 2,
+                            "name": "Unit1_Fault_state3",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(DCOVCRR) Mod. DC overcurrent",
+                                "(DCOVVP) Mod. DC overvoltage (P) - Overvoltage present in DC positive side",
+                                "(DCOVVN) Mod. DC overvoltage (N) - Overvoltage present in DC negative side",
+                                "(DESR1) Desat R1 (P) - Desaturation in IGBT driver",
+                                "(DESR2P) Desat R2 (P) - Desaturation in IGBT driver",
+                                "(DESR2N) Desat R2 (N) - Desaturation in IGBT driver",
+                                "(DESR3) Desat R3 (N) - Desaturation in IGBT driver",
+                                "(DESS1) Desat S1 (P) - Desaturation in IGBT driver",
+                                "(DESS2P) Desat S2 (P) - Desaturation in IGBT driver",
+                                "(DESS2N) Desat S2 (N) - Desaturation in IGBT driver",
+                                "(DESS3) Desat S3 (N) - Desaturation in IGBT driver",
+                                "(DEST1) Desat T1 (P) - Desaturation in IGBT driver",
+                                "(DEST2P) Desat T2 (P) - Desaturation in IGBT driver",
+                                "(DEST2N) Desat T2 (N) - Desaturation in IGBT driver",
+                                "(DEST3) Desat T3 (N) - Desaturation in IGBT driver",
+                                "(DESMLT) Multiple unlock - Desaturation in more than one IGBT controller at the same time. Could indicate power failure in module control card",
+                                "(COMMS_F) Mod. Comms - Communication between central FPGA and module FPGA, or between module FPGA and DSP, is lost",
+                                "(DCCNT) Mod. DC contactor - DC contactor is activated, but did not respond",
+                                "(ACSCC) Mod. ACSC contactor - Module AC soft charge contactor is activated, but did not respond",
+                                "(ACCNT) Mod. AC contactor - Command to activate the AC contactors of the modules was sent, but did not close in 1s",
+                                "(LCLFB) Mod. LCL contactor feedback - LCL contactor is activated, but did not respond",
+                                "(TIGHW) Mod. IGBTs Temperature HW - The temperature of any IGBT overcomes 127 degrees, or IGBT temperature sensor is disconnected",
+                                "(GUNBDC) Mod. Great unbal DC - DC bus unbalanced more than 500V",
+                                "(DISFLT) Mod. Discharge fault - Module FPGA attempts to discharge the module bus and voltage did not drop below 50V in 40s",
+                                "(THLCL) Mod. Thermal LCL - Thermal LCL contactor of a module inductance has been opened",
+                                "(PW15V) Mod. Power 15V - Internal power supply of the board does not provide the adequate voltage",
+                                "(TAMHW) Mod. Amb Temperature HW - The temperature of the module's electronic board has overcome 85 degrees C",
+                                "(MIDCD) Mod. Idc derivation",
+                                "(MIACD) Mod. Iac derivation",
+                                "(DCOMS_F) Display comms - Communications between display and control board lost",
+                                "(DCFS) Mod. DC Fuse - Module DC voltage measure is below the average value of all modules",
+                                "(IUNB) Unbalance current - A module output current unbalance greater than 30A has been detected for 5s"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_faults4",
+                            "offset": 2101,
+                            "size": 2,
+                            "name": "Unit1_Fault_state4",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(TIGBT_F) IGBTs temperature - The temperature of one or more IGBTs has overcome the maximum threshold",
+                                "(TAMB_F) Ambient temperature - Ambient temperature is over the maximum threshold",
+                                "(PWUNB_F) Pac/Pdc unbalanced - Unbalance between Pac and Pdc values. They differ a percentage defined (30% by default)",
+                                "(BUSUN_F) Vbus unbalanced - Unbalance between the high side and low side of DC bus",
+                                "(NRIAC) Iac not reached - Not enough bus voltage, or the 3 AC fuses have blown",
+                                "(HBMX_F) Half bus Vmax",
+                                "(LMVDC_F) Low module Vdc - Start command has been received but bus voltage is insufficient to start and maintain operation",
+                                "(BACF_F) Blown AC fuse - All AC fuses have blown",
+                                "(RSV_F) Reserved fault",
+                                "(OCACE_F) OCAC emergency - Overcurrent has been detected in communication between module-x and central control",
+                                "(CCHK_F) Comms checksum - Cummunication error between module-x and central control",
+                                "(MDFN_F) Mod. fans - Feedback has not been received from the module fan",
+                                "(MDSN_F) Mod. sensor - One, or more, of the three current sensors of the module are not measuring properly, there is an offset error",
+                                "(MDSC_F) Mod. disabled DC - Disabled by DSP due to software or module has failed too many times",
+                                "(CMTHR) Mod. common thermal - Inductance in a module has overheated",
+                                "(INDTHR) Inductance thermal - Feedback not received from the LCL filter inductance thermal",
+                                "(MVTT) MV transformer temperature - Temperature in medium voltage transformer (PT100 readings) too high",
+                                "(AFLV) Air flow LV - Air flow temperature in the low voltage side is too high",
+                                "(AFMV) Air flow MV - Air flow temperature in the medium voltage side is too high",
+                                "(FNIMER_F) Impulsion fans - One of the impulsion fans (cyclone) has reported an error",
+                                "(FNXCER_F) Extract fans control - Feedback from low voltage extraction fans not received",
+                                "(FNXMER_F) Extract fans MV - Feedback from medium voltage extraction fans not received",
+                                "(FNIMCM_F) Impulsion comms - Communication with impulsion fans (cyclone) cannot be established",
+                                "(MVTTC) MV critical temperature trans - The temperature threshold of medium voltage transformer has been overcome",
+                                "(CPMVO) MV cell protection open - Protection contractor of medium voltage cell is open",
+                                "(SDMV) Smoke detector MV - Medium voltage smoke detector activated",
+                                "(PRDID) Product ID invalid",
+                                "(HOMDIFMV) - Hom Diff MV - A zero-sequence current (earth leakage) has been detected on medium voltage side of the transformer",
+                                "(CRBALVMV) Curr Bal LVMV - A current unbalance has been detected between low and medium voltage sides (measures do not match)",
+                                "(NEGPWLV) Neg Pow LV - Active power in the low voltage side of the transformer has overcome the threshold set during the time adjusted",
+                                "(NEGPWMV) Neg Pow MV",
+                                "(CRUNBALV) Cur Unbl LV - Unbalance threshold between phases in low voltage side has been overcome. Grid event occurs, voltage unbalance causes current unbalance"
+                            ]
+                        },
+                        {
+                            "id": "pcs1_faults5",
+                            "offset": 2103,
+                            "size": 2,
+                            "name": "Unit1_Fault_state5",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "(CRUNBAMV) Cur Unbl MV - Unbalance threshold between phases in medium voltage side has been overcome. Grid event occurs, voltage unbalance causes current unbalance",
+                                "(CRBLDSPMD) Cur Bal DSPMD - Current measurement made by central control does not match sum of measurements of all modules",
+                                "(PWBALLVMV) Pow Bal LVMV",
+                                "(THDIMV) THDi MV - The threshold of harmonic distortion (THDi) has been overcome during the timeout set internally",
+                                "(CPVF) Comb prot Volt Frq - One of the protection thresholds has been overcome",
+                                "(CLBV) Crit Low Vdc Batt - Voltage in any of the buses is too low and DU is closed",
+                                "(IEMB) Unbalance Bank - Difference between each input busbar voltage is higher than expected",
+                                "(NOBNK) No Banks Enabled - No battery banks have been enabled. There is a mistake in the setting, or there is a fault in all the banks",
+                                "(HVACCOMMS) Timeout communication fault with the HVAC control unit",
+                                "(HVACNOP_F) Two or more HVAC units are not operational, and the battery container cooling is not guranteed",
+                                "(ENCCOMMS) Enclosure Comms - TCP Modbus communication timeout failure with the device",
+                                "(ENCTEMPH) Temperature in some of the enclosure sensors or the average temperature higher than expected",
+                                "(ENCDIG) Enclosure Digital - Emergency stop press-button on battery enclosure has been pushed",
+                                "(ENC24VDC) Enclosure 24VDC - Voltage is out of range or the UPS is offline. 24V voltage is out of range when it is out of 3% (21-29V)",
+                                "(ENCPREDIS) Enclosure system is in gas pre-discharge mode",
+                                "(ENCAGREL) Enclosure Agent Release - System has acted",
+                                "(ENCTEMPL) Enclosure Temp Low - Average temperature in the enclosure is lower than expected",
+                                "(TRCOMMS) Communication timeout failure with medium voltage transformer",
+                                "(TRTEMP_F) Transformer over oil temperature alarm has been activated",
+                                "(TRPRESU_F) Transfomrer over pressure alarm has been activated",
+                                "(TROIL_F) Transformer oil low level alarm has been activated"
+                            ]
+                        },
+                        {
+                            "id": "bms_maximum_cell_voltage",
+                            "offset": 2130,
+                            "scale": 10000,
+                            "name": "BMS maximum cell voltage"
+                        },
+                        {
+                            "id": "bms_minimum_cell_voltage",
+                            "offset": 2133,
+                            "scale": 10000,
+                            "name": "BMS minimum cell voltage"
+                        },
+                        {
+                            "id": "bms_maximum_cell_temperature",
+                            "offset": 2136,
+                            "scale": 100,
+                            "name": "BMS maximum cell temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_minimum_cell_temperature",
+                            "offset": 2139,
+                            "scale": 100,
+                            "name": "BMS minimum cell temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "bms_soc",
+                            "offset": 2144,
+                            "scale": 10,
+                            "name": "BMS SOC"
+                        },
+                        {
+                            "id": "bms_power",
+                            "offset": 2145,
+                            "scale": 10,
+                            "name": "BMS power"
+                        },
+                        {
+                            "id": "bms_maximum_charging_power_limit",
+                            "offset": 2157,
+                            "name": "BMS Maximum charging power limit"
+                        },
+                        {
+                            "id": "bms_maximum_discharging_power_limit",
+                            "offset": 2158,
+                            "name": "BMS Maximum discharging power limit"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2163,
+                    "number_of_registers": 103,
+                    "map": [
+                        {
+                            "id": "bms_alarms",
+                            "offset": 2163,
+                            "size": 2,
+                            "name": "BMS alarm state",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "Current Overlimit Warning",
+                                "Single Cell Voltage Overlimit Warning",
+                                "Single Cell Temperature Overlimit Warning",
+                                "System Voltage Overlimit Warning",
+                                "System Voltage Underlimit Warning",
+                                "Inner Communication Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "EMS Heartbeat Warning",
+                                "SOC Difference Warning",
+                                "Fire Fault Level 2 Warning"
+                            ]
+                        },
+                        {
+                            "id": "bms_faults1",
+                            "offset": 2165,
+                            "size": 2,
+                            "name": "BMS fault state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Reserved Address:2165 Bit:0",
+                                "Reserved Address:2165 Bit:1",
+                                "Insulation error protection",
+                                "Discharge undervoltage LV1 protection of cell",
+                                "Charge overvoltage LV1 protection of cell",
+                                "Discharge undervoltage LV1 protection of cluster",
+                                "Charge overvoltage LV1 protection of cluster",
+                                "Discharge overcurrent LV1 protection of cluster",
+                                "Charge overcurrent LV1 protection of cluster",
+                                "Discharge overcurrent LV1 protection of array",
+                                "Charge overcurrent LV1 protection of array",
+                                "Low-temp LV1 protection",
+                                "High-temp LV1 protection",
+                                "Reserved Address:2165 Bit:13",
+                                "Reserved Address:2165 Bit:14",
+                                "Reserved Address:2165 Bit:15",
+                                "Reserved Address:2165 Bit:16",
+                                "Reserved Address:2165 Bit:17",
+                                "Reserved Address:2165 Bit:18",
+                                "Reserved Address:2165 Bit:19",
+                                "Self-protection of BMS",
+                                "Reserved Address:2165 Bit:21",
+                                "E-stop fault",
+                                "Reserved Address:2165 Bit:23",
+                                "Reserved Address:2165 Bit:24",
+                                "Reserved Address:2165 Bit:25",
+                                "Reserved Address:2165 Bit:26",
+                                "Self-protection of EMMU"
+                            ]
+                        },
+                        {
+                            "id": "bms_faults2",
+                            "offset": 2167,
+                            "size": 2,
+                            "name": "BMS fault state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Reserved Address:2167 Bit:0",
+                                "Discharge undervoltage LV2 protection of cell",
+                                "Charge overvoltage LV2 protection of cell",
+                                "Discharge undervoltage LV2 protection of cluster",
+                                "Discharge undervoltage LV2 protection of cluster",
+                                "Discharge overcurrent LV2 protection of cluster",
+                                "Charge overcurrent LV2 protection of cluster",
+                                "Discharge overcurrent LV2 protection of array",
+                                "Charge overcurrent LV2 protection of array",
+                                "Low-temp LV2 protection",
+                                "High-temp LV2 protection"
+                            ]
+                        },
+                        {
+                            "id": "racks_in_service",
+                            "offset": 2199,
+                            "name": "Number of Battery Racks in Service"
+                        },
+                        {
+                            "id": "sbmu_1_battery_voltage",
+                            "offset": 2200,
+                            "name": "Battery Rack No. 1 Voltage"
+                        },
+                        {
+                            "id": "sbmu_1_battery_current",
+                            "offset": 2201,
+                            "name": "Battery Rack No. 1 Current",
+                            "signed": true
+                        },
+                        {
+                            "id": "sbmu_1_max_cell_voltage",
+                            "offset": 2202,
+                            "name": "Battery Rack No. 1 Max Cell Voltage"
+                        },
+                        {
+                            "id": "sbmu_1_max_cell_voltage_position",
+                            "offset": 2203,
+                            "name": "Battery Rack No. 1 Max Cell Voltage Position"
+                        },
+                        {
+                            "id": "sbmu_1_min_cell_voltage",
+                            "offset": 2204,
+                            "name": "Battery Rack No. 1 Min Cell Voltage"
+                        },
+                        {
+                            "id": "sbmu_1_min_cell_voltage_position",
+                            "offset": 2205,
+                            "name": "Battery Rack No. 1 Min Cell Voltage Position"
+                        },
+                        {
+                            "id": "sbmu_1_avg_cell_voltage",
+                            "offset": 2206,
+                            "name": "Battery Rack No. 1 Avg Cell Voltage"
+                        },
+                        {
+                            "id": "sbmu_1_max_cell_temperature",
+                            "offset": 2207,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Max Cell Temperature"
+                        },
+                        {
+                            "id": "sbmu_1_max_cell_temperature_position",
+                            "offset": 2208,
+                            "name": "Battery Rack No. 1 Max Cell Temperature Position"
+                        },
+                        {
+                            "id": "sbmu_1_min_cell_temperature",
+                            "offset": 2209,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Min Cell Temperature"
+                        },
+                        {
+                            "id": "sbmu_1_min_cell_temperature_position",
+                            "offset": 2210,
+                            "name": "Battery Rack No. 1 Min Cell Temperature Position"
+                        },
+                        {
+                            "id": "sbmu_1_avg_cell_temperature",
+                            "offset": 2211,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Avg Cell Temperature"
+                        },
+                        {
+                            "id": "sbmu_1_alarms1",
+                            "offset": 2212,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "TMS Fault Level 1",
+                                "TMS Fault Level 2",
+                                "TMS Fault Level 3",
+                                "Charge Overcurrent Warning",
+                                "Discharge Overcurrent Warning",
+                                "Temp Difference Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "Extreme Total Voltage Warning",
+                                "Master Positive Relay Close Fail Fault",
+                                "Master Negative Relay Close Fail Fault",
+                                "Master Positive Relay Stuck Fault",
+                                "Master Negative Relay Stuck Fault",
+                                "Power Loss Fault",
+                                "Balance Warning",
+                                "Inner Communication Fault (CCAN)",
+                                "Inner Communication Fault (SCAN)"
+                            ]
+                        },
+                        {
+                            "id": "sbmu_1_alarms2",
+                            "offset": 2214,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current Sensor Abnormal Fault",
+                                "Single Cell Voltage Sampling Abnormal Fault",
+                                "Module Temperature Sampling Abnormal Fault",
+                                "High Voltage Circuit Open Fault",
+                                "MSD Fault",
+                                "Isolate Switch Fault",
+                                "Rack Fuse Fault",
+                                "TMS Communication Fault",
+                                "TMS Mode Conflict Fault",
+                                "Fire Fault Level 1",
+                                "Temperature Sensor Alarm",
+                                "Smoke Sensor Alarm",
+                                "Aerosol State Fault",
+                                "Aerosol Close Fault",
+                                "Aerosol Open Fault",
+                                "Rack Switch State",
+                                "Control Box Overtemperature Fault"
+                            ]
+                        },
+                        {
+                            "id": "sbmu_2_battery_voltage",
+                            "offset": 2216,
+                            "name": "Battery Rack No. 1 Voltage",
+                            "repeat_of_offset": 2200
+                        },
+                        {
+                            "id": "sbmu_2_battery_current",
+                            "offset": 2217,
+                            "name": "Battery Rack No. 1 Current",
+                            "signed": true,
+                            "repeat_of_offset": 2201
+                        },
+                        {
+                            "id": "sbmu_2_max_cell_voltage",
+                            "offset": 2218,
+                            "name": "Battery Rack No. 1 Max Cell Voltage",
+                            "repeat_of_offset": 2202
+                        },
+                        {
+                            "id": "sbmu_2_max_cell_voltage_position",
+                            "offset": 2219,
+                            "name": "Battery Rack No. 1 Max Cell Voltage Position",
+                            "repeat_of_offset": 2203
+                        },
+                        {
+                            "id": "sbmu_2_min_cell_voltage",
+                            "offset": 2220,
+                            "name": "Battery Rack No. 1 Min Cell Voltage",
+                            "repeat_of_offset": 2204
+                        },
+                        {
+                            "id": "sbmu_2_min_cell_voltage_position",
+                            "offset": 2221,
+                            "name": "Battery Rack No. 1 Min Cell Voltage Position",
+                            "repeat_of_offset": 2205
+                        },
+                        {
+                            "id": "sbmu_2_avg_cell_voltage",
+                            "offset": 2222,
+                            "name": "Battery Rack No. 1 Avg Cell Voltage",
+                            "repeat_of_offset": 2206
+                        },
+                        {
+                            "id": "sbmu_2_max_cell_temperature",
+                            "offset": 2223,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Max Cell Temperature",
+                            "repeat_of_offset": 2207
+                        },
+                        {
+                            "id": "sbmu_2_max_cell_temperature_position",
+                            "offset": 2224,
+                            "name": "Battery Rack No. 1 Max Cell Temperature Position",
+                            "repeat_of_offset": 2208
+                        },
+                        {
+                            "id": "sbmu_2_min_cell_temperature",
+                            "offset": 2225,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Min Cell Temperature",
+                            "repeat_of_offset": 2209
+                        },
+                        {
+                            "id": "sbmu_2_min_cell_temperature_position",
+                            "offset": 2226,
+                            "name": "Battery Rack No. 1 Min Cell Temperature Position",
+                            "repeat_of_offset": 2210
+                        },
+                        {
+                            "id": "sbmu_2_avg_cell_temperature",
+                            "offset": 2227,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Avg Cell Temperature",
+                            "repeat_of_offset": 2211
+                        },
+                        {
+                            "id": "sbmu_2_alarms1",
+                            "offset": 2228,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "TMS Fault Level 1",
+                                "TMS Fault Level 2",
+                                "TMS Fault Level 3",
+                                "Charge Overcurrent Warning",
+                                "Discharge Overcurrent Warning",
+                                "Temp Difference Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "Extreme Total Voltage Warning",
+                                "Master Positive Relay Close Fail Fault",
+                                "Master Negative Relay Close Fail Fault",
+                                "Master Positive Relay Stuck Fault",
+                                "Master Negative Relay Stuck Fault",
+                                "Power Loss Fault",
+                                "Balance Warning",
+                                "Inner Communication Fault (CCAN)",
+                                "Inner Communication Fault (SCAN)"
+                            ],
+                            "repeat_of_offset": 2212
+                        },
+                        {
+                            "id": "sbmu_2_alarms2",
+                            "offset": 2230,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current Sensor Abnormal Fault",
+                                "Single Cell Voltage Sampling Abnormal Fault",
+                                "Module Temperature Sampling Abnormal Fault",
+                                "High Voltage Circuit Open Fault",
+                                "MSD Fault",
+                                "Isolate Switch Fault",
+                                "Rack Fuse Fault",
+                                "TMS Communication Fault",
+                                "TMS Mode Conflict Fault",
+                                "Fire Fault Level 1",
+                                "Temperature Sensor Alarm",
+                                "Smoke Sensor Alarm",
+                                "Aerosol State Fault",
+                                "Aerosol Close Fault",
+                                "Aerosol Open Fault",
+                                "Rack Switch State",
+                                "Control Box Overtemperature Fault"
+                            ],
+                            "repeat_of_offset": 2214
+                        },
+                        {
+                            "id": "sbmu_3_battery_voltage",
+                            "offset": 2232,
+                            "name": "Battery Rack No. 1 Voltage",
+                            "repeat_of_offset": 2200
+                        },
+                        {
+                            "id": "sbmu_3_battery_current",
+                            "offset": 2233,
+                            "name": "Battery Rack No. 1 Current",
+                            "signed": true,
+                            "repeat_of_offset": 2201
+                        },
+                        {
+                            "id": "sbmu_3_max_cell_voltage",
+                            "offset": 2234,
+                            "name": "Battery Rack No. 1 Max Cell Voltage",
+                            "repeat_of_offset": 2202
+                        },
+                        {
+                            "id": "sbmu_3_max_cell_voltage_position",
+                            "offset": 2235,
+                            "name": "Battery Rack No. 1 Max Cell Voltage Position",
+                            "repeat_of_offset": 2203
+                        },
+                        {
+                            "id": "sbmu_3_min_cell_voltage",
+                            "offset": 2236,
+                            "name": "Battery Rack No. 1 Min Cell Voltage",
+                            "repeat_of_offset": 2204
+                        },
+                        {
+                            "id": "sbmu_3_min_cell_voltage_position",
+                            "offset": 2237,
+                            "name": "Battery Rack No. 1 Min Cell Voltage Position",
+                            "repeat_of_offset": 2205
+                        },
+                        {
+                            "id": "sbmu_3_avg_cell_voltage",
+                            "offset": 2238,
+                            "name": "Battery Rack No. 1 Avg Cell Voltage",
+                            "repeat_of_offset": 2206
+                        },
+                        {
+                            "id": "sbmu_3_max_cell_temperature",
+                            "offset": 2239,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Max Cell Temperature",
+                            "repeat_of_offset": 2207
+                        },
+                        {
+                            "id": "sbmu_3_max_cell_temperature_position",
+                            "offset": 2240,
+                            "name": "Battery Rack No. 1 Max Cell Temperature Position",
+                            "repeat_of_offset": 2208
+                        },
+                        {
+                            "id": "sbmu_3_min_cell_temperature",
+                            "offset": 2241,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Min Cell Temperature",
+                            "repeat_of_offset": 2209
+                        },
+                        {
+                            "id": "sbmu_3_min_cell_temperature_position",
+                            "offset": 2242,
+                            "name": "Battery Rack No. 1 Min Cell Temperature Position",
+                            "repeat_of_offset": 2210
+                        },
+                        {
+                            "id": "sbmu_3_avg_cell_temperature",
+                            "offset": 2243,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Avg Cell Temperature",
+                            "repeat_of_offset": 2211
+                        },
+                        {
+                            "id": "sbmu_3_alarms1",
+                            "offset": 2244,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "TMS Fault Level 1",
+                                "TMS Fault Level 2",
+                                "TMS Fault Level 3",
+                                "Charge Overcurrent Warning",
+                                "Discharge Overcurrent Warning",
+                                "Temp Difference Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "Extreme Total Voltage Warning",
+                                "Master Positive Relay Close Fail Fault",
+                                "Master Negative Relay Close Fail Fault",
+                                "Master Positive Relay Stuck Fault",
+                                "Master Negative Relay Stuck Fault",
+                                "Power Loss Fault",
+                                "Balance Warning",
+                                "Inner Communication Fault (CCAN)",
+                                "Inner Communication Fault (SCAN)"
+                            ],
+                            "repeat_of_offset": 2212
+                        },
+                        {
+                            "id": "sbmu_3_alarms2",
+                            "offset": 2246,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current Sensor Abnormal Fault",
+                                "Single Cell Voltage Sampling Abnormal Fault",
+                                "Module Temperature Sampling Abnormal Fault",
+                                "High Voltage Circuit Open Fault",
+                                "MSD Fault",
+                                "Isolate Switch Fault",
+                                "Rack Fuse Fault",
+                                "TMS Communication Fault",
+                                "TMS Mode Conflict Fault",
+                                "Fire Fault Level 1",
+                                "Temperature Sensor Alarm",
+                                "Smoke Sensor Alarm",
+                                "Aerosol State Fault",
+                                "Aerosol Close Fault",
+                                "Aerosol Open Fault",
+                                "Rack Switch State",
+                                "Control Box Overtemperature Fault"
+                            ],
+                            "repeat_of_offset": 2214
+                        },
+                        {
+                            "id": "sbmu_4_battery_voltage",
+                            "offset": 2248,
+                            "name": "Battery Rack No. 1 Voltage",
+                            "repeat_of_offset": 2200
+                        },
+                        {
+                            "id": "sbmu_4_battery_current",
+                            "offset": 2249,
+                            "name": "Battery Rack No. 1 Current",
+                            "signed": true,
+                            "repeat_of_offset": 2201
+                        },
+                        {
+                            "id": "sbmu_4_max_cell_voltage",
+                            "offset": 2250,
+                            "name": "Battery Rack No. 1 Max Cell Voltage",
+                            "repeat_of_offset": 2202
+                        },
+                        {
+                            "id": "sbmu_4_max_cell_voltage_position",
+                            "offset": 2251,
+                            "name": "Battery Rack No. 1 Max Cell Voltage Position",
+                            "repeat_of_offset": 2203
+                        },
+                        {
+                            "id": "sbmu_4_min_cell_voltage",
+                            "offset": 2252,
+                            "name": "Battery Rack No. 1 Min Cell Voltage",
+                            "repeat_of_offset": 2204
+                        },
+                        {
+                            "id": "sbmu_4_min_cell_voltage_position",
+                            "offset": 2253,
+                            "name": "Battery Rack No. 1 Min Cell Voltage Position",
+                            "repeat_of_offset": 2205
+                        },
+                        {
+                            "id": "sbmu_4_avg_cell_voltage",
+                            "offset": 2254,
+                            "name": "Battery Rack No. 1 Avg Cell Voltage",
+                            "repeat_of_offset": 2206
+                        },
+                        {
+                            "id": "sbmu_4_max_cell_temperature",
+                            "offset": 2255,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Max Cell Temperature",
+                            "repeat_of_offset": 2207
+                        },
+                        {
+                            "id": "sbmu_4_max_cell_temperature_position",
+                            "offset": 2256,
+                            "name": "Battery Rack No. 1 Max Cell Temperature Position",
+                            "repeat_of_offset": 2208
+                        },
+                        {
+                            "id": "sbmu_4_min_cell_temperature",
+                            "offset": 2257,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Min Cell Temperature",
+                            "repeat_of_offset": 2209
+                        },
+                        {
+                            "id": "sbmu_4_min_cell_temperature_position",
+                            "offset": 2258,
+                            "name": "Battery Rack No. 1 Min Cell Temperature Position",
+                            "repeat_of_offset": 2210
+                        },
+                        {
+                            "id": "sbmu_4_avg_cell_temperature",
+                            "offset": 2259,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Avg Cell Temperature",
+                            "repeat_of_offset": 2211
+                        },
+                        {
+                            "id": "sbmu_4_alarms1",
+                            "offset": 2260,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "TMS Fault Level 1",
+                                "TMS Fault Level 2",
+                                "TMS Fault Level 3",
+                                "Charge Overcurrent Warning",
+                                "Discharge Overcurrent Warning",
+                                "Temp Difference Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "Extreme Total Voltage Warning",
+                                "Master Positive Relay Close Fail Fault",
+                                "Master Negative Relay Close Fail Fault",
+                                "Master Positive Relay Stuck Fault",
+                                "Master Negative Relay Stuck Fault",
+                                "Power Loss Fault",
+                                "Balance Warning",
+                                "Inner Communication Fault (CCAN)",
+                                "Inner Communication Fault (SCAN)"
+                            ],
+                            "repeat_of_offset": 2212
+                        },
+                        {
+                            "id": "sbmu_4_alarms2",
+                            "offset": 2262,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current Sensor Abnormal Fault",
+                                "Single Cell Voltage Sampling Abnormal Fault",
+                                "Module Temperature Sampling Abnormal Fault",
+                                "High Voltage Circuit Open Fault",
+                                "MSD Fault",
+                                "Isolate Switch Fault",
+                                "Rack Fuse Fault",
+                                "TMS Communication Fault",
+                                "TMS Mode Conflict Fault",
+                                "Fire Fault Level 1",
+                                "Temperature Sensor Alarm",
+                                "Smoke Sensor Alarm",
+                                "Aerosol State Fault",
+                                "Aerosol Close Fault",
+                                "Aerosol Open Fault",
+                                "Rack Switch State",
+                                "Control Box Overtemperature Fault"
+                            ],
+                            "repeat_of_offset": 2214
+                        },
+                        {
+                            "id": "sbmu_5_battery_voltage",
+                            "offset": 2264,
+                            "name": "Battery Rack No. 1 Voltage",
+                            "repeat_of_offset": 2200
+                        },
+                        {
+                            "id": "sbmu_5_battery_current",
+                            "offset": 2265,
+                            "name": "Battery Rack No. 1 Current",
+                            "signed": true,
+                            "repeat_of_offset": 2201
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 2266,
+                    "number_of_registers": 78,
+                    "map": [
+                        {
+                            "id": "sbmu_5_max_cell_voltage",
+                            "offset": 2266,
+                            "name": "Battery Rack No. 1 Max Cell Voltage",
+                            "repeat_of_offset": 2202
+                        },
+                        {
+                            "id": "sbmu_5_max_cell_voltage_position",
+                            "offset": 2267,
+                            "name": "Battery Rack No. 1 Max Cell Voltage Position",
+                            "repeat_of_offset": 2203
+                        },
+                        {
+                            "id": "sbmu_5_min_cell_voltage",
+                            "offset": 2268,
+                            "name": "Battery Rack No. 1 Min Cell Voltage",
+                            "repeat_of_offset": 2204
+                        },
+                        {
+                            "id": "sbmu_5_min_cell_voltage_position",
+                            "offset": 2269,
+                            "name": "Battery Rack No. 1 Min Cell Voltage Position",
+                            "repeat_of_offset": 2205
+                        },
+                        {
+                            "id": "sbmu_5_avg_cell_voltage",
+                            "offset": 2270,
+                            "name": "Battery Rack No. 1 Avg Cell Voltage",
+                            "repeat_of_offset": 2206
+                        },
+                        {
+                            "id": "sbmu_5_max_cell_temperature",
+                            "offset": 2271,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Max Cell Temperature",
+                            "repeat_of_offset": 2207
+                        },
+                        {
+                            "id": "sbmu_5_max_cell_temperature_position",
+                            "offset": 2272,
+                            "name": "Battery Rack No. 1 Max Cell Temperature Position",
+                            "repeat_of_offset": 2208
+                        },
+                        {
+                            "id": "sbmu_5_min_cell_temperature",
+                            "offset": 2273,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Min Cell Temperature",
+                            "repeat_of_offset": 2209
+                        },
+                        {
+                            "id": "sbmu_5_min_cell_temperature_position",
+                            "offset": 2274,
+                            "name": "Battery Rack No. 1 Min Cell Temperature Position",
+                            "repeat_of_offset": 2210
+                        },
+                        {
+                            "id": "sbmu_5_avg_cell_temperature",
+                            "offset": 2275,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Avg Cell Temperature",
+                            "repeat_of_offset": 2211
+                        },
+                        {
+                            "id": "sbmu_5_alarms1",
+                            "offset": 2276,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "TMS Fault Level 1",
+                                "TMS Fault Level 2",
+                                "TMS Fault Level 3",
+                                "Charge Overcurrent Warning",
+                                "Discharge Overcurrent Warning",
+                                "Temp Difference Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "Extreme Total Voltage Warning",
+                                "Master Positive Relay Close Fail Fault",
+                                "Master Negative Relay Close Fail Fault",
+                                "Master Positive Relay Stuck Fault",
+                                "Master Negative Relay Stuck Fault",
+                                "Power Loss Fault",
+                                "Balance Warning",
+                                "Inner Communication Fault (CCAN)",
+                                "Inner Communication Fault (SCAN)"
+                            ],
+                            "repeat_of_offset": 2212
+                        },
+                        {
+                            "id": "sbmu_5_alarms2",
+                            "offset": 2278,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current Sensor Abnormal Fault",
+                                "Single Cell Voltage Sampling Abnormal Fault",
+                                "Module Temperature Sampling Abnormal Fault",
+                                "High Voltage Circuit Open Fault",
+                                "MSD Fault",
+                                "Isolate Switch Fault",
+                                "Rack Fuse Fault",
+                                "TMS Communication Fault",
+                                "TMS Mode Conflict Fault",
+                                "Fire Fault Level 1",
+                                "Temperature Sensor Alarm",
+                                "Smoke Sensor Alarm",
+                                "Aerosol State Fault",
+                                "Aerosol Close Fault",
+                                "Aerosol Open Fault",
+                                "Rack Switch State",
+                                "Control Box Overtemperature Fault"
+                            ],
+                            "repeat_of_offset": 2214
+                        },
+                        {
+                            "id": "sbmu_6_battery_voltage",
+                            "offset": 2280,
+                            "name": "Battery Rack No. 1 Voltage",
+                            "repeat_of_offset": 2200
+                        },
+                        {
+                            "id": "sbmu_6_battery_current",
+                            "offset": 2281,
+                            "name": "Battery Rack No. 1 Current",
+                            "signed": true,
+                            "repeat_of_offset": 2201
+                        },
+                        {
+                            "id": "sbmu_6_max_cell_voltage",
+                            "offset": 2282,
+                            "name": "Battery Rack No. 1 Max Cell Voltage",
+                            "repeat_of_offset": 2202
+                        },
+                        {
+                            "id": "sbmu_6_max_cell_voltage_position",
+                            "offset": 2283,
+                            "name": "Battery Rack No. 1 Max Cell Voltage Position",
+                            "repeat_of_offset": 2203
+                        },
+                        {
+                            "id": "sbmu_6_min_cell_voltage",
+                            "offset": 2284,
+                            "name": "Battery Rack No. 1 Min Cell Voltage",
+                            "repeat_of_offset": 2204
+                        },
+                        {
+                            "id": "sbmu_6_min_cell_voltage_position",
+                            "offset": 2285,
+                            "name": "Battery Rack No. 1 Min Cell Voltage Position",
+                            "repeat_of_offset": 2205
+                        },
+                        {
+                            "id": "sbmu_6_avg_cell_voltage",
+                            "offset": 2286,
+                            "name": "Battery Rack No. 1 Avg Cell Voltage",
+                            "repeat_of_offset": 2206
+                        },
+                        {
+                            "id": "sbmu_6_max_cell_temperature",
+                            "offset": 2287,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Max Cell Temperature",
+                            "repeat_of_offset": 2207
+                        },
+                        {
+                            "id": "sbmu_6_max_cell_temperature_position",
+                            "offset": 2288,
+                            "name": "Battery Rack No. 1 Max Cell Temperature Position",
+                            "repeat_of_offset": 2208
+                        },
+                        {
+                            "id": "sbmu_6_min_cell_temperature",
+                            "offset": 2289,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Min Cell Temperature",
+                            "repeat_of_offset": 2209
+                        },
+                        {
+                            "id": "sbmu_6_min_cell_temperature_position",
+                            "offset": 2290,
+                            "name": "Battery Rack No. 1 Min Cell Temperature Position",
+                            "repeat_of_offset": 2210
+                        },
+                        {
+                            "id": "sbmu_6_avg_cell_temperature",
+                            "offset": 2291,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Avg Cell Temperature",
+                            "repeat_of_offset": 2211
+                        },
+                        {
+                            "id": "sbmu_6_alarms1",
+                            "offset": 2292,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "TMS Fault Level 1",
+                                "TMS Fault Level 2",
+                                "TMS Fault Level 3",
+                                "Charge Overcurrent Warning",
+                                "Discharge Overcurrent Warning",
+                                "Temp Difference Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "Extreme Total Voltage Warning",
+                                "Master Positive Relay Close Fail Fault",
+                                "Master Negative Relay Close Fail Fault",
+                                "Master Positive Relay Stuck Fault",
+                                "Master Negative Relay Stuck Fault",
+                                "Power Loss Fault",
+                                "Balance Warning",
+                                "Inner Communication Fault (CCAN)",
+                                "Inner Communication Fault (SCAN)"
+                            ],
+                            "repeat_of_offset": 2212
+                        },
+                        {
+                            "id": "sbmu_6_alarms2",
+                            "offset": 2294,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current Sensor Abnormal Fault",
+                                "Single Cell Voltage Sampling Abnormal Fault",
+                                "Module Temperature Sampling Abnormal Fault",
+                                "High Voltage Circuit Open Fault",
+                                "MSD Fault",
+                                "Isolate Switch Fault",
+                                "Rack Fuse Fault",
+                                "TMS Communication Fault",
+                                "TMS Mode Conflict Fault",
+                                "Fire Fault Level 1",
+                                "Temperature Sensor Alarm",
+                                "Smoke Sensor Alarm",
+                                "Aerosol State Fault",
+                                "Aerosol Close Fault",
+                                "Aerosol Open Fault",
+                                "Rack Switch State",
+                                "Control Box Overtemperature Fault"
+                            ],
+                            "repeat_of_offset": 2214
+                        },
+                        {
+                            "id": "sbmu_7_battery_voltage",
+                            "offset": 2296,
+                            "name": "Battery Rack No. 1 Voltage",
+                            "repeat_of_offset": 2200
+                        },
+                        {
+                            "id": "sbmu_7_battery_current",
+                            "offset": 2297,
+                            "name": "Battery Rack No. 1 Current",
+                            "signed": true,
+                            "repeat_of_offset": 2201
+                        },
+                        {
+                            "id": "sbmu_7_max_cell_voltage",
+                            "offset": 2298,
+                            "name": "Battery Rack No. 1 Max Cell Voltage",
+                            "repeat_of_offset": 2202
+                        },
+                        {
+                            "id": "sbmu_7_max_cell_voltage_position",
+                            "offset": 2299,
+                            "name": "Battery Rack No. 1 Max Cell Voltage Position",
+                            "repeat_of_offset": 2203
+                        },
+                        {
+                            "id": "sbmu_7_min_cell_voltage",
+                            "offset": 2300,
+                            "name": "Battery Rack No. 1 Min Cell Voltage",
+                            "repeat_of_offset": 2204
+                        },
+                        {
+                            "id": "sbmu_7_min_cell_voltage_position",
+                            "offset": 2301,
+                            "name": "Battery Rack No. 1 Min Cell Voltage Position",
+                            "repeat_of_offset": 2205
+                        },
+                        {
+                            "id": "sbmu_7_avg_cell_voltage",
+                            "offset": 2302,
+                            "name": "Battery Rack No. 1 Avg Cell Voltage",
+                            "repeat_of_offset": 2206
+                        },
+                        {
+                            "id": "sbmu_7_max_cell_temperature",
+                            "offset": 2303,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Max Cell Temperature",
+                            "repeat_of_offset": 2207
+                        },
+                        {
+                            "id": "sbmu_7_max_cell_temperature_position",
+                            "offset": 2304,
+                            "name": "Battery Rack No. 1 Max Cell Temperature Position",
+                            "repeat_of_offset": 2208
+                        },
+                        {
+                            "id": "sbmu_7_min_cell_temperature",
+                            "offset": 2305,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Min Cell Temperature",
+                            "repeat_of_offset": 2209
+                        },
+                        {
+                            "id": "sbmu_7_min_cell_temperature_position",
+                            "offset": 2306,
+                            "name": "Battery Rack No. 1 Min Cell Temperature Position",
+                            "repeat_of_offset": 2210
+                        },
+                        {
+                            "id": "sbmu_7_avg_cell_temperature",
+                            "offset": 2307,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Avg Cell Temperature",
+                            "repeat_of_offset": 2211
+                        },
+                        {
+                            "id": "sbmu_7_alarms1",
+                            "offset": 2308,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "TMS Fault Level 1",
+                                "TMS Fault Level 2",
+                                "TMS Fault Level 3",
+                                "Charge Overcurrent Warning",
+                                "Discharge Overcurrent Warning",
+                                "Temp Difference Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "Extreme Total Voltage Warning",
+                                "Master Positive Relay Close Fail Fault",
+                                "Master Negative Relay Close Fail Fault",
+                                "Master Positive Relay Stuck Fault",
+                                "Master Negative Relay Stuck Fault",
+                                "Power Loss Fault",
+                                "Balance Warning",
+                                "Inner Communication Fault (CCAN)",
+                                "Inner Communication Fault (SCAN)"
+                            ],
+                            "repeat_of_offset": 2212
+                        },
+                        {
+                            "id": "sbmu_7_alarms2",
+                            "offset": 2310,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current Sensor Abnormal Fault",
+                                "Single Cell Voltage Sampling Abnormal Fault",
+                                "Module Temperature Sampling Abnormal Fault",
+                                "High Voltage Circuit Open Fault",
+                                "MSD Fault",
+                                "Isolate Switch Fault",
+                                "Rack Fuse Fault",
+                                "TMS Communication Fault",
+                                "TMS Mode Conflict Fault",
+                                "Fire Fault Level 1",
+                                "Temperature Sensor Alarm",
+                                "Smoke Sensor Alarm",
+                                "Aerosol State Fault",
+                                "Aerosol Close Fault",
+                                "Aerosol Open Fault",
+                                "Rack Switch State",
+                                "Control Box Overtemperature Fault"
+                            ],
+                            "repeat_of_offset": 2214
+                        },
+                        {
+                            "id": "sbmu_8_battery_voltage",
+                            "offset": 2312,
+                            "name": "Battery Rack No. 1 Voltage",
+                            "repeat_of_offset": 2200
+                        },
+                        {
+                            "id": "sbmu_8_battery_current",
+                            "offset": 2313,
+                            "name": "Battery Rack No. 1 Current",
+                            "signed": true,
+                            "repeat_of_offset": 2201
+                        },
+                        {
+                            "id": "sbmu_8_max_cell_voltage",
+                            "offset": 2314,
+                            "name": "Battery Rack No. 1 Max Cell Voltage",
+                            "repeat_of_offset": 2202
+                        },
+                        {
+                            "id": "sbmu_8_max_cell_voltage_position",
+                            "offset": 2315,
+                            "name": "Battery Rack No. 1 Max Cell Voltage Position",
+                            "repeat_of_offset": 2203
+                        },
+                        {
+                            "id": "sbmu_8_min_cell_voltage",
+                            "offset": 2316,
+                            "name": "Battery Rack No. 1 Min Cell Voltage",
+                            "repeat_of_offset": 2204
+                        },
+                        {
+                            "id": "sbmu_8_min_cell_voltage_position",
+                            "offset": 2317,
+                            "name": "Battery Rack No. 1 Min Cell Voltage Position",
+                            "repeat_of_offset": 2205
+                        },
+                        {
+                            "id": "sbmu_8_avg_cell_voltage",
+                            "offset": 2318,
+                            "name": "Battery Rack No. 1 Avg Cell Voltage",
+                            "repeat_of_offset": 2206
+                        },
+                        {
+                            "id": "sbmu_8_max_cell_temperature",
+                            "offset": 2319,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Max Cell Temperature",
+                            "repeat_of_offset": 2207
+                        },
+                        {
+                            "id": "sbmu_8_max_cell_temperature_position",
+                            "offset": 2320,
+                            "name": "Battery Rack No. 1 Max Cell Temperature Position",
+                            "repeat_of_offset": 2208
+                        },
+                        {
+                            "id": "sbmu_8_min_cell_temperature",
+                            "offset": 2321,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Min Cell Temperature",
+                            "repeat_of_offset": 2209
+                        },
+                        {
+                            "id": "sbmu_8_min_cell_temperature_position",
+                            "offset": 2322,
+                            "name": "Battery Rack No. 1 Min Cell Temperature Position",
+                            "repeat_of_offset": 2210
+                        },
+                        {
+                            "id": "sbmu_8_avg_cell_temperature",
+                            "offset": 2323,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Avg Cell Temperature",
+                            "repeat_of_offset": 2211
+                        },
+                        {
+                            "id": "sbmu_8_alarms1",
+                            "offset": 2324,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "TMS Fault Level 1",
+                                "TMS Fault Level 2",
+                                "TMS Fault Level 3",
+                                "Charge Overcurrent Warning",
+                                "Discharge Overcurrent Warning",
+                                "Temp Difference Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "Extreme Total Voltage Warning",
+                                "Master Positive Relay Close Fail Fault",
+                                "Master Negative Relay Close Fail Fault",
+                                "Master Positive Relay Stuck Fault",
+                                "Master Negative Relay Stuck Fault",
+                                "Power Loss Fault",
+                                "Balance Warning",
+                                "Inner Communication Fault (CCAN)",
+                                "Inner Communication Fault (SCAN)"
+                            ],
+                            "repeat_of_offset": 2212
+                        },
+                        {
+                            "id": "sbmu_8_alarms2",
+                            "offset": 2326,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current Sensor Abnormal Fault",
+                                "Single Cell Voltage Sampling Abnormal Fault",
+                                "Module Temperature Sampling Abnormal Fault",
+                                "High Voltage Circuit Open Fault",
+                                "MSD Fault",
+                                "Isolate Switch Fault",
+                                "Rack Fuse Fault",
+                                "TMS Communication Fault",
+                                "TMS Mode Conflict Fault",
+                                "Fire Fault Level 1",
+                                "Temperature Sensor Alarm",
+                                "Smoke Sensor Alarm",
+                                "Aerosol State Fault",
+                                "Aerosol Close Fault",
+                                "Aerosol Open Fault",
+                                "Rack Switch State",
+                                "Control Box Overtemperature Fault"
+                            ],
+                            "repeat_of_offset": 2214
+                        },
+                        {
+                            "id": "sbmu_9_battery_voltage",
+                            "offset": 2328,
+                            "name": "Battery Rack No. 1 Voltage",
+                            "repeat_of_offset": 2200
+                        },
+                        {
+                            "id": "sbmu_9_battery_current",
+                            "offset": 2329,
+                            "name": "Battery Rack No. 1 Current",
+                            "signed": true,
+                            "repeat_of_offset": 2201
+                        },
+                        {
+                            "id": "sbmu_9_max_cell_voltage",
+                            "offset": 2330,
+                            "name": "Battery Rack No. 1 Max Cell Voltage",
+                            "repeat_of_offset": 2202
+                        },
+                        {
+                            "id": "sbmu_9_max_cell_voltage_position",
+                            "offset": 2331,
+                            "name": "Battery Rack No. 1 Max Cell Voltage Position",
+                            "repeat_of_offset": 2203
+                        },
+                        {
+                            "id": "sbmu_9_min_cell_voltage",
+                            "offset": 2332,
+                            "name": "Battery Rack No. 1 Min Cell Voltage",
+                            "repeat_of_offset": 2204
+                        },
+                        {
+                            "id": "sbmu_9_min_cell_voltage_position",
+                            "offset": 2333,
+                            "name": "Battery Rack No. 1 Min Cell Voltage Position",
+                            "repeat_of_offset": 2205
+                        },
+                        {
+                            "id": "sbmu_9_avg_cell_voltage",
+                            "offset": 2334,
+                            "name": "Battery Rack No. 1 Avg Cell Voltage",
+                            "repeat_of_offset": 2206
+                        },
+                        {
+                            "id": "sbmu_9_max_cell_temperature",
+                            "offset": 2335,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Max Cell Temperature",
+                            "repeat_of_offset": 2207
+                        },
+                        {
+                            "id": "sbmu_9_max_cell_temperature_position",
+                            "offset": 2336,
+                            "name": "Battery Rack No. 1 Max Cell Temperature Position",
+                            "repeat_of_offset": 2208
+                        },
+                        {
+                            "id": "sbmu_9_min_cell_temperature",
+                            "offset": 2337,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Min Cell Temperature",
+                            "repeat_of_offset": 2209
+                        },
+                        {
+                            "id": "sbmu_9_min_cell_temperature_position",
+                            "offset": 2338,
+                            "name": "Battery Rack No. 1 Min Cell Temperature Position",
+                            "repeat_of_offset": 2210
+                        },
+                        {
+                            "id": "sbmu_9_avg_cell_temperature",
+                            "offset": 2339,
+                            "scale": 100,
+                            "name": "Battery Rack No. 1 Avg Cell Temperature",
+                            "repeat_of_offset": 2211
+                        },
+                        {
+                            "id": "sbmu_9_alarms1",
+                            "offset": 2340,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 1",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Single Cell Overvoltage Warning 1",
+                                "Single Cell Overvoltage Warning 2",
+                                "Single Cell Overvoltage Warning 3",
+                                "Single Cell Undervoltage Warning 1",
+                                "Single Cell Undervoltage Warning 2",
+                                "Single Cell Undervoltage Warning 3",
+                                "Single Cell Overtemperature Warning 1",
+                                "Single Cell Overtemperature Warning 2",
+                                "Single Cell Overtemperature Warning 3",
+                                "Single Cell Undertemperature Warning 1",
+                                "Single Cell Undertemperature Warning 2",
+                                "Single Cell Undertemperature Warning 3",
+                                "SOC Low Warning 1",
+                                "SOC Low Warning 2",
+                                "SOC Low Warning 3",
+                                "TMS Fault Level 1",
+                                "TMS Fault Level 2",
+                                "TMS Fault Level 3",
+                                "Charge Overcurrent Warning",
+                                "Discharge Overcurrent Warning",
+                                "Temp Difference Warning",
+                                "Cell Extreme Temperature Warning",
+                                "Cell Extreme Voltage Warning",
+                                "Extreme Total Voltage Warning",
+                                "Master Positive Relay Close Fail Fault",
+                                "Master Negative Relay Close Fail Fault",
+                                "Master Positive Relay Stuck Fault",
+                                "Master Negative Relay Stuck Fault",
+                                "Power Loss Fault",
+                                "Balance Warning",
+                                "Inner Communication Fault (CCAN)",
+                                "Inner Communication Fault (SCAN)"
+                            ],
+                            "repeat_of_offset": 2212
+                        },
+                        {
+                            "id": "sbmu_9_alarms2",
+                            "offset": 2342,
+                            "size": 2,
+                            "name": "Battery Rack No. 1 alarm state 2",
+                            "uri": "/site/ess_ls",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Current Sensor Abnormal Fault",
+                                "Single Cell Voltage Sampling Abnormal Fault",
+                                "Module Temperature Sampling Abnormal Fault",
+                                "High Voltage Circuit Open Fault",
+                                "MSD Fault",
+                                "Isolate Switch Fault",
+                                "Rack Fuse Fault",
+                                "TMS Communication Fault",
+                                "TMS Mode Conflict Fault",
+                                "Fire Fault Level 1",
+                                "Temperature Sensor Alarm",
+                                "Smoke Sensor Alarm",
+                                "Aerosol State Fault",
+                                "Aerosol Close Fault",
+                                "Aerosol Open Fault",
+                                "Rack Switch State",
+                                "Control Box Overtemperature Fault"
+                            ],
+                            "repeat_of_offset": 2214
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

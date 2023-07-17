@@ -13,13 +13,16 @@ mongo = Mongo()
 ### HELPER FUNCS
 
 # this assumes that DBI-GET is working, so only use for DEL/SET/POST tests!!!
-def check_local_and_remote(collection, document, result):
+def check_local_and_remote(uri, result):
+    # parse URI and determine how to check result
+    frags = uri.split("/")[1:]
+
     # local check
-    local = send("get", "/dbi/%s/%s" % (collection, document)) # retrieve the current doc
+    local = send("get", "/%s/%s/%s" % (frags[0], frags[1], frags[2])) # retrieve the current doc
     assert result == local # asserts that the local document in dbi matches what we got
 
     # mongo check
-    remote = mongo.grab(collection, document)
+    remote = mongo.grab_document(uri)
     assert remote != False  # mongo returns False if doc DNE
     del remote['_id']       # remove metadata -- isnt tracked locally
     del remote['_version']  # ^^
@@ -28,6 +31,7 @@ def check_local_and_remote(collection, document, result):
 # helper function that gets passed as an argument to the parametrization of each test function
 def generate_new_uris(class_name):
     mongo.add_documents(class_name, pytest.numcollections, pytest.numdocuments, pytest.numlayers)
+    mongo.add_auditlogs(class_name, pytest.numdocuments)
     cmds = populate_uris(class_name)
     
     return cmds
@@ -35,6 +39,8 @@ def generate_new_uris(class_name):
 # populates command (test params) with JUST a URI (no body -- use only for set and delete) 
 def populate_uris(class_name):
     cmds = [] # return value
+
+    # start with standard dbi database
     colls = mongo.client["dbi"].list_collection_names()
     for col in colls:
         if not class_name in col:
@@ -44,6 +50,12 @@ def populate_uris(class_name):
         for doc in cursor:
             cmds = ["/dbi/%s/%s" % (col, doc["_id"])] + cmds # prepend
             cmds = populate_uris_recursive(doc, "/dbi/%s/%s" % (col, doc["_id"])) + cmds # prepend
+
+    # add URIs for audit log database as well
+    cursor = mongo.client["audit"]["log"].find({ "_id": { "$regex": class_name } }) # finds all audit logs that match the current class (method)
+    for doc in cursor:
+        cmds = ["/dbi/audit/%s" % doc["_id"]] + cmds # prepend
+        cmds = populate_uris_recursive(doc, "/dbi/audit/%s" % doc["_id"]) + cmds # prepend
 
     return cmds
 
@@ -86,7 +98,8 @@ def generate_new_params(class_name, new=True):
                 for key, value in doc_args.items():
                     renamed_body["%s_new" % key] = value
                 renamed_body_str = str(renamed_body).replace('True', 'true').replace('False', 'false').replace("'", '"')
-                params.append(("/dbi/%s_new/%s" % (frags[0], frags[1]), renamed_body_str))
+                if frags[0] != "audit": # this is not a valid test case for audit logging
+                    params.append(("/dbi/%s_new/%s" % (frags[0], frags[1]), renamed_body_str))
                 params.append((uri, renamed_body_str))
             else: # fields
                 splits = uri.rsplit("/", 1)
@@ -160,26 +173,27 @@ class TestGet:
 
         # parse URI and determine how to check result
         frags = uri.split("/")[2:] # ignores "" and "dbi" from the split
+
         assert len(frags) > 0
 
         if len(frags) == 1:
             self.check_collection(frags[0], response)
         elif len(frags) == 2:
-            self.check_document(frags[0], frags[1], response)
+            self.check_document(uri, response)
         else:
-            doc = mongo.grab(frags[0], frags[1]) # find the document we are working with
+            doc = mongo.grab_document(uri) # find the document we are working with
             assert doc != False # grab returns False if doc DNE
             self.check_field(frags[2:], response, doc) # frags[2:] prunes the collection and doc names off the frag list
     
     def check_collection(self, collection, result):
         assert type(result) == dict
         for doc_name, doc in result.items():
-            self.check_document(collection, doc_name, doc)
+            self.check_document("/dbi/%s/%s" % (collection, doc_name), doc)
 
-    def check_document(self, collection, document, result):
+    def check_document(self, uri, result):
         assert type(result) == dict
 
-        doc = mongo.grab(collection, document) # find the document we are working with
+        doc = mongo.grab_document(uri) # find the document we are working with
         assert doc != False # grab returns False if doc DNE
         del doc['_id']       # remove metadata -- isnt tracked locally
 
@@ -208,7 +222,7 @@ class TestGet:
             doc_map = send("get", "/dbi/%s/show_map" % coll)
             for doc_name, doc in doc_map.items():
                 assert doc_name in doc_list
-                remote = mongo.grab(coll, doc_name)
+                remote = mongo.grab_document("/dbi/%s/%s" % (coll, doc_name))
                 del remote['_id'] # remove metadata, this will always be here
                 try:
                     del remote['_version'] # remove metadata
@@ -243,7 +257,7 @@ class TestDelete:
             assert not frags[1] in response # doctument should have been removed from return val
 
             # remote check
-            doc = mongo.grab(frags[0], frags[1])
+            doc = mongo.grab_document(uri)
             assert not doc # should be False (DNE)
 
             # local check
@@ -251,7 +265,7 @@ class TestDelete:
             assert frags[1] not in docs
         else: # fields
             assert type(response) is dict
-            check_local_and_remote(frags[0], frags[1], response)
+            check_local_and_remote(uri, response)
 
 ### POST TESTS
 # note: uses GET to verify results -- make sure GET is working first!
@@ -265,10 +279,9 @@ class TestPost:
 
         if len(frags) == 1: # collection
             response = send("set", uri, body, True)
-            print(response)
 
             # check response
-            assert response == send("get", "%s/show_map" % uri)
+            assert response == send("get", "%s" % uri)
             assert type(response) is dict
 
             # check response
@@ -278,7 +291,7 @@ class TestPost:
 
             for doc_name, doc in response.items():
                 # check local and remote
-                check_local_and_remote(frags[0], doc_name, doc)
+                check_local_and_remote("/dbi/%s/%s" % (frags[0], doc_name), doc)
 
                 assert doc_name in prev_coll_state # should exist
                 assert doc != prev_coll_state[doc_name] # should be different
@@ -293,16 +306,16 @@ class TestPost:
             assert frags[1] in prev_coll_state # doc should exist in coll state
             prev_doc = prev_coll_state[frags[1]]
             response = send("post", uri, body)
-            print(response)
 
             # check document local and remote (will eval fields too)
-            check_local_and_remote(frags[0], frags[1], response)
+            check_local_and_remote(uri, response)
             if len(frags) == 2: # document
                 assert type(response) is dict
                 assert response != prev_doc
 
                 # clear out changed responses from prev_doc
                 for field_name in response:
+                    assert field_name in prev_doc
                     del prev_doc[field_name]
 
                 # all original fields should have been overridden and removed from our dict (see above)
@@ -328,7 +341,7 @@ class TestPost:
 
             for doc_name, doc in response.copy().items():
                 # check local and remote
-                check_local_and_remote(frags[0], doc_name, doc)
+                check_local_and_remote("/dbi/%s/%s" % (frags[0], doc_name), doc)
                 # remove from our prev_coll_state
                 if doc_name not in prev_coll_state:
                     del response[doc_name]
@@ -340,17 +353,17 @@ class TestPost:
             response = send("post", uri, body)
 
             # check document local and remote (will eval fields too)
-            check_local_and_remote(frags[0], frags[1], response)
+            check_local_and_remote(uri, response)
             if len(frags) == 2: # document
                 assert type(response) is dict
                 if "new" in frags[1]: # if we are POSTing a new document entirely
                     assert frags[1] not in prev_coll_state # doc should NOT exist in prev coll state
 
-                    new_coll_state = send("get", "/dbi/%s/show_map" % frags[0])
+                    new_coll_state = send("get", "/dbi/%s" % frags[0])
                     del new_coll_state[frags[1]]
                     assert new_coll_state == prev_coll_state # should be the only change
-                elif "new" in frags[0]: # we are POSTing to a new *COLLECTION* entirely
-                    assert "no documents" in prev_coll_state
+                elif "new" in frags[0]: # we are POSTing to a new *COLLECTION* entirely            
+                    assert "not found" in prev_coll_state
                     # this is a pass. check_local_remote has already verified the new content exists. nice!
                     pass
                 else: # doc already exists, we are POSTing a new *body* to this doc
@@ -398,7 +411,7 @@ class TestSet:
             response = send("set", uri, body, True)
 
             # check response
-            assert response == send("get", "%s/show_map" % uri)
+            assert response == send("get", "%s" % uri)
             assert type(response) is dict
 
             # check response
@@ -408,7 +421,7 @@ class TestSet:
 
             for doc_name, doc in response.items():
                 # check local and remote
-                check_local_and_remote(frags[0], doc_name, doc)
+                check_local_and_remote("/dbi/%s/%s" % (frags[0], doc_name), doc)
 
                 assert doc_name in prev_coll_state # should exist
                 assert doc != prev_coll_state[doc_name] # should be different
@@ -425,7 +438,7 @@ class TestSet:
             response = send("set", uri, body)
 
             # check document local and remote (will eval fields too)
-            check_local_and_remote(frags[0], frags[1], response)
+            check_local_and_remote(uri, response)
             if len(frags) == 2: # document
                 assert type(response) is dict
                 assert response != prev_doc
@@ -462,24 +475,24 @@ class TestSet:
 
             for doc_name, doc in response.copy().items():
                 # check local and remote
-                check_local_and_remote(frags[0], doc_name, doc)
+                check_local_and_remote("/dbi/%s/%s" % (frags[0], doc_name), doc)
         else:
             response = send("set", uri, body)
 
             # check document local and remote (will eval fields too)
-            check_local_and_remote(frags[0], frags[1], response)
+            check_local_and_remote(uri, response)
             if len(frags) == 2: # document
                 assert type(response) is dict
                 if "new" in frags[1]: # if we are SETing a new document entirely
                     # same behavior as POST
                     assert frags[1] not in prev_coll_state # doc should NOT exist in prev coll state
 
-                    new_coll_state = send("get", "/dbi/%s/show_map" % frags[0])
+                    new_coll_state = send("get", "/dbi/%s" % frags[0])
                     del new_coll_state[frags[1]]
                     assert new_coll_state == prev_coll_state # should be the only change
                 elif "new" in frags[0]: # we are SETing to a new *COLLECTION* entirely
                     # same behavior as POST
-                    assert "no documents" in prev_coll_state
+                    assert "not found" in prev_coll_state
                     # this is a pass. check_local_remote has already verified the new content exists. nice!
                     pass
                 else: # doc already exists, we are SETing a new *body* to this doc

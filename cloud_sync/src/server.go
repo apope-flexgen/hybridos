@@ -8,6 +8,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	log "github.com/flexgen-power/go_flexgen/logger"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/knownhosts"
@@ -23,6 +27,8 @@ type server struct {
 	sshConfigs map[string]*ssh.ClientConfig
 	sshClients map[string]*ssh.Client
 	sshPipes   map[string]*sshPipe
+	// S3 components
+	s3Uploader *s3manager.Uploader
 }
 
 type ServerConfig struct {
@@ -32,6 +38,10 @@ type ServerConfig struct {
 	Dir     string `json:"directory"`
 	Sorted  bool
 	Timeout int
+
+	// S3 components
+	Bucket string
+	Region string
 }
 
 type sshPipe struct {
@@ -51,6 +61,13 @@ func createServer(name string, cfg ServerConfig) (*server, error) {
 		name:   strings.ReplaceAll(strings.ToLower(name), " ", "_"),
 		config: cfg,
 	}
+
+	// if S3 connection, do nothing yet
+	// S3 does not use an IP either, so check this before assuming the configuration is local
+	if cfg.Bucket != "" {
+		return newServer, nil
+	}
+
 	// if server is local, ensure directory exists
 	if cfg.IP == "" {
 		err := ensureDirectoryExists(cfg.Dir)
@@ -59,6 +76,8 @@ func createServer(name string, cfg ServerConfig) (*server, error) {
 		}
 		return newServer, nil
 	}
+
+	// if not local or S3, assume SSH >>>
 	// only allocate memory for SSH connection if server is remote
 	newServer.sshConfigs = make(map[string]*ssh.ClientConfig)
 	newServer.sshPipes = make(map[string]*sshPipe)
@@ -68,11 +87,21 @@ func createServer(name string, cfg ServerConfig) (*server, error) {
 
 // initializes the connection from the client to the server
 func (serv *server) initConnection(cl *client) error {
+	// S3 configuration
+	if serv.config.Bucket != "" {
+		if serv.config.Timeout == 0 {
+			return fmt.Errorf("timeout must be > 0")
+		}
+
+		return serv.createS3Uploader(cl.config.AWSId, cl.config.AWSSecret)
+	}
+
 	// Nothing to do if the server is local
 	if serv.config.IP == "" {
 		return nil
 	}
 
+	// if not local or S3, assume SSH >>>
 	buf, err := os.ReadFile(cl.config.Key)
 	if err != nil {
 		return fmt.Errorf("failed to read private key: %w", err)
@@ -182,7 +211,13 @@ func (serv *server) asyncReestablishConnection(cl *client) (connectionReestablis
 func (serv *server) reestablishConnection(cl *client) (reestablished bool) {
 	log.Warnf("Connection from client %s to server %s is faulty. Rechecking connection status...", cl.name, serv.name)
 
-	if serv.config.IP != "" { // if server is remote, check SSH connection
+	if serv.config.Bucket != "" { // s3
+		err := serv.createS3Uploader(cl.config.AWSId, cl.config.AWSSecret)
+		if err != nil {
+			log.Errorf("s3 uploader issue: %v", err)
+			return false
+		}
+	} else if serv.config.IP != "" { // if server is remote, check SSH connection
 		err := serv.checkConn(cl)
 		if err != nil {
 			log.Errorf("Connection from client %s to server %s is still faulty: %v. Attempting to recreate connection now...", cl.name, serv.name, err)
@@ -230,5 +265,24 @@ func (serv *server) checkConn(cl *client) error {
 	if err != nil {
 		return fmt.Errorf("ping to server returned error: %w", err)
 	}
+	return nil
+}
+
+// Creates the uploader/session for S3 uploads.
+func (serv *server) createS3Uploader(aws_id, secret string) error {
+	// create aws session
+	sess, err := session.NewSession(
+		&aws.Config{
+			Credentials:      credentials.NewStaticCredentials(aws_id, secret, ""), // no token
+			Region:           aws.String(serv.config.Region),
+			S3ForcePathStyle: aws.Bool(true),
+		},
+	)
+	if err != nil {
+		return fmt.Errorf("could not create session: %w", err)
+	}
+
+	serv.s3Uploader = s3manager.NewUploader(sess)
+	log.Infof("created uploader %v", serv.s3Uploader)
 	return nil
 }

@@ -28,7 +28,6 @@ install --directory %{buildroot}%{bin_dir}
 install --directory %{buildroot}%{systemd_dir}
 
 install -m 0755 cops %{buildroot}%{bin_dir}
-install -m 0755 send_pdu_restart.sh %{buildroot}%{bin_dir}
 
 install -m 0644 cops.service %{buildroot}%{systemd_dir}
 
@@ -36,7 +35,6 @@ install -m 0644 cops.service %{buildroot}%{systemd_dir}
 rm -rf %{buildroot}
 
 %files
-%{bin_dir}/send_pdu_restart.sh
 %{bin_dir}/cops
 %{systemd_dir}/cops.service
 

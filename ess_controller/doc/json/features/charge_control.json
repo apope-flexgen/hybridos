@@ -1,0 +1,119 @@
+{
+  "name": "Charge Control",
+  "ess_charge_control_enable_flag": {
+    "name": "ESS Charge Control Enable",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "False Case Not Used",
+        "return_value": false
+      },
+      {
+        "name": "Charge Control Enable",
+        "return_value": true
+      }
+    ]
+  },
+  "ess_charge_control_solar_charge_only_flag": {
+    "name": "Solar Charge Only",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "False Case Not Used",
+        "return_value": false
+      },
+      {
+        "name": "Solar Charge Only",
+        "return_value": true
+      }
+    ]
+  },
+  "ess_charge_control_solar_dischg_priority_flag": {
+    "name": "Solar Discharge Priority",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "none",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "False Case Not Used",
+        "return_value": false
+      },
+      {
+        "name": "Solar Discharge Priority",
+        "return_value": true
+      }
+    ]
+  },
+  "ess_charge_control_kW_limit": {
+    "name": "ESS Charge Control Rate Limit",
+    "value": 150000,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "soc_avg_running": {
+    "name": "Average State of Charge for Running ESS",
+    "value": 0,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "ess_charge_control_kW_request": {
+    "name": "ESS Charge Control Power Request",
+    "value": -0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "_ess_charge_control_kW_command": {
+    "name": "ESS Charge Control Power Command",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "ess_charge_control_feeder_enable_flag": {
+    "name": "Charge Control Feeder Source Enable",
+    "value": true,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "False Case Not Used",
+        "return_value": false
+      },
+      {
+        "name": "Charge Control Feeder Source Enable",
+        "return_value": true
+      }
+    ]
+  }
+}

@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const hash = crypto.createHash('sha256');
 hash.setEncoding('hex');
 // eslint-disable-next-line import/no-unresolved
-const fims = require('fims');
+const fims = require('@flexgen/fims');
 const comp = require('./computations');
 
 /**

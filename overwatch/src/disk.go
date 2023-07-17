@@ -91,7 +91,7 @@ func (disk *DiskCollector) init() error {
 			continue
 		}
 		if _, exists := disk.mounts[fields[3]]; exists {
-			data, err := strconv.ParseUint(fields[2], 0, 32)
+			data, err := strconv.ParseUint(fields[2], 0, 64)
 			if err != nil {
 				return err
 			}
@@ -165,14 +165,14 @@ func (disk *DiskCollector) getMountInfo() map[string]interface{} {
 					continue
 				}
 
-				rtime, err := strconv.ParseUint(fields[6], 0, 32)
+				rtime, err := strconv.ParseUint(fields[6], 0, 64)
 				if err != nil {
 					log.Errorf("diskstat err on %s: %v", fields[2], err)
 				} else {
 					data[fields[2]+"_"+safeParseDir(disk.mounts[fields[2]])+"_rtimesec"] = (int)(rtime / 1000)
 				}
 
-				wtime, err := strconv.ParseUint(fields[10], 0, 32)
+				wtime, err := strconv.ParseUint(fields[10], 0, 64)
 				if err != nil {
 					log.Errorf("diskstat err on %s: %v", fields[2], err)
 				} else {
@@ -220,7 +220,7 @@ func (disk *DiskCollector) getDirInfo() map[string]interface{} {
 		}
 
 		filect := strings.Fields(string(out))[0]
-		num, err := strconv.ParseUint(filect, 0, 32)
+		num, err := strconv.ParseUint(filect, 0, 64)
 		if err != nil {
 			log.Errorf("diskstat err on %s: %v", filect, err)
 			continue

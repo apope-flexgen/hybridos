@@ -1,0 +1,998 @@
+{
+    "/notes/@@RACK_ID@@": {
+        "note1":"This is the bms component config template for CATL subsystems.",
+        "note1a":"The bms page of the ui display is outlined in /assets/bms/summay",
+        "note1b":"The /assets/@@RACK_ID@@ table defines the racks or battery management unit, each has a template file with placements for selected key words",
+        "note2": "The /config/bms area is still under development",
+        "note3":"The /components/catl... tables define the incoming control words from the bms modbus interface",
+        "note4":"The /links/<bms> table  defines mapping of external interface components to internal control variables",
+        "note5":"There are some junk/test fields as well... they will removed soon"
+    },
+    "/system/@@RACK_ID@@": {
+        "id": "@@RACK_ID@@",
+        "name": "BMS Risen Battery Rack @@RACK_NUM@@"
+    },
+    "/faults/@@RACK_ID@@": {
+        "note": "Leave as is for now. This definition is needed for clear faults UI cmd to work",
+        "clear_faults": {
+            "value": 0,
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "rack_volt_high": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "rack_volt_low": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_volt_high": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_volt_low": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "dsg_over_curr": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "chg_over_curr": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "dsg_temp_high": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "dsg_temp_low": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "chg_temp_high": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "chg_temp_low": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "insulation_low": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "terminal_temp_high": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "hvb_temp_high": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_volt_diff_high": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_temp_diff_high": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "bmu_hardware": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "bcu_hardware": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "fuse_protector": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "contactor_adhesion": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "bmu_comms": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "bau_comms": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "current_sensor": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "imd": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "disconnector_open": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        }
+    },
+    "/alarms/@@RACK_ID@@": {
+        "note": "Leave as is for now. These definitions are needed for alarms to populate in UI and for clear alarms UI cmd to work",
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "rack_volt_high_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "rack_volt_low_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_volt_high_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_volt_low_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "dsg_over_curr_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "chg_over_curr_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "dsg_temp_high_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "dsg_temp_low_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "chg_temp_high_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "chg_temp_low_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "insulation_low_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "terminal_temp_high_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "hvb_temp_high_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_volt_diff_high_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_temp_diff_high_warn": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "rack_volt_high_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "rack_volt_low_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_volt_high_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_volt_low_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "dsg_over_curr_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "chg_over_curr_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "dsg_temp_high_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "dsg_temp_low_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "chg_temp_high_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "chg_temp_low_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "insulation_low_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "terminal_temp_high_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "hvb_temp_high_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_volt_diff_high_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "cell_temp_diff_high_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "rack_vol_diff_large": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        },
+        "sms_confirmation_overtime": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@RACK_ID@@"}]}]
+            }
+        }
+    },
+    "/config/@@RACK_ID@@": {
+        "Pubs": "/assets/bms/@@RACK_ID@@",
+        "BlockSets": "/status/ess, /status/bms, /status/@@RACK_ID@@",
+        "AlarmDestination": {
+            "value": "/assets/bms/@@RACK_ID@@:alarms"
+        },
+        "FaultDestination": {
+            "value": "/assets/bms/@@RACK_ID@@:faults"
+        },
+        "NoFaultMsg": {
+            "value": "Normal"
+        },
+        "NoAlarmMsg": {
+            "value": "Normal"
+        }
+    },
+    "/status/@@RACK_ID@@": {
+        "note": "These are component status vars",
+        "RackPower": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "RackVoltage",
+            "variable2": "RackCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+        "rack_run_state": "Normal",
+        "rack_precharge_phase": "Normal",
+        "pos_contactor_state": "Normal",
+        "pre_contactor_state": "Normal",
+        "neg_contactor_state": "Normal",
+        "disconnector_state": "Normal",
+        "rack_state": "Normal"
+    },
+    "/links/@@RACK_ID@@": {
+        "RackVoltage": {
+            "value": "/components/bms_rack:rack_voltage"
+        },
+        "RackCurrent": {
+            "value": "/components/bms_rack:rack_current"
+        }
+    },
+    "/vlinks/@@RACK_ID@@": {
+        "@@RACK_ID@@_soc_ui":                   { "value": "/assets/bms/@@RACK_ID@@:soc",                               "vlink": "/components/bms_rack:rack_soc"    },
+        "@@RACK_ID@@_soh_ui":                   { "value": "/assets/bms/@@RACK_ID@@:soh",                               "vlink": "/components/bms_rack:rack_soh"    },
+        "@@RACK_ID@@_voltage_ui":               { "value": "/assets/bms/@@RACK_ID@@:system_voltage",                    "vlink": "/components/bms_rack:rack_voltage"},
+        "@@RACK_ID@@_current_ui":               { "value": "/assets/bms/@@RACK_ID@@:system_current",                    "vlink": "/components/bms_rack:rack_current"},
+        "@@RACK_ID@@_power_ui":                 { "value": "/assets/bms/@@RACK_ID@@:system_power",                      "vlink": "/status/@@RACK_ID@@:RackPower"},
+        "@@RACK_ID@@_max_cell_voltage_ui":      { "value": "/assets/bms/@@RACK_ID@@:max_cell_voltage",                  "vlink": "/components/bms_rack:rack_max_cell_voltage"},
+        "@@RACK_ID@@_min_cell_voltage_ui":      { "value": "/assets/bms/@@RACK_ID@@:min_cell_voltage",                  "vlink": "/components/bms_rack:rack_min_cell_voltage"},
+        "@@RACK_ID@@_avg_cell_voltage_ui":      { "value": "/assets/bms/@@RACK_ID@@:avg_cell_voltage",                  "vlink": "/components/bms_rack:rack_avg_cell_voltage"},
+        "@@RACK_ID@@_max_cell_temp_ui":         { "value": "/assets/bms/@@RACK_ID@@:max_cell_temp",                     "vlink": "/components/bms_rack:rack_max_cell_temperature"},
+        "@@RACK_ID@@_min_cell_temp_ui":         { "value": "/assets/bms/@@RACK_ID@@:min_cell_temp",                     "vlink": "/components/bms_rack:rack_min_cell_temperature"},
+        "@@RACK_ID@@_avg_cell_temp_ui":         { "value": "/assets/bms/@@RACK_ID@@:avg_cell_temp",                     "vlink": "/components/bms_rack:rack_avg_cell_temperature"},
+        "@@RACK_ID@@_max_charge_current_ui":    { "value": "/assets/bms/@@RACK_ID@@:max_charge_current",                "vlink": "/components/bms_rack:rack_max_charge_current"},
+        "@@RACK_ID@@_max_discharge_current_ui": { "value": "/assets/bms/@@RACK_ID@@:max_discharge_current",             "vlink": "/components/bms_rack:rack_min_charge_current"},
+
+        "site_@@RACK_ID@@_voltage":             { "value": "/site/ess_ls:@@RACK_ID@@_battery_voltage",                  "vlink": "/components/bms_rack:rack_voltage"},
+        "site_@@RACK_ID@@_current":             { "value": "/site/ess_ls:@@RACK_ID@@_battery_current",                  "vlink": "/components/bms_rack:rack_current"},
+        "site_@@RACK_ID@@_max_cell_voltage":    { "value": "/site/ess_ls:@@RACK_ID@@_max_cell_voltage",                 "vlink": "/components/bms_rack:rack_max_cell_voltage"},
+        "site_@@RACK_ID@@_min_cell_voltage":    { "value": "/site/ess_ls:@@RACK_ID@@_min_cell_voltage",                 "vlink": "/components/bms_rack:rack_min_cell_voltage"},
+        "site_@@RACK_ID@@_avg_cell_voltage":    { "value": "/site/ess_ls:@@RACK_ID@@_avg_cell_voltage",                 "vlink": "/components/bms_rack:rack_avg_cell_voltage"},
+        "site_@@RACK_ID@@_max_cell_temp":       { "value": "/site/ess_ls:@@RACK_ID@@_max_cell_temperature",             "vlink": "/components/bms_rack:rack_max_cell_temperature"},
+        "site_@@RACK_ID@@_min_cell_temp":       { "value": "/site/ess_ls:@@RACK_ID@@_min_cell_temperature",             "vlink": "/components/bms_rack:rack_min_cell_temperature"},
+        "site_@@RACK_ID@@_avg_cell_temp":       { "value": "/site/ess_ls:@@RACK_ID@@_avg_cell_temperature",             "vlink": "/components/bms_rack:rack_avg_cell_temperature"}
+    },
+    "/assets/bms/@@RACK_ID@@": {
+        "name": "Battery Rack @@RACK_NUM@@",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "soc": {
+            "name": "State of Charge",
+            "value": 76.55913543701172,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soh": {
+            "name": "State of Health",
+            "value": 45.67,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_voltage": {
+            "name": "System Voltage",
+            "value": 0,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_current": {
+            "name": "System Current",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_power": {
+            "name": "System Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_voltage": {
+            "name": "Current Highest Cell Volts",
+            "value": 27,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_voltage": {
+            "name": "Current Lowest Cell Volts",
+            "value": 22,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "avg_cell_voltage": {
+            "name": "Current Avg Cell Volts",
+            "value": 22,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_temp": {
+            "name": "Current Highest Cell Temp",
+            "value": 27,
+            "unit": "C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_temp": {
+            "name": "Current Lowest Cell Temp",
+            "value": 22,
+            "unit": "C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "avg_cell_temp": {
+            "name": "Current Avg Cell Temp",
+            "value": 22,
+            "unit": "C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_charge_current": {
+            "name": "Max Charge Current Allowed",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+
+        },
+        "max_discharge_current": {
+            "name": "Max Discharge Current Allowed",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/bms/@@RACK_ID@@:start@enabled"}, 
+                        {"uri":	"/assets/bms/@@RACK_ID@@:stop@enabled"}, 
+                        {"uri":	"/assets/bms/@@RACK_ID@@:enter_standby@enabled"}, 
+                        {"uri":	"/assets/bms/@@RACK_ID@@:exit_standby@enabled"},
+                        {"uri":	"/assets/bms/@@RACK_ID@@:clear_faults@enabled"},
+                        {"uri":	"/assets/bms/@@RACK_ID@@:clear_alarms@enabled"},
+                        {"uri":	"/assets/bms/@@RACK_ID@@:maint_reactive_power_setpoint@enabled"},
+                        {"uri":	"/assets/bms/@@RACK_ID@@:maint_active_power_setpoint@enabled"}
+                        ]
+                    }]
+            },
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value":"Init",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"bit":0,"inValue":true, "outValue":"Clear","uri":"/faults/@@RACK_ID@@:clear_faults"},
+                        {"bit":0,"inValue":true, "outValue":"Clear","uri":"/alarms/@@RACK_ID@@:clear_alarms"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": "Clear"
+                }
+            ]
+        }
+    },
+    "/schedule/wake_monitor/@@RACK_ID@@":{
+        "/status/@@RACK_ID@@:RackPower": { "enable": true, "rate":0.1, "amap": "@@RACK_ID@@", "func":"CalculateVar"}
+    },
+    "/components/bms_rack_controls": {
+        "rack_enable": 0,
+        "open_contactor": 0,
+        "close_contactor": 0
+    },
+    "/components/bms_rack": {
+        "rack_run_state": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/@@RACK_ID@@:rack_run_state", "outValue": "Normal"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/@@RACK_ID@@:rack_run_state", "outValue": "No charge"},
+                        { "shift": 0,"mask": 255,"inValue": 2,"uri": "/status/@@RACK_ID@@:rack_run_state", "outValue": "No discharge"},
+                        { "shift": 0,"mask": 255,"inValue": 3,"uri": "/status/@@RACK_ID@@:rack_run_state", "outValue": "Standby"},
+                        { "shift": 0,"mask": 255,"inValue": 4,"uri": "/status/@@RACK_ID@@:rack_run_state", "outValue": "Stop"}
+                    ]
+                }]
+            }
+        },
+        "rack_precharge_phase": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/@@RACK_ID@@:rack_precharge_phase", "outValue": "Disconnected"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/@@RACK_ID@@:rack_precharge_phase", "outValue": "Start connection"},
+                        { "shift": 0,"mask": 255,"inValue": 2,"uri": "/status/@@RACK_ID@@:rack_precharge_phase", "outValue": "Connecting"},
+                        { "shift": 0,"mask": 255,"inValue": 3,"uri": "/status/@@RACK_ID@@:rack_precharge_phase", "outValue": "Connected"},
+                        { "shift": 0,"mask": 255,"inValue": 4,"uri": "/status/@@RACK_ID@@:rack_precharge_phase", "outValue": "Connection fail"}
+                    ]
+                }]
+            }
+        },
+        "rack_connection_state": {
+            "value": 0,
+            "note": "0: Opened, 1: Closed",
+            "note1": "Bit0: Positive Contactor State",
+            "note2": "Bit1: PreContactor State",
+            "note3": "Bit2: Negative Contactor State",
+            "note4": "Bit3: Disconnector State",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/status/@@RACK_ID@@:pos_contactor_state", "outValue": "Opened"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/status/@@RACK_ID@@:pos_contactor_state", "outValue": "Closed"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/status/@@RACK_ID@@:pre_contactor_state", "outValue": "Opened"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/status/@@RACK_ID@@:pre_contactor_state", "outValue": "Closed"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/status/@@RACK_ID@@:neg_contactor_state", "outValue": "Opened"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/status/@@RACK_ID@@:neg_contactor_state", "outValue": "Closed"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/status/@@RACK_ID@@:disconnector_state", "outValue": "Opened"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/status/@@RACK_ID@@:disconnector_state", "outValue": "Closed"}
+                    ]
+                }]
+            }
+        },
+        "rack_alarm_info": {
+            "value": 0,
+            "note": "0: Normal, 1: Fault",
+            "note1": "Bit0: BMU Hardware Fault",
+            "note2": "Bit1: BCU Hardware Fault",
+            "note3": "Bit2: Fuse Protector Fault",
+            "note4": "Bit3: Contactor Adhesion Fault",
+            "note5": "Bit4: BMU Communication Fault",
+            "note6": "Bit5: BAU Communication Fault",
+            "note7": "Bit6: Current Sensor Fault",
+            "note8": "Bit7: IMD Fault",
+            "note9": "Bit8: Disconnector Open when Rack Enabled",
+            "note10": "Bit9-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:bmu_hardware", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:bmu_hardware", "outValue": "Fault"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:bcu_hardware", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:bcu_hardware", "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:fuse_protector", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:fuse_protector", "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:contactor_adhesion", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:contactor_adhesion", "outValue": "Fault"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:bmu_comms", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:bmu_comms", "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:bau_comms", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:bau_comms", "outValue": "Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:current_sensor", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:current_sensor", "outValue": "Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:imd", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:imd", "outValue": "Fault"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:disconnector_open", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:disconnector_open", "outValue": "Disconnector Open When Rack Enabled"}
+                    ]
+                }]
+            }
+        },
+        "rack_warning": {
+            "value": 0,
+            "note": "0: Normal, 1: Warning",
+            "note1": "Bit0: RackVolHigh Warn",
+            "note2": "Bit1: RackVolLow Warn",
+            "note3": "Bit2: CellVolHigh Warn",
+            "note4": "Bit3: CellVolLow Warn",
+            "note5": "Bit4: DsgOverCurr Warn",
+            "note6": "Bit5: ChgOverCurr Warn",
+            "note7": "Bit6: DsgTempHigh Warn",
+            "note8": "Bit7: DsgTempLow Warn",
+            "note9": "Bit8: ChgTempHigh Warn",
+            "note10": "Bit9: ChgTempLow Warn",
+            "note11": "Bit10: InsulationLow Warn",
+            "note12": "Bit11: TerminalTempHigh Warn",
+            "note13": "Bit12: HVBTempHigh Warn",
+            "note14": "Bit13: CellVolDiffHigh Warn",
+            "note15": "Bit14: CellTempDiffHigh Warn",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:rack_volt_high_warn", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:rack_volt_high_warn", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:rack_volt_low_warn", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:rack_volt_low_warn", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:cell_volt_high_warn", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:cell_volt_high_warn", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:cell_volt_low_warn", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:cell_volt_low_warn", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:dsg_over_curr_warn", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:dsg_over_curr_warn", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:chg_over_curr_warn", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:chg_over_curr_warn", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:dsg_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:dsg_temp_high_warn", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:dsg_temp_low_warn", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:dsg_temp_low_warn", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:chg_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:chg_temp_high_warn", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:chg_temp_low_warn", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:chg_temp_low_warn", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:insulation_low_warn", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:insulation_low_warn", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:terminal_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:terminal_temp_high_warn", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:hvb_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:hvb_temp_high_warn", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:cell_volt_diff_high_warn", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:cell_volt_diff_high_warn", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:cell_temp_diff_high_warn", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:cell_temp_diff_high_warn", "outValue": "Warning"}
+                    ]
+                }]
+            }
+        },
+        "rack_alarm": {
+            "value": 0,
+            "note": "0: Normal, 1: Warning",
+            "note1": "Bit0: RackVolHigh Alarm",
+            "note2": "Bit1: RackVolLow Alarm",
+            "note3": "Bit2: CellVolHigh Alarm",
+            "note4": "Bit3: CellVolLow Alarm",
+            "note5": "Bit4: DsgOverCurr Alarm",
+            "note6": "Bit5: ChgOverCurr Alarm",
+            "note7": "Bit6: DsgTempHigh Alarm",
+            "note8": "Bit7: DsgTempLow Alarm",
+            "note9": "Bit8: ChgTempHigh Alarm",
+            "note10": "Bit9: ChgTempLow Alarm",
+            "note11": "Bit10: InsulationLow Alarm",
+            "note12": "Bit11: TerminalTempHigh Alarm",
+            "note13": "Bit12: HVBTempHigh Alarm",
+            "note14": "Bit13: CellVolDiffHigh Alarm",
+            "note15": "Bit14: CellTempDiffHigh Alarm",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:rack_volt_high_alarm", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:rack_volt_high_alarm", "outValue": "Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:rack_volt_low_alarm", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:rack_volt_low_alarm", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:cell_volt_high_alarm", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:cell_volt_high_alarm", "outValue": "Alarm"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:cell_volt_low_alarm", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:cell_volt_low_alarm", "outValue": "Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:dsg_over_curr_alarm", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:dsg_over_curr_alarm", "outValue": "Alarm"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:chg_over_curr_alarm", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:chg_over_curr_alarm", "outValue": "Alarm"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:dsg_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:dsg_temp_high_alarm", "outValue": "Alarm"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:dsg_temp_low_alarm", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:dsg_temp_low_alarm", "outValue": "Alarm"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:chg_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:chg_temp_high_alarm", "outValue": "Alarm"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:chg_temp_low_alarm", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:chg_temp_low_alarm", "outValue": "Alarm"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:insulation_low_alarm", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:insulation_low_alarm", "outValue": "Alarm"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:terminal_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:terminal_temp_high_alarm", "outValue": "Alarm"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:hvb_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:hvb_temp_high_alarm", "outValue": "Alarm"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:cell_volt_diff_high_alarm", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:cell_volt_diff_high_alarm", "outValue": "Alarm"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:cell_temp_diff_high_alarm", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:cell_temp_diff_high_alarm", "outValue": "Alarm"}
+                    ]
+                }]
+            }
+        },
+        "rack_critical_alarm": {
+            "value": 0,
+            "note": "0: Normal, 1: Warning",
+            "note1": "Bit0: RackVolHigh Critical Alarm",
+            "note2": "Bit1: RackVolLow Critical Alarm",
+            "note3": "Bit2: CellVolHigh Critical Alarm",
+            "note4": "Bit3: CellVolLow Critical Alarm",
+            "note5": "Bit4: DsgOverCurr Critical Alarm",
+            "note6": "Bit5: ChgOverCurr Critical Alarm",
+            "note7": "Bit6: DsgTempHigh Critical Alarm",
+            "note8": "Bit7: DsgTempLow Critical Alarm",
+            "note9": "Bit8: ChgTempHigh Critical Alarm",
+            "note10": "Bit9: ChgTempLow Critical Alarm",
+            "note11": "Bit10: InsulationLow Critical Alarm",
+            "note12": "Bit11: TerminalTempHigh Critical Alarm",
+            "note13": "Bit12: HVBTempHigh Critical Alarm",
+            "note14": "Bit13: CellVolDiffHigh Critical Alarm",
+            "note15": "Bit14: CellTempDiffHigh Critical Alarm",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:rack_volt_high", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:rack_volt_high", "outValue": "Critical Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:rack_volt_low", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:rack_volt_low", "outValue": "Critical Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:cell_volt_high", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:cell_volt_high", "outValue": "Critical Alarm"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:cell_volt_low", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:cell_volt_low", "outValue": "Critical Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:dsg_over_curr", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:dsg_over_curr", "outValue": "Critical Alarm"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:chg_over_curr", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:chg_over_curr", "outValue": "Critical Alarm"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:dsg_temp_high", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:dsg_temp_high", "outValue": "Critical Alarm"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:dsg_temp_low", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:dsg_temp_low", "outValue": "Critical Alarm"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:chg_temp_high", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:chg_temp_high", "outValue": "Critical Alarm"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:chg_temp_low", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:chg_temp_low", "outValue": "Critical Alarm"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:insulation_low", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:insulation_low", "outValue": "Critical Alarm"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:terminal_temp_high", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:terminal_temp_high", "outValue": "Critical Alarm"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:hvb_temp_high", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:hvb_temp_high", "outValue": "Critical Alarm"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:cell_volt_diff_high", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:cell_volt_diff_high", "outValue": "Critical Alarm"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/faults/@@RACK_ID@@:cell_temp_diff_high", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/faults/@@RACK_ID@@:cell_temp_diff_high", "outValue": "Cirtical Alarm"}
+                    ]
+                }]
+            }
+        },
+        "rack_step_in_failure": {
+            "value": 0,
+            "note": "0: Normal, 1: Warning",
+            "note1": "Bit0: Rack Vol Diff Large",
+            "note2": "Bit1: SMS Confirmation Overtime",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:rack_vol_diff_large", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:rack_vol_diff_large", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/@@RACK_ID@@:sms_confirmation_overtime", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/@@RACK_ID@@:sms_confirmation_overtime", "outValue": "Warning"}
+                    ]
+                }]
+            }
+        },
+        "precharge_total_vol": 0,
+        "rack_voltage": 0,
+        "rack_current": 0,
+        "rack_state": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/@@RACK_ID@@:rack_state", "outValue": "Idle"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/@@RACK_ID@@:rack_state", "outValue": "Discharging"},
+                        { "shift": 0,"mask": 255,"inValue": 2,"uri": "/status/@@RACK_ID@@:rack_state", "outValue": "Charging"}
+                    ]
+                }]
+            }
+        },
+        "rack_soc": 0,
+        "rack_soh": 0,
+        "rack_insulation": 0,
+        "rack_positive_insulation": 0,
+        "rack_negative_insulation": 0,
+        "rack_max_charge_current": 0,
+        "rack_max_discharge_current": 0,
+        "rack_max_cell_voltage": 0,
+        "rack_min_cell_voltage": 0,
+        "rack_max_cell_temperature": 0,
+        "rack_min_cell_temperature": 0,
+        "rack_avg_voltage": 0,
+        "rack_avg_temperature": 0
+    }
+}

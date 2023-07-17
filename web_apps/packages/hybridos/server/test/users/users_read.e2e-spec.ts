@@ -9,6 +9,8 @@ import { HttpExceptionFilter } from '../../src/filters/http-expections.filter'
 import { UserNotFoundException } from '../../src/users/exceptions/exceptions'
 import { IUsersService, USERS_SERVICE } from '../../src/users/interfaces/users.service.interface'
 import { UsersController } from '../../src/users/users.controller'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
 
 describe('UsersController READ (e2e)', () => {
     let app: INestApplication
@@ -27,13 +29,19 @@ describe('UsersController READ (e2e)', () => {
                         all: jest.fn(),
                     },
                 },
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
+                    },
+                },
             ],
-        }).compile()
+        }).overrideGuard(RolesGuard).useValue({ canActivate: () => true }).compile();
 
         app = createTestApiApplication(moduleFixture)
         app.useGlobalPipes(new ValidationPipe())
         app.useGlobalFilters(new HttpExceptionFilter())
-        usersService = moduleFixture.get(USERS_SERVICE)
+        usersService = app.get(USERS_SERVICE)
         await app.init()
     })
 

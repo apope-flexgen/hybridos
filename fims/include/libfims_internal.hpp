@@ -56,19 +56,22 @@ struct Handshake
 
 void* encrypt(void* buf, u32 &length);
 void* decrypt(void* buf, u32 &length, u32 maxlen);
-bool  send_raw_message(int connection, 
+
+ssize_t writev_nonblock(int fd, iovec *iovec, size_t iovec_len);
+
+bool send_raw_message(int connection, 
                         const char* method,       u8 method_len, 
                         const char* uri,          u8 uri_len,
                         const char* replyto,      u8 replyto_len,
                         const char* process_name, u8 process_name_len,
                         const char* username,     u8 username_len,
                         void* data,               u32 data_len) noexcept;
-bool  aes_send_raw_message(int connection, 
+
+bool aes_send_raw_message(int connection, 
                             const char* method,       u8 method_len, 
                             const char* uri,          u8 uri_len,
                             const char* replyto,      u8 replyto_len,
                             const char* process_name, u8 process_name_len,
                             const char* username,     u8 username_len,
                             void* data,               u32 data_len) noexcept;
-
 #endif

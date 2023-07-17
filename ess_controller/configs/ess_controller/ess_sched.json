@@ -1,0 +1,172 @@
+{
+    "/sched/ess": {
+	"essSystemInit":	{
+		"value":	0,
+		"id":	"EssSystemInit",
+		"aname":	"ess",
+		"enabled":	false,
+		"refTime":	0.2,
+		"runTime":	0.2,
+        "repTime":	0,
+        "actions":	{
+			"onSet":	[{
+					"func":	[{
+							"amap":	"ess",
+							"func":	"EssSystemInit",
+							"var":	"/status/ess:status"
+						}]
+				}]
+		}
+	},
+	"every1000mS":	{
+		"value":	0,
+		"id":	"EverySecond",
+		"aname":	"ess",
+		"enabled":	false,
+		"refTime":	0.25,
+		"runTime":	0.25,
+        "repTime":	1,
+        "actions":	{
+			"onSet":	[{
+					"func":	[{
+							"amap":	"ess",
+							"func":	"Every1000mS",
+							"var":	"/status/ess:status"
+						}]
+				}]
+		}
+	},
+	"every100mSP1":	{
+		"value":	0,
+		"id":	"Every100mS_P1",
+		"aname":	"ess",
+		"enabled":	false,
+		"refTime":	0.251,
+		"runTime":	0.251,
+        "repTime":	0.1,
+        "actions":	{
+			"onSet":	[{
+					"func":	[{
+							"amap":	"ess",
+							"func":	"Every100mS_P1",
+							"var":	"/status/ess:status"
+						}]
+				}]
+		}
+	},
+	"every100mSP2":	{
+		"value":	0,
+		"id":	"Every100mS_P2",
+		"aname":	"ess",
+		"enabled":	false,
+		"refTime":	0.252,
+		"runTime":	0.252,
+        "repTime":	0.1,
+        "actions":	{
+			"onSet":	[{
+					"func":	[{
+							"amap":	"ess",
+							"func":	"Every100mS_P2",
+							"var":	"/status/ess:status"
+						}]
+				}]
+		}
+	},
+	"every100mSP3":	{
+		"value":	0,
+		"id":	"Every100mS_P3",
+		"aname":	"ess",
+		"enabled":	false,
+		"refTime":	0.253,
+		"runTime":	0.253,
+        "repTime":	0.1,
+        "actions":	{
+			"onSet":	[{
+					"func":	[{
+							"amap":	"ess",
+							"func":	"Every100mS_P3",
+							"var":	"/status/ess:status"
+						}]
+				}]
+		}
+	},
+	"fastPub":	{
+		"value":	0,
+		"id":	"FastPub",
+		"aname":	"ess",
+		"enabled":	false,
+		"refTime":	0.254,
+		"runTime":	0.254,
+        "repTime":	0.05,
+        "actions":	{
+			"onSet":	[{
+					"func":	[{
+							"amap":	"ess",
+							"func":	"FastPub",
+							"var":	"/status/ess:status"
+						}]
+				}]
+		}
+	},
+	"slowPub":	{
+		"value":	0,
+		"id":	"SlowPub",
+		"aname":	"ess",
+		"enabled":	false,
+		"refTime":	0.255,
+		"runTime":	0.255,
+        "repTime":	2,
+        "actions":	{
+			"onSet":	[{
+					"func":	[{
+							"amap":	"ess",
+							"func":	"SastPub",
+							"var":	"/status/ess:status"
+						}]
+				}]
+		}
+    },
+    "/scheduler/ess": {
+	    "add_item":	{
+		    "value":	"test string",
+		    "actions":	{
+			    "onSet":	[{
+					"func":	[{
+							"func":	"AddSchedItem",
+							"amap":	"ess"
+						}]
+				}]
+		    }
+	    },
+        "add_item":	{
+                "value":	"/sched/ess:essSystemInit",
+                "var":	"/sched/ess:essSystemInit"
+            },
+        "add_item":	{
+                    "value":	"/sched/ess:every1000mS",
+                    "var":	"/sched/ess:every1000mS"
+            },
+        "add_item":	{
+            "value":	"/sched/ess:every100mSP1",
+            "var":	"/sched/ess:every100mSP1"
+        },
+        "add_item":	{
+            "value":	"/sched/ess:every100mSP2",
+            "var":	"/sched/ess:every100mSP2"
+        },
+        "add_item":	{
+            "value":	"/sched/ess:every100mSP3",
+            "var":	"/sched/ess:every100mSP3"
+        },
+        "add_item":	{
+            "value":	"/sched/ess:fastPub",
+            "var":	"/sched/ess:fastPub"
+        },
+        "add_item":	{
+            "value":	"/sched/ess:slowPub",
+            "var":	"/sched/ess:slowPub"
+        }
+    }
+  }
+}
+

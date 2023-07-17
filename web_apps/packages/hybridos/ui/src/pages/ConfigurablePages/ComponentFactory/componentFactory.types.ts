@@ -10,6 +10,9 @@ export type StatusComponentStateInfo = ValueType;
 export type ControlComponentStateInfo = {
   value: ValueType
   enabled: boolean
+  extraProps?: {
+    [key: string]: any
+  }
 };
 
 export type MemoizedComponentObject = { prevState: any; element: JSX.Element };

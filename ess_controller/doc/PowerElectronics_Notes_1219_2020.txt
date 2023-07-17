@@ -1,0 +1,29 @@
+PowerElectronics Notes
+
+@here Preston and I worked with Power Electronics this morning to resolve the control issues we've been having with the lab unit. 
+There are a few power limitations based on how things are connected to the grid and the derating of the PCS (things out of our control), 
+but at this point the software team should have full control over the lab setup. 
+This should allow us to make some big strides in ESS controller sequencing and testing.
+
+
+Aarabi Madhavan  8:10 AM
+@Phil Wilshire, @Walker Williams - Have a meeting with you and others at 10:30 am to close some of these communication test cases and plan next week's functional testing.
+https://flexgen.monday.com/boards/882474731 (edited) 
+
+Phil Wilshire  8:11 AM
+@preston can you share the key points from the discussions
+
+Preston Miller  8:21 AM
+Once they put the unit in "comms" mode rather than "selector" (which is a permanent setting) we could send the Remote Control start through modbus. 
+Also we can set SG1.4.2 (address 2041) Selector Status to 0 to keep the inverter off when the key is turned to on, and then we can remote start. 
+Inverter status changes accordingly with most actions we take.
+
+Vinay Baliga  8:36 AM
+Yeah, honestly at this point the key can just stay in the on position. 
+However, if we need a manual start with no controller, it's always there for us.
+'Selector Status' initiates pre-charge + DC disconnect closure effectively putting us in Standby Mode (Power Electronics calls it 'Ready'). 
+We can also turn 'Selector Status' off to open the DC disconnect.
+'Start' actually starts switching the IGBTs so we can import/export power.
+'Stop' is also available to stop switching the IGBTs and bring us back to Standby Mode (Power Electronics calls it 'Ready').
+This is my understanding of how the unit works. (edited) 
+

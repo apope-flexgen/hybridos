@@ -1,5 +1,5 @@
-export type VariableOverrideDto = {
-    data: {
-        [key: string]: number | boolean
-    }
+export type ErcotOverrideDto = {
+   data: {
+    [key: string]: number | boolean
+   } 
 }

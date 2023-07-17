@@ -1,0 +1,30 @@
+{
+    "fileInfo": {
+        "not":"important"
+    },
+    "system":
+    {   
+        "also": " not important",
+        "name":"FlexGen_ESS_Controller",
+        "protocol": "Modbus TCP",
+        "id": "/site",
+        "ip_address": "0.0.0.0",
+        "port": 502 
+    },
+    "registers": {
+        "holding_registers": [
+            {"id": "life", "offset": 1000, "size": 2, "name": "Life", "signed": true, "uri": "/site/ess_ls" },
+            {"id": "start_stop", "offset": 1002, "name": "Control_Command", "uri": "/site/ess_ls" },
+            {"id": "run_mode", "offset": 1003, "name": "Run_mode", "uri": "/site/ess_ls" },
+            {"id": "on_off_grid_mode", "offset": 1004, "name": "On/Off grid mode setting", "uri": "/site/ess_ls" },
+            {"id": "active_power_setpoint", "offset": 1005, "scale": 10, "name": "Power_Set_AC", "unit": "kW", "signed": true, "uri": "/site/ess_ls" },
+            {"id": "reactive_power_setpoint", "offset": 1006, "scale": 10, "name": "Active_Set_AC", "unit": "kVar", "signed": true, "uri": "/site/ess_ls" },
+            {"id": "active_power_rising_slope", "offset": 1007, "scale": 10, "name": "Active_power_rising_slope", "unit": "%/s", "uri": "/site/ess_ls" },
+            {"id": "active_power_droop_slope", "offset": 1008, "scale": 10, "name": "Active_power_droop_slope", "unit": "%/s", "uri": "/site/ess_ls" },
+            {"id": "reactive_power_rising_slope", "offset": 1009, "scale": 10, "name": "Reactive_power_rising_slope", "unit": "%/s", "uri": "/site/ess_ls" },
+            {"id": "reactive_power_droop_slope", "offset": 1010, "scale": 10, "name": "Reactive_power_droop_slope", "unit": "%/s", "uri": "/site/ess_ls" },
+            {"id": "bms_dc_contactors", "offset": 1011, "name": "BMS DC Contactors", "uri": "/site/ess_ls"},
+            {"id": "clear_faults", "offset": 1012, "name": "Clear_Faults_Command", "uri": "/site/ess_ls", "individual_bits": true, "bit_strings": ["clear_faults"]}
+        ]
+    }
+}

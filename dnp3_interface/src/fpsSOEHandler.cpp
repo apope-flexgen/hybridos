@@ -161,22 +161,11 @@ void fpsSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<Fr
     return PrintAll(info, values);
 }
 void fpsSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<BinaryOutputStatus>>& values) {
-    // FPS_DEBUG_PRINT("******************************BiOpSta: \n");
-    // return PrintAll(info, values);
-}
-void fpsSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<AnalogOutputStatus>>& values) {
-    // FPS_DEBUG_PRINT("******************************AnOpSta: \n"); 
-    // std::cout << "AnalogOutputStatus: ";
-    // auto print = [](const Indexed<AnalogOutputStatus>& pair) {
-    //         std::cout << "index [" << pair.index << "] : value ["  << pair.value.value << " ] "
-    //                 //<< CommandStatusToString(pair.value.status) 
-    //                 << std::endl;
-    // };
-    // values.ForeachItem(print);
 }
 
-//     return PrintAll(info, values);
-// }
+void fpsSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<AnalogOutputStatus>>& values) {
+}
+
 void fpsSOEHandler::Process(const HeaderInfo& /*info*/, const ICollection<Indexed<OctetString>>& values) {
     auto print = [](const Indexed<OctetString>& pair) {
         std::cout << "OctetString "
@@ -201,18 +190,9 @@ void fpsSOEHandler::Process(const HeaderInfo& /*info*/, const ICollection<Indexe
     };
     values.ForeachItem(print);
 }
-// void fpsSOEHandler::Process(const HeaderInfo& /*info*/, const ICollection<Indexed<SecurityStat>>& values) {
-//     auto print = [](const Indexed<SecurityStat>& pair) {
-//         std::cout << "SecurityStat: "
-//                   << "[" << pair.index << "] : " << ToUTCString(pair.value.time) << " : " << pair.value.value.count << " : "
-//                   << static_cast<int>(pair.value.quality) << " : " << pair.value.value.assocId << std::endl;
-//     };
-//     values.ForeachItem(print);
-// }
 
 void fpsSOEHandler::Process(const opendnp3::HeaderInfo& /*info*/,
                                  const opendnp3::ICollection<opendnp3::DNPTime>& values) {
     auto print = [](const DNPTime& value) { std::cout << "DNPTime: " << ToUTCString(value) << std::endl; };
     values.ForeachItem(print);
 }
-//} // namespace asiodnp3

@@ -57,13 +57,14 @@ describe('SiteAdminsController', () => {
                         findOne: jest.fn(),
                         create: jest.fn(),
                         exec: jest.fn(),
+                        deleteMany: jest.fn(),
                     },
                 },
             ],
         }).compile()
 
         service = module.get<ISiteAdminsService>(SITE_ADMINS_SERVICE)
-        model = module.get<Model<SiteAdminDocument>>(getModelToken('siteAdmins'))
+        model = module.get<Model<SiteAdminDocument>>(getModelToken('siteadmins'))
     })
 
     it('should be defined', () => {

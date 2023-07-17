@@ -13,7 +13,7 @@ Version:    %{_version}
 Release:    %{_release}
 Source:     %{source}.tar.gz
 BuildRoot:  %{_topdir}
-Requires:   fims, influxdb
+Requires:   fims
 
 %description
 Metrics computation from FIMS pubs/sets

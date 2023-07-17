@@ -1,0 +1,54 @@
+
+for all of these use  package_utility/build.sh to make and install
+
+web_server:test/ess_controller                        after "make install" sudo /usr/local/bin/web_server/web_server  /usr/local/bin/web_ui/ /usr/local/etc/config/web_ui /usr/local/etc/config/web_server
+web_ui:test/ess_controller (use Ben Hu's release)                           build release then sudo npm start 
+scripts:feature/add_gpio_controller                   node excel_to_config_file.js   flexgen_ess_controller1.xlsx  foo_server.json server
+export LD_LIBRARY_PATH=build/release:/usr/local/bin:
+
+still uses local configs dir but will accept arg1 but not use it yet.
+ess_controller:temp/demo_01152021                    (make) build/release/ess_controller <ess_controller_config>/ess_controller
+gpio_controler:temp/demo_01152021                    (make) build/release/gpio_controller <ess_controller_config>/gpio_controller  ( only works on supermicros )
+
+modbus_interface:test/ess_cotroller                  make install (see below)
+config:ess_controller_config                         mkdir -p /usr/local/etc  && ln -sf config/tx10 /usr/local/etc/config
+
+
+Other stuff needed
+
+
+<ess_controller_config> is /usr/local/etc/config 
+
+sudo mongod --config /etc/mongod.con&
+sudo influxd 2> /dev/null &
+/usr/local/bin/fims/fims_server&
+
+
+Not quite got all these in place yet
+
+sudo /usr/local/bin/modbus_interface/modbus_client  <ess_controller_config>/modbus_client/bms_controller_client.json
+sudo /usr/local/bin/modbus_interface/modbus_client  <ess_controller_config>/modbus_clinet/pcs_controller_client.json
+sudo /usr/local/bin/modbus_interface/modbus_server  <ess_controller_config>/modbus_server/site_controller_server.json
+
+
+#eample from hybridos_run scripts
+sleep 3s; sudo influxd 2> /dev/null &
+sleep 3s; sudo mongod --config /etc/mongod.conf
+sleep 3s; $bin_dir/fims/fims_server &
+
+
+
+Building modbus maps
+in scripts (see above) 
+
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_ess_controller.xlsx  <ess_controller_config>/modbus_server/site_controller_server.json server
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_ess_controller.xlsx  <ess_controller_config>/modbus_client/site_controller_client.json client
+??node excel_to_config_file.js   <ess_controller>/maps/flexgen_ess_controller.xlsx  <ess_controller_config>ess_controller_server.json web_ui
+# bms
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_bms_controller.xlsx  <ess_controller_config>bms_controller_server.json server
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_bms_controller.xlsx  <ess_controller_config>bms_controller_clinet.json client
+
+#pcs
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_pcs_controller.xlsx  <ess_controller_config>/modbus_server/pcs_controller_server.json server
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_pcs_controller.xlsx  <ess_controller_config>/modbus_client/pcs_controller_clinet.json client
+

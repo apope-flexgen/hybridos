@@ -15,53 +15,66 @@ import {
   ENABLE_SUMMARY,
   EXTENSION,
   FAULT_FIELDS,
+  HAS_ALL_CONTROLS,
   HAS_SUMMARY,
   HOW_MANY_UNITS,
   ITEM_NAME,
-  ITEM_NAME_HELPER_TEXT,
+  NAME,
+  NAME_HELPER_TEXT,
+  SOURCE_URI,
 } from './helpers/constants';
 import { ColumnLeft, Row } from './styles';
 
 const Items = () => {
-  const {
-    selectedAsset,
-    setSelectedAsset,
-  } = useAssetsContext();
+  const { selectedAsset, setSelectedAsset } = useAssetsContext();
 
   const handleTextFieldChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { target: { id, name, value } } = event;
+    const {
+      target: { id, name, value },
+    } = event;
 
-    setSelectedAsset((prevSelectedAsset) => ({
-      ...prevSelectedAsset,
-      info: {
-        ...prevSelectedAsset?.info,
-        [id || name]: value,
-      },
-    } as Asset));
+    setSelectedAsset(
+      (prevSelectedAsset) => ({
+        ...prevSelectedAsset,
+        info: {
+          ...prevSelectedAsset?.info,
+          [id || name]: value,
+        },
+      } as Asset),
+    );
   };
 
   const handleTextFieldCommaSeparatedChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { target: { id, value } } = event;
+    const {
+      target: { id, value },
+    } = event;
 
-    setSelectedAsset((prevSelectedAsset) => ({
-      ...prevSelectedAsset,
-      info: {
-        ...prevSelectedAsset?.info,
-        [id]: value.split(',').map((v) => v.replace(' ', '')),
-      },
-    } as Asset));
+    setSelectedAsset(
+      (prevSelectedAsset) => ({
+        ...prevSelectedAsset,
+        info: {
+          ...prevSelectedAsset?.info,
+          [id]: value.split(',').map((v) => v.replace(' ', '')),
+        },
+      } as Asset),
+    );
   };
 
-  const handleSummaryChange = () => {
-    setSelectedAsset((prevSelectedAsset) => ({
-      ...prevSelectedAsset,
-      info: {
-        ...prevSelectedAsset?.info,
-        hasSummary: !prevSelectedAsset?.info.hasSummary,
-      },
-    } as Asset));
+  const handleCheckboxChange = (event: ChangeEvent<Element>, checked: boolean) => {
+    const {
+      target: { id },
+    } = event;
+    setSelectedAsset(
+      (prevSelectedAsset) => ({
+        ...prevSelectedAsset,
+        info: {
+          ...prevSelectedAsset?.info,
+          [id]: checked,
+        },
+      } as Asset),
+    );
   };
 
   return (
@@ -74,12 +87,28 @@ const Items = () => {
         <TextField
           color="primary"
           disableLabelAnimation
-          helperText={ITEM_NAME_HELPER_TEXT}
-          id="name"
+          id="itemName"
           label={ITEM_NAME}
+          onChange={handleTextFieldChange}
+          value={selectedAsset?.info.itemName || ''}
+          inputProps={{ maxLength: 100 }}
+        />
+      </Row>
+      <Divider orientation="horizontal" variant="fullWidth" />
+      <Row>
+        <ColumnLeft>
+          <Typography text={NAME} variant="bodyL" />
+        </ColumnLeft>
+        <TextField
+          color="primary"
+          disableLabelAnimation
+          helperText={NAME_HELPER_TEXT}
+          id="name"
+          label={NAME}
           onChange={handleTextFieldChange}
           value={selectedAsset?.info.name || ''}
           required
+          inputProps={{ maxLength: 100 }}
         />
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />
@@ -125,6 +154,20 @@ const Items = () => {
       <Divider orientation="horizontal" variant="fullWidth" />
       <Row>
         <ColumnLeft>
+          <Typography text={SOURCE_URI} variant="bodyL" />
+        </ColumnLeft>
+        <TextField
+          disableLabelAnimation
+          id="sourceURI"
+          label={SOURCE_URI}
+          onChange={handleTextFieldChange}
+          value={selectedAsset?.info.sourceURI || ''}
+          required
+        />
+      </Row>
+      <Divider orientation="horizontal" variant="fullWidth" />
+      <Row>
+        <ColumnLeft>
           <Typography text={BASE_URI} variant="bodyL" />
         </ColumnLeft>
         <TextField
@@ -133,6 +176,7 @@ const Items = () => {
           label={BASE_URI}
           onChange={handleTextFieldChange}
           value={selectedAsset?.info.baseURI || ''}
+          required
         />
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />
@@ -170,8 +214,22 @@ const Items = () => {
         <Checkbox
           color="primary"
           label={ENABLE_SUMMARY}
-          onChange={handleSummaryChange}
+          id="hasSummary"
+          onChange={handleCheckboxChange}
           value={!!selectedAsset?.info.hasSummary}
+        />
+      </Row>
+      <Divider orientation="horizontal" variant="fullWidth" />
+      <Row>
+        <ColumnLeft>
+          <Typography text={HAS_ALL_CONTROLS} variant="bodyL" />
+        </ColumnLeft>
+        <Checkbox
+          color="primary"
+          label={HAS_ALL_CONTROLS}
+          id="hasAllControls"
+          onChange={handleCheckboxChange}
+          value={!!selectedAsset?.info.hasAllControls}
         />
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />

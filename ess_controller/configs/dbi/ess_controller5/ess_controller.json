@@ -1,0 +1,207 @@
+{
+  "/doc/02ess": {
+    "note1":"Start with this config file, the bms, pcs (and drc) managers are referenced.",
+    "note1a":"The main page of the ui display is outlined in /assets/ess/summay",
+    "note2": " ",
+    "note3":"The /components/ess table defined the incoming control words from the site controller",
+    "note4":"The /links/<ess> table defines mapping of external interface components to internal variables",
+    "note5":" There are some junk/test fields as well... they will removed soon",
+    "note6":"This is the modbus server map",
+    "note7_ess":"flexgen_ess_server.json"
+  },
+  
+  "/config/ess": {
+    "LogDir": "/var/log/ess_controller",
+    "essCommsFaultTimeout": {
+      "value": 10
+    },
+    "essHeartbeatFaultTimeout": {
+      "value": 15
+    },
+    "essCommsAlarmTimeout": {
+      "value": 7
+    },
+    "essCommsRecoverTimeout": {
+      "value": 5
+    },
+    "AlarmDestination": {
+      "value": "/assets/ess/summary:alarms"
+    },
+    "FaultDestination": {
+      "value": "/assets/ess/summary:faults"
+    }
+  },
+
+  "/logs/ess": {
+    "CheckAmCommsLog": {
+      "value": "file:CheckAmCommsLog.txt",
+      "enableLog": true
+    },
+    "MonitorVarLog": {
+      "value": "file:MonitorVarLog.txt",
+      "enableLog": true
+    }
+  },
+
+  "/assets/ess/summary": {
+    "name":"ESS Summary",
+    "version": {
+      "name": "Version",
+      "value": "version",
+      "enabled": true
+    },
+    "max_charge_power": {
+      "name": "Max Charge Power",
+      "value": 0,
+      "enabled": false
+    },
+    "max_discharge_power": {
+      "name": "Max Discharge Power",
+      "value": 0,
+      "enabled": false
+    },
+    "estop_status": {
+        "name": "E-Stop Status",
+        "value": "Off",
+        "enabled": true
+    },
+    "disconnect_switch_status": {
+      "name": "Disconnect Switch Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "door_latch_status": {
+      "name": "Door Latch Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "surge_arrester_status": {
+      "name": "Surge Arrester Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "fire_alarm_status": {
+      "name": "Fire Alarm Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "fuse_monitoring_status": {
+      "name": "Fuse Monitoring Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "active_power": {
+      "name": "Active Power",
+      "value": 17,
+      "enabled": false
+    },
+    "active_power_setpoint": {
+      "name": "Active Power Setpoint",
+      "value": 3.0999999046325684,
+      "enabled": false
+    },
+    "alarms": {
+      "name": "Alarms",
+      "value": 0,
+      "options": [],
+      "enabled": true
+    },
+    "soc": {
+      "name": "State of Charge",
+      "value": 76.55913543701172,
+      "enabled": false
+    },
+    "soh": {
+      "name": "State of Health",
+      "value": 12.34,
+      "enabled": false
+    },
+    "status": {
+      "name": "Status",
+      "value": "N/A",
+      "enabled": true
+    }
+  },
+
+  "/assets/ess/ess_1":{
+    "name": "ESS 1 Summary",
+    "version": {
+        "name": "Version",
+        "value": "version",
+        "enabled": true
+    },
+    "estop_status": {
+      "name": "E-Stop Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "disconnect_switch_status": {
+      "name": "Disconnect Switch Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "door_latch_status": {
+      "name": "Door Latch Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "surge_arrester_status": {
+      "name": "Surge Arrester Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "fire_alarm_status": {
+      "name": "Fire Alarm Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "fuse_monitoring_status": {
+      "name": "Fuse Monitoring Status",
+      "value": "Off",
+      "enabled": true
+    },
+    "max_charge_power": {
+      "name": "Max Charge Power",
+      "value": 0,
+      "enabled": false
+    },
+    "max_discharge_power": {
+      "name": "Max Discharge Power",
+      "value": 0,
+      "enabled": false
+    },
+    "active_power": {
+      "name": "Active Power",
+      "value": 2.5,
+      "enabled": false
+    },
+    "active_power_setpoint": {
+      "name": "Active Power Setpoint",
+      "value": 3.0999999046325684,
+      "enabled": false
+    },
+    "alarms": {
+      "name": "Alarms",
+      "value": 0,
+      "options": [],
+      "enabled": true
+    },
+    "soc": {
+      "name": "State of Charge",
+      "value": 76.55913543701172,
+      "enabled": false
+    },
+    "soh": {
+      "name": "State of Health",
+      "value": 65.7,
+      "enabled": false
+    },
+    "status": {
+      "name": "Status",
+      "value": "Doing Fine",
+      "enabled": true
+    }
+  }
+  
+
+}

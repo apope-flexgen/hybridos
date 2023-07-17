@@ -1,0 +1,6754 @@
+{
+	"system":
+	{
+		"id": "samsung_bms.1_1_1",
+		"ip_address": "192.168.1.111",
+		"port": 502,
+		"device_id": 1,
+		"frequency": 1000,
+		"off_by_one": true,
+		"byte_swap": true
+	},
+	"registers": 
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 2,
+			"number_of_registers": 18,
+			"map":
+			[
+				{
+					"id": "system_voltage",
+					"offset": 2,
+					"size": 1,
+					"scale": 10
+				},
+				{
+					"id": "system_current",
+					"offset": 3,
+					"size": 1,
+					"scale": 1,
+					"signed": true
+				},
+				{
+					"id": "system_faults",
+					"offset": 15,
+					"size": 4,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "system_alarms",
+					"offset": 19,
+					"size": 4,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 41,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_1_voltage",
+					"offset": 41,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_current_real",
+					"offset": 46,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_current_avg",
+					"offset": 49,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_soc",
+					"offset": 51,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_soh",
+					"offset": 52,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_faults",
+					"offset": 57,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_1_alarms",
+					"offset": 61,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_1_max_cell_1_voltage_value",
+					"offset": 65,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_max_cell_1_voltage_position",
+					"offset": 66,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_max_cell_2_voltage_value",
+					"offset": 67,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_max_cell_2_voltage_position",
+					"offset": 68,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_min_cell_2_voltage_value",
+					"offset": 70,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_min_cell_2_voltage_position",
+					"offset": 71,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_min_cell_1_voltage_value",
+					"offset": 72,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_min_cell_1_voltage_position",
+					"offset": 73,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_max_cell_1_temp_value",
+					"offset": 74,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_max_cell_1_temp_position",
+					"offset": 75,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_max_cell_2_temp_value",
+					"offset": 76,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_max_cell_2_temp_position",
+					"offset": 77,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_min_cell_2_temp_value",
+					"offset": 79,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_min_cell_2_temp_position",
+					"offset": 80,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_min_cell_1_temp_value",
+					"offset": 81,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_min_cell_1_temp_position",
+					"offset": 82,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_1_dc_switch_status",
+					"offset": 85,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_1_dc_switch_position",
+					"offset": 86,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 101,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_2_voltage",
+					"offset": 101,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_current_real",
+					"offset": 106,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_current_avg",
+					"offset": 109,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_soc",
+					"offset": 111,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_soh",
+					"offset": 112,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_faults",
+					"offset": 117,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_2_alarms",
+					"offset": 121,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_2_max_cell_1_voltage_value",
+					"offset": 125,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_max_cell_1_voltage_position",
+					"offset": 126,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_max_cell_2_voltage_value",
+					"offset": 127,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_max_cell_2_voltage_position",
+					"offset": 128,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_min_cell_2_voltage_value",
+					"offset": 130,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_min_cell_2_voltage_position",
+					"offset": 131,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_min_cell_1_voltage_value",
+					"offset": 132,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_min_cell_1_voltage_position",
+					"offset": 133,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_max_cell_1_temp_value",
+					"offset": 134,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_max_cell_1_temp_position",
+					"offset": 135,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_max_cell_2_temp_value",
+					"offset": 136,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_max_cell_2_temp_position",
+					"offset": 137,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_min_cell_2_temp_value",
+					"offset": 139,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_min_cell_2_temp_position",
+					"offset": 140,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_min_cell_1_temp_value",
+					"offset": 141,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_min_cell_1_temp_position",
+					"offset": 142,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_2_dc_switch_status",
+					"offset": 145,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_2_dc_switch_position",
+					"offset": 146,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 161,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_3_voltage",
+					"offset": 161,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_current_real",
+					"offset": 166,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_current_avg",
+					"offset": 169,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_soc",
+					"offset": 171,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_soh",
+					"offset": 172,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_faults",
+					"offset": 177,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_3_alarms",
+					"offset": 181,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_3_max_cell_1_voltage_value",
+					"offset": 185,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_max_cell_1_voltage_position",
+					"offset": 186,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_max_cell_2_voltage_value",
+					"offset": 187,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_max_cell_2_voltage_position",
+					"offset": 188,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_min_cell_2_voltage_value",
+					"offset": 190,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_min_cell_2_voltage_position",
+					"offset": 191,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_min_cell_1_voltage_value",
+					"offset": 192,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_min_cell_1_voltage_position",
+					"offset": 193,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_max_cell_1_temp_value",
+					"offset": 194,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_max_cell_1_temp_position",
+					"offset": 195,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_max_cell_2_temp_value",
+					"offset": 196,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_max_cell_2_temp_position",
+					"offset": 197,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_min_cell_2_temp_value",
+					"offset": 199,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_min_cell_2_temp_position",
+					"offset": 200,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_min_cell_1_temp_value",
+					"offset": 201,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_min_cell_1_temp_position",
+					"offset": 202,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_3_dc_switch_status",
+					"offset": 205,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_3_dc_switch_position",
+					"offset": 206,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 221,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_4_voltage",
+					"offset": 221,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_current_real",
+					"offset": 226,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_current_avg",
+					"offset": 229,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_soc",
+					"offset": 231,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_soh",
+					"offset": 232,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_faults",
+					"offset": 237,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_4_alarms",
+					"offset": 241,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_4_max_cell_1_voltage_value",
+					"offset": 245,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_max_cell_1_voltage_position",
+					"offset": 246,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_max_cell_2_voltage_value",
+					"offset": 247,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_max_cell_2_voltage_position",
+					"offset": 248,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_min_cell_2_voltage_value",
+					"offset": 250,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_min_cell_2_voltage_position",
+					"offset": 251,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_min_cell_1_voltage_value",
+					"offset": 252,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_min_cell_1_voltage_position",
+					"offset": 253,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_max_cell_1_temp_value",
+					"offset": 254,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_max_cell_1_temp_position",
+					"offset": 255,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_max_cell_2_temp_value",
+					"offset": 256,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_max_cell_2_temp_position",
+					"offset": 257,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_min_cell_2_temp_value",
+					"offset": 259,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_min_cell_2_temp_position",
+					"offset": 260,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_min_cell_1_temp_value",
+					"offset": 261,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_min_cell_1_temp_position",
+					"offset": 262,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_4_dc_switch_status",
+					"offset": 265,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_4_dc_switch_position",
+					"offset": 266,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 281,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_5_voltage",
+					"offset": 281,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_current_real",
+					"offset": 286,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_current_avg",
+					"offset": 289,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_soc",
+					"offset": 291,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_soh",
+					"offset": 292,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_faults",
+					"offset": 297,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_5_alarms",
+					"offset": 301,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_5_max_cell_1_voltage_value",
+					"offset": 305,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_max_cell_1_voltage_position",
+					"offset": 306,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_max_cell_2_voltage_value",
+					"offset": 307,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_max_cell_2_voltage_position",
+					"offset": 308,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_min_cell_2_voltage_value",
+					"offset": 310,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_min_cell_2_voltage_position",
+					"offset": 311,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_min_cell_1_voltage_value",
+					"offset": 312,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_min_cell_1_voltage_position",
+					"offset": 313,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_max_cell_1_temp_value",
+					"offset": 314,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_max_cell_1_temp_position",
+					"offset": 315,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_max_cell_2_temp_value",
+					"offset": 316,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_max_cell_2_temp_position",
+					"offset": 317,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_min_cell_2_temp_value",
+					"offset": 319,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_min_cell_2_temp_position",
+					"offset": 320,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_min_cell_1_temp_value",
+					"offset": 321,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_min_cell_1_temp_position",
+					"offset": 322,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_5_dc_switch_status",
+					"offset": 325,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_5_dc_switch_position",
+					"offset": 326,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 341,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_6_voltage",
+					"offset": 341,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_current_real",
+					"offset": 346,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_current_avg",
+					"offset": 349,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_soc",
+					"offset": 351,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_soh",
+					"offset": 352,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_faults",
+					"offset": 357,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_6_alarms",
+					"offset": 361,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_6_max_cell_1_voltage_value",
+					"offset": 365,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_max_cell_1_voltage_position",
+					"offset": 366,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_max_cell_2_voltage_value",
+					"offset": 367,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_max_cell_2_voltage_position",
+					"offset": 368,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_min_cell_2_voltage_value",
+					"offset": 370,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_min_cell_2_voltage_position",
+					"offset": 371,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_min_cell_1_voltage_value",
+					"offset": 372,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_min_cell_1_voltage_position",
+					"offset": 373,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_max_cell_1_temp_value",
+					"offset": 374,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_max_cell_1_temp_position",
+					"offset": 375,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_max_cell_2_temp_value",
+					"offset": 376,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_max_cell_2_temp_position",
+					"offset": 377,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_min_cell_2_temp_value",
+					"offset": 379,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_min_cell_2_temp_position",
+					"offset": 380,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_min_cell_1_temp_value",
+					"offset": 381,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_min_cell_1_temp_position",
+					"offset": 382,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_6_dc_switch_status",
+					"offset": 385,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_6_dc_switch_position",
+					"offset": 386,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 401,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_7_voltage",
+					"offset": 401,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_current_real",
+					"offset": 406,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_current_avg",
+					"offset": 409,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_soc",
+					"offset": 411,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_soh",
+					"offset": 412,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_faults",
+					"offset": 417,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_7_alarms",
+					"offset": 421,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_7_max_cell_1_voltage_value",
+					"offset": 425,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_max_cell_1_voltage_position",
+					"offset": 426,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_max_cell_2_voltage_value",
+					"offset": 427,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_max_cell_2_voltage_position",
+					"offset": 428,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_min_cell_2_voltage_value",
+					"offset": 430,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_min_cell_2_voltage_position",
+					"offset": 431,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_min_cell_1_voltage_value",
+					"offset": 432,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_min_cell_1_voltage_position",
+					"offset": 433,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_max_cell_1_temp_value",
+					"offset": 434,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_max_cell_1_temp_position",
+					"offset": 435,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_max_cell_2_temp_value",
+					"offset": 436,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_max_cell_2_temp_position",
+					"offset": 437,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_min_cell_2_temp_value",
+					"offset": 439,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_min_cell_2_temp_position",
+					"offset": 440,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_min_cell_1_temp_value",
+					"offset": 441,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_min_cell_1_temp_position",
+					"offset": 442,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_7_dc_switch_status",
+					"offset": 445,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_7_dc_switch_position",
+					"offset": 446,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 461,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_8_voltage",
+					"offset": 461,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_current_real",
+					"offset": 466,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_current_avg",
+					"offset": 469,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_soc",
+					"offset": 471,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_soh",
+					"offset": 472,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_faults",
+					"offset": 477,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_8_alarms",
+					"offset": 481,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_8_max_cell_1_voltage_value",
+					"offset": 485,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_max_cell_1_voltage_position",
+					"offset": 486,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_max_cell_2_voltage_value",
+					"offset": 487,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_max_cell_2_voltage_position",
+					"offset": 488,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_min_cell_2_voltage_value",
+					"offset": 490,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_min_cell_2_voltage_position",
+					"offset": 491,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_min_cell_1_voltage_value",
+					"offset": 492,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_min_cell_1_voltage_position",
+					"offset": 493,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_max_cell_1_temp_value",
+					"offset": 494,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_max_cell_1_temp_position",
+					"offset": 495,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_max_cell_2_temp_value",
+					"offset": 496,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_max_cell_2_temp_position",
+					"offset": 497,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_min_cell_2_temp_value",
+					"offset": 499,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_min_cell_2_temp_position",
+					"offset": 500,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_min_cell_1_temp_value",
+					"offset": 501,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_min_cell_1_temp_position",
+					"offset": 502,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_8_dc_switch_status",
+					"offset": 505,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_8_dc_switch_position",
+					"offset": 506,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 521,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_9_voltage",
+					"offset": 521,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_current_real",
+					"offset": 526,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_current_avg",
+					"offset": 529,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_soc",
+					"offset": 531,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_soh",
+					"offset": 532,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_faults",
+					"offset": 537,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_9_alarms",
+					"offset": 541,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_9_max_cell_1_voltage_value",
+					"offset": 545,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_max_cell_1_voltage_position",
+					"offset": 546,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_max_cell_2_voltage_value",
+					"offset": 547,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_max_cell_2_voltage_position",
+					"offset": 548,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_min_cell_2_voltage_value",
+					"offset": 550,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_min_cell_2_voltage_position",
+					"offset": 551,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_min_cell_1_voltage_value",
+					"offset": 552,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_min_cell_1_voltage_position",
+					"offset": 553,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_max_cell_1_temp_value",
+					"offset": 554,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_max_cell_1_temp_position",
+					"offset": 555,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_max_cell_2_temp_value",
+					"offset": 556,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_max_cell_2_temp_position",
+					"offset": 557,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_min_cell_2_temp_value",
+					"offset": 559,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_min_cell_2_temp_position",
+					"offset": 560,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_min_cell_1_temp_value",
+					"offset": 561,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_min_cell_1_temp_position",
+					"offset": 562,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_9_dc_switch_status",
+					"offset": 565,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_9_dc_switch_position",
+					"offset": 566,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 581,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_10_voltage",
+					"offset": 581,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_current_real",
+					"offset": 586,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_current_avg",
+					"offset": 589,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_soc",
+					"offset": 591,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_soh",
+					"offset": 592,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_faults",
+					"offset": 597,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_10_alarms",
+					"offset": 601,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_10_max_cell_1_voltage_value",
+					"offset": 605,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_max_cell_1_voltage_position",
+					"offset": 606,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_max_cell_2_voltage_value",
+					"offset": 607,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_max_cell_2_voltage_position",
+					"offset": 608,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_min_cell_2_voltage_value",
+					"offset": 610,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_min_cell_2_voltage_position",
+					"offset": 611,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_min_cell_1_voltage_value",
+					"offset": 612,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_min_cell_1_voltage_position",
+					"offset": 613,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_max_cell_1_temp_value",
+					"offset": 614,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_max_cell_1_temp_position",
+					"offset": 615,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_max_cell_2_temp_value",
+					"offset": 616,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_max_cell_2_temp_position",
+					"offset": 617,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_min_cell_2_temp_value",
+					"offset": 619,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_min_cell_2_temp_position",
+					"offset": 620,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_min_cell_1_temp_value",
+					"offset": 621,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_min_cell_1_temp_position",
+					"offset": 622,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_10_dc_switch_status",
+					"offset": 625,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_10_dc_switch_position",
+					"offset": 626,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 641,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_11_voltage",
+					"offset": 641,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_current_real",
+					"offset": 646,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_current_avg",
+					"offset": 649,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_soc",
+					"offset": 651,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_soh",
+					"offset": 652,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_faults",
+					"offset": 657,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_11_alarms",
+					"offset": 661,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_11_max_cell_1_voltage_value",
+					"offset": 665,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_max_cell_1_voltage_position",
+					"offset": 666,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_max_cell_2_voltage_value",
+					"offset": 667,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_max_cell_2_voltage_position",
+					"offset": 668,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_min_cell_2_voltage_value",
+					"offset": 670,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_min_cell_2_voltage_position",
+					"offset": 671,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_min_cell_1_voltage_value",
+					"offset": 672,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_min_cell_1_voltage_position",
+					"offset": 673,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_max_cell_1_temp_value",
+					"offset": 674,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_max_cell_1_temp_position",
+					"offset": 675,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_max_cell_2_temp_value",
+					"offset": 676,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_max_cell_2_temp_position",
+					"offset": 677,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_min_cell_2_temp_value",
+					"offset": 679,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_min_cell_2_temp_position",
+					"offset": 680,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_min_cell_1_temp_value",
+					"offset": 681,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_min_cell_1_temp_position",
+					"offset": 682,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_11_dc_switch_status",
+					"offset": 685,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_11_dc_switch_position",
+					"offset": 686,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 701,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_12_voltage",
+					"offset": 701,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_current_real",
+					"offset": 706,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_current_avg",
+					"offset": 709,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_soc",
+					"offset": 711,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_soh",
+					"offset": 712,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_faults",
+					"offset": 717,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_12_alarms",
+					"offset": 721,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_12_max_cell_1_voltage_value",
+					"offset": 725,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_max_cell_1_voltage_position",
+					"offset": 726,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_max_cell_2_voltage_value",
+					"offset": 727,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_max_cell_2_voltage_position",
+					"offset": 728,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_min_cell_2_voltage_value",
+					"offset": 730,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_min_cell_2_voltage_position",
+					"offset": 731,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_min_cell_1_voltage_value",
+					"offset": 732,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_min_cell_1_voltage_position",
+					"offset": 733,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_max_cell_1_temp_value",
+					"offset": 734,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_max_cell_1_temp_position",
+					"offset": 735,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_max_cell_2_temp_value",
+					"offset": 736,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_max_cell_2_temp_position",
+					"offset": 737,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_min_cell_2_temp_value",
+					"offset": 739,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_min_cell_2_temp_position",
+					"offset": 740,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_min_cell_1_temp_value",
+					"offset": 741,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_min_cell_1_temp_position",
+					"offset": 742,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_12_dc_switch_status",
+					"offset": 745,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_12_dc_switch_position",
+					"offset": 746,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 761,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_13_voltage",
+					"offset": 761,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_current_real",
+					"offset": 766,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_current_avg",
+					"offset": 769,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_soc",
+					"offset": 771,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_soh",
+					"offset": 772,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_faults",
+					"offset": 777,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_13_alarms",
+					"offset": 781,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_13_max_cell_1_voltage_value",
+					"offset": 785,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_max_cell_1_voltage_position",
+					"offset": 786,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_max_cell_2_voltage_value",
+					"offset": 787,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_max_cell_2_voltage_position",
+					"offset": 788,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_min_cell_2_voltage_value",
+					"offset": 790,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_min_cell_2_voltage_position",
+					"offset": 791,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_min_cell_1_voltage_value",
+					"offset": 792,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_min_cell_1_voltage_position",
+					"offset": 793,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_max_cell_1_temp_value",
+					"offset": 794,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_max_cell_1_temp_position",
+					"offset": 795,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_max_cell_2_temp_value",
+					"offset": 796,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_max_cell_2_temp_position",
+					"offset": 797,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_min_cell_2_temp_value",
+					"offset": 799,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_min_cell_2_temp_position",
+					"offset": 800,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_min_cell_1_temp_value",
+					"offset": 801,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_min_cell_1_temp_position",
+					"offset": 802,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_13_dc_switch_status",
+					"offset": 805,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_13_dc_switch_position",
+					"offset": 806,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 821,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_14_voltage",
+					"offset": 821,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_current_real",
+					"offset": 826,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_current_avg",
+					"offset": 829,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_soc",
+					"offset": 831,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_soh",
+					"offset": 832,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_faults",
+					"offset": 837,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_14_alarms",
+					"offset": 841,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_14_max_cell_1_voltage_value",
+					"offset": 845,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_max_cell_1_voltage_position",
+					"offset": 846,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_max_cell_2_voltage_value",
+					"offset": 847,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_max_cell_2_voltage_position",
+					"offset": 848,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_min_cell_2_voltage_value",
+					"offset": 850,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_min_cell_2_voltage_position",
+					"offset": 851,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_min_cell_1_voltage_value",
+					"offset": 852,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_min_cell_1_voltage_position",
+					"offset": 853,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_max_cell_1_temp_value",
+					"offset": 854,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_max_cell_1_temp_position",
+					"offset": 855,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_max_cell_2_temp_value",
+					"offset": 856,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_max_cell_2_temp_position",
+					"offset": 857,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_min_cell_2_temp_value",
+					"offset": 859,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_min_cell_2_temp_position",
+					"offset": 860,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_min_cell_1_temp_value",
+					"offset": 861,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_min_cell_1_temp_position",
+					"offset": 862,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_14_dc_switch_status",
+					"offset": 865,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_14_dc_switch_position",
+					"offset": 866,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 881,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_15_voltage",
+					"offset": 881,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_current_real",
+					"offset": 886,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_current_avg",
+					"offset": 889,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_soc",
+					"offset": 891,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_soh",
+					"offset": 892,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_faults",
+					"offset": 897,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_15_alarms",
+					"offset": 901,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_15_max_cell_1_voltage_value",
+					"offset": 905,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_max_cell_1_voltage_position",
+					"offset": 906,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_max_cell_2_voltage_value",
+					"offset": 907,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_max_cell_2_voltage_position",
+					"offset": 908,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_min_cell_2_voltage_value",
+					"offset": 910,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_min_cell_2_voltage_position",
+					"offset": 911,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_min_cell_1_voltage_value",
+					"offset": 912,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_min_cell_1_voltage_position",
+					"offset": 913,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_max_cell_1_temp_value",
+					"offset": 914,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_max_cell_1_temp_position",
+					"offset": 915,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_max_cell_2_temp_value",
+					"offset": 916,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_max_cell_2_temp_position",
+					"offset": 917,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_min_cell_2_temp_value",
+					"offset": 919,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_min_cell_2_temp_position",
+					"offset": 920,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_min_cell_1_temp_value",
+					"offset": 921,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_min_cell_1_temp_position",
+					"offset": 922,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_15_dc_switch_status",
+					"offset": 925,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_15_dc_switch_position",
+					"offset": 926,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 941,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_16_voltage",
+					"offset": 941,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_current_real",
+					"offset": 946,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_current_avg",
+					"offset": 949,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_soc",
+					"offset": 951,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_soh",
+					"offset": 952,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_faults",
+					"offset": 957,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_16_alarms",
+					"offset": 961,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_16_max_cell_1_voltage_value",
+					"offset": 965,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_max_cell_1_voltage_position",
+					"offset": 966,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_max_cell_2_voltage_value",
+					"offset": 967,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_max_cell_2_voltage_position",
+					"offset": 968,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_min_cell_2_voltage_value",
+					"offset": 970,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_min_cell_2_voltage_position",
+					"offset": 971,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_min_cell_1_voltage_value",
+					"offset": 972,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_min_cell_1_voltage_position",
+					"offset": 973,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_max_cell_1_temp_value",
+					"offset": 974,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_max_cell_1_temp_position",
+					"offset": 975,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_max_cell_2_temp_value",
+					"offset": 976,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_max_cell_2_temp_position",
+					"offset": 977,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_min_cell_2_temp_value",
+					"offset": 979,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_min_cell_2_temp_position",
+					"offset": 980,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_min_cell_1_temp_value",
+					"offset": 981,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_min_cell_1_temp_position",
+					"offset": 982,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_16_dc_switch_status",
+					"offset": 985,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_16_dc_switch_position",
+					"offset": 986,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 1001,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_17_voltage",
+					"offset": 1001,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_current_real",
+					"offset": 1006,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_current_avg",
+					"offset": 1009,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_soc",
+					"offset": 1011,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_soh",
+					"offset": 1012,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_faults",
+					"offset": 1017,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_17_alarms",
+					"offset": 1021,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_17_max_cell_1_voltage_value",
+					"offset": 1025,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_max_cell_1_voltage_position",
+					"offset": 1026,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_max_cell_2_voltage_value",
+					"offset": 1027,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_max_cell_2_voltage_position",
+					"offset": 1028,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_min_cell_2_voltage_value",
+					"offset": 1030,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_min_cell_2_voltage_position",
+					"offset": 1031,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_min_cell_1_voltage_value",
+					"offset": 1032,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_min_cell_1_voltage_position",
+					"offset": 1033,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_max_cell_1_temp_value",
+					"offset": 1034,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_max_cell_1_temp_position",
+					"offset": 1035,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_max_cell_2_temp_value",
+					"offset": 1036,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_max_cell_2_temp_position",
+					"offset": 1037,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_min_cell_2_temp_value",
+					"offset": 1039,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_min_cell_2_temp_position",
+					"offset": 1040,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_min_cell_1_temp_value",
+					"offset": 1041,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_min_cell_1_temp_position",
+					"offset": 1042,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_17_dc_switch_status",
+					"offset": 1045,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_17_dc_switch_position",
+					"offset": 1046,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 1061,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_18_voltage",
+					"offset": 1061,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_current_real",
+					"offset": 1066,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_current_avg",
+					"offset": 1069,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_soc",
+					"offset": 1071,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_soh",
+					"offset": 1072,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_faults",
+					"offset": 1077,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_18_alarms",
+					"offset": 1081,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_18_max_cell_1_voltage_value",
+					"offset": 1085,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_max_cell_1_voltage_position",
+					"offset": 1086,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_max_cell_2_voltage_value",
+					"offset": 1087,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_max_cell_2_voltage_position",
+					"offset": 1088,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_min_cell_2_voltage_value",
+					"offset": 1090,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_min_cell_2_voltage_position",
+					"offset": 1091,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_min_cell_1_voltage_value",
+					"offset": 1092,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_min_cell_1_voltage_position",
+					"offset": 1093,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_max_cell_1_temp_value",
+					"offset": 1094,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_max_cell_1_temp_position",
+					"offset": 1095,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_max_cell_2_temp_value",
+					"offset": 1096,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_max_cell_2_temp_position",
+					"offset": 1097,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_min_cell_2_temp_value",
+					"offset": 1099,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_min_cell_2_temp_position",
+					"offset": 1100,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_min_cell_1_temp_value",
+					"offset": 1101,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_min_cell_1_temp_position",
+					"offset": 1102,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_18_dc_switch_status",
+					"offset": 1105,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_18_dc_switch_position",
+					"offset": 1106,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 1121,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_19_voltage",
+					"offset": 1121,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_current_real",
+					"offset": 1126,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_current_avg",
+					"offset": 1129,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_soc",
+					"offset": 1131,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_soh",
+					"offset": 1132,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_faults",
+					"offset": 1137,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_19_alarms",
+					"offset": 1141,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_19_max_cell_1_voltage_value",
+					"offset": 1145,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_max_cell_1_voltage_position",
+					"offset": 1146,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_max_cell_2_voltage_value",
+					"offset": 1147,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_max_cell_2_voltage_position",
+					"offset": 1148,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_min_cell_2_voltage_value",
+					"offset": 1150,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_min_cell_2_voltage_position",
+					"offset": 1151,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_min_cell_1_voltage_value",
+					"offset": 1152,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_min_cell_1_voltage_position",
+					"offset": 1153,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_max_cell_1_temp_value",
+					"offset": 1154,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_max_cell_1_temp_position",
+					"offset": 1155,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_max_cell_2_temp_value",
+					"offset": 1156,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_max_cell_2_temp_position",
+					"offset": 1157,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_min_cell_2_temp_value",
+					"offset": 1159,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_min_cell_2_temp_position",
+					"offset": 1160,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_min_cell_1_temp_value",
+					"offset": 1161,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_min_cell_1_temp_position",
+					"offset": 1162,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_19_dc_switch_status",
+					"offset": 1165,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_19_dc_switch_position",
+					"offset": 1166,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 1181,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_20_voltage",
+					"offset": 1181,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_current_real",
+					"offset": 1186,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_current_avg",
+					"offset": 1189,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_soc",
+					"offset": 1191,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_soh",
+					"offset": 1192,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_faults",
+					"offset": 1197,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_20_alarms",
+					"offset": 1201,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_20_max_cell_1_voltage_value",
+					"offset": 1205,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_max_cell_1_voltage_position",
+					"offset": 1206,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_max_cell_2_voltage_value",
+					"offset": 1207,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_max_cell_2_voltage_position",
+					"offset": 1208,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_min_cell_2_voltage_value",
+					"offset": 1210,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_min_cell_2_voltage_position",
+					"offset": 1211,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_min_cell_1_voltage_value",
+					"offset": 1212,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_min_cell_1_voltage_position",
+					"offset": 1213,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_max_cell_1_temp_value",
+					"offset": 1214,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_max_cell_1_temp_position",
+					"offset": 1215,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_max_cell_2_temp_value",
+					"offset": 1216,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_max_cell_2_temp_position",
+					"offset": 1217,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_min_cell_2_temp_value",
+					"offset": 1219,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_min_cell_2_temp_position",
+					"offset": 1220,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_min_cell_1_temp_value",
+					"offset": 1221,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_min_cell_1_temp_position",
+					"offset": 1222,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_20_dc_switch_status",
+					"offset": 1225,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_20_dc_switch_position",
+					"offset": 1226,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+				{
+			"type": "Input Registers",
+			"starting_offset": 1241,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_21_voltage",
+					"offset": 1241,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_current_real",
+					"offset": 1246,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_current_avg",
+					"offset": 1249,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_soc",
+					"offset": 1251,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_soh",
+					"offset": 1252,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_faults",
+					"offset": 1257,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_21_alarms",
+					"offset": 1261,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_21_max_cell_1_voltage_value",
+					"offset": 1265,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_max_cell_1_voltage_position",
+					"offset": 1266,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_max_cell_2_voltage_value",
+					"offset": 1267,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_max_cell_2_voltage_position",
+					"offset": 1268,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_min_cell_2_voltage_value",
+					"offset": 1270,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_min_cell_2_voltage_position",
+					"offset": 1271,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_min_cell_1_voltage_value",
+					"offset": 1272,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_min_cell_1_voltage_position",
+					"offset": 1273,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_max_cell_1_temp_value",
+					"offset": 1274,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_max_cell_1_temp_position",
+					"offset": 1275,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_max_cell_2_temp_value",
+					"offset": 1276,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_max_cell_2_temp_position",
+					"offset": 1277,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_min_cell_2_temp_value",
+					"offset": 1279,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_min_cell_2_temp_position",
+					"offset": 1280,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_min_cell_1_temp_value",
+					"offset": 1281,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_min_cell_1_temp_position",
+					"offset": 1282,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_21_dc_switch_status",
+					"offset": 1285,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_21_dc_switch_position",
+					"offset": 1286,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 1301,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_22_voltage",
+					"offset": 1301,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_current_real",
+					"offset": 1306,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_current_avg",
+					"offset": 1309,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_soc",
+					"offset": 1311,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_soh",
+					"offset": 1312,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_faults",
+					"offset": 1317,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_22_alarms",
+					"offset": 1321,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_22_max_cell_1_voltage_value",
+					"offset": 1325,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_max_cell_1_voltage_position",
+					"offset": 1326,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_max_cell_2_voltage_value",
+					"offset": 1327,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_max_cell_2_voltage_position",
+					"offset": 1328,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_min_cell_2_voltage_value",
+					"offset": 1330,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_min_cell_2_voltage_position",
+					"offset": 1331,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_min_cell_1_voltage_value",
+					"offset": 1332,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_min_cell_1_voltage_position",
+					"offset": 1333,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_max_cell_1_temp_value",
+					"offset": 1334,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_max_cell_1_temp_position",
+					"offset": 1335,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_max_cell_2_temp_value",
+					"offset": 1336,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_max_cell_2_temp_position",
+					"offset": 1337,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_min_cell_2_temp_value",
+					"offset": 1339,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_min_cell_2_temp_position",
+					"offset": 1340,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_min_cell_1_temp_value",
+					"offset": 1341,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_min_cell_1_temp_position",
+					"offset": 1342,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_22_dc_switch_status",
+					"offset": 1345,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_22_dc_switch_position",
+					"offset": 1346,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 1361,
+			"number_of_registers": 46,
+			"map":
+			[
+				{
+					"id": "rack_23_voltage",
+					"offset": 1361,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_current_real",
+					"offset": 1366,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_current_avg",
+					"offset": 1369,
+					"size": 1,
+					"scale": 10,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_soc",
+					"offset": 1371,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_soh",
+					"offset": 1372,
+					"size": 1,
+					"scale": 10,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_faults",
+					"offset": 1377,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_23_alarms",
+					"offset": 1381,
+					"size": 4,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Module PCB Under Temperature",
+						"Module PCB Over Temperature",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"DCSW 1 sensing fault",
+						"DCSW 2 sensing fault",
+						"DCSW 1 fail",
+						"DCSW 2 fail",
+						"Fan fail",
+						"Additional protection Fault",
+						"Cell Charge Operation Limit Fault",
+						"Cell Discharge Operation Limit Fault",
+						"Rack String Voltage-imbalance",
+						"Rack String I-imbalance",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved",
+						"Module Under Temperature",
+						"Module Over Temperature",
+						"Module Under Voltage",
+						"Module Over Voltage",
+						"Module Voltage Imbalance",
+						"Module Temperature Imbalance",
+						"R-M Communication Failure",
+						"R-S Communication Failure",
+						"Rack Charge Over Current",
+						"Rack Discharge Over Current",
+						"Rack Under Voltage",
+						"Rack Over Voltage",
+						"Rack Voltage Sensing Difference",
+						"Rack I sensor fail",
+						"Rack Fuse Fail",
+						"Permanent Under Voltage"
+					]
+				},
+				{
+					"id": "rack_23_max_cell_1_voltage_value",
+					"offset": 1385,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_max_cell_1_voltage_position",
+					"offset": 1386,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_max_cell_2_voltage_value",
+					"offset": 1387,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_max_cell_2_voltage_position",
+					"offset": 1388,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_min_cell_2_voltage_value",
+					"offset": 1390,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_min_cell_2_voltage_position",
+					"offset": 1391,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_min_cell_1_voltage_value",
+					"offset": 1392,
+					"size": 1,
+					"scale": 1000,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_min_cell_1_voltage_position",
+					"offset": 1393,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_max_cell_1_temp_value",
+					"offset": 1394,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_max_cell_1_temp_position",
+					"offset": 1395,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_max_cell_2_temp_value",
+					"offset": 1396,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_max_cell_2_temp_position",
+					"offset": 1397,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_min_cell_2_temp_value",
+					"offset": 1399,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_min_cell_2_temp_position",
+					"offset": 1400,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_min_cell_1_temp_value",
+					"offset": 1401,
+					"size": 1,
+					"scale": 100,
+					"signed": true,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_min_cell_1_temp_position",
+					"offset": 1402,
+					"size": 1,
+					"scale": 1,
+					"bit_field": false
+				},
+				{
+					"id": "rack_23_dc_switch_status",
+					"offset": 1405,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Grid SW",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved"
+					]
+				},
+				{
+					"id": "rack_23_dc_switch_position",
+					"offset": 1406,
+					"size": 1,
+					"scale": 1,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Switch 1 On",
+						"DC Switch 2 On",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved", "reserved", "reserved",
+						"reserved", "reserved"
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,885 @@
+{
+  "/notes/ess": {
+    "note1":"Start with this config file, the bms, pcs (and drc) managers are referenced.",
+    "note1a":"The main page of the ui display is outlined in /assets/ess/summay",
+    "note2": " The /config/ess area is still under development",
+    "note3":"The /components/ess table defined the incoming control words from the site controller",
+    "note4":"The /links/<ess> table defines mapping of external interface components to internal variables",
+    "note5":" There are some junk/test fields as well... they will removed soon"
+  },
+  
+  "/config/ess_server":{
+    "note":"This is the modbus server map",
+    "ess":"site_manager_server.json"
+  },
+
+  "/assets/ess/ess_1":{
+    "name": "ESS Local Controller",
+    "version": {
+        "name": "Version",
+        "value": "version",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+    },
+    "active_power": {
+        "name": "Active Power",
+        "value": 2.5,
+        "unit": "W",
+        "scaler": 1000,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+    },
+    "active_power_setpoint": {
+        "name": "Active Power Setpoint",
+        "value": 3.0999999046325684,
+        "unit": "W",
+        "scaler": 1000,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+    },
+    "alarms": {
+        "name": "Alarms",
+        "value": 0,
+        "options": [],
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "alarm",
+        "type": "number"
+    },
+    "soc": {
+        "name": "State of Charge",
+        "value": 76.55913543701172,
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+    },
+    "soh": {
+        "name": "State of Health",
+        "value": 65.7,
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+    },
+    "status": {
+        "name": "Status",
+        "value": "Hello Kitty",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+    },
+    "maint_mode": {
+        "name": "Maintenance Mode (ess_1)",
+        "value": false,
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "control",
+        "type": "enum_slider",
+        "actions":	{
+          "onSet":	[{
+              "remap":	[
+                  {"inValue":true, "uri":	"/assets/ess/ess_1:status","outValue":"Kitty Maint"}, 
+                  {"inValue":false, "uri": "/assets/ess/ess_1:status","outValue":"Kitty Back"}, 
+                  {"uri":	"/assets/ess/ess_1:start@enabled"}, 
+                  {"uri":	"/assets/ess/ess_1:stop@enabled"}, 
+                  {"uri":	"/assets/ess/ess_1:clear_faults@enabled"},
+                  {"uri":	"/assets/ess/ess_1:active_power_setpoint@enabled"}
+              ]
+          }]
+        },
+        "options": [
+          {
+            "name": "No",
+            "return_value": false
+          },
+          {
+            "name": "Yes",
+            "return_value": true
+          }
+        ]
+    },
+    "start": {
+        "name": "Start",
+        "unit": "",
+        "scaler": 0,
+        "enabled": false,
+        "ui_type": "control",
+        "type": "enum_button",
+        "actions":	{
+          "onSet":	[{
+              "remap":	[
+                  {"uri":	"/status/ess:UiStartup"},
+                  {"uri":	"/status/ess:UiShutdown", "outValue": false} 
+              ]
+          }]
+        },
+        "options": [
+            {
+              "name": "On",
+              "return_value": true
+            },
+            {
+              "name": "Off",
+              "return_value": false
+            }
+        ]
+    },
+    "stop": {
+        "name": "Stop",
+        "unit": "",
+        "scaler": 0,
+        "enabled": false,
+        "ui_type": "control",
+        "type": "enum_button",
+        "actions":	{
+          "onSet":	[{
+              "remap":	[
+                  {"uri":	"/status/ess:UiStartup", "outValue": false}, 
+                  {"uri":	"/status/ess:UiShutdown"}
+              ]
+          }]
+        },
+        "options": [
+            {
+              "name": "On",
+              "return_value": true
+            },
+            {
+              "name": "Off",
+              "return_value": false
+            }
+        ]
+    },
+    "clear_faults": {
+        "name": "Clear Faults",
+        "unit": "",
+        "scaler": 0,
+        "enabled": false,
+        "ui_type": "control",
+        "type": "enum_button",
+        "options": [
+            {
+              "name": "Clear Faults",
+              "return_value": true
+            }
+        ]
+    }
+  },
+  
+
+  "/config/ess/managers": {
+    "bms": "bms_manager.json",
+    "pcs": "pcs_manager.json",
+    "drc": "drc_manager.json",
+    "site": "site_manager.json"
+  },
+
+  "/config/ess": {
+    "Subs": "/ess, /components, /site, /assets, /params, /status, /controls, /links, /variables, /config, /tests, /default, /reload, /misc2",
+    "Pubs": "/assets/ess/summary",
+    "BlockSets": "/status/ess, /status/bms",
+    "BlockPubs": "/assets",
+    "LogDir":"/var/log/ess_controller",
+    "logging_size": { "value": 124, "actions": { "onSet": [ { "func": [ { "func": "SetLoggingSize" } ] } ] } },
+    "logging_timestamp": false,
+    "logging_enabled": false,
+    "essCommsFaultTimeout": {
+      "value": 10
+    },
+    "essHeartbeatFaultTimeout": {
+      "value": 15
+    },
+    "essCommsAlarmTimeout": {
+      "value": 7
+    },
+    "essCommsRecoverTimeout": {
+      "value": 5
+    },
+    "AlarmDestination": {
+      "value": "/assets/ess/summary:alarms"
+    },
+    "FaultDestination": {
+      "value": "/assets/ess/summary:faults"
+    },
+    "pChargeTbl": {
+      "value": "p_charge_tbl.csv"
+    },
+    "pDischargeTbl": {
+      "value": "p_discharge_tbl.csv"
+    }
+  },
+
+  "/logs/ess": {
+    "CheckAmCommsLog": {
+      "value": "file:CheckAmCommsLog.txt",
+      "enablePerf": true
+    },
+    "MonitorVarLog": {
+      "value": "file:MonitorVarLog.txt",
+      "enablePerf": true
+    }
+  },
+
+  "/assets/ess/summary": {
+      "name":"Ess Controller Summary",
+      "version": {
+        "name": "Version",
+        "value": "version",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+    },
+      "active_power": {
+        "name": "Active Power",
+        "value": 17,
+        "unit": "W",
+        "scaler": 1000,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "active_power_setpoint": {
+        "name": "Active Power Setpoint",
+        "value": 3.0999999046325684,
+        "unit": "W",
+        "scaler": 1000,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "alarms": {
+        "name": "Alarms",
+        "value": 0,
+        "options": [],
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "alarm",
+        "type": "number"
+      },
+      "soc": {
+        "name": "State of Charge",
+        "value": 76.55913543701172,
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "soh": {
+        "name": "State of Health",
+        "value": 12.34,
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "status": {
+        "name": "Status",
+        "value": "Summary Run",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+      },
+      "maint_mode": {
+        "name": "Maintenance Mode (Sum)",
+        "value": false,
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "control",
+        "type": "enum_slider",
+        "actions":	{
+					"onSet":	[{
+              "remap":	[
+                  {"uri":	"/assets/ess/summary:start@enabled"}, 
+                  {"uri":	"/assets/ess/summary:stop@enabled"}, 
+                  {"uri":	"/assets/ess/summary:clear_faults@enabled"},
+                  {"uri":	"/assets/ess/summary:active_power_setpoint@enabled"}
+                ]
+					}]
+				},
+        "options": [
+          {
+            "name": "No",
+            "return_value": false
+          },
+          {
+            "name": "Yes",
+            "return_value": true
+          }
+        ]
+      },
+      "start": {
+        "name": "Start",
+        "unit": "",
+        "scaler": 0,
+        "enabled": false,
+        "ui_type": "control",
+        "type": "enum_button",
+        "options": [
+          {
+            "name": "On",
+            "return_value": true
+          },
+          {
+            "name": "Off",
+            "return_value": false
+          }
+        ]
+      },
+      "stop": {
+        "name": "Stop",
+        "unit": "",
+        "scaler": 0,
+        "enabled": false,
+        "ui_type": "control",
+        "type": "enum_button",
+        "options": [
+          {
+            "name": "On",
+            "return_value": true
+          },
+          {
+            "name": "Off",
+            "return_value": false
+          }
+        ]
+      },
+      "clear_faults": {
+        "name": "Clear Faults",
+        "unit": "",
+        "scaler": 0,
+        "enabled": false,
+        "ui_type": "control",
+        "type": "enum_button",
+        "actions": { 
+          "onSet":[{
+              "remap":[
+                  {"inValue": true, "outValue": "Clear", "uri": "/faults/ess:clear_faults"},
+                  {"inValue": true, "outValue": "Clear", "uri": "/faults/pcs:clear_faults"},
+                  {"inValue": true, "outValue": "Clear", "uri": "/faults/bms:clear_faults"},
+                  {"inValue": true, "outValue": "Clear", "uri": "/alarms/ess:clear_alarms"},
+                  {"inValue": true, "outValue": "Clear", "uri": "/alarms/pcs:clear_alarms"},
+                  {"inValue": true, "outValue": "Clear", "uri": "/alarms/bms:clear_alarms"},
+
+                  {"inValue": true, "outValue": 0, "uri": "/site/ess_hs:com_status"},
+                  {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_faults1"},
+                  {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_faults2"},
+                  {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_alarms"},
+                  {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:bms_faults1"},
+                  {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:bms_faults2"},
+                  {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:bms_alarms"},
+
+                  {"inValue": true, "uri": "/sched/pcs:schedSendClearFaultCmdpcs@endTime", "amap": "pcs", "outValue": 1},
+                  {"inValue": true, "uri": "/sched/pcs:schedSendClearFaultCmdpcs", "amap": "pcs", "outValue": "schedSendClearFaultCmdpcs"},
+                  {"inValue": true, "uri": "/sched/bms:schedSendClearFaultCmdbms@endTime", "outValue": 1},
+                  {"inValue": true, "uri": "/sched/bms:schedSendClearFaultCmdbms", "outValue": "schedSendClearFaultCmdbms"},
+                  {"inValue": true, "uri": "/sched/ess:schedSendClearFaultCmdess@endTime", "amap": "ess", "outValue": 0},
+                  {"inValue": true, "uri": "/sched/ess:schedSendClearFaultCmdess", "amap": "ess", "outValue": "schedSendClearFaultCmdess"}
+              ]
+          }]
+        },
+        "options": [
+          {
+            "name": "Clear Faults",
+            "return_value": true
+          }
+        ]
+      }
+  },
+  
+  "/components/ess":{
+    "ctrlword1cfg":{
+      "note1":"//mask 3  bit 0   0000000000000001       oncmd",
+      "note2":"//mask 3  bit 1   0000000000000010       kacclosecmd",
+      "note3":"//mask 48 bit 4   0000000000010000       offcmd",
+      "note4":"//mask 48 bit 5   0000000000100000       kacopencmd",
+      "value":0,
+          "actions":{
+              "onSet":[{
+                  "bitfield":[
+                      { "bit":0, "uri": "/controls/ess:OnCmd",                     "outValue": true },
+                      { "bit":1, "uri": "/controls/ess:OffCmd",                    "outValue": true },
+                      { "bit":2, "uri": "/controls/ess:StandbyCmd",                "outValue": true },
+                      { "bit":3, "uri": "/controls/ess:readyOkSetCmd",             "outValue": true },
+                      { "bit":4, "uri": "/controls/ess:readyOkClearCmd",           "outValue": true }
+
+                  ]
+            }]                 
+      }
+    },
+    "ctrlword2cfg":{
+      "value":0,
+      "params":{"bitmask":255},
+          "actions":{
+              "onSet":[{
+                  "bitfield":[
+                      { "bit":0,"uri": "/controls/ess:DcContactorOpenCmd",             "outValue": true },
+                      { "bit":1,"uri": "/controls/ess:AcContactorOpenCmd",             "outValue": true },
+                      { "bit":2,"uri": "/controls/ess:DcContactorCloseCmd",            "outValue": true },
+                      { "bit":3,"uri": "/controls/ess:AcContactorCloseCmd",            "outValue": true }
+                  ]
+            }]                 
+        }
+    },
+    "ctrlword4cfg":{
+      "value":0,
+          "actions":{
+              "onSet":[{
+                  "enum":[
+                      { "mask":255,"inValue":0, "uri": "/status/ess:readyOkSetCmd",                     "outValue": true },
+                      { "mask":255,"inValue":1, "uri": "/status/ess:readyOkClearCmd",                   "outValue": true }
+                  ]
+            }]                 
+        }
+    },
+    "HeartBeatRelink": {
+        "value": 5
+    }
+    
+  },
+
+  "/faults/ess": {
+    "clear_faults": {
+        "value": 0,
+        "type": "fault",
+        "actions": {
+            "onSet": [
+                {
+                    "func": [
+                        {
+                            "func": "process_sys_alarm",
+                            "amap": "ess"
+                        }
+                    ]
+                }
+            ]
+        }
+      }
+  },
+
+  "/controls/ess": {
+    "ReactivePowerSetpoint": {
+      "value": 0
+    },
+    "ActivePowerSetpoint": {
+      "value": 0
+    },
+    "PowerPriority": {
+      "value": "q"
+    }
+  },
+
+  "/vlinks/ess": {
+    "note1":" these two assetVars share a common set of values via the linkVar (vlink) pointer",
+    "active_power_ess_1_ui":            { "value": "/assets/ess/ess_1:active_power",                     "vlink": "/components/pcsm_grid_visualization:active_power"       },
+    "active_power_ess_summary_ui":      { "value": "/assets/ess/summary:active_power",                   "vlink": "/components/pcsm_grid_visualization:active_power"       },
+    "active_power_setpoint_ess_1_ui":   { "value": "/assets/ess/ess_1:active_power_setpoint",            "vlink": "/components/pcsm_control:p_p_reference"                 },
+    "active_power_setpoint_ess_sum_ui": { "value": "/assets/ess/summary:active_power_setpoint",          "vlink": "/components/pcsm_control:p_p_reference"                 },
+    "soc_ess_1_ui":                     { "value": "/assets/ess/ess_1:soc",                              "vlink": "/components/catl_mbmu_summary_r:mbmu_soc"               },
+    "soc_ess_summary_ui":               { "value": "/assets/ess/summary:soc",                            "vlink": "/components/catl_mbmu_summary_r:mbmu_soc"               },
+    "soh_ess_1_ui":                     { "value": "/assets/ess/ess_1:soh",                              "vlink": "/components/catl_mbmu_summary_r:mbmu_soh"               },
+    "soh_ess_summary_ui":               { "value": "/assets/ess/summary:soh",                            "vlink": "/components/catl_mbmu_summary_r:mbmu_soh"               },
+    "version_ess_1_ui":                 { "value": "/assets/ess/ess_1:version",                          "vlink": "/status/ess:build"                                      },
+    "version_ess_summary_ui":           { "value": "/assets/ess/summary:version",                        "vlink": "/status/ess:build"                                      },
+    "site_max_charge_power":            { "value": "/site/ess_hs:chargeable_power",                      "vlink": "/status/ess:MaxChargePower"                             },
+    "site_max_discharge_power":         { "value": "/site/ess_hs:dischargeable_power",                   "vlink": "/status/ess:MaxDischargePower"                          }
+  }, 
+  "/test/ess":{
+
+    "set_enable": {
+      "value": false,
+      "actions": { "onSet": [{
+          "enum": [
+                    {"invalue": true,"uri":"/assets/ess:start@enabled","outValue":true},
+                    {"invalue": true,"uri":"/assets/ess:stop@enabled","outValue":true},
+                    {"invalue": false,"uri":"/assets/ess:start@enabled","outValue":false},
+                    {"invalue": false,"uri":"/assets/ess:stop@enabled","outValue":false}
+          ]}
+        ]}
+    }
+  },
+  "/xschedule/ess":{
+    "init": {    
+      "actions": {
+         "onSet": [{"func": [
+                     {"func":"InitEss","aname":"ess"}
+                     ]
+                   }]
+              }
+    },
+
+    "wake100mS": {    
+        "rate":0.1,   
+        "offset":0.0,
+        "actions": {
+          "onSet": [{"func": [
+                      {"func":"UpdateSystemTime","aname":"ess"},       
+                      {"func":"RunInitCheck","aname":"ess"},
+                      {"func":"RunComsCheck","aname":"ess"},
+                      {"func":"CheckMonitorVar","Av":"/components/catl_mbmu_control_r:mbmu_max_cell_voltage",     "enable": true,"aname":"bms"},
+                      {"func":"CheckMonitorVar","Av":"/components/catl_mbmu_control_r:mbmu_min_cell_voltage",     "enable": true,"aname":"bms"},
+                      {"func":"CheckMonitorVar","Av":"/components/catl_mbmu_control_r:mbmu_max_cell_temperature", "enable": true,"aname":"bms"},
+                      {"func":"CheckMonitorVar","Av":"/components/catl_mbmu_control_r:mbmu_min_cell_temperature", "enable": true,"aname":"bms"},
+                      {"func":"CheckMonitorVar","Av":"/components/catl_mbmu_control_r:mbmu_soc",                  "enable": true,"aname":"bms"},
+                      {"func":"CheckMonitorVar","Av":"/components/catl_mbmu_control_r:mbmu_soh",                  "enable": true,"aname":"bms"},
+                      {"func":"CheckMonitorVar","Av":"/components/catl_bms_ems_r:bms_heartbeat",                  "enable": true,"aname":"bms"},
+                      {"func":"CheckMonitorVar","Av":"/components/catl_bms_ems_r:bms_timestamp",                  "enable": true,"aname":"bms"},   
+                      {"func":"HandlePowerLimit","aname":"ess"},
+                      {"func":"HandlePowerCmd","aname":"ess"}
+        
+                      ]
+                  }
+              ]
+          }
+      }
+  },
+  "/links/ess": {
+    "HeartBeatLink": {
+      "value": "/components/ess:HeartBeatRelinkOK"
+    },
+    "DcContactorFbk": {
+      "value": "/components/pcs_1_status:DcContactor"
+    },
+    "AcContactorFbk": {
+      "value": "/components/pcs_1_status:AcContactor"
+    },
+    "xGPIOFault": {
+      "value": "/components/gpio:xgpioBitfield"
+    },
+    "EStop": {
+      "value": "/components/gpio:EStop"
+    },
+    "Disconnect Switch": {
+      "value": "/components/gpio:Disconnect Switch"
+    },
+    "Door Latch": {
+      "value": "/components/gpio:Door Latch"
+    },
+    "Surge Arrester": {
+      "value": "/components/gpio:Surge Arrester"
+    },
+    "Fire Alarm": {
+      "value": "/components/gpio:Fire Alarm"
+    },
+    "Fuse Monitoring": {
+      "value": "/components/gpio:Fuse Monitoring"
+    }
+  },
+  
+  "/status/pcs_test": {
+    "note": "These are component status vars",
+    "max_cell_temp": 23.4,
+    "min_cell_temp": 23.4,
+    "max_cell_volts": 3.4,
+    "min_cell_volts": 3.2,
+    "current_soc": 85.6,
+    "current_soh": 85.7,
+    "active_current_setpont": 0.0,
+    "reactive_current_setpont": 0.0,
+    "dc_contactor_open": true,
+    "ac_contactor_open": true,
+    "number_of_racks": 18,
+    "pcs_vdc_bus_1": 800,
+    "vdc_bus_1": 801,
+    "PCSStatusResp": {
+        "value": "StatusVal",
+        "actions": {
+            "onSet": [{
+                "enum": [
+                    {"invalue": "PUP", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "INIT", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "OFF", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "PCHG", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "REA", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true},
+                    {"invalue": "WAIT", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true},
+                    {"invalue": "ON", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true},
+                    {"invalue": "STOP", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true},
+                    {"invalue": "DISC", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "FLT", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "LVRT", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true},
+                    {"invalue": "OVRT", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true},
+                    {"invalue": "NGHT", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true},
+                    {"invalue": "NDCO", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true},
+                    {"invalue": "STB", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "HVPL", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "PRON", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "DIAG", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "LCON", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "PRMG", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": false},
+                    {"invalue": "BBAL", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true},
+                    {"invalue": "CVSB", "uri": "/status/pcs_test:vdc_bus_1@Enable", "outValue": true}
+                ]
+            }]
+        }
+    }
+},
+  "/status/ess": {
+    "build": "build number",
+    "ReactivePower": {
+      "value": 0
+    },
+    "active_power": {
+      "value": 1234.5
+    },
+    "UiStartup": {
+      "value": false
+    },
+    "MaxChargePower": {
+      "value": 0 
+    },
+    "MaxDischargePower": {
+      "value": 0 
+    },
+    "FaultShutdown": {
+      "value": false,
+      "actions": { 
+          "onSet":[{
+              "remap":[
+                  {"uri":"/assets/pcs/summary:shutdown"}
+              ]
+          }]
+      }
+    },
+    "gpioFault": {
+        "value": false,
+        "desc": "for keeping track of all the pins",
+        "actions": { 
+          "onSet":[{
+              "remap":[
+                {"inValue": true, "uri":"/assets/pcs/summary:xshutdown", "outValue": true},
+                {"inValue": false, "uri":"/assets/pcs/summary:xshutdown", "outValue": false}
+              ]
+          }]
+        }
+    }
+  },
+  "/params/ess": {
+    "ReactivePowerDeadband": {
+      "value": 5
+     }
+  },
+
+  "/sets/blocked": {
+    "/status": {"value": true},
+    "/components": {"value": true}
+  },
+
+  "/pubs/blocked": {
+    "/assets": { "value": true},
+    "/site": {"value": true}
+  },
+
+  "/gets/blocked": {
+    "/components": {"value": true}
+  },
+  "/schedule/ess":{
+    "addSchedItem": {"value":       "None",
+                         "actions":{
+                            "onSet":    [{ "func":      [
+                               {"func": "HandleSchedItem",
+                                 "amap":        "ess"}
+                         ]}]}}},
+      "/components/gpio": {
+        "EStop": {
+            "value": false,
+            "pin": 9,
+            "dir": "input",
+            "desc": "EStop",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_hs:ems_alarms[0]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "Disconnect Switch": {
+            "value": false,
+            "pin": 8,
+            "dir": "input",
+            "desc": "Disconnect Switch",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_hs:ems_alarms[1]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "Door Latch": {
+            "value": false,
+            "pin": 7,
+            "dir": "input",
+            "desc": "Door Latch",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_hs:ems_alarms[2]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "Surge Arrester": {
+            "value": false,
+            "pin": 6,
+            "dir": "input",
+            "desc": "Surge Arrester",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_hs:ems_alarms[3]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "Fire Alarm": {
+            "value": false,
+            "pin": 4,
+            "dir": "input",
+            "desc": "Fire Alarm",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_hs:ems_alarms[4]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "Fuse Monitoring": {
+            "value": false,
+            "pin": 3,
+            "dir": "input",
+            "desc": "Fuse Monitoring",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_hs:ems_alarms[5]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "GPIORefTime": {
+          "value": 0,
+          "actions":{
+            "onSet":    [{ "func":      [
+                {"func": "GPIOCalcResponse","amap":        "ess"}
+                ]}]
+          }
+      }
+    },
+  "/sched/ess":{
+    "essSystemInit":{ "value":    "EssSystemInit",
+                      "actions":{
+                        "onSet":    [{ "func":      [
+                            {"func": "HandleSchedLoad","amap":        "ess"}
+                            ]}]
+                      },
+                      "uri":      "/sched/ess:essSystemInit",
+                      "fcn":      "EssSystemInit",
+                      "id":      "EssSystemInit",
+                      "refTime":  0.200,
+                      "runAfter": 0.200,
+                      "repTime":  0.00,
+                      "endTime":  0.00
+    },
+    "every1000mS":{ "value":    "Every1000mS",
+                    "actions":{
+                      "onSet":    [{ "func":      [
+                          {"func": "HandleSchedLoad","amap":        "ess"}
+                          ]}]
+                    },
+            "uri":      "/sched/ess:every1000mS",
+            "fcn":      "Every1000mS",
+            "id":      "Every1000mS",
+            "refTime":  0.210,
+            "runAfter": 0.210,
+            "repTime":  1.00,
+            "endTime":  0.00
+    },
+    "every100mSP1":{ "value":    "Every100mSP1",
+                      "actions":{
+                      "onSet":    [{ "func":      [
+                          {"func": "HandleSchedLoad","amap":        "ess"}
+                        ]}]
+                    },
+            "uri":      "/sched/ess:every100mSP1",
+            "fcn":      "Every100mSP1",
+            "id":      "Every100mSP1",
+            "refTime":  0.220,
+            "runAfter": 0.220,
+            "repTime":  0.100,
+            "endTime":  0.00
+    },
+    "slowPub":{ "value":    "SlowPub",
+      "actions":{
+        "onSet":    [{ "func":      [
+            {"func": "HandleSchedLoad","amap":        "ess"}
+          ]}]
+          },
+      "uri":      "/sched/ess:slowPub",
+      "fcn":      "SlowPub",
+      "id":       "SlowPub",
+      "refTime":  0.250,
+      "runAfter": 0.250,
+      "repTime":  1.000,
+      "endTime":  0.00
+    },
+
+    "fastPub":{ "value":    "FastPub",
+      "actions":{
+        "onSet":    [{ "func":      [
+            {"func": "HandleSchedLoad","amap":        "ess"}
+          ]}]
+      },
+      "uri":      "/sched/ess:fastPub",
+      "fcn":      "FastPub",
+      "id":      "FastPub",
+      "refTime":  0.270,
+      "runAfter": 0.270,
+      "repTime":  0.050,
+      "endTime":  0.00
+    },
+    "schedSendClearFaultCmdess":{
+        "value":    "schedSendClearFaultCmdess",
+        "actions":{
+        "onSet": [{ "func": [
+                {"func": "HandleSchedLoad", "amap": "ess"}
+            ]}]
+        },
+        "uri":      "/sched/ess:schedSendClearFaultCmdess",
+        "fcn":      "SendClearFaultCmd",
+        "id":       "schedSendClearFaultCmdess",
+        "amap":     "ess",
+        "refTime":  0.275,
+        "runAfter": 0.270,
+        "repTime":  0.100,
+        "endTime":  0.001
+    }
+           
+  }
+}

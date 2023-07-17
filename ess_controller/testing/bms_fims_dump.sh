@@ -1,0 +1,14 @@
+./fims_send -m get -r /me -u /components/catl_ems_bms_rw | jq
+./fims_send -m get -r /me -u /components/catl_mbmu_sum_r | jq
+./fims_send -m get -r /me -u /components/catl_mbmu_stat_r | jq
+./fims_send -m get -r /me -u /components/catl_mbmu_control_r | jq
+./fims_send -m get -r /me -u /components/catl_bms_ems_r | jq
+./fims_send -m get -r /me -u /components/catl_sbmu_1 | jq
+./fims_send -m get -r /me -u /components/catl_sbmu_2 | jq
+./fims_send -m get -r /me -u /components/catl_sbmu_3 | jq
+./fims_send -m get -r /me -u /components/catl_sbmu_4 | jq
+./fims_send -m get -r /me -u /components/catl_sbmu_5 | jq
+./fims_send -m get -r /me -u /components/catl_sbmu_6 | jq
+./fims_send -m get -r /me -u /components/catl_sbmu_7 | jq
+./fims_send -m get -r /me -u /components/catl_sbmu_8 | jq
+./fims_send -m get -r /me -u /components/catl_sbmu_9 | jq

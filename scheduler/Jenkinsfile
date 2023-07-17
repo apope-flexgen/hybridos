@@ -11,7 +11,7 @@ myJobPipeline {
     imageNames=["centos7"]
 
     //Does the image need a special tag?
-    imageTag="base"
+    imageTag="devel-10.3.0-fims-3.0.4"
 
     //Run unit tests?
     unitTestStage=false

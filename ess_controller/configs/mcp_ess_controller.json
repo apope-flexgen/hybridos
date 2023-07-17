@@ -1,0 +1,10 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/ess_controller/ess_controller",
+			"args": [ "/usr/local/etc/config/ess_controller/" ],
+			"max_restarts": -1
+		}
+	]
+}

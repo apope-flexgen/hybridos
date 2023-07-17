@@ -1,0 +1,1100 @@
+sequences
+p. wilshire
+
+02/19/2021
+
+refactor the actions concept
+
+"actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/pcs/summary:start@enabled"},
+                        {"uri":	"/assets/pcs/summary:stop@enabled", "outValue": false}, 
+                        {"uri":	"/assets/pcs/summary:shutdown@enabled", "outValue": false},
+                        {"uri":	"/assets/pcs/summary:clear_faults@enabled"},
+                        {"uri":	"/assets/pcs/summary:clear_alarms@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_active_power_setpoint@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_reactive_power_setpoint@enabled"},
+
+                        {"uri":	"/status/ess:UiStartup", "outValue": false},
+                        {"uri":	"/status/ess:FaultShutdown"} 
+                    ]
+                }]
+            },
+
+"sequence":	{
+                "<path_name>":	[
+                    {
+                    "step_x":	[
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:start@enabled"},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:stop@enabled", "outValue": false}, 
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:shutdown@enabled", "outValue": false},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:clear_faults@enabled"},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:clear_alarms@enabled"},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:maint_active_power_setpoint@enabled"},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:maint_reactive_power_setpoint@enabled"},
+
+                        {"func" "FUNNAME","uri":	"/status/ess:UiStartup", "outValue": false},
+                        {"func" "FUNNAME","uri":	"/status/ess:FaultShutdown"} 
+                    ],
+                    "step_y":	[
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:start@enabled"},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:stop@enabled", "outValue": false}, 
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:shutdown@enabled", "outValue": false},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:clear_faults@enabled"},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:clear_alarms@enabled"},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:maint_active_power_setpoint@enabled"},
+                        {"func" "FUNNAME","uri":	"/assets/pcs/summary:maint_reactive_power_setpoint@enabled"},
+
+                        {"func" "FUNNAME","uri":	"/status/ess:UiStartup", "outValue": false},
+                        {"func" "FUNNAME","uri":	"/status/ess:FaultShutdown"} 
+                    ],
+
+                }]
+            },
+
+push an assSeq state on as assVec queue ( its a featdict so it has whatever we need in it)
+{ "path":name, "pathIdx":num,"stepname":name , "stepIdx":num, "inputAv":"avname", "result":some result  }
+So we can list all the steps in progress and each result
+as well as the overall or current state 
+When we run the assetVar with the Sequence.cpp function it will resume operation at the current state 
+poping or pusing on the state stack as needed.
+As each function in a step needs to process a "subfunction" it simply pushed its state on the stack.
+When the "subfunction" completes its operation it pops the current state off the stack.
+If there are no more steps then the sequence "request" has completed.
+The completion can happen at any time and the stack dropped.
+
+
+We will be able to see the seqeuence, state ,  and the stack using fims messages.
+Only new code we need it managing the seqStack and directing operations to the desired stepindx in each step.
+In fact simply push the Params ( push and copy or just push)
+
+One month tops to make this work.
+
+
+
+
+
+
+following discussion with Kyle 02/03/2021
+
+
+/sequences/ess
+     Init
+          always do Init monitor stuff 
+          steps ( each )
+              /bring up Coms 
+              /wait for status
+              /check last_state
+
+          onExit_0 ->StayHere
+          onExit_1 ->Next Step
+          onExit_2 ->Next Path (Ready)
+          onExit_3 ->Alarm
+          onExit_4 ->Fault
+          onExit_5 ->Last State
+
+    Ready
+          always do Ready monitor stuff 
+          steps ( each )
+              /check last_state
+              /wait for Ui or SiteManager input 
+              /Wait for command responses
+              
+
+          onExit_0 ->StayHere
+          onExit_1 ->Next Step
+          onExit_2 ->Next Path  (RUN,START,STOP, STANDBY)
+          onExit_3 ->Alarm
+          onExit_4 ->Fault
+          onExit_5 ->Last State
+ 
+    Run [1,2,3??]
+          always do (Run) monitor stuff 
+          steps ( each )
+              /check last_state
+              /wait for Ui or SiteManager input references etc
+              /Wait for command responses
+              
+
+          onExit_0 ->StayHere
+          onExit_1 ->Next Step
+          onExit_2 ->Next Path  (RUN,START,STOP, STANDBY)
+          onExit_3 ->Alarm
+          onExit_4 ->Fault
+          onExit_5 ->Last State
+
+    Stop
+          always do (Stop) monitor stuff 
+          steps ( each )
+              /check last_state
+              /wait for Ui or SiteManager input 
+              /Wait for command responses
+              
+
+          onExit_0 ->StayHere
+          onExit_1 ->Next Step
+          onExit_2 ->Next Path  (RUN,START,STOP, STANDBY)
+          onExit_3 ->Alarm
+          onExit_4 ->Fault
+          onExit_5 ->Last State
+
+    Start
+          always do (Start) monitor stuff 
+          steps ( each )
+              /check last_state
+              /wait for Ui or SiteManager input 
+              /Wait for command responses
+              
+
+          onExit_0 ->StayHere
+          onExit_1 ->Next Step
+          onExit_2 ->Next Path  (RUN,START,STOP, STANDBY)
+          onExit_3 ->Alarm
+          onExit_4 ->Fault
+          onExit_5 ->Last State
+
+    Standby
+          always do (Standby) monitor stuff 
+          steps ( each )
+              /check last_state
+              /wait for Ui or SiteManager input 
+              /Wait for command responses
+              
+
+          onExit_0 ->StayHere
+          onExit_1 ->Next Step
+          onExit_2 ->Next Path  (RUN,START,STOP, STANDBY)
+          onExit_3 ->Alarm
+          onExit_4 ->Fault
+          onExit_5 ->Last State
+
+    Alarm                                  may not be a state in its own rite just a "condition"
+          always do (Alarm) monitor stuff 
+          steps ( each )
+              /check last_state
+              /wait for Ui or SiteManager input 
+              /Wait for command responses
+              
+
+          onExit_0 ->StayHere
+          onExit_1 ->Next Step
+          onExit_2 ->Next Path  (RUN,START,STOP, STANDBY)
+          onExit_3 ->Alarm
+          onExit_4 ->Fault
+          onExit_5 ->Last State
+    Fault
+          always do (Fault) monitor stuff 
+          steps ( each )
+              /check last_state
+              /wait for Ui or SiteManager input 
+              /Wait for command responses
+              
+
+          onExit_0 ->StayHere
+          onExit_1 ->Next Step
+          onExit_2 ->Next Path  (RUN,START,STOP, STANDBY)
+          onExit_3 ->Alarm
+          onExit_4 ->Fault
+          onExit_5 ->Last State
+
+
+In general ......
+   we set a value to an assetVar.
+
+   This assetVar can then run a load of actions ...........for each type of assess
+   "onSet" but we could add other categories "onGet" perhaps.
+   we then have a list of types of functions "remap", "func", "bitmap" etc.... 
+      the sequencer will need to know where we are in that list to "continue"
+      lets see if for (auto xx : somemap) which navigates an iterator through the whole list
+      can be done as 
+         for (auto XX : somemap.at(lastindex)) 
+         for (auto i = _vector.begin()+last_time ; i != _vector.end(); ++i) {
+
+    // Do something with string (*i)
+
+   each function has an array of similar operations.
+
+   The "func" operation runs our function things with either the incoming AV as an argument or a designated target AV.
+   what I would like to do is have the option to set values of params on the Original AV based on the results of the function working with the target  AV  
+
+
+more stuff
+02/01/2021 !!
+
+1/ get the parser to read in a funcarray of funcItems 
+"/schedule/ess":{
+    "init": {
+        "functions":"InitEss"
+    },
+
+    "every100mS": {    // assetvar
+        "rate":0.1,         //params as usual;
+        "offset":0.0,
+        "actions":{
+            "onSet" [ { "exec" :[                        // special param functions
+                {"func": "UpdateSystemTime"},         // we'll have to parse funitems lets try to use a dict for this funVec
+                {"func":"RunInitCheck":,
+                {"func":"RunComsCheck":,
+                {"func":"CheckMonitorVar", "var":"/components/catl_mbmu_control_r:mbmu_max_cell_voltage",     "enable": true,"aname":"bms"}},
+                {"func":"CheckMonitorVar", "var":"/components/catl_mbmu_control_r:mbmu_min_cell_voltage",     "enable": true,"aname":"bms"}},
+                {"func":"CheckMonitorVar", "var":"/components/catl_mbmu_control_r:mbmu_max_cell_temperature", "enable": true,"aname":"bms"}},
+                {"func":"CheckMonitorVar", "var":"/components/catl_mbmu_control_r:mbmu_min_cell_temperature", "enable": true,"aname":"bms"}},
+                {"func":"CheckMonitorVar", "var":"/components/catl_mbmu_control_r:mbmu_soc",                  "enable": true,"aname":"bms"}},
+                {"func":"CheckMonitorVar", "var":"/components/catl_mbmu_control_r:mbmu_soh",                  "enable": true,"aname":"bms"}},
+                {"func":"CheckMonitorVar", "var":"/components/catl_mbmu_stat_r:bms_heartbeat",                 "enable": true,"aname":"bms"},
+                {"func":"CheckMonitorVar", "var":"/components/catl_mbmu_stat_r:bms_timestamp",                 "enable": true,"aname":"bms"}},   
+                {"func":"HandlePowerLimit"},
+                {"func":"HandlePowerCmd":},
+                {"func":"ShutDownSystem":},
+                {"func":"StartUpSystem":}  
+        ]
+    }
+  },
+  
+
+"/sequence/ess":{
+    "Init": {
+        "functions":"InitEss"
+    },
+
+    "Ready": {    // assetvar
+        "rate":0.1,         //run at this rate until we are done;
+        "offset":0.0,
+        "actions":{
+            "onSet" [{ "exec" :[                        // special param functions
+                {"func":"RunInitCheck"},
+                {"func":"RunComsCheck"},
+                {"func":"HandlePowerLimit"},
+                {"func":"HandlePowerCmd":},
+                {"func":"ShutDownSystem":},             // go to Stop
+                {"func":"StartUpSystem":}               // goto Start  
+        ]
+    },
+    "Run1": {    // assetvar
+        "rate":0.1,         //run at this rate until we are done;
+        "offset":0.0,
+        "actions":{
+            "onSet" [{ "exec" :[                        // special param functions
+                {"func":"ComsCheck"},
+                {"func":"SystemMonitor"},
+                {"func":"HandlePowerLimit"},
+                {"func":"HandlePowerCmd"},
+                {"func":"ShutDownSystem","goTo":"Stop"}             // go to Stop
+        ]
+    },
+    "Run2": {    // assetvar
+        "rate":0.1,         //run at this rate until we are done;
+        "offset":0.0,
+        "actions":{
+            "onSet" [{ "exec" :[                        // special param functions
+                {"func":"ComsCheck"},
+                {"func":"SystemMonitor"},
+                {"func":"HandlePowerLimit"},
+                {"func":"HandlePowerCmd":},
+                {"func":"ShutDownSystem":},             // go to Stop
+                {"func":"StartUpSystem":}               // goto Start  
+        ]
+    },
+    "Stop": {    // assetvar
+        "rate":0.1,         //run at this rate until we are done;
+        "offset":0.0,
+        "actions":{
+            "onSet" [{ "exec" :[                        // special param functions
+                {"func":"RunInitCheck":,
+                {"func":"RunComsCheck":,
+                {"func":"HandlePowerLimit"},
+                {"func":"HandlePowerCmd"},
+                {"func":"ShutDownSystem"},             // go to Stop
+                {"func":"StartUpSystem"}               // goto Start  
+        ]
+    },
+    "Standby": {    // assetvar
+        "rate":0.1,         //run at this rate until we are done;
+        "offset":0.0,
+        "actions":{
+            "onSet" [{ "exec" :[                        // special param functions
+                {"func":"RunInitCheck":,
+                {"func":"RunComsCheck":,
+                {"func":"HandlePowerLimit"},
+                {"func":"HandlePowerCmd":},
+                {"func":"ShutDownSystem":},             // go to Stop
+                {"func":"StartUpSystem":}               // goto Start  
+        ]
+    },
+
+
+  },
+
+
+
+12/30/2020
+
+Finally getting this organised.
+
+
+Currently we can specify monitor variables via a config file.
+This table sets up a list of input variables that need to be monitored
+The function is specified as an option here.
+
+The monitoring function is attached to the input variable
+Any changes in the value will cause the monitor func to be called.
+
+ "/components/catl_mbmu_control_r": {
+        "mbmu_max_cell_voltage": {
+            "value": 0,
+            "params": {
+                "Enable": true,
+                "EnableMaxValCheck": false,
+                "EnableMinValCheck": false,
+                "AlarmThresholdValue": 25.4,
+                "FaultThresholdValue": 28,
+                "ResetValue": 22.4,
+                "AlarmTimeout": 2.5,
+                "FaultTimeout": 5.5,
+                "RecoverTimeout": 1.4
+            },
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "CheckMonitorVar",
+                                "amap": "bms"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+
+
+The monitoring function is also run on a periodic basis.
+This allows the func to be run even with no changes to the variable.
+The periodic fuinction allows the system to time alarm limits etc.
+
+
+"/schedule/wake_monitor/bms":{
+        "/components/catl_mbmu_control_r:mbmu_max_cell_voltage": { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_min_cell_voltage": { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_max_cell_temperature": { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_min_cell_temperature": { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_soc": { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_soh": { "enable": true, "rate":0.1, "func":"CheckMonitorVar"}
+    },
+
+TODO /schedule/wake_pub
+TODO /schedule/wake_pub_hs ( ess_hs)
+TODO /schedule/wake_100    (100 ms Wakeup)
+TODO /schedule/wake_50     (50 ms Wakeup)
+TODO /schedule/wake_10     (10 ms Wakeup)
+
+
+When the system starts up, this table, shown above , will produce the following in the config.
+This means that the wake_monitor wake up will be issued every 100 ms 
+Note that I have not worked out the aname properly yet.
+// Only the ess has a scheduler 
+// the scheduler does not accept multiple rates etc yet , that is TODO next...
+
+When the scheduler issues a wake_monitor wake up the wake_handler detects tht this is a wake_monitor wakeup and pulls the list of functions 
+from this table.
+TODO each different wake_xxx will have its own table with functions to run
+
+
+"/schedule/ess":	{
+		"wake_monitor":	{
+			"value":	0.1,
+			"functions":	[{
+					"/components/catl_mbmu_control_r:mbmu_max_cell_temperature":	{
+						"func":	"CheckMonitorVar",
+						"funcaddr":	4233104,
+						"test":	"this is a test",
+						"enabled":	true
+					}
+				}, {
+					"/components/catl_mbmu_control_r:mbmu_max_cell_voltage":	{
+						"func":	"CheckMonitorVar",
+						"funcaddr":	4233104,
+						"test":	"this is a test",
+						"enabled":	true
+					}
+				}, {
+					"/components/catl_mbmu_control_r:mbmu_min_cell_temperature":	{
+						"func":	"CheckMonitorVar",
+						"funcaddr":	4233104,
+						"test":	"this is a test",
+						"enabled":	true
+					}
+				}, {
+					"/components/catl_mbmu_control_r:mbmu_min_cell_voltage":	{
+						"func":	"CheckMonitorVar",
+						"funcaddr":	4233104,
+						"test":	"this is a test",
+						"enabled":	true
+					}
+				}, {
+					"/components/catl_mbmu_control_r:mbmu_soc":	{
+						"func":	"CheckMonitorVar",
+						"funcaddr":	4233104,
+						"test":	"this is a test",
+						"enabled":	true
+					}
+				}, {
+					"/components/catl_mbmu_control_r:mbmu_soh":	{
+						"func":	"CheckMonitorVar",
+						"funcaddr":	4233104,
+						"test":	"this is a test",
+						"enabled":	true
+					}
+				}],
+			"enabled":	true,
+			"offset":	0,
+			"rate":	0.1
+		}
+	},
+
+
+// ignore these older ramblings
+
+When we want to change the state of the system we have to issue commands to the sysem and monitor its responses.
+The sequences operation means that we follow steps to get to where we want to go.
+So the general direction , or path, would be to take the system into an INIT or Ready State.
+This would be defined as the path.
+The steps to do this are :
+1    Are all comms active ?
+   1.1 Have we waited for comms time out ? 
+      1.1.1 report failure for non responsive systems
+         1.1.1.1 Continue or not....
+2    do we have heartbeats ?
+   2.1 Have we waited for heartbeat time out ?
+      2.1.1 repoert failed system ...
+       2.1.1.1 continue or not.
+
+3    are all the systems in init states ?
+   3.1        have we waited enough time
+        3.1.1 if not if not send init commands to the systems. and go back to 3 
+
+
+In each case a "step" in the sequence represents issuing some commsnd to the system followed by monitoring for results.
+A number of results are possible,  some require a limited resend on the command, some indicate failure after resends , some indicate success.
+
+
+HybridOS has sequence files. we'll take a look and see what we can use.
+
+{
+    "sequences":
+    {
+        "Init":  << this is a system State or a sequence name 
+        {
+            "sequence_name": "Init", << same again 
+            "paths":
+            [
+                {
+                    "path_name": "Init",     << here is the init path
+                    "return_id": "Init",
+                    "active_faults":
+                    [
+                        {
+                            "asset_fault_name": "/bypass",
+                            "asset_active_faults": [ 0 ]    << sets faults to 0 ??
+                        }
+                    ],
+                    "steps":
+                    [
+                        {
+                            "step_name": "Set State Variables",     << ok this is a step
+                            "entry_actions":                        << unclear what happens here
+                            {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions":
+                            {
+                                "route": "/bypass",
+                                "value": true,
+                                "debounce_timer": 1000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "Ready":  << looks like this is a desired state
+        {
+            "sequence_name": "Ready",
+            "paths":
+            [
+                {
+                    "path_name": "Ready",
+                    "return_id": "Ready",
+                    "active_faults":
+                    [
+                        {
+                            "asset_fault_name": "/bypass",
+                            "asset_active_faults": [ 0 ]
+                        }
+                    ],
+                    "steps":
+                    [
+                        {
+                            "step_name": "Wait for Start Site Command",   << if we are in ready wait for start 
+                            "entry_actions":
+                            {
+                                "route": "/bypass",   << ok do not bypass entry actions
+                                "value": false
+                            },
+                            "exit_conditions":
+                            {
+                                "route": "/bypass",
+                                "value": true,
+                                "debounce_timer": 1000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "Startup":
+        {
+            "sequence_name": "Startup",
+            "paths":
+            [
+                {
+                    "path_name": "Startup",               << waits 15 seconds 
+                    "return_id": "RunMode1",
+                    "timeout": 15,
+                    "active_faults":
+                    [
+                        {
+                            "asset_fault_name": "/bypass",
+                            "asset_active_faults": [ 0 ]
+                        }
+                    ],
+                    "steps":
+                    [
+                        {
+                            "step_name": "Set ESS Grid Following",      << sets to grid following.
+                            "entry_actions":
+                            {
+                                "route": "/ess/set_all_ess_grid_follow",    << here is a function 
+                                "value": true
+                            },
+                            "exit_conditions":
+                            {
+                                "route": "/bypass",
+                                "value": true,
+                                "debounce_timer": 1000
+                            }
+                        },
+                        {
+                            "step_name": "Start ESS",          << starts ESS
+                            "entry_actions":
+                            {
+                                "route": "/ess/start_all_ess",   << here is a function
+                                "value": true
+                            },
+                            "exit_conditions":
+                            {
+                                "route": "/bypass",
+                                "value": true,
+                                "debounce_timer": 1000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "RunMode1":
+        {
+            "sequence_name": "Running - Grid",
+            "paths":
+            [
+                {
+                    "path_name": "Running - Grid",
+                    "return_id": "RunMode1",
+                    "active_faults":
+                    [
+                        {
+                            "asset_fault_name": "/bypass",
+                            "asset_active_faults": [ 0 ]
+                        }
+                    ],
+                    "steps":
+                    [
+                        {
+                            "step_name": "Set State Variables",
+                            "entry_actions":
+                            {
+                                "route": "/config/site_state_runmode1",    << another function
+                                "value": true
+                            },
+                            "exit_conditions":
+                            {
+                                "route": "/bypass",
+                                "value": true,
+                                "debounce_timer": 1000
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "RunMode2":
+        {
+            "sequence_name": "RunMode2",
+            "paths":
+            [
+                {
+                    "path_name": "RunMode2",
+                    "return_id": "RunMode2",
+                    "active_faults":
+                    [
+                        {
+                            "asset_fault_name": "/bypass",
+                            "asset_active_faults": [ 0 ]
+                        }
+                    ],
+                    "steps":
+                    [
+                        {
+                            "step_name": "RunMode2",
+                            "entry_actions":
+                            {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions":
+                            {
+                                "route": "/bypass",
+                                "value": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "Standby":
+        {
+            "sequence_name": "Standby",
+            "paths":
+            [
+                {
+                    "path_name": "Standby",
+                    "return_id": "Standby",
+                    "active_faults":
+                    [
+                        {
+                            "asset_fault_name": "/bypass",
+                            "asset_active_faults": [ 0 ]
+                        }
+                    ],
+                    "steps":
+                    [
+                        {
+                            "step_name": "Standby",
+                            "entry_actions":
+                            {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions":
+                            {
+                                "route": "/bypass",
+                                "value": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "Shutdown":
+        {
+            "sequence_name": "Shutdown",
+            "paths":
+            [
+                {
+                    "path_name": "Shutdown",
+                    "return_id": "Ready",
+                    "active_faults":
+                    [
+                        {
+                            "asset_fault_name": "/bypass",
+                            "asset_active_faults": [ 0 ]
+                        }
+                    ],
+                    "steps":
+                    [
+                        {
+                            "step_name": "Set State Variables",
+                            "entry_actions":
+                            {
+                                "route": "/config/site_state_init",    << another function
+                                "value": true
+                            },
+                            "exit_conditions":
+                            {
+                                "route": "/bypass",
+                                "value": true,
+                                "debounce_timer": 1000
+                            }
+                        },
+                        {
+                            "step_name": "Stop ESS",
+                            "entry_actions":
+                            {
+                                "route": "/ess/stop_all_ess",   << another function
+                                "value": true
+                            },
+                            "exit_conditions":
+                            {
+                                "route": "/bypass",
+                                "value": true,
+                                "debounce_timer": 1000
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+
+
+So the config file tells a story but i am still not sure what each step entails etc. I like the concept but dont readily understand the operation from the config file.
+Lets do a sample for ess and try to work on it a little.
+
+{
+    "/_sequences/ess": {
+        "Init":{
+
+        },
+        "Ready":{
+
+        },
+        "Startup", :{
+
+        },
+        "RunMode1":{
+
+        },
+        "RunMode2":{
+
+        },
+        "Standby":{
+
+        },
+        "Shutdown":{
+
+        },
+        "Fault":{
+
+
+        }
+
+    }
+    "/_faults/ess": {
+
+        "CommsFault":[
+            "CommsError"
+        ]
+         {"if":"/ess/status:CommsError","funcs":"ReportCommsError, ShutdownSystem "},
+            ]
+    }
+}
+
+{
+  "/_faults/pcs/pcs_1": {
+    "CommsFaultTypes": [
+      "CommsError",
+      "CommsTest"
+    ]
+  }
+}
+
+So this defines the major states of the system.
+Lets break down each state...
+
+Start with Init.
+"Init": {
+    "LoadParams":{
+        "note1":"if cold start reset all params ..etc",
+        "note2":"if warm start load all params",
+        "entry_actions": {
+            {"if":"/ess/status:WarmStart","func":"LoadParams"},
+            {"if":"/ess/status:ColdStart","func":"ResetParams"}
+        },
+        "monitor: {
+            "func":"CheckParams"   
+            "onErr":{
+                "errCount": 5
+                "wait":2,
+                "func":"ResetParams"
+            },
+            onMaxErr": "::Fault",
+ 
+            "onOk": "CheckComms"
+        },
+    "CheckComms": {
+        "monitor": {
+            "func":"CheckComms"
+            "onErr":{
+                "errCount": 5
+                "wait":2,
+            },
+            "onMaxErr": "::Fault",
+            "onOk": "CheckHeartBeat"
+        },
+    "CheckHeartBeat": {
+        "monitor": {
+            "func":"CheckHeartBeat"
+            "onErr":{
+                "errCount": 5
+                "wait":2,
+            },
+            "onMaxErr": "::Fault",
+            "onOk": "CheckStatus"
+        },
+    "CheckStatus": {
+        "entry_actions": {
+            "note1":"NoColdReset if warm start"
+            {"if":"/ess/status:WarmStart","func":"LoadStatus"},
+            {"if":"/ess/status:ColdStart","func":"ResetStatus"}
+        },
+        "monitor": {
+            "func":"CheckStatus"
+            "onErr":{
+                "errCount": 5
+                "wait":2,
+            },
+            "onMaxErr": {
+                "status/ems/ComsFault":true,
+                "::Fault"
+            }
+            "onOk": "::Ready"
+        }
+    }
+}
+
+// When calling these pass in self as argument (should get URI, correct?).
+// That way we don't have to define URI in FaultHandlingSequences
+{
+  "/_faults/pcs/pcs_1": {
+    "CommsFaultTypes": [
+      "CommsError",
+      "CommsTest"
+    ]
+  }
+}
+
+Try Fault
+"FaultHandlingSequences": {  //draft
+    "note":" fault handling map for sequencing",
+    "note": "argumentation for functions, implicit if we keep second way. Also, allows for more particular sequences as opposed to general ones.",
+    "CommsFaults":[
+         {"if":"CommsError","funcs":"ReportCommsError, ShutdownSystem "},
+    ]
+    TODO: How to get arguments to this. Possible keyword args. Dynamic number of arguments is tricky (for the sequence funcs)
+
+    PSW >> actually you can sed a value plus free form params to an assetVar
+    -m set -u /some/fault '{"faultAval":{"value":"somevalue","params":{"param1":"val1" , "param2":"val2"}}}
+
+
+    DEFAULT ARGS: FIMS, the asset/assetManager (pass into handleFault func in map)
+
+    std::unordered_map<std::string, std::vector<std::string>> FaultHandlingSequenceMap;
+
+
+     PSW>> possibly a vecmap 
+     note the reference..
+
+    std::unordered_map<std::string, std::vector<std::string>*> FaultHandlingSequenceMap;
+
+    // SetLinkVal here, non-Global way to do it (gets particular key-value pairs in the bigFaultMap inside varsMap):
+    myFaultMap["faultType"] = vmap->setLinkVal("theURI", other args);
+
+    the asset will call (if it is global/a singleton):
+    handleFault(bigFaultMap,key=myURI+":"+faultType) (if myURI doesn't exist then call default faultType handler with the asset args)
+
+    {"if":"/ess/status:WarmStart","func":"LoadStatus"},
+    {"if":"/ess/status:ColdStart","func":"ResetStatus"}
+
+    // User defined configs here:
+    // Format: 
+    {"if":"/status/bms_4:CommsError", "func_sequence":"ReportCommsError, ShutdownSystem, doSomethingElse "},
+
+    //This will be parsed differently (check for "default" keyword, key is just _/default:CommsError in this case):
+    {"if":"_/default:CommsError", "func_sequence":"ReportCommsError, ShutdownSystem "},
+    will parse to (this way you don't have to , it will go to this CommsError):
+    {"_/default:CommsError":["0xReportCommsError,0xShutdownSystem"]}
+
+    // Setting up the function
+    vm->setFunc(vmap, "aname", "func_name", (void*)&func);
+
+    final parsed map looks like this:
+    {"status/bms:CommsError":["0xsomeFuncHex,0xsomeOtherFuncHex,0xyetAnotherFuncHex"]}
+
+
+    PSW >>> nope call the functions by name , keep them as strings. We do not know the hex values at config time.
+
+    let the current setFunc / getFunc set and recover the hex addresses.
+
+
+    inside handleFault(default args - call faultFuncs will have these args):
+        for (auto& func : func_vector_at_key) {
+            void *funcPointer = vm->getFunc(vmap, "aname", "func_name"); // getting that command
+            TODO: 
+            get proper function pointer cast out:
+                - Needs untangling
+                - Look at subs untangling (typedef stuff?) (look at vecmap in assetVar.h)
+            funcPointer(args); // calling that command here
+        }
+
+    {"if":/status/pcs:CommsError", "func_sequence":"ReportCommsError, ShutdownSystem, somethingElse..."},
+
+    // "MAYBE" Make it a singleton!!! (encapsulate it)
+    // Output bigFaultMap will be global? or do we need a reference to it (and particular key/value pairs?)
+    },
+    "/status/pcs:CommsError":{
+        {"funcs":"ReportCommsError"}
+    },
+
+}
+
+// BIG question: Do we want any asset to have access to every other fault's fault_sequences? If NOT then we need to use linkVal(to std::pair of the bigFaultMap)
+// would also need to change how faultHandle func works(it would need to be )
+
+// What the config would look like
+"FaultHandlingSequences": {
+    
+    // Comms Error
+    "commsError":[
+        {"if":"_/default:CommsError", "func_sequence":"ReportCommsError, ShutdownSystem "},                                      // default sequences of funcs to run
+        {"if":/status/pcs:CommsError", "func_sequence":"ReportCommsError, ShutdownSystem, somethingElse..."}                     // specific sequences of funcs to run for specific asset
+        {"if":"/status/bms_4:CommsError", "func_sequence":"ReportCommsError, SendKeyStop, ShutdownSystem, doSomethingElse "},    // specific sequences again
+            .
+            .
+            .
+    ],
+    // Parses to (constructs our faultHandleMap as):
+    faultHandleMap = 
+    {
+        "_/default:CommsError":["ReportCommsError","ShutdownSystem"],
+        "/status/pcs:CommsError":["ReportCommsError","ShutdownSystem","somethingelse",...],
+        "/status/bms_4:CommsError":["ReportCommsError","SendKeyStop","ShutdownSystem","somethingelse"],
+            .
+            .
+            .
+    }
+    
+    // Heartbeat Error
+    "heartBeatError": [
+        {"if":"_/default:HBError", "func_sequence":"ReportHeartBeatError, ShutdownSystem "},
+        {"if":"/status/pcs:HBError", "func_sequence":"ReportHeartBeatError, ShutdownSystem "}
+        {"if":"/status/bms_1:HBError", "func_sequence":"ReportHeartBeatError, ShutdownSystem "}
+            .
+            .
+            .
+    ]
+    // Parses to (you get the idea, same concept as CommsError, both will be parsed at once into the giant faultHandleMap)
+        .
+        .
+        .
+
+    // Add more fault cases here
+
+// What calling the fault sequence would look like from an asset's perspective:
+handleFault(bigFaultMap, faultType, myURI);
+or for default (myURI = "_/default" for default value):
+handleFault(bigFaultMap, faultType);
+and if calling the default fault handle isn't "safe" (NOTE: WIP, concept at the moment):
+handleFault(bigFaultMap, faultType, myURI, false);
+}
+
+// more later.
+current parser handles
+"ems_status":{
+            "value":1,
+            "actions":{  "params", "value " are all key words maybe "_faults"
+                      "onSet":{
+                        "enum":[
+                            { "mask":3,"inValue":0, "uri": "/asset/@@BMS_ID@@_enum_controls:oncmd",        "outValue": "we're on" },
+                            { "mask":3,"inValue":1, "uri": "/asset/@@BMS_ID@@_enum_controls:oncmd",        "outValue": "we're off" },
+                            { "mask":3,"inValue":2, "uri": "/asset/@@BMS_ID@@_enum_controls:oncmd",        "outValue": "we're in Standby" },
+                            { "mask":3,"inValue":3, "uri": "/asset/@@BMS_ID@@_enum_controls:oncmd",        "outValue": "we're Shutdown" }
+                        ]
+                }                 
+            }
+        },
+
+So what do we already have in place......
+
+
+Here is a typical function
+ "/controls/ess":        {
+                "start_stop":   {
+                        "value":        9000,
+                        "params": {"p1"::v1:,"p2":"v2"},    <- this could become a map......
+                        "actions":      {
+                                "onSet":        {
+                                            "func": [  <---- this is an array
+                                                        {
+                                                            "amap": "ess",    <--- these are in a map
+                                                            "enable":       "/controls/ess:start_enable",
+                                                            "func": "EssStart",
+                                                            "onErr":  "/controls/ess:Idle",
+                                                            "onOK": "/controls/ess:startOK",
+                                                            "xxxx":"yyyy",
+                                                            "aaaa":1234
+                                                        }
+                                                    ]
+                                                }
+                                        }
+                                }
+                        },
+
+
+1/ We can run one or more functions , with a bunch of parameters or arguments 
+
+        "/faults/ess":        {
+                "HeartBeatError":   {
+                        "value":        false,
+                        "actions":      {
+                                "onSet":        {
+                                        "func": [
+                                                    {
+                                                        "amap": "ess",
+                                                        "func": "ReportHeartBeatError"
+                                                    },
+                                                    {
+                                                        "func": "ShutdownSystem",
+                                                        "onOK": "/controls/ess:setIdle"
+                                                    }
+                                                ]
+                                }
+                        }
+                }
+        },
+ "/faults/ess":        {
+                "default":   {
+                        "value":        false,
+                        "params": {"p1"::v1:,"p2":"v2"},    <- this could become a map......
+                        "actions":      {
+                                "onSet":        {
+                                        "func": [
+                                                    {
+                                                        "amap": "ess",
+                                                        "func": "ReportDefaultError"
+                                                    },
+                                                    {
+                                                        "func": "ShutdownSystem",
+                                                        "onOK": "/controls/ess:setIdle"
+                                                    }
+                                                ]
+                                }
+                        }
+                }
+        },
+
+2/ Using the OnOk and OnErr keys we can trigger other groups of functions.
+set /faults/ess/anything '{"value":"somvalue","params":["aaa":1234,"bbb":"thias is bbbb"]}'
+

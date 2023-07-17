@@ -1,0 +1,178 @@
+
+{
+    "/system/pcs":{ 
+        "status":  {
+            "value":"Idle",
+            "ifChanged":true,
+            "actions":{
+                "onSet":[{
+                    "remap":[
+                        {"inValue":"Run","uri":"/system/pcs:voltage","outValue":480},
+                        {"inValue":"Stop","uri":"/system/pcs:voltage","outValue":0}
+                    ]
+                    }]
+            }
+        },
+        
+        "voltage":{
+            "value":0 ,
+            "max_value":495
+            },
+        "Errors":false,
+
+        "power":{
+            "value":0,
+            "numVars": 2,
+            "variable1": "/status/pcs:BMSVoltage",
+            "variable2": "/status/pcs:BMSCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+
+        "calcPower": {
+            "value": 0,
+            "actions": {
+              "onSet": [
+                {
+                  "func": [
+                    { "amap": "pcs", "func": "CalculateVar","inAv": "/system/pcs:power"}
+                  ]
+                }]
+            }
+          }
+    },
+        
+    "/status/pcs":{
+        "BMSVoltage": 1300,
+        "BMSCurrent": 280
+    },
+
+    "/site/ess_hs":{ 
+        "commands":{
+            "value":0,
+            "actions":{
+                "onSet":[{
+                    "enum":[
+                        {"inValue":3,"uri":"/system/pcs:status","outValue":"Stop"},
+                        {"inValue":2,"uri":"/system/pcs:status","outValue":"Standby"},
+                        {"inValue":1,"uri":"/system/pcs:status","outValue":"Run"}
+        
+                        ]
+                    }]        
+            }
+        }
+    },
+    "/assets/ess/summary":{ 
+        "Run":{
+            "value":false,
+            "actions":{
+                "onSet":[
+                    {"remap":[
+                        {"inValue":true,"uri":"/system/pcs:status","outValue":"Run"}
+                        ]
+                    }]
+            }
+        },
+        "Standby":{
+            "value":false,
+            "actions":{
+                "onSet":[
+                    {"remap":[
+                        {"inValue":true,"uri":"/system/pcs:status","outValue":"Standby"}
+                        ]
+                    }]
+            }
+        },
+        "Stop":{
+            "value":false,
+            "actions":
+                {"onSet":[
+                    {"remap":[
+                        {"inValue":true,"uri":"/system/pcs:status","outValue":"Stop"}
+                        ]
+                    }]
+            }
+        }
+    },
+    "/components/pcs_info":{
+        "power_command_feedback":1.234,
+        "power_command_setpoint":1.134
+    },
+    "/components/bms_current_status":{
+        "num_racks_in_service":12,
+        "number_of_racks":15,
+        "max_charge_current":375
+    },
+
+    "/links/pcs":{
+        "seconds": {
+        "value": "/components/pcsm_general:seconds",
+        "link": "/status/pcs:seconds"
+    },
+    "/vlinks/pcs":{
+        "voltage": {
+        "value": "/assets/pcs/summary:Volts",
+        "vlink": "/status/pcs:voltage"
+    },
+    
+    "/status/bms": {
+        "UnderCurrentAlarm": {
+                "value": 0,
+                "numVars": 4,
+                "variable1": "DCClosed",
+                "variable2": "PCSDCClosed",
+                "variable3": "MaintModeEnabled",
+                "variable4": "OffFault",
+                "expression": "({1} or {4}) and not {2} and {3}",
+                "actions": {
+                    "onSet": [{
+                        "remap": [
+                            {"inValue":0, "uri":"/assets/bms/summary:stop@enabled", "outValue":false},
+                            {"inValue":1, "uri":"/assets/bms/summary:stop@enabled", "outValue":true}
+                        ]
+                    }]
+                }
+            }
+    },
+
+    "/system/commands": {
+        "Run":{
+            "value":"test",
+            "help": "run a schedule var",
+            "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"amap":"ess","func":"RunSched"}]}]}
+        },
+        "Stop":{
+            "value":"test",
+            "help": "stop a schedule var",
+            "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"amap":"ess","func":"StopSched"}]}]}
+        }
+                             
+    }
+                    
+}
+
+{
+    "/control/pubs":{
+        "pubBmsHs": {
+            "value": 0,
+            "table":"/site/bms_hs",
+            "enabled":true, 
+            "actions":{
+                    "onSet":[{"func":[{"amap":"ess","func":"RunPub"}]}]
+                }
+        
+        }
+    },
+    "/system/commands/Run":{
+        " value":0,
+        "amap":"ess",
+        "uri":"/control/pubs:pubBmsHs",
+        "every":0.5,"offset":0,"debug":false
+    },
+    "/site/bms_hs":{ 
+        "speed":1234,
+        "Status":"Running",
+        "errors":false
+    }
+    
+}

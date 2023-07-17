@@ -40,16 +40,16 @@ public:
     virtual void OnStateChange(opendnp3::ChannelState state) override
     {
         // TODO emit events
-        std::string cstate = opendnp3::ChannelStateSpec::to_string(state);
-        //std::cout << "ORIG channel state change: " << ChannelStateSpec::to_string(state) << std::endl;
-        FPS_ERROR_PRINT("fps channel state change: [%s]\n", cstate.c_str());
-        char message[1024];
-        snprintf(message, sizeof(message), "DNP3  %s state change [%s]\n"
-                    , sysdb->id 
-                    , cstate.c_str());
-        //fprintf(stderr, "%s\n", message);
+        if (sysdb->enable_state_events)
+        {
+            std::string cstate = opendnp3::ChannelStateSpec::to_string(state);
+            FPS_ERROR_PRINT("fps channel state change: [%s]\n", cstate.c_str());
+            char message[1024];
+            snprintf(message, sizeof(message), "state change [%s]"
+                        , cstate.c_str());
 
-        emit_event(sysdb,  __FUNCTION__, message, 1);
+            emit_event_filt(sysdb, nullptr, message, 1);
+        }
     }
 
     static std::shared_ptr<IChannelListener> Create(sysCfg* fpsDB)
@@ -61,6 +61,6 @@ public:
     sysCfg* sysdb;
 };
 
-} // namespace asiodnp3
+} 
 
 #endif

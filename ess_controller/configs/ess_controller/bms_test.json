@@ -1,0 +1,47 @@
+{
+    "/assets/bms":        {
+                 "bms_1":   { 
+                                "template":"bms_catl_template.json",
+                                "subs":[
+                                {"replace":"@@BMS_ID@@","with":"bms_1"},
+                                {"replace":"@@BMS_NUM@@","with":"01"},
+                                {"replace":"@@BMS_IP@@","with":"192.168.1.114"}
+                                ]
+                            },
+                 "bms_2":   { 
+                                "template":"bms_catl_template.json",
+                                "subs":[
+                                {"replace":"@@BMS_ID@@","with":"bms_2"},
+                                {"replace":"@@BMS_NUM@@","with":"02"},
+                                {"replace":"@@BMS_IP@@","with":"192.168.1.115"}
+                                ]
+                            }
+
+            },
+    "/setup/bms": {        
+          "test_f1":{
+                "value":23.5,
+                "actions":{
+                "onSet": [{
+                        "func": [
+                            {"func": "TestFunc1","amap": "bms"}],
+                        "remap":[
+                            {"uri":"/assets/bms/summary:test_f1"}
+                        ]
+                    }]
+                }
+            },
+           "test_f2":{
+                "value":23.5,
+                "actions":{
+                "onSet": [{
+                    "func": [
+                        {"func": "TestFunc2","amap": "bms"}],
+                    "remap":[
+                        {"uri":"/assets/bms/summary:test_f2"}
+                    ]
+                }]
+            }
+        }
+    }
+}

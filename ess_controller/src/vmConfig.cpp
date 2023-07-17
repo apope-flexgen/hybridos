@@ -1166,7 +1166,9 @@ int configLoad(varsmap &vmap, VarMapUtils* vm, const char* xfile)
                         assetVar* tmplAv =  vm->getVar(vmap, "/config/ctmpl", currTmpl->valuestring);
                         size_t start = 1;
                         size_t end = tmplAv->extras->tbody.length() - 1;
-                        pi->av->extras->tbody += fmt::format(",{}", tmplAv->extras->tbody.substr(start, end - start));
+                        if (end > start) {          // prevent empty files from adding commas
+                            pi->av->extras->tbody += fmt::format(",{}", tmplAv->extras->tbody.substr(start, end - start));
+                        }
                         FPS_PRINT_INFO("pi's av tbody now: {}", pi->av->extras->tbody);
                     }
                 }
@@ -1978,7 +1980,7 @@ void VarMapUtils::handleCfile(varsmap& vmap
    , int& single, const char* body, cJSON** cjr, asset_manager* am, asset* ai)
 {
     
-    if(0)FPS_PRINT_INFO(" >>>>>> uri [{}]", uri);
+    if(0)FPS_PRINT_ERROR(" >>>>>> uri [{}]", uri);
 
     if (dbiess == "")
     {

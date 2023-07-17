@@ -1,0 +1,22 @@
+{    
+    "/alarms/##BMS_ID##": {
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]
+            }
+        },
+        "single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}}
+    }
+}

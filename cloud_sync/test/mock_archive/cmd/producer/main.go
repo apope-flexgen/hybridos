@@ -14,6 +14,7 @@ import (
 // Path of directory where archives are made
 var outputDirPath string
 var archivePeriod time.Duration
+var numArchivesPerPeriod int
 
 // Create mock archives forever
 func main() {
@@ -26,13 +27,15 @@ func main() {
 	stdDevSize := 0.05 * float64(averageSize)
 	archiveCount := 1
 	for range ticker.C {
-		size := int(rand.NormFloat64()*stdDevSize) + averageSize
-		archive := mock_archive.RandomDataArchive(fmt.Sprintf("archive_#%d_%d.tar.gz", archiveCount, time.Now().UnixMicro()), size)
-		err := archive.WriteToFile(outputDirPath)
-		if err != nil {
-			log.Printf("Failed to write archive: %v", err)
-		} else {
-			archiveCount++
+		for i := 0; i < numArchivesPerPeriod; i++ {
+			size := int(rand.NormFloat64()*stdDevSize) + averageSize
+			archive := mock_archive.RandomDataArchive(fmt.Sprintf("archive_#%d_%d.tar.gz", archiveCount, time.Now().UnixMicro()), size)
+			err := archive.WriteToFile(outputDirPath)
+			if err != nil {
+				log.Printf("Failed to write archive: %v", err)
+			} else {
+				archiveCount++
+			}
 		}
 	}
 }
@@ -41,6 +44,7 @@ func main() {
 func parseFlags() {
 	flag.StringVar(&outputDirPath, "out", ".", "Output directory for archives")
 	period := flag.String("period", "1s", "String representing archive period duration")
+	num := flag.Int("num", 1, "Number of archives created per archive period")
 	flag.Parse()
 
 	var err error
@@ -48,4 +52,5 @@ func parseFlags() {
 	if err != nil {
 		log.Fatalf("Failed to parse period: %v", err)
 	}
+	numArchivesPerPeriod = *num
 }

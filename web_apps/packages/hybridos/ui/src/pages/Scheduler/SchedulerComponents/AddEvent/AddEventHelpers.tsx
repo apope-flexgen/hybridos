@@ -1,8 +1,11 @@
 /* eslint-disable max-lines */
 import { SelectChangeEvent } from '@mui/material';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import {
-  ApiMode, schedulerEventForAPI, RepeatForAPI, SchedulerEvent,
+  ApiMode,
+  schedulerEventForAPI,
+  RepeatForAPI,
+  SchedulerEvent,
 } from 'shared/types/dtos/scheduler.dto';
 import { getVariables } from 'src/pages/Scheduler/SchedulerHelpers';
 import { EditEventState, EventVariables, VariableValues } from 'src/pages/Scheduler/SchedulerTypes';
@@ -19,8 +22,8 @@ export const numberValidationEnum = {
 export const addEventLabels = {
   title: { label: 'CREATE NEW EVENT' },
   eventType: { label: 'Mode' },
-  startDate: { label: 'Start Date' },
-  endDate: { label: 'End Date' },
+  startDate: { label: 'Start' },
+  endDate: { label: 'End' },
   repeatEveryRadios: { dayLabel: 'Days', weekLabel: 'Weeks' },
   repeatEvery: {
     placeholder: 1,
@@ -35,6 +38,9 @@ export const addEventLabels = {
   },
   startAfterEndError: { label: 'End time of event must be after start time' },
   durationOver24Error: { label: 'Duration of event must be fewer than 24 hours' },
+  cannotOverlapError: { label: 'New event cannot overlap with existing events' },
+  startOrEndInPastError: { label: 'New event cannot start or end in the past' },
+  endInPastError: { label: 'New event cannot have an end time in the past' },
 };
 
 export const dayNames = ['sun', 'mon', 'tues', 'wed', 'thurs', 'fri', 'sat'];
@@ -65,34 +71,34 @@ export const mapModesToVariables = (
 };
 
 export const isOverlappingStartTime = (
-  date: Dayjs | null,
-  startTime: string,
-  endTime: string,
-  endDate: Dayjs | null,
+  state: EditEventState,
   events: SchedulerEvent[],
+  editEvent?: SchedulerEvent,
 ) => {
   let overlapping = false;
-  if (startTime !== '' && endTime !== '') {
-    const startTimeOfNewEvent = dayjs(`${date?.format('YYYY-MM-DD')} ${startTime}`);
-    const endTimeOfNewEvent = dayjs(`${endDate?.format('YYYY-MM-DD')} ${endTime}`);
+  if (state.startTime !== '' && state.endTime !== '') {
+    const startTimeOfNewEvent = dayjs(`${state.date?.format('YYYY-MM-DD')} ${state.startTime}`);
+    const endTimeOfNewEvent = dayjs(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`);
+
     events.map((existingEvent) => {
       const startTimeOfExistingEvent = dayjs(existingEvent.start_time);
-      const endTimeOfExistingEvent = dayjs(existingEvent.start_time).add(existingEvent.duration, 'm');
+      const endTimeOfExistingEvent = dayjs(existingEvent.start_time).add(
+        existingEvent.duration,
+        'm',
+      );
       if (
-        (startTimeOfNewEvent.isBefore(endTimeOfExistingEvent)
-        || startTimeOfNewEvent.isSame(endTimeOfExistingEvent))
-          && (endTimeOfNewEvent.isAfter(startTimeOfExistingEvent)
-        || endTimeOfNewEvent.isSame(startTimeOfExistingEvent))
-      ) overlapping = true;
-      return overlapping;
+        startTimeOfNewEvent.isBefore(endTimeOfExistingEvent)
+        && endTimeOfNewEvent.isAfter(startTimeOfExistingEvent)
+        && (editEvent === undefined || editEvent.id !== existingEvent.id)
+      ) {
+        overlapping = true;
+      }
     });
   }
   return overlapping;
 };
 
-export const isDurationOver24Hours = (
-  state: EditEventState,
-) => {
+export const isDurationOver24Hours = (state: EditEventState) => {
   let over24 = false;
   if (state.startTime !== '' && state.endTime !== '') {
     const startTimeOfNewEvent = dayjs(`${state.date?.format('YYYY-MM-DD')} ${state.startTime}`);

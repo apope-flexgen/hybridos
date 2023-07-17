@@ -1,0 +1,33 @@
+{
+    "/system/commands":{
+        "link":{
+            "value":"test",
+            "help": "give a single assetvar multiple names",
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunLinks"}]}]}
+        },
+        "vlink":{
+            "value":"test",
+            "help": "link two var values",
+            "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunVLinks"}]}]}
+        },
+        "runMon":{
+            "value":0,
+            "help": "load the wake monitor setup system",
+            "ifChanged":false,"enabled":true, "actions":{"onSet":[{"func":[{"func":"RunMonitor"}]}]}
+        },
+
+        "run":{
+            "value":"test",
+            "help": "run a schedule var",
+            "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}
+         },
+       "stop":{
+            "value":"test",
+            "help": "stop a schedule var",
+            "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"StopSched"}]}]}
+        }
+    }
+
+    
+}
+

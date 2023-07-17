@@ -1,0 +1,122 @@
+{
+    "fileInfo": {
+        "sourceFileName": "BRP_FPS_FM_Comm_Server_DM_modified_062620.xlsx",
+        "sourceFileCreated": "2020-06-26T17:11:50.000Z",
+        "sourceFileLastModified": "2020-06-27T00:14:05.000Z",
+        "sourceFileCreatedBy": "Administrator",
+        "sourceFileLastModifiedBy": "Microsoft Office User",
+        "outputFileName": "BRP_FPS_FM_Comm_Server_server.json",
+        "outputFileType": "server",
+        "outputFileCreated": "2020-06-27T00:15:28.100Z"
+    },
+    "system": {
+        "name": "FlexGen Fleet Manager - Odessa",
+        "protocol": "DNP3",
+
+        "version": "0.2",
+        "id": "client_1",
+        "ip_address": "192.168.1.179",
+        "local_uri": "/local",
+        "port": 20000,
+        "debug":2,
+	"frequency": 10000
+    },
+    "registers": [
+		{
+            "type": "Holding Registers",
+            "dnp3_type":"AnOPF32",
+			"starting_offset": 600,
+            "map": [
+				{
+					"id": "Generation_Non-Spin_Responsibility",
+					"idx": 6,
+					"scale": 1,
+					"name": "Generation Non-Spin Responsibility",
+					"unit": "MW",
+					"float": true
+				},
+				{
+					"id": "Generation_Non-Spin_Requirement",
+					"idx": 7,
+					"scale": 1,
+					"name": "Generation Non-Spin Requirement",
+					"unit": "MW",
+					"float": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 600,
+			"dnp3_type":"analog",
+			"map": [
+				{
+					"id": "net_gen_mw",
+					"idx": 6,
+					"scale": 1,
+					"name": "Generation NET Megawatts",
+					"unit": "MW",
+					"float": true,
+					"uri": "/metrics/misc"
+				},
+				{
+					"id": "net_gen_mvar",
+					"idx": 7,
+					"scale": 1,
+					"name": "Generation NET Megavars",
+					"unit": "MVAR",
+					"float": true,
+					"uri": "/metrics/misc"
+				}
+			]
+		},
+		{		
+            "type": "Input Registers",
+            "starting_offset": 600,
+            "dnp3_type":"binary",
+            "map": [
+				{
+					"id": "Generation_Resource_Switches_",
+					"idx": 2,
+					"scale": 1,
+					"name": "Generation Resource Switches",
+					"unit": "ST",
+					"bool": true
+				},
+				{
+					"id": "Generation_Resource_Breaker_Status",
+					"idx": 3,
+					"scale": 1,
+					"name": "Generation Resource Breaker Status",
+					"unit": "ST",
+					"bool": true
+				}
+            ]
+        },
+        {
+
+            "type": "Holding Registers",
+            "starting_offset": 600,
+            "dnp3_type":"CROB",
+            "number_of_registers": 66,
+            "map": [
+                {
+                    "id": "Generation_Curtailment_Flag",
+                    "idx": 600,
+                    "scale": 1,
+                    "name": "Generation Curtailment Flag",
+                    "unit": "ST",
+                    "float": true
+                },
+                {
+                    "id": "Generation_SCCT_Mitigation_Flag",
+                    "idx": 601,
+                    "scale": 1,
+                    "name": "Generation SCCT Mitigation Flag",
+                    "unit": "ST",
+                    "float": true
+                }
+            ]
+        }
+    ]
+}

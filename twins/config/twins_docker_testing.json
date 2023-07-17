@@ -1,0 +1,1060 @@
+{
+    "updateRate": 100,
+    "publishRate": 1000,
+    "timeMultiplier": 1,
+    "manualTick": false,
+    "grids":[
+        {
+            "id": "grid", 
+            "v": 480,
+            "f": 60
+        }
+    ],
+    "feeds":[
+        {
+            "id": "cb_lab",
+            "pmax": 100000,
+            "qmax": 100000,
+            "smax": 100000,
+            "closecmd": true
+        }
+    ],
+    "pcs":[
+        {
+            "id": "pcs_1",
+            "plim": 3150,
+            "qlim": 3150,
+            "PRampStart": 10,
+            "PRampStop": 10,
+            "PRampRise": 10,
+            "PRampDrop": 10,
+            "QRampStart": 10,
+            "QRampStop": 10,
+            "QRampRise": 10,
+            "QRampDrop": 10,
+            "idleloss": 1.75,
+            "rte": 95.6,
+            "ctrlword1cfg":[
+                {
+                    "value": -21931,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 21930,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":4,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ]
+        },
+        {
+            "id": "pcs_2",
+            "plim": 3150,
+            "qlim": 3150,
+            "PRampStart": 10,
+            "PRampStop": 10,
+            "PRampRise": 10,
+            "PRampDrop": 10,
+            "QRampStart": 10,
+            "QRampStop": 10,
+            "QRampRise": 10,
+            "QRampDrop": 10,
+            "idleloss": 1.75,
+            "rte": 95.6,
+            "ctrlword1cfg":[
+                {
+                    "value": -21931,
+                    "controls": [
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 21930,
+                    "controls": [
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true },
+                        { "field": "standbycmd", "value": false }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":4,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ]
+        }
+    ],
+    "bms":[
+        {
+            "id": "bms_1",
+            "cap": 5000,
+            "racks": 11,
+            "soc":{
+                "value": 50.0,
+                "faulthighthreshold": 95,
+                "alarmhighthreshold": 90,
+                "alarmlowthreshold": 10,
+                "faultlowthreshold": 5
+            },
+            "vnom": 1330,
+            "inom": 2517,
+            "vdcprofile": [1282, 1320, 1330],
+            "socprofile": [20, 67, 100],
+            "pmax": 2500,
+            "idleloss": 1.75,
+            "rte": 92,
+            "dccontactor": true,
+            "ctrlword1cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "dccontactorclosecmd", "value": true },
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "dccontactoropencmd", "value": true },
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ],
+            "faultcfg": [
+                {
+                    "value":1,
+                    "string":"SOC High",
+                    "field":"soc_faulthigh"
+                },
+                {
+                    "value":2,
+                    "string":"SOC Low",
+                    "field":"soc_faultlow"
+                },
+                {
+                    "value":8,
+                    "string":"Cell Voltage High",
+                    "field":"maxcellvolt_faulthigh"
+                }
+            ],
+            "caprange": 0.005,
+            "lossrange": 0.005,
+            "cellvoltrange": 0.005,
+            "sbmu": [
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "bms_2",
+            "cap": 5000,
+            "racks": 11,
+            "soc":{
+                "value": 50.0,
+                "faulthighthreshold": 95,
+                "alarmhighthreshold": 90,
+                "alarmlowthreshold": 10,
+                "faultlowthreshold": 5
+            },
+            "vnom": 1330,
+            "inom": 2517,
+            "vdcprofile": [1282, 1320, 1330],
+            "socprofile": [20, 67, 100],
+            "pmax": 2500,
+            "idleloss": 1.75,
+            "rte": 92,
+            "dccontactor": true,
+            "ctrlword1cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "dccontactorclosecmd", "value": true },
+                        { "field": "oncmd", "value": true },
+                        { "field": "offcmd", "value": false }
+                    ]
+                },
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "dccontactoropencmd", "value": true },
+                        { "field": "oncmd", "value": false },
+                        { "field": "offcmd", "value": true }
+                    ]
+                }
+            ],
+            "statuscfg": [
+                {
+                    "value":1,
+                    "string":"Running",
+                    "field":"on"
+                },
+                {
+                    "value":0,
+                    "string":"Stopped",
+                    "field":"on",
+                    "invert":true
+                }
+            ],
+            "faultcfg": [
+                {
+                    "value":1,
+                    "string":"SOC High",
+                    "field":"soc_faulthigh"
+                },
+                {
+                    "value":2,
+                    "string":"SOC Low",
+                    "field":"soc_faultlow"
+                },
+                {
+                    "value":8,
+                    "string":"Cell Voltage High",
+                    "field":"maxcellvolt_faulthigh"
+                }
+            ],
+            "caprange": 0.005,
+            "lossrange": 0.005,
+            "cellvoltrange": 0.005,
+            "sbmu": [
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "warning1cfg": [{"value":1,"string":"Warning 1 Active","field":"warning1trigger"},
+                        {"value":0,"string":"Warning 1 Not Active","field":"warning1trigger","invert":true}
+                    ],
+                    "warning2cfg": [{"value":1,"string":"Warning 21 Active","field":"warning2trigger"},
+                        {"value":0,"string":"Warning 21 Not Active","field":"warning2trigger","invert":true}
+                    ],
+                    "warning3cfg": [{"value":1,"string":"Warning 22 Active","field":"warning3trigger"},
+                        {"value":0,"string":"Warning 22 Not Active","field":"warning3trigger","invert":true}
+                    ],
+                    "warning4cfg": [{"value":1,"string":"Warning 23 Active","field":"warning4trigger"},
+                        {"value":0,"string":"Warning 23 Not Active","field":"warning4trigger","invert":true}
+                    ],
+                    "idc":{
+                        "value": 0,
+                        "faulthighthreshold": 285,
+                        "alarmhighthreshold": 280
+                    },
+                    "ctrlword1cfg":[
+                        {
+                            "value": 1,
+                            "controls": [
+                                { "field": "enablecmd", "value": true },
+                                { "field": "disablecmd", "value": false }
+                            ]
+                        },
+                        {
+                            "value": 2,
+                            "controls": [
+                                { "field": "enablecmd", "value": false },
+                                { "field": "disablecmd", "value": true }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "root":{
+        "id": "grid",
+        "children":[
+            {
+                "id": "cb_lab",
+                "children":[
+                    { 
+                        "id": "pcs_1",
+                        "children":[
+                            { 
+                                "id": "bms_1"
+                            }
+                        ]
+                    },
+                    { 
+                        "id": "pcs_2",
+                        "children":[
+                            { 
+                                "id": "bms_2"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

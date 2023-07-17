@@ -20,6 +20,9 @@ type DeviceCollector struct {
 // === Collector funcs ===
 
 func (device *DeviceCollector) init() error {
+	if !device.DataMan.Active {
+		return fmt.Errorf("device is inactive")
+	}
 	// initialize current rpm and version
 	rpmInfo := device.getMetaRPM()
 	device.prevRPM = fmt.Sprint(rpmInfo["meta_rpm"])

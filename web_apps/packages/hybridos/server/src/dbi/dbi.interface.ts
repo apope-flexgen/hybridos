@@ -1,28 +1,16 @@
-import { AssetsResponse } from 'src/assets/responses';
-import { DashboardsResponse } from 'src/dashboards/responses';
-import { LayoutsResponse } from 'src/layouts/responses';
-import { User } from 'src/users/dtos/user.dto';
-import { FimsMsg } from '../fims/interfaces/fims.interface';
-
-export enum URIs {
+export enum DBI_URIs {
   UI_Config_Assets = '/ui_config/assets',
   UI_Config_Dashboard = '/ui_config/dashboard',
   UI_Config_Layout = '/ui_config/layout',
-  UI_Config_Audit_Log = '/audit/audit_log_'
-};
+  SITE_STATUS_BAR = '/ui_config/site_status',
+  AUDIT_LOG = '/audit/audit_log_',
+  SITE_CONTROLLER_ASSETS = '/site_controller/assets',
+  LOCK_MODE_STATE = '/lock_mode/lock_mode_state',
+}
+
+export const DBI_SERVICE = 'DBIService';
 
 export interface IDBIService {
-  getUIConfigAssets(): Promise<AssetsResponse>
-  getUIConfigDashboards(): Promise<DashboardsResponse>
-  getUIConfigLayouts(): Promise<LayoutsResponse>
-  postUIConfigAssets(data: { data: object[] }, user: User): Promise<AssetsResponse>
-  postUIConfigDashboards(data: { data: object[] }, user: User): Promise<DashboardsResponse>
-  postUIConfigLayouts(data: { data: object[] }, user: User): Promise<LayoutsResponse>
-  postUIConfigAuditLog(
-    data: {
-      modified_field?: string,
-      modified_value?: boolean | string
-    },
-    user: User
-  ): Promise<FimsMsg>
+  getFromDBI(URI: DBI_URIs): Promise<any>;
+  postToDBI(URI: string, data: any): Promise<any>;
 }

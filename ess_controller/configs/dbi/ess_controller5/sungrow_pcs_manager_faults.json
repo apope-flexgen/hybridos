@@ -1,0 +1,136 @@
+{
+    "/faults/pcs": {
+        "clear_faults": {
+            "value": "Normal",
+            "type": "fault",
+            "numVars": 3,
+            "variable1": "PCSHeartbeat",
+            "variable2": "ActivePower",
+            "variable3": "DCVoltage",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "MonitorVarFault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue":"DCVoltage_limit_min",   "ifChanged": false, "amap": "pcs", "uri": "/site/ess_ls:ess_faults[8]",  "outValue": "PCS DC Voltage Threshold Exceeded"},
+                        {"inValue":"ActivePower_limit_max", "ifChanged": false, "amap": "pcs", "uri": "/site/ess_ls:ess_faults[10]", "outValue": "PCS Active Power Threshold Exceeded"}
+                    ]
+                }]
+            }
+        },
+
+        "door_opening_protection":              {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "local_estop":                          {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "remote_estop":                         {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "lv_room_smoke_sensor":                 {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_undervoltage":                      {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_overvoltage":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_undervoltage":                      {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_overvoltage":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_underfrequency":                    {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_overfrequency":                     {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_contactor_fault":                   {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "islanding_protection":                 {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "pdp_protection":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "module_overtemperature":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "reactor_overtemperature":              {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "transformer_overtemperature":          {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "leakage_current_protection":           {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "overload_protection":                  {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "fan_1_fault":                          {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_fuse_fault":                        {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_overcurrent":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_overcurrent":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ambient_temperature_abnormal":         {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "hardware_fault":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "insulation_resistance":                {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_spd_fault":                         {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "sampling_fault":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "batt_polarity_reversed":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "lcd_dsp_fault":                        {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_current_unbalance_1":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "host_fault":                           {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_spd_fault":                         {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_injection_fault":                   {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_switch_fault":                      {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "device_code_repeat_fault":             {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "parallel_comms_err":                   {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "control_cabinet_temperature_abnormal": {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_voltage_unbalance":                 {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_switch_fault":                      {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "soft_start_fault":                     {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_voltage_sampling_fault":            {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "fan_2_fault":                          {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_current_unbalance_2":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_current_unbalance_3":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "drive_board_fault":                    {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "neutral_point_potential_shift":        {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "carrier_sync_fault":                   {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "bms_dry_contact_interface":            {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}}
+    },
+    "/alarms/pcs": {
+        "clear_alarms": {
+            "value": "Normal",
+            "type": "alarm",
+            "numVars": 3,
+            "variable1": "PCSHeartbeat",
+            "variable2": "ActivePower",
+            "variable3": "DCVoltage",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "MonitorVarAlarm": {
+            "value": "Normal",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue":"DCVoltage_limit_min",   "ifChanged": false, "amap": "pcs", "uri": "/site/ess_ls:ess_alarms[8]",  "outValue": "PCS DC Voltage Threshold Exceeded"},
+                        {"inValue":"ActivePower_limit_max", "ifChanged": false, "amap": "pcs", "uri": "/site/ess_ls:ess_alarms[10]", "outValue": "PCS Active Power Threshold Exceeded"}
+                    ]
+                }]
+            }
+        },
+
+        "heartbeat_stop":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "scu_metering_board_comms_err":   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "temp_abnormal":                  {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "low_insulation_resistance":      {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "gfrt_running":                   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_fuse_normal":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_sensor_abnormal":             {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_spd_alarm":                   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_spd_alarm":                   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "batt_volt_high":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "batt_volt_low":                  {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_switch_abnormal":             {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "fan_1_abnormal":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "branch_circuit_board_comms_err": {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_switch_abnormal":             {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "fan_2_abnormal":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_main_contactor_abnormal":     {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "gas_relay_alarm":                {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "oil_temp_alarm":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "winding_temp_alarm":             {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+
+        "start_cmd":                      {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "shutdown_cmd":                   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "standby_cmd":                    {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "off_grid_mode_cmd":              {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "on_grid_mode_cmd":               {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "on_grid_const_ac_power_cmd":     {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "reactive_power_adj_switch_cmd":  {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        
+        "start_failure":                  {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "shutdown_failure":               {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "standby_failure":                {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "off_grid_mode_failure":          {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "on_grid_mode_failure":           {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "on_grid_const_ac_power_failure": {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}}
+    }
+}

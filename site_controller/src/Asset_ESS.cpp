@@ -35,6 +35,7 @@ Asset_ESS::Asset_ESS ()
     bms_control_close = 0;
     bms_control_open = 0;
     bms_control_reset = 0;
+    dc_contactor_restriction = false;
     grid_forming_value = 0;
     grid_following_value = 0;
     setpoint_status = ACCEPTED;
@@ -51,13 +52,6 @@ Asset_ESS::Asset_ESS ()
     rated_chargeable_power = 0;
     energy_configured = false;
     rated_dischargeable_power = 0;
-
-    uri_start = NULL;
-    uri_stop = NULL;
-    uri_enter_standby = NULL;
-    uri_exit_standby = NULL;
-    uri_open_dc_contacts = NULL;
-    uri_close_dc_contacts = NULL;
 
     limits_override_flag = false;
     voltage_limits_flag = false;
@@ -76,15 +70,6 @@ Asset_ESS::Asset_ESS ()
 
 Asset_ESS::~Asset_ESS ()
 {
-    free(uri_clear_faults); 
-    free(uri_start);
-    free(uri_stop);
-    free(uri_enter_standby);
-    free(uri_exit_standby);
-    free(uri_open_dc_contacts);
-    free(uri_close_dc_contacts);
-    free(uri_set_autobalancing);
-
     if (grid_mode_setpoint)     delete grid_mode_setpoint;
     grid_mode_setpoint = NULL;
     if (power_mode_setpoint)    delete power_mode_setpoint;
@@ -328,9 +313,21 @@ bool Asset_ESS::send_active_power_setpoint(void)
     return false;
 }
 
-void Asset_ESS::set_active_power_setpoint(float setpoint)
+/**
+ * @brief Sets the ESS active power setpoint control to the given value after applying maximum and minimum limits.
+ * @param setpoint The value to which the active power setpoint control should be set, pre-limiting.
+ * @param use_strict_limits If false, will only limit based on dischargeable power and chargeable power.
+ * If true, will also limit based on asset slews and reactive power priority limiting.
+ * Possible reason to NOT use strict limits: setpoint decided by Site Manager which already took into account slew limits and may have decided to ignore them.
+ * Possible reason to use strict limits: asset is in maintenance mode so limits such as reactive power priority have not been applied to the given setpoint.
+*/
+void Asset_ESS::set_active_power_setpoint(float setpoint, bool use_strict_limits)
 {
-    active_power_setpoint->component_control_value.value_float = range_check(setpoint, max_limited_active_power, min_limited_active_power);
+    if (use_strict_limits) {
+        active_power_setpoint->component_control_value.value_float = range_check(setpoint, max_limited_active_power, min_limited_active_power);
+    } else {
+        active_power_setpoint->component_control_value.value_float = range_check(setpoint, dischargeable_power->value.value_float, -1*chargeable_power->value.value_float);
+    }
 }
 
 bool Asset_ESS::send_reactive_power_setpoint(void)
@@ -566,9 +563,6 @@ bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configura
     object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "DC_contactor_restriction");
     if (object)
     	dc_contactor_restriction = (object->type == cJSON_True);
-    else
-        // Default to false if not provided
-        dc_contactor_restriction = false;
 
     object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "chg_soc_begin");
     if (object)
@@ -668,7 +662,7 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure clear_faults UI control.");
                 return false;
             }
-            uri_clear_faults = strdup(build_uri(compNames[i], clear_faults_ctl.reg_name).c_str());
+            uri_clear_faults = build_uri(compNames[i], clear_faults_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "start");
@@ -677,7 +671,7 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure start asset UI control.");
                 return false;
             }
-            uri_start = strdup(build_uri(compNames[i], start_ctl.reg_name).c_str());
+            uri_start = build_uri(compNames[i], start_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "stop");
@@ -686,7 +680,7 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure stop asset UI control.");
                 return false;
             }
-            uri_stop = strdup(build_uri(compNames[i], stop_ctl.reg_name).c_str());
+            uri_stop = build_uri(compNames[i], stop_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "enter_standby");
@@ -695,7 +689,7 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure enter_standby UI control.");
                 return false;
             }
-            uri_enter_standby = strdup(build_uri(compNames[i], enter_standby_ctl.reg_name).c_str());
+            uri_enter_standby = build_uri(compNames[i], enter_standby_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "exit_standby");
@@ -704,7 +698,7 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure exit_standby UI control.");
                 return false;
             }
-            uri_exit_standby = strdup(build_uri(compNames[i], exit_standby_ctl.reg_name).c_str());
+            uri_exit_standby = build_uri(compNames[i], exit_standby_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "limits_override");
@@ -720,7 +714,7 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator)
                 return false;
             }
             // single uri used for both registers
-            uri_set_autobalancing = strdup(build_uri(compNames[i], autobalancing_enable_ctl.reg_name).c_str());
+            uri_set_autobalancing = build_uri(compNames[i], autobalancing_enable_ctl.reg_name);
         }
 
         // TODO: should there be a check that requires autobalancing_enable and autobalancing_disable to either BOTH be configured or NEITHER is configured?
@@ -757,7 +751,7 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure open_dc_contactors UI control.");
                 return false;
             }
-            uri_open_dc_contacts = strdup(build_uri(compNames[i], open_dc_contactors_ctl.reg_name).c_str());
+            uri_open_dc_contacts = build_uri(compNames[i], open_dc_contactors_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "close_dc_contactors");
@@ -766,7 +760,7 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure close_dc_contactors UI control.");
                 return false;
             }
-            uri_close_dc_contacts = strdup(build_uri(compNames[i], close_dc_contactors_ctl.reg_name).c_str());
+            uri_close_dc_contacts = build_uri(compNames[i], close_dc_contactors_ctl.reg_name);
         }
     }
     return true;
@@ -814,15 +808,8 @@ bool Asset_ESS::configure_typed_asset_fims_vars(std::map <std::string, Fims_Obje
 //Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case. 
 //Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
 /* following is called when asset manager receives a FIMS message of method "set"  */
-bool Asset_ESS::process_set(std::string uri, cJSON* fimsBody)
+bool Asset_ESS::handle_set(std::string uri, cJSON &body)
 {
-    FPS_DEBUG_LOG("Processing a set to an ESS asset\n");
-    if (fimsBody == NULL)
-    {
-        FPS_ERROR_LOG("\n NULL parsed data process_set ESS \n");
-        return false;
-    }
-    
     // The current setpoint being parsed from those available
     cJSON* current_setpoint = NULL;
 
@@ -833,27 +820,27 @@ bool Asset_ESS::process_set(std::string uri, cJSON* fimsBody)
     // For instance, sets that modify the system state should not persist as they will default to the published component state on restart
     bool persistent_setpoint = false;
 
-    if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "clear_faults")))
+    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "clear_faults")))
     {
-        clear_component_faults();
+        clear_alerts();
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "stop")) && inMaintenance)
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop")) && inMaintenance)
     {
         stop();
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "start")) && inMaintenance)
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start")) && inMaintenance)
     {
         start();
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "enter_standby")) && inMaintenance)
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "enter_standby")) && inMaintenance)
     {
         enter_standby();
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "exit_standby")) && inMaintenance)
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "exit_standby")) && inMaintenance)
     {
         exit_standby();
     }
-    else if ((current_setpoint  = grab_naked_or_clothed(fimsBody, current_setpoint, "limits_override")))
+    else if ((current_setpoint  = grab_naked_or_clothed(body, current_setpoint, "limits_override")))
     {
         if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance)
         {
@@ -862,48 +849,50 @@ bool Asset_ESS::process_set(std::string uri, cJSON* fimsBody)
             persistent_setpoint = true;
         }
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "autobalancing_enable")) && inMaintenance)
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "autobalancing_enable")) && inMaintenance)
     {
         // Write the autobalancing status (enabled) to the component register
         // Since enable and disable share the same register, a single function will write for both controls
         set_autobalancing(true);
         persistent_setpoint = true;
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "autobalancing_disable")) && inMaintenance)
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "autobalancing_disable")) && inMaintenance)
     {
         // Write the autobalancing status (enabled) to the component register
         // Since enable and disable share the same register, a single function will write for both controls
         set_autobalancing(false);
         persistent_setpoint = true;
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_Number, "maint_active_power_setpoint")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint")))
     {
         maint_active_power_setpoint = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble; 
         persistent_setpoint = true;
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint")))
     {
         maint_reactive_power_setpoint = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble; 
         persistent_setpoint = true;
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "open_dc_contactors")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "open_dc_contactors")))
     {
         open_bms_contactors();
         persistent_setpoint = true;
         // TODO persistent?
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "close_dc_contactors")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "close_dc_contactors")))
     {
         close_bms_contactors();
         persistent_setpoint = true;
         // TODO persistent?
     }
 
-    // Echo set to storage db if valid (value has been parsed)
-    if (current_setpoint && persistent_setpoint){
-        return Asset::send_setpoint(uri, current_setpoint);
-    }
-    return (Asset::process_set(uri, fimsBody));
+    // if target setpoint was found, back it up to DBI if it is a persistent setpoint.
+    // otherwise, send it to the generic controls handler
+    if (!current_setpoint)
+        return handle_generic_asset_controls_set(uri, body);
+    if (!persistent_setpoint)
+        return true;
+    return Asset::send_setpoint(uri, current_setpoint);
 }
 
 /****************************************************************************************/
@@ -961,14 +950,10 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer &buf, const char* const var
     goodBody = maint_reactive_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // Open contactors only if stopped (not faulted) and contactors are closed
-    // TODO: Is fault state handled separately from stopped? May need an additional mask and flag to track the fault state
-    //       so that we only open if stopped
     open_dc_contactors_ctl.enabled = inMaintenance && !isRunning && !inStandby && dc_contactors_closed->value.value_bool;
     goodBody = open_dc_contactors_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // Close contactors only if stopped (not faulted) and contactors are not closed
-    // TODO: Is fault state handled separately from stopped? May need an additional mask and flag to track the fault state
-    //       so that we only close if stopped
     close_dc_contactors_ctl.enabled = inMaintenance && !isRunning && !inStandby && !dc_contactors_closed->value.value_bool;
     goodBody = close_dc_contactors_ctl.makeJSONObject(buf, var, true) && goodBody;
 
@@ -1103,7 +1088,7 @@ void Asset_ESS::update_asset(void)
     if (inMaintenance)
     {
         set_power_mode(powerMode::REACTIVEPWR); // only allow reactive power mode while in maintenance
-        set_active_power_setpoint(maint_active_power_setpoint);
+        set_active_power_setpoint(maint_active_power_setpoint, true);
         set_reactive_power_setpoint(maint_reactive_power_setpoint);
     }
 }

@@ -1,0 +1,370 @@
+{
+    "fileInfo": {
+        "sourceFileName": "FlexGen_Bss_Interface.xlsx",
+        "sourceFileCreated": "2020-07-21T16:59:08.000Z",
+        "sourceFileLastModified": "2020-07-21T20:27:28.000Z",
+        "sourceFileCreatedBy": "Administrator",
+        "sourceFileLastModifiedBy": "",
+        "outputFileName": "FlexGen_Bss_1_Interface.json",
+        "outputFileType": "dnp3",
+        "outputFileCreated": "2020-07-21T20:29:10.610Z"
+    },
+    "system": {
+        "name": "FlexGen Clou BSS Interface",
+        "protocol": "DNP3",
+        "version": "0.5",
+        "id": "Bss_1",
+        "ip_address": "10.1.1.5",
+        "port": 20000,
+        "master_address": 200,
+        "station_address": 10
+    },
+    "registers": [
+        {
+            "type": "analog",
+            "starting_offset": 10,
+            "number_of_registers": 21,
+            "map": [
+                {
+                    "id": "bms_max_cell_voltage",
+                    "offset": 10,
+                    "name": "BMS maximum cell voltage"
+                },
+                {
+                    "id": "bms_max_cell_voltage_stack_index",
+                    "offset": 11,
+                    "name": "Stack index of the BMS maximum cell voltage"
+                },
+                {
+                    "id": "bms_max_cell_voltage_cluster_index",
+                    "offset": 12,
+                    "name": "Cluster index of the BMS maximum cell"
+                },
+                {
+                    "id": "bms_min_cell_voltage",
+                    "offset": 13,
+                    "name": "BMS minimum cell voltage"
+                },
+                {
+                    "id": "bms_min_cell_voltage_stack_index",
+                    "offset": 14,
+                    "name": "Stack index of the BMS minimum cell voltage"
+                },
+                {
+                    "id": "bms_min_cell_voltage_cluster_index",
+                    "offset": 15,
+                    "name": "Cluster index of the BMS minimum cell voltage"
+                },
+                {
+                    "id": "bms_max_cell_temp",
+                    "offset": 16,
+                    "name": "BMS maximum cell temperature"
+                },
+                {
+                    "id": "bms_max_cell_temp_stack_index",
+                    "offset": 17,
+                    "name": "Stackindexof BMS maximum temperature"
+                },
+                {
+                    "id": "bms_max_cell_temp_cluster_index",
+                    "offset": 18,
+                    "name": "Cluster index of BMS maximum temperature"
+                },
+                {
+                    "id": "bms_mim_cell_temp",
+                    "offset": 19,
+                    "name": "BMS minimum cell temperature"
+                },
+                {
+                    "id": "bms_min_cell_temp_stack_index",
+                    "offset": 20,
+                    "name": "Stack index of BMS minimum temperature"
+                },
+                {
+                    "id": "bms_min_cell_temp_cluster_index",
+                    "offset": 21,
+                    "name": "Cluster index of BMS minimum temperature"
+                },
+                {
+                    "id": "bms_bus_voltage",
+                    "offset": 22,
+                    "name": "BMS bus voltage"
+                },
+                {
+                    "id": "bms_bus_current",
+                    "offset": 23,
+                    "name": "BMS bus current"
+                },
+                {
+                    "id": "bms_soc",
+                    "offset": 24,
+                    "name": "BMSSOC"
+                },
+                {
+                    "id": "bms_power",
+                    "offset": 25,
+                    "name": "BMS power"
+                },
+                {
+                    "id": "bms_status",
+                    "offset": 26,
+                    "size": 2,
+                    "name": "Operation status"
+                },
+                {
+                    "id": "bms_error_code_1",
+                    "offset": 27,
+                    "name": "BMS error code #1"
+                },
+                {
+                    "id": "bms_error_code_2",
+                    "offset": 28,
+                    "name": "BMS error code #2"
+                },
+                {
+                    "id": "bms_current_rechargeable_capacity",
+                    "offset": 29,
+                    "size": 2,
+                    "name": "BMS current rechargeable capacity"
+                },
+                {
+                    "id": "bms_current_capacity",
+                    "offset": 30,
+                    "name": "BMS current capacity"
+                }
+            ]
+        },
+        {
+            "type": "analog",
+            "starting_offset": 110,
+            "number_of_registers": 45,
+            "map": [
+                {
+                    "id": "bms_breaker_control_word",
+                    "offset": 110,
+                    "name": "Circuit breaker control word"
+                },
+                {
+                    "id": "bms_breaker_status",
+                    "offset": 111,
+                    "name": "Read circuit breaker status"
+                },
+                {
+                    "id": "bms_breaker_control",
+                    "offset": 112,
+                    "name": "Control circuit breaker"
+                },
+                {
+                    "id": "bms_charging_power_limit",
+                    "offset": 113,
+                    "name": "Maximum charging power limit"
+                },
+                {
+                    "id": "bms_discharging_power_limit",
+                    "offset": 114,
+                    "name": "Maximum discharging power limit"
+                },
+                {
+                    "id": "battery_cluster_voltage_01",
+                    "offset": 115,
+                    "name": "Cluster No.1 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_01",
+                    "offset": 116,
+                    "name": "Cluster No.1 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_02",
+                    "offset": 117,
+                    "name": "ClusterNo. 2 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_02",
+                    "offset": 118,
+                    "name": "Cluster No.2 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_03",
+                    "offset": 119,
+                    "name": "Cluster No.3 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_03",
+                    "offset": 120,
+                    "name": "Cluster No.3 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_04",
+                    "offset": 121,
+                    "name": "Cluster No.4 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_04",
+                    "offset": 122,
+                    "name": "Cluster No.4 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_05",
+                    "offset": 123,
+                    "name": "Cluster No.5 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_05",
+                    "offset": 124,
+                    "name": "Cluster No.5 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_06",
+                    "offset": 125,
+                    "name": "Cluster No.6 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_06",
+                    "offset": 126,
+                    "name": "Cluster No.6 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_07",
+                    "offset": 127,
+                    "name": "Cluster No.7 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_07",
+                    "offset": 128,
+                    "name": "Cluster No.7 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_08",
+                    "offset": 129,
+                    "name": "Cluster No.8 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_08",
+                    "offset": 130,
+                    "name": "Cluster No.8 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_09",
+                    "offset": 131,
+                    "name": "Cluster No.9 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_09",
+                    "offset": 132,
+                    "name": "Cluster No.9 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_10",
+                    "offset": 133,
+                    "name": "Cluster No.10 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_10",
+                    "offset": 134,
+                    "name": "Cluster No.10 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_11",
+                    "offset": 135,
+                    "name": "Cluster No.11 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_11",
+                    "offset": 136,
+                    "name": "Cluster No.11 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_12",
+                    "offset": 137,
+                    "name": "Cluster No.12 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_12",
+                    "offset": 138,
+                    "name": "Cluster No.12 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_13",
+                    "offset": 139,
+                    "name": "Cluster No.13 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_13",
+                    "offset": 140,
+                    "name": "Cluster No.13 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_14",
+                    "offset": 141,
+                    "name": "Cluster No.14 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_14",
+                    "offset": 142,
+                    "name": "Cluster No.14 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_15",
+                    "offset": 143,
+                    "name": "Cluster No.15 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_15",
+                    "offset": 144,
+                    "name": "Cluster No. 15 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_16",
+                    "offset": 145,
+                    "name": "Cluster No.16 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_16",
+                    "offset": 146,
+                    "name": "Cluster No.16 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_17",
+                    "offset": 147,
+                    "name": "Cluster No.17 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_17",
+                    "offset": 148,
+                    "name": "Cluster No.17 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_18",
+                    "offset": 149,
+                    "name": "Cluster No.18 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_18",
+                    "offset": 150,
+                    "name": "Cluster No.18 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_19",
+                    "offset": 151,
+                    "name": "Cluster No. 19 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_19",
+                    "offset": 152,
+                    "name": "Cluster No.19 battery cluster current"
+                },
+                {
+                    "id": "battery_cluster_voltage_20",
+                    "offset": 153,
+                    "name": "Cluster No.20 battery cluster voltage"
+                },
+                {
+                    "id": "battery_cluster_current_20",
+                    "offset": 154,
+                    "name": "Cluster No. 20 battery cluster current"
+                }
+            ]
+        }
+    ]
+}

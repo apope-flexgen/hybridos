@@ -2,6 +2,9 @@ To change time on a Linux machine:
 sudo date --set="%H:%M:%S" +"%T"
 where %H, %M, and %S are replaced with hours, minutes, and seconds
 
+Another option:
+sudo date MMDDhhmmYYYY
+
 To show the current time:
 date
 

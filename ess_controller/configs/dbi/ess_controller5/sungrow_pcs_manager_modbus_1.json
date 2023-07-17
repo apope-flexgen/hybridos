@@ -1,0 +1,891 @@
+{
+    "/components/pcs_0_parameter_setting": {
+        "year":0,
+        "month":0,
+        "day":0,
+        "hour":0,
+        "minute":0,
+        "second":0,
+        "start_stop":0,
+        "grid_mode_setting":0,
+        "reactive_power_adj_switch":0,
+        "control_state":0,
+        "power_priority":0,
+        "power_soft_start":0,
+        "ac_precharge":0,
+        "quick_dispatch":0,
+        "zero_power_standby":0,
+        "on_grid_mode":0,
+        "on_grid_const_current":0,
+        "on_grid_const_voltage":0,
+        "on_grid_const_volt_limit_current":0,
+        "on_grid_const_ac_power":0,
+        "on_grid_const_dc_power":0,
+        "max_batttery_charge_voltage":0,
+        "min_batttery_discharge_voltage":0,
+        "max_batttery_charge_current":0,
+        "max_batttery_discharge_current":0,
+        "freq_ride_through_enabling":0,
+        "freq_ride_through_comp":0,
+        "heartbeat":0,
+        "hearbeat_timeout_interval":0,
+        "reactive_power_pct_setting":0,
+        "power_factor_setting":0,
+        "freq_regulation_control_enable":0,
+        "freq_dead_band_freq":0,
+        "max_charge_freq_reg_power":0,
+        "max_discharge_freq_reg_power":0,
+        "vsg_rate_output_voltage":0,
+        "vsg_rate_output_freq":0,
+        "vsg_freq_droop_slope":0,
+        "vsg_voltage_droop_slope":0,
+        "vsg_active_settting_value":0,
+        "vsg_reactive_settting_value":0,
+        "bms_comms_exception_switch":0,
+        "bms_comms_exception_time":0,
+        "qu_working_mode":0,
+        "dc_mode":0,
+        "active_islanding":0,
+        "black_start_enabling":0,
+        "black_start_beat":0,
+        "parallel_operation_ctrl":0,
+        "weak_grid_mode":0,
+        "reactive_power_soft_start":0,
+        "hv_load_switch_remote_open":0,
+        "hv_load_switch_remote_closed":0,
+
+        "off_grid_voltage_setpoint": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/assets/pcs/##PCS_ID##:voltage_command"}]}]
+            }
+        },
+        "off_grid_frequency_setpoint": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/assets/pcs/##PCS_ID##:frequency_command"}]}]
+            }
+        }
+       
+    },
+    "/components/##PCD_ID##_parameter_setting": {
+
+         "start_stop":0,
+         "max_battery_charging_voltage":0,
+         "max_battery_discharging_voltage":0,
+         "max_battery_charging_current":0,
+         "max_battery_discharging_current":0,
+         "on_grid_const_ac_power":0,
+         "reactive_power_percent_setting":0,
+         "power_factor_setting":0,
+         "on_grid_charge_discharge_mode":0,
+         "on_grid_CC_current_value":0,
+         "on_grid_CV_voltage_value":0,
+         "on_grid_CV_current_limiting":0,
+         "on_grid_const_dc_power":0,
+         "max_battery_charging_SOC":0,
+         "min_battery_discharging_SOC":0
+    },
+
+    "/components/##PCS_ID##_running_info": {
+        "charge_state": {
+            "value": -1,
+            "enable": "/config/pcs:enable",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": 0,  "uri": "/status/pcs:ChargeDischargeStatus", "outValue": "Charging"},
+                        {"inValue": 1,  "uri": "/status/pcs:ChargeDischargeStatus", "outValue": "Discharging"},
+                        {"inValue": 2,  "uri": "/status/pcs:ChargeDischargeStatus", "outValue": "Non-operating mode"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/##PCS_ID##_running_info:charge_state@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "node_state": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: AC switch abnormal",
+            "note3": "Bit 02: Fan 2 abnormal",
+            "note4": "Bit 03: Fan 2 abnormal",
+            "note5": "Bit 04-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 1, "mask": 1, "inValue":0, "uri": "/assets/pcs/##PCS_ID##:ac_switch_status",       "outValue": "Opened"},
+                        {"shift": 1, "mask": 1, "inValue":1, "uri": "/assets/pcs/##PCS_ID##:ac_switch_status",       "outValue": "Closed"},
+                        {"shift": 2, "mask": 1, "inValue":0, "uri": "/assets/pcs/##PCS_ID##:dc_switch_status",       "outValue": "Opened"},
+                        {"shift": 2, "mask": 1, "inValue":1, "uri": "/assets/pcs/##PCS_ID##:dc_switch_status",       "outValue": "Closed"},
+                        {"shift": 3, "mask": 1, "inValue":0, "uri": "/assets/pcs/##PCS_ID##:dc_fuse_status",         "outValue": "Opened"},
+                        {"shift": 3, "mask": 1, "inValue":1, "uri": "/assets/pcs/##PCS_ID##:dc_fuse_status",         "outValue": "Closed"},
+                        {"shift": 4, "mask": 1, "inValue":0, "uri": "/assets/pcs/##PCS_ID##:dc_aux_switch_1_status", "outValue": "Opened"},
+                        {"shift": 4, "mask": 1, "inValue":1, "uri": "/assets/pcs/##PCS_ID##:dc_aux_switch_1_status", "outValue": "Closed"},
+                        {"shift": 5, "mask": 1, "inValue":0, "uri": "/assets/pcs/##PCS_ID##:dc_aux_switch_2_status", "outValue": "Opened"},
+                        {"shift": 5, "mask": 1, "inValue":1, "uri": "/assets/pcs/##PCS_ID##:dc_aux_switch_2_status", "outValue": "Closed"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/##PCS_ID##_running_info:node_state@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "fault_state": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note": "0: Normal, 1: Fault",
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: Door-opening Protection",
+            "note3": "Bit 02: Local emergency stop",
+            "note4": "Bit 03: Remote emergency stop",
+            "note5": "Bit 04: Reserved",
+            "note6": "Bit 05: LV room smoke sensor",
+            "note7": "Bit 06-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:door_opening_protection",    "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:door_opening_protection",    "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:local_estop",                "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:local_estop",                "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:remote_estop",               "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:remote_estop",               "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:lv_room_smoke_sensor",       "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:lv_room_smoke_sensor",       "outValue": "Fault"},
+
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/assets/pcs/##PCS_ID##:local_estop_status", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/assets/pcs/##PCS_ID##:local_estop_status", "outValue": "Fault"},
+
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_overall_faults[0]",    "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_overall_faults[1]",    "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_overall_faults[2]",    "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_overall_faults[3]",    "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/##PCS_ID##_running_info:fault_state@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "fault_state_1": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00: DC undervoltage",
+            "note2": "Bit 01: DC overvoltage",
+            "note3": "Bit 02: AC undervoltage",
+            "note4": "Bit 03: AC overvoltage",
+            "note5": "Bit 04: AC underfrequency",
+            "note6": "Bit 05: AC overfrequency",
+            "note7": "Bit 06: AC contactor fault",
+            "note8": "Bit 07: Islanding protection",
+            "note9": "Bit 08: Reserved",
+            "note10": "Bit 09: PDP protection",
+            "note11": "Bit 10: Module overtemperature",
+            "note12": "Bit 11: Reactor overtemperature",
+            "note13": "Bit 12: Transformer overtemperature",
+            "note14": "Bit 13: Leakage current protection",
+            "note15": "Bit 14: Reserved",
+            "note16": "Bit 15: Overload protection",
+            "note17": "Bit 16: Reserved",
+            "note18": "Bit 17: Fan 1 fault",
+            "note19": "Bit 18: DC fuse fault",
+            "note20": "Bit 19: Reserved",
+            "note21": "Bit 20: DC overcurrent",
+            "note22": "Bit 21: AC overcurrent",
+            "note23": "Bit 22: Reserved",
+            "note24": "Bit 23: Ambient temperature abnormal",
+            "note25": "Bit 24: Hardware fault",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_undervoltage", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_undervoltage", "outValue": "Fault"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_overvoltage", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_overvoltage", "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_undervoltage", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_undervoltage", "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_overvoltage", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_overvoltage", "outValue": "Fault"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_underfrequency", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_underfrequency", "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_overfrequency", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_overfrequency", "outValue": "Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_contactor_fault", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_contactor_fault", "outValue": "Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/pcs:islanding_protection", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/pcs:islanding_protection", "outValue": "Fault"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/faults/pcs:pdp_protection", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/faults/pcs:pdp_protection", "outValue": "Fault"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/pcs:module_overtemperature", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/pcs:module_overtemperature", "outValue": "Fault"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/pcs:reactor_overtemperature", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/pcs:reactor_overtemperature", "outValue": "Fault"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/pcs:transformer_overtemperature", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/pcs:transformer_overtemperature", "outValue": "Fault"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/pcs:leakage_current_protection", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/pcs:leakage_current_protection", "outValue": "Fault"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/faults/pcs:overload_protection", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/faults/pcs:overload_protection", "outValue": "Fault"},
+                        { "shift": 17,"mask": 1,"inValue": 0,"uri": "/faults/pcs:fan_1_fault", "outValue": "Normal"},
+                        { "shift": 17,"mask": 1,"inValue": 1,"uri": "/faults/pcs:fan_1_fault", "outValue": "Fault"},
+                        { "shift": 18,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_fuse_fault", "outValue": "Normal"},
+                        { "shift": 18,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_fuse_fault", "outValue": "Fault"},
+                        { "shift": 20,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_overcurrent", "outValue": "Normal"},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_overcurrent", "outValue": "Fault"},
+                        { "shift": 21,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_overcurrent", "outValue": "Normal"},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_overcurrent", "outValue": "Fault"},
+                        { "shift": 23,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ambient_temperature_abnormal", "outValue": "Normal"},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ambient_temperature_abnormal", "outValue": "Fault"},
+                        { "shift": 24,"mask": 1,"inValue": 0,"uri": "/faults/pcs:hardware_fault", "outValue": "Normal"},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/faults/pcs:hardware_fault", "outValue": "Fault"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[3]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[4]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[5]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[6]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[7]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[8]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[9]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[10]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[11]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[12]", "outValue": true},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[13]", "outValue": true},
+                        { "shift": 17,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[14]", "outValue": true},
+                        { "shift": 18,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[15]", "outValue": true},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[16]", "outValue": true},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[17]", "outValue": true},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[18]", "outValue": true},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state1[19]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/##PCS_ID##_running_info:fault_state_1@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "fault_state_2": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00: Insulation resistance",
+            "note2": "Bit 01: AC SPD fault",
+            "note3": "Bit 02: Sampling fault",
+            "note4": "Bit 03: Battery polarity reversed",
+            "note5": "Bit 04: Reserved",
+            "note6": "Bit 05: LCD-DSP fault",
+            "note7": "Bit 06: AC current unbalance 1",
+            "note8": "Bit 07: Host fault",
+            "note9": "Bit 08: DC SPD fault",
+            "note10": "Bit 09: Reserved",
+            "note11": "Bit 10: DC injection fault",
+            "note12": "Bit 11: DC switch fault",
+            "note13": "Bit 12: Device code repeat fault",
+            "note14": "Bit 13: Parallel communication error",
+            "note15": "Bit 14: Control cabinet temperature abnormal",
+            "note16": "Bit 15: Reserved",
+            "note17": "Bit 16: AC voltage unbalance",
+            "note18": "Bit 17-18: Reserved",
+            "note19": "Bit 19: AC switch fault",
+            "note20": "Bit 20: Soft start fault",
+            "note21": "Bit 21: DC voltage sampling fault",
+            "note22": "Bit 22: Fan 2 fault",
+            "note23": "Bit 23: AC current unbalance 2",
+            "note24": "Bit 24: AC current unbalance 3",
+            "note25": "Bit 25: Drive board fault",
+            "note26": "Bit 26: Neutral point potential shift",
+            "note27": "Bit 27: Carrier sync fault",
+            "note28": "Bit 28-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/pcs:insulation_resistance", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/pcs:insulation_resistance", "outValue": "Fault"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_spd_fault", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_spd_fault", "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:sampling_fault", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:sampling_fault", "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:batt_polarity_reversed", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:batt_polarity_reversed", "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:lcd_dsp_fault", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:lcd_dsp_fault", "outValue": "Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_current_unbalance_1", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_current_unbalance_1", "outValue": "Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/pcs:host_fault", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/pcs:host_fault", "outValue": "Fault"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_spd_fault", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_spd_fault", "outValue": "Fault"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_injection_fault", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_injection_fault", "outValue": "Fault"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_switch_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_switch_fault", "outValue": "Fault"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/pcs:device_code_repeat_fault", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/pcs:device_code_repeat_fault", "outValue": "Fault"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/pcs:parallel_comms_err", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/pcs:parallel_comms_err", "outValue": "Fault"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/faults/pcs:control_cabinet_temperature_abnormal", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/faults/pcs:control_cabinet_temperature_abnormal", "outValue": "Fault"},
+                        { "shift": 16,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_voltage_unbalance", "outValue": "Normal"},
+                        { "shift": 16,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_voltage_unbalance", "outValue": "Fault"},
+                        { "shift": 19,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_switch_fault", "outValue": "Normal"},
+                        { "shift": 19,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_switch_fault", "outValue": "Fault"},
+                        { "shift": 20,"mask": 1,"inValue": 0,"uri": "/faults/pcs:soft_start_fault", "outValue": "Normal"},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/faults/pcs:soft_start_fault", "outValue": "Fault"},
+                        { "shift": 21,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_voltage_sampling_fault", "outValue": "Normal"},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_voltage_sampling_fault", "outValue": "Fault"},
+                        { "shift": 22,"mask": 1,"inValue": 0,"uri": "/faults/pcs:fan_2_fault", "outValue": "Normal"},
+                        { "shift": 22,"mask": 1,"inValue": 1,"uri": "/faults/pcs:fan_2_fault", "outValue": "Fault"},
+                        { "shift": 23,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_current_unbalance_2", "outValue": "Normal"},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_current_unbalance_2", "outValue": "Fault"},
+                        { "shift": 24,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_current_unbalance_3", "outValue": "Normal"},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_current_unbalance_3", "outValue": "Fault"},
+                        { "shift": 25,"mask": 1,"inValue": 0,"uri": "/faults/pcs:drive_board_fault", "outValue": "Normal"},
+                        { "shift": 25,"mask": 1,"inValue": 1,"uri": "/faults/pcs:drive_board_fault", "outValue": "Fault"},
+                        { "shift": 26,"mask": 1,"inValue": 0,"uri": "/faults/pcs:neutral_point_potential_shift", "outValue": "Normal"},
+                        { "shift": 26,"mask": 1,"inValue": 1,"uri": "/faults/pcs:neutral_point_potential_shift", "outValue": "Fault"},
+                        { "shift": 27,"mask": 1,"inValue": 0,"uri": "/faults/pcs:carrier_sync_fault", "outValue": "Normal"},
+                        { "shift": 27,"mask": 1,"inValue": 1,"uri": "/faults/pcs:carrier_sync_fault", "outValue": "Fault"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[3]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[4]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[5]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[6]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[7]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[8]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[9]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[10]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[11]", "outValue": true},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[12]", "outValue": true},
+                        { "shift": 16,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[13]", "outValue": true},
+                        { "shift": 19,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[14]", "outValue": true},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[15]", "outValue": true},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[16]", "outValue": true},
+                        { "shift": 22,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[17]", "outValue": true},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[18]", "outValue": true},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[19]", "outValue": true},
+                        { "shift": 25,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[20]", "outValue": true},
+                        { "shift": 26,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[21]", "outValue": true},
+                        { "shift": 27,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_fault_state2[22]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/##PCS_ID##_running_info:fault_state_2@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "alarm_state": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note": "0: Normal, 1: Alarm",
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: Heartbeat stop",
+            "note3": "Bit 02: SCU-metering board communication error",
+            "note4": "Bit 03-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:heartbeat_stop", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:heartbeat_stop", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:scu_metering_board_comms_err", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:scu_metering_board_comms_err", "outValue": "Alarm"},
+
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_overall_alarms[0]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_overall_alarms[1]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/##PCS_ID##_running_info:alarm_state@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "alarm_running_state_1": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00: Temperature abnormal alarm",
+            "note2": "Bit 01: Low insulation resistance alarm",
+            "note3": "Bit 02: GFRT running",
+            "note4": "Bit 03: Reserved",
+            "note5": "Bit 04: DC fuse abnormal",
+            "note6": "Bit 05: Reserved",
+            "note7": "Bit 06: DC sensor abnormal",
+            "note8": "Bit 07: DC SPD alarm",
+            "note9": "Bit 08: AC SPD alarm",
+            "note10": "Bit 09: Battery voltage high",
+            "note11": "Bit 10: Battery voltage low",
+            "note12": "Bit 11: Reserved",
+            "note13": "Bit 12: DC switch abnormal",
+            "note14": "Bit 13: Fan 1 abnormal",
+            "note15": "Bit 14-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:temp_abnormal", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:temp_abnormal", "outValue": "Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:low_insulation_resistance", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:low_insulation_resistance", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:gfrt_running", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:gfrt_running", "outValue": "Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_fuse_normal", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_fuse_normal", "outValue": "Alarm"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_sensor_abnormal", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_sensor_abnormal", "outValue": "Alarm"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_spd_alarm", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_spd_alarm", "outValue": "Alarm"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ac_spd_alarm", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ac_spd_alarm", "outValue": "Alarm"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:batt_volt_high", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:batt_volt_high", "outValue": "Alarm"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:batt_volt_low", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:batt_volt_low", "outValue": "Alarm"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_switch_abnormal", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_switch_abnormal", "outValue": "Alarm"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:fan_1_abnormal", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:fan_1_abnormal", "outValue": "Alarm"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[2]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[3]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[4]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[5]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[6]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[7]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[8]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[9]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[10]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/##PCS_ID@@_running_info:alarm_running_state_1@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "alarm_running_state_2": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00: Branch circuit board communication error",
+            "note2": "Bit 01: AC switch abnormal",
+            "note3": "Bit 02: Fan 2 abnormal",
+            "note4": "Bit 03: AC main contactor abnormal",
+            "note5": "Bit 04-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:branch_circuit_board_comms_err", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:branch_circuit_board_comms_err", "outValue": "Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ac_switch_abnormal", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ac_switch_abnormal", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:fan_2_abnormal", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:fan_2_abnormal", "outValue": "Alarm"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ac_main_contactor_abnormal", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ac_main_contactor_abnormal", "outValue": "Alarm"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[11]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[12]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[13]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##PCS_ID##_alarm_running_state[14]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/##PCS_ID##_running_info:alarm_running_state_2@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        }
+    },
+    "/components/pcs_0_running_info": {
+        "rated_active_power": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:RatedActivePower"}]}]
+            }
+        },
+        "overall_reactive_power": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallReactivePower"}]}]
+            }
+        },
+        "overall_grid_voltage_vab": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallGridVoltage1"}]}]
+            }
+        },
+        "overall_grid_voltage_vbc": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallGridVoltage2"}]}]
+            }
+        },
+        "overall_grid_voltage_vca": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallGridVoltage3"}]}]
+            }
+        },
+        "overall_phase_a_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallGridCurrent1"}]}]
+            }
+        },
+        "overall_phase_b_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallGridCurrent2"}]}]
+            }
+        },
+        "overall_phase_c_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallGridCurrent3"}]}]
+            }
+        },
+        "grid_frequency": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:GridFrequency"}]}]
+            }
+        },
+        "overall_dc_power": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallDCPower"}]}]
+            }
+        },
+        "overall_total_active_power": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallTotalActivePower"}]}]
+            }
+        },
+        "overall_total_reactive_power": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallTotalReactivePower"}]}]
+            }
+        },
+        "overall_total_apparant_power": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallTotalApparentPower"}]}]
+            }
+        },
+
+        "overall_total_charging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallTotalCharging"}]}]
+            }
+        },
+        "overall_total_discharging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallTotalDischarging"}]}]
+            }
+        },
+
+        "dc_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:DCVoltage"}]}]
+            }
+        },
+        "dc_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:DCCurrent"}]}]
+            }
+        },
+        "overall_power_factor": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallPowerFactor"}]}]
+            }
+        },
+        "heartbeat": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:PCSHeartbeat"}]}]
+            }
+        },
+        "overall_daily_charging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallDailyChargeEnergy"}]}]
+            }
+        },
+        "ovall_daily_discharging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:OverallDailyDischargeEnergy"}]}]
+            }
+        },
+        "total_charging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:TotalChargeEnergy"}]}]
+            }
+        },
+        "total_discharging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:TotalDischargeEnergy"}]}]
+            }
+        },
+        "leakage_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:LeakageCurrent"}]}]
+            }
+        },
+        "ambient_temp": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:AmbientTemp"}]}]
+            }
+        },
+        "module_temp_1": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:ModuleTemp1"}]}]
+            }
+        },
+        "module_temp_2": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:ModuleTemp2"}]}]
+            }
+        },
+        "module_temp_3": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:ModuleTemp3"}]}]
+            }
+        },
+        "overall_working_state": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00: Running",
+            "note2": "Bit 01-2: Reserved",
+            "note3": "Bit 03: Key stop",
+            "note4": "Bit 04: Standby",
+            "note5": "Bit 05: Reserved",
+            "note6": "Bit 06: Start in process",
+            "note7": "Bit 07-8: Reserved",
+            "note8": "Bit 09: Fault stop",
+            "note9": "Bit 10: Alarm running",
+            "note10": "Bit 11: Derating running",
+            "note11": "Bit 12-14: Reserved",
+            "note12": "Bit 15: DSP communication error",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallPCSStatusResp", "outValue": "Running"},
+                        {"shift": 3,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallPCSStatusResp", "outValue": "Key Stop"},
+                        {"shift": 4,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallPCSStatusResp", "outValue": "Standby"},
+                        {"shift": 6,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallPCSStatusResp", "outValue": "Start in process"},
+                        {"shift": 9,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallPCSStatusResp", "outValue": "Fault stop"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallPCSStatusResp", "outValue": "Alarm running"},
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallPCSStatusResp", "outValue": "Derating running"},
+                        {"shift": 15, "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallPCSStatusResp", "outValue": "DSP communication error"},
+
+                        {"shift": 0,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallSystemState", "outValue": "Running"},
+                        {"shift": 3,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallSystemState", "outValue": "Off"},
+                        {"shift": 4,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallSystemState", "outValue": "Ready"},
+                        {"shift": 6,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallSystemState", "outValue": "Starting"},
+                        {"shift": 9,  "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallSystemState", "outValue": "Fault"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallSystemState", "outValue": "Running"},
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallSystemState", "outValue": "Running"},
+                        {"shift": 15, "mask": 1, "inValue": 1, "uri": "/status/pcs:OverallSystemState", "outValue": "Running", "note": "DSP comms error occurs, but the PCS may still be running"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/pcs_0_running_info:overall_working_state@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        
+        "overall_fault_state": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note": "0: Normal, 1: Fault",
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: Door-opening Protection",
+            "note3": "Bit 02: Local emergency stop",
+            "note4": "Bit 03: Remote emergency stop",
+            "note5": "Bit 04: Reserved",
+            "note6": "Bit 05: LV room smoke sensor",
+            "note7": "Bit 06-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:door_opening_protection",    "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:door_opening_protection",    "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:local_estop",                "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:local_estop",                "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:remote_estop",               "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:remote_estop",               "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:lv_room_smoke_sensor",       "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:lv_room_smoke_sensor",       "outValue": "Fault"}
+                    ]
+                }
+            ]}
+        },
+        "overall_working_mode": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00: On-grid constant current",
+            "note2": "Bit 01: On-grid constant voltage",
+            "note3": "Bit 02: On-grid constant power (AC)",
+            "note4": "Bit 03: On-grid constant power (DC)",
+            "note5": "Bit 04-8: Reserved",
+            "note6": "Bit 09: On-grid mode",
+            "note7": "Bit 10: Off-grid mode",
+            "note8": "Bit 11: VSG mode",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0,  "mask": 255,"inValue": 0,  "uri": "/status/pcs:OnGridChgMode", "outValue": "N/A"},
+                        {"shift": 0,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant current"},
+                        {"shift": 1,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant voltage"},
+                        {"shift": 2,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant power (AC)"},
+                        {"shift": 3,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant power (DC)"},
+                        {"shift": 9,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:WorkMode",      "outValue": "On-grid"},
+                        {"shift": 10, "mask": 1,  "inValue": 1,  "uri": "/status/pcs:WorkMode",      "outValue": "Off-grid"},
+                        {"shift": 11, "mask": 1,  "inValue": 1,  "uri": "/status/pcs:WorkMode",      "outValue": "VSG"},
+
+                        {"shift": 0, "mask": 1, "inValue": 1,  "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Current"},
+                        {"shift": 1, "mask": 1, "inValue": 1,  "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Voltage"},
+                        {"shift": 2, "mask": 1, "inValue": 1,  "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "AC-Power"},
+                        {"shift": 3, "mask": 1, "inValue": 1,  "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "DC-Power"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/pcs_0_running_info:overall_working_mode@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+
+        
+        "MV_node_state": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00: Gas Relay Trip (0: normal, 1: tripping)",
+            "note2": "Bit 01: Gas Relay Alarm (0: normal, 1: alarm)",
+            "note3": "Bit 02: Oil Temperature Alarm (0: normal, 1: alarm)",
+            "note4": "Bit 03: Oil Temperature Trip (0: normal, 1: tripping)",
+            "note5": "Bit 04: Low Oil Level Trip (0: normal, 1: tripping)",
+            "note6": "Bit 06: Pressure Relief Trip (0: normal, 1: tripping)",
+            "note7": "Bit 08: MV Load Switch 1 (0: Open, 1: Close)",
+            "note8": "Bit 09: MV Load Switch 2 (0: Open, 1: Close)",
+            "note9": "Bit 10: MV Vacuum Circuit-Breaker (0: Open, 1: Close)",
+            "note10": "Bit 11: MV Disconnector Switch (0: Open, 1: Close)",
+            "note11": "Bit 12-13: Reserved",
+            "note12": "Bit 14: Winding Temperature Trip (0: normal, 1: tripping)",
+            "note13": "Bit 15: Winding Temperature Alarm (0: normal, 1: alarm)",
+            "note14": "Bit 16-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:gas_relay_alarm", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:gas_relay_alarm", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:oil_temp_alarm", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:oil_temp_alarm", "outValue": "Alarm"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:winding_temp_alarm", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:winding_temp_alarm", "outValue": "Alarm"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/pcs_0_running_info:MV_node_state@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+
+        "MV_node_state_1": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00-5: Reserved",
+            "note2": "Bit 06: HV Room Door (0: Open, 1: Close)",
+            "note3": "Bit 07-10: Reserved",
+            "note4": "Bit 11: External E-stop (0: normal, 1: tripping)",
+            "note5": "Bit 12: Reserved",
+            "note6": "Bit 13: HV Room Smoke (0: normal, 1: tripping)",
+            "note7": "Bit 14: HV Remote Control (0: remote, 1: local)",
+            "note8": "Bit 15-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 6,"mask": 1,"inValue": 0, "uri": "/assets/pcs/##PCS_ID##:hv_room_door_status",   "outValue": "Open"},
+                        { "shift": 6,"mask": 1,"inValue": 1, "uri": "/assets/pcs/##PCS_ID##:hv_room_door_status",   "outValue": "Close"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/assets/pcs/##PCS_ID##:external_estop_status", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/assets/pcs/##PCS_ID##:external_estop_status", "outValue": "Tripping"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/assets/pcs/##PCS_ID##:hv_room_smoke_status",  "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/assets/pcs/##PCS_ID##:hv_room_smoke_status",  "outValue": "Tripping"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/assets/pcs/##PCS_ID##:hv_remote_ctrl_status",  "outValue": "Remote"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/assets/pcs/##PCS_ID##:hv_remote_ctrl_status",  "outValue": "Local"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/pcs_0_running_info:MV_node_state_1@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "MV_node_state_2": {
+            "value": 0,
+            "enable": "/config/pcs:enable",
+            "note1": "Bit 00: MV Load Switch (0: disconnected. 1: connected)",
+            "note2": "Bit 01: HV Remote Control Trip (0: normal, 1: tripping)",
+            "note3": "Bit 02: Reserved",
+            "note4": "Bit 03: BMS Dry Contact Interface (0: Normal, 1: Fault)",
+            "note5": "Bit 04: Fast Response Control Interface (0: normal, 1: close)",
+            "note6": "Bit 05-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:bms_dry_contact_interface", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:bms_dry_contact_interface", "outValue": "Fault"},
+
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/assets/pcs/##PCS_ID##:bms_dry_contact_interface_status", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/assets/pcs/##PCS_ID##:bms_dry_contact_interface_status", "outValue": "Fault"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/pcs:enum_opt","uri": "/components/pcs_0_running_info:MV_node_state_2@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        }
+    }
+}

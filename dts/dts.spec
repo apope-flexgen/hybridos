@@ -13,7 +13,6 @@ Version:    %{_version}
 Release:    %{_release}
 Source:     %{source}.tar.gz
 BuildRoot:  %{_topdir}
-Requires:   fims
 
 %description
 Writes archived FIMS messages to a database

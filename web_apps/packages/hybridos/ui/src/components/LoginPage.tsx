@@ -24,7 +24,7 @@ const LoginPage = ({ loginComponent }: LoginPageProps): JSX.Element => {
   const LoginComponentContainer = styled.div`
             display: flex;
             justify-content: center;
-            padding-top: 16.8rem;
+            align-items: center;
             height: 100vh;
             overflow: auto;
         `;

@@ -1,0 +1,181 @@
+{
+	"system":
+	{
+		"id": "easygen_3500xt_3",
+		"ip_address": "10.8.20.13",
+		"port": 502,
+		"frequency": 500
+	},
+	"registers":
+	[
+        {
+            "type": "Holding Registers",
+            "starting_offset": 50009,
+            "number_of_registers": 4,
+            "map":
+            [
+                {
+                    "id": "frequency",
+                    "offset": 50009
+                },
+                {
+                    "id": "power_factor",
+                    "offset": 50012
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 50028,
+            "number_of_registers": 2,
+            "map":
+            [
+                {
+                    "id": "frequency_setpoint",
+                    "offset": 50028
+                },
+                {
+                    "id": "power_factor_setpoint",
+                    "offset": 50029
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 50099,
+            "number_of_registers": 2,
+            "map":
+            [
+                {
+                    "id": "start",
+                    "offset": 50099
+                },
+                {
+                    "id": "status",
+                    "offset": 50100,
+                    "bit_field": true,
+                    "bit_strings":
+                    [
+                        "Init",
+                        "Pre Crank",
+                        "Starting",
+                        "Running",
+                        "Pre-Cooldown",
+                        "Cooldown",
+                        "Stopping",
+                        "Stopped",
+                        "Idling"
+                    ]
+                }
+            ]
+        },    
+        {
+            "type": "Holding Registers",
+            "starting_offset": 50201,
+            "number_of_registers": 1,
+            "map":
+            [
+                {
+                    "id": "engine_speed",
+                    "offset": 50201
+                }
+            ]
+        },
+		{
+			"type": "Holding Registers",
+			"starting_offset": 50410,
+			"number_of_registers": 36,
+			"map":
+			[
+				{
+					"id": "active_power",
+					"offset": 50410,
+                    "signed": true,
+                    "scale": 1000,
+					"size": 2
+				},
+				{
+					"id": "reactive_power",
+					"offset": 50412,
+                    "signed": true,
+                    "scale": 1000,
+                    "size": 2
+				},
+				                {
+                    "id": "apparent_power",
+                    "offset": 50414,
+                    "signed": true,
+                    "scale": 1000,
+                    "size": 2
+                },
+                {
+                    "id": "ac_current_l1",
+                    "offset": 50424,
+                    "signed": true,
+                    "size": 2
+                },
+                                {
+                    "id": "ac_current_l2",
+                    "offset": 50426,
+                    "signed": true,
+                    "size": 2
+                },
+                {
+                    "id": "ac_current_l3",
+                    "offset": 50428,
+                    "signed": true,
+                    "size": 2
+                },
+                                {
+                    "id": "ac_voltage_l1_l2",
+                    "offset": 50434,
+                    "signed": true,
+                    "size": 2
+                },
+                {
+                    "id": "ac_voltage_l2_l3",
+                    "offset": 50436,
+                    "signed": true,
+                    "size": 2
+                },
+                                {
+                    "id": "ac_voltage_l3_l1",
+                    "offset": 50438,
+                    "signed": true,
+                    "size": 2
+                },
+                {
+                    "id": "ac_voltage_l1",
+                    "offset": 50440,
+                    "signed": true,
+                    "size": 2
+                },
+                                {
+                    "id": "ac_voltage_l2",
+                    "offset": 50442,
+                    "signed": true,
+                    "size": 2
+                },
+                {
+                    "id": "ac_voltage_l3",
+                    "offset": 50444,
+                    "signed": true,
+                    "size": 2
+                }
+
+			]
+		}, 
+        {
+            "type": "Holding Registers",
+            "starting_offset": 50460,
+            "number_of_registers": 1,
+            "map":
+            [
+                {
+                    "id": "active_power_setpoint",
+                    "offset": 50460
+                }
+            ]
+        }		
+	]
+}

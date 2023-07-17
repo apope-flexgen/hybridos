@@ -26,6 +26,8 @@ import { RefreshTokenService } from '../../src/auth/refreshTokenService'
 import { RefreshTokenStrategy } from '../../src/auth/strategies/refreshToken.strategy'
 import { AppEnvService } from '../../src/environment/appEnv.service'
 import { createTestApiApplication, HASH_COST } from '../testUtils'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
+import path from 'path'
 
 describe('AuthController Login (e2e)', () => {
     let app: INestApplication
@@ -120,12 +122,26 @@ describe('AuthController Login (e2e)', () => {
                 },
                 RefreshTokenService,
                 AppEnvService,
+                {
+                    provide: 'WEB_UI_CONFIG_PATH',
+                    useValue: path.resolve(__dirname, '../../test/configs/test-web_ui.json')
+                },
+                {
+                    provide: 'WEB_SERVER_CONFIG_PATH',
+                    useValue: path.resolve(__dirname, '../../test/configs/test-config.json')
+                },
                 RefreshTokenStrategy,
                 RadiusStrategy,
                 LocalStrategy,
                 AccessTokenStrategy,
                 AccessTokenMfaStrategy,
                 TotpStrategy,
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
+                    },
+                },
             ],
         }).compile()
 

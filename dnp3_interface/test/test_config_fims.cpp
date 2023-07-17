@@ -396,7 +396,7 @@ int main( int argc, char*argv[])
                                 varcount++;
                                 addVarToBuilder(builder, db, sys->debug, sys->useVindex);
                             }
-                        addVarToCj(cj, dbp);  // include flag
+                        addVarToCj(sys, cj, dbp);  // include flag
                         addCjTimestamp(cj, "Timestamp");
                         dbs.pop_back();
                     }

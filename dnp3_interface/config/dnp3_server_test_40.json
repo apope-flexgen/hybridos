@@ -1,0 +1,169 @@
+{
+    "system": {
+        "name": "FlexGen HybridOS",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "base_uri": "/sites",
+        "id": "hoth",
+        "debug": 0,
+        "xip_address": "10.10.1.31",
+        "ip_address": "172.17.0.2",
+        "local_uri": "/local_server",
+        "port": 20000,
+        "unsol":1,
+        "event_pub": true,
+        "xformat": "naked",
+        "note":"this system must have a timeout to trigger the variable timeout",
+        "timeout": 5,
+        "frequency": 500
+    },
+    "registers": [
+        {
+            "type": "AnOPInt32",
+            "map": [
+               {
+                   "id": "TestOPI32toSite",
+                   "offset": 0,
+                   "name": "Test OUTPut To Site",
+                   "unit": "MW",
+                   "signed": true,
+                   "uri": "/testsrv/testop"
+   
+               },
+               {
+                   "id": "TestOPI32toSiteCl",
+                   "offset": 1,
+                   "name": "Test OUTPut To Site",
+                   "unit": "MW",
+                   "format":"clothed",
+                   "signed": true,
+                   "uri": "/testsrv/testop"
+               }
+           ]
+       },
+       {
+         "type": "AnOPInt16",
+         "map": [
+            {
+                "id": "TestOPI16toSite",
+                "offset": 0,
+                "name": "Test OUTPut To Site",
+                "unit": "MW",
+                "signed": true,
+                "uri": "/testsrv/testop"
+            },
+            {
+                "id": "TestOPI16toSiteCl",
+                "offset": 1,
+                "name": "Test OUTPut To Site",
+                "unit": "MW",
+                "format":"clothed",
+                "signed": true,
+                "uri": "/testsrv/testop"
+            }
+        ]
+    },
+    {
+        "type": "AnOPF32",
+        "map": [
+            {
+                "id": "TestOPF32toSite",
+                "offset": 0,
+                "name": "Test OUTPut F32 To Site",
+                "unit": "MW",
+                "signed": true,
+                "uri": "/testsrv/testop"
+
+            },
+            {
+                "id": "TestOPF32toSiteCl",
+                "offset": 1,
+                "name": "Test OUTPut F32 To Site",
+                "unit": "MW",
+                "format":"clothed",
+                "signed": true,
+                "uri": "/testsrv/testop"
+            }
+        ]
+        },
+        {            
+            "type": "CROB",
+            "starting_offset": 100,
+            "map": [
+                    {
+                        "id": "breaker_close",
+                        "crob_string":false,
+                        "crob_true":"LATCH_ON",
+                        "crob_false":"LATCH_OFF",
+                        "idx": 100,
+                        "name": "Main Breaker Close Command",
+                        "uri": "/testsrv/testop"
+                    },
+                    {
+                            "id": "breaker_closeCl",
+                            "crob_string":false,
+                            "crob_true":"LATCH_ON",
+                            "crob_false":"LATCH_OFF",
+                            "format":"clothed",
+                            "idx": 101,
+                            "name": "Main Breaker Close Command",
+                            "uri": "/testsrv/testop"
+                        }
+                    
+                ]
+        },
+    
+        {
+            "type": "binaryOS",
+            "map": [
+                {
+                    "id": "binaryOS_10v2",
+                    "offset": 0,
+                    "scale": 1,
+                    "Xformat":"clothed",
+                    "timeout": 0,
+                    "variation":"Group10Var2",
+                    "uri":"/sites/binaryOS",
+                    "name": "BinaryOSG10V2"
+                },
+                {
+                    "id": "binaryOS_10v2_timeout",
+                    "offset": 1,
+                    "scale": 1,
+                    "timeout": 2,
+                    "Xformat":"clothed",
+                    "variation":"Group10Var2",
+                    "uri":"/sites/binaryOS",
+                    "name": "BinaryOSG10V2_TO"
+                }
+             ]
+        },
+        {
+            "type": "binary",
+            "map": [
+                {
+                    "id": "binary_1",
+                    "offset": 0,
+                    "scale": 1,
+                    "Xformat":"clothed",
+                    "timeout": 0,
+                    "variation":"Group1Var1",
+                    "evariation":"Group2Var3",
+                    "clazz":1,
+                    "uri":"/sites/binary",
+                    "name": "BinaryG10V2"
+                },
+                {
+                    "id": "binary_1_timeout",
+                    "offset": 1,
+                    "scale": 1,
+                    "timeout": 2,
+                    "Xformat":"clothed",
+                    "xvariation":"Group10Var2",
+                    "uri":"/sites/binary",
+                    "name": "Binary_1_TO"
+                }
+             ]
+        }
+    ]
+}

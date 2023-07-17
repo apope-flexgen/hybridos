@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 // eslint-disable-next-line import/no-unresolved
-const fims = require('fims');
+const fims = require('@flexgen/fims');
 const { Event, eventsQuery, clearActiveEventQuery } = require('./eventsDb.js');
 
 fims.connect('events');

@@ -10,6 +10,7 @@ import request from './../../../testReqAgent'
 import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 const isDefaultsiteAdmins = (res) => {
     testUtils.checksiteAdminsFields(res, testUtils.site(false, false, false))
@@ -33,6 +34,8 @@ describe('Authentication (Integration)', () => {
         })
             .overrideProvider(AppEnvService)
             .useValue(config)
+            .overrideProvider(PermissionsService)
+            .useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer
@@ -71,7 +74,7 @@ describe('Authentication (Integration)', () => {
 
         // test protected route (should pass)
         await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', accessToken)
             .set('Cookie', refreshToken)
             .then((res) => {

@@ -28,7 +28,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fims"
 	"flag"
 	"fmt"
@@ -38,8 +37,9 @@ import (
 	"strings"
 	"time"
 
-	fg "github.com/flexgen-power/go_flexgen"
+	"github.com/flexgen-power/go_flexgen/cfgfetch"
 	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/flexgen-power/go_flexgen/parsemap"
 )
 
 // cfg is the struct to unmarshal cops.json into
@@ -56,6 +56,7 @@ type cfg struct {
 	thisCtrlrStaticIP       string
 	otherCtrlrStaticIP      string
 	pduIP                   string
+	pduOutletEndpoint       string
 	otherCtrlrOutlet        string
 	processList             []processConfig
 }
@@ -102,17 +103,12 @@ type configurationError struct {
 }
 
 // Global variables
+var cfgDir = "/usr/local/etc/config/cops"
 var processJurisdiction map[string]*processInfo // Map of processes that will be checked to see if they are up and running
 var f fims.Fims                                 // FIMS connection
 var beginningTime time.Time                     // Timestamp of when COPS started running
-var enableRedundantFailover bool
-var controllerName string // Name of the controller machine, used to distinguish the controllers when running failover
-var primaryIP string
-var primaryNetworkInterface string // Virtual interface used to hold the primary IP
-var pduIP string
-var OtherCtrlrOutlet string
 var updatedProcesses []*processInfo
-var c2cRate, heartRate, patrolRate, briefingRate, statsUpdateTicker *time.Ticker // Tickers for main loop
+var heartRate, patrolRate, briefingRate, statsUpdateTicker *time.Ticker // Tickers for main loop
 
 func main() {
 	// parse command line
@@ -128,27 +124,24 @@ func main() {
 	// Configuration & initialization
 	fimsReceive := configureFIMS()
 
-	if cfgSource != "dbi" {
-		log.Infof("Cops config file provided.")
-		if err = readConfigFromFile(cfgSource); err != nil {
-			log.Errorf("Error: %v", err)
-			return
-		}
-	} else {
-		log.Infof("Cops config file not provided.")
-		if err = getDBIConfig(fimsReceive); err != nil {
-			log.Errorf("Error: %v", err)
-			return
-		}
+	log.Infof("Retrieving configuration from %s...", cfgSource)
+	configuration, err := cfgfetch.Retrieve("cops", cfgSource)
+	if err != nil {
+		log.Fatalf("Error retrieving configuration data: %v.", err)
 	}
+	log.Infof("Retrieved the following configuration data: %+v.", configuration)
+
+	if err = handleConfiguration(configuration); err != nil {
+		log.Fatalf("Error handling configuration: %v.", err)
+	}
+
+	getDBIUpdateModeStatus()
 
 	// Operating loop
 	for {
 		select {
 		case msg := <-fimsReceive:
 			processFIMS(msg)
-		case <-c2cRate.C:
-			sendC2CMsg()
 		case <-heartRate.C:
 			manageHeartbeats()
 		case <-patrolRate.C:
@@ -201,7 +194,8 @@ func configureCOPS(config cfg) error {
 
 		// Store the IP of the PDU
 		pduIP = config.pduIP
-		OtherCtrlrOutlet = config.otherCtrlrOutlet
+		pduOutletEndpoint = config.pduOutletEndpoint
+		otherCtrlrOutlet = config.otherCtrlrOutlet
 	}
 
 	tempSource = config.temperatureSource
@@ -223,6 +217,7 @@ func configureCOPS(config cfg) error {
 		processEntry.healthStats.lastConfirmedAlive = beginningTime
 		processEntry.healthStats.lastRestart = beginningTime
 		processEntry.healthStats.totalRestarts = -1 // First startup will increment this to zero
+		processEntry.healthStats.copsRestarts = 0
 		processJurisdiction[process.name] = &processEntry
 	}
 
@@ -237,7 +232,7 @@ func configureCOPS(config cfg) error {
 	if !enableRedundantFailover {
 		takeOverAsPrimary()
 	}
-	c2cRate, heartRate, patrolRate, briefingRate, statsUpdateTicker = startAllTickers(config)
+	heartRate, patrolRate, briefingRate, statsUpdateTicker = startAllTickers(config)
 	return nil
 }
 
@@ -283,21 +278,24 @@ func (process processInfo) isStillHungOrDead() bool {
 }
 
 // Sends a system kill command targeting the passed-in process
-func kill(process *processInfo) {
+func kill(process *processInfo) error {
 	if process.processPtr == nil {
-		log.Errorf("Process pointer is nil. Not possible to send kill command to %s", process.name)
-		return
+		return fmt.Errorf("process pointer is nil, not possible to send kill command to %s", process.name)
 	}
 	err := process.processPtr.Kill()
 	if err != nil {
-		log.Errorf("Error when trying to kill %s. Error: %v", process.name, err)
+		return fmt.Errorf("error when trying to kill %s: %w", process.name, err)
 	}
+	return nil
 }
 
 // Kill the process after `delay` milliseconds have expired
 func delayedkill(process *processInfo, delay int) {
 	time.Sleep(time.Duration(delay) * time.Millisecond)
-	kill(process)
+	err := kill(process)
+	if err != nil {
+		log.Errorf("Failed to send delayed kill signal to %s: %v", process.name, err)
+	}
 }
 
 // Sends latest heartbeats to processes then requests the processes for their recorded heartbeats
@@ -391,48 +389,21 @@ func processFIMS(msg fims.FimsMsg) {
 	}
 }
 
-// Reads in configuration data from the provided file path.
-// If path given is a folder, will try looking for cops.json
-// then configuration.json, in turn.
-func readConfigFromFile(cfgPath string) error {
-	// check that path exists
-	info, err := os.Stat(cfgPath)
-	if os.IsNotExist(err) {
-		return fmt.Errorf("COPS configuration path %s does not exist", cfgPath)
-	}
-	// if path is directory, look for cops.json or configuration.json inside it
-	if info.IsDir() {
-		copsJson := path.Join(cfgPath, "cops.json")
-		configurationJson := path.Join(cfgPath, "configuration.json")
-		if fg.IsFileExist(copsJson) {
-			cfgPath = copsJson
-		} else if fg.IsFileExist(configurationJson) {
-			cfgPath = configurationJson
-		} else {
-			return fmt.Errorf("given directory path %s to find config in, but neither cops.json nor configuration.json was found", cfgPath)
-		}
-	}
-	// read in contents of configuration file
-	configJSON, err := os.ReadFile(cfgPath)
-	if err != nil {
-		return fmt.Errorf("could not read the file %s", cfgPath)
-	}
-	// unmarshal into map
-	configBody := make(map[string]interface{})
-	err = json.Unmarshal(configJSON, &configBody)
-	if err != nil {
-		return fmt.Errorf("could not unmarshal config file to generic map[string]interface{}: %s", err)
-	}
-	// use configuration data to configure COPS
-	return handleConfiguration(configBody)
-}
-
 // Put all FIMS GET hooks here
 func handleGet(msg fims.FimsMsg) {
-	if msg.Uri == "/cops/processStats" {
+	switch msg.Uri {
+	case "/cops/processStats":
 		f.SendSet(msg.Replyto, "", buildHealthStatsMap())
-	} else if msg.Uri == "/cops/healthScore" {
+	case "/cops/healthScore":
 		f.SendSet(msg.Replyto, "", dr.healthCheckup())
+	case "/cops/status":
+		f.SendSet(msg.Replyto, "", statusNames[controllerMode])
+	case "/cops/controller_name":
+		f.SendSet(msg.Replyto, "", controllerName)
+	case "/cops":
+		f.SendSet(msg.Replyto, "", buildBriefingReport())
+	default:
+		log.Errorf("Error in handleSet: message URI doesn't match any known patterns. msg.uri: %s", msg.Uri)
 	}
 }
 
@@ -441,8 +412,7 @@ func handleSet(msg fims.FimsMsg) error {
 	switch {
 	// Set received from UI or command line enabling or disabling Update mode
 	case msg.Uri == "/cops/update_mode":
-		handleUpdateMode(msg)
-		return nil
+		return handleUpdateMode(msg)
 	case msg.Uri == "/cops/configuration":
 		// verify type of FIMS msg body
 		body, ok := msg.Body.(map[string]interface{})
@@ -518,7 +488,7 @@ func handleConfiguration(body map[string]interface{}) error {
 	}
 
 	// Validate each configuration field
-	heartbeatFreqInterface, err := fg.ExtractAsInt(body, "heartbeatFrequencyMS")
+	heartbeatFreqInterface, err := parsemap.ExtractAsInt(body, "heartbeatFrequencyMS")
 	// If error, use default value
 	if err == nil {
 		config.heartbeatFrequencyMS = heartbeatFreqInterface
@@ -526,7 +496,7 @@ func handleConfiguration(body map[string]interface{}) error {
 		log.Warnf("failed to extract heartbeatFrequencyMS from configuration, default value %d used.", config.heartbeatFrequencyMS)
 	}
 
-	patrolFreqInterface, err := fg.ExtractAsInt(body, "patrolFrequencyMS")
+	patrolFreqInterface, err := parsemap.ExtractAsInt(body, "patrolFrequencyMS")
 	// If error, use default value
 	if err == nil {
 		config.patrolFrequencyMS = patrolFreqInterface
@@ -534,7 +504,7 @@ func handleConfiguration(body map[string]interface{}) error {
 		log.Warnf("failed to extract patrolFrequencyMS from configuration, default value %d used.", config.patrolFrequencyMS)
 	}
 
-	briefingFreqInterface, err := fg.ExtractAsInt(body, "briefingFrequencyMS")
+	briefingFreqInterface, err := parsemap.ExtractAsInt(body, "briefingFrequencyMS")
 	// If error, use default value
 	if err == nil {
 		config.briefingFrequencyMS = briefingFreqInterface
@@ -542,7 +512,7 @@ func handleConfiguration(body map[string]interface{}) error {
 		log.Warnf("failed to extract briefingFrequencyMS from configuration, default value %d used.", config.briefingFrequencyMS)
 	}
 
-	cscMsgFreqInterface, err := fg.ExtractAsInt(body, "c2cMsgFrequencyMS")
+	cscMsgFreqInterface, err := parsemap.ExtractAsInt(body, "c2cMsgFrequencyMS")
 	// If error, use default value
 	if err == nil {
 		config.c2cMsgFrequencyMS = cscMsgFreqInterface
@@ -550,13 +520,13 @@ func handleConfiguration(body map[string]interface{}) error {
 		log.Warnf("failed to extract c2cMsgFrequencyMS from configuration, default value %d used.", config.c2cMsgFrequencyMS)
 	}
 
-	tempInterface, err := fg.ExtractValueWithType(body, "temperatureSource", fg.STRING)
+	tempInterface, err := parsemap.ExtractValueWithType(body, "temperatureSource", parsemap.STRING)
 	// If error, unused and do not report
 	if err == nil {
 		config.temperatureSource = tempInterface.(string)
 	}
 
-	failoverInterface, err := fg.ExtractValueWithType(body, "enableRedundantFailover", fg.BOOL)
+	failoverInterface, err := parsemap.ExtractValueWithType(body, "enableRedundantFailover", parsemap.BOOL)
 	// If error, use default value
 	if err == nil {
 		config.enableRedundantFailover = failoverInterface.(bool)
@@ -564,61 +534,11 @@ func handleConfiguration(body map[string]interface{}) error {
 		log.Warnf("failed to extract enableRedundantFailover from configuration, default value %t used.", config.enableRedundantFailover)
 	}
 
-	// Controller name is required when failover is enabled, but optional otherwise
-	controllerNameInterface, err := fg.ExtractValueWithType(body, "controllerName", fg.STRING)
-
-	if config.enableRedundantFailover {
-		// Required controller name configuration
-		if err != nil {
-			return fmt.Errorf("failed to extract controllerName from configuration: %w", err)
-		}
-		config.controllerName = controllerNameInterface.(string)
-
-		primaryIPInterface, err := fg.ExtractValueWithType(body, "primaryIP", fg.STRING)
-		if err != nil {
-			return fmt.Errorf("failed to extract primaryIP from configuration: %w", err)
-		}
-		config.primaryIP = primaryIPInterface.(string)
-
-		primaryNetInterface, err := fg.ExtractValueWithType(body, "primaryNetworkInterface", fg.STRING)
-		if err != nil {
-			return fmt.Errorf("failed to extract primaryNetworkInterface from configuration: %w", err)
-		}
-		config.primaryNetworkInterface = primaryNetInterface.(string)
-
-		thisCtrlrIPInterface, err := fg.ExtractValueWithType(body, "thisCtrlrStaticIP", fg.STRING)
-		if err != nil {
-			return fmt.Errorf("failed to extract thisCtrlrStaticIP from configuration: %w", err)
-		}
-		config.thisCtrlrStaticIP = thisCtrlrIPInterface.(string)
-
-		otherCtrlrIPInterface, err := fg.ExtractValueWithType(body, "otherCtrlrStaticIP", fg.STRING)
-		if err != nil {
-			return fmt.Errorf("failed to extract otherCtrlrStaticIP from configuration: %w", err)
-		}
-		config.otherCtrlrStaticIP = otherCtrlrIPInterface.(string)
-
-		pduIPInterface, err := fg.ExtractValueWithType(body, "pduIP", fg.STRING)
-		if err != nil {
-			return fmt.Errorf("failed to extract pduIP from configuration: %w", err)
-		}
-		config.pduIP = pduIPInterface.(string)
-
-		otherOutletInterface, err := fg.ExtractValueWithType(body, "otherCtrlrOutlet", fg.STRING)
-		if err != nil {
-			return fmt.Errorf("failed to extract otherCtrlrOutlet from configuration: %w", err)
-		}
-		config.otherCtrlrOutlet = otherOutletInterface.(string)
-	} else {
-		// Optional controller name configuration
-		if err == nil {
-			config.controllerName = controllerNameInterface.(string)
-		} else {
-			log.Warnf("failed to extract controllerName from configuration, will not be published")
-		}
+	if err = configureFailover(body, &config); err != nil {
+		return fmt.Errorf("failover configuration error: %w", err)
 	}
 
-	processListInterface, err := fg.ExtractValueWithType(body, "processList", fg.INTERFACE_SLICE)
+	processListInterface, err := parsemap.ExtractValueWithType(body, "processList", parsemap.INTERFACE_SLICE)
 	// Process list most be provided and include at least one entry
 	if err != nil {
 		return fmt.Errorf("failed to extract processList from configuration: %w", err)
@@ -642,19 +562,19 @@ func handleConfiguration(body map[string]interface{}) error {
 			configRestart:            true,
 		}
 
-		procNameInterface, err := fg.ExtractValueWithType(procObj, "name", fg.STRING)
+		procNameInterface, err := parsemap.ExtractValueWithType(procObj, "name", parsemap.STRING)
 		if err != nil {
 			return fmt.Errorf("failed to extract name from process %d object configuration: %w", procId, err)
 		}
 		procEntry.name = procNameInterface.(string)
 
-		procUriInterface, err := fg.ExtractValueWithType(procObj, "uri", fg.STRING)
+		procUriInterface, err := parsemap.ExtractValueWithType(procObj, "uri", parsemap.STRING)
 		if err != nil {
 			return fmt.Errorf("failed to extract uri from process %d object configuration: %w", procId, err)
 		}
 		procEntry.uri = procUriInterface.(string)
 
-		procHangInterface, err := fg.ExtractValueWithType(procObj, "killOnHang", fg.BOOL)
+		procHangInterface, err := parsemap.ExtractValueWithType(procObj, "killOnHang", parsemap.BOOL)
 		// If error, use default value
 		if err == nil {
 			procEntry.killOnHang = procHangInterface.(bool)
@@ -662,7 +582,7 @@ func handleConfiguration(body map[string]interface{}) error {
 			log.Warnf("failed to extract killOnHang from process %d object configuration, default value %t used.", procId, procEntry.killOnHang)
 		}
 
-		procHealthInterface, err := fg.ExtractValueWithType(procObj, "requiredForHealthyStatus", fg.BOOL)
+		procHealthInterface, err := parsemap.ExtractValueWithType(procObj, "requiredForHealthyStatus", parsemap.BOOL)
 		// If error, use default value
 		if err == nil {
 			procEntry.requiredForHealthyStatus = procHealthInterface.(bool)
@@ -670,7 +590,7 @@ func handleConfiguration(body map[string]interface{}) error {
 			log.Warnf("failed to extract requiredForHealthyStatus from process %d object configuration, default value %t used.", procId, procEntry.requiredForHealthyStatus)
 		}
 
-		procHangTimeInterface, err := fg.ExtractAsInt(procObj, "hangTimeAllowanceMS")
+		procHangTimeInterface, err := parsemap.ExtractAsInt(procObj, "hangTimeAllowanceMS")
 		// If error, use default value
 		if err == nil {
 			procEntry.hangTimeAllowanceMS = procHangTimeInterface
@@ -678,7 +598,7 @@ func handleConfiguration(body map[string]interface{}) error {
 			log.Warnf("failed to extract hangTimeAllowanceMS from process %d object configuration, default value %d used.", procId, procEntry.hangTimeAllowanceMS)
 		}
 
-		procRestartInterface, err := fg.ExtractValueWithType(procObj, "configRestart", fg.BOOL)
+		procRestartInterface, err := parsemap.ExtractValueWithType(procObj, "configRestart", parsemap.BOOL)
 		// If error, use default value
 		if err == nil {
 			procEntry.configRestart = procRestartInterface.(bool)
@@ -686,7 +606,7 @@ func handleConfiguration(body map[string]interface{}) error {
 			log.Warnf("failed to extract configRestart from process %d object configuration, default value %t used.", procId, procEntry.configRestart)
 		}
 
-		writeOutInterface, err := fg.ExtractValueWithType(procObj, "writeOutC2C", fg.INTERFACE_SLICE)
+		writeOutInterface, err := parsemap.ExtractValueWithType(procObj, "writeOutC2C", parsemap.INTERFACE_SLICE)
 		if err != nil {
 			return fmt.Errorf("failed to extract writeOutC2C list from process %d object configuration: %w", procId, err)
 		}
@@ -711,7 +631,7 @@ func handleDBIUpdate(msg fims.FimsMsg) {
 
 	// Send the document we got from DBI for this uri
 	// Sets will be received and written through C2C one-by-one, with the last set containing the uri keyword /dbi_update_complete
-	queueC2CMsg(fimsToC2C("SetDBIUpdate", msg.Uri, msg.Body))
+	sendC2CMsg(fimsToC2C("SetDBIUpdate", msg.Uri, msg.Body))
 }
 
 // Handles writing out setpoint data. If in Update mode, also tracks any processes that have been updated in order to restart them as needed
@@ -719,7 +639,7 @@ func handleSetpointWriteout(msg fims.FimsMsg, process *processInfo) {
 	// Writeout our setpoint sent from our process to the other process
 	if controllerMode == Primary {
 		// Convert the setpoint message to a C2C message and send to the secondary process
-		queueC2CMsg(fimsToC2C("Setpoints", msg.Uri, msg.Body))
+		sendC2CMsg(fimsToC2C("Setpoints", msg.Uri, msg.Body))
 		return
 	} else if controllerMode == Update {
 		// If updating, record all processes that have received updates so they can be restarted on exiting the mode
@@ -729,18 +649,46 @@ func handleSetpointWriteout(msg fims.FimsMsg, process *processInfo) {
 	}
 }
 
-func handleUpdateMode(msg fims.FimsMsg) {
+// Handle a set to update mode coming from either ansible or dbi
+func handleUpdateMode(msg fims.FimsMsg) error {
+	var interfaceBody interface{}
+	// Parse response from dbi that will be parsed as map[string]interface{}
+	if mapBody, ok := msg.Body.(map[string]interface{}); ok {
+		// Ignore empty response when no document exists
+		if len(mapBody) == 0 {
+			return nil
+		}
+		if interfaceBody, ok = mapBody["update_mode"]; !ok {
+			return fmt.Errorf("failed to extract update_mode entry from map %v", mapBody)
+		}
+	} else {
+		interfaceBody = msg.Body
+	}
+	// Parse single bool sent from ansible or by hand
+	body, ok := interfaceBody.(bool)
+	if !ok {
+		return fmt.Errorf("expected Update Mode value to be a bool, but received %T instead", msg.Body)
+	}
+
+	// Save the update mode bool received
+	f.SendSet("/dbi/cops/update_mode", "", map[string]interface{}{"update_mode": body})
+
 	// Update mode enabled
-	if msg.Body == true {
+	if body {
+		log.Infof("Locking this controller into update mode")
 		controllerMode = Update
 	} else if controllerMode == Update {
+		log.Infof("Exiting this controller from update mode")
 		// Received exit update mode signal
 		for _, process := range updatedProcesses {
 			// If the process requires a restart in order to properly configure such as site controller, restart it
 			if process.configRestart {
 				// The process may have no fully started up with a PID yet, delay it's restart then kill to ensure
 				// all of the latest configuration has been read
-				kill(process)
+				err := kill(process)
+				if err != nil {
+					log.Errorf("Failed to send kill signal to %s in attempt to ensure latest configuration: %v", process.name, err)
+				}
 			} else {
 				// Notify the process's (optional) dbi_update endpoint
 				// This endpoint is used for processes that support reading configuration data on the fly such as scheduler
@@ -753,6 +701,7 @@ func handleUpdateMode(msg fims.FimsMsg) {
 		// This will also sync the db of other controller (now secondary) with this controller's updated db
 		takeOverAsPrimary()
 	}
+	return nil
 }
 
 // Handles the given heartbeat reply message and associated process
@@ -816,8 +765,7 @@ func sendHeartbeats() {
 }
 
 // Returns all COPS tickers when given their frequencies
-func startAllTickers(config cfg) (c2cRate, heartRate, patrolRate, briefingRate, statsUpdateRate *time.Ticker) {
-	c2cRate = startTicker(config.c2cMsgFrequencyMS)
+func startAllTickers(config cfg) (heartRate, patrolRate, briefingRate, statsUpdateRate *time.Ticker) {
 	heartRate = startTicker(config.heartbeatFrequencyMS)
 	patrolRate = startTicker(config.patrolFrequencyMS)
 	briefingRate = startTicker(config.briefingFrequencyMS)
@@ -834,9 +782,19 @@ func startTicker(rawTickFreqMS int) *time.Ticker {
 // Takes necessary failure actions on a process that has been newly declared hung or dead
 func takeFailureAction(process *processInfo) {
 	log.Infof("Failure: Process %s declared hung or dead. Last confirmed alive at %s. Sending alarm notification to events.", process.name, process.healthStats.lastConfirmedAlive.String())
-	sendAlarm("Process " + process.name + " is hung or dead")
+	processHungMsg := fmt.Sprintf("Process %s is hung or dead (last confirmed alive at %v).", process.name, process.healthStats.lastConfirmedAlive.Round(time.Millisecond))
 	if process.killOnHang {
-		kill(process)
+		sendAlarm(processHungMsg + " Sending kill signal.")
+		err := kill(process)
+		if err != nil {
+			log.Errorf("Failed to send kill signal to %s: %v", process.name, err)
+			sendAlarm(fmt.Sprintf("Failed to send kill signal to process %s.", process.name))
+		} else {
+			sendAlarm(fmt.Sprintf("Successfully sent kill signal to process %s.", process.name))
+			process.healthStats.copsRestarts++
+		}
+	} else {
+		sendAlarm(processHungMsg)
 	}
 	process.alive = false
 }
@@ -870,29 +828,12 @@ func (process *processInfo) updatePID(readPID int) {
 	}
 }
 
-// Request to DBI for configuration
-func getDBIConfig(fimsReceive chan fims.FimsMsg) error {
-	configurationTimeout := time.NewTicker(10 * time.Second)
-	defer configurationTimeout.Stop()
-	for {
-		// Read config from dbi
-		f.SendGet("/dbi/cops/configuration", "/cops/configuration")
-		// Loop until valid configuration is received
-		select {
-		case msg := <-fimsReceive:
-			// verify type of FIMS msg body
-			body, ok := msg.Body.(map[string]interface{})
-			if !ok {
-				return fmt.Errorf("expected DBI configuration of the form map[string]interface{}, but received %T", body)
-			}
-			// Ignore empty response {} from DBI
-			if len(body) == 0 {
-				return fmt.Errorf("expected DBI configuration document, but it was empty")
-			}
-			return handleConfiguration(body)
-		case <-configurationTimeout.C:
-			continue
-		}
+// Check if the controller was previously put into update mode
+// If no response is received, simply continue
+func getDBIUpdateModeStatus() {
+	err := f.SendGet("/dbi/cops/update_mode", "/cops/update_mode")
+	if err != nil {
+		log.Errorf("error getting update_mode status from dbi: %v", err)
 	}
 }
 
@@ -915,15 +856,20 @@ func getDBIUpdate() {
 	}
 }
 
-// Update resource usage data and pub all process health statistics over FIMS
+// Pub all process health statistics over FIMS
 func publishBriefing() {
-	// Prevent a failure here from crashing all of COPS
+	// prevent a failure here from crashing all of COPS
 	defer func() {
 		if r := recover(); r != nil {
 			log.Errorf("Error with briefing publish: %v", r)
 		}
 	}()
-	f.SendPub("/cops", buildBriefingReport())
+	// publish summary data
+	f.SendPub("/cops/summary", buildBriefingReport())
+	// publish process health statistics
+	for _, process := range processJurisdiction {
+		f.SendPub("/cops/stats/"+process.name, process.buildStatsReport())
+	}
 }
 
 // Builds a map containing general information desired by external processes
@@ -934,17 +880,6 @@ func buildBriefingReport() map[string]interface{} {
 		briefingReport["controller_name"] = controllerName
 	}
 	briefingReport["status"] = statusNames[controllerMode]
-	var processBriefings []map[string]interface{}
-	// Add process info
-	for _, process := range processJurisdiction {
-		procObj := make(map[string]interface{})
-		procBriefing := make(map[string]interface{})
-		procBriefing["version"] = process.buildVersionReport()
-		procBriefing["health_stats"] = process.buildStatsReport()
-		procObj[process.name] = procBriefing
-		processBriefings = append(processBriefings, procObj)
-	}
-	briefingReport["processes"] = processBriefings
 	// Add the temperature only if a source is provided
 	if len(tempSource) != 0 {
 		systemTemp, err := readSystemTemp()
@@ -955,15 +890,6 @@ func buildBriefingReport() map[string]interface{} {
 		}
 	}
 	return briefingReport
-}
-
-// Create object with a process's version info
-func (process processInfo) buildVersionReport() map[string]interface{} {
-	versionReport := make(map[string]interface{})
-	versionReport["tag"] = process.version.tag
-	versionReport["commit"] = process.version.commit
-	versionReport["build"] = process.version.build
-	return versionReport
 }
 
 // `getProcess` searches the processJurisdiction for a process with the given

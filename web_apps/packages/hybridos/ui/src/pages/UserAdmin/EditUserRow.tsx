@@ -1,18 +1,18 @@
 import { Box, MuiButton } from '@flexgen/storybook';
 import { FunctionComponent, useContext, useState } from 'react';
 import { PasswordOptions } from 'shared/types/api/Users/Users.types';
-import { userRowButtonsSx, userRowSx } from 'src/pages/UserAdmin/UserAdmin.styles';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import { userRowButtonsSx, userRowSx } from 'src/pages/UserAdmin/UserAdmin.styles';
 import UserRow from 'src/pages/UserAdmin/UserRow';
 
 export interface RowContentsProps {
-  user: any
-  updateUserData: () => void
-  setIsLoading: (state: boolean) => void
-  showDeveloper?: boolean
-  passwordOptions: PasswordOptions
-  oldPasswords: number
+  user: any;
+  updateUserData: () => void;
+  setIsLoading: (state: boolean) => void;
+  showDeveloper?: boolean;
+  passwordOptions: PasswordOptions;
+  oldPasswords: number;
 }
 
 const EditUserRow: FunctionComponent<RowContentsProps> = ({
@@ -21,9 +21,9 @@ const EditUserRow: FunctionComponent<RowContentsProps> = ({
   setIsLoading,
   showDeveloper,
   passwordOptions,
-  oldPasswords
+  oldPasswords,
 }: RowContentsProps) => {
-  const axiosInstance = useAxiosWebUIInstance();
+  const axiosInstance = useAxiosWebUIInstance(true);
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
 
   const [userData, setUserData] = useState<any>({});
@@ -45,13 +45,10 @@ const EditUserRow: FunctionComponent<RowContentsProps> = ({
     try {
       setIsLoading(true);
       await axiosInstance.delete(`/users/${user.id}`);
-      notifCtx?.notif('success', 'Successfully deleted User');
+      notifCtx?.notif('success', 'Successfully deleted user');
       updateUserData();
     } catch (axiosError: any) {
-      notifCtx?.notif(
-        'error',
-        `Error deleting user: ${axiosError.response.data.message}`,
-      );
+      notifCtx?.notif('error', `Error deleting user: ${axiosError.response.data.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -70,14 +67,11 @@ const EditUserRow: FunctionComponent<RowContentsProps> = ({
       .put(`/users/${user.id}`, userData)
       .then(
         () => {
-          notifCtx?.notif('success', 'Successfully updated User');
+          notifCtx?.notif('success', 'Successfully updated user');
           updateUserData();
         },
         (axiosError) => {
-          notifCtx?.notif(
-            'error',
-            `Error updating user: ${axiosError.response.data.message}`,
-          );
+          notifCtx?.notif('error', `Error updating user: ${axiosError.response.data.message}`);
         },
       )
       .then(() => setIsLoading(false));

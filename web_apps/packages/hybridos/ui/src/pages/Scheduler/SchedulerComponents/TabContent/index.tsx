@@ -23,7 +23,7 @@ const TabContent = ({
       <UnconfiguredContainer />
     )}
     {schedulerTab === schedulerLabels.modeManagerTab.value && configured && (
-      <ModeManager schedulerType={schedulerType} />
+      <ModeManager schedulerType={schedulerType} setIsLoading={setIsLoading} />
     )}
     {schedulerTab === schedulerLabels.modeManagerTab.value && !configured && (
       <UnconfiguredContainer />
@@ -32,6 +32,7 @@ const TabContent = ({
       <SiteFleetConfig
         configured={configured}
         schedulerType={schedulerType}
+        setIsLoading={setIsLoading}
       />
     )}
   </>

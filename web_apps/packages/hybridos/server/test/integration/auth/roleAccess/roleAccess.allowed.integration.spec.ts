@@ -10,6 +10,7 @@ import request from './../../../testReqAgent'
 import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 describe('Role Access - Allowed (Integration)', () => {
     let app: INestApplication
@@ -18,7 +19,7 @@ describe('Role Access - Allowed (Integration)', () => {
     let ADMIN_ACCESS_TOKEN: string
     let USER_ACCESS_TOKEN: string
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         const mongoServer = await MongoMemoryServer.create()
 
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -26,6 +27,8 @@ describe('Role Access - Allowed (Integration)', () => {
         })
             .overrideProvider(AppEnvService)
             .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+            .overrideProvider(PermissionsService)
+            .useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer
@@ -39,14 +42,13 @@ describe('Role Access - Allowed (Integration)', () => {
 
     beforeEach(async () => {
         ADMIN_ACCESS_TOKEN = await testUtils.generateAdminAccessToken(app, db)
-        USER_ACCESS_TOKEN = await testUtils.generateUserAccessToken(app, db)
     })
 
     describe('allowed to access protected routes', () => {
         describe('siteAdmins routes', () => {
-            const URL = '/app-settings'
+            const URL = '/site-admins'
 
-            it('GET /app-settings', async () => {
+            it('GET /site-admins', async () => {
                 return await request(app.getHttpServer())
                     .get(URL)
                     .set('Authorization', ADMIN_ACCESS_TOKEN)
@@ -55,7 +57,7 @@ describe('Role Access - Allowed (Integration)', () => {
                     })
             })
 
-            it('POST /app-settings', async () => {
+            it('POST /site-admins', async () => {
                 const requestBody = testUtils.site(false, false, false)
 
                 return await request(app.getHttpServer())
@@ -67,7 +69,7 @@ describe('Role Access - Allowed (Integration)', () => {
                     })
             })
 
-            it('POST /app-settings/radius-test', async () => {
+            it('POST /site-admins/radius-test', async () => {
                 const requestBody = {
                     ipAddress: '127.0.0.1',
                     port: '8080',
@@ -100,6 +102,7 @@ describe('Role Access - Allowed (Integration)', () => {
             })
 
             it('GET /users can be accessed by a user', async () => {
+                USER_ACCESS_TOKEN = await testUtils.generateUserAccessToken(app, db)
                 return await request(app.getHttpServer())
                     .get(URL)
                     .set('Authorization', USER_ACCESS_TOKEN)

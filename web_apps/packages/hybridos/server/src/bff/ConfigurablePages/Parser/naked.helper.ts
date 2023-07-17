@@ -1,175 +1,253 @@
-import { computeNakedValue } from 'src/utils/utils'
+import { computeNakedValue } from 'src/utils/utils';
 import {
-    ControlComponentDTO,
-    ControlType,
-    DisplayGroupDTO,
-    StatusComponentDTO,
-    ValueType,
-} from 'shared/types/dtos/configurablePages.dto'
+  ControlComponentDTO,
+  ControlType,
+  DisplayGroupDTO,
+  StatusComponentDTO,
+  ValueType,
+} from 'shared/types/dtos/configurablePages.dto';
 
 import {
-    nakedBodyFromFims,
-    metadataFromDBI,
-    individualClothedBody,
-    statusDataFromNakedBody,
-    controlDataFromNakedBody,
-    controlObjectForNakedBody,
-    statusComponentStateInfo,
-    controlComponentStateInfo,
-    ControlTypes,
-} from '../configurablePages.types'
+  nakedBodyFromFims,
+  metadataFromDBI,
+  individualClothedBody,
+  statusDataFromNakedBody,
+  controlDataFromNakedBody,
+  controlObjectForNakedBody,
+  statusComponentStateInfo,
+  controlComponentStateInfo,
+  ControlTypes,
+} from '../configurablePages.types';
+import { scan } from 'rxjs';
+import { SiteConfiguration } from 'src/webuiconfig/webUIConfig.interface';
 
 // TODO: finalize this method
 export const parseNakedData = (
-    rawData: nakedBodyFromFims,
-    metaData: metadataFromDBI,
-    includeStatic: boolean,
-    enableAssetPageControls: boolean,
+  rawData: nakedBodyFromFims,
+  setLockMode: (state: boolean) => void,
+  metaData: metadataFromDBI,
+  includeStatic: boolean,
+  enableAssetPageControls: boolean,
+  siteConfiguration: SiteConfiguration,
 ): DisplayGroupDTO => {
-    const displayGroupDTO: DisplayGroupDTO = {
-        status: parseNakedBodyStatus(rawData, metaData, includeStatic),
-        control: parseNakedBodyControl(rawData, metaData, includeStatic, enableAssetPageControls),
-        fault: parseNakedBodyFault(rawData, metaData),
-        alarm: parseNakedBodyAlarm(rawData, metaData),
-    }
+  const displayGroupDTO: DisplayGroupDTO = {
+    status: parseNakedBodyStatus(rawData, metaData, includeStatic),
+    control: parseNakedBodyControl(
+      rawData,
+      setLockMode,
+      metaData,
+      includeStatic,
+      enableAssetPageControls,
+      siteConfiguration,
+    ),
+    fault: parseNakedBodyFault(rawData, metaData),
+    alarm: parseNakedBodyAlarm(rawData, metaData),
+  };
 
-    return displayGroupDTO
-}
+  return displayGroupDTO;
+};
 
 const parseNakedBodyStatus = (
-    rawData: nakedBodyFromFims,
-    metaData: metadataFromDBI,
-    includeStatic: boolean
+  rawData: nakedBodyFromFims,
+  metaData: metadataFromDBI,
+  includeStatic: boolean,
 ): { [componentID: string]: StatusComponentDTO } => {
-    const aggregatedDTOs: { [componentID: string]: StatusComponentDTO } = {}
+  const aggregatedDTOs: { [componentID: string]: StatusComponentDTO } = {};
 
-    metaData.statuses.forEach((status: statusDataFromNakedBody) => {
-        const componentID = status.uri.slice(1)
+  metaData.statuses.forEach((status: statusDataFromNakedBody) => {
+    const componentID = status.uri.slice(1);
 
-        if (!rawData[componentID]) {
-            return
-        }
+    if (rawData[componentID] === undefined || rawData[componentID] === null) {
+      return;
+    }
 
-        const rawValue = rawData[componentID] as ValueType // actual value from naked body data
+    const rawValue = rawData[componentID]; // actual value from naked body data
 
-        const actualValue =
-            typeof rawValue === 'number'
-                ? computeNakedValue(rawValue, Number(status.scalar))
-                : rawValue
+    const computeValue: ValueType =
+      rawValue !== null && typeof rawValue === 'object' ? rawValue.value : rawValue;
 
-        aggregatedDTOs[componentID] = {
-            state: {
-                value: actualValue,
-            },
-        }
+    const scalar =
+      status.scalar && (typeof status.scalar === 'number' || !isNaN(Number(status.scalar)))
+        ? Number(status.scalar)
+        : 1;
 
-        if (!includeStatic) {
-            return
-        }
+    const { value: actualValue } =
+      typeof computeValue === 'number'
+        ? computeNakedValue(computeValue, scalar, status.units ?? '')
+        : { value: computeValue };
 
-        aggregatedDTOs[componentID].static = {
-            label: status.name,
-            unit: status.units,
-        }
-    })
+    aggregatedDTOs[componentID] = {
+      state: {
+        value: actualValue,
+      },
+    };
 
-    return aggregatedDTOs
-}
+    if (!includeStatic) {
+      return;
+    }
+
+    aggregatedDTOs[componentID].static = {
+      label: status.name,
+      unit: status.units,
+    };
+  });
+
+  return aggregatedDTOs;
+};
 
 const parseNakedBodyControl = (
-    rawData: nakedBodyFromFims,
-    metaData: metadataFromDBI,
-    includeStatic: boolean,
-    enableAssetPageControls: boolean,
+  rawData: nakedBodyFromFims,
+  setLockMode: (state: boolean) => void,
+  metaData: metadataFromDBI,
+  includeStatic: boolean,
+  enableAssetPageControls: boolean,
+  siteConfiguration: SiteConfiguration,
 ): { [componentID: string]: ControlComponentDTO } => {
-    const aggregatedDTOs: { [componentID: string]: ControlComponentDTO } = {}
+  const aggregatedDTOs: { [componentID: string]: ControlComponentDTO } = {};
 
-    metaData.controls.forEach((control: controlDataFromNakedBody) => {
-        const componentID = control.uri.slice(1)
+  const lockModeStatus: controlObjectForNakedBody = rawData[
+    'lock_mode'
+  ] as controlObjectForNakedBody;
+  setLockMode(!!lockModeStatus?.value);
 
-        if (!rawData[componentID]) {
-            return
-        }
+  metaData.controls.forEach((control: controlDataFromNakedBody) => {
+    const componentID = control.uri.slice(1);
 
-        aggregatedDTOs[componentID] = {
-            state: {
-                enabled: setControlEnabled(
-                    enableAssetPageControls,
-                    (rawData[componentID] as controlObjectForNakedBody).enabled
-                ),
-            },
-        }
+    if (!rawData[componentID]) {
+      return;
+    }
 
-        if (rawData[componentID].hasOwnProperty('value')) {
-            const rawValue = (rawData[componentID] as controlObjectForNakedBody).value
-            const trueValue =
-                typeof rawValue === 'number'
-                    ? computeNakedValue(rawValue, Number(control.scalar))
-                    : rawValue
-            aggregatedDTOs[componentID].state.value = trueValue
-        }
+    aggregatedDTOs[componentID] = {
+      state: {
+        enabled: setControlEnabled(
+          enableAssetPageControls,
+          (rawData[componentID] as controlObjectForNakedBody).enabled,
+        ),
+      },
+    };
 
-        if (!includeStatic) {
-            return
-        }
+    let trueScalar = 1;
+    if (rawData[componentID].hasOwnProperty('value')) {
+      const rawValue = rawData[componentID];
 
-        aggregatedDTOs[componentID].static = {
-            label: control.name,
-            unit: control.units,
-            scalar: Number(control.scalar),
-            controlType:
-                control.name === ControlTypes.MaintenaceMode
-                    ? 'maint_mode_slider'
-                    : (control.inputType as ControlType),
-        }
-    })
+      const computeValue: ValueType =
+        rawValue !== null && typeof rawValue === 'object' ? rawValue.value : rawValue;
 
-    return aggregatedDTOs
-}
+      const scalar =
+        control.scalar && (typeof control.scalar === 'number' || !isNaN(Number(control.scalar)))
+          ? Number(control.scalar)
+          : 1;
+
+      if (includeStatic) {
+        // first run
+        const { scalar: newScalar } =
+          control.inputType === 'number'
+            ? computeNakedValue(undefined, scalar, control.units ?? '')
+            : { scalar: trueScalar };
+        trueScalar = newScalar;
+        aggregatedDTOs[componentID].state.value = computeValue;
+      } else {
+        const { value: trueValue, scalar: newScalar } =
+          typeof computeValue === 'number'
+            ? computeNakedValue(computeValue, scalar, control.units ?? '')
+            : { value: computeValue, scalar: trueScalar };
+
+        aggregatedDTOs[componentID].state.value = trueValue;
+        trueScalar = newScalar;
+      }
+    }
+
+    if (!includeStatic) {
+      return;
+    }
+
+    aggregatedDTOs[componentID].static = {
+      label: control.name,
+      unit: control.units ?? '',
+      scalar: trueScalar,
+      controlType: control.inputType as ControlType,
+    };
+
+    if (control.inputType === 'enum') {
+      const optionsArray = (rawData[componentID] as controlObjectForNakedBody).options.map(
+        (option) => {
+          return {
+            name: option.name,
+            value: option.return_value.toString(),
+          };
+        },
+      );
+
+      aggregatedDTOs[componentID].static = {
+        ...aggregatedDTOs[componentID].static,
+        extraProps: { options: optionsArray },
+      };
+    }
+
+    if (control.name === ControlTypes.MaintenaceMode) {
+      aggregatedDTOs[componentID].static.controlType = 'maint_mode_slider';
+
+      aggregatedDTOs[componentID].static.extraProps = {
+        ...aggregatedDTOs[componentID].static.extraProps,
+        product: siteConfiguration.product,
+      };
+    }
+  });
+
+  return aggregatedDTOs;
+};
 
 const parseNakedBodyAlarm = (rawData: nakedBodyFromFims, metaData: metadataFromDBI): string[] => {
-    const stateData: string[] = []
+  const stateData: string[] = [];
 
-    const fieldsToCheck = metaData.info['alarmFields']
+  const fieldsToCheck = metaData.info['alarmFields'];
 
-    fieldsToCheck.forEach((field: string) => {
-        if (!rawData[field] || rawData[field] === '0' || !isIndividualClothedBody(rawData[field]))
-            return
+  fieldsToCheck.forEach((field: string) => {
+    if (!rawData[field] || rawData[field] === '0' || !isIndividualClothedBody(rawData[field]))
+      return;
 
-        const alarmInfo = rawData[field] as individualClothedBody
-        alarmInfo.options.forEach((option) => {
-            stateData.push(option.name)
-        })
-    })
+    const alarmInfo = rawData[field] as individualClothedBody;
+    if ('options' in alarmInfo) {
+      alarmInfo.options.forEach((option) => {
+        stateData.push(option.name);
+      });
+    } else if ('value' in alarmInfo && Number(alarmInfo.value) > 0) {
+      stateData.push(alarmInfo.name);
+    }
+  });
 
-    return stateData
-}
+  return stateData;
+};
 
 const parseNakedBodyFault = (rawData: nakedBodyFromFims, metaData: metadataFromDBI): string[] => {
-    const stateData: string[] = []
+  const stateData: string[] = [];
 
-    const fieldsToCheck = metaData.info['faultFields']
+  const fieldsToCheck = metaData.info['faultFields'];
 
-    fieldsToCheck.forEach((field: string) => {
-        if (!rawData[field] || rawData[field] === '0' || !isIndividualClothedBody(rawData[field]))
-            return
+  fieldsToCheck.forEach((field: string) => {
+    if (!rawData[field] || rawData[field] === '0' || !isIndividualClothedBody(rawData[field]))
+      return;
 
-        const faultInfo = rawData[field] as individualClothedBody
-        faultInfo.options.forEach((option) => {
-            stateData.push(option.name)
-        })
-    })
+    const faultInfo = rawData[field] as individualClothedBody;
+    if ('options' in faultInfo) {
+      faultInfo.options.forEach((option) => {
+        stateData.push(option.name);
+      });
+    } else if ('value' in faultInfo && Number(faultInfo.value) > 0) {
+      stateData.push(faultInfo.name);
+    }
+  });
 
-    return stateData
-}
+  return stateData;
+};
 
 const isIndividualClothedBody = (
-    data: statusComponentStateInfo | controlComponentStateInfo | individualClothedBody
+  data: statusComponentStateInfo | controlComponentStateInfo | individualClothedBody,
 ): data is individualClothedBody => {
-    return data.hasOwnProperty('options')
-}
+  return data.hasOwnProperty('options');
+};
 
 const setControlEnabled = (enableAssetPageControls: boolean, currentValue: boolean) => {
-    const enableControl = enableAssetPageControls ? currentValue : false
-    return enableControl
-}
+  const enableControl = enableAssetPageControls ? currentValue : false;
+  return enableControl;
+};

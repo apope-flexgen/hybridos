@@ -1,0 +1,487 @@
+{
+    "/notes/##BMS_ID##": {
+        "note1":"This is the bms component config template for CATL subsystems.",
+        "note1a":"The bms page of the ui display is outlined in /assets/bms/summay",
+        "note1b":"The /assets/##BMS_ID## table defines the racks or battery management unit, each has a template file with placements for selected key words",
+        "note2": "The /config/bms area is still under development",
+        "note3":"The /components/catl... tables define the incoming control words from the bms modbus interface",
+        "note4":"The /links/<bms> table  defines mapping of external interface components to internal control variables",
+        "note5":"There are some junk/test fields as well... they will removed soon"
+    },
+    "/system/##BMS_ID##": {
+        "id": "##BMS_ID##",
+        "name": "BMS Battery  Block ##BMS_NUM##"
+    },
+    "/config/##BMS_ID##": {
+        "Pubs": "/assets/bms/##BMS_ID##",
+        "BlockSets": "/status/ess, /status/bms, /status/bms_1, /status/bms_2 ",
+        "AlarmDestination": "/assets/bms/##BMS_ID##:alarms",
+        "FaultDestination": "/assets/bms/##BMS_ID##:faults",
+        "NoFaultMsg": "Normal",
+        "NoAlarmMsg": "Normal"
+    },
+    "/assets/bms/##BMS_ID##": {
+        "name": "Battery Rack ##BMS_NUM##",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "soc": {
+            "name": "State of Charge",
+            "value": 76.55913543701172,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soh": {
+            "name": "State of Health",
+            "value": 45.67,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_voltage": {
+            "name": "System Voltage",
+            "value": 0,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_current": {
+            "name": "System Current",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_power": {
+            "name": "System Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_voltage": {
+            "name": "Max Cell Voltage",
+            "value": 27,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_voltage": {
+            "name": "Min Cell Voltage",
+            "value": 22,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "avg_cell_voltage": {
+            "name": "Avg Cell Voltage",
+            "value": 22,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_temp": {
+            "name": "Max Cell Temperature",
+            "value": 27,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_temp": {
+            "name": "Min Cell Temperature",
+            "value": 22,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "avg_cell_temp": {
+            "name": "Avg Cell Temperature",
+            "value": 22,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_charge_current": {
+            "name": "Max Charge Current Allowed",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_discharge_current": {
+            "name": "Max Discharge Current Allowed",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "sbmu_door_state_ui": {
+            "name": "Door State",
+            "value": "Off",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "dc_contactor_status": {
+            "name": "Contactor Status",
+            "value": "Open",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri":	"/assets/bms/##BMS_ID##:clear_faults@enabled"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No","return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet":[{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap":[
+                        {"ifChanged": false, "outValue":"Clear","uri":"/faults/##BMS_ID##:clear_faults"},
+                        {"ifChanged": false, "outValue":"Clear","uri":"/alarms/##BMS_ID##:clear_alarms"},
+
+                        {"ifChanged": false, "outValue":0,"uri":"/site/ess_ls:##BMS_ID##_alarms"},
+                        {"ifChanged": false, "outValue":0,"uri":"/site/ess_ls:##BMS_ID##_faults1"},
+						{"ifChanged": false, "outValue":0,"uri":"/site/ess_ls:##BMS_ID##_faults2"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": "Clear"
+                }
+            ]
+        }
+    },
+    "/links/##BMS_ID##": {
+        "sbmu_voltage": {
+            "value": "/components/catl_##BMS_ID##:sbmu_voltage"
+        },
+        "sbmu_current": {
+            "value": "/components/catl_##BMS_ID##:sbmu_current"
+        }
+    },
+
+    "/schedule/wake_monitor/##BMS_ID##":{
+        "/status/##BMS_ID##:SBMUPower":          { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:OverCurrentFault":   { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:UnderCurrentFault":  { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:OverCurrentAlarm":   { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:UnderCurrentAlarm":  { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:OverCurrentDerate":  { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:UnderCurrentDerate": { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:CurrentMeanDiff":    { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:DCClosed":           { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:SBMUCurrentFilt":    { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+        "/status/##BMS_ID##:PoweredOn":          { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CalculateVar"},
+
+        "/status/##BMS_ID##:SBMUCurrent":            { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CheckMonitorVar"},
+        "/status/##BMS_ID##:SBMUCurrentCheckDerate": { "enable": true, "rate":0.1, "amap": "##BMS_ID##", "func":"CheckMonitorVar"}
+    },
+
+    "/system/commands": {
+        "runOpts": {
+            "value": false,
+            "enabled": false,
+            "targav": "/system/commands:run",
+            "options": [
+                {"uri":"/sched/##BMS_ID##:pubAssets_##BMS_ID##","aname":"##BMS_ID##","value":0,"every":0.1}
+            ],
+            "actions": {
+                "onSet":[{"func":[{"func":"SchedItemOpts"}]}]
+            }
+        }
+    },
+
+    "/sched/##BMS_ID##": {
+        "pubAssets_##BMS_ID##": {
+            "value": 0,
+            "mode": "ui",
+            "table": "/assets/bms/##BMS_ID##",
+            "actions": {
+                "onSet":[{"func":[{"func":"RunPub"}]}]
+            }
+        }
+    },
+
+    "/vlinks/##BMS_ID##": {
+        "##BMS_ID##_soc_ui":                   { "value": "/assets/bms/##BMS_ID##:soc",                               "vlink": "/components/catl_##BMS_ID##:sbmu_soc"    },
+        "##BMS_ID##_soh_ui":                   { "value": "/assets/bms/##BMS_ID##:soh",                               "vlink": "/components/catl_##BMS_ID##:sbmu_soh"    },
+        "##BMS_ID##_voltage_ui":               { "value": "/assets/bms/##BMS_ID##:system_voltage",                    "vlink": "/components/catl_##BMS_ID##:sbmu_voltage"},
+        "##BMS_ID##_current_ui":               { "value": "/assets/bms/##BMS_ID##:system_current",                    "vlink": "/status/##BMS_ID##:SBMUCurrent"},
+        "##BMS_ID##_power_ui":                 { "value": "/assets/bms/##BMS_ID##:system_power",                      "vlink": "/status/##BMS_ID##:SBMUPower"},
+        "##BMS_ID##_max_cell_voltage_ui":      { "value": "/assets/bms/##BMS_ID##:max_cell_voltage",                  "vlink": "/components/catl_##BMS_ID##:sbmu_max_cell_voltage"},
+        "##BMS_ID##_min_cell_voltage_ui":      { "value": "/assets/bms/##BMS_ID##:min_cell_voltage",                  "vlink": "/components/catl_##BMS_ID##:sbmu_min_cell_voltage"},
+        "##BMS_ID##_avg_cell_voltage_ui":      { "value": "/assets/bms/##BMS_ID##:avg_cell_voltage",                  "vlink": "/components/catl_##BMS_ID##:sbmu_avg_cell_voltage"},
+        "##BMS_ID##_max_cell_temp_ui":         { "value": "/assets/bms/##BMS_ID##:max_cell_temp",                     "vlink": "/status/##BMS_ID##:SBMUMaxCellTemp"},
+        "##BMS_ID##_min_cell_temp_ui":         { "value": "/assets/bms/##BMS_ID##:min_cell_temp",                     "vlink": "/status/##BMS_ID##:SBMUMinCellTemp"},
+        "##BMS_ID##_avg_cell_temp_ui":         { "value": "/assets/bms/##BMS_ID##:avg_cell_temp",                     "vlink": "/status/##BMS_ID##:SBMUAvgCellTemp"},
+        "##BMS_ID##_max_charge_current_ui":    { "value": "/assets/bms/##BMS_ID##:max_charge_current",                "vlink": "/status/##BMS_ID##:SBMUMaxChargeCurrent"},
+        "##BMS_ID##_max_discharge_current_ui": { "value": "/assets/bms/##BMS_ID##:max_discharge_current",             "vlink": "/status/##BMS_ID##:SBMUMaxDischargeCurrent"}
+    },
+
+    "/status/##BMS_ID##": {
+        "SBMUPower": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/components/catl_##BMS_ID##:sbmu_voltage",
+            "variable2": "/status/##BMS_ID##:SBMUCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+        "SBMUCurrentFilt": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 4,
+            "variable1": "/status/##BMS_ID##:DCClosed",
+            "variable2": "/components/catl_##BMS_ID##:sbmu_current",
+            "variable3": "/status/bms:BMSCurrent",
+            "variable4": "/components/catl_bms_ems_r:num_hv_subsystem",
+            "expression": "if({1}, ({2} - 0), {3} / {4})",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##BMS_ID##:SBMUCurrentCoerced"}
+                    ]
+                }]
+            }
+        },
+        "SBMUCurrentCoerced": 0,
+        "SBMUCurrent": {
+            "value": 0,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+            "AlarmTimeout": 0.4,
+            "MinAlarmTimeout": 1.75,
+            "MaxAlarmTimeout": 1.75,
+            "MinRecoverTimeout": 0,
+            "MaxRecoverTimeout": 0,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar","amap": "##BMS_ID##"}]}]
+            }
+        },
+        "SBMUCurrentCheckDerate": {
+            "value": 0,
+            "EnableMaxValCheck": true,
+            "EnableMinValCheck": true,
+            "AlarmTimeout": 0.5,
+            "MinRecoverTimeout": 1.0,
+            "MaxRecoverTimeout": 1.0,
+            "EnableAlert": false,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar","amap": "##BMS_ID##"}]}]
+            }
+        },
+        "UnderCurrentFault": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1, 
+            "variable1": "/status/##BMS_ID##:SBMUMaxChargeCurrent",
+            "expression": "{1} * 1.05",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##BMS_ID##:SBMUCurrent@MinFaultThreshold"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentFault": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1, 
+            "variable1": "/status/##BMS_ID##:SBMUMaxDischargeCurrent",
+            "expression": "{1} * 1.05",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##BMS_ID##:SBMUCurrent@MaxFaultThreshold"}
+                    ]
+                }]
+            }
+        },
+        "UnderCurrentAlarm": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/##BMS_ID##:SBMUMaxChargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdHigh",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##BMS_ID##:SBMUCurrent@MinAlarmThreshold"},
+                        {"uri": "/status/##BMS_ID##:SBMUCurrent@MinResetValue"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentAlarm": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/##BMS_ID##:SBMUMaxDischargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdHigh",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##BMS_ID##:SBMUCurrent@MaxAlarmThreshold"},
+                        {"uri": "/status/##BMS_ID##:SBMUCurrent@MaxResetValue"}
+                    ]
+                }]
+            }
+        },
+        "UnderCurrentDerate": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/##BMS_ID##:SBMUMaxChargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdLow",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##BMS_ID##:SBMUCurrentCheckDerate@MinAlarmThreshold"},
+                        {"uri": "/status/##BMS_ID##:SBMUCurrentCheckDerate@MinResetValue"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentDerate": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/##BMS_ID##:SBMUMaxDischargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdLow",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/##BMS_ID##:SBMUCurrentCheckDerate@MaxAlarmThreshold"},
+                        {"uri": "/status/##BMS_ID##:SBMUCurrentCheckDerate@MaxResetValue"}
+                    ]
+                }]
+            }
+        },
+        "CurrentMeanDiff": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/status/##BMS_ID##:SBMUCurrent",
+            "variable2": "/status/bms:CurrentAverage",
+            "operation": "-"
+        },
+        "DCClosed": {
+            "value": 0,
+            "resetChange": false,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/catl_##BMS_ID##:sbmu_master_positive",
+            "variable2": "/components/catl_##BMS_ID##:sbmu_master_negative",
+            "expression": "{1} and {2}",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 0, "uri":"/status/##BMS_ID##:SBMUCurrent@EnableMaxValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/##BMS_ID##:SBMUCurrent@EnableMaxValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/##BMS_ID##:SBMUCurrent@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/##BMS_ID##:SBMUCurrent@EnableMinValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/##BMS_ID##:SBMUCurrentCheckDerate@EnableMaxValCheck", "outValue": true},
+                        {"inValue": 1, "uri":"/status/##BMS_ID##:SBMUCurrentCheckDerate@EnableMaxValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/##BMS_ID##:SBMUCurrentCheckDerate@EnableMinValCheck", "outValue": true},
+                        {"inValue": 1, "uri":"/status/##BMS_ID##:SBMUCurrentCheckDerate@EnableMinValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/components/catl_##BMS_ID##:sbmu_current", "outValue": 0},
+
+                        {"inValue": 0, "uri":"/assets/bms/##BMS_ID##:dc_contactor_status", "outValue": "Open"},
+                        {"inValue": 1, "uri":"/assets/bms/##BMS_ID##:dc_contactor_status", "outValue": "Closed"}
+                    ]
+                }]
+            }
+        },
+        "SBMUMaxChargeCurrent": 0,
+        "SBMUMaxDischargeCurrent": 0,
+        "SBMUMaxCellTemp": 0,
+        "SBMUMinCellTemp": 0,
+        "SBMUAvgCellTemp": 0,
+        "FaultCnt": 0,
+        "AlarmCnt": 0,
+        "PoweredOn": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/catl_##BMS_ID##:sbmu_avg_cell_voltage",
+            "expression": "{1} >= 2.5 and {1} <= 4"
+        }
+    }
+}

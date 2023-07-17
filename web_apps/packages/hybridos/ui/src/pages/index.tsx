@@ -1,6 +1,5 @@
 export * from './ConfigurablePages';
 export { default as Events } from './Events/Events';
-export { default as Home } from './Home/Home';
 export { default as Scheduler } from './Scheduler/Scheduler';
 export { default as Login } from './WebUILogin/WebUILogin';
 export { default as UIConfig } from './UIConfig';

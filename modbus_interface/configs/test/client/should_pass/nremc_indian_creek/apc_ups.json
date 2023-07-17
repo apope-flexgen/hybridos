@@ -1,0 +1,435 @@
+{
+	"connection":
+	{
+		"name": "APC SMT Smart-UPS",
+		"ip_address": "192.168.114.30",
+		"port": 502,
+		"device_id": 1
+	},
+	"components":
+	[
+		{
+			"id": "apc_ups",
+			"offset_time": 0,
+			"add_timings":false,
+			"registers":
+			[
+				{
+					"type": "Holding Registers",
+					"starting_offset": 0,
+					"number_of_registers": 27,
+					"map":
+					[
+						{
+							"id": "status",
+							"offset": 0,
+							"size": 2,
+							"name": "UPS Status",
+							"bit_field": true,
+							"bit_strings": [
+								"StatusChange-Modifier",
+								"State = Online",
+								"State = On Battery",
+								"State = Bypass",
+								"State = Output Off",
+								"Fault / Alarm",
+								"Input Bad",
+								"Test",
+								"Pending Output On",
+								"Pending Output Off",
+								"Commanded",
+								"Reserved Address:0 Bit:11",
+								"Reserved Address:0 Bit:12",
+								"High Efficency",
+								"Informational Alert",
+								"Fault",
+								"Reserved Address:0 Bit:16",
+								"Reserved Address:0 Bit:17",
+								"Reserved Address:0 Bit:18",
+								"Mains Bad State",
+								"Fault Recovery State",
+								"Overload State",
+								"Maintenance Mode"
+							]
+						},
+						{
+							"id": "status_change_cause",
+							"offset": 2,
+							"name": "UPS Status Change Cause",
+							"enum": true,
+							"bit_strings": [
+								"System Initialization",
+								"High Input Voltage",
+								"Low Input Voltage",
+								"Distorted Input",
+								"Rapid Change Of Input Voltage",
+								"High Input Frequency",
+								"Low Input Frequency",
+								"Freq And Or Phase Difference",
+								"Acceptable Input",
+								"Automatic Test",
+								"Test Ended",
+								"Local UI Command",
+								"Protocol Command",
+								"Low Battery Voltage",
+								"General Error",
+								"Power System Error",
+								"Battery System Error",
+								"Error Cleared",
+								"Automatic Restart",
+								"Distorted Inverter Output",
+								"Inverter Output Acceptable",
+								"EPO Interface",
+								"Input Phase Delta Out Of Range",
+								"Input Neutral Not Connected",
+								"ATS Transfer",
+								"Configuration Change",
+								"Alert Asserted",
+								"Alert Cleared",
+								"Plug Rating Exceeded",
+								"Outlet Group State Change",
+								"Failure Bypass Expired"
+							]
+						},
+						{
+							"id": "main_outlet_group_status",
+							"offset": 3,
+							"size": 2,
+							"name": "MOG outlet status",
+							"bit_field": true,
+							"bit_strings": [
+							"State = On",
+								"State = Off",
+								"Process Reboot",
+								"Process Shutdow",
+								"Process Sleep",
+								"Reserved Address:3 Bit:5",
+								"Reserved Address:3 Bit:6",
+								"Pending Load Shed",
+								"Pending On Delay",
+								"Pending Off Delay",
+								"Pending On AC Presence",
+								"Pending On Min Runtime",
+								"Member Group Process 1",
+								"Member Group Process 2",
+								"Low Runtime"
+							]
+						},
+						{
+							"id": "secondary_group_status",
+							"offset": 6,
+							"size": 2,
+							"name": "Secondary Outle group outlet status",
+							"bit_field": true,
+							"bit_strings": [
+								"State = On",
+								"State = Off",
+								"Process Reboot",
+								"Process Shutdow",
+								"Process Sleep",
+								"Reserved Address:6 Bit:5",
+								"Reserved Address:6 Bit:6",
+								"Pending Load Shed",
+								"Pending On Delay",
+								"Pending Off Delay",
+								"Pending On AC Presence",
+								"Pending On Min Runtime",
+								"Member Group Process 1",
+								"Member Group Process 2",
+								"Low Runtime"
+							]
+						},
+						{
+							"id": "simple_status",
+							"offset": 18,
+							"name": "Pole status",
+							"bit_field": true,
+							"bit_strings": [
+								"Power Failure",
+								"Shutdown Imminent"
+							]
+						},
+						{
+							"id": "error",
+							"offset": 19,
+							"name": "General Error",
+							"bit_field": true,
+							"bit_strings": [
+								"Site Wiring",
+								"EEPROM",
+								"AD Converter",
+								"Logic Power Supply",
+								"Internal Communication",
+								"UI Button",
+								"Needs Factory Setup",
+								"EPO Active",
+								"Firmware Mismatch",
+								"Oscillator",
+								"Measurement Mismatch",
+								"Subsystem",
+								"Logic Power Supply Relay"
+							]
+						},
+						{
+							"id": "ps_error",
+							"offset": 20,
+							"size": 2,
+							"name": "Power System Error",
+							"bit_field": true,
+							"bit_strings": [
+								"Output Overload",
+								"Output Short Circuit",
+								"Output Overvoltage",
+								"Transformer DC Imalance",
+								"Over Temperature",
+								"Backfeed Relay",
+								"AVR Relay",
+								"PFC Input Relay",
+								"Output Relay",
+								"Bypass Relay",
+								"Fan",
+								"PFC",
+								"DC Bus Overvoltage",
+								"Inverter",
+								"Over Current",
+								"Bypass PFC Relay",
+								"Bus Soft Start",
+								"Green Relay",
+								"DC Output",
+								"DC Bus Converter",
+								"Sensor"
+							]
+						},
+						{
+							"id": "batt_error",
+							"offset": 22,
+							"name": "Battery System Error",
+							"bit_field": true,
+							"bit_strings": [
+								"Disconnected",
+								"Overvoltage",
+								"Needs Replacement",
+								"Over Temperature Critical",
+								"Charger",
+								"Temperature Sensor",
+								"Bus Soft Start",
+								"Over Temperature Warning",
+								"General Error",
+								"Communication",
+								"Disconnected Frame",
+								"Firmware Mismatch",
+								"Voltage Sense Error"
+							]
+						},
+						{
+							"id": "batt_test_status",
+							"offset": 23,
+							"name": "Replace Battery Test Status",
+							"bit_field": true,
+							"bit_strings": [
+								"Pending",
+								"In Progress",
+								"Passed",
+								"Failed",
+								"Refused",
+								"Aborted",
+								"Aborted from Protocol Source",
+								"Aborted from Local UI",
+								"Aborted from Internal",
+								"Invalid State",
+								"Internal Fault",
+								"State of Charge not acceptable"
+							]
+						},
+						{
+							"id": "run_time_cal_status",
+							"offset": 24,
+							"name": "Run Time Calibration Status",
+							"bit_field": true,
+							"bit_strings": [
+								"Pending",
+								"In Progress",
+								"Passed",
+								"Failed",
+								"Refused",
+								"Aborted",
+								"Aborted from Protocol Source",
+								"Aborted from Local UI",
+								"Aborted from Internal",
+								"Invalid State",
+								"Internal Fault",
+								"State of Charge not acceptable",
+								"Load Change",
+								"AC Input Not Acceptable",
+								"Load Too Low",
+								"Over Charge In Progress"
+							]
+						},
+						{
+							"id": "batt_lifetime_status",
+							"offset": 25,
+							"name": "Battery Life Time Status",
+							"bit_field": true,
+							"bit_strings": [
+								"Life Time Status OK",
+								"Life Time Near End",
+								"Life Time Exceeded",
+								"Life Time Near End Acknowledged",
+								"Life Time Exceeded Acknowledged",
+								"Measured Life Time Near End",
+								"Measured Life Time Near End Acknowledged"
+							]
+						},
+						{
+							"id": "ui_status",
+							"offset": 26,
+							"name": "User Interface Status",
+							"bit_field": true,
+							"bit_strings": [
+								"Continious Test In Progress",
+								"Audible Alarm In Progress",
+								"Audible Alarm Muted",
+								"Any Button Pressed Recently"
+							]
+						}
+					]
+				},
+				{
+					"type": "Holding Registers",
+					"starting_offset": 128,
+					"number_of_registers": 24,
+					"map": [
+						{
+							"id": "run_time",
+							"offset": 128,
+							"size": 2,
+							"name": "Run Time Remaining"
+						},
+						{
+							"id": "soc",
+							"offset": 130,
+							"scale": 512,
+							"name": "State of Charge"
+						},
+						{
+							"id": "voltage_dc_pos",
+							"offset": 131,
+							"scale": 32,
+							"name": "Positive Voltage DC",
+							"signed": true
+						},
+						{
+							"id": "voltage_dc_neg",
+							"offset": 132,
+							"scale": 32,
+							"name": "Negitive Voltage DC",
+							"signed": true
+						},
+						{
+							"id": "batt_date",
+							"offset": 133,
+							"name": "Battery Replacement Date"
+						},
+						{
+							"id": "battery_temperature",
+							"offset": 135,
+							"scale": 128,
+							"name": "Battery Temperature",
+							"signed": true
+						},
+						{
+							"id": "active_power",
+							"offset": 136,
+							"scale": 189600,
+							"name": "Active Power"
+						},
+						{
+							"id": "active_power_2",
+							"offset": 137,
+							"scale": 189600,
+							"name": "Active Power Phase 2"
+						},
+						{
+							"id": "apparent_power",
+							"offset": 138,
+							"scale": 177700,
+							"name": "Apparent Power"
+						},
+						{
+							"id": "apparent_power_2",
+							"offset": 139,
+							"scale": 177700,
+							"name": "Apparent Power Phase 2"
+						},
+						{
+							"id": "output_current",
+							"offset": 140,
+							"scale": 32,
+							"name": "Output Current"
+						},
+						{
+							"id": "output_current_2",
+							"offset": 141,
+							"scale": 32,
+							"name": "Current Phase 2"
+						},
+						{
+							"id": "output_voltage_ac",
+							"offset": 142,
+							"scale": 64,
+							"name": "Output Voltage"
+						},
+						{
+							"id": "output_voltage_ac_2",
+							"offset": 143,
+							"scale": 64,
+							"name": "Voltage Phase 2"
+						},
+						{
+							"id": "output_frequency",
+							"offset": 144,
+							"scale": 128,
+							"name": "Output frequency"
+						},
+						{
+							"id": "output_engery",
+							"offset": 145,
+							"size": 2,
+							"name": "Output energy"
+						},
+						{
+							"id": "input_status",
+							"offset": 150,
+							"name": "Input Status",
+							"bit_field": true,
+							"bit_strings": [
+								"Acceptable Input",
+								"Pending Acceptance",
+								"Voltage Too Low",
+								"Voltage Too High",
+								"Distorted",
+								"Boost",
+								"Trim",
+								"Frequency Too Low",
+								"Frequency Too High",
+								"Freq And Phase Not Locked",
+								"Phase Delta Out of Range",
+								"Neutral Not Connected",
+								"Reserved Address:150 Bit:12",
+								"Reserved Address:150 Bit:13",
+								"Reserved Address:150 Bit:14",
+								"Powering Load"
+							]
+						},
+						{
+							"id": "input_voltage_ac",
+							"offset": 151,
+							"scale": 64,
+							"name": "Input Voltage AC"
+						}
+					]
+				}
+			]
+		}
+	]
+}

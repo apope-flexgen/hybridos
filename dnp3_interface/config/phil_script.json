@@ -1,0 +1,518 @@
+{
+    "fileInfo": {
+        "sourceFileName": "BRP FlexGen HybridOS Comm Servers.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2020-07-09T18:47:12.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "pmiller",
+        "outputFileName": "script.json",
+        "outputFileType": "dnp3",
+        "outputFileCreated": "2020-07-09T19:06:05.499Z"
+    },
+    "system": {
+        "name": "FlexGen HybridOS",
+        "protocol": "DNP3",
+        "version": "6.0 WIP",
+        "id": "FPS_HOS",
+        "port":20000,
+        "ip_address": "10.201.112.65"
+    },
+    "registers": [
+        {
+            "type": "AnOPInt16",
+            "starting_offset": 23,
+            "number_of_registers": 9,
+            "map": [
+                {
+                    "id": "fr_UF_droop_bypass_flag",
+                    "offset": 23,
+                    "name": "Under Frequency Droop Bypass Flag",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_droop_limit_flag",
+                    "offset": 24,
+                    "name": "Under Frequency Droop Limit Flag",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_enable_flag",
+                    "offset": 25,
+                    "name": "Over Frequency Enable Flag",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_slew_override_flag",
+                    "offset": 26,
+                    "name": "Over Frequency Slew Bypass Flag",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_droop_bypass_flag",
+                    "offset": 27,
+                    "name": "Over Frequency Droop Bypass Flag",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_droop_limit_flag",
+                    "offset": 28,
+                    "name": "Over Frequency Droop Limit Flag",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "remote_enable_flag",
+                    "offset": 29,
+                    "name": "Start Site Command",
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "remote_disable_flag",
+                    "offset": 30,
+                    "name": "Disable Site Command",
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "remote_clear_faults",
+                    "offset": 31,
+                    "name": "Clear Faults Command",
+                    "uri": "/site/operation"
+                }
+            ]
+        },
+        {
+            "type": "AnOPInt32",
+            "starting_offset": 1,
+            "number_of_registers": 22,
+            "map": [
+                {
+                    "id": "fr_baseload_kW_cmd",
+                    "offset": 1,
+                    "name": "Baseload Power Cmd",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_inactive_kW_cmd",
+                    "offset": 2,
+                    "name": "Inactive Baseload Power Cmd",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_active_kW_cmd",
+                    "offset": 3,
+                    "name": "Under Frequency Power Command",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_slew_rate",
+                    "offset": 4,
+                    "name": "Under Frequency Slew Rate",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_hz_trigger_percent",
+                    "offset": 5,
+                    "name": "Under Frequency Trigger Percentage",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_hz_recover_percent",
+                    "offset": 6,
+                    "name": "Under Frequency Recover Percentage",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_hz_instant_recover_percent",
+                    "offset": 7,
+                    "name": "Under Frequency Instant Recover Percentage",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_trigger_time",
+                    "offset": 8,
+                    "name": "Under Frequency Trigger Time",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_recover_time",
+                    "offset": 9,
+                    "name": "Under Frequency Recover Time",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_cooldown_time",
+                    "offset": 10,
+                    "name": "Under Frequency Cooldown Time",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_droop_percent",
+                    "offset": 11,
+                    "name": "Under Frequency Droop Percentage",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_active_kW_cmd",
+                    "offset": 12,
+                    "name": "Over Frequency Power Command",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_slew_rate",
+                    "offset": 13,
+                    "name": "Over Frequency Slew Rate",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_hz_trigger_percent",
+                    "offset": 14,
+                    "name": "Over Frequency Trigger Percentage",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_hz_recover_percent",
+                    "offset": 15,
+                    "name": "Over Frequency Recover Percentage",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_hz_instant_recover_percent",
+                    "offset": 16,
+                    "name": "Over Frequency Instant Recover Percentage",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_trigger_time",
+                    "offset": 17,
+                    "name": "Over Frequency Trigger Time",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_recover_time",
+                    "offset": 18,
+                    "name": "Over Frequency Recover Time",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_cooldown_time",
+                    "offset": 19,
+                    "name": "Over Frequency Cooldown Time",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_droop_percent",
+                    "offset": 20,
+                    "name": "Over Frequency Droop Percentage",
+                    "signed": true,
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_enable_flag",
+                    "offset": 21,
+                    "name": "Under Frequency Enable Flag",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_slew_override_flag",
+                    "offset": 22,
+                    "name": "Under Frequency Slew Bypass Flag",
+                    "uri": "/features/active_power"
+                }
+            ]
+        },
+        {
+            "type": "analog",
+            "starting_offset": 0,
+            "number_of_registers": 27,
+            "map": [
+                {
+                    "id": "ess_total_active_power",
+                    "offset": 0,
+                    "name": "Site - Active Power Total Gross",
+                    "signed": true,
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "ess_total_reactive_power",
+                    "offset": 1,
+                    "name": "Site - Reactive Power Total Gross",
+                    "signed": true,
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "ess_total_apparent_power",
+                    "offset": 2,
+                    "name": "Site - Apparent Power Total Gross",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "active_power",
+                    "offset": 3,
+                    "name": "Site - Active Power Total Net",
+                    "signed": true,
+                    "uri": "/components/sel_735"
+                },
+                {
+                    "id": "reactive_power",
+                    "offset": 4,
+                    "name": "Site - Reactive Power Total Net",
+                    "signed": true,
+                    "uri": "/components/sel_735"
+                },
+                {
+                    "id": "apparent_power",
+                    "offset": 5,
+                    "name": "Site - Apparent Power Total Net",
+                    "uri": "/components/sel_735"
+                },
+                {
+                    "id": "ess_average_soc",
+                    "offset": 6,
+                    "scale": 100,
+                    "name": "Battery - State of Charge %",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "ess_chargeable_energy",
+                    "offset": 7,
+                    "name": "Battery - Chargable energy kWh",
+                    "uri": "/metrics/ess"
+                },
+                {
+                    "id": "ess_dischargeable_energy",
+                    "offset": 8,
+                    "name": "Battery - Dischargeable energy kWh",
+                    "uri": "/metrics/ess"
+                },
+                {
+                    "id": "ess_chargeable_power",
+                    "offset": 9,
+                    "scale": 100,
+                    "name": "Battery - Chargeable power",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "ess_dischargeable_power",
+                    "offset": 10,
+                    "name": "Battery - Dischargeable power",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "available_ess_num",
+                    "offset": 11,
+                    "name": "Battery - Number ESS Available",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "running_ess_num",
+                    "offset": 12,
+                    "name": "Battery - Number ESS Online",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "breaker_status",
+                    "offset": 13,
+                    "name": "Main Breaker Closed",
+                    "uri": "/components/sel_651r"
+                },
+                {
+                    "id": "heartbeat_counter",
+                    "offset": 14,
+                    "name": "Heartbeat Counter",
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "status",
+                    "offset": 15,
+                    "size": 2,
+                    "name": "BESS Container #1 System Mode",
+                    "uri": "/assets/ess/ess_1"
+                },
+                {
+                    "id": "soc",
+                    "offset": 16,
+                    "name": "BESS Container #1 System SOC",
+                    "uri": "/assets/ess/ess_1"
+                },
+                {
+                    "id": "local_bms_status",
+                    "offset": 17,
+                    "name": "BESS Container #1 Number of Active Racks",
+                    "uri": "/assets/ess/ess_1"
+                },
+                {
+                    "id": "status",
+                    "offset": 18,
+                    "size": 3,
+                    "name": "BESS Container #2 System Mode",
+                    "uri": "/assets/ess/ess_2"
+                },
+                {
+                    "id": "soc",
+                    "offset": 19,
+                    "name": "BESS Container #2 System SOC",
+                    "uri": "/assets/ess/ess_2"
+                },
+                {
+                    "id": "local_bms_status",
+                    "offset": 20,
+                    "name": "BESS Container #2 Number of Active Racks",
+                    "uri": "/assets/ess/ess_2"
+                },
+                {
+                    "id": "status",
+                    "offset": 21,
+                    "size": 5,
+                    "name": "BESS Container #3 System Mode",
+                    "uri": "/assets/ess/ess_3"
+                },
+                {
+                    "id": "soc",
+                    "offset": 22,
+                    "name": "BESS Container #3 System SOC",
+                    "uri": "/assets/ess/ess_3"
+                },
+                {
+                    "id": "local_bms_status",
+                    "offset": 23,
+                    "name": "BESS Container #3 Number of Active Racks",
+                    "uri": "/assets/ess/ess_3"
+                },
+                {
+                    "id": "status",
+                    "offset": 24,
+                    "size": 6,
+                    "name": "BESS Container #4 System Mode",
+                    "uri": "/assets/ess/ess_4"
+                },
+                {
+                    "id": "soc",
+                    "offset": 25,
+                    "name": "BESS Container #4 System SOC",
+                    "uri": "/assets/ess/ess_4"
+                },
+                {
+                    "id": "local_bms_status",
+                    "offset": 26,
+                    "name": "BESS Container #4 Number of Active Racks",
+                    "uri": "/assets/ess/ess_4"
+                }
+            ]
+        },
+        {
+            "type": "binary",
+            "starting_offset": 0,
+            "number_of_registers": 15,
+            "map": [
+                {
+                    "id": "running_status_flag",
+                    "offset": 0,
+                    "name": "Running Status",
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "alarm_status_flag",
+                    "offset": 1,
+                    "name": "Alarm Status",
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "fault_status_flag",
+                    "offset": 2,
+                    "name": "Fault Status",
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "fr_UF_status_flag",
+                    "offset": 3,
+                    "name": "Under Frequency Status",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_UF_cooldown_status",
+                    "offset": 4,
+                    "name": "Under Frequency Cooldown Status",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_status_flag",
+                    "offset": 5,
+                    "name": "Over Frequency Status",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "fr_OF_cooldown_status",
+                    "offset": 6,
+                    "name": "Over Frequency Cooldown Status",
+                    "uri": "/features/active_power"
+                },
+                {
+                    "id": "faults",
+                    "offset": 7,
+                    "name": "BESS Container #1 Fault Flag",
+                    "uri": "/assets/ess/ess_1"
+                },
+                {
+                    "id": "alarms",
+                    "offset": 8,
+                    "name": "BESS Container #1 Alarm Flag",
+                    "uri": "/assets/ess/ess_1"
+                },
+                {
+                    "id": "faults",
+                    "offset": 9,
+                    "name": "BESS Container #2 Fault Flag",
+                    "uri": "/assets/ess/ess_2"
+                },
+                {
+                    "id": "alarms",
+                    "offset": 10,
+                    "name": "BESS Container #2 Alarm Flag",
+                    "uri": "/assets/ess/ess_2"
+                },
+                {
+                    "id": "faults",
+                    "offset": 11,
+                    "name": "BESS Container #3 Fault Flag",
+                    "uri": "/assets/ess/ess_3"
+                },
+                {
+                    "id": "alarms",
+                    "offset": 12,
+                    "name": "BESS Container #3 Alarm Flag",
+                    "uri": "/assets/ess/ess_3"
+                },
+                {
+                    "id": "faults",
+                    "offset": 13,
+                    "name": "BESS Container #4 Fault Flag",
+                    "uri": "/assets/ess/ess_4"
+                },
+                {
+                    "id": "alarms",
+                    "offset": 14,
+                    "name": "BESS Container #4 Alarm Flag",
+                    "uri": "/assets/ess/ess_4"
+                }
+            ]
+        }
+    ]
+}

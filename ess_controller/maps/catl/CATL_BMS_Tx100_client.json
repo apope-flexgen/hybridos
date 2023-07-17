@@ -1,0 +1,216 @@
+{
+    "xsystem": {
+        "name": "CATL_BMS_HEARTBEAT_TEST",
+        "protocol": "Modbus TCP",
+        "version": "6.0 WIP",
+        "id": "catl_BMU_1",
+        "port": 502,
+        "ip_address": "127.0.0.1",
+        "data_bits": "Columns marked in green are REQUIRED",
+        "frequency": 2000
+    },
+    "connection": {
+        "name": "BMS_x",
+        "ip_address": "192.168.1.8",
+        "port": 502,
+        "frequency":500
+    },
+    "components": [
+        {
+            "id": "catl_mbmu_stat_r",
+            "frequency": 500,
+            "offset_time": 20,
+            "hex_start": "0x0300",
+            "xheartbeat_enabled": true,
+            "xcomponent_heartbeat_read_uri": "life_signal",
+            "xcomponent_heartbeat_write_uri": "life",
+            "xmodbus_heartbeat_timeout_ms": 200,
+            "xcomponent_heartbeat_timeout_ms": 200,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 768,
+                    "number_of_registers": 7,
+                    "note": "Single Register Heartbeat Test",
+                    "map": [
+                        {
+                            "id": "bms_heartbeat",
+                            "offset": 768,
+                            "name": "Heartbeat Test"
+                        },
+                        {
+                            "id": "bms_poweron",
+                            "offset": 769,
+                            "name": "BMS Poweron"
+                        },
+                        {
+                            "id": "bms_status",
+                            "offset": 770,
+                            "name": "BMS Status"
+                        },
+
+                        {
+                            "id": "bms_reserve_1",
+                            "offset": 771,
+                            "name": "BMS Status"
+                        },
+                        {
+                            "id": "bms_num_connected",
+                            "offset": 772,
+                            "name": "BMS Num HV Connected"
+                        },
+                        {
+                            "id": "bms_charge_remain",
+                            "offset": 773,
+                            "name": "BMS Remaining Charge"
+                        },
+                        {
+                            "id": "bms_discharge_remain",
+                            "offset": 774,
+                            "name": "BMS Remaining Discharge"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_ems_bms_rw",
+            "frequency": 500,
+            "offset_time": 20,
+            "hex_start": "0x0380",
+            "xheartbeat_enabled": true,
+            "xcomponent_heartbeat_read_uri": "life_signal",
+            "xcomponent_heartbeat_write_uri": "life",
+            "xmodbus_heartbeat_timeout_ms": 200,
+            "xcomponent_heartbeat_timeout_ms": 200,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 896,
+                    "number_of_registers": 16,
+                    "note": "ess_bms_control",
+                    "map": [
+                            {
+                                "id": "ems_heartbeat",
+                                "offset": 896,
+                                "name": "EMS Heartbeat"
+                            },
+                            {
+                                "id": "ems_cmd",
+                                "offset": 897,
+                                "name": "BMS Poweron"
+                            },
+                            {
+                                "id": "ems_status",
+                                "offset": 898,
+                                "name": "BMS Status"
+                            },   
+                            {
+                                "id": "ems_reserve_1",
+                                "offset": 899,
+                                "name": "EMS Reserve"
+                            },
+                            {
+                                "id": "ems_rtc_year",
+                                "offset": 900,
+                                "name": "EMS RTC Year"
+                            },
+                            {
+                                "id": "ems_rtc_month",
+                                "offset": 901,
+                                "name": "EMS RTC month"
+                            },
+                            {
+                                "id": "ems_rtc_date",
+                                "offset": 902,
+                                "name": "EMS RTC date"
+                            },
+                            {
+                                "id": "ems_rtc_hour",
+                                "offset": 903,
+                                "name": "EMS RTC hour"
+                            },
+                            {
+                                "id": "ems_rtc_minute",
+                                "offset": 904,
+                                "name": "EMS RTC minute"
+                            },
+                            {
+                                "id": "ems_rtc_second",
+                                "offset": 905,
+                                "name": "EMS RTC Second"
+                            },
+                            {
+                                "id": "ems_reserve_2",
+                                "offset": 906,
+                                "name": "EMS Reserve 2"
+                            },
+                            {
+                                "id": "fault_clear_cmd",
+                                "offset": 907,
+                                "name": "EMS Fault Clear"
+                            },
+                            {
+                                "id": "ems_reserve_3",
+                                "offset": 908,
+                                "name": "EMS Reserve 3"
+                            },
+                            {
+                                "id": "ems_reserve_4",
+                                "offset": 909,
+                                "name": "EMS Reserve 4"
+                            },
+                            {
+                                "id": "ems_reserve_5",
+                                "offset": 910,
+                                "name": "EMS Reserve 5"
+                            }
+
+                    ]
+                }
+            ]
+        },
+        {
+        "id": "sbms_detail",
+        "frequency": 500,
+        "offset_time": 20,
+        "hex_start": "0x0480",
+        "xheartbeat_enabled": true,
+        "xcomponent_heartbeat_read_uri": "life_signal",
+        "xcomponent_heartbeat_write_uri": "life",
+        "xmodbus_heartbeat_timeout_ms": 200,
+        "xcomponent_heartbeat_timeout_ms": 200,
+        "registers": [
+            {
+                "type": "Holding Registers",
+                "starting_offset": 1152,
+                "number_of_registers": 4,
+                "note": "Single Register Heartbeat Test",
+                "map": [
+                    {
+                        "id": "cell_volts_01_01",
+                        "offset": 1152,
+                        "name": "cell volts 01 01"
+                    },
+                    {
+                        "id": "cell_volts_01_02",
+                        "offset": 1153,
+                        "name": "cell volts 01 02"
+                    },
+                    {
+                        "id": "cell_volts_01_03",
+                        "offset": 1154,
+                        "name": "cell volts 01 03"
+                    },
+
+                    {
+                        "id": "cell_volts_01_04",
+                        "offset": 1155,
+                        "name": "cell volts 01 04"
+                    }
+                ]
+            }
+        ]
+    }
+]
+}

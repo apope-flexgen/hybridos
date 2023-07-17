@@ -1,25 +1,29 @@
+/* eslint-disable */
 // TODO: fix lint
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-constructor-return */
-import SocketConnectionManager from 'src/services/SocketConnectionManager';
-import SseService from 'src/services/SseService';
+import { DashboardLayout } from 'shared/types/dtos/configurablePages.dto';
+import { TableDashboardDataTableDTO } from 'shared/types/dtos/dataTables.dto';
+import RealTimeService from 'src/services/RealTimeService/realtime.service';
 
 const instance: QueryService | null = null;
 
 class QueryService {
+  realTimeService: RealTimeService = RealTimeService.Instance;
+
   constructor() {
     return instance || this;
   }
 
   cleanupSocket = async () => {
-    SocketConnectionManager.cleanup();
+    RealTimeService.Instance.cleanup();
   };
 
-  getConfigurablePage(listenerFunction: (
-    e: MessageEvent
-  ) => void, pageName: string, pageCategory?: string) {
-    if (pageName === 'assetsPage' && pageCategory) {
-      this.getAssetsPage(pageCategory, listenerFunction);
+  getConfigurablePage(
+    listenerFunction: (e: MessageEvent) => void,
+    pageName: string,
+    assetKey?: string,
+  ) {
+    if (pageName === 'assetsPage' && assetKey) {
+      this.getAssetsPage(assetKey, listenerFunction);
       return;
     }
     if (pageName === 'dashboard') {
@@ -30,47 +34,57 @@ class QueryService {
     console.error('Invalid page name');
   }
 
-  private getAssetsPage: (
-    category: string,
-    listenerFunction: (e: MessageEvent) => void
-  ) => void = async (
-      category: string,
-      listenerFunction: (e: MessageEvent) => void,
-    ) => {
-      SocketConnectionManager.listen(listenerFunction);
-      SocketConnectionManager.send('assetsPage', category);
-    };
-
-  private getDashboard: (listenerFunction: (e: MessageEvent) => void) => void = async (
-    listenerFunction: (e: MessageEvent) => void,
+  private getAssetsPage: (assetKey: string, listenerFunction: (data: any) => void) => void = async (
+    assetKey: string,
+    listenerFunction: (data: any) => void,
   ) => {
-    SocketConnectionManager.listen(listenerFunction);
-    SocketConnectionManager.send('dashboard', '');
+    this.realTimeService.listen((data) => {
+      listenerFunction(data);
+    }, `assetsPage-${assetKey}`);
+    this.realTimeService.send('assetsPage', assetKey, `assetsPage-${assetKey}`);
   };
 
-  getSiteStatusBar: (listenerFunction: (e: MessageEvent) => void) => void = async (
-    listenerFunction: (e: MessageEvent) => void,
-  ) => {
-    SseService.listen('sitestatus', listenerFunction);
+  getTableDashboard = (listenerFunction: (data: TableDashboardDataTableDTO) => void) => {
+    this.realTimeService.listen(listenerFunction, 'tableDashboard');
+    this.realTimeService.send('dashboard', DashboardLayout.TABLE, 'tableDashboard');
   };
 
-  // FIXME: this should be combined into generic getPage
-  getSchedulerPage: (URIs: string[], listenerFunction: (e: MessageEvent) => void) => void = async (
+  private getDashboard: (listenerFunction: (data: any) => void) => void = async (
+    listenerFunction: (data: any) => void,
+  ) => {
+    this.realTimeService.listen(listenerFunction, 'cardDashboard');
+    this.realTimeService.send('dashboard', DashboardLayout.CARD, 'cardDashboard');
+  };
+
+  getSiteStatusBar: (listenerFunction: (data: any) => void) => void = async (
+    listenerFunction: (data: any) => void,
+  ) => {
+    this.realTimeService.sendOnEveryOpen('sitestatus', '', 'sitestatus');
+    this.realTimeService.persistentListen(listenerFunction, 'sitestatus');
+  };
+
+  getSchedulerPage: (URIs: string[], listenerFunction: (data: any) => void) => void = async (
     URIs: string[],
-    listenerFunction: (e: MessageEvent) => void,
+    listenerFunction: (data: any) => void,
   ) => {
-    SocketConnectionManager.listen(listenerFunction);
-    SocketConnectionManager.send('scheduler', URIs);
+    this.realTimeService.listen(listenerFunction, 'scheduler');
+    this.realTimeService.send('scheduler', URIs, 'scheduler');
   };
 
-  getVariableOverridePage:
-  (siteId: string, listenerFunction: (e: MessageEvent) => void) => void = async (
-      siteId: string,
-      listenerFunction: (e: MessageEvent) => void,
-    ) => {
-      SocketConnectionManager.listen(listenerFunction);
-      SocketConnectionManager.send('variableOverride', siteId);
-    };
+  getErcotOverridePage: (siteId: string, listenerFunction: (data: any) => void) => void = async (
+    siteId: string,
+    listenerFunction: (data: any) => void,
+  ) => {
+    this.realTimeService.listen(listenerFunction, 'ercotOverride');
+    this.realTimeService.send('ercotOverride', siteId, 'ercotOverride');
+  };
+
+  getLayouts: (listenerFunction: (data: any) => void) => void = async (
+    listenerFunction: (data: any) => void,
+  ) => {
+    this.realTimeService.sendOnEveryOpen('layouts', '', 'layouts');
+    this.realTimeService.persistentListen(listenerFunction, 'layouts');
+  };
 }
 
 export default new QueryService();

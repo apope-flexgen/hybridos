@@ -1,7 +1,7 @@
 export interface PageProps {
   pageName: string;
   currentUser?: any;
-  product?: string;
+  product?: any;
 }
 
 export type PageType = object;

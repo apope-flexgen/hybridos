@@ -1,19 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy, ExtractJwt } from 'passport-jwt'
-
-import { IValidJWTService, VALID_JWT_SERVICE } from '../interfaces/validJWT.service.interface'
+import { AppEnvService } from 'src/environment/appEnv.service'
 
 @Injectable()
 export class AccessTokenPassExpStrategy extends PassportStrategy(Strategy, 'accessToken-password-expiration') {
-    constructor(
-        @Inject(VALID_JWT_SERVICE)
-        private readonly validJwtService: IValidJWTService
-    ) {
+    constructor(appEnvService: AppEnvService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: true,
-            secretOrKey: 'supersecretkey-oneTimeUse-password-expiration',
+            secretOrKey: appEnvService.getJwtSecretKeyPasswordExp()
         })
     }
 

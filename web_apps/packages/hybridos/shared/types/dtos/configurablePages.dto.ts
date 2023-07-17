@@ -1,45 +1,55 @@
 export type ConfigurablePageDTO = {
-  hasStatic: boolean
+  hasStatic: boolean;
+  hasAllControls?: boolean;
   displayGroups: {
-    [displayGroupID: string]: DisplayGroupDTO
-  }
-}
+    [displayGroupID: string]: DisplayGroupDTO;
+  };
+};
 
 export type DisplayGroupDTO = {
-  displayName?: string
+  displayName?: string;
+  batteryViewStatus?: {
+    [componentID: string]: StatusComponentDTO;
+  };
   status?: {
-    [componentID: string]: StatusComponentDTO
-  }
+    [componentID: string]: StatusComponentDTO;
+  };
   control?: {
-    [componentID: string]: ControlComponentDTO
-  }
-  fault?: string[]
-  alarm?: string[]
-}
+    [componentID: string]: ControlComponentDTO;
+  };
+  fault?: string[];
+  alarm?: string[];
+};
 
 export type StatusComponentDTO = {
   static?: {
-    label?: string
-    unit?: string
-    variant?: DataPointVariantType
-  }
+    label?: string;
+    unit?: string;
+    variant?: DataPointVariantType;
+  };
   state?: {
-    value?: ValueType
-  }
-}
+    value?: ValueType;
+  };
+};
 
 export type ControlComponentDTO = {
   static?: {
-    label: string
-    unit?: string
-    scalar?: number
-    controlType: ControlType
-  }
+    label: string;
+    unit?: string;
+    scalar?: number;
+    controlType: ControlType;
+    extraProps?: {
+      [key: string]: any;
+    };
+  };
   state?: {
-    value?: ValueType
-    enabled?: boolean
-  }
-}
+    value?: ValueType;
+    enabled?: boolean;
+    extraProps?: {
+      [key: string]: any;
+    };
+  };
+};
 
 export type ControlType =
   | 'enum_button'
@@ -47,7 +57,12 @@ export type ControlType =
   | 'number'
   | 'enum_slider'
   | 'switch'
-  | 'maint_mode_slider'
-export type ValueType = string | number | boolean
+  | 'maint_mode_slider';
+export type ValueType = string | number | boolean;
 
-export type DataPointVariantType = 'vertical' | 'horizontal' | 'dynamic'
+export type DataPointVariantType = 'vertical' | 'horizontal' | 'dynamic';
+
+export enum DashboardLayout {
+  TABLE = 'table',
+  CARD = 'card',
+}

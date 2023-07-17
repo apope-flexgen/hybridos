@@ -1,0 +1,471 @@
+{
+    "/notes/bms": {
+        "note1":"This is the hvac manager config file.",
+        "note1a":"The bms page of the ui display is outlined in /assets/hvac/summary",
+        "note1b":"The /assets/hvac table defines the racks or battery management uints, each has a template file with placements for selected key words",
+        "note2": "The /config/hvac area is still under development",
+        "note3":"The /components/catl... tables define the incoming control words from the bms modbus interface",
+        "note4":"The /links/<bms> table  defines mapping of external interface components to internal control variables",
+        "note5":"There are some junk/test fields as well... they will removed soon"
+    },
+
+    "/sets/blocked": {
+        "/ess/tbms": {"value": true}
+    },
+    "/faults/hvac": {
+        "note": "Leave as is for now. This definition is needed for clear faults UI cmd to work",
+        "clear_faults": {
+            "value": 0,
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "hvac"}]}]
+            }
+        }
+    },
+    "/alarms/hvac": {
+        "note": "Leave as is for now. This definition is needed for clear alarms UI cmd to work",
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "hvac"}]}]
+            }
+        },
+        "hvac_comms_1": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "hvac"}]}]
+            }
+        },
+        "hvac_comms_2": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "hvac"}]}]
+            }
+        },
+        "hvac_comms_3": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "hvac"}]}]
+            }
+        }
+    },
+    "/config/hvac": {
+        "Pubs": "/assets/hvac/summary",
+        "BlockSets": "/status/ess, /status/hvac",
+        "AlarmDestination": {
+            "value": "/assets/hvac/summary:alarms"
+        },
+        "FaultDestination": {
+            "value": "/assets/hvac/summary:faults"
+        },
+        "NoFaultMsg": {
+            "value": "Normal"
+        },
+        "NoAlarmMsg": {
+            "value": "Normal"
+        },
+        "maxKeyCmdOnTime": {
+            "value": 3
+        },
+        "maxKeyCmdTime": {
+            "value": 4
+        },
+        "maxKeyCmdTries": {
+            "value": 5
+        },
+        "maxStartupTime": {
+            "value": 30
+        },
+        "maxShutdownTime": {
+            "value": 30
+        },
+        "DbiDestination": {
+            "value": "/dbi/ess/config"
+        }
+    },
+    "/assets/hvac/summary": {
+        "name": "Risen HVAC Manager",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/bms/summary:start@enabled"}, 
+                        {"uri":	"/assets/bms/summary:clear_faults@enabled"},
+                        {"uri":	"/assets/bms/summary:clear_alarms@enabled"},
+                        {"uri":	"/assets/bms/summary:maint_reactive_power_setpoint@enabled"},
+                        {"uri":	"/assets/bms/summary:maint_active_power_setpoint@enabled"}
+                        ]
+                    }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "start": {
+            "name": "Close DC Contactor",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue":true, "uri":	"/sched/bms:schedStartupBMS@endTime", "outValue": 0},
+                        {"inValue":true, "uri":	"/sched/bms:schedStartupBMS", "outValue": "schedStartupBMS"},
+
+                        {"uri": "/status/ess:xUiStartup@StartBMS"},
+                        {"uri": "/status/ess:xUiStartup@StartPCS", "outValue": false},
+                        {"uri": "/status/ess:xUiShutdown@ShutdownBMS", "outValue": false},
+                        {"uri":	"/status/ess:xBMSStartupCmd"},
+                        {"uri":	"/status/ess:xUiShutdown", "outValue": false},
+                        {"uri":	"/status/ess:xFullFaultShutdown", "outValue": false}
+                        ]
+                    }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "stop": {
+            "name": "Open DC Contactor",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue":true, "uri":	"/sched/bms:schedShutdownBMS@endTime", "outValue": 0},
+                        {"inValue":true, "uri":	"/sched/bms:schedShutdownBMS", "outValue": "schedShutdownBMS"},
+
+                        {"uri": "/status/ess:xUiShutdown@ShutdownBMS"},
+                        {"uri": "/status/ess:xUiShutdown@ShutdownPCS"},
+                        {"uri":	"/status/ess:xUiStartup@StartBMS", "outValue": false},
+                        {"uri":	"/status/ess:xBMSStartupCmd", "outValue": false},
+                        {"uri":	"/status/ess:xFullFaultShutdown"} 
+                        ]
+                    }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value":"Init",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": true, "outValue": "Clear","uri": "/faults/bms:clear_faults"},
+                        {"inValue": true, "outValue": "Clear","uri": "/alarms/bms:clear_alarms"},
+                        
+                        {"inValue": true, "outValue": false, "uri": "/site/ess_hs:com_status[1]"},
+                        {"inValue": true, "outValue": 0,"uri": "/site/ess_ls:bms_faults1"},
+                        {"inValue": true, "outValue": 0,"uri": "/site/ess_ls:bms_faults2"},
+                        {"inValue": true, "outValue": 0,"uri": "/site/ess_ls:bms_alarms"},
+
+                        {"inValue": true, "uri": "/sched/bms:schedSendClearFaultCmdbms@endTime", "outValue": 1},
+                        {"inValue": true, "uri": "/sched/bms:schedSendClearFaultCmdbms", "outValue": "schedSendClearFaultCmdbms"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": "Clear"
+                }
+            ]
+        }
+    },
+    "/templates/bms": {
+        "hvac_1": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_1"},
+                     {"replace": "@@AC_NUM@@","with": "01"}
+        ]},
+        "hvac_2": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_2"},
+                     {"replace": "@@AC_NUM@@","with": "02"}
+        ]},
+        "hvac_3": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_3"},
+                     {"replace": "@@AC_NUM@@","with": "03"}
+        ]},
+        "hvac_4": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_4"},
+                     {"replace": "@@AC_NUM@@","with": "04"}
+        ]},
+        "hvac_5": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_5"},
+                     {"replace": "@@AC_NUM@@","with": "05"}
+        ]},
+        "hvac_6": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_6"},
+                     {"replace": "@@AC_NUM@@","with": "06"}
+        ]},
+        "hvac_7": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_7"},
+                     {"replace": "@@AC_NUM@@","with": "07"}
+        ]},
+        "hvac_8": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_8"},
+                     {"replace": "@@AC_NUM@@","with": "08"}
+        ]},
+        "hvac_9": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_9"},
+                     {"replace": "@@AC_NUM@@","with": "09"}
+        ]},
+        "hvac_10": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_10"},
+                     {"replace": "@@AC_NUM@@","with": "10"}
+        ]},
+        "hvac_11": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_11"},
+                     {"replace": "@@AC_NUM@@","with": "11"}
+        ]},
+        "hvac_12": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_12"},
+                     {"replace": "@@AC_NUM@@","with": "12"}
+        ]},
+        "hvac_13": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_13"},
+                     {"replace": "@@AC_NUM@@","with": "13"}
+        ]},
+        "hvac_14": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_14"},
+                     {"replace": "@@AC_NUM@@","with": "14"}
+        ]},
+        "hvac_15": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_15"},
+                     {"replace": "@@AC_NUM@@","with": "15"}
+        ]},
+        "hvac_16": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_16"},
+                     {"replace": "@@AC_NUM@@","with": "16"}
+        ]},
+        "hvac_17": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_17"},
+                     {"replace": "@@AC_NUM@@","with": "17"}
+        ]},
+        "hvac_18": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_18"},
+                     {"replace": "@@AC_NUM@@","with": "18"}
+        ]},
+        "hvac_19": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_19"},
+                     {"replace": "@@AC_NUM@@","with": "19"}
+        ]},
+        "hvac_20": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_20"},
+                     {"replace": "@@AC_NUM@@","with": "20"}
+        ]},
+        "hvac_21": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_21"},
+                     {"replace": "@@AC_NUM@@","with": "21"}
+        ]},
+        "hvac_22": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_22"},
+                     {"replace": "@@AC_NUM@@","with": "22"}
+        ]},
+        "hvac_23": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_23"},
+                     {"replace": "@@AC_NUM@@","with": "23"}
+        ]},
+        "hvac_24": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_24"},
+                     {"replace": "@@AC_NUM@@","with": "24"}
+        ]},
+        "hvac_25": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_25"},
+                     {"replace": "@@AC_NUM@@","with": "25"}
+        ]},
+        "hvac_26": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_26"},
+                     {"replace": "@@AC_NUM@@","with": "26"}
+        ]},
+        "hvac_27": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_27"},
+                     {"replace": "@@AC_NUM@@","with": "27"}
+        ]},
+        "hvac_28": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_28"},
+                     {"replace": "@@AC_NUM@@","with": "28"}
+        ]},
+        "hvac_29": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_29"},
+                     {"replace": "@@AC_NUM@@","with": "29"}
+        ]},
+        "hvac_30": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_30"},
+                     {"replace": "@@AC_NUM@@","with": "30"}
+        ]},
+        "hvac_31": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_31"},
+                     {"replace": "@@AC_NUM@@","with": "31"}
+        ]},
+        "hvac_32": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_32"},
+                     {"replace": "@@AC_NUM@@","with": "32"}
+        ]},
+        "hvac_33": {  "template": "hvac_risen_template.json",
+            "subs": [{"replace": "@@AC_ID@@","with": "hvac_33"},
+                     {"replace": "@@AC_NUM@@","with": "33"}
+        ]}
+    }, 
+    "/links/hvac": {
+        "Sec": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_sec"
+        },
+        "Min": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_minute"
+        },
+        "Hour": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_hour"
+        },
+        "Day": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_day"
+        },
+        "Month": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_month"
+        },
+        "Year": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_year"
+        }
+    },
+    "/xschedule/wake_monitor/bms":{
+        "/components/catl_mbmu_summary_r:mbmu_max_cell_voltage": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"}
+    },
+    "/xvlinks/hvac": {
+        "power_state_ui":                      { "value": "/assets/bms/summary:power_state",                          "vlink": "/status/bms:BMSPowerOn"                                 }
+    },
+    "/components/ems_running_info": {
+        "ac_comms_state_1": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 1 Communication Abnormal"},
+                        { "shift": 1,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 2 Communication Abnormal"},
+                        { "shift": 2,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 3 Communication Abnormal"},
+                        { "shift": 3,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 4 Communication Abnormal"},
+                        { "shift": 4,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 5 Communication Abnormal"},
+                        { "shift": 5,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 6 Communication Abnormal"},
+                        { "shift": 6,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 7 Communication Abnormal"},
+                        { "shift": 7,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 8 Communication Abnormal"},
+                        { "shift": 8,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 9 Communication Abnormal"},
+                        { "shift": 9,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 10 Communication Abnormal"},
+                        { "shift": 10,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 11 Communication Abnormal"},
+                        { "shift": 11,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 12 Communication Abnormal"},
+                        { "shift": 12,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 13 Communication Abnormal"},
+                        { "shift": 13,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 14 Communication Abnormal"},
+                        { "shift": 14,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 15 Communication Abnormal"},
+                        { "shift": 15,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_1", "outValue": "HVAC 16 Communication Abnormal"}
+                    ]
+                }]
+            }
+        },
+        "ac_comms_state_2": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 17 Communication Abnormal"},
+                        { "shift": 1,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 18 Communication Abnormal"},
+                        { "shift": 2,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 19 Communication Abnormal"},
+                        { "shift": 3,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 20 Communication Abnormal"},
+                        { "shift": 4,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 21 Communication Abnormal"},
+                        { "shift": 5,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 22 Communication Abnormal"},
+                        { "shift": 6,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 23 Communication Abnormal"},
+                        { "shift": 7,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 24 Communication Abnormal"},
+                        { "shift": 8,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 25 Communication Abnormal"},
+                        { "shift": 9,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 26 Communication Abnormal"},
+                        { "shift": 10,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 27 Communication Abnormal"},
+                        { "shift": 11,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 28 Communication Abnormal"},
+                        { "shift": 12,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 29 Communication Abnormal"},
+                        { "shift": 13,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 30 Communication Abnormal"},
+                        { "shift": 14,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 31 Communication Abnormal"},
+                        { "shift": 15,"mask": 1, "inValue": 1,"uri": "/alarms/hvac:hvac_comms_2", "outValue": "HVAC 32 Communication Abnormal"}
+                    ]
+                }]
+            }
+        },
+        "ac_comms_state_3": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/alarms/hvac:hvac_comms_3", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,  "inValue": 1,"uri": "/alarms/hvac:hvac_comms_3", "outValue": "HVAC 33 Communication Abnormal"}
+                    ]
+                }]
+            }
+        }
+    }
+}

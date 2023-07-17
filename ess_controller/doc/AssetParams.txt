@@ -1,0 +1,91 @@
+AssetParams.txt
+phil wilshire
+12/6/2020
+
+To reduce the significant clutter in assetVars, asssetParams have been introduced
+These are  used to store intermediate values used during system processing.
+
+For example 
+   Last values
+   Target Values 
+   Number of attempts
+
+They are simple to set up and are oneshot the value can be changed but the param cannot (at the moment) be deleted.
+
+
+amap["MbmuStatus"]     ->setParam("seenFault", false);
+amap["MbmuStatus"]     ->setParam("seenOk", false);
+amap["MbmuStatus"]     ->setParam("initCnt", -1);
+amap["MbmuStatus"]     ->setParam("rdFault", toFault);                      // time remaining before fault
+
+In fact the UI display loads a few of these when it sets up a UI var.
+
+
+        "soc": {
+            "name": "State of Charge",
+            "value": 76.55913543701172,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+
+
+These values can be used like local variables that will persist while a process is running.
+The SetParam is typeless, but you have to specify the type when recoving tha value
+
+double rdFault = amap["BmsStatus"] ->getdParam("rdFault");
+int lastBmsStatus    = amap["BmsStatus"]->getiParam("lastBmsStatus");
+char* lastTimestamp    = amap["Timestamp"]->getcParam("lastTimestamp");//amap["lastTimestamp"]->getiVal();
+bool seenFault  = amap["BmsStatus"]->getbParam("seenFault");
+
+
+A very special case of assetParams is the assetVar type of param.
+
+This is a special way to associate other assetvars with a target assetVar.
+
+amap["BmsStatus"]     ->setParam("ParamtoAlarm", amap["BmsTestToAlarm"]);  // Set an Av as a param
+assetVar*  toav =amap["BmsStatus"] ->getaParam("ParamtoAlarm");  // Get an Av as a param
+if(1)FPS_ERROR_PRINT("%s >> %s  ParamtoAlarm %f  \n", __func__, aname, toav->getdVal() );
+
+
+This means that if we have a variable to monitor for example
+
+SetupMonitorVar(aVtoMonitor, avEnable, avMaxValue, avMinValue, avMaxAlarmTime, avMaxFaultTime, avRecoverTime, avAlarmAlarm, avAlarmFault, avErrorCount)
+
+Will set up the monitor function 
+
+RunMonitorVar(aVtoMonitor)   will then run that monitor function
+
+We can now define a function to monitor this value using other assetVars to define limits as needed.
+Here is an example of such an assetvar ready for use by a more or less generic  function  CheckMonitorVar
+
+"MaxCellTemperature":	{
+			"value":	6.4,
+			"Alarm":	"av::/errors/ess/TemperatureAlarms",
+			"Enable":	"av::/params/ess/MaxCellTemperature_Enable",
+			"ErrorCount":	"av::/status/ess/Errors",
+			"Fault":	"av::/errors/ess/TemperatureFaults",
+			"MaxAlarmTime":	"av::/params/ess/MaxCellTemperature_MaxAlarmTime",
+			"MaxFaultTime":	"av::/params/ess/MaxCellTemperature_MaxFaultTime",
+			"MaxValue":	"av::/params/ess/MaxCellTemperature_MaxValue",
+			"MinValue":	"av::/params/ess/MaxCellTemperature_MinValue",
+			"RecoverTime":	"av::/params/ess/MaxCellTemperature_RecoverTime",
+			"maxAlarm":	2.5,
+			"maxFault":	5.5,
+			"maxSeen":	false,
+			"minSeen":	false,
+			"recoverTime":	-0.00010800000745803118,
+			"tLast":	29.971107999968808
+};
+
+CheckMonitorVar >> Not set up for [MaxCellTemperature] mname [MaxCellTemperature_reload]
+SetupMonitorVar >>  setup for  ess  MaxCellTemperature
+SetupMonitorVar >> avEnable 0x7f6410058770 mname [MaxCellTemperature_Enable]
+makeAVar >> makeVar for Av input av 0x7f6410056d20
+makeAVar >> makeVar for Av input av 0x7f6410057500
+getFeatAv >> found item [ErrorCount] avStr [av::/status/ess:Errors] uri[/status] saname [ess] svar [Errors]
+CheckMonitorVar >> Max Alarm Reset val 6.400000 for MaxCellTemperature at time 0.106497
+
+

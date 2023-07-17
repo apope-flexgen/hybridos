@@ -1,0 +1,77 @@
+{
+    "authentication": {
+        "notes": "",
+        "permissions": [
+            {
+                "roleOrUsername": "user",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
+                "access": [
+                    "/assets/ess readWrite",
+                    "/assets/ess/ess_1/reactive_power read",
+                    "/assets/ess/ess_1/active_power readWrite"
+                ]
+            },
+            {
+                "roleOrUsername": "admin",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'.",
+                "access": [
+                    "/dbi/assets readWrite",
+                    "/dbi read"
+                ]
+            },
+            {
+                "roleOrUsername": "rest",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. For the basic rest role, only read is allowed.",
+                "access": [
+                    "/sites/batcave/active_power readWrite",
+                    "/sites/any_site/reactive_power readWrite",
+                    "/components/batcave/comp1 read",
+                    "/components/any_site/comp2 read",
+                    "/components/hoth/comp2 readWrite"
+                ]
+            },
+            {
+                "roleOrUsername": "schedulerConfiguration",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. For the basic rest role, only read is allowed.",
+                "access": [
+                    "/scheduler/configuration readWrite",
+                    "/scheduler/configuration/local_schedule/name read",
+                    "/scheduler/configuration/web_sockets/clients read",
+                    "/scheduler/configuration/web_sockets/clients/{clientId} readWrite",
+                    "/scheduler/configuration/web_sockets/clients/{clientId}/ip read",
+                    "/scheduler/configuration/web_sockets/clients/abcd/ip readWrite",
+                    "/scheduler/configuration/web_sockets/clients/{clientId}/port readWrite",
+                    "/scheduler/configuration/scada/num_strings readWrite"
+                ]
+            },
+            {
+                "roleOrUsername": "schedulerModes",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. For the basic rest role, only read is allowed.",
+                "access": [
+                    "/scheduler/modes read",
+                    "/scheduler/modes/{modeId} readWrite",
+                    "/scheduler/modes/{modeId}/name read",
+                    "/scheduler/modes/{modeId}/{setpointType} readWrite",
+                    "/scheduler/modes/{modeId}/{setpointType}/{setpointId} read",
+                    "/scheduler/modes/qwerty/{setpointType}/{setpointId} readWrite",
+                    "/scheduler/modes/{modeId}/{setpointType}/{setpointId}/unit readWrite",
+                    "/scheduler/modes/{modeId}/{setpointType}/qwerty/value read"
+                ]
+            },
+            {
+                "roleOrUsername": "schedulerEvents",
+                "notes": "NOTE: each URI must be followed by a permission which is either 'read' or 'readWrite'. For the basic rest role, only read is allowed.",
+                "access": [
+                    "/scheduler/events readWrite",
+                    "/scheduler/events/{scheduleId} read",
+                    "/scheduler/events/qwerty readWrite",
+                    "/scheduler/events/{scheduleId}/{eventId} readWrite",
+                    "/scheduler/events/{scheduleId}/{eventId}/start_time read",
+                    "/scheduler/events/{scheduleId}/{eventId}/variables/{variableId} readWrite",
+                    "/scheduler/events/{scheduleId}/{eventId}/repeat/exceptions read",
+                    "/scheduler/events/{scheduleId}/{eventId}/repeat/exceptions/{exceptionIndex} readWrite"
+                ]
+            }
+        ]
+    }
+}

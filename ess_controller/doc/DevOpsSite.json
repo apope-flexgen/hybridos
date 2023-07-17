@@ -1,0 +1,23 @@
+{
+    "amname":"site",
+    "pname":"ess",
+
+    "/notes/site": {
+        "note" :" These are owned by the site manager"
+    },
+    "/site/ess_hs":{ 
+        "commands":{
+            "value":0,
+            "actions":{
+                "onSet":[{
+                    "enum":[
+                        {"inValue":3,"uri":"/system/pcs:status","outValue":"Stop"},
+                        {"inValue":2,"uri":"/system/pcs:status","outValue":"Standby"},
+                        {"inValue":1,"uri":"/system/pcs:status","outValue":"Run"}
+        
+                        ]
+                    }]        
+            }
+        }
+    }
+}

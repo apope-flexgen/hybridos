@@ -1,0 +1,110 @@
+Running in a Pizero
+02/11/2021 !!!
+ <<< done
+schedThread >> Created Fims var [/sched/fims:dummy]
+ getePerfAv  new lmap name 0xb5700890  Logging aname [ess_test] lname [WakePerf] data
+schedThread >> Really Adding  Sched Request 0x1657e98 id [EssSystemInit]  at 8.608
+EssSystemInit 8.611 >>>>>>>>>>>>>>>>>>>>> running init for ess Manager
+EssSystemInit 8.613 >>>>>>>>>>>>>>>>>>>>> done running init for ess Manager
+ ~schedItem delete sched item 0x1657e98  sched id [EssSystemInit] count [   1] aname [     ess] uri [/sched/ess:essSystemInit] refTime 0.200 runTime 0.200000 re
+schedThread >> Really Adding  Sched Request 0x1657fa0 id [EverySecond]  at 8.615
+schedThread >> Really Adding  Sched Request 0x16580a0 id [Every100mS_P1]  at 8.619
+schedThread >> Really Adding  Sched Request 0x16581c0 id [Every100mS_P2]  at 8.632
+schedThread >> Really Adding  Sched Request 0x16582e0 id [Every100mS_P3]  at 8.643
+schedThread >> Really Adding  Sched Request 0x1658168 id [FastPub]  at 8.654
+schedThread >> Really Adding  Sched Request 0x1657ca0 id [SlowPub]  at 10.827
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 10.829
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 11.000
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 11.170
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 11.340
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 11.512
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 11.681
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 12.265
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 14.270
+ setupSchedVar >> got res [{
+        "testTriggerEvent":     {
+                "value":        0,
+                "id":   "testTriggerEvent",
+                "aname":        "/sched/ess:testTrigger",
+                "enabled":      false,
+                "refTime":      0,
+                "runTime":      16.304793,
+                "repTime":      0.2
+        }
+}]
+addSaction >> Created Function var [/sched/ess:testTrigger]
+ fims
+ nfrags 2   , fims pfrags [1] [ess] fims method [set] body [{"testTriggerEvent":{"value":0,"actions":{"onSet":[{"func":[{"amap":"ess","func":"testTriggerFunc","t"}]}]}}}]
+testTriggerFunc running at time 15.017435 enabled [false] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:fastPub] runTime 16.304793 runCnt 0
+ setupSchedItemActions >> got res [{
+        "testTriggerEvent":     {
+                "value":        0,
+                "actions":      {
+                        "onSet":        [{
+                                        "func": [{
+                                                        "amap": "ess",
+                                                        "func": "testTriggerFunc",
+                                                        "var":  "/sched/ess:testTriggerEvent"
+                                                }]
+                                }]
+                }
+        }
+}]
+activateSchedItem >> cjbuf [{"value":"/sched/ess:testTriggerEvent","var":"/sched/ess:testTriggerEvent"}] rbuf [{"method":"set","uri":"/schedule/ess","body":{"adtTriggerEvent","var":"/sched/ess:testTriggerEvent"}}}]
+
+
+***** AddSchedItem >> running for  av [/schedule/ess:add_item] am 0x1650b50 cj (nil)  aV [/sched/ess:testTriggerEvent] value [/sched/ess:testTriggerEvent] actio
+
+AddSchedItem >> we added new schedItem 0xb5701cd0
+ setUp setup a sched item 0xb5701cd0
+ sched id [testTriggerEvent] count [   0] aname [     ess] uri [/sched/ess:testTriggerEvent] refTime 0.000 runTime 16.304793 repTime 0.200
+@@@@@@ AddSchedItem>> activated /sched/ess:testTriggerEvent   avi 0xb5701500 runTime 16.305
+
+ activateSchedItem >> got res [{
+        "add_item":     {
+                "value":        "/sched/ess:testTriggerEvent",
+                "var":  "/sched/ess:testTriggerEvent"
+        }
+}]
+schedThread >> Really Adding  Sched Request 0xb5701cd0 id [testTriggerEvent]  at 15.005
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 16.264
+testTriggerFunc running at time 16.451224 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 16.304793 runCnt 0
+          getSchedDelay >> Response [Still working] from 16.451111 at 16.452819 elapsed mS 1.711000
+testTriggerFunc running at time 16.514753 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 16.504793 runCnt 1
+          getSchedDelay >> Response [Still working] from 16.514647 at 16.516391 elapsed mS 1.748000
+testTriggerFunc running at time 16.714882 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 16.704793 runCnt 2
+          getSchedDelay >> Response [Still working] from 16.714643 at 16.716489 elapsed mS 1.850000
+testTriggerFunc running at time 16.914844 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 16.904793 runCnt 3
+          getSchedDelay >> Response [Still working] from 16.914615 at 16.916595 elapsed mS 1.984000
+testTriggerFunc running at time 17.114857 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.104793 runCnt 4
+          getSchedDelay >> Response [Still working] from 17.114631 at 17.116484 elapsed mS 1.856000
+testTriggerFunc running at time 17.318571 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.304793 runCnt 5
+          getSchedDelay >> Response [Still working] from 17.318419 at 17.321124 elapsed mS 2.710000
+testTriggerFunc running at time 17.518601 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.504793 runCnt 6
+          getSchedDelay >> Response [Still working] from 17.518448 at 17.521255 elapsed mS 2.812000
+testTriggerFunc running at time 17.718623 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.704793 runCnt 7
+          getSchedDelay >> Response [Still working] from 17.718473 at 17.720760 elapsed mS 2.292000
+testTriggerFunc running at time 17.931302 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 17.904793 runCnt 8
+          getSchedDelay >> Response [Still working] from 17.931147 at 17.933549 elapsed mS 2.407000
+testTriggerFunc running at time 18.114844 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 18.104793 runCnt 9
+          getSchedDelay >> Response [Still working] from 18.114612 at 18.116637 elapsed mS 2.029000
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 18.265
+testTriggerFunc running at time 18.446017 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 18.304793 runCnt 10
+          getSchedDelay >> Response [Still working] from 18.445903 at 18.447632 elapsed mS 1.733000
+testTriggerFunc running at time 18.514591 enabled [true] for av [/sched/ess:testTriggerEvent] schedav [/sched/ess:testTriggerEvent] runTime 18.504793 runCnt 11
+testTriggerFunc shutting down  at time 18.514591 for av [/sched/ess:testTriggerEvent] runTime 18.504793 runCnt 11
+          getSchedDelay >> Response [Shutting down] from 18.514482 at 18.517502 elapsed mS 3.024000
+ ~schedItem delete sched item 0xb5701cd0  sched id [testTriggerEvent] count [  12] aname [     ess] uri [/sched/ess:testTriggerEvent] refTime 0.000 runTime 18.5
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 20.270
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 22.265
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 24.270
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 26.270
+ write_cjson >> Wrote 400589 bytes to  file run_configs/ess_after_30 seconds.json
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 30.639
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 31.206
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 32.265
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 34.271
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 36.270
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 38.265
+SlowPub >> aname [ess] >> publish status RunPub 0x1654fc8 ->true time 40.270
+fimsThread >> fims shutting down

@@ -28,9 +28,7 @@
 #include <opendnp3/PrintingCommandCallback.h> 
 #include "MySOEHandler.h"
 using namespace std; 
-//using namespace openpal; 
-//using namespace asiopal; 
-//using namespace asiodnp3; 
+
 using namespace opendnp3; 
 int  main(int argc, char* argv[]) {
     // Specify what log levels to use. NORMAL is warning and above

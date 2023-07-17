@@ -1,0 +1,21 @@
+{
+    "/assets/bms":        {
+                 "bms_1":   { 
+                                "template":"configs/bms_catl_template.json",
+                                "subs":[
+                                {"replace":"@@BMS_ID@@","with":"bms_1"},
+                                {"replace":"@@BMS_NUM@@","with":"01"},
+                                {"replace":"@@BMS_IP@@","with":"192.168.1.114"}
+                                ]
+                            },
+                 "bms_2":   { 
+                                "template":"configs/bms_catl_template.json",
+                                "subs":[
+                                {"replace":"@@BMS_ID@@","with":"bms_2"},
+                                {"replace":"@@BMS_NUM@@","with":"02"},
+                                {"replace":"@@BMS_IP@@","with":"192.168.1.115"}
+                                ]
+                            }
+
+            }
+}

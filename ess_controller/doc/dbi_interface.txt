@@ -1,0 +1,89 @@
+
+dbi interface
+
+P Wilshire  07/18/2021
+
+The dbi system provides a means to store arbitrary json objects in a mongo database.
+The eventual target for this object is to provide a way of storing configs and run time data in a common medium.
+
+
+The inteface to the dbi system uses the fims mesaging system.
+
+
+Here is an example of a simple config storage using dbi.
+
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /dbi/ess_controller/config_bms '
+         {"/assets/bms/summary":{"name":" Battery Management System"}}' 
+
+
+The data is retrieved in a similar fashon.
+/usr/local/bin/fims/fims_send -m get -r /$$ -u /dbi/ess_controller/config_bms 
+'{
+    "config_bms":{
+        "/assets/bms/summary":
+            {"name":" Battery Management System"}
+    }
+}' 
+
+
+Note the extra "config_bms" field in the response.
+
+The replyto field is used, in the ess_controller, 
+to direct the contents of the database entry to a special incoming message handler.  
+
+/usr/local/bin/fims/fims_send -m get -r /ess/dbi/config_bms -u /dbi/ess_controller/config_bms 
+'{
+    "config_bms":{
+        "/assets/bms/summary":
+            {"name":" Battery Management System"}
+    }
+}' 
+
+/ess                      bypasses the fims subscription scheme.
+    /dbi                  uses the special dbi incoming handler
+        /config_bms       triggers the import and causes the first config_bms level to be 
+                          skipped and then the next json object to be imported as if it was a file 
+                          being read into the system.
+
+
+Here is an example of run time variable data storage using dbi.
+
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /dbi/ess_controller/status_bms '
+         {
+             "/status/bms":
+                  {"MaxBMSDischargeCurrent":270.0}
+         }'
+
+The dbi interface means that  we can only have one "status_bms" entry and it is not cumulative.
+All data destined for "status_bms" must be written in the same dbi write.
+There is a way to get past data items and version information but this is not used at this time.
+
+So, if a special set of data, such as status_bms MaxBMSChargeCurrent and MaxBMSDischargeCurrent. 
+it must be saved in dbi as a unique name.
+
+This example will work.
+
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /dbi/ess_controller/status_bms_max_currents '
+{
+    "/status/bms":
+        {"MaxBMSDischargeCurrent":270.0, "MaxBMSChargeCurrent":370.0}
+}'
+
+
+
+The data is retrieved in a similar fashon.
+/usr/local/bin/fims/fims_send -m get -r /ess/dbi/status_bms_max_currents -u /dbi/ess_controller/status_bms_max_currents 
+{
+    "status_bms_max_currents":{
+         "/status/bms":{
+             "MaxBMSDischargeCurrent":270.0,
+             "MaxBMSChargeCurrent":370.0
+             }
+    }
+}
+
+Once again the /ess/dbi prefix is used to trigger special input handling 
+The status_bms_max_currents field triggers the  import mode for the "/status/bms" object.
+
+The ess_controller "/status/bms" object will have the Charge / Discharge Current variables updated.
+

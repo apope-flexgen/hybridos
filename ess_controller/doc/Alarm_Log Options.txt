@@ -1,0 +1,186 @@
+Alarm Log Options 
+p.wilshire
+12/26/2020
+
+Linking to site controller  alarms.
+
+The site controller used a packed bit array for alarms.
+
+    "id": "pcs_state",
+        "offset": 2044,
+        "size": 2,
+        "name": "PCS_State1",
+        "bit_field": true,
+        "bit_strings": [
+            "Running",
+            "Reserved Address:2044 Bit:1",
+            "Reserved Address:2044 Bit:2",
+            "Key stop",
+            "Standby",
+            "Emergency stop",
+            "Start in process",
+            "Stop in process",
+            "Reserved Address:2044 Bit:8",
+            "Fault stop",
+            "Alarm running",
+            "Derating running",
+            "Reserved Address:2044 Bit:12",
+            "Reserved Address:2044 Bit:13",
+            "Reserved Address:2044 Bit:14",
+            "DSP communication error"
+        ]
+
+
+        the ess_controller has a way to automate this mapping
+
+        av->setAlarm ( "/assets/ess:alarm_group_xx", "myalarmid", " this alarm went off", severity );
+        av->setAlarm ( "/assets/ess:alarm_group_xx", "pcs_state", " this alarm went off", severity );
+        This means that we need a map for  pcs_state@Running to give us /site/ess_hs:pcs_state@running.
+        This will have be in /status/ess
+        We'll probably have to add the raw bitfield bitstrings vector to it...
+        Sigh...
+                     
+The svalue is the key that triggers the bit set based on string value  put a '!' as the first char to reset the fault. 
+The nvalue is the key that triggers the bit set based on numerical value  put a '-' as the first char to reset the fault. 
+
+"/state/ess": {
+        "notem":"If used, move this to pcs_manager.json",
+
+        "state": {
+            "value": 1,
+            "actions": {
+                "onSet": [{
+                    "bitfield": {
+                        "bitmap": [
+                            {"bit": 0, "uri": "/site/ess_hs:ess_state", "svalue": "running"},
+                            {"bit": 3, "uri": "/site/ess_hs:ess_state", "svalue": "key stop"},
+                            {"bit": 4, "uri": "/site/ess_hs:ess_state", "svalue": "standby"},
+                            {"bit": 5, "uri": "/site/ess_hs:ess_state", "svalue": "Emergency Stop"},
+                            {"bit": 6, "uri": "/site/ess_hs:ess_state", "svalue": "Start in process"},
+                            {"bit": 7, "uri": "/site/ess_hs:ess_state", "svalue": "Stop in process"},
+                            {"bit": 9, "uri": "/site/ess_hs:ess_state", "svalue": "Fault stop"},
+                            {"bit": 10, "uri": "/site/ess_hs:ess_state", "svalue": "Fault stop"},
+                            {"bit": 11, "uri": "/site/ess_hs:ess_state", "svalue": "Derating running"},
+                            {"bit": 15, "uri": "/site/ess_hs:ess_state",  "svalue": "Dsp comms error"}
+
+                        ]
+                    }
+                }
+                ]
+            }
+        }
+
+
+12/20/2020
+
+
+The Alarm Idea has morphed into the Log solution as well.
+
+The ess_controller has two main execution components
+/a system wide data map 
+/b a series of FUNCTIONS
+
+input data arrived from fims messages and is output in the form of fims messages.
+
+The system is organised into asset managers and assets. asset managers can manage other asset managers and assets.
+The application code is in the form of functions that are executed in one or more groups in response to either
+a/ a single heartbeat timer
+or
+b/ setinng a value from a fims message.
+
+The functions are designed to work on a single task or small group of tasks.
+The functions execute , with no delays  as a state machine. Timers are built into  each variable by timing the "set" operation.
+
+All config status and component data is stored in a system wide data map and available to publish, trigger fims sets or receive fims data.
+
+
+Typically the system will  execute on or more functions in a  wake up list.
+Managers can control their assets or other chlid managers.
+
+
+Much more can be stated but we're going to switch to alarms.
+
+Traditional control system design thinking will dictate a global list of alarms or faults thet requires a recompile to change.
+
+The ess_controller does not want to be in that world. It is anticipated that alarms can be dynamic and flexible and needs may change as the company gains more deployment experience.
+Lets try to keep the complexity in the configuration. (in a controlled manner)
+
+This means that each assetVar ( of basic variable building block) can support the generation of an alarm.
+We can collect alarms inside one or more designated assetVars. When published these alarms will be available to the UI or system logs.
+
+This means that when we are monitoring currents / voltages etc, a monitored variable can be an alarm source.
+This variable can then send its alarm state to an alarm collection variable (Alarm Group 1).
+When the alarm condition the same assetVar can cause the alarm to be cleared or at least flagged as resolved.
+The original asset var can hold the identity of the alarm condition and can provide the anchor for the alarm cndition.
+
+The instance of the alarm can be forwarded to any desired alarm container in the system.
+Turning a regular asset var into an alarm container is done simply be sending an alarm to it from another assetVal.
+A single pointer in the assetvar is used to trigger extended options. So we only use extra space when one or more options are used.
+
+
+The alarmid is unique text used to identify the alarm topic.
+Only one alarm per av of a given topic can be raised.
+The same av can have several different topics. The receive av will place an alarm in a vector to keep order.
+THe same alarm object will also be saved (but in an alarm map ) in the source av.
+
+if av->valueChanged()
+av->setAlarm ( "/assets/ess:alarm_group_xx", "myalarmid", " this alarm went off", severity );
+av->resetAlarm ( "/assets/ess:alarm_group_xx", alarmid, " this alarm was reset" , severity );
+
+
+Lots of possibly nice things happen with this architecture. Names, times, values owners ,are all carried along with the assetVar.
+
+This also fits in with the concept of triggering operations on response to setting an assetVar value.
+Alarm logging and tracking are all taken care of.
+
+
+
+Alarm object
+
+string desc 
+assetVar* source
+assetVar* destination
+asssetVal* cause
+dest idx - vector index in the dest
+string alarmid
+
+
+
+in the source  assetvar keep a list of destinatons
+
+map in the source
+alarmid destav vecnum 
+std::map<std::string , std::pair<alarmObj*,int >
+
+vector in the dest
+std::vector<alarmObj *>
+
+
+
+
+in the dest you have a vector of alarms.
+
+11/24/20202
+
+Extended to Logs
+done
+change name to asset_log   
+Add copy of assetVal to asset_log  class
+Add (basetime) and time
+Add atype to log 
+Make the dest vec the owner 
+
+TODO
+Allow clear to clear all src / atype in dest.
+SetAlarm SetLog just about the same but not quite
+GetLog returns a nice big fat cJSON 
+Load Log ... hmm watch this space for Warm Start
+
+
+
+
+
+
+
+
+

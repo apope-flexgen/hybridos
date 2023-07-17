@@ -1,0 +1,139 @@
+## Goals
+
+The Ess_controller must shut down systems safely in response to failure states and emergency faults.
+Failure states are caused by asset conditions indicating that the Asset is unable to perform as desired.
+Emergency Faults are caused by external sensors indicating that the system has detected an urgent problem ESTOP, Fire Etc.   
+
+
+## Affected Repos
+
+ess_controller
+
+## Approach
+
+Asset Conditions are monitored by a combination of 
+   - AssetVar functions , triggered by reading an out of range value from a component
+   - Functions that are triggered by periodic or special wake up messages cascaded to the asset managers.
+The AssetVar operations are used to indicate an error condition while the periodic functions provide a timing facility.
+
+For example we detect a over temp battery cell from a FIMS input set or pub.
+   This will trigger a change in state for that component.
+  The periodic function will then monitor the changed state and trigger other fault actions based on a combination of the component fault and the time that the fault has been sustained. Here is an example of code to be used in the periodic function
+
+```code
+// MaxCellVoltSeen set by the assetVar holding the MaxCellVoltage component value when it exceeded MaxCellVoltLimit
+// MaxCellVoltOK set by the assetVar holding the MaxCellVoltage component value when it went below MaxCellVoltReset
+// MaxCellVoltFault is the assetVar indicating that we have a fault.
+
+// first check for latched limits.
+if(!MaxCellVoltSeen)
+{
+    if(MaxCellColtage >MaxCellVoltLimit)
+    {
+         MaxCellVoltageSeenAv->setVal(true);
+    }
+}
+if(!MaxCellVoltOK)
+{
+   if(MaxCellColtage <MaxCellVoltReset)
+   {
+         MaxCellVoltageOKAv->setVal(true);
+   }
+}
+
+if (MaxCellVoltageFault )
+{
+     if (MaxCellVoltageOK )&& ((tNow - MaxCellVoltageOKAv->getSetTime()) >MaxCellVoltageResetTime))
+     {
+       MaxCellVoltageFaultAv->setVal(false);
+       MaxCellVoltageSeenAv->setVal(false);
+      // Reset Fault Alarm (AssetManager)
+     am->ResetFault(MaxCellVoltageAv, tNow," MaxCellVoltage Alarm" );
+     // trigger Fault actions (assetManager)
+     am->trigger_wakeup(BMS_FAULT_RESET);
+
+     }
+}
+else
+{
+    if (MaxCellVoltageSeen && ((tNow - MaxCellVoltageSeenAv->getSetTime()) >MaxCellVoltageErrTime))
+    {
+       MaxCellVoltageFaultAv->setVal(true);
+       MaxCellVoltageFaultOK->setVal(false);
+      // Create Fault Alarm (AssetManager)
+     am->CreateFault(MaxCellVoltageAv, tNow," MaxCellVoltage Alarm" );
+     // trigger Fault actions (assetManager)
+     am->trigger_wakeup(BMS_FAULT);
+   }
+}
+```
+The Proposed Shutdown Sequence:
+
+ [https://app.zenhub.com/files/298025636/63cd2757-5d3c-41e8-8ad2-7833821f09b6/download](https://app.zenhub.com/files/298025636/63cd2757-5d3c-41e8-8ad2-7833821f09b6/download)
+
+## Interface
+
+The incoming Component is the MaxCellVoltage from a BMS unit.
+
+for example this is the input value from the Modbus_Client
+
+     /components/catl02_smbu_warn_r:sbmul_max_cell_voltage 
+
+this  will be linked to the internal variable
+
+   /status/bms_2/MaxCellVoltage
+
+The same assetVar is referred to by both entries.
+
+The following config variables will also be used
+
+```javascript
+{
+   "/config/bms_xx": {
+                     "MaxCellVoltLimit": 4.25,
+                     "MaxCellVoltReset":  4.2,
+                      "MaxCellFaultTime": 5.0,
+                      "MaxCellFaultReset": 25.0
+                        }
+}
+``` 
+ 
+The "OnSet" Handling for this variable is defined in the bms template config file.
+
+```javascript
+"/status/bms_2":        {
+                "MaxCellVoltage":   {
+                        "value":        3.5,
+                        "actions":      {
+                                "onSet":        {
+                                        "func": [
+                                                    {
+ 
+                                                        "amap": "bms_2",
+                                                        "func": "HandleMaxCellVoltage"
+                                                    }
+                                                ]
+                                }
+                        }
+                }
+        },
+```
+
+ 
+## Testing
+
+Testing is done on several  levels.
+1/ Shell script to set MaxCellVoltage values 
+2/ Simulated Modbus_Client ( Set up ModBus_Client and Server , inject same scripted test through the Modbus Server )
+3/ Twins (If available)
+4/ Possible internal fault simulation.
+        ( this can  used during commissioning to check the alarm response without having to generate the fault condition on the BMS System)
+ 
+## Backward Compatibility
+
+Not Applicable
+
+
+## Configuration
+
+See Above

@@ -7,6 +7,12 @@ export type AlertState = {
   }
 };
 
+export type MaintModeState = {
+  [displayGroupID: string]: {
+    value: boolean
+  }
+};
+
 export type DisplayGroupStateStructure = {
   status: {
     [componentID: string]: string
@@ -15,6 +21,9 @@ export type DisplayGroupStateStructure = {
     [componentID: string]: {
       value: ValueType
       enabled?: boolean
+      extraProps?: {
+        [key: string]: any
+      }
     }
   }
 };

@@ -2,129 +2,76 @@
 #include <spdlog/fmt/bundled/printf.h>
 #include <iostream>
 #include <iterator>
+#include <chrono>
+#include <unordered_map>
+#include <map>
 
 #ifndef LOGGER_H
 #define LOGGER_H
 
-namespace StaticLogs{
+#define MIN_LOG_LEVEL -1
+#define MAX_LOG_LEVEL 5
 
-    class Logger
+namespace Logging
+{
+    // Entry in the map storing a record of messages that have been logged
+    struct RecordEntry
     {
-    private:
-        //smart pointer no mem leak
-        static std::shared_ptr<spdlog::logger> logger;
-        static std::shared_ptr<spdlog::logger> console;
-    public:
-        static void Init(std::string module);
-        inline static std::shared_ptr<spdlog::logger>& get_logger() {return logger;}
-        inline static std::shared_ptr<spdlog::logger>& get_console() {return console;}
+        // Timestamp when the message was logged
+        std::chrono::_V2::steady_clock::time_point timestamp;
+        // Number of duplicate messages that have been captured
+        uint count;
     };
 
+    //smart pointer no mem leak
+    extern std::shared_ptr<spdlog::logger> logger;
+    extern std::shared_ptr<spdlog::logger> console;
+    extern std::unordered_map<std::string, RecordEntry> records;
+
+    extern bool to_file;
+    extern bool to_console;
+    extern std::map<spdlog::level::level_enum, std::string> severity_names; // Translation of spdlog levels to their string representations, used for logging
+    extern spdlog::level::level_enum severity_threshold;                    // Log level at or above which messages will be logged
+    extern std::chrono::seconds redundant_rate;                             // Minimum amount of time before logging the same message again
+    extern std::chrono::minutes clear_rate;                                 // Minimum amount of time before clearing the map of messages
+    extern std::chrono::_V2::steady_clock::time_point last_records_clear;   // Last time the records map was cleared
+
+    extern std::string parse_config_path(int argc, char** argv);
+    extern void Init(std::string module, int argc, char** argv);
+    extern std::vector<std::string> read_config(std::string file_path);
+    extern void log_msg(spdlog::level::level_enum severity, std::string pre, std::string msg, std::string post);
+    extern void log_test(spdlog::level::level_enum severity, std::string pre, std::string msg, std::string post);
+    extern bool update_records(std::string msg, std::string& redundant_msg);
+    extern void clear_records();
+
     /**
-     * @brief This function removes newlines from user messages to allow for valid json and 
-     * generates a single string from a variable number or arguments. Mimics printf formatting.
+     * @brief This function removes newlines and tabs from user messages to allow for valid json and 
+     * generates a single string from a variable number or arguments. Uses c-style formatting
      * 
-     * @tparam Types Variable arguments that correspond with format in printf fashion
-     * @param format printf style format <"%s etc. %d">
+     * @tparam Types Variable arguments that correspond with c-style formatting
+     * @param format c-style format <"%s etc. %d">
      * @param args const reference to types
-     * @return std::string <- single string with newlines removed.
+     * @return std::string <- single string with newlines and tabs removed.
      */
     template <class ... Types>
-    std::string msgString(std::string format, const Types&... args)
+    std::string msg_string(std::string format, const Types&... args)
     {
-        // removing newlines
-        std::string formatWithoutNewline; 
-        std::copy_if(format.begin(), format.end(), back_inserter(formatWithoutNewline), [](char c){return c!='\n' && c!='\t';});
+        // removing newlines and tabs
+        std::string formatted_str; 
+        std::copy_if(format.begin(), format.end(), back_inserter(formatted_str), [](char c){return c!='\n' && c!='\t';});
 
         // sprintf a string
-        std::string out(fmt::sprintf(formatWithoutNewline, args...));
-
-        // finish json needed output
-        out.push_back('"');
-        out.push_back('}');
-        return out;
+        return fmt::sprintf(formatted_str, args...);
     }
- 
-    std::string preString( const char * file, const char* func, const int line); 
-
-    void log_error( std::string pre, std::string post );
-    void log_info( std::string pre, std::string post );
-    void log_warning( std::string pre, std::string post );
-    void log_debug( std::string pre, std::string post );
-    void log_test( std::string pre, std::string post );
-
-    void console_error( std::string pre, std::string post );
-    void console_info( std::string pre, std::string post );
-    void console_warning( std::string pre, std::string post );
-    void console_debug( std::string pre, std::string post );
-    void console_test( std::string pre, std::string post );
-
+    extern std::string pre_string(const char * file, const char* func, const int line); 
+    extern std::string post_string();
+    extern spdlog::level::level_enum severity_to_level(int severity);
 }
 
-// macros for logging
-
-// if ./package_utility/build.sh -m devel
-// then also log to console
-#ifdef FPS_DEVELOPER_MODE
-    #define FPS_INFO_LOG(...)       do{ \
-        ::StaticLogs::log_info(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__)); \
-        ::StaticLogs::console_info(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__)); \
-    }while(0)
-    #define FPS_ERROR_LOG(...)      do{ \
-        ::StaticLogs::log_error(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__)); \
-        ::StaticLogs::console_error(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__)); \
-    }while (0)
-    #define FPS_WARNING_LOG(...)    do{ \
-        ::StaticLogs::log_warning(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__)); \
-        ::StaticLogs::console_warning(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__)); \
-    }while(0)
-    #ifdef FPS_DEBUG_MODE
-        #define FPS_DEBUG_LOG(...)      do{ \
-            ::StaticLogs::log_debug(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__)); \
-            ::StaticLogs::console_debug(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__)); \
-        }while(0) 
-    #else
-        #define FPS_DEBUG_LOG(...)
-    #endif
-#else 
-    #ifdef FPS_TEST_MODE // use fprintf for gtests. The logger is initialized inside of main don't use logger
-        #define FPS_INFO_LOG(...)       do{ \
-            std::string str = ::StaticLogs::msgString(__VA_ARGS__); \
-            std::string pre = ::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__); \
-            str.pop_back(); \
-            fprintf(stderr, "\nInfo:%s%s\n", pre.c_str(), str.c_str()); \
-        }while(0)
-        #define FPS_ERROR_LOG(...)      do{ \
-            std::string str = ::StaticLogs::msgString(__VA_ARGS__); \
-            std::string pre = ::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__); \
-            str.pop_back(); \
-            fprintf(stderr, "\nError:%s%s\n", pre.c_str(), str.c_str()); \
-        }while(0)
-        #define FPS_WARNING_LOG(...)    do{ \
-            std::string str = ::StaticLogs::msgString(__VA_ARGS__); \
-            std::string pre = ::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__); \
-            str.pop_back(); \
-            fprintf(stderr, "\nWarning:%s%s\n", pre.c_str(), str.c_str()); \
-        }while(0)
-        #define FPS_TEST_LOG(...)       do{ \
-            std::string str = ::StaticLogs::msgString(__VA_ARGS__); \
-            std::string pre = ::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__); \
-            str.pop_back(); \
-            fprintf(stderr, "\nTest:%s%s\n", pre.c_str(), str.c_str()); \
-        }while(0)
-        #define FPS_DEBUG_LOG(...)      do{ \
-            std::string str = ::StaticLogs::msgString(__VA_ARGS__); \
-            std::string pre = ::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__); \
-            str.pop_back(); \
-            fprintf(stderr, "\nDebug:%s%s\n", pre.c_str(), str.c_str()); \
-        }while(0)
-    #else // only log to file
-        #define FPS_INFO_LOG(...)       ::StaticLogs::log_info(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__))
-        #define FPS_ERROR_LOG(...)      ::StaticLogs::log_error(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__))
-        #define FPS_WARNING_LOG(...)    ::StaticLogs::log_warning(::StaticLogs::preString(__FILE__, __FUNCTION__, __LINE__), ::StaticLogs::msgString(__VA_ARGS__))
-        #define FPS_DEBUG_LOG(...)
-        #define FPS_TEST_LOG(...)
-    #endif
-#endif
+#define FPS_INFO_LOG(...)   ::Logging::log_msg(spdlog::level::info, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+#define FPS_DEBUG_LOG(...)   ::Logging::log_msg(spdlog::level::debug, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+#define FPS_WARNING_LOG(...)   ::Logging::log_msg(spdlog::level::warn, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+#define FPS_ERROR_LOG(...)   ::Logging::log_msg(spdlog::level::err, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+#define FPS_TEST_LOG(...)   ::Logging::log_test(spdlog::level::err, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
 
 #endif // header guard

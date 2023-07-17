@@ -1,7 +1,4 @@
-import {
-    IsNotEmpty,
-    IsNumber,
-} from 'class-validator'
+import { IsNotEmpty, IsNumber } from 'class-validator'
 
 export class ThrottleData {
     @IsNumber()
@@ -13,7 +10,7 @@ export class ThrottleData {
     limit: number
 
     constructor(ttl: number, limit: number) {
-        this.ttl = ttl;
-        this.limit = limit;
+        this.ttl = ttl
+        this.limit = limit
     }
 }

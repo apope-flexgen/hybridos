@@ -1,5 +1,5 @@
-/* eslint-disable max-lines */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable */
+// TODO: fix lint
 import {
   MuiButton,
   CardRow,
@@ -8,17 +8,17 @@ import {
   SelectorContainer,
   IconButton,
   IconList,
+  Typography,
 } from '@flexgen/storybook';
-import { Tooltip, Typography } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   icons,
   newType,
   handleIconColor,
   updateModeFields,
   schedulerConfigLabels as labels,
-  modeInfoSizing as sizes,
 } from 'src/pages/Scheduler/ModeManager/Helpers';
 import {
   customColorsArr,
@@ -28,18 +28,25 @@ import {
   ModeBody,
 } from 'src/pages/Scheduler/ModeManager/Types';
 import ExpandingTable from './SetpointTable/ExpandingTable';
+import ModeButtons from './ModeButtons';
+import { modeInfoStyles as styles } from 'src/pages/Scheduler/ModeManager/Styles';
 
 interface ModeInfoProps {
-  selectedModeId: string | null
-  updateMode: (mode: ModeBody | undefined | null, action: Actions) => void
-  checkChanges: () => void
-  changes: boolean
-  selectedModeValues?: ModeBody | null
-  setuneditedSelectedModeValues: any
-  modes: any
-  setselectedModeValues: React.Dispatch<React.SetStateAction<any>>
-  checkName: (selectedModeValues: any, id: any) => void
-  nameMatch: boolean
+  selectedModeId: string | null;
+  updateMode: (mode: ModeBody | undefined | null, action: Actions) => void;
+  checkChanges: () => void;
+  changes: boolean;
+  selectedModeValues?: ModeBody | null;
+  setuneditedSelectedModeValues: any;
+  modes: any;
+  modesFromAPI: any;
+  setselectedModeValues: React.Dispatch<React.SetStateAction<any>>;
+  setselectedModeId: (newValue: any) => void;
+  checkName: (selectedModeValues: any, id: any) => void;
+  nameMatch: boolean;
+  disableModeManager: boolean;
+  disableSave: boolean;
+  setDisableSave: any;
 }
 
 const ModeInfo: React.FC<ModeInfoProps> = ({
@@ -48,28 +55,46 @@ const ModeInfo: React.FC<ModeInfoProps> = ({
   checkChanges,
   changes,
   selectedModeValues,
+  setselectedModeId,
   modes,
+  modesFromAPI,
   setselectedModeValues,
   setuneditedSelectedModeValues,
   checkName,
   nameMatch,
+  disableModeManager,
+  disableSave,
+  setDisableSave,
 }: ModeInfoProps) => {
+  const [setpointError, setSetpointError] = useState<boolean>(false);
+  const [duplicateURI, setDuplicateURI] = useState<boolean>(false);
+  const [invalidName, setInvalidName] = useState<boolean>(false);
+
   useEffect(() => {
     if (selectedModeId) {
       setselectedModeValues(modes[selectedModeId as keyof typeof modes]);
       setuneditedSelectedModeValues(modes[selectedModeId as keyof typeof modes]);
     }
-  // TODO: Fix eslint-ignore
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedModeId, setselectedModeValues, modes]);
+  }, [selectedModeId]);
 
   useEffect(() => {
-    checkChanges();
-  }, [selectedModeValues, checkChanges]);
+    const disabled =
+      !changes || nameMatch || disableModeManager || duplicateURI || setpointError || invalidName;
+    setDisableSave(disabled);
+  }, [changes, nameMatch, disableModeManager, duplicateURI, setpointError, invalidName]);
 
   useEffect(() => {
     checkName(selectedModeValues, selectedModeId);
-  }, [selectedModeValues, checkName, selectedModeId]);
+    checkChanges();
+  }, [selectedModeValues, selectedModeId]);
+
+  useEffect(() => {
+    if (selectedModeValues) {
+      const emptyName = !selectedModeValues.name || selectedModeValues.name.trim() === '';
+      setInvalidName(emptyName);
+      setDuplicateURI(checkDuplicateURIS(selectedModeValues));
+    }
+  }, [selectedModeValues]);
 
   const addSetpoint = (type: keyof ModeBody) => {
     const newSetpoint = newType(type);
@@ -90,14 +115,39 @@ const ModeInfo: React.FC<ModeInfoProps> = ({
     }
   };
 
-  const handleValueTypes = (
-    type: string | undefined,
-    value: string,
-  ) => {
+  function checkDuplicateURIS(mode: ModeBody): boolean {
+    if (!modes) return false;
+    const uris: Set<string> = new Set();
+
+    for (const variable of mode.variables) {
+      const uri = variable.uri.endsWith('/') ? variable.uri.slice(0, -1) : variable.uri;
+      if (uris.has(uri.toLowerCase())) return true;
+      uris.add(uri.toLowerCase());
+    }
+
+    for (const constant of mode.constants) {
+      const uri = constant.uri.endsWith('/') ? constant.uri.slice(0, -1) : constant.uri;
+      if (uris.has(uri.toLowerCase())) return true;
+      uris.add(uri.toLowerCase());
+    }
+
+    return false;
+  }
+
+  const handleValueTypes = (type: string | undefined, value: string) => {
     if (type) {
-      if (type === 'Int') { return parseInt(value, 10); }
-      if (type === 'Float') { return parseFloat(value); }
-      if (type === 'Bool') { if (value === 'true') { return true; } return false; }
+      if (type === 'Int') {
+        return parseInt(value, 10);
+      }
+      if (type === 'Float') {
+        return parseFloat(value);
+      }
+      if (type === 'Bool') {
+        if (value === 'true') {
+          return true;
+        }
+        return false;
+      }
     }
     return value;
   };
@@ -107,7 +157,7 @@ const ModeInfo: React.FC<ModeInfoProps> = ({
     type: keyof ModeBody,
     action: SetpointActions,
     property?: string,
-    event?: any,
+    newValue?: any,
     setpointType?: string,
   ) => {
     if (selectedModeValues && selectedModeValues[type]) {
@@ -117,17 +167,25 @@ const ModeInfo: React.FC<ModeInfoProps> = ({
       const arrayCopy = [...selectedModeValues[type]];
       if (action === 'update' && property) {
         if (index !== undefined) {
-          arrayCopy[index] = {
-            // @ts-ignore
-            ...arrayCopy[index],
-            [property]:
-                            property === 'value'
-                              ? handleValueTypes(setpointType, event.target.value)
-                              : event.target.value,
-          };
+          if (property === 'type') {
+            arrayCopy[index] = {
+              // @ts-ignore
+              ...arrayCopy[index],
+              [property]: newValue,
+              value: '',
+            };
+          } else {
+            arrayCopy[index] = {
+              // @ts-ignore
+              ...arrayCopy[index],
+              [property]:
+                property === 'value' ? handleValueTypes(setpointType, newValue) : newValue,
+            };
+          }
         }
       } else if (action === 'delete') {
         arrayCopy.splice(index, 1);
+        setSetpointError(false);
       }
       setselectedModeValues((prevState: any) => ({
         ...prevState,
@@ -136,161 +194,118 @@ const ModeInfo: React.FC<ModeInfoProps> = ({
     }
   };
 
-  const isNewMode = selectedModeValues?.name === 'New Mode';
+  const handleNameHelper = () => {
+    if (invalidName) return labels.modeInfo.tooltip.emptyModeName;
+    else if (nameMatch) return labels.modeInfo.tooltip.nameFieldHelperText;
+    return undefined;
+  };
+
+  const defaultMode =
+    selectedModeId?.toString().toLowerCase() === 'default' &&
+    selectedModeValues?.name.toLowerCase() === 'default';
 
   return (
-    <Box sx={{ flexGrow: 1, padding: '16px' }}>
-      <CardRow alignItems="center">
-        <Typography variant="h1">{labels.modeInfo.title.selectedModeId}</Typography>
-        <Box
-          sx={{
-            marginLeft: 'auto',
-            display: 'flex',
-            gap: '16px',
-          }}
-        >
-          <MuiButton
-            color="inherit"
-            label={labels.modeInfo.buttons.cancel}
-            onClick={() => selectedModeId && setselectedModeValues(modes[selectedModeId])}
-            size="medium"
-            variant="text"
-          />
-          {selectedModeId?.toString().toLowerCase() !== 'default' && (
-            <MuiButton
-              color="error"
-              label={labels.modeInfo.buttons.delete}
-              onClick={() => updateMode(selectedModeValues, 'delete')}
-              size="medium"
-            />
-          )}
-          <MuiButton
-            color="primary"
-            disabled={!changes || nameMatch}
-            label={labels.modeInfo.buttons.save}
-            onClick={() => updateMode(selectedModeValues, 'save')}
-            size="medium"
-          />
-        </Box>
+    <Box sx={styles.box}>
+      <CardRow alignItems='center'>
+        <Typography variant='headingS' text={labels.modeInfo.title.selectedModeId} />
+        <ModeButtons
+          selectedModeId={selectedModeId}
+          selectedModeValues={selectedModeValues}
+          updateMode={updateMode}
+          modesFromAPI={modesFromAPI}
+          disableModeManager={disableModeManager}
+          disableSave={disableSave}
+        />
       </CardRow>
-      <CardRow alignItems="center">
-        <Typography variant="h3">{selectedModeValues?.name}</Typography>
+      <CardRow alignItems='center'>
+        <Typography variant='bodyLBold' text={selectedModeValues?.name || ''} />
         {selectedModeId?.toString().toLowerCase() === 'default' && (
-        <Tooltip arrow title={labels.modeInfo.tooltip.defaultMode}>
-          <div>
-            <IconButton icon="Help" size="small" />
-          </div>
-        </Tooltip>
+          <Tooltip arrow title={labels.modeInfo.tooltip.defaultMode}>
+            <div>
+              <IconButton icon='Help' size='small' />
+            </div>
+          </Tooltip>
+        )}
+        {duplicateURI && (
+          <Typography
+            sx={styles.duplicateURITypo}
+            variant='bodyM'
+            text={labels.modeInfo.tooltip.duplicateURI}
+            color='error'
+          />
         )}
       </CardRow>
       <Box sx={{ direction: 'column' }}>
-        <CardRow alignItems="center">
-          <Typography sx={{ width: sizes.textWidth }} variant="body1">
-            Name
-          </Typography>
+        <CardRow alignItems='center'>
+          <Typography sx={styles.textWidth} variant='bodyL' text={labels.modeInfo.name} />
           <TextField
-            disabled={selectedModeValues?.name.toLowerCase() === 'default'}
-            color={nameMatch || isNewMode ? 'error' : 'primary'}
-            helperText={
-                            // eslint-disable-next-line no-nested-ternary
-                            isNewMode
-                              ? labels.modeInfo.tooltip.newModeNameHelperText
-                              : nameMatch
-                                ? labels.modeInfo.tooltip.nameFieldHelperText
-                                : undefined
-                        }
-            label="Name"
-            onChange={(event: any) => updateModeFields(
-              'name',
-              undefined,
-              setselectedModeValues,
-              event,
-            )}
-            size="small"
+            disabled={disableModeManager || defaultMode}
+            color={nameMatch || invalidName ? 'error' : 'primary'}
+            helperText={handleNameHelper()}
+            label={labels.modeInfo.name}
+            onChange={(event: any) =>
+              updateModeFields('name', undefined, setselectedModeValues, event)
+            }
+            size='small'
             value={selectedModeValues?.name}
           />
         </CardRow>
-        <CardRow alignItems="center">
-          <Typography sx={{ width: sizes.textWidth }} variant="body1">
-            Color
-          </Typography>
-          <Box sx={{ minWidth: sizes.selectorWidth }}>
-            <SelectorContainer
-              fullWidth
-              value={selectedModeValues?.color_code}
-              variant="color"
-            >
+        <CardRow alignItems='center'>
+          <Typography sx={styles.textWidth} variant='bodyL' text={labels.modeInfo.color} />
+          <Box sx={styles.selectorWidth}>
+            <SelectorContainer fullWidth value={selectedModeValues?.color_code} variant='color'>
               {customColorsArr.map((color: string) => (
                 <Circle
                   color={color as CustomColorType}
-                  onClick={() => updateModeFields(
-                    'color',
-                    color,
-                    setselectedModeValues,
-                  )}
+                  onClick={() =>
+                    !disableModeManager && updateModeFields('color', color, setselectedModeValues)
+                  }
                   selected={selectedModeValues?.color_code === color}
                 />
               ))}
             </SelectorContainer>
           </Box>
         </CardRow>
-        <CardRow alignItems="center">
-          <Typography sx={{ width: sizes.textWidth }} variant="body1">
-            Icon
-          </Typography>
-          <Box sx={{ width: sizes.selectorWidth }}>
+        <CardRow alignItems='center'>
+          <Typography sx={styles.textWidth} variant='bodyL' text={labels.modeInfo.icon} />
+          <Box sx={styles.selectorWidth}>
             <SelectorContainer
+              disabled={disableModeManager}
               fullWidth
               value={selectedModeValues?.icon}
-              variant="icon"
+              variant='icon'
             >
               {icons.map((icon: string) => (
                 <IconButton
                   color={handleIconColor(icon, selectedModeValues)}
                   icon={icon as IconList}
-                  onClick={() => updateModeFields(
-                    'icon',
-                    icon,
-                    setselectedModeValues,
-                  )}
+                  onClick={() => updateModeFields('icon', icon, setselectedModeValues)}
                 />
               ))}
             </SelectorContainer>
           </Box>
         </CardRow>
         {selectedModeId?.toString().toLowerCase() === 'default' ? null : (
-          <CardRow alignItems="start">
-            <Typography
-              sx={{
-                width: sizes.textWidth,
-                marginTop: sizes.setpointMargin,
-              }}
-              variant="body1"
-            >
-              Variables
-            </Typography>
+          <CardRow alignItems='start'>
+            <Typography text='Variables' sx={styles.setpointText} variant='bodyL' />
             <ExpandingTable
+              disableModeManager={disableModeManager}
               addSetpoint={addSetpoint}
+              setSetpointError={setSetpointError}
               setpoint={selectedModeValues?.variables}
-              type="variables"
+              type='variables'
               updateSetpoint={updateSetpoint}
             />
           </CardRow>
         )}
-        <CardRow alignItems="start">
-          <Typography
-            sx={{
-              width: sizes.textWidth,
-              marginTop: sizes.setpointMargin,
-            }}
-            variant="body1"
-          >
-            Constants
-          </Typography>
+        <CardRow alignItems='start'>
+          <Typography sx={styles.setpointText} variant='bodyL' text='Constants' />
           <ExpandingTable
             addSetpoint={addSetpoint}
+            disableModeManager={disableModeManager}
+            setSetpointError={setSetpointError}
             setpoint={selectedModeValues?.constants}
-            type="constants"
+            type='constants'
             updateSetpoint={updateSetpoint}
           />
         </CardRow>

@@ -149,7 +149,6 @@ std::string Input_Source::get_ui_type_of_var(std::string var_id)
             return "none";
         }
     }
-    
 }
 
 /**

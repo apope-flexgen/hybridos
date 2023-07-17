@@ -5,7 +5,6 @@ c.out
 coverage.html
 GIT_*
 *.o
-*.sum
 .gitconfig
 go/
 .cache/
@@ -13,3 +12,14 @@ rpmbuild/
 
 *GIT_*
 *git_*
+
+.idea/*
+config/ytwins.json
+twins
+twins.exe
+xtwins.json
+
+scripts/test.sh
+scripts/twinswatch.sh
+scripts/watchscript.sh
+

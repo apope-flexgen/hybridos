@@ -1,0 +1,35 @@
+{
+    "/doc/10_##RACK_ID##": {
+        "note1":"This is the bms component config template for CATL subsystems.",
+        "note1a":"The bms page of the ui display is outlined in /assets/##BMS_ID##/summay",
+        "note1b":"The /assets/##BMS_ID##/##RACK_ID## table defines the racks or battery management unit, each has a template file with placements for selected key words",
+        "note2": "The /config/bms area is still under development",
+        "note3":"The /components/catl_##BMS_ID##... tables define the incoming control words from the bms modbus interface",
+        "note4":"The /links/<bms> table  defines mapping of external interface components to internal control variables",
+        "note5":"There are some junk/test fields as well... they will removed soon"
+    },
+    "/system/##RACK_ID##": {
+        "id": "##RACK_ID##",
+        "name": "BMS Battery  Block ##BMS_NUM##"
+    },
+    "/config/##RACK_ID##": {
+        "RatedCurrent": 100
+    },
+    "/locks/##RACK_ID##": {
+        "/config/##RACK_ID##": {
+            "value": true
+        }
+    },
+    "/lockVars/##RACK_ID##": {
+        "runLock": {
+            "value": "test",
+            "uri": "/locks/##RACK_ID##",
+            "enabled": false,
+            "ifChanged": false,
+            "debug": true,
+            "actions": {
+                "onSet":[{"func":[{"amap": "bms", "func":"runAllLocks"}]}]
+            }
+        }
+    }
+}

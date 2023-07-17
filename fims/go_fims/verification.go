@@ -160,26 +160,26 @@ func (records *AtomicVerificationRecords) GetUnverifiedMessages() (map[string]ve
 // Checks if the message is a verification response, and removes the response if so
 // As we don't know if the response is for record type "all" or "latest", first check if the entry is present for the given uri
 // If not, check if a unique id is present, and if so, try removing it and checking just the base replyto uri ("latest" use case)
-func (records *AtomicVerificationRecords) handleVerificationResponse(msg FimsMsg) {
-	// Make sure configuration has taken place
+func (records *AtomicVerificationRecords) handleVerificationResponseUri(uri string, nfrags int) {
+		// Make sure configuration has taken place
 	if records.VerificationRecordMap == nil {
 		return
 	}
 	// First perform the check for records tracking "all" messages
-	if entry, ok := records.get(msg.Uri); ok {
+	if entry, ok := records.get(uri); ok {
 		// The record exists for the replyto received, so simply remove it
-		records.deleteVerificationRecordEntry(msg.Uri)
+		records.deleteVerificationRecordEntry(uri)
 		HandleSuccessfulVerification(entry)
-	} else if msg.Nfrags > 1 {
+	} else if nfrags > 1 {
 		// Next check for the records using the "latest" schema
 		// Pattern matching the end of the string with a numeric id fragment
 		regexSuffix := regexp.MustCompile("/[0-9]+$")
-		substrPos := regexSuffix.FindStringIndex(msg.Uri)
-		if len(substrPos) == 2 && substrPos[1] == len(msg.Uri) {
-			baseUriKey := msg.Uri[0:substrPos[0]]
+		substrPos := regexSuffix.FindStringIndex(uri)
+		if len(substrPos) == 2 && substrPos[1] == len(uri) {
+			baseUriKey := uri[0:substrPos[0]]
 			// Now check if a record exists for the base Uri (all records use same key), and ensure the ids match
 			if entry, ok := records.get(baseUriKey); ok {
-				if extractedId, _ := strconv.Atoi(msg.Uri[substrPos[0]+1 : substrPos[1]]); extractedId == entry.id {
+				if extractedId, _ := strconv.Atoi(uri[substrPos[0]+1 : substrPos[1]]); extractedId == entry.id {
 					// The record exists for the replyto received, so simply remove it from the record of unverified messages
 					records.deleteVerificationRecordEntry(baseUriKey)
 					HandleSuccessfulVerification(entry)
@@ -189,6 +189,21 @@ func (records *AtomicVerificationRecords) handleVerificationResponse(msg FimsMsg
 	}
 	// No record matched, simply return
 }
+
+// Checks if the message is a verification response, and removes the response if so
+// As we don't know if the response is for record type "all" or "latest", first check if the entry is present for the given uri
+// If not, check if a unique id is present, and if so, try removing it and checking just the base replyto uri ("latest" use case)
+func (records *AtomicVerificationRecords) handleVerificationResponseRaw(msg FimsMsgRaw) {
+	records.handleVerificationResponseUri(msg.Uri, msg.Nfrags)
+}
+
+// Checks if the message is a verification response, and removes the response if so
+// As we don't know if the response is for record type "all" or "latest", first check if the entry is present for the given uri
+// If not, check if a unique id is present, and if so, try removing it and checking just the base replyto uri ("latest" use case)
+func (records *AtomicVerificationRecords) handleVerificationResponse(msg FimsMsg) {
+	records.handleVerificationResponseUri(msg.Uri, msg.Nfrags)
+}
+
 
 // Delete the records map and reset id generation
 func (records *AtomicVerificationRecords) ResetRecords() {

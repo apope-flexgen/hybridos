@@ -1,0 +1,26 @@
+{  
+    "/doc/043_bms_init": {
+        "note1":"This is the battery management system (BMS) initial config file for loading Risen BMS modbus configuration (EMS/environment variables)"
+    },
+
+    "/config/load": {
+        "risen_bms_1_modbus_env_init": {
+            "value":false,
+            "file":"risen_bms_1_modbus_env_init",
+            "pname":"ess",
+            "aname":"bms",
+            "new_options":[
+                {
+                    "tmpl":"risen_bms_manager_modbus_env",
+                    "pname":"ess",
+                    "amname":"bms",
+                    "from":1,
+                    "to":1,
+                    "reps":[
+                        {"replace":"##BMS_ID##", "with":"bms_{:01d}"}
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -32,6 +32,7 @@ type processHealthStats struct {
 	recentMemUsagePercents    []float64
 	avgCPUUsagePercent        float64
 	totalRestarts             int
+	copsRestarts              int
 	lastRestart               time.Time
 	lastConfirmedAlive        time.Time
 	lastResponseTime          time.Duration
@@ -69,15 +70,17 @@ func (process processInfo) buildStatsReport() map[string]interface{} {
 	mu.Lock()
 	defer mu.Unlock()
 	healthParams["alive"] = process.alive
-	healthParams["lastRestart"] = process.healthStats.lastRestart
-	healthParams["totalRestarts"] = process.healthStats.totalRestarts
-	healthParams["lastResponseTimeMS"] = process.healthStats.lastResponseTime.Milliseconds()
-	healthParams["maxResponseTimeMS"] = process.healthStats.maxResponseTime.Milliseconds()
-	healthParams["avgResponseTimeMS"] = process.healthStats.avgResponseTimeMS
-	healthParams["avgCpuUsagePct"] = process.healthStats.avgCPUUsagePercent
-	healthParams["lastMemUsagePct"] = process.healthStats.lastMemUsagePercent
-	healthParams["maxMemUsagePct"] = process.healthStats.maxMemUsagePercent
-	healthParams["avgMemUsagePct"] = process.healthStats.avgMemUsagePercent
+	// the time format should be consistent with modbus_client (strftime "%m-%d-%Y %T.", i.e. 01-25-2023 11:16:12.396265)
+	healthParams["last_restart"] = process.healthStats.lastRestart.Format("01-02-2006 15:04:05.000000")
+	healthParams["total_restarts"] = process.healthStats.totalRestarts
+	healthParams["cops_restarts"] = process.healthStats.copsRestarts
+	healthParams["last_response_time_ms"] = process.healthStats.lastResponseTime.Milliseconds()
+	healthParams["max_response_time_ms"] = process.healthStats.maxResponseTime.Milliseconds()
+	healthParams["avg_response_time_ms"] = process.healthStats.avgResponseTimeMS
+	healthParams["avg_cpu_usage_pct"] = process.healthStats.avgCPUUsagePercent
+	healthParams["last_mem_usage_pct"] = process.healthStats.lastMemUsagePercent
+	healthParams["max_mem_usage_pct"] = process.healthStats.maxMemUsagePercent
+	healthParams["avg_mem_usage_pct"] = process.healthStats.avgMemUsagePercent
 	return healthParams
 }
 

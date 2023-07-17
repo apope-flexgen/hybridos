@@ -1,0 +1,42 @@
+{
+    "pcs": [
+        {
+            "vars": {
+                "id": "pcs_##PCS_NUM##",
+                "Slim": 4000,
+                "Plim": 3000,
+                "Qlim": 3000
+            },
+            "reps": {
+                "from": 1,
+                "to": 2,
+                "token": "##PCS_NUM##"
+            }
+        },
+		{
+            "vars": {
+                "id": "pcs_##PCS_NAME##",
+                "ctrlword1cfg":[
+                    {
+                        "value": -21931,
+                        "controls": [
+                            { "field": "oncmd"  , "value": true  },
+                            { "field": "offcmd" , "value": false }
+                        ]
+                    },
+                    {
+                        "value": 21930,
+                        "controls": [
+                            { "field"   : "oncmd", "value": false },
+                            { "field"   : "offcmd", "value": true }
+                        ]
+                    }
+                ]
+            },
+            "reps": {
+                "list": ["aardvark", "gorilla", "toucan"],
+                "token": "##PCS_NAME##"
+            }
+        }
+    ]
+}

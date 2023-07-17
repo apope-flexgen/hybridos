@@ -8,12 +8,14 @@ const handleWeekDisplay = (rangeStart: any, rangeEnd: any) => {
   const dateEnd = rangeEnd.getDate();
   const month = rangeStart.getMonth();
   const monthEnd = rangeEnd.getMonth();
+  const year = rangeStart.getFullYear();
+  const yearEnd = rangeEnd.getFullYear();
   if (month !== monthEnd) {
-    return `Week of ${dayjs().month(month).format('MMMM')} ${date}- ${dayjs()
-      .month(month)
-      .format('MMMM')} ${dateEnd}`;
+    return `Week of ${dayjs().month(month).format('MMMM')} ${date}, ${year} - ${dayjs()
+      .month(monthEnd)
+      .format('MMMM')} ${dateEnd}, ${yearEnd}`;
   }
-  return `Week of  ${dayjs().month(month).format('MMMM')} ${date}-${dateEnd}`;
+  return `Week of  ${dayjs().month(month).format('MMMM')} ${date} - ${dateEnd}, ${year}`;
 };
 
 const handle2WeekDisplay = (rangeStart: any, rangeEnd: any) => {
@@ -21,12 +23,29 @@ const handle2WeekDisplay = (rangeStart: any, rangeEnd: any) => {
   const dateEnd = rangeEnd.getDate();
   const month = rangeStart.getMonth();
   const monthEnd = rangeEnd.getMonth();
+  const year = rangeStart.getFullYear();
+  const yearEnd = rangeEnd.getFullYear();
   if (month !== monthEnd) {
-    return ` ${dayjs().month(month).format('MMMM')} ${date}- ${dayjs()
+    return ` ${dayjs().month(month).format('MMMM')} ${date}, ${year} - ${dayjs()
       .month(monthEnd)
-      .format('MMMM')} ${dateEnd}`;
+      .format('MMMM')} ${dateEnd}, ${yearEnd}`;
   }
-  return ` ${dayjs().month(month).format('MMMM')} ${date}-${dateEnd}`;
+  return ` ${dayjs().month(month).format('MMMM')} ${date} - ${dateEnd}, ${year}`;
+};
+
+const handleMonthDisplay = (rangeStart: any, rangeEnd: any) => {
+  const date = rangeStart.getDate();
+  const dateEnd = rangeEnd.getDate();
+  const month = rangeStart.getMonth();
+  const monthEnd = rangeEnd.getMonth();
+  const year = rangeStart.getFullYear();
+  const yearEnd = rangeEnd.getFullYear();
+  if (month !== monthEnd) {
+    return ` ${dayjs().month(month).format('MMMM')} ${date}, ${year} - ${dayjs()
+      .month(monthEnd)
+      .format('MMMM')} ${dateEnd}, ${yearEnd}`;
+  }
+  return ` ${dayjs().month(month).format('MMMM')} ${date} - ${dateEnd}, ${year}`;
 };
 
 export const getDisplayDate = (calendarInstance: Calendar, view: Views) => {
@@ -53,7 +72,7 @@ export const getDisplayDate = (calendarInstance: Calendar, view: Views) => {
       dateText = handle2WeekDisplay(rangeStart, rangeEnd);
       break;
     default:
-      dateText = `${month} ${year}`;
+      dateText = handleMonthDisplay(rangeStart, rangeEnd);
   }
 
   return dateText;
@@ -89,7 +108,7 @@ export const tabs: Tab[] = [
   { label: 'Daily', value: 'day' },
   { label: 'Week', value: 'week' },
   { label: '2 Weeks', value: '2weeks' },
-  { label: 'Month', value: 'month' },
+  { label: '4 Weeks', value: 'month' },
 ];
 
 export type MoveDirections = 'next' | 'prev' | 'today';

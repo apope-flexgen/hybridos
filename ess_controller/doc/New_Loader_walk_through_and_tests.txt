@@ -1,0 +1,383 @@
+New Loader walk through and tests.
+P. Wilshire   10/15/2021
+
+
+The new FlexEss loader has two components.
+1/ A file / template loader
+  this will listen for data objects sent to  /ess/cfg/cfile/xxx_yyyy or /ess/cfg/ctmpl/aaa_bbbb.
+  these can be any json objects. 
+  The cfiles are decoded and committed immediately to the current vmap.
+  The template files are decoded bu tthe jsonobject is stored in the "body" parameter.
+
+  Sending any cfile or ctmpl data to the system will trigger the loader monitoring system.
+
+Placing a cfile or tmpl definition in the /config/cfile or /config/tmpl tables will 
+trigger the system to request that the specified file be loaded.
+
+
+2/ Loader monitoring system
+This task will look for loader operations.
+A loader will have an associated list of files. templates and other loader definitions.
+
+Each cfile and ctmpl file will have a boolean value. Set to true means that the file has been loaded 
+
+Just placing an entry in the /config/cfile or /config/tmpl tables will cause the loader to , periodically,
+request that the file be loaded.
+When using the dbi system that  request will be directed to the dbi loader.
+
+An entry into the /config/load directs the loader system to monitor 
+the components specfied in the loader for completion.
+
+Once a loader has completed its operation , indicated by all the components showing a true value 
+a special file called the "final"  is requested if it is defined.
+This file is used to run all the scheduled tasks required to operate the system.
+
+Cascading loaders.
+The main loader can request that other loader operations are completed as part of the load operation.
+
+
+
+Templates
+These are used to specify repeating components.
+For example multiple, identical,  racks numbered from rack_01 to rack_18.
+A template file will be requested with a number of substitutions specified.
+
+Multiple templates can be executed in sequence. 
+
+Racks can have modules and modules can have cells.
+
+Given a template def of ##RACK_ID##_##MOD_ID##_##CELL_ID##
+We could end up with 
+rack_14_module_08_cell_05
+
+
+Examples 
+
+1/ simple cfile input.
+
+This example simply loads a cfile into the system.
+
+ fims_send -m set -f ~/config_ess/install/dbicfg/risen_bms_controls.json  -u /ess/cfg/cfile/ms/risen_bms_controls
+
+The system loads the file and registers the file as loaded
+
+ fims_send -m get -r /$$ -u /ess/full/config/cfile  | jq
+    {
+        "risen_bms_controls": {
+            "value": true,
+            "md5sum": "874aec49394d08c50a9eb252a570bd91",
+            "reqResp": 120.53004300000612
+        }
+    }
+
+1/ template input.
+A template file  will not be loaded in this manner unless the file has been requiested in a cfile.
+
+fims_send -m set -r /$$ -u /ess/full/config/tmpl '{"risen_bms_template":{"value":false}}' | jq
+{
+  "risen_bms_template": {
+    "value": false
+  }
+}
+
+Once this entry has been established a template file can be loaded into the system.
+
+fims_send -m set -f ~/config_ess/install/dbicfg/risen_bms_template.json  -u /flex/cfg/ctmpl/bms/risen_bms_template
+And the template load can be verified:
+
+fims_send -m get -r /$$ -u /flex/full/config/tmpl  | jq       
+{
+  "risen_bms_template": {
+        "value": false
+        "body": " loads of template data ......."
+        "md5sum": "2102d25e243e4616a47b6eb635376a31",
+        "reqCount": 5,
+        "reqResp": 888.2589759998955,
+        "reqTimeout": 805.5564239999512
+  }
+}
+
+Template files just sit in memory waiting to be used by a loader.
+
+3/ A loader request.
+
+These sit in the /config/load table. The loader task will check for unfinished load operations and then evaluate 
+any templates specified. 
+The loader configs are included in the cfiles that have already been loaded into the system.
+
+
+
+Consider a typical loader request
+
+"/config/load": {
+        "risen_bms_manager": {
+            "value":false,
+            "file":"risen_bms_manager",
+            "pname":"ess",
+            "aname":"bms",
+            "options":[
+                { "file":"risen_bms_status",      "amname":"bms", "pname":"ess"   },
+                { "file":"risen_bms_controls",    "amname":"bms", "pname":"ess"   },
+                { "file":"risen_bms_alarms",      "amname":"bms", "pname":"ess"   },
+                { "file":"risen_bms_modbus",      "amname":"bms", "pname":"ess"   },
+                {
+                 "tmpl":"risen_bms_template",  "pname":"bms", "amname":"##RACK_ID##",
+                  "from":1, "to":18,
+                  "reps":[
+                          {"replace":"##RACK_ID##",   "with":"rack_{:02d}"},
+                          {"replace":"##RACK_NUM##",  "with":"{:02d}"},
+                          {"replace": "##AC_1_ID##",  "with": "hvac_{:02d}", "mult":2         },
+                          {"replace": "##AC_1_NUM##", "with": "{:02d}",      "mult":2         },
+                          {"replace": "##AC_2_ID##",  "with": "hvac_{:02d}", "mult":2, "add":1},
+                          {"replace": "##AC_2_NUM##", "with": "{:02d}",      "mult":2, "add":1}
+                      ]
+                  }
+              ]
+        }
+      },
+
+This loader has several requirements.
+
+3.1/ The "risen_bms_manager" file must already be loaded. /config/cfile:risen_bms_manager must have a "true" value.
+3.2/ The following files must also be loaded: 
+          "risen_bms_status"
+          "risen_bms_controls"
+          "risen_bms_alarms"
+          "risen_bms_modbus"
+
+3.3/ The  template file "risen_bms_template" must be loaded.
+
+    when all these conditions are met the template is evaluated.
+NOTE:
+     All the references for template substitutions must be in the risen_bms_template file.
+     The template references are expanded from 1 to 18 in sequence.
+     For each expansion the data in the template is replaced by the keyed values and the file placed in the system vmap.
+
+Once all the expansions have been completed, the "value" of the "loader" is set to "true".
+
+
+"/config/load": {
+        "risen_bms_manager": {
+            "value":true
+        }
+}
+
+4/ Full System load
+The first "cfile" presented to the system after start up will contain the full system loader.
+
+"/config/load": {       
+       "ess_controller": {
+          "value":false,
+          "useFiles": true,
+          "type":"master",
+          "file":"ess_controller",
+          "aname":"ess",
+          "final":"ess_final",
+          "new_options":[
+             { "file":"ess_default",              "amname":"ess"                               },
+             { "file":"risen_bms_manager",        "amname":"bms", "pname":"ess"                               },
+             { "file":"sungrow_pcs_manager",      "amname":"pcs", "pname":"ess"                               },
+             { "tmpl":"sungrow_pcs_tmpl",         "amname":"pcs", "pname":"ess"                               },
+             { "load":"ess_manager",              "aname":"ess",                 "summary":"ess/summary", "svec":"ess/ess_"  },
+             { "load":"risen_bms_manager",        "aname":"bms",  "pname":"ess", "summary":"bms/summary", "svec":"bms/rack_" },
+             { "load":"sungrow_pcs_manager",      "aname":"pcs",  "pname":"ess", "summary":"pcs/summary", "svec":"pcs/module_"},
+             { "load":"site_manager_load",        "aname":"site", "pname":"ess"                                    },
+             { "site":"site_modbus",              "aname":"site", "pname":"ess", "uri":"/config/tmpl:site_modbus"  }
+          ]
+      }
+    }   
+
+This would be inside the file given to the system from the command line.
+    "ess_config_risen_sungrow"
+
+
+This loader contains:
+        one or more files
+        , a sequence of subsystem loaders
+        , a template ( but its not used here)
+        , a "site" file  
+and 
+         a "final" file. 
+
+The loader management software keeps track of all the file and template requests.
+If a sub loader is specified that loader operation must be defined in one of the requested files.
+For example There must be an entry  like 
+
+"/config/load": {
+        "risen_bms_manager": {
+...
+        }
+}
+In the risen_bms_manager file.
+
+
+The loader checks eack load operation and marks the load request as "true" when that load operation has completed.
+
+The master loader can monitor the progress of all the sub system loaders and then trigger its "final" 
+file load once all the sub modules have completed.
+
+The system is quite easy to monitor.
+
+1/ look at /config/cfiles or /config/tmpl (use naked for template)     to see which have been requested and which load operations have been satisfied.
+2/ look at /config/load to see how all the load operations are progressing.
+3/ look for the "final" file to see if that file has been received.
+
+If all the operations have been completed the system has loaded.
+
+
+The "final" file.
+
+This file has a number of duties to perform.
+1/ evaluate all the system links   - create multiple names for the same assetVar
+2/ evaluate all the system vlinks  - create multiple assetVars sharing the same value.
+3/ evaluate the system assetlists  - create the ordered lists for UI asset data presentation 
+4/ create the system sysvec        - create the ordered list for UI asset (ess,pcs,bms) presentation
+5/ start all the scheduled processes - start all the system operations.
+6/ note that "initDone":true forces the action to be performed on loading.
+   Normally actions are not executed on the initial load intil the "initDone" param is set. 
+
+
+Note on a typical ess_final file. 
+
+New functions have been developed to allow this system to operate.
+The wake_monitor operation will be given a list of wake targets 
+allsysvec has not yet been created.
+allalist allsysvec allvlink and all link definitions must be loaded into /system/commands before executing 
+this file , this is typically done in the ess_controller file.
+
+Here are the typical command entries. 
+{
+    "/system/commands":{
+        "link":{
+            "value":"test",
+            "help": "give a single assetvar multiple names",
+            "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunLinks"}]}]}
+        },
+        "vlink":{
+            "value":"test",
+            "help": "link two var values",
+            "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunVLinks"}]}]}
+        },
+        "runMon":{
+            "value":0,
+            "help": "load the wake monitor setup system",
+            "ifChanged":false,"enabled":true, "actions":{"onSet":[{"func":[{"func":"RunMonitor"}]}]}
+        },
+
+        "run":{
+            "value":"test",
+            "help": "run a schedule var",
+            "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}
+         },
+       "stop":{
+            "value":"test",
+            "help": "stop a schedule var",
+            "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"func":"StopSched"}]}]}
+        }
+    }
+
+
+}
+
+
+A typical ess_final file .
+
+
+  "/final/ess": {
+       "sched_commands":       {
+            "value": true,
+            "amap":"ess",
+            "note":"send something to each uri in the list",
+            "debug":true,
+            "ifChanged": false,
+            "new_options":[
+                {"value":"Ok",  "uri":"/system/commands:allalist"                               },
+                {"value":"Ok",  "uri":"/system/commands:allsysvec"                              },
+                {"value":"Ok",  "uri":"/system/commands:allvlink"                               },
+                {"value":"Ok",  "uri":"/system/commands:alllink"                                },
+                {"value":0.11,  "uri":"/sched/ess:essSystemInit"                                },
+                {"value":0.141, "uri";"/schedule/ess:wake100mS",  "every":0.1,  "offset":0.00   },
+                {"value":0.115, "uri":"/sched/ess:every1000mS",   "every":1.0,  "offset":0.05   },
+                {"value":0.12,  "uri":"/sched/ess:every100mSP1",  "every":0.1,  "offset":0.01   },
+                {"value":0.13,  "xuri":"/sched/ess:every100mSP2", "every":0.1,  "offset":0.02   },
+                {"value":0.14,  "xuri":"/sched/ess:every100mSP3", "every":0.1,  "offset":0.03   },
+                {"value":0.15,  "uri":"/sched/ess:fastPub",       "every":1.05, "offset":0.04   },
+                {"value":0.16,  "uri":"/sched/ess:slowPub",       "every":2,    "offset":0.05   }
+            ],
+            "actions":  {
+                "onSet":        [{
+                    "func":     [{
+                            "func":     "SchedItemOpts",
+                            "amap":     "ess",
+                            "initDone":true
+                        }]
+
+                }]
+            }
+        },
+    }
+
+
+
+
+
+Complex template operations.
+
+Note that complex, layered, template substitutions can be made 
+
+
+                {
+                 "tmpl":"risen_bms_template",  "pname":"bms", "amname":"##RACK_ID##",
+                  "from":1, "to":18,
+                  "reps":[
+                          {"replace":"##RACK_ID##",   "with":"rack_{:02d}"},
+                          {"replace":"##RACK_NUM##",  "with":"{:02d}"},
+                          {"replace": "##AC_1_ID##",  "with": "hvac_{:02d}", "mult":2         },
+                          {"replace": "##AC_1_NUM##", "with": "{:02d}",      "mult":2         },
+                          {"replace": "##AC_2_ID##",  "with": "hvac_{:02d}", "mult":2, "add":1},
+                          {"replace": "##AC_2_NUM##", "with": "{:02d}",      "mult":2, "add":1}
+                      ]
+                },
+                {
+                 "tmpl":"risen_module_template",  "pname":"##RACK_ID##", "amname":"##RACK_ID##_##MOD_ID##",
+                  "from":1, "to":9,
+                  "reps":[
+                          {"replace":"##MOD_ID##",   "with":"module_{:02d}"},
+                          {"replace":"##MOD_NUM##",  "with":"{:02d}"}
+                      ]
+                  }
+                {
+                 "tmpl":"risen_cell_template",  "pname":"##RACK_ID##_##MOD_ID##"
+                                                ,"ainame":"##RACK_ID##_##MOD_ID##_##CELL_ID##",
+                  "from":1, "to":32,
+                  "reps":[
+                          {"replace":"##CELL_ID##",   "with":"cell_{:02d}"},
+                          {"replace":"##CELL_NUM##",  "with":"{:02d}"}
+                      ]
+                  }
+
+This would produce a system like this
+           bms
+             - racks
+                 - modules
+                    - cells
+
+The amname, ainame, pname options allow the system to have a management hierarchy.                   
+The keys evaluated in the higher order templates are available to the lower order ones.
+This means that an individual cell would be referenced as :
+
+/status/rack_xx_module_yy_cell_zz 
+
+The system management software can reference the system data as follows.
+
+bms:detect_max_temp
+    for each rack
+        rack_xx:detect_max_temp
+        for each module
+            rack_xx_module_yy:detect_max_temp
+            for each cell 
+                rack_xx_module_yy_cell_zz:detect_max_temp
+
+At each stage in the operation  max,min and avg values for each component can be evaluated 
+using recursion methods.
+

@@ -36,22 +36,11 @@ Asset_Solar::Asset_Solar ()
     curtailed_active_power_limit = 0.0;
     potential_reactive_power = 0.0;
 
-    uri_start = NULL;
-    uri_stop = NULL;
-    uri_enter_standby = NULL;
-    uri_exit_standby = NULL;
-
     set_required_variables();
 }
 
 Asset_Solar::~Asset_Solar ()
 {
-    free(uri_clear_faults);
-    free(uri_start);
-    free(uri_stop);
-    free(uri_enter_standby);
-    free(uri_exit_standby);
-
     if (power_mode_setpoint) delete power_mode_setpoint;
     power_mode_setpoint = NULL;
     if (power_factor_setpoint) delete power_factor_setpoint;
@@ -241,7 +230,7 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure clear_faults UI control.");
                 return false;
             }
-            uri_clear_faults = strdup(build_uri(compNames[i], clear_faults_ctl.reg_name).c_str());
+            uri_clear_faults = build_uri(compNames[i], clear_faults_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "start");
@@ -250,7 +239,7 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure start asset UI control.");
                 return false;
             }
-            uri_start = strdup(build_uri(compNames[i], start_ctl.reg_name).c_str());
+            uri_start = build_uri(compNames[i], start_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "stop");
@@ -259,7 +248,7 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure stop asset UI control.");
                 return false;
             }
-            uri_stop = strdup(build_uri(compNames[i], stop_ctl.reg_name).c_str());
+            uri_stop = build_uri(compNames[i], stop_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "enter_standby");
@@ -268,7 +257,7 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure enter_standby UI control.");
                 return false;
             }
-            uri_enter_standby = strdup(build_uri(compNames[i], enter_standby_ctl.reg_name).c_str());
+            uri_enter_standby = build_uri(compNames[i], enter_standby_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "exit_standby");
@@ -277,7 +266,7 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure exit_standby UI control.");
                 return false;
             }
-            uri_exit_standby = strdup(build_uri(compNames[i], exit_standby_ctl.reg_name).c_str());
+            uri_exit_standby = build_uri(compNames[i], exit_standby_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_active_power_setpoint");
@@ -340,9 +329,6 @@ bool Asset_Solar::generate_asset_ui(fmt::memory_buffer &buf, const char* const v
     exit_standby_ctl.enabled = (isRunning && inMaintenance && inStandby);
     goodBody = exit_standby_ctl.makeJSONObject(buf, var) && goodBody;
 
-    clear_faults_ctl.enabled = (get_num_active_faults() != 0 || get_num_active_alarms() != 0);
-    goodBody = clear_faults_ctl.makeJSONObject(buf, var) && goodBody;
-
     // now add the rest of the controls
     maint_active_power_setpoint_ctl.enabled = (inMaintenance && isRunning && !inStandby);
     goodBody = maint_active_power_setpoint_ctl.makeJSONObject(buf, var) && goodBody;
@@ -355,14 +341,8 @@ bool Asset_Solar::generate_asset_ui(fmt::memory_buffer &buf, const char* const v
 
 //Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case. 
 //Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
-bool Asset_Solar::process_set(std::string uri, cJSON* fimsBody)
+bool Asset_Solar::handle_set(std::string uri, cJSON &body)
 {
-    if (fimsBody == NULL)
-    {
-        FPS_ERROR_LOG("\nNULL parsed data process_set Solar\n");
-        return false;
-    }
-
     // The current setpoint being parsed from those available
     cJSON* current_setpoint = NULL;
     // The value of the setpoint object received
@@ -371,38 +351,40 @@ bool Asset_Solar::process_set(std::string uri, cJSON* fimsBody)
     // For instance, sets that modify the system state should not persist as they will default to the published component state on restart
     bool persistent_setpoint = false;
 
-    if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "clear_faults")))
+    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "clear_faults")))
     {
-        clear_component_faults();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_Number, "maint_active_power_setpoint")))
+        clear_alerts();
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint")))
     {
         value = cJSON_GetObjectItem(current_setpoint, "value");
         maint_active_power_setpoint = value->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint")))
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint")))
     {
         value = cJSON_GetObjectItem(current_setpoint, "value");
         maint_reactive_power_setpoint = value->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "stop")))
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop")))
     {
         stop();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "start")))
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start")))
     {
         start();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "enter_standby")))
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "enter_standby")))
     {
         enter_standby();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "exit_standby")))
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "exit_standby")))
     {
         exit_standby();
     }
 
-    // Echo set to storage db if valid (value has been parsed)
-    if (current_setpoint && persistent_setpoint)
-        return Asset::send_setpoint(uri, current_setpoint);
-
-    return (Asset::process_set(uri, fimsBody));
+    // if target setpoint was found, back it up to DBI if it is a persistent setpoint.
+    // otherwise, send it to the generic controls handler
+    if (!current_setpoint)
+        return handle_generic_asset_controls_set(uri, body);
+    if (!persistent_setpoint)
+        return true;
+    return Asset::send_setpoint(uri, current_setpoint);
 }
 
 void Asset_Solar::set_potential_active_power_limit(float limit)

@@ -1,0 +1,14 @@
+HYbridOS : manual blackstart recovery sequence:
+gens running, smart breaker closed
+ensure Ironclad is stopped (from HybridOS)
+reconnect unit 2-5 DC power cables
+service tool - system config # battery racks = 1
+note voltage on rack 2 (need to charge rack 1 to this voltage later)
+power off 24V to racks 2-14
+start Ironclad from HybridOS
+charge system from HybridOS until rack 1 voltage is equal to target voltage (rack 2 voltage)
+stop Ironclad from HybridOS
+service tool - system config # battery racks = 14
+power on 24V to racks 2-14
+power cycle Ironclad (cRIO, 5 sbRIO, HMI, Samsung BMS)
+start Ironclad from HybridOS

@@ -1,0 +1,23 @@
+{
+    "/sysconfig/default": 
+    {
+        "Help": " This is the bms_1 config file",
+        "Subs":":/components/bms_1:/assets:/system/bms_1:/site/bms_1:",
+        "Config":"bms_1_init",
+        "EssName": "bms_1"
+    }
+    ,
+    "/blockeduris/pub" :
+    {
+        "/assets/ess/summary":true,
+        "/assets/ess/ess":true,
+        "/assets/ess/bms_2":true
+    },
+    "/blockeduris/set" :
+    {
+        "/assets/ess/summary":true,
+        "/assets/ess/ess":true,
+        "/assets/ess/bms_2":true
+    }
+
+}

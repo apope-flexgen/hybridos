@@ -1,48 +1,43 @@
 /* eslint-disable max-lines */
 import {
-  CardContainer,
-  PageLoadingIndicator,
-  Tab,
-  Tabs,
-  TimeZones,
+  CardContainer, PageLoadingIndicator, Tab, Tabs, TimeZones,
 } from '@flexgen/storybook';
 import { Box } from '@mui/material';
-import {
-  createContext, useContext,
-} from 'react';
+import { createContext, useContext } from 'react';
 import {
   ApiMode, Configuration, Connected, EventsObject,
 } from 'shared/types/dtos/scheduler.dto';
 import { PageProps } from 'src/pages/PageTypes';
 import { ModalStateType } from 'src/pages/Scheduler/SchedulerComponents/Modal/Helpers';
 import SchedulerModal from 'src/pages/Scheduler/SchedulerComponents/Modal/Modal';
-import TabContent from 'src/pages/Scheduler/SchedulerComponents/TabContent';
-import { schedulerTabs } from 'src/pages/Scheduler/SchedulerHelpers';
-import { SchedulerTabs, FleetManagerSite } from 'src/pages/Scheduler/SchedulerTypes';
-import useScheduler from 'src/pages/Scheduler/hooks';
+import TabContent from './SchedulerComponents/TabContent';
+import { schedulerTabs } from './SchedulerHelpers';
+import { SchedulerTabs, FleetManagerSite } from './SchedulerTypes';
+import useScheduler from './hooks';
 
 interface EventSchedulerContextValue {
-  siteId: string
-  fmSites: FleetManagerSite[]
-  setSiteId: (newValue: string) => void
-  timezone: TimeZones[]
-  admin: boolean
-  setSchedulerTab: (newTab: SchedulerTabs) => void
-  siteName: string
-  config: Configuration | null | undefined
-  modes: ApiMode
-  events: EventsObject | null
-  setEvents: (events: EventsObject) => void
-  connected: Connected | null
-  navigationFlag: boolean
-  setNavigationFlag: (newValue: boolean) => void
-  modalOpen: boolean
-  setModalOpen: (newValue: boolean) => void
-  modalState: ModalStateType | null,
-  setModalState: any
-  unsavedChange: boolean
-  setUnsavedChange: (newValue: boolean) => void
-  disableAllFields: boolean
+  siteId: string;
+  fmSites: FleetManagerSite[];
+  setSiteId: (newValue: string) => void;
+  timezone: TimeZones[];
+  admin: boolean;
+  setSchedulerTab: (newTab: SchedulerTabs) => void;
+  siteName: string;
+  config: Configuration | null | undefined;
+  modes: ApiMode;
+  events: EventsObject | null;
+  setEvents: (events: EventsObject) => void;
+  connected: Connected | null;
+  navigationFlag: boolean;
+  setNavigationFlag: (newValue: boolean) => void;
+  modalOpen: boolean;
+  setModalOpen: (newValue: boolean) => void;
+  modalState: ModalStateType | null;
+  setModalState: any;
+  unsavedChange: boolean;
+  setUnsavedChange: (newValue: boolean) => void;
+  disableAllFields: boolean;
+  disableModeManager: boolean;
 }
 
 const EventSchedulerContext = createContext<EventSchedulerContextValue>({
@@ -67,6 +62,7 @@ const EventSchedulerContext = createContext<EventSchedulerContextValue>({
   unsavedChange: false,
   setUnsavedChange: () => {},
   disableAllFields: false,
+  disableModeManager: false,
 });
 
 export function useSchedulerContext() {
@@ -89,7 +85,9 @@ const Scheduler: React.FunctionComponent<PageProps> = ({ currentUser, product }:
     modalState,
     setModalState,
     unsavedChange,
-    setUnsavedChange,
+    setUnsavedChange
+
+    ,
   } = useScheduler(currentUser, product);
 
   const handleTabChange = (newValue: any) => {
@@ -125,28 +123,25 @@ const Scheduler: React.FunctionComponent<PageProps> = ({ currentUser, product }:
         <CardContainer flexDirection="column">
           <Box sx={{ width: '100%' }}>
             {displayTabs && (
-            <Tabs
-              onChange={(_, newValue) => {
-                setNavigationFlag(true);
-                handleTabChange(newValue);
-              }}
-              value={schedulerTab}
-            >
-              {schedulerTabs.map((tab) => (
-                <Tab
-                  icon={tab.icon ? tab.icon : undefined}
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
-              ))}
-            </Tabs>
+              <Tabs
+                onChange={(_, newValue) => {
+                  setNavigationFlag(true);
+                  handleTabChange(newValue);
+                }}
+                value={schedulerTab}
+              >
+                {schedulerTabs.map((tab) => (
+                  <Tab
+                    icon={tab.icon ? tab.icon : undefined}
+                    key={tab.value}
+                    label={tab.label}
+                    value={tab.value}
+                  />
+                ))}
+              </Tabs>
             )}
             <PageLoadingIndicator isLoading={isLoading} type="primary" />
-            <SchedulerModal
-              state={modalState}
-              open={modalOpen}
-            />
+            <SchedulerModal state={modalState} open={modalOpen} />
             <TabContent
               configured={configured}
               schedulerTab={schedulerTab}

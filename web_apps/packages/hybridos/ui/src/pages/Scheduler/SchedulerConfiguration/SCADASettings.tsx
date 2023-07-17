@@ -1,4 +1,4 @@
-import { ThemeType, TextField } from '@flexgen/storybook';
+import { ThemeType, NumericInput } from '@flexgen/storybook';
 import { Box } from '@mui/system';
 import React from 'react';
 import { Configuration } from 'shared/types/dtos/scheduler.dto';
@@ -16,13 +16,12 @@ const SCADASettings: React.FC<SCADASettingsProps> = ({
 }: SCADASettingsProps) => {
   const theme = useTheme() as ThemeType;
   const sx = SCADASettingsSx(theme);
-  const updateField = (field: string, event: any) => {
-    const newValue = event.target.value;
+  const updateField = (field: string, value: any) => {
     setConfigEdits((prevState: any) => ({
       ...prevState,
       scada: {
         ...prevState.scada,
-        [field]: Number(newValue),
+        [field]: Number(value),
       },
     }));
   };
@@ -30,57 +29,49 @@ const SCADASettings: React.FC<SCADASettingsProps> = ({
   return (
     <Box sx={sx.box}>
       <Box sx={sx.boxRow}>
-        <TextField
-          inputProps={{ min: 0 }}
+        <NumericInput
           label={labels.SCADA.stageSize}
-          onChange={(event) => updateField('stage_size', event)}
+          onChange={(event) => updateField('stage_size', event.target.value)}
           size="small"
-          type="number"
           value={settings?.stage_size?.toString() || ''}
+          validationRegEx="positiveIntegers"
         />
-        <TextField
-          inputProps={{ min: 0 }}
+        <NumericInput
           label={labels.SCADA.maxEvents}
-          onChange={(event) => updateField('max_num_events', event)}
+          onChange={(event) => updateField('max_num_events', event.target.value)}
           size="small"
-          type="number"
           value={settings?.max_num_events?.toString() || ''}
+          validationRegEx="positiveIntegers"
         />
       </Box>
       <Box sx={sx.boxRow}>
-        <TextField
-          inputProps={{ min: 0 }}
+        <NumericInput
           label={labels.SCADA.ints}
-          onChange={(event) => updateField('num_ints', event)}
-          size="small"
-          type="number"
+          onChange={(event) => updateField('num_ints', event.target.value)}
           value={settings?.num_ints?.toString() || ''}
+          validationRegEx="positiveIntegers"
         />
-        <TextField
-          inputProps={{ min: 0 }}
+        <NumericInput
           label={labels.SCADA.floats}
-          onChange={(event) => updateField('num_floats', event)}
-          size="small"
-          type="number"
+          onChange={(event) => updateField('num_floats', event.target.value)}
           value={settings?.num_floats?.toString() || ''}
+          validationRegEx="positiveIntegers"
         />
       </Box>
       <Box sx={sx.boxRow}>
-        <TextField
-          inputProps={{ min: 0 }}
+        <NumericInput
           label={labels.SCADA.booleans}
-          onChange={(event) => updateField('num_bools', event)}
+          onChange={(event) => updateField('num_bools', event.target.value)}
           size="small"
-          type="number"
           value={settings?.num_bools?.toString() || ''}
+          validationRegEx="positiveIntegers"
         />
-        <TextField
-          inputProps={{ min: 0 }}
+        <NumericInput
           label={labels.SCADA.strings}
-          onChange={(event) => updateField('num_strings', event)}
+          onChange={(event) => updateField('num_strings', event.target.value)}
           size="small"
-          type="number"
           value={settings?.num_strings?.toString() || ''}
+          validationRegEx="positiveIntegers"
         />
       </Box>
     </Box>

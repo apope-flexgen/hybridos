@@ -1,0 +1,272 @@
+{
+  "name": "Reactive Power Management",
+  "local_features_kVAR_mode_cmd": {
+    "name": "Mode Select - Reactive Power",
+    "value": 2,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": [
+      {
+        "name": "Active Voltage Regulation",
+        "return_value": 0
+      },
+      {
+        "name": "Reactive Power Setpoint",
+        "return_value": 2
+      }
+    ]
+  },
+  "local_active_voltage_cmd": {
+    "name": "Active Voltage Setpoint",
+    "value": 12470,
+    "unit": "V",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "local_reactive_setpoint_kVAR_cmd": {
+    "name": "Reactive Power Setpoint",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "local_power_factor_cmd": {
+    "name": "Power Factor Setpoint",
+    "value": 1,
+    "unit": "",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "features_kVAR_mode_status": {
+    "name": "Reactive Power Mode",
+    "value": "Reactive Power Setpoint",
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "string",
+    "options": []
+  },
+  "active_voltage_status_flag": {
+    "name": "Active Voltage Regulation Status",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "active_voltage_actual_volts": {
+    "name": "Measured Voltage",
+    "value": 0,
+    "unit": "V",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "remote_features_kVAR_mode_cmd": {
+    "name": "Remote Mode Select - Reactive Power",
+    "value": 2,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "remote_active_voltage_cmd": {
+    "name": "Remote Active Voltage Setpoint",
+    "value": 12470,
+    "unit": "V",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "remote_reactive_setpoint_kVAR_cmd": {
+    "name": "Remote Reactive Power Setpoint",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "remote_power_factor_cmd": {
+    "name": "Remote Power Factor Setpoint",
+    "value": 1,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "present_features_kVAR_mode_cmd": {
+    "name": "Present Mode Select - Reactive Power",
+    "value": 2,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "present_active_voltage_cmd": {
+    "name": "Present Active Voltage Setpoint",
+    "value": 12470,
+    "unit": "V",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "present_reactive_setpoint_kVAR_cmd": {
+    "name": "Present Reactive Power Setpoint",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "present_power_factor_cmd": {
+    "name": "Present Power Factor Setpoint",
+    "value": 1,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "site_kVAR_demand": {
+    "name": "Site Demand Reactive Power",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "ess_kVAR_cmd": {
+    "name": "ESS Reactive Power Setpoint",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "gen_kVAR_cmd": {
+    "name": "Generator Reactive Power Setpoint",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "solar_kVAR_cmd": {
+    "name": "Solar Reactive Power Setpoint",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "potential_ess_kVAR": {
+    "name": "ESS Potential Reactive Power",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "potential_gen_kVAR": {
+    "name": "Generator Potential Reactive Power",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "potential_solar_kVAR": {
+    "name": "Solar Potential Reactive Power",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "ess_actual_kVAR": {
+    "name": "ESS Actual Reactive Power",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "gen_actual_kVAR": {
+    "name": "Generator Actual Reactive Power",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "solar_actual_kVAR": {
+    "name": "Solar Actual Reactive Power",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "feeder_actual_kVAR": {
+    "name": "Transformer Actual Reactive Power",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  }
+}

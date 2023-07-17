@@ -1,0 +1,200 @@
+{
+    "/assets/pcs/summary": {
+        "work_state": 0,
+        "operating_mode": 0,
+        "charge_state": 2,
+        "vdc": 0,
+        "idc": 0
+    },
+    "/schedule/wake_monitor/pcs":{
+        "/status/pcs:Running":          { "enable": true, "rate": 0.1, "amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:Stopped":          { "enable": true, "rate": 0.1, "amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:Standby":          { "enable": true, "rate": 0.1, "amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:3phCurrent":       { "enable": true, "rate": 0.1, "amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:ChargeState":      { "enable": true, "rate": 0.1, "amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:DischargeState":   { "enable": true, "rate": 0.1, "amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:NonOperatingState":{ "enable": true, "rate": 0.1, "amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:UpdateDCVoltage":  { "enable": true, "rate": 0.1, "amap": "pcs", "func": "CalculateVar"},
+        "/status/pcs:UpdateDCCurrent":  { "enable": true, "rate": 0.1, "amap": "pcs", "func": "CalculateVar"}
+    },
+    "/status/pcs": {
+        "Running": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/pcs_1:on",
+            "variable2": "/components/pcs_1:standby",
+            "expression": "{1} and not {2}",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/pcs/summary:work_state[0]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/pcs/summary:work_state[0]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "Stopped": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/pcs_1:on",
+            "expression": "not {1}",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/pcs/summary:work_state[3]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/pcs/summary:work_state[3]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "Standby": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/pcs_1:on",
+            "variable2": "/components/pcs_1:standby",
+            "expression": "{1} and {2}",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/pcs/summary:work_state[4]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/pcs/summary:work_state[4]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "3phCurrent": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/pcs_1:iac",
+            "expression": "{1} * 1.0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri": "/assets/pcs/summary:iac_1"},
+                        {"uri": "/assets/pcs/summary:iac_2"},
+                        {"uri": "/assets/pcs/summary:iac_3"}
+                    ]
+                }]
+            }
+        },
+        "ChargeState": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/pcs_1:p",
+            "expression": "{1} < 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "uri": "/assets/pcs/summary:charge_state", "outValue": 0}
+                    ]
+                }]
+            }
+        },
+        "DischargeState": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/pcs_1:p",
+            "expression": "{1} > 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "uri": "/assets/pcs/summary:charge_state", "outValue": 1}
+                    ]
+                }]
+            }
+        },
+        "NonOperatingState": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/pcs_1:p",
+            "variable2": "/components/pcs_1:q",
+            "expression": "{1} == 0 and {2} == 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "uri": "/assets/pcs/summary:charge_state", "outValue": 2}
+                    ]
+                }]
+            }
+        },
+        "UpdateDCVoltage": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/bms_1:dccontactor",
+            "variable2": "/components/bms_1:vdc_value",
+            "expression": "if ({1}, {2}, 0)",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri": "/assets/pcs/summary:vdc"}
+                    ]
+                }]
+            }
+        },
+        "UpdateDCCurrent": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/bms_1:dccontactor",
+            "variable2": "/components/bms_1:idc_value",
+            "expression": "if ({1}, {2}, 0)",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri": "/assets/pcs/summary:idc"}
+                    ]
+                }]
+            }
+        }
+    },
+    "/components/pcs_1": {
+        "gridforming": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/assets/pcs/summary:operating_mode", "outValue": 516},
+                        {"inValue": true,  "ifChanged": false, "uri": "/assets/pcs/summary:operating_mode", "outValue": 1028}
+                    ]
+                }]
+            }
+        },
+        "iac": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri": "/assets/pcs/summary:xiac_2"},
+                        {"uri": "/assets/pcs/summary:xiac_3"}
+                    ]
+                }]
+            }
+        },
+        "vac": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri": "/assets/pcs/summary:vac_st"},
+                        {"uri": "/assets/pcs/summary:vac_tr"}
+                    ]
+                }]
+            }
+        },
+        "p": 0,
+        "q": 0
+    },
+    "/components/bms_1": {
+        "dccontator": false,
+        "vdc_value": 0,
+        "idc_value": 0
+    }
+}

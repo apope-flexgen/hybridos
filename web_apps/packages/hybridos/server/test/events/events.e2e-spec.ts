@@ -39,7 +39,7 @@ export const buildURI = (filters: any): string => {
     return URI;
 };
 
-describe('siteAdmins (e2e)', () => {
+describe('Events (e2e)', () => {
     let app: INestApplication
     let eventsService: EventsService
     const tenMinutesAgoMs = (1000 * 60 * 10)

@@ -69,8 +69,6 @@ public:
     float get_gen_total_min_potential_active_power(void);
     float get_gen_total_potential_reactive_power(void);
     float get_gen_total_nameplate_active_power(void);
-    float get_gen_total_nameplate_reactive_power(void);
-    float get_gen_total_nameplate_apparent_power(void);
 
     float get_gen_total_rated_active_power(void);
     float get_total_kW_discharge_limit(void);

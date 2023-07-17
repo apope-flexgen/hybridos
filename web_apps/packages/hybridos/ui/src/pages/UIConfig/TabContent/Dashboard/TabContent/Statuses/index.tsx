@@ -1,32 +1,28 @@
+/* eslint-disable */
 // TODO: fix lint
-/* eslint-disable react/no-array-index-key */
-import {
-  Accordion, CardRow, Divider, Label, MuiButton, TextField,
-} from '@flexgen/storybook';
+import { Accordion, CardRow, Divider, Label, MuiButton, TextField } from '@flexgen/storybook';
 import { ChangeEvent, useState } from 'react';
 import { Dashboard, Status } from 'shared/types/dtos/dashboards.dto';
 import { useDashboardsContext } from 'src/pages/UIConfig/TabContent/Dashboard';
-import { ColumnTitles, TextFieldsContainer } from 'src/pages/UIConfig/TabContent/Dashboard/TabContent/styles';
-import { AddItemButtonSX, DeleteButtonContainer } from 'src/pages/UIConfig/TabContent/styles';
 import {
-  ADD_STATUS, DELETE_STATUS, items, newStatus, STATUS,
-} from './helpers/constants';
+  ColumnTitles,
+  TextFieldsContainer,
+} from 'src/pages/UIConfig/TabContent/Dashboard/TabContent/styles';
+import { AddItemButtonSX, DeleteButtonContainer } from 'src/pages/UIConfig/TabContent/styles';
+import { ADD_STATUS, DELETE_STATUS, items, newStatus, STATUS } from './helpers/constants';
 
 const Statuses = () => {
-  const {
-    selectedDashboard,
-    setSelectedDashboard,
-  } = useDashboardsContext();
+  const { selectedDashboard, setSelectedDashboard } = useDashboardsContext();
   const [expanded, setExpanded] = useState(selectedDashboard?.status.length ? [0] : []);
 
   const handleAdd = () => {
-    setSelectedDashboard((prevSelectedDashboard) => ({
-      ...prevSelectedDashboard,
-      status: [
-        ...(prevSelectedDashboard?.status || []),
-        newStatus,
-      ],
-    } as Dashboard));
+    setSelectedDashboard(
+      (prevSelectedDashboard) =>
+        ({
+          ...prevSelectedDashboard,
+          status: [...(prevSelectedDashboard?.status || []), newStatus],
+        } as Dashboard),
+    );
     setExpanded((prevExpanded) => [...prevExpanded, selectedDashboard?.status.length || 0]);
   };
 
@@ -34,7 +30,9 @@ const Statuses = () => {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number,
   ) => {
-    const { target: { id, value } } = event;
+    const {
+      target: { id, value },
+    } = event;
     setSelectedDashboard((prevSelectedDashboard) => {
       const status = prevSelectedDashboard?.status.map((st, i) => {
         if (i === index) {
@@ -56,10 +54,8 @@ const Statuses = () => {
   const handleExpand = (index: number, exp: boolean) => {
     if (exp) setExpanded((prevExpanded) => [...prevExpanded, index]);
     else {
-      setExpanded(
-        (prevExpanded) => prevExpanded.filter(
-          (expandedIndex) => expandedIndex !== index,
-        ),
+      setExpanded((prevExpanded) =>
+        prevExpanded.filter((expandedIndex) => expandedIndex !== index),
       );
     }
   };
@@ -77,12 +73,12 @@ const Statuses = () => {
 
   return (
     <>
-      <CardRow alignItems="center">
+      <CardRow alignItems='center'>
         <ColumnTitles>
-          <Label color="primary" size="medium" value={STATUS} />
+          <Label color='primary' size='medium' value={STATUS} />
         </ColumnTitles>
       </CardRow>
-      <Divider orientation="horizontal" variant="fullWidth" />
+      <Divider orientation='horizontal' variant='fullWidth' />
       {selectedDashboard?.status.map((st, index) => (
         <Accordion
           expanded={expanded.includes(index)}
@@ -107,10 +103,10 @@ const Statuses = () => {
           </TextFieldsContainer>
           <DeleteButtonContainer>
             <MuiButton
-              color="error"
+              color='error'
               label={DELETE_STATUS}
               onClick={() => handleDelete(index)}
-              variant="outlined"
+              variant='outlined'
             />
           </DeleteButtonContainer>
         </Accordion>
@@ -118,10 +114,10 @@ const Statuses = () => {
       <MuiButton
         label={ADD_STATUS}
         onClick={handleAdd}
-        size="small"
-        startIcon="Add"
+        size='small'
+        startIcon='Add'
         sx={AddItemButtonSX}
-        variant="outlined"
+        variant='outlined'
       />
     </>
   );

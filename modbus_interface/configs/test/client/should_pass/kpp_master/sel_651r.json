@@ -1,0 +1,519 @@
+{
+    "connection":
+    {
+        "name": "SEL 651R Relay",
+        "ip_address": "192.168.114.22",
+        "port": 502
+    },
+    "components":
+    [
+        {
+            "id": "sel_651r",
+            "frequency": 1000,
+            "offset_time": 0,
+            "add_timings":false,
+            "off_by_one":true,
+            "registers":
+            [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1,
+                    "number_of_registers": 57,
+                    "map":
+                    [
+                        {
+                            "id": "breaker_control",
+                            "offset": 1,
+                            "name": "Breaker Control"
+                        },
+                        {
+                            "id": "battery_voltage",
+                            "offset": 2,
+                            "scale": 10,
+                            "name": "Battery Voltage",
+                            "signed": true
+                        },
+                        {
+                            "id": "battery_temperature",
+                            "offset": 3,
+                            "scale": 10,
+                            "name": "Battery Temperature",
+                            "signed": true
+                        },
+                        {
+                            "id": "frequency",
+                            "offset": 4,
+                            "scale": 100,
+                            "name": "Frequency"
+                        },
+                        {
+                            "id": "ldpf3",
+                            "offset": 5,
+                            "name": "Power Factor direction"
+                        },
+                        {
+                            "id": "pf",
+                            "offset": 6,
+                            "scale": 100,
+                            "name": "Power Factor",
+                            "signed": true
+                        },
+                        {
+                            "id": "current_l1",
+                            "offset": 7,
+                            "name": "Current L1"
+                        },
+                        {
+                            "id": "current_l2",
+                            "offset": 8,
+                            "name": "Current L2"
+                        },
+                        {
+                            "id": "current_l3",
+                            "offset": 9,
+                            "name": "Current L3"
+                        },
+                        {
+                            "id": "current_n",
+                            "offset": 10,
+                            "name": "Current Neutral"
+                        },
+                        {
+                            "id": "voltage_l1",
+                            "offset": 11,
+                            "size": 2,
+                            "name": "Voltage L1"
+                        },
+                        {
+                            "id": "voltage_l2",
+                            "offset": 13,
+                            "size": 2,
+                            "name": "Voltage L2"
+                        },
+                        {
+                            "id": "voltage_l3",
+                            "offset": 15,
+                            "size": 2,
+                            "name": "Voltage L3"
+                        },
+                        {
+                            "id": "grid_voltage_l1",
+                            "offset": 17,
+                            "size": 2,
+                            "name": "Grid Voltage L1"
+                        },
+                        {
+                            "id": "grid_voltage_l2",
+                            "offset": 19,
+                            "size": 2,
+                            "name": "Grid Voltage L2"
+                        },
+                        {
+                            "id": "grid_voltage_l3",
+                            "offset": 21,
+                            "size": 2,
+                            "name": "Grid Voltage L3"
+                        },
+                        {
+                            "id": "active_power",
+                            "offset": 23,
+                            "size": 2,
+                            "name": "Active Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "apparent_power",
+                            "offset": 25,
+                            "size": 2,
+                            "name": "Apparent Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "reactive_power",
+                            "offset": 27,
+                            "size": 2,
+                            "name": "Reactive Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "instantaneous_overcurrent_status",
+                            "offset": 29,
+                            "name": "Instantaneous Over Current",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                null,
+                                "inst_overcurrent",
+                                "inst_overcurrent_l3",
+                                "inst_overcurrent_l2",
+                                "inst_overcurrent_l1"
+                            ]
+                        },
+                        {
+                            "id": "time_overcurrent_status",
+                            "offset": 30,
+                            "name": "Time Over Current",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                "time_overcurrent_l2",
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                "time_overcurrent_l1"
+                            ]
+                        },
+                        {
+                            "id": "time_overcurrent_status_2",
+                            "offset": 31,
+                            "name": "Time Over Current 2",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "time_overcurrent",
+                                null,
+                                null,
+                                null,
+                                null,
+                                "time_overcurrent_l3"
+                            ]
+                        },
+                        {
+                            "id": "ground_fault_status",
+                            "offset": 32,
+                            "name": "Ground Fault Over Current",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                null,
+                                "ground_fault_overcurrent"
+                            ]
+                        },
+                        {
+                            "id": "definite_time_overcurrent",
+                            "offset": 33,
+                            "name": "Definite Time Over Current",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                null,
+                                "definite_time_overcurrent",
+                                "definite_overcurrent_l3",
+                                "definite_overcurrent_l2",
+                                "definite_overcurrent_l1"
+                            ]
+                        },
+                        {
+                            "id": "pole_status",
+                            "offset": 34,
+                            "name": "Pole status",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "single_pole_open",
+                                null,
+                                null,
+                                null,
+                                "breaker_status",
+                                "status_l3",
+                                "status_l2",
+                                "status_l1"
+                            ]
+                        },
+                        {
+                            "id": "electrical_fault",
+                            "offset": 35,
+                            "name": "Electrical Fault",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                "electrical_fault"
+                            ]
+                        },
+                        {
+                            "id": "overvoltage_relay_1",
+                            "offset": 36,
+                            "name": "Over Voltage 1",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "overvolt_l2",
+                                "overvolt_l1"
+                            ]
+                        },
+                        {
+                            "id": "overvoltage_relay_2",
+                            "offset": 37,
+                            "name": "Over Voltage 2",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                "overvolt_l3"
+                            ]
+                        },
+                        {
+                            "id": "overvoltage_relay_3",
+                            "offset": 38,
+                            "name": "Over Voltage 3",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                "overvolt"
+                            ]
+                        },
+                        {
+                            "id": "overvoltage_relay_grid",
+                            "offset": 39,
+                            "name": "Grid Overvoltage",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "overvolt_grid_l2",
+                                "overvolt_grid_l1",
+                                null,
+                                null,
+                                null,
+                                "undervolt_grid_l3",
+                                "undervolt_grid_l2",
+                                "undervolt_grid_l1"
+                            ]
+                        },
+                        {
+                            "id": "overvoltage_relay_grid_2",
+                            "offset": 40,
+                            "name": "Grid Overvoltage 2",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                "overvolt_grid_l3"
+                            ]
+                        },
+                        {
+                            "id": "overvoltage_relay_grid_3",
+                            "offset": 41,
+                            "name": "Grid Overvoltage 3",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "grid_overvolt",
+                                "grid_undervolt"
+                            ]
+                        },
+                        {
+                            "id": "aux_contacts",
+                            "offset": 42,
+                            "name": "Aux Contacts",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "aux_contact_l1",
+                                "aux_contact_l2",
+                                "aux_contact_l3",
+                                "lockout_handle"
+                            ]
+                        },
+                        {
+                            "id": "remote_commands",
+                            "offset": 43,
+                            "name": "Remote commands",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "remote_open_cmd",
+                                null,
+                                null,
+                                null,
+                                "remote_close_cmd"
+                            ]
+                        },
+                        {
+                            "id": "trip_status",
+                            "offset": 44,
+                            "name": "Trip Issued Status",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "trip_status"
+                            ]
+                        },
+                        {
+                            "id": "voltage_swell",
+                            "offset": 45,
+                            "name": "Voltage Swell",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "volt_swell",
+                                "volt_swell_l3",
+                                "volt_swell_l2",
+                                "volt_swell_l1",
+                                "volt_sag",
+                                "volt_sag_l3",
+                                "volt_sag_l2",
+                                "volt_sag_l1"
+                            ]
+                        },
+                        {
+                            "id": "voltage_interruption",
+                            "offset": 46,
+                            "name": "Voltage Interuption",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                "test_relay",
+                                null,
+                                null,
+                                null,
+                                "volt_int",
+                                "volt_int_l3",
+                                "volt_int_l2",
+                                "volt_int_l1"
+                            ]
+                        },
+                        {
+                            "id": "open_push",
+                            "offset": 47,
+                            "name": "Open Push Button Pushed",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                "open_button_pushed"
+                            ]
+                        },
+                        {
+                            "id": "grid_voltage_l1_l2",
+                            "offset": 48,
+                            "size": 2,
+                            "scale": 1,
+                            "name": "Voltage ABZ"
+                        },
+                        {
+                            "id": "grid_voltage_l2_l3",
+                            "offset": 50,
+                            "size": 2,
+                            "scale": 1,
+                            "name": "Voltage BCZ"
+                        },
+                        {
+                            "id": "grid_voltage_l3_l1",
+                            "offset": 52,
+                            "size": 2,
+                            "scale": 1,
+                            "name": "Voltage CAZ"
+                        },
+                        {
+                            "id": "frequency_timeout",
+                            "offset": 54,
+                            "name": "Relay Row 32",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                "overfreq_time_1",
+                                "overfreq_time_2",
+                                "underfreq_time_1",
+                                "underfreq_time_2"
+                            ]
+                        },
+                        {
+                            "id": "voltage_timeout_1",
+                            "offset": 55,
+                            "name": "Relay Row 48",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                "undervolt_time_1",
+                                "undervolt_time_2"
+                            ]
+                        },
+                        {
+                            "id": "voltage_timeout_2",
+                            "offset": 56,
+                            "name": "Relay Row 49",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                "undervolt_time_3",
+                                "overvolt_time_1",
+                                "overvolt_time_2",
+                                "overvolt_time_3"
+                            ]
+                        },
+                        {
+                            "id": "power_limit_element",
+                            "offset": 57,
+                            "name": "Relay Row 88",
+                            "individual_bits": true,
+                            "bit_strings":
+                            [
+                                null,
+                                null,
+                                null,
+                                null,
+                                "pos_power_limit",
+                                "neg_power_limit"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

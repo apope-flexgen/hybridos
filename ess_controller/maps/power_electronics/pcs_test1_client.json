@@ -1,0 +1,161 @@
+{
+    "connection":
+    {
+        "name": "power_electronics_pcs_1",
+        "ip_address": "192.168.1.19",
+        "port": 502
+    },
+    "components": 
+    [
+        {
+            "id": "power_electronics_pcs_1",
+            "frequency": 500,
+            "offset_time": 0,
+            "xheartbeat_enabled": true,
+            "xcomponent_heartbeat_read_uri": "life_signal",
+            "xcomponent_heartbeat_write_uri": "life",
+            "xmodbus_heartbeat_timeout_ms": 1000,
+            "add_timings": true,
+            "xcomponent_heartbeat_timeout_ms": 1000,
+            "registers": 
+            [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1000,
+                    "number_of_registers": 3,
+                    "map":
+                    [
+                        {
+                            "id": "grid_voltage_rs",
+                            "offset": 1000
+                        },
+                        {
+                            "id": "grid_voltage_st",
+                            "offset": 1001
+                        },
+                        {
+                            "id": "grid_voltage_tr",
+                            "offset": 1002
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1120,
+                    "number_of_registers": 3,
+                    "map":
+                    [
+                        {
+                            "id": "current_fault",
+                            "offset": 1120
+                        },
+                        {
+                            "id": "current_warning",
+                            "offset": 1121
+                        },
+                        {
+                            "id": "inverter_status",
+                            "offset": 1122
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1192,
+                    "number_of_registers": 3,
+                    "map":
+                    [
+                        {
+                            "id": "pt100_l1_temperature",
+                            "offset": 1192
+                        },
+                        {
+                            "id": "pt100_l2_temperature",
+                            "offset": 1193
+                        },
+                        {
+                            "id": "pt100_l3_temperature",
+                            "offset": 1194
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 7304,
+                    "number_of_registers": 1,
+                    "map":
+                    [
+                        {
+                            "id": "bess_voltage_bus_1",
+                            "offset": 7304
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 552,
+                    "number_of_registers": 6,
+                    "map":
+                    [
+                        {
+                            "id": "p_reference",
+                            "offset": 552
+                        },
+                        {
+                            "id": "q_reference",
+                            "offset": 557
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 2041,
+                    "number_of_registers": 1,
+                    "map":
+                    [
+                        {
+                            "id": "enable_main_selector",
+                            "offset": 2041
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1007,
+                    "number_of_registers": 2,
+                    "map":
+                    [
+                       {
+                            "id": "active_power",
+                            "offset": 1007
+                        },
+                        {
+                            "id": "reactive_power",
+                            "offset": 1008
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 7400,
+                    "number_of_registers": 10,
+                    "map":
+                    [
+                        {
+                            "id": "vdc_bus",
+                            "offset": 7400
+                        },
+                        {
+                            "id": "dc_input_power_bess1",
+                            "offset": 7406
+                        },
+                        {
+                            "id": "dc_input_current_bess1",
+                            "offset": 7409
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

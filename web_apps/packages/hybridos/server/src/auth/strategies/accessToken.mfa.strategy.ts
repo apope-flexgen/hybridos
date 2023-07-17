@@ -1,19 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy, ExtractJwt } from 'passport-jwt'
-
-import { IValidJWTService, VALID_JWT_SERVICE } from '../interfaces/validJWT.service.interface'
+import { AppEnvService } from 'src/environment/appEnv.service'
 
 @Injectable()
 export class AccessTokenMfaStrategy extends PassportStrategy(Strategy, 'accessToken-mfa') {
-    constructor(
-        @Inject(VALID_JWT_SERVICE)
-        private readonly validJwtService: IValidJWTService
-    ) {
+    constructor(appEnvService: AppEnvService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: 'supersecretkey-oneTimeUse-mfa',
+            secretOrKey: appEnvService.getJwtSecretKeyMFA(),
         })
     }
 

@@ -1,0 +1,456 @@
+{
+  "system": {
+    "name": "PCSM Test",
+    "protocol": "Modbus TCP",
+    "version": "6.0 WIP",
+    "id": "pcsm_test",
+    "port": 502,
+    "data_bits": "Columns marked in green are REQUIRED",
+    "off_by_one": false
+  },
+  "connection": {
+    "name": "PCMS",
+    "device protocol": "Modbus TCP",
+    "device protocol version": "6.0 WIP",
+    "device name": "hems_pcs_1",
+    "device id string": "hems_pcs_1",
+    "ip_address": "192.168.202.1",
+    "data bits (8 typical)": "Columns marked in green are REQUIRED"
+  },
+  "components": [
+    {
+      "id": "pcs_status",
+      "xheartbeat_enabled": true,
+      "xcomponent_heartbeat_read_uri": "life_signal",
+      "xcomponent_heartbeat_write_uri": "life",
+      "xmodbus_heartbeat_timeout_ms": 200,
+      "xcomponent_heartbeat_timeout_ms": 200,
+      "frequency": 400,
+      "offset_time": 20,
+      "xdevice_id": 98,
+      "registers": [
+        {
+          "type": "Input Registers",
+          "starting_offset": 41001,
+          "number_of_registers": 9,
+          "map": [
+            {
+              "id": "grid_voltage_rs",
+              "offset": 41001,
+              "name": "Grid voltage RS",
+              "scale":10
+            },
+            {
+              "id": "grid_voltage_st",
+              "offset": 41002,
+              "name": "Grid voltage ST",
+              "scale":10
+            },
+            {
+              "id": "grid_voltage_tr",
+              "offset": 41003,
+              "name": "Grid voltage TR",
+              "scale":10
+            },
+            {
+              "id": "grid_current_I1",
+              "offset": 41004,
+              "name": "Grid current I1",
+              "scale":10
+            },
+            {
+              "id": "grid_current_I2",
+              "offset": 41005,
+              "name": "Grid current I2",
+              "scale":10
+            },
+            {
+              "id": "grid_current_I3",
+              "offset": 41006,
+              "name": "Grid current I3",
+              "scale":10
+            },
+            {
+              "id": "active_power",
+              "offset": 41008,
+              "name": "Active Power (P)",
+              "scale":1
+            },
+            {
+              "id": "reactive_power",
+              "offset": 41009,
+              "name": "Reactive Power (Q)",
+              "scale":1
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 41121,
+          "number_of_registers": 3,
+          "map": [
+            {
+              "id": "current_fault",
+              "offset": 41121,
+              "name": "Current fault"
+            },
+            {
+              "id": "current_warning",
+              "offset": 41122,
+              "name": "Current warning"
+            },
+            {
+              "id": "inverter_status",
+              "offset": 41123,
+              "name": "Inverter Status"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 47501,
+          "number_of_registers": 18,
+          "map": [
+            {
+              "id": "bms_select",
+              "offset": 47501,
+              "name": "bms_select"
+            },
+            {
+              "id": "pcs_heartbeat",
+              "offset": 47502,
+              "name": "pcs_heartbeat"
+            },
+            {
+              "id": "pcs_string_in_service",
+              "offset": 47503,
+              "name": "pcs_string_in_service"
+            },
+            {
+              "id": "pcs_total_string_count",
+              "offset": 47504,
+              "name": "pcs_total_string_count"
+            },
+            {
+              "id": "service_voltage",
+              "offset": 47505,
+              "name": "service_voltage",
+              "scale": 10
+            },
+            {
+              "id": "service_soc",
+              "offset": 47506,
+              "name": "service_soc",
+              "scale": 10
+            },
+            {
+              "id": "system_voltage",
+              "offset": 47507,
+              "name": "system_voltage",
+              "scale": 10
+            },
+            {
+              "id": "system_current",
+              "offset": 47508,
+              "name": "system_current"
+            },
+            {
+              "id": "system_soc",
+              "offset": 47509,
+              "name": "system_soc",
+              "scale": 10
+            },
+            {
+              "id": "system_soh",
+              "offset": 47510,
+              "name": "system_soh",
+              "scale": 10
+            },
+            {
+              "id": "system_mode",
+              "offset": 47511,
+              "name": "system_mode"
+            },
+            {
+              "id": "max_cell_voltage",
+              "offset": 47512,
+              "name": "max_cell_voltage"
+            },
+            {
+              "id": "min_cell_voltage",
+              "offset": 47513,
+              "name": "min_cell_voltage"
+            },
+            {
+              "id": "max_cell_temp",
+              "offset": 47514,
+              "name": "max_cell_temp",
+              "scale": 100
+            },
+            {
+              "id": "min_cell_temp",
+              "offset": 47515,
+              "name": "min_cell_temp",
+              "scale": 100
+            },
+            {
+              "id": "partial_min_string",
+              "offset": 47516,
+              "name": "partial_min_string"
+            },
+            {
+              "id": "partial_diff_volt",
+              "offset": 47517,
+              "name": "partial_diff_volt"
+            },
+            {
+              "id": "system_config_status",
+              "offset": 47518,
+              "name": "system_config_status"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 47530,
+          "number_of_registers": 2,
+          "map": [
+            {
+              "id": "digital_input_status",
+              "offset": 47530,
+              "name": "Digital input status"
+            },
+            {
+              "id": "sys_alarm_status",
+              "offset": 47531,
+              "name": "System alarm status"
+            }
+          ]
+        },
+        {
+          "type": "Holding Registers",
+          "starting_offset": 468,
+          "number_of_registers": 1,
+          "map":
+          [
+            {
+              "id": "pcs_keepalive",
+              "offset": 468
+            }
+          ]
+        },
+        {
+
+          "type": "Holding Registers",
+          "starting_offset": 40006,
+          "number_of_registers": 7,
+          "map":
+          [
+            {
+              "id": "pcs_rtc_sec",
+              "offset": 40006,
+              "name": "PCS RTC seconds"
+            },
+            {
+              "id": "pcs_rtc_min",
+              "offset": 40007,
+              "name": "PCS RTC minutes"
+            },
+            {
+              "id": "pcs_rtc_hour",
+              "offset": 40008,
+              "name": "PCS RTC hour"
+            },
+            {
+              "id": "pcs_rtc_day",
+              "offset": 40009,
+              "name": "PCS RTC day"
+            },
+            {
+              "id": "pcs_rtc_month",
+              "offset": 40010,
+              "name": "PCS RTC month"
+            },
+            {
+              "id": "pcs_rtc_year",
+              "offset": 40011,
+              "name": "PCS RTC year"
+            },
+            {
+              "id": "pcs_rtc_utc_offset",
+              "offset": 40012,
+              "name": "PCS UTC offset"
+            }
+          ]
+        },
+        {
+          "type": "Holding Registers",
+          "starting_offset": 2041,
+          "number_of_registers": 1,
+          "map":
+          [
+            {
+                "id": "enable_main_selector",
+                "offset": 2041
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pcs_controls",
+      "xheartbeat_enabled": true,
+      "xcomponent_heartbeat_read_uri": "life_signal",
+      "xcomponent_heartbeat_write_uri": "life",
+      "xmodbus_heartbeat_timeout_ms": 200,
+      "xcomponent_heartbeat_timeout_ms": 200,
+      "frequency": 400,
+      "offset_time": 20,
+      "xdevice_id": 98,
+      "registers":
+      [
+        {
+          "type": "Input Registers",
+          "starting_offset": 43010,
+          "number_of_registers": 3,
+          "map": [
+            {
+              "id": "start_cmd",
+              "offset": 43010,
+              "name": "Start command"
+            },
+            {
+              "id": "stop_cmd",
+              "offset": 43011,
+              "name": "Stop command"
+            },
+            {
+              "id": "reset_cmd",
+              "offset": 43012,
+              "name": "Reset command"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 43200,
+          "number_of_registers": 1,
+          "map": [
+            {
+              "id": "EStop_cmd",
+              "offset": 43200,
+              "name": "Emergency stop command"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pcs_params",
+      "xheartbeat_enabled": true,
+      "xcomponent_heartbeat_read_uri": "life_signal",
+      "xcomponent_heartbeat_write_uri": "life",
+      "xmodbus_heartbeat_timeout_ms": 200,
+      "xcomponent_heartbeat_timeout_ms": 200,
+      "frequency": 400,
+      "offset_time": 20,
+      "xdevice_id": 98,
+      "registers":
+      [
+        {
+          "type": "Input Registers",
+          "starting_offset": 40101,
+          "number_of_registers": 2,
+          "map": [
+            {
+              "id": "p_limit",
+              "offset": 40101,
+              "name": "P limit"
+            },
+            {
+              "id": "q_limit",
+              "offset": 40102,
+              "name": "Q limit"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 40502,
+          "number_of_registers": 3,
+          "map": [
+            {
+              "id": "num_retries",
+              "offset": 40502,
+              "name": "Number of retries"
+            },
+            {
+              "id": "retries_delay",
+              "offset": 40503,
+              "name": "Delay between retries"
+            },
+            {
+              "id": "retries_reset_timeout",
+              "offset": 40504,
+              "name": "Reset retries timeout"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 44253,
+          "number_of_registers": 2,
+          "map": [
+            {
+              "id": "reset_refs_time",
+              "offset": 44253,
+              "name": "Reset refs time"
+            },
+            {
+              "id": "comms_fault_time",
+              "offset": 44254,
+              "name": "Comms fault time"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 40553,
+          "number_of_registers": 6,
+          "map":
+          [
+            {
+                "id": "p_reference",
+                "offset": 40553,
+                "name": "P reference"
+            },
+            {
+                "id": "q_reference",
+                "offset": 40558,
+                "name": "Q reference"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 40588,
+          "number_of_registers": 2,
+          "map":
+          [
+            {
+                "id": "response_delay",
+                "offset": 40588,
+                "name": "Response delay"
+            },
+            {
+                "id": "response_time",
+                "offset": 40589,
+                "name": "Response time"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+  

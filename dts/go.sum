@@ -13,8 +13,8 @@ github.com/flexgen-power/go_flexgen v0.0.0-20220928143027-2922ae5b733a/go.mod h1
 github.com/flexgen-power/go_flexgen v0.0.0-20221102195558-e0b45330cfdc/go.mod h1:vXEESlFMgcPOj6qx/Ow5bKqknNsvyYYgHZdimp7se7w=
 github.com/flexgen-power/go_flexgen v0.0.0-20230125170151-549ed55db233 h1:eoMjn0Gnm/MCmSu8Xk2s0iVjYkChfjq281iiNzvAnAA=
 github.com/flexgen-power/go_flexgen v0.0.0-20230125170151-549ed55db233/go.mod h1:mxQBTPnyaPiRkLX4yS02XnXeYWr8KSpH4jSNWnXbjv4=
-github.com/flexgen-power/influxdb_client v0.0.0-20221107205823-f8e2ef73a5c7 h1:3MIA9HnBv3AXPAjk/8c9yhKm2Ix9QCUlTWhjrlJ3OrQ=
-github.com/flexgen-power/influxdb_client v0.0.0-20221107205823-f8e2ef73a5c7/go.mod h1:Pr/BVfAIXdCV0Cl+4uZcPORuEib3US94HiLryIEdd5k=
+github.com/flexgen-power/influxdb_client v0.0.0-20230322221340-8842e616f777 h1:lt3+o3opza8sbS+uYLKImv/cd7Tzr6f99HaEKhY+kgg=
+github.com/flexgen-power/influxdb_client v0.0.0-20230322221340-8842e616f777/go.mod h1:Pr/BVfAIXdCV0Cl+4uZcPORuEib3US94HiLryIEdd5k=
 github.com/flexgen-power/mongodb_client v0.0.0-20221010181048-147c5e08c801 h1:4IiSmAnAUEJPMUkyowXFRn0FplLn8Jkoo9oDGU6PcOc=
 github.com/flexgen-power/mongodb_client v0.0.0-20221010181048-147c5e08c801/go.mod h1:dYH+p7eE6W4PhC7L/T/jZIQsZTBgw62yR/6L7xX41kw=
 github.com/getkin/kin-openapi v0.61.0/go.mod h1:7Yn5whZr5kJi6t+kShccXS8ae1APpYTW6yheSwk8Yi4=

@@ -23,7 +23,6 @@
 #include <memory>
 
 #include "dnp3_utils.h"
-//#include <opendnp3/util/Uncopyable.h>
 #include <opendnp3/util/StaticOnly.h>
 
 #include <opendnp3/master/CommandResultCallbackT.h>
@@ -38,18 +37,10 @@ class fpsCommandCallback : public StaticOnly
         static CommandResultCallbackT Get();
         static CommandResultCallbackT Get(sysCfg* fpsDB);
 
-        // static std::shared_ptr<CommandResultCallbackT> Create(sysCfg* fpsDB)
-        // {
-        //     return std::make_shared<fpsCommandCallback>(fpsDB);
-        // }
-
-        //fpsCommandCallback(sysCfg* fpsDB) {sysdb = fpsDB;};
-
         static sysCfg* sysdb;
 };
 
-} // namespace opendnp3
-
+}
 
 
 #endif

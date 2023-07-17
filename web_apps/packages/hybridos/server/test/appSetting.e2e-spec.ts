@@ -7,6 +7,8 @@ import { createTestApiApplication } from './testUtils'
 import { SITE_ADMINS_SERVICE } from '../src/siteAdmins/interfaces/siteAdmin.service.interface'
 import { SiteAdminsController } from '../src/siteAdmins/siteAdmins.controller'
 import { SiteAdminsDto } from '../src/siteAdmins/dto/create-siteAdmins.dto'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
 
 describe('SiteAdmins (e2e)', () => {
     let app: INestApplication
@@ -45,23 +47,29 @@ describe('SiteAdmins (e2e)', () => {
                         }),
                     },
                 },
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
+                    },
+                },
             ],
-        }).compile()
+        }).overrideGuard(RolesGuard).useValue({ canActivate: () => true }).compile()
 
         app = createTestApiApplication(moduleFixture)
         await app.init()
     })
 
-    it('/GET app-settings', () => {
+    it('/GET site-admins', () => {
         return request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .expect(200)
             .expect(defaultSiteAdmins)
     })
 
-    it('/POST app-settings', () => {
+    it('/POST site-admins', () => {
         return request(app.getHttpServer())
-            .post('/app-settings')
+            .post('/site-admins')
             .send(defaultSiteAdmins)
             .expect(201)
             .expect(defaultSiteAdmins)

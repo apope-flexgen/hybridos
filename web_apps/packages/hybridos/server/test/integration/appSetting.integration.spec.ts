@@ -12,6 +12,7 @@ import { User } from '../../../shared/types/dtos/auth.dto'
 import { AppModule } from '../../src/app.module'
 import { AppEnvService } from '../../src/environment/appEnv.service'
 import * as testUtils from '../testUtils'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 let VALID_ACCESS_TOKEN: string
 const VALID_USERNAME = 'user1'
@@ -27,7 +28,11 @@ const defaultsiteAdmins = {
         password_regular_expression: JSON.stringify(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!"#\$%&'\*\+,\.\/:;=\\?@\^`\|~])/
         ),
-        multi_factor_authentication: false
+        multi_factor_authentication: false,
+        lowercase: true,
+        uppercase: true,
+        special: true,
+        digit: true,
     },
     radius: {
         is_enabled: false,
@@ -50,6 +55,10 @@ const altsiteAdmins = {
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!"#\$%&'\*\+,\.\/:;=\\?@\^`\|~])/
         ),
         multi_factor_authentication: false,
+        lowercase: true,
+        uppercase: true,
+        special: true,
+        digit: true,
     },
     radius: {
         is_enabled: true,
@@ -70,6 +79,10 @@ const invalidsiteAdmins = {
         old_passwords: -3,
         password_regular_expression: '',
         multi_factor_authentication: null,
+        lowercase: true,
+        uppercase: true,
+        special: true,
+        digit: true,
     },
     radius: {
         is_enabled: true,
@@ -88,19 +101,6 @@ const isDefaultsiteAdmins = (res) => {
     testUtils.checksiteAdminsFields(res, defaultsiteAdmins)
 }
 
-const initializeUser = async (uri: string, user: User) => {
-    const con = await MongoClient.connect(uri, {})
-    const tdb = con.db('integrationTestDb')
-
-    expect(tdb).toBeDefined()
-    const col = tdb.collection('users')
-    await col.deleteMany({})
-    expect(await col.countDocuments({})).toBe(0)
-    const result = await col.insertMany([{ ...user }])
-    expect(result.insertedCount).toStrictEqual(1)
-    await con.close()
-}
-
 describe('siteAdmins (Integration)', () => {
     let app: INestApplication
     let db: MongoMemoryServer
@@ -113,6 +113,7 @@ describe('siteAdmins (Integration)', () => {
         })
             .overrideProvider(AppEnvService)
             .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+            .overrideProvider(PermissionsService).useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer
@@ -130,7 +131,7 @@ describe('siteAdmins (Integration)', () => {
     it('should return default siteAdmins with empty db', async () => {
         console.log('accessToken: ', VALID_ACCESS_TOKEN)
         return await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .expect(200)
             .expect(isDefaultsiteAdmins)
@@ -138,7 +139,7 @@ describe('siteAdmins (Integration)', () => {
 
     it('should return updated siteAdmins', async () => {
         return await request(app.getHttpServer())
-            .post('/app-settings')
+            .post('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .send(altsiteAdmins)
             .expect(201)
@@ -147,23 +148,23 @@ describe('siteAdmins (Integration)', () => {
 
     it('should return current siteAdmins', async () => {
         await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .expect(200)
             .expect(isDefaultsiteAdmins)
 
         await request(app.getHttpServer())
-            .post('/app-settings')
+            .post('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .send(altsiteAdmins)
             .expect(201)
             .expect(isAltsiteAdmins)
         const con = await MongoClient.connect(db.getUri(), {})
-        const col = con.db('integrationTestDb').collection('siteAdmins')
+        const col = con.db('integrationTestDb').collection('siteadmins')
         await con.close()
 
         return await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .expect(200)
             .expect(isAltsiteAdmins)
@@ -171,7 +172,7 @@ describe('siteAdmins (Integration)', () => {
 
     it('should fail due to invalid input', async () => {
         return await request(app.getHttpServer())
-            .post('/app-settings')
+            .post('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .send(invalidsiteAdmins)
             .expect(400)
@@ -195,35 +196,35 @@ describe('siteAdmins (Integration)', () => {
 
     it('testing capped capability', async () => {
         await request(app.getHttpServer())
-            .post('/app-settings')
+            .post('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .send(altsiteAdmins)
             .expect(201)
             .expect(isAltsiteAdmins)
 
         await request(app.getHttpServer())
-            .post('/app-settings')
+            .post('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .send(altsiteAdmins)
             .expect(201)
             .expect(isAltsiteAdmins)
 
         await request(app.getHttpServer())
-            .post('/app-settings')
+            .post('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .send(altsiteAdmins)
             .expect(201)
             .expect(isAltsiteAdmins)
 
         await request(app.getHttpServer())
-            .post('/app-settings')
+            .post('/site-admins')
             .set('Authorization', `${VALID_ACCESS_TOKEN}`)
             .send(altsiteAdmins)
             .expect(201)
             .expect(isAltsiteAdmins)
 
         const con = await MongoClient.connect(db.getUri(), {})
-        const col = con.db('integrationTestDb').collection('siteAdmins')
+        const col = con.db('integrationTestDb').collection('siteadmins')
         console.log('iscapped: ', await col.isCapped())
         expect(await col.countDocuments({})).toBe(1)
         await con.close()

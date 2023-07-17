@@ -1,0 +1,576 @@
+{
+    "fileInfo": {
+        "sourceFileName": "PCS-TI_Sungrow_SC1725UD_Modbus_Map.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2021-06-04T14:30:32.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "Jimmy Nguyen",
+        "outputFileName": "sungrow_pcs_sc1725_server.json",
+        "outputFileType": "server",
+        "outputFileCreated": "2021-06-04T14:33:05.118Z"
+    },
+    "system": {
+        "connection name": "Sungrow PCS SC1725",
+        "protocol": "Modbus TCP",
+        "version": "6.0 WIP",
+        "name": "sungrow_pcs_sc1725",
+        "id": "sungrow_pcs_sc1725",
+        "ip_address": "0.0.0.0",
+        "port": 502,
+        "data_bits": "Columns marked in green are REQUIRED"
+    },
+    "registers": {
+        "holding_registers": [
+            {
+                "id": "start_stop",
+                "offset": 3256,
+                "name": "Start/Stop/Standby",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "grid_mode_setting",
+                "offset": 3257,
+                "name": "On/Off-Grid Mode Setting",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "reactive_power_adj_switch",
+                "offset": 3258,
+                "name": "Reactive Power Adjustment Switch",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "control_state",
+                "offset": 3259,
+                "name": "Remote/Local",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "power_priority",
+                "offset": 3260,
+                "name": "Active/Reactive Priority",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "power_soft_start",
+                "offset": 3261,
+                "name": "Power Soft Start Enabling",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "ac_precharge",
+                "offset": 3270,
+                "name": "AC Pre-charging Enabling",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "quick_dispatch",
+                "offset": 3271,
+                "name": "Quick Dispatch",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "zero_power_standby",
+                "offset": 3272,
+                "name": "Zero Power Standby",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "on_grid_mode",
+                "offset": 3300,
+                "name": "On-grid Charging/Discharging Mode",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "on_grid_const_current",
+                "offset": 3301,
+                "name": "On-grid Constant Current Value",
+                "unit": "A",
+                "signed": true,
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "on_grid_const_voltage",
+                "offset": 3302,
+                "scale": 0.1,
+                "name": "On-grid Constant Voltage Value",
+                "unit": "V",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "on_grid_const_volt_limit_current",
+                "offset": 3303,
+                "name": "On-grid Constant Voltage Limit Current",
+                "unit": "A",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "on_grid_const_ac_power",
+                "offset": 3304,
+                "scale": 0.1,
+                "name": "On-grid Constant Power (AC)",
+                "unit": "%",
+                "signed": true,
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "on_grid_const_dc_power",
+                "offset": 3305,
+                "scale": 0.1,
+                "name": "On-grid Constant Power (DC)",
+                "unit": "%",
+                "signed": true,
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "heartbeat",
+                "offset": 3316,
+                "name": "Heartbeat",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "hearbeat_timeout_interval",
+                "offset": 3317,
+                "name": "Heartbeat Timeout Interval",
+                "unit": "s",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "reactive_power_pct_setting",
+                "offset": 3319,
+                "name": "Reactive Power Percentage Setting",
+                "unit": "%",
+                "signed": true,
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "power_factor_setting",
+                "offset": 3320,
+                "name": "Power Factor Setting",
+                "signed": true,
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "bms_comms_exception_switch",
+                "offset": 3370,
+                "name": "BMS Communication Exception Switch",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "bms_comms_exception_time",
+                "offset": 3371,
+                "name": "BMS Communication Exception Time",
+                "unit": "s",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "qu_working_mode",
+                "offset": 3396,
+                "name": "QU Working Mode",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "dc_mode",
+                "offset": 3406,
+                "name": "DC Mode",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "active_islanding",
+                "offset": 3416,
+                "name": "Active Islanding Enabling",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "black_start_enabling",
+                "offset": 3520,
+                "name": "Black Start Enabling",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "black_start_beat",
+                "offset": 3521,
+                "name": "Black Start Beat",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "parallel_operation_ctrl",
+                "offset": 3608,
+                "name": "Parallel Operation Control",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "weak_grid_mode",
+                "offset": 3609,
+                "name": "Weak Grid Mode",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "reactive_power_soft_start",
+                "offset": 3610,
+                "name": "Reactive Power Soft Start",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "hv_load_switch_remote_open",
+                "offset": 3611,
+                "name": "HV Load Switch Remote Open",
+                "uri": "/components/pcs_parameter_setting"
+            },
+            {
+                "id": "hv_load_switch_remote_closed",
+                "offset": 3612,
+                "name": "HV Load Switch Remote Closed",
+                "uri": "/components/pcs_parameter_setting"
+            }
+        ],
+        "input_registers": [
+            {
+                "id": "fault_state",
+                "offset": 3288,
+                "name": "Overall Fault State",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "alarm_state",
+                "offset": 3289,
+                "size": 2,
+                "name": "Overall Alarm State",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "mv_node_state",
+                "offset": 3291,
+                "size": 2,
+                "name": "MV Node State",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "trans_oil_temp",
+                "offset": 3293,
+                "scale": 0.1,
+                "name": "Transformer Oil Temperature",
+                "unit": "°C",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "heartbeat",
+                "offset": 3294,
+                "name": "Heartbeat Count",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "leakage_current",
+                "offset": 3297,
+                "scale": 0.01,
+                "name": "Leakage Current",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "mv_node_state_1",
+                "offset": 3298,
+                "size": 2,
+                "name": "MV Node State 1",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "mv_node_state_2",
+                "offset": 3300,
+                "size": 2,
+                "name": "MV Node State 2",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "winding_temp",
+                "offset": 3302,
+                "scale": 0.1,
+                "name": "Winding Temperature",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "module_temp_1",
+                "offset": 3304,
+                "scale": 0.1,
+                "name": "Module Temperature 1",
+                "unit": "°C",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "module_temp_2",
+                "offset": 3305,
+                "scale": 0.1,
+                "name": "Module Temperature 2",
+                "unit": "°C",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "module_temp_3",
+                "offset": 3306,
+                "scale": 0.1,
+                "name": "Module Temperature 3",
+                "unit": "°C",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "dc_voltage",
+                "offset": 3310,
+                "scale": 0.1,
+                "name": "DC Voltage",
+                "unit": "V",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "dc_current",
+                "offset": 3311,
+                "scale": 0.1,
+                "name": "DC Current",
+                "unit": "A",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "dc_power",
+                "offset": 3312,
+                "scale": 0.1,
+                "name": "DC Power",
+                "unit": "kW",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "grid_voltage_vab",
+                "offset": 3313,
+                "scale": 0.1,
+                "name": "Grid Voltage Vab",
+                "unit": "V",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "grid_voltage_vbc",
+                "offset": 3314,
+                "scale": 0.1,
+                "name": "Grid Voltage Vbc",
+                "unit": "V",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "grid_voltage_vca",
+                "offset": 3315,
+                "scale": 0.1,
+                "name": "Grid Voltage Vca",
+                "unit": "V",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "phase_a_current",
+                "offset": 3316,
+                "scale": 0.1,
+                "name": "Phase A Current",
+                "unit": "A",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "phase_b_current",
+                "offset": 3317,
+                "scale": 0.1,
+                "name": "Phase B Current",
+                "unit": "A",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "phase_c_current",
+                "offset": 3318,
+                "scale": 0.1,
+                "name": "Phase C Current",
+                "unit": "A",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "active_power",
+                "offset": 3319,
+                "size": 2,
+                "scale": 0.1,
+                "name": "Active Power",
+                "unit": "kW",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "reactive_power",
+                "offset": 3321,
+                "size": 2,
+                "scale": 0.1,
+                "name": "Reactive Power",
+                "unit": "kVar",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "pos_ground_impedence",
+                "offset": 3323,
+                "size": 2,
+                "scale": 0.01,
+                "name": "Positive Impedance to Ground",
+                "unit": "kΩ",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "neg_ground_impedence",
+                "offset": 3325,
+                "size": 2,
+                "scale": 0.01,
+                "name": "Negative Impedance to Ground",
+                "unit": "kΩ",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "alarm_running_state_1",
+                "offset": 3327,
+                "name": "Alarm Running State 1",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "alarm_running_state_2",
+                "offset": 3328,
+                "name": "Alarm Running State 2",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "fault_state_1",
+                "offset": 3329,
+                "size": 2,
+                "name": "Fault State 1",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "fault_state_2",
+                "offset": 3331,
+                "size": 2,
+                "name": "Fault State 2",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "charge_state",
+                "offset": 3333,
+                "name": "Charging/Discharging State",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "work_state",
+                "offset": 3342,
+                "size": 2,
+                "name": "Work State",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "operating_mode",
+                "offset": 3344,
+                "name": "Operating Mode",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "nominal_output_power",
+                "offset": 3348,
+                "scale": 0.1,
+                "name": "Nominal Output Power",
+                "unit": "kW",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "nominal_reactive_output_power",
+                "offset": 3349,
+                "scale": 0.1,
+                "name": "Nominal Reactive Output Power",
+                "unit": "kVar",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "grid_status",
+                "offset": 3351,
+                "name": "Grid Status",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "grid_frequency",
+                "offset": 3352,
+                "scale": 0.01,
+                "name": "Grid Frequency",
+                "unit": "Hz",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "power_factor",
+                "offset": 3353,
+                "scale": 0.001,
+                "name": "Power Factor",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "ambient_temp",
+                "offset": 3354,
+                "scale": 0.1,
+                "name": "Ambient Temperature",
+                "unit": "°C",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "node_state",
+                "offset": 3355,
+                "size": 2,
+                "name": "Node State",
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "max_charging_power",
+                "offset": 3363,
+                "scale": 0.1,
+                "name": "Max Charging Power",
+                "unit": "kW",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "max_discharging_power",
+                "offset": 3364,
+                "scale": 0.1,
+                "name": "Max Discharging Power",
+                "unit": "kW",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "max_inductive_reactive_power",
+                "offset": 3365,
+                "scale": 0.1,
+                "name": "Max Inductive Reactive Power",
+                "unit": "kVar",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "max_capacitive_reactive_power",
+                "offset": 3366,
+                "scale": 0.1,
+                "name": "Max Capacitive Reactive Power",
+                "unit": "kVar",
+                "signed": true,
+                "uri": "/components/pcs_running_info"
+            },
+            {
+                "id": "num_black_start_beats",
+                "offset": 3369,
+                "name": "Current Number of Black Start Beats",
+                "uri": "/components/pcs_running_info"
+            }
+        ],
+        "discrete_inputs": [],
+        "coils": []
+    }
+}

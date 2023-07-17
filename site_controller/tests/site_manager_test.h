@@ -5,39 +5,23 @@
 #include "Site_Manager.h"
 #include <Site_Controller_Utils.h>
 #include "Types.h"
-
+#include <test_tools.h>
 #include "frequency_response_test.h"
 
-float asset_priority;
-Version* version;
 
-class Site_Manager_Mock : public Site_Manager
+class site_manager_test : public Site_Manager, public testing::Test
 {
 	public:
-	Site_Manager_Mock(Version* v):Site_Manager(v){}
+    site_manager_test() : Site_Manager(nullptr) {}
+	site_manager_test(Version* v):Site_Manager(v){}
 
-    // variable endpoint/helper functions
-    void configure_pfr(float site_hz, float nominal_hz, float pfr_dband, float pfr_min, float pfr_max, float pfr_droop);
-    void call_pfr(float cmd);
-    void call_limit_ess_by_aggregate(float, float);
-    void configure_and_apply_poi_limits(int asset_priority, float min_poi_limit_kW, float max_poi_limit_kW, bool soc_poi_limit, float actual_soc, float soc_target, float under_min, float under_max, float over_min, float over_max, bool load_enable);
-    void set_agg_asset_limit_kw(float val);
-};
-
-class site_manager_test : public testing::Test
-{ 
-public:
-	Site_Manager_Mock* siteMgr;
-	
-	virtual void SetUp()
-	{
-	    siteMgr = new Site_Manager_Mock(NULL);
-	}
-
-	virtual void TearDown()
-	{
-		delete siteMgr;
-	}
+    void SetUp()
+    {
+        // For some reason the Asset_Cmd_Object holds on to its member variables across tests
+        // TODO: Look into this more for a better solution
+        // All other Site Manager member variables seem to be cleared across tests so there are not issues
+        asset_cmd = Asset_Cmd_Object();
+    }
 };
 
 //ess discharge 
@@ -78,7 +62,7 @@ TEST_F(site_manager_test, calculate_site_kW_load)
     //iterate through each test case and get results
     for (int i = 0; i < num_tests; i++)
     {
-        siteMgr->asset_cmd.create_site_kW_load_buffer(array[i].buffer_size);
+        asset_cmd.create_site_kW_load_buffer(array[i].buffer_size);
         for (int j = 0; j < array[i].buffer_size; j++)
         {
             // Only print messages to log if a test fails
@@ -87,14 +71,14 @@ TEST_F(site_manager_test, calculate_site_kW_load)
             // // Capture any prints within site controller that might be present in debug mode
             capture_stdout();
 
-            siteMgr->asset_cmd.set_ess_actual_kW(array[i].ess_actual[j]);
-            siteMgr->asset_cmd.set_feeder_actual_kW(array[i].feed_actual[j]);
-            siteMgr->asset_cmd.calculate_site_kW_load();
+            asset_cmd.set_ess_actual_kW(array[i].ess_actual[j]);
+            asset_cmd.set_feeder_actual_kW(array[i].feed_actual[j]);
+            asset_cmd.calculate_site_kW_load();
 
             errorLog << "calculate_site_kW_load() test " << i+1 << " of " << num_tests << std::endl;
             // failure conditions
-            failure = siteMgr->asset_cmd.get_site_kW_load() != array[i].expected_load[j];
-            EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_load(), array[i].expected_load[j]);
+            failure = asset_cmd.get_site_kW_load() != array[i].expected_load[j];
+            EXPECT_EQ(asset_cmd.get_site_kW_load(), array[i].expected_load[j]);
 
             // Release stdout so we can write again
             release_stdout(failure);
@@ -106,10 +90,63 @@ TEST_F(site_manager_test, calculate_site_kW_load)
     }
 }
 
+// Calculate the amount of additional load compensation that should be provided for slewed features
+TEST_F(site_manager_test, track_slewed_load)
+{
+    //struct that has variables to configure for each test case
+    struct tests 
+    {
+        load_compensation load_method;
+        float starting_demand;
+        float new_demand;
+        float additional_load;
+        int slew_rate;
+        float expected_load;
+    };
+
+    std::vector<tests> tests = {
+        {NO_COMPENSATION, 0.0f, 0.0f, 0.0f, 10, 0.0f},
+        {LOAD_MINIMUM, 0.0f, 500.0f, 500.0f, 10, 0.1f}, // Test: just started slewing, no command
+        {LOAD_MINIMUM, 0.0f, 1000.0f, 0.0f, 10, 0.0f}, // Command in same direction
+        {LOAD_MINIMUM, 0.0f, -1000.0f, 500.0f, 10, 0.05f}, // Command in opposite direction
+        {LOAD_OFFSET, 0.0f, 500.0f, 500.0f, 10, 0.1f}, // No command
+        {LOAD_OFFSET, 0.0f, 1500.0f, 500.0f, 10, 0.033f}, // Command in same direction
+        {LOAD_OFFSET, 0.0f, -1000.0f, 500.0f, 10, 0.05f}, // Command in opposite direction
+        {LOAD_MINIMUM, 250.0f, 500.0f, 500.0f, 10, 250.0f}, // Test: halfway to target, no command
+        {LOAD_MINIMUM, 500.0f, 1000.0f, 0.0f, 10, 0.0f}, // Command in same direction
+        {LOAD_MINIMUM, -500.0f, -1000.0f, 500.0f, 10, 250.0f}, // Command in opposite direction
+        {LOAD_OFFSET, 250.0f, 500.0f, 500.0f, 10, 250.0f}, // No command
+        {LOAD_OFFSET, 750.0f, 1500.0f, 500.0f, 10, 250.0f}, // Command in same direction
+        {LOAD_OFFSET, -500.0f, -1000.0f, 500.0f, 10, 250.0f}, // Command in opposite direction
+        {LOAD_MINIMUM, 500.0f, 500.0f, 500.0f, 10, 500.0f}, // Test: at target, no command
+        {LOAD_MINIMUM, 1000.0f, 1000.0f, 0.0f, 10, 0.0f}, // Command in same direction
+        {LOAD_MINIMUM, -1000.0f, -1000.0f, 500.0f, 10, 500.0f}, // Command in opposite direction
+        {LOAD_OFFSET, 500.0f, 500.0f, 500.0f, 10, 500.0f}, // No command
+        {LOAD_OFFSET, 1500.0f, 1500.0f, 500.0f, 10, 500.0f}, // Command in same direction
+        {LOAD_OFFSET, -1000.0f, -1000.0f, 500.0f, 10, 500.0f}, // Command in opposite direction
+    };
+
+    uint test_id = 1;
+    //iterate through each test case and get results
+    for (auto test : tests)
+    {
+        test_logger t_log("track_slewed_load", test_id++, tests.size());
+        // Setup feature slew object at starting demand
+        export_target_kW_cmd_slew.reset_slew_target(10000);
+        export_target_kW_cmd_slew.update_slew_target(test.starting_demand);
+        usleep(10000); // wait one iteration
+        export_target_kW_cmd_slew.set_slew_rate(test.slew_rate);
+        export_target_kW_cmd_slew.update_slew_target(test.starting_demand);
+        asset_cmd.set_site_kW_demand(export_target_kW_cmd_slew.get_slew_target(test.new_demand));
+        asset_cmd.track_slewed_load(test.load_method, test.new_demand, test.additional_load, export_target_kW_cmd_slew);
+        t_log.range_results.push_back({test.expected_load, 0.1f, asset_cmd.get_additional_load_compensation(), "additional_load_compensation"});
+        t_log.check_solution();
+    }
+}
+
 // Ensures that output from feature (combination of demand, requests and load) produces valid feature and site demand values
 TEST_F(site_manager_test, calculate_feature_kW_demand)
 {
-    int const num_tests = 21;  //total number of test cases
 
     //struct that has variables to configure for each test case
     struct tests 
@@ -118,68 +155,66 @@ TEST_F(site_manager_test, calculate_feature_kW_demand)
         float ess_request;
         float gen_request;
         float solar_request;
-        bool load_inclusion;
+        load_compensation load_inclusion;
         float load;
         float expected_feature_demand;
         float expected_site_demand;
     };
 
-    tests array[num_tests];  //an array with an element for each test case
+    std::vector<tests> tests = {
+        {0.0f,    0.0f,    0.0f,    0.0f,   NO_COMPENSATION, 0.0f,   0.0f,    0.0f},    // Nothing
+        {0.0f,    500.0f,  0.0f,    0.0f,   NO_COMPENSATION, 0.0f,   500.0f,  500.0f},  // ess request
+        {0.0f,    -500.0f, 0.0f,    0.0f,   NO_COMPENSATION, 0.0f,   -500.0f, -500.0f}, // negative ess request
+        {0.0f,    500.0f,  1500.0f, 750.0f, NO_COMPENSATION, 0.0f,   2750.0f, 2750.0f}, // all assets
+        {0.0f,    -500.0f, 1500.0f, 750.0f, NO_COMPENSATION, 0.0f,   1750.0f, 1750.0f}, // all assets negative ess
+        {1000.0f, 0.0f,    0.0f,    0.0f,   NO_COMPENSATION, 0.0f,   1000.0f, 1000.0f}, // Same tests with demand
+        {1000.0f, 500.0f,  0.0f,    0.0f,   NO_COMPENSATION, 0.0f,   1500.0f, 1500.0f}, // ess request
+        {1000.0f, -500.0f, 0.0f,    0.0f,   NO_COMPENSATION, 0.0f,   500.0f,  500.0f},  // negative ess request
+        {1000.0f, 500.0f,  1500.0f, 750.0f, NO_COMPENSATION, 0.0f,   3750.0f, 3750.0f}, // all assets
+        {1000.0f, -500.0f, 1500.0f, 750.0f, NO_COMPENSATION, 0.0f,   2750.0f, 2750.0f}, // all assets negative ess
+        {0.0f,    0.0f,    0.0f,    0.0f,   LOAD_OFFSET,     0.0f,   0.0f,    0.0f},    // Same tests with load offset
+        {0.0f,    0.0f,    0.0f,    0.0f,   NO_COMPENSATION, 500.0f, 0.0f,    0.0f},    // Additional test with load but not enabled
+        {0.0f,    500.0f,  0.0f,    0.0f,   LOAD_OFFSET,     500.0f, 1000.0f, 1000.0f}, // ess request
+        {0.0f,    -500.0f, 0.0f,    0.0f,   LOAD_OFFSET,     500.0f, 0.0f,    0.0f},    // negative ess request
+        {0.0f,    500.0f,  1500.0f, 750.0f, LOAD_OFFSET,     500.0f, 3250.0f, 3250.0f}, // all assets
+        {0.0f,    -500.0f, 1500.0f, 750.0f, LOAD_OFFSET,     500.0f, 2250.0f, 2250.0f}, // all assets negative ess
+        {1000.0f, 0.0f,    0.0f,    0.0f,   LOAD_OFFSET,     500.0f, 1500.0f, 1500.0f}, // Same tests with demand
+        {1000.0f, 500.0f,  0.0f,    0.0f,   LOAD_OFFSET,     500.0f, 2000.0f, 2000.0f}, // ess request
+        {1000.0f, -500.0f, 0.0f,    0.0f,   LOAD_OFFSET,     500.0f, 1000.0f, 1000.0f}, // negative ess request
+        {1000.0f, 500.0f,  1500.0f, 750.0f, LOAD_OFFSET,     500.0f, 4250.0f, 4250.0f}, // all assets
+        {1000.0f, -500.0f, 1500.0f, 750.0f, LOAD_OFFSET,     500.0f, 3250.0f, 3250.0f}, // all assets negative ess
+        {0.0f,    0.0f,    0.0f,    0.0f,   LOAD_MINIMUM,    0.0f,   0.0f,    0.0f},    // Same tests with load minimum
+        {0.0f,    500.0f,  0.0f,    0.0f,   LOAD_MINIMUM,    500.0f, 500.0f,  500.0f},  // ess request
+        {0.0f,    -500.0f, 0.0f,    0.0f,   LOAD_MINIMUM,    500.0f, 0.0f,    0.0f},    // negative ess request
+        {0.0f,    500.0f,  1500.0f, 750.0f, LOAD_MINIMUM,    500.0f, 2750.0f, 2750.0f}, // all assets
+        {0.0f,    -500.0f, 1500.0f, 750.0f, LOAD_MINIMUM,    500.0f, 1750.0f, 1750.0f}, // all assets negative ess
+        {1000.0f, 0.0f,    0.0f,    0.0f,   LOAD_MINIMUM,    500.0f, 1000.0f, 1000.0f}, // Same tests with demand
+        {1000.0f, 500.0f,  0.0f,    0.0f,   LOAD_MINIMUM,    500.0f, 1500.0f, 1500.0f}, // ess request
+        {1000.0f, -500.0f, 0.0f,    0.0f,   LOAD_MINIMUM,    500.0f, 500.0f,  500.0f},  // negative ess request
+        {1000.0f, 500.0f,  1500.0f, 750.0f, LOAD_MINIMUM,    500.0f, 3750.0f, 3750.0f}, // all assets
+        {1000.0f, -500.0f, 1500.0f, 750.0f, LOAD_MINIMUM,    500.0f, 2750.0f, 2750.0f}, // all assets negative ess
+    };
 
-    //configure variables for each test case
-    array[0]  = {0.0f,    0.0f,    0.0f,    0.0f,   false, 0.0f,   0.0f,    0.0f};    // Nothing
-    array[1]  = {0.0f,    500.0f,  0.0f,    0.0f,   false, 0.0f,   500.0f,  500.0f};  // ess request
-    array[2]  = {0.0f,    -500.0f, 0.0f,    0.0f,   false, 0.0f,   -500.0f, -500.0f}; // negative ess request
-    array[3]  = {0.0f,    500.0f,  1500.0f, 750.0f, false, 0.0f,   2750.0f, 2750.0f}; // all assets
-    array[4]  = {0.0f,    -500.0f, 1500.0f, 750.0f, false, 0.0f,   1750.0f, 1750.0f}; // all assets negative ess
-    array[5]  = {1000.0f, 0.0f,    0.0f,    0.0f,   false, 0.0f,   1000.0f, 1000.0f}; // Same tests with demand
-    array[6]  = {1000.0f, 500.0f,  0.0f,    0.0f,   false, 0.0f,   1500.0f, 1500.0f}; // ess request
-    array[7]  = {1000.0f, -500.0f, 0.0f,    0.0f,   false, 0.0f,   500.0f,  500.0f};  // negative ess request
-    array[8]  = {1000.0f, 500.0f,  1500.0f, 750.0f, false, 0.0f,   3750.0f, 3750.0f}; // all assets
-    array[9]  = {1000.0f, -500.0f, 1500.0f, 750.0f, false, 0.0f,   2750.0f, 2750.0f}; // all assets negative ess
-    array[10] = {0.0f,    0.0f,    0.0f,    0.0f,   true,  0.0f,   0.0f,    0.0f};    // Same tests with load
-    array[11] = {0.0f,    0.0f,    0.0f,    0.0f,   false, 500.0f, 0.0f,    0.0f};    // Additional test with load but not enabled
-    array[12] = {0.0f,    500.0f,  0.0f,    0.0f,   true,  500.0f, 1000.0f, 1000.0f}; // ess request
-    array[13] = {0.0f,    -500.0f, 0.0f,    0.0f,   true,  500.0f, 0.0f,    0.0f};    // negative ess request
-    array[14] = {0.0f,    500.0f,  1500.0f, 750.0f, true,  500.0f, 3250.0f, 3250.0f}; // all assets
-    array[15] = {0.0f,    -500.0f, 1500.0f, 750.0f, true,  500.0f, 2250.0f, 2250.0f}; // all assets negative ess
-    array[16] = {1000.0f, 0.0f,    0.0f,    0.0f,   true,  500.0f, 1500.0f, 1500.0f}; // Same tests with demand
-    array[17] = {1000.0f, 500.0f,  0.0f,    0.0f,   true,  500.0f, 2000.0f, 2000.0f}; // ess request
-    array[18] = {1000.0f, -500.0f, 0.0f,    0.0f,   true,  500.0f, 1000.0f, 1000.0f}; // negative ess request
-    array[19] = {1000.0f, 500.0f,  1500.0f, 750.0f, true,  500.0f, 4250.0f, 4250.0f}; // all assets
-    array[20] = {1000.0f, -500.0f, 1500.0f, 750.0f, true,  500.0f, 3250.0f, 3250.0f}; // all assets negative ess
-
+    uint test_id = 1;
     //iterate through each test case and get results
-    for (int i = 0; i < num_tests; i++)
+    for (auto test : tests)
     {
-        // Only print messages to log if a test fails
-        bool failure = false;
-        std::stringstream errorLog;
-        // // Capture any prints within site controller that might be present in debug mode
-		capture_stdout();
-
-        siteMgr->asset_cmd.set_ess_max_potential_kW(10000);
-        siteMgr->asset_cmd.set_gen_max_potential_kW(10000);
-        siteMgr->asset_cmd.set_solar_max_potential_kW(10000);
-        siteMgr->asset_cmd.set_site_kW_demand(array[i].site_demand);
-        siteMgr->asset_cmd.set_ess_kW_request(array[i].ess_request);
-        siteMgr->asset_cmd.set_gen_kW_request(array[i].gen_request);
-        siteMgr->asset_cmd.set_solar_kW_request(array[i].solar_request);
-        siteMgr->asset_cmd.set_site_kW_load_inclusion(array[i].load_inclusion);
-        siteMgr->asset_cmd.set_site_kW_load(array[i].load);
-        siteMgr->asset_cmd.calculate_feature_kW_demand(0);
-        errorLog << "calculate_feature_kW_demand() test " << i+1 << " of " << num_tests << std::endl;
-        // failure conditions
-        failure = siteMgr->asset_cmd.get_feature_kW_demand() != array[i].expected_feature_demand
-               || siteMgr->asset_cmd.get_site_kW_demand() != array[i].expected_site_demand;
-        EXPECT_EQ(siteMgr->asset_cmd.get_feature_kW_demand(), array[i].expected_feature_demand);
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_demand(), array[i].expected_site_demand);
-
-        // Release stdout so we can write again
-		release_stdout(failure);
-        // Print the test id if failure
-        if (failure)
-            std::cout << errorLog.str() << std::endl;
+        test_logger t_log("calculate_feature_kW_demand", test_id++, tests.size());
+        asset_cmd.set_ess_max_potential_kW(10000);
+        asset_cmd.set_ess_min_potential_kW(-10000);
+        asset_cmd.set_gen_max_potential_kW(10000);
+        asset_cmd.set_solar_max_potential_kW(10000);
+        asset_cmd.set_site_kW_demand(test.site_demand);
+        asset_cmd.set_ess_kW_request(test.ess_request);
+        asset_cmd.set_gen_kW_request(test.gen_request);
+        asset_cmd.set_solar_kW_request(test.solar_request);
+        asset_cmd.set_load_compensation_method(test.load_inclusion);
+        asset_cmd.set_site_kW_load(test.load);
+        asset_cmd.track_unslewed_load(test.load_inclusion);
+        asset_cmd.calculate_feature_kW_demand(0);
+        t_log.float_results.push_back({asset_cmd.get_feature_kW_demand(), test.expected_feature_demand, "feature"});
+        t_log.float_results.push_back({asset_cmd.get_site_kW_demand(), test.expected_feature_demand, "demand"});
+        t_log.check_solution();
     }
 }
 
@@ -197,7 +232,7 @@ TEST_F(site_manager_test, calculate_site_kW_production_limits)
         float gen_request;
         float solar_request;
         bool load_inclusion;
-        float load;
+        float additional_load;
         float expected_charge_production;
         float expected_discharge_production;
     };
@@ -212,13 +247,13 @@ TEST_F(site_manager_test, calculate_site_kW_production_limits)
     array[4]  = {1000.0f,  1000.0f,  1000.0f,  0.0f,   0.0f,   false, 200.0f, 0.0f,     1000.0f}; // + ess
     array[5]  = {2200.0f,  2200.0f,  1000.0f,  500.0f, 700.0f, false, 200.0f, 0.0f,     2200.0f}; // + ess + gen + solar
     array[6]  = {700.0f,   700.0f,   -500.0f,  500.0f, 700.0f, false, 200.0f, -500.0f,  1200.0f}; // - ess + gen + solar, net positive
-    array[7]  = {0.0f,     0.0f,     -200.0f,  0.0f,   0.0f,   true,  200.0f, -200.0f,   200.0f}; // Same tests with load enabled
+    array[7]  = {0.0f,     0.0f,     -200.0f,  0.0f,   0.0f,   true,  200.0f, -200.0f,  200.0f};  // Same tests with load enabled
     array[8]  = {0.0f,     0.0f,     -1400.0f, 500.0f, 700.0f, true,  200.0f, -1400.0f, 1400.0f}; // - ess + gen + solar
     array[9]  = {-1000.0f, -1000.0f, -1200.0f, 0.0f,   0.0f,   true,  200.0f, -1200.0f, 200.0f};  // - ess
     array[10] = {-800.0f,  -800.0f,  -2200.0f, 500.0f, 700.0f, true,  200.0f, -2200.0f, 1400.0f}; // - ess + gen + solar, net negative
     array[11] = {1000.0f,  1000.0f,  800.0f,   0.0f,   0.0f,   true,  200.0f, 0.0f,     1000.0f}; // + ess
-    array[12] = {2200.0f,  2200.0f,  1000.0f,  400.0f, 600.0f, true,  200.0f, 0.0f,     2200.0f}; // + ess + gen + solar
-    array[13] = {700.0f,   700.0f,   -500.0f,  400.0f, 600.0f, true,  200.0f, -500.0f,  1200.0f}; // - ess + gen + solar, net positive
+    array[12] = {2400.0f,  2400.0f,  1200.0f,  400.0f, 600.0f, true,  200.0f, 0.0f,     2400.0f}; // + ess + gen + solar
+    array[13] = {700.0f,   700.0f,   -300.0f,  400.0f, 600.0f, true,  200.0f, -500.0f,  1200.0f}; // - ess + gen + solar, net positive
     array[14] = {0.0f,     -300.0f,  0.0f,     0.0f,   0.0f,   false, 200.0f, -300.0f,  0.0f};    // Same test with negative standalone modification
     array[15] = {0.0f,     -300.0f,  -1200.0f, 500.0f, 700.0f, false, 200.0f, -1500.0f, 1200.0f};
     array[16] = {-1000.0f, -1300.0f, -1000.0f, 0.0f,   0.0f,   false, 200.0f, -1300.0f, 0.0f};
@@ -227,12 +262,12 @@ TEST_F(site_manager_test, calculate_site_kW_production_limits)
     array[19] = {2200.0f,  1900.0f,  1000.0f,  500.0f, 700.0f, false, 200.0f, 0.0f,     1900.0f};
     array[20] = {700.0f,   400.0f,   -500.0f,  500.0f, 700.0f, false, 200.0f, -500.0f,  900.0f};
     array[21] = {0.0f,     -300.0f,  -200.0f,  0.0f,   0.0f,   true,  200.0f, -500.0f,  200.0f};
-    array[22] = {0.0f,     -300.0f,  -1400.0f, 500.0f, 700.0f, true,  200.0f, -1700.0f, 1400.0f};
+    array[22] = {0.0f,     -300.0f,  -1200.0f, 500.0f, 700.0f, true,  200.0f, -1700.0f, 1400.0f};
     array[23] = {-1000.0f, -1300.0f, -1200.0f, 0.0f,   0.0f,   true,  200.0f, -1500.0f, 200.0f};
-    array[24] = {-800.0f,  -1100.0f, -2200.0f, 500.0f, 700.0f, true,  200.0f, -2500.0f, 1400.0f};
+    array[24] = {-800.0f,  -1100.0f, -2000.0f, 500.0f, 700.0f, true,  200.0f, -2500.0f, 1400.0f};
     array[25] = {1000.0f,  700.0f,   800.0f,   0.0f,   0.0f,   true,  200.0f, 0.0f,     700.0f};
     array[26] = {2200.0f,  1900.0f,  1000.0f,  400.0f, 600.0f, true,  200.0f, 0.0f,     1900.0f};
-    array[27] = {700.0f,   400.0f,   -500.0f,  400.0f, 600.0f, true,  200.0f, -500.0f,  900.0f};
+    array[27] = {700.0f,   400.0f,   -300.0f,  400.0f, 600.0f, true,  200.0f, -500.0f,  900.0f};
     array[28] = {0.0f,     300.0f,   0.0f,     0.0f,   0.0f,   false, 200.0f, 0.0f,     300.0f};  // Same tests with positive standalone modification
     array[29] = {0.0f,     300.0f,   -1200.0f, 500.0f, 700.0f, false, 200.0f, -1200.0f, 1500.0f}; 
     array[30] = {-1000.0f, -700.0f,  -1000.0f, 0.0f,   0.0f,   false, 200.0f, -700.0f,  0.0f};
@@ -241,12 +276,12 @@ TEST_F(site_manager_test, calculate_site_kW_production_limits)
     array[33] = {2200.0f,  2500.0f,  1000.0f,  500.0f, 700.0f, false, 200.0f, 0.0f,     2500.0f}; 
     array[34] = {700.0f,   1000.0f,  -500.0f,  500.0f, 700.0f, false, 200.0f, -500.0f,  1500.0f}; 
     array[35] = {0.0f,     300.0f,   -200.0f,  0.0f,   0.0f,   true,  200.0f, -200.0f,  500.0f};  
-    array[36] = {0.0f,     300.0f,   -1400.0f, 500.0f, 700.0f, true,  200.0f, -1400.0f, 1700.0f};  
+    array[36] = {0.0f,     300.0f,   -1200.0f, 500.0f, 700.0f, true,  200.0f, -1400.0f, 1700.0f};  
     array[37] = {-1000.0f, -700.0f,  -1200.0f, 0.0f,   0.0f,   true,  200.0f, -900.0f,  200.0f};   
-    array[38] = {-800.0f,  -500.0f,  -2200.0f, 500.0f, 700.0f, true,  200.0f, -1900.0f, 1400.0f};  
-    array[39] = {1000.0f,  1300.0f,  800.0f,   0.0f,   0.0f,   true,  200.0f, 0.0f,     1300.0f};   
-    array[40] = {2200.0f,  2500.0f,  1000.0f,  400.0f, 600.0f, true,  200.0f, 0.0f,     2500.0f};  
-    array[41] = {700.0f,   1000.0f,  -500.0f,  400.0f, 600.0f, true,  200.0f, -500.0f,  1500.0f};  
+    array[38] = {-800.0f,  -500.0f,  -2000.0f, 500.0f, 700.0f, true,  200.0f, -1900.0f, 1400.0f};  
+    array[39] = {1200.0f,  1500.0f,  1000.0f,  0.0f,   0.0f,   true,  200.0f, 0.0f,     1500.0f};   
+    array[40] = {2400.0f,  2700.0f,  1200.0f,  400.0f, 600.0f, true,  200.0f, 0.0f,     2700.0f};  
+    array[41] = {700.0f,   1000.0f,  -300.0f,  400.0f, 600.0f, true,  200.0f, -500.0f,  1500.0f};  
 
     //iterate through each test case and get results
     for (int i = 0; i < num_tests; i++)
@@ -257,26 +292,75 @@ TEST_F(site_manager_test, calculate_site_kW_production_limits)
         // // Capture any prints within site controller that might be present in debug mode
 		capture_stdout();
 
-        siteMgr->asset_cmd.set_feature_kW_demand(array[i].feature_demand);
-        siteMgr->asset_cmd.set_site_kW_demand(array[i].site_demand);
-        siteMgr->asset_cmd.set_ess_kW_request(array[i].ess_request);
-        siteMgr->asset_cmd.set_gen_kW_request(array[i].gen_request);
-        siteMgr->asset_cmd.set_solar_kW_request(array[i].solar_request);
-        siteMgr->asset_cmd.set_site_kW_load_inclusion(array[i].load_inclusion);
-        siteMgr->asset_cmd.set_site_kW_load(array[i].load);
-        siteMgr->asset_cmd.calculate_site_kW_production_limits();
+        asset_cmd.set_feature_kW_demand(array[i].feature_demand);
+        asset_cmd.set_site_kW_demand(array[i].site_demand);
+        asset_cmd.set_ess_kW_request(array[i].ess_request);
+        asset_cmd.set_gen_kW_request(array[i].gen_request);
+        asset_cmd.set_solar_kW_request(array[i].solar_request);
+        asset_cmd.set_load_compensation_method(LOAD_MINIMUM);
+        asset_cmd.set_additional_load_compensation(array[i].load_inclusion * array[i].additional_load);
+        asset_cmd.calculate_site_kW_production_limits();
         errorLog << "calculate_site_kW_production_limits() test " << i+1 << " of " << num_tests << std::endl;
         // failure conditions
-        failure = siteMgr->asset_cmd.get_site_kW_charge_production() != array[i].expected_charge_production
-               || siteMgr->asset_cmd.get_site_kW_discharge_production() != array[i].expected_discharge_production;
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_charge_production(), array[i].expected_charge_production);
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_discharge_production(), array[i].expected_discharge_production);
+        failure = asset_cmd.get_site_kW_charge_production() != array[i].expected_charge_production
+               || asset_cmd.get_site_kW_discharge_production() != array[i].expected_discharge_production;
+        EXPECT_EQ(asset_cmd.get_site_kW_charge_production(), array[i].expected_charge_production);
+        EXPECT_EQ(asset_cmd.get_site_kW_discharge_production(), array[i].expected_discharge_production);
 
         // Release stdout so we can write again
 		release_stdout(failure);
         // Print the test id if failure
         if (failure)
             std::cout << errorLog.str() << std::endl;
+    }
+}
+
+// Determine if ESS must discharge to handle load
+TEST_F(site_manager_test, determine_ess_load_requirement)
+{
+    struct test
+    {
+        load_compensation load_method;
+        int asset_priority;
+        float load;
+        float ess_request;
+        float site_demand;
+        float feature_demand;
+        bool expected_result;
+        float expected_demand;
+        float expected_feature;
+    };
+
+    std::vector<test> tests = {
+        {NO_COMPENSATION, 0, 0.0f, -100.0f, -100.0f, -100.0f, false, -100.0f, -100.0f},
+        {LOAD_OFFSET, 0, 0.0f, -100.0f, -100.0f, -100.0f, false, -100.0f, -100.0f},
+        {LOAD_MINIMUM, 0, 0.0f, -100.0f, -100.0f, -100.0f, false, -100.0f, -100.0f},
+        {LOAD_MINIMUM, 0, 150.0f, -100.0f, -100.0f, -100.0f, false, -100.0f, -100.0f},
+        {LOAD_MINIMUM, 0, 200.0f, -100.0f, 250.0f, 250.0f, false, 250.0f, 250.0f},
+        {LOAD_MINIMUM, 0, 201.0f, -100.0f, -100.0f, 100.0f, true, 0.0f, 200.0f},
+        {LOAD_MINIMUM, 2, 101.0f, -100.0f, -100.0f, 100.0f, true, 0.0f, 200.0f}
+    };
+    int test_id = 1;
+    for (auto test : tests)
+    {
+        test_logger t_log("determine_ess_load_requirement", test_id++, tests.size());
+        asset_cmd.set_load_compensation_method(test.load_method);
+        asset_cmd.set_site_kW_load(test.load);
+        asset_cmd.set_ess_kW_request(test.ess_request);
+        asset_cmd.set_site_kW_demand(test.site_demand);
+        asset_cmd.set_feature_kW_demand(test.feature_demand);
+        asset_cmd.set_feeder_max_potential_kW(100.0f);
+        asset_cmd.set_ess_max_potential_kW(100.0f);
+        asset_cmd.set_gen_max_potential_kW(100.0f);
+        asset_cmd.set_solar_max_potential_kW(100.0f);
+        t_log.bool_results.push_back({test.expected_result, asset_cmd.determine_ess_load_requirement(test.asset_priority), "result"});
+        t_log.float_results.push_back({test.expected_demand, asset_cmd.get_site_kW_demand(), "demand"});
+        t_log.float_results.push_back({test.expected_feature, asset_cmd.get_feature_kW_demand(), "feature"});
+        if (test.expected_result)
+            t_log.float_results.push_back({0.0f, asset_cmd.get_ess_kW_request(), "request"});
+        else
+            t_log.float_results.push_back({test.ess_request, asset_cmd.get_ess_kW_request(), "request"});
+        t_log.check_solution();
     }
 }
 
@@ -310,25 +394,25 @@ TEST_F(site_manager_test, dispatch_site_kW_charge_cmd)
     array[0]  = {-700.0f,  0.0f,    0.0f,     0.0f,    0, true,  true,  true,  0.0f,     0.0f,    0.0f,    0.0f,    0.0f,     0.0f};    // no request
     array[1]  = {-700.0f,  0.0f,    500.0f,   600.0f,  0, true,  true,  true,  0.0f,     0.0f,    0.0f,    0.0f,    0.0f,     600.0f};  // positive request
     array[2]  = {-700.0f,  100.0f,  -500.0f,  600.0f,  0, true,  true,  true,  100.0f,   0.0f,    0.0f,    0.0f,    0.0f,     600.0f};  // blocked by discharge
-    array[3]  = {-700.0f,  0.0f,    -500.0f,  600.0f,  0, false, false, false, 0.0f,     0.0f,    0.0f,    0.0f,    0.0f,     600.0f};  // no source
+    array[3]  = {-700.0f,  0.0f,    -500.0f,  600.0f,  0, false, false, false, 0.0f,     0.0f,    0.0f,    0.0f,    0.0f,     100.0f};  // no source, reduce discharge
     array[4]  = {-700.0f,  0.0f,    -800.0f,  800.0f,  0, true,  true,  true,  -700.0f,  0.0f,    0.0f,    700.0f,  -700.0f,  100.0f};  // exceeds potential, limited
     array[5]  = {-700.0f,  -500.0f, -500.0f,  600.0f,  0, true,  true,  true,  -700.0f,  0.0f,    0.0f,    200.0f,  -200.0f,  400.0f};  // exceeds potential - cmd, limited
     array[6]  = {-700.0f,  0.0f,    -500.0f,  600.0f,  0, false, false, true,  -500.0f,  0.0f,    0.0f,    500.0f,  -500.0f,  100.0f};  // 1st source
     array[7]  = {-700.0f,  0.0f,    -500.0f,  600.0f,  0, false, true,  false, -500.0f,  0.0f,    500.0f,  0.0f,    -500.0f,  100.0f};  // 1st disabled, 2nd source
     array[8]  = {-700.0f,  0.0f,    -500.0f,  600.0f,  0, true,  false, false, -500.0f,  500.0f,  0.0f,    0.0f,    -500.0f,  100.0f};  // first two disabled, 3rd source
     array[9]  = {-1500.0f, 0.0f,    -1500.0f, 1500.0f, 0, true,  true,  true,  -1500.0f, 0.0f,    500.0f,  1000.0f, -1500.0f, 0.0f};    // request requires 2 sources
-    array[10] = {-3500.0f, 0.0f,    -3500.0f, 3500.0f, 0, true,  true,  true,  -3000.0f, 1000.0f, 1000.0f, 1000.0f, -3000.0f, 500.0f};  // request exceeds 3 sources
+    array[10] = {-3500.0f, 0.0f,    -3500.0f, 3500.0f, 0, true,  true,  true,  -3000.0f, 1000.0f, 1000.0f, 1000.0f, -3000.0f, 0.0f};    // request exceeds 3 sources, reduce discharge
     array[11] = {-700.0f,  0.0f,    0.0f,     0.0f,    2, true,  true,  true,  0.0f,     0.0f,    0.0f,    0.0f,    0.0f,     0.0f};    // Same tests different priority
     array[12] = {-700.0f,  0.0f,    500.0f,   600.0f,  2, true,  true,  true,  0.0f,     0.0f,    0.0f,    0.0f,    0.0f,     600.0f};
     array[13] = {-700.0f,  100.0f,  -500.0f,  600.0f,  2, true,  true,  true,  100.0f,   0.0f,    0.0f,    0.0f,    0.0f,     600.0f};
-    array[14] = {-700.0f,  0.0f,    -500.0f,  600.0f,  2, false, false, false, 0.0f,     0.0f,    0.0f,    0.0f,    0.0f,     600.0f};
+    array[14] = {-700.0f,  0.0f,    -500.0f,  600.0f,  2, false, false, false, 0.0f,     0.0f,    0.0f,    0.0f,    0.0f,     100.0f};
     array[15] = {-700.0f,  0.0f,    -800.0f,  800.0f,  2, true,  true,  true,  -700.0f,  0.0f,    700.0f,  0.0f,    -700.0f,  100.0f};
     array[16] = {-700.0f,  -500.0f, -500.0f,  600.0f,  2, true,  true,  true,  -700.0f,  0.0f,    200.0f,  0.0f,    -200.0f,  400.0f};
     array[17] = {-700.0f,  0.0f,    -500.0f,  600.0f,  2, false, true,  false, -500.0f,  0.0f,    500.0f,  0.0f,    -500.0f,  100.0f};
     array[18] = {-700.0f,  0.0f,    -500.0f,  600.0f,  2, false, false, true,  -500.0f,  0.0f,    0.0f,    500.0f,  -500.0f,  100.0f};
     array[19] = {-700.0f,  0.0f,    -500.0f,  600.0f,  2, true,  false, false, -500.0f,  500.0f,  0.0f,    0.0f,    -500.0f,  100.0f};
     array[20] = {-1500.0f, 0.0f,    -1500.0f, 1500.0f, 2, true,  true,  true,  -1500.0f, 0.0f,    1000.0f, 500.0f,  -1500.0f, 0.0f};
-    array[21] = {-3500.0f, 0.0f,    -3500.0f, 3500.0f, 2, true,  true,  true,  -3000.0f, 1000.0f, 1000.0f, 1000.0f, -3000.0f, 500.0f};
+    array[21] = {-3500.0f, 0.0f,    -3500.0f, 3500.0f, 2, true,  true,  true,  -3000.0f, 1000.0f, 1000.0f, 1000.0f, -3000.0f, 0.0f};
 
     //iterate through each test case and get results
     for (int i = 0; i < num_tests; i++)
@@ -339,32 +423,32 @@ TEST_F(site_manager_test, dispatch_site_kW_charge_cmd)
         // Capture any prints within site controller that might be present in debug mode
 		capture_stdout();
 
-        siteMgr->asset_cmd.set_ess_min_potential_kW(array[i].ess_min_potential_kW);
-        siteMgr->asset_cmd.set_ess_kW_cmd(array[i].ess_kW_cmd);
+        asset_cmd.set_ess_min_potential_kW(array[i].ess_min_potential_kW);
+        asset_cmd.set_ess_kW_cmd(array[i].ess_kW_cmd);
         // Hard coded potentials/cmds (0) to simplify tests as there are already a significant number of cases
-        siteMgr->asset_cmd.set_gen_max_potential_kW(1000.0f);
-        siteMgr->asset_cmd.set_gen_kW_cmd(0.0f);
-        siteMgr->asset_cmd.set_solar_max_potential_kW(1000.0f);
-        siteMgr->asset_cmd.set_solar_kW_cmd(0.0f);
-        siteMgr->asset_cmd.set_feeder_max_potential_kW(1000.0f);
-        siteMgr->asset_cmd.set_feeder_kW_cmd(0.0f);
-        siteMgr->asset_cmd.set_site_kW_charge_production(array[i].charge_production);
-        siteMgr->asset_cmd.set_site_kW_discharge_production(array[i].discharge_production);
-        float result = siteMgr->asset_cmd.dispatch_site_kW_charge_cmd(array[i].priority, array[i].solar_source, array[i].gen_source, array[i].feeder_source);
+        asset_cmd.set_gen_max_potential_kW(1000.0f);
+        asset_cmd.set_gen_kW_cmd(0.0f);
+        asset_cmd.set_solar_max_potential_kW(1000.0f);
+        asset_cmd.set_solar_kW_cmd(0.0f);
+        asset_cmd.set_feeder_max_potential_kW(1000.0f);
+        asset_cmd.set_feeder_kW_cmd(0.0f);
+        asset_cmd.set_site_kW_charge_production(array[i].charge_production);
+        asset_cmd.set_site_kW_discharge_production(array[i].discharge_production);
+        float result = asset_cmd.dispatch_site_kW_charge_cmd(array[i].priority, array[i].solar_source, array[i].gen_source, array[i].feeder_source);
         errorLog <<"dispatch_site_kW_charge_cmd() test " << i+1 << " of " << num_tests << std::endl;
         // failure conditions
-        failure = siteMgr->asset_cmd.get_ess_kW_cmd() != array[i].expected_ess_kW_cmd
-               || siteMgr->asset_cmd.get_feeder_kW_cmd() != array[i].expected_feeder_kW_cmd
-               || siteMgr->asset_cmd.get_gen_kW_cmd() != array[i].expected_gen_kW_cmd
-               || siteMgr->asset_cmd.get_solar_kW_cmd() != array[i].expected_solar_kW_cmd
+        failure = asset_cmd.get_ess_kW_cmd() != array[i].expected_ess_kW_cmd
+               || asset_cmd.get_feeder_kW_cmd() != array[i].expected_feeder_kW_cmd
+               || asset_cmd.get_gen_kW_cmd() != array[i].expected_gen_kW_cmd
+               || asset_cmd.get_solar_kW_cmd() != array[i].expected_solar_kW_cmd
                || result != array[i].expected_charge_production
-               || siteMgr->asset_cmd.get_site_kW_discharge_production() != array[i].expected_discharge_production;
-        EXPECT_EQ(siteMgr->asset_cmd.get_ess_kW_cmd(), array[i].expected_ess_kW_cmd);
-        EXPECT_EQ(siteMgr->asset_cmd.get_feeder_kW_cmd(), array[i].expected_feeder_kW_cmd);
-        EXPECT_EQ(siteMgr->asset_cmd.get_gen_kW_cmd(), array[i].expected_gen_kW_cmd);
-        EXPECT_EQ(siteMgr->asset_cmd.get_solar_kW_cmd(), array[i].expected_solar_kW_cmd);
+               || asset_cmd.get_site_kW_discharge_production() != array[i].expected_discharge_production;
+        EXPECT_EQ(asset_cmd.get_ess_kW_cmd(), array[i].expected_ess_kW_cmd);
+        EXPECT_EQ(asset_cmd.get_feeder_kW_cmd(), array[i].expected_feeder_kW_cmd);
+        EXPECT_EQ(asset_cmd.get_gen_kW_cmd(), array[i].expected_gen_kW_cmd);
+        EXPECT_EQ(asset_cmd.get_solar_kW_cmd(), array[i].expected_solar_kW_cmd);
         EXPECT_EQ(result, array[i].expected_charge_production);
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_discharge_production(), array[i].expected_discharge_production);
+        EXPECT_EQ(asset_cmd.get_site_kW_discharge_production(), array[i].expected_discharge_production);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -428,31 +512,31 @@ TEST_F(site_manager_test, dispatch_site_kW_discharge_cmd)
         // Capture any prints within site controller that might be present in debug mode
 		capture_stdout();
 
-        siteMgr->asset_cmd.set_ess_max_potential_kW(600.0f);
-        siteMgr->asset_cmd.set_ess_kW_request(array[i].ess_kW_request);
-        siteMgr->asset_cmd.set_ess_kW_cmd(0.0f);
-        siteMgr->asset_cmd.set_gen_max_potential_kW(700.0f);
-        siteMgr->asset_cmd.set_gen_kW_request(array[i].gen_kW_request);
-        siteMgr->asset_cmd.set_gen_kW_cmd(0.0f);
-        siteMgr->asset_cmd.set_solar_max_potential_kW(800.0f);
-        siteMgr->asset_cmd.set_solar_kW_request(array[i].solar_kW_request);
-        siteMgr->asset_cmd.set_solar_kW_cmd(0.0f);
-        siteMgr->asset_cmd.set_feeder_max_potential_kW(900.0f);
-        siteMgr->asset_cmd.set_feeder_kW_cmd(0.0f);
-        siteMgr->asset_cmd.set_site_kW_discharge_production(array[i].discharge_production);
-        float actual_dispatch = siteMgr->asset_cmd.dispatch_site_kW_discharge_cmd(array[i].priority, array[i].cmd, DEMAND);
+        asset_cmd.set_ess_max_potential_kW(600.0f);
+        asset_cmd.set_ess_kW_request(array[i].ess_kW_request);
+        asset_cmd.set_ess_kW_cmd(0.0f);
+        asset_cmd.set_gen_max_potential_kW(700.0f);
+        asset_cmd.set_gen_kW_request(array[i].gen_kW_request);
+        asset_cmd.set_gen_kW_cmd(0.0f);
+        asset_cmd.set_solar_max_potential_kW(800.0f);
+        asset_cmd.set_solar_kW_request(array[i].solar_kW_request);
+        asset_cmd.set_solar_kW_cmd(0.0f);
+        asset_cmd.set_feeder_max_potential_kW(900.0f);
+        asset_cmd.set_feeder_kW_cmd(0.0f);
+        asset_cmd.set_site_kW_discharge_production(array[i].discharge_production);
+        float actual_dispatch = asset_cmd.dispatch_site_kW_discharge_cmd(array[i].priority, array[i].cmd, DEMAND);
         errorLog << "dispatch_site_kW_discharge_cmd() test " << i+1 << " of " << num_tests << std::endl;
         // failure conditions
         failure = !near(actual_dispatch, array[i].expected_dispatch, 0.001)
-               || !near(siteMgr->asset_cmd.get_ess_kW_cmd(), array[i].expected_ess_kW_cmd, 0.001)
-               || !near(siteMgr->asset_cmd.get_gen_kW_cmd(), array[i].expected_gen_kW_cmd, 0.001)
-               || !near(siteMgr->asset_cmd.get_solar_kW_cmd(), array[i].expected_solar_kW_cmd, 0.001)
-               || !near(siteMgr->asset_cmd.get_feeder_kW_cmd(), array[i].expected_feeder_kW_cmd, 0.001);
+               || !near(asset_cmd.get_ess_kW_cmd(), array[i].expected_ess_kW_cmd, 0.001)
+               || !near(asset_cmd.get_gen_kW_cmd(), array[i].expected_gen_kW_cmd, 0.001)
+               || !near(asset_cmd.get_solar_kW_cmd(), array[i].expected_solar_kW_cmd, 0.001)
+               || !near(asset_cmd.get_feeder_kW_cmd(), array[i].expected_feeder_kW_cmd, 0.001);
         EXPECT_NEAR(actual_dispatch, array[i].expected_dispatch, 0.001);
-        EXPECT_NEAR(siteMgr->asset_cmd.get_ess_kW_cmd(), array[i].expected_ess_kW_cmd, 0.001);
-        EXPECT_NEAR(siteMgr->asset_cmd.get_gen_kW_cmd(), array[i].expected_gen_kW_cmd, 0.001);
-        EXPECT_NEAR(siteMgr->asset_cmd.get_solar_kW_cmd(), array[i].expected_solar_kW_cmd, 0.001);
-        EXPECT_NEAR(siteMgr->asset_cmd.get_feeder_kW_cmd(), array[i].expected_feeder_kW_cmd, 0.001);
+        EXPECT_NEAR(asset_cmd.get_ess_kW_cmd(), array[i].expected_ess_kW_cmd, 0.001);
+        EXPECT_NEAR(asset_cmd.get_gen_kW_cmd(), array[i].expected_gen_kW_cmd, 0.001);
+        EXPECT_NEAR(asset_cmd.get_solar_kW_cmd(), array[i].expected_solar_kW_cmd, 0.001);
+        EXPECT_NEAR(asset_cmd.get_feeder_kW_cmd(), array[i].expected_feeder_kW_cmd, 0.001);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -497,16 +581,16 @@ TEST_F(site_manager_test, target_soc)
         // Capture any prints within site controller that might be present in debug mode
 		capture_stdout();
 
-        siteMgr->asset_cmd.set_ess_kW_request(array[i].ess_kW_request);
-        siteMgr->asset_cmd.set_solar_max_potential_kW(array[i].solar_max_potential);
-        siteMgr->asset_cmd.target_soc_mode(array[i].load_enable);
+        asset_cmd.set_ess_kW_request(array[i].ess_kW_request);
+        asset_cmd.set_solar_max_potential_kW(array[i].solar_max_potential);
+        asset_cmd.target_soc_mode(array[i].load_enable);
         errorLog << "target_soc() test " << i+1 << " of " << num_tests << std::endl;
-        bool failure = siteMgr->asset_cmd.get_ess_kW_request() != array[i].expected_ess_request
-                    || siteMgr->asset_cmd.get_solar_kW_request() != array[i].expected_solar_request
-                    || siteMgr->asset_cmd.get_site_kW_load_inclusion() != array[i].expected_load_inclusion;
-        EXPECT_EQ(siteMgr->asset_cmd.get_ess_kW_request(), array[i].expected_ess_request);
-        EXPECT_EQ(siteMgr->asset_cmd.get_solar_kW_request(), array[i].expected_solar_request);
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_load_inclusion(), array[i].expected_load_inclusion);
+        bool failure = asset_cmd.get_ess_kW_request() != array[i].expected_ess_request
+                    || asset_cmd.get_solar_kW_request() != array[i].expected_solar_request
+                    || asset_cmd.get_site_kW_load_inclusion() != array[i].expected_load_inclusion;
+        EXPECT_EQ(asset_cmd.get_ess_kW_request(), array[i].expected_ess_request);
+        EXPECT_EQ(asset_cmd.get_solar_kW_request(), array[i].expected_solar_request);
+        EXPECT_EQ(asset_cmd.get_site_kW_load_inclusion(), array[i].expected_load_inclusion);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -540,10 +624,10 @@ TEST_F(site_manager_test, site_export_target_mode)
     array[3] = {true,  2000.0f,  true,  2000.0f};
 
     //increment export target cmd slew prior to test 
-    siteMgr->export_target_kW_cmd_slew.set_slew_rate(1000000);  //1000MW/s
-    siteMgr->export_target_kW_cmd_slew.update_slew_target(0); //call once to set time vars
+    export_target_kW_cmd_slew.set_slew_rate(1000000);  //1000MW/s
+    export_target_kW_cmd_slew.update_slew_target(0); //call once to set time vars
     usleep(10000); //wait 10ms (total range +/-10MW)
-    siteMgr->export_target_kW_cmd_slew.update_slew_target(0); //call again to get delta time for non-zero slew range
+    export_target_kW_cmd_slew.update_slew_target(0); //call again to get delta time for non-zero slew range
 
     //iterate through each test case and get results
     for (int i = 0; i < num_tests; i++)
@@ -554,13 +638,13 @@ TEST_F(site_manager_test, site_export_target_mode)
         // Capture any prints within site controller that might be present in debug mode
 		capture_stdout();
 
-        siteMgr->asset_cmd.site_export_target_mode(array[i].load_enable_flag, &siteMgr->export_target_kW_cmd_slew, array[i].export_target_cmd);
+        asset_cmd.site_export_target_mode(array[i].load_enable_flag, &export_target_kW_cmd_slew, array[i].export_target_cmd);
         errorLog << "site_export_target_mode() test " << i+1 << " of " << num_tests << std::endl;
         // failure conditions
-        failure = siteMgr->asset_cmd.get_site_kW_demand() != array[i].expected_site_demand
-               || siteMgr->asset_cmd.get_site_kW_load_inclusion() != array[i].expected_load_enable;
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_demand(), array[i].expected_site_demand);
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_load_inclusion(), array[i].expected_load_enable);
+        failure = asset_cmd.get_site_kW_demand() != array[i].expected_site_demand
+               || asset_cmd.get_site_kW_load_inclusion() != array[i].expected_load_enable;
+        EXPECT_EQ(asset_cmd.get_site_kW_demand(), array[i].expected_site_demand);
+        EXPECT_EQ(asset_cmd.get_site_kW_load_inclusion(), array[i].expected_load_enable);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -608,21 +692,21 @@ TEST_F(site_manager_test, manual_mode)
 		capture_stdout();
 
         // Set potentials to some abritrary nonzero value to ensure they are modified appropriately
-        siteMgr->asset_cmd.set_solar_max_potential_kW(5000);
-        siteMgr->asset_cmd.set_ess_max_potential_kW(2500);
-        siteMgr->asset_cmd.manual_mode(array[i].ess_cmd, array[i].solar_cmd);
+        asset_cmd.set_solar_max_potential_kW(5000);
+        asset_cmd.set_ess_max_potential_kW(2500);
+        asset_cmd.manual_mode(array[i].ess_cmd, array[i].solar_cmd);
         errorLog << "manual_mode() test " << i+1 << " of " << num_tests << std::endl;
         // failure conditions
-        failure = siteMgr->asset_cmd.get_solar_kW_request() != array[i].expected_solar_kW_request
-               || siteMgr->asset_cmd.get_ess_kW_request() != array[i].expected_ess_charge_kW_request
-               || siteMgr->asset_cmd.get_ess_max_potential_kW() != array[i].expected_ess_max_potential
-               || siteMgr->asset_cmd.get_solar_max_potential_kW() != array[i].expected_solar_max_potential
-               || siteMgr->asset_cmd.get_site_kW_load_inclusion() != false; // Ensure this feature does not track load
-        EXPECT_EQ(siteMgr->asset_cmd.get_solar_kW_request(), array[i].expected_solar_kW_request);
-        EXPECT_EQ(siteMgr->asset_cmd.get_ess_kW_request(), array[i].expected_ess_charge_kW_request);
-        EXPECT_EQ(siteMgr->asset_cmd.get_ess_max_potential_kW(),array[i].expected_ess_max_potential);
-        EXPECT_EQ(siteMgr->asset_cmd.get_solar_max_potential_kW(),array[i].expected_solar_max_potential);
-        EXPECT_FALSE(siteMgr->asset_cmd.get_site_kW_load_inclusion());
+        failure = asset_cmd.get_solar_kW_request() != array[i].expected_solar_kW_request
+               || asset_cmd.get_ess_kW_request() != array[i].expected_ess_charge_kW_request
+               || asset_cmd.get_ess_max_potential_kW() != array[i].expected_ess_max_potential
+               || asset_cmd.get_solar_max_potential_kW() != array[i].expected_solar_max_potential
+               || asset_cmd.get_site_kW_load_inclusion() != false; // Ensure this feature does not track load
+        EXPECT_EQ(asset_cmd.get_solar_kW_request(), array[i].expected_solar_kW_request);
+        EXPECT_EQ(asset_cmd.get_ess_kW_request(), array[i].expected_ess_charge_kW_request);
+        EXPECT_EQ(asset_cmd.get_ess_max_potential_kW(),array[i].expected_ess_max_potential);
+        EXPECT_EQ(asset_cmd.get_solar_max_potential_kW(),array[i].expected_solar_max_potential);
+        EXPECT_FALSE(asset_cmd.get_site_kW_load_inclusion());
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -633,7 +717,7 @@ TEST_F(site_manager_test, manual_mode)
 }
 
 // Grid Target mode
-// Ensure that only the exporting grid target is taken into account by the demand in the feature, and load handling is passed off
+// Should set demand to the grid target + load
 TEST_F(site_manager_test, grid_target_mode)
 {
     int const num_tests = 4;  //total number of test cases
@@ -650,9 +734,9 @@ TEST_F(site_manager_test, grid_target_mode)
 
     //configure variables each test case
     array[0] = {0.0f,   0.0f,     0.0f};
-    array[1] = {500.0f, 0.0f,     0.0f};
-    array[2] = {500.0f, 1000.0f,  0.0f}; // Signs represent the POI in this feature e.g. positve -> import, negative -> export
-    array[3] = {500.0f, -1000.0f, 1000.0f};
+    array[1] = {500.0f, 0.0f,     500.0f};
+    array[2] = {500.0f, 1000.0f,  500.0f}; // Signs represent the POI in this feature e.g. positve -> import, negative -> export
+    array[3] = {500.0f, -1000.0f, 1500.0f};
 
     //iterate through each test case and get results
     for (int i = 0; i < num_tests; i++)
@@ -663,12 +747,12 @@ TEST_F(site_manager_test, grid_target_mode)
 		capture_stdout();
 
         errorLog << "grid_target_mode() test " << i+1 << " of " << num_tests << std::endl;
-        siteMgr->asset_cmd.set_site_kW_load(array[i].site_load);
-        siteMgr->asset_cmd.grid_target_mode(array[i].grid_target);
-        bool failure = siteMgr->asset_cmd.get_site_kW_demand() != array[i].expected_site_demand
-                    || siteMgr->asset_cmd.get_site_kW_load_inclusion() != true; // always tracks load
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_demand(), array[i].expected_site_demand);
-        EXPECT_TRUE(siteMgr->asset_cmd.get_site_kW_load_inclusion());
+        asset_cmd.set_site_kW_load(array[i].site_load);
+        asset_cmd.grid_target_mode(array[i].grid_target);
+        bool failure = asset_cmd.get_site_kW_demand() != array[i].expected_site_demand
+                    || asset_cmd.get_site_kW_load_inclusion() != true; // always tracks load
+        EXPECT_EQ(asset_cmd.get_site_kW_demand(), array[i].expected_site_demand);
+        EXPECT_TRUE(asset_cmd.get_site_kW_load_inclusion());
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -716,16 +800,16 @@ TEST_F(site_manager_test, absolute_ess)
 		capture_stdout();
 
         errorLog << "absolute_ess() test " << i+1 << " of " << num_tests << std::endl;
-        siteMgr->asset_cmd.set_ess_min_potential_kW(array[i].ess_min_potential_kW);
-        siteMgr->asset_cmd.set_ess_max_potential_kW(array[i].ess_max_potential_kW);
-        siteMgr->asset_cmd.set_solar_max_potential_kW(array[i].solar_max_potential_kW);
-        siteMgr->asset_cmd.absolute_ess(array[i].chg_dischg_flag, array[i].ess_cmd);
-        bool failure = siteMgr->asset_cmd.get_ess_kW_request() != array[i].expected_ess_request
-                    || siteMgr->asset_cmd.get_solar_kW_request() != array[i].expected_solar_request
-                    || siteMgr->asset_cmd.get_site_kW_load_inclusion() != false;
-        EXPECT_EQ(siteMgr->asset_cmd.get_ess_kW_request(), array[i].expected_ess_request);
-        EXPECT_EQ(siteMgr->asset_cmd.get_solar_kW_request(), array[i].expected_solar_request);
-        EXPECT_FALSE(siteMgr->asset_cmd.get_site_kW_load_inclusion());
+        asset_cmd.set_ess_min_potential_kW(array[i].ess_min_potential_kW);
+        asset_cmd.set_ess_max_potential_kW(array[i].ess_max_potential_kW);
+        asset_cmd.set_solar_max_potential_kW(array[i].solar_max_potential_kW);
+        asset_cmd.absolute_ess(array[i].chg_dischg_flag, array[i].ess_cmd);
+        bool failure = asset_cmd.get_ess_kW_request() != array[i].expected_ess_request
+                    || asset_cmd.get_solar_kW_request() != array[i].expected_solar_request
+                    || asset_cmd.get_site_kW_load_inclusion() != false;
+        EXPECT_EQ(asset_cmd.get_ess_kW_request(), array[i].expected_ess_request);
+        EXPECT_EQ(asset_cmd.get_solar_kW_request(), array[i].expected_solar_request);
+        EXPECT_FALSE(asset_cmd.get_site_kW_load_inclusion());
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -771,26 +855,26 @@ TEST_F(site_manager_test, dispatch_reactive_power)
         // Capture any prints within site controller that might be present in debug mode
 		capture_stdout();
 
-        siteMgr->asset_cmd.set_solar_potential_kVAR(array[i].solar_potential_kVAR);
-        siteMgr->asset_cmd.set_ess_potential_kVAR(array[i].ess_potential_kVAR);
-        siteMgr->asset_cmd.set_gen_potential_kVAR(array[i].gen_potential_kVAR);
-        siteMgr->asset_cmd.set_site_kVAR_demand(array[i].site_kVAR_demand);
+        asset_cmd.set_solar_potential_kVAR(array[i].solar_potential_kVAR);
+        asset_cmd.set_ess_potential_kVAR(array[i].ess_potential_kVAR);
+        asset_cmd.set_gen_potential_kVAR(array[i].gen_potential_kVAR);
+        asset_cmd.set_site_kVAR_demand(array[i].site_kVAR_demand);
 
         //reset cmds each iteration (will exit on 0 demand or potential)
-        siteMgr->asset_cmd.set_solar_kVAR_cmd(0);
-        siteMgr->asset_cmd.set_ess_kVAR_cmd(0);
-        siteMgr->asset_cmd.set_gen_kVAR_cmd(0);
+        asset_cmd.set_solar_kVAR_cmd(0);
+        asset_cmd.set_ess_kVAR_cmd(0);
+        asset_cmd.set_gen_kVAR_cmd(0);
 
-        siteMgr->asset_cmd.calculate_total_potential_kVAR();
-        siteMgr->asset_cmd.dispatch_reactive_power();
+        asset_cmd.calculate_total_potential_kVAR();
+        asset_cmd.dispatch_reactive_power();
         errorLog << "dispatch_reactive_power() test " << i+1 << " of " << num_tests << std::endl;
         // failure conditions
-        failure = siteMgr->asset_cmd.get_solar_kVAR_cmd() != array[i].result_solar_kVAR_cmd
-                || siteMgr->asset_cmd.get_ess_kVAR_cmd() != array[i].result_ess_kVAR_cmd
-                || siteMgr->asset_cmd.get_gen_kVAR_cmd() != array[i].result_gen_kVAR_cmd;
-        EXPECT_EQ(siteMgr->asset_cmd.get_solar_kVAR_cmd(), array[i].result_solar_kVAR_cmd);
-        EXPECT_EQ(siteMgr->asset_cmd.get_ess_kVAR_cmd(), array[i].result_ess_kVAR_cmd);
-        EXPECT_EQ(siteMgr->asset_cmd.get_gen_kVAR_cmd(), array[i].result_gen_kVAR_cmd);
+        failure = asset_cmd.get_solar_kVAR_cmd() != array[i].result_solar_kVAR_cmd
+                || asset_cmd.get_ess_kVAR_cmd() != array[i].result_ess_kVAR_cmd
+                || asset_cmd.get_gen_kVAR_cmd() != array[i].result_gen_kVAR_cmd;
+        EXPECT_EQ(asset_cmd.get_solar_kVAR_cmd(), array[i].result_solar_kVAR_cmd);
+        EXPECT_EQ(asset_cmd.get_ess_kVAR_cmd(), array[i].result_ess_kVAR_cmd);
+        EXPECT_EQ(asset_cmd.get_gen_kVAR_cmd(), array[i].result_gen_kVAR_cmd);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -842,29 +926,29 @@ TEST_F(site_manager_test, active_voltage_mode)
         // Capture any prints within site controller that might be present in debug mode
 		capture_stdout();
 
-        siteMgr->asset_cmd.set_solar_potential_kVAR(array[i].solar_potential_kVAR);
-        siteMgr->asset_cmd.set_ess_potential_kVAR(array[i].ess_potential_kVAR);
-        siteMgr->asset_cmd.set_gen_potential_kVAR(array[i].gen_potential_kVAR);
+        asset_cmd.set_solar_potential_kVAR(array[i].solar_potential_kVAR);
+        asset_cmd.set_ess_potential_kVAR(array[i].ess_potential_kVAR);
+        asset_cmd.set_gen_potential_kVAR(array[i].gen_potential_kVAR);
 
         //reset cmds each iteration (will exit on 0 demand or potential)
-        siteMgr->asset_cmd.set_solar_kVAR_cmd(0);
-        siteMgr->asset_cmd.set_ess_kVAR_cmd(0);
-        siteMgr->asset_cmd.set_gen_kVAR_cmd(0);
+        asset_cmd.set_solar_kVAR_cmd(0);
+        asset_cmd.set_ess_kVAR_cmd(0);
+        asset_cmd.set_gen_kVAR_cmd(0);
 
-        siteMgr->asset_cmd.calculate_total_potential_kVAR();
-        siteMgr->asset_cmd.active_voltage_mode(deadband, cmd, array[i].actual_voltage, droop_percent, rated_kVAR);
-        siteMgr->asset_cmd.dispatch_reactive_power();
+        asset_cmd.calculate_total_potential_kVAR();
+        asset_cmd.active_voltage_mode(deadband, cmd, array[i].actual_voltage, droop_percent, rated_kVAR);
+        asset_cmd.dispatch_reactive_power();
 
         errorLog << "active_voltage_mode() test " << i+1 << " of " << num_tests << std::endl;
         // failure conditions
-        failure = siteMgr->asset_cmd.get_site_kVAR_demand() != array[i].result_site_kVAR_demand
-                || siteMgr->asset_cmd.get_solar_kVAR_cmd() != array[i].result_solar_kVAR_cmd
-                || siteMgr->asset_cmd.get_ess_kVAR_cmd() != array[i].result_ess_kVAR_cmd
-                || siteMgr->asset_cmd.get_gen_kVAR_cmd() != array[i].result_gen_kVAR_cmd;
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kVAR_demand(), array[i].result_site_kVAR_demand);
-        EXPECT_EQ(siteMgr->asset_cmd.get_solar_kVAR_cmd(), array[i].result_solar_kVAR_cmd);
-        EXPECT_EQ(siteMgr->asset_cmd.get_ess_kVAR_cmd(), array[i].result_ess_kVAR_cmd);
-        EXPECT_EQ(siteMgr->asset_cmd.get_gen_kVAR_cmd(), array[i].result_gen_kVAR_cmd);
+        failure = asset_cmd.get_site_kVAR_demand() != array[i].result_site_kVAR_demand
+                || asset_cmd.get_solar_kVAR_cmd() != array[i].result_solar_kVAR_cmd
+                || asset_cmd.get_ess_kVAR_cmd() != array[i].result_ess_kVAR_cmd
+                || asset_cmd.get_gen_kVAR_cmd() != array[i].result_gen_kVAR_cmd;
+        EXPECT_EQ(asset_cmd.get_site_kVAR_demand(), array[i].result_site_kVAR_demand);
+        EXPECT_EQ(asset_cmd.get_solar_kVAR_cmd(), array[i].result_solar_kVAR_cmd);
+        EXPECT_EQ(asset_cmd.get_ess_kVAR_cmd(), array[i].result_ess_kVAR_cmd);
+        EXPECT_EQ(asset_cmd.get_gen_kVAR_cmd(), array[i].result_gen_kVAR_cmd);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -912,22 +996,22 @@ TEST_F(site_manager_test, watt_var_mode_curve_1)
         Fims_Object fims_object;
         fims_object.options_value = options_value;
         fims_object.num_options = array_size;
-        set_curve_points(&fims_object, siteMgr->watt_var_curve);
+        set_curve_points(&fims_object, watt_var_curve);
         errorLog << "watt_var_mode() curve 1 test " << i+1 << " of " << num_tests << std::endl;
         for (int j = 0; j < array_size; j+=2)
         {
             // failure conditions
-            failure = siteMgr->watt_var_curve[j/2].first != options_value[j].value_float
-                    || siteMgr->watt_var_curve[j/2].second != options_value[j+1].value_float;
+            failure = watt_var_curve[j/2].first != options_value[j].value_float
+                    || watt_var_curve[j/2].second != options_value[j+1].value_float;
             //test set_curve_points plots correctly
-            EXPECT_EQ(siteMgr->watt_var_curve[j/2].first,  options_value[j].value_float);
-            EXPECT_EQ(siteMgr->watt_var_curve[j/2].second, options_value[j+1].value_float);
+            EXPECT_EQ(watt_var_curve[j/2].first,  options_value[j].value_float);
+            EXPECT_EQ(watt_var_curve[j/2].second, options_value[j+1].value_float);
         }
 
         //test watt_var_mode provides correct site kVAR demand output
-        siteMgr->watt_var_mode(array[i].actual_kW, siteMgr->watt_var_curve);
-        failure = failure || siteMgr->asset_cmd.get_site_kVAR_demand() != array[i].result_site_kVAR_demand;
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kVAR_demand(), array[i].result_site_kVAR_demand);
+        watt_var_mode(array[i].actual_kW, watt_var_curve);
+        failure = failure || asset_cmd.get_site_kVAR_demand() != array[i].result_site_kVAR_demand;
+        EXPECT_EQ(asset_cmd.get_site_kVAR_demand(), array[i].result_site_kVAR_demand);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -976,22 +1060,22 @@ TEST_F(site_manager_test, watt_var_mode_curve_2)
         Fims_Object fims_object;
         fims_object.options_value = options_value;
         fims_object.num_options = array_size;
-        set_curve_points(&fims_object, siteMgr->watt_var_curve);
+        set_curve_points(&fims_object, watt_var_curve);
         errorLog << "watt_var_mode() curve 1 test " << i+1 << " of " << num_tests << std::endl;
         for (int j = 0; j < array_size; j+=2)
         {
             // failure conditions
-            failure = siteMgr->watt_var_curve[j/2].first != options_value[j].value_float
-                    || siteMgr->watt_var_curve[j/2].second != options_value[j+1].value_float;
+            failure = watt_var_curve[j/2].first != options_value[j].value_float
+                    || watt_var_curve[j/2].second != options_value[j+1].value_float;
             //test set_curve_points plots correctly
-            EXPECT_EQ(siteMgr->watt_var_curve[j/2].first,  options_value[j].value_float);
-            EXPECT_EQ(siteMgr->watt_var_curve[j/2].second, options_value[j+1].value_float);
+            EXPECT_EQ(watt_var_curve[j/2].first,  options_value[j].value_float);
+            EXPECT_EQ(watt_var_curve[j/2].second, options_value[j+1].value_float);
         }
         
         //test watt_var_mode provides correct site kVAR demand output
-        siteMgr->watt_var_mode(array[i].actual_kW, siteMgr->watt_var_curve);
-        failure = failure || siteMgr->asset_cmd.get_site_kVAR_demand() != array[i].result_site_kVAR_demand;
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kVAR_demand(), array[i].result_site_kVAR_demand);
+        watt_var_mode(array[i].actual_kW, watt_var_curve);
+        failure = failure || asset_cmd.get_site_kVAR_demand() != array[i].result_site_kVAR_demand;
+        EXPECT_EQ(asset_cmd.get_site_kVAR_demand(), array[i].result_site_kVAR_demand);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -1157,12 +1241,12 @@ TEST_F(site_manager_test, apply_aggregated_asset_limit)
 		capture_stdout();
 
         errorLog << "apply_aggregated_asset_limit() test " << i+1 << " of " << num_tests << std::endl;
-        siteMgr->asset_cmd.set_solar_actual_kW(array[i].controlled_solar_kw);
-        siteMgr->asset_cmd.set_ess_max_potential_kW(array[i].current_controlled_ess_max);
-        siteMgr->set_agg_asset_limit_kw(array[i].agg_asset_limit_kw);
-        siteMgr->call_limit_ess_by_aggregate(array[i].uncontrolled_ess_kW, array[i].uncontrolled_solar_kw);
-        bool failure = siteMgr->asset_cmd.get_ess_max_potential_kW() != array[i].result_ess_max_potential_kw;
-        EXPECT_EQ(siteMgr->asset_cmd.get_ess_max_potential_kW(), array[i].result_ess_max_potential_kw);
+        asset_cmd.set_solar_actual_kW(array[i].controlled_solar_kw);
+        asset_cmd.set_ess_max_potential_kW(array[i].current_controlled_ess_max);
+        agg_asset_limit_kw.value.set(array[i].agg_asset_limit_kw);
+        apply_aggregated_asset_limit(array[i].uncontrolled_ess_kW, array[i].uncontrolled_solar_kw);
+        bool failure = asset_cmd.get_ess_max_potential_kW() != array[i].result_ess_max_potential_kw;
+        EXPECT_EQ(asset_cmd.get_ess_max_potential_kW(), array[i].result_ess_max_potential_kw);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -1173,17 +1257,16 @@ TEST_F(site_manager_test, apply_aggregated_asset_limit)
 }
 
 // POI limits
-TEST_F(site_manager_test, apply_poi_limits)
+TEST_F(site_manager_test, apply_active_power_poi_limits)
 {
-    int const num_tests = 14;    //total number of test cases
-
     //struct that has variables to configure for each test case
     struct tests
     {
         bool load_enable;
-        bool load_inclusion;
+        load_compensation load_inclusion;
         float feed_max;
         float asset_maxes;
+        bool feed_only;
         float site_load;
         float site_demand;
         float min_poi_limit_kW;
@@ -1193,57 +1276,52 @@ TEST_F(site_manager_test, apply_poi_limits)
         float expected_site_demand;
     };
 
-    tests array[num_tests];  //an array with an element for each test case
+    std::vector<tests> tests = {
     // Ensure that load and uncontrollable properly limit the site demand based on import/export, but do not influence the feed max
-    array[0]  = {false, false, 600.0f, 100.0f,  0.0f,    390.0f, -485,  485, 0, 485,  390};  // discharging, no limit
-    array[1]  = {false, false, 600.0f, 100.0f,  0.0f,   -390.0f, -485,  485, 0, 485, -390};  // charging, no limit
-    array[2]  = {false, false, 600.0f, 100.0f,  0.0f,    490.0f, -485,  485, 0, 485,  485};  // discharging, limited
-    array[3]  = {false, false, 600.0f, 0.0f,    0.0f,   -490.0f, -485,  485, 0, 485, -485};  // charging, limited
-    array[4]  = {false, false, 600.0f, 100.0f,  200.0f,  490.0f, -485,  485, 0, 485,  485};  // Load present but disabled, no limit modification
-    array[5]  = {true, false,  600.0f, 100.0f,  200.0f,  490.0f, -485,  485, 0, 485,  485};  // Load enabled but not part of feature, no limit modification
-    array[6]  = {false, true,  600.0f, 100.0f,  0.0f,    490.0f, -485,  485, 0, 485,  485};  // Feature load enabled, but not POI load
-    array[7]  = {true,  true,  600.0f, 100.0f,  200.0f,  490.0f, -485,  485, 0, 485,  490};  // Load importing, demand exporting, gives extra headroom
-    array[8]  = {true,  true,  600.0f, 100.0f,  200.0f, -390.0f, -485,  485, 0, 485, -390};  // Load importing, demand importing, but other assets can satisfy load, no limit
-    array[9]  = {true,  true,  600.0f, 0.0f,    200.0f, -390.0f, -485,  485, 0, 485, -285};  // Load importing, demand importing, no other assets, limited
-    array[10] = {true,  true,  600.0f, 100.0f, -200.0f,  390.0f, -485,  485, 0, 485,  285};  // Load exporting, demand exporting, limited
-    array[11] = {true,  true,  600.0f, 100.0f, -200.0f, -490.0f, -485,  485, 0, 485, -490};  // Load exporting, demand importing, gives extra headroom
-    array[12] = {true,  true,  600.0f, 100.0f,  200.0f,  490.0f, -485,  485, 1, 485,  490};  // Load importing, demand exporting with different asset priority
-    array[13] = {true,  true,  600.0f, 100.0f,  300.0f, -490.0f, -485,  485, 1, 485, -385};  // Load importing, demand importing, asset priority -> some load on feeder -> limited
+        {false, NO_COMPENSATION, 600.0f, 200.0f, true,   0.0f,    390.0f, -485,  485, 0, 485,  390},  // discharging, no limit
+        {false, NO_COMPENSATION, 600.0f, 200.0f, true,   0.0f,   -390.0f, -485,  485, 0, 485, -390},  // charging, no limit
+        {false, NO_COMPENSATION, 600.0f, 200.0f, true,   0.0f,    490.0f, -485,  485, 0, 485,  485},  // discharging, limited
+        {false, NO_COMPENSATION, 600.0f, 200.0f, true,   0.0f,   -490.0f, -485,  485, 0, 485, -485},  // charging, limited
+        {false, NO_COMPENSATION, 600.0f, 200.0f, false,  200.0f,  490.0f, -485,  485, 0, 485,  485},  // Load present but disabled, no limit modification
+        {false, LOAD_OFFSET,     600.0f, 200.0f, false,  0.0f,    490.0f, -485,  485, 0, 485,  485},  // Feature load enabled, but no load
+        {true,  LOAD_OFFSET,     600.0f, 200.0f, false,  200.0f,  490.0f, -485,  485, 0, 485,  490},  // Load importing, demand exporting, gives extra headroom
+        {true,  LOAD_OFFSET,     600.0f, 100.0f, false,  200.0f, -190.0f, -485,  485, 0, 485, -190},  // Load importing, demand importing, other assets satisfy load, no limit
+        {true,  LOAD_OFFSET,     600.0f, 200.0f, false, -200.0f,  390.0f, -485,  485, 0, 485,  285},  // Load exporting, demand exporting, limited
+        {true,  LOAD_OFFSET,     600.0f, 200.0f, false, -200.0f, -490.0f, -485,  485, 0, 485, -490},  // Load exporting, demand importing, gives extra headroom
+        {true,  LOAD_OFFSET,     600.0f, 200.0f, false,  200.0f,  490.0f, -485,  485, 1, 485,  490},  // Load importing, demand exporting with different asset priority
+        // {true,  LOAD_OFFSET,     600.0f, 200.0f, false,  300.0f, -490.0f, -485,  485, 1, 485, -475},  // Load importing, demand importing, some load on feeder -> limited
+        {true,  LOAD_MINIMUM,     200.0f, 200.0f, false,  500.0f,  0.0f,   -200,  200, 1, 200,  500},  // Load importing, demand wants to import but ESS must help with load
+    };
     
-    for (int i = 0; i < num_tests; i++)
+    int test_id = 1;
+    for (auto test : tests)
     {
-        // Only print messages to log if a test fails
-        bool failure = false;
-        std::stringstream errorLog;
-        // Capture any prints within site controller that might be present in debug mode
-		capture_stdout();
-
-        errorLog << "apply_poi_limits() test " << i+1 << " of " << num_tests << std::endl;
-        
+        test_logger t_log("apply_active_power_poi_limits", test_id++, tests.size());
         // Set independent variables
-        siteMgr->asset_cmd.set_site_kW_load_inclusion(array[i].load_inclusion);
-        siteMgr->asset_cmd.set_site_kW_load(array[i].site_load);
-        siteMgr->asset_cmd.set_feeder_max_potential_kW(array[i].feed_max);
-        siteMgr->asset_cmd.set_ess_max_potential_kW(array[i].asset_maxes);    // Other asset potentials used to determine how much of the load will
-        siteMgr->asset_cmd.set_gen_max_potential_kW(array[i].asset_maxes);    // be satisfied by other assets, therefore not falling on the POI
-        siteMgr->asset_cmd.set_solar_max_potential_kW(array[i].asset_maxes);
-        siteMgr->asset_cmd.set_site_kW_demand(array[i].site_demand);
+        asset_cmd.set_load_compensation_method(test.load_inclusion);
+        asset_cmd.set_site_kW_load(test.site_load);
+        asset_cmd.set_additional_load_compensation(asset_cmd.get_site_kW_load_inclusion() * test.site_load);
+        asset_cmd.set_feeder_max_potential_kW(test.feed_max);
+        asset_cmd.set_ess_max_potential_kW(test.asset_maxes);    // Other asset potentials used to determine how much of the load will
+        asset_cmd.set_gen_max_potential_kW(test.asset_maxes);    // be satisfied by other assets, therefore not falling on the POI
+        asset_cmd.set_ess_min_potential_kW(-1.0f * test.feed_max);
+        asset_cmd.set_solar_max_potential_kW(test.asset_maxes);
+        charge_dispatch_feeder_enable_flag.value.set(true);
+        charge_dispatch_gen_enable_flag.value.set(!test.feed_only);
+        charge_dispatch_solar_enable_flag.value.set(!test.feed_only);
+        asset_cmd.set_site_kW_demand(test.site_demand);
+        asset_cmd.set_feature_kW_demand(test.site_demand);
 
         // Apply limits
-        siteMgr->configure_and_apply_poi_limits(array[i].priority, array[i].min_poi_limit_kW, array[i].max_poi_limit_kW, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, array[i].load_enable);
+        asset_priority_runmode1.value.set(test.priority);
+        active_power_poi_limits_min_kW.value.set(test.min_poi_limit_kW);
+        active_power_poi_limits_max_kW.value.set(test.max_poi_limit_kW);
+        apply_active_power_poi_limits();
 
-        // failure conditions
-        failure = siteMgr->asset_cmd.get_site_kW_demand() != array[i].expected_site_demand
-                || siteMgr->asset_cmd.get_feeder_max_potential_kW() != array[i].expected_feed_max;
-        // Analyze expected
-        EXPECT_EQ(siteMgr->asset_cmd.get_site_kW_demand(), array[i].expected_site_demand);
-        EXPECT_EQ(siteMgr->asset_cmd.get_feeder_max_potential_kW(), array[i].expected_feed_max);
-
-        // Release stdout so we can write again
-		release_stdout(failure);
-        // Print the test id if failure
-        if (failure)
-            std::cout << errorLog.str() << std::endl;
+        // Check results
+        t_log.float_results.push_back({asset_cmd.get_site_kW_demand(), test.expected_site_demand, "demand"});
+        t_log.float_results.push_back({asset_cmd.get_feeder_max_potential_kW(), test.expected_feed_max, "feed_max"});
+        t_log.check_solution();
     }
 }
 
@@ -1270,14 +1348,14 @@ TEST_F(site_manager_test, apply_poi_limits_soc)
 
     tests array[num_tests];  //an array with an element for each test case
 
-    array[0]  = {true,  49.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f,  5000.0f, 3000.0f,  150.0f,  250.0f};  // soc below, discharging
-    array[1]  = {true,  49.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f, -5000.0f, 3000.0f, -250.0f,  250.0f};  // soc below, charging
-    array[2]  = {false, 49.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f,  5000.0f, 3000.0f,  5000.0f, 3000.0f}; // soc below, but disabled, no effect
-    array[3]  = {false, 49.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f, -5000.0f, 3000.0f, -5000.0f, 3000.0f}; // soc below, but disabled, no effect
-    array[4]  = {true,  50.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f,  5000.0f, 3000.0f,  150.0f,  250.0f};  // soc equal, discharging
-    array[5]  = {true,  50.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f, -5000.0f, 3000.0f, -250.0f,  250.0f};  // soc equal, charging
-    array[6]  = {true,  51.0f, 50.0f, -250.0f, 250.0f, -1000.0f, 750.0f,  5000.0f, 3000.0f,  750.0f,  1000.0f}; // soc above, discharging
-    array[7]  = {true,  51.0f, 50.0f, -250.0f, 250.0f, -1000.0f, 750.0f, -5000.0f, 3000.0f, -1000.0f, 1000.0f}; // soc above, charging
+    array[0]  = {true,  49.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f,  5000.0f, 5000.0f,  150.0f,  250.0f};  // soc below, discharging
+    array[1]  = {true,  49.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f, -5000.0f, 5000.0f, -250.0f,  250.0f};  // soc below, charging
+    array[2]  = {false, 49.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f,  5000.0f, 5000.0f,  5000.0f, 5000.0f}; // soc below, but disabled, no effect
+    array[3]  = {false, 49.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f, -5000.0f, 5000.0f, -5000.0f, 5000.0f}; // soc below, but disabled, no effect
+    array[4]  = {true,  50.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f,  5000.0f, 5000.0f,  150.0f,  250.0f};  // soc equal, discharging
+    array[5]  = {true,  50.0f, 50.0f, -250.0f, 150.0f, -1000.0f, 750.0f, -5000.0f, 5000.0f, -250.0f,  250.0f};  // soc equal, charging
+    array[6]  = {true,  51.0f, 50.0f, -250.0f, 250.0f, -1000.0f, 750.0f,  5000.0f, 5000.0f,  750.0f,  1000.0f}; // soc above, discharging
+    array[7]  = {true,  51.0f, 50.0f, -250.0f, 250.0f, -1000.0f, 750.0f, -5000.0f, 5000.0f, -1000.0f, 1000.0f}; // soc above, charging
  
     for (int i = 0; i < num_tests; i++)
     {
@@ -1287,20 +1365,34 @@ TEST_F(site_manager_test, apply_poi_limits_soc)
         // Capture any prints within site controller that might be present in debug mode
 		capture_stdout();
 
-        errorLog << "apply_poi_limits() test " << i+1 << " of " << num_tests << std::endl;
+        errorLog << "apply_active_power_poi_limits() SoC test " << i+1 << " of " << num_tests << std::endl;
         
         // Set independent variables
-        siteMgr->asset_cmd.set_site_kW_demand(array[i].site_demand);
-        siteMgr->asset_cmd.set_feeder_max_potential_kW(array[i].feed_potential);
+        asset_cmd.set_load_compensation_method(NO_COMPENSATION);
+        asset_cmd.set_ess_max_potential_kW(5000.0f);
+        asset_cmd.set_ess_min_potential_kW(-5000.0f);
+        asset_cmd.set_site_kW_demand(array[i].site_demand);
+        asset_cmd.set_feature_kW_demand(array[i].site_demand);
+        asset_cmd.set_feeder_max_potential_kW(array[i].feed_potential);
 
         // Apply limits
-        siteMgr->configure_and_apply_poi_limits(0.0f, -10000.0f, 10000.0f, array[i].soc_limits_enabled, array[i].avg_soc, array[i].soc_target, array[i].under_min, array[i].under_max, array[i].over_min, array[i].over_max, false);
+        active_power_poi_limits_min_kW.value.set(-10000.0f);
+        active_power_poi_limits_max_kW.value.set(10000.0f);
+        active_power_soc_poi_limits_enable.value.set(array[i].soc_limits_enabled);
+        soc_avg_running.value.set(array[i].avg_soc);
+        active_power_soc_poi_target_soc.value.set(array[i].soc_target);
+        active_power_soc_poi_limits_low_min_kW.value.set(array[i].under_min);
+        active_power_soc_poi_limits_low_max_kW.value.set(array[i].under_max);
+        active_power_soc_poi_limits_high_min_kW.value.set(array[i].over_min);
+        active_power_soc_poi_limits_high_max_kW.value.set(array[i].over_max);
+        charge_dispatch_feeder_enable_flag.value.set(true);
+        apply_active_power_poi_limits();
 
         // failure conditions
-        failure = array[i].expected_site_demand != siteMgr->asset_cmd.get_site_kW_demand() || array[i].expected_feed_potential != siteMgr->asset_cmd.get_feeder_max_potential_kW();
+        failure = array[i].expected_site_demand != asset_cmd.get_site_kW_demand() || array[i].expected_feed_potential != asset_cmd.get_feeder_max_potential_kW();
         // Analyze expected
-        EXPECT_EQ(array[i].expected_site_demand, siteMgr->asset_cmd.get_site_kW_demand());
-        EXPECT_EQ(array[i].expected_feed_potential, siteMgr->asset_cmd.get_feeder_max_potential_kW());
+        EXPECT_EQ(array[i].expected_site_demand, asset_cmd.get_site_kW_demand());
+        EXPECT_EQ(array[i].expected_feed_potential, asset_cmd.get_feeder_max_potential_kW());
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -1309,6 +1401,59 @@ TEST_F(site_manager_test, apply_poi_limits_soc)
             std::cout << errorLog.str() << std::endl;
     }
 }
+
+// POI limits
+TEST_F(site_manager_test, apply_reactive_poi_limits)
+{
+    int const num_tests = 4;    //total number of test cases
+
+    //struct that has variables to configure for each test case
+    struct tests
+    {
+        float site_demand;
+        float min_poi_limit_kVAR;
+        float max_poi_limit_kVAR;
+        float expected_demand;
+    };
+
+    tests array[num_tests];  //an array with an element for each test case
+    // Ensure that load and uncontrollable properly limit the site demand based on import/export, but do not influence the feed max
+    array[0]  = { 5000,     -10000,     10000,       5000};  // discharging, no limit
+    array[1]  = {-5000,     -10000,     10000,      -5000};  // charging, no limit
+    array[2]  = { 15000,     -10000,     10000,     10000};  // discharging, above limit
+    array[3]  = {-15000,     -10000,     10000,    -10000};  // charging, above limit
+    
+    for (int i = 0; i < num_tests; i++)
+    {
+        // Only print messages to log if a test fails
+        bool failure = false;
+        std::stringstream errorLog;
+        // Capture any prints within site controller that might be present in debug mode
+		capture_stdout();
+
+        errorLog << "apply_reactive_power_poi_limits() test " << i+1 << " of " << num_tests << std::endl;
+        
+        // Set independent variables
+        asset_cmd.set_site_kVAR_demand(array[i].site_demand);
+
+        // Apply limits
+        reactive_power_poi_limits_min_kVAR.value.set(array[i].min_poi_limit_kVAR);
+        reactive_power_poi_limits_max_kVAR.value.set(array[i].max_poi_limit_kVAR);
+        apply_reactive_power_poi_limits();
+
+        // failure conditions
+        failure = asset_cmd.get_site_kVAR_demand() != array[i].expected_demand;
+        // Analyze expected
+        EXPECT_EQ(asset_cmd.get_site_kVAR_demand(), array[i].expected_demand);
+
+        // Release stdout so we can write again
+		release_stdout(failure);
+        // Print the test id if failure
+        if (failure)
+            std::cout << errorLog.str() << std::endl;
+    }
+}
+
 
 // check_expired_time
 TEST_F(site_manager_test, check_expired_time)
@@ -1608,12 +1753,19 @@ TEST_F(site_manager_test, pfr)
         // Capture any prints within site controller that might be present in debug mode
 		capture_stdout();
 
-        siteMgr->configure_pfr(array[i].site_hz, 60.0, 0.017, array[i].pfr_min, array[i].pfr_max, 5);
-        siteMgr->asset_cmd.set_site_kW_demand(array[i].kW_cmd);
-        siteMgr->call_pfr(array[i].kW_cmd);
+        // Apply PFR
+        asset_cmd.set_site_kW_demand(array[i].kW_cmd);
+        site_frequency.value.set(array[i].site_hz);
+        pfr_site_nominal_hz.value.set(60.0f);
+        pfr_deadband.value.set(0.017f);
+        pfr_limits_min_kW.value.set(array[i].pfr_min);
+        pfr_limits_max_kW.value.set(array[i].pfr_max);
+        pfr_droop_percent.value.set(5.0f);
+        primary_frequency_response(array[i].kW_cmd);
+
         errorLog << "primary_frequency_response() demand test " << i+1 << " of " << num_tests << std::endl;
-        bool failure = !near(siteMgr->asset_cmd.get_site_kW_demand(), array[i].expected_demand, 0.001);
-        EXPECT_NEAR(siteMgr->asset_cmd.get_site_kW_demand(), array[i].expected_demand, 0.001);
+        bool failure = !near(asset_cmd.get_site_kW_demand(), array[i].expected_demand, 0.001);
+        EXPECT_NEAR(asset_cmd.get_site_kW_demand(), array[i].expected_demand, 0.001);
 
         // Release stdout so we can write again
 		release_stdout(failure);
@@ -1623,40 +1775,95 @@ TEST_F(site_manager_test, pfr)
     }
 }
 
-// Helper functions
-void Site_Manager_Mock::configure_pfr(float site_hz, float nominal_hz, float pfr_dband, float pfr_min, float pfr_max, float pfr_droop)
+// Constant Power Factor algorithm tests
+TEST_F(site_manager_test, constant_power_factor)
 {
-    site_frequency.value.set(site_hz);
-    pfr_site_nominal_hz.value.set(nominal_hz);
-    pfr_deadband.value.set(pfr_dband);
-    pfr_limits_min_kW.value.set(pfr_min);
-    pfr_limits_max_kW.value.set(pfr_max);
-    pfr_droop_percent.value.set(pfr_droop);
-}
-// Private functions need to be executed using a test endpoint
-void Site_Manager_Mock::call_pfr(float cmd)
-{
-    primary_frequency_response(cmd);
-}
-void Site_Manager_Mock::configure_and_apply_poi_limits(int asset_priority, float min_poi_limit_kW, float max_poi_limit_kW, bool soc_poi_limit, float actual_soc, float soc_target, float under_min, float under_max, float over_min, float over_max, bool load_enable) {
-    asset_priority_runmode1.value.set(asset_priority);
-    poi_limits_load_enable.value.set(load_enable);
-    poi_limits_min_kW.value.set(min_poi_limit_kW);
-    poi_limits_max_kW.value.set(max_poi_limit_kW);
-    soc_poi_limits_enable.value.set(soc_poi_limit);
-    soc_avg_running.value.set(actual_soc);
-    soc_poi_target_soc.value.set(soc_target);
-    soc_poi_limits_low_min_kW.value.set(under_min);
-    soc_poi_limits_low_max_kW.value.set(under_max);
-    soc_poi_limits_high_min_kW.value.set(over_min);
-    soc_poi_limits_high_max_kW.value.set(over_max);
-    apply_poi_limits();
-}
-void Site_Manager_Mock::set_agg_asset_limit_kw(float val)
-{
-    agg_asset_limit_kw.value.set(val);
-}
-void Site_Manager_Mock::call_limit_ess_by_aggregate(float uncontrolled_ess, float uncontrolled_solar)
-{
-    apply_aggregated_asset_limit(uncontrolled_ess, uncontrolled_solar);
+    // struct that has variables to configure for each test case
+    struct cpf_test
+    {
+        bool absolute_mode;
+        bool direction_flag;
+        float lagging_limit;
+        float leading_limit;
+        float pf_setpoint;
+        float demand_kW;
+        float potential_kVAR;
+        float expected_pf;
+        float expected_kVAR;
+    };
+
+    std::vector<cpf_test> tests = {
+        {true, false,  -0.5f,  0.5f,  1.0f,   10000.0f, 10000.0f,  1.0f,   0.0f},       // Absolute mode tests, 0 reactive
+        {true, true,   -0.5f,  0.5f, -0.97f,  10000.0f, 10000.0f, -0.97f, -2500.0f},    // Lagging reactive
+        {true, true,   -0.5f,  0.5f,  0.97f,  10000.0f, 10000.0f, -0.97f, -2500.0f},    // Lagging reactive, positive pf forced negative
+        {true, false,  -0.5f,  0.5f,  0.97f,  10000.0f, 10000.0f,  0.97f,  2500.0f},    // Leading reactive
+        {true, false,  -0.5f,  0.5f, -0.97f,  10000.0f, 10000.0f,  0.97f,  2500.0f},    // Leading reactive, negative pf forced positive
+        {true, true,   -0.5f,  0.5f,  0.7f,   10000.0f, 10000.0f, -0.7f,  -10000.0f},   // Lagging reactive, beyond total potential KVAR but limited
+        {true, false,  -0.5f,  0.5f,  0.7f,   10000.0f, 10000.0f,  0.7f,   10000.0f},   // Leading reactive, beyond total potential KVAR but limited
+        {true, false,  -0.0f,  0.0f,  0.0f,   10000.0f, 10000.0f,  0.0f,   10000.0f},   // Divide by 0 case
+        {true, true,   -0.5f,  0.5f,  1.1f,   10000.0f, 10000.0f, -1.0f,   0.0f},       // Lagging, beyond outer limit, limited to -1.0
+        {true, true,   -0.5f,  0.5f,  0.0f,   10000.0f, 10000.0f, -0.5f,  -10000.0f},   // Lagging, beyond inner limit, limited to lagging limit
+        {true, false,  -0.5f,  0.5f,  1.1f,   10000.0f, 10000.0f,  1.0f,   0.0f},       // Leading, beyond outer limit, limited to 1.0
+        {true, false,  -0.5f,  0.5f,  0.0f,   10000.0f, 10000.0f,  0.5f,   10000.0f},   // Leading, beyond inner limit, limited to lagging limit
+        {false, false, -0.5f,  0.5f,  1.0f,   10000.0f, 10000.0f,  1.0f,   0.0f},       // Bidirectional tests, 0 reactive
+        {false, false,  0.5f,  0.5f, -0.97f,  10000.0f, 10000.0f, -0.97f, -2500.0f},    // Positive lagging limit forced negative
+        {false, false, -0.5f, -0.5f,  0.97f,  10000.0f, 10000.0f,  0.97f,  2500.0f},    // Negative leading limit forced positive
+        {false, false,  1.1f,  0.5f, -1.1f,   10000.0f, 10000.0f, -1.0f,   0.0f},       // Positive lagging limit above 1.0
+        {false, false, -0.5f, -1.1f,  1.1f,   10000.0f, 10000.0f,   1.0f,   0.0f},      // Negative leading limit below -1.0
+        {false, false, -0.5f,  0.5f, -0.97f,  10000.0f, 10000.0f, -0.97f, -2500.0f},    // Lagging reactive
+        {false, false, -0.5f,  0.5f,  0.97f,  10000.0f, 10000.0f,  0.97f,  2500.0f},    // Leading reactive
+        {false, false, -0.5f,  0.5f, -0.7f,   10000.0f, 10000.0f, -0.7f,  -10000.0f},   // Lagging reactive, beyond total potential KVAR but limited
+        {false, false, -0.5f,  0.5f,  0.7f,   10000.0f, 10000.0f,  0.7f,   10000.0f},   // Leading reactive, beyond total potential KVAR but limited
+        {false, false, -0.0f,  0.0f,  0.0f,   10000.0f, 10000.0f,  0.0f,   10000.0f},   // Divide by 0 case
+        {false, false, -0.5f,  0.5f, -1.1f,   10000.0f, 10000.0f, -1.0f,   0.0f},       // Lagging, beyond outer limit, limited to -1.0
+        {false, false, -0.5f,  0.5f, -0.0f,   10000.0f, 10000.0f, -0.5f,  -10000.0f},   // Lagging, beyond inner limit, limited to lagging limit
+        {false, false, -0.5f,  0.5f,  1.0f,   10000.0f, 10000.0f,  1.0f,   0.0f},       // Leading, beyond outer limit, limited to 1.0
+        {false, false, -0.5f,  0.5f,  0.0f,   10000.0f, 10000.0f,  0.5f,   10000.0f},   // Leading, beyond inner limit, limited to lagging limit
+        {true, false,  -0.5f,  0.5f,  1.0f,   10000.0f, 10000.0f,  1.0f,   0.0f},       // Ensure negative site demand produces the same result for the same tests
+        {true, true,   -0.5f,  0.5f, -0.97f, -10000.0f, 10000.0f, -0.97f, -2500.0f},
+        {true, true,   -0.5f,  0.5f,  0.97f, -10000.0f, 10000.0f, -0.97f, -2500.0f},
+        {true, false,  -0.5f,  0.5f,  0.97f, -10000.0f, 10000.0f,  0.97f,  2500.0f},
+        {true, false,  -0.5f,  0.5f, -0.97f, -10000.0f, 10000.0f,  0.97f,  2500.0f},
+        {true, true,   -0.5f,  0.5f,  0.7f,  -10000.0f, 10000.0f, -0.7f,  -10000.0f},
+        {true, false,  -0.5f,  0.5f,  0.7f,  -10000.0f, 10000.0f,  0.7f,   10000.0f},
+        {true, false,  -0.0f,  0.0f,  0.0f,  -10000.0f, 10000.0f,  0.0f,   10000.0f},
+        {true, true,   -0.5f,  0.5f,  1.1f,  -10000.0f, 10000.0f, -1.0f,   0.0f},
+        {true, true,   -0.5f,  0.5f,  0.0f,  -10000.0f, 10000.0f, -0.5f,  -10000.0f},
+        {true, false,  -0.5f,  0.5f,  1.1f,  -10000.0f, 10000.0f,  1.0f,   0.0f},
+        {true, false,  -0.5f,  0.5f,  0.0f,  -10000.0f, 10000.0f,  0.5f,   10000.0f},
+        {false, false, -0.5f,  0.5f,  1.0f,  -10000.0f, 10000.0f,  1.0f,   0.0f},
+        {false, false,  0.5f,  0.5f, -0.97f, -10000.0f, 10000.0f, -0.97f, -2500.0f},
+        {false, false, -0.5f, -0.5f,  0.97f, -10000.0f, 10000.0f,  0.97f,  2500.0f},
+        {false, false,  1.1f,  0.5f, -1.1f,  -10000.0f, 10000.0f, -1.0f,   0.0f},
+        {false, false, -0.5f, -1.1f,  1.1f,  -10000.0f, 10000.0f,   1.0f,   0.0f},
+        {false, false, -0.5f,  0.5f, -0.97f, -10000.0f, 10000.0f, -0.97f, -2500.0f},
+        {false, false, -0.5f,  0.5f,  0.97f, -10000.0f, 10000.0f,  0.97f,  2500.0f},
+        {false, false, -0.5f,  0.5f, -0.7f,  -10000.0f, 10000.0f, -0.7f,  -10000.0f},
+        {false, false, -0.5f,  0.5f,  0.7f,  -10000.0f, 10000.0f,  0.7f,   10000.0f},
+        {false, false, -0.0f,  0.0f,  0.0f,  -10000.0f, 10000.0f,  0.0f,   10000.0f},
+        {false, false, -0.5f,  0.5f, -1.1f,  -10000.0f, 10000.0f, -1.0f,   0.0f},
+        {false, false, -0.5f,  0.5f, -0.0f,  -10000.0f, 10000.0f, -0.5f,  -10000.0f},
+        {false, false, -0.5f,  0.5f,  1.0f,  -10000.0f, 10000.0f,  1.0f,   0.0f},
+        {false, false, -0.5f,  0.5f,  0.0f,  -10000.0f, 10000.0f,  0.5f,   10000.0f},
+    };    
+    int test_id = 1;
+    for (auto test : tests)
+    {
+        test_logger t_log("constant_power_factor", test_id++, tests.size());
+        // Set CPF values
+        constant_power_factor_absolute_mode.value.set(test.absolute_mode);
+        constant_power_factor_lagging_direction.value.set(test.direction_flag);
+        constant_power_factor_lagging_limit.value.set(test.lagging_limit);
+        constant_power_factor_leading_limit.value.set(test.leading_limit);
+        constant_power_factor_setpoint.value.set(test.pf_setpoint);
+        // Setup Asset Cmd Obj inputs
+        asset_cmd.set_site_kW_demand(test.demand_kW);
+        asset_cmd.preserve_uncorrected_site_kW_demand();
+        asset_cmd.set_ess_potential_kVAR(test.potential_kVAR);
+        asset_cmd.calculate_total_potential_kVAR();
+        execute_constant_power_factor();
+        t_log.float_results.push_back({test.expected_pf, constant_power_factor_setpoint.value.value_float, "PF Setpoint"});
+        t_log.range_results.push_back({test.expected_kVAR, 0.05f, asset_cmd.get_site_kVAR_demand(), "CPF Demand"});
+        t_log.check_solution();
+    }
 }

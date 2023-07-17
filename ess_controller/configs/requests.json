@@ -1,0 +1,226 @@
+{
+  "notes1": " when a command is recieved from user input or hybredOS it is in the form of a request. Please go from init to standby",
+  "notes2": " a matrix is created to define the transition from each current state to the desired stte of possible ",
+  "notes3": " when you want to perform  transition you must satisfy the entry conditions, then issue state change commands, and monitor resonses before moveing on to another step.   ",
+  "notes4": "note that this system will allow a flow diagram to be implimented",
+  "notes5": " error logging will allow detailed information on where the process failed",
+  "requests": [
+    {
+      "fromstate": "init",
+      "tostate": [
+        {
+          "standby": {
+            "preconds": [
+              {
+                "comp": "/system/bms_1/",
+                "var": "bms_heartbeat_ok",
+                "value": true,
+                "onError": "Estop"
+              },
+              {
+                "comp": "/system/bms_1/",
+                "var": "pcs_heartbeat_ok",
+                "value": true,
+                "onError": "Estop"
+              }
+            ],
+            "step1": {
+              "cmds": [
+                {
+                  "mode": "set",
+                  "comp": "/system/bms_1/",
+                  "var": "close_dc_cmd",
+                  "value": true,
+                  "onError": "Estop"
+                }
+              ],
+              "monitor": [
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "close_dc_cmd",
+                  "value": true,
+                  "timeS": 5,
+                  "onOK": "step2",
+                  "onError": "Estop"
+                },
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "bms_fail",
+                  "value": true,
+                  "timeS": 5,
+                  "onOK": "eStop"
+                }
+              ]
+            },
+            "step2": {
+              "cmds": [
+                {
+                  "mode": "set",
+                  "comp": "/system/bms_1/",
+                  "var": "set_dc_volts",
+                  "valuevar": "dc_volts_target",
+                  "onError": "Estop"
+                }
+              ],
+              "monitor": [
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "dc_volts_feedback",
+                  "mode": "comare",
+                  "valuevar": "dc_volts_target",
+                  "withinV": 200,
+                  "timeMs": 3000,
+                  "onOK": "step3",
+                  "onError": "Estop"
+                },
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "bms_fail",
+                  "value": true,
+                  "timeS": 5,
+                  "onOK": "eStop"
+                }
+              ]
+            },
+            "step3": {
+              "cmds": [
+                {
+                  "mode": "set",
+                  "comp": "/system/bms_1/",
+                  "var": "system_state",
+                  "value": "standby",
+                  "onError": "Estop"
+                }
+              ],
+              "monitor": [
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "dc_volts_feedback",
+                  "mode": "comare",
+                  "valuevar": "dc_volts_target",
+                  "withinV": 200,
+                  "timeMs": 3000,
+                  "onError": "Estop"
+                },
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "bms_fail",
+                  "value": true,
+                  "timeS": 5,
+                  "onOK": "eStop"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "fromstate": "standby",
+      "tostate": [
+        {
+          "change": {
+            "preconds": [
+              {
+                "comp": "/system/bms_1/",
+                "var": "bms_heartbeat_ok",
+                "value": true,
+                "onError": "Estop"
+              },
+              {
+                "comp": "/system/bms_1/",
+                "var": "pcs_heartbeat_ok",
+                "value": true,
+                "onError": "Estop"
+              }
+            ],
+            "step1": {
+              "cmds": [
+                {
+                  "mode": "set",
+                  "comp": "/system/bms_1/",
+                  "var": "start_charge",
+                  "value": true,
+                  "onError": "Estop"
+                },
+                {
+                  "mode": "set",
+                  "comp": "/system/bms_1/",
+                  "var": "system_state",
+                  "value": "charging",
+                  "onError": "Estop"
+                }
+              ],
+              "monitor": [
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "soc",
+                  "max": 95,
+                  "timeS": 500,
+                  "onOK": "step2",
+                  "onError": "Estop"
+                },
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "bms_fail",
+                  "value": true,
+                  "timemS": 100,
+                  "onOK": "eStop"
+                }
+              ]
+            },
+            "step2": {
+              "cmds": [],
+              "monitor": [
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "soc",
+                  "maxvar": "max_soc_required",
+                  "timeS": 50,
+                  "onOK": "step3",
+                  "onError": "Estop"
+                },
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "bms_fail",
+                  "value": true,
+                  "timemS": 100,
+                  "onOK": "eStop"
+                }
+              ]
+            },
+            "step3": {
+              "cmds": [
+                {
+                  "mode": "set",
+                  "comp": "/system/bms_1/",
+                  "var": "system_state",
+                  "value": "charged",
+                  "onError": "Estop"
+                }
+              ],
+              "monitor": [
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "dc_volts_feedback",
+                  "mode": "comare",
+                  "valuevar": "dc_volts_target",
+                  "withinV": 200,
+                  "timeMs": 3000,
+                  "onError": "Estop"
+                },
+                {
+                  "comp": "/system/bms_1/",
+                  "var": "bms_fail",
+                  "value": true,
+                  "timeS": 5,
+                  "onOK": "eStop"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

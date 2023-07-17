@@ -1,0 +1,147 @@
+{
+	"system":
+	{
+		"id": "sel_751",
+		"ip_address": "10.201.112.135",
+		"port": 502,
+		"frequency": 100,
+		"off_by_one": false,
+		"byte_swap": false
+	},
+	"registers": [
+		{
+			"type": "Coils",
+			"starting_offset": 60,
+			"number_of_registers": 3,
+			"map":
+			[
+				{"id": "breaker_trip","offset": 60},
+				{"id": "breaker_close","offset": 61},
+				{"id": "breaker_reset","offset": 62}
+			]
+		},
+		{
+			"type": "Discrete Inputs",
+			"starting_offset": 8,
+			"number_of_registers": 750,
+			"map":
+			[
+				{"id": "relay_status","offset": 8},
+				{"id": "software_alarm","offset": 108},
+				{"id": "breaker_rackedin","offset": 150},
+				{"id": "bess_fuse_status","offset": 158},
+				{"id": "pv_fuse_status","offset": 159},
+				{"id": "hardware_alarm","offset": 208},
+				{"id": "recloser_tripped","offset": 752},
+				{"id": "recloser_alarm","offset": 753},
+				{"id": "recloser_open","offset": 754},
+				{"id": "recloser_closed","offset": 755},
+				{"id": "recloser_lockout","offset": 756},
+				{"id": "recloser_ups_fail","offset": 757}
+			]
+		},
+        {
+            "type": "Input Registers",
+            "starting_offset": 313,
+            "number_of_registers": 68,
+            "map": [
+                {
+                    "id": "relay_enabled",
+                    "offset": 313,
+                    "name": "Relay Enabled Status"
+                },
+                {
+                    "id": "current_a",
+                    "offset": 320,
+                    "name": "Phase A Current"
+                },
+                {
+                    "id": "current_b",
+                    "offset": 322,
+                    "name": "Phase B Current"
+                },
+                {
+                    "id": "current_c",
+                    "offset": 324,
+                    "name": "Phase C Current"
+                },
+                {
+                    "id": "voltage_ab",
+                    "offset": 335,
+                    "scale": 0.1,
+                    "name": "Phase AB Voltage"
+                },
+                {
+                    "id": "voltage_bc",
+                    "offset": 337,
+                    "scale": 0.1,
+                    "name": "Phase BC Voltage"
+                },
+                {
+                    "id": "voltage_ca",
+                    "offset": 339,
+                    "scale": 0.1,
+                    "name": "Phase CA Voltage"
+                },
+                {
+                    "id": "active_power",
+                    "offset": 372,
+                    "name": "Total Real Power",
+                    "signed": true
+                },
+                {
+                    "id": "reactive_power",
+                    "offset": 373,
+                    "name": "Total Reactive Power",
+                    "signed": true
+                },
+                {
+                    "id": "power_factor",
+                    "offset": 375,
+                    "scale": 100,
+                    "name": "Power Factor",
+                    "signed": true
+                },
+                {
+                    "id": "frequency",
+                    "offset": 376,
+                    "scale": 100,
+                    "name": "Frequency"
+                },
+                {
+                    "id": "throughput",
+                    "offset": 380,
+                    "scale": 1,
+                    "name": "Input Side Throughput"
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 1730,
+            "number_of_registers": 4,
+            "map": [
+                {
+                    "id": "trip_status_1",
+                    "offset": 1730,
+                    "name": "Trip Status Lo"
+                },
+                {
+                    "id": "trip_status_2",
+                    "offset": 1731,
+                    "name": "Trip Status Hi"
+                },
+                {
+                    "id": "warn_status_1",
+                    "offset": 1732,
+                    "name": "Warn Status Lo"
+                },
+                {
+                    "id": "warn_status_2",
+                    "offset": 1733,
+                    "name": "Warn Status Hi"
+                }
+            ]
+        }
+    ]
+}

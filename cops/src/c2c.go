@@ -38,6 +38,8 @@ type C2C struct {
 	amServerNotClient             bool
 	connected                     bool
 	lastModeConfirmationFromOther time.Time
+	connectionLock                sync.RWMutex // Lock on establishing connection
+	resolvingConnection           bool         // Whether a connection error is currently being handled
 }
 
 // Global variables
@@ -46,19 +48,69 @@ var startWord = "C2C" // indicates beginning of TCP message in serial stream
 var thisCtrlrStaticIP string
 var otherCtrlrStaticIP string
 var bufferSize = 65536 // Size of the TCP buffer, default 4096, set manually to accommodate larger config files
-var msgQueue []string
 
 // Constants
+const waitUntilNextRead = time.Second // Wait this long before the next attempt to read if disconnected
 const serverKeyPairPath = "/usr/local/etc/config/cops/"
 const serverCrtPath = serverKeyPairPath + "c2c_server.crt"
 const serverKeyPath = serverKeyPairPath + "c2c_server.key"
+
+// Error wrapper to distinguish connection errors
+type connectionError struct {
+	err error
+}
+
+func (m *connectionError) Error() string {
+	return m.err.Error()
+}
+
+// Error wrapper to distinguish c2c parsing errors
+type parseError struct {
+	err error
+}
+
+func (m *parseError) Error() string {
+	return m.err.Error()
+}
+
+func (c2c *C2C) close() {
+	c2c.connectionLock.Lock()
+	defer c2c.connectionLock.Unlock()
+	if c2c.tcpConnection != nil {
+		c2c.tcpConnection.Close()
+	}
+}
+
+func (c2c *C2C) setConnection(newConn net.Conn) {
+	c2c.connectionLock.Lock()
+	defer c2c.connectionLock.Unlock()
+	c2c.tcpConnection = newConn
+	c2c.connected = true
+	c2c.resolvingConnection = false
+	c2c.lastModeConfirmationFromOther = time.Now()
+}
+
+// Handle a C2C connection error
+func (c2c *C2C) handleConnectionError() {
+	// Make sure a new connection attempt is not already ongoing
+	c2c.connectionLock.Lock()
+	// Do not reconnect is connection is already being resolved
+	if c2c.resolvingConnection {
+		c2c.connectionLock.Unlock()
+		return
+	}
+	c2c.connected = false
+	c2c.resolvingConnection = true
+	c2c.connectionLock.Unlock()
+	connectOverTCP()
+}
 
 // Verifies an IP address has 4 fields and ends with a port number
 func checkIPAddrFormat(ip string) {
 	if strings.Count(ip, ":") != 1 {
 		panic("Port formatting is invalid. Expected format: #.#.#.#:Port#")
 	}
-	if strings.Count(ip, ".") != 3 {
+	if net.ParseIP(ip[:strings.Index(ip, ":")]) == nil {
 		panic("IP address formatting is invalid. Expected format: #.#.#.#:Port#")
 	}
 }
@@ -98,6 +150,7 @@ func configureC2C(config cfg) error {
 		log.Infof("Running as TCP client")
 	}
 	go connectOverTCP()
+	go processC2C()
 	return nil
 }
 
@@ -108,23 +161,18 @@ func connectOverTCP() {
 	} else {
 		connectToTCPServer(otherCtrlrStaticIP)
 	}
-	c2c.connected = true
-	c2c.lastModeConfirmationFromOther = time.Now()
 	log.Infof("TCP connection established")
-	go processC2C()
 }
 
-// Listens for a new TCP client connection request. When request received and accepted, closes old TCP connection if there is one
+// Closes the existing connection and listens for a new TCP client connection request
 func connectToTCPClient() {
+	c2c.close()
 	for {
 		newClientConn, err := c2c.tcpListener.Accept()
 		if err != nil {
 			log.Errorf("Error: Received TCP connection request that could not be accepted")
 		} else {
-			if c2c.tcpConnection != nil {
-				c2c.tcpConnection.Close()
-			}
-			c2c.tcpConnection = newClientConn
+			c2c.setConnection(newClientConn)
 			return
 		}
 	}
@@ -132,7 +180,6 @@ func connectToTCPClient() {
 
 // Attempts to connect to the server every 1 second and returns TCP connection when successful
 func connectToTCPServer(serverAddr string) {
-	prevDialErr := error(nil)
 	for {
 		// add the server certificate to the list of certificate authorities trusted by the client
 		caCert, err := ioutil.ReadFile(serverCrtPath)
@@ -148,12 +195,8 @@ func connectToTCPServer(serverAddr string) {
 		tlsConfig := &tls.Config{RootCAs: caCertPool}
 		tcpServerConnection, err := tls.Dial("tcp", serverAddr, tlsConfig)
 		if err == nil {
-			c2c.tcpConnection = tcpServerConnection
+			c2c.setConnection(tcpServerConnection)
 			return
-		} else if prevDialErr == nil || err.Error() != prevDialErr.Error() {
-			// If we encounter a new dial error message, report it, otherwise don't spam console
-			log.Errorf("Error connecting to tcp server: %s", err)
-			prevDialErr = err
 		}
 		time.Sleep(time.Second) // Wait a second before trying again
 	}
@@ -181,57 +224,82 @@ func numberfyIP(ip string) uint64 {
 	return concatIPFrags(ipFrags)
 }
 
+// Read a c2c message
+func getC2CMessage() (string, error) {
+	c2c.connectionLock.RLock()
+	defer c2c.connectionLock.RUnlock()
+	// Only read if connected
+	if !c2c.connected {
+		time.Sleep(waitUntilNextRead)
+		return "", nil
+	}
+
+	// Try reading for the configured period
+	c2c.tcpConnection.SetReadDeadline(time.Now().Add(replyFromOtherAllowableDelay))
+	reader := bufio.NewReaderSize(c2c.tcpConnection, bufferSize)
+	startOfMsg, err := reader.Peek(len(startWord))
+	if err != nil {
+		return "", &connectionError{err}
+	} else if string(startOfMsg) != startWord {
+		reader.Discard(1)
+		return "", &parseError{fmt.Errorf("message started with %s, not %s", string(startOfMsg), startWord)}
+	}
+
+	// If no errors have occurred, now read the entire message
+	var msg string
+	msg, err = parseC2CMsg(reader)
+	if err != nil {
+		return "", &parseError{err}
+	}
+	return msg, nil
+}
+
 // Parses a C2C message and returns either the message contents or an error message, indicated by error flag
-func parseC2CMsg(reader *bufio.Reader) (string, bool) {
+func parseC2CMsg(reader *bufio.Reader) (string, error) {
 	_, err := reader.Discard(len(startWord))
 	if err != nil {
-		return "Error trying to discard message start word", true
+		return "", fmt.Errorf("Error trying to discard message start word")
 	}
 	msgSizeString, err := reader.ReadString(' ')
 	if err != nil {
-		return "Error parsing received message size", true
+		return "", fmt.Errorf("Error parsing received message size")
 	}
 	msgSize, err := strconv.Atoi(strings.Trim(msgSizeString, " "))
 	if err != nil {
-		return "Error parsing received message size", true
+		return "", fmt.Errorf("Error parsing received message size")
 	}
 	msgBuffer := make([]byte, msgSize)
+	c2c.tcpConnection.SetReadDeadline(time.Now().Add(replyFromOtherAllowableDelay))
 	// Need ReadFull to guarantee a full read of msgSize bytes
 	_, err = io.ReadFull(reader, msgBuffer)
 	if err != nil {
-		return "Error reading from message buffer", true
+		return "", fmt.Errorf("Error reading from message buffer")
 	}
 	msg := string(msgBuffer)
-	return msg, false
+	return msg, nil
 }
 
 // Waits for a new C2C message to appear on a TCP connection and processes it
 func processC2C() {
 	for {
-		reader := bufio.NewReaderSize(c2c.tcpConnection, bufferSize)
-		startOfMsg, err := reader.Peek(len(startWord))
+		msg, err := getC2CMessage()
 		if err != nil {
-			c2c.connected = false
-			log.Errorf("TCP connection lost!")
-			go connectOverTCP()
-			return
-		} else if string(startOfMsg) != startWord {
-			reader.Discard(1)
-			log.Warnf("Error: message started with %s, not %s", string(startOfMsg), startWord)
-			continue
-		}
-
-		msg, isErr := parseC2CMsg(reader)
-		if isErr {
-			log.Errorf("%s", msg)
-			continue
+			switch err.(type) {
+			case *connectionError:
+				log.Errorf("TCP Connection error: %s", err.Error())
+				go c2c.handleConnectionError()
+				continue
+			case *parseError:
+				log.Errorf("C2C Parsing error: %s", err.Error())
+				continue
+			}
 		}
 
 		if strings.HasPrefix(msg, "ModeQuery") {
-			// Mode Query commands, controllers negotiate who is primary
+			// Mode Queries, controllers negotiate who is primary
 			replyToModeQueryMsg()
 		} else if strings.HasPrefix(msg, "ModeCommand") {
-			// Command the other controller to run in a particular mode
+			// Mode Commands, other controller has commanded this one to run in a particular mode
 			processModeCommand(msg)
 		} else if strings.HasPrefix(msg, "Setpoints") {
 			handleSetpoints(msg)
@@ -240,29 +308,28 @@ func processC2C() {
 			// Get all data this primary has in DBI and send it to the other controller through c2c (handled elsewhere)
 			getDBIUpdate()
 		} else if strings.HasPrefix(msg, "SetDBIUpdate") {
-			err := handleDbiUpdateSet(msg)
-			if err != nil {
-				log.Errorf("Error handling DBI update SET: %s", err.Error())
-			}
+			handleDbiUpdateSet(msg)
 		}
+
 	}
 }
 
-// Prepends a C2C message body with the required C2C message header and sends it
-func sendC2CMsg() {
-	var mu sync.Mutex
-	mu.Lock()
-	defer mu.Unlock()
-	if c2c.connected && len(msgQueue) != 0 {
-		msgBody := msgQueue[0]
-		msgQueue = msgQueue[1:]
-		msgHeader := startWord + strconv.Itoa(len(msgBody)) + " "
-		fmt.Fprint(c2c.tcpConnection, msgHeader+string(msgBody))
+// Convert the message to the required C2C format and send it
+func sendC2CMsg(msgBody string) {
+	c2c.connectionLock.RLock()
+	if !c2c.connected {
+		c2c.connectionLock.RUnlock()
+		return
 	}
-}
 
-func queueC2CMsg(msgBody string) {
-	msgQueue = append(msgQueue, msgBody)
+	msgHeader := startWord + strconv.Itoa(len(msgBody)) + " "
+	c2c.tcpConnection.SetWriteDeadline(time.Now().Add(replyFromOtherAllowableDelay))
+	_, err := c2c.tcpConnection.Write([]byte(msgHeader + string(msgBody)))
+	c2c.connectionLock.RUnlock()
+	if err != nil {
+		log.Errorf("TCP Connection error: %v", err)
+		c2c.handleConnectionError()
+	}
 }
 
 // Splits an IP address string into five integer parts: 4 IP address fields and its port number
@@ -367,17 +434,17 @@ func handleSetpoints(msg string) error {
 // new setpoints from DBI (i.e. site_controller) will be killed and processes that can accept new
 // setpoints without a restart (i.e. scheduler) will have a dbi_update flag sent to them, telling
 // them to GET the setpoints from DBI.
-func handleDbiUpdateSet(msg string) error {
+func handleDbiUpdateSet(msg string) {
 	// extract the target URI and target process from the msg
 	targetUri, err := extractUriFromC2CMsg(msg)
 	if err != nil {
-		return fmt.Errorf("failed to extract target URI from C2C msg: %v", err.Error())
+		log.Errorf("failed to extract target URI from C2C msg: %v", err.Error())
 	}
 
 	// extract the target process from the URI
 	targetProcess, err := extractTargetProcessFromC2CUri(msg)
 	if err != nil {
-		return fmt.Errorf("failed to extract target process from C2C URI: %v", err.Error())
+		log.Errorf("failed to extract target process from C2C URI: %v", err.Error())
 	}
 
 	// check the msg to see if it is a dbi_update_complete, indicating there are no more setpoint groups for which to wait
@@ -391,7 +458,7 @@ func handleDbiUpdateSet(msg string) error {
 			log.Infof("Sending dbi_update flag to %s", path.Join(targetProcess.uri, "operation/dbi_update"))
 			f.SendSet(path.Join(targetProcess.uri, "/operation/dbi_update"), "", true)
 		}
-		return nil
+		return
 	}
 
 	// check the target URI against each of the target process's writeout URIs.
@@ -400,10 +467,10 @@ func handleDbiUpdateSet(msg string) error {
 		if strings.Contains(targetUri, path.Join(writeOutUri, "/dbi_update")) {
 			_, setpointGroupName := path.Split(writeOutUri)
 			sendDBIUpdate(false, path.Join("/dbi", targetProcess.name, setpointGroupName), msg)
-			return nil
+			return
 		}
 	}
-	return fmt.Errorf("target URI %v did not match any writeout URIs for target process %v", targetUri, targetProcess)
+	log.Errorf("target URI %v did not match any writeout URIs for target process %v", targetUri, targetProcess)
 }
 
 // `extractUriFromC2CMsg` extracts only the URI from a C2C msg.

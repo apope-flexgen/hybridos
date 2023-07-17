@@ -1,0 +1,81 @@
+{
+  "Notes1": " before evaluation any potential state changes the system must monitor the current state for failures",
+  "Notes2": " the monitor system desribes the features to be evaluated, the limits and the actions on failures ",
+  "Notes3": " more complex calculations can be introduced here as built in functions and this system or somthing like it can be used to process and evaluate system and asset variables",
+  "monitor": {
+    "allstates": {
+      "freqmS": 100,
+      "checks": [
+        {
+          "comp": "/system/bms_1/",
+          "var": "bms_heartbeat_1",
+          "mode": "incrementing",
+          "time": 1,
+          "wrap": 255,
+          "onError": "Estop"
+        },
+        {
+          "comp": "/system/pcs_1/",
+          "var": "pcs_heartbeat_1",
+          "mode": "incrementing",
+          "time": 1,
+          "wrap": 255,
+          "onError": "Estop"
+        },
+        {
+          "comp": "/system/pcs_1/",
+          "var": "dc_voltage",
+          "mode": "range",
+          "time": 0.5,
+          "max": 1000.4,
+          "min": 995.2,
+          "onError": "Estop"
+        }
+      ]
+    },
+    "standby": {
+      "freqmS": 150,
+      "checks": [
+        {
+          "comp": "/system/bms_1/",
+          "var": "bms_heartbeat_2",
+          "mode": "incrementing",
+          "time": 1,
+          "wrap": 255,
+          "onError": "Estop"
+        },
+        {
+          "comp": "/system/pcs_1/",
+          "var": "pcs_heartbeat_2",
+          "mode": "incrementing",
+          "time": 1,
+          "wrap": 255,
+          "onError": "Estop"
+        },
+        {
+          "comp": "/system/pcs_1/",
+          "var": "dc_voltage_1",
+          "mode": "range",
+          "time": 0.5,
+          "max": 1000.4,
+          "min": 995.2,
+          "onError": "Estop"
+        }
+      ]
+    },
+    "charge": {
+      "freqmS": 150,
+      "checks": [
+        {
+          "comp": "/system/pcs_1/",
+          "var": "active_dc_volt_1",
+          "mode": "range",
+          "time": 0.5,
+          "maxvar": "max_active_dc_volts",
+          "minvar": "min_active_dc_volts",
+          "onError": "Estop"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+    "xsystem": {
+        "name": "CATL_BMS_HEARTBEAT_TEST",
+        "protocol": "Modbus TCP",
+        "version": "6.0 WIP",
+        "id": "catl_BMU_1",
+        "port": 502,
+        "ip_address": "127.0.0.1",
+        "data_bits": "Columns marked in green are REQUIRED",
+        "frequency": 2000
+    },
+    "connection": {
+        "name": "BMS_x",
+        "ip_address": "192.168.1.8",
+        "port": 502
+    },
+    "components": [
+        {
+            "id": "heartbeat",
+            "frequency": 50,
+            "offset_time": 20,
+            "hex_start": "0x0300",
+            "xheartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 768,
+                    "number_of_registers": 1,
+                    "note": "Single Register Heartbeat Test",
+                    "map": [
+                        {
+                            "id": "heartbeat",
+                            "offset": 768,
+                            "name": "Heartbeat Test"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -256,14 +256,21 @@ void Site_Manager::configure_feature_objects(void)
     power_factor.feature_vars = {
         &power_factor_cmd
     };
-    // Watt-PF Mode
-    watt_pf.enable_flag = &watt_pf_mode_enable_flag;
+    // Constant Power Factor Mode
+    constant_power_factor.enable_flag = &constant_power_factor_mode_enable_flag;
+    constant_power_factor.feature_vars = {
+        &constant_power_factor_setpoint,
+        &constant_power_factor_lagging_limit,
+        &constant_power_factor_leading_limit,
+        &constant_power_factor_absolute_mode,
+        &constant_power_factor_lagging_direction
+    };
     // add features to list
     runmode1_kVAR_features_list.push_back(&active_voltage);
     runmode1_kVAR_features_list.push_back(&watt_var);
     runmode1_kVAR_features_list.push_back(&reactive_setpoint);
     runmode1_kVAR_features_list.push_back(&power_factor);
-    runmode1_kVAR_features_list.push_back(&watt_pf);
+    runmode1_kVAR_features_list.push_back(&constant_power_factor);
     // Disable all features as part of initial configuration in case any are accidentally enabled
     for (auto feature : runmode1_kVAR_features_list)
         feature->enable_flag->value.set(false);
@@ -277,21 +284,20 @@ void Site_Manager::configure_feature_objects(void)
     // Standalone Power Features
     //
     // POI Limits
-    poi_limits.enable_flag = &poi_limits_enable;
-    poi_limits.feature_vars = {
-        &poi_limits_max_kW,
-        &poi_limits_min_kW,
-        &poi_limits_load_enable,
-        &soc_poi_limits_enable,
-        &soc_poi_target_soc,
-        &soc_poi_limits_low_min_kW,
-        &soc_poi_limits_low_max_kW,
-        &soc_poi_limits_high_min_kW,
-        &soc_poi_limits_high_max_kW
+    active_power_poi_limits.enable_flag = &active_power_poi_limits_enable;
+    active_power_poi_limits.feature_vars = {
+        &active_power_poi_limits_max_kW,
+        &active_power_poi_limits_min_kW,
+        &active_power_soc_poi_limits_enable,
+        &active_power_soc_poi_target_soc,
+        &active_power_soc_poi_limits_low_min_kW,
+        &active_power_soc_poi_limits_low_max_kW,
+        &active_power_soc_poi_limits_high_min_kW,
+        &active_power_soc_poi_limits_high_max_kW
     };
-    poi_limits.summary_vars = {
-        &poi_limits_max_kW,
-        &poi_limits_min_kW
+    active_power_poi_limits.summary_vars = {
+        &active_power_poi_limits_max_kW,
+        &active_power_poi_limits_min_kW
     };
     // PFR
     pfr.enable_flag = &pfr_enable_flag;
@@ -331,6 +337,7 @@ void Site_Manager::configure_feature_objects(void)
     load_shed.feature_vars = {
         &load_shed_value,
         &load_shed_max_value,
+        &load_shed_min_value,
         &load_shed_max_shedding_threshold,
         &load_shed_high_threshold,
         &load_shed_low_threshold,
@@ -345,6 +352,7 @@ void Site_Manager::configure_feature_objects(void)
     solar_shed.feature_vars = {
         &solar_shed_value,
         &solar_shed_max_value,
+        &solar_shed_min_value,
         &solar_shed_max_shedding_threshold,
         &solar_shed_high_threshold,
         &solar_shed_low_threshold,
@@ -369,6 +377,9 @@ void Site_Manager::configure_feature_objects(void)
     active_power_closed_loop.feature_vars = {
         &active_power_closed_loop_step_size_kW,
         &active_power_closed_loop_default_offset,
+        &active_power_closed_loop_min_offset,
+        &active_power_closed_loop_max_offset,
+        &active_power_closed_loop_total_correction,
         &active_power_closed_loop_steady_state_deadband_kW,
         &active_power_closed_loop_regulation_deadband_kW,
         &active_power_closed_loop_update_rate_ms,
@@ -380,14 +391,27 @@ void Site_Manager::configure_feature_objects(void)
     reactive_power_closed_loop.feature_vars = {
         &reactive_power_closed_loop_step_size_kW,
         &reactive_power_closed_loop_default_offset,
+        &reactive_power_closed_loop_min_offset,
+        &reactive_power_closed_loop_max_offset,
+        &reactive_power_closed_loop_total_correction,
         &reactive_power_closed_loop_steady_state_deadband_kW,
         &reactive_power_closed_loop_regulation_deadband_kW,
         &reactive_power_closed_loop_update_rate_ms,
         &reactive_power_closed_loop_decrease_timer_ms,
         &reactive_power_closed_loop_increase_timer_ms
     };
+    reactive_power_poi_limits.enable_flag = &reactive_power_poi_limits_enable;
+    reactive_power_poi_limits.feature_vars = {
+        &reactive_power_poi_limits_min_kVAR,
+        &reactive_power_poi_limits_max_kVAR,
+    };
+    reactive_power_poi_limits.summary_vars = {
+        &reactive_power_poi_limits_min_kVAR,
+        &reactive_power_poi_limits_max_kVAR,
+    };
+
     // add features to list
-    standalone_power_features_list.push_back(&poi_limits);
+    standalone_power_features_list.push_back(&active_power_poi_limits);
     standalone_power_features_list.push_back(&pfr);
     standalone_power_features_list.push_back(&watt_watt);
     standalone_power_features_list.push_back(&ldss);
@@ -397,6 +421,7 @@ void Site_Manager::configure_feature_objects(void)
     standalone_power_features_list.push_back(&agg_asset_limit);
     standalone_power_features_list.push_back(&active_power_closed_loop);
     standalone_power_features_list.push_back(&reactive_power_closed_loop);
+    standalone_power_features_list.push_back(&reactive_power_poi_limits);
 
     //
     // Site Operation Features
@@ -551,6 +576,7 @@ void Site_Manager::build_JSON_features_reactive_power(fmt::memory_buffer &buf, c
     if (pAssets->get_num_feeder_parsed() > 0)
     {
         feeder_actual_kVAR.add_to_JSON_buffer(buf, var);
+        feeder_actual_pf.add_to_JSON_buffer(buf, var);
     }
     if (pAssets->get_num_solar_parsed() > 0)
     {
@@ -579,6 +605,7 @@ void Site_Manager::build_JSON_features_site_operation(fmt::memory_buffer &buf, c
     bufJSON_AddStringCheckVar(buf, "name", "Site Operation Features", var);
 
     // site operation features feature variables
+    power_priority_flag.add_to_JSON_buffer(buf, var);
     add_feature_group_feature_vars_to_JSON_buffer(site_operation_features_list, buf, var);
 
     if (var == NULL) bufJSON_EndObject(buf); // } JSON_object
@@ -685,7 +712,6 @@ void Site_Manager::build_JSON_site_configuration(fmt::memory_buffer &buf, const 
         solar_kVAR_slew_rate.add_to_JSON_buffer(buf, var);
     }
     // config flags
-    power_priority_flag.add_to_JSON_buffer(buf, var);
     invert_poi_kW.add_to_JSON_buffer(buf, var);
     // reserved bools
     reserved_bool_1.add_to_JSON_buffer(buf, var);
@@ -1003,6 +1029,12 @@ bool Site_Manager::parse_variables(cJSON* object)
         }
     }
     cJSON_Delete(JSON_flat_vars);
+
+    // input_source_status string should be programmatically set based on the name of the currently selected input source.
+    // initial value of input_source_status in variables.json is not actually used since it is too easy for configurator to forget to match it with the initially selected input source.
+    // it is only present to satisfy parser
+    input_source_status.value.set(input_sources.get_name_of_input(input_sources.get_selected_input_source_index()));
+
     return true;
 }
 
@@ -1110,8 +1142,8 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                         frequency_response.handle_fims_set(*msg);
 
                         runmode1_kW_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode1_kW_features_mask);
-                        asset_priority_runmode1.set_fims_int(msg->pfrags[2], range_check(body_int, 5, 0));
-                        asset_priority_runmode2.set_fims_int(msg->pfrags[2], range_check(body_int, 5, 0));
+                        asset_priority_runmode1.set_fims_int(msg->pfrags[2], range_check(body_int, NUM_ASSET_PRIORITIES, 0));
+                        asset_priority_runmode2.set_fims_int(msg->pfrags[2], range_check(body_int, NUM_ASSET_PRIORITIES, 0));
                         site_kW_load_interval_ms.set_fims_int(msg->pfrags[2], range_check(body_int, 1, 60000)); // Interval between 1ms and 60s
 
                         //Manual Mode
@@ -1161,24 +1193,31 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                     }
                     else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0)
                     {
-                        runmode1_kVAR_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode1_kVAR_features_mask);     
+                        runmode1_kVAR_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode1_kVAR_features_mask);
                         reactive_setpoint_kVAR_cmd.set_fims_float(msg->pfrags[2], body_float);
+                        reactive_setpoint_kVAR_slew_rate.set_fims_int(msg->pfrags[2], body_int);
                         active_voltage_cmd.set_fims_float(msg->pfrags[2], body_float);
                         active_voltage_deadband.set_fims_float(msg->pfrags[2], body_float);
                         active_voltage_droop_percent.set_fims_float(msg->pfrags[2], body_float);
                         power_factor_cmd.set_fims_float(msg->pfrags[2], zero_check(body_float > 1 ? 1 : body_float));
+                        constant_power_factor_setpoint.set_fims_float(msg->pfrags[2], body_float);
+                        constant_power_factor_lagging_limit.set_fims_float(msg->pfrags[2], body_float);
+                        constant_power_factor_leading_limit.set_fims_float(msg->pfrags[2], body_float);
                         valid_set = true;
                     }
                     else if (strncmp(msg->pfrags[1], "standalone_power", strlen("standalone_power")) == 0)
                     {
                         // poi limits
-                        poi_limits_max_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
-                        poi_limits_min_kW.set_fims_float(msg->pfrags[2], -1*fabsf(body_float));
-                        soc_poi_target_soc.set_fims_float(msg->pfrags[2], fabsf(body_float));
-                        soc_poi_limits_low_min_kW.set_fims_float(msg->pfrags[2], -1 * fabsf(body_float));
-                        soc_poi_limits_low_max_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
-                        soc_poi_limits_high_min_kW.set_fims_float(msg->pfrags[2], -1 * fabsf(body_float));
-                        soc_poi_limits_high_max_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
+                        active_power_poi_limits_max_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
+                        active_power_poi_limits_min_kW.set_fims_float(msg->pfrags[2], -1*fabsf(body_float));
+                        active_power_soc_poi_target_soc.set_fims_float(msg->pfrags[2], fabsf(body_float));
+                        active_power_soc_poi_limits_low_min_kW.set_fims_float(msg->pfrags[2], -1 * fabsf(body_float));
+                        active_power_soc_poi_limits_low_max_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
+                        active_power_soc_poi_limits_high_min_kW.set_fims_float(msg->pfrags[2], -1 * fabsf(body_float));
+                        active_power_soc_poi_limits_high_max_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
+                        // Reactive poi limits
+                        reactive_power_poi_limits_min_kVAR.set_fims_float(msg->pfrags[2], -1*fabsf(body_float));
+                        reactive_power_poi_limits_max_kVAR.set_fims_float(msg->pfrags[2], fabsf(body_float));
                         // pfr
                         pfr_offset_hz.set_fims_float(msg->pfrags[2], body_float);
                         pfr_limits_min_kW.set_fims_float(msg->pfrags[2], -1*fabsf(body_float));
@@ -1203,6 +1242,11 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                         active_power_closed_loop_step_size_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
                         active_power_closed_loop_steady_state_deadband_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
                         active_power_closed_loop_regulation_deadband_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
+                        reactive_power_closed_loop_min_offset.set_fims_int(msg->pfrags[2], -1 * fabs(body_int));
+                        reactive_power_closed_loop_max_offset.set_fims_int(msg->pfrags[2], fabs(body_int));
+                        reactive_power_closed_loop_step_size_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
+                        reactive_power_closed_loop_steady_state_deadband_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
+                        reactive_power_closed_loop_regulation_deadband_kW.set_fims_float(msg->pfrags[2], fabsf(body_float));
                         valid_set = true;
                     }
                     else if (strncmp(msg->pfrags[1], "site_operation", strlen("site_operation")) == 0)
@@ -1269,6 +1313,8 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                     }
                     else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0)
                     {
+                        constant_power_factor_absolute_mode.set_fims_bool(msg->pfrags[2], body_bool);
+                        constant_power_factor_lagging_direction.set_fims_bool(msg->pfrags[2], body_bool);
                     }
                     else if (strncmp(msg->pfrags[1], "standalone_power", strlen("standalone_power")) == 0)
                     {
@@ -1277,8 +1323,7 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                             if (feature->available)
                                 feature->enable_flag->set_fims_bool(msg->pfrags[2], body_bool);
                         // Additional feature options
-                        poi_limits_load_enable.set_fims_bool(msg->pfrags[2], body_bool);
-                        soc_poi_limits_enable.set_fims_bool(msg->pfrags[2], body_bool);
+                        active_power_soc_poi_limits_enable.set_fims_bool(msg->pfrags[2], body_bool);
                         valid_set = true;
                     }
                     else if (strncmp(msg->pfrags[1], "site_operation", strlen("site_operation")) == 0)
@@ -1287,6 +1332,8 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                         for (auto feature : site_operation_features_list)
                             if (feature->available)
                                 feature->enable_flag->set_fims_bool(msg->pfrags[2], body_bool);
+
+                        power_priority_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         valid_set = true;
                     }
                 }
@@ -1506,10 +1553,9 @@ void Site_Manager::publish_all_FIMS()
     send_FIMS("pub", "/features/site_operation", NULL, "/features/site_operation");
 }
 
-//get all interface variables (from asset manager, FIMS)
+// Get all interface variables (from asset manager, FIMS).
 void Site_Manager::get_values()
 {
-
     FPS_DEBUG_LOG("Getting Asset Manager Values; Site_Manager::get_values.\n");
 
     //update clock for any timers
@@ -1539,6 +1585,9 @@ void Site_Manager::get_values()
 
     total_site_kW_rated_charge.value.set(-1.0f * rated_ess_kW.value.value_float);
     total_site_kW_rated_discharge.value.set(rated_ess_kW.value.value_float + rated_gen_kW.value.value_float + rated_solar_kW.value.value_float);
+    total_site_kVAR_rated_charge = -1.0f * pAssets->get_ess_total_rated_reactive_power();
+    // TODO: add gen power to calculation when it supports reactive power production from features
+    total_site_kVAR_rated_discharge = pAssets->get_ess_total_rated_reactive_power() + pAssets->get_solar_total_rated_reactive_power();
     total_asset_kW_charge_limit = pAssets->get_total_kW_charge_limit();
     total_asset_kW_discharge_limit =  pAssets->get_total_kW_discharge_limit();
     total_site_kW_charge_limit.value.set(total_asset_kW_charge_limit);
@@ -1547,6 +1596,8 @@ void Site_Manager::get_values()
     potential_ess_kVAR.value.set(pAssets->get_ess_total_potential_reactive_power());
     potential_gen_kVAR.value.set(pAssets->get_gen_total_potential_reactive_power());
     potential_solar_kVAR.value.set(pAssets->get_solar_total_potential_reactive_power());
+
+    reactive_setpoint_kVAR_cmd_slew.set_slew_rate(reactive_setpoint_kVAR_slew_rate.value.value_int);
 
     // Update LDSS values
     set_ldss_variables();
@@ -1572,6 +1623,7 @@ void Site_Manager::get_values()
     solar_actual_kVAR.value.set(pAssets->get_solar_total_reactive_power());
     // Invert using the same flag as active power
     feeder_actual_kVAR.value.set((invert_poi_kW.value.value_bool ? -1.0f : 1.0f) * pAssets->get_feeder_reactive_power(pAssets->get_poi_id()));
+    feeder_actual_pf.value.set(pAssets->get_poi_power_factor());
 
     //frequency response values needed
     pfr_nameplate_kW.value.set(pAssets->get_ess_total_nameplate_active_power());
@@ -1582,6 +1634,7 @@ void Site_Manager::get_values()
 
     num_ess_available = pAssets->get_num_ess_avail();
     num_ess_running = pAssets->get_num_ess_running();
+    num_ess_controllable = pAssets->get_num_ess_controllable();
     num_solar_available = pAssets->get_num_solar_avail();
     num_solar_running = pAssets->get_num_solar_running();
     num_gen_available = pAssets->get_num_gen_avail();
@@ -1589,6 +1642,8 @@ void Site_Manager::get_values()
     num_gen_active = pAssets->get_num_gen_controllable();
 
     //update asset_cmd w external variables for state machine
+    asset_cmd.set_additional_load_compensation(0.0f);
+    asset_cmd.poi_cmd = 0.0f;
     asset_cmd.set_ess_actual_kW(ess_actual_kW.value.value_float);
     asset_cmd.set_feeder_actual_kW(feeder_actual_kW.value.value_float);
     asset_cmd.set_gen_actual_kW(gen_actual_kW.value.value_float);
@@ -1617,8 +1672,8 @@ void Site_Manager::get_values()
     asset_cmd.set_solar_start_first_kW(start_first_solar_kW.value.value_float);
 
     //reset all asset kW and kVAR cmds to 0
-    asset_cmd.reset_kW_cmd();
-    asset_cmd.reset_kVAR_cmd();
+    asset_cmd.reset_kW_dispatch();
+    asset_cmd.reset_kVAR_dispatch();
 
     //calculate total potential kVAR
     asset_cmd.calculate_total_potential_kVAR();
@@ -1627,6 +1682,10 @@ void Site_Manager::get_values()
     asset_cmd.calculate_site_kW_load();
     site_kW_load_inclusion.value.set(false);
     site_kW_load.value.set(asset_cmd.get_site_kW_load());
+
+    // Reset CLC correction reporting vars
+    active_power_closed_loop_total_correction.value.set(0.0f);
+    reactive_power_closed_loop_total_correction.value.set(0.0f);
 
     //KPI values
     update_ess_kpi_values();
@@ -1663,13 +1722,11 @@ void Site_Manager::set_values()
     }
 
     //update asset slew instances
-    export_target_kW_cmd_slew.update_slew_target(ess_kW_cmd.value.value_float + solar_kW_cmd.value.value_float + gen_kW_cmd.value.value_float);
     ess_kVAR_cmd_slew.update_slew_target(ess_kVAR_cmd.value.value_float);
     gen_kVAR_cmd_slew.update_slew_target(gen_kVAR_cmd.value.value_float);
     solar_kVAR_cmd_slew.update_slew_target(solar_kVAR_cmd.value.value_float);
-    // If closed loop control is enabled, subtract it's contribution from the slew target to prevent feedback loop
-    float reactive_slew_contribution = reactive_power_closed_loop_enable.value.value_bool * reactive_power_closed_loop_regulator.offset * reactive_power_closed_loop_step_size_kW.value.value_float;
-    reactive_setpoint_kVAR_cmd_slew.update_slew_target(ess_kVAR_cmd.value.value_float + solar_kVAR_cmd.value.value_float - reactive_slew_contribution);
+    remove_active_poi_corrections_from_slew_targets();
+    remove_reactive_poi_corrections_from_slew_targets();
 
     pAssets->set_reactive_power_priority(power_priority_flag.value.value_bool);
 
@@ -1776,6 +1833,7 @@ void Site_Manager::set_asset_cmd_variables()
 
     site_kW_load_inclusion.value.set(asset_cmd.get_site_kW_load_inclusion());
     site_kW_demand.value.set(asset_cmd.get_site_kW_demand());
+    site_kVAR_demand.value.set(asset_cmd.get_site_kVAR_demand());
 }
 
 /**
@@ -1788,6 +1846,48 @@ void Site_Manager::set_volatile_asset_cmd_variables()
     feature_kW_demand.value.set(asset_cmd.get_feature_kW_demand());
     site_kW_charge_production.value.set(asset_cmd.get_site_kW_charge_production());
     site_kW_discharge_production.value.set(asset_cmd.get_site_kW_discharge_production());
+}
+
+/**
+ * The output of standalone features will be included in the asset commands. In the case of POI correction features,
+ * this will throw off the slew target of active power features that utilize their own slew rates.
+ * 
+ * Remove the corrections instead to get a clean slew target that's also limited by asset potentials. This function
+ * handles the following active power feature slews: Export Target
+ * by removing the following POI corrections: Active Power Closed Loop Control, Watt-Watt
+ */
+void Site_Manager::remove_active_poi_corrections_from_slew_targets()
+{
+    // TODO: fix for mixed asset commands
+    // i.e. a -10MW charge cmd could produce asset cmds of -10MW ESS, +10MW Solar, resulting in a target of 0MW
+    // We would only get passed this with a sufficient slew rate that can reach -10MW from net 0MW
+    float slew_target = ess_kW_cmd.value.value_float + solar_kW_cmd.value.value_float + gen_kW_cmd.value.value_float;
+    // Remove corrections in reverse of the order they were dispatched
+    if (watt_watt_adjustment_enable_flag.value.value_bool)
+        slew_target -= watt_watt_correction;
+    if (active_power_closed_loop_enable.value.value_bool)
+        slew_target -= active_power_closed_loop_total_correction.value.value_float;
+    // Reset feature slews
+    export_target_kW_cmd_slew.update_slew_target(slew_target);
+}
+
+/**
+ * The output of standalone features will be included in the asset commands. In the case of POI correction features,
+ * this will throw off the slew target of reactive power features that utilize their own slew rates.
+ * 
+ * Remove the corrections instead to get a clean slew target that's also limited by asset potentials. This function
+ * handles the following reactive power feature slews: Reactive Setpoint
+ * by removing the following POI corrections: Reactive Power Closed Loop Control
+ */
+void Site_Manager::remove_reactive_poi_corrections_from_slew_targets()
+{
+    // Start the aggregate of site production
+    // Gen and feeder are not supported by reactive setpoint currently
+    float slew_target = ess_kVAR_cmd.value.value_float + solar_kVAR_cmd.value.value_float;
+    if (reactive_power_closed_loop_enable.value.value_bool)
+        slew_target -= reactive_power_closed_loop_total_correction.value.value_float;
+    // Reset feature slews
+    reactive_setpoint_kVAR_cmd_slew.update_slew_target(slew_target);
 }
 
 /**
@@ -1806,17 +1906,22 @@ void Site_Manager::ui_configuration(void)
 	if (disable_flag.value.value_bool)
 	{
 		enable_flag.ui_enabled = false;
+        set_enable_flag(false);
 	}
 	else
 	{
-		//hide start button if not in ready state
+		// hide start button if not in ready state
 		enable_flag.ui_enabled = (current_state == Ready);
+        // Manually set the enable flag false for all states except Init
+        // This allows a persistent settings set to be received on startup but all other redundant enable sets to be ignored
+        // In most cases a persistent settings start should be delayed 10 seconds, but this provides additional tolerance if it's sent too early
+        set_enable_flag(enable_flag.value.value_bool && current_state == Init);
 	}
 
 	disable_flag.ui_enabled = true;
 	runmode1_kW_mode_cmd.ui_enabled = true;
 	runmode1_kVAR_mode_cmd.ui_enabled = true;
-	poi_limits_enable.ui_enabled = true;
+	active_power_poi_limits_enable.ui_enabled = true;
 	watchdog_enable.ui_enabled = true;
 	watchdog_duration_ms.ui_enabled = watchdog_enable.value.value_bool;
 	ess_charge_control_kW_limit.ui_enabled = true;
@@ -1833,22 +1938,22 @@ void Site_Manager::ui_configuration(void)
     for (auto feature : standalone_power_features_list)
     {
         // One-off logic to invert POI limits based on its subfeature, soc-based limits
-        if (feature == &poi_limits) {
+        if (feature == &active_power_poi_limits) {
             // For the main POI limits feature, enable its variables based on the enable status of the feature and the inverse of soc-based limits enable status
-            bool poi_limits_enabled_status = feature->enable_flag->value.value_bool && !soc_poi_limits_enable.value.value_bool;
+            bool poi_limits_enabled_status = feature->enable_flag->value.value_bool && !active_power_soc_poi_limits_enable.value.value_bool;
             // For soc-based POI limits, enable its variables based on the enable status of the feature and the subfeature enable status
-            bool soc_limits_enabled_status = feature->enable_flag->value.value_bool && soc_poi_limits_enable.value.value_bool;
+            bool soc_limits_enabled_status = feature->enable_flag->value.value_bool && active_power_soc_poi_limits_enable.value.value_bool;
 
             // Apply to all variables in the feature
             feature->toggle_ui_enabled(poi_limits_enabled_status);
             // Unique behavior for sub feature control: if feature is enabled it will always be enabled
-            soc_poi_limits_enable.ui_enabled = feature->enable_flag->value.value_bool;
+            active_power_soc_poi_limits_enable.ui_enabled = feature->enable_flag->value.value_bool;
             // Update soc-based subfeature to mirror it's enabled status
-            soc_poi_target_soc.ui_enabled = soc_limits_enabled_status;
-            soc_poi_limits_low_min_kW.ui_enabled = soc_limits_enabled_status;
-            soc_poi_limits_low_max_kW.ui_enabled = soc_limits_enabled_status;
-            soc_poi_limits_high_min_kW.ui_enabled = soc_limits_enabled_status;
-            soc_poi_limits_high_max_kW.ui_enabled = soc_limits_enabled_status;
+            active_power_soc_poi_target_soc.ui_enabled = soc_limits_enabled_status;
+            active_power_soc_poi_limits_low_min_kW.ui_enabled = soc_limits_enabled_status;
+            active_power_soc_poi_limits_low_max_kW.ui_enabled = soc_limits_enabled_status;
+            active_power_soc_poi_limits_high_min_kW.ui_enabled = soc_limits_enabled_status;
+            active_power_soc_poi_limits_high_max_kW.ui_enabled = soc_limits_enabled_status;
         }
         // Default behavior for other features
         else
@@ -2157,7 +2262,7 @@ bool Site_Manager::configure_runmode1_kVAR_features(void)
     if (!initial_gc_kVAR_feature_found)
     {
         FPS_ERROR_LOG("INITIAL RUN MODE 1 REACTIVE POWER FEATURE MISCONFIGURED!\n");
-        FPS_ERROR_LOG("Initial runmode1 kVAR feature does not pass available active power features mask.\n");
+        FPS_ERROR_LOG("Initial runmode1 kVAR feature does not pass available reactive power features mask.\n");
         return false;
     }
     return true;
@@ -2452,6 +2557,18 @@ void Site_Manager::clear_fault_registers()
     }
 }
 
+/**
+ * Set the enable flag and all of its multiple inputs false
+ * @param value the value to set
+ */
+void Site_Manager::set_enable_flag(bool value)
+{
+    enable_flag.value.set(value);
+    for(auto& input_flag : enable_flag.inputs) {
+        input_flag.set(value);
+    }
+}
+
 void Site_Manager::build_active_faults()
 {
     int count = 0;
@@ -2467,6 +2584,7 @@ void Site_Manager::build_active_faults()
         }
     }
     active_faults.value.set(count);
+    active_faults.num_options = count;
 }
 
 void Site_Manager::build_active_alarms()
@@ -2484,6 +2602,7 @@ void Site_Manager::build_active_alarms()
         }
     }
     active_alarms.value.set(count);
+    active_alarms.num_options = count;
 }
 
 bool Site_Manager::set_state(states state_request)
@@ -2573,6 +2692,8 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_available, tolerance_percent));
         else if (strcmp(asset_cmd, "get_num_ess_running") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_running, tolerance_percent));
+        else if (strcmp(asset_cmd, "get_num_ess_controllable") == 0)
+            return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_controllable, tolerance_percent));
         else if (strcmp(asset_cmd, "get_ess_active_power") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, ess_actual_kW.value.value_float, tolerance_percent));
         else if (strcmp(asset_cmd, "start_all_ess") == 0)
@@ -2678,8 +2799,8 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
         if (strcmp(asset_cmd, "reset_load_shed") == 0)
         {
             int configured_shed_value = int(value->value_float);
-            if (configured_shed_value < 0 || configured_shed_value > load_shed_max_value.value.value_int) {
-                FPS_ERROR_LOG("Invalid load shed value %d provided, must be between 0 and %d\n", configured_shed_value, load_shed_max_value.value.value_int);
+            if (configured_shed_value < load_shed_min_value.value.value_int || configured_shed_value > load_shed_max_value.value.value_int) {
+                FPS_ERROR_LOG("Invalid load shed value %d provided, must be between %d and %d\n", configured_shed_value, load_shed_min_value.value.value_int, load_shed_max_value.value.value_int);
                 command_found = false;
             } else {
                 load_shed_value.value.set(configured_shed_value);
@@ -2853,7 +2974,7 @@ void Site_Manager::init_state(void)
     set_curve_points(&watt_watt_points, watt_watt_curve);
 
     //initialize load shed Variable_Regulator
-    load_shed_calculator.min_offset = 0;
+    load_shed_calculator.min_offset = load_shed_min_value.value.value_int;
     load_shed_calculator.max_offset = load_shed_max_value.value.value_int;
     //the default case is set to the maximum offset configured
     load_shed_calculator.offset = load_shed_calculator.max_offset;
@@ -2869,7 +2990,7 @@ void Site_Manager::init_state(void)
     load_shed_calculator.set_increase_timer_duration_ms(load_shed_increase_timer_ms.value.value_int);
 
     //initialize solar shed Variable_Regulator
-    solar_shed_calculator.min_offset = 0;
+    solar_shed_calculator.min_offset = solar_shed_min_value.value.value_int;
     solar_shed_calculator.max_offset = solar_shed_max_value.value.value_int;
     solar_shed_calculator.offset = solar_shed_calculator.max_offset;
     solar_shed_calculator.default_offset = solar_shed_calculator.max_offset;
@@ -2919,7 +3040,6 @@ void Site_Manager::init_state(void)
     ess_kVAR_cmd_slew.set_slew_rate(ess_kVAR_slew_rate.value.value_int);
     gen_kVAR_cmd_slew.set_slew_rate(gen_kVAR_slew_rate.value.value_int);
     solar_kVAR_cmd_slew.set_slew_rate(solar_kVAR_slew_rate.value.value_int);
-    reactive_setpoint_kVAR_cmd_slew.set_slew_rate(reactive_setpoint_kVAR_slew_rate.value.value_int);
 
     // lower first_gen_is_starting in case it was not cleared by a started generator in startup.
     pAssets->set_first_gen_is_starting_flag(false);
@@ -2940,10 +3060,6 @@ void Site_Manager::ready_state(void)
     if (enable_flag.value.value_bool && !disable_flag.value.value_bool)
     {
         FPS_INFO_LOG("site manager received enable command \n");
-        enable_flag.value.set(false);
-        for(auto& input_flag : enable_flag.inputs) {
-            input_flag.set(false);
-        }
         current_state = Startup;
     }
 }
@@ -2971,11 +3087,10 @@ void Site_Manager::runmode1_state(void)
                                                  ess_charge_control_kW_limit.value.value_float,
                                                  -1 * ess_charge_control_kW_limit.value.value_float));
 
+    // Active Power Features
+
     // all runmode1 active power features contained here
     process_runmode1_kW_feature();
-
-    // all runmode1 reactive power features contained here
-    process_runmode1_kVAR_feature();
 
     // when enabled, Aggregated Asset Limit will not allow controllable ESS to cause all ESS+Solar to exceed feature limit
     if (agg_asset_limit_enable.value.value_bool)
@@ -2989,9 +3104,12 @@ void Site_Manager::runmode1_state(void)
     if (pfr_enable_flag.value.value_bool)
         primary_frequency_response(asset_cmd.get_site_kW_demand());
 
-    // limit power values based on the amount of value that the POI can legally/physically handle
-    if(poi_limits_enable.value.value_bool)
-        apply_poi_limits();
+    // limit power values based on the amount of power that the POI can legally/physically handle
+    if(active_power_poi_limits_enable.value.value_bool)
+        apply_active_power_poi_limits();
+
+    // Preserve demand prior to POI corrections
+    asset_cmd.preserve_uncorrected_site_kW_demand();
 
     // reinit internal debug value
     charge_dispatch_kW_command.value.set(0.0f);
@@ -3003,6 +3121,9 @@ void Site_Manager::runmode1_state(void)
     // close the loop on active power, taking into account the value at the POI and making adjustments as needed
     if (active_power_closed_loop_enable.value.value_bool)
         calculate_active_power_closed_loop_offset();
+    // Reset when disabled
+    else
+        active_power_closed_loop_regulator.reset();
 
     // dispatch the active power request to the various assets
     dispatch_active_power(asset_priority_runmode1.value.value_int);
@@ -3013,9 +3134,20 @@ void Site_Manager::runmode1_state(void)
         asset_cmd.ess_overload_support(grid_target_kW_cmd.value.value_float);
     }
 
+    // Reactive Power Features
+
+    // all runmode1 reactive power features contained here
+    process_runmode1_kVAR_feature();
+
+    if (reactive_power_poi_limits_enable.value.value_bool)
+        apply_reactive_power_poi_limits();
+
     // close the loop on reactive power, taking into account the value at the POI and making adjustments as needed
     if (reactive_power_closed_loop_enable.value.value_bool)
         calculate_reactive_power_closed_loop_offset();
+    // Reset when disabled
+    else
+        reactive_power_closed_loop_regulator.reset();
 
     // dispatch the reactive power request to the various assets
     asset_cmd.dispatch_reactive_power();
@@ -3132,6 +3264,13 @@ void Site_Manager::shutdown_state(void)
     solar_kVAR_cmd_slew.reset_slew_target();
     reactive_setpoint_kVAR_cmd_slew.reset_slew_target();
 
+    // Reset load shed value to max
+    load_shed_calculator.offset = load_shed_calculator.max_offset;
+    if (load_shed_value.value.value_int != load_shed_calculator.offset) {
+        load_shed_value.value.set(load_shed_calculator.offset);
+        load_shed_value.send_to_component(true);
+    }
+
     // Reset solar shed value to max
     solar_shed_calculator.offset = solar_shed_calculator.max_offset;
     solar_shed_value.value.set(solar_shed_calculator.offset);
@@ -3233,6 +3372,8 @@ void Site_Manager::execute_frequency_response_feature() {
     asset_cmd.set_site_kW_demand(outs.output_kw);
     // Fully curtail solar. Even if configured to be larger, the UF response will not exceed the ESS (and gen) output and will not request from solar
     asset_cmd.set_solar_max_potential_kW(0);
+    // This feature does not track load
+    asset_cmd.set_load_compensation_method(NO_COMPENSATION);
 }
 
 void Site_Manager::energy_arbitrage_helper() {
@@ -3251,8 +3392,8 @@ void Site_Manager::energy_arbitrage_helper() {
         // Solar fully uncurtailed, but reserve a portion equal to ESS charge request (negative feature output) if present
         asset_cmd.set_solar_kW_request(outputs.solar_kW_request);
     }
-
-    asset_cmd.set_site_kW_load_inclusion(true);
+    // This feature tracks load at a minimum
+    asset_cmd.track_unslewed_load(LOAD_MINIMUM);
 }
 
 /**
@@ -3269,7 +3410,7 @@ void Site_Manager::energy_arbitrage_helper() {
 void Site_Manager::process_runmode2_kW_feature()
 {
     // site_kW_demand should start by covering the site load
-    asset_cmd.set_site_kW_load_inclusion(true);
+    asset_cmd.set_load_compensation_method(LOAD_MINIMUM);
 
     // Request full charge which may be satisfied based on availability of other assets
     // If no other assets available, ESS will discharge to compensate for load
@@ -3324,11 +3465,10 @@ void Site_Manager::process_runmode1_kVAR_feature()
         //this mode does uses power factor control
         asset_pf_flag = true;
     }
-    //WATT-PF MODE tbd
-    else if (watt_pf_mode_enable_flag.value.value_bool)
+    // Constant Power Factor Mode
+    else if (constant_power_factor_mode_enable_flag.value.value_bool)
     {
-        asset_cmd.set_site_kVAR_demand(0);
-
+        execute_constant_power_factor();
         //this mode does not use power factor control (it will if it is ever implemented)
         asset_pf_flag = false;
     }
@@ -3344,6 +3484,46 @@ void Site_Manager::process_runmode1_kVAR_feature()
     site_kVAR_demand.value.set(asset_cmd.get_site_kVAR_demand());
 }
 
+// Helper function for executing constant power factor mode
+void Site_Manager::execute_constant_power_factor()
+{
+    // Ensure limits are bounded
+    constant_power_factor_lagging_limit.value.set(
+        range_check(-1.0f * std::abs(constant_power_factor_lagging_limit.value.value_float), 0.0f, -1.0f)
+    );
+    constant_power_factor_leading_limit.value.set(
+        range_check(std::abs(constant_power_factor_leading_limit.value.value_float), 1.0f, 0.0f)
+    );
+    // Establish command direction
+    bool cpf_direction;
+    // If direction flag is enabled, use it to determine direction
+    if (constant_power_factor_absolute_mode.value.value_bool)
+        cpf_direction = constant_power_factor_lagging_direction.value.value_bool;
+    else
+        cpf_direction = std::signbit(constant_power_factor_setpoint.value.value_float);
+
+    // Apply the appropriate limit based on direction (negative is lagging)
+    if (cpf_direction)
+    {
+        // Explicitly set direction of the setpoint
+        constant_power_factor_setpoint.value.set(-1.0f * std::abs(constant_power_factor_setpoint.value.value_float));
+        // Bound the setpoint using lagging limit, -1.0 < pf < lagging limit
+        constant_power_factor_setpoint.value.set(
+            range_check(constant_power_factor_setpoint.value.value_float, constant_power_factor_lagging_limit.value.value_float, -1.0f)
+        );
+    }
+    else
+    {
+        // Explicitly set direction of the setpoint
+        constant_power_factor_setpoint.value.set(std::abs(constant_power_factor_setpoint.value.value_float));
+        // Bound the setpoint using leading limit < pf < 1.0
+        constant_power_factor_setpoint.value.set(
+            range_check(constant_power_factor_setpoint.value.value_float, 1.0f, constant_power_factor_leading_limit.value.value_float)
+        );
+    }
+    asset_cmd.constant_power_factor_mode(constant_power_factor_setpoint.value.value_float, cpf_direction);
+}
+
 /**
  * Adjusts site demand based on the legal/physical/etc power limits of the point of interface (poi), with poi_limits_min_kW limiting the
  * power that can be imported into the site (negative), and poi_limits_max_kW limiting the power that can be exported from the site (positive).
@@ -3352,45 +3532,60 @@ void Site_Manager::process_runmode1_kVAR_feature()
  * If tracked by the active power feature and enabled based on configuration, load (including uncontrollable) is implicit in the site demand received and is expected to
  * cancel out with site discharge production. As such, it should be removed from the demand to get the true expected value at the POI.
  */
-void Site_Manager::apply_poi_limits()
+void Site_Manager::apply_active_power_poi_limits()
 {
-    float poi_demand = asset_cmd.get_site_kW_demand();
-    // Determine whether load should be taken into account (includes uncontrollable)
-    float load_correction = (poi_limits_load_enable.value.value_bool && asset_cmd.get_site_kW_load_inclusion()) * asset_cmd.get_site_kW_load();
-    // Remove the aggregate power that exists outside the control of Site Controller
-    poi_demand -= load_correction;
-
-    // If importing, determine the actual amount of demand that will not be cancelled out by production from within the site
-    if (poi_demand < 0)
-        poi_demand = less_than_zero_check(poi_demand + asset_cmd.calculate_internal_charge_compensation(asset_priority_runmode1.value.value_float));
-
-    float max_poi_limit = poi_limits_max_kW.value.value_float;
-    float min_poi_limit = poi_limits_min_kW.value.value_float;
+    float max_poi_limit = active_power_poi_limits_max_kW.value.value_float;
+    float min_poi_limit = active_power_poi_limits_min_kW.value.value_float;
 
     // soc-based POI limits are enabled, overwriting the default POI limits
-    if (soc_poi_limits_enable.value.value_bool)
+    if (active_power_soc_poi_limits_enable.value.value_bool)
     {
         // Only apply under limits if ESS are below the configured threshold
-        if (soc_avg_running.value.value_float <= soc_poi_target_soc.value.value_float) {
-            max_poi_limit = soc_poi_limits_low_max_kW.value.value_float;
-            min_poi_limit = soc_poi_limits_low_min_kW.value.value_float;
+        if (soc_avg_running.value.value_float <= active_power_soc_poi_target_soc.value.value_float) {
+            max_poi_limit = active_power_soc_poi_limits_low_max_kW.value.value_float;
+            min_poi_limit = active_power_soc_poi_limits_low_min_kW.value.value_float;
         // Only apply over limits if ESS are above the configured threshold
         } else {
-            max_poi_limit = soc_poi_limits_high_max_kW.value.value_float;
-            min_poi_limit = soc_poi_limits_high_min_kW.value.value_float;
+            max_poi_limit = active_power_soc_poi_limits_high_max_kW.value.value_float;
+            min_poi_limit = active_power_soc_poi_limits_high_min_kW.value.value_float;
         }
     }
 
-    float final_correction = (range_check(poi_demand, max_poi_limit, min_poi_limit) - poi_demand);
+    // Limit explicit POI request in addition to demand
+    asset_cmd.poi_cmd = range_check(asset_cmd.poi_cmd, max_poi_limit, min_poi_limit);
 
-    asset_cmd.set_site_kW_demand(asset_cmd.get_site_kW_demand() + final_correction);
-    // Do not take uncontrolled correction into account in the feeder limit as it represents the actual import of power of the POI
+    // POI limits are asymmetric due to there being a single source of POI charge and multiple sources of POI discharge
+    // Apply the charge POI limit
     asset_cmd.set_feeder_max_potential_kW(std::min(asset_cmd.get_feeder_max_potential_kW(), -1.0f * min_poi_limit));
+    asset_cmd.determine_ess_load_requirement(asset_priority_runmode1.value.value_int);
+
+    // Limit site demand, tracking load if enabled to ensure an accurate value at the POI
+    float min_limit_with_load = min_poi_limit + asset_cmd.get_site_kW_load_inclusion() * asset_cmd.get_site_kW_load();
+    float max_limit_with_load = max_poi_limit + asset_cmd.get_site_kW_load_inclusion() * asset_cmd.get_site_kW_load();
+    asset_cmd.set_site_kW_demand(range_check(asset_cmd.get_site_kW_demand(), max_limit_with_load, min_limit_with_load));
 
     // Apply to reported site limits. Cancelling does not need to be calculated as only one of charge/discharge will be active at a time
-    // Load must be included (conditional on params) as it would be implicit in the requested demand were the limit to be used
-    total_site_kW_charge_limit.value.set(range_check(total_site_kW_charge_limit.value.value_float, max_poi_limit + load_correction, min_poi_limit + load_correction));
-    total_site_kW_discharge_limit.value.set(range_check(total_site_kW_discharge_limit.value.value_float, max_poi_limit + load_correction, min_poi_limit + load_correction));
+    // Load must be included in all cases as the total limit represents the value that will be seen at the POI
+    total_site_kW_charge_limit.value.set(
+        range_check(total_site_kW_charge_limit.value.value_float + asset_cmd.get_site_kW_load(), max_poi_limit, min_poi_limit)
+    );
+    total_site_kW_discharge_limit.value.set(
+        range_check(total_site_kW_discharge_limit.value.value_float + asset_cmd.get_site_kW_load(), max_poi_limit, min_poi_limit)
+    );
+}
+
+/**
+ * Adjusts site demand based on the legal/physical/etc power limits of the point of interface (poi), with reactive_power_poi_limits_min_kVAR limiting the
+ * power that can be imported into the site (negative), and reactive_power_poi_limits_max_kVAR limiting the power that can be exported from the site (positive).
+ * 
+ * No load is considered so there is no requirement to solve for the value at the POI. The limits are simply applied as is
+ */
+void Site_Manager::apply_reactive_power_poi_limits()
+{
+    float min_poi_limit = reactive_power_poi_limits_min_kVAR.value.value_float;
+    float max_poi_limit = reactive_power_poi_limits_max_kVAR.value.value_float;
+
+    asset_cmd.set_site_kVAR_demand(range_check(asset_cmd.get_site_kVAR_demand(), max_poi_limit, min_poi_limit));
 }
 
 /**
@@ -3408,7 +3603,8 @@ void Site_Manager::dispatch_active_power(int asset_priority)
 
     // Process and dispatch discharge production to meet load, if appropriate
     float aggregate_dispatch = 0.0f;
-    if (asset_cmd.get_site_kW_load_inclusion())
+    // Handle load first if it's tracked separately from demand (MINIMUM use case). Otherwise it will be handled later in demand
+    if (asset_cmd.get_load_method() == LOAD_MINIMUM)
         aggregate_dispatch += asset_cmd.dispatch_site_kW_discharge_cmd(asset_priority, asset_cmd.get_site_kW_load(), LOAD);
 
     // Process and dispatch charge production
@@ -3443,7 +3639,11 @@ void Site_Manager::set_asset_power_commands()
 //W-VAr mode function
 void Site_Manager::watt_var_mode(float active_power, std::vector<std::pair<float,float>>& curve)
 {
-    asset_cmd.set_site_kVAR_demand(get_curve_cmd(active_power, curve));
+    float reference_site_demand = asset_cmd.get_site_kVAR_demand();
+    float new_site_demand = get_curve_cmd(active_power, curve);
+    watt_var_correction = new_site_demand - reference_site_demand;
+
+    asset_cmd.set_site_kVAR_demand(new_site_demand);
 }
 
 void Site_Manager::primary_frequency_response(float kW_cmd)
@@ -3594,7 +3794,9 @@ void Site_Manager::dogbark()
 // Adjusts power requests to account for transformer losses at the POI
 void Site_Manager::watt_watt_poi_adjustment()
 {
+    float reference_site_demand = asset_cmd.get_site_kW_demand();
     float new_site_demand = get_curve_cmd( asset_cmd.get_site_kW_demand(), watt_watt_curve);
+    watt_watt_correction = new_site_demand - reference_site_demand;
 
     // Set asset cmd value
     asset_cmd.set_site_kW_demand(new_site_demand);
@@ -3651,19 +3853,60 @@ void Site_Manager::calculate_solar_shed()
 // Updates the closed loop control offset value to correct for inaccuracies in active power at the POI
 void Site_Manager::calculate_active_power_closed_loop_offset()
 {
-    float current_cmd = asset_cmd.get_site_kW_demand();
+    // Default to using site demand as the desired reference, but remove load so it closes in on the correct value
+    float current_cmd = asset_cmd.get_site_kW_demand() - asset_cmd.get_additional_load_compensation();
+    // Overwrite with the explicit poi request as the desired reference if it's available
+    if (asset_cmd.poi_cmd != 0.0f)
+        current_cmd = asset_cmd.poi_cmd;
+
     // Always invert POI, using the convention that positive power flows into the site and negative power flows out of the site at the POI
     float poi_value = -1.0f * feeder_actual_kW.value.value_float;
 
+    // Make sure a step size is configured to prevent divide by zero -> NaN
+    if (active_power_closed_loop_step_size_kW.value.value_float == 0.0f)    active_power_closed_loop_step_size_kW.value.value_float = 1.0f;
+    // Reset offset limits
+    active_power_closed_loop_regulator.min_offset = active_power_closed_loop_min_offset.value.value_int;
+    active_power_closed_loop_regulator.max_offset = active_power_closed_loop_max_offset.value.value_int;
+
+    // Determine min and max correction limits based on available power and the currently requested production
+    asset_cmd.calculate_site_kW_production_limits();
+    // First calculate remaining available power for negative corrections
+    float negative_charge_increase = less_than_zero_check(total_site_kW_rated_charge.value.value_float - asset_cmd.get_site_kW_charge_production());
+    float negative_discharge_decrease = std::min(total_site_kW_rated_discharge.value.value_float, asset_cmd.get_site_kW_discharge_production());
+    float negative_power_available = negative_charge_increase - negative_discharge_decrease;
+    // Next calculate remaining available power for positive corrections
+    float positive_charge_decrease = std::max(total_site_kW_rated_charge.value.value_float, asset_cmd.get_site_kW_charge_production());
+    float positive_discharge_increase = zero_check(total_site_kW_rated_discharge.value.value_float - asset_cmd.get_site_kW_discharge_production());
+    float positive_power_available = positive_discharge_increase - positive_charge_decrease;
+
+    // Then calculate the min/max offset
+    int min_allowable_offset = negative_power_available / active_power_closed_loop_step_size_kW.value.value_float;
+    int max_allowable_offset = positive_power_available / active_power_closed_loop_step_size_kW.value.value_float;
+    // Finally update regulator limits
+    if (active_power_closed_loop_regulator.min_offset < min_allowable_offset)   active_power_closed_loop_regulator.min_offset = min_allowable_offset;
+    if (active_power_closed_loop_regulator.max_offset > max_allowable_offset)   active_power_closed_loop_regulator.max_offset = max_allowable_offset;
+
     // Regulate based on configured deadbands compared to difference in dispatched commands (steady state) and difference in command and POI (accuracy)
-    bool command_accepted = active_power_closed_loop_regulator.regulate_variable_offset(std::abs(current_cmd - prev_active_power_feature_cmd), poi_value - current_cmd);
-    float total_correction = _active_power_closed_loop_manual_offset_kW.value.value_float + active_power_closed_loop_regulator.offset * active_power_closed_loop_step_size_kW.value.value_float;
+    bool command_accepted = active_power_closed_loop_regulator.regulate_variable_offset(
+        std::abs(current_cmd - prev_active_power_feature_cmd), poi_value - current_cmd
+    );
+
+    // TODO: if the offset is beyond the new min/max, manually bound it so it does get stuck
+    //       in the future we should count up/down until we're within range again, but changing the regulator itself carries more risk
+    active_power_closed_loop_regulator.offset = range_check(
+        active_power_closed_loop_regulator.offset, active_power_closed_loop_regulator.max_offset, active_power_closed_loop_regulator.min_offset
+    );
 
     // Take the product of the offset and step size as the total correction applied to the active power feature's command
-    asset_cmd.set_site_kW_demand(current_cmd + total_correction);
-    // Give enough headroom to accomodate the full correction if needed
+    active_power_closed_loop_total_correction.value.set(_active_power_closed_loop_manual_offset_kW.value.value_float
+                           + active_power_closed_loop_regulator.offset * active_power_closed_loop_step_size_kW.value.value_float
+    );
+    asset_cmd.set_site_kW_demand(asset_cmd.get_site_kW_demand() + active_power_closed_loop_total_correction.value.value_float);
+    // Give enough headroom to accommodate the full correction if needed
     // Because this feature explicitly takes the POI value into account and has determined that it has not been reached yet, the POI limit should not be violated
-    asset_cmd.set_feeder_max_potential_kW(std::max(asset_cmd.get_feeder_max_potential_kW(), current_cmd + zero_check(-1.0f * total_correction)));
+    asset_cmd.set_feeder_max_potential_kW(
+        std::max(asset_cmd.get_feeder_max_potential_kW(), current_cmd + zero_check(-1.0f * active_power_closed_loop_total_correction.value.value_float))
+    );
     // Preserve the active power feature command to be dispatched, but only if closed loop control had a chance to act on the command
     if (command_accepted)
         prev_active_power_feature_cmd = current_cmd;
@@ -3674,18 +3917,49 @@ void Site_Manager::calculate_reactive_power_closed_loop_offset()
 {
     // Always invert POI, using the convention that positive power flows into the site and negative power flows out of the site at the POI
     float poi_value = -1.0f * feeder_actual_kVAR.value.value_float;
+    float current_cmd = asset_cmd.get_site_kVAR_demand();
 
-    float reactive_power_feature_cmd = asset_cmd.get_site_kVAR_demand();
+    // Make sure a step size is configured to prevent divide by zero -> NaN
+    if (reactive_power_closed_loop_step_size_kW.value.value_float == 0.0f)    reactive_power_closed_loop_step_size_kW.value.value_float = 1.0f;
+    // Reset offset limits
+    reactive_power_closed_loop_regulator.min_offset = reactive_power_closed_loop_min_offset.value.value_int;
+    reactive_power_closed_loop_regulator.max_offset = reactive_power_closed_loop_max_offset.value.value_int;
+
+    // First calculate remaining available power for negative corrections
+    float negative_charge_increase = less_than_zero_check(total_site_kVAR_rated_charge - current_cmd);
+    float negative_discharge_decrease = std::min(total_site_kVAR_rated_discharge, zero_check(current_cmd));
+    float negative_power_available = negative_charge_increase - negative_discharge_decrease;
+    // Next calculate remaining available power for positive corrections
+    float positive_charge_decrease = std::max(total_site_kVAR_rated_charge, less_than_zero_check(current_cmd));
+    float positive_discharge_increase = zero_check(total_site_kVAR_rated_discharge - current_cmd);
+    float positive_power_available = positive_discharge_increase - positive_charge_decrease;
+
+    // Then calculate the min/max offset
+    int min_allowable_offset = negative_power_available / reactive_power_closed_loop_step_size_kW.value.value_float;
+    int max_allowable_offset = positive_power_available / reactive_power_closed_loop_step_size_kW.value.value_float;
+    // Finally update regulator limits
+    if (reactive_power_closed_loop_regulator.min_offset < min_allowable_offset)   reactive_power_closed_loop_regulator.min_offset = min_allowable_offset;
+    if (reactive_power_closed_loop_regulator.max_offset > max_allowable_offset)   reactive_power_closed_loop_regulator.max_offset = max_allowable_offset;
+
     // Regulate based on configured deadbands compared to difference in dispatched commands (steady state) and difference in command and POI (accuracy)
     bool command_accepted = reactive_power_closed_loop_regulator.regulate_variable_offset(
-        std::abs(reactive_power_feature_cmd - prev_reactive_power_feature_cmd), poi_value - reactive_power_feature_cmd
+        std::abs(current_cmd - prev_reactive_power_feature_cmd), poi_value - current_cmd
     );
+
+    // TODO: if the offset is beyond the new min/max, reset it so it doesn't get stuck
+    //       in the future we should count up/down until we're within range again, but changing the regulator itself carries more risk
+    reactive_power_closed_loop_regulator.offset = range_check(
+        reactive_power_closed_loop_regulator.offset, reactive_power_closed_loop_regulator.max_offset, reactive_power_closed_loop_regulator.min_offset
+    );
+
     // Take the product of the offset and step size as the total correction applied to the reactive power feature's command
-    float total_correction = reactive_power_closed_loop_regulator.offset * reactive_power_closed_loop_step_size_kW.value.value_float;
-    asset_cmd.set_site_kVAR_demand(asset_cmd.get_site_kVAR_demand() + total_correction);
+    reactive_power_closed_loop_total_correction.value.set(
+        reactive_power_closed_loop_regulator.offset * reactive_power_closed_loop_step_size_kW.value.value_float
+    );
+    asset_cmd.set_site_kVAR_demand(asset_cmd.get_site_kVAR_demand() + reactive_power_closed_loop_total_correction.value.value_float);
     // Preserve the reactive power feature command to be dispatched, but only if closed loop control had a chance to act on the command
     if (command_accepted)
-        prev_reactive_power_feature_cmd = reactive_power_feature_cmd;
+        prev_reactive_power_feature_cmd = current_cmd;
 }
 
 /**
@@ -3826,16 +4100,6 @@ bool Site_Manager::get_reserved_bool_15()
 bool Site_Manager::get_reserved_bool_16()
 {
     return reserved_bool_16.value.value_bool;
-}
-
-int Site_Manager::get_num_ess_available()
-{
-    return num_ess_available;
-}
-
-int Site_Manager::get_num_ess_running()
-{
-    return num_ess_running;
 }
 
 float Site_Manager::get_ess_total_rated_active_power()

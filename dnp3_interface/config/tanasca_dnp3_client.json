@@ -1,0 +1,389 @@
+{
+    "fileInfo": {
+        "sourceFileName": "BRP FlexGen HybridOS Comm Servers.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2020-07-16T18:58:39.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "Tony Olivo",
+        "outputFileName": "odessa_new.json",
+        "outputFileType": "dnp3",
+        "outputFileCreated": "2020-07-16T18:58:45.597Z"
+    },
+    "system": {
+        "name": "FlexGen HybridOS",
+        "protocol": "DNP3",
+        "version": "1.2",
+        "debug": 0,
+        "ip_address1": "10.1.31.10",
+        "ip_address": "127.0.0.1",
+        "local_uri": "/local_client",
+        "master_address": 200,
+        "station_address":10,
+        "id": "tanasca_dnp3_client",
+        "port": 20000,
+        "frequency": 5000
+    },
+    "registers": [
+        {
+            "type": "AnOPInt16",
+            "map": [
+                {
+                    "id": "active_power_mode_command",
+                    "offset": 0,
+                    "name": "BES Active Power Mode Command",
+                    "uri": "/metrics/active_power_mode_set"
+                },
+                {
+                    "id": "reactive_power_mode_command",
+                    "offset": 1,
+                    "name": "BES Reactive Power Mode Command",
+                    "uri": "/metrics/reactive_power_mode_set"
+                }
+            ]
+        },
+        {
+            "type": "AnOPF32",
+            "map": [
+                {
+                    "id": "active_power_command",
+                    "offset": 2,
+                    "name": "Active Power Command",
+                    "uri": "/metrics/kW_set"
+                },
+                {
+                    "id": "reactive_power_command",
+                    "offset": 3,
+                    "name": "Reactive Power Command",
+                    "uri": "/metrics/kVAR_set"
+                },
+                {
+                    "id": "avr_setpoint_voltage",
+                    "offset": 4,
+                    "name": "Voltage Command",
+                    "uri": "/metrics/kVAR_set"
+                },
+                {
+                    "id": "soc_cmd",
+                    "offset": 5,
+                    "name": "SOC Target Setpoint",
+                    "uri": "/metrics/kW_set"
+                },
+                {
+                    "id": "day_ahead_price",
+                    "offset": 6,
+                    "name": "LMP Price Data - Day-Ahead Hourly Price",
+                    "uri": "/metrics/lmp"
+                },
+                {
+                    "id": "realtime_price",
+                    "offset": 7,
+                    "name": "LMP Price Data - Realtime (5-min) Price",
+                    "uri": "/metrics/lmp"
+                },
+                {
+                    "id": "curtailment_input",
+                    "offset": 8,
+                    "name": "Curtailment Input",
+                    "uri": "/metrics/curtailment_input"
+                },
+                {
+                    "id": "charging_input",
+                    "offset": 9,
+                    "name": "Charging",
+                    "uri": "/metrics/charging_input"
+                }
+            ]
+        },
+        {
+            "type": "analog",
+            "map": [
+                {
+                    "id": "active_power_mode_command_feedback",
+                    "offset": 0,
+                    "variation": "Group30Var2",
+                    "name": "BES Active Power Mode Command Feedback",
+                    "uri": "/metrics/active_power_mode_set"
+                },
+                {
+                    "id": "active_power_operating_mode",
+                    "offset": 1,
+                    "variation": "Group30Var2",
+                    "name": "Active Power Operating Mode",
+                    "uri": "/metrics/kW_mode"
+                },
+                {
+                    "id": "reactive_power_command_feedback",
+                    "offset": 2,
+                    "variation": "Group30Var2",
+                    "name": "BES Reactive Power Mode Command Feedback",
+                    "uri": "/metrics/reactive_power_mode_set"
+                },
+                {
+                    "id": "reactive_power_operating_mode",
+                    "offset": 3,
+                    "variation": "Group30Var2",
+                    "name": "Reactive Power Operating Mode",
+                    "uri": "/metrics/kVAR_mode"
+                },
+                {
+                    "id": "active_power_command_feedback",
+                    "offset": 4,
+                    "variation": "Group30Var5",
+                    "name": "Active Power Command Feedback",
+                    "uri": "/metrics/kW_set"
+                },
+                {
+                    "id": "ess_total_active_power",
+                    "offset": 5,
+                    "variation": "Group30Var5",
+                    "name": "BES Active Power Output",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "active_power",
+                    "offset": 6,
+                    "variation": "Group30Var5",
+                    "name": "POI Active Power Output",
+                    "uri": "/components/sel_735"
+                },
+                {
+                    "id": "reactive_power_command_feedback",
+                    "offset": 7,
+                    "variation": "Group30Var5",
+                    "name": "Reactive Power Command Feedback",
+                    "uri": "/metrics/kVAR_set"
+                },
+                {
+                    "id": "ess_total_reactive_power",
+                    "offset": 8,
+                    "variation": "Group30Var5",
+                    "name": "BES Reactive Power Output",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "reactive_power",
+                    "offset": 9,
+                    "variation": "Group30Var5",
+                    "name": "POI Reactive Power Output",
+                    "uri": "/components/sel_735"
+                },
+                {
+                    "id": "avr_setpoint_voltage_feedback",
+                    "offset": 10,
+                    "variation": "Group30Var5",
+                    "name": "Voltage Command Feedback",
+                    "uri": "/metrics/kVAR_set"
+                },
+                {
+                    "id": "voltage_l1_l2",
+                    "offset": 11,
+                    "variation": "Group30Var5",
+                    "name": "POI Voltage L1-L2",
+                    "uri": "/components/sel_735"
+                },
+                {
+                    "id": "soc_cmd_feedback",
+                    "offset": 12,
+                    "variation": "Group30Var5",
+                    "name": "SOC Target Setpoint Feedback",
+                    "uri": "/metrics/kW_set"
+                },
+                {
+                    "id": "current_soc",
+                    "offset": 13,
+                    "variation": "Group30Var5",
+                    "name": "BES SOC ",
+                    "uri": "/metrics/measurements"
+                },
+                {
+                    "id": "day_ahead_price_feedback",
+                    "offset": 14,
+                    "variation": "Group30Var5",
+                    "name": "LMP Price Data - Day-Ahead Hourly Price Feedback",
+                    "uri": "/metrics/lmp"
+                },
+                {
+                    "id": "realtime_price_feedback",
+                    "offset": 15,
+                    "variation": "Group30Var5",
+                    "name": "LMP Price Data - Realtime (5-min) Price Feedback",
+                    "uri": "/metrics/lmp"
+                },
+                {
+                    "id": "ess_chargeable_power",
+                    "offset": 16,
+                    "variation": "Group30Var5",
+                    "name": "Battery - Chargeable Power MW",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "ess_chargeable_energy",
+                    "offset": 17,
+                    "variation": "Group30Var5",
+                    "name": "Battery - Chargeable Energy MWh",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "ess_dischargeable_power",
+                    "offset": 18,
+                    "variation": "Group30Var5",
+                    "name": "Battery - Dischargeable Power MW",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "ess_dischargeable_energy",
+                    "offset": 19,
+                    "variation": "Group30Var5",
+                    "name": "Battery - Dischargeable Energy MWh",
+                    "uri": "/assets/ess/summary"
+                },
+                {
+                    "id": "status",
+                    "offset": 20,
+                    "variation": "Group30Var2",
+                    "name": "BES Status",
+                    "uri": "/metrics/bes"
+                },
+                {
+                    "id": "kwh_delivered",
+                    "offset": 21,
+                    "variation": "Group30Var5",
+                    "name": "Site Exported Energy",
+                    "uri": "/components/sel_735"
+                },
+                {
+                    "id": "kwh_received",
+                    "offset": 22,
+                    "variation": "Group30Var5",
+                    "name": "Site Imported Energy",
+                    "uri": "/components/sel_735"
+                }
+            ]
+        },
+        {
+            "type": "binary",
+            "map": [
+                {
+                    "id": "breaker_status",
+                    "offset": 0,
+                    "name": "POI Breaker Status",
+                    "uri": "/components/sel_351"
+                },
+                {
+                    "id": "alarm_status_flag",
+                    "offset": 1,
+                    "name": "Alarms Status",
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "fault_status_flag",
+                    "offset": 2,
+                    "name": "Fault Status",
+                    "uri": "/site/operation"
+                },
+                {
+                    "id": "alarm_01",
+                    "offset": 3,
+                    "name": "Alarm 01",
+                    "uri": "/metrics/alarms"
+                },
+                {
+                    "id": "alarm_02",
+                    "offset": 4,
+                    "name": "Alarm 02",
+                    "uri": "/metrics/alarms"
+                },
+                {
+                    "id": "alarm_03",
+                    "offset": 5,
+                    "name": "Alarm 03",
+                    "uri": "/metrics/alarms"
+                },
+                {
+                    "id": "alarm_04",
+                    "offset": 6,
+                    "name": "Alarm 04",
+                    "uri": "/metrics/alarms"
+                },
+                {
+                    "id": "alarm_05",
+                    "offset": 7,
+                    "name": "Alarm 05",
+                    "uri": "/metrics/alarms"
+                },
+                {
+                    "id": "alarm_06",
+                    "offset": 8,
+                    "name": "Alarm 06",
+                    "uri": "/metrics/alarms"
+                },
+                {
+                    "id": "alarm_07",
+                    "offset": 9,
+                    "name": "Alarm 07",
+                    "uri": "/metrics/alarms"
+                },
+                {
+                    "id": "alarm_08",
+                    "offset": 10,
+                    "name": "Alarm 08",
+                    "uri": "/metrics/alarms"
+                },
+                {
+                    "id": "fault_01",
+                    "offset": 11,
+                    "name": "Fault 01",
+                    "uri": "/metrics/faults"
+                },
+                {
+                    "id": "fault_02",
+                    "offset": 12,
+                    "name": "Fault 02",
+                    "uri": "/metrics/faults"
+                },
+                {
+                    "id": "fault_03",
+                    "offset": 13,
+                    "name": "Fault 03",
+                    "uri": "/metrics/faults"
+                },
+                {
+                    "id": "fault_04",
+                    "offset": 14,
+                    "name": "Fault 04",
+                    "uri": "/metrics/faults"
+                },
+                {
+                    "id": "fault_05",
+                    "offset": 15,
+                    "name": "Fault 05",
+                    "uri": "/metrics/faults"
+                },
+                {
+                    "id": "fault_06",
+                    "offset": 16,
+                    "name": "Fault 06",
+                    "uri": "/metrics/faults"
+                },
+                {
+                    "id": "fault_07",
+                    "offset": 17,
+                    "name": "Fault 07",
+                    "uri": "/metrics/faults"
+                },
+                {
+                    "id": "fault_08",
+                    "offset": 18,
+                    "name": "Fault 08",
+                    "uri": "/metrics/faults"
+                },
+                {
+                    "id": "avr_selector",
+                    "offset": 19,
+                    "name": "AVR mode selector",
+                    "uri": "/metrics/kVAR_mode"
+                }
+            ]
+        }
+    ]
+}

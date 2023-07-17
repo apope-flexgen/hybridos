@@ -4,10 +4,7 @@
             "directory" : "/home/archives",
             "private_key" : "/root/.ssh/id_rsa",
             "known_hosts" : "/root/.ssh/known_hosts",
-            "tar_mode": {
-                "mode": "untar",
-                "extracted_extension": ".tar.gz"
-            }
+            "extension" : ".tar.gz"
         }
     },
     "servers": {

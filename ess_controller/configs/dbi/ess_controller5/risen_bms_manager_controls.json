@@ -1,0 +1,139 @@
+{
+    "/schedule/wake_monitor/bms": {
+        "/controls/bms:CloseContactors":          { "enable": true, "amap": "bms", "func": "HandleCmd"},
+        "/controls/bms:OpenContactors":           { "enable": true, "amap": "bms", "func": "HandleCmd"},
+        "/controls/bms:VerifyContactorsClosed":   { "enable": true, "amap": "bms", "func": "HandleCmd"},
+        "/controls/bms:VerifyContactorsOpened":   { "enable": true, "amap": "bms", "func": "HandleCmd"}
+    },
+
+    "/controls/bms": {
+        "CloseContactors": {
+            "value": 1,
+            "note": "Close DC contactors command to send to BMS if the BMS is off ready (meaning DC contactors are open) and the PCS is either off or faulted [TODO: add additional conditions here, if needed]",
+            "cmdVar": "/components/##BMS_ID##_info:start_connection",
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 3,
+            "variable1": "/status/bms:DCClosed",
+            "variable2": "/status/pcs:SystemState",
+            "variable3": "/controls/bms:CheckIfFault",
+            "useExpr": true,
+            "expression": "{1} == 0 and ({2} == Off or {2} == Fault) and not {3}",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "bms"}]}]
+            }
+        },
+        "OpenContactors": {
+            "value": 2,
+            "note": "Open DC contactors command to send to BMS if the BMS is on ready (meaning DC contactors are closed) and the PCS is either off or faulted [TODO: add additional conditions here, if needed]",
+            "cmdVar": "/components/##BMS_ID##_info:start_connection",
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 60,
+            "numVars": 2,
+            "variable1": "/status/bms:DCClosed",
+            "variable2": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == 1 and ({2} == Off or {2} == Fault)",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "bms"}]}]
+            }
+        },
+        "VerifyContactorsClosed": {
+            "value": 0,
+            "note": "Verify that the BMS system state is now on ready (meaning DC contactors are closed) when the close contactors command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 45,
+            "numVars": 1,
+            "variable1": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "{1} == 1",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "bms"}]}]
+            }
+        },
+        "VerifyContactorsOpened": {
+            "value": 0,
+            "note": "Verify that the BMS system state is now off ready (meaning DC contactors are open) when the open contactors command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "{1} == 0",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "bms"}]}]
+            }
+        },
+        "CheckIfFault": {
+            "value": 0,
+            "note": "Check if the BMS is in a fault state",
+            "enableAlert": false,
+            "numVars": 4,
+            "sendCmdHoldTimeout": 1,
+            "variable1": "/status/bms:SystemFault",
+            "variable2": "/status/bms:BMSPowerOn",
+            "variable3": "/status/bms:BMSStatus",
+            "variable4": "/status/bms:FaultCnt",
+            "useExpr": true,
+            "expression": "not {1} or {2} == Fault or {3} == Fault or {4} > 0",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "bms"}]}]
+            }
+        }
+    },
+    
+    "/status/bms": {
+        "CloseContactorsSuccess": {
+            "value": false,
+            "note": "If the close contactors command has been successfully sent to the BMS, verify that the BMS DC contactors have been closed. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/bms:VerifyContactorsClosed@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/bms:VerifyContactorsClosed",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/bms:close_contactors_cmd",                "outValue": "Failed to send/verify close contactors command (1) to BMS"}
+                    ]
+                }]
+            }
+        },
+        "OpenContactorsSuccess": {
+            "value": false,
+            "note": "If the open contactors command has been successfully sent to the BMS, verify that the BMS DC contactors have been opened. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/bms:VerifyContactorsOpened@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/bms:VerifyContactorsOpened",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/bms:open_contactors_cmd",                 "outValue": "Failed to send/verify open contactors command (2) to BMS"}
+                    ]
+                }]
+            }
+        },
+        "VerifyContactorsClosedSuccess": {
+            "value": false,
+            "note": "If the BMS failed to close contactors after an elasped time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/bms:close_contactors_failure", "outValue": "Failed to close contactors for BMS"}
+                    ]
+                }]
+            }
+        },
+        "VerifyContactorsOpenedSuccess": {
+            "value": false,
+            "note": "If the BMS failed to open contactors after an elasped time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/bms:open_contactors_failure", "outValue": "Failed to open contactors for BMS"}
+                    ]
+                }]
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "/notes/bms": {
+        "note01" :" these are owned by the bms manager"
+    },
+    "/status/bms": {
+        "UnderCurrentAlarm": {
+                "value": 0,
+                "numVars": 4,
+                "variable1": "DCClosed",
+                "variable2": "PCSDCClosed",
+                "variable3": "MaintModeEnabled",
+                "variable4": "OffFault",
+                "expression": "({1} or {4}) and not {2} and {3}",
+                "actions": {
+                    "onSet": [{
+                        "remap": [
+                            {"inValue":0, "uri":"/assets/bms/summary:stop@enabled", "outValue":false},
+                            {"inValue":1, "uri":"/assets/bms/summary:stop@enabled", "outValue":true}
+                        ]
+                    }]
+                }
+            }
+    },
+    "/site/bms_hs": { 
+        "speed":1234,
+        "Status":"Running",
+        "errors":false
+    }
+}

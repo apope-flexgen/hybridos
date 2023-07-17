@@ -99,6 +99,15 @@ std::string Variable_Regulator::get_decrease_display_timer()
 }
 
 /**
+ * Reset to default state
+ */
+void Variable_Regulator::reset()
+{
+    offset = default_offset;
+    reset_timers();
+}
+
+/**
  * Main functionality of the Variable_Regulator. Updates the offset based on the provided input variable and timers
  * @param base_case_input   Input determining whether the base case is currently satisfied (soc below threshold, active power feature in deadband)
  *                          If within the base case, regulate the variable through its offset
@@ -127,8 +136,7 @@ bool Variable_Regulator::regulate_variable_offset(float base_case_input, float r
     if ((base_case_input < default_threshold && default_comparison == VALUE_BELOW) ||
         (base_case_input > default_threshold && default_comparison == VALUE_ABOVE))
     {
-        offset = default_offset;
-        reset_timers();
+        reset();
     }
     // Update the offset decrease/increase timers
     else

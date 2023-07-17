@@ -10,4 +10,5 @@ export interface LogText {
     ip?: string
     hostname?: string
     message?: string
+    stack?: string
 }

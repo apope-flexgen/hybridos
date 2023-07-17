@@ -3,16 +3,26 @@
 /* eslint-disable react/no-array-index-key */
 import {
   Accordion,
-  Divider, MuiButton, Switch, TextField, Typography,
+  Divider,
+  MuiButton,
+
+  Switch,
+  TextField,
+  Typography,
 } from '@flexgen/storybook';
 import { ChangeEvent, useState } from 'react';
 import { Dashboard } from 'shared/types/dtos/dashboards.dto';
 import { useDashboardsContext } from 'src/pages/UIConfig/TabContent/Dashboard';
-import { SEPARATE_INPUTS_WITH_COMMA } from 'src/pages/UIConfig/TabContent/helpers/constants';
+import {
+  BATTERY_SOURCE_URI_HELPER,
+  SEPARATE_INPUTS_WITH_COMMA,
+} from 'src/pages/UIConfig/TabContent/helpers/constants';
 import {
   ITEM_NAME,
   BATTERY_VIEW,
   ENABLE_BATTERY_VIEW,
+  BATTERY_VIEW_SOURCE_URI,
+  BATTERY_VIEW_URI,
   SOURCE_URI,
   BASE_URI,
   TEMPLATE,
@@ -29,78 +39,93 @@ import {
 } from './styles';
 
 const Items = () => {
-  const {
-    selectedDashboard,
-    setSelectedDashboard,
-  } = useDashboardsContext();
+  const { selectedDashboard, setSelectedDashboard } = useDashboardsContext();
 
   const [expanded, setExpanded] = useState(false);
 
   const handleTextFieldChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { target: { id, name, value } } = event;
+    const {
+      target: { id, name, value },
+    } = event;
 
-    setSelectedDashboard((prevSelectedDashboard) => ({
-      ...prevSelectedDashboard,
-      info: {
-        ...prevSelectedDashboard?.info,
-        [id || name]: value,
-      },
-    } as Dashboard));
+    setSelectedDashboard(
+      (prevSelectedDashboard) => ({
+        ...prevSelectedDashboard,
+        info: {
+          ...prevSelectedDashboard?.info,
+          [id || name]: value,
+        },
+      } as Dashboard),
+    );
   };
 
   const handleTextFieldCommaSeparatedChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { target: { id, value } } = event;
+    const {
+      target: { id, value },
+    } = event;
 
-    setSelectedDashboard((prevSelectedDashboard) => ({
-      ...prevSelectedDashboard,
-      info: {
-        ...prevSelectedDashboard?.info,
-        [id]: value,
-      },
-    } as Dashboard));
+    const valueWithoutSpaces = value.replace(/\s/g, '');
+    const valueArray = valueWithoutSpaces.split(',');
+    const arrayWithoutEmptyItems = valueArray.filter((item) => item !== '');
+
+    setSelectedDashboard(
+      (prevSelectedDashboard) => ({
+        ...prevSelectedDashboard,
+        info: {
+          ...prevSelectedDashboard?.info,
+          [id]: arrayWithoutEmptyItems,
+        },
+      } as Dashboard),
+    );
   };
 
   const handleSwitchChange = (id: string, checked: boolean | undefined) => {
-    setSelectedDashboard((prevSelectedDashboard) => ({
-      ...prevSelectedDashboard,
-      info: {
-        ...prevSelectedDashboard?.info,
-        [id]: checked,
-      },
-    } as Dashboard));
+    setSelectedDashboard(
+      (prevSelectedDashboard) => ({
+        ...prevSelectedDashboard,
+        info: {
+          ...prevSelectedDashboard?.info,
+          [id]: checked,
+        },
+      } as Dashboard),
+    );
   };
 
   const handleNewItemClick = () => {
-    setSelectedDashboard((prevSelectedDashboard) => ({
-      ...prevSelectedDashboard,
-      info: {
-        ...prevSelectedDashboard?.info,
-        items: [
-          ...(prevSelectedDashboard?.info.items || []),
-          {
-            name: '',
-            uri: '',
-          },
-        ],
-      },
-    } as Dashboard));
+    setSelectedDashboard(
+      (prevSelectedDashboard) => ({
+        ...prevSelectedDashboard,
+        info: {
+          ...prevSelectedDashboard?.info,
+          items: [
+            ...(prevSelectedDashboard?.info.items || []),
+            {
+              name: '',
+              uri: '',
+            },
+          ],
+        },
+      } as Dashboard),
+    );
   };
 
   const handleItemChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number,
   ) => {
-    const { target: { id, value } } = event;
+    const {
+      target: { id, value },
+    } = event;
 
     setSelectedDashboard((prevSelectedDashboard) => {
       const items = prevSelectedDashboard?.info.items?.map((item, i) => {
         if (i === index) {
-          return ({
+          return {
             ...(prevSelectedDashboard.info.items?.[i] || {}),
             [id]: value,
-          });
+          };
         }
         return item;
       });
@@ -116,13 +141,15 @@ const Items = () => {
   };
 
   const handleDeleteItemClick = (index: number) => {
-    setSelectedDashboard((prevSelectedDashboard) => ({
-      ...prevSelectedDashboard,
-      info: {
-        ...prevSelectedDashboard?.info,
-        items: (prevSelectedDashboard?.info.items || []).filter((item, i) => i !== index),
-      },
-    } as Dashboard));
+    setSelectedDashboard(
+      (prevSelectedDashboard) => ({
+        ...prevSelectedDashboard,
+        info: {
+          ...prevSelectedDashboard?.info,
+          items: (prevSelectedDashboard?.info.items || []).filter((item, i) => i !== index),
+        },
+      } as Dashboard),
+    );
   };
 
   const handleExpand = () => {
@@ -142,81 +169,9 @@ const Items = () => {
           label={ITEM_NAME}
           onChange={handleTextFieldChange}
           value={selectedDashboard?.info.name || ''}
+          required
+          inputProps={{ maxLength: 100 }}
         />
-      </Row>
-      <Divider orientation="horizontal" variant="fullWidth" />
-      <Row>
-        <ColumnLeft>
-          <Typography text={BATTERY_VIEW} variant="bodyL" />
-        </ColumnLeft>
-        <Switch
-          color="primary"
-          label={ENABLE_BATTERY_VIEW}
-          labelPlacement="right"
-          onChange={(checked) => handleSwitchChange('batteryView', checked)}
-          value={selectedDashboard?.info.batteryView}
-        />
-      </Row>
-      <Divider orientation="horizontal" variant="fullWidth" />
-      <Row>
-        <ColumnLeft>
-          <Typography text={TEMPLATE} variant="bodyL" />
-        </ColumnLeft>
-        <Switch
-          color="primary"
-          label={ENABLE_TEMPLATE}
-          labelPlacement="right"
-          onChange={(checked) => handleSwitchChange('isTemplate', checked)}
-          value={selectedDashboard?.info.isTemplate}
-        />
-      </Row>
-      <Divider orientation="horizontal" variant="fullWidth" />
-      <Row>
-        <ColumnLeft>
-          <Typography text={ITEMS} variant="bodyL" />
-        </ColumnLeft>
-        <Accordion
-          accordionStyles={AccordionSX}
-          accordionDetailsStyles={AccordionDetailsSX as React.CSSProperties}
-          expanded={expanded}
-          heading={selectedDashboard?.info.items?.length ? ITEMS : NO_ITEMS_YET}
-          onChange={handleExpand}
-        >
-          <>
-            {selectedDashboard?.info.items?.map((item, index) => (
-              <Item key={index}>
-                <TextField
-                  color="primary"
-                  disableLabelAnimation
-                  id="name"
-                  label={NAME}
-                  onChange={(e) => handleItemChange(e, index)}
-                  value={item.name}
-                />
-                <TextField
-                  color="primary"
-                  disableLabelAnimation
-                  id="uri"
-                  label={URI}
-                  onChange={(e) => handleItemChange(e, index)}
-                  value={item.uri}
-                />
-                <MuiButton
-                  color="error"
-                  label={DELETE_ITEM}
-                  onClick={() => handleDeleteItemClick(index)}
-                  variant="outlined"
-                />
-              </Item>
-            ))}
-            <MuiButton
-              label={CREATE_NEW_ITEM}
-              onClick={handleNewItemClick}
-              startIcon="Add"
-              variant="text"
-            />
-          </>
-        </Accordion>
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />
       <Row>
@@ -227,12 +182,141 @@ const Items = () => {
           color="primary"
           disableLabelAnimation
           helperText={SEPARATE_INPUTS_WITH_COMMA}
+          id="sourceURIs"
+          label={SOURCE_URI}
+          onChange={handleTextFieldCommaSeparatedChange}
+          value={selectedDashboard?.info.sourceURIs?.toString() || ''}
+        />
+      </Row>
+      <Divider orientation="horizontal" variant="fullWidth" />
+      <Row>
+        <ColumnLeft>
+          <Typography text={BASE_URI} variant="bodyL" />
+        </ColumnLeft>
+        <TextField
+          color="primary"
+          disableLabelAnimation
           id="baseURI"
           label={BASE_URI}
-          onChange={handleTextFieldCommaSeparatedChange}
+          onChange={handleTextFieldChange}
           value={selectedDashboard?.info.baseURI || ''}
         />
       </Row>
+      <Divider orientation="horizontal" variant="fullWidth" />
+      <Row>
+        <ColumnLeft>
+          <Typography text={TEMPLATE} variant="bodyL" />
+        </ColumnLeft>
+        <Switch
+          autoLayout
+          color="primary"
+          label={ENABLE_TEMPLATE}
+          labelPlacement="right"
+          onChange={(checked) => handleSwitchChange('isTemplate', checked)}
+          value={selectedDashboard?.info.isTemplate}
+        />
+      </Row>
+      {selectedDashboard?.info.isTemplate && (
+        <>
+          <Divider orientation="horizontal" variant="fullWidth" />
+          <Row>
+            <ColumnLeft>
+              <Typography text={ITEMS} variant="bodyL" />
+            </ColumnLeft>
+            <Accordion
+              accordionStyles={AccordionSX}
+              accordionDetailsStyles={AccordionDetailsSX as React.CSSProperties}
+              expanded={expanded}
+              heading={selectedDashboard?.info.items?.length ? ITEMS : NO_ITEMS_YET}
+              onChange={handleExpand}
+            >
+              <>
+                {selectedDashboard?.info.items?.map((item, index) => (
+                  <Item key={index}>
+                    <TextField
+                      color="primary"
+                      disableLabelAnimation
+                      id="name"
+                      label={NAME}
+                      onChange={(e) => handleItemChange(e, index)}
+                      value={item.name}
+                    />
+                    <TextField
+                      color="primary"
+                      disableLabelAnimation
+                      id="uri"
+                      label={URI}
+                      onChange={(e) => handleItemChange(e, index)}
+                      value={item.uri}
+                    />
+                    <MuiButton
+                      color="error"
+                      label={DELETE_ITEM}
+                      onClick={() => handleDeleteItemClick(index)}
+                      variant="outlined"
+                    />
+                  </Item>
+                ))}
+                <MuiButton
+                  label={CREATE_NEW_ITEM}
+                  onClick={handleNewItemClick}
+                  startIcon="Add"
+                  variant="text"
+                />
+              </>
+            </Accordion>
+          </Row>
+        </>
+      )}
+      {selectedDashboard?.info.isTemplate && (
+        <>
+          <Divider orientation="horizontal" variant="fullWidth" />
+          <Row>
+            <ColumnLeft>
+              <Typography text={BATTERY_VIEW} variant="bodyL" />
+            </ColumnLeft>
+            <Switch
+              autoLayout
+              color="primary"
+              label={ENABLE_BATTERY_VIEW}
+              labelPlacement="right"
+              onChange={(checked) => handleSwitchChange('batteryView', checked)}
+              value={selectedDashboard?.info.batteryView}
+            />
+          </Row>
+        </>
+      )}
+      {selectedDashboard?.info.batteryView && selectedDashboard?.info.isTemplate && (
+        <Row>
+          <ColumnLeft>
+            <Typography text={BATTERY_VIEW_SOURCE_URI} variant="bodyM" />
+          </ColumnLeft>
+          <TextField
+            color="primary"
+            disableLabelAnimation
+            helperText={BATTERY_SOURCE_URI_HELPER}
+            id="batteryViewSourceURI"
+            label={BATTERY_VIEW_SOURCE_URI}
+            onChange={handleTextFieldChange}
+            value={selectedDashboard?.info.batteryViewSourceURI || ''}
+          />
+        </Row>
+      )}
+      {selectedDashboard?.info.batteryView && selectedDashboard?.info.isTemplate && (
+        <Row>
+          <ColumnLeft>
+            <Typography text={BATTERY_VIEW_URI} variant="bodyM" />
+          </ColumnLeft>
+          <TextField
+            color="primary"
+            disableLabelAnimation
+            id="batteryViewURI"
+            label={BATTERY_VIEW_URI}
+            onChange={handleTextFieldChange}
+            value={selectedDashboard?.info.batteryViewURI || ''}
+          />
+        </Row>
+      )}
       <Divider orientation="horizontal" variant="fullWidth" />
     </>
   );

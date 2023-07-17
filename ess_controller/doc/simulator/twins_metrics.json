@@ -1,0 +1,300 @@
+{
+    "publishRate": 1000,
+    "listenRate": 10,
+    "metricsUri": "/metrics/kpi",
+    "publishUris": [
+        {
+            "uri": "/metrics/remap",
+            "naked": "false",
+            "metrics": [
+                {
+                    "id": "bms_poweron_bitfield",
+                    "name": "BMS Power On Status",
+                    "type": "xenum",
+                    "inputs": [
+                        { "uri": "/metrics/remap", "id": "bms_1_power_off_ready" },
+                        { "uri": "/metrics/remap", "id": "bms_1_power_on_ready" },
+                        { "uri": "/metrics/remap", "id": "bms_1_power_on_fault" },
+                        { "uri": "/metrics/remap", "id": "bms_1_power_off_fault" }
+                    ],
+                    "operation": "bitfield",
+                    "param": {
+                        "position": [
+                            0,
+                            1,
+                            2,
+                            3
+                        ],
+                        "string": [
+                            "Power off Ready",
+                            "Power on Ready",
+                            "Power on Fault",
+                            "Power off Fault"
+                        ],
+                        "invertMask": [
+                            false,
+                            false,
+                            false,
+                            false
+                        ]
+                    }
+                },
+                {
+                    "id": "bms_status_bitfield",
+                    "name": "BMS Status",
+                    "type": "xenum",
+                    "inputs": [
+                        { "uri": "/metrics/remap", "id": "bms_1_initial_status" },
+                        { "uri": "/metrics/remap", "id": "bms_1_normal_status" },
+                        { "uri": "/metrics/remap", "id": "full_charge_status" },
+                        { "uri": "/metrics/remap", "id": "full_discharge_status" },
+                        { "uri": "/components/bms_1", "id": "warning" },
+                        { "uri": "/components/bms_1", "id": "fault" }
+                    ],
+                    "operation": "bitfield",
+                    "param": {
+                        "position": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ],
+                        "string": [
+                            "Initial Status",
+                            "Normal Status",
+                            "Full Charge Status",
+                            "Full Discharge Status",
+                            "Warning Status",
+                            "Fault Status"
+                        ],
+                        "invertMask": [
+                            false,
+                            false,
+                            false,
+                            false,
+                            false,
+                            false
+                        ]
+                    }
+                },
+                {
+                    "id": "current_status_bitfield",
+                    "name": "PCS Status",
+                    "type": "xenum",
+                    "inputs": [
+                        { "uri": "/metrics/remap", "id": "pcs_1_not_ready" },
+                        { "uri": "/metrics/remap", "id": "pcs_1_ready" },
+                        { "uri": "/components/pcs_1", "id": "on" }
+                    ],
+                    "operation": "bitfield",
+                    "param": {
+                        "position": [
+                            2,
+                            4,
+                            6
+                        ],
+                        "string": [
+                            "Off",
+                            "Ready",
+                            "On"
+                        ],
+                        "invertMask": [
+                            false,
+                            false,
+                            false
+                        ]
+                    }
+                },
+                {
+                    "id": "bms_1_off",
+                    "inputs": [
+                        { "uri": "/components/bms_1", "id": "on" }
+                    ],
+                    "operation": "select",
+                    "param":{
+                        "trueCase": false,
+                        "falseCase": true
+                    },
+                    "initialInput": false
+                },
+                {
+                    "id": "bms_1_power_off_ready",
+                    "inputs": [
+                        { "uri": "/metrics/remap", "id": "bms_1_off" },
+                        { "uri": "/components/bms_1", "id": "dccontactor" }
+                    ],
+                    "operation": "compareand",
+                    "param": {
+                      "operation": "eq",
+                      "reference": true
+                    },
+                    "initialInput": true
+                },
+                {
+                    "id": "bms_1_power_on_ready",
+                    "inputs": [
+                        { "uri": "/components/bms_1", "id": "on" },
+                        { "uri": "/components/bms_1", "id": "dccontactor" }
+                    ],
+                    "operation": "compareand",
+                    "param": {
+                      "operation": "eq",
+                      "reference": true
+                    },
+                    "initialInput": false
+                },
+                {
+                    "id": "bms_1_power_on_fault",
+                    "inputs": [
+                        { "uri": "/components/bms_1", "id": "on" },
+                        { "uri": "/components/bms_1", "id": "fault" }
+                    ],
+                    "operation": "compareand",
+                    "param": {
+                      "operation": "eq",
+                      "reference": true
+                    },
+                    "initialInput": false
+                },
+                {
+                    "id": "bms_1_power_off_fault",
+                    "inputs": [
+                        { "uri": "/metrics/remap", "id": "bms_1_off" },
+                        { "uri": "/components/bms_1", "id": "fault" }
+                    ],
+                    "operation": "compareand",
+                    "param": {
+                      "operation": "eq",
+                      "reference": true
+                    },
+                    "initialInput": false
+                },
+                {
+                    "id": "full_charge_status",
+                    "inputs": [
+                        { "uri": "/components/bms_1", "id": "soc_value" }
+                    ],
+                    "operation": "compareor",
+                    "param":{
+                        "operation": "gt",
+                        "reference": 90
+                    },
+                    "initialInput": 50
+                },
+                {
+                    "id": "full_discharge_status",
+                    "inputs": [
+                        { "uri": "/components/bms_1", "id": "soc_value" }
+                    ],
+                    "operation": "compareor",
+                    "param":{
+                        "operation": "lt",
+                        "reference": 10
+                    },
+                    "initialInput": 50
+                },
+                {
+                    "id": "bms_1_initial_status",
+                    "inputs": [
+                        { "uri": "/metrics/remap", "id": "bms_1_power_on_fault" },
+                        { "uri": "/metrics/remap", "id": "bms_1_power_off_fault" }
+                    ],
+                    "operation": "compareor",
+                    "param":{
+                        "operation": "eq",
+                        "reference": true
+                    },
+                    "initialInput": true
+                },
+                {
+                    "id": "bms_1_normal_status",
+                    "inputs": [
+                        { "uri": "/metrics/remap", "id": "bms_1_power_off_ready" }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "pcs_1_off",
+                    "inputs": [
+                        { "uri": "/components/pcs_1", "id": "on" }
+                    ],
+                    "operation": "compareor",
+                    "param":{
+                        "operation": "ne",
+                        "reference": true
+                    },
+                    "initialInput": false
+                },
+                {
+                    "id": "pcs_1_ready",
+                    "inputs": [
+                        { "uri": "/metrics/remap", "id": "bms_1_power_on_ready" },
+                        { "uri": "/metrics/remap", "id": "pcs_1_off" }
+                    ],
+                    "operation": "compareand",
+                    "param":{
+                        "operation": "eq",
+                        "reference": true
+                    },
+                    "initialInput": false
+                },
+                {
+                    "id": "pcs_1_not_ready",
+                    "inputs": [
+                        { "uri": "/metrics/remap", "id": "bms_1_normal_status" },
+                        { "uri": "/metrics/remap", "id": "pcs_1_off" }
+                    ],
+                    "operation": "compareand",
+                    "param":{
+                        "operation": "eq",
+                        "reference": true
+                    },
+                    "initialInput": true
+                }
+            ]
+        },
+        {
+            "uri": "/metrics/bms_m",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id":"bms_poweron",
+                    "name":"BMS Power On",
+                    "type":"number",
+                    "inputs" : [
+                        { "uri": "/metrics/remap", "id": "bms_poweron_bitfield" }
+                    ],
+                    "operation":"and"
+                },
+                {
+                    "id":"bms_status",
+                    "name":"BMS Status",
+                    "type":"number",
+                    "inputs" : [
+                        { "uri": "/metrics/remap", "id": "bms_poweron_bitfield" }
+                    ],
+                    "operation":"and"
+                }
+              
+            ]
+        },
+        {
+            "uri": "/metrics/pcs_m",
+            "naked": "true",
+            "metrics": [
+                {
+                    "id":"current_status",
+                    "name":"Current Status",
+                    "type":"number",
+                    "inputs" : [
+                        { "uri": "/metrics/remap", "id": "current_status_bitfield" }
+                    ],
+                    "operation":"and"
+                }
+            ]
+        }
+    ]
+}

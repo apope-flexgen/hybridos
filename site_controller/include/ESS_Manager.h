@@ -179,11 +179,6 @@ public:
 
     void process_asset_data(void);
     void update_asset_data(void);
-
-    void set_ess_clear_faults(void);
-
-    // Friend classes for testing
-    friend class Site_Manager_Mock;
 };
 
 #endif /* ESS_MANAGER_H_ */

@@ -1,33 +1,44 @@
+/* eslint-disable */
 // TODO: fix lint
-/* eslint-disable max-lines */
 import {
-  Box, IconButton, MuiButton, PageLoadingIndicator, Tab, Tabs, Tooltip, Typography,
+  Box,
+  IconButton,
+  MuiButton,
+  PageLoadingIndicator,
+  Tab,
+  Tabs,
+  Tooltip,
+  Typography,
 } from '@flexgen/storybook';
 import isEqual from 'lodash.isequal';
-import {
-  createContext, useCallback, useContext, useEffect, useMemo, useState,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Dashboard } from 'shared/types/dtos/dashboards.dto';
 import { CANCEL, DUPLICATE, SAVE } from 'src/pages/UIConfig/TabContent/helpers/constants';
 import {
-  BoxSX, ButtonsContainer, Item, ListContainer, MainBoxSX, MuiButtonSX, TabContainer, Toolbar,
+  BoxSX,
+  ButtonsContainer,
+  Item,
+  ListContainer,
+  MainBoxSX,
+  MuiButtonSX,
+  TabContainer,
+  Toolbar,
 } from 'src/pages/UIConfig/TabContent/styles';
-import { axiosWebUIInstance } from 'src/services/axios';
 import TabContent from './TabContent';
-import {
-  ADD_NEW_DASHBOARD_CARD, DELETE_CARD, newDashboard, tabOptions,
-} from './helpers';
+import { ADD_NEW_DASHBOARD_CARD, DELETE_CARD, newDashboard, tabOptions } from './helpers';
 import AddMuiButtonSX from './styles';
+import { NotifContext, NotifContextType } from 'src/contexts/NotifContext';
+import useAxiosWebUIInstance from 'src/hooks/useAxios';
 
 const DASHBOARDS_URL = '/dashboards';
 interface IDashboardsContext {
-  dashboards: Dashboard[],
-  selectedDashboard: Dashboard | null,
-  setDashboards: React.Dispatch<React.SetStateAction<Dashboard[]>>,
-  setSelectedDashboard: React.Dispatch<React.SetStateAction<Dashboard | null>>,
-  handleAddDashboard: () => void,
-  selectedDashboardIndex: number | null,
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  dashboards: Dashboard[];
+  selectedDashboard: Dashboard | null;
+  setDashboards: React.Dispatch<React.SetStateAction<Dashboard[]>>;
+  setSelectedDashboard: React.Dispatch<React.SetStateAction<Dashboard | null>>;
+  handleAddDashboard: () => void;
+  selectedDashboardIndex: number | null;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DashboardsContext = createContext<IDashboardsContext>({
@@ -35,7 +46,7 @@ const DashboardsContext = createContext<IDashboardsContext>({
   selectedDashboard: null,
   setDashboards: () => [],
   setSelectedDashboard: () => null,
-  handleAddDashboard: () => { },
+  handleAddDashboard: () => {},
   selectedDashboardIndex: null,
   setIsLoading: () => false,
 });
@@ -52,39 +63,52 @@ const Dashboards = () => {
   const [selectedDashboard, setSelectedDashboard] = useState<null | any>(null);
   const [selectedDashboardIndex, setSelectedDashboardIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const notifCtx = useContext<NotifContextType | null>(NotifContext);
+  const axiosInstance = useAxiosWebUIInstance();
 
-  const handleAddDashboard = useCallback(() => {
-    setDashboards((prevDashboards) => [
-      newDashboard,
-      ...prevDashboards,
-    ]);
-    setSelectedTab('info');
-    setSelectedDashboard(newDashboard);
-    setSelectedDashboardIndex(0);
-  }, []);
+  const handleAddDashboard = useCallback(
+    async (dashboard = newDashboard) => {
+      try {
+        setIsLoading(true);
+        const data = [dashboard, ...dashboards];
+        const res = await axiosInstance.post(DASHBOARDS_URL, { data });
+        const updatedDashboards = res.data.data;
+        setDashboards(updatedDashboards);
+        setSelectedTab('info');
+        setSelectedDashboard(dashboard);
+        setSelectedDashboardIndex(0);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [dashboards],
+  );
 
-  const contextValue = useMemo(() => ({
-    dashboards,
-    setDashboards,
-    selectedDashboard,
-    setSelectedDashboard,
-    handleAddDashboard,
-    selectedDashboardIndex,
-    setIsLoading,
-  }), [
-    dashboards,
-    setDashboards,
-    selectedDashboard,
-    setSelectedDashboard,
-    handleAddDashboard,
-    selectedDashboardIndex,
-    setIsLoading,
-  ]);
+  const contextValue = useMemo(
+    () => ({
+      dashboards,
+      setDashboards,
+      selectedDashboard,
+      setSelectedDashboard,
+      handleAddDashboard,
+      selectedDashboardIndex,
+      setIsLoading,
+    }),
+    [
+      dashboards,
+      setDashboards,
+      selectedDashboard,
+      setSelectedDashboard,
+      handleAddDashboard,
+      selectedDashboardIndex,
+      setIsLoading,
+    ],
+  );
 
   const fetchDashboards = async () => {
     try {
       setIsLoading(true);
-      const res = await axiosWebUIInstance.get(DASHBOARDS_URL);
+      const res = await axiosInstance.get(DASHBOARDS_URL);
       const { data }: { data: Dashboard[] } = res.data;
       setDashboards(data);
       if (data.length) {
@@ -111,12 +135,10 @@ const Dashboards = () => {
         1,
         selectedDashboard || newDashboard,
       );
-      const res = await axiosWebUIInstance.post(
-        DASHBOARDS_URL,
-        { data },
-      );
+      const res = await axiosInstance.post(DASHBOARDS_URL, { data });
       const updatedDashboards = res.data.data;
       setDashboards(updatedDashboards);
+      notifCtx?.notif('success', 'Data successfully saved');
     } finally {
       setIsLoading(false);
     }
@@ -126,10 +148,7 @@ const Dashboards = () => {
     try {
       setIsLoading(true);
       const data = [...dashboards].filter((_, index) => index !== selectedDashboardIndex);
-      const res = await axiosWebUIInstance.post(
-        DASHBOARDS_URL,
-        { data },
-      );
+      const res = await axiosInstance.post(DASHBOARDS_URL, { data });
       const updatedDashboards = res.data.data;
       setDashboards(updatedDashboards);
       if (updatedDashboards.length) {
@@ -140,6 +159,7 @@ const Dashboards = () => {
         setSelectedDashboard(null);
         setSelectedDashboardIndex(null);
       }
+      notifCtx?.notif('success', 'Data successfully saved');
     } finally {
       setIsLoading(false);
     }
@@ -150,15 +170,17 @@ const Dashboards = () => {
   };
 
   const handleCopyClick = () => {
-    setDashboards((prevDashboards) => [dashboards[selectedDashboardIndex || 0], ...prevDashboards]);
-    setSelectedDashboard(dashboards[selectedDashboardIndex || 0]);
-    setSelectedDashboardIndex(0);
-    setSelectedTab('info');
+    handleAddDashboard(dashboards[selectedDashboardIndex || 0]);
   };
 
   const disableCancel = useMemo(
     () => isEqual(dashboards[selectedDashboardIndex || 0], selectedDashboard),
     [dashboards, selectedDashboard, selectedDashboardIndex],
+  );
+
+  const disabledSave = useMemo(
+    () => (selectedDashboard?.info.name || '').trim() === '',
+    [selectedDashboard],
   );
 
   useEffect(() => {
@@ -169,77 +191,68 @@ const Dashboards = () => {
     <DashboardsContext.Provider value={contextValue}>
       <TabContainer>
         <Box sx={MainBoxSX}>
-          <PageLoadingIndicator isLoading={isLoading} type="primary" />
-          <Typography text="Dashboard Cards" variant="bodyLBold" />
+          <PageLoadingIndicator isLoading={isLoading} type='primary' />
+          <Typography text='Dashboard Cards' variant='bodyLBold' />
           <ListContainer>
             {dashboards.map((dashboard, index) => (
               // TODO: fix lint
               // eslint-disable-next-line react/no-array-index-key
               <Item key={index}>
                 <MuiButton
-                  color="inherit"
-                  label={dashboard.info.name || 'New Item'}
+                  color='inherit'
+                  label={dashboard.info.name}
                   onClick={() => handleDashboardClick(dashboard, index)}
                   sx={MuiButtonSX}
                   variant={index === selectedDashboardIndex ? 'contained' : 'outlined'}
                 />
                 {index === selectedDashboardIndex && (
-                <Tooltip title={DUPLICATE}>
-                  <IconButton
-                    color="action"
-                    icon="ContentCopy"
-                    onClick={handleCopyClick}
-                  />
-                </Tooltip>
-
+                  <Tooltip title={DUPLICATE}>
+                    <IconButton color='action' icon='ContentCopy' onClick={handleCopyClick} />
+                  </Tooltip>
                 )}
               </Item>
             ))}
             <MuiButton
               fullWidth
               label={ADD_NEW_DASHBOARD_CARD}
-              onClick={handleAddDashboard}
-              size="small"
-              startIcon="Add"
+              onClick={() => handleAddDashboard()}
+              size='small'
+              startIcon='Add'
               sx={AddMuiButtonSX}
-              variant="outlined"
+              variant='outlined'
             />
           </ListContainer>
         </Box>
         <Box sx={BoxSX}>
           {selectedDashboard && (
             <Toolbar>
-              <Typography text={selectedDashboard.info.name} variant="bodyMBold" />
+              <Typography text={selectedDashboard.info.name} variant='bodyMBold' />
               <ButtonsContainer>
                 <MuiButton
-                  color="inherit"
+                  color='inherit'
                   disabled={disableCancel}
                   label={CANCEL}
                   onClick={handleCancelClick}
-                  variant="text"
+                  variant='text'
                 />
                 <MuiButton
-                  color="error"
+                  color='error'
                   label={DELETE_CARD}
                   onClick={handleDeleteClick}
-                  variant="outlined"
+                  variant='outlined'
                 />
                 <MuiButton
+                  disabled={disabledSave}
                   label={SAVE}
                   onClick={handleSaveClick}
-                  variant="contained"
+                  variant='contained'
                 />
               </ButtonsContainer>
             </Toolbar>
           )}
           <Tabs onChange={(_, tab) => setSelectedTab(tab as string)} value={selectedTab}>
             {tabOptions.map(({ label, value }) => (
-              <Tab
-                disabled={!dashboards.length}
-                key={value}
-                label={label}
-                value={value}
-              />
+              <Tab disabled={!dashboards.length} key={value} label={label} value={value} />
             ))}
           </Tabs>
           <TabContent selectedTab={selectedTab} />

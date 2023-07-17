@@ -1,0 +1,1512 @@
+{
+    "/notes/@@BMS_ID@@": {
+        "note1":"This is the bms component config template for CATL subsystems.",
+        "note1a":"The bms page of the ui display is outlined in /assets/bms/summay",
+        "note1b":"The /assets/@@BMS_ID@@ table defines the racks or battery management unit, each has a template file with placements for selected key words",
+        "note2": "The /config/bms area is still under development",
+        "note3":"The /components/catl... tables define the incoming control words from the bms modbus interface",
+        "note4":"The /links/<bms> table  defines mapping of external interface components to internal control variables",
+        "note5":"There are some junk/test fields as well... they will removed soon"
+    },
+    "/system/@@BMS_ID@@": {
+        "id": "@@BMS_ID@@",
+        "name": "BMS Battery  Block @@BMS_NUM@@"
+    },
+    "/faults/bms":{
+        "@@BMS_ID@@_charge_overcurrent": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_discharge_overcurrent": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_temp_difference": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_cell_extreme_temp": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_cell_extreme_voltage": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_total_extreme_voltage": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_main_positive_relay_close_fail": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_main_negative_relay_close_fail": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_main_positive_relay_stuck_fail": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_main_negative_relay_stuck_fail": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_power_loss": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_balance_function": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_CCAN_communications": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_SCAN_communications": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_current_sensor_abnormal": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_single_cell_voltage_sampling": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_module_temp_sampling": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_high_voltage_open_circuit": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_MSD_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_rack_isolate": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_rack_fuse": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_TMS_mode_conflict": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_fire_fault_level_1": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_temperature_sensor": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_smoke_sensor": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_aerosol_state": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_aerosol_close": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_aerosol_open": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_rack_door_switch_state": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "@@BMS_ID@@_control_box_oven_temp": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        }        
+    },
+    "/faults/@@BMS_ID@@": {
+        "note": "Leave as is for now. This definition is needed for clear faults UI cmd to work",
+        "clear_faults": {
+            "value": 0,
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "charge_overcurrent": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "discharge_overcurrent": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "temp_difference": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "cell_extreme_temp": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "cell_extreme_voltage": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "main_positive_relay_close_fail": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "main_negative_relay_close_fail": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "main_positive_relay_stuck_fail": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "main_negative_relay_stuck_fail": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "power_loss": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "balance_function": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "CCAN_communications": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "SCAN_communications": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "current_sensor_abnormal": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "single_cell_voltage_sampling": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "module_temp_sampling": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "high_voltage_open_circuit": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "MSD_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "rack_isolate": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "rack_fuse": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "TMS_mode_conflict": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "fire_fault_level_1": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "temperature_sensor": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "smoke_sensor": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "aerosol_state": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "aerosol_close": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "aerosol_open": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "rack_door_switch_state": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "control_box_oven_temp": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        }
+    },
+    "/alarms/@@BMS_ID@@": {
+        "note": "Leave as is for now. These definitions are needed for alarms to populate in UI and for clear alarms UI cmd to work",
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "single_cell_over_volt": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "single_cell_under_volt": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "single_cell_over_temp": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "single_cell_under_temp": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "SOC_low": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "TMS_fault": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        },
+        "TMS_communications": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@BMS_ID@@"}]}]
+            }
+        }
+    },
+    "/config/@@BMS_ID@@": {
+        "Pubs": "/assets/bms/@@BMS_ID@@",
+        "BlockSets": "/status/ess, /status/bms, /status/bms_1, /status/bms_2 ",
+        "AlarmDestination": {
+            "value": "/assets/bms/@@BMS_ID@@:alarms"
+        },
+        "FaultDestination": {
+            "value": "/assets/bms/@@BMS_ID@@:faults"
+        },
+        "NoFaultMsg": {
+            "value": "Normal"
+        },
+        "NoAlarmMsg": {
+            "value": "Normal"
+        }
+    },
+    "/constants/@@BMS_ID@@": {
+        "note": "These are constant defintions",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 2200.0,
+        "rated_apparent_power": 2200.0,
+        "priority": 1,
+        "start_timer": 50,
+        "cooldown_timer": 250,
+        "max_load_threshold": 200000,
+        "min_load_threshold": 1000,
+        "control_word_on": 1,
+        "control_word_off": 2,
+        "DC_contactor_open": 1,
+        "DC_contactor_closed": 2,
+        "DC_contactor_reset": 3,
+        "chg_soc_begin": 90.001,
+        "chg_soc_end": 101.5,
+        "dischg_soc_begin": 10.001,
+        "dischg_soc_end": -1.5,
+        "max_soc_raw": 99.5,
+        "min_soc_raw": 1.5
+    },
+    "/controls/@@BMS_ID@@": {
+        "start_stop": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "bitfield": [
+                        {
+                            "bit": 0,
+                            "uri": "/system/new_controls:oncmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 1,
+                            "uri": "/system/new_controls:kacclosecmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 8,
+                            "uri": "/system/new_controls:offcmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 9,
+                            "uri": "/system/new_controls:kacopencmd",
+                            "value": true
+                        }
+                    ]
+                }]
+            }
+        },
+        "ctrlword2": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {
+                            "mask": 3,
+                            "bit": 0,
+                            "uri": "/system/enum_controls:mask_3_bit_0",
+                            "value": true
+                        },
+                        {
+                            "mask": 3,
+                            "bit": 1,
+                            "uri": "/system/enum_controls:mask_3_bit_1",
+                            "value": true
+                        },
+                        {
+                            "mask": 3,
+                            "bit": 2,
+                            "uri": "/system/enum_controls::mask_3_bit_2",
+                            "value": true
+                        },
+                        {
+                            "mask": 3,
+                            "bit": 3,
+                            "uri": "/system/enum_controls:mask_3_bit_3",
+                            "value": true
+                        }
+                    ]
+                }]
+            }
+        }
+    },
+    "/status/@@BMS_ID@@": {
+        "note": "These are component status vars",
+        "max_cell_temp": 23.4,
+        "min_cell_temp": 23.4,
+        "max_cell_volts": 3.4,
+        "min_cell_volts": 3.2,
+        "current_soc": 85.6,
+        "current_soh": 85.7,
+        "active_current_setpont": 0.0,
+        "reactive_current_setpont": 0.0,
+        "dc_contactor_open": true,
+        "ac_contactor_open": true,
+        "number_of_racks": 18,
+        "SBMUPower": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "sbmu_voltage",
+            "variable2": "SBMUCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+        "SBMUCurrent": {
+            "value": 0,
+            "EnableMaxValCheck": true,
+            "EnableMinValCheck": true,
+            "AlarmTimeout": 0.4,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "CheckMonitorVar",
+                                "amap": "@@BMS_ID@@"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "SBMUCurrentCheckDerate": {
+            "value": 0,
+            "EnableMaxValCheck": true,
+            "EnableMinValCheck": true,
+            "AlarmTimeout": 0.5,
+            "MinRecoverTimeout": 1.0,
+            "MaxRecoverTimeout": 1.0,
+            "EnableAlert": false,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "CheckMonitorVar",
+                                "amap": "@@BMS_ID@@"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "UnderCurrentFault": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1, 
+            "variable1": "SBMUMaxChargeCurrent",
+            "expression": "{1} * 1.05",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrent@MinFaultThreshold"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentFault": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1, 
+            "variable1": "SBMUMaxDischargeCurrent",
+            "expression": "{1} * 1.05",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrent@MaxFaultThreshold"}
+                    ]
+                }]
+            }
+        },
+        "UnderCurrentAlarm": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "SBMUMaxChargeCurrent",
+            "variable2": "DerateThresholdHigh",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrent@MinAlarmThreshold"},
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrent@MinResetValue"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentAlarm": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "SBMUMaxDischargeCurrent",
+            "variable2": "DerateThresholdHigh",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrent@MaxAlarmThreshold"},
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrent@MaxResetValue"}
+                    ]
+                }]
+            }
+        },
+        "UnderCurrentDerate": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "SBMUMaxChargeCurrent",
+            "variable2": "DerateThresholdLow",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrentCheckDerate@MinAlarmThreshold"},
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrentCheckDerate@MinResetValue"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentDerate": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "SBMUMaxDischargeCurrent",
+            "variable2": "DerateThresholdLow",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrentCheckDerate@MaxAlarmThreshold"},
+                        {"uri": "/status/@@BMS_ID@@:SBMUCurrentCheckDerate@MaxResetValue"}
+                    ]
+                }]
+            }
+        },
+        "CurrentMeanDiff": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "SBMUCurrent",
+            "variable2": "/status/bms/CurrentAverage",
+            "operation": "-"
+        },
+        "DCClosed": {
+            "value": 0,
+            "resetChange": false,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/catl_@@BMS_ID@@:sbmu_master_positive",
+            "variable2": "/components/catl_@@BMS_ID@@:sbmu_master_negative",
+            "expression": "{1} and {2}",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 0, "uri":"/status/@@BMS_ID@@:SBMUCurrent@EnableMaxValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/@@BMS_ID@@:SBMUCurrent@EnableMaxValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/@@BMS_ID@@:SBMUCurrent@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/@@BMS_ID@@:SBMUCurrent@EnableMinValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/@@BMS_ID@@:SBMUCurrentCheckDerate@EnableMaxValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/@@BMS_ID@@:SBMUCurrentCheckDerate@EnableMaxValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/@@BMS_ID@@:SBMUCurrentCheckDerate@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/@@BMS_ID@@:SBMUCurrentCheckDerate@EnableMinValCheck", "outValue": true},
+
+                        {"inValue": 0, "uri":"/assets/bms/@@BMS_ID@@:dc_contactor_status", "outValue": "Open"},
+                        {"inValue": 1, "uri":"/assets/bms/@@BMS_ID@@:dc_contactor_status", "outValue": "Closed"}
+                    ]
+                }]
+            }
+        },
+        "SBMUMaxChargeCurrent": 0,
+        "SBMUMaxDischargeCurrent": 0,
+        "SBMUMaxCellTemp": 0,
+        "SBMUMinCellTemp": 0,
+        "SBMUAvgCellTemp": 0,
+        "SBMUFiltCurrent": 0,
+        "SBMURawCurrent": {
+            "value": 0,
+            "amap":"ess",
+            "depth":16,
+            "ifChanged": false,
+            "vecAv":"/status/@@BMS_ID@@:SBMUCurrentVec",
+            "outFilt":"/status/@@BMS_ID@@:SBMUFiltCurrent",
+            "filtFac":0.75,
+            "actions":{
+               "onSet":
+               [
+                    { 
+                    "func":
+                         [
+                              {"func":"MathMovAvg","amap":"ess"}
+                         ]
+                    }
+               ]
+          }
+        } 
+    },
+    "/params/@@BMS_ID@@": {
+        "note": "These are control parameters",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "active_power_setpoint": 2200.0,
+        "reactive_power_setpoint": 2200.0,
+        "oncmd": 0,
+        "onffcmd": 0,
+        "kacclosecmd": 0,
+        "kdcclosecmd": 0,
+        "kacopencmd": 0,
+        "kdccopencmd": 0
+    },
+    "/variables/@@BMS_ID@@": {
+        "note":"junk to be removed",
+        "q": 1234,
+        "p": 3456,
+        "soc": 100,
+        "soh": 100,
+        "dc_contactor": "off",
+        "ac_contactor": "off",
+        "dc_contactor_cmd": "off",
+        "ac_contactor_cmd": "off",
+        "mode": "init",
+        "mode_cmd": "off",
+        "bms_max_p_charge": 400,
+        "bms_max_p_discharge": 400,
+        "bms_charge_energy": 172,
+        "bms_discharge_energy": 172,
+        "bms_limit_charge_hv": 817,
+        "bms_limit_discharge_hv": 817,
+        "bms_status": 1
+    },
+    "/links/@@BMS_ID@@": {
+        "Year": {
+            "value": "/components/catl_@@BMS_ID@@_ems_bms_rw:ems_rtc_year"
+        },
+        "Month": {
+            "value": "/components/catl_@@BMS_ID@@_ems_bms_rw:ems_rtc_month"
+        },
+        "Day": {
+            "value": "/components/catl_@@BMS_ID@@_ems_bms_rw:ems_rtc_day"
+        },
+        "Hour": {
+            "value": "/components/catl_@@BMS_ID@@_ems_bms_rw:ems_rtc_hour"
+        },
+        "Min": {
+            "value": "/components/catl_@@BMS_ID@@_ems_bms_rw:ems_rtc_minute"
+        },
+        "Sec": {
+            "value": "/components/catl_@@BMS_ID@@_ems_bms_rw:ems_rtc_second"
+        },
+        "fault_clear_cmd": {
+            "value": "/components/catl_@@BMS_ID@@_ems_bms_rw:fault_clear_cmd"
+        },
+        "sbmu_voltage": {
+            "value": "/components/catl_@@BMS_ID@@:sbmu_voltage"
+        },
+        "sbmu_current": {
+            "value": "/components/catl_@@BMS_ID@@:sbmu_current"
+        },
+        "FaultCnt": {
+            "value": "/status/@@BMS_ID@@:@@BMS_ID@@_fault_cnt"
+        },
+        "DerateThresholdLow": {
+            "value": "/status/pcs:DerateThresholdLow"
+        },
+        "DerateThresholdHigh": {
+            "value": "/status/pcs:DerateThresholdHigh"
+        }
+    },
+    "/vlinks/@@BMS_ID@@": {
+        "@@BMS_ID@@_soc_ui":                   { "value": "/assets/bms/@@BMS_ID@@:soc",                               "vlink": "/components/catl_@@BMS_ID@@:sbmu_soc"    },
+        "@@BMS_ID@@_soh_ui":                   { "value": "/assets/bms/@@BMS_ID@@:soh",                               "vlink": "/components/catl_@@BMS_ID@@:sbmu_soh"    },
+        "@@BMS_ID@@_voltage_ui":               { "value": "/assets/bms/@@BMS_ID@@:system_voltage",                    "vlink": "/components/catl_@@BMS_ID@@:sbmu_voltage"},
+        "@@BMS_ID@@_current_ui":               { "value": "/assets/bms/@@BMS_ID@@:system_current",                    "vlink": "/status/@@BMS_ID@@:SBMUCurrent"},
+        "@@BMS_ID@@_power_ui":                 { "value": "/assets/bms/@@BMS_ID@@:system_power",                      "vlink": "/status/@@BMS_ID@@:SBMUPower"},
+        "@@BMS_ID@@_max_cell_voltage_ui":      { "value": "/assets/bms/@@BMS_ID@@:max_cell_voltage",                  "vlink": "/components/catl_@@BMS_ID@@:sbmu_max_cell_voltage"},
+        "@@BMS_ID@@_min_cell_voltage_ui":      { "value": "/assets/bms/@@BMS_ID@@:min_cell_voltage",                  "vlink": "/components/catl_@@BMS_ID@@:sbmu_min_cell_voltage"},
+        "@@BMS_ID@@_avg_cell_voltage_ui":      { "value": "/assets/bms/@@BMS_ID@@:avg_cell_voltage",                  "vlink": "/components/catl_@@BMS_ID@@:sbmu_avg_cell_voltage"},
+        "@@BMS_ID@@_max_cell_temp_ui":         { "value": "/assets/bms/@@BMS_ID@@:max_cell_temp",                     "vlink": "/status/@@BMS_ID@@:SBMUMaxCellTemp"},
+        "@@BMS_ID@@_min_cell_temp_ui":         { "value": "/assets/bms/@@BMS_ID@@:min_cell_temp",                     "vlink": "/status/@@BMS_ID@@:SBMUMinCellTemp"},
+        "@@BMS_ID@@_avg_cell_temp_ui":         { "value": "/assets/bms/@@BMS_ID@@:avg_cell_temp",                     "vlink": "/status/@@BMS_ID@@:SBMUAvgCellTemp"},
+        "@@BMS_ID@@_max_charge_current_ui":    { "value": "/assets/bms/@@BMS_ID@@:max_charge_current",                "vlink": "/status/@@BMS_ID@@:SBMUMaxChargeCurrent"},
+        "@@BMS_ID@@_max_discharge_current_ui": { "value": "/assets/bms/@@BMS_ID@@:max_discharge_current",             "vlink": "/status/@@BMS_ID@@:SBMUMaxDischargeCurrent"}
+    },
+    "/assets/bms/@@BMS_ID@@": {
+        "name": "Battery Rack @@BMS_NUM@@",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "soc": {
+            "name": "State of Charge",
+            "value": 76.55913543701172,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soh": {
+            "name": "State of Health",
+            "value": 45.67,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_voltage": {
+            "name": "System Voltage",
+            "value": 0,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_current": {
+            "name": "System Current",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_power": {
+            "name": "System Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_voltage": {
+            "name": "Current Highest Cell Volts",
+            "value": 27,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_voltage": {
+            "name": "Current Lowest Cell Volts",
+            "value": 22,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "avg_cell_voltage": {
+            "name": "Current Avg Cell Volts",
+            "value": 22,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_temp": {
+            "name": "Current Highest Cell Temp",
+            "value": 27,
+            "unit": "C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_temp": {
+            "name": "Current Lowest Cell Temp",
+            "value": 22,
+            "unit": "C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "avg_cell_temp": {
+            "name": "Current Avg Cell Temp",
+            "value": 22,
+            "unit": "C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_charge_current": {
+            "name": "Max Charge Current Allowed",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_discharge_current": {
+            "name": "Max Discharge Current Allowed",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "sbmu_door_state_ui": {
+            "name": "Door State",
+            "value": "Off",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "dc_contactor_status": {
+            "name": "Contactor Status",
+            "value": "Open",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/bms/@@BMS_ID@@:start@enabled"}, 
+                        {"uri":	"/assets/bms/@@BMS_ID@@:stop@enabled"}, 
+                        {"uri":	"/assets/bms/@@BMS_ID@@:enter_standby@enabled"}, 
+                        {"uri":	"/assets/bms/@@BMS_ID@@:exit_standby@enabled"},
+                        {"uri":	"/assets/bms/@@BMS_ID@@:clear_faults@enabled"},
+                        {"uri":	"/assets/bms/@@BMS_ID@@:clear_alarms@enabled"},
+                        {"uri":	"/assets/bms/@@BMS_ID@@:maint_reactive_power_setpoint@enabled"},
+                        {"uri":	"/assets/bms/@@BMS_ID@@:maint_active_power_setpoint@enabled"}
+                        ]
+                    }]
+            },
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value":"Init",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"bit":0,"inValue":true, "outValue":"Clear","uri":"/faults/@@BMS_ID@@:clear_faults"},
+                        {"bit":0,"inValue":true, "outValue":"Clear","uri":"/alarms/@@BMS_ID@@:clear_alarms"},
+
+                        {"bit":0,"inValue":true, "outValue":0,"uri":"/site/ess_ls:@@BMS_ID@@_alarms"},
+                        {"bit":0,"inValue":true, "outValue":0,"uri":"/site/ess_ls:@@BMS_ID@@_faults"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": "Clear"
+                }
+            ]
+        }
+    },
+    "/schedule/wake_monitor/@@BMS_ID@@":{
+        "/status/@@BMS_ID@@:SBMUPower": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CalculateVar"},
+        "/status/@@BMS_ID@@:OverCurrentFault": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CalculateVar"},
+        "/status/@@BMS_ID@@:UnderCurrentFault": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CalculateVar"},
+        "/status/@@BMS_ID@@:OverCurrentAlarm": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CalculateVar"},
+        "/status/@@BMS_ID@@:UnderCurrentAlarm": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CalculateVar"},
+        "/status/@@BMS_ID@@:OverCurrentDerate": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CalculateVar"},
+        "/status/@@BMS_ID@@:UnderCurrentDerate": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CalculateVar"},
+        "/status/@@BMS_ID@@:CurrentMeanDiff": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CalculateVar"},
+        "/status/@@BMS_ID@@:DCClosed": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CalculateVar"},
+        "/status/@@BMS_ID@@:SBMUCurrent": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CheckMonitorVar"},
+        "/status/@@BMS_ID@@:SBMUCurrentCheckDerate": { "enable": true, "rate":0.1, "amap": "@@BMS_ID@@", "func":"CheckMonitorVar"}
+    },
+    "/links/bms":{
+        "@@BMS_ID@@_fault_cnt": {
+            "value": "/status/@@BMS_ID@@:@@BMS_ID@@_fault_cnt"
+        }
+    },
+    
+    "/components/catl_@@BMS_ID@@": {
+        "sbmu_voltage": {
+            "value": 0
+        },
+        "sbmu_current": {
+            "value": 2000,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"bit":0, "offset": 2000, "uri":"/status/@@BMS_ID@@:SBMUCurrent"},
+                        {"bit":0, "offset": 2000, "uri":"/status/@@BMS_ID@@:SBMUCurrentCheckDerate"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_max_cell_voltage": {
+            "value": 0
+        },
+        "sbmu_min_cell_voltage": {
+            "value": 0
+        },
+        "sbmu_avg_cell_voltage": {
+            "value": 0
+            },
+        "sbmu_max_cell_temp": {
+            "value": 0,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"bit":0, "offset": 50,"uri":"/status/@@BMS_ID@@:SBMUMaxCellTemp"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_min_cell_temp": {
+            "value": 0,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"bit":0, "offset": 50,"uri":"/status/@@BMS_ID@@:SBMUMinCellTemp"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_avg_cell_temp": {
+            "value": 0,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"bit":0, "offset": 50,"uri":"/status/@@BMS_ID@@:SBMUAvgCellTemp"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_soc": {
+            "value": 0
+        },
+        "sbmu_soh": {
+            "value": 0
+        },
+        "sbmu_max_charge_current": {
+            "value": 2000,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"bit":0, "offset": 2000,"uri":"/status/@@BMS_ID@@:SBMUMaxChargeCurrent"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_max_discharge_current": {
+            "value": 2000,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"bit":0, "offset": 2000,"uri":"/status/@@BMS_ID@@:SBMUMaxDischargeCurrent"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_warning_1": {
+            "value": 0,
+            "note":"Sbmu Warning table with degrees reg 1 Appendix 3",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 3,"inValue": 0,"uri": "/alarms/@@BMS_ID@@:single_cell_over_volt", "outValue": "Normal"},
+                        { "shift": 0,"mask": 3,"inValue": 1,"uri": "/alarms/@@BMS_ID@@:single_cell_over_volt", "outValue": "Warn 1"},
+                        { "shift": 0,"mask": 3,"inValue": 2,"uri": "/alarms/@@BMS_ID@@:single_cell_over_volt", "outValue": "Warn 2"},
+                        { "shift": 0,"mask": 3,"inValue": 3,"uri": "/alarms/@@BMS_ID@@:single_cell_over_volt", "outValue": "Warn 3"},
+
+                        { "shift": 2,"mask": 3,"inValue": 0,"uri": "/alarms/@@BMS_ID@@:single_cell_under_volt", "outValue": "Normal"},
+                        { "shift": 2,"mask": 3,"inValue": 1,"uri": "/alarms/@@BMS_ID@@:single_cell_under_volt", "outValue": "Warn 1"},
+                        { "shift": 2,"mask": 3,"inValue": 2,"uri": "/alarms/@@BMS_ID@@:single_cell_under_volt", "outValue": "Warn 2"},
+                        { "shift": 2,"mask": 3,"inValue": 3,"uri": "/alarms/@@BMS_ID@@:single_cell_under_volt", "outValue": "Warn 3"},
+
+                        { "shift": 4,"mask": 3,"inValue": 0,"uri": "/alarms/@@BMS_ID@@:single_cell_over_temp", "outValue": "Normal"},
+                        { "shift": 4,"mask": 3,"inValue": 1,"uri": "/alarms/@@BMS_ID@@:single_cell_over_temp", "outValue": "Warn 1"},
+                        { "shift": 4,"mask": 3,"inValue": 2,"uri": "/alarms/@@BMS_ID@@:single_cell_over_temp", "outValue": "Warn 2"},
+                        { "shift": 4,"mask": 3,"inValue": 3,"uri": "/alarms/@@BMS_ID@@:single_cell_over_temp", "outValue": "Warn 3"},
+
+                        { "shift": 6,"mask": 3,"inValue": 0,"uri": "/alarms/@@BMS_ID@@:single_cell_under_temp", "outValue": "Normal"},
+                        { "shift": 6,"mask": 3,"inValue": 1,"uri": "/alarms/@@BMS_ID@@:single_cell_under_temp", "outValue": "Warn 1"},
+                        { "shift": 6,"mask": 3,"inValue": 2,"uri": "/alarms/@@BMS_ID@@:single_cell_under_temp", "outValue": "Warn 2"},
+                        { "shift": 6,"mask": 3,"inValue": 3,"uri": "/alarms/@@BMS_ID@@:single_cell_under_temp", "outValue": "Warn 3"},
+
+                        { "shift": 8,"mask": 3,"inValue": 0,"uri": "/alarms/@@BMS_ID@@:SOC_low", "outValue": "Normal"},
+                        { "shift": 8,"mask": 3,"inValue": 1,"uri": "/alarms/@@BMS_ID@@:SOC_low", "outValue": "Warn 1"},
+                        { "shift": 8,"mask": 3,"inValue": 2,"uri": "/alarms/@@BMS_ID@@:SOC_low", "outValue": "Warn 2"},
+                        { "shift": 8,"mask": 3,"inValue": 3,"uri": "/alarms/@@BMS_ID@@:SOC_low", "outValue": "Warn 3"},
+
+                        { "shift": 10,"mask": 3,"inValue": 0,"uri": "/alarms/@@BMS_ID@@:TMS_fault", "outValue": "Normal"},
+                        { "shift": 10,"mask": 3,"inValue": 1,"uri": "/alarms/@@BMS_ID@@:TMS_fault", "outValue": "Warn 1"},
+                        { "shift": 10,"mask": 3,"inValue": 2,"uri": "/alarms/@@BMS_ID@@:TMS_fault", "outValue": "Warn 2"},
+                        { "shift": 10,"mask": 3,"inValue": 3,"uri": "/alarms/@@BMS_ID@@:TMS_fault", "outValue": "Warn 3"},
+
+
+                        { "shift": 0,"mask": 3,"inValue": 0,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_over_volt", "outValue": "Normal"},
+                        { "shift": 0,"mask": 3,"inValue": 1,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_over_volt", "outValue": "Warn 1"},
+                        { "shift": 0,"mask": 3,"inValue": 2,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_over_volt", "outValue": "Warn 2"},
+                        { "shift": 0,"mask": 3,"inValue": 3,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_over_volt", "outValue": "Warn 3"},
+
+                        { "shift": 2,"mask": 3,"inValue": 0,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_under_volt", "outValue": "Normal"},
+                        { "shift": 2,"mask": 3,"inValue": 1,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_under_volt", "outValue": "Warn 1"},
+                        { "shift": 2,"mask": 3,"inValue": 2,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_under_volt", "outValue": "Warn 2"},
+                        { "shift": 2,"mask": 3,"inValue": 3,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_under_volt", "outValue": "Warn 3"},
+
+                        { "shift": 4,"mask": 3,"inValue": 0,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_over_temp", "outValue": "Normal"},
+                        { "shift": 4,"mask": 3,"inValue": 1,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_over_temp", "outValue": "Warn 1"},
+                        { "shift": 4,"mask": 3,"inValue": 2,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_over_temp", "outValue": "Warn 2"},
+                        { "shift": 4,"mask": 3,"inValue": 3,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_over_temp", "outValue": "Warn 3"},
+
+                        { "shift": 6,"mask": 3,"inValue": 0,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_under_temp", "outValue": "Normal"},
+                        { "shift": 6,"mask": 3,"inValue": 1,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_under_temp", "outValue": "Warn 1"},
+                        { "shift": 6,"mask": 3,"inValue": 2,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_under_temp", "outValue": "Warn 2"},
+                        { "shift": 6,"mask": 3,"inValue": 3,"uri": "/alarms/bms:@@BMS_ID@@_single_cell_under_temp", "outValue": "Warn 3"},
+
+                        { "shift": 8,"mask": 3,"inValue": 0,"uri": "/alarms/bms:@@BMS_ID@@_SOC_low", "outValue": "Normal"},
+                        { "shift": 8,"mask": 3,"inValue": 1,"uri": "/alarms/bms:@@BMS_ID@@_SOC_low", "outValue": "Warn 1"},
+                        { "shift": 8,"mask": 3,"inValue": 2,"uri": "/alarms/bms:@@BMS_ID@@_SOC_low", "outValue": "Warn 2"},
+                        { "shift": 8,"mask": 3,"inValue": 3,"uri": "/alarms/bms:@@BMS_ID@@_SOC_low", "outValue": "Warn 3"},
+
+                        { "shift": 10,"mask": 3,"inValue": 0,"uri": "/alarms/bms:@@BMS_ID@@_TMS_fault", "outValue": "Normal"},
+                        { "shift": 10,"mask": 3,"inValue": 1,"uri": "/alarms/bms:@@BMS_ID@@_TMS_fault", "outValue": "Warn 1"},
+                        { "shift": 10,"mask": 3,"inValue": 2,"uri": "/alarms/bms:@@BMS_ID@@_TMS_fault", "outValue": "Warn 2"},
+                        { "shift": 10,"mask": 3,"inValue": 3,"uri": "/alarms/bms:@@BMS_ID@@_TMS_fault", "outValue": "Warn 3"},
+
+
+                        { "shift": 0,"mask": 3,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[0]", "outValue": true, "note": "Bit 0 - Single Cell Overvoltage Warning 1"},
+                        { "shift": 0,"mask": 3,"inValue": 2,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[1]", "outValue": true, "note": "Bit 1 - Single Cell Overvoltage Warning 2"},
+                        { "shift": 0,"mask": 3,"inValue": 3,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[2]", "outValue": true, "note": "Bit 2 - Single Cell Overvoltage Warning 3"},
+
+                        { "shift": 2,"mask": 3,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[3]", "outValue": true, "note": "Bit 3 - Single Cell Undervoltage Warning 1"},
+                        { "shift": 2,"mask": 3,"inValue": 2,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[4]", "outValue": true, "note": "Bit 4 - Single Cell Undervoltage Warning 2"},
+                        { "shift": 2,"mask": 3,"inValue": 3,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[5]", "outValue": true, "note": "Bit 5 - Single Cell Undervoltage Warning 3"},
+
+                        { "shift": 4,"mask": 3,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[6]", "outValue": true, "note": "Bit 6 - Single Cell Overtemperature Warning 1"},
+                        { "shift": 4,"mask": 3,"inValue": 2,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[7]", "outValue": true, "note": "Bit 7 - Single Cell Overtemperature Warning 2"},
+                        { "shift": 4,"mask": 3,"inValue": 3,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[8]", "outValue": true, "note": "Bit 8 - Single Cell Overtemperature Warning 3"},
+
+                        { "shift": 6,"mask": 3,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[9]", "outValue": true, "note": "Bit 9 - Single Cell Undertemperature Warning 1"},
+                        { "shift": 6,"mask": 3,"inValue": 2,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[10]", "outValue": true, "note": "Bit 10 - Single Cell Undertemperature Warning 2"},
+                        { "shift": 6,"mask": 3,"inValue": 3,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[11]", "outValue": true, "note": "Bit 11 - Single Cell Undertemperature Warning 3"},
+
+                        { "shift": 8,"mask": 3,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[12]", "outValue": true, "note": "Bit 12 - SOC Low Warning 1"},
+                        { "shift": 8,"mask": 3,"inValue": 2,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[13]", "outValue": true, "note": "Bit 13 - SOC Low Warning 2"},
+                        { "shift": 8,"mask": 3,"inValue": 3,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[14]", "outValue": true, "note": "Bit 14 - SOC Low Warning 3"},
+
+                        { "shift": 10,"mask": 3,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[15]", "outValue": true, "note": "Bit 15 - TMS Fault Level 1"},
+                        { "shift": 10,"mask": 3,"inValue": 2,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[16]", "outValue": true, "note": "Bit 16 - TMS Fault Level 2"},
+                        { "shift": 10,"mask": 3,"inValue": 3,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[17]", "outValue": true, "note": "Bit 17 - TMS Fault Level 3"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_warning_21": {
+            "value": 0,
+            "note":"Sbmu Warning table without degrees reg 1 Appendix 4",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:charge_overcurrent", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:charge_overcurrent", "outValue": "Warn"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:discharge_overcurrent", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:discharge_overcurrent", "outValue": "Warn"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:temp_difference", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:temp_difference", "outValue": "Warn"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:cell_extreme_temp", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:cell_extreme_temp", "outValue": "Warn"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:cell_extreme_voltage", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:cell_extreme_voltage", "outValue": "Warn"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:total_extreme_voltage", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:total_extreme_voltage", "outValue": "Warn"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:main_positive_relay_close_fail", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:main_positive_relay_close_fail", "outValue": "Warn"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:main_negative_relay_close_fail", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:main_negative_relay_close_fail", "outValue": "Warn"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:main_positive_relay_stuck_fail", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:main_positive_relay_stuck_fail", "outValue": "Warn"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:main_negative_relay_stuck_fail", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:main_negative_relay_stuck_fail", "outValue": "Warn"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:power_loss", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:power_loss", "outValue": "Warn"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:balance_function", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:balance_function", "outValue": "Warn"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:CCAN_communications", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:CCAN_communications", "outValue": "Warn"},
+                        
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_charge_overcurrent", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_charge_overcurrent", "outValue": "Warn"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_discharge_overcurrent", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_discharge_overcurrent", "outValue": "Warn"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_temp_difference", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_temp_difference", "outValue": "Warn"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_cell_extreme_temp", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_cell_extreme_temp", "outValue": "Warn"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_cell_extreme_voltage", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_cell_extreme_voltage", "outValue": "Warn"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_total_extreme_voltage", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_total_extreme_voltage", "outValue": "Warn"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_main_positive_relay_close_fail", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_main_positive_relay_close_fail", "outValue": "Warn"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_main_negative_relay_close_fail", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_main_negative_relay_close_fail", "outValue": "Warn"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_main_positive_relay_stuck_fail", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_main_positive_relay_stuck_fail", "outValue": "Warn"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_main_negative_relay_stuck_fail", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_main_negative_relay_stuck_fail", "outValue": "Warn"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_power_loss", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_power_loss", "outValue": "Warn"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_balance_function", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_balance_function", "outValue": "Warn"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_CCAN_communications", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_CCAN_communications", "outValue": "Warn"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[0]", "outValue": true, "note": "Bit 0 - Charge Overcurrent Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[1]", "outValue": true, "note": "Bit 1 - Discharge Overcurrent Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[2]", "outValue": true, "note": "Bit 2 - Temp Difference Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[3]", "outValue": true, "note": "Bit 3 - Cell Extreme Temperature Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[4]", "outValue": true, "note": "Bit 4 - Cell Extreme Voltage Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[5]", "outValue": true, "note": "Bit 5 - Extreme Total Voltage Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[6]", "outValue": true, "note": "Bit 6 - Master Positive Relay Close Fail Fault"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[7]", "outValue": true, "note": "Bit 7 - Master Negative Relay Close Fail Fault"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[8]", "outValue": true, "note": "Bit 8 - Master Positive Relay Stuck Fault"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[9]", "outValue": true, "note": "Bit 9 - Master Negative Relay Stuck Fault"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[10]", "outValue": true, "note": "Bit 10 - Power Loss Fault"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[11]", "outValue": true, "note": "Bit 11 - Balance Warning"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[12]", "outValue": true, "note": "Bit 12 - Inner Communication Fault (CCAN)"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_warning_22": {
+            "value": 0,
+            "note":"Sbmu Warning table without degrees reg 2 Appendix 4",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:SCAN_communications", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:SCAN_communications", "outValue": "Warn"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:current_sensor_abnormal", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:current_sensor_abnormal", "outValue": "Warn"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:single_cell_voltage_sampling", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:single_cell_voltage_sampling", "outValue": "Warn"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:module_temp_sampling", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:module_temp_sampling", "outValue": "Warn"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:high_voltage_open_circuit", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:high_voltage_open_circuit", "outValue": "Warn"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:MSD_fault", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:MSD_fault", "outValue": "Warn"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:rack_isolate", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:rack_isolate", "outValue": "Warn"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:rack_fuse", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:rack_fuse", "outValue": "Warn"},
+
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_SCAN_communications", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_SCAN_communications", "outValue": "Warn"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_current_sensor_abnormal", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_current_sensor_abnormal", "outValue": "Warn"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_single_cell_voltage_sampling", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_single_cell_voltage_sampling", "outValue": "Warn"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_module_temp_sampling", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_module_temp_sampling", "outValue": "Warn"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_high_voltage_open_circuit", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_high_voltage_open_circuit", "outValue": "Warn"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_MSD_fault", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_MSD_fault", "outValue": "Warn"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_rack_isolate", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_rack_isolate", "outValue": "Warn"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_rack_fuse", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_rack_fuse", "outValue": "Warn"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[13]", "outValue": true, "note": "Bit 13 - Inner Communication Fault (SCAN)"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[14]", "outValue": true, "note": "Bit 14 - Current Sensor Abnormal Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[15]", "outValue": true, "note": "Bit 15 - Single Cell Voltage Sampling Abnormal Fault"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[16]", "outValue": true, "note": "Bit 16 - Module Temperature Sampling Abnormal Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[17]", "outValue": true, "note": "Bit 17 - High Voltage Circuit Open Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[18]", "outValue": true, "note": "Bit 18 - MSD Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[19]", "outValue": true, "note": "Bit 19 - Isolate Switch Fault"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[20]", "outValue": true, "note": "Bit 20 - Rack Fuse Fault"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_warning_23": {
+            "value": 0,
+            "note":"Sbmu Warning table without degrees reg 3 Appendix 4",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/@@BMS_ID@@:TMS_communications", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/@@BMS_ID@@:TMS_communications", "outValue": "Warn"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:TMS_mode_conflict",     "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:TMS_mode_conflict",     "outValue": "Warn"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:fire_fault_level_1", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:fire_fault_level_1", "outValue": "Warn"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:temperature_sensor", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:temperature_sensor", "outValue": "Warn"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:smoke_sensor", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:smoke_sensor", "outValue": "Warn"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:aerosol_state", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:aerosol_state", "outValue": "Warn"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:aerosol_close", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:aerosol_close", "outValue": "Warn"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:aerosol_open", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:aerosol_open", "outValue": "Warn"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:rack_door_switch_state", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:rack_door_switch_state", "outValue": "Warn"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/faults/@@BMS_ID@@:control_box_oven_temp",    "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/faults/@@BMS_ID@@:control_box_oven_temp",    "outValue": "Warn"},
+
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/bms:@@BMS_ID@@_TMS_communications", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/bms:@@BMS_ID@@_TMS_communications", "outValue": "Warn"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_TMS_mode_conflict",     "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_TMS_mode_conflict",     "outValue": "Warn"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_fire_fault_level_1", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_fire_fault_level_1", "outValue": "Warn"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_temperature_sensor", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_temperature_sensor", "outValue": "Warn"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_smoke_sensor", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_smoke_sensor", "outValue": "Warn"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_aerosol_state", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_aerosol_state", "outValue": "Warn"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_aerosol_close", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_aerosol_close", "outValue": "Warn"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_aerosol_open", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_aerosol_open", "outValue": "Warn"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_rack_door_switch_state", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_rack_door_switch_state", "outValue": "Warn"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/faults/bms:@@BMS_ID@@_control_box_oven_temp",    "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/faults/bms:@@BMS_ID@@_control_box_oven_temp",    "outValue": "Warn"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_alarms[18]", "outValue": true, "note": "Bit 18 - TMS Communication Fault"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[21]", "outValue": true, "note": "Bit 21 - TMS Mode Conflict Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[22]", "outValue": true, "note": "Bit 22 - Fire Fault Level 1"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[23]", "outValue": true, "note": "Bit 23 - Temperature Sensor Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[24]", "outValue": true, "note": "Bit 24 - Smoke Sensor Alarm"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[25]", "outValue": true, "note": "Bit 25 - Aerosol State Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[26]", "outValue": true, "note": "Bit 26 - Aerosol Close Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[27]", "outValue": true, "note": "Bit 27 - Aerosol Open Fault"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[28]", "outValue": true, "note": "Bit 28 - Rack Switch State"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:@@BMS_ID@@_faults[29]", "outValue": true, "note": "Bit 29 - Control Box Overtemperature Fault"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_door_state": {
+            "value":0,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 0, "uri":"/assets/bms/@@BMS_ID@@:sbmu_door_state_ui", "outValue": "Closed"},
+                        {"inValue": 1, "uri":"/assets/bms/@@BMS_ID@@:sbmu_door_state_ui", "outValue": "Open"}
+                    ]
+                }]
+            }
+        },
+        "sbmu_master_positive": 0,
+        "sbmu_master_negative": 0
+    }
+}

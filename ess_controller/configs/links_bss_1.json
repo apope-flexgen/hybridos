@@ -1,0 +1,296 @@
+{
+	"/assets/bms":	{
+		"ctrlword2":	{
+			"value":	0,
+			"actions":	{
+				"onSet":	{
+					"enum":	[{
+							"bit":	0,
+							"mask":	3,
+							"uri":	"/enum_controls/bms_1",
+							"value":	true,
+							"var":	"mask_3_bit_0"
+						}, {
+							"bit":	1,
+							"mask":	3,
+							"uri":	"/enum_controls/bms_1",
+							"value":	true,
+							"var":	"mask_3_bit_1"
+						}, {
+							"bit":	2,
+							"mask":	3,
+							"uri":	"/enum_controls/bms_1",
+							"value":	true,
+							"var":	"mask_3_bit_2"
+						}, {
+							"bit":	3,
+							"mask":	3,
+							"uri":	"/enum_controls/bms_1",
+							"value":	true,
+							"var":	"mask_3_bit_3"
+						}]
+				}
+			}
+		},
+		"start_stop":	{
+			"value":	0,
+			"actions":	{
+				"onSet":	{
+					"bitfield":	[{
+							"bit":	0,
+							"uri":	"/controls/bms:oncmd",
+							"value":	true
+						}, {
+							"bit":	1,
+							"uri":	"/controls/bms:kacclosecmd",
+							"value":	true
+						}, {
+							"bit":	8,
+							"uri":	"/controls/bms:offcmd",
+							"value":	true
+						}, {
+							"bit":	9,
+							"uri":	"/controls/bms:kacopencmd",
+							"value":	true
+						}]
+				}
+			}
+		}
+	},
+	"/components/catl01_ems_bms_rw":	{
+		"ems_test_status":	{
+			"value":	"Idle",
+			"actions":	{
+				"onSet":	{
+					"remap":	[]
+				}
+			}
+		}
+	},
+	"/constants/bss_1":	{
+		"DC_contactor_closed":	{
+			"value":	2
+		},
+		"DC_contactor_open":	{
+			"value":	1
+		},
+		"DC_contactor_reset":	{
+			"value":	3
+		},
+		"chg_soc_begin":	{
+			"value":	90.001
+		},
+		"chg_soc_end":	{
+			"value":	101.5
+		},
+		"control_word_off":	{
+			"value":	2
+		},
+		"control_word_on":	{
+			"value":	1
+		},
+		"cooldown_timer":	{
+			"value":	250
+		},
+		"dischg_soc_begin":	{
+			"value":	10.001
+		},
+		"dischg_soc_end":	{
+			"value":	-1.5
+		},
+		"max_load_threshold":	{
+			"value":	200000
+		},
+		"max_soc_raw":	{
+			"value":	99.5
+		},
+		"min_load_threshold":	{
+			"value":	1000
+		},
+		"min_soc_raw":	{
+			"value":	1.5
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are constant defintions"
+		},
+		"priority":	{
+			"value":	1
+		},
+		"rated_active_power":	{
+			"value":	2200
+		},
+		"rated_apparent_power":	{
+			"value":	2200
+		},
+		"start_timer":	{
+			"value":	50
+		}
+	},
+	"/controls/bss_1":	{
+		"active_power_setpoint":	{
+			"value":	2200
+		},
+		"kacclosecmd":	{
+			"value":	0
+		},
+		"kacopencmd":	{
+			"value":	0
+		},
+		"kdcclosecmd":	{
+			"value":	0
+		},
+		"kdccopencmd":	{
+			"value":	0
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are controls defintions"
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"onffcmd":	{
+			"value":	0
+		},
+		"reactive_power_setpoint":	{
+			"value":	2200
+		}
+	},
+	"/ident/bss_1":	{
+		"id":	{
+			"value":	"bss_1"
+		},
+		"name":	{
+			"value":	"BESS  Block 01"
+		}
+	},
+	"/links/bms_1":	{
+		" ReactivePowerCmd":	{
+			"value":	"/controls/bms_1:ReactivePowerCmd"
+		},
+		"AcContactor":	{
+			"value":	"/status/bms_1:AcContactor"
+		},
+		"AcContactorCloseCmd":	{
+			"value":	"/controls/bms_1:AcContactorCloseCmd"
+		},
+		"AcContactorOpenCmd":	{
+			"value":	"/controls/bms_1:AcContactorOpenCmd"
+		},
+		"ActivePower":	{
+			"value":	"/status/bms_1:ActivePower"
+		},
+		"ActivePowerCmd":	{
+			"value":	"/controls/bms_1:ActivePowerCmd"
+		},
+		"ActivePowerDeadband":	{
+			"value":	"/params/bms_1:ActivePowerDeadband"
+		},
+		"ActivePowerSetpoint":	{
+			"value":	"/controls/bms_1:ActivePowerSetpoint"
+		},
+		"DcContactor":	{
+			"value":	"/status/bms_1:DcContactor"
+		},
+		"DcContactorCloseCmd":	{
+			"value":	"/controls/bms_1:DcContactorCloseCmd"
+		},
+		"DcContactorOpenCmd":	{
+			"value":	"/controls/bms_1:DcContactorOpenCmd"
+		},
+		"HeartBeat":	{
+			"value":	"/controls/bms_1:HeartBeat"
+		},
+		"Off":	{
+			"value":	"/status/bms_1:Off"
+		},
+		"OffCmd":	{
+			"value":	"/controls/bms_1:OffCmd"
+		},
+		"On":	{
+			"value":	"/status/bms_1:On"
+		},
+		"OnCmd":	{
+			"value":	"/controls/bms_1:OnCmd"
+		},
+		"ReactivePower":	{
+			"value":	"/status/bms_1:ReactivePower"
+		},
+		"ReactivePowerCmd":	{
+			"value":	0
+		},
+		"ReactivePowerDeadband":	{
+			"value":	"/params/bms_1:ReactivePowerDeadband"
+		},
+		"ReactivePowerSetpoint":	{
+			"value":	"/controls/bms_1:ReactivePowerSetpoint"
+		},
+		"StandBy":	{
+			"value":	"/status/bms_1:Standby"
+		},
+		"StandByCmd":	{
+			"value":	"/controls/bms_1:StandbyCmd"
+		},
+		"Standby":	{
+			"value":	false
+		},
+		"StandbyCmd":	{
+			"value":	false
+		},
+		"lastActivePowerSetpoint":	{
+			"value":	"/controls/bms_1:lastActivePowerSetpoint"
+		},
+		"lastReactivePowerSetpoint":	{
+			"value":	"/controls/bms_1:lastReactivePowerSetpoint"
+		},
+		"maxActivePower":	{
+			"value":	"/params/bms_1:maxActivePower"
+		},
+		"maxReactivePower":	{
+			"value":	"/params/bms_1:maxRectivePower"
+		}
+	},
+	"/variables/bss_1":	{
+		"ac_contactor":	{
+			"value":	"off"
+		},
+		"ac_contactor_cmd":	{
+			"value":	"off"
+		},
+		"dc_contactor":	{
+			"value":	"off"
+		},
+		"dc_contactor_cmd":	{
+			"value":	"off"
+		},
+		"mode":	{
+			"value":	"init"
+		},
+		"mode_cmd":	{
+			"value":	"off"
+		},
+		"p":	{
+			"value":	3456
+		},
+		"q":	{
+			"value":	1234
+		},
+		"soc":	{
+			"value":	100
+		},
+		"soh":	{
+			"value":	100
+		}
+	}
+}

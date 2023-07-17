@@ -1,0 +1,91 @@
+{
+	"note01": "Creates expanded configs for twins assets of type denoted at top level",
+	"note02": "vars field contains variables that will overwrite the corresponding default config. 'id' field is mandatory, all others are optional",
+	"note03": "reps field contains replacement instructions. Two types, sequential and list.",
+    "note04": "'iterator' and 'every' are optional fields in sequential replacement that create an expression like '2n+1' that will define which numbers get used.",
+    "note05": "If iterator or every are missing default is to hit every interger value [to:from] inclusive",
+    "note06": "'replacewith' field defines replacement format. See notes later for details.",
+    "note07": "if multiple rules are provided in 'reps' then they will execute in order, with each subsequent rule applying to the outputs of the prevoius rule",
+    "pcs": [
+        {
+            "note": "Sequentially replace token with numbers or characters [from:to]",
+            "vars": {
+                "id": "PCS_##PCS_NUM##@@",
+                "Slim": 6000,
+                "Plim": 4000,
+                "QRampDropEnable": true
+            },
+            "reps": [
+                {
+                    "note": "These two rules will create 74*2 PCSes named e.g. PCS_01a, PCS_01b...",
+                    "type": "sequential",
+                    "iterator": "n",
+                    "every": "n",
+                    "from": 1,
+                    "to": 74,
+                    "token": "##PCS_NUM##",
+                    "replacewith": "{01d}",
+                    "note01": "{1d} 1, 2.. 9, 10, 11. {01d}: 01, 02, 03... 10 11... 100, 101"
+                },
+                {
+                    "type": "list",
+                    "list": ["a", "b"],
+                    "token": "@@"
+                }
+            ]
+        },
+        {
+            "note": "Sequentially replace token with characters [from:to]. iterates from a to z, then aa, ab. ",
+            "vars": {
+                "id": "PCS_##PCS_NAME##",
+                "Slim": 6000,
+                "Plim": 4000,
+                "QRampDropEnable": true
+            },
+            "reps": {
+                "type": "sequential",
+                "iterator": "n",
+                "from": 1,
+                "to": 10,
+                "every": "n",
+                "token": "##PCS_NAME##",
+                "replacewith":"{01c}",
+                "case": "lower",
+                "note": "{1c}: a, b c.... aa, ab. {01c}: aa ab ac ad..  ba, bb, bc",
+                "note01": "case: lower is all lower case, case:upper is all lower case. default lower if not specified."
+            }
+        },
+        {
+            "vars": {
+                "note": "creates pcses with ID like vendor_name_bobcat, vendor_name_cheetah, etc",
+                "id": "vendor_name_##",
+                "Plim": 300
+            },
+            "reps": {
+                "type": "list",
+                "list": ["bobcat", "cheetah", "lion", "lynx", "tiger", "panther"],
+                "token": "##"
+            }
+        }
+    ],
+    "bms": [
+        {
+            "note": "Will create assets named BMS_01, BMS_03, BMS_05, BMS_07... BMS_31",
+            "vars": {
+                "id": "BMS_##BMS_ID##",
+                "Slim": 6000,
+                "Plim": 4000,
+                "QRampDropEnable": true
+            },
+            "reps": {
+                "type": "sequential",
+                "iterator": "n",
+                "from": 0,
+                "to": 15,
+                "every": "2*n+1",
+                "token": "##BMS_ID##",
+                "replacewith":"{01c}"
+            }
+        }
+    ]
+}

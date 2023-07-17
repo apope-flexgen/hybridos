@@ -46,7 +46,8 @@ enum priority //asset-type priority for power commands
     gen_ess_solar_feeder,
     gen_solar_ess_feeder,
     ess_solar_gen_feeder,
-    ess_solar_feeder_gen
+    ess_solar_feeder_gen,
+    solar_gen_feeder_ess
 };
 
 enum gridMode

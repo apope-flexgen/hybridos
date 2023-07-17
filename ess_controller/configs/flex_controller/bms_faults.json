@@ -1,0 +1,56 @@
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /flex/components/bms_info '{
+        "system_max_cell_voltage": {
+            "value": 0, "EnableFaultCheck": true, "EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "system_min_cell_voltage": {
+            "value": 0, "EnableFaultCheck": true, "EnableMinValCheck": false, "MinAlarmThreshold": 25.4,"MinFaultThreshold": 10,"MinResetValue": 30,
+            "MinAlarmTimeout": 2.5,"MinFaultTimeout": 5.5,"MinRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "system_avg_voltage": {
+            "value": 0, "EnableFaultCheck": true, "EnableMaxValCheck": false, "MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5, "MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "system_max_cell_temperature": {
+            "value": 0, "EnableFaultCheck": true, "EnableMaxValCheck": false, "MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"remap":[{"bit":0, "offset": 50,"uri":"/status/bms:BMSMaxCellTemp"}]}]}
+        },
+        "system_min_cell_temperature": {
+            "value": 0,"EnableFaultCheck": true,"EnableMinValCheck": false, "MinAlarmThreshold": 25.4, "MinFaultThreshold": 10,"MinResetValue": 30,
+            "MinAlarmTimeout": 2.5,"MinFaultTimeout": 5.5,"MinRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"remap":[{"bit":0, "offset": 50,"uri":"/status/bms:BMSMinCellTemp"}]}]}
+        },
+        "system_avg_temperature": {
+            "value": 0,"EnableFaultCheck": true,"EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"remap":[{"bit":0, "offset": 50,"uri":"/status/bms:BMSAvgCellTemp"}]}]}
+        },
+        "system_soc": {
+            "value": 0,"EnableFaultCheck": true,"EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "system_soh": {
+            "value": 0,"EnableFaultCheck": true,"EnableMaxValCheck": false,"MaxAlarmThreshold": 25.4,"MaxFaultThreshold": 28,"MaxResetValue": 22.4,
+            "MaxAlarmTimeout": 2.5,"MaxFaultTimeout": 5.5,"MaxRecoverTimeout": 1.4,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}
+        },
+        "system_max_charge_current": {
+            "value":0,
+            "actions": { "onSet":[{"remap":[{"bit":0, "offset": 20000, "uri":"/status/bms:MaxBMSChargeCurrent"}]}]}
+        },
+        "system_max_discharge_current": {
+            "value":0,
+            "actions": { "onSet":[{"remap":[{"bit":0, "offset": 20000,"uri":"/status/bms:MaxBMSDischargeCurrent"}]}]}
+        }
+    }'
+/usr/local/bin/fims/fims_send -m set -r /$$ -u /flex/components/bms_info '{
+    "bms_heartbeat":{
+            "value": 0,"EnableStateCheck": true,"EnableCommsCheck": true,"Type":"int",
+            "AlarmTimeout": 1,"FaultTimeout": 2,"RecoverTimeout": 1,
+            "actions": {"onSet": [{"func": [{"func": "CheckMonitorVar","amap": "bms"}]}]}}
+    }'

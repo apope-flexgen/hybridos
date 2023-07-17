@@ -4,7 +4,7 @@ import { SeverityType } from '@flexgen/storybook';
 import dayjs from 'dayjs';
 import { EventsRequestParams } from 'shared/types/dtos/events.dto';
 
-export const cardHeading = 'SORT ACTIVITY';
+export const cardHeading = 'SORT ACTIVITY LOG';
 
 export const buildURI = (filters: EventsRequestParams): string => {
   const filtersArray = [];
@@ -33,7 +33,7 @@ export const buildURI = (filters: EventsRequestParams): string => {
     filtersArray.push(['orderBy', filters.orderBy]);
   }
   if (filters.page != null) {
-    const page = (filters.page === 0) ? 1 : (filters.page + 1);
+    const page = filters.page === 0 ? 1 : filters.page + 1;
     filtersArray.push(['page', page.toString()]);
   }
 

@@ -1,0 +1,7 @@
+{
+    "/links/bms_1": {
+        "testValue": {
+            "value": "/catl_server/testing:to_be_changed"
+        }
+    }
+}

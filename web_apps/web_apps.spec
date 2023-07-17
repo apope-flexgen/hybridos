@@ -14,7 +14,7 @@ Version:    %{_version}
 Release:    %{_release}
 Source:     %{source}.tar.gz
 BuildRoot:  %{_topdir}
-Requires:   fims
+Requires:   fims, mongodb-org
 
 %description
 FlexGen HybridOS Web Apps

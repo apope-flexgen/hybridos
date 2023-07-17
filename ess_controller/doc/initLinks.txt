@@ -1,0 +1,13 @@
+Run test_Preston.cpp with line 736 (InitPCSLinks(*pcs_man->vmap, pcs_man->amap, "pcs", pcs_man);) running
+    /usr/local/bin/fims/fims_send -m set -r /me -u /controls/pcs '{"PDropGradient":24300.2}'
+    /usr/local/bin/fims/fims_send -m get -r /me -u /controls/pcs/PDropGradient
+        Limiting to 3000 doesn't happen
+    /usr/local/bin/fims/fims_send -m get -r /me -u /components/pe_pcs/pcs_drop_grad_p
+        Link is working
+
+Run test_Preston.cpp with line 736 (InitPCSLinks(*pcs_man->vmap, pcs_man->amap, "pcs", pcs_man);) commented out
+    /usr/local/bin/fims/fims_send -m set -r /me -u /controls/pcs '{"PDropGradient":24300.2}'
+    /usr/local/bin/fims/fims_send -m get -r /me -u /controls/pcs/PDropGradient
+        Limiting to 3000 happens
+    /usr/local/bin/fims/fims_send -m get -r /me -u /components/pe_pcs/pcs_drop_grad_p
+        Link var doesn't exist to get

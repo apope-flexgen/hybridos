@@ -1,0 +1,286 @@
+{
+	"system":
+	{
+		"id": "flexgen_ess",
+		"ip_address": "192.168.127.2",
+		"port": 502,
+		"frequency": 100,
+		"byte_swap": false
+	},
+	"registers":
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 30,
+			"number_of_registers": 25,
+			"map":
+			[
+				{
+					"id": "ac_voltage_l1",
+					"offset": 30,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "ac_voltage_l2",
+					"offset": 31,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "ac_voltage_l3",
+					"offset": 32,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "ac_current_l1",
+					"offset": 33,
+					"signed": true
+				},
+				{
+					"id": "ac_current_l2",
+					"offset": 34,
+					"signed": true
+				},
+				{
+					"id": "ac_current_l3",
+					"offset": 35,
+					"signed": true
+				},
+				{
+					"id": "active_power",
+					"offset": 36,
+					"signed": true
+				},
+				{
+					"id": "reactive_power",
+					"offset": 37,
+					"signed": true
+				},
+				{
+					"id": "frequency",
+					"offset": 38,
+					"signed": true,
+					"scale": 100
+				},
+				{
+					"id": "vdc_high",
+					"offset": 39,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "vdc_low",
+					"offset": 40,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "ambient_temp",
+					"offset": 45,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "igbt_temp",
+					"offset": 46,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "esm_temp_1",
+					"offset": 47,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "esm_temp_2",
+					"offset": 48,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "soc",
+					"offset": 51,
+					"signed": true,
+					"scale": 10
+				},
+				{
+					"id": "dc_current_l1",
+					"offset": 52,
+					"signed": true
+				},
+				{
+					"id": "dc_current_l2",
+					"offset": 53,
+					"signed": true
+				},
+				{
+					"id": "dc_current_l3",
+					"offset": 54,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 153,
+			"number_of_registers": 13,
+			"map":
+			[
+				{
+					"id": "status",
+					"offset": 153,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Charge Control",
+						"Voltage Support",
+						"Discharging",
+						"Idle",
+						"Virtual Inertia",
+						"Faulted",
+						"Shutdown - State",
+						"Ready - State",
+						"Startup - State",
+						"Running - State",
+						"Discharging - State",
+						"Idle - State"
+					]
+				},
+				{
+					"id": "alarms",
+					"offset": 158,
+					"size": 4,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Voltage High Over Voltage Slow",
+						"DC Voltage Low Over Voltage",
+						"DC Voltage Low Under Voltage",
+						"AC Voltage Over Voltage",
+						"AC Voltage Under Voltage",
+						"AC Voltage Over Frequency",
+						"AC Voltage Under Frequency",
+						"24V Under Voltage",
+						"ESM Over Voltage 1",
+						"ESM Over Voltage 2",
+						"Reserved", "Reserved",
+						"Generator Regulation",
+						"Reserved", "Reserved", "Reserved",
+						"Reserved", "Reserved", "Reserved", "Reserved",
+						"Reserved", "Reserved", "Reserved", "Reserved",
+						"Hardware Current Limit L1",
+						"Hardware Current Limit L2",
+						"Hardware Current Limit L3",
+						"Hardware Current Limit L4",
+						"Hardware Current Limit L5",
+						"Hardware Current Limit L6",
+						"Reserved", "Reserved",
+						"Overload Level 2 L6",
+						"Overload Level 3 L6",
+						"Ambient Temp",
+						"IGBT Temp L1",
+						"IGBT Temp L2",
+						"IGBT Temp L3",
+						"IGBT Temp L4",
+						"IGBT Temp L5",
+						"IGBT Temp L6",
+						"ESM Temp 1",
+						"ESM Temp 2",
+						"Reserved", "Reserved", "Reserved",
+						"Overload (All)",
+						"Harmonics",
+						"Overload Level 1 L1",
+						"Overload Level 2 L1",
+						"Overload Level 3 L1",
+						"Overload Level 1 L2",
+						"Overload Level 2 L2",
+						"Overload Level 3 L2",
+						"Overload Level 1 L3",
+						"Overload Level 2 L3",
+						"Overload Level 3 L3",
+						"Overload Level 1 L4",
+						"Overload Level 2 L4",
+						"Overload Level 3 L4",
+						"Overload Level 1 L5",
+						"Overload Level 2 L5",
+						"Overload Level 3 L5",
+						"Overload Level 1 L6"
+					]
+				},
+				{
+					"id": "faults",
+					"offset": 162,
+					"size": 4,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"DC Voltage High Over Voltage Slow",
+						"DC Voltage Low Over Voltage",
+						"DC Voltage Low Under Voltage",
+						"AC Voltage Over Voltage",
+						"AC Voltage Under Voltage",
+						"AC Voltage Over Frequency",
+						"AC Voltage Under Frequency",
+						"24V Under Voltage",
+						"ESM Over Voltage 1",
+						"ESM Over Voltage 2",
+						"Reserved", "Reserved",
+						"Ground Current",
+						"Gen Stability",
+						"Precharge Error",
+						"Reverse Rotation",
+						"Gate Error L1",
+						"Gate Error L2",
+						"Gate Error L3",
+						"Gate Error L4",
+						"Gate Error L5",
+						"Gate Error L6",
+						"Real-Time Watchdog",
+						"Emergency Stop",
+						"Hardware Current Limit L1",
+						"Hardware Current Limit L2",
+						"Hardware Current Limit L3",
+						"Hardware Current Limit L4",
+						"Hardware Current Limit L5",
+						"Hardware Current Limit L6",
+						"Vdc High Over Voltage Fast",
+						"Vdc High Under Voltage Slow",
+						"Overload Level 2 L6",
+						"Overload Level 3 L6",
+						"IGBT Temp L1",
+						"IGBT Temp L2",
+						"IGBT Temp L3",
+						"IGBT Temp L4",
+						"IGBT Temp L5",
+						"IGBT Temp L6",
+						"Ambient Temp",
+						"ESM Temp 1",
+						"ESM Temp 2",
+						"Reserved", "Reserved", "Reserved",
+						"Overload (All)",
+						"Harmonics",
+						"Overload Level 1 L1",
+						"Overload Level 2 L1",
+						"Overload Level 3 L1",
+						"Overload Level 1 L2",
+						"Overload Level 2 L2",
+						"Overload Level 3 L2",
+						"Overload Level 1 L3",
+						"Overload Level 2 L3",
+						"Overload Level 3 L3",
+						"Overload Level 1 L4",
+						"Overload Level 2 L4",
+						"Overload Level 3 L4",
+						"Overload Level 1 L5",
+						"Overload Level 2 L5",
+						"Overload Level 3 L5",
+						"Overload Level 1 L6"
+						]
+				}
+			]
+		}
+	]
+}

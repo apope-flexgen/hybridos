@@ -1,138 +1,227 @@
-// TODO: fix lint
 /* eslint-disable max-lines */
+// TODO: fix lint
 import {
-  AppBar,
-  darkTheme,
-  lightTheme,
-  Icon,
-  Footer,
-  Avatar,
-  Menu,
-  MenuItem,
-  PageLayout,
-  Typography,
-  Switch,
+  darkTheme, lightTheme, Footer, PageLayout, Typography,
 } from '@flexgen/storybook';
-import { TextColorType } from '@flexgen/storybook/dist/types/commonTypes';
 import Box from '@mui/material/Box';
-import { useState, ReactNode, MouseEvent } from 'react';
+import isEqual from 'lodash.isequal';
+import {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import LogoutButton from 'src/components/LogoutButton';
+import { useAppContext } from 'src/App/App';
+import getRoutes, { decideAppDisplayName } from 'src/App/helpers';
+import { SITE_CONFIGURATION_URL, initWebUIConfigValue } from 'src/App/helpers/constants';
+import HosControlFinal from 'src/assets/HosControlFinal.svg';
+import HosCoordinateFinal from 'src/assets/HosCoordinate.svg';
+import SiteStatusWrapper from 'src/components/SiteStatusWrapper';
+import WebUIAppBar from 'src/components/WebUIAppBar';
 import NotifProvider from 'src/contexts/NotifContext';
+import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import {
+  AssetsPage,
+  Solar,
+  Scheduler,
+  Dashboard,
+  Events,
+  Feeders,
+  Features,
+  Generators,
+  ESS,
+  Site,
+  UIConfig,
+  SiteAdmin,
+  UserAdmin,
+  ErcotOverride,
+  FleetManagerDashboard,
+} from 'src/pages';
+import QueryService from 'src/services/QueryService';
 import { ThemeProvider } from 'styled-components';
 import ErrorModal from './ErrorModal';
 import NavigationDrawer from './NavigationDrawer';
 import AppRoutes from './Routes';
 import ToastNotif from './ToastNotif';
 
-const BaseApp = (
-  appInitMock: any,
-  pageDictionary: any,
-  currentUser: any,
-  product: string | null,
-  statusBar?: JSX.Element,
-): JSX.Element => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: MouseEvent<HTMLDivElement>) => setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(undefined);
-  const toggleDarkMode = () => { setDarkMode(!darkMode); };
+const PageDictionary = {
+  AssetsPage,
+  Solar,
+  Scheduler,
+  Dashboard,
+  FleetManagerDashboard,
+  Events,
+  Feeders,
+  Generators,
+  Features,
+  ESS,
+  Site,
+  UIConfig,
+  SiteAdmin,
+  UserAdmin,
+  ErcotOverride,
+};
+
+export const SITE_CONTROLLER = 'SC';
+export const FLEET_MANAGER = 'FM';
+export const SITE_CONTROLLER_NAME = 'HybridOS Control';
+export const FLEET_MANAGER_NAME = 'HybridOS Coordinate';
+
+const BaseApp = (): JSX.Element => {
+  const isDarkMode = localStorage.getItem('darkMode');
+  const [darkMode, setDarkMode] = useState<boolean>(isDarkMode === 'true');
+
+  const axiosInstance = useAxiosWebUIInstance(true);
   const {
-    app: {
-      timeZone,
-      appBar: {
-        appLogo,
-        appLogoSize,
-        appDisplayName,
-      },
+    siteConfiguration,
+    currentUser,
+    product,
+    setSiteConfiguration,
+    setProduct,
+    layouts,
+    setLayouts,
+  } = useAppContext();
+
+  const statusBar = siteConfiguration !== null && siteConfiguration.site_status_bar ? (
+    <SiteStatusWrapper />
+  ) : undefined;
+
+  const routes: any = useMemo(() => {
+    if (currentUser && layouts && siteConfiguration) {
+      return getRoutes(currentUser.role, layouts, siteConfiguration);
+    }
+    return [];
+  }, [currentUser, layouts, siteConfiguration]);
+
+  const fetchData = useCallback(async () => {
+    const siteConfigRes = await axiosInstance.get(SITE_CONFIGURATION_URL);
+    const newSiteConfiguration = siteConfigRes.data;
+    setSiteConfiguration(newSiteConfiguration);
+    setProduct(newSiteConfiguration.product);
+  }, [axiosInstance, setProduct, setSiteConfiguration]);
+
+  const appInit = useMemo(() => {
+    if (siteConfiguration && currentUser) {
+      return {
+        app: {
+          appName: 'HybridOS',
+          timeZone: siteConfiguration.timezone,
+          appBar: {
+            appLogo:
+              siteConfiguration.product === FLEET_MANAGER ? HosCoordinateFinal : HosControlFinal,
+            appLogoSize: siteConfiguration.product === FLEET_MANAGER ? 'large' : 'small',
+            appDisplayName: decideAppDisplayName(siteConfiguration),
+            appIcon: 'tbd', // TODO: should be included in FlexGen Component Lib
+          },
+        },
+        routes,
+        menuItems: [
+          {
+            children: (
+              <Typography
+                text={currentUser.username || ''}
+                variant="bodyL"
+                sx={{ paddingLeft: '8px' }}
+              />
+            ),
+            divider: false,
+            enableHover: false,
+            color: 'primary',
+            height: 'large',
+          },
+          {
+            children: (
+              <Typography
+                text={currentUser.role.toUpperCase() || ''}
+                variant="bodyS"
+                sx={{ paddingLeft: '8px' }}
+              />
+            ),
+            divider: true,
+            enableHover: false,
+            color: 'primary',
+            height: 'small',
+          },
+        ],
+        footer: {
+          softwareName:
+            siteConfiguration.product === FLEET_MANAGER ? FLEET_MANAGER_NAME : SITE_CONTROLLER_NAME,
+          version: '11',
+        },
+      };
+    }
+    return initWebUIConfigValue;
+  }, [currentUser, routes, siteConfiguration]);
+
+  const handleDarkModeChange = () => {
+    setDarkMode((prevDarkMode) => {
+      localStorage.setItem('darkMode', String(!prevDarkMode));
+      return !prevDarkMode;
+    });
+  };
+
+  const handleNewMessage = useCallback(
+    (newInformationFromSocket: any) => {
+      const parsedData = newInformationFromSocket.data ?? [];
+      setLayouts((prevLayouts) => {
+        if (!isEqual(prevLayouts, parsedData)) {
+          return parsedData;
+        }
+        return prevLayouts;
+      });
     },
-    routes,
-    menuItems,
-    footer: {
-      softwareName,
-      version,
-    },
-  } = appInitMock;
+    [setLayouts],
+  );
+
+  useEffect(() => {
+    QueryService.getLayouts(handleNewMessage);
+
+    return () => {
+      QueryService.cleanupSocket();
+    };
+  }, [handleNewMessage]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // TODO: export AppBar types
   return (
     <Router>
       <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-        <Box sx={{
-          display: 'flex', padding: 0, flex: 1, minHeight: '100vh',
-        }}
+        <Box
+          sx={{
+            display: 'flex',
+            padding: 0,
+            flex: 1,
+            minHeight: '100vh',
+          }}
         >
-          <AppBar
-            logo={appLogo}
-            logoSize={appLogoSize}
-            siteName={appDisplayName}
-            timeZone={timeZone}
-          >
-            <Avatar onClick={handleClick}>
-              <Icon src="AccountCircle" />
-            </Avatar>
-            <Box sx={{}}>
-              <Menu
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                open={open}
-              >
-                {menuItems.map(
-                  (menuItem: {
-                    enableHover: boolean
-                    children: ReactNode | string
-                    divider: boolean
-                    color: TextColorType
-                    height: 'small' | 'large'
-                  }) => (
-                    <MenuItem
-                      color={menuItem.color}
-                      disableHover={!menuItem.enableHover}
-                      divider={menuItem.divider}
-                      height={menuItem.height}
-                    >
-                      {menuItem.children}
-                    </MenuItem>
-                  ),
-                )}
-                <MenuItem
-                  disableHover
-                  color="primary"
-                  divider={false}
-                  height="large"
-                >
-                  <Box sx={{minWidth: '180px'}}>
-                    <Switch onChange={toggleDarkMode} value={darkMode} />
-                    <Typography text="Dark Mode" variant="bodyL" />
-                  </Box>
-                </MenuItem>
-                <MenuItem
-                  divider={false}
-                  disableHover={false}
-                  height="large"
-                  color={darkMode ? 'primary' : 'secondary'}
-                >
-                    <LogoutButton />
-                </MenuItem>
-              </Menu>
-            </Box>
-          </AppBar>
-          <NavigationDrawer routes={routes} />
+          <WebUIAppBar
+            appData={appInit}
+            darkMode={darkMode}
+            handleDarkModeChange={handleDarkModeChange}
+          />
           <ErrorModal />
           <NotifProvider>
             <ToastNotif />
-            <PageLayout statusBar={statusBar}>
-              <AppRoutes
-                currentUser={currentUser}
-                product={product}
-                pageDictionary={pageDictionary}
-                routes={routes}
-              />
+            <PageLayout
+              statusBar={statusBar}
+              navigationDrawer={<NavigationDrawer routes={routes} />}
+            >
+              {layouts && (
+                <AppRoutes
+                  currentUser={currentUser}
+                  product={product}
+                  pageDictionary={PageDictionary}
+                  routes={routes}
+                />
+              )}
             </PageLayout>
           </NotifProvider>
         </Box>
-        <Footer softwareName={softwareName} version={`Version ${version}`} />
+        <Footer
+          softwareName={appInit.footer.softwareName}
+          version={`Version ${appInit.footer.version}`}
+        />
       </ThemeProvider>
     </Router>
   );

@@ -1,0 +1,802 @@
+{
+    "/components/##BMS_ID##_##RACK_ID##": {
+        "rack_enable": 0,
+        "open_contactor": 0,
+        "close_contactor": 0,
+        "rack_run_state": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/##RACK_ID##:SystemState", "outValue": "Normal"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/##RACK_ID##:SystemState", "outValue": "No charge"},
+                        { "shift": 0,"mask": 255,"inValue": 2,"uri": "/status/##RACK_ID##:SystemState", "outValue": "No discharge"},
+                        { "shift": 0,"mask": 255,"inValue": 3,"uri": "/status/##RACK_ID##:SystemState", "outValue": "Standby"},
+                        { "shift": 0,"mask": 255,"inValue": 4,"uri": "/status/##RACK_ID##:SystemState", "outValue": "Stop"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_##RACK_ID##:rack_run_state@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "rack_precharge_phase": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/##RACK_ID##:rack_precharge_phase", "outValue": "Disconnected"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/##RACK_ID##:rack_precharge_phase", "outValue": "Start connection"},
+                        { "shift": 0,"mask": 255,"inValue": 2,"uri": "/status/##RACK_ID##:rack_precharge_phase", "outValue": "Connecting"},
+                        { "shift": 0,"mask": 255,"inValue": 3,"uri": "/status/##RACK_ID##:rack_precharge_phase", "outValue": "Connected"},
+                        { "shift": 0,"mask": 255,"inValue": 4,"uri": "/status/##RACK_ID##:rack_precharge_phase", "outValue": "Connection fail"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_##RACK_ID##:rack_precharge_phase@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "rack_connection_state": {
+            "value": 0,
+            "note": "0: Opened, 1: Closed",
+            "note1": "Bit0: Positive Contactor State",
+            "note2": "Bit1: PreContactor State",
+            "note3": "Bit2: Negative Contactor State",
+            "note4": "Bit3: Disconnector State",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/status/##RACK_ID##:pos_contactor_state", "outValue": 0},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/status/##RACK_ID##:pos_contactor_state", "outValue": 1},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/status/##RACK_ID##:pre_contactor_state", "outValue": "Opened"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/status/##RACK_ID##:pre_contactor_state", "outValue": "Closed"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/status/##RACK_ID##:neg_contactor_state", "outValue": 0},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/status/##RACK_ID##:neg_contactor_state", "outValue": 1},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/status/##RACK_ID##:disconnector_state", "outValue": "Opened"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/status/##RACK_ID##:disconnector_state", "outValue": "Closed"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_##RACK_ID##:rack_connection_state@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+
+                }
+            ]}
+        },
+        "rack_alarm_info": {
+            "value": 0,
+            "note": "0: Normal, 1: Fault",
+            "note1": "Bit0: BMU Hardware Fault",
+            "note2": "Bit1: BCU Hardware Fault",
+            "note3": "Bit2: Fuse Protector Fault",
+            "note4": "Bit3: Contactor Adhesion Fault",
+            "note5": "Bit4: BMU Communication Fault",
+            "note6": "Bit5: BAU Communication Fault",
+            "note7": "Bit6: Current Sensor Fault",
+            "note8": "Bit7: IMD Fault",
+            "note9": "Bit8: Disconnector Open when Rack Enabled",
+            "note10": "Bit9-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:bmu_hardware", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:bmu_hardware", "outValue": "Fault"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:bcu_hardware", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:bcu_hardware", "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:fuse_protector", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:fuse_protector", "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:contactor_adhesion", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:contactor_adhesion", "outValue": "Fault"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:bmu_comms", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:bmu_comms", "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:bau_comms", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:bau_comms", "outValue": "Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:current_sensor", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:current_sensor", "outValue": "Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:imd", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:imd", "outValue": "Fault"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:disconnector_open", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:disconnector_open", "outValue": "Disconnector Open When Rack Enabled"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarm_info[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarm_info[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarm_info[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarm_info[3]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarm_info[4]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarm_info[5]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarm_info[6]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarm_info[7]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarm_info[8]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_##RACK_ID##:rack_alarm_info@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+
+                }
+            ]}
+        },
+        "rack_warning": {
+            "value": 0,
+            "note": "0: Normal, 1: Warning",
+            "note1": "Bit0: RackVolHigh Warn",
+            "note2": "Bit1: RackVolLow Warn",
+            "note3": "Bit2: CellVolHigh Warn",
+            "note4": "Bit3: CellVolLow Warn",
+            "note5": "Bit4: DsgOverCurr Warn",
+            "note6": "Bit5: ChgOverCurr Warn",
+            "note7": "Bit6: DsgTempHigh Warn",
+            "note8": "Bit7: DsgTempLow Warn",
+            "note9": "Bit8: ChgTempHigh Warn",
+            "note10": "Bit9: ChgTempLow Warn",
+            "note11": "Bit10: InsulationLow Warn",
+            "note12": "Bit11: TerminalTempHigh Warn",
+            "note13": "Bit12: HVBTempHigh Warn",
+            "note14": "Bit13: CellVolDiffHigh Warn",
+            "note15": "Bit14: CellTempDiffHigh Warn",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:rack_volt_high_warn", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:rack_volt_high_warn", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:rack_volt_low_warn", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:rack_volt_low_warn", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:cell_volt_high_warn", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:cell_volt_high_warn", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:cell_volt_low_warn", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:cell_volt_low_warn", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:dsg_over_curr_warn", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:dsg_over_curr_warn", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:chg_over_curr_warn", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:chg_over_curr_warn", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:dsg_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:dsg_temp_high_warn", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:dsg_temp_low_warn", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:dsg_temp_low_warn", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:chg_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:chg_temp_high_warn", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:chg_temp_low_warn", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:chg_temp_low_warn", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:insulation_low_warn", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:insulation_low_warn", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:terminal_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:terminal_temp_high_warn", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvb_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvb_temp_high_warn", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:cell_volt_diff_high_warn", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:cell_volt_diff_high_warn", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:cell_temp_diff_high_warn", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:cell_temp_diff_high_warn", "outValue": "Warning"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[3]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[4]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[5]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[6]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[7]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[8]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[9]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[10]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[11]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[12]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[13]", "outValue": true},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_warnings[14]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_##RACK_ID##:rack_warning@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "rack_alarm": {
+            "value": 0,
+            "note": "0: Normal, 1: Warning",
+            "note1": "Bit0: RackVolHigh Alarm",
+            "note2": "Bit1: RackVolLow Alarm",
+            "note3": "Bit2: CellVolHigh Alarm",
+            "note4": "Bit3: CellVolLow Alarm",
+            "note5": "Bit4: DsgOverCurr Alarm",
+            "note6": "Bit5: ChgOverCurr Alarm",
+            "note7": "Bit6: DsgTempHigh Alarm",
+            "note8": "Bit7: DsgTempLow Alarm",
+            "note9": "Bit8: ChgTempHigh Alarm",
+            "note10": "Bit9: ChgTempLow Alarm",
+            "note11": "Bit10: InsulationLow Alarm",
+            "note12": "Bit11: TerminalTempHigh Alarm",
+            "note13": "Bit12: HVBTempHigh Alarm",
+            "note14": "Bit13: CellVolDiffHigh Alarm",
+            "note15": "Bit14: CellTempDiffHigh Alarm",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:rack_volt_high_alarm", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:rack_volt_high_alarm", "outValue": "Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:rack_volt_low_alarm", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:rack_volt_low_alarm", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:cell_volt_high_alarm", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:cell_volt_high_alarm", "outValue": "Alarm"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:cell_volt_low_alarm", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:cell_volt_low_alarm", "outValue": "Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:dsg_over_curr_alarm", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:dsg_over_curr_alarm", "outValue": "Alarm"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:chg_over_curr_alarm", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:chg_over_curr_alarm", "outValue": "Alarm"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:dsg_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:dsg_temp_high_alarm", "outValue": "Alarm"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:dsg_temp_low_alarm", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:dsg_temp_low_alarm", "outValue": "Alarm"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:chg_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:chg_temp_high_alarm", "outValue": "Alarm"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:chg_temp_low_alarm", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:chg_temp_low_alarm", "outValue": "Alarm"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:insulation_low_alarm", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:insulation_low_alarm", "outValue": "Alarm"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:terminal_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:terminal_temp_high_alarm", "outValue": "Alarm"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvb_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvb_temp_high_alarm", "outValue": "Alarm"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:cell_volt_diff_high_alarm", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:cell_volt_diff_high_alarm", "outValue": "Alarm"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:cell_temp_diff_high_alarm", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:cell_temp_diff_high_alarm", "outValue": "Alarm"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[3]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[4]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[5]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[6]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[7]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[8]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[9]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[10]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[11]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[12]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[13]", "outValue": true},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_alarms[14]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_##RACK_ID##:rack_alarm@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "rack_critical_alarm": {
+            "value": 0,
+            "note": "0: Normal, 1: Warning",
+            "note1": "Bit0: RackVolHigh Critical Alarm",
+            "note2": "Bit1: RackVolLow Critical Alarm",
+            "note3": "Bit2: CellVolHigh Critical Alarm",
+            "note4": "Bit3: CellVolLow Critical Alarm",
+            "note5": "Bit4: DsgOverCurr Critical Alarm",
+            "note6": "Bit5: ChgOverCurr Critical Alarm",
+            "note7": "Bit6: DsgTempHigh Critical Alarm",
+            "note8": "Bit7: DsgTempLow Critical Alarm",
+            "note9": "Bit8: ChgTempHigh Critical Alarm",
+            "note10": "Bit9: ChgTempLow Critical Alarm",
+            "note11": "Bit10: InsulationLow Critical Alarm",
+            "note12": "Bit11: TerminalTempHigh Critical Alarm",
+            "note13": "Bit12: HVBTempHigh Critical Alarm",
+            "note14": "Bit13: CellVolDiffHigh Critical Alarm",
+            "note15": "Bit14: CellTempDiffHigh Critical Alarm",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:rack_volt_high", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:rack_volt_high", "outValue": "Critical Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:rack_volt_low", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:rack_volt_low", "outValue": "Critical Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:cell_volt_high", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:cell_volt_high", "outValue": "Critical Alarm"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:cell_volt_low", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:cell_volt_low", "outValue": "Critical Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:dsg_over_curr", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:dsg_over_curr", "outValue": "Critical Alarm"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:chg_over_curr", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:chg_over_curr", "outValue": "Critical Alarm"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:dsg_temp_high", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:dsg_temp_high", "outValue": "Critical Alarm"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:dsg_temp_low", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:dsg_temp_low", "outValue": "Critical Alarm"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:chg_temp_high", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:chg_temp_high", "outValue": "Critical Alarm"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:chg_temp_low", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:chg_temp_low", "outValue": "Critical Alarm"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:insulation_low", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:insulation_low", "outValue": "Critical Alarm"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:terminal_temp_high", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:terminal_temp_high", "outValue": "Critical Alarm"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:hvb_temp_high", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:hvb_temp_high", "outValue": "Critical Alarm"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:cell_volt_diff_high", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:cell_volt_diff_high", "outValue": "Critical Alarm"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/faults/##RACK_ID##:cell_temp_diff_high", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/faults/##RACK_ID##:cell_temp_diff_high", "outValue": "Critical Alarm"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[3]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[4]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[5]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[6]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[7]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[8]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[9]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[10]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[11]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[12]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[13]", "outValue": true},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_critical_alarms[14]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_##RACK_ID##:rack_critical_alarm@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "rack_step_in_failure": {
+            "value": 0,
+            "note": "0: Normal, 1: Warning",
+            "note1": "Bit0: Rack Vol Diff Large",
+            "note2": "Bit1: SMS Confirmation Overtime",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:rack_vol_diff_large", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:rack_vol_diff_large", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:sms_confirmation_overtime", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:sms_confirmation_overtime", "outValue": "Warning"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_##RACK_ID##:rack_step_in_failure@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "precharge_total_vol": 0,
+        "rack_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackVoltage"}]}]
+            }
+        },
+        "rack_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackCurrent"}]}]
+            }
+        },
+        "rack_state": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/##RACK_ID##:ChargeDischargeState", "outValue": "Idle"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/##RACK_ID##:ChargeDischargeState", "outValue": "Discharging"},
+                        { "shift": 0,"mask": 255,"inValue": 2,"uri": "/status/##RACK_ID##:ChargeDischargeState", "outValue": "Charging"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_##RACK_ID##:rack_state@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "rack_soc": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackSOC"}]}]
+            }
+        },
+        "rack_soh": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackSOH"}]}]
+            }
+        },
+        "rack_insulation": 0,
+        "rack_positive_insulation": 0,
+        "rack_negative_insulation": 0,
+        "rack_max_charge_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackMaxChargeCurrent"}]}]
+            }
+        },
+        "rack_max_discharge_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackMaxDischargeCurrent"}]}]
+            }
+        },
+        "rack_max_cell_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackMaxCellVoltage"}]}]
+            }
+        },
+        "rack_min_cell_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackMinCellVoltage"}]}]
+            }
+        },
+        "rack_max_cell_temperature": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackMaxCellTemp"}]}]
+            }
+        },
+        "rack_min_cell_temperature": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackMinCellTemp"}]}]
+            }
+        },
+        "rack_avg_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackAvgCellVoltage"}]}]
+            }
+        },
+        "rack_avg_temperature": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/##RACK_ID##:RackAvgCellTemp"}]}]
+            }
+        }
+    },
+    "/components/##BMS_ID##_hvac_params": {
+        "##RACK_ID##_remote_ac_on": 0,
+        "##RACK_ID##_cooling_temp_setting": 0,
+        "##RACK_ID##_cooling_setpoint_upper_limit": 0,
+        "##RACK_ID##_ht_warning_setting": 0,
+        "##RACK_ID##_lt_warning_setting": 0,
+        "##RACK_ID##_interior_air_fan_stop_setting": 0,
+        "##RACK_ID##_heating_temp_setting": 0,
+        "##RACK_ID##_heating_setpoint_lower_limit": 0,
+        "##RACK_ID##_dehumidity_setting": 0
+    },
+    "/components/##BMS_ID##_hvac_info": {
+        "##AC_1_ID##_unit_running_status": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/assets/##BMS_ID##/##RACK_ID##:hvac_1_unit_running_status", "outValue": "Stop"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/assets/##BMS_ID##/##RACK_ID##:hvac_1_unit_running_status", "outValue": "Running"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:##AC_1_ID##_unit_running_status@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "##AC_1_ID##_inside_return_temp": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri": "/assets/##BMS_ID##/##RACK_ID##:hvac_1_temperature"}
+                    ]
+                }]
+            }
+        },
+        "##AC_1_ID##_alarms_1": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_high_temp", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_high_temp", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_low_temp", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_low_temp", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_high_humidity", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_high_humidity", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_low_humidity", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_low_humidity", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_heat_exchanger_coil_frost", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_heat_exchanger_coil_frost", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_exhaust_temp_high", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_exhaust_temp_high", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_heat_exchanger_coil_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_heat_exchanger_coil_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_exterior_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_exterior_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_condensation_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_condensation_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_interior_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_interior_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_exhaust_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_exhaust_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_humidity_sensing_failure", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_humidity_sensing_failure", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_interior_fan_failure", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_interior_fan_failure", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_exterior_fan_failure", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_exterior_fan_failure", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_compressor_failure", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_compressor_failure", "outValue": "Warning"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_electric_heating_failure", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_electric_heating_failure", "outValue": "Warning"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[3]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[4]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[5]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[6]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[7]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[8]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[9]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[10]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[11]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[12]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[13]", "outValue": true},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[14]", "outValue": true},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[15]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:##AC_1_ID##_alarms_1@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "##AC_1_ID##_alarms_2": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_emergency_air_fan_failure", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_emergency_air_fan_failure", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_high_air_pressure", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_high_air_pressure", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_low_air_pressure", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_low_air_pressure", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_flood", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_flood", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_smoke", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_smoke", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_door_open", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_door_open", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_high_air_pressure_lockdown", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_high_air_pressure_lockdown", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_low_air_pressure_lockdown", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_low_air_pressure_lockdown", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_exhaust_lockdown", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_exhaust_lockdown", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_ac_high_voltage", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_ac_high_voltage", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_ac_low_voltage", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_ac_low_voltage", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_ac_drop_out", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_ac_drop_out", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_phase_loss", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_phase_loss", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_freq_abnormal", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_freq_abnormal", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_phase_reversal", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_phase_reversal", "outValue": "Warning"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_dc_high_voltage", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_dc_high_voltage", "outValue": "Warning"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[16]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[17]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[18]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[19]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[20]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[21]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[22]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[23]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[24]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[25]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[26]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[27]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[28]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[29]", "outValue": true},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[30]", "outValue": true},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:##RACK_ID##_##AC_1_ID##_alarms[31]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:##AC_1_ID##_alarms_2@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "##AC_1_ID##_alarms_3": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_1_dc_low_voltage", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_1_dc_low_voltage", "outValue": "Warning"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:##AC_1_ID##_alarms_3@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+
+        "##AC_2_ID##_unit_running_status": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/assets/##BMS_ID##/##RACK_ID##:hvac_2_unit_running_status", "outValue": "Stop"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/assets/##BMS_ID##/##RACK_ID##:hvac_2_unit_running_status", "outValue": "Running"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:##AC_2_ID##_unit_running_status@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "##AC_2_ID##_inside_return_temp": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri": "/assets/##BMS_ID##/##RACK_ID##:hvac_2_temperature"}
+                    ]
+                }]
+            }
+        },
+        "##AC_2_ID##_alarms_1": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_high_temp", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_high_temp", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_low_temp", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_low_temp", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_high_humidity", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_high_humidity", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_low_humidity", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_low_humidity", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_heat_exchanger_coil_frost", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_heat_exchanger_coil_frost", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_exhaust_temp_high", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_exhaust_temp_high", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_heat_exchanger_coil_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_heat_exchanger_coil_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_exterior_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_exterior_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_condensation_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_condensation_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_interior_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_interior_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_exhaust_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_exhaust_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_humidity_sensing_failure", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_humidity_sensing_failure", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_interior_fan_failure", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_interior_fan_failure", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_exterior_fan_failure", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_exterior_fan_failure", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_compressor_failure", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_compressor_failure", "outValue": "Warning"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_electric_heating_failure", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_electric_heating_failure", "outValue": "Warning"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:##AC_2_ID##_alarms_1@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "##AC_2_ID##_alarms_2": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_emergency_air_fan_failure", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_emergency_air_fan_failure", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_high_air_pressure", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_high_air_pressure", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_low_air_pressure", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_low_air_pressure", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_flood", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_flood", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_smoke", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_smoke", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_door_open", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_door_open", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_high_air_pressure_lockdown", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_high_air_pressure_lockdown", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_low_air_pressure_lockdown", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_low_air_pressure_lockdown", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_exhaust_lockdown", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_exhaust_lockdown", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_ac_high_voltage", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_ac_high_voltage", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_ac_low_voltage", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_ac_low_voltage", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_ac_drop_out", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_ac_drop_out", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_phase_loss", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_phase_loss", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_freq_abnormal", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_freq_abnormal", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_phase_reversal", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_phase_reversal", "outValue": "Warning"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_dc_high_voltage", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_dc_high_voltage", "outValue": "Warning"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:##AC_2_ID##_alarms_@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "##AC_2_ID##_alarms_3": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/##RACK_ID##:hvac_2_dc_low_voltage", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/##RACK_ID##:hvac_2_dc_low_voltage", "outValue": "Warning"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:##AC_2_ID##_alarms_3@ifChanged", 
+                                                            "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        }
+    }
+}

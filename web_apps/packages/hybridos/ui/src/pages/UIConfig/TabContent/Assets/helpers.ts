@@ -36,7 +36,9 @@ export const NO_ASSETS_TO_DISPLAY = 'No Assets to display yet.';
 export const DELETE_ASSET = 'DELETE ASSET';
 
 export const newAsset: Asset = {
-  info: {},
+  info: {
+    name: 'New Item',
+  },
   alarms: {
     alarmFields: [],
     faultFields: [],

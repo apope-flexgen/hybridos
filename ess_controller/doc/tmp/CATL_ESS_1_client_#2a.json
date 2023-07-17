@@ -1,0 +1,104 @@
+{
+  "fileInfo": {
+    "sourceFileName": "Catl_ESS_Ref.xlsx",
+    "sourceFileCreated": "2020-07-23T05:59:21.000Z",
+    "sourceFileLastModified": "2020-08-11T18:06:59.000Z",
+    "sourceFileCreatedBy": "17576",
+    "sourceFileLastModifiedBy": "pmiller",
+    "outputFileName": "Catl_ESS_client.json",
+    "outputFileType": "client",
+    "outputFileCreated": "2020-08-12T13:00:45.553Z"
+  },
+  "xsystem": {
+    "name": "CATL BMS",
+    "protocol": "Modbus TCP",
+    "version": "6.0 WIP",
+    "id": "catl_BMU_1",
+    "port": 512,
+    "ip_address": "192.168.1.86",
+    "data_bits": "Columns marked in green are REQUIRED",
+    "frequency": 2000
+  },
+  "connection": {
+    "name": "Clou_ESS_Controller",
+    "xip_address": "192.168.1.19",
+    "xport": 512,
+    "ip_address": "127.0.0.1",
+    "port": 2502
+  },
+  "components": [
+    {
+      "id": "catl_ems_bms_rw",
+      "frequency": 200,
+      "offset_time": 20,
+      "hex_start": "0x0380",
+      "Xheartbeat_enabled": true,
+      "component_heartbeat_read_uri": "life_signal",
+      "component_heartbeat_write_uri": "life",
+      "modbus_heartbeat_timeout_ms": 200,
+      "component_heartbeat_timeout_ms": 200,
+      "registers": [
+        {
+          "type": "Holding Registers",
+          "starting_offset": 896,
+          "number_of_registers": 13,
+          "note": "EMS->BMS (write/read)",
+          "map": [
+            {
+              "id": "ems_heartbeat",
+              "offset": 896,
+              "name": "MS heartbeat"
+            },
+            {
+              "id": "ems_cmd",
+              "offset": 897,
+              "name": "MS_cmd",
+              "enum": true,
+              "bit_strings": [
+                "Initial",
+                "Stay Status",
+                "Power on cmd",
+                "Power off cmd"
+              ]
+            },
+            {
+              "id": "ems_status",
+              "offset": 898,
+              "name": "EMS_status"
+            },
+            {
+              "id": "ems_rtc_year",
+              "offset": 900,
+              "name": "EMS_RTC_month"
+            },
+            {
+              "id": "ems_rtc_day",
+              "offset": 902,
+              "name": "EMS_RTC_day"
+            },
+            {
+              "id": "ems_rtc_hour",
+              "offset": 903,
+              "name": "EMS_RTC_hour"
+            },
+            {
+              "id": "ems_rtc_minute",
+              "offset": 904,
+              "name": "EMS_RTC_minute"
+            },
+            {
+              "id": "ems_rtc_second",
+              "offset": 905,
+              "name": "EMS_RTC_second"
+            },
+            {
+              "id": "fault_clear_cmd",
+              "offset": 908,
+              "name": "Fault_Clear_cmd"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+Fault/Alarm concept thoughts
+
+ Phil Wilshire
+ 12/3/2020
+
+ Update 
+ 12/4/2020
+
+ All this uses this sort of routing in the component config.
+
+{ "/components/catl_mbmu_sum_r": {
+    "mbmu_warning_11": {
+        "value": 0,
+        "note":"Mbmu Warning table with degrees reg 1 Appendix 1",
+        "actions": {
+            "onSet": {
+                "enum": [
+                    { "shift": 0,"mask": 3,"inValue": 0,"uri": "/warn/bms:single_cell_overvoltage", "outValue": "Normal"},
+                    { "shift": 0,"mask": 3,"inValue": 1,"uri": "/warn/bms:single_cell_overvoltage", "outValue": "Warn 1"},
+                    { "shift": 0,"mask": 3,"inValue": 2,"uri": "/warn/bms:single_cell_overvoltage", "outValue": "Warn 2"},
+                    { "shift": 0,"mask": 3,"inValue": 3,"uri": "/warn/bms:single_cell_overvoltage", "outValue": "Warn 3"},
+
+                    { "shift": 2,"mask": 3,"inValue": 0,"uri": "/warn/bms:single_cell_undervoltage", "outValue": "Normal"},
+                    { "shift": 2,"mask": 3,"inValue": 1,"uri": "/warn/bms:single_cell_undervoltage", "outValue": "Warn 1"},
+                    { "shift": 2,"mask": 3,"inValue": 2,"uri": "/warn/bms:single_cell_undervoltage", "outValue": "Warn 2"},
+                    { "shift": 2,"mask": 3,"inValue": 3,"uri": "/warn/bms:single_cell_undervoltage", "outValue": "Warn 3"},
+
+                    { "shift": 4,"mask": 3,"inValue": 0,"uri": "/warn/bms:single_cell_overtemp", "outValue": "Normal"},
+                    { "shift": 4,"mask": 3,"inValue": 1,"uri": "/warn/bms:single_cell_overtemp", "outValue": "Warn 1"},
+                    { "shift": 4,"mask": 3,"inValue": 2,"uri": "/warn/bms:single_cell_overtemp", "outValue": "Warn 2"},
+                    { "shift": 4,"mask": 3,"inValue": 3,"uri": "/warn/bms:single_cell_overtemp", "outValue": "Warn 3"},
+
+                    { "shift": 6,"mask": 3,"inValue": 0,"uri": "/warn/bms:single_cell_undertemp", "outValue": "Normal"},
+                    { "shift": 6,"mask": 3,"inValue": 1,"uri": "/warn/bms:single_cell_undertemp", "outValue": "Warn 1"},
+                    { "shift": 6,"mask": 3,"inValue": 2,"uri": "/warn/bms:single_cell_undertemp", "outValue": "Warn 2"},
+                    { "shift": 6,"mask": 3,"inValue": 3,"uri": "/warn/bms:single_cell_undertemp", "outValue": "Warn 3"},
+
+                    { "shift": 8,"mask": 3,"inValue": 0,"uri": "/warn/bms:SOC_low", "outValue": "Normal"},
+                    { "shift": 8,"mask": 3,"inValue": 1,"uri": "/warn/bms:SOC_low", "outValue": "Warn 1"},
+                    { "shift": 8,"mask": 3,"inValue": 2,"uri": "/warn/bms:SOC_low", "outValue": "Warn 2"},
+                    { "shift": 8,"mask": 3,"inValue": 3,"uri": "/warn/bms:SOC_low", "outValue": "Warn 3"}
+                ]
+            }
+        }
+    }
+}
+}   
+
+This in turn used this operation in test_phil.cpp
+vm->setAmFunc(vmap, "comp", "/warn", aname, ass_man, (void*)&dummy_bms_alarm);
+
+to produce this in the varsmap
+{
+    "/functions/comp":	{
+    "/fault":	{
+        "value":	"0x47a243"
+    },
+    "/fault/bms":	{
+        "value":	"0x47a278"
+    },
+    "/warn/bms":	{
+        "value":	"0x47a3e6"
+    },
+    "/warn/pcs":	{
+        "value":	"0x47a3e6"
+    }
+}
+}
+A set action on anything in /warn/bms will run the dummy_bms_alarm code.
+This code is run with the assetVar "/warn/bms:SOC_low" as a target
+
+
+// set with  /usr/local/bin/fims/fims_send -m pub -u /components/catl_mbmu_sum_r '{"mbmu_warning_11": 1234}'
+Coupled with this code
+
+// int  dummy_bms_alarm(varsmap &vmap, assetVar* av)
+// {
+//     if(av)
+//     {
+//         char* dest;
+//         asprintf(&dest,"/assets/%s/summary:alarms",av->am->name.c_str());
+//         char* msg;
+//         char* almsg = av->aVal->valuestring?av->aVal->valuestring:(char *)"Normal";
+        
+//         asprintf(&msg,"%s alarm generated [%s]",av->name.c_str(), almsg);
+//         if(almsg && (strcmp(almsg,"Normal")!=0))
+//         {
+//             if(av->am&& av->am->vm)
+//             {
+//                 av->am->vm->sendAlarm(vmap, av, dest, nullptr, msg, 2);
+//             }
+//         }
+//         //av->am->vm->sendAlarm(vmap, "smbu", dest, nullptr, msg, 2);
+//         FPS_ERROR_PRINT(" %s >> dest [%s] msg [%s]  am %p \n", __func__, dest, msg ,(void *)av->am);
+
+//         if(dest)free((void*)dest);
+//         if(msg)free((void*)msg);
+//     }
+//     else
+//     {
+//         FPS_ERROR_PRINT(" %s >> running \n", __func__);
+//     }
+//     return 0;
+// }
+
+We are going all over the place to solve this problem nd making things a little difficult ... But it demonstrates what we are tryng to do.
+Ideally we should be able to do this
+
+{ "shift": 8,"mask": 3,"inValue": 3,"uri": "/assets/bms/summary:SOC_low", "func":"/functions/bms:SendAlarm","outValue": "Warn 3"}
+
+This will be in place  12/7/2020
+The main problem is the way the system is configued.
+The manager configs are loaded a little differently.
+the /assets and /links are all pulled in but the manager in the initial design just pulled in the assets and those objects did the real work.
+In reality there is very little difference between an asset_manager and an asset. I'll remove any differences as soon as I can.
+
+In reallity a component or asset can have management duties  and embedded child systems.
+The differences between the two will dissolve as the design progresses.
+
+The configs are all loaded within a "context" that being the asset manager (or asset)
+Because the asset_manager config load was only a partial config it only looked at selected parts of the config file.
+You have to add "manager" stuff into the template file .
+For example:
+"/components/catl_mbmu_sum_r": {
+    "mbmu_warning_11": {
+        "value": 0,
+        ...
+
+    }
+}
+This was really a config item for the bms and not smbu_xx.
+
+I'll fix that by 12/7/2020 as well and move the config items to their correct place.
+
+Once this is done all items in the config file will have the correct context ( or asset_maager / asset) to work within.
+This has been the missing factor needed to allow sequences and fault configs  etc to work.
+
+
+
+ So the one of the Main Functions of the ess_controller  seems to be the manager of all the warning and fault conditions of the battery units.
+ There is static monitoring of the system state and dynamic monitoring of the system operation.
+ In setting up the json template file I am considering adding the concept of component level (IE json table) handlers.
+ We already have variable level handlers (actions, SetFunc so far).
+ If we divert a  incoming , decoded modbus value to a "/fault" or a "/warn" or any other table and attach a handler to that "set" operation based on the table (or component) name.
+ This handler would automatically issue an assert or clear on an alarm or fault  as dictated by the data in the variable.
+ This means that a write of "Warn" to /warn/smbu_1/cell_overtemp  will automatically send a "cell_overtemp" warning to the asset manager of smbu_1 ( in this case the bms).
+ We "simply" attach a function to any writes, with changed values, to /warn/smbu_1.
+ This means that we can write the general purpose handler ( with exceptions if needed) for the hundreds of fault conditions we are going to have to handle.
+ I can add this functionality over the weekend  (maybe even tonight, its not much work) and we can recover most of the lost project time caused by lab and training this week. (edited) 
+
+ for each nfrag
+
+The  function returns "1" if it is done.
+
+// Something like this
+// if function/comp/uri(nfrag) exists
+if (vmap["/functions/comp"]["/warn/bms/smbu_1"] ){
+    fcn = (fcn*)vmap["/functions/comp"]["/warn/bms/smbu_1"];
+    if(fcn(Av))
+        break;
+    }
+    if (vmap["/functions/comp"]["/warn/bms"]){
+        fcn = (fcn*)vmap["/functions/comp"]["/warn/bms"];
+        if(fcn(Av))
+            break;
+    }
+    if (vmap["/functions/comp"]["/warm"] ) {
+        fcn = (fcn*)vmap["/functions/comp"]["/warn"];
+        if(fcn(Av))
+            break;
+    }
+}
+
+vm.registerCompFunction("/warn", "name", &func);
+vm.registerCompFunction("/warn/bms", "name", &func)
+vm.registerCompFunction("/warn/smbu_1", "name", &func)
+
+
+"/functions/comp":{
+    "/warn": {
+        "name" :"GlobalWarnFun",
+        "value":	"0x479566"
+    },
+    "/warn/ess": {
+        "name" :"ManagerWarnFun",
+        "value":	"0x479566"
+    },
+    "/warn/bms/smbu_1": {
+        "name" :"AssetWarnFun",
+        "value":	"0x479566"
+    },
+    "/fault": {
+        "name" :"GlobalFaultFun",
+        "value":	"0x479566"
+    },
+    "/fault/ess": {
+        "name" :"ManagerFaultFun",
+        "value":	"0x479566"
+    },
+    "/fault/bms/smbu_1": {
+        "name" :"AssetFaultFun",
+        "value":	"0x479566"
+    }
+
+},
+
+"/functions/comp/warn/ess":{
+    "send_ess_warning": {
+        "value":	"0x479566"
+    },
+    "send_ess_fault": {
+        "value":	"0x479566"
+    }
+
+},
+
+ "/functions/bms":	{
+    "run_asset_init":	{
+        "value":	"0x479566"
+    },
+    "run_asset_wakeup":	{
+        "value":	"0x479df3"
+    },
+    "run_init":	{
+        "value":	"0x479524"
+    },
+    "run_wakeup":	{
+        "value":	"0x479e5b"
+    }
+},

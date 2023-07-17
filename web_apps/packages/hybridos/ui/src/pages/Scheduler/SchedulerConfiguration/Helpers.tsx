@@ -66,28 +66,13 @@ export const buttonBoxSx = (theme: ThemeType) => ({
   gap: theme.fgb.siteFleetConfig.sizing.padding,
 });
 
-export const switchBoxSx = {
-  width: '240px',
-  display: 'flex',
-  gap: '20px',
-};
-
-export const noSelectedSiteSx = (theme: ThemeType) => ({
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '1rem',
-  flexGrow: 1,
-  backgroundColor: theme.fgd.primary.main_8p,
-});
-
 export const fleetSiteListBoxSx = (theme: ThemeType) => ({
   minWidth: '18%',
   minHeight: '500px',
   padding: theme.fgb.schedulerConfig.sizing.padding,
+  paddingBottom: '12px',
   display: 'flex',
-  backgroundColor: theme.fgd.primary.main_16p,
+  backgroundColor: `${theme.fgd.primary.main}20`,
   flexDirection: 'column',
   gap: '10px',
 });
@@ -119,6 +104,9 @@ export const SCADASettingsSx = (theme: ThemeType) => ({
 });
 
 export const siteFleetConfigLabels = {
+  notifications: {
+    success: 'Configuration successfully saved',
+  },
   pageDescription: {
     sc: 'Site Controller Configuration',
     fm: 'Fleet Manager Configuration',
@@ -133,7 +121,7 @@ export const siteFleetConfigLabels = {
   },
   SCADA: {
     main: 'SCADA',
-    switch: 'Use SCADA interface',
+    switch: 'View SCADA Settings',
     stageSize: 'Stage Size',
     maxEvents: 'Max Events',
     ints: 'Ints',
@@ -161,16 +149,19 @@ export const siteControllerLabels = {
     textField: 'Port',
   },
   serverTextLabel: 'Port',
+  nameError: 'This field is required',
 };
 
 export const fleetManagerLabels = {
   sites: 'Sites',
   addSite: 'Add Site',
   settings: 'Fleet Settings (optional)',
+  scadaSettings: 'SCADA Settings',
   noItem: 'Select a Site to View Site Configuration',
   duplicateName: 'Site Names must be unique',
+  missingName: 'Please enter a site name',
   localSchedule: {
-    missingNameField: 'To save Fleet Settings, please provide a Fleet Name',
+    missingNameField: 'To edit Fleet Settings, please provide a name',
     name: 'Name',
     clothedSetpoints: 'Use Clothed Setpoints',
     setPointEnforcement: {
@@ -195,6 +186,8 @@ export const fleetManagerLabels = {
 
 // eslint-disable-next-line max-len
 export const IPregex = /^(?!0)(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+export const nameRegex = /^\s*$/;
 
 export const initialSCConfig: Configuration = {
   scheduler_type: 'SC',
@@ -225,20 +218,9 @@ export const initialSCConfig: Configuration = {
 
 export const initialFMConfig: Configuration = {
   scheduler_type: 'FM',
-  local_schedule: {
-    id: uuid(),
-    name: '',
-    clothed_setpoints: false,
-    // default values
-    setpoint_enforcement: {
-      enabled: false,
-      frequency_seconds: 360000,
-    },
-  },
   web_sockets: {
     clients: [],
   },
-  // these are the default values
   scada: {
     stage_size: 1,
     max_num_events: 100,

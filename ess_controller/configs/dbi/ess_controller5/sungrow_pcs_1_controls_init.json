@@ -1,0 +1,26 @@
+{  
+    "/notes/pcs": {
+        "note1":"This is the power conversion system (PCS) initial config file for loading Sungrow PCS controls configuration"
+    },
+
+    "/config/load": {
+        "sungrow_pcs_1_controls_init": {
+            "value":false,
+            "file":"sungrow_pcs_1_controls_init",
+            "pname":"ess",
+            "aname":"pcs",
+            "new_options":[
+                {
+                    "tmpl":"sungrow_pcs_manager_controls",
+                    "pname":"ess",
+                    "amname":"pcs",
+                    "from":1,
+                    "to":1,
+                    "reps":[
+                        {"replace":"##PCS_ID##", "with":"pcs_{:01d}"}
+                    ]
+                }
+            ]
+        }
+    }
+}

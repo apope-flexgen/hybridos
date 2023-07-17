@@ -1,12 +1,12 @@
-import { Checkbox, SeverityType } from '@flexgen/storybook';
+import { Box, Checkbox, SeverityType } from '@flexgen/storybook';
 import { FC, useState } from 'react';
 import { EventsRequestParams } from 'shared/types/dtos/events.dto';
 import { initialSeverities, severitiesProperties } from './EventSeverities-helpers';
-import { CheckBoxColors, SeveritiesStateObject } from './EventSeveritiesTypes';
+import { SeveritiesStateObject } from './EventSeveritiesTypes';
 
 interface EventSeveritiesProps {
-  filters: EventsRequestParams
-  setFilters: (value: React.SetStateAction<EventsRequestParams>) => void
+  filters: EventsRequestParams;
+  setFilters: (value: React.SetStateAction<EventsRequestParams>) => void;
 }
 
 const EventSeverities: FC<EventSeveritiesProps> = ({
@@ -33,30 +33,25 @@ const EventSeverities: FC<EventSeveritiesProps> = ({
   };
 
   return (
-    <>
+    <Box>
       {Object.entries(severitiesProperties).map(([key, value]) => {
         const severity = key as keyof SeveritiesStateObject;
         return (
           <Checkbox
-            color={value.color ? (value.color as CheckBoxColors) : 'primary'}
+            color="primary"
             label={value.label}
             onChange={() => {
               setSeverities({
                 ...severities,
                 [severity]: !severities[severity],
               });
-              updateSeverityFilter(
-                !severities[severity],
-                severity,
-                filters,
-                setFilters,
-              );
+              updateSeverityFilter(!severities[severity], severity, filters, setFilters);
             }}
             value={severities[severity]}
           />
         );
       })}
-    </>
+    </Box>
   );
 };
 

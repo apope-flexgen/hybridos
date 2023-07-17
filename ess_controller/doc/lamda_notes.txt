@@ -1,0 +1,55 @@
+Quite often, C++ applications depend on third-party or operating system libraries that are entirely written in C or expose C-only interface. Some examples of these C-APIs are database drivers, messaging service APIs, and native threading interfaces. Usually, these C-APIs take function pointer parameters for callback arguments. Let's take the example of pthread_create from the POSIX pthread library.
+
+int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
+               void *(*start_routine) (void *), void *arg);
+The pthread_create function creates a new thread that starts execution by invoking the parameter, start_routine. The last parameter, arg, is passed as the argument to start_routine.
+
+Suppose, we are creating a Worker class that periodically does some work in a background thread. The Worker's start method creates a new thread through pthread_create. The new background thread always executes in a loop in the Worker's run method until the loop is terminated. The stop method sets a boolean flag to end the run loop and joins the thread. Below is the code of the Worker class:
+
+// requires pthread.h and unistd.h
+class Worker {
+public:
+
+ // Implemented later
+ int start();
+
+ void stop() {
+  stopped_ = true;
+  // wait for the thread to exit by joining
+  pthread_join(threadId_, nullptr);
+ }
+private:
+
+ void run() {
+  while(!stopped_) {
+      std::cout << "Running\n";
+      usleep(1000000); // sleep 1 second
+  }
+  std::cout << "Stopped\n";
+ }
+
+ pthread_t threadId_;
+ bool stopped_{false};
+};
+When it comes to calling pthread_create in Worker::start, there are three choices to pass as start_routine parameter: a stand-alone function in the file scope, a static member function of the Worker, or a capture-less lambda expression. Note that, we cannot pass a nonstatic member function of Worker as start_routine because the nonstatic member functions have implied hidden this parameter. The stand-alone function and static member function choices require us to write a separate function, which is tedious and hinders the readability. Besides, the stand-alone function solution is an anti-OOP pattern. That brings us to the implementation of Worker::start using capture-less lambda expression:
+
+int Worker::start() {
+ return
+ pthread_create(&threadId_,nullptr,
+  [](void* self) -> void* { // capture-less lambda
+     static_cast<Worker*>(self)->run();
+     return nullptr;
+  }, 
+  this);  // 'this' as argument to lambda
+}
+The lambda expression in the above code has an empty capture clause ([ ]), takes a void* parameter, and has an explicit return type of void* to match the start_routine type. It casts the self parameter to Worker* and calls the run method on it. The last parameter to pthread_create is the this pointer, which is subsequently passed to the lambda expression as an argument. We can use the Worker class in the main function, as shown below:
+
+int main() {
+  Worker w;
+  if(w.start() == 0) {
+    usleep(10000000);  // wait 10 seconds
+    w.stop();
+  } else {
+    std::cout << "Error\n";
+  }
+}

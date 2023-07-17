@@ -1,16 +1,19 @@
 // TODO: fix lint
 /* eslint-disable no-param-reassign */
-import { InternalAxiosRequestConfig } from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
 import { useCallback, useEffect } from 'react';
 import { useErrorContext } from 'src/contexts/ErrorContext';
 import { ErrorContextType } from 'src/contexts/ErrorContext/types';
-import SocketConnectionManager from 'src/services/SocketConnectionManager';
+import RealTimeService from 'src/services/RealTimeService/realtime.service';
 import { axiosWebUIInstance } from 'src/services/axios';
+import {
+  setRefreshingTokens,
+  isRefreshingTokens,
+  refreshingTokens,
+} from 'src/services/refreshingTokens';
 import { useAuth } from './useAuth';
-import useRefreshToken from './useRefresh';
 
 const useAxiosWebUIInstance = (skipGenericError?: boolean) => {
-  const refresh = useRefreshToken();
   const { auth } = useAuth();
   const { showErrorModal } = useErrorContext() as ErrorContextType;
 
@@ -20,16 +23,22 @@ const useAxiosWebUIInstance = (skipGenericError?: boolean) => {
     }
   };
 
-  const appendAuthHeader = useCallback((config: InternalAxiosRequestConfig<any>) => {
-    if (!config.headers!.Authorization) {
-      config.headers!.Authorization = auth?.accessToken;
-    }
-  }, [auth?.accessToken]);
+  const appendAuthHeader = useCallback(
+    async (config: InternalAxiosRequestConfig<any>) => {
+      if (isRefreshingTokens()) {
+        const response = await refreshingTokens;
+        config.headers.Authorization = response.data.accessToken;
+      } else if (!config.headers.Authorization) {
+        config.headers.Authorization = auth?.accessToken;
+      }
+    },
+    [auth?.accessToken],
+  );
 
   useEffect(() => {
     const requestIntercept = axiosWebUIInstance.interceptors.request.use(
-      (config) => {
-        appendAuthHeader(config);
+      async (config) => {
+        await appendAuthHeader(config);
         appendApiPath(config);
         return config;
       },
@@ -39,30 +48,43 @@ const useAxiosWebUIInstance = (skipGenericError?: boolean) => {
     const responseIntercept = axiosWebUIInstance.interceptors.response.use(
       (response) => response,
       async (error) => {
-        const prevRequest = error?.config;
-        const errorMessage = (error?.response?.data?.message || '').toString().toLowerCase();
-        const jwtError = (
-          errorMessage === 'jwt expired'
-                    || errorMessage === 'jwt malformed'
-                    || errorMessage === 'no auth token'
+        try {
+          const realTimeService = RealTimeService.Instance;
+          const prevRequest = error?.config;
+          const errorMessage = (error?.response?.data?.message || '').toString().toLowerCase();
+          const jwtError = errorMessage === 'jwt expired'
+            || errorMessage === 'jwt malformed'
+            || errorMessage === 'no auth token';
 
-        );
-        if (jwtError && !prevRequest?.sent) {
-          prevRequest.sent = true;
-          const accessToken = await refresh();
-          prevRequest.headers.Authorization = `${accessToken}`;
-          SocketConnectionManager.setAccessToken(accessToken);
-          return axiosWebUIInstance(prevRequest);
+          if (!isRefreshingTokens()) {
+            setRefreshingTokens(
+              axios.get('/api/refresh_token', {
+                withCredentials: true,
+              }),
+            );
+          }
+          if (jwtError && !prevRequest?.sent) {
+            prevRequest.sent = true;
+            const response = await refreshingTokens;
+            const { accessToken } = response.data;
+            auth!.accessToken = accessToken;
+            prevRequest.headers.Authorization = `${accessToken}`;
+            realTimeService.setAccessToken(accessToken);
+            return await axiosWebUIInstance(prevRequest);
+          }
+          if (!skipGenericError) {
+            const {
+              response: { data, status, statusText },
+            } = error;
+            showErrorModal({
+              title: statusText,
+              description: data.message || data,
+              errorCode: status,
+            });
+          }
+        } finally {
+          setRefreshingTokens(undefined);
         }
-        if (!skipGenericError) {
-          const { response: { data, status, statusText } } = error;
-          showErrorModal({
-            title: statusText,
-            description: data.message || data,
-            errorCode: status,
-          });
-        }
-
         return Promise.reject(error);
       },
     );
@@ -71,7 +93,7 @@ const useAxiosWebUIInstance = (skipGenericError?: boolean) => {
       axiosWebUIInstance.interceptors.request.eject(requestIntercept);
       axiosWebUIInstance.interceptors.response.eject(responseIntercept);
     };
-  }, [appendAuthHeader, refresh, showErrorModal, skipGenericError]);
+  }, [appendAuthHeader, auth, showErrorModal, skipGenericError]);
 
   return axiosWebUIInstance;
 };

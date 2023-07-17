@@ -4,12 +4,7 @@
             "directory" : "/home/archives",
             "private_key" : "/root/.ssh/id_rsa",
             "known_hosts" : "/root/.ssh/known_hosts",
-            "extension" : ".tar.gz",
-            "tar_mode": {
-                "mode": "tar",
-                "interval_seconds": 1000000,
-                "buffer_size": 50
-            }
+            "extension" : ".tar.gz"
         }
     },
     "servers": {
@@ -18,6 +13,10 @@
             "port": "22",
             "user": "root",
             "directory" : "/home/archives",
+            "timeout" : 10
+        },
+        "local_consumer": {
+            "directory" : "/home/local_consumer",
             "timeout" : 10
         }
     },

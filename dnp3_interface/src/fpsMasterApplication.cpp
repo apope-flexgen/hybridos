@@ -17,7 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-//#include "asiodnp3/DefaultMasterApplication.h"
 
 // this starts and stops the pub for the event 
 #include "fpsMasterApplication.h"

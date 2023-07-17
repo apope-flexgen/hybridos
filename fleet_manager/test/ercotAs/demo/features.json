@@ -1,12 +1,12 @@
 {
     "features": 
     {
-        "caisoAds": 
+        "caiso_ads": 
         {
-            "schedulerMode": "Site Export Target",
-            "eventDurationMinutes": 5,
-            "commandId": "kw_cmd",
-            "adsOnFlagId": "adsOnFlag"
+            "scheduler_mode": "Site Export Target",
+            "event_duration_minutes": 5,
+            "ads_kw_cmd_id": "kw_cmd",
+            "ads_on_flag_id": "adsOnFlag"
         },
         "ercotAs":
         { 

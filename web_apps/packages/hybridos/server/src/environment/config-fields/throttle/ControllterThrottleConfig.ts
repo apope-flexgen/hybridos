@@ -1,3 +1,3 @@
-import { ThrottleData } from "./ThrottleData";
+import { ThrottleData } from './ThrottleData'
 
-export class ControllerThrottleConfig extends Map<string, ThrottleData> { }
+export class ControllerThrottleConfig extends Map<string, ThrottleData> {}

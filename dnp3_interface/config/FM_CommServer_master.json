@@ -1,0 +1,587 @@
+{
+    "fileInfo": {
+        "sourceFileName": "BRP_FPS_FM_Comm_Server_DM_modified_062620.xlsx",
+        "sourceFileCreated": "2020-06-26T17:11:50.000Z",
+        "sourceFileLastModified": "2020-06-27T00:14:05.000Z",
+        "sourceFileCreatedBy": "Administrator",
+        "sourceFileLastModifiedBy": "Microsoft Office User",
+        "outputFileName": "BRP_FPS_FM_Comm_Server_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2020-06-27T00:15:50.670Z"
+    },
+    "system": {
+        "name": "FlexGen Fleet Manager - Odessa",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "id": "master",
+        "ip_address": "127.0.0.1",
+        "port": 20000,
+        "frequency": 1000,
+        "useOffset" : true
+    },
+    "registers": [
+        {
+            "type": "Holding Registers",
+            "starting_offset": 600,
+            "dnp3_type":"AnOPF32",
+            "number_of_registers": 51,
+            "map": [
+                {
+                    "id": "Generation_Non-Spin_Responsibility",
+                    "offset": 600,
+                    "scale": 1,
+                    "name": "Generation Non-Spin Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Non-Spin_Requirement",
+                    "offset": 601,
+                    "scale": 1,
+                    "name": "Generation Non-Spin Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Non-Spin_Schedule",
+                    "offset": 602,
+                    "scale": 1,
+                    "name": "Generation Non-Spin Schedule",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Regulation_Down_Responsibility",
+                    "offset": 603,
+                    "scale": 1,
+                    "name": "Generation Regulation Down Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Regulation_Down_Requirement",
+                    "offset": 604,
+                    "scale": 1,
+                    "name": "Generation Regulation Down Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Regulation_Down_Participation_Factor",
+                    "offset": 605,
+                    "scale": 1,
+                    "name": "Generation Regulation Down Participation Factor",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Responsive_Reserve_Responsibility",
+                    "offset": 606,
+                    "scale": 1,
+                    "name": "Generation Responsive Reserve Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Responsive_Reserve_Requirement",
+                    "offset": 607,
+                    "scale": 1,
+                    "name": "Generation Responsive Reserve Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Responsive_Reserve_Schedule",
+                    "offset": 608,
+                    "scale": 1,
+                    "name": "Generation Responsive Reserve Schedule",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Regulation_Up_Responsibility",
+                    "offset": 609,
+                    "scale": 1,
+                    "name": "Generation Regulation Up Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Regulation_Up_Requirement",
+                    "offset": 610,
+                    "scale": 1,
+                    "name": "Generation Regulation Up Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Regulation_Up_Participation_Factor",
+                    "offset": 611,
+                    "scale": 1,
+                    "name": "Generation Regulation Up Participation Factor",
+                    "float": true
+                },
+                {
+                    "id": "Generation_FRRS_Down_Responsibility",
+                    "offset": 612,
+                    "scale": 1,
+                    "name": "Generation FRRS Down Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Generation_FRRS_Down_Requirement",
+                    "offset": 613,
+                    "scale": 1,
+                    "name": "Generation FRRS Down Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Generation_FRRS_Down_Participation_Factor",
+                    "offset": 614,
+                    "scale": 1,
+                    "name": "Generation FRRS Down Participation Factor",
+                    "float": true
+                },
+                {
+                    "id": "Generation_FRRS_Up_Responsibility",
+                    "offset": 615,
+                    "scale": 1,
+                    "name": "Generation FRRS Up Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Generation_FRRS_Up_Requirement",
+                    "offset": 616,
+                    "scale": 1,
+                    "name": "Generation FRRS Up Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Generation_FRRS_Up_Participation_Factor",
+                    "offset": 617,
+                    "scale": 1,
+                    "name": "Generation FRRS Up Participation Factor",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Locational_Marginal_Pricing",
+                    "offset": 618,
+                    "scale": 1,
+                    "name": "Generation Locational Marginal Pricing",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Base_Point",
+                    "offset": 619,
+                    "scale": 1,
+                    "name": "Generation Base Point",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Updated_Desired_Base_Point",
+                    "offset": 620,
+                    "scale": 1,
+                    "name": "Generation Updated Desired Base Point",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Non-Spin_Responsibility",
+                    "offset": 630,
+                    "scale": 1,
+                    "name": "Controllable Load Non-Spin Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Non-Spin_Requirement",
+                    "offset": 631,
+                    "scale": 1,
+                    "name": "Controllable Load Non-Spin Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Non-Spin_Schedule",
+                    "offset": 632,
+                    "scale": 1,
+                    "name": "Controllable Load Non-Spin Schedule",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Regulation_Down_Responsibility",
+                    "offset": 633,
+                    "scale": 1,
+                    "name": "Controllable Load Regulation Down Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Regulation_Down_Requirement",
+                    "offset": 634,
+                    "scale": 1,
+                    "name": "Controllable Load Regulation Down Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Regulation_Down_Participation_Factor",
+                    "offset": 635,
+                    "scale": 1,
+                    "name": "Controllable Load Regulation Down Participation Factor",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Responsive_Reserve_Responsibility",
+                    "offset": 636,
+                    "scale": 1,
+                    "name": "Controllable Load Responsive Reserve Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Responsive_Reserve_Requirement",
+                    "offset": 637,
+                    "scale": 1,
+                    "name": "Controllable Load Responsive Reserve Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Responsive_Reserve_Schedule",
+                    "offset": 638,
+                    "scale": 1,
+                    "name": "Controllable Load Responsive Reserve Schedule",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Regulation_Up_Responsibility",
+                    "offset": 639,
+                    "scale": 1,
+                    "name": "Controllable Load Regulation Up Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Regulation_Up_Requirement",
+                    "offset": 640,
+                    "scale": 1,
+                    "name": "Controllable Load Regulation Up Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Regulation_Up_Participation_Factor",
+                    "offset": 641,
+                    "scale": 1,
+                    "name": "Controllable Load Regulation Up Participation Factor",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_FRRS_Down_Responsibility",
+                    "offset": 642,
+                    "scale": 1,
+                    "name": "Controllable Load FRRS Down Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_FRRS_Down_Requirement",
+                    "offset": 643,
+                    "scale": 1,
+                    "name": "Controllable Load FRRS Down Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_FRRS_Down_Participation_Factor",
+                    "offset": 644,
+                    "scale": 1,
+                    "name": "Controllable Load FRRS Down Participation Factor",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_FRRS_Up_Responsibility",
+                    "offset": 645,
+                    "scale": 1,
+                    "name": "Controllable Load FRRS Up Responsibility",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_FRRS_Up_Requirement",
+                    "offset": 646,
+                    "scale": 1,
+                    "name": "Controllable Load FRRS Up Requirement",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_FRRS_Up_Participation_Factor",
+                    "offset": 647,
+                    "scale": 1,
+                    "name": "Controllable Load FRRS Up Participation Factor",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Locational_Marginal_Pricing",
+                    "offset": 648,
+                    "scale": 1,
+                    "name": "Controllable Load Locational Marginal Pricing",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Base_Point",
+                    "offset": 649,
+                    "scale": 1,
+                    "name": "Controllable Load Base Point",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Updated_Desired_Base_Point",
+                    "offset": 650,
+                    "scale": 1,
+                    "name": "Controllable Load Updated Desired Base Point",
+                    "float": true
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "dnp3_type":"analog",
+            "starting_offset": 600,
+            "number_of_registers": 38,
+            "map": [
+                {
+                    "id": "net_gen_mw",
+                    "offset": 600,
+                    "scale": 1,
+                    "name": "Generation NET Megawatts",
+                    "float": true
+                },
+                {
+                    "id": "net_gen_mvar",
+                    "offset": 601,
+                    "scale": 1,
+                    "name": "Generation NET Megavars",
+                    "float": true
+                },
+                {
+                    "id": "gross_gen_mw",
+                    "offset": 602,
+                    "scale": 1,
+                    "name": "Generation Gross Megawatts",
+                    "float": true
+                },
+                {
+                    "id": "gross_gen_mvar",
+                    "offset": 603,
+                    "scale": 1,
+                    "name": "Generation Gross Megavars",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Normal_Up_Ramp_Rate",
+                    "offset": 604,
+                    "scale": 1,
+                    "name": "Generation Normal Up Ramp Rate",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Normal_Down_Ramp_Rate",
+                    "offset": 605,
+                    "scale": 1,
+                    "name": "Generation Normal Down Ramp Rate",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Emergency_Up_Ramp_Rate",
+                    "offset": 606,
+                    "scale": 1,
+                    "name": "Generation Emergency Up Ramp Rate",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Emercency_Down_Ramp_Rate",
+                    "offset": 607,
+                    "scale": 1,
+                    "name": "Generation Emercency Down Ramp Rate",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Maximum_Operating_State_of_Charge",
+                    "offset": 608,
+                    "scale": 1,
+                    "name": "Generation Maximum Operating State of Charge",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Minimum_Operating_State_of_Charge",
+                    "offset": 609,
+                    "scale": 1,
+                    "name": "Generation Minimum Operating State of Charge",
+                    "float": true
+                },
+                {
+                    "id": "Generation_State_of_Charge",
+                    "offset": 610,
+                    "scale": 1,
+                    "name": "Generation State of Charge",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Maximum_Operating_Discharge_Power_Limit",
+                    "offset": 611,
+                    "scale": 1,
+                    "name": "Generation Maximum Operating Discharge Power Limit",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Maximum_Operating_Charge_Power_Limit",
+                    "offset": 612,
+                    "scale": 1,
+                    "name": "Generation Maximum Operating Charge Power Limit",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Voltage",
+                    "offset": 613,
+                    "scale": 1,
+                    "name": "Generation Voltage",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Plant_Auxiliary_Load_MW",
+                    "offset": 614,
+                    "scale": 1,
+                    "name": "Generation Plant Auxiliary Load MW",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Plant_Auxiliary_Load_MVAR",
+                    "offset": 615,
+                    "scale": 1,
+                    "name": "Generation Plant Auxiliary Load MVAR",
+                    "float": true
+                },
+                {
+                    "id": "net_load_mw",
+                    "offset": 630,
+                    "scale": 1,
+                    "name": "Controllable Load Net Load MW",
+                    "float": true
+                },
+                {
+                    "id": "net_load_mvar",
+                    "offset": 631,
+                    "scale": 1,
+                    "name": "Controllable Load Net Load MVAR",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Scheduled_Power_Consumption",
+                    "offset": 632,
+                    "scale": 1,
+                    "name": "Controllable Load Scheduled Power Consumption",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Scheduled_Power_Consumption_+2_hours",
+                    "offset": 633,
+                    "scale": 1,
+                    "name": "Controllable Load Scheduled Power Consumption +2 hours",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Normal_Up_Ramp_Rate",
+                    "offset": 634,
+                    "scale": 1,
+                    "name": "Controllable Load Normal Up Ramp Rate",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Normal_Down_Ramp_Rate",
+                    "offset": 635,
+                    "scale": 1,
+                    "name": "Controllable Load Normal Down Ramp Rate",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Emercency_Up_Ramp_Rate",
+                    "offset": 636,
+                    "scale": 1,
+                    "name": "Controllable Load Emercency Up Ramp Rate",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Emercency_Down_Ramp_Rate",
+                    "offset": 637,
+                    "scale": 1,
+                    "name": "Controllable Load Emercency Down Ramp Rate",
+                    "float": true
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "dnp3_type":"binary",
+            "starting_offset": 600,
+            "number_of_registers": 31,
+            "map": [
+                {
+                    "id": "Generation_Resource_Switches_",
+                    "offset": 600,
+                    "scale": 1,
+                    "name": "Generation Resource Switches"
+                },
+                {
+                    "id": "Generation_Resource_Breaker_Status",
+                    "offset": 601,
+                    "scale": 1,
+                    "name": "Generation Resource Breaker Status"
+                },
+                {
+                    "id": "Generation_Virtual_Breaker_Status_-_PSEUDO_GEN",
+                    "offset": 602,
+                    "scale": 1,
+                    "name": "Generation Virtual Breaker Status - PSEUDO GEN"
+                },
+                {
+                    "id": "Controllable_Load_Virtual_Breaker_Status_-_PSEUDO_LOAD",
+                    "offset": 630,
+                    "scale": 1,
+                    "name": "Controllable Load Virtual Breaker Status - PSEUDO LOAD"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "dnp3_type":"CROB",
+            "starting_offset": 600,
+            "number_of_registers": 34,
+            "map": [
+                {
+                    "id": "Generation_Curtailment_Flag",
+                    "offset": 600,
+                    "scale": 1,
+                    "name": "Generation Curtailment Flag",
+                    "float": true
+                },
+                {
+                    "id": "Generation_SCCT_Mitigation_Flag",
+                    "offset": 601,
+                    "scale": 1,
+                    "name": "Generation SCCT Mitigation Flag",
+                    "float": true
+                },
+                {
+                    "id": "Generation_Non-spin_deployed_Flag_(NDPL)",
+                    "offset": 602,
+                    "scale": 1,
+                    "name": "Generation Non-spin deployed Flag (NDPL)",
+                    "float": true
+                },
+                {
+                    "id": "Controllable_Load_Curtailment_Flag",
+                    "offset": 630,
+                    "scale": 1,
+                    "name": "Controllable Load Curtailment Flag"
+                },
+                {
+                    "id": "Controllable_Load_SCCT_Mitigation_Flag",
+                    "offset": 631,
+                    "scale": 1,
+                    "name": "Controllable Load SCCT Mitigation Flag"
+                },
+                {
+                    "id": "Controllable_Load_Non-spin_deployed_Flag_(NDPL)",
+                    "offset": 632,
+                    "scale": 1,
+                    "name": "Controllable Load Non-spin deployed Flag (NDPL)"
+                },
+                {
+                    "id": "Controllable_Load_Responsive_Deployed_Flag_(RDPL)",
+                    "offset": 633,
+                    "scale": 1,
+                    "name": "Controllable Load Responsive Deployed Flag (RDPL)"
+                }
+            ]
+        }
+    ]
+}

@@ -1,4 +1,5 @@
 export type SiteStatusConfig = {
+    siteStatusLabel?: string,
     dataSources: SiteStatusDataField[]
 }
 
@@ -21,7 +22,7 @@ export type SiteStatusDataPointsDTO = {
 
 export type SiteStatusResponse = {
     data: {
-        siteName?: string
+        siteStatusLabel?: string
         activeFaults?: number
         activeAlarms?: number
         siteState?: string

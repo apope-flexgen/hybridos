@@ -10,6 +10,7 @@ import request from './../../../testReqAgent'
 import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 describe('Authentication (Integration)', () => {
     let app: INestApplication
@@ -31,6 +32,7 @@ describe('Authentication (Integration)', () => {
         })
             .overrideProvider(AppEnvService)
             .useValue(config)
+            .overrideProvider(PermissionsService).useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer
@@ -98,7 +100,7 @@ describe('Authentication (Integration)', () => {
 
         await new Promise((f) => setTimeout(f, waitMs))
         await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', accessToken)
             .set('Cookie', refreshToken)
             .then((res) => {
@@ -134,7 +136,7 @@ describe('Authentication (Integration)', () => {
         // wait for 3 second expiration
         await new Promise((f) => setTimeout(f, 3000))
         await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', initialAccessToken)
             .then((res) => {
                 expect(res.status).toBe(401)

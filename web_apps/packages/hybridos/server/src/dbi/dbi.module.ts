@@ -1,23 +1,11 @@
 import { Module } from '@nestjs/common'
-import { JwtModule } from '@nestjs/jwt'
 import { FimsModule } from 'src/fims/fims.module'
-import { FimsService } from 'src/fims/fims.service'
-import { FIMS_SERVICE } from 'src/fims/interfaces/fims.interface'
-import { DBI_SERVICE } from './dbi.constants'
+import { DBI_SERVICE } from './dbi.interface'
 import { DBIService } from './dbi.service'
 
 @Module({
-    imports: [
-        FimsModule,
-        JwtModule.register({
-            secret: 'supersecretkey',
-        }),
-    ],
+    imports: [FimsModule],
     providers: [
-        {
-            useClass: FimsService,
-            provide: FIMS_SERVICE
-        },
         {
             useClass: DBIService,
             provide: DBI_SERVICE,
@@ -25,10 +13,9 @@ import { DBIService } from './dbi.service'
     ],
     exports: [
         {
-            useClass: FimsService,
-            provide: FIMS_SERVICE
-        }
+            useClass: DBIService,
+            provide: DBI_SERVICE,
+        },
     ],
 })
-
-export class DBIModule { }
+export class DBIModule {}

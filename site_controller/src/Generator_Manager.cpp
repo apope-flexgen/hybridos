@@ -237,7 +237,10 @@ bool Generator_Manager::aggregate_gen_data(void)
         }
         else
         {
-            genTotalUncontrollableActivePowerkW += pGens[i]->get_active_power();
+            // only add to uncontrollable power if gen is uncontrollable for reasons besides a modbus disconnect
+            if (!pGens[i]->get_watchdog_fault()) {
+                genTotalUncontrollableActivePowerkW += pGens[i]->get_active_power();
+            }
         }
         
     }
@@ -282,6 +285,8 @@ void Generator_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf
         sprintf(temp_name, "%s_faults",gen_id);
         bufJSON_AddNumberCheckVar(buf, temp_name, it->get_num_active_faults() > 0 ? 1:0, var);
     }
+    bufJSON_AddNumberCheckVar(buf, "gen_num_alarmed", get_num_alarmed(), var);
+    bufJSON_AddNumberCheckVar(buf, "gen_num_faulted", get_num_faulted(), var);
 
     if (var == NULL) bufJSON_EndObjectNoComma(buf); // } summary
 }

@@ -126,7 +126,8 @@ go/
 
 .cache/
 .gitconfig
-versioning/
 .config/
 GIT_*
 *.o
+__pycache__/
+.pyc

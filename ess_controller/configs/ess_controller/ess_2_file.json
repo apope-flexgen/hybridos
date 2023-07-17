@@ -1,0 +1,31 @@
+{
+    "/sysconfig/default": 
+    {
+        "Help": " This is the default system config file",
+        "Subs":":/components/ess_2:/assets:/system:/site/ess_2:",
+        "Config":"ess_init_dual_2",
+        "EssName": "ess_2"
+    },
+    "/config/ess":
+    {
+        "LogDir":"/var/log/ess_controller",
+        "logging_size": { "value": 124, "actions": { "onSet": [ { "func": [ { "func": "SetLoggingSize" } ] } ] } },
+        "logging_timestamp": false,
+        "logging_enabled": false
+    },
+    "/blockeduris/pub" :
+    {
+        "/components/ess_1":true,
+        "/system/ess_1":true,
+        "/assets/ess/summary":true,
+        "/assets/ess_1":true
+    },
+    "/blockeduris/set" :
+    {
+        "/components/ess_1":true,
+        "/system/ess_1":true,
+        "/assets/ess/summary":true,
+        "/assets/ess_1":true
+    }
+
+}

@@ -53,36 +53,12 @@ void fpsLogger::log(ModuleId module, const char* id, LogLevel level, char const*
         oss << " - " << location;
     }
     oss << " - " << message;
-    snprintf(msg, sizeof(msg), "DNP3  %s message [%s] --[%s]\n"
+    snprintf(msg, sizeof(msg), "DNP3  %s_%s message [%s] --[%s]\n"
+                    ,sysdb->master?"client":"server" 
                     ,sysdb->id 
                     ,mstring.c_str()
                     ,oss.str().c_str());
-    //fprintf(stderr, "%s\n", message);
-    // lets cut out a few "events" 
-    // bool sendit = true;
-    // if (oss.str().find("PRI_UNCONFIRMED_USER_DATA")!=string::npos)
-    //     sendit = false;
-    // if (oss.str().find("Binary Input - With Flags")!=string::npos)
-    //     sendit = false;
-    // if (oss.str().find("Analog Input - 32-bit With Flag")!=string::npos)
-    //     sendit = false;
-    // if (oss.str().find("- Class Data - Class")!=string::npos)
-    //     sendit = false;
-    // if (oss.str().find(" FUNC: READ")!=string::npos)
-    //     sendit = false;
-    // if (oss.str().find(" FUNC: RESPONSE")!=string::npos)
-    //     sendit = false;
-    // if (oss.str().find(" FIR: ")!=string::npos)
-    //     sendit = false;
-
-    //if(sendit) 
-    //    emit_event(sysdb, "DNP3", msg, 1);
-
-    // unique_lock creates a temp lock that goes away >>> 
     std::unique_lock<std::mutex> lock(mutex);
-    //FPS_DEBUG_PRINT("%s\n", oss.str().c_str());
     if(sysdb->debug>0)std::cout << oss.str() << std::endl;
-    // <<< here
 }
 
-//} // namespace asiodnp3

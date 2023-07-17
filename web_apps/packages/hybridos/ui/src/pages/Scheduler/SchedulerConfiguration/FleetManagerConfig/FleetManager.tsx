@@ -1,6 +1,13 @@
-/* eslint-disable max-lines */
+/* eslint-disable */
+// TODO: fix lint
 import {
-  ThemeType, Switch, CardRow, TextField, Typography, IconButton, NumericInput
+  ThemeType,
+  Switch,
+  CardRow,
+  TextField,
+  Typography,
+  IconButton,
+  NumericInput,
 } from '@flexgen/storybook';
 import { Box, Collapse } from '@mui/material';
 import React, { useEffect, useState } from 'react';
@@ -13,6 +20,7 @@ import {
   siteFleetConfigLabels as labels,
   FleetSiteActions,
   IPregex,
+  nameRegex,
 } from 'src/pages/Scheduler/SchedulerConfiguration/Helpers';
 import SCADASettings from 'src/pages/Scheduler/SchedulerConfiguration/SCADASettings';
 import { useTheme } from 'styled-components';
@@ -20,9 +28,9 @@ import { v4 as uuid } from 'uuid';
 
 interface FleetManagerConfigProps {
   // configEdits
-  data?: Configuration | null
-  setConfigEdits: React.Dispatch<React.SetStateAction<Configuration | null | undefined>>
-  setSaveDisabled: any
+  data?: Configuration | null;
+  setConfigEdits: React.Dispatch<React.SetStateAction<Configuration | null | undefined>>;
+  setSaveDisabled: any;
 }
 
 const FleetManagerConfig: React.FC<FleetManagerConfigProps> = ({
@@ -36,44 +44,55 @@ const FleetManagerConfig: React.FC<FleetManagerConfigProps> = ({
   const [showSCADA, setShowSCADA] = useState(false);
   const [index, setIndex] = useState<any>(null);
   const [nameFieldMissing, setNameFieldMissing] = useState<boolean>(false);
+  const [siteError, setSiteError] = useState<boolean>(false);
 
   /** Checks for local schedule */
   useEffect(() => {
-    if (!data?.local_schedule) return;
+    if (!data?.local_schedule) return setNameFieldMissing(true);
     const path = data.local_schedule;
-    if ((!path.name || path.name === '') && (path.clothed_setpoints || path.setpoint_enforcement)) {
-      setSaveDisabled(true);
-      setNameFieldMissing(true);
-    } else {
-      setSaveDisabled(false);
-      setNameFieldMissing(false);
-    }
-  }, [data, setSaveDisabled]);
+    const missing = !path.name || nameRegex.test(path.name);
+    setNameFieldMissing(missing);
+  }, [data]);
 
-  /** Checks for duplicate names / reset index */
-  useEffect(() => {
-    if (!data?.web_sockets?.clients
-            || data?.web_sockets?.clients.length === 0
-            || !data?.web_sockets?.clients[index]) return setIndex(null);
-
+  const checkSiteError = () => {
+    if (!data?.web_sockets?.clients || data?.web_sockets?.clients.length === 0) return;
     const sites = data.web_sockets.clients;
     const nameSet = new Set<string>();
-    // TODO
-    // eslint-disable-next-line no-restricted-syntax
     for (const obj of sites) {
-      if (nameSet.has(obj.name) || !IPregex.test(obj.ip)) {
-        return setSaveDisabled(true);
+      const name = obj.name.toLowerCase();
+      if (nameSet.has(name) || !IPregex.test(obj.ip) || nameRegex.test(name)) {
+        return setSiteError(true);
       }
-      nameSet.add(obj.name);
+      nameSet.add(name);
     }
-    return setSaveDisabled(false);
-  }, [data, index, setSaveDisabled]);
+    return setSiteError(false);
+  };
+
+  useEffect(() => {
+    checkSiteError();
+    if (
+      !data?.web_sockets?.clients ||
+      data?.web_sockets?.clients.length === 0 ||
+      !data?.web_sockets?.clients[index]
+    )
+      setIndex(null);
+  }, [data, index, setSiteError]);
+
+  useEffect(() => {
+    const missingLSName =
+      (data?.local_schedule !== undefined && !data.local_schedule.name) ||
+      (data?.local_schedule !== undefined &&
+        data?.local_schedule.name &&
+        nameRegex.test(data?.local_schedule?.name));
+    setSaveDisabled(siteError || missingLSName);
+  }, [siteError, data]);
 
   const updateSiteData = (action: FleetSiteActions) => {
     if (!data?.web_sockets?.clients) return;
     const arrayCopy = [...data.web_sockets.clients];
     if (index === undefined) return;
     if (action === 'delete') {
+      setSiteError(false);
       arrayCopy.splice(index, 1);
       setIndex(null);
     }
@@ -83,124 +102,133 @@ const FleetManagerConfig: React.FC<FleetManagerConfigProps> = ({
         clients: arrayCopy,
       },
     }));
+    checkSiteError();
   };
 
   const addSite = () => {
     const newSite = {
-      id: uuid(), name: 'New Site', ip: '', port: 1,
+      id: uuid(),
+      name: 'New Site',
+      ip: '',
+      port: 9000,
     };
-    if (data?.web_sockets?.clients) {
+    const sites = data?.web_sockets?.clients;
+    if (sites) {
       setConfigEdits((prevState: any) => ({
         ...prevState,
         web_sockets: {
-          clients: [
-            ...prevState.web_sockets.clients,
-            newSite,
-          ],
+          clients: [...prevState.web_sockets.clients, newSite],
         },
       }));
+      setIndex(sites.length);
     } else {
       setConfigEdits((prevState: any) => ({
         ...prevState,
-        webS_sockets: {
-          clients: [
-            newSite,
-          ],
+        web_sockets: {
+          clients: [newSite],
         },
       }));
+      setIndex(0);
     }
+    checkSiteError();
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
-      <Collapse collapsedSize="48px" in={open} orientation="horizontal" sx={collapseSx(theme)}>
+    <Box sx={{ display: 'flex', flexDirection: 'row', flex: 1, paddingBottom: '12px' }}>
+      <Collapse collapsedSize='48px' in={open} orientation='horizontal' sx={collapseSx(theme)}>
         <Box sx={localScheduleSx}>
           <div style={{ marginLeft: '4px' }}>
-            <IconButton icon="Settings" onClick={() => setOpen(!open)} />
+            <IconButton icon='Settings' onClick={() => setOpen(!open)} />
           </div>
           <Box>
-            <CardRow alignItems="center">
-              <Typography text={FMlabels.settings} variant="bodyLBold" />
+            <CardRow alignItems='center' styleOverrides={{ paddingTop: '8px' }}>
+              <Typography text={FMlabels.scadaSettings} variant='bodyLBold' />
+            </CardRow>
+            <CardRow alignItems='center'>
+              <SCADASettings setConfigEdits={setConfigEdits} settings={data?.scada} />
+            </CardRow>
+            <CardRow alignItems='center'>
+              <Typography text={FMlabels.settings} variant='bodyLBold' />
             </CardRow>
             <CardRow>
               <TextField
                 helperText={nameFieldMissing ? FMlabels.localSchedule.missingNameField : undefined}
                 label={FMlabels.localSchedule.name}
-                onChange={(event) => setConfigEdits((prevState: any) => ({
-                  ...prevState,
-                  local_schedule: {
-                    ...prevState.local_schedule,
-                    name: event.target.value,
-                  },
-                }))}
-                size="small"
+                onChange={(event) =>
+                  setConfigEdits((prevState: any) => ({
+                    ...prevState,
+                    local_schedule: {
+                      ...prevState.local_schedule,
+                      name: event.target.value,
+                    },
+                  }))
+                }
+                size='small'
                 value={data?.local_schedule?.name || ''}
               />
             </CardRow>
             <CardRow>
               <Switch
-                color="primary"
+                color='primary'
+                disabled={nameFieldMissing}
                 label={FMlabels.localSchedule.clothedSetpoints}
-                labelPlacement="right"
-                onChange={(event) => setConfigEdits((prevState: any) => ({
-                  ...prevState,
-                  local_schedule: {
-                    ...prevState.local_schedule,
-                    clothed_setpoints: !prevState.local_schedule?.clothed_setpoints || event,
-                  },
-                }))}
+                labelPlacement='right'
+                onChange={(event) =>
+                  setConfigEdits((prevState: any) => ({
+                    ...prevState,
+                    local_schedule: {
+                      ...prevState.local_schedule,
+                      clothed_setpoints: !prevState.local_schedule?.clothed_setpoints || event,
+                    },
+                  }))
+                }
                 value={data?.local_schedule?.clothed_setpoints || false}
               />
             </CardRow>
             <CardRow>
               <Switch
-                color="primary"
+                color='primary'
+                disabled={nameFieldMissing}
                 label={FMlabels.localSchedule.setPointEnforcement.switch}
-                labelPlacement="right"
-                onChange={(event) => setConfigEdits((prevState: any) => ({
-                  ...prevState,
-                  local_schedule: {
-                    ...prevState.local_schedule,
-                    setpoint_enforcement: {
-                      ...prevState.local_schedule?.setpoint_enforcement,
-                      enabled: !prevState.local_schedule?.setpoint_enforcement?.enabled || event,
+                labelPlacement='right'
+                onChange={(event) =>
+                  setConfigEdits((prevState: any) => ({
+                    ...prevState,
+                    local_schedule: {
+                      ...prevState.local_schedule,
+                      setpoint_enforcement: {
+                        ...prevState.local_schedule?.setpoint_enforcement,
+                        enabled: !prevState.local_schedule?.setpoint_enforcement?.enabled || event,
+                      },
                     },
-                  },
-                }))}
+                  }))
+                }
                 value={data?.local_schedule?.setpoint_enforcement?.enabled || false}
               />
             </CardRow>
             <CardRow>
               <NumericInput
                 fullWidth
-                endComponentAdorment={ <></> }
+                disabled={nameFieldMissing}
+                endComponentAdorment={<></>}
                 label={FMlabels.localSchedule.setPointEnforcement.textField}
-                onChange={(event) => setConfigEdits((prevState: any) => ({
-                  ...prevState,
-                  local_schedule: {
-                    ...prevState.local_schedule,
-                    setpoint_enforcement: {
-                      ...prevState.local_schedule?.setpoint_enforcement,
-                      frequency_seconds: Number(event.target.value),
+                onChange={(event) =>
+                  setConfigEdits((prevState: any) => ({
+                    ...prevState,
+                    local_schedule: {
+                      ...prevState.local_schedule,
+                      setpoint_enforcement: {
+                        ...prevState.local_schedule?.setpoint_enforcement,
+                        frequency_seconds: Number(event.target.value),
+                      },
                     },
-                  },
-                }))}
-                value={data?.local_schedule?.setpoint_enforcement?.frequency_seconds?.toString() || ''}
+                  }))
+                }
+                value={
+                  data?.local_schedule?.setpoint_enforcement?.frequency_seconds?.toString() || ''
+                }
                 validationRegEx='positiveIntegers'
               />
-            </CardRow>
-            <CardRow>
-              <Switch
-                color="primary"
-                label={labels.SCADA.switch}
-                labelPlacement="right"
-                onChange={() => setShowSCADA(!showSCADA)}
-                value={false}
-              />
-            </CardRow>
-            <CardRow alignItems="center">
-              {showSCADA
-              && <SCADASettings setConfigEdits={setConfigEdits} settings={data?.scada} />}
             </CardRow>
           </Box>
         </Box>

@@ -1,0 +1,485 @@
+{
+    "/system/@@BMS_ID@@": {
+        "id": "@@BMS_ID@@",
+        "name": "BMS Nice Battery  Block @@BMS_NUM@@"
+    },
+    "/config/@@BMS_ID@@": {
+        "Pubs": "/assets/bms/@@BMS_ID@@",
+        "BlockSets": "/status/ess, /status/bms, /status/bms_1, /status/bms_2 "
+    },
+    "/constants/@@BMS_ID@@": {
+        "note": "These are constant defintions",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 2200.0,
+        "rated_apparent_power": 2200.0,
+        "priority": 1,
+        "start_timer": 50,
+        "cooldown_timer": 250,
+        "max_load_threshold": 200000,
+        "min_load_threshold": 1000,
+        "control_word_on": 1,
+        "control_word_off": 2,
+        "DC_contactor_open": 1,
+        "DC_contactor_closed": 2,
+        "DC_contactor_reset": 3,
+        "chg_soc_begin": 90.001,
+        "chg_soc_end": 101.5,
+        "dischg_soc_begin": 10.001,
+        "dischg_soc_end": -1.5,
+        "max_soc_raw": 99.5,
+        "min_soc_raw": 1.5
+    },
+    "/controls/@@BMS_ID@@": {
+        "start_stop": {
+            "value": 0,
+            "actions": {
+                "onSet": {
+                    "bitfield": [
+                        {
+                            "bit": 0,
+                            "uri": "/system/new_controls:oncmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 1,
+                            "uri": "/system/new_controls:kacclosecmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 8,
+                            "uri": "/system/new_controls:offcmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 9,
+                            "uri": "/system/new_controls:kacopencmd",
+                            "value": true
+                        }
+                    ]
+                }
+            }
+        },
+        "ctrlword2": {
+            "value": 0,
+            "actions": {
+                "onSet": {
+                    "enum": [
+                        {
+                            "mask": 3,
+                            "bit": 0,
+                            "uri": "/system/enum_controls:mask_3_bit_0",
+                            "value": true
+                        },
+                        {
+                            "mask": 3,
+                            "bit": 1,
+                            "uri": "/system/enum_controls:mask_3_bit_1",
+                            "value": true
+                        },
+                        {
+                            "mask": 3,
+                            "bit": 2,
+                            "uri": "/system/enum_controls::mask_3_bit_2",
+                            "value": true
+                        },
+                        {
+                            "mask": 3,
+                            "bit": 3,
+                            "uri": "/system/enum_controls:mask_3_bit_3",
+                            "value": true
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "/components/catl@@BMS_NUM@@_ems_bms_rw": {
+        "ems_test_status": {
+            "value": "Idle",
+            "actions": {
+                "onSet": {
+                    "remap": [
+                        {
+                            "uri": "/system/remap",
+                            "var": "remap_ems_test_status_0"
+                        },
+                        {
+                            "uri": "/system/remap",
+                            "var": "remap_ems_test_status_1"
+                        }
+                    ]
+                }
+            }
+        },
+        "ems_status": {
+            "value": 1,
+            "actions": {
+                "onSet": {
+                    "enum": [
+                        {
+                            "mask": 3,
+                            "inValue": 0,
+                            "uri": "/asset/enum_controls:oncmd",
+                            "outValue": "we're on"
+                        },
+                        {
+                            "inValue":	"someString",
+                            "mask":	3,
+                            "outValue":	"EMSvalue",
+                            "uri":	"/asset/sbmu_1_enum_controls:stringcmd"
+                        },
+                        {
+                            "mask": 3,
+                            "inValue": 1,
+                            "uri": "/asset/enum_controls:oncmd",
+                            "outValue": "we're off"
+                        },
+                        {
+                            "mask": 3,
+                            "inValue": 2,
+                            "uri": "/asset/enum_controls:oncmd",
+                            "outValue": "we're in Standby"
+                        },
+                        {
+                            "mask": 3,
+                            "inValue": 3,
+                            "uri": "/asset/enum_controls:oncmd",
+                            "outValue": "we're Shutdown"
+                        }
+                    ]
+                }
+            }
+        },
+        "ems_status2": {
+            "value": "string",
+            "actions": {
+                "onSet": {
+                    "enum": [
+                        {
+                            "inString": "whateva",
+                            "uri": "/asset/xxenum_controls:stringcmd",
+                            "outValue": "we're on"
+                        },
+                        {
+                            "inString":	"someString",
+                            "outValue":	"EMSvalue",
+                            "uri":	"/asset/xxenum_controls:stringcmd"
+                        },
+                        {
+                            "inString": "okokok",
+                            "uri": "/asset/xxenum_controls:stringcmd",
+                            "outValue": "we're off"
+                        }
+                    ]
+                }
+            }
+        },
+        "start_stop": {
+            "value": 0,
+            "actions": {
+                "onSet": {
+                    "bitfield": [
+                        {
+                            "inValue": 0,
+                            "uri": "/asset/bit_controls",
+                            "var": "oncmd",
+                            "outValue": true
+                        },
+                        {
+                            "inValue": 1,
+                            "uri": "/asset/bit_controls",
+                            "var": "kacclosecmd",
+                            "outValue": true
+                        },
+                        {
+                            "inValue": 8,
+                            "uri": "/asset/bit_controls",
+                            "var": "offcmd",
+                            "outValue": true
+                        },
+                        {
+                            "inValue": 9,
+                            "uri": "/asset/bit_controls",
+                            "var": "kacopencmd",
+                            "outValue": true
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "/controls/bms": {
+        "ems_heartbeat":0,
+        "ems_cmd":0,
+        "ems_status":0,
+        "ems_rtc_year":0,
+        "ems_rtc_day":0,
+        "ems_rtc_hour":0,
+        "ems_rtc_minute":0,
+        "ems_rtc_second":0,
+        "fault_clear_cmd":0
+    },
+    "/status/bms": {
+        "bms_heartbeat":0,
+        "bms_poweron":0,
+        "bms_status":0,
+        "num_hv_subsystem":0,
+        "bms_remain_charge_energy":0,
+        "bms_remain_discharge_energy":0,
+        "bms_max_discharge_allowed":0,
+        "bms_max_charge_allowed":0,
+        "bms_limit_charge_hv":0,
+        "bms_limit_discharge_hv":0,
+        "mbmu_voltage":0,
+        "mbmu_current":0,
+        "mbmu_soc":0,
+        "mbmu_soh":0,
+        "mbmu_max_cell_voltage":0,
+        "mbmu_min_cell_voltage":0,
+        "mbmu_avg_cell_voltage":0,
+        "mbmu_max_cell_temperature":0,
+        "mbmu_min_cell_temperature":0,
+        "mbmu_avg_cell_temperature":0,
+        "mbmu_max_charge_current":0,
+        "mbmu_max_discharge_current":0,
+        "mbmu_warning_1":0,
+        "mbmu_warning_2":0,
+        "mbmu_status":0,
+        "sbmu1_system_warning_1":0,
+        "sbmu1_system_warning_2":0,
+        "sbmu1_precharge":0,
+        "sbmu1_master_positive":0,
+        "sbmu1_master_negative":0,
+        "sbmu1_balance_status":0,
+        "sbmu1_voltage":0,
+        "sbmu1_current":0,
+        "sbmu1_soc":0,
+        "sbmu1_soh":0,
+        "sbmu1_max_cell_voltage":0,
+        "sbmu1_min_cell_voltage":0,
+        "sbmu1_avg_cell_voltage":0,
+        "sbmu1_max_cell_temp":0,
+        "sbmu1_min_cell_temp":0,
+        "sbmu1_avg_cell_temp":0,
+        "sbmu1_max_charge_current":0,
+        "sbmu1_max_discharge_current":0,
+        "sbmu1_max_cell_voltage_positions":0,
+        "sbmu1_min_cell_voltage_positions":0,
+        "sbmu1_max_cell_temp_positions":0,
+        "sbmu1_sum_cells":0,
+        "sbmu1_tms_mode_command":0,
+        "sbmu1_tms_temp_setting":0,
+        "sbmu1_tms_real_mode":0,
+        "sbmu1_rack_inlet_temperature":0,
+        "sbmu1_rack_outlet_temperature":0,
+        "sbmu1_ambient_temp":0,
+        "sbmu1_tms_demand_power":0,
+        "sbmu1_tms_fault_code":0,
+        "sbmu1_door_state":0,
+        "sbmu1_fan_in_box":0
+    },
+    "/links/bms": {
+        "ems_heartbeat": {
+            "value": "/components/catl_ems_bms_rw:ems_heartbeat"
+        },
+        "BMSKeyCmd": {
+            "value": "/components/catl_ems_bms_rw:ems_cmd"
+        },
+        "ems_status": {
+            "value": "/components/catl_ems_bms_rw:ems_status"
+        },
+        "ems_rtc_year": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_year"
+        },
+        "ems_rtc_day": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_day"
+        },
+        "ems_rtc_hour": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_hour"
+        },
+        "ems_rtc_minute": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_minute"
+        },
+        "ems_rtc_second": {
+            "value": "/components/catl_ems_bms_rw:ems_rtc_second"
+        },
+        "fault_clear_cmd": {
+            "value": "/components/catl_ems_bms_rw:fault_clear_cmd"
+        },
+        "mbmu_warning_1": {
+            "value": "/components/catl_mbmu_sum_r:mbmu_warning_1"
+        },
+        "mbmu_warning_2": {
+            "value": "/components/catl_mbmu_sum_r:mbmu_warning_2"
+        },
+        "BMSStatus": {
+            "value": "/components/catl_mbmu_stat_r:mbmu_status"
+        },
+        "mbmu_voltage": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_voltage"
+        },
+        "mbmu_current": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_current"
+        },
+        "mbmu_soc": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_soc"
+        },
+        "mbmu_soh": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_soh"
+        },
+        "mbmu_max_cell_voltage": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_max_cell_voltage"
+        },
+        "mbmu_min_cell_voltage": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_min_cell_voltage"
+        },
+        "mbmu_avg_cell_voltage": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_avg_cell_voltage"
+        },
+        "mbmu_max_cell_temperature": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_max_cell_temperature"
+        },
+        "mbmu_min_cell_temperature": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_min_cell_temperature"
+        },
+        "mbmu_avg_cell_temperature": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_avg_cell_temperature"
+        },
+        "mbmu_max_charge_current": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_max_charge_current"
+        },
+        "mbmu_max_discharge_current": {
+            "value": "/components/catl_mbmu_summary_r:mbmu_max_discharge_current"
+        },
+        "bms_heartbeat": {
+            "value": "/components/catl_bms_ems_r:bms_heartbeat"
+        },
+        "bms_poweron": {
+            "value": "/components/catl_bms_ems_r:bms_poweron"
+        },
+        "bms_status": {
+            "value": "/components/catl_bms_ems_r:bms_status"
+        },
+        "num_hv_subsystem": {
+            "value": "/components/catl_bms_ems_r:num_hv_subsystem"
+        },
+        "bms_remain_charge_energy": {
+            "value": "/components/catl_bms_ems_r:bms_remain_charge_energy"
+        },
+        "bms_remain_discharge_energy": {
+            "value": "/components/catl_bms_ems_r:bms_remain_discharge_energy"
+        },
+        "bms_max_discharge_allowed": {
+            "value": "/components/catl_bms_ems_r:bms_max_discharge_allowed"
+        },
+        "bms_max_charge_allowed": {
+            "value": "/components/catl_bms_ems_r:bms_max_charge_allowed"
+        },
+        "bms_limit_charge_hv": {
+            "value": "/components/catl_bms_ems_r:bms_limit_charge_hv"
+        },
+        "bms_limit_discharge_hv": {
+            "value": "/components/catl_bms_ems_r:bms_limit_discharge_hv"
+        },
+        "sbmu1_system_warning_1": {
+            "value": "/components/catl_sbmu_warn_r:sbmu1_system_warning_1"
+        },
+        "sbmu1_system_warning_2": {
+            "value": "/components/catl_sbmu_warn_r:sbmu1_system_warning_2"
+        },
+        "sbmu1_precharge": {
+            "value": "/components/catl_sbmu_status_r:sbmu1_precharge"
+        },
+        "sbmu1_master_positive": {
+            "value": "/components/catl_sbmu_status_r:sbmu1_master_positive"
+        },
+        "sbmu1_master_negative": {
+            "value": "/components/catl_sbmu_status_r:sbmu1_master_negative"
+        },
+        "sbmu1_balance_status": {
+            "value": "/components/catl_sbmu_status_r:sbmu1_balance_status"
+        },
+        "sbmu1_voltage": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_voltage"
+        },
+        "sbmu1_current": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_current"
+        },
+        "sbmu1_soc": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_soc"
+        },
+        "sbmu1_soh": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_soh"
+        },
+        "sbmu1_max_cell_voltage": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_max_cell_voltage"
+        },
+        "sbmu1_min_cell_voltage": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_min_cell_voltage"
+        },
+        "sbmu1_avg_cell_voltage": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_avg_cell_voltage"
+        },
+        "sbmu1_max_cell_temp": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_max_cell_temp"
+        },
+        "sbmu1_min_cell_temp": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_min_cell_temp"
+        },
+        "sbmu1_avg_cell_temp": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_avg_cell_temp"
+        },
+        "sbmu1_max_charge_current": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_max_charge_current"
+        },
+        "sbmu1_max_discharge_current": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_max_discharge_current"
+        },
+        "sbmu1_max_cell_voltage_positions": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_max_cell_voltage_positions"
+        },
+        "sbmu1_min_cell_voltage_positions": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_min_cell_voltage_positions"
+        },
+        "sbmu1_max_cell_temp_positions": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_max_cell_temp_positions"
+        },
+        "sbmu1_min_cell_temp_positions": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_min_cell_temp_positions"
+        },
+        "sbmu1_sum_cells": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_sum_cells"
+        },
+        "sbmu1_tms_mode_command": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_tms_mode_command"
+        },
+        "sbmu1_tms_temp_setting": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_tms_temp_setting"
+        },
+        "sbmu1_tms_real_mode": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_tms_real_mode"
+        },
+        "sbmu1_rack_inlet_temperature": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_rack_inlet_temperature"
+        },
+        "sbmu1_rack_outlet_temperature": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_rack_outlet_temperature"
+        },
+        "sbmu1_ambient_temp": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_ambient_temp"
+        },
+        "sbmu1_tms_demand_power": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_tms_demand_power"
+        },
+        "sbmu1_tms_fault_code": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_tms_fault_code"
+        },
+        "sbmu1_door_state": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_door_state"
+        },
+        "sbmu1_fan_in_box": {
+            "value": "/components/catl_sbmu_summary_r:sbmu1_fan_in_box"
+        }
+    }
+}

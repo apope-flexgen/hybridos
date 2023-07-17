@@ -1,0 +1,55 @@
+{
+    "system": {
+        "name": "FlexGen HybridOS",
+        "protocol": "DNP3",
+        "version": "0.1",
+        "base_uri": "/sites",
+        "id": "odessa",
+        "debug": 2,
+        "ip_address": "192.168.1.101",
+        "xip_address": "127.0.0.1",
+        "local_uri": "/local",
+        "port": 20000,
+        "frequency": 1000
+    },
+    "registers": [
+        {
+            "dnp3_type": "analog",
+            "starting_offset": 100,
+            "number_of_registers": 1,
+            "map": [
+                {
+                    "id": "gross_active_power",
+                    "idx": 10,
+                    "name": "Site - Active Power Total Gross",
+                    "xuri":"/sites/odessa",
+                    "float": true
+                }
+            ]
+        },
+        {
+            "dnp3_type": "binary",
+            "starting_offset": 100,
+            "number_of_registers": 1,
+            "map": [
+                {
+                    "id": "breaker_closed",
+                    "idx": 11,
+                    "name": "Main Breaker Closed"
+                }
+            ]
+                },
+                {
+            "dnp3_type": "CROB",
+            "starting_offset": 100,
+            "number_of_registers": 1,
+            "map": [
+                {
+                    "id": "breaker_close",
+                    "idx": 12,
+                    "name": "Main Breaker Close Command"
+                                }
+                        ]
+                }
+        ]
+}

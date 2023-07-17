@@ -1,0 +1,52 @@
+{
+  "xsystem": 
+  {
+    "id": "brainbox_ed538",
+    "ip_address": "192.168.114.25",
+    "port": 502,
+    "frequency": 500
+  },
+  "connection": {
+        "name": "brainbox_ed538",
+        "ip_address": "192.168.114.25",
+        "port": 502
+    },
+    "components": [
+        {
+            "id": "brainbox_ed538",
+            "frequency": 500,
+            "offset_time": 0,
+            "xheartbeat_enabled": true,
+            "xcomponent_heartbeat_read_uri": "life_signal",
+            "xcomponent_heartbeat_write_uri": "life",
+            "xmodbus_heartbeat_timeout_ms": 1000,
+            "add_timings":true,
+            "xcomponent_heartbeat_timeout_ms": 1000,
+
+  "registers": 
+  [
+    {
+      "type": "Discrete Inputs",
+      "starting_offset": 0,
+      "number_of_registers": 3,
+      "map": 
+      [
+        {
+          "id": "intrusion_detection",
+          "offset": 0
+        },
+        {
+          "id": "HVAC_normally_open",
+          "offset": 1
+        },
+        {
+          "id": "HVAC_normally_close",
+          "offset": 2
+        }
+      ]
+    }
+  ]
+}
+]
+}
+

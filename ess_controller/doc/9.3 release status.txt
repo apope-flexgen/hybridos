@@ -1,0 +1,75 @@
+9.3 release status
+=================
+p. wilshire
+12/09/2021
+
+
+So it looks like v1.1.0 is going to make the cut today.
+I have valground the heck out of the code. 
+Jimmy and Preston have tested the UI/Twins environment.
+Today make sure the grafana/influx  system is working and include details on how to load the ui_config into dbi in the release notes.
+ 
+I think the web_ui is still tagged at v1.7.0
+Lets try to get the PR passed before the 9:30 meeting. 
+That has to happen to trigger the release rpm build.
+I think we also have to do a PR on ess_controller_pm. 
+We need to review that too.
+We also need to add notes into the release docs on how to load the Ui configuration into DBI.
+I would like to add stuff to the README.md in config_ess and docker_testing.
+Simple stuff on what it is and how to run it.
+Moving ahead to 10.1
+ess_controller
+for 10.1 we are going to remove the aI ( assetInstance) 
+and merge the assetVal and assFeat objects.
+This will entain a rework of the aggregation operation  see below.
+complete dbi vars ( testing mainly)
+complete dbi config ( helped a lot by removing the aI s)
+switch to DTS
+twins - fims_echo 
+modbus_client
+DNP3 exceptions
+DNP3 RTU
+DNP3 TLS
+ 
+Twins 
+I would like to find way to easily switch configs for the docker systems.  
+The configs are defaulted in saved_configs but perhaps we could use an env var to switch the defaults.
+CONFIG=kpp/sierra docker_compose UP --build -d ( if this is correct)
+This means that the corect configs are already in place.
+Also use a different volume mount for each config selection.
+ 
+We are going to have 3 projects to mainatain from day 1 of 10.1 with another 3 or 4 to be added in the next few months.
+I also think that the configs should be a git module (like package_utils)
+We can kep the integration/development teams in sync that way.
+This is to be a feature request on dev-ops.
+  
+I also want to trigger auto tests on the test container.
+TEST=ess_start_stop CONFIG=kpp/sierra docker_compose UP --build -d 
+This would bring the system up and then unleash a series of tests  
+Should be simple , just execute the test suite after ess_run.sh
+We'll volume mount the log dir so we can capture the test results.
+For now my script based test suite will do. We need the testing in the next release.
+Once we get these options in place we can then quickly run a release check for each combination of configs.
+TEST=ess_start_stop CONFIG=kpp/sierra docker_compose UP --build -d 
+TEST=ess_start_stop CONFIG=tx100/release docker_compose UP --build -d 
+TEST=ess_start_stop CONFIG=amaresco/release docker_compose UP --build -d 
+I think this is something dev-ops could adopt. But it is also a way for us to quickly 
+run through the systems.
+We will have a bit of twins / fims_echo work to do.
+This TEST / CONFIG system will also be the primary way we get our new integration engineers up to speed.
+  
+More Review
+Two last minute panics yesterday 
+We were missing the proper asset manager / amap allocation .
+this means that all the rack amap vars were placed in the bms amp.
+Quite simple to fix. I tried to enforce using the racks as aI's but all of the functions assume that the working assetVar has an am ( which provides the vm due to legacy in the design )   
+This was done originally to give the product more flexibility than it now needs.
+We no longer need the aI's  They will be removed in 10.1.
+The assetVals will also go and be mrged into the assFeat structure .
+All minor surgery items but they clean up the code.
+This means that the aggregation on calculator.hpp will have to be reworked.
+It should be multi layer and have limited recursion anyway the simBms.cpp code shows you how to do that.
+The other minor glitch was the SlewFunc trying to use its own Av as its own output.
+We need to use the vm->setVal but that triggered an action to set another value into itself.
+"useAv" is a v1.1.0 actions trick to make the remap (or any other action) not use the vm->setVal outer loop but use the av->setVal ( no actions triggered)
+The useAv was in the v1.1.0 release I just tweaed it a bit last night.

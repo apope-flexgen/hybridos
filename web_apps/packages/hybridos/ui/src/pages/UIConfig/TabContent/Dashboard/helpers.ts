@@ -15,6 +15,10 @@ export const tabOptions = [
 ];
 
 export const newDashboard: Dashboard = {
-  info: {},
+  info: {
+    name: 'New Item',
+    baseURI: '',
+    sourceURIs: [],
+  },
   status: [],
 };

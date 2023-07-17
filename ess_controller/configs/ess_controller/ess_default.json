@@ -1,0 +1,9 @@
+{
+    "/sysconfig/default": 
+    {
+        "Help": " This is the default system config file",
+        "Subs":":/components:/assets:/system:/site:/reload:/misc21:",
+        "Config":"ess_init_xxx",
+        "EssName": "essxxx"
+    }
+}

@@ -20,7 +20,7 @@ Asset_Cmd_Object::Asset_Cmd_Object()
 {
     load_buffer.resize(1);
     site_kW_load = 0.0f;
-    site_kW_load_inclusion = false;
+    load_method = NO_COMPENSATION;
     site_kW_demand = 0.0f;
     site_kVAR_demand = 0.0f;
     total_potential_kVAR = 0.0f;
@@ -54,7 +54,7 @@ Asset_Cmd_Object::Asset_Cmd_Data::Asset_Cmd_Data()
 float Asset_Cmd_Object::Asset_Cmd_Data::calculate_source_kW_contribution(float cmd)
 {
     // calculate how much more power this asset type is available to contribute
-    float unused_kW = calculate_unused_kW();
+    float unused_kW = calculate_unused_dischg_kW();
 
     // set bool to turn on asset if its needed
     start_first_flag = (cmd >= start_first_kW);
@@ -70,24 +70,56 @@ float Asset_Cmd_Object::Asset_Cmd_Data::calculate_source_kW_contribution(float c
     kW_cmd += (cmd > unused_kW) ? unused_kW : cmd;
 
     // return the change in kW_cmd AKA how much of cmd this asset type picked up
-    return kW_cmd - old_kW_cmd;  
+    float asset_contribution = kW_cmd - old_kW_cmd;
+
+    // if the asset requested to discharge, reduce its discharge request by its contribution as well
+    if (kW_request > 0)
+        kW_request = zero_check(kW_request - asset_contribution);
+
+    return asset_contribution;  
 }
 
 /**
- * Calculates the amount of active power that can still be assigned to the asset type without violating
+ * Calculates the amount of active power that can still be assigned to the asset type for charge without violating
+ * its minimum power limit.
+ * @return The amount of kW that can still be assigned without violating the minimum kW limit.
+ */
+float Asset_Cmd_Object::Asset_Cmd_Data::calculate_unused_charge_kW()
+{
+    if (kW_cmd > 0)
+        return 0.0f;
+
+    return less_than_zero_check(min_potential_kW - kW_cmd);
+}
+
+/**
+ * Calculates the amount of active power that can still be assigned to the asset type for discharge without violating
  * its maximum power limit.
  * @return The amount of kW that can still be assigned without violating the maximum kW limit.
  */
-float Asset_Cmd_Object::Asset_Cmd_Data::calculate_unused_kW()
+float Asset_Cmd_Object::Asset_Cmd_Data::calculate_unused_dischg_kW()
 {
-    return zero_check(max_potential_kW - zero_check(kW_cmd));
+    if (kW_cmd < 0)
+        return 0.0f;
+
+    return zero_check(max_potential_kW - kW_cmd);
+}
+
+/**
+ * Calculates the expected POI value based on the commands dispatched.
+ * This includes feeder "discharge" i.e. import to handle load or charge
+ * @return the net production of the site that will be seen at the POI
+ */
+float Asset_Cmd_Object::calculate_net_poi_export()
+{
+    return ess_data.kW_cmd + gen_data.kW_cmd + solar_data.kW_cmd + feeder_data.kW_cmd - (get_site_kW_load_inclusion() * site_kW_load);
 }
 
 /**
  * Calculates site_kW_load as the sum all active power values reported by assets
  * Also resets the feature load inclusion flag
  * 
- * Uses a rolling average based on a configurable window size to be more tolerant to (inaccurate) fluctations
+ * Uses a rolling average based on a configurable window size to be more tolerant to (inaccurate) fluctuations
  * in the actual published active power values
  */
 void Asset_Cmd_Object::calculate_site_kW_load()
@@ -97,24 +129,91 @@ void Asset_Cmd_Object::calculate_site_kW_load()
     load_iterator %= load_buffer.size();
     site_kW_load = std::accumulate(load_buffer.begin(), load_buffer.end(), 0.0f) / load_buffer.size();
     // Reset load inclusion
-    site_kW_load_inclusion = false;
+    load_method = NO_COMPENSATION;
 }
 
 /**
- * Calculate site_kW_demand based on the output of the Active Power Feature
- * Features will set a site demand and or asset requests, as well as a flag indicating if load should be included in site power production
- * This function simply aggregates these values for convenience and flexibility in feature output
+ * After the Active Power Feature has set its optional asset requests and demand, aggregate the total discharge requested
+ * and determine if any additional discharge is needed for load compensation
+ */
+float Asset_Cmd_Object::calculate_additional_load_compensation()
+{
+    // Load is outside of site control, so additional compensation is unneeded
+    if (load_method == NO_COMPENSATION)
+        return 0.0f;
+
+    // Calculate the amount of outstanding load based on the type of load compensation being used
+    if (load_method == LOAD_OFFSET)
+        return site_kW_load;
+
+    // Load is a minimum. Reduce the amount of additional discharge needed by the amount already being produced
+    // Take the aggregate of the demand (generic discharge) and any additional asset discharge requests as the total discharge
+    float feature_discharge_request = zero_check(site_kW_demand)
+                                    + zero_check(ess_data.kW_request)
+                                    + zero_check(gen_data.kW_request)
+                                    + zero_check(solar_data.kW_request);
+    // Return the amount of additional discharge needed to handle load
+    return zero_check(site_kW_load - feature_discharge_request);
+}
+
+/**
+ * Add load to demand based on the method of compensation provided. This method should only be used for active power features
+ * that do not utilize their own slew rates. This is because adding the load to the demand after slewing can cause a runaway
+ * effect. Export Target is the only feature with this issue currently.
+ * @param method_of_compensation The method of load compensation
+ */
+void Asset_Cmd_Object::track_unslewed_load(load_compensation method_of_compensation)
+{
+    load_method = load_compensation(method_of_compensation);
+    // Calculate if any additional load compensation is needed from the site
+    additional_load_compensation = calculate_additional_load_compensation();
+    site_kW_demand += additional_load_compensation;
+}
+
+/**
+ * Extract load from demand based on the method of compensation provided. This method should only be used for active power features
+ * that utilize their own slew rates. This is because these features already track load manually as part of their slewed input,
+ * producing a variable output that is not necessarily equal to the measured load. Export Target is the only feature meeting this
+ * criteria currently.
+ * @param method_of_compensation The method of load compensation
+ * @param unslewed_demand The aggregate (unslewed) demand entered into the feature slew
+ * @param additional_load Additional (unslewed) load that was required of the feature
+ * @param feature_slew The slew object used by the feature
+ */
+void Asset_Cmd_Object::track_slewed_load(load_compensation method_of_compensation, float unslewed_demand, float additional_load, Slew_Object& feature_slew)
+{
+    load_method = load_compensation(method_of_compensation);
+    // No additional compensation was added
+    if (load_method == NO_COMPENSATION)
+        return;
+
+    // Handle the case where compensation and charge cancelled out
+    if (site_kW_demand == 0.0f)
+    {
+        // In this case we can simply assume that charge = slew min and demand = slew max
+        additional_load_compensation = std::min(additional_load, feature_slew.get_max_target());
+    }
+    else
+    {
+        // Calculate how much the slew divided the demand
+        float slew_divisor = std::abs(unslewed_demand / site_kW_demand);
+        // Divide load by this value to get the slewed load compensation
+        additional_load_compensation = additional_load / slew_divisor;
+    }
+}
+
+/**
+ * Calculates site_kW_demand based on the output of the Active Power Feature. Features will set a site demand and/or asset requests,
+ * which this function aggregate into two demand values, feature demand which will preserve the unmodified feature demand, and site
+ * demand, which will be modified by the following standalone power features.
  * @param asset_priority Enumerated integer indicating the priority of the various asset types.
- * 0 = solar, gen, ess, feeder. 1 = solar, feeder, ess, gen. 2 = gen, ess, solar, feeder.
  */
 void Asset_Cmd_Object::calculate_feature_kW_demand(int asset_priority)
 {
-    site_kW_demand += ess_data.kW_request + gen_data.kW_request + solar_data.kW_request + site_kW_load_inclusion * site_kW_load;
+    // Aggregate all sources of power generated by the feature and load
+    feature_kW_demand = site_kW_demand += ess_data.kW_request + gen_data.kW_request + solar_data.kW_request;
     // Removed ess charge request if it must discharge to meet load, and disallow any net importing of power
-    if (site_kW_load_inclusion && determine_ess_load_requirement(asset_priority))
-        site_kW_demand = std::max(site_kW_demand - less_than_zero_check(ess_data.kW_request), 0.0f);
-    
-    feature_kW_demand = site_kW_demand;
+    determine_ess_load_requirement(asset_priority);
 }
 
 //calculate total kVAR potential
@@ -134,11 +233,14 @@ void Asset_Cmd_Object::calculate_total_potential_kVAR()
 void Asset_Cmd_Object::calculate_site_kW_production_limits()
 {
     // The asset requests and load were added into the feature demand, so make this step of extraction reference that demand
+    // First find all sources of discharge, including load compensation if it must be met at a MINIMUM only
+    // TODO: for the OFFSET use case we would need to look at the potentials to determine whether to reduce charge or increase discharge
+    // Instead this assumes that the assets have already requested to discharge as much as they want (Solar)
+    float requested_discharge = zero_check(ess_data.kW_request) + zero_check(gen_data.kW_request) + zero_check(solar_data.kW_request);
+    if (load_method == LOAD_MINIMUM)
+        requested_discharge += additional_load_compensation;
     // Charge production from removing all sources of discharge
-    site_kW_charge_production = less_than_zero_check(feature_kW_demand - zero_check(ess_data.kW_request)
-                                                                       - zero_check(gen_data.kW_request)
-                                                                       - zero_check(solar_data.kW_request)
-                                                                       - zero_check(site_kW_load_inclusion * site_kW_load));
+    site_kW_charge_production = less_than_zero_check(feature_kW_demand - requested_discharge);
     // Discharge production from removing all sources of charge
     site_kW_discharge_production = zero_check(feature_kW_demand - site_kW_charge_production);
 
@@ -177,9 +279,15 @@ void Asset_Cmd_Object::calculate_site_kW_production_limits()
  */
 float Asset_Cmd_Object::dispatch_site_kW_charge_cmd(int asset_priority, bool solar_source_flag, bool gen_source_flag, bool feeder_source_flag)
 {
-    // if ess is already discharging, there is no charge request, or ess cannot charge, or site demand is not negative: exit function
-    if (ess_data.kW_cmd > 0.0f  || ess_data.min_potential_kW >= 0.0f || site_kW_charge_production >= 0.0f)
+    // if ess is already discharging, there is no charge request, or ess cannot charge, exit function
+    if (ess_data.kW_cmd > 0.0f || ess_data.min_potential_kW >= 0.0f || site_kW_charge_production >= 0.0f)
+    {
+        // Clear site demand and any charge requests as they cannot be handled
+        site_kW_demand -= less_than_zero_check(site_kW_charge_production);
+        site_kW_charge_production = 0.0f;
+        ess_data.kW_request -= less_than_zero_check(ess_data.kW_request);
         return 0.0f;
+    }
 
     // temp variable for getting old/new kW_cmd delta
     float old_ess_cmd = ess_data.kW_cmd;
@@ -193,25 +301,31 @@ float Asset_Cmd_Object::dispatch_site_kW_charge_cmd(int asset_priority, bool sol
 
     // limit the ESS charge request by the amount of power the ESS can handle and the amount of power other assets can contribute
     // to avoid frequent sign conversion when comparing against positive source values, the charge command is inverted here and used as a positive value
-    float limited_cmd = std::min(zero_check(-1 * site_kW_charge_production), zero_check(-1 * ess_data.min_potential_kW) + ess_data.kW_cmd);
-    limited_cmd = std::min(limited_cmd, aggregate_unused_kW(asset_list));
+    float ess_limited_request = std::min(zero_check(-1 * site_kW_charge_production), zero_check(-1 * ess_data.calculate_unused_charge_kW()));
+    float dispatch_charge_remainder = std::min(ess_limited_request, aggregate_unused_kW(asset_list));
+    // Keep values in sync for lookahead dispatch
+    site_kW_charge_production += dispatch_charge_remainder;
+    // If we aren't able to charge as much as requested, reconcile by reducing the discharge production to maintain the expected POI value.
+    // A charge remainder will only be present if the charge request is larger than the total available discharge production. This ensures that
+    // every asset has already had a chance to discharge (except ESS, which wanted to charge) so it's safe to reduce the discharge production
+    site_kW_discharge_production -= ess_limited_request;
+    // Increase demand by any unserviced charge in order to maintain the expected target
+    site_kW_demand += ess_limited_request - dispatch_charge_remainder;
 
     for(auto asset_data : asset_list)
     {
         // if the charge request has been satisfied, quit iterating
-        if (limited_cmd <= 0.0f)
+        if (dispatch_charge_remainder <= 0.0f)
             break;
 
         // if the current asset type cannot provide any power, skip to next one
-        float charge_request_contribution = std::min(limited_cmd, asset_data->calculate_unused_kW());
+        float charge_request_contribution = std::min(dispatch_charge_remainder, asset_data->calculate_unused_dischg_kW());
         if (charge_request_contribution <= 0.0f) continue;
 
         // update commands/request with however much power the current asset type can contribute
         ess_data.kW_cmd -= charge_request_contribution;
         asset_data->kW_cmd += charge_request_contribution;
-        limited_cmd -= charge_request_contribution;
-
-        site_kW_discharge_production -= charge_request_contribution;
+        dispatch_charge_remainder -= charge_request_contribution;
     }
 
     return ess_data.kW_cmd - old_ess_cmd;
@@ -235,14 +349,18 @@ float Asset_Cmd_Object::dispatch_site_kW_discharge_cmd(int asset_priority, float
     // Then calculate the active power contribution of each asset type
     for (auto it : asset_list)
     {
-        // Contibute to kW_request and subtract it from command
-        if (command_type == REQUESTS && it->kW_request >= 0)
+        // Contribute to kW_request and subtract it from the command received
+        if (command_type == REQUESTS)
         {
-            float asset_request = std::min(it->kW_request, cmd);
-            cmd -= it->calculate_source_kW_contribution(asset_request);
+            // Only contribute power from this asset if it has a discharge request
+            if (it->kW_request > 0)
+            {
+                float asset_request = std::min(it->kW_request, cmd);
+                cmd -= it->calculate_source_kW_contribution(asset_request);
+            }
         }
-        // Contribute to command directly (load, discharge_production demand)
-        else
+        // Contribute to the received command directly (load, discharge_production demand)
+        else if (command_type == LOAD || command_type == DEMAND)
             // Only dispatch using the asset as a source if appropriate
             cmd -= it->calculate_source_kW_contribution(cmd);
     }
@@ -280,26 +398,32 @@ void Asset_Cmd_Object::target_soc_mode(bool load_requirement)
     // Solar uncurtailed
     solar_data.kW_request = solar_data.max_potential_kW;
 
-    // Track load if appropriate
-    site_kW_load_inclusion = load_requirement;
+    // Track load as a demand minimum if appropriate
+    track_unslewed_load(load_compensation(load_requirement * LOAD_MINIMUM));
 }
 
 /**
  * SITE EXPORT TARGET MODE takes a single power command (the total site production, ignoring load) that is distributed to assets.
  * Positive commands are distributed to to all assets as needed, with priority based on the configured asset priority.
  * Negative commands are distributed to ESS as available.
- * If load is not taken into account, the value at the POI will fluctuate as load changes
+ * If load is not taken into account, the value at the POI will fluctuate as load changes.
+ * Load must be handled manually by this feature due to its feature level slew
  * @param load_enable_flag Whether site production should handle load compensation at a minimum
  * @param export_target_slew Slew rate for the feature
  * @param export_target_kW_cmd Single power command to be distributed to assets
  */
 void Asset_Cmd_Object::site_export_target_mode(bool load_enable_flag, Slew_Object* export_target_slew, float export_target_kW_cmd)
 {
+    // Setup desired command at the POI
+    poi_cmd = export_target_kW_cmd;
+    // Load must be included in the reference command and routed through the slewed target
+    load_method = load_compensation(load_enable_flag * LOAD_OFFSET);
+    additional_load_compensation = calculate_additional_load_compensation();
+    export_target_kW_cmd += additional_load_compensation;
+
     // Set site demand to be distributed based on dispatch availability and priority, bypassing load unless specified
     site_kW_demand = export_target_slew->get_slew_target(export_target_kW_cmd);
-
-    // Track load if appropriate
-    site_kW_load_inclusion = load_enable_flag;
+    track_slewed_load(load_method, export_target_kW_cmd, additional_load_compensation, *export_target_slew);
 }
 
 /**
@@ -319,6 +443,8 @@ void Asset_Cmd_Object::manual_mode(float manual_ess_kW_cmd, float manual_solar_k
     solar_data.kW_request = zero_check(manual_solar_kW_cmd);
     // Ensure that any extra available solar is not used to service the site demand
     solar_data.max_potential_kW = std::min(solar_data.max_potential_kW, solar_data.kW_request);
+    
+    // No load compensation
 }
 
 /**
@@ -332,7 +458,7 @@ void Asset_Cmd_Object::grid_target_mode(float grid_target_kW_cmd)
 {
     site_kW_demand = zero_check(-1.0f * grid_target_kW_cmd);
     // This feature tracks load in all cases
-    site_kW_load_inclusion = true;
+    track_unslewed_load(LOAD_OFFSET);
 }
 
 /**
@@ -361,7 +487,7 @@ void Asset_Cmd_Object::ess_calibration_mode(float ess_calibration_kW_cmd, int nu
 {
     // Multiple by the number of ESS available to get the total power that should be distributed
     float total_feature_cmd = ess_calibration_kW_cmd * num_ess_controllable;
-    // Provide at least enough potential to meet the commannd, as the potentials can limit the command due to a shared slew target but unbalanced SoCs
+    // Provide at least enough potential to meet the command, as the potentials can limit the command due to a shared slew target but unbalanced SoCs
     // Commands will still be limited safely by the amount of (dis)chargeable power available
     set_ess_max_potential_kW(std::max(total_feature_cmd, get_ess_max_potential_kW()));
     set_ess_min_potential_kW(std::min(total_feature_cmd, get_ess_min_potential_kW()));
@@ -396,6 +522,34 @@ void Asset_Cmd_Object::reactive_setpoint_mode(Slew_Object* reactive_setpoint_sle
 
     site_kVAR_demand = std::min(total_potential_kVAR, fabsf(kVAR_request));
     site_kVAR_demand *= (std::signbit(kVAR_request)) ? -1 : 1;
+}
+
+/**
+ * Constant Power Factor mode algorithm.
+ * Calculates site_kVAR_demand based on active power (site_kW_demand without POI corrections) and 
+ * power factor setpoint received
+ * @param power_factor_setpoint The power factor setpoint to follow
+ * @param set_lagging_direction The direction of the power factor setpoint: True is negative aka lagging, and false is positive aka leading
+ */
+void Asset_Cmd_Object::constant_power_factor_mode(float power_factor_setpoint, bool set_lagging_direction)
+{
+    // Calculate magnitude of reactive power
+    if (power_factor_setpoint != 0.0f)
+    {
+        // Dispatch Q based on P and pf
+        // Equation derived from power factor equation:
+        //    power factor = active power / apparent power
+        //    apparent power = sqrt(active power^2 + reactive power^2)
+        site_kVAR_demand = uncorrected_site_kW_demand * std::sqrt(1/std::pow(power_factor_setpoint, 2) - 1);
+        // Limit by total potential for small power factor setpoints
+        site_kVAR_demand = std::min(std::abs(site_kVAR_demand), std::abs(total_potential_kVAR));
+    }
+    else
+        // Dispatch full reactive power capability (and no active power) when pf is 0
+        site_kVAR_demand = std::abs(total_potential_kVAR);
+
+    // Apply configured sign (true is negative, false is positive)
+    site_kVAR_demand = set_lagging_direction ? -1.0f * site_kVAR_demand : site_kVAR_demand;
 }
 
 //active voltage regulation mode algorithm
@@ -458,10 +612,36 @@ float Asset_Cmd_Object::get_site_kW_load()
     return site_kW_load;
 }
 
-//return site_kW_load_inclusion
+/**
+ * Return whether load is being tracked at all. This will be true for both MINIMUM and OFFSET cases and false for NO_COMPENSATION
+ * @return whether load is being tracked
+ */
 bool Asset_Cmd_Object::get_site_kW_load_inclusion()
 {
-    return site_kW_load_inclusion;
+    return load_method != NO_COMPENSATION;
+}
+
+/**
+ * Return the load method being used. Possible methods are NO_COMPENSATION if load is not being tracked at all, LOAD_OFFSET if load
+ * is being tracked in demand as an offset to the command, and LOAD_MINIMUM if the load is being tracked separately as compensation
+ * that is added to the demand.
+ * @return the load method being used
+ */
+load_compensation Asset_Cmd_Object::get_load_method()
+{
+    return load_method;
+}
+
+/**
+ * Return additional load compensation. This will be the amount of additional discharge
+ * production that has been added to the site demand.
+ * In the case of NO_COMPENSATION there will not be any additional load compensation as the feature does not track load.
+ * In the case of LOAD_OFFSET there will not be any additional load compensation as its already included in the demand
+ * In the case of LOAD_MINIMUM additional load compensation will be the amount of additional power needed to meet load
+ */
+float Asset_Cmd_Object::get_additional_load_compensation()
+{
+    return additional_load_compensation;
 }
 
 //return feature_kW_demand
@@ -513,10 +693,25 @@ void Asset_Cmd_Object::set_site_kW_demand(float value)
     site_kW_demand = value;
 }
 
+// Save the demand prior to POI corrections (CLC, watt-watt)
+void Asset_Cmd_Object::preserve_uncorrected_site_kW_demand()
+{
+    uncorrected_site_kW_demand = site_kW_demand;
+}
+
 //set site_kW_load
 void Asset_Cmd_Object::set_site_kW_load(float value)
 {
     site_kW_load = value;
+}
+
+/**
+ * Set the amount of load compensation required in addition to the feature (required for testing only)
+ * @param value The amount of additional load compensation
+ */
+void Asset_Cmd_Object::set_additional_load_compensation(float value)
+{
+    additional_load_compensation = value;
 }
 
 //set site_kW_load_buffer_size
@@ -528,10 +723,14 @@ void Asset_Cmd_Object::create_site_kW_load_buffer(int size)
     load_iterator = 0;
 }
 
-//set site_kW_load_inclusion
-void Asset_Cmd_Object::set_site_kW_load_inclusion(bool value)
+/**
+ * Set the load method
+ * @param method The enumerated load type to use.
+ *               Available options are NO_COMPENSATION, LOAD_OFFSET, and LOAD_MINIMUM
+ */
+void Asset_Cmd_Object::set_load_compensation_method(load_compensation method)
 {
-    site_kW_load_inclusion = value;
+    load_method = method;
 }
 
 //set feature_kW_demand
@@ -706,6 +905,38 @@ bool Asset_Cmd_Object::get_gen_start_first_flag()
 bool Asset_Cmd_Object::get_solar_start_first_flag()
 {
     return solar_data.start_first_flag;
+}
+
+// Return the aggregate of available active chargeable power
+float Asset_Cmd_Object::get_total_available_charge_kW()
+{
+    // TODO: This is an oversimplified solution for unidirectional features
+    // Need to reevaluate how feeder works with CLC as well as mixed asset requests
+    return less_than_zero_check(ess_data.min_potential_kW - less_than_zero_check(ess_data.kW_cmd));
+}
+
+// Return the aggregate of available active dischargeable power
+float Asset_Cmd_Object::get_total_available_discharge_kW()
+{
+    // TODO: This is an oversimplified solution for unidirectional features
+    // Need to reevaluate how feeder works with CLC as well as mixed asset requests
+    return ess_data.calculate_unused_dischg_kW() + gen_data.calculate_unused_dischg_kW() + solar_data.calculate_unused_dischg_kW();
+}
+
+// Return the aggregate of available reactive chargeable power
+float Asset_Cmd_Object::get_total_available_charge_kVAR()
+{
+    // Only ESS and Solar support negative reactive, and gen is not part of reactive power dispatch
+    return less_than_zero_check(-1.0f * ess_data.potential_kVAR - less_than_zero_check(ess_data.kVAR_cmd))
+         + less_than_zero_check(-1.0f * solar_data.potential_kVAR - less_than_zero_check(solar_data.kVAR_cmd));
+}
+
+// Return the aggregate of available reactive dischargeable power
+float Asset_Cmd_Object::get_total_available_discharge_kVAR()
+{
+    // Only ESS and Solar are part of reactive power dispatch
+    return zero_check(ess_data.potential_kVAR - zero_check(ess_data.kVAR_cmd))
+         + zero_check(solar_data.potential_kVAR - zero_check(solar_data.kVAR_cmd));
 }
 
 //set ess_kW_cmd
@@ -894,8 +1125,30 @@ void Asset_Cmd_Object::set_solar_start_first_flag(bool value)
     solar_data.start_first_flag = value;
 }
 
-//reset kW cmd to 0 each asset type
-void Asset_Cmd_Object::reset_kW_cmd()
+// Save asset vars and demand before their modification so that they can be restored at a future point
+void Asset_Cmd_Object::save_state()
+{
+    std::vector<Asset_Cmd_Data*> assets = list_assets_by_discharge_priority(0);
+    for (auto asset : assets)
+    {
+        asset->saved_kW_request = asset->kW_request;
+        asset->saved_kW_cmd = asset->kW_cmd;
+    }
+}
+
+// Load asset vars and demand back to their original state
+void Asset_Cmd_Object::restore_state()
+{
+    std::vector<Asset_Cmd_Data*> assets = list_assets_by_discharge_priority(0);
+    for (auto asset : assets)
+    {
+        asset->kW_request = asset->saved_kW_request;
+        asset->kW_cmd = asset->saved_kW_cmd;
+    }
+}
+
+// reset active power dispatch variables
+void Asset_Cmd_Object::reset_kW_dispatch()
 {
     ess_data.kW_cmd = 0.0f;
     feeder_data.kW_cmd = 0.0f;
@@ -911,7 +1164,7 @@ void Asset_Cmd_Object::reset_kW_cmd()
 }
 
 //reset kVAR cmd to 0 each asset type
-void Asset_Cmd_Object::reset_kVAR_cmd()
+void Asset_Cmd_Object::reset_kVAR_dispatch()
 {
     ess_data.kVAR_cmd = 0.0;
     gen_data.kVAR_cmd = 0.0;
@@ -920,6 +1173,7 @@ void Asset_Cmd_Object::reset_kVAR_cmd()
 
 /**
  * Builds a list of the asset data objects in the order of the given priority
+ * Assets with a discharge request will be prioritized before assets without one
  * @param asset_priority Enumerated integer indicating the priority of the various asset types.
  * @param exclusions Any assets that should be excluded from the list. Defaults to empty with no exclusions
  * 0 = solar, gen, ess, feeder. 1 = solar, feeder, ess, gen. 2 = gen, ess, solar, feeder.
@@ -928,25 +1182,42 @@ void Asset_Cmd_Object::reset_kVAR_cmd()
 std::vector<Asset_Cmd_Object::Asset_Cmd_Data*> Asset_Cmd_Object::list_assets_by_discharge_priority(int asset_priority, std::vector<Asset_Cmd_Data*> exclusions)
 {
     // Construct the basic list based on priority
-    std::vector<Asset_Cmd_Data*> asset_list;
+    std::vector<Asset_Cmd_Data*> list_by_priority;
     switch(asset_priority)
     {
-    case solar_gen_ess_feeder:  asset_list =  {&solar_data, &gen_data, &ess_data, &feeder_data}; break;
-    case solar_feeder_ess_gen:  asset_list =  {&solar_data, &feeder_data, &ess_data, &gen_data}; break;
-    case gen_ess_solar_feeder:  asset_list =  {&gen_data, &ess_data, &solar_data, &feeder_data}; break;
-    case gen_solar_ess_feeder:  asset_list =  {&gen_data, &solar_data, &ess_data, &feeder_data}; break;
-    case ess_solar_gen_feeder:  asset_list =  {&ess_data, &solar_data, &gen_data, &feeder_data}; break;
-    default:                    asset_list =  {&ess_data, &solar_data, &feeder_data, &gen_data}; break;
+    case solar_gen_ess_feeder:  list_by_priority =  {&solar_data, &gen_data, &ess_data, &feeder_data}; break;
+    case solar_feeder_ess_gen:  list_by_priority =  {&solar_data, &feeder_data, &ess_data, &gen_data}; break;
+    case gen_ess_solar_feeder:  list_by_priority =  {&gen_data, &ess_data, &solar_data, &feeder_data}; break;
+    case gen_solar_ess_feeder:  list_by_priority =  {&gen_data, &solar_data, &ess_data, &feeder_data}; break;
+    case ess_solar_gen_feeder:  list_by_priority =  {&ess_data, &solar_data, &gen_data, &feeder_data}; break;
+    case ess_solar_feeder_gen:  list_by_priority =  {&ess_data, &solar_data, &feeder_data, &gen_data}; break;
+    case solar_gen_feeder_ess:  list_by_priority =  {&solar_data, &gen_data, &feeder_data, &ess_data}; break;
+    default: 
+        FPS_ERROR_LOG("Invalid asset priority, defaulting to priority 0");
+        list_by_priority =  {&solar_data, &gen_data, &ess_data, &feeder_data};
+        break;
     }
     // And remove any assets that should be excluded
-    remove_asset_types(asset_list, exclusions);
-    return asset_list;
+    remove_asset_types(list_by_priority, exclusions);
+
+    // Then create a final list with discharge requests prioritized first, falling back on the previous priority order otherwise
+    std::vector<Asset_Cmd_Data*> list_by_kW_request_and_priority;
+    // Copy over assets with discharge requests
+    for (auto asset : list_by_priority)
+        if (asset->kW_request > 0)
+            list_by_kW_request_and_priority.push_back(asset);
+    // Then copy over all other assets
+    for (auto asset : list_by_priority)
+        if (asset->kW_request <= 0)
+            list_by_kW_request_and_priority.push_back(asset);
+
+    return list_by_kW_request_and_priority;
 }
 
 /**
  * Removes the given asset types from a list of asset data objects.
  * @param data_list List of asset data objects.
- * @param asset_types Pointer to asset data objects that should be removed.
+ * @param asset_types Pointers to asset data objects that should be removed.
  */
 void Asset_Cmd_Object::remove_asset_types(std::vector<Asset_Cmd_Data*> &data_list, const std::vector<Asset_Cmd_Data*> asset_types)
 {
@@ -964,54 +1235,45 @@ float Asset_Cmd_Object::aggregate_unused_kW(std::vector<Asset_Cmd_Object::Asset_
     float total_unused_kW = 0;
     for(auto asset_data : data_list)
     {
-        total_unused_kW += asset_data->calculate_unused_kW();
+        total_unused_kW += asset_data->calculate_unused_dischg_kW();
     }
     return total_unused_kW;
 }
 
 /**
- * Determine if ESS is required to compensate for load
+ * Determine if ESS is required to compensate for load due to asset priority. This will be a case
+ * where ESS is prioritized before other assets, or the other assets are unable to discharge enough
+ * power to meet the load.
  * @param asset_priority Enumerated integer indicating the priority of the various asset types.
- * 0 = solar, gen, ess, feeder. 1 = solar, feeder, ess, gen. 2 = gen, ess, solar, feeder.
- * @return The import that will not fall on the feeder
+ *                       See Types.h "priority" enum for a list of available values
+ * @return True if ESS is required to handle load
  */
 bool Asset_Cmd_Object::determine_ess_load_requirement(int asset_priority)
 {
+    calculate_site_kW_production_limits();
+    if (load_method != LOAD_MINIMUM || (ess_data.kW_request >= 0 && site_kW_charge_production >= 0))
+        return false;
+
     std::vector<Asset_Cmd_Data*> site_assets_list = list_assets_by_discharge_priority(asset_priority);
     float uncompensated_load = site_kW_load;
     for(auto asset_data : site_assets_list)
     {
+        // Load has been accounted for
         if (uncompensated_load <= 0)
             break;
 
-        uncompensated_load -= asset_data->calculate_unused_kW();
-        
+        uncompensated_load -= asset_data->calculate_unused_dischg_kW();
+
+        // The ESS is responsible for discharging
         if (asset_data == &ess_data)
+        {
+            // Determine the amount of charge included in the demand and remove it
+            calculate_site_kW_production_limits();
+            feature_kW_demand -= less_than_zero_check(site_kW_charge_production);
+            site_kW_demand -= less_than_zero_check(site_kW_charge_production);
+            ess_data.kW_request = 0.0f;
             return true;
+        }
     }
     return false;
-}
-
-/**
- * Calculates the amount of unused power that can be produced internally for load without importing from POI
- * @param asset_priority Enumerated integer indicating the priority of the various asset types.
- * 0 = solar, gen, ess, feeder. 1 = solar, feeder, ess, gen. 2 = gen, ess, solar, feeder.
- * @return The import that will not fall on the feeder
- */
-float Asset_Cmd_Object::calculate_internal_load_compensation(int asset_priority)
-{
-    std::vector<Asset_Cmd_Data*> site_assets_list = list_assets_by_discharge_priority(asset_priority, {&feeder_data});
-    return aggregate_unused_kW(site_assets_list);
-}
-
-/**
- * Calculates the amount of unused power that can be produced internally for charge without importing from the POI
- * @param asset_priority Enumerated integer indicating the priority of the various asset types.
- * 0 = solar, gen, ess, feeder. 1 = solar, feeder, ess, gen. 2 = gen, ess, solar, feeder.
- * @return The import that will not fall on feeder or ess
- */
-float Asset_Cmd_Object::calculate_internal_charge_compensation(int asset_priority)
-{
-    std::vector<Asset_Cmd_Data*> site_assets_list = list_assets_by_discharge_priority(asset_priority, {&ess_data, &feeder_data});
-    return aggregate_unused_kW(site_assets_list);
 }

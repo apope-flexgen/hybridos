@@ -60,9 +60,7 @@ public:
     void process_asset(void);
     void update_asset(void);
     void send_to_components(void) override;
-
-    // utility functions
-    bool process_set(std::string uri, cJSON* fimsBody);
+    bool handle_set(std::string uri, cJSON &body);
     bool generate_asset_ui(fmt::memory_buffer&, const char* const var = NULL) override;
     
 protected:
@@ -101,11 +99,8 @@ protected:
     bool isStopped;
 
     // uris
-    char* uri_start;
-    char* uri_stop;
-    char* uri_grid_mode;
-    char* uri_active_power_setpoint;
-    char* uri_reactive_power_setpoint;
+    std::string uri_start;
+    std::string uri_stop;
     
     // internal functions
     bool send_grid_mode(void);

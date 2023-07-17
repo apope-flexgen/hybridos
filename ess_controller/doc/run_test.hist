@@ -1,0 +1,1157 @@
+   35  /usr/local/bin/fims_send -m get -r /$$ -u /components/test_01 
+   36  bg
+   37  jobs
+   38  /usr/local/bin/fims_send -m get -r /$$ -u /components/test_01 
+   39  fg
+   40  make 
+   41  make clean all
+   42  sudo make install
+   43  sh ~/work/modbus/maps/test_new_client/test_10_1_echo.sh 
+   44  sudo /usr/local/bin/modbus_server ~/work/modbus/maps/test_new_client/test_10_1_server.json 
+   45  bg
+   46  killall fims_echo
+   47  /usr/local/bin/fims_send -m get -r /$$ -u /components/test_01 
+   48  /usr/local/bin/fims_send -m set -r /$$ -u /components/test_01 '"foo'" 
+   49  '
+   50  "
+   51  '
+   52  cd v10.1/ess_controller/
+   53  . scripts/benv.sh 
+   54  fims_listen 
+   55  sh ~/work/modbus/maps/test_new_client/test_10_1_echo.sh 
+   56  fims_send -m get -r /$$ -u /components/test_10 
+   57  fims_send -m set -r /$$ -u /components/test_10 '{"component_heartbeat":21}' 
+   58  fims_send -m set -r /$$ -u /components/test_10 '{"component_heartbeat":{"value":21}}' 
+   59  fims_send -m pub  -u /components/test_10 '{"component_heartbeat":{"value":21}}' 
+   60  fims_send -m get -r /$$ -u /components/test_10 
+   61  kill fims_echo
+   62  pkill fims_echo
+   63  fims_send -m get -r /$$ -u /components/test_10 
+   64  fims_send -m pub  -u /components/test_10 '{"component_heartbeat":{"value":21}}' 
+   65  fims_send -m pub  -u /components/test_10 '{"component_heartbeat":{"value":22}}' 
+   66  code /home/vagrant/work/modbus/maps/test_new_client/test_10_1_client.json 
+   67  code /home/vagrant/modbus_interface/src/modbus_client.cpp 
+   68  fims_send -m get  -r /%% -u /components/test_10/_stats   
+   69  fims_send -m get  -r /$$ -u /components/test_10/_stats   
+   70  fims_send -m get  -r /$$ -u /components/test_10_1/_stats   
+   71  fims_send -m get  -r /$$ -u /components/test_10_1/_stats    | jq
+   72  cd ../../modbus_interface
+   73  make
+   74  sudo make install
+   75  sk ~/work/modbus/maps/test_new_client/test_10_1_echo.sh 
+   76  sh ~/work/modbus/maps/test_new_client/test_10_1_echo.sh 
+   77  pkill fims_echo
+   78  fims_send -m pub  -u /components/test_10 '{"component_heartbeat":{"value":22}}' 
+   79  ls test/watchdog_test_config/heartbeat_test.sh 
+   80  sh test/watchdog_test_config/heartbeat_test.sh 
+   81  ping pizero202
+   82  fims_listen
+   83  cd v10.1/ess_controller/
+   84  . scripts/benv.sh 
+   85  fims_server
+   86  cd v10.1/ess_controller/
+   87  . scripts/benv.sh 
+   88   sudo /usr/local/bin/modbus_server work/modbus/maps/test_new_client/test_10_1_server.json
+   89   sudo /usr/local/bin/modbus_server ~/work/modbus/maps/test_new_client/test_10_1_server.json
+   90  ps ax | grepmodbus
+   91  ps ax | grep modbus
+   92  kill -9 7763
+   93  sudo kill -9 7763
+   94  kill -9 7763
+   95  ps ax | grep modbus
+   96  kill -9 7764
+   97   sudo /usr/local/bin/modbus_server ~/work/modbus/maps/test_new_client/test_10_1_server.json
+   98  ps ax | grep modbus
+   99  kill -9 7764
+  100  sudo kill -9 7764
+  101   sudo /usr/local/bin/modbus_server ~/work/modbus/maps/test_new_client/test_10_1_server.json
+  102  ps ax | grep fims
+  103  sudo /usr/local/bin/modbus_client work/modbus/maps/test_new_client/test_10_1_client.json 
+  104  sudo /usr/local/bin/modbus_server work/modbus/maps/test_new_client/test_10_1_server.json 
+  105  sudo /usr/local/bin/modbus_client work/modbus/maps/test_new_client/test_10_1_client.json 
+  106  cd modbus_interface
+  107  g++ -v
+  108  . ../v10.1/ess_controller/scripts/benv.sh 
+  109  g++ -v
+  110  make
+  111  sudo make install
+  112  sudo /usr/local/bin/modbus_client work/modbus/maps/test_new_client/test_10_1_client.json 
+  113  sudo /usr/local/bin/modbus_client ~/work/modbus/maps/test_new_client/test_10_1_client.json 
+  114  make
+  115  sudo make install
+  116  sudo /usr/local/bin/modbus_client ~/work/modbus/maps/test_new_client/test_10_1_client.json 
+  117  make
+  118  sudo make install
+  119  sudo /usr/local/bin/modbus_client ~/work/modbus/maps/test_new_client/test_10_1_client.json 
+  120  cd v10.1/ess_controller/
+  121  . scripts/benv.sh 
+  122  ls scripts/demo/
+  123  ls scripts/demo/012822/
+  124  ls scripts/demo
+  125  ls scripts/demo/0203_Vinay/
+  126  code  scripts/demo/0203_Vinay/
+  127  killall code
+  128  code  scripts/demo/0203_Vinay/
+  129  build/release/ess_controller -x
+  130  fims_server
+  131  fims_send -m set -r /$$ -u /ess/system/commands/run '{"value":22, "uri":"/test/ess:run2", "every":0.01}'
+  132  top
+  133  cd v10.1/ess_controller/
+  134  . scripts/benv.sh 
+  135  ls scripts/demo/0203_Vinay/
+  136  sh scripts/demo/0203_Vinay/RunTimingsEnumStr.sh 
+  137  fims_send -m get -r /$$ -u /ess/full/timings/ess
+  138  fims_send -m get -r /$$ -u /ess/full/timings/ess | jq
+  139  sh scripts/demo/0203_Vinay/RunTimingsEnumStr.sh 
+  140  fims_send -m get -r /$$ -u /ess/full/timings/ess | jq
+  141  sh scripts/demo/0203_Vinay/RunTimingsEnumStr.sh 
+  142  fims_send -m get -r /$$ -u /ess/full/timings/ess | jq
+  143  fims_send -m get -r /$$ -u /ess/components/pcs_registers_fast
+  144  fims_send -m get -r /$$ -u /ess/components/pcs_registers_fast  | jq
+  145  fims_send -m get -r /$$ -u /ess/components/pcs_registers_fast/pcs_01  | jq
+  146  fims_send -m get -r /$$ -u /ess/components/pcs_registers_fast/pcs_01_status_str  | jq
+  147  fims_send -m get -r /$$ -u /ess/full/components/pcs_registers_fast/pcs_01_status_str  | jq
+  148  sh scripts/demo/0203_Vinay/RunTimingsEnumStr.sh 
+  149  fims_send -m get -r /$$ -u /ess/full/components/pcs_registers_fast/pcs_01_status_str  | jq
+  150  fims_send -m get -r /$$ -u /ess/full/timings/ess | jq
+  151  fims_send -m get -r /$$ -u /ess/full/ttest | jq
+  152  fims_send -m get -r /$$ -u /ess/full/test | jq
+  153  fims_send -m get -r /$$ -u /ess/components | jq
+  154  fims_send -m get -r /$$ -u /ess/full/components | jq
+  155  sh scripts/demo/0203_Vinay/RunTimingsEnumStr.sh 
+  156  fims_send -m get -r /$$ -u /ess/full/components | jq
+  157  sh scripts/demo/0203_Vinay/RunTimingsEnumStr.sh 
+  158  fims_send -m get -r /$$ -u /ess/full/components | jq
+  159  fims_send -m get -r /$$ -u /ess/full/timings/ess | jq
+  160  fims_send -m get -r /$$ -u /ess/full/components | jq
+  161  fims_send -m get -r /$$ -u /ess/test/pcs | jq
+  162  fims_send -m get -r /$$ -u /ess/full/timings/ess | jq
+  163  fims_send -m get -r /$$ -u /ess/full/test/ess | jq
+  164  fims_send -m get -r /$$ -u /ess/full/test/pcs | jq
+  165  fims_send -m get -r /$$ -u /ess/full/test/pcs/pcs_01 | jq
+  166  fims_send -m get -r /$$ -u /ess/full/timings/ess | jq
+  167  top
+  168  git status
+  169  git checkout scripts/demo/0203_Vinay/RunTimings.sh
+  170  git status
+  171  git add doc/10.1_release.txt 
+  172  git add scripts/demo/0203_Vinay/RunTimingsEnumStr.sh 
+  173  git commit -am " Added enum test. Why is this stuff so fast ??"
+  174  fims_listen
+  175  ls -a ~/.ssh
+  176  scp  -r  ~/.ssh pi@pizero202:/home/pi
+  177  ls doc/
+  178  ls doc/python/
+  179  ls scripts/
+  180  ls scripts/python
+  181  ls
+  182  ls fims_stress/
+  183  ls twins
+  184  find . -name "*.py"
+  185  more doc/fims2/fims_replay.py
+  186  cd v10.1/ess_controller/
+  187  . scripts/benv.sh 
+  188  build/release/ess_controller -x
+  189  pwd
+  190  cd work/
+  191  ls
+  192  git clone  git@github.com:philflex2020/ess_basics.git 
+  193  g++ -v
+  194  cd ess_basics/
+  195  make
+  196  cd ../
+  197  ls
+  198  ls ../
+  199  ls
+  200  tar tvzf v1.8.5.tar.gz 
+  201  ls
+  202  git clone https://github.com/simdjson/simdjson.git
+  203  cd simdjson/
+  204  mkdir buid
+  205  mkdir build
+  206  cd build
+  207  cmake ../
+  208  make
+  209  sudo make install
+  210  cd ../../ess_basics/
+  211  make
+  212  ls build/release/ess_basics 
+  213  build/release/ess_basics 
+  214  ls config/
+  215  more runit 
+  216  sh runit 
+  217  git status
+  218  code include/assetUri.h
+  219  ls test
+  220  g++ -o testA test/test_assetUri.cpp 
+  221  g++ -I ../include -o testA test/test_assetUri.cpp 
+  222  g++ -I include -o testA test/test_assetUri.cpp 
+  223  g++ -v
+  224  ls /usr/lib64
+  225  more Makefile 
+  226  code  Makefile 
+  227  make
+  228  build/release/test_assetUri 
+  229  make
+  230  grep cstr ../../v10.1/ess_controller/include/*.h
+  231  grep cstr ../../v10.1/ess_controller/include/*.h*
+  232  make
+  233  build/release/test_assetUri 
+  234  valgrind -v build/release/test_assetUri 
+  235  git status
+  236  git add include/assetUri.h src/assetUri.cpp test/test_assetUri.cpp 
+  237  git commit -am " working on asseturi"
+  238  git push
+  239  ping 192.168.110.202
+  240  ssh pi@192.168.110.202
+  241  killall code
+  242  cd work/ess_basics/
+  243  ls
+  244  ls test
+  245  code test
+  246  make
+  247  build/release/test_assetUri 
+  248  make
+  249  valgrind -v build/release/test_assetUri 
+  250  piong 8.8.8.8
+  251  ping 8.8.8.8
+  252  make
+  253  build/release/test_assetUri 
+  254  make
+  255  build/release/test_assetUri 
+  256  make
+  257  build/release/test_assetUri 
+  258  CPPFLAGS=-g
+  259  make clean all
+  260  gdb build/release/test_assetUri 
+  261  make clean all
+  262  r build/release/test_assetUri 
+  263  build/release/test_assetUri 
+  264  ls woek
+  265  ls work
+  266  cd work/ess_basics/
+  267  make
+  268  make clean all
+  269  cd ~/
+  270  ls
+  271  pwd
+  272  cd work/ess_basics/
+  273  more src/assetUri.cpp 
+  274  code include/assetUri.h 
+  275  killall code
+  276  code include/assetUri.h 
+  277  make
+  278  ls ../
+  279  ls ../fims/src/
+  280  code ../fims/src/libfims.cpp 
+  281  make
+  282  more runit 
+  283  cp config/base_test_obj2.json config/default.json
+  284  make
+  285  build/release/ess_basics 
+  286  make
+  287  build/release/ess_basics 
+  288  make
+  289  build/release/ess_basics 
+  290  git status
+  291  git add config/default.json 
+  292  git add include/baseUtils.h 
+  293  git add include/checkUri.h
+  294  git add src/checkUri.cpp
+  295  git rm src/checkUri.cpp
+  296  git rm -f src/checkUri.c
+  297  git add i
+  298  git status
+  299  git add src/baseUtils.cpp 
+  300  mkdir oldcode
+  301  git add src/baseUtils.cpp 
+  302  mv include/checkUri.cpp  oldcode
+  303  git status
+  304  git rm -f  include/checkUri.h 
+  305  git commit -am " working towards real code"
+  306  python
+  307  cd v10.1/ess_controller/
+  308  . scripts/benv.sh 
+  309  fims_server &
+  310  ls work/
+  311  ls work/ess_basics/
+  312  cd  work/ess_basics/
+  313  git status
+  314  git pull -r
+  315  git status
+  316  git push 
+  317  gitk
+  318  ls src/
+  319  code src/ess_basics.cpp 
+  320  make
+  321  make clean
+  322  make
+  323  make clean all
+  324  git status
+  325  git commi t-am " sorting out code structure"
+  326  git commit -am " sorting out code structure"
+  327  git push
+  328  make
+  329  ls
+  330  more runit 
+  331  sh runit 
+  332  make
+  333  sh runit 
+  334  git status
+  335  git commit -am " attempted to update base->parent->dbval"
+  336  git push
+  337  make
+  338  git commit -am " attempted to update base->parent->dbval"
+  339  git push
+  340  sh runit 
+  341  more runit 
+  342  valgrind -v  build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  343  export CPPFLAGS=-g
+  344  make clean all
+  345  valgrind -v  build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  346  valgrind -v  --leak-check=full build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  347  valgrind -v  --leak-check=full --show-leak-kinds=all build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  348  build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  349  make
+  350  build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  351  make clean all
+  352  build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  353  make clean all
+  354  build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  355  valgrind -v  --leak-check=full --show-leak-kinds=all build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  356  make clean all
+  357  valgrind -v  --leak-check=full --show-leak-kinds=all build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  358  build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  359  make clean all
+  360  build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  361  make clean all
+  362  build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  363  valgrind -v  --leak-check=full --show-leak-kinds=all build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  364  make clean all
+  365  valgrind -v  --leak-check=full --show-leak-kinds=all build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  366  make clean all
+  367  valgrind -v  --leak-check=full --show-leak-kinds=all build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  368  make clean all
+  369  valgrind -v  --leak-check=full --show-leak-kinds=all build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  370  make clean all
+  371  valgrind -v  --leak-check=full --show-leak-kinds=all build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  372  make clean all
+  373  valgrind -v  --leak-check=full --show-leak-kinds=all build/release/ess_basics config/base_test_obj2.json config/base_test_obj3.json
+  374  git status
+  375  git commit -am " working through leaks"
+  376  git push
+  377  ping pi4os6401
+  378  cd v10.1/ess_controller/
+  379  . scripts/benv.sh 
+  380  build/release/ess_controller -x
+  381  build/release/ess_controller -x 
+  382  more ess_controller.spec 
+  383  more ess_controller.service 
+  384  nano ess_controller.service 
+  385  git status
+  386  nano ess_controller.spec
+  387  more ess_controller.service 
+  388  nano ess_controller.spec
+  389  nano gpio_controller.spec
+  390  nano gpio_controller.service 
+  391  git commit -am " fix up service files'
+  392  git commit -am " fix up service files"
+  393  git push
+  394  scp -r ~/.ssh pi@pi4os6401:/home/pi
+  395  cd v10.1/ess_controller/
+  396  . scripts/benv.sh 
+  397  killall code
+  398  code src/varMapUtils.cpp 
+  399  ifconfig
+  400  cp /tmp//tsc/tscns.h include
+  401  g++ -v
+  402  make
+  403  make clean all && sudo make install
+  404  build/release/ess_controller -x 
+  405  make && sudo make install
+  406  build/release/ess_controller -x 
+  407  more /tmp/tsc/test.cc 
+  408  code /tmp/tsc/test.cc 
+  409  make && sudo make install
+  410  build/release/ess_controller -x 
+  411  make && sudo make install
+  412  grep get_time_ref funcs/*.cpp
+  413  grep -B 5 -A 5 get_time_ref funcs/*.cpp
+  414  make && sudo make install
+  415  sh scripts/demo/0203_Vinay/RunTimingsEnumStr.sh 
+  416  sh scripts/demo/0203_Vinay/RunTimings.sh 
+  417  fims_send  -m get -r /$$ -u /ess/perf | jq
+  418  fims_send  -m get -r /$$ -u /ess/full/perf | jq
+  419  fims_send  -m get -r /$$ -u /ess/full/perf | jq > perf_new.out
+  420  make && sudo make install
+  421  fims_send  -m get -r /$$ -u /ess/full/perf | jq > perf_old.out
+  422  sh scripts/demo/0203_Vinay/RunTimings.sh 
+  423  sh scripts/demo/0203_Vinay/RunTimingsEnumStr.sh 
+  424  fims_send  -m get -r /$$ -u /ess/full/perf | jq > perf_old.out
+  425  make && sudo make install
+  426  ping 192.168.1.151
+  427  git status
+  428  git add include/tscns.h 
+  429  git add src/assetUri.cpp 
+  430  git commit -am " added new tsc time  alc"
+  431  git push 
+  432  git branch
+  433  ls ../../spdlog
+  434  scp  ../../spdlog-1.8.2.tar.gz centos@centos7-3:/tmp
+  435  scp  ../../spdlog-1.8.2.tar.gz centos@centos7-03:/tmp
+  436  scp  ../../spdlog-1.8.2.tar.gz centos@192.168.1.151:/tmp
+  437  ls scripts/demo/0203_Vinay/
+  438  man cut
+  439  cd v10.1/ess_controller/
+  440  grep cut scripts/*
+  441  grep cut scripts/*/*
+  442  echo " \"value\":23,"
+  443  echo " \"value\":23,"| cut -d ':'
+  444  echo " \"value\":23," | cut -d ':'
+  445  echo " \"value\":23," | cut -d ";"
+  446  echo " \"value\":23," 
+  447  echo " \"value\":23,"  | cut -d ':' -f2
+  448  echo " \"value\":23,"  | cut -d ':' -f2 | cut -d ',' -f2
+  449  echo " \"value\":23,"  | cut -d ':' -f2 | cut -d ',' -f1
+  450  ping 192.168.110.32
+  451  ping 192.168.110.13
+  452  ping 192.168.110.10
+  453  ping 192.168.110.11
+  454  ping pi4os6401
+  455  pwd
+  456  fims_server
+  457  cd v10.1/ess_controller/
+  458  . scripts/benv.sh 
+  459  fims_send -m get -r /$$ -u /ess/system | jq
+  460  fims_send -m get -r /$$ -u /ess_2/system | jq
+  461  git status
+  462  git commit -am " added /system/name:ident'
+  463  git commit -am " added /system/name:ident"
+  464  git push
+  465  fims_send -m get -r /$$ -u /ess_2/system | jq
+  466  fims_send -m get -r /$$ -u /ess/system | jq
+  467  cd v10.1/ess_controller/
+  468  git pull -r
+  469  . scripts/benv.sh 
+  470  code src/ess_controller.cpp 
+  471  make
+  472  sudo make install
+  473  build/release/ess_controller -x
+  474  build/release/ess_controller -x -n ess_2
+  475  ping pizerow202
+  476  scp -r ~/.ssh pi@pizerow202 ~/
+  477  scp -r ~/.ssh pi@pizerow202:~/
+  478  ssh-copy-id pi@pizerow202
+  479  ssh pi@pizerow202
+  480  python
+  481  cd v10.1/ess_controller/
+  482  . scripts/benv.sh 
+  483  killall code
+  484  code src/varMapUtils.cpp 
+  485  make 
+  486  make clean all
+  487  sudo make install
+  488  build/release/ess_controller -x
+  489  g++ -v
+  490  export CPPFLAGS=-g
+  491  make clean all && sudo make install
+  492  sudo make install
+  493  build/release/ess_controller -x
+  494  make
+  495  make && sudo make install
+  496  build/release/ess_controller -x
+  497  make && sudo make install
+  498  build/release/ess_controller -x
+  499  make && sudo make install
+  500  build/release/ess_controller -x
+  501  git status
+  502  git commit -am "just need the run_pub enabled now"
+  503  git push
+  504  more scripts/demo/0203_Vinay/MonitorVariables.sh 
+  505  grep -i handleschedload  scripts/demo/0203_Vinay/*.sh
+  506  grep -i handleschedload  scripts/*.sh
+  507  grep -i handleschedload  scripts/*/*.sh
+  508  grep -i handleschedload  scripts/*/*/*.sh
+  509  grep -i handleschedload  configs/ess_controller/*.json
+  510  make
+  511  sudo make install
+  512  build/release/ess_controller -x
+  513  make && sudo make install
+  514  build/release/ess_controller -x
+  515  make
+  516  sudo make install
+  517  build/release/ess_controller -x
+  518  make && sudo make install
+  519  build/release/ess_controller -x
+  520  make && sudo make install
+  521  git checkout funcs/PubFuncs.cpp
+  522  make && sudo make install
+  523  build/release/ess_controller -x
+  524  make && sudo make install
+  525  build/release/ess_controller -x
+  526  cd v10.1/ess_controller/
+  527  . scripts/benv.sh 
+  528  fims_listen
+  529  fims_send -m get -r /$$ -u /ess/naked/docs | jq
+  530  ping 192.168.110.14
+  531  ping 192.168.110.11
+  532  ping 192.168.110.13
+  533  ping 192.168.110.11
+  534  ping 192.168.1.19
+  535  ping centos7-01
+  536  ping 192.168.1.19
+  537  ping 192.168.1.151
+  538  cd v10.1/ess_controller/
+  539  . scripts/benv.sh 
+  540  more scripts/FlexPack/all_command.sh 
+  541  fims_send -m set -u /ess/system/commands '
+  542  {
+  543  "run":{
+  544                  "value":"test",
+  545                   "help": "run a schedule var",
+  546                   "ifChanged":false, 
+  547                   "enabled":true, 
+  548                    "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}
+  549                  }
+  550  }
+  551  }'
+  552  fims_send -m set -r /$$ -u /ess/system/commands '
+  553  {
+  554  "run":{
+  555                  "value":"test",
+  556                   "help": "run a schedule var",
+  557                   "ifChanged":false, 
+  558                   "enabled":true, 
+  559                    "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}
+  560                  }
+  561  }
+  562  }'
+  563  more scripts/FlexPack/run_pub_bms.sh 
+  564  fims_send -m set -r /$$ -u /ess/system/commands/run '
+  565            {"value":0,"uri":"/control/pcs_01:run_mon_pcs_01","every":1,"offset":0,"debug":false}
+  566  '
+  567  fims_send -m get -r /$$ -u /ess/full/control/pcs_01 | jq
+  568  fims_send -m get -r /$$ -u /ess/perf | jq
+  569  fims_send -m get -r /$$ -u /ess/full/control/pcs_01 | jq
+  570  fims_send -m get -r /$$ -u /ess/full/controls/all_bms | jq
+  571  ping 192.168.110.13
+  572  ping 192.168.1.143
+  573  ping 192.168.114.13
+  574  ssh hybridos@192.168.114.13
+  575  ping 192.168.110.13
+  576  ssh hybridos@192.168.110.13
+  577  cd v10.1/ess_controller/
+  578  . scripts/benv.sh 
+  579  fims_server
+  580  cd v10.1/ess_controller/
+  581  . scripts/benv.sh 
+  582  more ~/docker_testing/
+  583  more ~/docker_testing/ess/configs/ess_controller/risen_bms_manager.json 
+  584  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  585  fims_send -m "get" -r /$$ -u /ess/config/loadd
+  586  fims_send -m "get" -r /$$ -u /ess/config/load
+  587  fims_send -m "get" -r /$$ -u /ess/config/cfile
+  588  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  589  fims_send -m "get" -r /$$ -u /ess/config/cfile
+  590  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  591  fims_send -m "get" -r /$$ -u /ess/config/cfile
+  592  fims_send -m "get" -r /$$ -u /ess/config/ctmpl
+  593  fims_send -m "get" -r /$$ -u /ess/status/bms
+  594  fims_send -m "get" -r /$$ -u /ess/status/bms_1
+  595  fims_send -m "get" -r /$$ -u /ess/status/bms_
+  596  fims_send -m "get" -r /$$ -u /ess/status/bms_01
+  597  fims_send -m "get" -r /$$ -u /ess/full/config/ctmpl
+  598  fims_send -m "get" -r /$$ -u /ess/full/config/ctmpl | jq
+  599  fims_send -m "get" -r /$$ -u /ess/aname
+  600  fims_send -m "get" -r /$$ -u /ess/amap
+  601  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  602  fims_send -m "get" -r /$$ -u /ess/amap
+  603  fims_send -m "get" -r /$$ -u /ess/full/config/ctmpl | jq
+  604  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  605  fims_send -m "get" -r /$$ -u /ess/full/config/ctmpl | jq
+  606  fims_send -m "get" -r /$$ -u /ess/amap
+  607  fims_send -m "get" -r /$$ -u /ess/amap | jq
+  608  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  609  fims_send -m "get" -r /$$ -u /ess/amap | jq
+  610  fims_send -m "get" -r /$$ -u /ess/full/config/ctmpl | jq
+  611  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  612  fims_send -m "get" -r /$$ -u /ess/full/config/ctmpl | jq
+  613  fims_send -m "get" -r /$$ -u /ess/amap | jq
+  614  git status
+  615  git commit -am " test template" 
+  616  git add scripts/demo/0203_Vinay/dummy_load.sh 
+  617  git commit -am " test template" 
+  618  git push
+  619  git add scripts/demo/0203_Vinay/dummy_load.sh 
+  620  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  621  fims_send -m "get" -r /$$ -u /ess/amap | jq
+  622  fims_send -m "get" -r /$$ -u /ess/full/config/ctmpl | jq
+  623  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  624  fims_send -m "get" -r /$$ -u /ess/amap | jq
+  625  fims_send -m "get" -r /$$ -u /ess/full/components | jq
+  626  more scripts/
+  627  grep wake_monitor  scripts/*.sh
+  628  grep wake_monitor  scripts/*/*.sh
+  629  grep -A 5 wake_monitor  scripts/*/*.sh
+  630  grep -A 15 wake_monitor  scripts/*/*.sh
+  631  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  632  fims_send -m "get" -r /$$ -u /ess/amap | jq
+  633  fims_send -m "get" -r /$$ -u /ess/full/schedule/wake_monitor_bms
+  634  fims_send -m "get" -r /$$ -u /ess/full/schedule/wake_monitor/bms
+  635  fims_send -m "get" -r /$$ -u /ess/full/schedule/wake_monitor/bms | jq
+  636  fims_send -m "get" -r /$$ -u /ess/full/schedule/bms_10 | jq
+  637  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  638  fims_send -m "get" -r /$$ -u /ess/full/schedule/bms_10 | jq
+  639  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  640  fims_send -m "get" -r /$$ -u /ess/full/schedule/bms_10 | jq
+  641  fims_send -m "get" -r /$$ -u /ess/full/schedule/wake_monitor/bms | jq
+  642  fims_send -m "get" -r /$$ -u /ess/schedule/wake_monitor/bms | jq
+  643  fims_send -m "get" -r /$$ -u /ess/naked/schedule/wake_monitor/bms | jq
+  644  more  scripts/demo/0203_Vinay/ 
+  645  more  scripts/demo/0203_Vinay/MonitorVariables.sh 
+  646  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  647  fims_send -m "get" -r /$$ -u /ess/naked/schedule/wake_monitor/bms | jq
+  648  fims_send -m "get" -r /$$ -u /ess/full/config/load
+  649  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  650  fims_send -m "get" -r /$$ -u /ess/full/config/load
+  651  fims_send -m "get" -r /$$ -u /ess/full/config/load | jq
+  652  fims_send -m "get" -r /$$ -u /ess/full/system/commands
+  653  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  654  fims_send -m "get" -r /$$ -u /ess/full/system/commands
+  655  fims_send -m "get" -r /$$ -u /ess/full/system/commands | jq
+  656  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon 234 | jq
+  657  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon@enabled true | jq
+  658  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon 234 | jq
+  659  fims_send -m "get" -r /$$ -u /ess/full/system/commands | jq
+  660  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  661  fims_send -m "get" -r /$$ -u /ess/full/system/commands | jq
+  662  fims_send -m "get" -r /$$ -u /ess/full/status/bms | jq
+  663  fims_send -m "get" -r /$$ -u /ess/full/config/load | jq
+  664  fims_send -m "get" -r /$$ -u /ess/full/config/cfil | jq
+  665  fims_send -m "get" -r /$$ -u /ess/full/config/cfile | jq
+  666  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  667  fims_send -m "get" -r /$$ -u /ess/full/system/commands | jq
+  668  fims_send -m "get" -r /$$ -u /ess/full/schedule | jq
+  669  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon@enabled true | jq
+  670  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon 234 | jq
+  671  fims_send -m "get" -r /$$ -u /ess/full/system/commands | jq
+  672  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  673  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon@enabled true | jq
+  674  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon 234 | jq
+  675  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  676  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon@enabled true | jq
+  677  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon 234 | jq
+  678  fims_listen
+  679  fims_send -m set -r /$$ -u /ess/full/schedule/wake_monitor/ss | jq
+  680  fims_send -m set -r /$$ -u /ess/full/schedule/wake_monitor/ess | jq
+  681  fims_send -m get -r /$$ -u /ess/full/schedule/wake_monitor/ess | jq
+  682  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01 | jq
+  683  fims_send -m set -r /$$ -u /ess/full/components/bms_01 | jq
+  684  fims_send -m set -r /$$ -u /ess/full/config/ctmpl | jq
+  685  fims_send -m get -r /$$ -u /ess/full/schedule/bms_01 | jq
+  686  fims_send -m get -r /$$ -u /ess/full/components/bms_01 | jq
+  687  fims_send -m get -r /$$ -u /ess/full/schedule
+  688  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  689  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  690  fims_send -m get -r /$$ -u /ess/full/components/bms_01 | jq
+  691  fims_send -m get -r /$$ -u /ess/full/schedule/wake_monitor/ess | jq
+  692  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon@enabled true | jq
+  693  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon 234 | jq
+  694  fims_send -m set -r /$$ -u /ess/full/system/schedule/bms_01 | jq
+  695  fims_send -m get -r /$$ -u /ess/full/system/schedule/bms_01 | jq
+  696  fims_send -m get -r /$$ -u /ess/full/system/schedule | jq
+  697  fims_send -m get -r /$$ -u /ess/full/schedule/wake_monitor/ess | jq
+  698  fims_send -m set -r /$$ -u /ess/full/system/schedule | jq
+  699  fims_send -m get -r /$$ -u /ess/full/system/schedule | jq
+  700  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  701  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  702  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  703  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  704  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  705  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  706  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  707  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  708  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  709  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub@enable true | jq
+  710  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub@enablee true | jq
+  711  fims_send -m get -r /$$ -u /ess/full/schedule/bms_01/run_pub | jq
+  712  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub@enabled true | jq
+  713  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub 123 | jq
+  714  fims_send -m get -r /$$ -u /ess/full/schedule/bms_01/run_pub | jq
+  715  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub 123 | jq
+  716  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub true | jq
+  717  git status
+  718  git commit -am " getting loader script closer, just need to trigger RunWakeMonitor properly"
+  719  git push
+  720  grep RunMonitorList funcs/*.cpp
+  721  make 
+  722  make clan all
+  723  make clean all
+  724  sudo make install
+  725  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  726  fims_send -m get -r /$$ -u /ess/full/schedule/bms_01/run_pub | jq
+  727  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub true | jq
+  728  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub@enabled true | jq
+  729  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub true | jq
+  730  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub@enable true | jq
+  731  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub true | jq
+  732  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  733  fims_send -m get -r /$$ -u /ess/full/system/commands | jq
+  734  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon@enabled true | jq
+  735  fims_send -m get -r /$$ -u /ess/full/system/commands | jq
+  736  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon true | jq
+  737  fims_send -m get -r /$$ -u /ess/full/system/commands | jq
+  738  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub true | jq
+  739  fims_send -m get -r /$$ -u /ess/full/system/commands | jq
+  740  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok'" | jq
+  741  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok"' | jq
+  742  fims_send -m get -r /$$ -u /ess/full/system/commands | jq
+  743  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok"' | jq
+  744  fims_send -m get -r /$$ -u /ess/full/schedule/
+  745  fims_send -m get -r /$$ -u /ess/full/schedule/ | jq
+  746  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  747  fims_send -m get -r /$$ -u /ess/full/schedule/ | jq
+  748  fims_send -m get -r /$$ -u /ess/full/system/commands | jq
+  749  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok"' | jq
+  750  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  751  fims_send -m get -r /$$ -u /ess/full/system/commands | jq
+  752  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok"' | jq
+  753  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  754  fims_send -m get -r /$$ -u /ess/full/system/commands | jq
+  755  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok"' | jq
+  756  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  757  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok"' | jq
+  758  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok2"' | jq
+  759  fims_send -m set -r /$$ -u /ess/full/schedule/bms_01/run_pub@enabled true | jq
+  760  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok2"' | jq
+  761  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok3"' | jq
+  762  fims_send -m set -r /$$ -u /ess/full/schedule/bms_02/run_pub@enabled true | jq
+  763  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon '"ok4"' | jq
+  764  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon 23 | jq
+  765  fims_send -m set -r /$$ -u /ess/full/system/commands/runBmsMon 24 | jq
+  766  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  767  fims_send -m get -r /$$ -u /ess/full/system/commands/runBmsMon 
+  768  fims_send -m get -r /$$ -u /ess/full/system/commands/runBmsMon  | jq
+  769  fims_send -m get -r /$$ -u /ess/full/schedule/bms_02/run_pub
+  770  fims_send -m get -r /$$ -u /ess/full/schedule/bms_02/run_pub | jq
+  771  fims_send -m get -r /$$ -u /ess/full/schedule
+  772  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  773  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  774  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  775  fims_send -m get -r /$$ -u /ess/full/schedule/bms_02/run_pub | jq
+  776  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  777  fims_send -m get -r /$$ -u /ess/full/schedule/bms_02/run_pub | jq
+  778  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  779  fims_send -m get -r /$$ -u /ess/full/schedule/bms_02/run_pub | jq
+  780  fims_listen
+  781  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  782  fims_listen
+  783  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  784  fims_listen
+  785  git status
+  786  git commit -am " dummy_load script now running"
+  787  git push
+  788  git commit -am " dummy_load script now running"
+  789  git push
+  790  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  791  fims_listen
+  792  git commit -am " dummy_load script now running"
+  793  git push
+  794  git pull -r
+  795  gitk
+  796  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  797  fims_listen
+  798  fims_send -m get -r /$$ -u /ess/full/schedule/bms_02/run_pub | jq
+  799  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  800  fims_send -m get -r /$$ -u /ess/full/system_test | jq
+  801  fims_send -m get -r /$$ -u /ess/full/system/test | jq
+  802  fims_send -m get -r /$$ -u /ess/full/system/commands | jq
+  803  fims_send -m get -r /$$ -u /ess/full/config/dfile | jq
+  804  fims_send -m get -r /$$ -u /ess/full/config/cfile | jq
+  805  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  806  fims_send -m get -r /$$ -u /ess/full/config/cfile | jq
+  807  fims_send -m get -r /$$ -u /ess/full/system/test | jq
+  808  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  809  fims_send -m get -r /$$ -u /ess/full/system/test | jq
+  810  fims_send -m get -r /$$ -u /ess/full/config/cfile | jq
+  811  fims_send -m get -r /$$ -u /ess/full/config/load | jq
+  812  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  813  fims_send -m get -r /$$ -u /ess/full/system/test | jq
+  814  fims_send -m get -r /$$ -u /ess/full/config/load | jq
+  815  fims_send -m get -r /$$ -u /ess/full/system/test | jq
+  816  fims_send -m get -r /$$ -u /ess/full/system/test/test_opts | jq
+  817  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@debug true | jq
+  818  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@enabled true | jq
+  819  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 123 | jq
+  820  fims_send -m set -r /$$ -u /ess/full/system/test 123 | jq
+  821  fims_send -m set -r /$$ -u /ess/full/test 123 | jq
+  822  fims_listen
+  823  fims_send -m set -r /$$ -u /ess/full/test 123 | jq
+  824  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  825  fims_listen
+  826  fims_send -m get -r /$$ -u /ess/full/system/test 
+  827  fims_send -m get -r /$$ -u /ess/full/system/test  | jq
+  828  fims_send -m get -r /$$ -u /ess/full/system/test/ess  | jq
+  829  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10  | jq
+  830  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10_rack_05_test  | jq
+  831  fims_send -m get -r /$$ -u /ess/full/system/test/test_opts  | jq
+  832  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 4444 | jq
+  833  fims_send -m get -r /$$ -u /ess/full/system/test/test_opts  | jq
+  834  fims_send -m get -r /$$ -u /ess/full/system/test/test_opts 
+  835  fims_send -m get -r /$$ -u /ess/full/system/test/test_opts  | jq | grep enabled
+  836  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@enabled true | jq
+  837  fims_send -m get -r /$$ -u /ess/full/system/test/test_opts  | jq | grep enabled
+  838  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 123444 | jq
+  839  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10_rack_05_test  | jq
+  840  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  841  fims_listen
+  842  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10_rack_05_test  | jq
+  843  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@targVal 123444 | jq
+  844  fims_send -m get -r /$$ -u /ess/full/system/test/test_opts | jq
+  845  fims_send -m get -r /$$ -u /ess/full/system/test/test_opts | jq | grep targVal
+  846  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 44 | jq
+  847  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10_rack_05_test  | jq
+  848  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  849  fims_listen
+  850  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10_rack_05_test  | jq
+  851  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@targVal 123444 | jq
+  852  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 44 | jq
+  853  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10_rack_05_test  | jq
+  854  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@targVal 123 | jq
+  855  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 44 | jq
+  856  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@targVal 123 | jq
+  857  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10_rack_05_test  | jq
+  858  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  859  fims_listen
+  860  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10_rack_05_test  | jq
+  861  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@targVal 123 | jq
+  862  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 44 | jq
+  863  fims_send -m get -r /$$ -u /ess/full/system/test/ess/bms_10_rack_05_test  | jq
+  864  git status
+  865  git commit -am " adjusted schedItemOpts to send a targAval to the designated option uri" 
+  866  git push
+  867  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  868  fims_listen
+  869  make
+  870  sudo make install
+  871  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  872  fims_listen
+  873  fims_send -m get -r /$$ -u /ess/full/components/bms_10/SOC  | jq
+  874  fims_send -m get -r /$$ -u /ess/full/components/bms_10/bms_10_rack_03_Voltage  | jq
+  875  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  876  fims_listen
+  877  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@targVal 123 | jq
+  878  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@targVar '"aNewVar"' | jq
+  879  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 123 | jq
+  880  fims_listen
+  881  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts@targVal 456 | jq
+  882  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 123 | jq
+  883  fims_listen
+  884  fims_send -m set -r /$$ -u /ess/full/system/test/test_opts 123 | jq
+  885  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  886  fims_listen
+  887  sh scripts/demo/0203_Vinay/dummy_load.sh 
+  888  fims_listen
+  889  fims_send -m get -r /$$ -u /ess/full/config/load | jq
+  890  sh scripts/demo/0203_Vinay/load_bms_components.sh 
+  891  fims_listen
+  892  fims_send -m get -r /$$ -u /ess/full/config/load | jq
+  893  fims_send -m get -r /$$ -u /ess/full/config/cfile| jq
+  894  fims_send -m get -r /$$ -u /ess/full/config/ctmpl| jq
+  895  sh scripts/demo/0203_Vinay/load_bms_components.sh 
+  896  fims_listen
+  897  fims_send -m get -r /$$ -u /ess/naked/docs | jq
+  898  fims_send -m set -r /$$ -u /ess/controls/all_racks/set_targ@enabled true | jq
+  899  fims_send -m set -r /$$ -u /ess/controls/all_racks/set_targ@targVar '"myNewVar"' | jq
+  900  fims_send -m set -r /$$ -u /ess/controls/all_racks/set_targ@targVal '"pick a value"' | jq
+  901  fims_send -m set -r /$$ -u /ess/controls/all_racks/set_targ 21 | jq
+  902  fims_listen
+  903  fims_send -m set -r /$$ -u /ess/controls/all_racks/set_targ@targVal 33 | jq
+  904  fims_send -m set -r /$$ -u /ess/controls/all_racks/set_targ 21 | jq
+  905  fims_listen
+  906  fims_send -m set -r /$$ -u /ess/controls/all_bms/set_targ@targVal 33.5 | jq
+  907  fims_send -m set -r /$$ -u /ess/controls/all_bms/set_targ@targVar '"SOC"' | jq
+  908  fims_send -m set -r /$$ -u /ess/controls/all_bms/set_targ@enabled tru | jq
+  909  fims_send -m set -r /$$ -u /ess/controls/all_bms/set_targ@enabled true | jq
+  910  fims_send -m set -r /$$ -u /ess/controls/all_bms/set_targ 33 | jq
+  911  fims_listen
+  912  fims_send -m set -r /$$ -u /ess/controls/all_bms/set_targ@targVal 34.5 | jq
+  913  fims_send -m set -r /$$ -u /ess/controls/all_bms/set_targ 33 | jq
+  914  fims_listen
+  915  git status
+  916  git add scripts/demo/0203_Vinay/load_bms_components.sh 
+  917  git checkout scripts/demo/0203_Vinay/dummy_load.sh
+  918  git status
+  919  git commit -am " new loader demo"
+  920  fims_send -m get -r /$$ -u /ess/naked/docs | jq
+  921  git status
+  922  git push
+  923  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  924  fims_send -m set -r /$$ -u /ess/full/schedule/wake_monitor/pcs_01 '
+  925  {
+  926  "/status/pcs_01:Temp":{"func":"CheckMonitorVar"},
+  927  "status/pcs_01:Current":{"func":CheckMonitorVar"},
+  928  }'
+  929  fims_send -m set -r /$$ -u /ess/full/schedule/wake_monitor/pcs_01 '
+  930  {
+  931  "/status/pcs_01:Temp":{"func":"CheckMonitorVar"},
+  932  "/status/pcs_01:Current":{"func":CheckMonitorVar"},
+  933  }'
+  934  fims_send -m set -r /$$ -u /ess/full/schedule/wake_monitor/pcs_01 '
+  935  {
+  936  "/status/pcs_01:Temp":{"func":"CheckMonitorVar"},
+  937  "/status/pcs_01:Current":{"func":CheckMonitorVar"}, "/status/pcs_01:Voltage":{"func":CheckMonitorVar"}
+  938  }'
+  939  fims_send -m set -r /$$ -u /ess/full/schedule/wake_monitor/pcs_01 '
+  940  {
+  941  "/status/pcs_01:Temp":{"func":"CheckMonitorVar"},
+  942  "/status/pcs_01:Current":{"func":CheckMonitorVar"}, "/status/pcs_01:Voltage":{"func":"CheckMonitorVar"}
+  943  }'
+  944  fims_send -m set -r /$$ -u /ess/full/schedule/wake_monitor/pcs_01 '
+  945  {
+  946  "/status/pcs_01:Temp":{"func":"CheckMonitorVar"},
+  947  "/status/pcs_01:Current":{"func":"CheckMonitorVar"}, "/status/pcs_01:Voltage":{"func":"CheckMonitorVar"}
+  948  }'
+  949  fims_send -m get -r /$$ -u /ess/full/schedule/wake_monitor/pcs_01 
+  950  fims_send -m get -r /$$ -u /ess/full/schedule/wake_monitor/pcs_01  | jq
+  951  fims_send -m set -r /$$ -u /ess/full/control/pcs_01 '
+  952  {
+  953  "run_mon_pcs_01":{
+  954  "/status/pcs_01:Current":{"func":"CheckMonitorVar"}, "/status/pcs_01:Voltage":{"func":"CheckMonitorVar"}
+  955  }'
+  956  fims_send -m set -r /$$ -u /ess/full/control/pcs_01 '
+  957  {
+  958  "run_mon_pcs_01":{ "value":"run_mon_pcs_01", "enabled":true ,"amname":"pcs_01", "mname":"wake_monitor", "debug":true,
+  959  "actions":{"onSet":[{"func":[{"debug":true,"func":"RunMonitorList"}]}]}
+  960  }'
+  961  fims_send -m set -r /$$ -u /ess/full/control/pcs_01 '
+  962  {
+  963  "run_mon_pcs_01":{ "value":"run_mon_pcs_01", "enabled":true ,"amname":"pcs_01", "mname":"wake_monitor", "debug":true,
+  964  "actions":{"onSet":[{"func":[{"debug":true,"func":"RunMonitorList"}]}]}}
+  965  }'
+  966  fims_send -m set -r /$$ -u /ess/full/control/pcs_01/run_mon_pcs_01 222
+  967  fims_send -m set -r /$$ -u /ess/full/status/pcs_01 '
+  968  {
+  969  "Temp":23.4,"Current":267,"Voltage":1324
+  970  }'
+  971  fims_send -m get -r /$$ -u /ess/full/status/pcs_01 
+  972  fims_send -m get -r /$$ -u /ess/full/status/pcs_01  |jq
+  973  fims_send -m set -r /$$ -u /ess/full/control/pcs_01/run_mon_pcs_01 222
+  974  fims_send -m get -r /$$ -u /ess/full/status/pcs_01  |jq
+  975  more scripts/FlexPack/all_command.sh 
+  976  ping 192.168.110.11
+  977  ssh hybridos@192.168.110.11
+  978  nano ~/.ssh/known_hosts 
+  979  ssh hybridos@192.168.110.11
+  980  cd v10.1/ess_controller/
+  981  . scripts/benv.sh 
+  982  build/release/ess_controller -x
+  983  cd v10.1/ess_controller/
+  984  . scripts/benv.sh 
+  985  sh scripts/demo/0203_Vinay/load_bms_components.sh 
+  986  fims_listen
+  987  fims_send -m get -r /$$ -u /ess/schedule
+  988  fims_send -m get -r /$$ -u /ess/schedule | jq
+  989  fims_send -m get -r /$$ -u /ess/full/schedule | jq
+  990  cd v10.1/ess_controller/
+  991  . scripts/benv.sh 
+  992  fims_listen
+  993  fims_server
+  994  bg
+  995  cd v10.1/ess_controller/
+  996  . scripts/benv.sh 
+  997  code scripts/demo/0203_Vinay/load_bms_components.sh 
+  998  git status
+  999  git commit -am "loose wake_monitor name"
+ 1000  git push
+ 1001  cd v10.1/ess_controller/
+ 1002  . scripts/benv.sh 
+ 1003  echo '
+{
+         "run":{
+                "value":"test",
+                "help": "run a schedule var",
+                "ifChanged":false, 
+                "enabled":true, 
+                 "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}},
+        "stop":{
+              "value":"test",
+               "help": "stop a schedule var",
+               "ifChanged":false, 
+               "enabled":true, 
+               "actions":{"onSet":[{"func":[{"func":"StopSched"}]}]}}
+}'
+ 1004  echo '
+{
+         "run":{
+                "value":"test",
+                "help": "run a schedule var",
+                "ifChanged":false, 
+                "enabled":true, 
+                 "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}},
+        "stop":{
+              "value":"test",
+               "help": "stop a schedule var",
+               "ifChanged":false, 
+               "enabled":true, 
+               "actions":{"onSet":[{"func":[{"func":"StopSched"}]}]}}
+}' | jq
+ 1005  fims_send -m set -r /$$ -u /ess/system/commands  '
+{
+         "run":{
+                "value":"test",
+                "help": "run a schedule var",
+                "ifChanged":false, 
+                "enabled":true, 
+                 "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}},
+        "stop":{
+              "value":"test",
+               "help": "stop a schedule var",
+               "ifChanged":false, 
+               "enabled":true, 
+               "actions":{"onSet":[{"func":[{"func":"StopSched"}]}]}}
+}' | jq
+ 1006  fims_send -m get -r /$$ -u /ess/full/system/commands  | jq
+ 1007  echo '
+[200~{
+    "sched_pubs": {
+        "value": false,
+        "debug":false,
+        "enabled":false,
+        "ifChanged": false,
+        "targav": "/system/commands:run",
+        "options":[ 
+                    {"value":22,"uri":"/control/pubs:pubPcsHighSpeed","every":0.5,"offset":0,"debug":false},
+                    {"value":23,"uri":"/control/pubs:pubPcsLowSpeed","every":2.0,"offset":0.1,"debug":false}
+        ],
+        "actions":{
+            "onSet": [{
+                "func":[{"debug":true,"func":"SchedItemOpts","amap":"ess"}]
+                     }]
+        }
+    }
+}'
+ 1008  echo '
+[200~{
+    "sched_pubs": {
+        "value": false,
+        "debug":false,
+        "enabled":false,
+        "ifChanged": false,
+        "targav": "/system/commands:run",
+        "options":[ 
+                    {"value":22,"uri":"/control/pubs:pubPcsHighSpeed","every":0.5,"offset":0,"debug":false},
+                    {"value":23,"uri":"/control/pubs:pubPcsLowSpeed","every":2.0,"offset":0.1,"debug":false}
+        ],
+        "actions":{
+            "onSet": [{
+                "func":[{"debug":true,"func":"SchedItemOpts","amap":"ess"}]
+                     }]
+        }
+    }
+}' | jq
+ 1009  echo '
+{
+    "sched_pubs": {
+        "value": false,
+        "debug":false,
+        "enabled":false,
+        "ifChanged": false,
+        "targav": "/system/commands:run",
+        "options":[ 
+                    {"value":22,"uri":"/control/pubs:pubPcsHighSpeed","every":0.5,"offset":0,"debug":false},
+                    {"value":23,"uri":"/control/pubs:pubPcsLowSpeed","every":2.0,"offset":0.1,"debug":false}
+        ],
+        "actions":{
+            "onSet": [{
+                "func":[{"debug":true,"func":"SchedItemOpts","amap":"ess"}]
+                     }]
+        }
+    }
+}' | jq
+ 1010  fims_send -m set -r /$$ -u /ess/controls/pcs_start  '
+{
+    "sched_pubs": {
+        "value": false,
+        "debug":false,
+        "enabled":false,
+        "ifChanged": false,
+        "targav": "/system/commands:run",
+        "options":[ 
+                    {"value":22,"uri":"/control/pubs:pubPcsHighSpeed","every":0.5,"offset":0,"debug":false},
+                    {"value":23,"uri":"/control/pubs:pubPcsLowSpeed","every":2.0,"offset":0.1,"debug":false}
+        ],
+        "actions":{
+            "onSet": [{
+                "func":[{"debug":true,"func":"SchedItemOpts","amap":"ess"}]
+                     }]
+        }
+    }
+}' | jq
+ 1011  fims_send -m get -r /$$ -u /ess/full/controls/pcs_start  | jq
+ 1012  fims_send -m set -r /$$ -u /ess/full/controls/pcs_start '  | jq
+ 1013  fims_send -m set -r /$$ -u /ess/full/controls/pcs_start ' 
+ "sched_pubs": {
+        "value": true,
+        "enabled": true
+     }
+  }'
+ 1014  fims_send -m set -r /$$ -u /ess/full/controls/pcs_start ' 
+{ "sched_pubs": {
+        "value": true,
+        "enabled": true
+     }
+  }'
+ 1015  fims_send -m set -r /$$ -u /ess/full/controls/pubs '  | jq
+'
+ 1016  fims_send -m get -r /$$ -u /ess/full/controls/pubs   | jq
+ 1017  '
+'
+ 1018  fims_send -m set -r /$$ -u /ess/full/control/pubs '
+{
+        "pubPcsHighSpeed":{
+           "value":1,
+           "table":"/status/pcs_hs", 
+           "mode":"naked", 
+           "debug":false,
+           "enabled":false, 
+           "actions":{
+                "onSet":[{"func":[{"debug":false, "amap":"ess", "func":"RunPub"}]}]}
+           }
+        },
+        "pubPcsLowSpeed":{
+           "value":1,
+           "table":"/status/pcs_ls", 
+           "mode":"naked", 
+           "debug":false,
+           "enabled":false, 
+           "actions":{
+                "onSet":[{"func":[{"debug":false, "amap":"ess", "func":"RunPub"}]}]}
+           }
+        }
+}'
+ 1019  fims_send -m get -r /$$ -u /ess/full/controls/pubs   | jq
+ 1020  fims_send -m get -r /$$ -u /ess/full/control/pubs   | jq
+ 1021  fims_send -m set -r /$$ -u /ess/full/control/pubs/pubPcsLowSpeed@table '"/status/pcs_ls"'
+ 1022  fims_send -m set -r /$$ -u /ess/full/control/pubs/pubPcsLowSpeed@mode '"naked'"
+ 1023  fims_send -m set -r /$$ -u /ess/full/control/pubs/pubPcsLowSpeed@mode '"naked"'
+ 1024  fims_send -m get -r /$$ -u /ess/full/control/pubs   | jq
+ 1025  fims_send -m set -r /$$ -u /ess/full/control/pubs/pubPcsLowSpeed@actions ''
+ 1026  fims_send -m set -r /$$ -u /ess/full/control/pubs/pubPcsLowSpeed@actions '
+{
+                "onSet":[{"func":[{"debug":false, "amap":"ess", "func":"RunPub"}]}]}
+           }'
+ 1027  fims_send -m get -r /$$ -u /ess/full/control/pubs   | jq
+ 1028  fims_send -m set -r /$$ -u /ess/full/control/pubs/pubPcsLowSpeed@actions '
+{
+                "onSet":[{"func":[{"debug":false, "amap":"ess", "func":"RunPub"}]}]}
+           }'
+ 1029  fims_send -m get -r /$$ -u /ess/full/control/pubs   | jq
+ 1030  fims_send -m set -r /$$ -u /ess/full/control/pubs/pubPcsLowSpeed '
+{ "value":0,"actions":{
+                "onSet":[{"func":[{"debug":false, "amap":"ess", "func":"RunPub"}]}]}
+           }'
+ 1031  fims_send -m get -r /$$ -u /ess/full/control/pubs   | jq
+ 1032  fims_listen
+ 1033  history
+ 1034  history > doc/run_test.hist

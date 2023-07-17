@@ -1,0 +1,960 @@
+{  
+    "/doc/04_bms_manager": {
+        "note1":"This is the battery management system (BMS) manager config file for Risen",
+        "note1a": "/assets/bms/##BMS_ID##        - defines the web UI for the BMS. BMS-related statuses, controls, and faults/alarms are displayed on the UI",
+        "note1b": "/config/bms                - defines configurable variables used in the ESS Controller source code",
+        "note1d": "/status/bms                - defines the status variables for the BMS",
+        "note1e": "/components/[id]           - defines the interface for retrieving data from the BMS hardware and converting the data into a useable format (ex.: scaling, remap, etc.)",
+        "note1f": "/links/bms                 - defines mapping of external interface components to internal variables",
+        "note1g": "/vlinks/bms                - allows two variables to share the same value",
+        "note1h": "/sched/bms                 - defines the variables that will run a function on a scheduled basis",
+        "note1i": "/schedule/wake_monitor/bms - periodically runs a function for a particular variable (default to 100ms; wake_monitor to be removed)",
+        "note1j": "/faults/bms                - defines BMS-related faults reported by the ESS Controller (will trigger PCS shutdown)",
+        "note1k": "/alarms/bms                - defines BMS-related alarms reported by the ESS Controller",
+        "note1l": "/templates/bms             - defines the asset instances (ex.: battery racks) managed by the BMS manager",
+        "note2": "To retrieve data from the BMS hardware, the modbus communication protocol will be used. To connect via modbus, use the modbus client (bms_modbus_client.json)",
+        "note3": " /config/bms:enable must be set true for selected actions to be allowed to run after load",
+        "note3a": " /config/bms:enum_opt is used to turn on the enum optimizations, it will need a every1000mS task to trigger a reload  "
+    },
+
+    "/config/bms": {
+        "enable": false,
+        "enum_opt": false,
+        "AlarmDestination": "/assets/bms/##BMS_ID##:alarms",
+        "FaultDestination": "/assets/bms/##BMS_ID##:faults",
+        "DbiDestination": "/dbi/ess/config",
+        "NoFaultMsg": "Normal",
+        "NoAlarmMsg": "Normal",
+        "maxKeyCmdOnTime": 3,
+        "maxKeyCmdTime": 4,
+        "maxKeyCmdTries": 5,
+        "maxStartupTime": 30,
+        "maxShutdownTime": 30,
+        "EstDischargePowerOffset": 150,
+        "EstChargePowerOffset": 100,
+        "BMSstart": 1,
+        "BMSstop": 2,
+        "BMSstay": 0
+    },
+
+    "/assets/bms/##BMS_ID##": {
+    "name": "Risen BMS Manager",
+        "alarms":                       {"name": "Alarms",                "value": 0,"options": [],"enabled": true},
+        "faults":                       {"name": "Faults",                 "value": 0,"options": [],"enabled": true},
+        "power_state":                  {"name": "Power State",            "value": "OFF","enabled": true},
+        "system_state":                 {"name": "Batteries Status",       "value": "INIT","enabled": true},
+        "charge_state":                 {"name": "Charge/Discharge Status","value": "INIT","enabled": true},
+        "com_status":                   {"name": "Communication Status",   "value": "INIT","enabled": true},
+        "soc":                          {"name": "State of Charge",        "value": 76.55913543701172,"enabled": false},
+        "soh":                          {"name": "State of Health",        "value": 0,"enabled": false},
+        "system_voltage":               {"name": "System Voltage",         "value": 0,"enabled": true},
+        "system_current":               {"name": "System Current",         "value": 0,"enabled": true},
+        "system_power":                 {"name": "System Power",           "value": 0,"enabled": true},
+        "max_cell_voltage":             {"name": "Max Cell Voltage",       "value": 0,"enabled": true},
+        "min_cell_voltage":             {"name": "Min Cell Voltage",       "value": 0,"enabled": true},
+        "avg_cell_voltage":             {"name": "Avg Cell Voltage",       "value": 0,"enabled": true},
+        "max_cell_temp":                {"name": "Max Cell Temperature",   "value": 0,"enabled": true},
+        "min_cell_temp":                {"name": "Min Cell Temperature",   "value": 0,"enabled": true},
+        "avg_cell_temp":                {"name": "Avg Cell Temperature",   "value": 0,"enabled": true},
+        "max_charge_current":           {"name": "Max Charge Current",     "value": 0,"enabled": true},
+        "max_discharge_current":        {"name": "Max Discharge Current",  "value": 0,"enabled": true},
+        "max_charge_power":             {"name": "Max Charge Power",         "value": 0,"enabled": true},
+        "max_discharge_power":          {"name": "Max Discharge Power",      "value": 0,"enabled": true},
+        "charge_energy":                {"name": "Chargeable Energy",        "value": 0,"enabled": true},
+        "discharge_energy":             {"name": "Dischargeable Energy",     "value": 0,"enabled": true},
+        "accumulated_charge_energy":    {"name": "Accumulated Charge Energy",   "value": 0,"enabled": true},
+        "accumulated_discharge_energy": {"name": "Accumulated Discharge Energy","value": 0,"enabled": true},
+        "num_racks_in_service":         {"name": "Number of Racks in Service",  "value": 0,"enabled": true},
+        "num_racks_enabled":            {"name": "Number of Racks Enabled",     "value": 0,"enabled": true},
+        "hvac_1_unit_running_status":   {"name": "HVAC 01 Unit Running Status", "value": "N/A","enabled": true},
+        "hvac_1_temperature":           {"name": "HVAC 01 Temperature",         "value": 0,"enabled": false},
+        "FSS_fault_signal":             {"name": "FSS Fault Signal",            "value": "N/A","enabled": true},
+        "FSS_alarm_signal":             {"name": "FSS Alarm Signal",            "value": "N/A","enabled": true},
+        "lightning_protector_status":   {"name": "Lightning Protector Status",  "value": "N/A","enabled": true},
+        "transformer_high_temp":        {"name": "Transformer High Temperature Status","value": "N/A","enabled": true},
+        "emergency_stop":               {"name": "Emergency Stop Status",       "value": "N/A","enabled": true},
+        "dc_load_switch":               {"name": "DC Load Switch Status",       "value": "N/A","enabled": true},
+        "access_control_switch":        {"name": "Access Control Switch Status","value": "N/A","enabled": true},
+        "dc_fuse":                      {"name": "DC Fuse Status",              "value": "N/A","enabled": true},
+
+        "maint_mode": {"name": "Maintenance Mode","value": false,"enabled": true,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri":	"/assets/bms/##BMS_ID##:clear_faults@enabled"}
+                    ]
+                }]
+            },
+            "options": [{"name": "No", "return_value": false},{"name": "Yes","return_value": true}]
+        },
+        "start": {"name": "Close DC Contactor","value": false,"enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/bms:CloseContactors@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/bms:CloseContactors",            "outValue": 1, "note": "Send close contactors command to BMS"}
+                    ]
+                }]
+            },
+            "options": [{"name": "No", "return_value": false},{"name": "Yes","return_value": true}]
+        },
+
+        "stop": {"name": "Open DC Contactor","value": false,"enabled": false,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/bms:OpenContactors@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/bms:OpenContactors",            "outValue": 2, "note": "Send open contactors command to BMS"}
+                    ]
+                }]
+            },
+            "options": [{"name": "No", "return_value": false},{"name": "Yes","return_value": true}]
+        },
+
+        "clear_faults": {"name": "Clear Faults","value": false,"enabled": false,
+            "actions": { 
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"ifChanged": false, "outValue": "Clear", "uri":"/faults/bms:clear_faults"},
+                        {"ifChanged": false, "outValue": "Clear", "uri":"/alarms/bms:clear_alarms"}
+                    ]
+                }]
+            },
+            "options": [{"name": "Clear Faults", "return_value": "Clear"}]
+        }
+    },
+    
+    "/links/bms": {
+        "Sec": {"value": "/components/##BMS_ID##_ems_running_info:second"},
+        "Min": {"value": "/components/##BMS_ID##_ems_running_info:minute"},
+        "Hour": {"value": "/components/##BMS_ID##_ems_running_info:hour"},
+        "Day": {"value": "/components/##BMS_ID##_ems_running_info:day"},
+        "Month": {"value": "/components/##BMS_ID##_ems_running_info:month"},
+        "Year": {"value": "/components/##BMS_ID##_ems_running_info:year"},
+        "SystemState": {"value": "/status/pcs:SystemState"}
+    },
+
+    "/schedule/wake_monitor/bms":{
+        "/status/bms:BMSHeartbeat":          { "enable": true, "amap": "bms", "func": "CheckMonitorVar"},
+        "/status/bms:BMSMaxCellVoltage":     { "enable": true, "amap": "bms", "func": "CheckMonitorVar"},
+        "/status/bms:BMSMinCellVoltage":     { "enable": true, "amap": "bms", "func": "CheckMonitorVar"},
+        "/status/bms:BMSMaxCellTemp":        { "enable": true, "amap": "bms", "func": "CheckMonitorVar"},
+        "/status/bms:BMSMinCellTemp":        { "enable": true, "amap": "bms", "func": "CheckMonitorVar"},
+        "/status/bms:BMSSOH":                { "enable": true, "amap": "bms", "func": "CheckMonitorVar"},
+        "/status/bms:NumRacksInService":     { "enable": true, "amap": "bms", "func": "CheckMonitorVar"},
+        "/status/bms:BMSCurrentCheckDerate": { "enable": true, "amap": "bms", "func": "CheckMonitorVar"},
+        "/status/bms:BMSCurrent":            { "enable": true, "amap": "bms", "func": "CheckMonitorVar"},
+        
+        "/status/bms:BMSPower":                   { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:OpenContactorsEnable":       { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:CloseContactorsEnable":      { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:OverCurrentFault":           { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:UnderCurrentFault":          { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:OverCurrentAlarm":           { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:UnderCurrentAlarm":          { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:OverCurrentDerate":          { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:UnderCurrentDerate":         { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:OverCurrentD1":              { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:UnderCurrentD1":             { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:OverCurrentD2":              { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:UnderCurrentD2":             { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:CurrentAverage":             { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:RackChargeCurrentMax":       { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:RackDischargeCurrentMax":    { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:MaxBMSChargeCurrentEx":      { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:MaxBMSDischargeCurrentEx":   { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:MaxBMSChargePowerRunning":   { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:MaxBMSDischargePowerRunning":{ "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:MaxBMSChargePowerEst":       { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:MaxBMSDischargePowerEst":    { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:AccumulatedChargeEnergy":    { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:AccumulatedDischargeEnergy": { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:BMSFaultCnt":                { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:MaxBMSDischargeIV":          { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:MaxBMSChargeIV":             { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:AnyRacksDCClosed":           { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:RackConnectionStatus":       { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:NewConnectionStatus":        { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:NumRacksEnabled":            { "enable": true, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:BMSHeartbeatCheckEnable":    { "enable": true, "amap": "bms", "func": "CalculateVar"}
+    },
+
+    "/sched/bms": {
+        "enable":{ 
+            "value":true,
+            "actions":{
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri":"/sched/bms:pub@enabled"},
+                        {"inValue": true, "ifChanged": false, "uri":"/sched/bms:pub", "outTime":1}
+                    ]
+                }]
+            }
+        },
+        "pub": {
+            "value": "pub_bms",
+            "enabled": true,
+            "uri":   "/sched/bms:pub",
+            "fcn":   "RunPub",
+            "id":    "pub_bms",
+            "table": "/assets/bms/##BMS_ID##",
+            "refTime":  0.220,
+            "runAfter": 0.220,
+            "repTime":  0.100,
+            "endTime":  0.00,
+            "actions":{
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "bms"}]}]
+            }
+        },
+        "schedStartupBMS":{
+            "value":    "schedStartupBMS",
+            "uri":      "/sched/bms:schedStartupBMS",
+            "fcn":      "StartupBMS",
+            "id":       "schedStartupBMS",
+            "amap":     "bms",
+            "refTime":  0.268,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001,
+            "actions":{
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "bms"}]}]
+            }
+        },
+        "schedShutdownBMS":{
+            "value":    "schedShutdownBMS",
+            "uri":      "/sched/bms:schedShutdownBMS",
+            "fcn":      "StartupBMS",
+            "id":       "schedShutdownBMS",
+            "amap":     "bms",
+            "refTime":  0.267,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "bms"}]}]
+            }
+        },
+        "schedSendClearFaultCmdbms":{
+            "value":    "schedSendClearFaultCmdbms",
+            "uri":      "/sched/bms:schedSendClearFaultCmdbms",
+            "fcn":      "SendClearFaultCmd",
+            "id":       "schedSendClearFaultCmdbms",
+            "amap":     "bms",
+            "refTime":  0.271,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "bms"}]}]
+            }
+        }
+    },
+
+    "/vlinks/bms": {
+        "charge_state_ui":                     { "value": "/assets/bms/##BMS_ID##:charge_state",                         "vlink": "/status/bms:ChargeState"                                },
+        "system_soc_ui":                       { "value": "/assets/bms/##BMS_ID##:soc",                                  "vlink": "/status/bms:BMSSOC"                                     },
+        "system_soh_ui":                       { "value": "/assets/bms/##BMS_ID##:soh",                                  "vlink": "/status/bms:BMSSOH"                                     },
+        "system_voltage_ui":                   { "value": "/assets/bms/##BMS_ID##:system_voltage",                       "vlink": "/status/bms:BMSVoltage"                                 },
+        "system_current_ui":                   { "value": "/assets/bms/##BMS_ID##:system_current",                       "vlink": "/status/bms:BMSCurrent"                                 },
+        "system_power_ui":                     { "value": "/assets/bms/##BMS_ID##:system_power",                         "vlink": "/status/bms:BMSPower"                                   },
+        "max_cell_voltage_ui":                 { "value": "/assets/bms/##BMS_ID##:max_cell_voltage",                     "vlink": "/status/bms:BMSMaxCellVoltage"                          },
+        "min_cell_voltage_ui":                 { "value": "/assets/bms/##BMS_ID##:min_cell_voltage",                     "vlink": "/status/bms:BMSMinCellVoltage"                          },
+        "avg_cell_voltage_ui":                 { "value": "/assets/bms/##BMS_ID##:avg_cell_voltage",                     "vlink": "/status/bms:BMSAvgCellVoltage"                          },
+        "max_cell_temp_ui":                    { "value": "/assets/bms/##BMS_ID##:max_cell_temp",                        "vlink": "/status/bms:BMSMaxCellTemp"                             },
+        "min_cell_temp_ui":                    { "value": "/assets/bms/##BMS_ID##:min_cell_temp",                        "vlink": "/status/bms:BMSMinCellTemp"                             },
+        "avg_cell_temp_ui":                    { "value": "/assets/bms/##BMS_ID##:avg_cell_temp",                        "vlink": "/status/bms:BMSAvgCellTemp"                             },
+        "max_charge_current":                  { "value": "/assets/bms/##BMS_ID##:max_charge_current",                   "vlink": "/status/bms:MaxBMSChargeCurrent"                        },
+        "max_discharge_current":               { "value": "/assets/bms/##BMS_ID##:max_discharge_current",                "vlink": "/status/bms:MaxBMSDischargeCurrent"                     },
+        "max_charge_power":                    { "value": "/assets/bms/##BMS_ID##:max_charge_power",                     "vlink": "/status/bms:MaxBMSChargePower"                          },
+        "max_discharge_power":                 { "value": "/assets/bms/##BMS_ID##:max_discharge_power",                  "vlink": "/status/bms:MaxBMSDischargePower"                       },
+        "system_chargeable_energy_ui":         { "value": "/assets/bms/##BMS_ID##:charge_energy",                        "vlink": "/status/bms:BMSChargeEnergy"                            },
+        "system_dischargeable_energy_ui":      { "value": "/assets/bms/##BMS_ID##:discharge_energy",                     "vlink": "/status/bms:BMSDischargeEnergy"                         },
+        "accumulated_chargeable_energy_ui":    { "value": "/assets/bms/##BMS_ID##:accumulated_charge_energy",            "vlink": "/status/bms:AccumulatedChargeEnergy"                    },
+        "accumulated_dischargeable_energy_ui": { "value": "/assets/bms/##BMS_ID##:accumulated_discharge_energy",         "vlink": "/status/bms:AccumulatedDischargeEnergy"                 },
+        "num_racks_in_service_ui":             { "value": "/assets/bms/##BMS_ID##:num_racks_in_service",                 "vlink": "/status/bms:NumRacksInService"                          },
+        "num_racks_enabled_ui":                { "value": "/assets/bms/##BMS_ID##:num_racks_enabled",                    "vlink": "/status/bms:NumRacksEnabled"                            },
+        "num_total_racks_ui":                  { "value": "/assets/bms/##BMS_ID##:total_racks",                          "vlink": "/status/bms:TotalNumRacks"                              },
+
+        "site_chargeable_energy":              { "value": "/site/ess_ls:chargeable_energy",                           "vlink": "/status/bms:BMSChargeEnergy"                            },
+        "site_dischargeable_energy":           { "value": "/site/ess_ls:dischargeable_energy",                        "vlink": "/status/bms:BMSDischargeEnergy"                         },
+        "site_voltage_dc":                     { "value": "/site/ess_ls:voltage_dc",                                  "vlink": "/status/bms:BMSVoltage"                                 },
+        "site_current_dc":                     { "value": "/site/ess_ls:current_dc",                                  "vlink": "/status/bms:BMSCurrent"                                 },
+        "site_bms_max_cell_volt":              { "value": "/site/ess_ls:bms_maximum_cell_voltage",                    "vlink": "/status/bms:BMSMaxCellVoltage"                          },
+        "site_bms_min_cell_volt":              { "value": "/site/ess_ls:bms_minimum_cell_voltage",                    "vlink": "/status/bms:BMSMinCellVoltage"                          },
+        "site_bms_avg_cell_volt":              { "value": "/site/ess_ls:bms_average_cell_voltage",                    "vlink": "/status/bms:BMSAvgCellVoltage"                          },
+        "site_bms_max_cell_temp":              { "value": "/site/ess_ls:bms_maximum_cell_temperature",                "vlink": "/status/bms:BMSMaxCellTemp"                             },
+        "site_bms_min_cell_temp":              { "value": "/site/ess_ls:bms_minimum_cell_temperature",                "vlink": "/status/bms:BMSMinCellTemp"                             },
+        "site_bms_avg_cell_temp":              { "value": "/site/ess_ls:bms_average_cell_temperature",                "vlink": "/status/bms:BMSAvgCellTemp"                             },
+        "site_bms_soc":                        { "value": "/site/ess_ls:bms_soc",                                     "vlink": "/status/bms:BMSSOC"                                     },
+        "site_bms_soh":                        { "value": "/site/ess_ls:bms_soh",                                     "vlink": "/status/bms:BMSSOH"                                     },
+        "site_bms_units_connected":            { "value": "/site/ess_ls:racks_in_service",                            "vlink": "/status/bms:NumRacksInService"                          }
+    },
+
+    "/status/bms": {
+        "CommsOK": {
+            "value": false,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/assets/bms/##BMS_ID##:com_status",   "outValue": "ONLINE"},
+                        { "inValue": false, "uri": "/assets/bms/##BMS_ID##:com_status",  "outValue": "OFFLINE"},
+                        { "inValue": false, "uri": "/site/ess_ls:com_status[1]",      "outValue": true, "ifChanged": true}
+                    ]
+                }]
+            }
+        },
+        "BMSPower": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/status/bms:BMSVoltage",
+            "variable2": "/status/bms:BMSCurrent",
+            "scale": 1000,
+            "operation": "*"
+        },
+        "BMSVoltage": 0,
+        "BMSCurrent": {
+            "value": 0,
+			
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+
+            "MinAlarmTimeout": 1,
+            "MaxAlarmTimeout": 1,
+            "MinFaultTimeout": 2.5,
+            "MaxFaultTimeout": 2.5,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "BMSPowerOn": {
+            "value": "Ready",
+            "EnableConditionCheck": true,
+            "Type": "string",
+            "AlarmTimeout": 5,
+            "FaultTimeout": 7,
+            "RecoverTimeout": 4,
+
+            "numExpectedVals": 1,
+            "expectedVal1": "Ready",
+
+            "numConditionVars": 1,
+            "conditionVar1": "SystemState",
+            "conditionType1": "string",
+            "numConditions1": 2,
+            "conditionVal1_1": "Ready",
+            "conditionVal2_1": "Running",
+
+            "xactions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "BMSStatus": "Initial",
+        "MaxBMSChargePower": 0,
+        "MaxBMSDischargePower": 0,
+        "MaxBMSChargeCurrentEx": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/status/bms:NumRacksInService",
+            "variable2": "/status/bms:RackChargeCurrentMax",
+            "variable3": "/status/bms:EstChargeCurrentOffset",
+            "expression": "{1} * ({2} - {3})"
+        },
+        "MaxBMSDischargeCurrentEx": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/status/bms:NumRacksInService",
+            "variable2": "/status/bms:RackDischargeCurrentMax",
+            "variable3": "/status/bms:EstDischargeCurrentOffset",
+            "expression": "{1} * ({2} + {3})"
+        },
+        "EstChargeCurrentOffset": 5,
+        "EstDischargeCurrentOffset": 5,
+        "MaxBMSChargeCurrentVec": 0,
+        "MaxBMSChargeCurrentVecFilt": 0,
+        "MaxBMSDischargeCurrentVec": 0,
+        "MaxBMSDischargeCurrentVecFilt": 0,
+        "MaxBMSChargePowerEst": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 4,
+            "variable1": "/status/bms:BMSVoltage",
+            "variable2": "/status/bms:BMSCurrent",
+            "variable3": "/status/bms:MaxBMSChargeCurrentFilt",
+            "variable4": "/status/bms:MaxBMSChargeCurrentEx",
+            "expression": "{1} * ({2} + {3} - {4}) * 0.001 * 1.0165 - 40.819",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"uri":"/status/bms:MaxBMSChargePowerEstFiltIn"}
+                    ]
+                }]
+            }
+        },
+        "MaxBMSDischargePowerEst": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 4,
+            "variable1": "/status/bms:BMSVoltage",
+            "variable2": "/status/bms:BMSCurrent",
+            "variable3": "/status/bms:MaxBMSDischargeCurrentFilt",
+            "variable4": "/status/bms:MaxBMSDischargeCurrentEx",
+            "expression": "{1} * ({2} + {3} - {4}) * 0.001 * 0.9492 + 91.519",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"uri":"/status/bms:MaxBMSDischargePowerEstFiltIn"}
+                    ]
+                }]
+            }
+        },
+        "MaxBMSChargePowerEstFiltIn": {
+            "value": 0,
+            "depth": 120,
+            "ifChanged": false,
+            "vecAv": "/status/bms:MaxBMSChargePowerEstVec",
+            "outAv": "/status/bms:MaxBMSChargePowerEstFilt",
+            "actions": {
+                "onSet": [{ 
+                    "func": [
+                        {"func":"MathMovAvg","amap":"ess"}
+                    ]}
+                ]
+            }
+        },
+        "MaxBMSDischargePowerEstFiltIn": {
+            "value": 0,
+            "depth": 120,
+            "ifChanged": false,
+            "vecAv": "/status/bms:MaxBMSDischargePowerEstVec",
+            "outAv": "/status/bms:MaxBMSDischargePowerEstFilt",
+            "actions": {
+                "onSet": [{ 
+                    "func": [
+                        {"func":"MathMovAvg","amap":"ess"}
+                    ]}
+                ]
+            }
+        },
+        "MaxBMSChargePowerEstVec": 0,
+        "MaxBMSDischargePowerEstVec": 0,
+        "MaxBMSChargePowerEstFilt": 0,
+        "MaxBMSDischargePowerEstFilt": 0,
+        "MaxBMSChargePowerRunning": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/status/bms:BMSPower",
+            "variable2": "/status/bms:MaxBMSChargePowerEstFilt",
+            "variable3": "/config/bms:EstChargePowerOffset",
+            "expression": "if(({1} < -1000), ({2} + {3}), ({2} * 0.96))"
+        },
+        "MaxBMSDischargePowerRunning": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/status/bms:BMSPower",
+            "variable2": "/status/bms:MaxBMSDischargePowerEstFilt",
+            "variable3": "/config/bms:EstDischargePowerOffset",
+            "expression": "if(({1} > 1000), ({2} - {3}), ({2} * 0.97))"
+        },
+        "MaxBMSChargeIV": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/status/bms:BMSVoltage",
+            "variable2": "/status/bms:MaxBMSChargeCurrent",
+            "scale": 1000,
+            "operation": "*",
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:MaxBMSChargePower"}]}]
+            }
+        },
+        "MaxBMSDischargeIV": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/status/bms:BMSVoltage",
+            "variable2": "/status/bms:MaxBMSDischargeCurrent",
+            "scale": 1000,
+            "operation": "*",
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:MaxBMSDischargePower"}]}]
+            }
+        },
+        "ChargeState": "Normal",
+        "DCClosed": {
+            "value": 0,
+            "resetChange": false,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 0, "uri":"/status/bms:BMSSOH@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/bms:BMSSOH@EnableMinValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/bms:BMSMinCellVoltage@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/bms:BMSMinCellVoltage@EnableMinValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/bms:BMSMaxCellVoltage@EnableMaxValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/bms:BMSMaxCellVoltage@EnableMaxValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/bms:BMSCurrent@EnableMaxValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/bms:BMSCurrent@EnableMaxValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/bms:BMSCurrent@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/bms:BMSCurrent@EnableMinValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/bms:BMSMaxCellTemp@EnableMaxValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/bms:BMSMaxCellTemp@EnableMaxValCheck", "outValue": true},
+                        {"inValue": 0, "uri":"/status/bms:BMSMinCellTemp@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1, "uri":"/status/bms:BMSMinCellTemp@EnableMinValCheck", "outValue": true},
+
+                        {"inValue": 0, "uri": "/site/ess_ls:dc_contactors_closed", "outValue": false},
+                        {"inValue": 1, "uri": "/site/ess_ls:dc_contactors_closed", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "OpenContactorsEnable": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/status/bms:DCClosed",
+            "variable2": "/status/pcs:DCClosed",
+            "variable3": "/assets/bms/##BMS_ID##:maint_mode",
+            "expression": "{1} and not {2} and {3}",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/bms/##BMS_ID##:stop@enabled", "outValue":false},
+                        {"inValue":1, "uri":"/assets/bms/##BMS_ID##:stop@enabled", "outValue":true}
+                    ]
+                }]
+            }
+        },
+        "CloseContactorsEnable": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/bms:DCClosed",
+            "variable2": "/assets/bms/##BMS_ID##:maint_mode",
+            "expression": "not {1} and {2}",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/bms/##BMS_ID##:start@enabled", "outValue":false},
+                        {"inValue":1, "uri":"/assets/bms/##BMS_ID##:start@enabled", "outValue":true}
+                    ]
+                }]
+            }
+        },
+        "BMSMaxCellVoltage":{
+            "value": 0,
+
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "MaxAlarmThreshold": 3.5,
+            "MaxFaultThreshold": 3.6,
+            "MaxResetValue": 3.5,
+
+            "MaxAlarmTimeout": 2.5,
+            "MaxFaultTimeout": 0,
+            "MaxRecoverTimeout": 1.4,
+            "actions":{
+                "onSet":[{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "BMSMinCellVoltage":{
+            "value": 0,
+
+            "EnableFaultCheck": true,
+            "EnableMinValCheck": false,
+            "MinAlarmThreshold": 2.85,
+            "MinFaultThreshold": 2.8,
+            "MinResetValue": 2.85,
+
+            "MinAlarmTimeout": 2.5,
+            "MinFaultTimeout": 0.5,
+            "MinRecoverTimeout": 1.4,
+            "actions":{
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "BMSAvgCellVoltage": 0,
+        "BMSSOC": 0,
+        "BMSSOH": {
+            "value": 0,
+
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "MinAlarmThreshold": 30,
+            "MinFaultThreshold": 25,
+            "MinResetValue": 30,
+
+            "MinAlarmTimeout": 5.5,
+            "MinFaultTimeout": 2.5,
+            "MinRecoverTimeout": 1.4,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "BMSMaxCellTemp": {
+            "value": 0,
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+
+            "MaxAlarmThreshold": 45,
+            "MaxFaultThreshold": 52,
+            "MaxResetValue": 45,
+
+            "MaxAlarmTimeout": 2.5,
+            "MaxFaultTimeout": 1.0,
+            "MaxRecoverTimeout": 1.4,
+            "actions":{
+                "onSet":[{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "BMSMinCellTemp": {
+            "value": 0,
+            "EnableFaultCheck": true,
+            "EnableMinValCheck": false,
+
+            "MinAlarmThreshold": 10,
+            "MinFaultThreshold": 0.1,
+            "MinResetValue": 10,
+
+            "MinAlarmTimeout": 2.5,
+            "MinFaultTimeout": 0.5,
+            "MinRecoverTimeout": 1.4,
+            "actions":{
+                "onSet":[{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "BMSAvgCellTemp": 0,
+        "NumRacksInService": {
+            "value": 0,
+			
+            "EnableFaultCheck": true,
+            "EnableMinValCheck": false,
+            "MinAlarmThreshold": 5,
+            "MinFaultThreshold": 2,
+            "MinResetValue": 5,
+
+            "MinAlarmTimeout": 28,
+            "MinFaultTimeout": 30,
+            "MinRecoverTimeout": 1,
+
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "NumRacksEnabled": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "bms:RackEnableStatus",
+            "operation": "+"
+        },
+        "NewConnectionStatus": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/status/bms:NumRacksInService",
+            "variable2": "/status/bms:NumRacksEnabled",
+            "variable3": "/components/##BMS_ID##_info:connection_status",
+            "expression": "if (({1} != 0 and {1} >= {2}), 2, {3})",
+            "actions": {
+                "onSet": [{
+                    "remap":[
+                        {"uri": "/components/##BMS_ID##_info:new_connection_status"}
+                    ]
+                }]
+            }
+        },
+        "BMSHeartbeat": {
+            "value": 0,
+            "EnableStateCheck": true,
+            "EnableCommsCheck": true,
+            "Type": "int",
+            "AlarmTimeout": 10,
+            "FaultTimeout": 15,
+            "RecoverTimeout": 0.1,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "BMSHeartbeatCheckEnable": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/##BMS_ID##_info:connection_status",
+            "expression": "{1} > -1",
+            "actions": {
+                "onSet":[{"remap":[{"ifChanged": false, "uri": "/status/bms:BMSHeartbeat@EnableStateCheck"}]}]
+            }
+        },
+        "MaxBMSChargeCurrent": 0,
+        "MaxBMSDischargeCurrent": 0,
+        "BMSChargeEnergy": 0,
+        "BMSDischargeEnergy": 0,
+        "AccumulatedChargeEnergy": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/##BMS_ID##_info:accumulation_charge_energy_msb",
+            "variable2": "/components/##BMS_ID##_info:accumulation_charge_energy_lsb",
+            "expression": "{1} * 2 ** 16 + {2}"
+        },
+        "AccumulatedDischargeEnergy": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/components/##BMS_ID##_info:accumulation_discharge_energy_msb",
+            "variable2": "/components/##BMS_ID##_info:accumulation_discharge_energy_lsb",
+            "expression": "{1} * 2 ** 16 + {2}"
+        },
+        "BMSCurrentCheckDerate": {
+            "value": 0,
+            "EnableAlert": false,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "BMSCurrentCheckStop": {
+            "value": 0,
+			
+            "EnableMaxValCheck": true,
+            "EnableMinValCheck": true,
+            "EnableAlert": false,
+
+            "MinAlarmThreshold": -35,
+            "MaxAlarmThreshold": 35,
+            "MinResetValue": -35,
+            "MaxResetValue": 35,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "bms"}]}]
+            }
+        },
+        "UnderCurrentFault": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1, 
+            "variable1": "/status/bms:MaxBMSChargeCurrent",
+            "expression": "{1} * 1.05",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/bms:BMSCurrent@MinFaultThreshold"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentFault": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 1, 
+            "variable1": "/status/bms:MaxBMSDischargeCurrent",
+            "expression": "{1} * 1.05",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/bms:BMSCurrent@MaxFaultThreshold"}
+                    ]
+                }]
+            }
+        },
+        "UnderCurrentAlarm": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/bms:MaxBMSChargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdHigh",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/bms:BMSCurrent@MinAlarmThreshold"},
+                        {"uri": "/status/bms:BMSCurrent@MinResetValue"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentAlarm": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/bms:MaxBMSDischargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdHigh",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/bms:BMSCurrent@MaxAlarmThreshold"},
+                        {"uri": "/status/bms:BMSCurrent@MaxResetValue"}
+                    ]
+                }]
+            }
+        },
+        "UnderCurrentDerate": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/bms:MaxBMSChargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdLow",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/bms:BMSCurrentCheckDerate@MinAlarmThreshold"},
+                        {"uri": "/status/bms:BMSCurrentCheckDerate@MinResetValue"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentDerate": {
+            "value": 0,
+            "numVars": 2, 
+            "variable1": "/status/bms:MaxBMSDischargeCurrent",
+            "variable2": "/status/pcs:DerateThresholdLow",
+            "operation": "*",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"uri": "/status/bms:BMSCurrentCheckDerate@MaxAlarmThreshold"},
+                        {"uri": "/status/bms:BMSCurrentCheckDerate@MaxResetValue"}
+                    ]
+                }]
+            }
+        },
+        "OverCurrentD1": {
+            "value": false,
+            "numVars": 2, 
+            "variable1": "bms:RackCurrentCheckDerate@seenMaxAlarm",
+            "variable2": "/status/bms:BMSCurrentCheckDerate@seenMaxAlarm",
+            "operation": "or"
+        },
+        "UnderCurrentD1": {
+            "value": false,
+            "numVars": 2, 
+            "variable1": "bms:RackCurrentCheckDerate@seenMinAlarm",
+            "variable2": "/status/bms:BMSCurrentCheckDerate@seenMinAlarm",
+            "operation": "or"
+        },
+        "OverCurrentD2": {
+            "value": false,
+            "numVars": 2, 
+            "variable1": "bms:RackCurrent@seenMaxAlarm",
+            "variable2": "/status/bms:BMSCurrent@seenMaxAlarm",
+            "operation": "or"
+        },
+        "UnderCurrentD2": {
+            "value": false,
+            "numVars": 2, 
+            "variable1": "bms:RackCurrent@seenMinAlarm",
+            "variable2": "/status/bms:BMSCurrent@seenMinAlarm",
+            "operation": "or"
+        },
+        "CurrentAverage": {
+            "value": false,
+            "numVars": 2,
+            "variable1": "/status/bms:BMSCurrent",
+            "variable2": "/status/bms:NumRacksInService",
+            "operation": "/"
+        },
+        "RackChargeCurrentMax": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "bms:RackCurrentCoerced",
+            "operation": "min"
+        },
+        "RackDischargeCurrentMax": {
+            "value": 0,
+            "numVars": 1,
+            "variable1": "bms:RackCurrentCoerced",
+            "operation": "max"
+        },
+        "FaultCnt": 0,
+        "BMSFaultCnt": {
+            "value": 0, 
+            "numVars": 2,
+            "variable1": "bms:FaultCnt",
+            "variable2": "/status/bms:FaultCnt",
+            "operation": "+"
+        },
+        "RackConnectionStatus": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/bms:AnyRacksDCClosed",
+            "variable2": "/components/##BMS_ID##_info:system_operation_state",
+            "expression": "{1} == 0 and {2} == 3",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 1, "uri": "/assets/bms/##BMS_ID##:power_state", "outValue": "Off"},
+                        {"inValue": 1, "uri": "/status/bms:BMSPowerOn",          "outValue": "Off"},
+                        {"inValue": 1, "uri": "/status/bms:SystemFault",         "outValue": false},
+                        {"inValue": 1, "uri": "/site/ess_ls:system_state",       "outValue": 1,  "note": "Bit 0 - Stop"}
+                    ]
+                }]
+            }
+        },
+        "AlarmCnt": 0,
+        "SystemFault": false,
+        "ClearFaultsDone": {
+            "value": false,
+            "note": "Set to true if all alarms/faults have been cleared using process_sys_alarm function. If true, reset ESS alarm/fault registers to 0",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"inValue": true, "ifChanged": false, "outValue": false, "uri": "/site/ess_ls:com_status[1]"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:bms_alarms"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:bms_rack_warnings"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:bms_rack_alarms"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:bms_rack_critical_alarms"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:bau_bcu_comms_alarms"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:bms_hvac_comms_alarms1"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:bms_hvac_comms_alarms2"}
+                    ]
+                }
+            ]}
+        },
+        "SendClearFault": false,
+        "FaultShutdown": {
+            "value": false,
+            "note": "When the BMS faults, we'll shutdown the PCS",
+            "ifChanged": true,
+            "actions": { 
+                "onSet":[{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap":[
+                        {"inValue": true, "uri": "/controls/pcs:ActivePowerSetpoint@triggerCmd",    "outValue": true},
+                        {"inValue": true, "uri": "/controls/pcs:ActivePowerSetpoint",               "outValue": 0,     "note": "Send 0 kW command to PCS before proceeding to shutdown"},
+                        {"inValue": true, "uri": "/controls/pcs:ReactivePowerAdjSwitch@triggerCmd", "outValue": true},
+                        {"inValue": true, "uri": "/controls/pcs:ReactivePowerAdjSwitch",            "outValue": 162,   "note": "162 = 0xA2 = Reactive power percentage setting enabled"},
+                        {"inValue": true, "uri": "/controls/pcs:ReactivePowerSetpoint",             "outValue": 0,     "note": "Send 0 kVAr command to PCS before proceeding to shutdown"},
+
+                        {"inValue": true, "uri": "/controls/pcs:CheckIfFault@triggerCmd",           "outValue": true},
+                        {"inValue": true, "uri": "/controls/pcs:CheckIfFault",                      "outValue": 0,     "note": "Check if the PCS is already in a fault state. We won't need to send shutdown command to PCS if so"}
+                    ]
+                }]
+            }
+        },
+        "AnyRacksDCClosed": {
+            "value": false,
+            "numVars": 1,
+            "variable1": "bms:DCClosed",
+            "operation": "or",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": false,  "uri": "/status/bms:DCClosed",  "outValue": 0},
+                        {"inValue": true,   "uri": "/status/bms:DCClosed",  "outValue": 1}
+                    ]
+                }]
+            }
+        }
+    }
+}

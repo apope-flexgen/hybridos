@@ -1,0 +1,39 @@
+{
+   "system":
+   {   "name":"CATL_ESS_Controller",
+       "protocol": "Modbus TCP",
+       "id": "CATL_ESS_Controller",
+       "ip_address": "0.0.0.0",
+       "port": 502 
+   },
+    "registers":
+     {
+      "holding_registers":
+       [
+          { "name":"mbmu_warning_1","id":"mbmu_warning_1","offset":0,"uri":"/components/catl_mbmu_sum_r" },
+          { "name":"mbmu_warning_2","id":"mbmu_warning_2","offset":1,"size": 2, "uri":"/components/catl_mbmu_sum_r" },
+          { "name":"mbmu_status","id":"mbmu_status","offset":16,"uri":"/components/catl_mbmu_stat_r" },
+          { "name":"mbmu_voltage","id":"mbmu_voltage","offset":32,"scale": 10.000000, "uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_current","id":"mbmu_current","offset":33,"scale": 10.000000, "signed": true, "uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_soc","id":"mbmu_soc","offset":34,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_soh","id":"mbmu_soh","offset":35,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_max_cell_voltage","id":"mbmu_max_cell_voltage","offset":36,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_min_cell_voltage","id":"mbmu_min_cell_voltage","offset":37,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_avg_cell_voltage","id":"mbmu_avg_cell_voltage","offset":38,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_max_cell_temperature","id":"mbmu_max_cell_temperature","offset":39,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_min_cell_temperature","id":"mbmu_min_cell_temperature","offset":40,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_avg_cell_temperature","id":"mbmu_avg_cell_temperature","offset":41,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_max_charge_current","id":"mbmu_max_charge_current","offset":42,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"mbmu_max_dischare_current","id":"mbmu_max_dischare_current","offset":43,"uri":"/components/catl_mbmu_control_r" },
+          { "name":"ems_heartbeat","id":"ems_heartbeat","offset":896,"uri":"/components/catl_ems_bms_rw" },
+          { "name":"ems_cmd","id":"ems_cmd","offset":897,"uri":"/components/catl_ems_bms_rw" },
+          { "name":"ems_status","id":"ems_status","offset":898,"uri":"/components/catl_ems_bms_rw" },
+          { "name":"ems_rtc_year","id":"ems_rtc_year","offset":900,"uri":"/components/catl_ems_bms_rw" },
+          { "name":"ems_rtc_day","id":"ems_rtc_day","offset":902,"uri":"/components/catl_ems_bms_rw" },
+          { "name":"ems_rtc_hour","id":"ems_rtc_hour","offset":903,"uri":"/components/catl_ems_bms_rw" },
+          { "name":"ems_rtc_minute","id":"ems_rtc_minute","offset":904,"uri":"/components/catl_ems_bms_rw" },
+          { "name":"ems_rtc_second","id":"ems_rtc_second","offset":905,"uri":"/components/catl_ems_bms_rw" },
+          { "name":"fault_clear_cmd","id":"fault_clear_cmd","offset":908,"uri":"/components/catl_ems_bms_rw" }       ]
+    }
+}
+

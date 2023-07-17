@@ -32,8 +32,9 @@ type pcs struct {
 	Q   float64
 	S   float64
 	Pf  float64
-	F   float64
+	F   float64 // Real frequency, after any adjustments made by pcs in gridforming mode
 	Ph  float64 // phase angle
+	Fadjust float64 // Unadjusted frequency (frequency to adjust to). This is the frequency due to active power droop losses for gridforming mode
 	// PCS Communications - includes configurable I/O
 	Heart        hearttime
 	Heartbeat    int
@@ -134,18 +135,36 @@ func (p *pcs) Init() {
 		// TODO: throw an error?
 	}
 
-	if p.Dactive.Percent != 0 && p.Dactive.XNom != 0 {
-		p.Dactive.slope, p.Dactive.offset = getSlope(p.Dactive.Percent, p.Dactive.YNom, p.Dactive.XNom)
-		p.Dreactive.slope, p.Dreactive.offset = getSlope(p.Dreactive.Percent, p.Dreactive.YNom, p.Dreactive.XNom)
-	}
+
 
 	// DC droop settings need to model a "weak grid"
-	p.Dvoltage.XNom = p.VDCcmd
-	p.Dvoltage.YNom = 0
-	p.Dvoltage.Percent = 0.99
-
+	if p.VDCcmd > 0{
+		p.Dvoltage.XNom = p.VDCcmd
+	} else {
+		p.Dvoltage.XNom = 1330 //TODO GB: find a way to do this with default configs. 
+	}
+	p.Dvoltage.YNom = p.Slim
+	p.Dvoltage.Percent = 0.2
 	p.Dvoltage.slope, p.Dvoltage.offset = getSlope(p.Dvoltage.Percent, p.Dvoltage.YNom, p.Dvoltage.XNom) // initial DC droop settings
 	// fmt.Println(p.ID, p.Dactive, p.Dreactive)
+	//Dactive droop is frequency (x axis) vs active power (y axis)
+	if p.Fcmd > 0 {
+		p.Dactive.XNom = p.Fcmd
+	} else {
+		p.Dactive.XNom = 60
+	}
+	p.Dactive.YNom = p.Plim
+	p.Dactive.Percent = 0.2
+	//Dreactive droop is AC voltage (x axis) vs reactive power (y axis)
+	if p.VACcmd > 0 {
+		p.Dreactive.XNom = p.VACcmd
+	} else {
+		p.Dreactive.XNom = 480
+	}
+	p.Dreactive.YNom = p.Qlim
+	p.Dreactive.Percent = 0.2
+	p.Dactive.slope, p.Dactive.offset = getSlope(p.Dactive.Percent, p.Dactive.YNom, p.Dactive.XNom)
+	p.Dreactive.slope, p.Dreactive.offset = getSlope(p.Dreactive.Percent, p.Dreactive.YNom, p.Dreactive.XNom)
 }
 
 // PCS UpdateMode() processes commands either through control words or direct
@@ -207,7 +226,7 @@ func (p *pcs) UpdateMode(input terminal) (output terminal) {
 	// if PCS is on and contactors closed, pass information down
 	if p.On && p.AcContactor {
 		if p.GridForming {
-			p.P, p.Q, p.Vac = input.p, input.q, p.VACcmd
+			p.P, p.Q, p.Vac = p.P, p.Q, p.VACcmd
 			p.F, p.Ph = input.f, input.ph
 		} else {
 			p.P, p.Q, p.Vac = input.p, input.q, input.v
@@ -222,16 +241,18 @@ func (p *pcs) UpdateMode(input terminal) (output terminal) {
 }
 
 // PCS GetLoadLines() returns droop parameters up the tree if grid forming
+// TODO GB: Why is this using DC-side information to send up the tree (AC-side?)
 func (p *pcs) GetLoadLines(input terminal, dt float64) (output terminal) {
 	dcTerminal := terminal{
 		p: p.P, dVdc: p.Dvoltage,
 	}
-	// Set XNom in the droops based on VDCcmd, because it might have changed
-	dcTerminal.dVdc.XNom = p.VDCcmd
-
+	// Set XNom in the droops based because they might have changed
+	if p.VDCcmd > 0 {
+		dcTerminal.dVdc.XNom = p.VDCcmd
+	}
 	// Recalculate slope and offset to take commands into account
 	dcTerminal.dVdc.slope, dcTerminal.dVdc.offset = getSlope(dcTerminal.dVdc.Percent, dcTerminal.dVdc.YNom, dcTerminal.dVdc.XNom)
-
+	
 	// Do combine terminals here since the PCS is the root of the tree
 	// and needs to store external droop information for DistributeVoltage()
 	output = combineTerminals(dcTerminal, input) // input is coming from the BMS "children"
@@ -240,11 +261,16 @@ func (p *pcs) GetLoadLines(input terminal, dt float64) (output terminal) {
 	// "AC-side" of the PCS, similar to ESS
 	if p.GridForming && p.On {
 		output.dHertz = p.Dactive   // Nominal rating is saved in dHertz, but
-		output.dHertz.XNom = p.Fcmd // commands can override
+		if p.Fcmd > 0 {
+			output.dHertz.XNom = p.Fcmd // commands can override
+		}
 		output.dVolts = p.Dreactive
-		output.dVolts.XNom = p.VACcmd
+		if p.VACcmd > 0 {
+			output.dVolts.XNom = p.VACcmd
+		}
 		output.p = p.P // p.P and p.Q contain the last iteration's output at this
 		output.q = p.Q // point in the solver, so droop has a one tick delay
+		//output.f = getX(p.P, p.Dactive.slope, p.Dactive.offset)
 	}
 
 	return output
@@ -272,8 +298,10 @@ func (p *pcs) DistributeVoltage(input terminal) (output terminal) {
 
 	// pass DC voltage down BMS downstream of PCS
 	// in this way, PCS is more of a feeder
+	// send power setpoint down for dependent sources (pv) that need it to arbitrate their own setpoints. 
 	if p.On && p.DcContactor {
 		output.vdc = p.VDCcmd
+		output.p = p.Pcmd
 	} else {
 		output.vdc = 0
 	}
@@ -287,7 +315,7 @@ func (p *pcs) CalculateState(input terminal, dt float64) (output terminal) {
 		return output
 	}
 
-	p.F, p.Ph = input.f, input.ph
+	p.F, p.Ph = input.f, input.ph  //TODO GB: Why is PCS taking F and Ph from below (DC side?)
 	pcmd := p.Pcmd
 	qcmd := p.Qcmd
 
@@ -333,10 +361,13 @@ func (p *pcs) CalculateState(input terminal, dt float64) (output terminal) {
 func (p *pcs) DistributeLoad(input terminal) (output terminal) {
 	// TODO: implement losses here from AC power to DC power during conversion
 	if p.GridForming {
-		output.p = input.p // send power down, because we return zero-terminal in CalculateState() in grid-forming
+		p.Fadjust = input.f
+		output.p = getY(p.Fadjust, p.Dactive.slope, p.Dactive.offset) // send power down, because we return zero-terminal in CalculateState() in grid-forming TODO GB: should this be p.P? 
 		output.vdc = getX(input.p, p.DvoltageExternal.slope, p.DvoltageExternal.offset)
 	} else {
-		output.p = p.P // still send power down, because we calculated PCS power at the end of CalculateState() in grid-following
+		//Previously this was p.P, however that includes losses and our convention is to put losses on output and draw pcmd kW from battery.
+		//TODO GB: Is this convention right? Should we instead output pcmd kW and draw pcmd + losses?
+		output.p = p.Pcmd // still send power down, because we calculated PCS power at the end of CalculateState() in grid-following. 
 		output.vdc = getX(p.P, p.DvoltageExternal.slope, p.DvoltageExternal.offset)
 	}
 	return output
@@ -351,8 +382,10 @@ func (p *pcs) UpdateState(input terminal, dt float64) (output terminal) {
 		//active, reactive = p.P, p.Q
 	} else {
 		// grid-forming mode, power commands are not available and must be calculated based on droop
-		active = getY(input.f, p.Dactive.slope, p.Dactive.offset)
-		reactive = getY(input.v, p.Dreactive.slope, p.Dreactive.offset)
+		p.Dactive.slope, p.Dactive.offset = getSlope(p.Dactive.Percent, p.Dactive.YNom, p.Dactive.XNom)
+		p.Dreactive.slope, p.Dreactive.offset = getSlope(p.Dreactive.Percent, p.Dreactive.YNom, p.Dreactive.XNom)
+		active = getY(p.Fadjust, p.Dactive.slope, p.Dactive.offset)
+		reactive = getY(p.Vac, p.Dreactive.slope, p.Dreactive.offset)
 	}
 
 	// Update heartbeat and time
@@ -367,7 +400,7 @@ func (p *pcs) UpdateState(input terminal, dt float64) (output terminal) {
 	p.Second = p.Heart.Second
 
 	// Update DC bus voltage
-	p.Vdc = input.dVdc.XNom
+	p.Vdc = input.vdc
 
 	// TODO: throw a fault here if you are above the limits of the PCS
 	if p.On && !p.Standby {
@@ -404,7 +437,12 @@ func (p *pcs) UpdateState(input terminal, dt float64) (output terminal) {
 	p.Iac, p.Di, p.Qi = sToI(p.S, p.Vac), sToI(p.P, p.Vac), sToI(p.Q, p.Vac)
 	p.Idc = pToI(p.Pdc, p.Vdc)
 	output.p, output.q, output.s = p.P, p.Q, p.S
-	// fmt.Printf("PCS %s: P: %.1f\tQ: %.1f\tS: %.1f\tV: %.1f\tF: %.1f\n", p.ID, p.P, p.Q, p.S, p.V, p.F)
+//	p.Dvoltage.YNom = p.Pdc //set up DC droop for next execution. 
+	if p.VDCcmd > 0 {
+		p.Dvoltage.XNom = p.VDCcmd
+	} else {
+		p.Dvoltage.XNom = p.Vdc //set up DC droop for next execution
+	}
 	return output
 }
 

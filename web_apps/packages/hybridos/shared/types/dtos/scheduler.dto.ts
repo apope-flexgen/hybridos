@@ -109,27 +109,29 @@ export class DeleteModeID {
 
 /** This is the format the API accepts. */
 export class ApiMode {
-    [id: string]: {
+    [id: string]: ModeBody
+}
+
+export class ModeBody {
+    name: string
+    color_code: string
+    icon: string
+    variables: {
+        id: string
         name: string
-        color_code: string
-        icon: string
-        variables: {
-            id: string
-            name: string
-            type: string
-            unit: string
-            uri: string
-            value: number | boolean
-        }[]
-        constants: {
-            id: string
-            name: string
-            type: string
-            unit: string
-            uri: string
-            value: number | boolean
-        }[]
-    }
+        type: string
+        unit: string
+        uri: string
+        value: number | boolean
+    }[]
+    constants: {
+        id: string
+        name: string
+        type: string
+        unit: string
+        uri: string
+        value: number | boolean
+    }[]
 }
 
 /** Mode format used in backend. */

@@ -25,22 +25,6 @@
 #include "dnp3_utils.h"
 #include <iostream>
 
-// class newCommandHandler final : public opendnp3::ICommandHandler
-// {
-
-// public:
-//     newCommandHandler(sysCfg* myDB){sysdb = myDB;};
-
-//     static std::shared_ptr<ICommandHandler> Create(sysCfg* db)
-//     {
-//         return std::make_shared<newCommandHandler>(db);
-//     }
-
-//     void Start() override {}
-//     void End() override {}
-/**
- * A singleton 
- */
 
 class fpsOutstationApplication final : public opendnp3::IOutstationApplication
 {

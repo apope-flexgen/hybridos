@@ -76,14 +76,13 @@ public:
     void process_asset_data(void);
     void update_asset_data(void);
     void send_to_components(void);
-    void get_current_time_ms(void);
 
     void enable_ldss(bool);
     void start_first_solar(bool enable);
     void start_first_gen(bool enable);
     void set_first_gen_is_starting_flag(bool flag);
-    // status methods
 
+    // status methods
     int get_num_ess_avail(void);
     int get_num_solar_avail(void);
     int get_num_gen_avail(void);
@@ -175,8 +174,6 @@ public:
     float get_gen_total_rated_active_power(void);
     float get_gen_total_potential_reactive_power(void);
     float get_gen_total_nameplate_active_power(void);
-    float get_gen_total_nameplate_reactive_power(void);
-    float get_gen_total_nameplate_apparent_power(void);
     
     float get_ess_total_chargeable_power_kW(void);
     float get_ess_total_dischargeable_power_kW(void);
@@ -193,10 +190,10 @@ public:
     bool get_poi_feeder_close_permissive_state(void);
     float get_poi_gridside_frequency(void);
     float get_poi_gridside_avg_voltage(void);
+    float get_poi_power_factor();
     float get_poi_max_potential_active_power(void);
     float get_poi_min_potential_active_power(void);
 
-    char* get_sync_feeder_id(void);
     bool get_sync_feeder_status(void);
     float get_sync_feeder_gridside_frequency(void);
     float get_sync_frequency_offset(void);
@@ -268,19 +265,14 @@ protected:
     void handle_pub_alarm_or_fault_options(cJSON* cJcomp, Fims_Object* fimsComp, int varArraySize);
     void handle_pub_other_options(cJSON* cJcomp, Fims_Object* fimsComp, int varArraySize);
     void handle_get(fims_message *pmsg);
-    void handle_set(char** pfrags, int nfrags, char* replyto, char* body);
+    void handle_set(fims_message &msg);
     void handle_post(int nfrags, char* body);
     void handle_del(int nfrags, char* body);
     void send_all_asset_data(char* uri);
 
-    void set_target_soc(float);
-
     void print_component_var_map();
     void print_asset_var_map();
     bool build_configurators(void);
-
-    // Friend classes
-    friend class Site_Manager_Mock;
 };
 
 #endif /* ASSET_MANAGER_H_ */

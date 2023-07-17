@@ -7,6 +7,7 @@
 #include "Asset_Manager.h"
 
 /* add specific unit-level test headers here*/
+#include "asset_test.h"
 #include "ess_manager_test.h"
 #include "feeder_manager_test.h"
 #include "generator_manager_test.h"

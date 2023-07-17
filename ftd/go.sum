@@ -3,8 +3,9 @@ github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/flexgen-power/fims_codec v0.0.0-20230103202426-afd915dc6851 h1:UKvsSOypamWDX7ZccAFNyqp9LIYcAsEHv+9rThV2m0U=
 github.com/flexgen-power/fims_codec v0.0.0-20230103202426-afd915dc6851/go.mod h1:Sqk0pPYZh8bdDwUZ6//wG7TLIcsSjUS1ivQLhm/X5OA=
-github.com/flexgen-power/go_flexgen v0.0.0-20221102195558-e0b45330cfdc h1:3/O3Wftn9jSdxB1zqQdYbKK8+GKa2OaVu1l8UlWl3r4=
 github.com/flexgen-power/go_flexgen v0.0.0-20221102195558-e0b45330cfdc/go.mod h1:vXEESlFMgcPOj6qx/Ow5bKqknNsvyYYgHZdimp7se7w=
+github.com/flexgen-power/go_flexgen v0.0.0-20230118202037-6dba88dd3c1b h1:3QDB0fADqJPy63Z3QmwD7O4B3ChNmK+cBsytcjD22Bk=
+github.com/flexgen-power/go_flexgen v0.0.0-20230118202037-6dba88dd3c1b/go.mod h1:vXEESlFMgcPOj6qx/Ow5bKqknNsvyYYgHZdimp7se7w=
 github.com/go-ole/go-ole v1.2.6 h1:/Fpf6oFPoeFik9ty7siob0G6Ke8QvQEuVcuChpwXzpY=
 github.com/go-ole/go-ole v1.2.6/go.mod h1:pprOEPIfldk/42T2oK7lQ4v4JSDwmV0As9GaiUsvbm0=
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=

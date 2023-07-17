@@ -22,14 +22,10 @@ function build() # build.sh passes build mode as $1
     # Make sure scheduler source flies are in GO_PATH
     ln -sfn $(pwd)/src $GO_PATH/$name
 
-    # Go's embed package does not support relative directories, requiring view of the embedded file location in src/
-    mkdir -p src/versioning
-    mv GIT_* src/versioning
-
     if [ "$1" = "test" ]; then # Build test binary if in test mode
-        go test -o $build_output/$name ./src/
+        go test -ldflags "$go_linker_flags" -o $build_output/$name ./src/
     else # Otherwise test files aren't built
-        go build -o $build_output/$name ./src/
+        go build -ldflags "$go_linker_flags" -o $build_output/$name ./src/
     fi
     
     if [ "$?" -eq 0 ]; then echo "build() - $name built"; else echo "build() - $name not built"; fi

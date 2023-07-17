@@ -1,1 +1,0 @@
-export const DBI_SERVICE = 'DBIService'

@@ -32,7 +32,7 @@ static inline char* get_raw_timestamp(char* buffer, int blen)
     gettimeofday(&tv, NULL);
     struct tm local_tm;
     strftime(time_str,64,"%Y-%m-%d %T.", localtime_r(static_cast<time_t*>(&tv.tv_sec), &local_tm));
-    snprintf(buffer, blen,"%s%ld",time_str,tv.tv_usec);
+    snprintf(buffer, blen,"%s%06ld",time_str,tv.tv_usec);
     return buffer;
 }
 
@@ -43,13 +43,14 @@ int main(int argc, char** argv)
 
     char* subs = NULL;
     char* method = NULL;
+    int num_msgs_to_listen_for = -1;
     int method_len = 0;
     char  subs_array[128];
     int arg;
     bool publish_only = false;
     opterr = 0;
 
-    while ((arg = getopt (argc, argv, "u:m:")) != -1)
+    while ((arg = getopt (argc, argv, "u:m:n:")) != -1)
     {
         switch(arg)
         {
@@ -60,8 +61,11 @@ int main(int argc, char** argv)
             method = optarg;
             method_len = strlen(method); // pre-calculate method length for parsing downstream
             break;
+        case 'n':
+            num_msgs_to_listen_for = atoi(optarg);
+            break;
         case '?':
-            if(optopt == 'u' || optopt == 'm')
+            if(optopt == 'u' || optopt == 'm' || optopt == 'n')
             {
                 FPS_RELEASE_PRINT("Options -%c requires an argument\n\n", optopt);
             }
@@ -70,7 +74,8 @@ int main(int argc, char** argv)
             FPS_RELEASE_PRINT("usage: fims_listen <options> [args]\n"
                               " options:\n"
                               " -u sets the uri to subscribe to\n"
-                              " -m sets the message method type to filter\n");
+                              " -m sets the message method type to filter\n"
+                              " -n set the number of messages to collect before termination (if none provided, will listen indefinitely)\n");
             return 1;
             break;
         }
@@ -105,7 +110,7 @@ int main(int argc, char** argv)
     }
 
     char buffer[128];
-    while (running && fims_gateway.Connected())
+    while (running && fims_gateway.Connected() && num_msgs_to_listen_for != 0)
     {
         fims_message* msg = fims_gateway.Receive();
         if (msg)
@@ -123,6 +128,10 @@ Body:         %s
 Timestamp:    %s
 )",
                     msg->method, msg->uri, msg->replyto, msg->process_name, msg->username, msg->body, get_raw_timestamp(buffer, sizeof(buffer)));
+                if (num_msgs_to_listen_for > 0)
+                {
+                    num_msgs_to_listen_for--;
+                }
             }
             fims_gateway.free_message(msg);
         }

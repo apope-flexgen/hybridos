@@ -1,0 +1,12 @@
+{
+   "system":
+   {   "name":"Risen BMS",
+       "protocol": "Modbus TCP",
+       "id": "Risen BMS",
+       "ip_address": "192.168.1.136",
+       "port": 502 
+   },
+    "registers":
+     {
+    }
+}

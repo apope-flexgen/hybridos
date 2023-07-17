@@ -1,0 +1,48 @@
+
+HybridOS output
+
+Method:  pub
+Uri:     /assets/ess/summary
+ReplyTo: (null)
+Body:    {
+    "name":"ESS Summary",
+    "num_ess_available":{"value":" 4","type":"string","name":"Units Available","unit":"","scaler":1,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "num_ess_running":{"value":" 0","type":"string","name":"Units Running","unit":"","scaler":1,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "ess_total_active_power":{"value":0,"type":"number","name":"Active Power","unit":"W","scaler":1000,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "ess_total_reactive_power":{"value":0,"type":"number","name":"Reactive Power","unit":"VAR","scaler":1000,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "ess_total_apparent_power":{"value":0,"type":"number","name":"Apparent Power","unit":"VA","scaler":1000,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "ess_average_soc":{"value":0,"type":"number","name":"State of Charge","unit":"%","scaler":1,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "ess_chargeable_power":{"value":0,"type":"number","name":"Chargeable Power","unit":"W","scaler":1000,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "ess_dischargeable_power":{"value":0,"type":"number","name":"Dischargeable Power","unit":"W","scaler":1000,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "ess_chargeable_energy":{"value":0,"type":"number","name":"Chargeable Energy","unit":"Wh","scaler":1000,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "ess_dischargeable_energy":{"value":0,"type":"number","name":"Dischargeable Energy","unit":"Wh","scaler":1000,"time":false,"enabled":true,"ui_type":"status","options":[]},
+    "ess_total_alarms":{"value":0,"type":"number","name":"Alarms","unit":"","scaler":1,"time":false,"enabled":true,"ui_type":"alarm","options":[]},
+    "ess_total_faults":{"value":0,"type":"number","name":"Faults","unit":"","scaler":1,"time":false,"enabled":true,"ui_type":"fault","options":[]},
+    "running_ess_num":{"value":0,"type":"number","name":"Number units running","unit":"","scaler":1,"time":false,"enabled":true,"ui_type":"none","options":[]},
+    "available_ess_num":{"value":4,"type":"number","name":"Number units available","unit":"","scaler":1,"time":false,"enabled":true,"ui_type":"none","options":[]},
+    "grid_forming_voltage_slew":{"value":0,"type":"number","name":"Grid Forming Voltage Slew","unit":"%/s","scaler":1,"time":false,"enabled":true,"ui_type":"status","options":[]}
+    }
+
+Timestamp:   2021-01-16 12:51:56.720854
+
+Ess output
+
+Method:  pub
+Uri:     /assets/ess/summary
+ReplyTo: (null)
+Body:    {
+    "name":"Ess Controller",
+    "active_power":{"value":17,"enabled":false,"name":"Active Power","scaler":1000,"type":"number","ui_type":"status","unit":"W"},
+    "active_power_setpoint":{"value":3.0999999046325684,"enabled":false,"name":"Active Power Setpoint","scaler":1000,"type":"number","ui_type":"status","unit":"W"},
+    "alarms":{"value":0,"options":[],"enabled":true,"name":"Alarms","scaler":0,"type":"number","ui_type":"alarm","unit":""},
+    "soc":{"value":76.559135437011719,"enabled":false,"name":"State of Charge","scaler":1,"type":"number","ui_type":"status","unit":"%"},
+    "soh":{"value":0,"enabled":false,"name":"State of Health","scaler":1,"type":"number","ui_type":"status","unit":"%"},
+    "status":{"value":"Run","enabled":true,"name":"Status","scaler":0,"type":"number","ui_type":"status","unit":""},
+    "maint_mode":{"value":false,"options":[{"name":"No","return_value":false},{"name":"Yes","return_value":true}],"enabled":true,"name":"Maintenance Mode","scaler":0,"type":"enum_slider","ui_type":"control","unit":""},
+    "start":{"value":false,"options":[{"name":"On","return_value":true},{"name":"Off","return_value":false}],"enabled":false,"name":"Start","scaler":0,"type":"enum_button","ui_type":"control","unit":""},
+    "stop":{"value":false,"options":[{"name":"On","return_value":true},{"name":"Off","return_value":false}],"enabled":false,"name":"Stop","scaler":0,"type":"enum_button","ui_type":"control","unit":""},
+    "enter_standby":{"value":false,"options":[{"name":"On","return_value":true},{"name":"Off","return_value":false}],"enabled":false,"name":"Enter Standby","scaler":0,"type":"enum_button","ui_type":"control","unit":""},
+    "exit_standby":{"value":false,"options":[{"name":"On","return_value":true},{"name":"Off","return_value":false}],"enabled":false,"name":"Exit Standby","scaler":0,"type":"enum_button","ui_type":"control","unit":""},
+    "clear_faults":{"value":false,"options":[{"name":"Clear Faults","return_value":true}],"enabled":false,"name":"Clear Faults","scaler":0,"type":"enum_button","ui_type":"control","unit":""}
+    }
+Timestamp:   2021-01-16 12:59:17.510359

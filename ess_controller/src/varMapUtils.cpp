@@ -3669,6 +3669,16 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
     }
 
     cJSON* cj = cJSON_Parse(body);
+    if(cj)
+    {
+        // run the config system.
+        if (strncmp(uri,"/cfg/", strlen("/cfg/"))==0)
+        {
+            if(0)FPS_PRINT_INFO(" >>>>>> before cfile #2  uri [{}] ", uri);
+            return handleCfile(vmap, cj, method, uri, single, body, cjr, am, ai);
+        }
+        
+    }
     if(0)FPS_ERROR_PRINT("%s >> got cj %p  cj->type [%d]\n", __func__, cj, cj?cj->type:-1);
     if(cj && cj->type == cJSON_Object)
     {
@@ -3727,16 +3737,7 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
 
         }
     }
-    if(cj)
-    {
-        // run the config system.
-        if (strncmp(uri,"/cfg/", strlen("/cfg/"))==0)
-        {
-            if(0)FPS_PRINT_INFO(" >>>>>> before cfile #2  uri [{}] ", uri);
-            return handleCfile(vmap, cj, method, uri, single, body, cjr, am, ai);
-        }
-        
-    }
+    
     if (cj)
     {
         // Evaluate this at the head of the table 

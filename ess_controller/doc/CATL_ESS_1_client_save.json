@@ -1,0 +1,1262 @@
+{
+  "fileInfo": {
+    "sourceFileName": "Catl_ESS_Ref.xlsx",
+    "sourceFileCreated": "2020-07-23T05:59:21.000Z",
+    "sourceFileLastModified": "2020-08-11T18:06:59.000Z",
+    "sourceFileCreatedBy": "17576",
+    "sourceFileLastModifiedBy": "pmiller",
+    "outputFileName": "Catl_ESS_client.json",
+    "outputFileType": "client",
+    "outputFileCreated": "2020-08-12T13:00:45.553Z"
+  },
+  "system": {
+    "name": "CATL BMU",
+    "protocol": "Modbus TCP",
+    "version": "6.0 WIP",
+    "id": "catl_BMU",
+    "ip_address": "192.168.1.86",
+    "port": 506,
+    "data_bits": "Columns marked in green are REQUIRED",
+    "frequency":20
+  },
+  "registers": [
+    {
+      "type": "Holding Registers",
+      "starting_offset": 896,
+      "number_of_registers": 13,
+      "note":"EMS->BMS (write/read)",
+      "map": [
+        {
+          "id": "ems_heartbeat",
+          "offset": 896,
+          "name": "MS heartbeat"
+        },
+        {
+          "id": "ems_cmd",
+          "offset": 897,
+          "name": "MS_cmd",
+          "bit_field": true,
+          "bit_strings": [
+              "Initial",
+              "Stay Status",
+              "Power on cmd",
+              "Power off cmd"
+          ]
+        },
+        {
+          "id": "ems_status",
+          "offset": 898,
+          "name": "EMS_status"
+        },
+        {
+          "id": "ems_rtc_year",
+          "offset": 900,
+          "name": "EMS_RTC_year"
+        },
+        {
+          "id": "ems_rtc_month",
+          "offset": 901,
+          "name": "EMS_RTC_month"
+        },
+        {
+          "id": "ems_rtc_day",
+          "offset": 902,
+          "name": "EMS_RTC_day"
+        },
+        {
+          "id": "ems_rtc_hour",
+          "offset": 903,
+          "name": "EMS_RTC_hour"
+        },
+        {
+          "id": "ems_rtc_minute",
+          "offset": 904,
+          "name": "EMS_RTC_minute"
+        },
+        {
+          "id": "ems_rtc_second",
+          "offset": 905,
+          "name": "EMS_RTC_second"
+        },
+        {
+          "id": "fault_clear_cmd",
+          "offset": 908,
+          "name": "Fault_Clear_cmd"
+        }
+      ]
+    },
+    {
+      "type": "Input Registers",
+      "starting_offset": 0,
+      "number_of_registers": 44,
+      "note":"MBMU Summary messages (read)",
+      "map": [
+        {
+          "id": "mbmu_warning_1",
+          "offset": 0,
+          "name": "System warning (with degrees) Detailed in appendix Ⅰ",
+          "note1": " 000000000000011: 0=norm, 1=cell OV warn 1, 2=cell OV warn2, 3= cell OV warn3",
+          "note2": " 000000000001100: 0=norm, 1=cell UV warn 1, 2=cell UV warn2, 3= cell UV warn3",
+          "note3": " 000000000110000: 0=norm, 1=cell OT warn 1, 2=cell OT warn2, 3= cell OT warn3",
+          "note4": " 000000011000000: 0=norm, 1=cell UT warn 1, 2=cell UT warn2, 3= cell UT warn3",
+          "note5": " 000001100000000: 0=norm, 1=cell Soc warn 1, 2=cell Soc  warn2, 3= cell Soc  warn3"
+        },
+        {
+          "id": "mbmu_warning_2",
+          "offset": 1,
+          "size": 2,
+          "name": "System warning (without degrees) Detailed in appendix Ⅱ",
+          "bit_field": true,
+          "bit_strings": [
+                "Current over limit",
+                "Single Cell over voltage",
+                "Single Cell over temp",
+                "System over voltage",
+                "System under voltage",
+                "Inner Comm warn",
+                "Cell Extreme Temp warn",
+                "Cell Extreme Volt warn",
+                "Ems Hearteat Fault",
+                "Reserve 1-9",
+                "Reserve 1-10",
+                "Reserve 1-11",
+                "Reserve 1-12",
+                "Reserve 1-13",
+                "Reserve 1-14",
+                "Reserve 1-15",
+                "Reserve 2-0",
+                "Reserve 2-1",
+                "Reserve 2-2",
+                "Reserve 2-3",
+                "Reserve 2-5",
+                "Reserve 2-6",
+                "Reserve 2-7",
+                "Reserve 2-8",
+                "Reserve 2-9",
+                "SOC difference warning",
+                "Fire Fault level 2",
+                "Reserve 2-12",
+                "Reserve 2-13",
+                "Reserve 2-14",
+                "Reserve 2-15" 
+            ]
+        },
+        {
+          "id": "mbmu_status",
+          "offset": 16,
+          "name": "System status"
+        },
+        {
+          "id": "mbmu_voltage",
+          "offset": 32,
+          "scale":10,
+          "name": "System voltage"
+        },
+        {
+          "id": "mbmu_current",
+          "offset": 33,
+          "scale":10,
+          "signed":true,
+          "name": "System Current"
+        },
+        {
+          "id": "mbmu_soc",
+          "offset": 34,
+          "name": "SOC"
+        },
+        {
+          "id": "mbmu_soh",
+          "offset": 35,
+          "name": "SOH"
+        },
+        {
+          "id": "mbmu_max_cell_voltage",
+          "offset": 36,
+          "scale":1000,
+          "name": "Max cell voltage"
+        },
+        {
+          "id": "mbmu_min_cell_voltage",
+          "offset": 37,
+          "scale":1000,
+          "name": "Min cell voltage"
+        },
+        {
+          "id": "mbmu_avg_cell_voltage",
+          "offset": 38,
+          "scale":1000,
+          "name": "Avg. cell voltage"
+        },
+        {
+          "id": "mbmu_max_cell_temperature",
+          "offset": 39,
+          "note":" offset of 50 from temp",
+          "name": "Max cell temperature"
+        },
+        {
+          "id": "mbmu_min_cell_temperature",
+          "offset": 40,
+          "note":" offset of 50 from temp",
+          "name": "Min cell temperature"
+        },
+        {
+          "id": "mbmu_avg_cell_temperature",
+          "offset": 41,
+          "note":" offset of 50 from temp",
+          "name": "Avg. cell temperature"
+        },
+        {
+          "id": "mbmu_max_charge_current",
+          "offset": 42,
+          "scale":10,
+          "signed":true,         
+          "name": "Max charge current allowed"
+        },
+        {
+          "id": "mbmu_max_discharge_current",
+          "offset": 43,
+          "scale":10,
+          "signed":true,         
+          "name": "Max discharge current allowed"
+        }
+      ]
+    },
+    {
+      "type": "Input Registers",
+      "starting_offset": 768,
+      "number_of_registers": 125,
+      "note":" BMS->EMS messages(read)",
+      "map": [
+        {
+          "id": "bms_heartbeat",
+          "offset": 768,
+          "name": "BMS heartbeat"
+        },
+        {
+          "id": "bms_poweron",
+          "offset": 769,
+          "name": "BMS_poweron",
+          "enum": true,
+          "bit_strings": [
+                "Power off Ready",
+                "Power on Ready",
+                "Power on Fault",
+                "Power off Fault"
+            ]
+        },
+        {
+          "id": "bms_status",
+          "offset": 770,
+          "name": "BMS_status",
+          "enum": true,
+          "bit_strings": [
+                "Initial status",
+                "Normal status",
+                "Full Charge status",
+                "Full Discharge status",
+                "Warning status",
+                "Fault status"
+            ]
+        },
+        {
+          "id": "num_hv_subsystem",
+          "offset": 772,
+          "name": "Number of HV connected subsystem"
+        },
+        {
+          "id": "bms_charge_energy",
+          "offset": 775,
+          "scale":10,
+          "note":" should be 2 words",
+          "name": "System remain charge energy"
+        },
+        {
+          "id": "bms_discharge_energy",
+          "offset": 776,
+          "scale":10,
+          "note":" should be 2 words",
+          "name": "System remain discharge energy"
+        },
+        {
+          "id": "bms_max_discharge_allowed",
+          "offset": 783,
+          "scale":10,
+          "note":" should be 2 words",
+          "name": "Max system discharge power allowed"
+        },
+        {
+          "id": "bms_max_charge_allowed",
+          "offset": 784,
+          "scale":10,
+          "note":" should be 2 words",
+          "name": "Max system charge power allowed"
+        },
+        {
+          "id": "bms_limit_charge_hv",
+          "offset": 785,
+          "scale":10,
+          "note":" should be 2 words",
+          "name": "BMS_limit_charge_hv"
+        },
+        {
+          "id": "bms_limit_discharge_hv",
+          "offset": 786,
+          "scale":10,
+          "note":" should be 2 words",
+          "name": "BMS_limit_discharge_hv"
+        }
+      ]
+    },
+    {
+      "type": "Input Registers",
+      "starting_offset": 1024,
+      "number_of_registers": 81,
+      "note":"SMBU warning message(read)",
+      "map": [
+        {
+          "id": "sbmu1_system_warning_1",
+          "offset": 1024,
+          "name": "System warning (with degrees)"
+        },
+        {
+          "id": "sbmu1_system_warning_2",
+          "offset": 1025,
+          "size": 2,
+          "name": "System warning (without degrees)"
+        },
+        {
+          "id": "sbmu1_precharge",
+          "offset": 1040,
+          "name": "Precharge"
+        },
+        {
+          "id": "sbmu1_master_positive",
+          "offset": 1041,
+          "name": "Master positive"
+        },
+        {
+          "id": "sbmu1_master_negative",
+          "offset": 1042,
+          "name": "Master negative"
+        },
+        {
+          "id": "sbmu1_balance_status",
+          "offset": 1044,
+          "name": "Balance status"
+        },
+        {
+          "id": "sbmu1_voltage",
+          "offset": 1056,
+          "scale":10,
+          "name": "Battery Subsystem Voltage"
+        },
+        {
+          "id": "sbmu1_current",
+          "offset": 1058,
+          "scale":10,
+          "signed":true,
+          "name": "Battery Subsystem Current"
+        },
+        {
+          "id": "sbmu1_soc",
+          "offset": 1059,
+          "name": "SOC Battery system"
+        },
+        {
+          "id": "sbmu1_soh",
+          "offset": 1060,
+          "name": "SOH Battery system"
+        },
+        {
+          "id": "sbmu1_max_cell_voltage",
+          "offset": 1061,
+          "scale":1000,
+          "name": "Max single cell voltage"
+        },
+        {
+          "id": "sbmu1_min_cell_voltage",
+          "offset": 1062,
+          "scale":1000,
+          "name": "Min single cell voltage"
+        },
+        {
+          "id": "sbmu1_avg_cell_voltage",
+          "offset": 1063,
+          "scale":1000,
+          "name": "Avg. cell voltage"
+        },
+        {
+          "id": "sbmu1_max_cell_temp",
+          "offset": 1064,
+          "note":"offset 50",
+          "name": "Max single cell temperature"
+        },
+        {
+          "id": "sbmu1_min_cell_temp",
+          "offset": 1065,
+          "note":"offset 50",
+          "name": "Min single cell temperature"
+        },
+        {
+          "id": "sbmu1_avg_cell_temp",
+          "offset": 1066,
+          "note":"offset 50",
+          "name": "Avg. single cell temperature"
+        },
+        {
+          "id": "sbmu1_max_charge_current",
+          "offset": 1067,
+          "scale":10,
+          "signed":true,
+          "name": "Max allowed charge current"
+        },
+        {
+          "id": "sbmu1_max_discharge_current",
+          "offset": 1068,
+          "scale":10,
+          "signed":true,
+          "name": "Max allowed discharge current"
+        },
+        {
+          "id": "sbmu1_max_cell_voltage_positions",
+          "offset": 1072,
+          "name": "Max single cell voltage position"
+        },
+        {
+          "id": "sbmu1_min_cell_voltage_positions",
+          "offset": 1073,
+          "name": "Min single cell voltage position"
+        },
+        {
+          "id": "sbmu1_max_cell_temp_positions",
+          "offset": 1074,
+          "name": "Max single cell temperature position"
+        },
+        {
+          "id": "sbmu1_min_cell_temp_positions",
+          "offset": 1075,
+          "name": "Min single cell temperature position"
+        },
+        {
+          "id": "sbmu1_sum_cells",
+          "offset": 1079,
+          "name": "Sum of cell voltage",
+          "scale":10
+        },
+        {
+          "id": "sbmu1_tms_mode_command",
+          "offset": 1096,
+          "name": "TMS mode command by BMS",
+          "enum": true,
+          "bit_strings": [
+              "Power off",
+              "Cooling Mode",
+              "Heating Mode",
+              "Self Circulating Mode"              
+          ]
+        },
+        {
+          "id": "sbmu1_tms_temp_setting",
+          "offset": 1097,
+          "name": "TMS temperature value set by BMS"
+        },
+        {
+          "id": "sbmu1_tms_real_mode",
+          "offset": 1098,
+          "name": "TMS real mode",
+          "enum": true,
+          "bit_strings": [
+              "Power off",
+              "Cooling Mode",
+              "Heating Mode",
+              "Self Circulating Mode"              
+          ]
+        },
+        {
+          "id": "sbmu1_rack_inlet_temperature",
+          "offset": 1099,
+          "name": "Rack inlet temperature"
+        },
+        {
+          "id": "sbmu1_rack_outlet_temperature",
+          "offset": 1100,
+          "name": "Rack outlet temperature"
+        },
+        {
+          "id": "sbmu1_ambient_temp",
+          "offset": 1101,
+          "name": "Environment temperature"
+        },
+        {
+          "id": "sbmu1_tms_demand_power",
+          "offset": 1102,
+          "scale":10,
+          "name": "TMS demand power"
+        },
+        {
+          "id": "sbmu1_tms_fault_code",
+          "offset": 1103,
+          "name": "TMS fault code"
+        },
+        {
+          "id": "sbmu1_door_state",
+          "offset": 1104,
+          "name": "Door state"
+        },
+        {
+          "id": "sbmu1_fan_in_boxs",
+          "offset": 1105,
+          "name": "Fan state in control box"
+        }
+      ]
+    },
+    {
+      "type": "Input Registers",
+      "hex_starting_offset": "0X0480",
+      "starting_offset": 1152,
+      "xnumber_of_registers": 576,
+      "note":" one of theses for each CSC * each cell, we'll set it up as a simple matrix",
+      "note2":" 6 banks of 96 in each 8 X 12 arrays 1152,1248,1344,1440,1536,1632",
+      "number_of_registers": 96,
+      "map": [
+        {
+          "id": "sbms_cell_00_00_00_voltage",
+          "offset": 1152,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_01_voltage",
+          "offset": 1153,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_02_voltage",
+          "offset": 1154,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_03_voltage",
+          "offset": 1155,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_04_voltage",
+          "offset": 1156,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_05_voltage",
+          "offset": 1157,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_06_voltage",
+          "offset": 1158,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_07_voltage",
+          "offset": 1159,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_08_voltage",
+          "offset": 1160,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_09_voltage",
+          "offset": 1161,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_10_voltage",
+          "offset": 1162,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_00_11_voltage",
+          "offset": 1163,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_01_00_voltage",
+          "offset": 1164,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        }, 
+        {
+          "id": "sbms_cell_00_01_01_voltage",
+          "offset": 1165,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_01_02_voltage",
+          "offset": 1166,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+          {
+          "id": "sbms_cell_00_01_03_voltage",
+          "offset": 1167,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_01_04_voltage",
+          "offset": 1168,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_01_05_voltage",
+          "offset": 1169,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_01_06_voltage",
+          "offset": 1170,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_01_07_voltage",
+          "offset": 1171,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_01_08_voltage",
+          "offset": 1172,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_01_09_voltage",
+          "offset": 1173,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_01_10_voltage",
+          "offset": 1174,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_01_11_voltage",
+          "offset": 1175,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_02_00_voltage",
+          "offset": 1176,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_02_01_voltage",
+          "offset": 1177,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_02_02_voltage",
+          "offset": 1178,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_02_03_voltage",
+          "offset": 1179,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_02_04_voltage",
+          "offset": 1180,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_02_05_voltage",
+          "offset": 1181,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_02_06_voltage",
+          "offset": 1182,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_02_07_voltage",
+          "offset": 1183,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_02_08_voltage",
+          "offset": 1184,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_02_09_voltage",
+          "offset": 1185,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_02_10_voltage",
+          "offset": 1186,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_02_11_voltage",
+          "offset": 1187,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_03_00_voltage",
+          "offset": 1188,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_03_01_voltage",
+          "offset": 1189,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        }, 
+        {
+          "id": "sbms_cell_00_03_02_voltage",
+          "offset": 1190,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        }, 
+         {
+          "id": "sbms_cell_00_03_03_voltage",
+          "offset": 1191,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_03_04_voltage",
+          "offset": 1192,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_03_05_voltage",
+          "offset": 1193,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_03_06_voltage",
+          "offset": 1194,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_03_07_voltage",
+          "offset": 1195,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_03_08_voltage",
+          "offset": 1196,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_03_09_voltage",
+          "offset": 1197,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_03_10_voltage",
+          "offset": 1198,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_03_11_voltage",
+          "offset": 1199,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_00_voltage",
+          "offset": 1200,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_01_voltage",
+          "offset": 1201,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_02_voltage",
+          "offset": 1202,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+          {
+          "id": "sbms_cell_00_04_03_voltage",
+          "offset": 1203,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+          {
+          "id": "sbms_cell_00_04_04_voltage",
+          "offset": 1204,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_05_voltage",
+          "offset": 1205,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_06_voltage",
+          "offset": 1206,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_07_voltage",
+          "offset": 1207,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_08_voltage",
+          "offset": 1208,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_09_voltage",
+          "offset": 1209,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_10_voltage",
+          "offset": 1210,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_04_11_voltage",
+          "offset": 1211,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_05_00_voltage",
+          "offset": 1212,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_05_01_voltage",
+          "offset": 1213,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_05_02_voltage",
+          "offset": 1214,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_05_03_voltage",
+          "offset": 1215,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_05_04_voltage",
+          "offset": 1216,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_05_05_voltage",
+          "offset": 1217,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_05_06_voltage",
+          "offset": 1218,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_05_07_voltage",
+          "offset": 1219,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_05_08_voltage",
+          "offset": 1220,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_05_09_voltage",
+          "offset": 1221,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_05_10_voltage",
+          "offset": 1222,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_05_11_voltage",
+          "offset": 1223,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_06_00_voltage",
+          "offset": 1224,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_06_01_voltage",
+          "offset": 1225,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        }, 
+        {
+          "id": "sbms_cell_00_06_02_voltage",
+          "offset": 1226,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_06_03_voltage",
+          "offset": 1227,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_06_04_voltage",
+          "offset": 1228,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_06_05_voltage",
+          "offset": 1229,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_06_06_voltage",
+          "offset": 1230,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_06_07_voltage",
+          "offset": 1231,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_06_08_voltage",
+          "offset": 1232,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_06_09_voltage",
+          "offset": 1233,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_06_10_voltage",
+          "offset": 1234,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_06_11_voltage",
+          "offset": 1235,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_07_00_voltage",
+          "offset": 1236,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        }, 
+        {
+          "id": "sbms_cell_00_07_01_voltage",
+          "offset": 1237,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+         {
+          "id": "sbms_cell_00_07_02_voltage",
+          "offset": 1238,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },  
+        {
+          "id": "sbms_cell_00_07_03_voltage",
+          "offset": 1239,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_07_04_voltage",
+          "offset": 1240,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_07_05_voltage",
+          "offset": 1241,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_07_06_voltage",
+          "offset": 1242,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_07_07_voltage",
+          "offset": 1243,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_07_08_voltage",
+          "offset": 1244,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_07_09_voltage",
+          "offset": 1245,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_07_10_voltage",
+          "offset": 1246,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        },
+        {
+          "id": "sbms_cell_00_07_11_voltage",
+          "offset": 1247,
+          "size": 1,
+          "scale":1000,
+          "name": "Detail message-single cell voltage"
+        }
+
+      ]
+    },
+    {
+      "type": "Input Registers",
+      "starting_offset": 1728,
+      "xnumber_of_registers": 192,
+      "number_of_registers": 4,
+      "map": [
+        {
+          "id": "sbms_csc_01_cell_01_temperature",
+          "offset": 1728,
+          "size": 1,
+          "name": "Detail message-single cell temp"
+        },
+        {
+          "id": "sbms_csc_01_cell_02_temperature",
+          "offset": 1729,
+          "size": 1,
+          "name": "Detail message-single cell temp"
+        },
+        {
+          "id": "sbms_csc_01_cell_03_temperature",
+          "offset": 1730,
+          "size": 1,
+          "name": "Detail message-single cell temp"
+        },
+        {
+          "id": "sbms_csc_01_cell_01_temperature",
+          "offset": 1731,
+          "size": 1,
+          "name": "Detail message-single cell temp"
+        }
+      ]
+    },
+    {
+      "type": "Input Registers",
+      "starting_offset": 1920,
+      "xnumber_of_registers": 48,
+      "number_of_registers": 4,
+      "map": [
+        {
+          "id": "sbms_csc_01_cell_01_balance",
+          "offset": 1920,
+          "size": 1,
+          "name": "Detail message-balance information"
+        },
+        {
+          "id": "sbms_csc_01_cell_02_balance",
+          "offset": 1921,
+          "size": 1,
+          "name": "Detail message-balance information"
+        }
+        {
+          "id": "sbms_csc_01_cell_03_balance",
+          "offset": 1922,
+          "size": 1,
+          "name": "Detail message-balance information"
+        }
+        {
+          "id": "sbms_csc_01_cell_04_balance",
+          "offset": 1923,
+          "size": 1,
+          "name": "Detail message-balance information"
+        }
+      ]
+    }
+  ]
+}

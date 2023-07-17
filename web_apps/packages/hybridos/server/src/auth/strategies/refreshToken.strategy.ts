@@ -2,14 +2,18 @@ import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-jwt'
 import { RefreshTokenService } from '../refreshTokenService'
+import { AppEnvService } from 'src/environment/appEnv.service'
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'refresh-token') {
-    constructor(private readonly refreshTokenService: RefreshTokenService) {
+    constructor(
+        private readonly refreshTokenService: RefreshTokenService,
+        appEnvService: AppEnvService
+    ) {
         super({
             jwtFromRequest: refreshTokenService.extractRefreshTokenFromRequest,
             ignoreExpiration: false,
-            secretOrKey: 'supersecretkey',
+            secretOrKey: appEnvService.getJwtSecretKey(),
             passReqToCallback: true,
         })
     }

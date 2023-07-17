@@ -1,0 +1,46 @@
+{
+    "connection":
+    {
+        "name": "power_electronics_pcs_1",
+        "ip_address": "192.168.1.19",
+        "port": 522
+    },
+    "components": 
+    [
+        {
+            "id": "power_electronics_pcs_1",
+            "frequency": 500,
+            "offset_time": 0,
+            "xheartbeat_enabled": true,
+            "xcomponent_heartbeat_read_uri": "life_signal",
+            "xcomponent_heartbeat_write_uri": "life",
+            "xmodbus_heartbeat_timeout_ms": 1000,
+            "add_timings": true,
+            "xcomponent_heartbeat_timeout_ms": 1000,
+            "registers": 
+            [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 1000,
+                    "number_of_registers": 3,
+                    "map":
+                    [
+                        {
+                            "id": "grid_voltage_rs",
+                            "offset": 1000
+                        },
+                        {
+                            "id": "grid_voltage_st",
+                            "offset": 1001
+                        },
+                        {
+                            "id": "grid_voltage_tr",
+                            "offset": 1002
+                        }
+                    
+                    ]
+                }
+           ]
+       }
+   ]
+}

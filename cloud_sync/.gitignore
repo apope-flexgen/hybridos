@@ -17,6 +17,7 @@
 
 cloud_sync
 build/
+.test/
 
 GIT_*
 *.o

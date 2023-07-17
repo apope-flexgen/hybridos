@@ -13,7 +13,7 @@ Version:    %{_version}
 Release:    %{_release}
 Source:     %{source}.tar.gz
 BuildRoot:  %{_topdir}
-Requires:   fims, mongodb-org, mongodb-org-mongos, mongodb-org-server, mongodb-org-shell, mongodb-org-tools
+Requires:   fims, mongodb-org
 
 %description
 HybridOS Events Storage - receive events, store in database, serve to UI with filtering

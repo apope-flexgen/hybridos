@@ -1,0 +1,75 @@
+{
+    
+    "/assets/flex/summary": {
+        "name": "FlexPack Controller",
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "start": {
+            "name": "Start",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "stop": {
+            "name": "Stop",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": true
+                }
+            ]
+        }
+    }    
+}

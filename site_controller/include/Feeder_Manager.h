@@ -47,8 +47,8 @@ public:
 
     float get_poi_gridside_frequency(void);
     float get_poi_gridside_avg_voltage(void);
+    float get_poi_power_factor();
 
-    char* get_sync_feeder_id(void);
     bool get_sync_feeder_status(void);
     float get_sync_feeder_gridside_frequency(void);
     float get_sync_frequency_offset(void);
@@ -75,8 +75,6 @@ public:
 
     void process_asset_data(std::map <std::string, Fims_Object*> *asset_var_map);
     // No feeder data in update_asset_data()
-
-    void set_feeder_clear_faults(void);
 
     const char* get_poi_id(void);
     //float get_poi_potential_active_power(void);

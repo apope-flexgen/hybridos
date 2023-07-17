@@ -1,0 +1,209 @@
+{
+    "system": {
+        "name": "Flex_Plant_Controller_DNP",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "base_uri": "/sites",
+        "id": "brp_sierra",
+        "debug": 2,
+        "xip_address": "10.10.1.31",
+        "ip_address": "172.17.0.3",
+        "yip_address": "192.168.114.5",
+        "local_uri": "/local_server",
+        "port": 20000,
+        "master_address":20,
+        "station_address":21,
+        "batchSets":500,
+        "frequency": 1000
+    },
+    "registers": [
+        {
+            "type": "CROB",
+            "map": [
+                {
+                    "id": "TESTCROB_DEFAULT",
+                    "offset": 0,
+                    "name": "TEST_CROB_DEF",
+		            "notBatched":true
+                },
+                {
+                    "id": "TESTCROB_STRING",
+                    "offset": 1,
+                    "name": "TEST_CROB_STRING",
+		            "notBatched":true
+                },
+                {
+                    "id": "TESTCROB_INT",
+                    "offset": 2,
+                    "name": "TEST_CROB_INT",
+		            "notBatched":true
+                },
+                {
+                    "id": "TESTCROB_BOOL",
+                    "offset": 3,
+                    "name": "TEST_CROB_BOOL",
+		            "notBatched":true
+                },
+                {
+                    "id": "TESTCROB_BOOL_PULSE_ON",
+                    "offset": 4,
+                    "name": "TEST_CROB_BOOL_PULSE_ON",
+		            "notBatched":true
+                }
+            ]
+	},
+	{
+            "type": "AnOPF32",
+            "map": [
+                {
+                    "id": "SETPOINT",
+                    "offset": 0,
+                    "variation": "Group40Var0",
+                    "name": "SETPOINT",
+		            "notBatched":true
+
+                },
+                {
+                    "id": "SETVAL",
+                    "offset": 1,
+                    "variation": "Group40Var0",
+                    "name": "SETPOINT",
+		    "notBatched":false
+
+                },
+                {
+                    "id": "voltage",
+                    "offset": 2,
+                    "variation": "Group40Var0",
+                    "name": "voltage"
+                },
+                {
+                    "id": "current",
+                    "offset": 10,
+                    "variation": "Group40Var0",
+                    "name": "current"
+                },
+                {
+                    "id": "charge",
+                    "offset": 11,
+                    "variation": "Group40Var0",
+                    "name": "charge"
+                }
+            ]
+        },
+        {
+            "type": "analog",
+            "map": [
+                {
+                    "id": "U1_UGMW_GEN7",
+                    "offset": 0,
+                    "format": "clothed",
+                    "variation": "Group30Var2",
+                    "name": "U1 UNIT GROSS MEGAWATTS"
+                },
+                {
+                    "id": "U1_UGMV_GEN7",
+                    "offset": 1,
+                    "format": "full",
+                    "variation": "Group30Var2",
+                    "name": "U1 UNIT GROSS MEGAVARS"
+                },
+                {
+                    "id": "U1_UOLL_GENX",
+                    "offset": 2,
+                    "variation": "Group30Var2",
+                    "name": "U1 LOW OPERATION LIMIT"
+                },
+                {
+                    "id": "U1_UOHL_GENX",
+                    "offset": 3,
+                    "variation": "Group30Var2",
+                    "name": "U1 HIGH OPERATING LIMIT"
+                },
+                {
+                    "id": "U1_CTLFDBK_GENX",
+                    "offset": 4,
+                    "variation": "Group30Var2",
+                    "name": "U1 SETPOINT CONTROL FEEDBACK"
+                },
+                {
+                    "id": "GOV_DRP",
+                    "offset": 5,
+                    "variation": "Group30Var2",
+                    "name": "GOVERNOR DROOP"
+                },
+                {
+                    "id": "GOV_DB",
+                    "offset": 6,
+                    "variation": "Group30Var2",
+                    "name": "GOVERNER DEADBAND"
+                },
+                {
+                    "id": "OPER_RR",
+                    "offset": 7,
+                    "variation": "Group30Var2",
+                    "name": "OPEATIONAL RAMP RATE"
+                },
+                {
+                    "id": "NUMBER_OF_ONLINE_INVERTORS",
+                    "offset": 8,
+                    "variation": "Group30Var2",
+                    "name": "NUMBER OF ONLINE INVERTORS"
+                },
+                {
+                    "id": "SOC_GEN_MWHX",
+                    "offset": 9,
+                    "variation": "Group30Var2",
+                    "name": "STATE OF CHARGE MEGA WATT HOUR"
+                },
+                {
+                    "id": "MXENERGY_GEN_MWHX",
+                    "offset": 10,
+                    "variation": "Group30Var2",
+                    "name": "MAXIMUM ENERGY CHARGE MEGA WATT HOUR"
+                }
+            ]
+        },
+        {
+            "type": "binary",
+            "map": [
+                {
+                    "id": "52_2_LOW_SIDE_CIRCUIT_BREAKER",
+                    "offset": 0,
+                    "xevariation": "Group2Var1",
+                    "name": "52-2 LOW SIDE CIRCUIT BREAKER"
+                },
+                {
+                    "id": "U1_UNIT_LOCAL_REMOTE_CONTROL",
+                    "offset": 1,
+                    "variation": "Group2Var1",
+                    "name": "U1 UNIT LOCAL REMOTE CONTROL"
+                },
+                {
+                    "id": "U1_UNIT_AUTHORITY_SWITCH_ISO",
+                    "offset": 2,
+                    "variation": "Group2Var1",
+                    "name": "U1 UNIT AUTHORITY SWITCH (ISO)"
+                },
+                {
+                    "id": "GOV_BLOCK",
+                    "offset": 3,
+                    "variation": "Group2Var1",
+                    "name": "GOVERNOR BLOCK"
+                },
+                {
+                    "id": "BESS_IDLE",
+                    "offset": 4,
+                    "xvariation": "Group2Var1",
+                    "name": "BESS IS IDLE (NO GENERATION)"
+                },
+                {
+                    "id": "BESS_NOT_IDLE",
+                    "offset": 5,
+                    "xvariation": "Group2Var1",
+                    "name": "BESS IS NOT IDLE (IN GENERATION)"
+                }
+           ]
+        }
+    ]
+}

@@ -1,0 +1,478 @@
+SetFunc 
+The Functions process looks really good. 
+So much so that I have taken the concept a lot further.
+
+The options include:
+
+   .. Setting up a config file option attached to an assetVar that runs that function when the assetVar is "set" via a fims message.
+   .. Embedding a function in a compiled program to allow the use of local vars without adding these entries to the varsmap 
+   .. Attaching a function during run time to an assetVar. This can be changed while running 
+
+1/ Setting up via config 
+
+This config entry 
+"/assets/ess":  {
+                "start_stop":   {
+                        "value":        13000,
+                        "actions":      {
+                                "onSet":        {
+                                        "func": [{
+                                                        "amap": "ess",
+                                                        "enable":       "/assets/ess:start_enable",
+                                                        "func": "TestEssStart",
+                                                        "onErr":        "/asset/ess/controls/startErr",
+                                                        "onOK": "/asset/ess/controls/startOK"
+                                                }]
+                                }
+                        }
+                }
+        },
+
+Will run this Func in the ess_manager context
+
+int TestEssStart(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset* am)
+{
+    int reload;
+    double dval = 3000.0;
+    VarMapUtils* vmp = am->vm;
+    bool bval = false;
+    assetVar* TestEssStart      = amap["TestEssStart"];  
+    if (!TestEssStart || TestEssStart->getVal(reload)==0)
+    {
+        reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
+    }
+    
+    if(reload < 2)
+    {
+        //reload = 0;
+        amap["TestEssStart"]             = vmp->setLinkVal(vmap, aname, "/reload",    "TestEssStart",      reload);
+        amap["EssStartOK"]               = vmp->setLinkVal(vmap, aname, "/status",    "EssStartOK",        bval);
+        amap["EssStartLimit"]            = vmp->setLinkVal(vmap, aname, "/config",    "EssStartLimit",     dval);
+        amap["EssStartCmd"]              = vmp->setLinkVal(vmap, aname, "/assets",    "start_stop",       dval);
+        //amap["]->setVal(2);  // revert reload
+        if(reload == 0) // complete restart 
+        {
+            ival = 0; amap["EssStartOK"]->setVal(bval);
+        }
+    }
+    ival = 2; amap["TestEssStart"]->setVal(ival);
+    double StartCmd = amap["EssStartCmd"]->getVal(StartCmd);
+    double StartLimit = amap["EssStartLimit"]->getVal(StartLimit);
+    dval = 1.0;
+    // dont use valueChanged it resets the change currently
+    if(StartCmd > StartLimit)
+    {
+        bval = true;
+        amap["EssStartOK"]->setVal(bval);
+        
+    }
+    return 0;
+}
+When you send this message
+set /assets/ess {"start_stop":13000}
+
+All you have to do is register the function when you have the  ess asset_manager  configured.
+(This seemed to work but I think you'd have to set up ess_man->vm as well ..)
+
+
+    VarMapUtils vm;
+    vm.setFunc(vmap, "ess", "TestEssStart" , (void*) &TestEssStart);
+
+    asset_manager *ess_man = new asset_manager("ess");
+    ess_man->am = nullptr;
+    ess_man->running = 1;
+
+2/ Custom Functions 
+
+assetFunc.h assetFunc.cpp contain some functions that have local variables to reduce the clutter in the assetVar space. 
+No need to keep all the data in the open just the stuff that other processes need. 
+The assetFunc encapsulates local variables and preserves them between passes of the function. 
+You have to write a class with a real xxx.cpp file but it helps to keep the system clean.
+
+Currently we have two custom functions, one for checking incoming timestamps the other for checking heartbeats.
+
+Here is the current code for the heartbeat assetFunc.
+The "local" variables are:
+
+    int lastHeartBeat;
+    int hbInit;
+    bool bokErr; 
+    bool bokWarn;
+    bool bokOK;
+    double toErr;
+    double toWarn;
+    int totalHBErrs;
+    int totalHBWarns;
+
+I have hard coded the root "ess" assetManager in this case, there is a better way to do that.
+
+char* assetRoot;
+while (am->am)
+{
+    am = am->am;
+}
+assetRoot = am->name.c_str();
+
+
+Here is the current code.
+
+Note that it interracts with the amap space just like the function in the wakeup loop.
+
+int hbTestFunc::runFunc(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset *am)
+{
+    //double dval = 0.0;
+    int ival = 0;
+    char * cval =  (char *) "HeartBeat Init";
+    VarMapUtils* vm =am->vm;
+    int reload = 0;
+    // this loads up the errors in the asset manager
+    if (amap["CheckAssetHeartBeat"])
+    reload = amap["CheckAssetHeartBeat"]->getVal(reload); 
+
+    //if(1)FPS_ERROR_PRINT("%s >>  reload first for  %s , is  %d \n", __func__, aname, reload);
+    if (reload < 2) 
+    {
+        ival = 0;
+        //dval = 1.0;
+        //bool bval = false;
+
+        amap["CheckAssetHeartBeat"]    = vm->setLinkVal(vmap, aname,                "/reload",     "CheckAssetHeartBeat",    reload);
+        amap["HeartBeat"]              = vm->setLinkVal(vmap, aname,                 "/components", "HeartBeat",             hbInit);
+
+        amap["essHeartBeatErrors"]     = vm->setLinkVal(vmap, "ess",                 "/status",     "essHeartBeatErrors",    ival);
+        amap["essHeartBeatWarns"]      = vm->setLinkVal(vmap, "ess",                 "/status",     "essHeartBeatWarns",     ival);
+
+        if(am->am)
+        {
+            amap["amHeartBeatErrors"]  = vm->setLinkVal(vmap, am->am->name.c_str(), "/status",    "HeartBeatErrors",        ival);
+            amap["amHeartBeatWarns"]   = vm->setLinkVal(vmap, am->am->name.c_str(), "/status",    "HeartBeatWarns",         ival);
+        }
+        amap["HeartBeatErrors"]        = vm->setLinkVal(vmap, aname,                "/status",     "HeartBeatErrors",       ival);
+        amap["HeartBeatWarns"]         = vm->setLinkVal(vmap, aname,                "/status",     "HeartBeatWarns",        ival);
+        amap["HeartBeatState"]         = vm->setLinkVal(vmap, aname,                "/status",     "HeartBeatState",        cval);
+
+        if(reload == 0) // complete restart 
+        {
+            amap["HeartBeat"]     ->setVal(hbInit);
+            lastHeartBeat=hbInit;
+            amap["HeartBeatState"]->setVal(cval);
+        }
+        ival = 2; amap["CheckAssetHeartBeat"]->setVal(ival);
+    }
+
+    double tNow = am->vm->get_time_dbl();
+    int ival1 = amap["HeartBeat"]->getVal(ival1);
+    int ival2 = lastHeartBeat;//amap["lastHeartBeat"]->getVal(ival2);
+    if (ival1 == hbInit)    
+    {
+        //ival = 1; amap["CheckAssetComs"]->setVal(ival);
+        if(0)FPS_ERROR_PRINT("%s >> %s  NO HeartBeat \n", __func__, aname);
+        char* cval = (char *)"HeartBeat Init no HB yet ";
+        amap["HeartBeatState"]->setVal(cval);
+    }
+    else
+    {
+        double toVal  = amap["HeartBeat"]->getLastSetDiff(tNow);
+        //if(1)FPS_ERROR_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n", __func__, aname, lastTs?lastTs:"no last Value", Ts);
+        if(ival1 != ival2)
+        { 
+            //if(1)FPS_ERROR_PRINT("%s >>  ts  change for %s from [%s] to [%s] \n", __func__, aname, lastTs?lastTs:"no last Value", Ts);
+            lastHeartBeat = ival1;
+            char *tval;
+            asprintf(&tval," HeartBeat OK last set %2.3f warn %3.2f max %3.2f", toVal, toWarn, toErr);
+            if(tval)
+            {
+                amap["HeartBeatState"]->setVal(tval);
+                free((void *)tval);
+            }
+        }
+        else
+        {
+            double toVal  = amap["HeartBeat"]->getLastSetDiff(tNow);
+
+            if ((toVal > toErr)  && !bokErr)
+            {
+                char *tval;
+                asprintf(&tval," HeartBeat Error last set %2.3f warn %3.2f max %3.2f", toVal, toWarn, toErr);
+                if(tval)
+                {
+                    amap["HeartBeatState"]->setVal(tval);
+                    free((void *)tval);
+                }
+                int ival = 1 ; 
+                amap["HeartBeatErrors"]->addVal(ival);
+                amap["essHeartBeatErrors"]->addVal(ival);
+                if(am->am)
+                {
+                    amap["amHeartBeatErrors"]->addVal(ival);
+                }
+                bokErr = true;
+                bokOK = false;
+                bokWarn =  false;
+                totalHBErrs++;
+
+            }
+            else if ((toVal > toWarn)  && !bokWarn)
+            {
+                char *tval;
+                asprintf(&tval," HeartBeat Warning last set %2.3f warn %3.2f max %3.2f", toVal, toWarn, toErr);
+                if(tval)
+                {
+                    amap["HeartBeatState"]->setVal(tval);
+                    free((void *)tval);
+                }
+                int ival = 1; 
+                amap["HeartBeatWarns"]->addVal(ival);
+                amap["essHeartBeatWarns"]->addVal(ival);
+                if(am->am)
+                {
+                    amap["amHeartBeatWarns"]->addVal(ival);
+                }
+
+                bokWarn = true;
+                bokOK = false;
+                bokErr = false; 
+                totalHBWarns++;
+            }
+            else
+            {
+                if (!bokOK)
+                {
+                    char *tval;
+                    asprintf(&tval," HeartBeat OK last set %2.3f warn %3.2f max %3.2f", toVal, toWarn, toErr);
+                    if(tval)
+                    {
+                        amap["HeartBeatState"]->setVal(tval);
+                        free((void *)tval);
+                    }
+                    bokOK = true;
+                    bokWarn = false;
+                    bokErr = false;
+                }
+            } 
+        }          
+    }
+    return 0;
+}
+
+The setup operation is contained in one of the main loops
+
+// checks individual HeartBeat passes up warn and error count to asset Manager
+// works for any asset with HeartBeat in its /components output 
+// TODO add total warnings/ errors  with clea
+// ONCE triggered dont still count the error.
+
+int CheckAssetHeartBeat(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset *am)
+{
+    hbTestFunc* hbTest;
+    if ( !amap["CheckAssetHBFunc"] )
+    {
+        hbTestFunc* hbTest = new hbTestFunc(aname);
+        amap["CheckAssetHBFunc"] = (assetVar *)hbTest;
+        hbTest->toErr = 5.0;
+        hbTest->toWarn = 3.5;
+    }
+    hbTest = (hbTestFunc*) amap["CheckAssetHBFunc"];
+
+    // run the function with the current context
+    return hbTest->runFunc(vmap, amap, aname, p_fims, am);
+}
+
+3  at Run Time attach a func to an assetVar 
+
+The assetFunc system also opened up a real opportunity for "attaching" a real Function to an actual assetVar.
+You have to setup the operation in one of the wakeup loops (or a function called in the wakeup loop) because we have to provide the Function context from the full process. 
+
+Here is the required process context.
+
+    varsmap *vmap; // the whole system database
+    varmap *amap;    // local mappings 
+    const char* aname; // context name (ess, bms,bms_1 .. etc)
+    fims* p_fims;       // Fims handler
+    asset* ai;             // either ai or am must be set for asset instance or asset manager.
+    asset_manager* am;
+
+The fims inputs are processed as they arrive. No polling or delays. 
+If a fims input sets a value the SetVar method servicing that Fims message can immediately call a Function to process that message.
+
+The function is ONLY called when the value has changed ( Walker is debugging that at the moment).
+
+This means that when we want to send a command to the PCR unit to turn on  we have a function that runs as the PCR changes state. 
+This function can run as each status message comes in. 
+We want the unit to get to the desired state and can process the operation as it progresses.
+
+So a SetFunc is attached to the PCR fims input, the main management loop issues the command to change the PCR state. 
+The main loop. working from the time of the change state request can wait for the SetFunc process to indicate the result.
+Keep it simple like this for now.
+Here is an example of setting up a SetFunc.
+In this case each incoming PCRCmd ( linked to /components/pcr_1/pcr_1_fast_monitor:PCR_Cmd) will cause the "HandlePCRCmd" function to be run when it changes.
+
+
+
+int SetupRunPCRCmd(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset_manager *am)
+{
+
+    FPS_ERROR_PRINT(">>>>>>>>>ESS>>>>>>>>>>>%s running for ESS Manager\n",__func__);
+
+    assetFunc* RunPCRCmd;
+    VarMapUtils* vm;
+    vm = am->vm;
+    int reload = 0; 
+
+    if (!amap["SetupRunPCRCmd"] || amap["SetupRunPCRCmd"]->getVal(reload) < 2 )
+    {
+        amap["SetupRunPCRCmd"]     = vm->setLinkVal(vmap, aname, "/reload",        "SetupRunPCRCmd",     reload);
+        amap["RunPCRCmd"]          = vm->setLinkVal(vmap, aname, "/status",        "RunPCRCmd",     reload);
+        amap["PCRCmd"]             = vm->setLinkVal(vmap, aname, "/components",    "PCRCmd",     reload);
+
+        if ( reload < 1)
+        {
+            RunPCRCmd =(assetFunc *) new assetFunc(aname);
+            amap["RunPCRCmdFunc"] = (assetVar *)RunPCRCmd;
+            // this is an asset_manager function. use SetupRaiFunc for an asset instance.
+            RunPCRCmd->setupRamFunc(HandlePCRCmd,vmap, amap, aname, p_fims, am);
+            // the following causes HandlePCRCmd to be run on eery Set or Pub on PCRCmd
+            // may need to use VarMapUtils to runit
+            amap["PCRCmd"] ->SetFunc = (assetVar* )RunPCRCmd; // nasty recasting but we'll fix that later.
+            amap["PCRCmd"] ->PubFunc = (assetVar* )RunPCRCmd;
+        }
+        reload = 2;
+        amap["SetupRunPCRCmd"]->setVal(reload);
+    }
+
+    return 0;
+}
+
+And here is the HandlePCRCmd function:
+A PCRCmdRequest is issued by the main_wakeup function.
+This function runs every time the PCRCmd input changes.
+It continually monitors the input against the request. 
+
+int HandlePCRCmd(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset_manager *am)
+{
+    VarMapUtils* vm;
+    vm = am->vm;
+    int reload = 0; 
+    int ival = -1;
+    bool bval = false;
+    char *tVal=(char *) " PCR Command Init";
+    if (!amap["HandlePCRCmd"] || amap["HandlePCRCmd"]->getVal(reload) < 2 )
+    {
+        amap["HandlePCRCmd"]       = vm->setLinkVal(vmap, aname, "/reload",        "HandlePCRCmd",  reload);
+        amap["PCRCmd"]             = vm->setLinkVal(vmap, aname, "/components",    "PCRCmd",        ival);
+        amap["PCRCmdStatus"]       = vm->setLinkVal(vmap, aname, "/status",        "PCRCmdStatus",  tVal);
+        amap["PCRCmdRequest"]      = vm->setLinkVal(vmap, aname, "/status",        "PCRCmdRequest", iVal);
+        amap["PCROk"]              = vm->setLinkVal(vmap, "pcr", "/status",        "PCROk",         bval);
+        if(reload < 1)
+        {
+            // do init stuff here
+            amap["PCRCmdStatus"]->setVal(tVal); 
+            amap["PCRCmd"]->setVal(ival); 
+            amap["PCRCmdRequest"]->setVal(ival-1); 
+            amap["PCROk"]->setVal(false); 
+
+        }
+        reload = 2;
+        amap["HandlePCRCmd"]->setVal(reload);
+    }
+    char * cval; 
+    double cmdTime = vm->get_time_dbl();
+    ival = amap["PCRCmd"]->getVal(ival); 
+
+    asprintf(&cval, "%s >> Set PCRCmd Status to %d at %f",__func__, ival, cmdTime);
+    if(cval)
+    {
+        amap["PCRCmdStatus"]->setVal(cval); 
+        free((void *)cval);
+    }
+
+    // Now do stuff to handle change in PCSCmd 
+    // if we get an error set PCRError
+    // if we get to a specific state we can set PCROk
+    int ival1, ival2;
+    if(   amap["PCRCmd"]->getVal(ival1) == amap["PCRCmdRequest"]->getVal(ival2))
+    {
+        amap["PCROk"]->setVal(true); 
+    }
+    else
+    {
+        amap["PCROk"]->setVal(false); 
+    }
+    return 0;
+}
+
+The  manager wake function just needs to send the new request and monitor the status.
+
+int HandlePCR(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asset_manager *am)
+{
+    VarMapUtils* vm;
+    vm = am->vm;
+    int reload = 0; 
+    int ival = -1;
+    int ival2;
+    bool bval = false;
+    char *tVal=(char *) " PCR Handle Init";
+    if (!amap["HandlePCR"] || amap["HandlePCR]->getVal(reload) < 2 )
+    {
+        amap["HandlePCR"]          = vm->setLinkVal(vmap, aname, "/reload",        "HandlePCR",  reload);
+        amap["PCRCmd"]             = vm->setLinkVal(vmap, aname, "/components",    "PCRCmd",        ival);
+        amap["PCRCmdStatus"]       = vm->setLinkVal(vmap, aname, "/status",        "PCRCmdStatus",  tVal);
+        amap["PCRCmdRequest"]      = vm->setLinkVal(vmap, aname, "/status",        "PCRCmdRequest", iVal);
+        amap["PCROk"]              = vm->setLinkVal(vmap, "pcr", "/status",        "PCROk",         bval); 
+        amap["PCRCmdSent"]         = vm->setLinkVal(vmap, "pcr", "/status",        "PCRCmdSent",    dval);
+        amap["PCRCmdTimeout"]      = vm->setLinkVal(vmap, "pcr", "/status",        "PCRCmdTimeout", dval);
+
+        if(reload < 1)
+        {
+            // do init stuff here
+            amap["PCRCmdStatus"]->setVal(tVal); 
+            amap["PCRCmd"]->setVal(ival); 
+            amap["PCRCmdRequest"]->setVal(ival-1); 
+            amap["PCROk"]->setVal(false); 
+            dval =  1.5;
+            amap["PCRCmdTimeout"]->setVal(dval); 
+            SetupRunPCRCmd(vmap, amap, aname, p_fims, am);
+        }
+        reload = 2;
+        amap["HandlePCRCmd"]->setVal(reload);
+    }
+    char * cval; 
+    double cmdTime = vm->get_time_dbl();
+    ival = amap["PCRCmd"]->getVal(ival);
+    assetVar* PCRCmdRequest = amap["PCRCmdRequest"];
+    assetVar* PCRCmd = amap["PCRCmd"];
+    assetVar* PCROk = amap["PCROk"];
+    assetVar* PCRCmdSent = amap["PCRCmdSent"];
+    assetVar* PCRCmdTimeout = amap["PCRCmdTimeout"];
+
+    if(PCRCmdRequest->valueChanged(ival)))
+    {
+        // send this out to the component
+        vm->sendAssetVar(PCRCmdRequest, p_fims);
+        PCRCmdSent->setVal(cmdTime);
+    }
+
+    if(PCRCmdRequest->getVal(ival) != PCRCmd->getVal(ival2) && (PCRCmdSent->getLastSetDiff(cmdTime) > PCRCmdTimeout->getVal(dval)))
+    {
+        //command request timed out
+        PCROk->setVal(false);
+        asprintf(&cval, "%s >> PCR Command Failure request %d reply %d  at time %f",__func__
+                 , PCRCmdRequest->getVal(ival)
+                 , PCRCmd->getVal(ival2)
+                 , cmdTime);
+        if(cval)
+        {
+            amap["PCRCmdStatus"]->setVal(cval); 
+            free((void *)cval);
+        }
+
+    }
+
+    return 0;
+}
+
+
+
+The SetFunc can also be used to ESTOP.
+If we get an ESTOP fims input the SetFunc attached to that Variable can take direct action to process the estop with out waiting for any polling loop. 
+This was a design objective and now it looks clean and effective. 

@@ -1,0 +1,37 @@
+
+Add this inside your func  called CheckAmBmsStatus
+
+int CheckAmBmsStatus(varsmap &vmap, varmap &amap, const char* aname,
+                                         fims* p_fims, asset_manager*am)
+// declare an assetvar as normal
+amap["BmsStatusString"]      = vm->setLinkVal(vmap, aname,                "/status",
+                      "BmsStatusString",     initBmsStatus);
+
+//now link the function to fims sets on this asset var only during reload
+if (reload < 1)
+{                                           [var name]        [function]
+    vm->setAmFunc(vmap,amap,aname,p_fims,am,"BmsStatusString",CheckAmBmsStatus);
+}
+
+In this example BmsStatusString2 does not have a function attached to it.
+fims_send -m set -r /$$ -u /status/bms '{"BmsStatusString2":"valueone",
+                                          "BmsStatusString2":"valuetwo",
+                                          "BmsStatusString2":"valuethree"}'
+                                          
+result
+CheckAmBmsStatus >> BmsStatusString2 Changed from 
+                               [BmsStatus Init] to [valuethree] at 8.227
+We did not get all the transitions We only ran the function every 100mS and did not see the intermediate results.
+
+
+Now send data to the "fast" variable with the function attached
+
+fims_send -m set -r /$$ -u /status/bms '{"BmsStatusString":"valueone",
+                                          "BmsStatusString":"valuetwo",
+                                          "BmsStatusString":"valuethree"}'
+ CheckAmBmsStatus >> BmsStatusString Changed from [BmsStatus Init] to [valueone] at 14.392112
+ CheckAmBmsStatus >> BmsStatusString Changed from [valueone] to [valuetwo]       at 14.392142
+ CheckAmBmsStatus >> BmsStatusString Changed from [valuetwo] to [valuethree]     at 14.392157
+
+Note that we capture and log each transition.
+

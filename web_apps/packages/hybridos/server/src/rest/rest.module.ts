@@ -1,13 +1,15 @@
-import { Module } from '@nestjs/common'
-import { AppEnvModule } from '../environment/appEnv.module'
-import { FimsModule } from '../fims/fims.module'
-import { PermissionsModule } from '../permissions/permissions.module'
-import { RestController } from './rest.controller'
-import { RestService } from './rest.service'
+import { Module } from '@nestjs/common';
+import { AppEnvModule } from 'src/environment/appEnv.module';
+import { FimsModule } from 'src/fims/fims.module';
+import { PermissionsModule } from 'src/permissions/permissions.module';
+import { REST_SERVICE } from './interfaces/rest.interface';
+import { LegacyRestModule } from './legacy/rest.legacy.module';
+import { RestController } from './rest.controller';
+import { RestService } from './rest.service';
 
 @Module({
-    imports: [FimsModule, PermissionsModule, AppEnvModule],
-    controllers: [RestController],
-    providers: [RestService],
+  imports: [FimsModule, AppEnvModule, PermissionsModule, LegacyRestModule],
+  controllers: [RestController],
+  providers: [{ provide: REST_SERVICE, useClass: RestService }],
 })
 export class RestModule {}

@@ -1,3 +1,5 @@
+// TODO: fix lint
+/* eslint-disable max-lines */
 import {
   ThemeType, Views, createTemplate, Calendar,
 } from '@flexgen/storybook';
@@ -25,9 +27,7 @@ const CalendarGroup: React.FC = () => {
   const calendarRef = React.createRef();
 
   const { modes } = useSchedulerContext();
-  const {
-    eventsForUi, view, timezone,
-  } = useEventSchedulerContext();
+  const { eventsForUi, view, timezone } = useEventSchedulerContext();
 
   const theme = useTheme() as ThemeType;
   const colorList: { [color in ModeColors]: string } = getColorList(theme);
@@ -46,9 +46,10 @@ const CalendarGroup: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const calendarInstance = calendarRef.current?.getInstance();
-    calendarInstance.setOptions({ template: newTemplate });
+    calendarInstance?.setOptions({ template: newTemplate });
+    calendarInstance?.render();
     // TODO: fix eslint-ignore
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [calendarRef, theme]);
 
   const getModeName = (event: SchedulerEvent) => {
@@ -60,7 +61,6 @@ const CalendarGroup: React.FC = () => {
 
   useEffect(() => {
     const tempDisplayEvents: any[] = [];
-
     // eslint-disable-next-line array-callback-return
     eventsForUi.map((event: any, index: any) => {
       const modeName = getModeName(event);
@@ -71,19 +71,35 @@ const CalendarGroup: React.FC = () => {
         calendarId: event.mode,
         title: modeName,
         category:
-                    view === (views.twoWeeks as Views) || view === (views.month as Views)
-                      ? ['task']
-                      : undefined,
+          view === (views.twoWeeks as Views) || view === (views.month as Views)
+            ? ['task']
+            : undefined,
         isReadOnly: true,
         start: startTime.toDate(),
         end: endTime.toDate(),
-        recurrenceRule: (event.repeat.end_count === 1) ? '' : recurringString,
+        recurrenceRule: event.repeat.end_count === 1 ? '' : recurringString,
+        customStyle: {
+          border:
+            view === 'day' || view === 'week'
+              ? `1px solid ${theme.fgc.datePicker.color.text}`
+              : 'none',
+          maxHeight:
+            (view === 'day' || view === 'week') && event.duration <= 15
+              ? 'calc(2.08333% - 13px)'
+              : undefined,
+        },
       });
     });
     setDisplayEvents(tempDisplayEvents);
-  // TODO: fix eslint ignore
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventsForUi, view]);
+
+    if (editModalOpen && editModalEvent.id !== undefined) {
+      const currentOpenEvent = eventsForUi.find((event) => event.id === editModalEvent.id);
+      if (currentOpenEvent === undefined) setEditModalOpen(false);
+      else setEditModalEvent(currentOpenEvent);
+    }
+    // TODO: fix eslint ignore
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventsForUi, view, theme]);
 
   useEffect(() => {
     const tempDisplayModes: Mode[] = [];
@@ -101,9 +117,9 @@ const CalendarGroup: React.FC = () => {
       }
     });
     setDisplayModes(tempDisplayModes);
-  // TODO: fix eslint-ignore
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modes]);
+    // TODO: fix eslint-ignore
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modes, theme]);
 
   // rule used for recurrence - if event end_count is 1, event does not repeat
   const recurrenceRule = !(editModalEvent.repeat?.end_count === 1);

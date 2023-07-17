@@ -1,0 +1,3724 @@
+File that did not pass:      "10_2_aggregated-asset-limit/ess_real_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     ess_real_hs
+Current Register index:      0
+Last Known Register type:    Holding Registers
+Current Decode index:        0
+Last Known Decode id:        voltage_setpoint
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "10_2_automate-valgrind/ess_real_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     ess_real_hs
+Current Register index:      0
+Last Known Register type:    Holding Registers
+Current Decode index:        0
+Last Known Decode id:        voltage_setpoint
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "10_2_bluk-sched-scada/ess_real_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     ess_real_hs
+Current Register index:      0
+Last Known Register type:    Holding Registers
+Current Decode index:        0
+Last Known Decode id:        voltage_setpoint
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "10_2_calibration-capacity-test/ess_real_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     ess_real_hs
+Current Register index:      0
+Last Known Register type:    Holding Registers
+Current Decode index:        0
+Last Known Decode id:        voltage_setpoint
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "10_2_powercloud-influx-fixes/ess_real_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     ess_real_hs
+Current Register index:      0
+Last Known Register type:    Holding Registers
+Current Decode index:        0
+Last Known Decode id:        voltage_setpoint
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "9.3_release/pcs_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     pcs_running_info
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           component_heartbeat_timeout_ms
+Current Required type:       integer
+Error:                       component_heartbeat_timeout_ms (currently: 200, default: 1000) must be greater than or equal to frequency (currently: 1000)
+
+File that did not pass:      "9.3_release_final/pcs_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     pcs_running_info
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           component_heartbeat_timeout_ms
+Current Required type:       integer
+Error:                       component_heartbeat_timeout_ms (currently: 200, default: 1000) must be greater than or equal to frequency (currently: 1000)
+
+File that did not pass:      "alluvial_master/apt_generator_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_master/apt_generator_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_master/apt_master_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_master/emcp_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_master/emcp_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_master/flexgen_ess_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_master/pm-130_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_master/pm-130_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_master/sel-351-7A_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_master/sel-351-7B_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/apt_generator_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/apt_generator_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/apt_master_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/emcp_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/emcp_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/flexgen_ess_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/pm-130_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/pm-130_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/sel-351-7A_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "alluvial_twins/sel-351-7B_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/easygen_3500xt_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/easygen_3500xt_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/easygen_3500xt_3_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/emax_smart_breaker_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/flexgen_ess_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/pm_130_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/pm_130_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/sel_351_7a_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/solar_trio_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_customerdemo/solar_trio_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/easygen_3500xt_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/easygen_3500xt_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/easygen_3500xt_3_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/emax_smart_breaker_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/flexgen_ess_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/pm-130_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/pm-130_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/sel-351-7a_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/sel-351-7b_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_master/solar_trio_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/easygen_3500xt_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/easygen_3500xt_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/easygen_3500xt_3_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/emax_smart_breaker_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/flexgen_ess_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/pm_130_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/pm_130_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/sel_351_7a_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/solar_trio_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_release/solar_trio_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/easygen_3500xt_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/easygen_3500xt_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/easygen_3500xt_3_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/emax_smart_breaker_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/flexgen_ess_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/pm_130_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/pm_130_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/sel_351_7a_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/solar_trio_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "cedar_twins/solar_trio_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "clou_tx10_release/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "clou_tx10_release/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "customerdemo_master/epm9650_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/ess_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/ess_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/hybridos_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/ion_8650b_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/ion_8650b_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/met_station_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_1_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_2_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_3_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_3_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_4_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_4_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_5_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_5_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_6_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/pv_6_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/sel_735_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/sel_735_poi_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/sel_751_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_master/tracker_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/epm9650_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/ess_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/ess_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/hybridos_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/ion_8650b_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/ion_8650b_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/met_station_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_1_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_2_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_3_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_3_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_4_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_4_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_5_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_5_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_6_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/pv_6_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/sel_735_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/sel_735_poi_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/sel_751_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "customerdemo_release/tracker_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "dev/ess_real_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     ess_real_hs
+Current Register index:      0
+Last Known Register type:    Holding Registers
+Current Decode index:        0
+Last Known Decode id:        voltage_setpoint
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "ess_controller/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "ess_controller/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "feature_twins_server/pcs_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     pcs_running_info
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           component_heartbeat_timeout_ms
+Current Required type:       integer
+Error:                       component_heartbeat_timeout_ms (currently: 200, default: 1000) must be greater than or equal to frequency (currently: 1000)
+
+File that did not pass:      "kpp_faultfix/pcs_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     pcs_running_info
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           component_heartbeat_timeout_ms
+Current Required type:       integer
+Error:                       component_heartbeat_timeout_ms (currently: 200, default: 1000) must be greater than or equal to frequency (currently: 1000)
+
+File that did not pass:      "kpp_master/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "kpp_master/clou_ess_A.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_1
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "kpp_master/clou_ess_B.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_3
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "kpp_master/clou_ess_C.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_5
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "kpp_master/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "kpp_release/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "kpp_release/flexgen_ess_modbus_client_01.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     flexgen_ess_01_hs
+Current Register index:      0
+Last Known Register type:    Holding Registers
+Current Decode index:        0
+Last Known Decode id:        voltage_setpoint
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "kpp_release/sel_351.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_351
+Current Register index:      1
+Last Known Register type:    Input Registers
+Current Decode index:        0
+Last Known Decode id:        current_l1
+Current Bit String index:    0
+Current Key/Field:           offset
+Current Required type:       unsigned integer
+Error:                       offset (currently: 18446744073709551615, off_by_one: true) must be between 0 and 65535
+
+File that did not pass:      "kpp_release/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "kpp_release_config_ess/pcs_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     pcs_running_info
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           component_heartbeat_timeout_ms
+Current Required type:       integer
+Error:                       component_heartbeat_timeout_ms (currently: 200, default: 1000) must be greater than or equal to frequency (currently: 1000)
+
+File that did not pass:      "kpp_test/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "kpp_test/flexgen_ess_modbus_client_01.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     flexgen_ess_01_hs
+Current Register index:      0
+Last Known Register type:    Holding Registers
+Current Decode index:        0
+Last Known Decode id:        voltage_setpoint
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "kpp_test/sel_351_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_351
+Current Register index:      1
+Last Known Register type:    Input Registers
+Current Decode index:        0
+Last Known Decode id:        current_l1
+Current Bit String index:    0
+Current Key/Field:           offset
+Current Required type:       unsigned integer
+Error:                       offset (currently: 18446744073709551615, off_by_one: true) must be between 0 and 65535
+
+File that did not pass:      "kpp_test/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "kpp_test-twins/pcs_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     pcs_running_info
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           component_heartbeat_timeout_ms
+Current Required type:       integer
+Error:                       component_heartbeat_timeout_ms (currently: 200, default: 1000) must be greater than or equal to frequency (currently: 1000)
+
+File that did not pass:      "kpp_update-power-settings-and-amx-currents/pcs_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     pcs_running_info
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           component_heartbeat_timeout_ms
+Current Required type:       integer
+Error:                       component_heartbeat_timeout_ms (currently: 200, default: 1000) must be greater than or equal to frequency (currently: 1000)
+
+File that did not pass:      "nipsco_master/brainbox_1.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/brainbox_2.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_1.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_10.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_11.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_12.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_2.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_3.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_4.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_5.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_6.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_7.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_8.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/samsung_bms_9.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_master/sungrow_ess_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/brainbox_1.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/brainbox_2.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_1.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_10.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_11.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_12.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_2.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_3.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_4.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_5.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_6.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_7.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_8.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/samsung_bms_9.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nipsco_release/sungrow_ess_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "northfork_hotfix-metrics/flexgen_ess_modbus_client.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     flexgen_ess_01_ls
+Current Register index:      2
+Last Known Register type:    Input Registers
+Current Decode index:        0
+Last Known Decode id:        sbmu_9_alarms2
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "northfork_hotfix-metrics/sel_351_1_modbus_client.json.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "northfork_release/flexgen_ess_modbus_client.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     flexgen_ess_01_ls
+Current Register index:      2
+Last Known Register type:    Input Registers
+Current Decode index:        0
+Last Known Decode id:        sbmu_9_alarms2
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       component_heartbeat_read_uri (currently: "life_signal") was provided but could not be found in this component
+
+File that did not pass:      "northfork_release/sel_351_1_modbus_client.json.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "nremc_factory-acceptance/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "nremc_factory-acceptance/clou_2p_ess.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_1
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_factory-acceptance/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "nremc_indian_creek/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "nremc_indian_creek/clou_ess_A.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_1
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_indian_creek/clou_ess_B.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_3
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_indian_creek/clou_ess_C.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_5
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_indian_creek/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "nremc_perry/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "nremc_perry/clou_ess_A.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_1
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_perry/clou_ess_B.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_3
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_perry/clou_ess_C.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_5
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_perry/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "nremc_release/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "nremc_release/clou_ess_A.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_1
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_release/clou_ess_B.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_3
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_release/clou_ess_C.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_5
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "nremc_release/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/epm9650_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/hybridos_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/ion_8650b_1_modbus(manual).json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/ion_8650b_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/ion_8650b_1_modbus_manual.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/ion_8650b_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/met_station_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/rbi_tracker_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/samsung_bms_1_1.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/samsung_bms_1_2.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/samsung_bms_2_1.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/samsung_bms_2_2.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sel_735_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sel_735_poi_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sel_751_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_1_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_2_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_3_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_3_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_4_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_4_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_5_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_5_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_6_dc_command_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sma_pv_6_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sungrow_ess_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/sungrow_ess_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_feature_renewable-charge-only/test.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_master/sungrow_ess_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/epm9650_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/ion_8650b_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/ion_8650b_1_modbus_manual.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/ion_8650b_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/met_station_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/rbi_tracker_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/samsung_bms_1_1.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/samsung_bms_1_2.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/samsung_bms_2_1.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/samsung_bms_2_2.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sel_735_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sel_751_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sma_pv_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sma_pv_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sma_pv_3_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sma_pv_4_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sma_pv_5_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sma_pv_6_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sungrow_ess_1_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/sungrow_ess_2_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "panguitch_twins-function-integration/test.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "pioneer_master/flexgen_ess_modbus.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           connection
+Current Required type:       object
+Error:                       The JSON field referenced does not exist in this object.
+
+File that did not pass:      "sce_release/sce_catl_bms_1_modbus_client.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     catl_bms_1_info
+Current Register index:      2
+Last Known Register type:    Holding Registers
+Current Decode index:        0
+Last Known Decode id:        mbmu_tms_make_bms_stop_2_2
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "mbmu_tms_make_bms_stop_2_2" has already been mapped within this component
+
+File that did not pass:      "sierra_release/pcs_modbus_client.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     pcs_0_running_info
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           component_heartbeat_timeout_ms
+Current Required type:       integer
+Error:                       component_heartbeat_timeout_ms (currently: 200, default: 1000) must be greater than or equal to frequency (currently: 1000)
+
+File that did not pass:      "sungrow_tx10_field/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "sungrow_tx10_field/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "sungrow_tx10_field/sungrow_ess_1.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_01
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_field/sungrow_ess_2.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_02
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_field/sungrow_ess_3.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_03
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_field/sungrow_ess_4.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_04
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_pueblo_zapata/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "sungrow_tx10_pueblo_zapata/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "sungrow_tx10_pueblo_zapata/sungrow_ess_1.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_01
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_pueblo_zapata/sungrow_ess_2.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_02
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_pueblo_zapata/sungrow_ess_3.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_03
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_pueblo_zapata/sungrow_ess_4.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_04
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_release/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "sungrow_tx10_release/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "sungrow_tx10_release/sungrow_ess_1.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_01
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_release/sungrow_ess_2.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_02
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_release/sungrow_ess_3.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_03
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "sungrow_tx10_release/sungrow_ess_4.json"
+Error Location:
+
+Current Component index:     1
+Last Known Component id:     sungrow_ess_04
+Current Register index:      8
+Last Known Register type:    Input Registers
+Current Decode index:        13
+Last Known Decode id:        rack1_min_cell_volt
+Current Bit String index:    0
+Current Key/Field:           id
+Current Required type:       string
+Error:                       string (currently: "rack1_min cell_volt_pos") contains one of the forbidden characters: '{', '}', '\', '/', ' ', '"', '%'
+
+File that did not pass:      "test_fm_dashboard/apc_ups.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     apc_ups
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+
+File that did not pass:      "test_fm_dashboard/clou_ess_A.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_1
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "test_fm_dashboard/clou_ess_B.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_3
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "test_fm_dashboard/clou_ess_C.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     clou_ess_5
+Current Register index:      3
+Last Known Register type:    Input Registers
+Current Decode index:        16
+Last Known Decode id:        pcs_mode
+Current Bit String index:    0
+Current Key/Field:           
+Current Required type:       
+Error:                       decode id "pcs_mode" has already been mapped within this component
+
+File that did not pass:      "test_fm_dashboard/sel_735.json"
+Error Location:
+
+Current Component index:     0
+Last Known Component id:     sel_735
+Current Register index:      0
+Last Known Register type:    
+Current Decode index:        0
+Last Known Decode id:        
+Current Bit String index:    0
+Current Key/Field:           frequency
+Current Required type:       integer
+Error:                       frequency (currently: 0) must be greater than 0, and must be provided/overriden in each component object or inherited from the connection object
+

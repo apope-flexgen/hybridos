@@ -22,6 +22,9 @@ function build()
 
     echo "vetting $name..."
     go vet ./src/
+
+    # build fims_format_scan
+    ./cmd/fims_format_scan/build.sh $build_output/fims_format_scan
 }
 
 function postbuild()
@@ -32,11 +35,13 @@ function postbuild()
 function install()
 {
     sudo cp $build_output/$name $BIN_DIR/
+    sudo cp $build_output/fims_format_scan $BIN_DIR/
 }
 
 function uninstall()
 {
-    sudo rm -rf $BIN_DIR/ftd
+    sudo rm -rf $BIN_DIR/$name
+    sudo rm -rf $BIN_DIR/fims_format_scan
 }
 
 function test() # test.sh passes test binary as $1

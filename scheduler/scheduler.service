@@ -1,7 +1,7 @@
 [Unit]
 Description=FlexGen Scheduler - schedules charge and discharge events
-Requires=fims.service
-After=fims.service
+Requires=fims.service dbi.service
+After=fims.service dbi.service
 
 [Service]
 User=hybridos

@@ -1,0 +1,4065 @@
+{
+    "fileInfo": {
+        "sourceFileName": "PCSM_PE_Modbus_Map.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2020-12-10T15:59:55.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "pmiller",
+        "outputFileName": "pcsm_server.json",
+        "outputFileType": "server",
+        "outputFileCreated": "2020-12-10T16:18:21.908Z"
+    },
+    "system": {
+        "connection name": "PCMS",
+        "protocol": "Modbus TCP",
+        "version": "6.0 WIP",
+        "name": "hems_pcs_1",
+        "id": "hems_pcs_1",
+        "ip_address": "127.0.0.1",
+        "data_bits": "Columns marked in green are REQUIRED"
+    },
+    "registers": {
+        "holding_registers": [
+            {
+                "id": "start",
+                "offset": 43010,
+                "name": "Start",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "1 = Start",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "stop",
+                "offset": 43011,
+                "name": "Stop",
+                "web_ui_options": "1 = Stop",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "reset",
+                "offset": 43012,
+                "name": "Reset",
+                "web_ui_options": "1 = Reset",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "e_stop",
+                "offset": 43200,
+                "name": "E-Stop",
+                "web_ui_options": "1 = Estop",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "user_pw",
+                "offset": 40005,
+                "name": "User Password",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "seconds",
+                "offset": 40006,
+                "name": "seconds",
+                "unit": "Sec",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "minutes",
+                "offset": 40007,
+                "name": "Minutes",
+                "unit": "Min",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "hours",
+                "offset": 40008,
+                "name": "Hours",
+                "unit": "Hrs",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "day",
+                "offset": 40009,
+                "name": "Day",
+                "unit": "Day",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "month",
+                "offset": 40010,
+                "name": "Month",
+                "unit": "Month",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "year",
+                "offset": 40011,
+                "name": "Year",
+                "unit": "Year",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "utc",
+                "offset": 40012,
+                "name": "UTC offset",
+                "unit": "UTC",
+                "signed": true,
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vdc_low",
+                "offset": 40031,
+                "name": "Vdc Low",
+                "unit": "V",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vac_low",
+                "offset": 40032,
+                "scale": 0.1,
+                "name": "Vac Low",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vac_high",
+                "offset": 40033,
+                "scale": 0.1,
+                "name": "Vac High",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "start_delay",
+                "offset": 40036,
+                "name": "Start Delay",
+                "unit": "Sec",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "p_limit",
+                "offset": 40101,
+                "scale": 0.01,
+                "name": "P Limit",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "q_limit",
+                "offset": 40102,
+                "scale": 0.01,
+                "name": "Q Limit",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "p_q_priority",
+                "offset": 40103,
+                "name": "P / Q Priority",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=P, 1= Q",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "s_limit",
+                "offset": 40104,
+                "scale": 0.01,
+                "name": "S limit",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "p_algo_pri",
+                "offset": 40105,
+                "name": "P algorithm priority",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=min, 1=P(f) priority, 2=P(v)piority",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "lvrt_ref",
+                "offset": 40193,
+                "name": "LVRT Reference",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "ovrt_ref",
+                "offset": 40194,
+                "name": "OVRT Reference",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "night_mode_enable",
+                "offset": 40261,
+                "name": "Night Mode Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1=Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "night_mode_q_ref",
+                "offset": 40262,
+                "scale": 0.01,
+                "name": "Night Mode Q ref",
+                "signed": true,
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "night_mode_vbus_ref",
+                "offset": 40263,
+                "scale": 1,
+                "name": "Night Mode Vbus Ref",
+                "unit": "V",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "night_mode_activate",
+                "offset": 40264,
+                "name": "Night Mode Activate",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "start_grad_p_enable",
+                "offset": 40277,
+                "name": "P Start Gradient Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "start_grad_p",
+                "offset": 40278,
+                "scale": 0.1,
+                "name": "P Start Gradient",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "start_grad_q_enable",
+                "offset": 40279,
+                "name": "Q Start Gradient Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "start_grad_q",
+                "offset": 40280,
+                "scale": 0.1,
+                "name": "Q Start Gradient",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "rise_grad_p_enable",
+                "offset": 40281,
+                "name": "P Rise Gradient Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "rise_grad_p",
+                "offset": 40282,
+                "scale": 0.1,
+                "name": "P Rise Gradient",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "rise_grad_q_enable",
+                "offset": 40283,
+                "name": "Q Rise Gradient Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "rise_grad_q",
+                "offset": 40284,
+                "scale": 0.1,
+                "name": "Q Rise Gradient",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "drop_grad_p_enable",
+                "offset": 40285,
+                "name": "P Drop Gradient Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "drop_grad_p",
+                "offset": 40286,
+                "scale": 0.1,
+                "name": "P Drop Gradient",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "drop_grad_q_enable",
+                "offset": 40287,
+                "name": "Q Drop Gradient Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "drop_grad_q",
+                "offset": 40288,
+                "scale": 0.1,
+                "name": "Q Drop Gradient",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "stop_grad_p_enable",
+                "offset": 40289,
+                "name": "P Stop Gradient Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "stop_grad_p",
+                "offset": 40290,
+                "scale": 0.1,
+                "name": "P Stop Gradient",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "stop_grad_q_enable",
+                "offset": 40291,
+                "name": "Q Stop Gradient Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "stop_grad_q",
+                "offset": 40292,
+                "scale": 0.1,
+                "name": "Q Stop Gradient",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "tracker_enable",
+                "offset": 40293,
+                "name": "Trackers Enable",
+                "web_ui_display_type": "enum",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "tracker_vac_out",
+                "offset": 40294,
+                "name": "Trackers Vac Out",
+                "unit": "V",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "tracker_vac_min",
+                "offset": 40295,
+                "scale": 0.1,
+                "name": "Trackers Vac min",
+                "unit": "%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "tracker_time_start",
+                "offset": 40296,
+                "scale": 0.1,
+                "name": "Trackers Time Start",
+                "unit": "Sec",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_enable",
+                "offset": 40821,
+                "name": "V/P Enable",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_v1",
+                "offset": 40822,
+                "scale": 0.01,
+                "name": "V/P V1",
+                "unit": "%",
+                "web_ui_options": "100 to g4_10_3%",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_v2",
+                "offset": 40823,
+                "scale": 0.01,
+                "name": "V/P V2",
+                "unit": "%",
+                "web_ui_options": "G4.10.2% to 140%, G4.10.2 to 14000",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_p1",
+                "offset": 40824,
+                "scale": 0.01,
+                "name": "V/P P1",
+                "unit": "%",
+                "web_ui_options": "G4.10.5% to 100%, G4.10.5 to 10000",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_p2",
+                "offset": 40825,
+                "scale": 0.01,
+                "name": "V/P P2",
+                "unit": "%",
+                "web_ui_options": "0 to G4.10.4% , 0 to G4.10.4",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_hysteresis",
+                "offset": 40826,
+                "scale": 0.1,
+                "name": "V/P Hysteresis",
+                "unit": "%",
+                "web_ui_options": "0 to 10%, 0 to 100",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_delay_hysteresis",
+                "offset": 40828,
+                "scale": 0.1,
+                "name": "V/P Delay Hysterisis",
+                "unit": "S",
+                "web_ui_options": "0.0 to 90 Sec, 0 to 900",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_response_tiime",
+                "offset": 40829,
+                "scale": 0.1,
+                "name": "V/P Response Time",
+                "unit": "S",
+                "web_ui_options": "0.0 to 90.0s, 0 to 900",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_ref_power",
+                "offset": 40819,
+                "name": "V/P Ref Power Rel",
+                "web_ui_options": "0=rel, 1= abs",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "vp_rec_mode",
+                "offset": 40820,
+                "name": "V/P Recover Mode",
+                "web_ui_options": "0=Abs, 1= Rel",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_enable",
+                "offset": 40541,
+                "name": "SVR Enable",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_v1_threshold",
+                "offset": 40542,
+                "scale": 0.1,
+                "name": "SVR V1 Threshold",
+                "unit": "%",
+                "web_ui_options": "100.0% to G4.11.7%, 1000 to G4.11.7",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_v1_hysteresis",
+                "offset": 40544,
+                "scale": 0.1,
+                "name": "SVR V1 Hysteresis",
+                "unit": "%",
+                "web_ui_options": "0.5 to 10%, 5 to 100",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_grad_inject",
+                "offset": 40546,
+                "scale": 0.1,
+                "name": "SVR Grad Inj Q",
+                "unit": "%/S",
+                "web_ui_options": "0.1 to 200.0 %/S, 1 to 2000",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_grad_recover_q",
+                "offset": 40547,
+                "scale": 0.1,
+                "name": "SVR Grad Recover Q",
+                "unit": "%/S",
+                "web_ui_options": "0.1% to 200.0%, 1 to 2000",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_cosfi_limit",
+                "offset": 40550,
+                "scale": 0.01,
+                "name": "SVR CosFi limit",
+                "web_ui_options": "0.80 to 1.00. 80 to 100",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_v2_threshold",
+                "offset": 40543,
+                "scale": 0.1,
+                "name": "SVR V2 Threshold",
+                "unit": "%",
+                "web_ui_options": "G4.11.2% to 120%, G4.11.2 to 1200",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_v2_hysetresis",
+                "offset": 40545,
+                "scale": 0.1,
+                "name": "SVR V2 Hysteresis",
+                "unit": "%",
+                "web_ui_options": "0.5 to 10%, 5 to 100",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_grad_reduction_p",
+                "offset": 40548,
+                "scale": 0.1,
+                "name": "SVR Grad Reduction P",
+                "web_ui_options": "0.1 to 200 %/S, 1 to 2000",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "svr_grad_recover_p",
+                "offset": 40549,
+                "scale": 0.1,
+                "name": "SVR Grad Recover P",
+                "unit": "%/S",
+                "web_ui_options": "0.1% to 200.0%, 1 to 2000",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "active_bal_activate",
+                "offset": 47022,
+                "name": "Active Balancing Activate",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bank_bal_activate",
+                "offset": 47025,
+                "name": "Bank Balancing Activate",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bank_bal_reconnect_grad",
+                "offset": 47028,
+                "name": "Bank Balancing Reconnect Gradient",
+                "web_ui_options": "0.1 to 3000.0 %/s",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "cvsb_activate",
+                "offset": 47030,
+                "name": "Constant Voltage Standby Activate",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "cvsb_time_to_enter",
+                "offset": 47031,
+                "name": "Constant Voltage Standby  Time to Enter",
+                "web_ui_options": "60 to 3600 s",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "lv_enable",
+                "offset": 40301,
+                "name": "LV Protections Enable",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_three",
+                "bit_field": true,
+                "bit_strings": [
+                    "LV Slow Protection",
+                    "LV Fast Protection",
+                    "LV Fast 2 Protection",
+                    "LV Very Fast Protection",
+                    "LV Very Fast 2 Protection"
+                ]
+            },
+            {
+                "id": "lv_interpolation",
+                "offset": 40309,
+                "name": "LV Interpolation",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_slow",
+                "offset": 40302,
+                "scale": 0.1,
+                "name": "LV Slow Protection",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_delay_slow",
+                "offset": 40303,
+                "scale": 0.01,
+                "name": "LV Delay Slow Protection",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_fast",
+                "offset": 40304,
+                "scale": 0.1,
+                "name": "LV Fast Protection",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_delay_fast",
+                "offset": 40305,
+                "scale": 0.01,
+                "name": "LV Delay Fast Protection",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_fast_2",
+                "offset": 40376,
+                "scale": 0.1,
+                "name": "LV Fast Protection 2",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_delay_fast_2",
+                "offset": 40377,
+                "scale": 0.01,
+                "name": "LV Delay Fast Protection 2",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_very_fast",
+                "offset": 40306,
+                "scale": 0.1,
+                "name": "LV Very Fast Protection",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_delay_very_fast",
+                "offset": 40307,
+                "scale": 0.01,
+                "name": "LV Delay Very Fast Protection",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_very_fast_2",
+                "offset": 40378,
+                "scale": 0.1,
+                "name": "LV Very Fast Protection 2",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_delay_very_fast_2",
+                "offset": 40379,
+                "scale": 0.01,
+                "name": "LV Delay Very Fast Protection 2",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_enable",
+                "offset": 40311,
+                "name": "HV Protections Enable",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_three",
+                "bit_field": true,
+                "bit_strings": [
+                    "HV Slow Protection",
+                    "HV Fast Protection",
+                    "HV Fast 2 Protection",
+                    "HV Very Fast Protection",
+                    "HV Very Fast 2 Protection"
+                ]
+            },
+            {
+                "id": "hv_interpolation",
+                "offset": 40318,
+                "name": "HV Interpolation",
+                "web_ui_options": "0=No, 1= Yes",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_slow",
+                "offset": 40312,
+                "scale": 0.1,
+                "name": "HV Slow Protection",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_delay_slow",
+                "offset": 40313,
+                "scale": 0.01,
+                "name": "HV Delay Slow Protection",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_fast",
+                "offset": 40314,
+                "scale": 0.1,
+                "name": "HV Fast Protection",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_delay_fast",
+                "offset": 40315,
+                "scale": 0.01,
+                "name": "HV Delay Fast Protection",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_fast_2",
+                "offset": 40380,
+                "scale": 0.1,
+                "name": "HV Fast Protection 2",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_delay_fast_2",
+                "offset": 40381,
+                "scale": 0.01,
+                "name": "HV Delay Fast Protection 2",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_very_fast",
+                "offset": 40316,
+                "scale": 0.1,
+                "name": "HV Very Fast Protection",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_delay_very_fast",
+                "offset": 40317,
+                "scale": 0.01,
+                "name": "HV Delay Very Fast Protection",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_very_fast_2",
+                "offset": 40382,
+                "scale": 0.1,
+                "name": "HV Very Fast Protection 2",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_delay_very_fast_2",
+                "offset": 40383,
+                "scale": 0.01,
+                "name": "HV Delay Very Fast Protection 2",
+                "unit": "S",
+                "web_ui_options": "0.0 to 6550.0S , 0 to 65500",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_enable",
+                "offset": 40321,
+                "name": "LF Protections Enable",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_three",
+                "bit_field": true,
+                "bit_strings": [
+                    "LF Slow Protection",
+                    "LF Slow 2 Protection",
+                    "LF Fast Protection",
+                    "LF Very Fast Protection",
+                    "LF Very Fast 2 Protection"
+                ]
+            },
+            {
+                "id": "lf_slow",
+                "offset": 40322,
+                "scale": 0.1,
+                "name": "LF Slow Protection",
+                "unit": "%",
+                "web_ui_options": "0 to 100%, 10 to 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_delay_slow",
+                "offset": 40323,
+                "scale": 0.01,
+                "name": "LF Delay Slow Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_slow_2",
+                "offset": 40384,
+                "scale": 0.1,
+                "name": "LF Slow 2 Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_delay_slow_2",
+                "offset": 40385,
+                "scale": 0.01,
+                "name": "LF Delay Slow 2 Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_fast",
+                "offset": 40324,
+                "scale": 0.1,
+                "name": "LF Fast Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_delay_fast",
+                "offset": 40325,
+                "scale": 0.01,
+                "name": "LF Delay Fast Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_very_fast",
+                "offset": 40326,
+                "scale": 0.01,
+                "name": "LF Very Fast Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_delay_very_fast",
+                "offset": 40327,
+                "scale": 0.1,
+                "name": "LF Delay Very Fast Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_very_fast_2",
+                "offset": 40386,
+                "scale": 0.1,
+                "name": "LF Very Fast 2 Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lf_delay_very_fast_2",
+                "offset": 40387,
+                "scale": 0.01,
+                "name": "LF Delay Very Fast 2 Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_enable",
+                "offset": 40331,
+                "name": "HF Protections Enable",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_three",
+                "bit_field": true,
+                "bit_strings": [
+                    "HF Slow Protection",
+                    "HF Slow 2 Protection",
+                    "HF Fast Protection",
+                    "HF Very Fast Protection",
+                    "HF Very Fast 2 Protection"
+                ]
+            },
+            {
+                "id": "hf_slow",
+                "offset": 40332,
+                "scale": 0.1,
+                "name": "HF Slow Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_delay_slow",
+                "offset": 40333,
+                "scale": 0.01,
+                "name": "HF Delay Slow Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_slow_2",
+                "offset": 40388,
+                "scale": 0.1,
+                "name": "HF Slow 2 Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_delay_slow_2",
+                "offset": 40389,
+                "scale": 0.01,
+                "name": "HF Delay Slow 2 Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_fast",
+                "offset": 40334,
+                "scale": 0.1,
+                "name": "HF Fast Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_delay_fast",
+                "offset": 40335,
+                "scale": 0.01,
+                "name": "HF Delay Fast Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_very_fast",
+                "offset": 40336,
+                "scale": 0.1,
+                "name": "HF Very Fast Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_delay_very_fast",
+                "offset": 40337,
+                "scale": 0.01,
+                "name": "HF Delay Very Fast Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_very_fast_2",
+                "offset": 40390,
+                "scale": 0.1,
+                "name": "HF Very Fast 2 Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hf_delay_very_fast_2",
+                "offset": 40391,
+                "scale": 0.01,
+                "name": "HF Delay Very Fast 2 Protection",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_hf_enable",
+                "offset": 40731,
+                "name": "Enable 5.4b.1.1",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_hf_V",
+                "offset": 40732,
+                "scale": 0.1,
+                "name": "V1 = 120%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_hf_f",
+                "offset": 40733,
+                "scale": 0.01,
+                "name": "f1 = 62.00 Hz",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_hf_t",
+                "offset": 40734,
+                "scale": 0.1,
+                "name": "t1 = 1.0 s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_hf_enable",
+                "offset": 40735,
+                "name": "Enable 5.4b.2.1",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_hf_V",
+                "offset": 40736,
+                "scale": 0.1,
+                "name": "V2 = 80%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_hf_f",
+                "offset": 40737,
+                "scale": 0.01,
+                "name": "f2 = 62.00 Hz",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_hf_t",
+                "offset": 40738,
+                "scale": 0.1,
+                "name": "t2 = 1.0 s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_lf_enable",
+                "offset": 40739,
+                "name": "Enable 5.4b.3.1",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_lf_V",
+                "offset": 40740,
+                "scale": 0.1,
+                "name": "V3 = 120%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_lf_f",
+                "offset": 40741,
+                "scale": 0.01,
+                "name": "f3 = 58.00 Hz",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hv_lf_t",
+                "offset": 40742,
+                "scale": 0.1,
+                "name": "t3 = 1.0 s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_lf_enable",
+                "offset": 40473,
+                "name": "Enable 5.4b.4.1",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_lf_V",
+                "offset": 40474,
+                "scale": 0.1,
+                "name": "V4 = 80%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_lf_f",
+                "offset": 40475,
+                "scale": 0.01,
+                "name": "f4 = 58.00 Hz",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_lf_t",
+                "offset": 40476,
+                "scale": 0.1,
+                "name": "t4 = 1.0 s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "unbalance_enable",
+                "offset": 40341,
+                "name": "Unbalance Protections",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_three",
+                "bit_field": true,
+                "bit_strings": [
+                    "I unbalance",
+                    "v unbalance"
+                ]
+            },
+            {
+                "id": "unbalance_i_threshold",
+                "offset": 40342,
+                "scale": 1,
+                "name": "I unbalance",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "unbalance_i_min",
+                "offset": 40348,
+                "scale": 1,
+                "name": "I unbalance min",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "unbalance_i_delay",
+                "offset": 40343,
+                "scale": 1,
+                "name": "Delay I unbalance",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "unbalance_v_threshold",
+                "offset": 40344,
+                "scale": 1,
+                "name": "Unbalance V",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "unbalance_v_delay",
+                "offset": 40345,
+                "scale": 1,
+                "name": "Delay Unbalance V",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "antiislanding_enable",
+                "offset": 40351,
+                "name": "Anti Islanding Enable",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_three",
+                "bit_field": true,
+                "bit_strings": [
+                    "Anti Islanding off",
+                    "Anti Islanding Active",
+                    "Anti Islanding Passive",
+                    "Anti Islanding Simultaneous"
+                ]
+            },
+            {
+                "id": "igbt_temp_thres_fit",
+                "offset": 40361,
+                "scale": 1,
+                "name": "IGBTs temp thres fit=125 C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "igbt_temp_hist",
+                "offset": 40362,
+                "scale": 1,
+                "name": "IGBTs temp hist =10 C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "module_temp_thres_fit",
+                "offset": 40363,
+                "scale": 1,
+                "name": "Module temp thres fit=85 C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "module_temp_hist",
+                "offset": 40364,
+                "scale": 1,
+                "name": "Module temp thist=10 C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "internal_temp_thres_fit",
+                "offset": 40365,
+                "scale": 1,
+                "name": "Internal temp thres fit=85 C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hvpl_enable",
+                "offset": 40392,
+                "name": "HVPL Enable 5.9.1",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_three",
+                "bit_field": true,
+                "bit_strings": [
+                    "HVPL Enable 5.9.1 No",
+                    "HVPL Enable 5.9.1 Yes"
+                ]
+            },
+            {
+                "id": "hvpl_activation_level_5",
+                "offset": 40393,
+                "scale": 1,
+                "name": "HVPL Activation Level = 5%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hvpl_scale_1000",
+                "offset": 40394,
+                "scale": 1,
+                "name": "HVPL Scale = 1000",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hvpl_fault_level_0",
+                "offset": 40395,
+                "scale": 1,
+                "name": "HVPL Fault Level = 0",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hvpl_filter_hz_100_hz",
+                "offset": 40396,
+                "scale": 0.001,
+                "name": "HVPL filter = 0.100 Hz",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hvpl_delay_fault_s_0_s",
+                "offset": 40397,
+                "scale": 0.1,
+                "name": "HVPL delay fault = 2.0 s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "hvpl_start_test",
+                "offset": 40398,
+                "name": "HVPL Start Test",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_three",
+                "bit_field": true,
+                "bit_strings": [
+                    "HVPL Start Test no",
+                    "HVPL Start Test yes"
+                ]
+            },
+            {
+                "id": "hvpl_test_level_20",
+                "offset": 40399,
+                "scale": 1,
+                "name": "HVPL Test Level = -20%",
+                "signed": true,
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "earth_current",
+                "offset": 40371,
+                "scale": 0.1,
+                "name": "Earth Current",
+                "unit": "%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "high_vdc_delay",
+                "offset": 40372,
+                "scale": 1,
+                "name": "Delay High Vdc = 1 s",
+                "unit": "s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "du_overcurrent",
+                "offset": 40373,
+                "scale": 0.1,
+                "name": "DU Overcurrent = 400.0 A",
+                "unit": "A",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "mv_manometer_fault",
+                "offset": 40481,
+                "scale": 1,
+                "name": "MV manometer fault = off",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "mv_manometer_delay",
+                "offset": 40482,
+                "scale": 1,
+                "name": "MV manometer delay = 10 s",
+                "unit": "s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_manometer_fault",
+                "offset": 40483,
+                "scale": 1,
+                "name": "LV manometer fault = off",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "lv_manometer_delay",
+                "offset": 40484,
+                "scale": 1,
+                "name": "LV manometer delay = 10 s",
+                "unit": "s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "display_baudrate",
+                "offset": 40401,
+                "name": "Display Baudrate = 115200",
+                "unit": "bps",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "modbus_address",
+                "offset": 40402,
+                "name": "Modbus Address=150",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "modbus_baudrate",
+                "offset": 40403,
+                "name": "Modbus Baudrate=19200 bps",
+                "unit": "bps",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "modbus_parity",
+                "offset": 40404,
+                "name": "Modbus Parity",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "modbus_stop_bits",
+                "offset": 40405,
+                "name": "Modbus Stop bits",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "modbus_master",
+                "offset": 40406,
+                "name": "Modbus Master",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "automatic_ip",
+                "offset": 40411,
+                "name": "Automatic IP",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_ip_a",
+                "offset": 40412,
+                "name": "Assigned IP A",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_ip_b",
+                "offset": 40413,
+                "name": "Assigned IP B",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_ip_c",
+                "offset": 40414,
+                "name": "Assigned IP C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_ip_d",
+                "offset": 40415,
+                "name": "Assigned IP D",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_subnet_a",
+                "offset": 40416,
+                "name": "Assigned Subnet A",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_subnet_b",
+                "offset": 40417,
+                "name": "Assigned Subnet B",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_subnet_c",
+                "offset": 40418,
+                "name": "Assigned Subnet C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_subnet_d",
+                "offset": 40419,
+                "name": "Assigned Subnet D",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_gateway_a",
+                "offset": 40420,
+                "name": "Assigned Gateway A",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_gateway_b",
+                "offset": 40421,
+                "name": "Assigned Gateway B",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_gateway_c",
+                "offset": 40422,
+                "name": "Assigned Gateway C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "assigned_gateway_d",
+                "offset": 40423,
+                "name": "Assigned Gateway D",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ip_address_a",
+                "offset": 40424,
+                "name": "IP address A",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ip_address_b",
+                "offset": 40425,
+                "name": "IP address B",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ip_address_c",
+                "offset": 40426,
+                "name": "IP address C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ip_address_d",
+                "offset": 40427,
+                "name": "IP address D",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "subnet_a",
+                "offset": 40428,
+                "name": "Subnet A",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "subnet_b",
+                "offset": 40429,
+                "name": "Subnet B",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "subnet_c",
+                "offset": 40430,
+                "name": "Subnet C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "subnet_d",
+                "offset": 40431,
+                "name": "Subnet D",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "gateway_a",
+                "offset": 40432,
+                "name": "Gateway A",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "gateway_b",
+                "offset": 40433,
+                "name": "Gateway B",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "gateway_c",
+                "offset": 40434,
+                "name": "Gateway C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "gateway_d",
+                "offset": 40435,
+                "name": "Gateway D",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "mac_a",
+                "offset": 40436,
+                "name": "Mac A",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "mac_b",
+                "offset": 40437,
+                "name": "Mac B",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "mac_c",
+                "offset": 40438,
+                "name": "Mac C",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "mac_d",
+                "offset": 40439,
+                "name": "Mac D",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "mac_e",
+                "offset": 40440,
+                "name": "Mac E",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "mac_f",
+                "offset": 40441,
+                "name": "Mac F",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "reset_refs_time_s",
+                "offset": 44253,
+                "scale": 1,
+                "name": "Reset refs time = 4s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "comms_fault_time_s_s",
+                "offset": 44254,
+                "scale": 0.1,
+                "name": "Comms Fault time = 60 s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "home_p_ref_0_0",
+                "offset": 44255,
+                "scale": 0.01,
+                "name": "Home P ref  = 0.0%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "home_q_ref_0_0",
+                "offset": 44256,
+                "scale": 0.01,
+                "name": "Home Q ref = 0.0%",
+                "signed": true,
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "auto_reset_enable",
+                "offset": 40501,
+                "name": "Auto Reset Enable",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "number_of_retries",
+                "offset": 40502,
+                "scale": 1,
+                "name": "Number of Retries",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "delay_between_retries_s_s",
+                "offset": 40503,
+                "scale": 0.1,
+                "name": "Delay between retries = 30 s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "reset_retries_timeout",
+                "offset": 40504,
+                "scale": 1,
+                "name": "Reset Retries timeout",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "all_faults_enabled",
+                "offset": 40505,
+                "name": "All Faults enabled",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_number",
+                "offset": 40506,
+                "name": "Faults allowed number = 0",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_1",
+                "offset": 40507,
+                "name": "Faults allowed 1 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_2",
+                "offset": 40508,
+                "name": "Faults allowed 2 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_3",
+                "offset": 40509,
+                "name": "Faults allowed 3 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_4",
+                "offset": 40510,
+                "name": "Faults allowed 4 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_5",
+                "offset": 40511,
+                "name": "Faults allowed 5 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_6",
+                "offset": 40512,
+                "name": "Faults allowed 6 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_7",
+                "offset": 40513,
+                "name": "Faults allowed 7 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_8",
+                "offset": 40514,
+                "name": "Faults allowed 8 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_9",
+                "offset": 40515,
+                "name": "Faults allowed 9 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_allowed_10",
+                "offset": 40516,
+                "name": "Faults allowed 10 = No Faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_number",
+                "offset": 40517,
+                "name": "Faults exception number = 0",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_1",
+                "offset": 40518,
+                "name": "Faults exception 1 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_2",
+                "offset": 40519,
+                "name": "Faults exception 2 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_3",
+                "offset": 40520,
+                "name": "Faults exception 3 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_4",
+                "offset": 40521,
+                "name": "Faults exception 4 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_5",
+                "offset": 40522,
+                "name": "Faults exception 5 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_6",
+                "offset": 40523,
+                "name": "Faults exception 6 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_7",
+                "offset": 40524,
+                "name": "Faults exception 7 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_8",
+                "offset": 40525,
+                "name": "Faults exception 8 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_9",
+                "offset": 40526,
+                "name": "Faults exception 9 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "faults_exception_10",
+                "offset": 40527,
+                "name": "Faults exception 10 = No faults",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "p_control_mode",
+                "offset": 40551,
+                "name": "P control Mode",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_one",
+                "bit_field": true,
+                "bit_strings": [
+                    "P control Mode = I",
+                    "P control mode = P"
+                ]
+            },
+            {
+                "id": "q_control_mode",
+                "offset": 40552,
+                "name": "Q control Mode = Q",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_one",
+                "bit_field": true,
+                "bit_strings": [
+                    "Q control Mode = Cos phi",
+                    "Q control Mode = Q",
+                    "Q control Mode = I",
+                    "Q control mode = V/Q"
+                ]
+            },
+            {
+                "id": "p_p_reference",
+                "offset": 40553,
+                "scale": 0.01,
+                "name": "P reference = 100%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "p_id_reference",
+                "offset": 40554,
+                "scale": 0.01,
+                "name": "Id reference = 100%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "q_cosphi_reference",
+                "offset": 40556,
+                "scale": 0.001,
+                "name": "Cos phi reference = 1.000",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "q_iq_reference",
+                "offset": 40557,
+                "scale": 0.01,
+                "name": "Iq reference = 0",
+                "unit": "%",
+                "signed": true,
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "q_q_reference",
+                "offset": 40558,
+                "scale": 0.01,
+                "name": "Q reference = 0.0%",
+                "unit": "%",
+                "signed": true,
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "q_v_reference",
+                "offset": 40576,
+                "scale": 0.01,
+                "name": "Vref = 100.00%",
+                "unit": "%",
+                "signed": true,
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "excitation",
+                "offset": 40559,
+                "name": "Excitation",
+                "bitfield_type": "bitfield",
+                "uri": "/components/component_one",
+                "bit_field": true,
+                "bit_strings": [
+                    "Excitation = Capacitive",
+                    "Excitation = Inductive"
+                ]
+            },
+            {
+                "id": "vq_v1",
+                "offset": 40577,
+                "scale": 0.01,
+                "name": "V1=90%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_v2",
+                "offset": 40578,
+                "scale": 0.01,
+                "name": "V2 = 92.00%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_v3",
+                "offset": 40579,
+                "scale": 0.01,
+                "name": "V3 = 108.00%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_v4",
+                "offset": 40580,
+                "scale": 0.01,
+                "name": "V4 =  110.00%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_q1",
+                "offset": 40581,
+                "scale": 0.01,
+                "name": "Q1 = 48.43%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_q2",
+                "offset": 40582,
+                "scale": 0.01,
+                "name": "Q2 = 0.00%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_q3",
+                "offset": 40583,
+                "scale": 0.01,
+                "name": "Q3 = 0.00%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_q4",
+                "offset": 40584,
+                "scale": 0.01,
+                "name": "Q4 = 48.43%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_hysterisis",
+                "offset": 40585,
+                "scale": 0.1,
+                "name": "V hysterisis = 1.0%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_p_activation",
+                "offset": 40586,
+                "scale": 0.1,
+                "name": "P activation = 20%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_p_deactivation",
+                "offset": 40587,
+                "scale": 0.1,
+                "name": "P deactivation = 5.0%",
+                "unit": "%",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_response_delay",
+                "offset": 40588,
+                "scale": 0.1,
+                "name": "Response Tdelay = 0.3 s",
+                "unit": "s",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vq_response_time",
+                "offset": 40589,
+                "scale": 0.1,
+                "name": "Response Time = 5.0 s",
+                "unit": "s",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_protection_type_1",
+                "offset": 47151,
+                "name": "Leak Protection Type",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_imi_activation_1",
+                "offset": 47152,
+                "name": "IMI Activation",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_fault_threshold_1",
+                "offset": 47153,
+                "scale": 0.1,
+                "name": "Fault Threshold = 5.0kOhms",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_fault_recover_threshold_1",
+                "offset": 47154,
+                "scale": 0.0005,
+                "name": "Fault Recover Threshold = 115%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_warning_theshold_1",
+                "offset": 47155,
+                "scale": 0.1,
+                "name": "Warning Theshold=50.0kOhms",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_self_test_exec_period_1",
+                "offset": 47158,
+                "scale": 1,
+                "name": "Self Test exec per = 1440",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_self_test_manual_command_1",
+                "offset": 47159,
+                "scale": 1,
+                "name": "Self Test Manual Command",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_protection_type_2",
+                "offset": 47161,
+                "name": "Leak Protection Type",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_imi_activation_2",
+                "offset": 47162,
+                "name": "IMI Activation",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_fault_threshold_2",
+                "offset": 47163,
+                "scale": 0.1,
+                "name": "Fault Threshold = 5.0kOhms",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_fault_recover_threshold_2",
+                "offset": 47164,
+                "scale": 0.0005,
+                "name": "Fault Recover Threshold = 115%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_warning_theshold_2",
+                "offset": 47165,
+                "scale": 0.1,
+                "name": "Warning Theshold=50.0kOhms",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_self_test_exec_period_2",
+                "offset": 47168,
+                "scale": 1,
+                "name": "Self Test exec per = 1440",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_self_test_manual_command_2",
+                "offset": 47169,
+                "scale": 1,
+                "name": "Self Test Manual Command",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_protection_type_3",
+                "offset": 47171,
+                "name": "Leak Protection Type",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_imi_activation_3",
+                "offset": 47172,
+                "name": "IMI Activation",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_fault_threshold_3",
+                "offset": 47173,
+                "scale": 0.1,
+                "name": "Fault Threshold = 5.0kOhms",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_fault_recover_threshold_3",
+                "offset": 47174,
+                "scale": 0.0005,
+                "name": "Fault Recover Threshold = 115%",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_warning_theshold_3",
+                "offset": 47175,
+                "scale": 0.1,
+                "name": "Warning Theshold=50.0kOhms",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_self_test_exec_period_3",
+                "offset": 47178,
+                "scale": 1,
+                "name": "Self Test exec per = 1440",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "leak_self_test_manual_command_3",
+                "offset": 47179,
+                "scale": 1,
+                "name": "Self Test Manual Command",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "du_type",
+                "offset": 40650,
+                "scale": 1,
+                "name": "Du Type = HEM",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "working_mode",
+                "offset": 40651,
+                "scale": 1,
+                "name": "Working Mode = GFDI + IMI",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "enabled_nec",
+                "offset": 40649,
+                "scale": 1,
+                "name": "Enabled NEC = NEC 2017",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "battery_module_model",
+                "offset": 47051,
+                "scale": 1,
+                "name": "Battery Module Model",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "bms_banks_enabled",
+                "offset": 47052,
+                "scale": 1,
+                "name": "BMS Banks Enabled",
+                "uri": "/components/component_three"
+            }
+        ],
+        "input_registers": [
+            {
+                "id": "access",
+                "offset": 40003,
+                "name": "Access Code",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "user",
+                "offset": 40004,
+                "name": "User",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "grid_voltage_rs",
+                "offset": 41001,
+                "scale": 0.1,
+                "name": "Grid voltage RS",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "grid_voltage_st",
+                "offset": 41002,
+                "scale": 0.1,
+                "name": "Grid voltage ST",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "grid_voltage_tr",
+                "offset": 41003,
+                "scale": 0.1,
+                "name": "Grid voltage TR",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "grid_current_1",
+                "offset": 41004,
+                "scale": 0.1,
+                "name": "Grid current I1",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "grid_current_2",
+                "offset": 41005,
+                "scale": 0.1,
+                "name": "Grid current I2",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "grid_current_3",
+                "offset": 41006,
+                "scale": 0.1,
+                "name": "Grid current I3",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "active_power",
+                "offset": 41008,
+                "name": "P",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "reactive_power",
+                "offset": 41009,
+                "name": "Q",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "apparent_power",
+                "offset": 41010,
+                "name": "S",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "cosphi",
+                "offset": 41011,
+                "scale": 0.001,
+                "name": "Cos phi",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "grid_frequency",
+                "offset": 41012,
+                "scale": 0.01,
+                "name": "Grid frequency",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "poi_v_est",
+                "offset": 41014,
+                "name": "POI V estimated",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vdc_bus_1",
+                "offset": 47401,
+                "name": "DC Voltage Bus 1",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vdc_bus_2",
+                "offset": 47402,
+                "name": "DC Voltage Bus 2",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vdc_bus_3",
+                "offset": 47403,
+                "name": "DC Voltage Bus 3",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "vdc_last_linp",
+                "offset": 41053,
+                "name": "DC voltage last linp",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "bess_1_v",
+                "offset": 47404,
+                "scale": 0.1,
+                "name": "BESS 1 voltage bus",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "bess_2_v",
+                "offset": 47405,
+                "scale": 0.1,
+                "name": "BESS 2 voltage bus",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "bess_3_v",
+                "offset": 47406,
+                "scale": 0.1,
+                "name": "BESS 3 voltage bus",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "dc_p_input",
+                "offset": 41061,
+                "name": "DC input power",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "bess_1_p_input",
+                "offset": 47407,
+                "name": "BESS1 DC input power",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "bess_2_p_input",
+                "offset": 47408,
+                "name": "BESS2 DC input power",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "bess_3_p_input",
+                "offset": 47409,
+                "name": "BESS3 DC input power",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "dc_total_i_input",
+                "offset": 41062,
+                "name": "DC input current total",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "dc_1_i_input",
+                "offset": 47410,
+                "name": "DC input current 1",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "dc_2_i_input",
+                "offset": 47411,
+                "name": "DC input current 2",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "dc_3_i_input",
+                "offset": 47412,
+                "name": "DC input current 3",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "bess_1_idcref",
+                "offset": 47413,
+                "name": "Ref current DC BESS1",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "bess_2_idcref",
+                "offset": 47414,
+                "name": "Ref current DC BESS2",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "bess_3_idcref",
+                "offset": 47415,
+                "name": "Ref current DC BESS3",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_status_1",
+                "offset": 41103,
+                "name": "Insulation Status",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_resistor_msb_1",
+                "offset": 41104,
+                "name": "Insulation Resistor MSB",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_resistor_lsb_1",
+                "offset": 41105,
+                "name": "Resistor LSB",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_measurement_started_time_1",
+                "offset": 41106,
+                "name": "Insulation Measurement started time",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_self_test_started_time_1",
+                "offset": 41107,
+                "name": "Insulation Self-test started time",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_self_test_exec_countdown_1",
+                "offset": 41108,
+                "name": "Insulation Self-test exec countdown",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_status_update_1",
+                "offset": 41109,
+                "name": "Insulation Status update",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_status_2",
+                "offset": 47483,
+                "name": "Insulation Status",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_resistor_msb_2",
+                "offset": 47484,
+                "name": "Insulation Resistor MSB",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_resistor_lsb_2",
+                "offset": 47485,
+                "name": "Resistor LSB",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_measurement_started_time_2",
+                "offset": 47486,
+                "name": "Insulation Measurement started time",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_self_test_started_time_2",
+                "offset": 47487,
+                "name": "Insulation Self-test started time",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_self_test_exec_countdown_2",
+                "offset": 47488,
+                "name": "Insulation Self-test exec countdown",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_status_update_2",
+                "offset": 47489,
+                "name": "Insulation Status update",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_status_3",
+                "offset": 47492,
+                "name": "Insulation Status",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_resistor_msb_3",
+                "offset": 47493,
+                "name": "Insulation Resistor MSB",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_resistor_lsb_3",
+                "offset": 47494,
+                "name": "Resistor LSB",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_measurement_started_time_3",
+                "offset": 47495,
+                "name": "Insulation Measurement started time",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_self_test_started_time_3",
+                "offset": 47496,
+                "name": "Insulation Self-test started time",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_self_test_exec_countdown_3",
+                "offset": 47497,
+                "name": "Insulation Self-test exec countdown",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "insulation_status_update_3",
+                "offset": 47498,
+                "name": "Insulation Status update",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "current_fault",
+                "offset": 41121,
+                "name": "Current fault",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "current_fault_module",
+                "offset": 41131,
+                "name": "Current fault module",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "current_warning",
+                "offset": 41122,
+                "name": "Current warning",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "current_status",
+                "offset": 41123,
+                "name": "Current status",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "internal_temperature",
+                "offset": 41124,
+                "name": "Internal temperature",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "max_igbts_temperature",
+                "offset": 41125,
+                "name": "Max IGBTs temperature",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "max_modules_temperature",
+                "offset": 41126,
+                "name": "Max modules temperature",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "internal_input_status",
+                "offset": 41127,
+                "name": "Internal input status",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "internal_output_status",
+                "offset": 41128,
+                "name": "Internal output status",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "ac_module_admission_temperature",
+                "offset": 41129,
+                "scale": 0.1,
+                "name": "AC module admission temperature",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "current_normative",
+                "offset": 41130,
+                "name": "Current normative",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "internal_humidity",
+                "offset": 41132,
+                "name": "Internal humidity",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "lv_manometer",
+                "offset": 41133,
+                "name": "LV manometer",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "power_source_1",
+                "offset": 41135,
+                "scale": 0.01,
+                "name": "Power source 1",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "power_source_2",
+                "offset": 41136,
+                "scale": 0.01,
+                "name": "Power source 2",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "p_limit_inst",
+                "offset": 41141,
+                "scale": 0.0001,
+                "name": "P limit inst",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "q_limit_inst",
+                "offset": 41142,
+                "scale": 0.0001,
+                "name": "Q limit inst",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "start_conditions_all",
+                "offset": 41151,
+                "name": "Start conditions all",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "start_conditions_v",
+                "offset": 41152,
+                "name": "Start conditions V",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "start_conditions_f",
+                "offset": 41153,
+                "name": "Start conditions f",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "start_conditions_vdc",
+                "offset": 41154,
+                "name": "Start conditions Vdc",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "start_conditions_p",
+                "offset": 41156,
+                "name": "Start conditions P",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "start_conditions_soc_no",
+                "offset": 41157,
+                "name": "Start conditions SOC = No",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "inverter_type",
+                "offset": 41183,
+                "name": "Inverter type",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "nominal_ac_voltage",
+                "offset": 41161,
+                "name": "Nominal AC voltage",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "nominal_s",
+                "offset": 41165,
+                "scale": 0.01,
+                "name": "Nominal S",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "number_of_modules",
+                "offset": 41166,
+                "name": "Number of modules",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "number_of_bus",
+                "offset": 41170,
+                "name": "Number of BUS = 2",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "number_of_mpps",
+                "offset": 41167,
+                "name": "Number of MPPs",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "nominal_bus_voltage",
+                "offset": 41163,
+                "name": "Nominal bus voltage",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "max_ac_current",
+                "offset": 41162,
+                "name": "Max AC current",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "max_dc_current",
+                "offset": 41164,
+                "name": "Max DC current",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "inductive_i_limit",
+                "offset": 41184,
+                "name": "Inductive I limit",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "capacitive_i_limit",
+                "offset": 41185,
+                "name": "Capacitive I limit",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "max_p_limit",
+                "offset": 41186,
+                "scale": 0.01,
+                "name": "Max P limit",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "max_q_limit",
+                "offset": 41187,
+                "scale": 0.01,
+                "name": "Max Q limit",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "max_s_limit",
+                "offset": 41188,
+                "scale": 0.01,
+                "name": "Max S limit",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "r_mohm",
+                "offset": 41146,
+                "scale": 0.01,
+                "name": "R (mOhm)",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "l_uh",
+                "offset": 41147,
+                "name": "L (uH)",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "c_uf",
+                "offset": 41148,
+                "scale": 0.01,
+                "name": "C (uF)",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "lc_uh",
+                "offset": 41149,
+                "scale": 0.01,
+                "name": "Lc (uH)",
+                "uri": "/components/component_one"
+            },
+            {
+                "id": "select_module",
+                "offset": 41201,
+                "name": "Select module",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "daily_energy_msb",
+                "offset": 41202,
+                "name": "Daily energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "daily_energy_lsb",
+                "offset": 41203,
+                "name": "Daily energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "yesterday_energy_msb",
+                "offset": 41204,
+                "name": "Yesterday energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "yesterday_energy_lsb",
+                "offset": 41205,
+                "name": "Yesterday energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "current_month_energy_msb",
+                "offset": 41206,
+                "name": "Current month energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "current_month_energy_lsb",
+                "offset": 41207,
+                "name": "Current month energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "last_month_energy_msb",
+                "offset": 41208,
+                "name": "Last month energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "last_month_energy_lsb",
+                "offset": 41209,
+                "name": "Last month energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "total_energy_msb",
+                "offset": 41210,
+                "name": "Total energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "total_energy_lsb",
+                "offset": 41211,
+                "name": "Total energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "consum_daily_energy_msb",
+                "offset": 41231,
+                "name": "Consum. daily energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "consum_daily_energy_lsb",
+                "offset": 41232,
+                "name": "Consum. daily energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "consum_total_energy_msb",
+                "offset": 41233,
+                "name": "Consum. total energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "consum_total_energy_lsb",
+                "offset": 41234,
+                "name": "Consum. total energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "select_module_reactive_energy",
+                "offset": 41212,
+                "name": "Select module reactive energy",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "daily_reactive_energy_msb",
+                "offset": 41213,
+                "name": "Daily reactive energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "daily_reactive_energy_lsb",
+                "offset": 41214,
+                "name": "Daily reactive energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "yesterday_reactive_energy_msb",
+                "offset": 41215,
+                "name": "Yesterday reactive energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "yesterday_reactive_energy_lsb",
+                "offset": 41216,
+                "name": "Yesterday reactive energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "current_month_reactive_energy_msb",
+                "offset": 41217,
+                "name": "Current month reactive energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "current_month_reactive_energy_lsb",
+                "offset": 41218,
+                "name": "Current month reactive energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "last_month_reactive_energy_msb",
+                "offset": 41219,
+                "name": "Last month reactive energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "last_month_reactive_energy_lsb",
+                "offset": 41220,
+                "name": "Last month reactive energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "total_reactive_energy_msb",
+                "offset": 41221,
+                "name": "Total reactive energy MSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "total_reactive_energy_lsb",
+                "offset": 41222,
+                "name": "Total reactive energy LSB",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "total_run_time_years",
+                "offset": 41223,
+                "name": "Total run time years",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "total_run_time_days",
+                "offset": 41224,
+                "name": "Total run time days",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "total_run_time_hours",
+                "offset": 41225,
+                "name": "Total run time hours",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "partial_run_time_years",
+                "offset": 41226,
+                "name": "Partial run time years",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "partial_run_time_days",
+                "offset": 41227,
+                "name": "Partial run time days",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "partial_run_time_hours",
+                "offset": 41228,
+                "name": "Partial run time hours",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "total_grid_connections",
+                "offset": 41229,
+                "name": "Total number of grid connections",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "partial_grid_connections",
+                "offset": 41230,
+                "name": "Partial number of grid connections",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "last_fault",
+                "offset": 41251,
+                "name": "Last fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "last_fault_date",
+                "offset": 41252,
+                "name": "Date of last fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "last_fault_time",
+                "offset": 41253,
+                "name": "Time of last fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ninth_fault",
+                "offset": 41254,
+                "name": "9th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ninth_fault_date",
+                "offset": 41255,
+                "name": "Date of 9th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ninth_fault_time",
+                "offset": 41256,
+                "name": "Time of 9th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "eighth_fault",
+                "offset": 41257,
+                "name": "8th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "eighth_fault_date",
+                "offset": 41258,
+                "name": "Date of 8th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "eighth_fault_time",
+                "offset": 41259,
+                "name": "Time of 8th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "seventh_fault",
+                "offset": 41260,
+                "name": "7th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "seventh_fault_date",
+                "offset": 41261,
+                "name": "Date of 7th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "seventh_fault_time",
+                "offset": 41262,
+                "name": "Time of 7th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "sixth_fault",
+                "offset": 41263,
+                "name": "6th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "sixth_fault_date",
+                "offset": 41264,
+                "name": "Date of 6th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "sixth_fault_time",
+                "offset": 41265,
+                "name": "Time of 6h fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fifth_fault",
+                "offset": 41266,
+                "name": "5th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fifth_fault_date",
+                "offset": 41267,
+                "name": "Date of 5th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fifth_fault_time",
+                "offset": 41268,
+                "name": "Time of 5th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fourth_fault",
+                "offset": 41269,
+                "name": "4th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fourth_fault_date",
+                "offset": 41270,
+                "name": "Date of 4th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fourth_fault_time",
+                "offset": 41271,
+                "name": "Time of 4th fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "third_fault",
+                "offset": 41272,
+                "name": "3rd fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "third_fault_date",
+                "offset": 41273,
+                "name": "Date of 3rd fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "third_fault_time",
+                "offset": 41274,
+                "name": "Time of 3rd fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "second_fault",
+                "offset": 41275,
+                "name": "2nd fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "second_fault_date",
+                "offset": 41276,
+                "name": "Date of 2nd fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "second_fault_time",
+                "offset": 41277,
+                "name": "Time of 2nd fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "first_fault",
+                "offset": 41278,
+                "name": "1st fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "first_fault_date",
+                "offset": 41279,
+                "name": "Date of 1st fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "first_fault_time",
+                "offset": 41280,
+                "name": "Time of 1st fault",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "last_warning",
+                "offset": 41301,
+                "name": "Last warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "last_warning_date",
+                "offset": 41302,
+                "name": "Date of last warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "last_warning_time",
+                "offset": 41303,
+                "name": "Time of last warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ninth_warning",
+                "offset": 41304,
+                "name": "9th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ninth_warning_date",
+                "offset": 41305,
+                "name": "Date of 9th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ninth_warning_time",
+                "offset": 41306,
+                "name": "Time of 9th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "eighth_warning",
+                "offset": 41307,
+                "name": "8th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "eighth_warning_date",
+                "offset": 41308,
+                "name": "Date of 8th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "eighth_warning_time",
+                "offset": 41309,
+                "name": "Time of 8th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "seventh_warning",
+                "offset": 41310,
+                "name": "7th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "seventh_warning_date",
+                "offset": 41311,
+                "name": "Date of 7th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "seventh_warning_time",
+                "offset": 41312,
+                "name": "Time of 7th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "sixth_warning",
+                "offset": 41313,
+                "name": "6th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "sixth_warning_date",
+                "offset": 41314,
+                "name": "Date of 6th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "sixth_warning_time",
+                "offset": 41315,
+                "name": "Time of 6h warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fifth_warning",
+                "offset": 41316,
+                "name": "5th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fifth_warning_date",
+                "offset": 41317,
+                "name": "Date of 5th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fifth_warning_time",
+                "offset": 41318,
+                "name": "Time of 5th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fourth_warning",
+                "offset": 41319,
+                "name": "4th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fourth_warning_date",
+                "offset": 41320,
+                "name": "Date of 4th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fourth_warning_time",
+                "offset": 41321,
+                "name": "Time of 4th warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "third_warning",
+                "offset": 41322,
+                "name": "3rd warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "third_warning_date",
+                "offset": 41323,
+                "name": "Date of 3rd warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "third_warning_time",
+                "offset": 41324,
+                "name": "Time of 3rd warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "second_warning",
+                "offset": 41325,
+                "name": "2nd warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "second_warning_date",
+                "offset": 41326,
+                "name": "Date of 2nd warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "second_warning_time",
+                "offset": 41327,
+                "name": "Time of 2nd warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "first_warning",
+                "offset": 41328,
+                "name": "1st warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "first_warning_date",
+                "offset": 41329,
+                "name": "Date of 1st warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "first_warning_time",
+                "offset": 41330,
+                "name": "Time of 1st warning",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "last_event",
+                "offset": 41351,
+                "name": "Last event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "last_event_date",
+                "offset": 41352,
+                "name": "Date of last event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "last_event_time",
+                "offset": 41353,
+                "name": "Time of last event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ninth_event",
+                "offset": 41354,
+                "name": "9th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ninth_event_date",
+                "offset": 41355,
+                "name": "Date of 9th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "ninth_event_time",
+                "offset": 41356,
+                "name": "Time of 9th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "eighth_event",
+                "offset": 41357,
+                "name": "8th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "eighth_event_date",
+                "offset": 41358,
+                "name": "Date of 8th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "eighth_event_time",
+                "offset": 41359,
+                "name": "Time of 8th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "seventh_event",
+                "offset": 41360,
+                "name": "7th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "seventh_event_date",
+                "offset": 41361,
+                "name": "Date of 7th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "seventh_event_time",
+                "offset": 41362,
+                "name": "Time of 7th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "sixth_event",
+                "offset": 41363,
+                "name": "6th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "sixth_event_date",
+                "offset": 41364,
+                "name": "Date of 6th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "sixth_event_time",
+                "offset": 41365,
+                "name": "Time of 6h event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fifth_event",
+                "offset": 41366,
+                "name": "5th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fifth_event_date",
+                "offset": 41367,
+                "name": "Date of 5th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fifth_event_time",
+                "offset": 41368,
+                "name": "Time of 5th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fourth_event",
+                "offset": 41369,
+                "name": "4th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fourth_event_date",
+                "offset": 41370,
+                "name": "Date of 4th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "fourth_event_time",
+                "offset": 41371,
+                "name": "Time of 4th event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "third_event",
+                "offset": 41372,
+                "name": "3rd event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "third_event_date",
+                "offset": 41373,
+                "name": "Date of 3rd event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "third_event_time",
+                "offset": 41374,
+                "name": "Time of 3rd event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "second_event",
+                "offset": 41375,
+                "name": "2nd event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "second_event_date",
+                "offset": 41376,
+                "name": "Date of 2nd event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "second_event_time",
+                "offset": 41377,
+                "name": "Time of 2nd event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "first_event",
+                "offset": 41378,
+                "name": "1st event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "first_event_date",
+                "offset": 41379,
+                "name": "Date of 1st event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "first_event_time",
+                "offset": 41380,
+                "name": "Time of 1st event",
+                "uri": "/components/component_three"
+            },
+            {
+                "id": "running_modules",
+                "offset": 41391,
+                "name": "Running modules",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "num_running_modules",
+                "offset": 41392,
+                "name": "Num running modules",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "next_starting_module",
+                "offset": 41393,
+                "name": "Next starting module",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "modules_start_stop",
+                "offset": 41394,
+                "name": "Modules start stop",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "modules_enable_reg",
+                "offset": 41395,
+                "name": "Modules enable reg",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "selected_module",
+                "offset": 41401,
+                "name": "Selected module",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "module_status",
+                "offset": 41402,
+                "name": "Module status",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "current_r",
+                "offset": 41403,
+                "scale": 0.1,
+                "name": "Current R",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "current_s",
+                "offset": 41404,
+                "scale": 0.1,
+                "name": "Current S",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "current_t",
+                "offset": 41405,
+                "scale": 0.1,
+                "name": "Current T",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "dc_current",
+                "offset": 41406,
+                "scale": 0.1,
+                "name": "DC current",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "dc_voltage_p",
+                "offset": 41407,
+                "name": "DC voltage (P)",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "dc_voltage_n",
+                "offset": 41408,
+                "name": "DC voltage (N)",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "dc_voltage",
+                "offset": 41409,
+                "name": "DC voltage",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "p",
+                "offset": 41410,
+                "scale": 0.1,
+                "name": "P",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "q",
+                "offset": 41411,
+                "scale": 0.1,
+                "name": "Q",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "ambient_temperature",
+                "offset": 41412,
+                "name": "Ambient temperature",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "max_temperature",
+                "offset": 41413,
+                "name": "Max temperature",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "i_o_status",
+                "offset": 41414,
+                "name": "I/O status",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "temperature_r1",
+                "offset": 41417,
+                "name": "Temperature R1",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "temperature_r2",
+                "offset": 41418,
+                "name": "Temperature R2",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "temperature_r3",
+                "offset": 41419,
+                "name": "Temperature R3",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "temperature_s1",
+                "offset": 41420,
+                "name": "Temperature S1",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "temperature_s2",
+                "offset": 41421,
+                "name": "Temperature S2",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "temperature_s3",
+                "offset": 41422,
+                "name": "Temperature S3",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "temperature_t1",
+                "offset": 41423,
+                "name": "Temperature T1",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "temperature_t2",
+                "offset": 41424,
+                "name": "Temperature T2",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "temperature_t3",
+                "offset": 41425,
+                "name": "Temperature T3",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "du_feedback_status",
+                "offset": 47424,
+                "name": "DU Feedback Status",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms1_status",
+                "offset": 47451,
+                "name": "BMS Status",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms1_strings_in_service",
+                "offset": 47452,
+                "name": "Strings In Service",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms1_total_strings_count",
+                "offset": 47453,
+                "name": "Total Strings Count",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms1_system_voltage",
+                "offset": 47454,
+                "scale": 0.1,
+                "name": "System Voltage",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms1_system_current",
+                "offset": 47455,
+                "name": "System Current",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms1_system_soc",
+                "offset": 47456,
+                "scale": 0.1,
+                "name": "System SOC",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms2_status",
+                "offset": 47457,
+                "name": "BMS Status",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms2_strings_in_service",
+                "offset": 47458,
+                "name": "Strings In Service",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms2_total_strings_count",
+                "offset": 47459,
+                "name": "Total Strings Count",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms2_system_voltage",
+                "offset": 47460,
+                "scale": 0.1,
+                "name": "System Voltage",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms2_system_current",
+                "offset": 47461,
+                "name": "System Current",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms2_system_soc",
+                "offset": 47462,
+                "scale": 0.1,
+                "name": "System SOC",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms3_status",
+                "offset": 47463,
+                "name": "BMS Status",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms3_strings_in_service",
+                "offset": 47464,
+                "name": "Strings In Service",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms3_total_strings_count",
+                "offset": 47465,
+                "name": "Total Strings Count",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms3_system_voltage",
+                "offset": 47466,
+                "scale": 0.1,
+                "name": "System Voltage",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms3_system_current",
+                "offset": 47467,
+                "scale": 0.1,
+                "name": "System Current",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms3_system_soc",
+                "offset": 47468,
+                "name": "System SOC",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_select",
+                "offset": 47501,
+                "scale": 0.1,
+                "name": "BMS Select",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_sys_heartbeat",
+                "offset": 47502,
+                "name": "Sys heartbeat",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_strings_service",
+                "offset": 47503,
+                "name": "Strings In Service",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_total_strings_count",
+                "offset": 47504,
+                "name": "Total Strings Count",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_service_voltage",
+                "offset": 47505,
+                "scale": 0.1,
+                "name": "Service Voltage",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_service_soc",
+                "offset": 47506,
+                "scale": 0.1,
+                "name": "Service SOC",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_voltage",
+                "offset": 47507,
+                "scale": 0.1,
+                "name": "System Voltage",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_current",
+                "offset": 47508,
+                "name": "System Current",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_soc",
+                "offset": 47509,
+                "scale": 0.1,
+                "name": "System SOC",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_soh",
+                "offset": 47510,
+                "scale": 0.1,
+                "name": "System SOH",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_mode",
+                "offset": 47511,
+                "name": "System Mode",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_max_v",
+                "offset": 47512,
+                "name": "Max Cell Volt Sys",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_min_v",
+                "offset": 47513,
+                "name": "Min Cell Volt Sys",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_max_temp",
+                "offset": 47514,
+                "scale": 0.01,
+                "name": "Max Cell Temp Sys",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_min_temp",
+                "offset": 47515,
+                "scale": 0.01,
+                "name": "Min Cell Temp Sys",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_min_partial_strings",
+                "offset": 47516,
+                "name": "Min. Partial String",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_partial_voltage",
+                "offset": 47517,
+                "name": "Partial Diff Voltage",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_config_status",
+                "offset": 47518,
+                "name": "Sys Config Status",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_protection_4",
+                "offset": 47519,
+                "name": "Protection #4",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_protection_3",
+                "offset": 47520,
+                "name": "Protection #3",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_protection_2",
+                "offset": 47521,
+                "name": "Protection #2",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_protection_1",
+                "offset": 47522,
+                "name": "Protection #1",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_alarm_4",
+                "offset": 47523,
+                "name": "Alarm #4",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_alarm_3",
+                "offset": 47524,
+                "name": "Alarm #3",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_alarm_2",
+                "offset": 47525,
+                "name": "Alarm #2",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_alarm_1",
+                "offset": 47526,
+                "name": "Alarm #1",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_dcl",
+                "offset": 47527,
+                "scale": 0.1,
+                "name": "DCL",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_ccl",
+                "offset": 47528,
+                "scale": 0.1,
+                "name": "CCL",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_watchdog_response",
+                "offset": 47529,
+                "name": "Watchdog response",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_dio_status",
+                "offset": 47530,
+                "name": "Digital Input Status",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bms_alarm_status",
+                "offset": 47531,
+                "name": "System Alarm Status",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_door_contact",
+                "offset": 47651,
+                "name": "Door Contact",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_fcp_alarm",
+                "offset": 47652,
+                "name": "FCP Alarm",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_fcp_predischarge",
+                "offset": 47653,
+                "name": "FCP Predischarge",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_fcp_release",
+                "offset": 47654,
+                "name": "FCP Agent Release",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_fcp_sup",
+                "offset": 47655,
+                "name": "FCP Trouble Sup",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_dc_disconnected_1",
+                "offset": 47656,
+                "name": "DC 1 Disconnected",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_dc_disconnected_2",
+                "offset": 47657,
+                "name": "DC 2 Disconnected",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_emergency_stop",
+                "offset": 47658,
+                "name": "Emergency Stop",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_ups_failure",
+                "offset": 47659,
+                "name": "UPS Battery Failure",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_ups_ok",
+                "offset": 47660,
+                "name": "UPS DC OK",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_temp_humidity_t",
+                "offset": 47661,
+                "name": "Temp Humidity T",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_temp_humidity_h",
+                "offset": 47662,
+                "name": "Temp Humidity H",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_temp_1",
+                "offset": 47663,
+                "scale": 0.1,
+                "name": "Temp 1",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_temp_2",
+                "offset": 47664,
+                "scale": 0.1,
+                "name": "Temp 2",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_temp_3",
+                "offset": 47665,
+                "scale": 0.1,
+                "name": "Temp 3",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_temp_4",
+                "offset": 47666,
+                "scale": 0.1,
+                "name": "Temp 4",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_temp_5",
+                "offset": 47667,
+                "scale": 0.1,
+                "name": "Temp 5",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "bmsenc_temp_6",
+                "offset": 47668,
+                "scale": 0.1,
+                "name": "Temp 6",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "transformer_alarms",
+                "offset": 47681,
+                "name": "Transformer Alarms",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "hvac_signals_1",
+                "offset": 47691,
+                "name": "HVAC signals 1",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "hvac_signals_2",
+                "offset": 47692,
+                "name": "HVAC signals 2",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "hvac_signals_3",
+                "offset": 47693,
+                "name": "HVAC signals 3",
+                "uri": "/components/component_two"
+            },
+            {
+                "id": "hvac_signals_4",
+                "offset": 47694,
+                "name": "HVAC signals 4",
+                "uri": "/components/component_two"
+            }
+        ],
+        "discrete_inputs": [],
+        "coils": []
+    }
+}

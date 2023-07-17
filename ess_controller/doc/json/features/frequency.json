@@ -1,0 +1,103 @@
+{
+  "name": "Frequency Response",
+  "frequency_droop_target": {
+    "name": "Frequency Droop Target Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "frequency_droop_enable_flag": {
+    "name": "Frequency Droop Enable",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "frequency_droop_enable_feedback_flag": {
+    "name": "Frequency Droop Enable Feedback",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "frequency_droop_status_flag": {
+    "name": "Frequency Droop Status",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "pfr_enable_flag": {
+    "name": "Frequency Response Enable",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "pfr_status_flag": {
+    "name": "Frequency Response Status",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "pfr_actual_hz": {
+    "name": "Measured Frequency",
+    "value": 0,
+    "unit": "Hz",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "_pfr_power": {
+    "name": "Frequency Response Power Command",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "pfr_offset_hz": {
+    "name": "Offset Frequency",
+    "value": 0,
+    "unit": "Hz",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "avr_setpoint_voltage": {
+    "name": "AVR Target Voltage",
+    "value": 0,
+    "unit": "V",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  }
+}

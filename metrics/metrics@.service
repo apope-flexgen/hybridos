@@ -1,7 +1,7 @@
 [Unit]
 Description=Metrics computation from FIMS pubs/sets
-Requires=fims.service influxdb.service
-After=fims.service influxdb.service storage.service
+Requires=fims.service
+After=fims.service
 
 [Service]
 User=hybridos

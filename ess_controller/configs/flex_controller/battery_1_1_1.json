@@ -1,0 +1,26 @@
+{
+    "/bms/sbmu_1":{
+        "module_1_cell_1":{
+            "aman":"/bms/sbmu_1/module_1_1/",
+            "aitem":"cell_1_1_1",
+            "soc":50.0,
+            "soh":100,
+            "voltage":3.2,
+            "maxCapacity":280.0,
+            "currCapacity":140.0,
+            "temp":25.0,
+            "current":5.0
+        },
+        "module_1_cell_2":{
+            "aman":"/bms/sbmu_1/module_1_1/",
+            "aitem":"cell_1_1_2",
+            "soc":50.0,
+            "soh":100,
+            "voltage":3.2,
+            "maxCapacity":280.0,
+            "currCapacity":140.0,
+            "temp":25.0,
+            "current":5.0
+        }
+    }
+}

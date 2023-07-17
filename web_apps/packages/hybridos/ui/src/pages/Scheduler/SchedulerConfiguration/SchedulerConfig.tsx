@@ -1,8 +1,12 @@
+/* eslint-disable import/no-extraneous-dependencies */
+// TODO: fix lint
 import { MuiButton, ThemeType, Typography } from '@flexgen/storybook';
 import { Box, ThemeProvider } from '@mui/system';
 import isEqual from 'lodash.isequal';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+
 import { Configuration } from 'shared/types/dtos/scheduler.dto';
+import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
 import { schedulerURLS } from 'src/pages/Scheduler/SchedulerComponents/EventScheduler/EventSchedulerHelper';
@@ -18,13 +22,15 @@ import {
 import SiteControllerConfig from './SiteController';
 
 interface SiteFleetConfigProps {
-  configured: boolean
-  schedulerType: 'SC' | 'FM' | null
+  configured: boolean;
+  schedulerType: 'SC' | 'FM' | null;
+  setIsLoading: any;
 }
 
 const SiteFleetConfig: React.FC<SiteFleetConfigProps> = ({
   configured,
   schedulerType,
+  setIsLoading,
 }: SiteFleetConfigProps) => {
   const theme = useTheme() as ThemeType;
   const muiTheme = createMuiTheme(theme);
@@ -32,6 +38,7 @@ const SiteFleetConfig: React.FC<SiteFleetConfigProps> = ({
   const buttonSx = buttonBoxSx(theme);
   const [configEdits, setConfigEdits] = useState<Configuration | null | undefined>(null);
   const [saveDisabled, setSaveDisabled] = useState<boolean>(false);
+  const notifCtx = useContext<NotifContextType | null>(NotifContext);
   const axiosInstance = useAxiosWebUIInstance();
 
   const { config, siteName } = useSchedulerContext();
@@ -41,9 +48,15 @@ const SiteFleetConfig: React.FC<SiteFleetConfigProps> = ({
   }, [config]);
 
   /** Saves the configuration object and posts it. If cancel then resets the fields */
-  const updateConfig = (action: 'save' | 'cancel') => {
+  const updateConfig = async (action: 'save' | 'cancel') => {
     if (action === 'save') {
-      axiosInstance.post(schedulerURLS.postConfiguration, configEdits);
+      try {
+        setIsLoading(true);
+        await axiosInstance.post(schedulerURLS.postConfiguration, configEdits);
+      } finally {
+        notifCtx?.notif('success', labels.notifications.success);
+        setIsLoading(false);
+      }
     }
     setConfigEdits(config);
   };
@@ -60,9 +73,11 @@ const SiteFleetConfig: React.FC<SiteFleetConfigProps> = ({
       <Box sx={boxSx}>
         <Box sx={headerSx(theme)}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {configured
-              ? <Typography text={siteName} variant="headingL" />
-              : <Typography text={labels.pageDescription.unconfigured} variant="headingL" />}
+            {configured ? (
+              <Typography text={siteName} variant="headingL" />
+            ) : (
+              <Typography text={labels.pageDescription.unconfigured} variant="headingL" />
+            )}
             <Typography
               text={schedulerType === 'SC' ? labels.pageDescription.sc : labels.pageDescription.fm}
               variant="bodyL"
@@ -78,11 +93,7 @@ const SiteFleetConfig: React.FC<SiteFleetConfigProps> = ({
             />
             <MuiButton
               color="primary"
-              disabled={
-                                isEqual(config, configEdits)
-                                || !checkRequiredValues()
-                                || saveDisabled
-                            }
+              disabled={isEqual(config, configEdits) || !checkRequiredValues() || saveDisabled}
               label={labels.buttons.save}
               onClick={() => updateConfig('save')}
               size="small"
@@ -90,16 +101,20 @@ const SiteFleetConfig: React.FC<SiteFleetConfigProps> = ({
           </Box>
         </Box>
         {schedulerType === 'SC' && (
-        <SiteControllerConfig data={configEdits} setConfigEdits={setConfigEdits} />
+          <SiteControllerConfig
+            data={configEdits}
+            setConfigEdits={setConfigEdits}
+            setSaveDisabled={setSaveDisabled}
+          />
         )}
         {schedulerType === 'FM'
-                    && (
-                    <FleetManagerConfig
-                      data={configEdits}
-                      setConfigEdits={setConfigEdits}
-                      setSaveDisabled={setSaveDisabled}
-                    />
-                    )}
+          && (
+          <FleetManagerConfig
+            data={configEdits}
+            setConfigEdits={setConfigEdits}
+            setSaveDisabled={setSaveDisabled}
+          />
+          )}
       </Box>
     </ThemeProvider>
   );

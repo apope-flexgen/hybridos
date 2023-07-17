@@ -1,0 +1,115 @@
+alarm objects
+Phil Wilshire 
+Tue Oct 27 04:38:38 EDT 2020
+
+
+Looks like we need alarm/fault objects.
+I think the varsmap concept is the best way to manage them. We have a system wide list of faults and alarms.
+
+faultsMap
+alarmaMap
+
+So here are some initial thoughts Of course, they are all up for discussion. We'll have to get some initial ideas into code by the weekend.
+
+
+The alarm object has an ID, this is simply the system time.
+We'll use the relative time but we'll have to drop in the base time somewhere.
+The alarm will have a manager or asset  and a function that produced it.
+
+
+
+The alarm will reference one or more  assetVars using the comp:name combo.
+The alarm will reference the conditions  at the time of failure.
+
+Side note . 
+I have given an assetVar a number of components.
+Started out with actions OnSet OnPub onGet { only the Onset group is used at the moment.)
+
+Then came the setFunc setPubFunc GetFunc  operations  we may expand those.
+
+The actions each have a name or type (bitmap enum , remap).
+Each action type has a feat(ure)Dict.
+
+To assist with the UI interface the assetVar now also has "params",  These params can be changed and added to (and deleted probably) on the fly
+
+Start here 
+/usr/local/bin/fims/fims_send -r /$$ -m set -u /ess/myconfig/ess '{"SimPcsComms":{"value":true,"params":{"scaling":12.34,"units":"kW"}}}
+
+/usr/local/bin/fims/fims_send -r /$$ -m get -u /ess/myconfigsim/ess
+                   {"SimPcsComms":{"value":true,"params":{"scaling":12.34,"units":"kW"}}}
+
+Add more stuff here
+/usr/local/bin/fims/fims_send -r /$$ -m set -u /ess/myconfig/ess '{"SimPcsComms":{"value":true,"params":{"max_Value":1234,"min_Value":-3456}}}
+
+/usr/local/bin/fims/fims_send -r /$$ -m get -u /ess/myconfigsim/ess
+                   {"SimPcsComms":{"value":true,"params":{"max_Value":1234,"min_Value":-3456,"scaling":12.34,"units":"kW"}}}
+
+Currently we have to have the "value" field .. But I'll change that.
+
+I am also going to add an "options" array just like the params. That also shold be a simple assetFeatDict.  That is a question for Ben.
+
+
+
+The params are all stored in a featureDict associated with the root assetVar.
+These params are the things that will be used to help operate the assetVar.
+We can put the maxVals etc in here.
+Each assetVar has an , as yet, unused depth vector for storing any changes.
+
+Each change is stored with the time the value changed..... This is why IsDiff has been quite important.
+  Wait for it.
+
+  The alarms id is ... the time.. so , in theory we have a way to link any value in the varsMap to any alarm of fault using the time.
+
+  So it would be nice to capture a snapshot of the full component and its history in the alarm object.
+
+We can have several alarm objects all with the same time associated with any given alarm.
+
+So , lets say , we have an overtemp alarm.
+We have the alarm time and can then register the alarm and with some descriptive message and perhaps a few more fields and pin a snapshot of a few assetsVars with the object.
+This is all going into a mongoDB size does not mattter that much..
+
+In fact you could capture all of the status vars with their history for the asset generating the alarm.
+
+Another thought would be to capture all the status vars plus history periodically anyway.
+Since we have the alarm id as a time we could cross reference the assetVar history with the alarm.
+
+So back to the overtemp alarm.
+We use the time as an id, we know the asset manager and the asset , we then have to capture the params or at least the alarm related params.
+
+For now assume that there is a regular dumping of asset statevars ( and any other table ) into the DB. 
+Then the alarm will capture the assetVar, and its history , and its params both are quite simple structure copies ( I think C++ will help us here std::move perhaps.)
+The alarm has to have a name  
+
+Tue Oct 27 04:38:38 EDT 2020/Alarm/Battery OverTemp /57C exceeded 45C/ for more than 5 seconds -> asset/bms/bms_1/rack3/battery21:CellTemp  params[...]  history[{time,value}, (time,value)]
+Battery OverTemp is the alarm type. we define those on the fly simply by using them.
+
+We can keep a simple list of fault ids where ever we need them.
+assetVar, assetmanager Asset.
+
+
+
+So next , some up with the class structure
+
+std::map<double,vector<alarmObject*>> faultMap give us a list of alarm objects at this time. 
+
+std::map<string,alarmType*> typeMap 
+
+class alarmType {
+    string name;
+    string desc;
+    ...
+    vector <double> instances;
+
+}
+
+class alarmObject {
+
+ string name
+ int (or AlarmType) type
+ string assetname "/asset/bms/bms_1/rack3/battery21:CellTemp
+ featDict params (copy)
+ vector assetVals ( copy)
+
+};
+
+

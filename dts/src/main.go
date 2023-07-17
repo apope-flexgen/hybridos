@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	buffman "github.com/flexgen-power/go_flexgen/buffman"
+	"github.com/flexgen-power/dts/pkg/dts"
 	build "github.com/flexgen-power/go_flexgen/buildinfo"
 	"github.com/flexgen-power/go_flexgen/fileops"
 	"github.com/flexgen-power/go_flexgen/flexservice"
@@ -15,25 +15,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// The pipeline stages used to process data: archives -> monitor -> validator -> writers -> db_clients
-var (
-	// Monitors input path for archives to process
-	monitor *archiveMonitor
-
-	// Carries the filepaths of archives noticed by the monitor to be decoded by the validator
-	archiveQueue buffman.BufferManager
-
-	// Decodes and validates archive data
-	validator *archiveValidator
-
-	// Writes decoded data to InfluxDB
-	writerToInflux *influxWriter
-	// Writes decoded data to MongoDB
-	writerToMongo *mongoWriter
-
-	// The destination DBs we want to write to
-	destinations = []string{"influx", "mongo"}
-)
+var pipeline dts.Pipeline
 
 func main() {
 	initConfig()
@@ -48,50 +30,18 @@ func main() {
 	defer cancelAll()
 	group, groupContext := errgroup.WithContext(mainContext)
 
-	// Start thread for monitor
-	log.MsgDebug("Starting monitor")
-	monitor = newArchiveMonitor(config.InputPath)
-	err = monitor.run(group, groupContext)
-	if err != nil {
-		log.Fatalf("Failed to start monitor stage: %v", err)
-	}
-
-	// Open buffer manager for validator work
-	archiveQueue = buffman.New(buffman.Stack, config.NumValidateWorkers, monitor.out)
-
-	// Start thread for validator
-	log.MsgDebug("Starting validator")
-	validator = newArchiveValidator(archiveQueue.Out(), destinations)
-	err = validator.run(group, groupContext)
-	if err != nil {
-		log.Fatalf("Failed to start validator stage: %v", err)
-	}
-
-	// Start thread for writers
-	log.MsgDebug("Starting writers")
-	log.MsgDebug("Starting writer to influx")
-	writerToInflux = newInfluxWriter(validator.outs["influx"])
-	err = writerToInflux.run(group, groupContext)
-	if err != nil {
-		log.Fatalf("Failed to start writer to %s stage: %v", "influx", err)
-	}
-	writerToMongo = newMongoWriter(validator.outs["mongo"])
-	err = writerToMongo.run(group, groupContext)
-	if err != nil {
-		log.Fatalf("Failed to start writer to %s stage: %v", "mongo", err)
-	}
-
-	// Open up flex service now that pipeline has been initialized
+	// Open up flex service (note: this might technically cause a race condition due to variables exposed to flex service not being initialized yet)
 	err = initFlexService()
 	if err != nil {
 		log.Fatalf("Error initializing FlexService: %v.", err)
 	}
 
-	// Block until a fatal error
-	log.Infof("All child routines started. dts main routine now running indefinitely.")
-	err = group.Wait()
+	// Run the main pipeline
+	err = pipeline.Run(group, groupContext)
 	if err != nil {
-		log.Fatalf("Pipeline encountered a fatal error: %v", err)
+		log.Fatalf("Main pipeline stopped with error: %v", err)
+	} else {
+		log.Fatalf("Main pipeline stopped without an error")
 	}
 }
 
@@ -117,32 +67,32 @@ func initConfig() {
 	}
 
 	fmt.Println("config source parsed is ", cfgSource)
-	err = parseConfig(cfgSource)
+	err = dts.ParseConfig(cfgSource)
 	if err != nil {
 		log.Fatalf("Failed to configure: %v", err)
 	}
 
-	fmt.Printf("Configured with %+v\n", config)
+	fmt.Printf("Configured with %+v\n", dts.GlobalConfig)
 }
 
 // Ensure that all directories necessary for the program to run exist
 func initDirectories() error {
 	var err error
-	err = fileops.EnsureDirectoryExists(config.InputPath, os.ModePerm)
+	err = fileops.EnsureDirectoryExists(dts.GlobalConfig.InputPath, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to ensure input path exists: %w", err)
 	}
-	err = fileops.EnsureDirectoryExists(config.FailedValidatePath, os.ModePerm)
+	err = fileops.EnsureDirectoryExists(dts.GlobalConfig.FailedValidatePath, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to ensure validate error path exists: %w", err)
 	}
-	err = fileops.EnsureDirectoryExists(config.FailedWritePath, os.ModePerm)
+	err = fileops.EnsureDirectoryExists(dts.GlobalConfig.FailedWritePath, os.ModePerm)
 	if err != nil {
 		return fmt.Errorf("failed to ensure write error path exists: %w", err)
 	}
 	// Forward path may be empty
-	if len(config.FwdPath) > 0 {
-		err = fileops.EnsureDirectoryExists(config.FwdPath, os.ModePerm)
+	if len(dts.GlobalConfig.FwdPath) > 0 {
+		err = fileops.EnsureDirectoryExists(dts.GlobalConfig.FwdPath, os.ModePerm)
 		if err != nil {
 			return fmt.Errorf("failed to ensure forward path exists: %w", err)
 		}
@@ -166,8 +116,8 @@ func initFlexService() error {
 		ApiDesc: "displays all active endpoints currently writing to",
 		ApiCallback: flexservice.Callback(func(args []interface{}) (string, error) {
 			var retVal string = ""
-			retVal += fmt.Sprintf("%s\n%#v\n", "---Influx writer---", writerToInflux)
-			retVal += fmt.Sprintf("%s\n%#v\n", "---Mongo writer---", writerToMongo)
+			retVal += fmt.Sprintf("%s\n%#v\n", "---Influx writer---", pipeline.WriterToInflux)
+			retVal += fmt.Sprintf("%s\n%#v\n", "---Mongo writer---", pipeline.WriterToMongo)
 			return retVal, nil
 		}),
 	})
@@ -180,17 +130,17 @@ func initFlexService() error {
 		ApiDesc: "Total number of files decoded",
 		ApiCallback: flexservice.Callback(func(args []interface{}) (string, error) {
 			var retVal string = ""
-			retVal += fmt.Sprintf("# of files that failed validation - %d\n", validator.failCt)
+			retVal += fmt.Sprintf("# of files that failed validation - %d\n", pipeline.Validator.FailCt)
 			// Influx writer
 			retVal += fmt.Sprintf("stats for db instance -  %s\n", "influx")
-			retVal += fmt.Sprintf("\t db type is %s deployed at %s\n", "influx", writerToInflux.dbUrl)
-			retVal += fmt.Sprintf("\t wrote %d files \n", writerToInflux.writeCnt)
-			retVal += fmt.Sprintf("\t failed to write %d files \n", writerToInflux.failCnt)
+			retVal += fmt.Sprintf("\t db type is %s deployed at %s\n", "influx", pipeline.WriterToInflux.DbUrl)
+			retVal += fmt.Sprintf("\t wrote %d files \n", pipeline.WriterToInflux.WriteCnt)
+			retVal += fmt.Sprintf("\t failed to write %d files \n", pipeline.WriterToInflux.FailCnt)
 			// Mongo writer
 			retVal += fmt.Sprintf("stats for db instance -  %s\n", "mongo")
-			retVal += fmt.Sprintf("\t db type is %s deployed at %s\n", "mongo", writerToMongo.dbUrl)
-			retVal += fmt.Sprintf("\t wrote %d files \n", writerToMongo.writeCnt)
-			retVal += fmt.Sprintf("\t failed to write %d files \n", writerToMongo.failCnt)
+			retVal += fmt.Sprintf("\t db type is %s deployed at %s\n", "mongo", pipeline.WriterToMongo.DbUrl)
+			retVal += fmt.Sprintf("\t wrote %d files \n", pipeline.WriterToMongo.WriteCnt)
+			retVal += fmt.Sprintf("\t failed to write %d files \n", pipeline.WriterToMongo.FailCnt)
 			return retVal, nil
 		}),
 	})

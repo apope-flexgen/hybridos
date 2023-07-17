@@ -147,7 +147,7 @@ TEST_F(frequency_response_test, frrs) {
         // run test
         Frequency_Response_Outputs actual_result = fr_comp_mock.frequency_response(input);
         // check results. ess limits should never change in frrs
-        t_log.range_results.push_back({test.output_power, 0.001F, test.output_power, "output_cmd"});
+        t_log.range_results.push_back({test.output_power, 0.001F, actual_result.output_kw, "output_cmd"});
         t_log.float_results.push_back({11.0F, actual_result.ess_max_potential, "ess max potential"});
         t_log.float_results.push_back({9.0F, actual_result.ess_min_potential, "ess min potential"});
         t_log.bool_results.push_back({test.in_recov, fr_comp_mock.get_in_recov(), "in_recovery"});
@@ -255,7 +255,7 @@ void FR_Comp_Mock::set_frrs_state(frrs_state state, float active_cmd, float inac
     active_cmd_kw.value.set(active_cmd);
     inactive_cmd_kw.value.set(inactive_cmd);
     output_kw.value.set(state.in_trig ? active_cmd : inactive_cmd);
-    slew_cmd_kw.set_slew_rate(state.slew_rate);
+    slew_rate_kw.value.set(state.slew_rate);
     trigger_freq_hz.value.set(state.trig_freq);
     droop_freq_hz.value.set(state.trig_freq);
     recovery_freq_hz.value.set(state.recov_freq);

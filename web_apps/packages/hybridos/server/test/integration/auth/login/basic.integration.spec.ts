@@ -10,6 +10,7 @@ import request from './../../../testReqAgent'
 import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 const INCORRECT_PASSWORD = 'incorrectPassword'
 const INCORRECT_USERNAME = 'userDoesntExist'
@@ -26,6 +27,8 @@ describe('Authentication (Integration)', () => {
         })
             .overrideProvider(AppEnvService)
             .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+            .overrideProvider(PermissionsService)
+            .useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer

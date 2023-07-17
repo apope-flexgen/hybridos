@@ -27,8 +27,6 @@
 #include <sstream>
 #include "dnp3_utils.h"
 
-// namespace opendnp3 
-// { 
 
 /**
  *	ISOEHandler singleton that prints to the console.
@@ -65,16 +63,12 @@ public:
                          const opendnp3::ICollection<opendnp3::Indexed<opendnp3::BinaryCommandEvent>>& values) override;
     virtual void Process(const opendnp3::HeaderInfo& info,
                          const opendnp3::ICollection<opendnp3::Indexed<opendnp3::AnalogCommandEvent>>& values) override;
-//    virtual void Process(const opendnp3::HeaderInfo& info,
-//                         const opendnp3::ICollection<opendnp3::Indexed<opendnp3::SecurityStat>>& values) override;
     virtual void Process(const opendnp3::HeaderInfo& info,
                          const opendnp3::ICollection<opendnp3::DNPTime>& values) override; 
     protected:
     
     void BeginFragment(const ResponseInfo& info) final {} //override;
     void EndFragment(const ResponseInfo& info) final {} //override;
-    //void Begin() final {}
-    //void End() final {} private:
     template<class T>
     static void PrintAll(const opendnp3::HeaderInfo& info, const opendnp3::ICollection<opendnp3::Indexed<T>>& values)
     {
@@ -123,28 +117,10 @@ public:
         return oss.str();
     }
 
-    // static std::string GetTimeString(opendnp3::TimestampMode tsmode)
-    // {
-    //     std::ostringstream oss;
-    //     switch (tsmode)
-    //     {
-    //     case (opendnp3::TimestampMode::SYNCHRONIZED):
-    //         return "synchronized";
-    //         break;
-    //     case (opendnp3::TimestampMode::UNSYNCHRONIZED):
-    //         oss << "unsynchronized";
-    //         break;
-    //     default:
-    //         oss << "no timestamp";
-    //         break;
-    //     }
-    //     return oss.str();
-    // }
     static std::string ValueToString(const opendnp3::DoubleBitBinary& meas)
     {
         return opendnp3::DoubleBitSpec::to_human_string(meas.value);
     }
     sysCfg* sysdb;
 };
-//} // namespace asiodnp3
 #endif

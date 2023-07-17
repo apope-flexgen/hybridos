@@ -4,7 +4,7 @@ Requires=fims.service
 After=fims.service
 
 [Service]
-User=root
+User=hybridos
 ExecStart=/usr/local/bin/overwatch -c /usr/local/etc/config/overwatch/config.json
 Restart=always
 RestartSec=10s

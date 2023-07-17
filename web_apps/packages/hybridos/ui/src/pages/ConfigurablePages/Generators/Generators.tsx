@@ -2,6 +2,6 @@
 /* eslint-disable import/no-cycle */
 import { AssetsPage } from '..';
 
-const Generators = () => <AssetsPage category="generators" />;
+const Generators = () => <AssetsPage assetKey="gen" />;
 
 export default Generators;

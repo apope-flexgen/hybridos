@@ -1,0 +1,181 @@
+Test Cases
+p. wilshire
+01/20/2021
+
+## Test Sending Heartbeat to Catl
+
+    The   UpdateSystemTime  function generates a heartbeat count and system time.
+    Validate function with test_UpdateSystemTime.sh
+
+
+        amap["Heartbeat"]            = vm->setLinkVal(vmap, aname, "/status", "Heartbeat", sec);
+        amap["Debug"]                = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeDebug", ival);
+        amap["Send"]                 = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSend", ival);
+        amap["SendAll"]              = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSendAll", bval);
+        amap["SendHB"]               = vm->setLinkVal(vmap, aname, "/config", "UpdateSysTimeSendHB", bval);
+
+    This is mapped to the CATL device  (aname = "bms")..
+
+    "Heartbeat": {
+            "value": "/components/catl_ems_to_bms_rw:ems_heartbeat"
+
+    bool sendHB = amap["SendHB"]->getbVal();  (/config/bms/UpdateSysTimeSendHB)
+
+    This is sent to Holding Register 896 <catl_ems_to_bms_rw> in the Catl Management unit.
+
+    (bms_heartbeat is Holding Register 768  catl_mbmu_stat_r )
+
+    if(sendHB)vm->addVlist(vlist, amap["Heartbeat"]);
+                    vm->sendVlist(p_fims, "set", vlist);
+
+    This command will disable the heartbeat from the ess_controller
+    fims_send -m set -u /ess/config/bms/UpdateSysTimeSendHB false
+
+    The Catl unit responds by entering a fault state
+
+     The script test_UpdateSystemTime.sh will exercise these operations
+     @@BMS_ID@@ == sbmu_xx
+     "ems_heartbeat": {
+            "value": "/components/catl_@@BMS_ID@@_ems_bms_rw:ems_heartbeat"
+        "bms_heartbeat": {
+            "value": "/components/catl_@@BMS_ID@@_bms_ems_r:bms_heartbeat"
+        },
+
+## Test monitoring of Battery State
+
+  The  CheckMonitorVar  function manages monitoring of alarm and fault conditions of a number of data points.
+
+  The ess controller monitors states using zzzzz .
+    A configuration item 
+         
+         will cause the bms state to be monitored for 
+        "mbmu_max_cell_voltage":     {"value": "/components/catl_mbmu_control_r:mbmu_max_cell_voltage"},
+        "mbmu_max_cell_temperature": {"value": "/components/catl_mbmu_control_r:mbmu_max_cell_temperature"},
+        "mbmu_min_cell_temperature": {"value": "/components/catl_mbmu_control_r:mbmu_min_cell_temperature"},
+        "mbmu_min_cell_voltage":     {"value": "/components/catl_mbmu_control_r:mbmu_min_cell_voltage"},
+    },
+  >> TODO make sure these are correct !!
+    "/schedule/wake_monitor/bms":{
+        "/components/catl_mbmu_control_r:mbmu_max_cell_voltage":     { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_min_cell_voltage":     { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_max_cell_temperature": { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_min_cell_temperature": { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_soc":                  { "enable": true, "rate":0.1, "func":"CheckMonitorVar"},
+        "/components/catl_mbmu_control_r:mbmu_soh":                  { "enable": true, "rate":0.1, "func":"CheckMonitorVar"}
+    },
+
+    "/components/catl_mbmu_control_r": 
+    "/components/catl_bms_1_mbmu_summary_r",
+    Item                        Map Addr  Enable EnableMaxValCheck  EnableMinValCheck AlarmThresholdValue FaultThresholdValue ResetValue AlarmTimeout FaultTimeout RecoverTimeout Func
+    mbmu_max_cell_voltage       36        true   false              false             25.4                28                   22.4      2.5           5.5         1.4            CheckMonitorVar
+    mbmu_min_cell_voltage       37        true   false              false             25.4                28                   22.4      2.5           5.5         1.4            CheckMonitorVar
+    mbmu_max_cell_temperature   38        true   false              false             25.4                28                   22.4      2.5           5.5         1.4            CheckMonitorVar
+    mbmu_min_cell_temperature   39        true   false              false             25.4                28                   22.4      2.5           5.5         1.4            CheckMonitorVar
+
+          
+## Manage PowerGeneration between off and Grid Following
+
+    The powerManagement is controlled  by module_runFuncs.cpp (???) 
+    The power Management is tested using the test_powerCommands.sh (???) script
+
+    The power on / off and status signals are :
+    "bms_poweron": {"value":0,"actions": {"onSet": [{"enum": [
+                        {"shift": 0, "mask": 255, "inValue": 0, "uri": "/status/bms:BMSPowerOn", "outValue": "Off Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/status/bms:BMSPowerOn", "outValue": "On Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/status/bms:BMSPowerOn", "outValue": "On Fault"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/status/bms:BMSPowerOn", "outValue": "Off Fault"}
+                    ]}]}},
+    "bms_status": {"value":0,"actions": {"onSet": [{"enum": [
+                        {"shift": 0, "mask": 255, "inValue": 0, "uri": "/status/bms:BMSStatus", "outValue": "Initial"},
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/status/bms:BMSStatus", "outValue": "Normal"},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/status/bms:BMSStatus", "outValue": "Full Charge"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/status/bms:BMSStatus", "outValue": "Full Discharge"},
+                        {"shift": 0, "mask": 255, "inValue": 4, "uri": "/status/bms:BMSStatus", "outValue": "Warning"},
+                        {"shift": 0, "mask": 255, "inValue": 5, "uri": "/status/bms:BMSStatus", "outValue": "Fault"}
+                    ]}]}
+
+The process is :: ????
+
+# reset UIStartup
+./fims_send -m set -r /me -u /ess/status/ess '{"UiStartup":false}'
+#"PCS Off, BMS Off, Batteries normal"
+./fims_send -m set -r /me -u /ess/components/pcsm_internal_visualization '{"current_status":2}'                 # PCS is ready
+./fims_send -m set -r /me -u /ess/components/catl_mbmu_stat_r '{"bms_status":1}'   # BMS is powered off batteries normal
+./fims_send -m set -r /me -u /ess/components/catl_mbmu_stat_r '{"bms_poweron":0}'
+
+
+echo "Starting up"
+
+The results are :: ????
+
+## Monitor the system from a user interface
+## Respond to commands to store and discharge Power from Site Manager
+## Manage which alarms and faults count as system alarms and faults
+## Control all switches and breakers remotely
+## Command Reactive Power Lagging and Leading
+## Test Charge Control
+## Operate correctly after a reboot or power cycle.
+## Control Individual Components like opening DC contacts
+## Report available charge/discharge power
+## Introduce Falut , detect fault remove fault ( help from CATL)
+## Test 0x038c Fault Clear Command
+## Test Ability to Manage rack and system
+## Turn off HVAC when there is a fire
+## Test responding to faults
+## Test responding to alarms
+## Test Surge Protection
+## Test Ground fault protection.
+## Test abilty to isolate network.
+## Test Controlling Ambient Temp.
+
+// Reference data 
+
+        "mbmu_soc":              {"value": "/components/catl_mbmu_control_r:mbmu_soc"},
+        "mbmu_soh":              {"value": "/components/catl_mbmu_control_r:mbmu_soh"},
+        "MaxBMSChargeEnergy":    {"value": "/components/catl_mbmu_stat_r:bms_remain_charge_energy"},
+        "MaxBMSDischargeEnergy": {"value": "/components/catl_mbmu_stat_r:bms_remain_discharge_energy"},
+        "MaxBMSChargePower":     {"value": "/components/catl_mbmu_stat_r:bms_max_charge_power"},
+        "MaxBMSDischargePower":  {"value": "/components/catl_mbmu_stat_r:bms_max_discharge_power"}
+
+
+"id": "catl_bms_1_mbmu_summary_r",
+            "frequency": 100,
+            "offset_time": 4,
+            "registers": [
+                {"type": "Holding Registers","starting_offset": 32,"number_of_registers": 12,"hex_offset": "0x0020",
+                    "note": "MBMU Summary messages (read)",
+                    "map": [
+                        {"id": "mbmu_voltage","offset": 32,"scale": 10,"name": "System voltage"},
+                        {"id": "mbmu_current","offset": 33,"scale": 10,"signed": true,"name": "System Current"},
+                        {"id": "mbmu_soc","offset": 34,"name": "SOC"},
+                        {"id": "mbmu_soh","offset": 35,"name": "SOH"},
+                        {"id": "mbmu_max_cell_voltage","offset": 36,"name": "Max cell voltage"},
+                        {"id": "mbmu_min_cell_voltage","offset": 37,"name": "Min cell voltage"},
+                        {"id": "mbmu_avg_cell_voltage","offset": 38,"name": "Avg. cell voltage"},
+                        {"id": "mbmu_max_cell_temperature","offset": 39,"name": "Max cell temperature"},
+                        {"id": "mbmu_min_cell_temperature","offset": 40,"name": "Min cell temperature"},
+                        {"id": "mbmu_avg_cell_temperature","offset": 41,"name": "Avg. cell temperature"},
+                        {"id": "mbmu_max_charge_current","offset": 42,"name": "Max charge current allowed"},
+                        {"id": "mbmu_max_dischare_current","offset": 43,"name": "Max discharge current allowed"}
+                    ]
+                }
+            ]
+"/components/pcsm_internal_visualization": {
+        "current_fault": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+					    {"shift": 0, "mask": 65535, "inValue": 45, "uri": "/site/ess:pcs1_faults1[0]", "outValue": true, "note": "Bit 0 - Insulation Resistance"},
+                        {"shift": 0, "mask": 65535, "inValue": 1, "uri": "/site/ess:pcs1_faults1[5]", "outValue": true, "note": "Bit 5 - LCD_DSP fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 58, "uri": "/site/ess:pcs1_faults1[5]", "outValue": true, "note": "Bit 5 - LCD_DSP fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 116, "uri": "/site/ess:pcs1_faults1[5]", "outValue": true, "note": "Bit 5 - LCD_DSP fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 25, "uri": "/site/ess:pcs1_faults2[0]", "outValue": true, "note": "Bit 0 - DC undervoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 24, "uri": "/site/ess:pcs1_faults2[1]", "outValue": true, "note": "Bit 1 - DC overvoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 6, "uri": "/site/ess:pcs1_faults2[2]", "outValue": true, "note": "Bit 2 - AC undervoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 5, "uri": "/site/ess:pcs1_faults2[3]", "outValue": true, "note": "Bit 3 - AC overvoltage"},
+​
+				    ]
+                }]
+            }
+        }

@@ -1,0 +1,200 @@
+{
+	"/controls/pcs_1:AcContactorCloseCmd":	{
+		"AcContactorCloseCmd":	{
+			"value":	false
+		}
+	},
+	"/controls/pcs_1:AcContactorOpenCmd":	{
+		"AcContactorOpenCmd":	{
+			"value":	false
+		}
+	},
+	"/controls/pcs_1:ActivePowerCmd":	{
+		"ActivePowerCmd":	{
+			"value":	5
+		}
+	},
+	"/controls/pcs_1:ActivePowerSetpoint":	{
+		"ActivePowerSetpoint":	{
+			"value":	0
+		}
+	},
+	"/controls/pcs_1:DcContactorCloseCmd":	{
+		"DcContactorCloseCmd":	{
+			"value":	false
+		}
+	},
+	"/controls/pcs_1:DcContactorOpenCmd":	{
+		"DcContactorOpenCmd":	{
+			"value":	false
+		}
+	},
+	"/controls/pcs_1:HeartBeat":	{
+		"HeartBeat":	{
+			"value":	0
+		}
+	},
+	"/controls/pcs_1:OffCmd":	{
+		"OffCmd":	{
+			"value":	false
+		}
+	},
+	"/controls/pcs_1:OnCmd":	{
+		"OnCmd":	{
+			"value":	false
+		}
+	},
+	"/controls/pcs_1:ReactivePowerCmd":	{
+		"ReactivePowerCmd":	{
+			"value":	0
+		}
+	},
+	"/controls/pcs_1:ReactivePowerSetpoint":	{
+		"ReactivePowerSetpoint":	{
+			"value":	0
+		}
+	},
+	"/controls/pcs_1:lastActivePowerSetpoint":	{
+		"lastActivePowerSetpoint":	{
+			"value":	0
+		}
+	},
+	"/controls/pcs_1:lastReactivePowerSetpoint":	{
+		"lastReactivePowerSetpoint":	{
+			"value":	0
+		}
+	},
+	"/links/pcs_1":	{
+		"AcContactor":	{
+			"value":	"/status/pcs_1:AcContactor"
+		},
+		"AcContactorCloseCmd":	{
+			"value":	"/controls/pcs_1:AcContactorCloseCmd"
+		},
+		"AcContactorOpenCmd":	{
+			"value":	"/controls/pcs_1:AcContactorOpenCmd"
+		},
+		"ActivePower":	{
+			"value":	"/status/pcs_1:ActivePower"
+		},
+		"ActivePowerCmd":	{
+			"value":	"/controls/pcs_1:ActivePowerCmd"
+		},
+		"ActivePowerDeadband":	{
+			"value":	"/params/pcs_1:ActivePowerDeadband"
+		},
+		"ActivePowerSetpoint":	{
+			"value":	"/controls/pcs_1:ActivePowerSetpoint"
+		},
+		"DcContactor":	{
+			"value":	"/status/pcs_1:DcContactor"
+		},
+		"DcContactorCloseCmd":	{
+			"value":	"/controls/pcs_1:DcContactorCloseCmd"
+		},
+		"DcContactorOpenCmd":	{
+			"value":	"/controls/pcs_1:DcContactorOpenCmd"
+		},
+		"HeartBeat":	{
+			"value":	"/controls/pcs_1:HeartBeat"
+		},
+		"Off":	{
+			"value":	"/status/pcs_1:Off"
+		},
+		"OffCmd":	{
+			"value":	"/controls/pcs_1:OffCmd"
+		},
+		"On":	{
+			"value":	"/status/pcs_1:On"
+		},
+		"OnCmd":	{
+			"value":	"/controls/pcs_1:OnCmd"
+		},
+		"ReactivePower":	{
+			"value":	"/status/pcs_1:ReactivePower"
+		},
+		"ReactivePowerCmd":	{
+			"value":	"/controls/pcs_1:ReactivePowerCmd"
+		},
+		"ReactivePowerDeadband":	{
+			"value":	"/params/pcs_1:ReactivePowerDeadband"
+		},
+		"ReactivePowerSetpoint":	{
+			"value":	"/controls/pcs_1:ReactivePowerSetpoint"
+		},
+		"StandBy":	{
+			"value":	"/status/pcs_1:StandBy"
+		},
+		"StandByCmd":	{
+			"value":	"/controls/pcs_1:StandByCmd"
+		},
+		"Standby":	{
+			"value":	false
+		},
+		"StandbyCmd":	{
+			"value":	false
+		},
+		"lastActivePowerSetpoint":	{
+			"value":	"/controls/pcs_1:lastActivePowerSetpoint"
+		},
+		"lastReactivePowerSetpoint":	{
+			"value":	"/controls/pcs_1:lastReactivePowerSetpoint"
+		},
+		"maxActivePower":	{
+			"value":	"/params/pcs_1:maxActivePower"
+		},
+		"maxReactivePower":	{
+			"value":	"/params/pcs_1:maxReactivePower"
+		}
+	},
+	"/params/pcs_1:ActivePowerDeadband":	{
+		"ActivePowerDeadband":	{
+			"value":	5
+		}
+	},
+	"/params/pcs_1:ReactivePowerDeadband":	{
+		"ReactivePowerDeadband":	{
+			"value":	5
+		}
+	},
+	"/params/pcs_1:maxActivePower":	{
+		"maxActivePower":	{
+			"value":	50000
+		}
+	},
+	"/params/pcs_1:maxReactivePower":	{
+		"maxReactivePower":	{
+			"value":	50000
+		}
+	},
+	"/status/pcs_1:AcContactor":	{
+		"AcContactor":	{
+			"value":	false
+		}
+	},
+	"/status/pcs_1:ActivePower":	{
+		"ActivePower":	{
+			"value":	0
+		}
+	},
+	"/status/pcs_1:DcContactor":	{
+		"DcContactor":	{
+			"value":	false
+		}
+	},
+	"/status/pcs_1:Off":	{
+		"Off":	{
+			"value":	false
+		}
+	},
+	"/status/pcs_1:On":	{
+		"On":	{
+			"value":	false
+		}
+	},
+	"/status/pcs_1:ReactivePower":	{
+		"ReactivePower":	{
+			"value":	0
+		}
+	}
+}

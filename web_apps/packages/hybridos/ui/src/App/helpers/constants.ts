@@ -1,4 +1,4 @@
-export const initAppValue = {
+export const initWebUIConfigValue = {
   app: {
     appName: 'HybridOs',
     timeZone: 'America/New_York',
@@ -26,5 +26,5 @@ export const initAppValue = {
 };
 
 export const AUTH_USER_TOKEN_URL = '/authenticate-user-token';
-export const SITE_CONFIGURATION_URL = '/app';
+export const SITE_CONFIGURATION_URL = '/web-ui-config';
 export const LAYOUTS_URL = '/layouts';

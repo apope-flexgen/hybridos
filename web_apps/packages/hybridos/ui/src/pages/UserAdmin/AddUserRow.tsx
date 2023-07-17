@@ -3,18 +3,18 @@
 import { Box, MuiButton } from '@flexgen/storybook';
 import { FunctionComponent, useContext, useState } from 'react';
 import { PasswordOptions } from 'shared/types/api/Users/Users.types';
-import { addUserRowButtonsSx, addUserRowSx } from 'src/pages/UserAdmin/UserAdmin.styles';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import { addUserRowButtonsSx, addUserRowSx } from 'src/pages/UserAdmin/UserAdmin.styles';
 import UserRow from 'src/pages/UserAdmin/UserRow';
 
 export interface AddUserRowProps {
-  updateUserData: () => void
-  setIsLoading: (state: boolean) => void
-  setShowAddUser: (state: any) => void
-  showDeveloper?: boolean
-  passwordOptions: PasswordOptions
-  oldPasswords: number
+  updateUserData: () => void;
+  setIsLoading: (state: boolean) => void;
+  setShowAddUser: (state: any) => void;
+  showDeveloper?: boolean;
+  passwordOptions: PasswordOptions;
+  oldPasswords: number;
 }
 
 const AddUserRow: FunctionComponent<AddUserRowProps> = ({
@@ -23,9 +23,9 @@ const AddUserRow: FunctionComponent<AddUserRowProps> = ({
   setShowAddUser,
   showDeveloper,
   passwordOptions,
-  oldPasswords
+  oldPasswords,
 }: AddUserRowProps) => {
-  const axiosInstance = useAxiosWebUIInstance();
+  const axiosInstance = useAxiosWebUIInstance(true);
   const notifCtx = useContext<NotifContextType | null>(NotifContext);
 
   const [userData, setUserData] = useState<any>({});
@@ -34,32 +34,27 @@ const AddUserRow: FunctionComponent<AddUserRowProps> = ({
 
   const checkPassword = (): boolean => validPassword;
 
-  const validInput = (data: any): boolean => {
-    if (!checkPassword()) return false;
-
-    return (
-      data.hasOwnProperty('username')
-            && data.hasOwnProperty('password')
-            && data.hasOwnProperty('role')
-    );
+  const validInput = (data: any): { valid: boolean, field: 'username' | 'password' | 'role' | null } => {
+    if (!checkPassword()) return { valid: false, field: 'password' };
+    if (!data.hasOwnProperty('username')) return { valid: false, field: 'username' };
+    if (!data.hasOwnProperty('password')) return { valid: false, field: 'password' };
+    if (!data.hasOwnProperty('role')) return { valid: false, field: 'role' };
+    return { valid: true, field: null };
   };
 
   const addUser = async () => {
-    if (!validInput(userData)) {
-      notifCtx?.notif('error', 'Error creating user: invalid input');
+    if (!validInput(userData).valid) {
+      notifCtx?.notif('error', `Error creating user: invalid input for ${validInput(userData).field} field`);
       return;
     }
     try {
       setIsLoading(true);
       await axiosInstance.post('/users', userData);
-      notifCtx?.notif('success', 'Successfully created User');
+      notifCtx?.notif('success', 'Successfully created user');
       updateUserData();
       setShowAddUser(false);
     } catch (axiosError: any) {
-      notifCtx?.notif(
-        'error',
-        `Error creating user: ${axiosError.response.data.message}`,
-      );
+      notifCtx?.notif('error', `Error creating user: ${axiosError.response.data.message}`);
     } finally {
       setIsLoading(false);
     }

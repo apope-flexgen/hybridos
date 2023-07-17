@@ -13,14 +13,24 @@
 package main
 
 import (
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
+	"net"
+	"os"
 	"os/exec"
 	"path"
 	"strconv"
 	"strings"
 	"time"
 
+	fp "path/filepath"
+
 	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/flexgen-power/go_flexgen/parsemap"
+
+	"github.com/gosnmp/gosnmp"
 )
 
 // Three possible controller modes: Primary, Secondary, and Update
@@ -35,6 +45,23 @@ var statusNames = [3]string{"Primary", "Secondary", "Update"}
 // Global variables
 var controllerMode = Secondary
 var firstIteration = true // Used to determine additional, one-time startup behavior if Secondary
+var pduUser = "hybridos"  // SNMP User and Community names used by the PDU
+var enableRedundantFailover bool
+var controllerName string // Name of the controller machine, used to distinguish the controllers when running failover
+var primaryIP string
+var primaryNetworkInterface string // Virtual interface used to hold the primary IP
+var pduIP string
+var pduHashedAuthPath = fp.Join(cfgDir, "encrypted_auth.enc") // Location of hashed password used for encrypting authentication with the PDU
+var pduHashedPrivPath = fp.Join(cfgDir, "encrypted_priv.enc") // Location of hashed password used for encrypting privacy with the PDU
+var pduDecryptionKeyPath = fp.Join(cfgDir, "decrypt.key")     // Location of private key used to decrypt hashed passwords
+var pduAuth string                                            // Decrypted password used for encrypting authentication with the PDU
+var pduPriv string                                            // Decrypted password used for encrypting privacy with the PDU
+var pduOutletEndpoint string                                  // SNMP endpoint of the PDU. Should always be the same but made (optionally) configurable in case another model is used
+var otherCtrlrOutlet string                                   // Outlet that the other controller is plugged in to
+var pduResetCmd = 3                                           // Supported PDU command values are 1 (disable), 2 (enable), 3 (reboot)
+const checkModeFreqMS = 1000                                  // Rate in ms at which to poll between client and server
+const replyFromOtherAllowableDelay = 3000 * time.Millisecond  // Communication delays longer than this are considered to have failed
+const firstTCPConnectionAttemptTimeAllowanceMS = 10000        // How long to wait for c2c connection to be established before erroring and assuming primary
 
 // Execute mode negotiation actions
 func checkControllerMode() {
@@ -42,17 +69,16 @@ func checkControllerMode() {
 	if controllerMode != Update && otherControllerIsUnresponsive() {
 		takeOverAsPrimary()
 	} else {
-		queueC2CMsg("ModeQuery")
+		sendC2CMsg("ModeQuery")
 	}
 }
 
 // If in Secondary mode, every second check if This controller should take over as Primary
 func negotiateControllerMode() {
-	checkModeFreqMS := 1000
 	checkModeTicker := startTicker(checkModeFreqMS)
 	defer checkModeTicker.Stop()
 	for {
-		if controllerMode == Secondary {
+		if controllerMode != Primary {
 			checkControllerMode()
 		}
 		<-checkModeTicker.C
@@ -61,8 +87,7 @@ func negotiateControllerMode() {
 
 // Checks if TCP connection has been lost or if last mode confirmation from Other was too long ago
 func otherControllerIsUnresponsive() bool {
-	replyFromOtherAllowableDelayMS := 3000
-	if !c2c.connected || time.Since(c2c.lastModeConfirmationFromOther).Milliseconds() > int64(replyFromOtherAllowableDelayMS) {
+	if !c2c.connected || time.Since(c2c.lastModeConfirmationFromOther) > replyFromOtherAllowableDelay {
 		return true
 	}
 	return false
@@ -87,7 +112,7 @@ func processModeCommand(msg string) {
 			time.Sleep(time.Millisecond * 500)
 			// Request the latest configuration data from the primary
 			// TODO: send version id of each document instead, primary returns any newer versions it has
-			queueC2CMsg("GetDBIUpdate")
+			sendC2CMsg("GetDBIUpdate")
 		}
 	}
 	c2c.lastModeConfirmationFromOther = time.Now()
@@ -96,20 +121,199 @@ func processModeCommand(msg string) {
 // If the Other controller asks what mode it should be in, reply telling it what it should be and give health status
 func replyToModeQueryMsg() {
 	reply := "ModeCommand "
-	if controllerMode == Primary || c2c.amServerNotClient {
+	if controllerMode == Primary || (c2c.amServerNotClient && controllerMode != Update) {
 		reply += "Secondary"
 	} else {
 		reply += "Primary"
 	}
 	totalHealthScore := dr.healthCheckup()
 	reply += fmt.Sprintf(" %f", totalHealthScore)
-	queueC2CMsg(reply)
+	sendC2CMsg(reply)
 }
 
 // Attempt to connect to other controller then start negotiation
 func startControllerModeNegotiation() {
 	waitForTCPConnectionAttempt()
 	negotiateControllerMode()
+}
+
+// Handle configuration for SNMP encryption
+func handleEncryptionConfig(config *cfg) error {
+	// Configure hashed passwords and decryption key from their hard-coded locations as well
+	pduHashedAuth, err := os.ReadFile(pduHashedAuthPath)
+	if err != nil {
+		return fmt.Errorf("failed to read hashed authentication password: %w", err)
+	}
+	pduHashedPriv, err := os.ReadFile(pduHashedPrivPath)
+	if err != nil {
+		return fmt.Errorf("failed to read hashed privacy password: %w", err)
+	}
+
+	decryptKeyBytes, err := os.ReadFile(pduDecryptionKeyPath)
+	if err != nil {
+		return fmt.Errorf("failed to read decryption key: %w", err)
+	}
+	block, _ := pem.Decode(decryptKeyBytes)
+	pduDecryptionKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		return fmt.Errorf("failed to parse decryption key interface: %w", err)
+	}
+
+	decryptedPduAuth, err := rsa.DecryptPKCS1v15(nil, pduDecryptionKey, pduHashedAuth)
+	if err != nil {
+		return fmt.Errorf("failed to decrypt hashed pdu Authentication password: %w", err)
+	}
+	pduAuth = strings.TrimSpace(string(decryptedPduAuth))
+	decryptedPduPriv, err := rsa.DecryptPKCS1v15(nil, pduDecryptionKey, pduHashedPriv)
+	if err != nil {
+		return fmt.Errorf("failed to decrypt hashed pdu Privacy password: %w", err)
+	}
+	pduPriv = strings.TrimSpace(string(decryptedPduPriv))
+
+	return nil
+}
+
+// Further validate failover configuration
+func validateFailoverConfig(config *cfg) error {
+	if config.controllerName == "" {
+		return fmt.Errorf("no controller name provided")
+	}
+	if net.ParseIP(config.primaryIP) == nil {
+		return fmt.Errorf("invalid primary IP address provided: %s", config.primaryIP)
+	}
+	if config.primaryNetworkInterface == "" {
+		return fmt.Errorf("no primary network interface provided")
+	}
+	if net.ParseIP(config.thisCtrlrStaticIP) == nil {
+		return fmt.Errorf("invalid static IP provided for this controller: %s", config.thisCtrlrStaticIP)
+	}
+	if net.ParseIP(config.otherCtrlrStaticIP) == nil {
+		return fmt.Errorf("invalid static IP provided for other controller: %s", config.otherCtrlrStaticIP)
+	}
+	if net.ParseIP(config.pduIP) == nil {
+		return fmt.Errorf("invalid pdu IP provided: %s", config.pduIP)
+	}
+	if config.pduOutletEndpoint == "" {
+		return fmt.Errorf("no pdu outlet endpoint provided")
+	}
+	otherOutletInt, err := strconv.Atoi(config.otherCtrlrOutlet)
+	if err != nil {
+		return fmt.Errorf("outlet value: %s for the other controller should be able to be parsed as an integer", config.otherCtrlrOutlet)
+	}
+	// TODO: currently only 8 outlets supported, but could be up to 24 in the future with different models
+	if otherOutletInt < 1 || otherOutletInt > 8 {
+		return fmt.Errorf("outlet value for the other controller is out of range, should be [1 - 8] but got %d", otherOutletInt)
+	}
+
+	return nil
+}
+
+func configureFailover(body map[string]interface{}, config *cfg) error {
+	if !config.enableRedundantFailover {
+		return nil
+	}
+	// Controller name is required when failover is enabled, but optional otherwise
+	controllerNameInterface, err := parsemap.ExtractValueWithType(body, "controllerName", parsemap.STRING)
+	if err != nil {
+		// Controller name is optional if failover is disabled
+		if !config.enableRedundantFailover {
+			log.Warnf("Failed to extract controllerName from configuration, will not be published")
+			return nil
+		}
+		// Controller name is required if failover is enabled
+		return fmt.Errorf("failed to extract controllerName from configuration: %w", err)
+	}
+	config.controllerName = controllerNameInterface.(string)
+
+	primaryIPInterface, err := parsemap.ExtractValueWithType(body, "primaryIP", parsemap.STRING)
+	if err != nil {
+		return fmt.Errorf("failed to extract primaryIP from configuration: %w", err)
+	}
+	config.primaryIP = primaryIPInterface.(string)
+
+	primaryNetInterface, err := parsemap.ExtractValueWithType(body, "primaryNetworkInterface", parsemap.STRING)
+	if err != nil {
+		return fmt.Errorf("failed to extract primaryNetworkInterface from configuration: %w", err)
+	}
+	config.primaryNetworkInterface = primaryNetInterface.(string)
+
+	thisCtrlrIPInterface, err := parsemap.ExtractValueWithType(body, "thisCtrlrStaticIP", parsemap.STRING)
+	if err != nil {
+		return fmt.Errorf("failed to extract thisCtrlrStaticIP from configuration: %w", err)
+	}
+	config.thisCtrlrStaticIP = thisCtrlrIPInterface.(string)
+
+	otherCtrlrIPInterface, err := parsemap.ExtractValueWithType(body, "otherCtrlrStaticIP", parsemap.STRING)
+	if err != nil {
+		return fmt.Errorf("failed to extract otherCtrlrStaticIP from configuration: %w", err)
+	}
+	config.otherCtrlrStaticIP = otherCtrlrIPInterface.(string)
+
+	pduIPInterface, err := parsemap.ExtractValueWithType(body, "pduIP", parsemap.STRING)
+	if err != nil {
+		return fmt.Errorf("failed to extract pduIP from configuration: %w", err)
+	}
+	config.pduIP = pduIPInterface.(string)
+
+	pduOutletEndpointInterface, err := parsemap.ExtractValueWithType(body, "pduOutletEndpoint", parsemap.STRING)
+	// If error, use default and do not report
+	if err == nil {
+		config.pduOutletEndpoint = pduOutletEndpointInterface.(string)
+	} else {
+		// Setup default PDU endpoint
+		config.pduOutletEndpoint = ".1.3.6.1.4.1.318.1.1.4.4.2.1.3."
+	}
+
+	otherOutletInterface, err := parsemap.ExtractValueWithType(body, "otherCtrlrOutlet", parsemap.STRING)
+	if err != nil {
+		return fmt.Errorf("failed to extract otherCtrlrOutlet from configuration: %w", err)
+	}
+	config.otherCtrlrOutlet = otherOutletInterface.(string)
+
+	err = handleEncryptionConfig(config)
+	if err != nil {
+		return err
+	}
+
+	// Validate failover configuration
+	return validateFailoverConfig(config)
+}
+
+// Claim the virtual interface and add the Primary IP to it
+func setupPrimaryIP() error {
+	if primaryIP == "" || primaryNetworkInterface == "" {
+		return fmt.Errorf("failed to takeover: primary IP or network interface undefined")
+	}
+	// Take the primary IP on this machine
+	// Set up virtual device
+	ipCmd := exec.Command("ip", "link", "add", primaryNetworkInterface, "type", "dummy")
+	if ipErr := ipCmd.Run(); ipErr != nil {
+		return fmt.Errorf("error adding virtual interface: %w", ipErr)
+	}
+	// Create IP alias
+	ipAliasCmd := exec.Command("ip", "addr", "add", primaryIP, "dev", primaryNetworkInterface, "label", primaryNetworkInterface)
+	if ipAliasErr := ipAliasCmd.Run(); ipAliasErr != nil {
+		return fmt.Errorf("error setting IP: %w", ipAliasErr)
+	}
+	return nil
+}
+
+// Configure and return PDU SNMP connection
+func configureSNMP() {
+	gosnmp.Default.Target = pduIP
+	gosnmp.Default.Version = gosnmp.Version3
+	gosnmp.Default.Transport = "udp"
+	gosnmp.Default.MsgFlags = gosnmp.AuthPriv
+	gosnmp.Default.Community = pduUser
+	gosnmp.Default.UseUnconnectedUDPSocket = true
+	gosnmp.Default.SecurityModel = gosnmp.UserSecurityModel
+	gosnmp.Default.SecurityParameters = &gosnmp.UsmSecurityParameters{
+		UserName:                 pduUser,
+		AuthenticationProtocol:   gosnmp.SHA,
+		PrivacyProtocol:          gosnmp.AES,
+		AuthenticationPassphrase: pduAuth,
+		PrivacyPassphrase:        pduPriv,
+	}
 }
 
 // Sets controller mode to Primary, takes over primary IP and restarts the other controller
@@ -121,29 +325,30 @@ func takeOverAsPrimary() {
 	}
 
 	if enableRedundantFailover {
-		if primaryIP == "" || primaryNetworkInterface == "" {
-			log.Errorf("Failed to takeover: primary IP or network interface undefined")
-			return
-		}
-		// Take the primary IP on this machine
-		// Set up virtual device
-		ipCmd := exec.Command("ip", "link", "add", primaryNetworkInterface, "type", "dummy")
-		if ipErr := ipCmd.Run(); ipErr != nil {
-			log.Errorf("Error setting IP: %s", ipErr)
-		}
-		// Create IP alias
-		ipAliasCmd := exec.Command("ip", "addr", "add", primaryIP, "dev", primaryNetworkInterface, "label", primaryNetworkInterface)
-		if ipAliasErr := ipAliasCmd.Run(); ipAliasErr != nil {
-			log.Errorf("Error setting IP: %s", ipAliasErr)
+		// Setup Primary IP for this controller
+		if err := setupPrimaryIP(); err != nil {
+			log.Errorf("Failover takeover error: %v\n", err)
 		}
 
-		// Reset the pdu
-		restartCmd := exec.Command("/bin/sh", "/usr/local/bin/send_pdu_restart.sh", OtherCtrlrOutlet, pduIP)
-		// Shows the execution of the restart script including ssh connection - uncomment for debugging
-		// restartCmd.Stdout = os.Stdout
-		// restartCmd.Stderr = os.Stderr
-		if restartErr := restartCmd.Start(); restartErr != nil {
-			log.Errorf("Error restarting PDU: %s", restartErr)
+		// Configure and negotiate SNMP connection
+		configureSNMP()
+		if err := gosnmp.Default.Connect(); err != nil {
+			log.Errorf("Failed to connect to pdu: %v\n", err)
+		}
+
+		// Restart the PDU outlet
+		result, err := gosnmp.Default.Set([]gosnmp.SnmpPDU{
+			{
+				Name:  pduOutletEndpoint + otherCtrlrOutlet,
+				Type:  gosnmp.Integer,
+				Value: pduResetCmd,
+			},
+		})
+		if err != nil {
+			log.Errorf("Failed to restart other outlet: %v\n", err)
+		}
+		if result != nil && result.Error != 0 {
+			log.Errorf("Failed to restart other outlet: %v\n", result.Error)
 		}
 
 		// This controller started up as secondary when it should have been primary, re-read latest setpoints from DBI
@@ -165,7 +370,6 @@ func (p *processInfo) sendPrimaryFlag(v bool) {
 
 // If C2C connection does not succeed after a set amount of time, assume Primary. Otherwise, let negotiation decide
 func waitForTCPConnectionAttempt() {
-	firstTCPConnectionAttemptTimeAllowanceMS := 10000
 	deadlineToConnectToClientIfServer := startTicker(firstTCPConnectionAttemptTimeAllowanceMS)
 	defer deadlineToConnectToClientIfServer.Stop()
 	for {

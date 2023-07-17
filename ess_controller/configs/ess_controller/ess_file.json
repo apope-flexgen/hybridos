@@ -1,0 +1,23 @@
+{
+    "/sysconfig/default": 
+    {
+        "Help": " This is the default system config file",
+        "Subs":":/components/ess:/assets:/system/ess:/site/ess:",
+        "Config":"ess_init",
+        "EssName": "ess"
+    }
+    ,
+    "/blockeduris/pub" :
+    {
+        "/assets/ess/summary":false,
+        "/assets/ess/bms_1":true,
+        "/assets/ess/bms_2":true
+    },
+    "/blockeduris/set" :
+    {
+        "/assets/ess/summary":true,
+        "/assets/ess/bms_1":true,
+        "/assets/ess/bms_2":true
+    }
+
+}

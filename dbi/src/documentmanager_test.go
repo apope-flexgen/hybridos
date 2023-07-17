@@ -27,8 +27,8 @@ func TestExtractDB(t *testing.T) {
 	}
 
 	// check if all data was pulled
-	if len(docMan.localData["test"]) != numDocs {
-		t.Fatalf("docMan did not find all the documents: %v/%v", len(docMan.localData["test"]), numDocs)
+	if len(docMan.localData["dbi"]["test"]) != numDocs {
+		t.Fatalf("docMan did not find all the documents: %v/%v", len(docMan.localData["dbi"]["test"]), numDocs)
 	}
 }
 
@@ -48,20 +48,20 @@ func TestSyncDocument(t *testing.T) {
 	}
 
 	// edit and sync back up to mongo
-	docMan.localData["test"]["1"]["new"] = "this"
+	docMan.localData["dbi"]["test"]["1"]["new"] = "this"
 
-	err = docMan.syncDocument("test", "1")
+	err = docMan.syncDocument("dbi", "test", "1")
 	if err != nil {
 		t.Fatalf("sync failed: %v", err)
 	}
 
 	// pull down mongo data to check
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Fatalf("extract failed: %v", err)
 	}
 
-	if docMan.localData["test"]["1"]["new"] != "this" {
+	if docMan.localData["dbi"]["test"]["1"]["new"] != "this" {
 		t.Fatal("did not sync!")
 	}
 }
@@ -82,18 +82,18 @@ func TestDesyncDocument(t *testing.T) {
 	}
 
 	// desync from mongo
-	err = docMan.desyncDocument("test", "1")
+	err = docMan.desyncDocument("dbi", "test", "1")
 	if err != nil {
 		t.Fatalf("sync failed: %v", err)
 	}
 
 	// pull down mongo data to check
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Fatalf("extract failed: %v", err)
 	}
 
-	if _, exists := docMan.localData["test"]["1"]; exists {
+	if _, exists := docMan.localData["dbi"]["test"]["1"]; exists {
 		t.Fatal("did not sync!")
 	}
 }
@@ -119,7 +119,7 @@ func TestListCollections(t *testing.T) {
 		t.Fatalf("listed %v of 3 collections that should be present!", len(collectionNames))
 	}
 	t.Log(collectionNames)
-	t.Log(docMan.localData)
+	t.Log(docMan.localData["dbi"])
 	for _, n := range collectionNames {
 		if n != "test1" && n != "test2" && n != "test3" {
 			t.Fatalf("wrong name; %s", n)
@@ -191,7 +191,7 @@ func TestGetCollection(t *testing.T) {
 		t.Fatalf("could not start document manager: %v", err)
 	}
 
-	test1, err := docMan.getCollection("test1")
+	test1, err := docMan.getCollection("dbi", "test1")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -216,7 +216,7 @@ func TestGetDocument(t *testing.T) {
 		t.Fatalf("could not start document manager: %v", err)
 	}
 
-	doc23, err := docMan.getDocument("test2", "3")
+	doc23, err := docMan.getDocument("dbi", "test2", "3")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -241,7 +241,7 @@ func TestGetField(t *testing.T) {
 		t.Fatalf("could not start document manager: %v", err)
 	}
 
-	doc31numberstr, err := docMan.getField("test3", "1", "numberstr")
+	doc31numberstr, err := docMan.getField("dbi", "test3", "1", "numberstr")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -252,12 +252,12 @@ func TestGetField(t *testing.T) {
 	}
 
 	// test a nested retrieve
-	_, err = docMan.editDocument("test3", "newdoc", map[string]interface{}{"layer1": map[string]interface{}{"layer2": map[string]interface{}{"layer3": true, "missme": false}}}, true)
+	_, err = docMan.editDocument("dbi", "test3", "newdoc", map[string]interface{}{"layer1": map[string]interface{}{"layer2": map[string]interface{}{"layer3": true, "missme": false}}}, true)
 	if err != nil {
 		t.Error(err)
 	}
 
-	recursive, err := docMan.getField("test3", "newdoc", "layer1/layer2/layer3")
+	recursive, err := docMan.getField("dbi", "test3", "newdoc", "layer1/layer2/layer3")
 	if err != nil {
 		t.Error(err)
 	}
@@ -288,7 +288,7 @@ func TestSetCollection(t *testing.T) {
 		docMap[doc["_id"].(string)] = doc
 	}
 
-	_, err = docMan.editCollection("test1", docMap, true)
+	_, err = docMan.editCollection("dbi", "test1", docMap, true)
 	if err != nil {
 		t.Error(err)
 	}
@@ -299,7 +299,7 @@ func TestSetCollection(t *testing.T) {
 	}
 
 	// check mongo
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Error(err)
 	}
@@ -325,12 +325,12 @@ func TestSetDocument(t *testing.T) {
 		t.Fatalf("could not start document manager: %v", err)
 	}
 
-	_, err = docMan.editDocument("test", "5", map[string]interface{}{"foo": "bar"}, true)
+	_, err = docMan.editDocument("dbi", "test", "5", map[string]interface{}{"foo": "bar"}, true)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	doc5, err := docMan.getDocument("test", "5")
+	doc5, err := docMan.getDocument("dbi", "test", "5")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -343,12 +343,12 @@ func TestSetDocument(t *testing.T) {
 	t.Log(doc5)
 
 	// extract from mongo and check again
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Error(err)
 	}
 
-	doc5, err = docMan.getDocument("test", "5")
+	doc5, err = docMan.getDocument("dbi", "test", "5")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -377,27 +377,28 @@ func TestSetField(t *testing.T) {
 	}
 
 	// value map
-	_, err = docMan.editField("test", "1", "fault", map[string]interface{}{"value": false}, true)
+	_, err = docMan.editField("dbi", "test", "1", "fault", map[string]interface{}{"value": false}, true)
 	if err != nil {
 		t.Errorf("failed setField (value map): %v", err)
 	}
 
-	val, err := docMan.getField("test", "1", "fault")
+	val, err := docMan.getField("dbi", "test", "1", "fault")
 	if err != nil {
 		t.Error("could not get doc 1/fault")
 	}
 
 	if val != false {
+		t.Log(val)
 		t.Error("set failed")
 	}
 
 	// new value
-	_, err = docMan.editField("test", "2", "new", "this", true)
+	_, err = docMan.editField("dbi", "test", "2", "new", "this", true)
 	if err != nil {
 		t.Errorf("failed setField (new value map): %v", err)
 	}
 
-	val, err = docMan.getField("test", "2", "new")
+	val, err = docMan.getField("dbi", "test", "2", "new")
 	if err != nil {
 		t.Error("could not get doc 2/new")
 	}
@@ -407,12 +408,12 @@ func TestSetField(t *testing.T) {
 	}
 
 	// new map
-	_, err = docMan.editField("test", "3", "maptest", map[string]interface{}{"something": true, "nothing": false, "a": 1, "b": map[string]interface{}{"b": 2, "c": 3}}, true)
+	_, err = docMan.editField("dbi", "test", "3", "maptest", map[string]interface{}{"something": true, "nothing": false, "a": 1, "b": map[string]interface{}{"b": 2, "c": 3}}, true)
 	if err != nil {
 		t.Errorf("failed setField (new map): %v", err)
 	}
 
-	val, err = docMan.getField("test", "3", "maptest")
+	val, err = docMan.getField("dbi", "test", "3", "maptest")
 	if err != nil {
 		t.Error("could not get doc 3/maptest")
 	}
@@ -427,12 +428,12 @@ func TestSetField(t *testing.T) {
 	}
 
 	// set map value
-	_, err = docMan.editField("test", "3", "maptest/something", false, true)
+	_, err = docMan.editField("dbi", "test", "3", "maptest/something", false, true)
 	if err != nil {
 		t.Errorf("failed setField (set map value): %v", err)
 	}
 
-	val, err = docMan.getField("test", "3", "maptest")
+	val, err = docMan.getField("dbi", "test", "3", "maptest")
 	if err != nil {
 		t.Error("could not get doc 3/maptest")
 	}
@@ -449,12 +450,12 @@ func TestSetField(t *testing.T) {
 	}
 
 	// set double map value w override
-	_, err = docMan.editField("test", "3", "maptest/b", map[string]interface{}{"d": 4}, true)
+	_, err = docMan.editField("dbi", "test", "3", "maptest/b", map[string]interface{}{"d": 4}, true)
 	if err != nil {
 		t.Errorf("failed setField (set double map value w override): %v", err)
 	}
 
-	val, err = docMan.getField("test", "3", "maptest/b")
+	val, err = docMan.getField("dbi", "test", "3", "maptest/b")
 	if err != nil {
 		t.Error("could not get doc 3/maptest")
 	}
@@ -474,12 +475,12 @@ func TestSetField(t *testing.T) {
 	}
 
 	// field in coll/doc that DNE
-	_, err = docMan.editField("newcoll", "newdoc", "newfield", true, true)
+	_, err = docMan.editField("dbi", "newcoll", "newdoc", "newfield", true, true)
 	if err != nil {
 		t.Errorf("failed to create field/doc/coll: %v", err)
 	}
 
-	val, err = docMan.getField("newcoll", "newdoc", "newfield")
+	val, err = docMan.getField("dbi", "newcoll", "newdoc", "newfield")
 	if err != nil {
 		t.Error("could not get doc 3/maptest")
 	}
@@ -510,7 +511,7 @@ func TestPostCollection(t *testing.T) {
 	}
 
 	// test adding to existing
-	docMan.editCollection("test1", docMap, false)
+	docMan.editCollection("dbi", "test1", docMap, false)
 
 	docs := docMan.listDocumentsMap("test1")
 	if len(docs) != len(docArr)+numDocs {
@@ -518,7 +519,7 @@ func TestPostCollection(t *testing.T) {
 	}
 
 	// check mongo
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Error(err)
 	}
@@ -529,7 +530,7 @@ func TestPostCollection(t *testing.T) {
 	}
 
 	// test adding new
-	_, err = docMan.editCollection("test3", docMap, false)
+	_, err = docMan.editCollection("dbi", "test3", docMap, false)
 	if err != nil {
 		t.Error(err)
 	}
@@ -540,7 +541,7 @@ func TestPostCollection(t *testing.T) {
 	}
 
 	// check mongo
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Error(err)
 	}
@@ -566,12 +567,12 @@ func TestPostDocument(t *testing.T) {
 		t.Fatalf("could not start document manager: %v", err)
 	}
 
-	_, err = docMan.editDocument("test", "5", map[string]interface{}{"foo": "bar"}, false)
+	_, err = docMan.editDocument("dbi", "test", "5", map[string]interface{}{"foo": "bar"}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	doc5, err := docMan.getDocument("test", "5")
+	doc5, err := docMan.getDocument("dbi", "test", "5")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -585,12 +586,12 @@ func TestPostDocument(t *testing.T) {
 	t.Log(doc5)
 
 	// extract from mongo and check again
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Error(err)
 	}
 
-	doc5, err = docMan.getDocument("test", "5")
+	doc5, err = docMan.getDocument("dbi", "test", "5")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -619,12 +620,12 @@ func TestPostField(t *testing.T) {
 	}
 
 	// value map
-	_, err = docMan.editField("test", "1", "fault", map[string]interface{}{"value": false}, false)
+	_, err = docMan.editField("dbi", "test", "1", "fault", map[string]interface{}{"value": false}, false)
 	if err != nil {
 		t.Errorf("failed setField (value map): %v", err)
 	}
 
-	val, err := docMan.getField("test", "1", "fault")
+	val, err := docMan.getField("dbi", "test", "1", "fault")
 	if err != nil {
 		t.Error("could not get doc 1/fault")
 	}
@@ -634,12 +635,12 @@ func TestPostField(t *testing.T) {
 	}
 
 	// new value
-	_, err = docMan.editField("test", "2", "new", "this", false)
+	_, err = docMan.editField("dbi", "test", "2", "new", "this", false)
 	if err != nil {
 		t.Errorf("failed setField (new value map): %v", err)
 	}
 
-	val, err = docMan.getField("test", "2", "new")
+	val, err = docMan.getField("dbi", "test", "2", "new")
 	if err != nil {
 		t.Error("could not get doc 2/new")
 	}
@@ -649,15 +650,16 @@ func TestPostField(t *testing.T) {
 	}
 
 	// new map
-	_, err = docMan.editField("test", "3", "maptest", map[string]interface{}{"something": true, "nothing": false, "a": 1, "b": map[string]interface{}{"b": 2, "c": 3}}, false)
+	_, err = docMan.editField("dbi", "test", "3", "maptest", map[string]interface{}{"something": true, "nothing": false, "a": 1, "b": map[string]interface{}{"b": 2, "c": 3}}, false)
 	if err != nil {
 		t.Errorf("failed setField (new map): %v", err)
 	}
 
-	val, err = docMan.getField("test", "3", "maptest")
+	val, err = docMan.getField("dbi", "test", "3", "maptest")
 	if err != nil {
 		t.Error("could not get doc 3/maptest")
 	}
+	t.Log(val)
 
 	switch v := val.(type) {
 	case map[string]interface{}:
@@ -669,12 +671,12 @@ func TestPostField(t *testing.T) {
 	}
 
 	// set map value
-	_, err = docMan.editField("test", "3", "maptest/something", false, false)
+	_, err = docMan.editField("dbi", "test", "3", "maptest/something", false, false)
 	if err != nil {
 		t.Errorf("failed setField (set map value): %v", err)
 	}
 
-	val, err = docMan.getField("test", "3", "maptest")
+	val, err = docMan.getField("dbi", "test", "3", "maptest")
 	if err != nil {
 		t.Error("could not get doc 3/maptest")
 	}
@@ -691,12 +693,12 @@ func TestPostField(t *testing.T) {
 	}
 
 	// set double map value w override
-	_, err = docMan.editField("test", "3", "maptest/b", map[string]interface{}{"d": 4}, false)
+	_, err = docMan.editField("dbi", "test", "3", "maptest/b", map[string]interface{}{"d": 4}, false)
 	if err != nil {
 		t.Errorf("failed setField (set double map value w override): %v", err)
 	}
 
-	val, err = docMan.getField("test", "3", "maptest/b")
+	val, err = docMan.getField("dbi", "test", "3", "maptest/b")
 	if err != nil {
 		t.Error("could not get doc 3/maptest")
 	}
@@ -731,7 +733,7 @@ func TestDeleteCollection(t *testing.T) {
 		t.Fatalf("could not start document manager: %v", err)
 	}
 
-	_, err = docMan.deleteCollection("test1")
+	_, err = docMan.deleteCollection("dbi", "test1")
 	if err != nil {
 		t.Error(err)
 	}
@@ -750,7 +752,7 @@ func TestDeleteCollection(t *testing.T) {
 	}
 
 	// check remote
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Error(err)
 	}
@@ -783,23 +785,23 @@ func TestDeleteDocument(t *testing.T) {
 		t.Fatalf("could not start document manager: %v", err)
 	}
 
-	_, err = docMan.deleteDocument("test", "7")
+	_, err = docMan.deleteDocument("dbi", "test", "7")
 	if err != nil {
 		t.Errorf("could not delete doc: %v", err)
 	}
 
-	doc, _ := docMan.getDocument("test", "7")
+	doc, _ := docMan.getDocument("dbi", "test", "7")
 	if doc != nil {
 		t.Log(doc)
 		t.Fatalf("document still exists!")
 	}
 
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	doc, _ = docMan.getDocument("test", "7")
+	doc, _ = docMan.getDocument("dbi", "test", "7")
 	if doc != nil {
 		t.Log(doc)
 		t.Fatalf("document still exists in mongo!")
@@ -822,40 +824,40 @@ func TestDeleteField(t *testing.T) {
 	}
 
 	// regular delete
-	_, err = docMan.deleteField("test", "7", "fault")
+	_, err = docMan.deleteField("dbi", "test", "7", "fault")
 	if err != nil {
 		t.Errorf("could not delete doc: %v", err)
 	}
 
-	doc, _ := docMan.getDocument("test", "7")
+	doc, _ := docMan.getDocument("dbi", "test", "7")
 	if doc["fault"] != nil {
 		t.Log(doc)
 		t.Fatalf("field still exists!")
 	}
 
-	err = docMan.extractDB()
+	err = docMan.extractDBs()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	doc, _ = docMan.getDocument("test", "7")
+	doc, _ = docMan.getDocument("dbi", "test", "7")
 	if doc["fault"] != nil {
 		t.Log(doc)
 		t.Fatalf("field still exists in mongo!")
 	}
 
 	// recursive delete
-	_, err = docMan.editDocument("test3", "newdoc", map[string]interface{}{"layer1": map[string]interface{}{"layer2": map[string]interface{}{"layer3": true}}}, true)
+	_, err = docMan.editDocument("dbi", "test3", "newdoc", map[string]interface{}{"layer1": map[string]interface{}{"layer2": map[string]interface{}{"layer3": true}}}, true)
 	if err != nil {
 		t.Error(err)
 	}
 
-	_, err = docMan.deleteField("test3", "newdoc", "layer1/layer2/layer3")
+	_, err = docMan.deleteField("dbi", "test3", "newdoc", "layer1/layer2/layer3")
 	if err != nil {
 		t.Error(err)
 	}
 
-	recursive, err := docMan.getField("test3", "newdoc", "layer1/layer2")
+	recursive, err := docMan.getField("dbi", "test3", "newdoc", "layer1/layer2")
 	if err != nil {
 		t.Error(err)
 	}
@@ -865,7 +867,7 @@ func TestDeleteField(t *testing.T) {
 	}
 
 	// DNE delete
-	_, err = docMan.deleteField("test3", "numberstr", "nein/nein/nein")
+	_, err = docMan.deleteField("dbi", "test3", "numberstr", "nein/nein/nein")
 	if err != nil {
 		t.Log(err)
 	}
@@ -917,4 +919,342 @@ func makePoints(size int) []map[string]interface{} {
 	}
 
 	return data
+}
+
+// POST-ALPHA FEATURE TESTS
+
+// feature - array interfacing
+func TestGetArray(t *testing.T) {
+	// set up sample data
+	numDocs := 1
+	err := populateSampleData(numDocs, "test")
+	if err != nil {
+		t.Fatalf("could not populate test data: %v", err)
+	}
+
+	// create docMan
+	docMan := DocumentManager{}
+	err = docMan.init("localhost", "27017")
+	if err != nil {
+		t.Fatalf("could not start document manager: %v", err)
+	}
+
+	// write arr
+	arr := []interface{}{1, 2.2, "three", false}
+	_, err = docMan.editField("dbi", "test", "1", "arr", arr, true)
+	if err != nil {
+		t.Errorf("failed setField (initial array): %v", err)
+	}
+
+	// check get
+	for i, correct := range arr {
+		val, err := docMan.getField("dbi", "test", "1", fmt.Sprintf("arr/%v", i))
+		if err != nil {
+			t.Errorf("%v", err)
+		}
+
+		if correct != val {
+			t.Errorf("%v should be %v, is %v", i, correct, val)
+		}
+	}
+
+	// check invalid get
+	val, err := docMan.getField("dbi", "test", "1", "arr/4")
+	if val != nil {
+		t.Error("should be invalid")
+	}
+	if err == nil {
+		t.Error("error should not be nil")
+	}
+}
+
+func TestDeleteArray(t *testing.T) {
+	// set up sample data
+	numDocs := 1
+	err := populateSampleData(numDocs, "test")
+	if err != nil {
+		t.Fatalf("could not populate test data: %v", err)
+	}
+
+	// create docMan
+	docMan := DocumentManager{}
+	err = docMan.init("localhost", "27017")
+	if err != nil {
+		t.Fatalf("could not start document manager: %v", err)
+	}
+
+	// write arr
+	arr := []interface{}{1, 2.2, "three", false}
+	_, err = docMan.editField("dbi", "test", "1", "arr", arr, true)
+	if err != nil {
+		t.Errorf("failed setField (initial array): %v", err)
+	}
+
+	val, err := docMan.getField("dbi", "test", "1", "arr")
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(val)
+
+	_, err = docMan.deleteField("dbi", "test", "1", "arr/2")
+	if err != nil {
+		t.Error(err)
+	}
+
+	val, err = docMan.getField("dbi", "test", "1", "arr")
+	if err != nil {
+		t.Error(err)
+	}
+
+	switch slice := val.(type) {
+	case []any:
+		t.Log(slice)
+		if len(slice) != len(arr)-1 {
+			t.Error("wrong size!")
+		}
+		if slice[2] == "three" {
+			t.Error("did not delete properly")
+		}
+	default:
+		t.Error("was not array!")
+	}
+
+	// deleting through arrays
+
+	// write arr
+	arr = []interface{}{1, 2.2, "three", map[string]interface{}{"number": 2, "arr": []interface{}{0, 1, 2, 3}}}
+	_, err = docMan.editField("dbi", "test", "1", "arr", arr, true)
+	if err != nil {
+		t.Errorf("failed setField (initial array): %v", err)
+	}
+
+	val, err = docMan.getField("dbi", "test", "1", "arr/3/arr")
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(val)
+
+	_, err = docMan.deleteField("dbi", "test", "1", "arr/3/arr/1")
+	if err != nil {
+		t.Error(err)
+	}
+
+	val, err = docMan.getField("dbi", "test", "1", "arr/3/arr")
+	if err != nil {
+		t.Error(err)
+	}
+
+	switch slice := val.(type) {
+	case []any:
+		if len(slice) != len(arr)-1 {
+			t.Error("wrong size!")
+		}
+		if slice[1] == 1 {
+			t.Error("did not delete properly")
+		}
+	default:
+		t.Error("was not array!")
+	}
+
+	// erroneous requests
+	_, err = docMan.deleteField("dbi", "test", "1", "arr/3/arr/-1")
+	if err == nil {
+		t.Error("should be invalid")
+	}
+
+	_, err = docMan.deleteField("dbi", "test", "1", "arr/3/arr/10")
+	if err == nil {
+		t.Error("should be invalid")
+	}
+}
+
+func TestSetArray(t *testing.T) {
+	// set up sample data
+	numDocs := 1
+	err := populateSampleData(numDocs, "test")
+	if err != nil {
+		t.Fatalf("could not populate test data: %v", err)
+	}
+
+	// create docMan
+	docMan := DocumentManager{}
+	err = docMan.init("localhost", "27017")
+	if err != nil {
+		t.Fatalf("could not start document manager: %v", err)
+	}
+
+	// write arr
+	arr := []interface{}{1, 2.2, "three", map[string]interface{}{"number": 2, "arr": []interface{}{0, 1, 2, 3}}}
+	_, err = docMan.editField("dbi", "test", "1", "arr", arr, true)
+	if err != nil {
+		t.Errorf("failed setField (initial array): %v", err)
+	}
+
+	// edit a nested array
+	_, err = docMan.editField("dbi", "test", "1", "arr/3/arr", []interface{}{true, false}, true)
+	if err != nil {
+		t.Error(err)
+	}
+
+	val, err := docMan.getField("dbi", "test", "1", "arr/3/arr")
+	if err != nil {
+		t.Error(err)
+	}
+	switch s := val.(type) {
+	case []interface{}:
+		if !(s[0].(bool) && !s[1].(bool)) || len(s) != 2 {
+			t.Error("set did not take")
+		}
+	default:
+		t.Error("is not a slice!")
+	}
+
+	// create a new array with set
+	_, err = docMan.editField("dbi", "test", "1", "arr/7/new", []interface{}{true, false}, true)
+	if err != nil {
+		t.Error(err)
+	}
+
+	val, err = docMan.getField("dbi", "test", "1", "arr/7/new")
+	if err != nil {
+		t.Error(err)
+	}
+	switch s := val.(type) {
+	case []interface{}:
+		if !(s[0].(bool) && !s[1].(bool)) || len(s) != 2 {
+			t.Error("set did not take")
+		}
+	default:
+		t.Error("is not a slice!")
+	}
+
+	// make dbi create array by passing a number field to nonexistent field
+	_, err = docMan.editField("dbi", "test", "1", "arr/8/2", []interface{}{true, false}, true)
+	if err != nil {
+		t.Error(err)
+	}
+
+	val, err = docMan.getField("dbi", "test", "1", "arr/8/2")
+	if err != nil {
+		t.Error(err)
+	}
+	switch s := val.(type) {
+	case []interface{}:
+		if !(s[0].(bool) && !s[1].(bool)) || len(s) != 2 {
+			t.Error("set did not take")
+		}
+	default:
+		t.Error("is not a slice!")
+	}
+}
+
+func TestPostArray(t *testing.T) {
+	// set up sample data
+	numDocs := 1
+	err := populateSampleData(numDocs, "test")
+	if err != nil {
+		t.Fatalf("could not populate test data: %v", err)
+	}
+
+	// create docMan
+	docMan := DocumentManager{}
+	err = docMan.init("localhost", "27017")
+	if err != nil {
+		t.Fatalf("could not start document manager: %v", err)
+	}
+
+	// write arr
+	arr := []interface{}{1, 2.2, "three", map[string]interface{}{"number": 2, "arr": []interface{}{0, 1, 2, 3}}}
+	_, err = docMan.editField("dbi", "test", "1", "arr", arr, true)
+	if err != nil {
+		t.Errorf("failed setField (initial array): %v", err)
+	}
+
+	// edit a nested array
+	_, err = docMan.editField("dbi", "test", "1", "arr", []interface{}{true, false}, false)
+	if err != nil {
+		t.Error(err)
+	}
+
+	val, err := docMan.getField("dbi", "test", "1", "arr")
+	if err != nil {
+		t.Error(err)
+	}
+	switch s := val.(type) {
+	case []interface{}:
+		if len(s) != len(arr)+2 || !(s[4].(bool) && !s[5].(bool)) {
+			t.Error("post did not take")
+			t.Log(val)
+		}
+	default:
+		t.Error("is not a slice!")
+	}
+
+	// create a new array with post
+	_, err = docMan.editField("dbi", "test", "1", "arr/7/new", []interface{}{true, false}, false)
+	if err != nil {
+		t.Error(err)
+	}
+
+	val, err = docMan.getField("dbi", "test", "1", "arr/7/new")
+	if err != nil {
+		t.Error(err)
+	}
+	switch s := val.(type) {
+	case []interface{}:
+		if !(s[0].(bool) && !s[1].(bool)) || len(s) != 2 {
+			t.Error("post did not take")
+		}
+	default:
+		t.Error("is not a slice!")
+	}
+
+	// make dbi create array by passing a number field to nonexistent field
+	_, err = docMan.editField("dbi", "test", "1", "arr/8/2", []interface{}{true, false}, false)
+	if err != nil {
+		t.Error(err)
+	}
+
+	val, err = docMan.getField("dbi", "test", "1", "arr/8/2")
+	if err != nil {
+		t.Error(err)
+	}
+	switch s := val.(type) {
+	case []interface{}:
+		if !(s[0].(bool) && !s[1].(bool)) || len(s) != 2 {
+			t.Error("post did not take")
+		}
+	default:
+		t.Error("is not a slice!")
+	}
+}
+
+func TestPlayground(t *testing.T) {
+	// set up sample data
+	numDocs := 1
+	err := populateSampleData(numDocs, "test")
+	if err != nil {
+		t.Fatalf("could not populate test data: %v", err)
+	}
+
+	// create docMan
+	docMan := DocumentManager{}
+	err = docMan.init("localhost", "27017")
+	if err != nil {
+		t.Fatalf("could not start document manager: %v", err)
+	}
+
+	// write arr
+	arr := []interface{}{1, 2.2, "three", map[string]interface{}{"number": 2, "arr": []interface{}{0, 1, 2, 3}}}
+
+	_, err = docMan.editField("dbi", "test", "0", "arr", arr, true)
+	if err != nil {
+		t.Errorf("failed setField (initial array): %v", err)
+	}
+
+	val, err := docMan.getDocument("dbi", "test", "0")
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(val)
 }

@@ -1,0 +1,248 @@
+{
+	"/assets/bms":	{
+		"ctrlword2":	{
+			"value":	0,
+			"actions":	{
+				"onSet":	{
+					"enum":	[]
+				}
+			}
+		},
+		"start_stop":	{
+			"value":	0,
+			"actions":	{
+				"onSet":	{
+					"bitfield":	[]
+				}
+			}
+		}
+	},
+	"/commands/bss_1":	{
+		"ActivePowerCmd":	{
+			"value":	5
+		},
+		"ReactivePowerCmd":	{
+			"value":	0
+		}
+	},
+	"/components/catl01_ems_bms_rw":	{
+		"ems_test_status":	{
+			"value":	"Idle",
+			"actions":	{
+				"onSet":	{
+					"remap":	[]
+				}
+			}
+		}
+	},
+	"/constants/bss_1":	{
+		"DC_contactor_closed":	{
+			"value":	2
+		},
+		"DC_contactor_open":	{
+			"value":	1
+		},
+		"DC_contactor_reset":	{
+			"value":	3
+		},
+		"chg_soc_begin":	{
+			"value":	90.001
+		},
+		"chg_soc_end":	{
+			"value":	101.5
+		},
+		"control_word_off":	{
+			"value":	2
+		},
+		"control_word_on":	{
+			"value":	1
+		},
+		"cooldown_timer":	{
+			"value":	250
+		},
+		"dischg_soc_begin":	{
+			"value":	10.001
+		},
+		"dischg_soc_end":	{
+			"value":	-1.5
+		},
+		"max_load_threshold":	{
+			"value":	200000
+		},
+		"max_soc_raw":	{
+			"value":	99.5
+		},
+		"min_load_threshold":	{
+			"value":	1000
+		},
+		"min_soc_raw":	{
+			"value":	1.5
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are constant defintions"
+		},
+		"priority":	{
+			"value":	1
+		},
+		"rated_active_power":	{
+			"value":	2200
+		},
+		"rated_apparent_power":	{
+			"value":	2200
+		},
+		"start_timer":	{
+			"value":	50
+		}
+	},
+	"/controls/bss_1":	{
+		"AcContactorCloseCmd":	{
+			"value":	false
+		},
+		"AcContactorOpenCmd":	{
+			"value":	false
+		},
+		"ActivePowerSetpoint":	{
+			"value":	0
+		},
+		"DcContactorCloseCmd":	{
+			"value":	false
+		},
+		"DcContactorOpenCmd":	{
+			"value":	false
+		},
+		"OffCmd":	{
+			"value":	false
+		},
+		"OnCmd":	{
+			"value":	false
+		},
+		"ReactivePowerSetpoint":	{
+			"value":	0
+		},
+		"StandbyCmd":	{
+			"value":	false
+		},
+		"active_power_setpoint":	{
+			"value":	2200
+		},
+		"kacclosecmd":	{
+			"value":	0
+		},
+		"kacopencmd":	{
+			"value":	0
+		},
+		"kdcclosecmd":	{
+			"value":	0
+		},
+		"kdccopencmd":	{
+			"value":	0
+		},
+		"lastActivePowerSetpoint":	{
+			"value":	0
+		},
+		"lastReactivePowerSetpoint":	{
+			"value":	0
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are controls defintions"
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"onffcmd":	{
+			"value":	0
+		},
+		"reactive_power_setpoint":	{
+			"value":	2200
+		}
+	},
+	"/ident/bss_1":	{
+		"id":	{
+			"value":	"bss_1"
+		},
+		"name":	{
+			"value":	"BESS  Block 01"
+		}
+	},
+	"/params/bss_1":	{
+		"ActivePowerDeadband":	{
+			"value":	5
+		},
+		"ReactivePowerDeadband":	{
+			"value":	5
+		},
+		"maxActivePower":	{
+			"value":	0
+		},
+		"maxRectivePower":	{
+			"value":	0
+		}
+	},
+	"/status/bss_1":	{
+		"AcContactor":	{
+			"value":	false
+		},
+		"ActivePower":	{
+			"value":	0
+		},
+		"DcContactor":	{
+			"value":	false
+		},
+		"Off":	{
+			"value":	false
+		},
+		"On":	{
+			"value":	false
+		},
+		"RectivePower":	{
+			"value":	0
+		},
+		"Standby":	{
+			"value":	false
+		}
+	},
+	"/variables/bss_1":	{
+		"ac_contactor":	{
+			"value":	"off"
+		},
+		"ac_contactor_cmd":	{
+			"value":	"off"
+		},
+		"dc_contactor":	{
+			"value":	"off"
+		},
+		"dc_contactor_cmd":	{
+			"value":	"off"
+		},
+		"mode":	{
+			"value":	"init"
+		},
+		"mode_cmd":	{
+			"value":	"off"
+		},
+		"p":	{
+			"value":	3456
+		},
+		"q":	{
+			"value":	1234
+		},
+		"soc":	{
+			"value":	100
+		},
+		"soh":	{
+			"value":	100
+		}
+	}
+}

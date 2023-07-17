@@ -1,0 +1,76 @@
+Changes in the 9.3 ess_controller for the 10.1 release.
+
+
+Split configs.
+dbi load configs
+config based  run/stop  controls
+all control in configs
+improved templates
+
+
+
+9.3 changes
+109 "outTime":fval
+    this can be used in place ot outValue,
+     it provides the current time plus (or minus) the offset described by fval
+	 
+118 Multiple values 
+    The new_options plus the SchedItemOpts does this for you. 
+    new_options is a way to replace the options in an assetVar. 
+    Simplly specifying "options" will add components to the current "options" array.
+    test_schedItemsOpts.sh needs to be converted to the new test format.
+
+122 Blockduris
+    /blockduris/pubs ....
+    script 300.3_test_blocked.sh needs to be converted to the new format
+
+95  Change an assetVar attributes without changing its value
+    specify a value of "$$" and we do not touch the actual value but all the Params, Options and actions are updated.
+    In addition no actions are run.
+
+67 Break run away loops.
+  If one assetVar as an action that sets a value in a second asstVar.
+  If the scond assetVar then has an action that sets a value in the first the system can enter an infinite loop.
+  
+  The number of successive actions associated with a particular asset var loop is limited to 128
+
+135  SlewRate
+
+xx HandleCmd
+
+
+140 Twins Open Close Contactors
+137  Twins Basics
+139  Twins enable / disable racks
+141 Twins Charge/Discharge setpoints.
+138 Twins Modbus
+
+ 65 Multiple options for action items. inVar , inValue inAv , outVar, outValue
+
+ 42 use protection tables for values
+    needs test script
+
+108 needs test script
+
+102  Simplified scheduler interface
+   needs test scripts and more details
+   see 
+     402.2_test_dbi_wake
+
+83  new AssetActions
+     multiple test scripts
+
+
+148  Refactored vmActions code 
+
+
+171 Dynamically configured from configs 
+
+100 Improved Templates
+  needs test infrastructure
+
+
+
+
+
+

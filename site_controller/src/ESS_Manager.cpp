@@ -522,7 +522,10 @@ bool ESS_Manager::aggregate_ess_data(void)
         }
         else
         {
-            essTotalUncontrollableActivePowerkW += pEss[i]->get_active_power();
+            // only add to uncontrollable power if ESS is uncontrollable for reasons besides a modbus disconnect
+            if (!pEss[i]->get_watchdog_fault()) {
+                essTotalUncontrollableActivePowerkW += pEss[i]->get_active_power();
+            }
         }
         
     }
@@ -546,6 +549,7 @@ void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf, cons
     bufJSON_AddStringCheckVar(buf, "name", "ESS Summary", var);
     bufJSON_AddNumberCheckVar(buf, "num_ess_available", numAvail, var);
     bufJSON_AddNumberCheckVar(buf, "num_ess_running", numRunning, var);
+    bufJSON_AddNumberCheckVar(buf, "num_ess_controllable", numEssControllable, var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_active_power", essTotalActivePowerkW, var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_reactive_power", essTotalReactivePowerkVAR, var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_apparent_power", essTotalApparentPowerkVA, var);
@@ -554,10 +558,13 @@ void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf, cons
     bufJSON_AddNumberCheckVar(buf, "ess_dischargeable_power", essTotalDischargeablePowerkW, var);
     bufJSON_AddNumberCheckVar(buf, "ess_chargeable_energy", essTotalChargeableEnergykWh, var);
     bufJSON_AddNumberCheckVar(buf, "ess_dischargeable_energy", essTotalDischargeableEnergykWh, var);
-    // Add a binary 1/0 if any alarms/faults are present across all assets
-    bufJSON_AddNumberCheckVar(buf, "ess_total_alarms", get_num_active_alarms() > 0 ? 1:0, var);
-    bufJSON_AddNumberCheckVar(buf, "ess_total_faults", get_num_active_faults() > 0 ? 1:0, var);
     bufJSON_AddNumberCheckVar(buf, "grid_forming_voltage_slew", grid_forming_voltage_slew, var);
+    bufJSON_AddNumberCheckVar(buf, "ess_num_alarmed", get_num_alarmed(), var);
+    bufJSON_AddNumberCheckVar(buf, "ess_num_faulted", get_num_faulted(), var);
+
+    // Marked for deprecation
+    bufJSON_AddNumberCheckVar(buf, "ess_total_alarms", get_num_active_alarms(), var);
+    bufJSON_AddNumberCheckVar(buf, "ess_total_faults", get_num_active_faults(), var);
     
     if (var == NULL) bufJSON_EndObjectNoComma(buf); // } summary
 }
@@ -661,7 +668,8 @@ bool ESS_Manager::calculate_ess_active_power(void)
             // must reiterate through algorithm if power limit violated
             if (balancePowerDistribution && fabsf(setpoint) > it->powerLimit)
             {
-                it->ess->set_active_power_setpoint((powerToAssign > 0) ? it->powerLimit : -1*it->powerLimit);
+                float signed_power_limit = powerToAssign > 0 ? it->powerLimit : -1*it->powerLimit;
+                it->ess->set_active_power_setpoint(signed_power_limit, false);
                 powerToAssign -= it->ess->get_active_power_setpoint_control();
                 essAssetsToAssignPowerTo.erase(it);
                 powerLimitViolated = true;
@@ -670,7 +678,7 @@ bool ESS_Manager::calculate_ess_active_power(void)
             // if calculated setpoint is within ESS instance power limit, or a feature has disabled the power distribution balancing, give the setpoint to the ESS
             else
             {
-                it->ess->set_active_power_setpoint(setpoint);
+                it->ess->set_active_power_setpoint(setpoint, false);
             }
         }
     }

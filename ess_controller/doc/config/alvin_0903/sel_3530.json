@@ -1,0 +1,147 @@
+{
+    "xfileInfo": {
+        "sourceFileName": "TX10_SEL_RTAC_Modbus.xlsx",
+        "sourceFileCreated": "2020-01-02T21:16:38.000Z",
+        "sourceFileLastModified": "2020-07-12T22:03:12.000Z",
+        "sourceFileCreatedBy": "Microsoft Office User",
+        "sourceFileLastModifiedBy": "Davin Ojala",
+        "outputFileName": "sel_3530.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2020-07-13T01:24:05.909Z"
+    },
+    "xsystem": {
+        "name": "SEL 3530 RTAC",
+        "protocol": "Modbus TCP",
+        "id": "sel_3530_rtac",
+        "ip_address": "192.168.114.20",
+        "port": 502,
+        "frequency": 16,
+        "device_id": 1
+    },
+    "connection": {
+        "name": "SEL 3530 RTAC",
+        "ip_address": "192.168.114.20",
+        "port": 502,
+	"device_id": 1
+    },
+    "components": [
+        {
+            "id": "sel_3530_rtac",
+            "frequency": 16,
+            "offset_time": 0,
+            "xheartbeat_enabled": true,
+            "xcomponent_heartbeat_read_uri": "life_signal",
+            "xcomponent_heartbeat_write_uri": "life",
+            "xmodbus_heartbeat_timeout_ms": 1000,
+            "add_timings":true,
+            "xcomponent_heartbeat_timeout_ms": 1000,
+
+    "registers": [
+        {
+            "type": "Holding Registers",
+            "starting_offset": 0,
+            "number_of_registers": 24,
+            "map": [
+                {
+                    "id": "frequency",
+                    "offset": 0,
+                    "size": 2,
+                    "scale": 1000,
+                    "name": "Frequency",
+                    "signed": true
+                },
+                {
+                    "id": "voltage_l1",
+                    "offset": 2,
+                    "size": 2,
+                    "scale": 1,
+                    "name": "Voltage Phasor A",
+                    "signed": true
+                },
+                {
+                    "id": "voltage_l2",
+                    "offset": 4,
+                    "size": 2,
+                    "scale": 1,
+                    "name": "Voltage Phasor B",
+                    "signed": true
+                },
+                {
+                    "id": "voltage_l3",
+                    "offset": 6,
+                    "size": 2,
+                    "scale": 1,
+                    "name": "Voltage Phasor C",
+                    "signed": true
+                },
+                {
+                    "id": "current_l1",
+                    "offset": 8,
+                    "size": 2,
+                    "scale": 1,
+                    "name": "Current Phasor magnitude phase A",
+                    "signed": true
+                },
+                {
+                    "id": "current_l2",
+                    "offset": 10,
+                    "size": 2,
+                    "scale": 1,
+                    "name": "Current Phasor magnitude phase B",
+                    "signed": true
+                },
+                {
+                    "id": "current_l3",
+                    "offset": 12,
+                    "size": 2,
+                    "scale": 1,
+                    "name": "Current Phasor magnitude phase C",
+                    "signed": true
+                },
+                {
+                    "id": "current_n",
+                    "offset": 14,
+                    "size": 2,
+                    "scale": 1,
+                    "name": "Current Phasor magnitude Neutral",
+                    "signed": true
+                },
+                {
+                    "id": "active_power",
+                    "offset": 16,
+                    "size": 2,
+                    "scale": 1000,
+                    "name": "Real Power",
+                    "signed": true
+                },
+                {
+                    "id": "reactive_power",
+                    "offset": 18,
+                    "size": 2,
+                    "scale": 1000,
+                    "name": "Reactive Power",
+                    "signed": true
+                },
+                {
+                    "id": "power_factor",
+                    "offset": 20,
+                    "size": 2,
+                    "scale": 100,
+                    "name": "Power Factor",
+                    "signed": true
+                },
+                {
+                    "id": "apparent_power",
+                    "offset": 22,
+                    "size": 2,
+                    "scale": 1000,
+                    "name": "Apparent Power"
+                }
+            ]
+        }
+    ]
+}
+
+]
+}
+

@@ -16,7 +16,6 @@ function build() # build.sh passes build mode as $1
 {
     npm ci --production
     npm prune --production
-    npm link fims
 
     # create binary package
     node_modules/pkg/lib-es5/bin.js --targets node16-linux-x64 src/metrics.js -o $build_output/metrics || error_trap "failed to generate metrics binary"

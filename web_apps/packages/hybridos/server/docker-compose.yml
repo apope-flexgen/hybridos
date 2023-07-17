@@ -14,7 +14,7 @@ services:
     networks:
       - net
   api:
-    container_name: "nest_web_server"
+    container_name: "web_server"
     build:
       context: .
       target: development

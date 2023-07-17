@@ -45,6 +45,28 @@ void signal_handler (int sig)
     signal(sig, SIG_DFL);
 }
 
+/**
+ * @brief Attempts to parse the value with the given key from the FIMS message body.
+ * @param msg FIMS message from which to parse the value.
+ * @param key Key of the value inside the FIMS message body.
+ * @returns double-bool pair, where the double is the parsed value and the bool is a flag that will be true if the value could not be found.
+*/
+inline std::pair<double, bool> parse_value(fims_message *msg, char key[256])
+{
+    cJSON* msg_body = cJSON_Parse(msg->body);
+    cJSON* clothed_value = cJSON_GetObjectItem(msg_body, key);
+    std::pair<double, bool> return_value(0.0, false);
+    if (strcmp(msg->method, "set") == 0)
+        return_value.first = clothed_value != NULL ? clothed_value->valuedouble : msg_body->valuedouble;
+    // if not SET then PUB
+    else if (clothed_value == NULL)
+        return_value.second = true;
+    else
+        return_value.first = clothed_value->valuedouble;
+    cJSON_Delete(msg_body);
+    return return_value;
+}
+
 //subscribe to two URIs.  trigger a timer when a set or pub occurs on the first URI 
 //and print the elapsed time when a pub or set occurs on second URI
 //third arg is a value to watch for the sets or pubs
@@ -126,16 +148,14 @@ int main(int argc, char** argv)
                 // Check for pub or set
                 if ((methodFlag1 == 'p' && strcmp(msg->method, "pub") == 0) || (methodFlag1 == 's' && strcmp(msg->method, "set") == 0))
                 {
-                    cJSON* body_JSON = cJSON_Parse(msg->body);
-                    cJSON* body_value = cJSON_GetObjectItem(body_JSON, KEY1);
-                    if (body_value == NULL)
+                    std::pair<double, bool> parsed_value = parse_value(msg, KEY1);
+                    if (parsed_value.second)
                     {
-                        FPS_ERROR_PRINT("fims message body value key not found \n");
+                        FPS_ERROR_PRINT("Did not find key %s in message body. Continuing to listen...\n", KEY1);
                     }
                     else
                     {
-                        float body_float = body_value->valuedouble;
-                        double val = ((double)((int)(body_float*1000)))/1000; // These type conversions and multiply/divide simply rounds number to 3rd decimal place
+                        double val = ((double)((int)(parsed_value.first*1000)))/1000; // These type conversions and multiply/divide simply round number to 3rd decimal place
                         if ((operator1 == 'e' && val == val1) || (operator1 == 'g' && val >= val1) || (operator1 == 'l' && val <= val1))
                         {
                             //start timer
@@ -148,7 +168,6 @@ int main(int argc, char** argv)
                             }
                         }
                     }
-                    cJSON_Delete(body_JSON);
                 }
             }
             //process URI 2 message
@@ -157,16 +176,14 @@ int main(int argc, char** argv)
                 // Check for pub or set
                 if ((methodFlag2 == 'p' && strcmp(msg->method, "pub") == 0) || (methodFlag2 == 's' && strcmp(msg->method, "set") == 0))
                 {
-                    cJSON* body_JSON = cJSON_Parse(msg->body);
-                    cJSON* body_value = cJSON_GetObjectItem(body_JSON, KEY2);
-                    if (body_value == NULL)
+                    std::pair<double, bool> parsed_value = parse_value(msg, KEY2);
+                    if (parsed_value.second)
                     {
-                        FPS_ERROR_PRINT("fims message body value key not found \n");
+                        FPS_ERROR_PRINT("Did not find key %s in message body. Continuing to listen...\n", KEY2);
                     }
                     else
                     {
-                        float body_float = body_value->valuedouble;
-                        double val = ((double)((int)(body_float*1000)))/1000; // These type conversions and multiply/divide simply rounds number to 3rd decimal place
+                        double val = ((double)((int)(parsed_value.first*1000)))/1000; // These type conversions and multiply/divide simply round number to 3rd decimal place
                         if ((operator2 == 'e' && val == val2) || (operator2 == 'g' && val >= val2) || (operator2 == 'l' && val <= val2))
                         {
                             //print timer

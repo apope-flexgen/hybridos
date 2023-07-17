@@ -1,23 +1,19 @@
 {
     "hoth": 
     {
-        "name": "Hoth",
-        "feature": "ercotAs"
+        "name": "Hoth"
     },
     "mustafar":
     {
-        "name": "Mustafar",
-        "feature": "ercotAs"
+        "name": "Mustafar"
     },
     "tatooine":
     {
-        "name": "Tatooine",
-        "feature": "ercotAs"
+        "name": "Tatooine"
         
     },
     "alderaan":
     {
-        "name": "Alderaan",
-        "feature": "caisoAds"
+        "name": "Alderaan"
     }
 }

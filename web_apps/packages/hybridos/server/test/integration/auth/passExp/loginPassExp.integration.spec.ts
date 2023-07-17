@@ -12,6 +12,10 @@ import request from './../../../testReqAgent'
 import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
+import { ValidPasswordConstraint } from 'src/users/validators/IsValidPassword'
+import { SITE_ADMINS_SERVICE } from 'src/siteAdmins/interfaces/siteAdmin.service.interface'
+import { useContainer } from 'class-validator'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 const OLD_PASS = testUtils.VALID_PASS
 const INVALID_PASS = 'abc'
@@ -36,19 +40,31 @@ describe('Authentication (Integration)', () => {
     let app: INestApplication
     let db: MongoMemoryServer
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         const mongoServer = await MongoMemoryServer.create()
 
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
+            providers: [
+                ValidPasswordConstraint,
+                {
+                    provide: SITE_ADMINS_SERVICE,
+                    useValue: {
+                        find: jest.fn()
+                    }
+                },
+            ]
         })
             .overrideProvider(AppEnvService)
             .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+            .overrideProvider(PermissionsService)
+            .useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer
 
         app = testUtils.createTestApiApplication(moduleFixture)
+        useContainer(moduleFixture, { fallbackOnErrors: true})
         app.useWebSocketAdapter(new WsAdapter(app))
         app.use(cookieParser())
 

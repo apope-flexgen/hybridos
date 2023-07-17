@@ -1,0 +1,8 @@
+nipso-lab is setup and running as a site controller (tx10/release configuration).
+to restart or reset, log in and run the following:
+./git/scripts/hybridos_stop.sh
+./git/scripts/hybridos_run.sh --twins
+---
+hostname: nipsco-lab
+ip (external VPN): 192.168.6.25
+ip (internal lab): 192.168.127.25 (edited) 

@@ -159,7 +159,7 @@ struct Receiver_Bufs
 };
 
 // receiver helper functions:
-bool  recv_raw_message(int connection, Meta_Data_Info& meta_data, void* data_buf, uint32_t data_buf_len) noexcept;
+bool recv_raw_message(int connection, Meta_Data_Info& meta_data, void* data_buf, uint32_t data_buf_len) noexcept;
 void* decrypt_buf(Meta_Data_Info& meta_data, void* data_buf, uint32_t data_buf_len) noexcept;
 
 // This receives the raw message without decryption:

@@ -5,6 +5,11 @@
     "ts"
   ],
   "rootDir": "../",
+  "moduleNameMapper": {
+    "src/(.*)": [
+        "/home/hybridos/web_apps/packages/hybridos/server/src/$1"
+    ]
+  },
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {

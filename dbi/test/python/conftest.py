@@ -13,7 +13,7 @@ import shutil
 # commandline args
 def pytest_addoption(parser):
     parser.addoption("--colls", action="store", default=1, help="number of collections")
-    parser.addoption("--docs", action="store", default=1, help="number of documents per collection")
+    parser.addoption("--docs", action="store", default=3, help="number of documents per collection")
     parser.addoption("--depth", action="store", default=2, help="maximum depth of nested maps per document")
 
 # these run to verify the testing infrastructure (dbi, mongo, user-defined content) works before starting the tests
@@ -25,7 +25,8 @@ def pytest_sessionstart(session):
         pytest.exit("dbi is not running")
 
     mongo = Mongo()
-    mongo.client.drop_database('dbi') # clear out database
+    mongo.client.drop_database('dbi')   # clear out databases
+    mongo.client.drop_database('audit') 
     mongo.client.close()
 
     print("startup check successful")
@@ -66,13 +67,17 @@ def save_restore_state(request):
         state =  json.load(file)
         file.close()
     else: # else save it
-        state = send("get", "/dbi/%s/show_map" % frags[0])
+        state = send("get", "/dbi/%s" % frags[0])
+        if 'not found' in state:
+            state = "{}"
         state_path = tmp_json(state, '%s_prev' % frags[0])
 
     yield state # handoff
 
     # reset to previous state
     send("set", '/dbi/%s' % frags[0], state_path, True)
+    cmd = Command("set", "/dbi/resync")
+    cmd.execute() # resync to local
 
 ###
 # HELPER FUNCTIONS/CLASSES
@@ -120,26 +125,58 @@ class Mongo():
     def __init__(self):
         self.client = pymongo.MongoClient("mongodb://localhost:27017/")
 
-    def grab(self, collection, document):
-        cursor = self.client["dbi"][collection].find({"_id" : document})
+    # determines the DOCUMENT to grab from mongo based on a DBI URI
+    def grab_document(self, uri):
+        # parse URI and determine how to grab result
+        frags = uri.split("/")[1:]
+
+        # SPECIAL CASE: frags[1] (collection) == "audit" (#BAD-186)
+        # expected format: /dbi/audit/audit_log_TIMESTAMP
+        #					^	^     ^
+        #			   ignore	db 	  document
+        if frags[1] == "audit":
+            db = "audit"
+            collection = "log"
+            document = frags[2]
+        else:
+            db = frags[0]
+            collection = frags[1]
+            document = frags[2]
+
+
+        cursor = self.client[db][collection].find({"_id" : document})
         try:
             doc = cursor.next()
         except StopIteration:
             doc = False # error, doc DNE
         return doc
 
-    # clears the dbi database and resyncs down to an active dbi process
+    # adds documents to dbi database in mongo and syncs back down to active dbi instance
     def add_documents(self, class_name, numcollections, numdocuments, numlayers):
         file = open('template.json')
         template = json.load(file)
         file.close()
 
         for c in range(numcollections):
-            col_random_key = class_name + "%d" % c # colls sort by name and #
+            col_random_key = "%s%d" % (class_name, c) # colls sort by name and #
             for d in range(numdocuments):
                 doc = recurse_add_layer(template.copy(), "map", numlayers)
                 doc["_id"] = ''.join(random.choices(string.ascii_lowercase + string.ascii_uppercase, k=d+5)) # assign random name (_id)
                 self.client["dbi"][col_random_key].insert_one(doc)
+
+        cmd = Command("set", "/dbi/resync")
+        return cmd.execute()
+    
+    # adds audit log documents to audit database in mongo and syncs back down to active dbi instance
+    def add_auditlogs(self, class_name, numlogs):
+        file = open('template.json')
+        template = json.load(file)
+        file.close()
+
+        for d in range(numlogs):
+            doc = recurse_add_layer(template.copy(), "map", 1) # logs only ever have one layer anyway
+            doc["_id"] = "audit_log_%s%d" %  (class_name, d)
+            self.client["audit"]["log"].insert_one(doc)
 
         cmd = Command("set", "/dbi/resync")
         return cmd.execute()

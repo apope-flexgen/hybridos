@@ -1,0 +1,508 @@
+{
+	"/assets/ess":	{
+		"bms":	{
+			"value":	"configs/bms_manager.json"
+		},
+		"drc":	{
+			"value":	"configs/drc_manager.json"
+		},
+		"pcs":	{
+			"value":	"configs/pcs_manager.json"
+		}
+	},
+	"/components/catl01_ems_bms_rw":	{
+		"ems_test_status":	{
+			"value":	"Idle",
+			"actions":	{
+				"onSet":	{
+					"remap":	[]
+				}
+			}
+		}
+	},
+	"/components/catl02_ems_bms_rw":	{
+		"ems_test_status":	{
+			"value":	"Idle",
+			"actions":	{
+				"onSet":	{
+					"remap":	[]
+				}
+			}
+		}
+	},
+	"/constants/bms_1":	{
+		"DC_contactor_closed":	{
+			"value":	2
+		},
+		"DC_contactor_open":	{
+			"value":	1
+		},
+		"DC_contactor_reset":	{
+			"value":	3
+		},
+		"chg_soc_begin":	{
+			"value":	90.001
+		},
+		"chg_soc_end":	{
+			"value":	101.5
+		},
+		"control_word_off":	{
+			"value":	2
+		},
+		"control_word_on":	{
+			"value":	1
+		},
+		"cooldown_timer":	{
+			"value":	250
+		},
+		"dischg_soc_begin":	{
+			"value":	10.001
+		},
+		"dischg_soc_end":	{
+			"value":	-1.5
+		},
+		"max_load_threshold":	{
+			"value":	200000
+		},
+		"max_soc_raw":	{
+			"value":	99.5
+		},
+		"min_load_threshold":	{
+			"value":	1000
+		},
+		"min_soc_raw":	{
+			"value":	1.5
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are constant defintions"
+		},
+		"priority":	{
+			"value":	1
+		},
+		"rated_active_power":	{
+			"value":	2200
+		},
+		"rated_apparent_power":	{
+			"value":	2200
+		},
+		"start_timer":	{
+			"value":	50
+		}
+	},
+	"/constants/bms_2":	{
+		"DC_contactor_closed":	{
+			"value":	2
+		},
+		"DC_contactor_open":	{
+			"value":	1
+		},
+		"DC_contactor_reset":	{
+			"value":	3
+		},
+		"chg_soc_begin":	{
+			"value":	90.001
+		},
+		"chg_soc_end":	{
+			"value":	101.5
+		},
+		"control_word_off":	{
+			"value":	2
+		},
+		"control_word_on":	{
+			"value":	1
+		},
+		"cooldown_timer":	{
+			"value":	250
+		},
+		"dischg_soc_begin":	{
+			"value":	10.001
+		},
+		"dischg_soc_end":	{
+			"value":	-1.5
+		},
+		"max_load_threshold":	{
+			"value":	200000
+		},
+		"max_soc_raw":	{
+			"value":	99.5
+		},
+		"min_load_threshold":	{
+			"value":	1000
+		},
+		"min_soc_raw":	{
+			"value":	1.5
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are constant defintions"
+		},
+		"priority":	{
+			"value":	1
+		},
+		"rated_active_power":	{
+			"value":	2200
+		},
+		"rated_apparent_power":	{
+			"value":	2200
+		},
+		"start_timer":	{
+			"value":	50
+		}
+	},
+	"/controls/bms_1":	{
+		"ctrlword2":	{
+			"value":	0,
+			"actions":	{
+				"onSet":	{
+					"enum":	[]
+				}
+			}
+		},
+		"start_stop":	{
+			"value":	0,
+			"actions":	{
+				"onSet":	{
+					"bitfield":	[]
+				}
+			}
+		}
+	},
+	"/controls/bms_2":	{
+		"ctrlword2":	{
+			"value":	0,
+			"actions":	{
+				"onSet":	{
+					"enum":	[]
+				}
+			}
+		},
+		"start_stop":	{
+			"value":	0,
+			"actions":	{
+				"onSet":	{
+					"bitfield":	[]
+				}
+			}
+		}
+	},
+	"/links/ess":	{
+		"AcContactor":	{
+			"value":	"/status/ess:AcContactor"
+		},
+		"AcContactorCloseCmd":	{
+			"value":	"/controls/ess:AcContactorCloseCmd"
+		},
+		"AcContactorOpenCmd":	{
+			"value":	"/controls/ess:AcContactorOpenCmd"
+		},
+		"ActivePower":	{
+			"value":	"/status/ess:ActivePower"
+		},
+		"ActivePowerCmd":	{
+			"value":	"/controls/ess:ActivePowerCmd"
+		},
+		"ActivePowerDeadband":	{
+			"value":	"/params/ess:ActivePowerDeadband"
+		},
+		"ActivePowerSetpoint":	{
+			"value":	"/controls/ess:ActivePowerSetpoint"
+		},
+		"DcContactor":	{
+			"value":	"/status/ess:DcContactor"
+		},
+		"DcContactorCloseCmd":	{
+			"value":	"/controls/ess:DcContactorCloseCmd"
+		},
+		"DcContactorOpenCmd":	{
+			"value":	"/controls/ess:DcContactorOpenCmd"
+		},
+		"HeartBeat":	{
+			"value":	"/controls/ess:HeartBeat"
+		},
+		"Off":	{
+			"value":	"/status/ess:Off"
+		},
+		"OffCmd":	{
+			"value":	"/controls/ess:OffCmd"
+		},
+		"On":	{
+			"value":	"/status/ess:On"
+		},
+		"OnCmd":	{
+			"value":	"/controls/ess:OnCmd"
+		},
+		"ReactivePower":	{
+			"value":	"/status/ess:ReactivePower"
+		},
+		"ReactivePowerCmd":	{
+			"value":	"/controls/ess:ReactivePowerCmd"
+		},
+		"ReactivePowerDeadband":	{
+			"value":	"/params/ess:ReactivePowerDeadband"
+		},
+		"ReactivePowerSetpoint":	{
+			"value":	"/controls/ess:ReactivePowerSetpoint"
+		},
+		"StandBy":	{
+			"value":	"/status/ess:Standby"
+		},
+		"StandByCmd":	{
+			"value":	"/controls/ess:StandbyCmd"
+		},
+		"Standby":	{
+			"value":	false
+		},
+		"StandbyCmd":	{
+			"value":	false
+		},
+		"lastActivePowerSetpoint":	{
+			"value":	"/controls/ess:lastActivePowerSetpoint"
+		},
+		"lastReactivePowerSetpoint":	{
+			"value":	"/controls/ess:lastReactivePowerSetpoint"
+		},
+		"maxActivePower":	{
+			"value":	"/params/ess:maxActivePower"
+		},
+		"maxReactivePower":	{
+			"value":	"/params/ess:maxRectivePower"
+		}
+	},
+	"/params/bms_1":	{
+		"active_power_setpoint":	{
+			"value":	2200
+		},
+		"kacclosecmd":	{
+			"value":	0
+		},
+		"kacopencmd":	{
+			"value":	0
+		},
+		"kdcclosecmd":	{
+			"value":	0
+		},
+		"kdccopencmd":	{
+			"value":	0
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are control parameters"
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"onffcmd":	{
+			"value":	0
+		},
+		"reactive_power_setpoint":	{
+			"value":	2200
+		}
+	},
+	"/params/bms_2":	{
+		"active_power_setpoint":	{
+			"value":	2200
+		},
+		"kacclosecmd":	{
+			"value":	0
+		},
+		"kacopencmd":	{
+			"value":	0
+		},
+		"kdcclosecmd":	{
+			"value":	0
+		},
+		"kdccopencmd":	{
+			"value":	0
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are control parameters"
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"onffcmd":	{
+			"value":	0
+		},
+		"reactive_power_setpoint":	{
+			"value":	2200
+		}
+	},
+	"/status/bms_1":	{
+		"ac_contactor_open":	{
+			"value":	true
+		},
+		"active_current_setpont":	{
+			"value":	0
+		},
+		"current_soc":	{
+			"value":	85.6
+		},
+		"current_soh":	{
+			"value":	85.7
+		},
+		"dc_contactor_open":	{
+			"value":	true
+		},
+		"max_cell_temp":	{
+			"value":	23.4
+		},
+		"max_cell_volts":	{
+			"value":	3.4
+		},
+		"min_cell_temp":	{
+			"value":	23.4
+		},
+		"min_cell_volts":	{
+			"value":	3.2
+		},
+		"note":	{
+			"value":	"These are component status vars"
+		},
+		"number_of_racks":	{
+			"value":	18
+		},
+		"reactive_current_setpont":	{
+			"value":	0
+		}
+	},
+	"/status/bms_2":	{
+		"ac_contactor_open":	{
+			"value":	true
+		},
+		"active_current_setpont":	{
+			"value":	0
+		},
+		"current_soc":	{
+			"value":	85.6
+		},
+		"current_soh":	{
+			"value":	85.7
+		},
+		"dc_contactor_open":	{
+			"value":	true
+		},
+		"max_cell_temp":	{
+			"value":	23.4
+		},
+		"max_cell_volts":	{
+			"value":	3.4
+		},
+		"min_cell_temp":	{
+			"value":	23.4
+		},
+		"min_cell_volts":	{
+			"value":	3.2
+		},
+		"note":	{
+			"value":	"These are component status vars"
+		},
+		"number_of_racks":	{
+			"value":	18
+		},
+		"reactive_current_setpont":	{
+			"value":	0
+		}
+	},
+	"/system/bms_1":	{
+		"id":	{
+			"value":	"bms_1"
+		},
+		"name":	{
+			"value":	"BMS Battery  Block 01"
+		}
+	},
+	"/system/bms_2":	{
+		"id":	{
+			"value":	"bms_2"
+		},
+		"name":	{
+			"value":	"BMS Battery  Block 02"
+		}
+	},
+	"/variables/bms_1":	{
+		"ac_contactor":	{
+			"value":	"off"
+		},
+		"ac_contactor_cmd":	{
+			"value":	"off"
+		},
+		"dc_contactor":	{
+			"value":	"off"
+		},
+		"dc_contactor_cmd":	{
+			"value":	"off"
+		},
+		"mode":	{
+			"value":	"init"
+		},
+		"mode_cmd":	{
+			"value":	"off"
+		},
+		"p":	{
+			"value":	3456
+		},
+		"q":	{
+			"value":	1234
+		},
+		"soc":	{
+			"value":	100
+		},
+		"soh":	{
+			"value":	100
+		}
+	},
+	"/variables/bms_2":	{
+		"ac_contactor":	{
+			"value":	"off"
+		},
+		"ac_contactor_cmd":	{
+			"value":	"off"
+		},
+		"dc_contactor":	{
+			"value":	"off"
+		},
+		"dc_contactor_cmd":	{
+			"value":	"off"
+		},
+		"mode":	{
+			"value":	"init"
+		},
+		"mode_cmd":	{
+			"value":	"off"
+		},
+		"p":	{
+			"value":	3456
+		},
+		"q":	{
+			"value":	1234
+		},
+		"soc":	{
+			"value":	100
+		},
+		"soh":	{
+			"value":	100
+		}
+	}
+}

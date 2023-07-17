@@ -44,9 +44,7 @@ public:
     void process_asset(void);
     void update_asset(void);
     void send_to_components(void) override;
-    
-    // utility functions
-    bool process_set(std::string uri, cJSON*);
+    bool handle_set(std::string uri, cJSON &body);
     bool generate_asset_ui(fmt::memory_buffer&, const char* const var = NULL) override;
 
 protected:
@@ -85,10 +83,10 @@ protected:
     fimsCtl maint_reactive_power_setpoint_ctl;
 
     // uris
-    char* uri_start;
-    char* uri_stop;
-    char* uri_enter_standby;
-    char* uri_exit_standby;
+    std::string uri_start;
+    std::string uri_stop;
+    std::string uri_enter_standby;
+    std::string uri_exit_standby;
   
     // internal functions
     void process_potential_active_power(void) override;

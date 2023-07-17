@@ -1,0 +1,187 @@
+{
+   "/components/bms_hs": {
+      "remote_ac_on": {
+         "value": 0,
+         "actions": {
+            "onSet": [
+               {
+                  "func": [
+                     {
+                        "func": "TurnOnRemoteAc",
+                        "amap": "flex"
+                     }
+                  ],
+                  "enum": [
+                     {
+                        "shift": 0,
+                        "mask": 65535,
+                        "inValue": 1,
+                        "uri": "/system/ac1:state",
+                        "outValue": "running"
+                     },
+                     {
+                        "shift": 0,
+                        "mask": 65535,
+                        "inValue": 2,
+                        "uri": "/system/ac1:state",
+                        "outValue": "stopped"
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "cooling_temp_setting": {
+         "temp": 0,
+         "actions": {
+            "onSet": [
+               {
+                  "func": [
+                     {
+                        "func": "ChangeCoolingTemp",
+                        "amap": "flex"
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "cooling_temp_upper_limit": {
+         "temp": 0,
+         "actions": {
+            "onSet": [
+               {
+                  "func": [
+                     {
+                        "func": "SetTempUpperLimit",
+                        "amap": "flex"
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "ht_warning_setting": {
+         "temperature": 0,
+         "actions": {
+            "onSet": [
+               {
+                  "func": [
+                     {
+                        "func": "CheckTemp",
+                        "amap": "flex"
+                     }
+                  ],
+                  "enum": [
+                     {
+                        "shift": 0,
+                        "mask": 65535,
+                        "inValue": 3,
+                        "uri": "/system/ac1:temp",
+                        "outValue": "too high"
+                     },
+                     {
+                        "shift": 0,
+                        "mask": 65535,
+                        "inValue": 4,
+                        "uri": "/system/ac1:temp",
+                        "outValue": "okay"
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "lt_warning_setting": {
+         "temperature": 0,
+         "actions": {
+            "onSet": [
+               {
+                  "func": [
+                     {
+                        "func": "CheckTemp",
+                        "amap": "flex"
+                     }
+                  ],
+                  "enum": [
+                     {
+                        "shift": 0,
+                        "mask": 65535,
+                        "inValue": 4,
+                        "uri": "/system/ac1:temp",
+                        "outValue": "okay"
+                     },
+                     {
+                        "shift": 0,
+                        "mask": 65535,
+                        "inValue": 5,
+                        "uri": "/system/ac1:temp",
+                        "outValue": "too low"
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "interior_air_fan_stop_setting": {
+         "value": 0,
+         "actions": {
+            "onSet": [
+               {
+                  "func": [
+                     {
+                        "func": "TurnOffFan",
+                        "amap": "flex"
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "heating_temp_setting": {
+         "value": 0,
+         "actions": {
+            "onSet": [
+               {
+                  "func": [
+                     {
+                        "func": "HeatingTemp",
+                        "amap": "flex"
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "heating_set_point_lower_limit": {
+         "value": 0,
+         "actions": {
+            "onSet": [
+               {
+                  "func": [
+                     {
+                        "func": "SetTempLowerLimit",
+                        "amap": "flex"
+                     }
+                  ]
+               }
+            ]
+         }
+      },
+      "dehumidify_setting": {
+         "value": 0,
+         "actions": {
+            "onSet": [
+               {
+                  "func": [
+                     {
+                        "func": "SetDehumidify",
+                        "amap": "flex"
+                     }
+                  ]
+               }
+            ]
+         }
+      }
+   }
+}

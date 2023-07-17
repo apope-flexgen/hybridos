@@ -159,7 +159,7 @@ bool Path::check_alerts(UI_Type alertType)
                 else if (asset_cmd == "get_num_ess_running")
                 {
                     // asset the number of expected running based on type
-                    if ( (int) name_mask_pair.second >= pSite->get_num_ess_running())
+                    if ( (int) name_mask_pair.second >= pSite->pAssets->get_num_ess_running())
                     {
                         num_active_alerts++;
                         if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
@@ -176,13 +176,30 @@ bool Path::check_alerts(UI_Type alertType)
                 else if (asset_cmd == "get_num_ess_available")
                 {
                     // asset the number of expected available based on type
-                    if ( (int) name_mask_pair.second >= pSite->get_num_ess_available())
+                    if ( (int) name_mask_pair.second >= pSite->pAssets->get_num_ess_avail())
                     {
                         num_active_alerts++;
                         if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
                         {
                             FPS_ERROR_LOG("get_num_ess_available %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
                             sprintf(event_message, "Site Manager #ESS available %s detected", alertType == FAULT ? "fault" : "alarm");
+                            emit_event("Site", event_message, 1);
+                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        }
+                    }
+                }
+                // check for number of ess controllable.  compare read value to first element and fault if less/equal
+                // In this case asset_active_faults value is used as the expected number
+                else if (asset_cmd == "get_num_ess_controllable")
+                {
+                    // assert the number of expected controllable based on type
+                    if ( (int) name_mask_pair.second >= pSite->pAssets->get_num_ess_controllable())
+                    {
+                        num_active_alerts++;
+                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
+                        {
+                            FPS_ERROR_LOG("get_num_ess_controllable %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
+                            sprintf(event_message, "Site Manager #ESS controllable %s detected", alertType == FAULT ? "fault" : "alarm");
                             emit_event("Site", event_message, 1);
                             (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }

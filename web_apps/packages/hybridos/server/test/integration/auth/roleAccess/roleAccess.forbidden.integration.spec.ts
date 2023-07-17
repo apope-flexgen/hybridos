@@ -10,6 +10,7 @@ import request from './../../../testReqAgent'
 import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 describe('Role Access - Forbidden (Integration)', () => {
     let app: INestApplication
@@ -25,6 +26,8 @@ describe('Role Access - Forbidden (Integration)', () => {
         })
             .overrideProvider(AppEnvService)
             .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+            .overrideProvider(PermissionsService)
+            .useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer
@@ -42,9 +45,9 @@ describe('Role Access - Forbidden (Integration)', () => {
 
     describe('forbidden to access protected routes', () => {
         describe('siteAdmins routes', () => {
-            const URL = '/app-settings'
+            const URL = '/site-admins'
 
-            it('GET /app-settings', async () => {
+            it('GET /site-admins', async () => {
                 return await request(app.getHttpServer())
                     .get(URL)
                     .set('Authorization', USER_ACCESS_TOKEN)
@@ -54,7 +57,7 @@ describe('Role Access - Forbidden (Integration)', () => {
                     })
             })
 
-            it('POST /app-settings', async () => {
+            it('POST /site-admins', async () => {
                 const requestBody = testUtils.site(false, false, false)
 
                 return await request(app.getHttpServer())
@@ -67,7 +70,7 @@ describe('Role Access - Forbidden (Integration)', () => {
                     })
             })
 
-            it('POST /app-settings/radius-test', async () => {
+            it('POST /site-admins/radius-test', async () => {
                 const requestBody = {
                     ipAddress: '127.0.0.1',
                     port: '8080',

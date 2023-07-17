@@ -14,6 +14,10 @@ export const items = [
     type: 'number',
   },
   {
+    label: 'SourceURI',
+    key: 'sourceURI',
+  },
+  {
     label: 'Units',
     key: 'units',
   },

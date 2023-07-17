@@ -1,0 +1,70 @@
+{
+    "updateRate": 1000,
+    "pcs":[
+        {
+            "id": "pcs_1",
+            "plim": 2100,
+            "qlim": "string"
+            
+        },
+        {
+            "id": "pcs_2",
+            "plim": 1000,
+            "qlim": 1000
+        }
+    ],
+    "bms":[
+        {
+            "id": "bms_2",
+            "cap": 2000,
+            "racks": 12,
+            "soc":{
+                "value": 60.0,
+                "faulthighthreshold": 90,
+                "alarmhighthreshold": 80,
+                "alarmlowthreshold": 20,
+                "faultlowthreshold": 10
+            },
+            "socprofile": [10, 20, 30, 40, 50, 60, 90, 100],
+            "vdcprofile": [1200, 1220, 1230, 1250, 1270, 1280, 1300, 1330],
+            "ctrlword1cfg":[
+                {
+                    "value": 1,
+                    "controls": [
+                        { "field": "this_is_updated", "value": false },
+                        { "field": "this_too", "value": false },
+                        { "field": "no_longer_off", "value": false }
+                    ]
+                },
+                {
+                    "value": 2,
+                    "controls": [
+                        { "field": "Im_very_different", "value": false },
+                        { "field": "Ive_changed_too", "value": false },
+                        { "field": "things_got_updated", "value": false }
+                    ]
+                }
+            ],
+            "sbmu": [
+                {
+                    "ctrlword1cfg":[
+                        {
+                            "value": 11,
+                            "controls": [
+                                { "field": "SBMU_ENABLE", "value": false },
+                                { "field": "SBMU_DISABLE", "value": true }
+                            ]
+                        },
+                        {
+                            "value": 22,
+                            "controls": [
+                                { "field": "SBMU_ENABLE", "value": true },
+                                { "field": "SBMU_DISABLE", "value": false }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }  
+    ]
+}

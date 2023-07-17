@@ -62,6 +62,11 @@ float Feeder_Manager::get_poi_gridside_avg_voltage(void)
     return (pPointOfInterConnect->get_voltage_avg_line_to_line());
 }
 
+float Feeder_Manager::get_poi_power_factor()
+{
+    return pPointOfInterConnect->get_power_factor();
+}
+
 bool Feeder_Manager::get_sync_feeder_status(void)
 {
     if (pSyncFeeder != NULL)
@@ -234,6 +239,8 @@ void Feeder_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf, c
         sprintf(temp_name, "%s_faults",feeder_id);
         bufJSON_AddNumberCheckVar(buf, temp_name, get_num_active_faults() > 0 ? 1:0, var);
     }
+    bufJSON_AddNumberCheckVar(buf, "feeder_num_alarmed", get_num_alarmed(), var);
+    bufJSON_AddNumberCheckVar(buf, "feeder_num_faulted", get_num_faulted(), var);
 
     if (var == NULL) bufJSON_EndObjectNoComma(buf); // } summary
 }
@@ -296,7 +303,7 @@ Asset* Feeder_Manager::build_new_asset(void)
     Asset_Feeder* asset = new Asset_Feeder;
     if (asset == NULL)
     {
-        FPS_ERROR_LOG("Feeder_Manager::build_new_asset ~ Feeder %ld: Memory allocation error.\n", pFeeder.size()+1);
+        FPS_ERROR_LOG("Feeder %zu: Memory allocation error.", pFeeder.size()+1);
     }
     numParsed++;
     return asset;
@@ -310,57 +317,56 @@ void Feeder_Manager::append_new_asset(Asset* asset)
 // After configuring individual asset instances, this function finishes configuring the Feeder Manager
 bool Feeder_Manager::configure_type_manager(Type_Configurator* configurator)
 {
-    cJSON* feederRoot = configurator->assetTypeRoot;
+    cJSON* feeder_root = configurator->assetTypeRoot;
     /************************* Identify POI feeder, which is required ******************************/
-    cJSON* object = cJSON_HasObjectItem(feederRoot, "poi_feeder") ? cJSON_GetObjectItem(feederRoot, "poi_feeder") : NULL;
+    cJSON* object = cJSON_HasObjectItem(feeder_root, "poi_feeder") ? cJSON_GetObjectItem(feeder_root, "poi_feeder") : NULL;
     if (object == NULL)
     {
-        FPS_ERROR_LOG("Feeder_Manager::configure_type_manager ~ Failed to find poi_feeder in config.\n");
+        FPS_ERROR_LOG("Failed to find poi_feeder in config.");
         return false;
     }
     else
     {
-        uint poiIndex = uint(object->valueint);
-        if (poiIndex >= pFeeder.size())
+        int poi_index = object->valueint;
+        if (poi_index < 0 || uint(poi_index) >= pFeeder.size())
         {
-            FPS_ERROR_LOG("Feeder_Manager::configure_type_manager ~ POI Feeder index is outside bounds of parsed feeders.\n");
+            FPS_ERROR_LOG("POI Feeder index %d is outside bounds of parsed feeders.", poi_index);
             return false;
         }
-        pPointOfInterConnect = pFeeder[poiIndex];
+        pPointOfInterConnect = pFeeder[poi_index];
         // point configurator at poi feeder's asset instance json object for validation
-        cJSON* feederInstancesArray = cJSON_GetObjectItem(configurator->assetTypeRoot, "asset_instances");
-        configurator->assetConfig.assetInstanceRoot = cJSON_GetArrayItem(feederInstancesArray, poiIndex);
+        cJSON* feeder_instances_array = cJSON_GetObjectItem(configurator->assetTypeRoot, "asset_instances");
+        configurator->assetConfig.assetInstanceRoot = cJSON_GetArrayItem(feeder_instances_array, poi_index);
     }
     if (pPointOfInterConnect && !pPointOfInterConnect->validate_poi_feeder_configuration(configurator))
     {
-        FPS_ERROR_LOG("Feeder_Manager::configure_type_manager ~ Validation of POI feeder configuration failed. Failing config\n");
+        FPS_ERROR_LOG("Validation of POI feeder configuration failed. Failing config.");
         return false;
     }
 
     /************************* asset type variables ******************************/
-    bool sync_feeder_present = false;
-    object = cJSON_GetObjectItem(feederRoot, "sync_feeder");
+    object = cJSON_GetObjectItem(feeder_root, "sync_feeder");
     if (object != NULL)
     {
-        sync_feeder_present = true;
-        pSyncFeeder = pFeeder[object->valueint];
-        FPS_DEBUG_LOG("Feeder_Manager::configure_type_manager ~  sync_feeder_index: %d\n", object->valueint);
+        int sync_feeder_index = object->valueint;
+        if (sync_feeder_index < 0 || uint(sync_feeder_index) >= pFeeder.size()) {
+            FPS_ERROR_LOG("Sync Feeder index %d is outside bounds of parsed feeders.", sync_feeder_index);
+            return false;
+        }
+        pSyncFeeder = pFeeder[sync_feeder_index];
+        FPS_DEBUG_LOG("sync_feeder index: %d\n", sync_feeder_index);
+
+        // if sync_feeder is specified, a sync_frequency_offset must also be specified
+        object = cJSON_GetObjectItem(feeder_root, "sync_frequency_offset");
+        if (object == NULL)
+        {
+            FPS_ERROR_LOG("Failed to find sync_frequency_offset in config, but sync_feeder exists.");
+            return false;
+        }
+        sync_frequency_offset = object->valuedouble;
+        FPS_DEBUG_LOG("sync_frequency_offset: %f\n", sync_frequency_offset);
     }
 
-    object = cJSON_GetObjectItem(feederRoot, "sync_frequency_offset");
-    if (object == NULL)
-    {
-        if (sync_feeder_present)
-        {
-            FPS_ERROR_LOG("Feeder_Manager::configure_type_manager ~ Failed to find sync frequency offset in config, but sync feeder exists.\n");
-            return false; // configuration failure, must set sync frequency offset if sync feeder is present
-        }
-    }
-    else
-    {
-        sync_frequency_offset = object->valuedouble;
-        FPS_DEBUG_LOG("Feeder_Manager::configure_type_manager ~  sync_frequency_offset: %f\n", sync_frequency_offset);
-    }
     return true;
 }
 /****************************************************************************************/

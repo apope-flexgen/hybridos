@@ -1,0 +1,153 @@
+{
+  "system": {
+    "name": "PCSM Test",
+    "protocol": "Modbus TCP",
+    "version": "6.0 WIP",
+    "id": "pcsm_test",
+    "port": 502,
+    "data_bits": "Columns marked in green are REQUIRED",
+    "off_by_one": false
+  },
+  "connection": {
+    "name": "PCMS",
+    "device protocol": "Modbus TCP",
+    "device protocol version": "6.0 WIP",
+    "device name": "hems_pcs_1",
+    "device id string": "hems_pcs_1",
+    "ip_address": "192.168.202.1",
+    "data bits (8 typical)": "Columns marked in green are REQUIRED"
+  },
+  "components": [
+    {
+      "id": "component_one",
+      "xheartbeat_enabled": true,
+      "xcomponent_heartbeat_read_uri": "life_signal",
+      "xcomponent_heartbeat_write_uri": "life",
+      "xmodbus_heartbeat_timeout_ms": 200,
+      "xcomponent_heartbeat_timeout_ms": 200,
+      "frequency": 400,
+      "offset_time": 20,
+      "xdevice_id": 98,
+      "registers": [
+        {
+          "type": "Input Registers",
+          "starting_offset": 1000,
+          "number_of_registers": 3,
+          "map": [
+            {
+              "id": "grid_voltage_rs",
+              "offset": 1000,
+              "name": "Grid voltage RS"
+            },
+            {
+              "id": "grid_voltage_st",
+              "offset": 1001,
+              "name": "Grid voltage ST"
+            },
+            {
+              "id": "grid_voltage_tr",
+              "offset": 1002,
+              "name": "Grid voltage TR"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 1120,
+          "number_of_registers": 3,
+          "map": [
+            {
+              "id": "current_fault",
+              "offset": 1120,
+              "name": "Current fault"
+            },
+            {
+              "id": "current_warning",
+              "offset": 1121,
+              "name": "Current warning"
+            },
+            {
+              "id": "inverter_status",
+              "offset": 1122,
+              "name": "Inverter Status"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 1192,
+          "number_of_registers": 3,
+          "map": [
+            {
+              "id": "pt100_l1_temperature",
+              "offset": 1192,
+              "name": "PT100 L1 Temperature"
+            },
+            {
+              "id": "pt100_l2_temperature",
+              "offset": 1193,
+              "name": "PT100 L2 Temperature"
+            },
+            {
+              "id": "pt100_l3_temperature",
+              "offset": 1194,
+              "name": "PT100 L3 Temperature"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 7304,
+          "number_of_registers": 1,
+          "map": [
+            {
+              "id": "bess_voltage_bus_1",
+              "offset": 7304,
+              "name": "BESS voltage bus 1"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 7400,
+          "number_of_registers": 1,
+          "map": [
+            {
+              "id": "vdc_bus",
+              "offset": 7400,
+              "name": "vdc"
+            }
+          ]
+        },
+        {
+          "type": "Holding Registers",
+          "starting_offset": 552,
+          "number_of_registers": 6,
+          "map":
+          [
+              {
+                  "id": "p_reference",
+                  "offset": 552
+              },
+              {
+                  "id": "q_reference",
+                  "offset": 557
+              }
+          ]
+        },
+        {
+          "type": "Holding Registers",
+          "starting_offset": 2041,
+          "number_of_registers": 1,
+          "map":
+          [
+              {
+                  "id": "enable_main_selector",
+                  "offset": 2041
+              }
+          ]
+        }
+      ]
+    }
+  ]
+}

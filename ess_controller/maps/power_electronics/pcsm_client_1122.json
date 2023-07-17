@@ -1,0 +1,3661 @@
+{
+    "fileInfo": {
+        "sourceFileName": "PCSM_PE_Modbus_Map.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2020-09-16T19:34:01.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "pmiller",
+        "outputFileName": "pcsm_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2020-09-16T19:34:18.170Z"
+    },
+    "connection": {
+        "name": "PCMS",
+        "device protocol": "Modbus TCP",
+        "device protocol version": "6.0 WIP",
+        "device name": "hems_pcs_1",
+        "device id string": "hems_pcs_1",
+        "ip_address": "192.168.1.19",
+         "port":502,
+        "data bits (8 typical)": "Columns marked in green are REQUIRED"
+    },
+    "components": [
+        {
+            "id": "pcs_status",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 400,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 40005,
+                    "number_of_registers": 101,
+                    "map": [
+                        {
+                            "id": "pcs_user_pw",
+                            "offset": 40005,
+                            "name": "User Password"
+                        },
+                        {
+                            "id": "pcs_seconds",
+                            "offset": 40006,
+                            "name": "seconds"
+                        },
+                        {
+                            "id": "pcs_minutes",
+                            "offset": 40007,
+                            "name": "Minutes"
+                        },
+                        {
+                            "id": "pcs_hours",
+                            "offset": 40008,
+                            "name": "Hours"
+                        },
+                        {
+                            "id": "pcs_day",
+                            "offset": 40009,
+                            "name": "Day"
+                        },
+                        {
+                            "id": "pcs_month",
+                            "offset": 40010,
+                            "name": "Month"
+                        },
+                        {
+                            "id": "pcs_year",
+                            "offset": 40011,
+                            "name": "Year"
+                        },
+                        {
+                            "id": "pcs_utc",
+                            "offset": 40012,
+                            "name": "UTC offset",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_vdc_low",
+                            "offset": 40031,
+                            "name": "Vdc Low"
+                        },
+                        {
+                            "id": "pcs_vac_low",
+                            "offset": 40032,
+                            "scale": 0.1,
+                            "name": "Vac Low"
+                        },
+                        {
+                            "id": "pcs_vac_high",
+                            "offset": 40033,
+                            "scale": 0.1,
+                            "name": "Vac High"
+                        },
+                        {
+                            "id": "pcs_start_delay",
+                            "offset": 40036,
+                            "name": "Start Delay"
+                        },
+                        {
+                            "id": "pcs_p_limit",
+                            "offset": 40101,
+                            "scale": 0.01,
+                            "name": "P Limit"
+                        },
+                        {
+                            "id": "pcs_q_limit",
+                            "offset": 40102,
+                            "scale": 0.01,
+                            "name": "Q Limit"
+                        },
+                        {
+                            "id": "pcs_p_q_priority",
+                            "offset": 40103,
+                            "name": "P / Q Priority",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=P, 1= Q"
+                        },
+                        {
+                            "id": "pcs_s_limit",
+                            "offset": 40104,
+                            "scale": 0.01,
+                            "name": "S limit"
+                        },
+                        {
+                            "id": "pcs_p_algo_pri",
+                            "offset": 40105,
+                            "name": "P algorithm priority",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=min, 1=P(f) priority, 2=P(v)piority"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 43010,
+                    "number_of_registers": 191,
+                    "map": [
+                        {
+                            "id": "pcs_start",
+                            "offset": 43010,
+                            "name": "Start",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "1 = Start"
+                        },
+                        {
+                            "id": "pcs_stop",
+                            "offset": 43011,
+                            "name": "Stop",
+                            "web_ui_options": "1 = Stop"
+                        },
+                        {
+                            "id": "pcs_reset",
+                            "offset": 43012,
+                            "name": "Reset",
+                            "web_ui_options": "1 = Reset"
+                        },
+                        {
+                            "id": "pcs_e_stop",
+                            "offset": 43200,
+                            "name": "E-Stop",
+                            "web_ui_options": "1 = Estop"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 40003,
+                    "number_of_registers": 2,
+                    "map": [
+                        {
+                            "id": "pcs_access",
+                            "offset": 40003,
+                            "name": "Access Code"
+                        },
+                        {
+                            "id": "pcs_user",
+                            "offset": 40004,
+                            "name": "User"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "pcs_control",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 400,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 40193,
+                    "number_of_registers": 104,
+                    "map": [
+                        {
+                            "id": "pcs_lvrt_ref",
+                            "offset": 40193,
+                            "name": "LVRT Reference"
+                        },
+                        {
+                            "id": "pcs_ovrt_ref",
+                            "offset": 40194,
+                            "name": "OVRT Reference"
+                        },
+                        {
+                            "id": "pcs_night_mode_enable",
+                            "offset": 40261,
+                            "name": "Night Mode Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1=Yes"
+                        },
+                        {
+                            "id": "pcs_night_mode_q_ref",
+                            "offset": 40262,
+                            "scale": 0.01,
+                            "name": "Night Mode Q ref",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_night_mode_vbus_ref",
+                            "offset": 40263,
+                            "scale": 1,
+                            "name": "Night Mode Vbus Ref"
+                        },
+                        {
+                            "id": "pcs_night_mode_activate",
+                            "offset": 40264,
+                            "name": "Night Mode Activate",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_start_grad_p_enable",
+                            "offset": 40277,
+                            "name": "P Start Gradient Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_start_grad_p",
+                            "offset": 40278,
+                            "scale": 0.1,
+                            "name": "P Start Gradient"
+                        },
+                        {
+                            "id": "pcs_start_grad_q_enable",
+                            "offset": 40279,
+                            "name": "Q Start Gradient Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_start_grad_q",
+                            "offset": 40280,
+                            "scale": 0.1,
+                            "name": "Q Start Gradient"
+                        },
+                        {
+                            "id": "pcs_rise_grad_p_enable",
+                            "offset": 40281,
+                            "name": "P Rise Gradient Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_rise_grad_p",
+                            "offset": 40282,
+                            "scale": 0.1,
+                            "name": "P Rise Gradient"
+                        },
+                        {
+                            "id": "pcs_rise_grad_q_enable",
+                            "offset": 40283,
+                            "name": "Q Rise Gradient Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_rise_grad_q",
+                            "offset": 40284,
+                            "scale": 0.1,
+                            "name": "Q Rise Gradient"
+                        },
+                        {
+                            "id": "pcs_drop_grad_p_enable",
+                            "offset": 40285,
+                            "name": "P Drop Gradient Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_drop_grad_p",
+                            "offset": 40286,
+                            "scale": 0.1,
+                            "name": "P Drop Gradient"
+                        },
+                        {
+                            "id": "pcs_drop_grad_q_enable",
+                            "offset": 40287,
+                            "name": "Q Drop Gradient Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_drop_grad_q",
+                            "offset": 40288,
+                            "scale": 0.1,
+                            "name": "Q Drop Gradient"
+                        },
+                        {
+                            "id": "pcs_stop_grad_p_enable",
+                            "offset": 40289,
+                            "name": "P Stop Gradient Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_stop_grad_p",
+                            "offset": 40290,
+                            "scale": 0.1,
+                            "name": "P Stop Gradient"
+                        },
+                        {
+                            "id": "pcs_stop_grad_q_enable",
+                            "offset": 40291,
+                            "name": "Q Stop Gradient Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_stop_grad_q",
+                            "offset": 40292,
+                            "scale": 0.1,
+                            "name": "Q Stop Gradient"
+                        },
+                        {
+                            "id": "pcs_tracker_enable",
+                            "offset": 40293,
+                            "name": "Trackers Enable",
+                            "web_ui_display_type": "enum",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_tracker_vac_out",
+                            "offset": 40294,
+                            "name": "Trackers Vac Out"
+                        },
+                        {
+                            "id": "pcs_tracker_vac_min",
+                            "offset": 40295,
+                            "scale": 0.1,
+                            "name": "Trackers Vac min"
+                        },
+                        {
+                            "id": "pcs_tracker_time_start",
+                            "offset": 40296,
+                            "scale": 0.1,
+                            "name": "Trackers Time Start"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 40541,
+                    "number_of_registers": 10,
+                    "map": [
+                        {
+                            "id": "pcs_svr_enable",
+                            "offset": 40541,
+                            "name": "SVR Enable",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_svr_v1_threshold",
+                            "offset": 40542,
+                            "scale": 0.1,
+                            "name": "SVR V1 Threshold",
+                            "web_ui_options": "100.0% to G4.11.7%, 1000 to G4.11.7"
+                        },
+                        {
+                            "id": "pcs_svr_v2_threshold",
+                            "offset": 40543,
+                            "scale": 0.1,
+                            "name": "SVR V2 Threshold",
+                            "web_ui_options": "G4.11.2% to 120%, G4.11.2 to 1200"
+                        },
+                        {
+                            "id": "pcs_svr_v1_hysteresis",
+                            "offset": 40544,
+                            "scale": 0.1,
+                            "name": "SVR V1 Hysteresis",
+                            "web_ui_options": "0.5 to 10%, 5 to 100"
+                        },
+                        {
+                            "id": "pcs_svr_v2_hysetresis",
+                            "offset": 40545,
+                            "scale": 0.1,
+                            "name": "SVR V2 Hysteresis",
+                            "web_ui_options": "0.5 to 10%, 5 to 100"
+                        },
+                        {
+                            "id": "pcs_svr_grad_inject",
+                            "offset": 40546,
+                            "scale": 0.1,
+                            "name": "SVR Grad Inj Q",
+                            "web_ui_options": "0.1 to 200.0 %/S, 1 to 2000"
+                        },
+                        {
+                            "id": "pcs_svr_grad_recover_q",
+                            "offset": 40547,
+                            "scale": 0.1,
+                            "name": "SVR Grad Recover Q",
+                            "web_ui_options": "0.1% to 200.0%, 1 to 2000"
+                        },
+                        {
+                            "id": "pcs_svr_grad_reduction_p",
+                            "offset": 40548,
+                            "scale": 0.1,
+                            "name": "SVR Grad Reduction P",
+                            "web_ui_options": "0.1 to 200 %/S, 1 to 2000"
+                        },
+                        {
+                            "id": "pcs_svr_grad_recover_p",
+                            "offset": 40549,
+                            "scale": 0.1,
+                            "name": "SVR Grad Recover P",
+                            "web_ui_options": "0.1% to 200.0%, 1 to 2000"
+                        },
+                        {
+                            "id": "pcs_svr_cosfi_limit",
+                            "offset": 40550,
+                            "scale": 0.01,
+                            "name": "SVR CosFi limit",
+                            "web_ui_options": "0.80 to 1.00. 80 to 100"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 40819,
+                    "number_of_registers": 11,
+                    "map": [
+                        {
+                            "id": "pcs_vp_ref_power",
+                            "offset": 40819,
+                            "name": "V/P Ref Power Rel",
+                            "web_ui_options": "0=rel, 1= abs"
+                        },
+                        {
+                            "id": "pcs_vp_rec_mode",
+                            "offset": 40820,
+                            "name": "V/P Recover Mode",
+                            "web_ui_options": "0=Abs, 1= Rel"
+                        },
+                        {
+                            "id": "pcs_vp_enable",
+                            "offset": 40821,
+                            "name": "V/P Enable"
+                        },
+                        {
+                            "id": "pcs_vp_v1",
+                            "offset": 40822,
+                            "scale": 0.01,
+                            "name": "V/P V1",
+                            "web_ui_options": "100 to g4_10_3%"
+                        },
+                        {
+                            "id": "pcs_vp_v2",
+                            "offset": 40823,
+                            "scale": 0.01,
+                            "name": "V/P V2",
+                            "web_ui_options": "G4.10.2% to 140%, G4.10.2 to 14000"
+                        },
+                        {
+                            "id": "pcs_vp_p1",
+                            "offset": 40824,
+                            "scale": 0.01,
+                            "name": "V/P P1",
+                            "web_ui_options": "G4.10.5% to 100%, G4.10.5 to 10000"
+                        },
+                        {
+                            "id": "pcs_vp_p2",
+                            "offset": 40825,
+                            "scale": 0.01,
+                            "name": "V/P P2",
+                            "web_ui_options": "0 to G4.10.4% , 0 to G4.10.4"
+                        },
+                        {
+                            "id": "pcs_vp_hysteresis",
+                            "offset": 40826,
+                            "scale": 0.1,
+                            "name": "V/P Hysteresis",
+                            "web_ui_options": "0 to 10%, 0 to 100"
+                        },
+                        {
+                            "id": "pcs_vp_delay_hysteresis",
+                            "offset": 40828,
+                            "scale": 0.1,
+                            "name": "V/P Delay Hysterisis",
+                            "web_ui_options": "0.0 to 90 Sec, 0 to 900"
+                        },
+                        {
+                            "id": "pcs_vp_response_tiime",
+                            "offset": 40829,
+                            "scale": 0.1,
+                            "name": "V/P Response Time",
+                            "web_ui_options": "0.0 to 90.0s, 0 to 900"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 47022,
+                    "number_of_registers": 10,
+                    "map": [
+                        {
+                            "id": "pcs_active_bal_activate",
+                            "offset": 47022,
+                            "name": "Active Balancing Activate",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_bank_bal_activate",
+                            "offset": 47025,
+                            "name": "Bank Balancing Activate",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_bank_bal_reconnect_grad",
+                            "offset": 47028,
+                            "name": "Bank Balancing Reconnect Gradient",
+                            "web_ui_options": "0.1 to 3000.0 %/s"
+                        },
+                        {
+                            "id": "pcs_cvsb_activate",
+                            "offset": 47030,
+                            "name": "Constant Voltage Standby Activate",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_cvsb_time_to_enter",
+                            "offset": 47031,
+                            "name": "Constant Voltage Standby  Time to Enter",
+                            "web_ui_options": "60 to 3600 s"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "component_three",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 1000,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 40301,
+                    "number_of_registers": 117,
+                    "map": [
+                        {
+                            "id": "pcs_lv_enable",
+                            "offset": 40301,
+                            "name": "LV Protections Enable",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "LV Slow Protection",
+                                "LV Fast Protection",
+                                "LV Fast 2 Protection",
+                                "LV Very Fast Protection",
+                                "LV Very Fast 2 Protection"
+                            ]
+                        },
+                        {
+                            "id": "pcs_lv_slow",
+                            "offset": 40302,
+                            "scale": 0.1,
+                            "name": "LV Slow Protection",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_lv_delay_slow",
+                            "offset": 40303,
+                            "scale": 0.01,
+                            "name": "LV Delay Slow Protection",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_lv_fast",
+                            "offset": 40304,
+                            "scale": 0.1,
+                            "name": "LV Fast Protection",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_lv_delay_fast",
+                            "offset": 40305,
+                            "scale": 0.01,
+                            "name": "LV Delay Fast Protection",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_lv_very_fast",
+                            "offset": 40306,
+                            "scale": 0.1,
+                            "name": "LV Very Fast Protection",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_lv_delay_very_fast",
+                            "offset": 40307,
+                            "scale": 0.01,
+                            "name": "LV Delay Very Fast Protection",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_lv_interpolation",
+                            "offset": 40309,
+                            "name": "LV Interpolation",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_hv_enable",
+                            "offset": 40311,
+                            "name": "HV Protections Enable",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "HV Slow Protection",
+                                "HV Fast Protection",
+                                "HV Fast 2 Protection",
+                                "HV Very Fast Protection",
+                                "HV Very Fast 2 Protection"
+                            ]
+                        },
+                        {
+                            "id": "pcs_hv_slow",
+                            "offset": 40312,
+                            "scale": 0.1,
+                            "name": "HV Slow Protection",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_hv_delay_slow",
+                            "offset": 40313,
+                            "scale": 0.01,
+                            "name": "HV Delay Slow Protection",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_hv_fast",
+                            "offset": 40314,
+                            "scale": 0.1,
+                            "name": "HV Fast Protection",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_hv_delay_fast",
+                            "offset": 40315,
+                            "scale": 0.01,
+                            "name": "HV Delay Fast Protection",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_hv_very_fast",
+                            "offset": 40316,
+                            "scale": 0.1,
+                            "name": "HV Very Fast Protection",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_hv_delay_very_fast",
+                            "offset": 40317,
+                            "scale": 0.01,
+                            "name": "HV Delay Very Fast Protection",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_hv_interpolation",
+                            "offset": 40318,
+                            "name": "HV Interpolation",
+                            "web_ui_options": "0=No, 1= Yes"
+                        },
+                        {
+                            "id": "pcs_lf_enable",
+                            "offset": 40321,
+                            "name": "LF Protections Enable",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "LF Slow Protection",
+                                "LF Slow 2 Protection",
+                                "LF Fast Protection",
+                                "LF Very Fast Protection",
+                                "LF Very Fast 2 Protection"
+                            ]
+                        },
+                        {
+                            "id": "pcs_lf_slow",
+                            "offset": 40322,
+                            "scale": 0.1,
+                            "name": "LF Slow Protection",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_lf_delay_slow",
+                            "offset": 40323,
+                            "scale": 0.01,
+                            "name": "LF Delay Slow Protection"
+                        },
+                        {
+                            "id": "pcs_lf_fast",
+                            "offset": 40324,
+                            "scale": 0.1,
+                            "name": "LF Fast Protection"
+                        },
+                        {
+                            "id": "pcs_lf_delay_fast",
+                            "offset": 40325,
+                            "scale": 0.01,
+                            "name": "LF Delay Fast Protection"
+                        },
+                        {
+                            "id": "pcs_lf_very_fast",
+                            "offset": 40326,
+                            "scale": 0.01,
+                            "name": "LF Very Fast Protection"
+                        },
+                        {
+                            "id": "pcs_lf_delay_very_fast",
+                            "offset": 40327,
+                            "scale": 0.1,
+                            "name": "LF Delay Very Fast Protection"
+                        },
+                        {
+                            "id": "pcs_hf_enable",
+                            "offset": 40331,
+                            "name": "HF Protections Enable",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "HF Slow Protection",
+                                "HF Slow 2 Protection",
+                                "HF Fast Protection",
+                                "HF Very Fast Protection",
+                                "HF Very Fast 2 Protection"
+                            ]
+                        },
+                        {
+                            "id": "pcs_hf_slow",
+                            "offset": 40332,
+                            "scale": 0.1,
+                            "name": "HF Slow Protection"
+                        },
+                        {
+                            "id": "pcs_hf_delay_slow",
+                            "offset": 40333,
+                            "scale": 0.01,
+                            "name": "HF Delay Slow Protection"
+                        },
+                        {
+                            "id": "pcs_hf_fast",
+                            "offset": 40334,
+                            "scale": 0.1,
+                            "name": "HF Fast Protection"
+                        },
+                        {
+                            "id": "pcs_hf_delay_fast",
+                            "offset": 40335,
+                            "scale": 0.01,
+                            "name": "HF Delay Fast Protection"
+                        },
+                        {
+                            "id": "pcs_hf_very_fast",
+                            "offset": 40336,
+                            "scale": 0.1,
+                            "name": "HF Very Fast Protection"
+                        },
+                        {
+                            "id": "pcs_hf_delay_very_fast",
+                            "offset": 40337,
+                            "scale": 0.01,
+                            "name": "HF Delay Very Fast Protection"
+                        },
+                        {
+                            "id": "pcs_unbalance_enable",
+                            "offset": 40341,
+                            "name": "Unbalance Protections",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "I unbalance",
+                                "v unbalance"
+                            ]
+                        },
+                        {
+                            "id": "pcs_unbalance_i_threshold",
+                            "offset": 40342,
+                            "scale": 1,
+                            "name": "I unbalance"
+                        },
+                        {
+                            "id": "pcs_unbalance_i_delay",
+                            "offset": 40343,
+                            "scale": 1,
+                            "name": "Delay I unbalance"
+                        },
+                        {
+                            "id": "pcs_unbalance_v_threshold",
+                            "offset": 40344,
+                            "scale": 1,
+                            "name": "Unbalance V"
+                        },
+                        {
+                            "id": "pcs_unbalance_v_delay",
+                            "offset": 40345,
+                            "scale": 1,
+                            "name": "Delay Unbalance V"
+                        },
+                        {
+                            "id": "pcs_unbalance_i_min",
+                            "offset": 40348,
+                            "scale": 1,
+                            "name": "I unbalance min"
+                        },
+                        {
+                            "id": "pcs_antiislanding_enable",
+                            "offset": 40351,
+                            "name": "Anti Islanding Enable",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Anti Islanding off",
+                                "Anti Islanding Active",
+                                "Anti Islanding Passive",
+                                "Anti Islanding Simultaneous"
+                            ]
+                        },
+                        {
+                            "id": "pcs_igbt_temp_thres_fit",
+                            "offset": 40361,
+                            "scale": 1,
+                            "name": "IGBTs temp thres fit=125 C"
+                        },
+                        {
+                            "id": "pcs_igbt_temp_hist",
+                            "offset": 40362,
+                            "scale": 1,
+                            "name": "IGBTs temp hist =10 C"
+                        },
+                        {
+                            "id": "pcs_module_temp_thres_fit",
+                            "offset": 40363,
+                            "scale": 1,
+                            "name": "Module temp thres fit=85 C"
+                        },
+                        {
+                            "id": "pcs_module_temp_hist",
+                            "offset": 40364,
+                            "scale": 1,
+                            "name": "Module temp thist=10 C"
+                        },
+                        {
+                            "id": "pcs_internal_temp_thres_fit",
+                            "offset": 40365,
+                            "scale": 1,
+                            "name": "Internal temp thres fit=85 C"
+                        },
+                        {
+                            "id": "pcs_earth_current",
+                            "offset": 40371,
+                            "scale": 0.1,
+                            "name": "Earth Current"
+                        },
+                        {
+                            "id": "pcs_high_vdc_delay",
+                            "offset": 40372,
+                            "scale": 1,
+                            "name": "Delay High Vdc = 1 s"
+                        },
+                        {
+                            "id": "pcs_du_overcurrent",
+                            "offset": 40373,
+                            "scale": 0.1,
+                            "name": "DU Overcurrent = 400.0 A"
+                        },
+                        {
+                            "id": "pcs_lv_fast_2",
+                            "offset": 40376,
+                            "scale": 0.1,
+                            "name": "LV Fast Protection 2",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_lv_delay_fast_2",
+                            "offset": 40377,
+                            "scale": 0.01,
+                            "name": "LV Delay Fast Protection 2",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_lv_very_fast_2",
+                            "offset": 40378,
+                            "scale": 0.1,
+                            "name": "LV Very Fast Protection 2",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_lv_delay_very_fast_2",
+                            "offset": 40379,
+                            "scale": 0.01,
+                            "name": "LV Delay Very Fast Protection 2",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_hv_fast_2",
+                            "offset": 40380,
+                            "scale": 0.1,
+                            "name": "HV Fast Protection 2",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_hv_delay_fast_2",
+                            "offset": 40381,
+                            "scale": 0.01,
+                            "name": "HV Delay Fast Protection 2",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_hv_very_fast_2",
+                            "offset": 40382,
+                            "scale": 0.1,
+                            "name": "HV Very Fast Protection 2",
+                            "web_ui_options": "0 to 100%, 10 to 1000"
+                        },
+                        {
+                            "id": "pcs_hv_delay_very_fast_2",
+                            "offset": 40383,
+                            "scale": 0.01,
+                            "name": "HV Delay Very Fast Protection 2",
+                            "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                        },
+                        {
+                            "id": "pcs_lf_slow_2",
+                            "offset": 40384,
+                            "scale": 0.1,
+                            "name": "LF Slow 2 Protection"
+                        },
+                        {
+                            "id": "pcs_lf_delay_slow_2",
+                            "offset": 40385,
+                            "scale": 0.01,
+                            "name": "LF Delay Slow 2 Protection"
+                        },
+                        {
+                            "id": "pcs_lf_very_fast_2",
+                            "offset": 40386,
+                            "scale": 0.1,
+                            "name": "LF Very Fast 2 Protection"
+                        },
+                        {
+                            "id": "pcs_lf_delay_very_fast_2",
+                            "offset": 40387,
+                            "scale": 0.01,
+                            "name": "LF Delay Very Fast 2 Protection"
+                        },
+                        {
+                            "id": "pcs_hf_slow_2",
+                            "offset": 40388,
+                            "scale": 0.1,
+                            "name": "HF Slow 2 Protection"
+                        },
+                        {
+                            "id": "pcs_hf_delay_slow_2",
+                            "offset": 40389,
+                            "scale": 0.01,
+                            "name": "HF Delay Slow 2 Protection"
+                        },
+                        {
+                            "id": "pcs_hf_very_fast_2",
+                            "offset": 40390,
+                            "scale": 0.1,
+                            "name": "HF Very Fast 2 Protection"
+                        },
+                        {
+                            "id": "pcs_hf_delay_very_fast_2",
+                            "offset": 40391,
+                            "scale": 0.01,
+                            "name": "HF Delay Very Fast 2 Protection"
+                        },
+                        {
+                            "id": "pcs_hvpl_enable",
+                            "offset": 40392,
+                            "name": "HVPL Enable 5.9.1",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "HVPL Enable 5.9.1 No",
+                                "HVPL Enable 5.9.1 Yes"
+                            ]
+                        },
+                        {
+                            "id": "pcs_hvpl_activation_level_5",
+                            "offset": 40393,
+                            "scale": 1,
+                            "name": "HVPL Activation Level = 5%"
+                        },
+                        {
+                            "id": "pcs_hvpl_scale_1000",
+                            "offset": 40394,
+                            "scale": 1,
+                            "name": "HVPL Scale = 1000"
+                        },
+                        {
+                            "id": "pcs_hvpl_fault_level_0",
+                            "offset": 40395,
+                            "scale": 1,
+                            "name": "HVPL Fault Level = 0"
+                        },
+                        {
+                            "id": "pcs_hvpl_filter_hz_100_hz",
+                            "offset": 40396,
+                            "scale": 0.001,
+                            "name": "HVPL filter = 0.100 Hz"
+                        },
+                        {
+                            "id": "pcs_hvpl_delay_fault_s_0_s",
+                            "offset": 40397,
+                            "scale": 0.1,
+                            "name": "HVPL delay fault = 2.0 s"
+                        },
+                        {
+                            "id": "pcs_hvpl_start_test",
+                            "offset": 40398,
+                            "name": "HVPL Start Test",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "HVPL Start Test no",
+                                "HVPL Start Test yes"
+                            ]
+                        },
+                        {
+                            "id": "pcs_hvpl_test_level_20",
+                            "offset": 40399,
+                            "scale": 1,
+                            "name": "HVPL Test Level = -20%",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_display_baudrate",
+                            "offset": 40401,
+                            "name": "Display Baudrate = 115200"
+                        },
+                        {
+                            "id": "pcs_modbus_address",
+                            "offset": 40402,
+                            "name": "Modbus Address=150"
+                        },
+                        {
+                            "id": "pcs_modbus_baudrate",
+                            "offset": 40403,
+                            "name": "Modbus Baudrate=19200 bps"
+                        },
+                        {
+                            "id": "pcs_modbus_parity",
+                            "offset": 40404,
+                            "name": "Modbus Parity"
+                        },
+                        {
+                            "id": "pcs_modbus_stop_bits",
+                            "offset": 40405,
+                            "name": "Modbus Stop bits"
+                        },
+                        {
+                            "id": "pcs_modbus_master",
+                            "offset": 40406,
+                            "name": "Modbus Master"
+                        },
+                        {
+                            "id": "pcs_automatic_ip",
+                            "offset": 40411,
+                            "name": "Automatic IP"
+                        },
+                        {
+                            "id": "pcs_assigned_ip_a",
+                            "offset": 40412,
+                            "name": "Assigned IP A"
+                        },
+                        {
+                            "id": "pcs_assigned_ip_b",
+                            "offset": 40413,
+                            "name": "Assigned IP B"
+                        },
+                        {
+                            "id": "pcs_assigned_ip_c",
+                            "offset": 40414,
+                            "name": "Assigned IP C"
+                        },
+                        {
+                            "id": "pcs_assigned_ip_d",
+                            "offset": 40415,
+                            "name": "Assigned IP D"
+                        },
+                        {
+                            "id": "pcs_assigned_subnet_a",
+                            "offset": 40416,
+                            "name": "Assigned Subnet A"
+                        },
+                        {
+                            "id": "pcs_assigned_subnet_b",
+                            "offset": 40417,
+                            "name": "Assigned Subnet B"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 40418,
+                    "number_of_registers": 110,
+                    "map": [
+                        {
+                            "id": "pcs_assigned_subnet_c",
+                            "offset": 40418,
+                            "name": "Assigned Subnet C"
+                        },
+                        {
+                            "id": "pcs_assigned_subnet_d",
+                            "offset": 40419,
+                            "name": "Assigned Subnet D"
+                        },
+                        {
+                            "id": "pcs_assigned_gateway_a",
+                            "offset": 40420,
+                            "name": "Assigned Gateway A"
+                        },
+                        {
+                            "id": "pcs_assigned_gateway_b",
+                            "offset": 40421,
+                            "name": "Assigned Gateway B"
+                        },
+                        {
+                            "id": "pcs_assigned_gateway_c",
+                            "offset": 40422,
+                            "name": "Assigned Gateway C"
+                        },
+                        {
+                            "id": "pcs_assigned_gateway_d",
+                            "offset": 40423,
+                            "name": "Assigned Gateway D"
+                        },
+                        {
+                            "id": "pcs_ip_address_a",
+                            "offset": 40424,
+                            "name": "IP address A"
+                        },
+                        {
+                            "id": "pcs_ip_address_b",
+                            "offset": 40425,
+                            "name": "IP address B"
+                        },
+                        {
+                            "id": "pcs_ip_address_c",
+                            "offset": 40426,
+                            "name": "IP address C"
+                        },
+                        {
+                            "id": "pcs_ip_address_d",
+                            "offset": 40427,
+                            "name": "IP address D"
+                        },
+                        {
+                            "id": "pcs_subnet_a",
+                            "offset": 40428,
+                            "name": "Subnet A"
+                        },
+                        {
+                            "id": "pcs_subnet_b",
+                            "offset": 40429,
+                            "name": "Subnet B"
+                        },
+                        {
+                            "id": "pcs_subnet_c",
+                            "offset": 40430,
+                            "name": "Subnet C"
+                        },
+                        {
+                            "id": "pcs_subnet_d",
+                            "offset": 40431,
+                            "name": "Subnet D"
+                        },
+                        {
+                            "id": "pcs_gateway_a",
+                            "offset": 40432,
+                            "name": "Gateway A"
+                        },
+                        {
+                            "id": "pcs_gateway_b",
+                            "offset": 40433,
+                            "name": "Gateway B"
+                        },
+                        {
+                            "id": "pcs_gateway_c",
+                            "offset": 40434,
+                            "name": "Gateway C"
+                        },
+                        {
+                            "id": "pcs_gateway_d",
+                            "offset": 40435,
+                            "name": "Gateway D"
+                        },
+                        {
+                            "id": "pcs_mac_a",
+                            "offset": 40436,
+                            "name": "Mac A"
+                        },
+                        {
+                            "id": "pcs_mac_b",
+                            "offset": 40437,
+                            "name": "Mac B"
+                        },
+                        {
+                            "id": "pcs_mac_c",
+                            "offset": 40438,
+                            "name": "Mac C"
+                        },
+                        {
+                            "id": "pcs_mac_d",
+                            "offset": 40439,
+                            "name": "Mac D"
+                        },
+                        {
+                            "id": "pcs_mac_e",
+                            "offset": 40440,
+                            "name": "Mac E"
+                        },
+                        {
+                            "id": "pcs_mac_f",
+                            "offset": 40441,
+                            "name": "Mac F"
+                        },
+                        {
+                            "id": "pcs_enable_5_4b_4",
+                            "offset": 40473,
+                            "name": "Enable 5.4b.4.1"
+                        },
+                        {
+                            "id": "pcs_5_4b_4_V4",
+                            "offset": 40474,
+                            "scale": 0.1,
+                            "name": "V4 = 80%"
+                        },
+                        {
+                            "id": "pcs_5_4b_4_f4",
+                            "offset": 40475,
+                            "scale": 0.01,
+                            "name": "f4 = 58.00 Hz"
+                        },
+                        {
+                            "id": "pcs_5_4b_4_t4",
+                            "offset": 40476,
+                            "scale": 0.1,
+                            "name": "t4 = 1.0 s"
+                        },
+                        {
+                            "id": "pcs_mv_manometer_fault",
+                            "offset": 40481,
+                            "scale": 1,
+                            "name": "MV manometer fault = off"
+                        },
+                        {
+                            "id": "pcs_mv_manometer_delay",
+                            "offset": 40482,
+                            "scale": 1,
+                            "name": "MV manometer delay = 10 s"
+                        },
+                        {
+                            "id": "pcs_lv_manometer_fault",
+                            "offset": 40483,
+                            "scale": 1,
+                            "name": "LV manometer fault = off"
+                        },
+                        {
+                            "id": "pcs_lv_manometer_delay",
+                            "offset": 40484,
+                            "scale": 1,
+                            "name": "LV manometer delay = 10 s"
+                        },
+                        {
+                            "id": "pcs_enable_g_1",
+                            "offset": 40501,
+                            "name": "Auto Reset Enable"
+                        },
+                        {
+                            "id": "pcs_number_of_retries",
+                            "offset": 40502,
+                            "scale": 1,
+                            "name": "Number of Retries"
+                        },
+                        {
+                            "id": "pcs_delay_between_retries_s_s",
+                            "offset": 40503,
+                            "scale": 0.1,
+                            "name": "Delay between retries = 30 s"
+                        },
+                        {
+                            "id": "pcs_reset_retries_timeout",
+                            "offset": 40504,
+                            "scale": 1,
+                            "name": "Reset Retries timeout"
+                        },
+                        {
+                            "id": "pcs_all_faults_enabled",
+                            "offset": 40505,
+                            "name": "All Faults enabled"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_number",
+                            "offset": 40506,
+                            "name": "Faults allowed number = 0"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_1",
+                            "offset": 40507,
+                            "name": "Faults allowed 1 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_2",
+                            "offset": 40508,
+                            "name": "Faults allowed 2 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_3",
+                            "offset": 40509,
+                            "name": "Faults allowed 3 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_4",
+                            "offset": 40510,
+                            "name": "Faults allowed 4 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_5",
+                            "offset": 40511,
+                            "name": "Faults allowed 5 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_6",
+                            "offset": 40512,
+                            "name": "Faults allowed 6 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_7",
+                            "offset": 40513,
+                            "name": "Faults allowed 7 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_8",
+                            "offset": 40514,
+                            "name": "Faults allowed 8 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_9",
+                            "offset": 40515,
+                            "name": "Faults allowed 9 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_allowed_10",
+                            "offset": 40516,
+                            "name": "Faults allowed 10 = No Faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_number",
+                            "offset": 40517,
+                            "name": "Faults exception number = 0"
+                        },
+                        {
+                            "id": "pcs_faults_exception_1",
+                            "offset": 40518,
+                            "name": "Faults exception 1 = No faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_2",
+                            "offset": 40519,
+                            "name": "Faults exception 2 = No faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_3",
+                            "offset": 40520,
+                            "name": "Faults exception 3 = No faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_4",
+                            "offset": 40521,
+                            "name": "Faults exception 4 = No faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_5",
+                            "offset": 40522,
+                            "name": "Faults exception 5 = No faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_6",
+                            "offset": 40523,
+                            "name": "Faults exception 6 = No faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_7",
+                            "offset": 40524,
+                            "name": "Faults exception 7 = No faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_8",
+                            "offset": 40525,
+                            "name": "Faults exception 8 = No faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_9",
+                            "offset": 40526,
+                            "name": "Faults exception 9 = No faults"
+                        },
+                        {
+                            "id": "pcs_faults_exception_10",
+                            "offset": 40527,
+                            "name": "Faults exception 10 = No faults"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 40731,
+                    "number_of_registers": 12,
+                    "map": [
+                        {
+                            "id": "pcs_enable_5_4b_1",
+                            "offset": 40731,
+                            "name": "Enable 5.4b.1.1"
+                        },
+                        {
+                            "id": "pcs_5_4b_1_V1",
+                            "offset": 40732,
+                            "scale": 0.1,
+                            "name": "V1 = 120%"
+                        },
+                        {
+                            "id": "pcs_5_4b_1_f1",
+                            "offset": 40733,
+                            "scale": 0.01,
+                            "name": "f1 = 62.00 Hz"
+                        },
+                        {
+                            "id": "pcs_5_4b_1_t1",
+                            "offset": 40734,
+                            "scale": 0.1,
+                            "name": "t1 = 1.0 s"
+                        },
+                        {
+                            "id": "pcs_enable_5_4b_2",
+                            "offset": 40735,
+                            "name": "Enable 5.4b.2.1"
+                        },
+                        {
+                            "id": "pcs_5_4b_2_V2",
+                            "offset": 40736,
+                            "scale": 0.1,
+                            "name": "V2 = 80%"
+                        },
+                        {
+                            "id": "pcs_5_4b_2_f2",
+                            "offset": 40737,
+                            "scale": 0.01,
+                            "name": "f2 = 62.00 Hz"
+                        },
+                        {
+                            "id": "pcs_5_4b_2_t2",
+                            "offset": 40738,
+                            "scale": 0.1,
+                            "name": "t2 = 1.0 s"
+                        },
+                        {
+                            "id": "pcs_enable_5_4b_3",
+                            "offset": 40739,
+                            "name": "Enable 5.4b.3.1"
+                        },
+                        {
+                            "id": "pcs_5_4b_3_V3",
+                            "offset": 40740,
+                            "scale": 0.1,
+                            "name": "V3 = 120%"
+                        },
+                        {
+                            "id": "pcs_5_4b_3_f3",
+                            "offset": 40741,
+                            "scale": 0.01,
+                            "name": "f3 = 58.00 Hz"
+                        },
+                        {
+                            "id": "pcs_5_4b_3_t3",
+                            "offset": 40742,
+                            "scale": 0.1,
+                            "name": "t3 = 1.0 s"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 44253,
+                    "number_of_registers": 4,
+                    "map": [
+                        {
+                            "id": "pcs_reset_refs_time_s",
+                            "offset": 44253,
+                            "scale": 1,
+                            "name": "Reset refs time = 4s"
+                        },
+                        {
+                            "id": "pcs_comms_fault_time_s_s",
+                            "offset": 44254,
+                            "scale": 0.1,
+                            "name": "Comms Fault time = 60 s"
+                        },
+                        {
+                            "id": "pcs_home_p_ref_0_0",
+                            "offset": 44255,
+                            "scale": 0.01,
+                            "name": "Home P ref  = 0.0%"
+                        },
+                        {
+                            "id": "pcs_home_q_ref_0_0",
+                            "offset": 44256,
+                            "scale": 0.01,
+                            "name": "Home Q ref = 0.0%",
+                            "signed": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "component_one",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 16,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 40551,
+                    "number_of_registers": 38,
+                    "map": [
+                        {
+                            "id": "pcs_p_control_mode",
+                            "offset": 40551,
+                            "name": "P control Mode",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "P control Mode = I",
+                                "P control mode = P"
+                            ]
+                        },
+                        {
+                            "id": "pcs_q_control_mode",
+                            "offset": 40552,
+                            "name": "Q control Mode = Q",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Q control Mode = Cos phi",
+                                "Q control Mode = Q",
+                                "Q control Mode = I",
+                                "Q control mode = V/Q"
+                            ]
+                        },
+                        {
+                            "id": "pcs_p_p_reference",
+                            "offset": 40553,
+                            "scale": 0.01,
+                            "name": "P reference = 100%"
+                        },
+                        {
+                            "id": "pcs_p_id_reference",
+                            "offset": 40554,
+                            "scale": 0.01,
+                            "name": "Id reference = 100%"
+                        },
+                        {
+                            "id": "pcs_q_cosphi_reference",
+                            "offset": 40556,
+                            "scale": 0.001,
+                            "name": "Cos phi reference = 1.000"
+                        },
+                        {
+                            "id": "pcs_q_iq_reference",
+                            "offset": 40557,
+                            "scale": 0.01,
+                            "name": "Iq reference = 0",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_q_q_reference",
+                            "offset": 40558,
+                            "scale": 0.01,
+                            "name": "Q reference = 0.0%",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_excitation",
+                            "offset": 40559,
+                            "name": "Excitation",
+                            "uri": "/components/hems_pcs_1",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Excitation = Capacitive",
+                                "Excitation = Inductive"
+                            ]
+                        },
+                        {
+                            "id": "pcs_q_v_reference",
+                            "offset": 40576,
+                            "scale": 0.01,
+                            "name": "Vref = 100.00%",
+                            "signed": true
+                        },
+                        {
+                            "id": "pcs_vq_v1",
+                            "offset": 40577,
+                            "scale": 0.01,
+                            "name": "V1=90%"
+                        },
+                        {
+                            "id": "pcs_vq_v2",
+                            "offset": 40578,
+                            "scale": 0.01,
+                            "name": "V2 = 92.00%"
+                        },
+                        {
+                            "id": "pcs_vq_v3",
+                            "offset": 40579,
+                            "scale": 0.01,
+                            "name": "V3 = 108.00%"
+                        },
+                        {
+                            "id": "pcs_vq_v4",
+                            "offset": 40580,
+                            "scale": 0.01,
+                            "name": "V4 =  110.00%"
+                        },
+                        {
+                            "id": "pcs_vq_q1",
+                            "offset": 40581,
+                            "scale": 0.01,
+                            "name": "Q1 = 48.43%"
+                        },
+                        {
+                            "id": "pcs_vq_q2",
+                            "offset": 40582,
+                            "scale": 0.01,
+                            "name": "Q2 = 0.00%"
+                        },
+                        {
+                            "id": "pcs_vq_q3",
+                            "offset": 40583,
+                            "scale": 0.01,
+                            "name": "Q3 = 0.00%"
+                        },
+                        {
+                            "id": "pcs_vq_q4",
+                            "offset": 40584,
+                            "scale": 0.01,
+                            "name": "Q4 = 48.43%"
+                        },
+                        {
+                            "id": "pcs_vq_hysterisis",
+                            "offset": 40585,
+                            "scale": 0.1,
+                            "name": "V hysterisis = 1.0%"
+                        },
+                        {
+                            "id": "pcs_vq_p_activation",
+                            "offset": 40586,
+                            "scale": 0.1,
+                            "name": "P activation = 20%"
+                        },
+                        {
+                            "id": "pcs_vq_p_deactivation",
+                            "offset": 40587,
+                            "scale": 0.1,
+                            "name": "P deactivation = 5.0%"
+                        },
+                        {
+                            "id": "pcs_vq_response_delay",
+                            "offset": 40588,
+                            "scale": 0.1,
+                            "name": "Response Tdelay = 0.3 s"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "component_three",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 1000,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 40589,
+                    "number_of_registers": 63,
+                    "map": [
+                        {
+                            "id": "pcs_vq_response_time",
+                            "offset": 40589,
+                            "scale": 0.1,
+                            "name": "Response Time = 5.0 s"
+                        },
+                        {
+                            "id": "pcs_enabled_nec",
+                            "offset": 40649,
+                            "scale": 1,
+                            "name": "Enabled NEC = NEC 2017"
+                        },
+                        {
+                            "id": "pcs_du_type",
+                            "offset": 40650,
+                            "scale": 1,
+                            "name": "Du Type = HEM"
+                        },
+                        {
+                            "id": "pcs_working_mode",
+                            "offset": 40651,
+                            "scale": 1,
+                            "name": "Working Mode = GFDI + IMI"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 47051,
+                    "number_of_registers": 2,
+                    "map": [
+                        {
+                            "id": "pcs_battery_module_model",
+                            "offset": 47051,
+                            "scale": 1,
+                            "name": "Battery Module Model"
+                        },
+                        {
+                            "id": "pcs_bms_banks_enabled",
+                            "offset": 47052,
+                            "scale": 1,
+                            "name": "BMS Banks Enabled"
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 47151,
+                    "number_of_registers": 29,
+                    "map": [
+                        {
+                            "id": "pcs_leak_protection_type_1",
+                            "offset": 47151,
+                            "name": "Leak Protection Type"
+                        },
+                        {
+                            "id": "pcs_leak_imi_activation_1",
+                            "offset": 47152,
+                            "name": "IMI Activation"
+                        },
+                        {
+                            "id": "pcs_leak_fault_threshold_1",
+                            "offset": 47153,
+                            "scale": 0.1,
+                            "name": "Fault Threshold = 5.0kOhms"
+                        },
+                        {
+                            "id": "pcs_leak_fault_recover_threshold_1",
+                            "offset": 47154,
+                            "scale": 0.0005,
+                            "name": "Fault Recover Threshold = 115%"
+                        },
+                        {
+                            "id": "pcs_leak_warning_theshold_1",
+                            "offset": 47155,
+                            "scale": 0.1,
+                            "name": "Warning Theshold=50.0kOhms"
+                        },
+                        {
+                            "id": "pcs_leak_self_test_exec_period_1",
+                            "offset": 47158,
+                            "scale": 1,
+                            "name": "Self Test exec per = 1440"
+                        },
+                        {
+                            "id": "pcs_leak_self_test_manual_command_1",
+                            "offset": 47159,
+                            "scale": 1,
+                            "name": "Self Test Manual Command"
+                        },
+                        {
+                            "id": "pcs_leak_protection_type_2",
+                            "offset": 47161,
+                            "name": "Leak Protection Type"
+                        },
+                        {
+                            "id": "pcs_leak_imi_activation_2",
+                            "offset": 47162,
+                            "name": "IMI Activation"
+                        },
+                        {
+                            "id": "pcs_leak_fault_threshold_2",
+                            "offset": 47163,
+                            "scale": 0.1,
+                            "name": "Fault Threshold = 5.0kOhms"
+                        },
+                        {
+                            "id": "pcs_leak_fault_recover_threshold_2",
+                            "offset": 47164,
+                            "scale": 0.0005,
+                            "name": "Fault Recover Threshold = 115%"
+                        },
+                        {
+                            "id": "pcs_leak_warning_theshold_2",
+                            "offset": 47165,
+                            "scale": 0.1,
+                            "name": "Warning Theshold=50.0kOhms"
+                        },
+                        {
+                            "id": "pcs_leak_self_test_exec_period_2",
+                            "offset": 47168,
+                            "scale": 1,
+                            "name": "Self Test exec per = 1440"
+                        },
+                        {
+                            "id": "pcs_leak_self_test_manual_command_2",
+                            "offset": 47169,
+                            "scale": 1,
+                            "name": "Self Test Manual Command"
+                        },
+                        {
+                            "id": "pcs_leak_protection_type_3",
+                            "offset": 47171,
+                            "name": "Leak Protection Type"
+                        },
+                        {
+                            "id": "pcs_leak_imi_activation_3",
+                            "offset": 47172,
+                            "name": "IMI Activation"
+                        },
+                        {
+                            "id": "pcs_leak_fault_threshold_3",
+                            "offset": 47173,
+                            "scale": 0.1,
+                            "name": "Fault Threshold = 5.0kOhms"
+                        },
+                        {
+                            "id": "pcs_leak_fault_recover_threshold_3",
+                            "offset": 47174,
+                            "scale": 0.0005,
+                            "name": "Fault Recover Threshold = 115%"
+                        },
+                        {
+                            "id": "pcs_leak_warning_theshold_3",
+                            "offset": 47175,
+                            "scale": 0.1,
+                            "name": "Warning Theshold=50.0kOhms"
+                        },
+                        {
+                            "id": "pcs_leak_self_test_exec_period_3",
+                            "offset": 47178,
+                            "scale": 1,
+                            "name": "Self Test exec per = 1440"
+                        },
+                        {
+                            "id": "pcs_leak_self_test_manual_command_3",
+                            "offset": 47179,
+                            "scale": 1,
+                            "name": "Self Test Manual Command"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "component_one",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 16,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 41001,
+                    "number_of_registers": 62,
+                    "map": [
+                        {
+                            "id": "pcs_grid_voltage_rs",
+                            "offset": 41001,
+                            "scale": 0.1,
+                            "name": "Grid voltage RS"
+                        },
+                        {
+                            "id": "pcs_grid_voltage_st",
+                            "offset": 41002,
+                            "scale": 0.1,
+                            "name": "Grid voltage ST"
+                        },
+                        {
+                            "id": "pcs_grid_voltage_tr",
+                            "offset": 41003,
+                            "scale": 0.1,
+                            "name": "Grid voltage TR"
+                        },
+                        {
+                            "id": "pcs_grid_current_1",
+                            "offset": 41004,
+                            "scale": 0.1,
+                            "name": "Grid current I1"
+                        },
+                        {
+                            "id": "pcs_grid_current_2",
+                            "offset": 41005,
+                            "scale": 0.1,
+                            "name": "Grid current I2"
+                        },
+                        {
+                            "id": "pcs_grid_current_3",
+                            "offset": 41006,
+                            "scale": 0.1,
+                            "name": "Grid current I3"
+                        },
+                        {
+                            "id": "pcs_active_power",
+                            "offset": 41008,
+                            "name": "P"
+                        },
+                        {
+                            "id": "pcs_reactive_power",
+                            "offset": 41009,
+                            "name": "Q"
+                        },
+                        {
+                            "id": "pcs_apparent_power",
+                            "offset": 41010,
+                            "name": "S"
+                        },
+                        {
+                            "id": "pcs_cosphi",
+                            "offset": 41011,
+                            "scale": 0.001,
+                            "name": "Cos phi"
+                        },
+                        {
+                            "id": "pcs_grid_frequency",
+                            "offset": 41012,
+                            "scale": 0.01,
+                            "name": "Grid frequency"
+                        },
+                        {
+                            "id": "pcs_poi_v_est",
+                            "offset": 41014,
+                            "name": "POI V estimated"
+                        },
+                        {
+                            "id": "pcs_vdc_last_linp",
+                            "offset": 41053,
+                            "name": "DC voltage last linp"
+                        },
+                        {
+                            "id": "pcs_dc_p_input",
+                            "offset": 41061,
+                            "name": "DC input power"
+                        },
+                        {
+                            "id": "pcs_dc_total_i_input",
+                            "offset": 41062,
+                            "name": "DC input current total"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 41103,
+                    "number_of_registers": 86,
+                    "map": [
+                        {
+                            "id": "pcs_insulation_status_1",
+                            "offset": 41103,
+                            "name": "Insulation Status"
+                        },
+                        {
+                            "id": "pcs_insulation_resistor_msb_1",
+                            "offset": 41104,
+                            "name": "Insulation Resistor MSB"
+                        },
+                        {
+                            "id": "pcs_insulation_resistor_lsb_1",
+                            "offset": 41105,
+                            "name": "Resistor LSB"
+                        },
+                        {
+                            "id": "pcs_insulation_measurement_started_time_1",
+                            "offset": 41106,
+                            "name": "Insulation Measurement started time"
+                        },
+                        {
+                            "id": "pcs_insulation_self_test_started_time_1",
+                            "offset": 41107,
+                            "name": "Insulation Self-test started time"
+                        },
+                        {
+                            "id": "pcs_insulation_self_test_exec_countdown_1",
+                            "offset": 41108,
+                            "name": "Insulation Self-test exec countdown"
+                        },
+                        {
+                            "id": "pcs_insulation_status_update_1",
+                            "offset": 41109,
+                            "name": "Insulation Status update"
+                        },
+                        {
+                            "id": "pcs_current_fault",
+                            "offset": 41121,
+                            "name": "Current fault"
+                        },
+                        {
+                            "id": "pcs_current_warning",
+                            "offset": 41122,
+                            "name": "Current warning"
+                        },
+                        {
+                            "id": "pcs_current_status",
+                            "offset": 41123,
+                            "name": "Current status"
+                        },
+                        {
+                            "id": "pcs_internal_temperature",
+                            "offset": 41124,
+                            "name": "Internal temperature"
+                        },
+                        {
+                            "id": "pcs_max_igbts_temperature",
+                            "offset": 41125,
+                            "name": "Max IGBTs temperature"
+                        },
+                        {
+                            "id": "pcs_max_modules_temperature",
+                            "offset": 41126,
+                            "name": "Max modules temperature"
+                        },
+                        {
+                            "id": "pcs_internal_input_status",
+                            "offset": 41127,
+                            "name": "Internal input status"
+                        },
+                        {
+                            "id": "pcs_internal_output_status",
+                            "offset": 41128,
+                            "name": "Internal output status"
+                        },
+                        {
+                            "id": "pcs_ac_module_admission_temperature",
+                            "offset": 41129,
+                            "scale": 0.1,
+                            "name": "AC module admission temperature"
+                        },
+                        {
+                            "id": "pcs_current_normative",
+                            "offset": 41130,
+                            "name": "Current normative"
+                        },
+                        {
+                            "id": "pcs_current_fault_module",
+                            "offset": 41131,
+                            "name": "Current fault module"
+                        },
+                        {
+                            "id": "pcs_internal_humidity",
+                            "offset": 41132,
+                            "name": "Internal humidity"
+                        },
+                        {
+                            "id": "pcs_lv_manometer",
+                            "offset": 41133,
+                            "name": "LV manometer"
+                        },
+                        {
+                            "id": "pcs_power_source_1",
+                            "offset": 41135,
+                            "scale": 0.01,
+                            "name": "Power source 1"
+                        },
+                        {
+                            "id": "pcs_power_source_2",
+                            "offset": 41136,
+                            "scale": 0.01,
+                            "name": "Power source 2"
+                        },
+                        {
+                            "id": "pcs_p_limit_inst",
+                            "offset": 41141,
+                            "scale": 0.0001,
+                            "name": "P limit inst"
+                        },
+                        {
+                            "id": "pcs_q_limit_inst",
+                            "offset": 41142,
+                            "scale": 0.0001,
+                            "name": "Q limit inst"
+                        },
+                        {
+                            "id": "pcs_r_mohm",
+                            "offset": 41146,
+                            "scale": 0.01,
+                            "name": "R (mOhm)"
+                        },
+                        {
+                            "id": "pcs_l_uh",
+                            "offset": 41147,
+                            "name": "L (uH)"
+                        },
+                        {
+                            "id": "pcs_c_uf",
+                            "offset": 41148,
+                            "scale": 0.01,
+                            "name": "C (uF)"
+                        },
+                        {
+                            "id": "pcs_lc_uh",
+                            "offset": 41149,
+                            "scale": 0.01,
+                            "name": "Lc (uH)"
+                        },
+                        {
+                            "id": "pcs_start_conditions_all",
+                            "offset": 41151,
+                            "name": "Start conditions all"
+                        },
+                        {
+                            "id": "pcs_start_conditions_v",
+                            "offset": 41152,
+                            "name": "Start conditions V"
+                        },
+                        {
+                            "id": "pcs_start_conditions_f",
+                            "offset": 41153,
+                            "name": "Start conditions f"
+                        },
+                        {
+                            "id": "pcs_start_conditions_vdc",
+                            "offset": 41154,
+                            "name": "Start conditions Vdc"
+                        },
+                        {
+                            "id": "pcs_start_conditions_p",
+                            "offset": 41156,
+                            "name": "Start conditions P"
+                        },
+                        {
+                            "id": "pcs_start_conditions_soc_no",
+                            "offset": 41157,
+                            "name": "Start conditions SOC = No"
+                        },
+                        {
+                            "id": "pcs_nominal_ac_voltage",
+                            "offset": 41161,
+                            "name": "Nominal AC voltage"
+                        },
+                        {
+                            "id": "pcs_max_ac_current",
+                            "offset": 41162,
+                            "name": "Max AC current"
+                        },
+                        {
+                            "id": "pcs_nominal_bus_voltage",
+                            "offset": 41163,
+                            "name": "Nominal bus voltage"
+                        },
+                        {
+                            "id": "pcs_max_dc_current",
+                            "offset": 41164,
+                            "name": "Max DC current"
+                        },
+                        {
+                            "id": "pcs_nominal_s",
+                            "offset": 41165,
+                            "scale": 0.01,
+                            "name": "Nominal S"
+                        },
+                        {
+                            "id": "pcs_number_of_modules",
+                            "offset": 41166,
+                            "name": "Number of modules"
+                        },
+                        {
+                            "id": "pcs_number_of_mpps",
+                            "offset": 41167,
+                            "name": "Number of MPPs"
+                        },
+                        {
+                            "id": "pcs_number_of_bus",
+                            "offset": 41170,
+                            "name": "Number of BUS = 2"
+                        },
+                        {
+                            "id": "pcs_inverter_type",
+                            "offset": 41183,
+                            "name": "Inverter type"
+                        },
+                        {
+                            "id": "pcs_inductive_i_limit",
+                            "offset": 41184,
+                            "name": "Inductive I limit"
+                        },
+                        {
+                            "id": "pcs_capacitive_i_limit",
+                            "offset": 41185,
+                            "name": "Capacitive I limit"
+                        },
+                        {
+                            "id": "pcs_max_p_limit",
+                            "offset": 41186,
+                            "scale": 0.01,
+                            "name": "Max P limit"
+                        },
+                        {
+                            "id": "pcs_max_q_limit",
+                            "offset": 41187,
+                            "scale": 0.01,
+                            "name": "Max Q limit"
+                        },
+                        {
+                            "id": "pcs_max_s_limit",
+                            "offset": 41188,
+                            "scale": 0.01,
+                            "name": "Max S limit"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 47401,
+                    "number_of_registers": 98,
+                    "map": [
+                        {
+                            "id": "pcs_vdc_bus_1",
+                            "offset": 47401,
+                            "name": "DC Voltage Bus 1"
+                        },
+                        {
+                            "id": "pcs_vdc_bus_2",
+                            "offset": 47402,
+                            "name": "DC Voltage Bus 2"
+                        },
+                        {
+                            "id": "pcs_vdc_bus_3",
+                            "offset": 47403,
+                            "name": "DC Voltage Bus 3"
+                        },
+                        {
+                            "id": "pcs_bess_1_v",
+                            "offset": 47404,
+                            "scale": 0.1,
+                            "name": "BESS 1 voltage bus"
+                        },
+                        {
+                            "id": "pcs_bess_2_v",
+                            "offset": 47405,
+                            "scale": 0.1,
+                            "name": "BESS 2 voltage bus"
+                        },
+                        {
+                            "id": "pcs_bess_3_v",
+                            "offset": 47406,
+                            "scale": 0.1,
+                            "name": "BESS 3 voltage bus"
+                        },
+                        {
+                            "id": "pcs_bess_1_p_input",
+                            "offset": 47407,
+                            "name": "BESS1 DC input power"
+                        },
+                        {
+                            "id": "pcs_bess_2_p_input",
+                            "offset": 47408,
+                            "name": "BESS2 DC input power"
+                        },
+                        {
+                            "id": "pcs_bess_3_p_input",
+                            "offset": 47409,
+                            "name": "BESS3 DC input power"
+                        },
+                        {
+                            "id": "pcs_dc_1_i_input",
+                            "offset": 47410,
+                            "name": "DC input current 1"
+                        },
+                        {
+                            "id": "pcs_dc_2_i_input",
+                            "offset": 47411,
+                            "name": "DC input current 2"
+                        },
+                        {
+                            "id": "pcs_dc_3_i_input",
+                            "offset": 47412,
+                            "name": "DC input current 3"
+                        },
+                        {
+                            "id": "pcs_bess_1_idcref",
+                            "offset": 47413,
+                            "name": "Ref current DC BESS1"
+                        },
+                        {
+                            "id": "pcs_bess_2_idcref",
+                            "offset": 47414,
+                            "name": "Ref current DC BESS2"
+                        },
+                        {
+                            "id": "pcs_bess_3_idcref",
+                            "offset": 47415,
+                            "name": "Ref current DC BESS3"
+                        },
+                        {
+                            "id": "pcs_insulation_status_2",
+                            "offset": 47483,
+                            "name": "Insulation Status"
+                        },
+                        {
+                            "id": "pcs_insulation_resistor_msb_2",
+                            "offset": 47484,
+                            "name": "Insulation Resistor MSB"
+                        },
+                        {
+                            "id": "pcs_insulation_resistor_lsb_2",
+                            "offset": 47485,
+                            "name": "Resistor LSB"
+                        },
+                        {
+                            "id": "pcs_insulation_measurement_started_time_2",
+                            "offset": 47486,
+                            "name": "Insulation Measurement started time"
+                        },
+                        {
+                            "id": "pcs_insulation_self_test_started_time_2",
+                            "offset": 47487,
+                            "name": "Insulation Self-test started time"
+                        },
+                        {
+                            "id": "pcs_insulation_self_test_exec_countdown_2",
+                            "offset": 47488,
+                            "name": "Insulation Self-test exec countdown"
+                        },
+                        {
+                            "id": "pcs_insulation_status_update_2",
+                            "offset": 47489,
+                            "name": "Insulation Status update"
+                        },
+                        {
+                            "id": "pcs_insulation_status_3",
+                            "offset": 47492,
+                            "name": "Insulation Status"
+                        },
+                        {
+                            "id": "pcs_insulation_resistor_msb_3",
+                            "offset": 47493,
+                            "name": "Insulation Resistor MSB"
+                        },
+                        {
+                            "id": "pcs_insulation_resistor_lsb_3",
+                            "offset": 47494,
+                            "name": "Resistor LSB"
+                        },
+                        {
+                            "id": "pcs_insulation_measurement_started_time_3",
+                            "offset": 47495,
+                            "name": "Insulation Measurement started time"
+                        },
+                        {
+                            "id": "pcs_insulation_self_test_started_time_3",
+                            "offset": 47496,
+                            "name": "Insulation Self-test started time"
+                        },
+                        {
+                            "id": "pcs_insulation_self_test_exec_countdown_3",
+                            "offset": 47497,
+                            "name": "Insulation Self-test exec countdown"
+                        },
+                        {
+                            "id": "pcs_insulation_status_update_3",
+                            "offset": 47498,
+                            "name": "Insulation Status update"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "component_two",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 100,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 41201,
+                    "number_of_registers": 34,
+                    "map": [
+                        {
+                            "id": "pcs_select_module",
+                            "offset": 41201,
+                            "name": "Select module"
+                        },
+                        {
+                            "id": "pcs_daily_energy_msb",
+                            "offset": 41202,
+                            "name": "Daily energy MSB"
+                        },
+                        {
+                            "id": "pcs_daily_energy_lsb",
+                            "offset": 41203,
+                            "name": "Daily energy LSB"
+                        },
+                        {
+                            "id": "pcs_yesterday_energy_msb",
+                            "offset": 41204,
+                            "name": "Yesterday energy MSB"
+                        },
+                        {
+                            "id": "pcs_yesterday_energy_lsb",
+                            "offset": 41205,
+                            "name": "Yesterday energy LSB"
+                        },
+                        {
+                            "id": "pcs_current_month_energy_msb",
+                            "offset": 41206,
+                            "name": "Current month energy MSB"
+                        },
+                        {
+                            "id": "pcs_current_month_energy_lsb",
+                            "offset": 41207,
+                            "name": "Current month energy LSB"
+                        },
+                        {
+                            "id": "pcs_last_month_energy_msb",
+                            "offset": 41208,
+                            "name": "Last month energy MSB"
+                        },
+                        {
+                            "id": "pcs_last_month_energy_lsb",
+                            "offset": 41209,
+                            "name": "Last month energy LSB"
+                        },
+                        {
+                            "id": "pcs_total_energy_msb",
+                            "offset": 41210,
+                            "name": "Total energy MSB"
+                        },
+                        {
+                            "id": "pcs_total_energy_lsb",
+                            "offset": 41211,
+                            "name": "Total energy LSB"
+                        },
+                        {
+                            "id": "pcs_select_module_reactive_energy",
+                            "offset": 41212,
+                            "name": "Select module reactive energy"
+                        },
+                        {
+                            "id": "pcs_daily_reactive_energy_msb",
+                            "offset": 41213,
+                            "name": "Daily reactive energy MSB"
+                        },
+                        {
+                            "id": "pcs_daily_reactive_energy_lsb",
+                            "offset": 41214,
+                            "name": "Daily reactive energy LSB"
+                        },
+                        {
+                            "id": "pcs_yesterday_reactive_energy_msb",
+                            "offset": 41215,
+                            "name": "Yesterday reactive energy MSB"
+                        },
+                        {
+                            "id": "pcs_yesterday_reactive_energy_lsb",
+                            "offset": 41216,
+                            "name": "Yesterday reactive energy LSB"
+                        },
+                        {
+                            "id": "pcs_current_month_reactive_energy_msb",
+                            "offset": 41217,
+                            "name": "Current month reactive energy MSB"
+                        },
+                        {
+                            "id": "pcs_current_month_reactive_energy_lsb",
+                            "offset": 41218,
+                            "name": "Current month reactive energy LSB"
+                        },
+                        {
+                            "id": "pcs_last_month_reactive_energy_msb",
+                            "offset": 41219,
+                            "name": "Last month reactive energy MSB"
+                        },
+                        {
+                            "id": "pcs_last_month_reactive_energy_lsb",
+                            "offset": 41220,
+                            "name": "Last month reactive energy LSB"
+                        },
+                        {
+                            "id": "pcs_total_reactive_energy_msb",
+                            "offset": 41221,
+                            "name": "Total reactive energy MSB"
+                        },
+                        {
+                            "id": "pcs_total_reactive_energy_lsb",
+                            "offset": 41222,
+                            "name": "Total reactive energy LSB"
+                        },
+                        {
+                            "id": "pcs_total_run_time_years",
+                            "offset": 41223,
+                            "name": "Total run time years"
+                        },
+                        {
+                            "id": "pcs_total_run_time_days",
+                            "offset": 41224,
+                            "name": "Total run time days"
+                        },
+                        {
+                            "id": "pcs_total_run_time_hours",
+                            "offset": 41225,
+                            "name": "Total run time hours"
+                        },
+                        {
+                            "id": "pcs_partial_run_time_years",
+                            "offset": 41226,
+                            "name": "Partial run time years"
+                        },
+                        {
+                            "id": "pcs_partial_run_time_days",
+                            "offset": 41227,
+                            "name": "Partial run time days"
+                        },
+                        {
+                            "id": "pcs_partial_run_time_hours",
+                            "offset": 41228,
+                            "name": "Partial run time hours"
+                        },
+                        {
+                            "id": "pcs_total_grid_connections",
+                            "offset": 41229,
+                            "name": "Total number of grid connections"
+                        },
+                        {
+                            "id": "pcs_partial_grid_connections",
+                            "offset": 41230,
+                            "name": "Partial number of grid connections"
+                        },
+                        {
+                            "id": "pcs_consum_daily_energy_msb",
+                            "offset": 41231,
+                            "name": "Consum. daily energy MSB"
+                        },
+                        {
+                            "id": "pcs_consum_daily_energy_lsb",
+                            "offset": 41232,
+                            "name": "Consum. daily energy LSB"
+                        },
+                        {
+                            "id": "pcs_consum_total_energy_msb",
+                            "offset": 41233,
+                            "name": "Consum. total energy MSB"
+                        },
+                        {
+                            "id": "pcs_consum_total_energy_lsb",
+                            "offset": 41234,
+                            "name": "Consum. total energy LSB"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "component_three",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 1000,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 41251,
+                    "number_of_registers": 63,
+                    "map": [
+                        {
+                            "id": "pcs_last_fault",
+                            "offset": 41251,
+                            "name": "Last fault"
+                        },
+                        {
+                            "id": "pcs_last_fault_date",
+                            "offset": 41252,
+                            "name": "Date of last fault"
+                        },
+                        {
+                            "id": "pcs_last_fault_time",
+                            "offset": 41253,
+                            "name": "Time of last fault"
+                        },
+                        {
+                            "id": "pcs_ninth_fault",
+                            "offset": 41254,
+                            "name": "9th fault"
+                        },
+                        {
+                            "id": "pcs_ninth_fault_date",
+                            "offset": 41255,
+                            "name": "Date of 9th fault"
+                        },
+                        {
+                            "id": "pcs_ninth_fault_time",
+                            "offset": 41256,
+                            "name": "Time of 9th fault"
+                        },
+                        {
+                            "id": "pcs_eighth_fault",
+                            "offset": 41257,
+                            "name": "8th fault"
+                        },
+                        {
+                            "id": "pcs_eighth_fault_date",
+                            "offset": 41258,
+                            "name": "Date of 8th fault"
+                        },
+                        {
+                            "id": "pcs_eighth_fault_time",
+                            "offset": 41259,
+                            "name": "Time of 8th fault"
+                        },
+                        {
+                            "id": "pcs_seventh_fault",
+                            "offset": 41260,
+                            "name": "7th fault"
+                        },
+                        {
+                            "id": "pcs_seventh_fault_date",
+                            "offset": 41261,
+                            "name": "Date of 7th fault"
+                        },
+                        {
+                            "id": "pcs_seventh_fault_time",
+                            "offset": 41262,
+                            "name": "Time of 7th fault"
+                        },
+                        {
+                            "id": "pcs_sixth_fault",
+                            "offset": 41263,
+                            "name": "6th fault"
+                        },
+                        {
+                            "id": "pcs_sixth_fault_date",
+                            "offset": 41264,
+                            "name": "Date of 6th fault"
+                        },
+                        {
+                            "id": "pcs_sixth_fault_time",
+                            "offset": 41265,
+                            "name": "Time of 6h fault"
+                        },
+                        {
+                            "id": "pcs_fifth_fault",
+                            "offset": 41266,
+                            "name": "5th fault"
+                        },
+                        {
+                            "id": "pcs_fifth_fault_date",
+                            "offset": 41267,
+                            "name": "Date of 5th fault"
+                        },
+                        {
+                            "id": "pcs_fifth_fault_time",
+                            "offset": 41268,
+                            "name": "Time of 5th fault"
+                        },
+                        {
+                            "id": "pcs_fourth_fault",
+                            "offset": 41269,
+                            "name": "4th fault"
+                        },
+                        {
+                            "id": "pcs_fourth_fault_date",
+                            "offset": 41270,
+                            "name": "Date of 4th fault"
+                        },
+                        {
+                            "id": "pcs_fourth_fault_time",
+                            "offset": 41271,
+                            "name": "Time of 4th fault"
+                        },
+                        {
+                            "id": "pcs_third_fault",
+                            "offset": 41272,
+                            "name": "3rd fault"
+                        },
+                        {
+                            "id": "pcs_third_fault_date",
+                            "offset": 41273,
+                            "name": "Date of 3rd fault"
+                        },
+                        {
+                            "id": "pcs_third_fault_time",
+                            "offset": 41274,
+                            "name": "Time of 3rd fault"
+                        },
+                        {
+                            "id": "pcs_second_fault",
+                            "offset": 41275,
+                            "name": "2nd fault"
+                        },
+                        {
+                            "id": "pcs_second_fault_date",
+                            "offset": 41276,
+                            "name": "Date of 2nd fault"
+                        },
+                        {
+                            "id": "pcs_second_fault_time",
+                            "offset": 41277,
+                            "name": "Time of 2nd fault"
+                        },
+                        {
+                            "id": "pcs_first_fault",
+                            "offset": 41278,
+                            "name": "1st fault"
+                        },
+                        {
+                            "id": "pcs_first_fault_date",
+                            "offset": 41279,
+                            "name": "Date of 1st fault"
+                        },
+                        {
+                            "id": "pcs_first_fault_time",
+                            "offset": 41280,
+                            "name": "Time of 1st fault"
+                        },
+                        {
+                            "id": "pcs_last_warning",
+                            "offset": 41301,
+                            "name": "Last warning"
+                        },
+                        {
+                            "id": "pcs_last_warning_date",
+                            "offset": 41302,
+                            "name": "Date of last warning"
+                        },
+                        {
+                            "id": "pcs_last_warning_time",
+                            "offset": 41303,
+                            "name": "Time of last warning"
+                        },
+                        {
+                            "id": "pcs_ninth_warning",
+                            "offset": 41304,
+                            "name": "9th warning"
+                        },
+                        {
+                            "id": "pcs_ninth_warning_date",
+                            "offset": 41305,
+                            "name": "Date of 9th warning"
+                        },
+                        {
+                            "id": "pcs_ninth_warning_time",
+                            "offset": 41306,
+                            "name": "Time of 9th warning"
+                        },
+                        {
+                            "id": "pcs_eighth_warning",
+                            "offset": 41307,
+                            "name": "8th warning"
+                        },
+                        {
+                            "id": "pcs_eighth_warning_date",
+                            "offset": 41308,
+                            "name": "Date of 8th warning"
+                        },
+                        {
+                            "id": "pcs_eighth_warning_time",
+                            "offset": 41309,
+                            "name": "Time of 8th warning"
+                        },
+                        {
+                            "id": "pcs_seventh_warning",
+                            "offset": 41310,
+                            "name": "7th warning"
+                        },
+                        {
+                            "id": "pcs_seventh_warning_date",
+                            "offset": 41311,
+                            "name": "Date of 7th warning"
+                        },
+                        {
+                            "id": "pcs_seventh_warning_time",
+                            "offset": 41312,
+                            "name": "Time of 7th warning"
+                        },
+                        {
+                            "id": "pcs_sixth_warning",
+                            "offset": 41313,
+                            "name": "6th warning"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 41314,
+                    "number_of_registers": 67,
+                    "map": [
+                        {
+                            "id": "pcs_sixth_warning_date",
+                            "offset": 41314,
+                            "name": "Date of 6th warning"
+                        },
+                        {
+                            "id": "pcs_sixth_warning_time",
+                            "offset": 41315,
+                            "name": "Time of 6h warning"
+                        },
+                        {
+                            "id": "pcs_fifth_warning",
+                            "offset": 41316,
+                            "name": "5th warning"
+                        },
+                        {
+                            "id": "pcs_fifth_warning_date",
+                            "offset": 41317,
+                            "name": "Date of 5th warning"
+                        },
+                        {
+                            "id": "pcs_fifth_warning_time",
+                            "offset": 41318,
+                            "name": "Time of 5th warning"
+                        },
+                        {
+                            "id": "pcs_fourth_warning",
+                            "offset": 41319,
+                            "name": "4th warning"
+                        },
+                        {
+                            "id": "pcs_fourth_warning_date",
+                            "offset": 41320,
+                            "name": "Date of 4th warning"
+                        },
+                        {
+                            "id": "pcs_fourth_warning_time",
+                            "offset": 41321,
+                            "name": "Time of 4th warning"
+                        },
+                        {
+                            "id": "pcs_third_warning",
+                            "offset": 41322,
+                            "name": "3rd warning"
+                        },
+                        {
+                            "id": "pcs_third_warning_date",
+                            "offset": 41323,
+                            "name": "Date of 3rd warning"
+                        },
+                        {
+                            "id": "pcs_third_warning_time",
+                            "offset": 41324,
+                            "name": "Time of 3rd warning"
+                        },
+                        {
+                            "id": "pcs_second_warning",
+                            "offset": 41325,
+                            "name": "2nd warning"
+                        },
+                        {
+                            "id": "pcs_second_warning_date",
+                            "offset": 41326,
+                            "name": "Date of 2nd warning"
+                        },
+                        {
+                            "id": "pcs_second_warning_time",
+                            "offset": 41327,
+                            "name": "Time of 2nd warning"
+                        },
+                        {
+                            "id": "pcs_first_warning",
+                            "offset": 41328,
+                            "name": "1st warning"
+                        },
+                        {
+                            "id": "pcs_first_warning_date",
+                            "offset": 41329,
+                            "name": "Date of 1st warning"
+                        },
+                        {
+                            "id": "pcs_first_warning_time",
+                            "offset": 41330,
+                            "name": "Time of 1st warning"
+                        },
+                        {
+                            "id": "pcs_last_event",
+                            "offset": 41351,
+                            "name": "Last event"
+                        },
+                        {
+                            "id": "pcs_last_event_date",
+                            "offset": 41352,
+                            "name": "Date of last event"
+                        },
+                        {
+                            "id": "pcs_last_event_time",
+                            "offset": 41353,
+                            "name": "Time of last event"
+                        },
+                        {
+                            "id": "pcs_ninth_event",
+                            "offset": 41354,
+                            "name": "9th event"
+                        },
+                        {
+                            "id": "pcs_ninth_event_date",
+                            "offset": 41355,
+                            "name": "Date of 9th event"
+                        },
+                        {
+                            "id": "pcs_ninth_event_time",
+                            "offset": 41356,
+                            "name": "Time of 9th event"
+                        },
+                        {
+                            "id": "pcs_eighth_event",
+                            "offset": 41357,
+                            "name": "8th event"
+                        },
+                        {
+                            "id": "pcs_eighth_event_date",
+                            "offset": 41358,
+                            "name": "Date of 8th event"
+                        },
+                        {
+                            "id": "pcs_eighth_event_time",
+                            "offset": 41359,
+                            "name": "Time of 8th event"
+                        },
+                        {
+                            "id": "pcs_seventh_event",
+                            "offset": 41360,
+                            "name": "7th event"
+                        },
+                        {
+                            "id": "pcs_seventh_event_date",
+                            "offset": 41361,
+                            "name": "Date of 7th event"
+                        },
+                        {
+                            "id": "pcs_seventh_event_time",
+                            "offset": 41362,
+                            "name": "Time of 7th event"
+                        },
+                        {
+                            "id": "pcs_sixth_event",
+                            "offset": 41363,
+                            "name": "6th event"
+                        },
+                        {
+                            "id": "pcs_sixth_event_date",
+                            "offset": 41364,
+                            "name": "Date of 6th event"
+                        },
+                        {
+                            "id": "pcs_sixth_event_time",
+                            "offset": 41365,
+                            "name": "Time of 6h event"
+                        },
+                        {
+                            "id": "pcs_fifth_event",
+                            "offset": 41366,
+                            "name": "5th event"
+                        },
+                        {
+                            "id": "pcs_fifth_event_date",
+                            "offset": 41367,
+                            "name": "Date of 5th event"
+                        },
+                        {
+                            "id": "pcs_fifth_event_time",
+                            "offset": 41368,
+                            "name": "Time of 5th event"
+                        },
+                        {
+                            "id": "pcs_fourth_event",
+                            "offset": 41369,
+                            "name": "4th event"
+                        },
+                        {
+                            "id": "pcs_fourth_event_date",
+                            "offset": 41370,
+                            "name": "Date of 4th event"
+                        },
+                        {
+                            "id": "pcs_fourth_event_time",
+                            "offset": 41371,
+                            "name": "Time of 4th event"
+                        },
+                        {
+                            "id": "pcs_third_event",
+                            "offset": 41372,
+                            "name": "3rd event"
+                        },
+                        {
+                            "id": "pcs_third_event_date",
+                            "offset": 41373,
+                            "name": "Date of 3rd event"
+                        },
+                        {
+                            "id": "pcs_third_event_time",
+                            "offset": 41374,
+                            "name": "Time of 3rd event"
+                        },
+                        {
+                            "id": "pcs_second_event",
+                            "offset": 41375,
+                            "name": "2nd event"
+                        },
+                        {
+                            "id": "pcs_second_event_date",
+                            "offset": 41376,
+                            "name": "Date of 2nd event"
+                        },
+                        {
+                            "id": "pcs_second_event_time",
+                            "offset": 41377,
+                            "name": "Time of 2nd event"
+                        },
+                        {
+                            "id": "pcs_first_event",
+                            "offset": 41378,
+                            "name": "1st event"
+                        },
+                        {
+                            "id": "pcs_first_event_date",
+                            "offset": 41379,
+                            "name": "Date of 1st event"
+                        },
+                        {
+                            "id": "pcs_first_event_time",
+                            "offset": 41380,
+                            "name": "Time of 1st event"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "component_two",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 100,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 41391,
+                    "number_of_registers": 35,
+                    "map": [
+                        {
+                            "id": "pcs_running_modules",
+                            "offset": 41391,
+                            "name": "Running modules"
+                        },
+                        {
+                            "id": "pcs_num_running_modules",
+                            "offset": 41392,
+                            "name": "Num running modules"
+                        },
+                        {
+                            "id": "pcs_next_starting_module",
+                            "offset": 41393,
+                            "name": "Next starting module"
+                        },
+                        {
+                            "id": "pcs_modules_start_stop",
+                            "offset": 41394,
+                            "name": "Modules start stop"
+                        },
+                        {
+                            "id": "pcs_modules_enable_reg",
+                            "offset": 41395,
+                            "name": "Modules enable reg"
+                        },
+                        {
+                            "id": "pcs_selected_module",
+                            "offset": 41401,
+                            "name": "Selected module"
+                        },
+                        {
+                            "id": "pcs_module_status",
+                            "offset": 41402,
+                            "name": "Module status"
+                        },
+                        {
+                            "id": "pcs_current_r",
+                            "offset": 41403,
+                            "scale": 0.1,
+                            "name": "Current R"
+                        },
+                        {
+                            "id": "pcs_current_s",
+                            "offset": 41404,
+                            "scale": 0.1,
+                            "name": "Current S"
+                        },
+                        {
+                            "id": "pcs_current_t",
+                            "offset": 41405,
+                            "scale": 0.1,
+                            "name": "Current T"
+                        },
+                        {
+                            "id": "pcs_dc_current",
+                            "offset": 41406,
+                            "scale": 0.1,
+                            "name": "DC current"
+                        },
+                        {
+                            "id": "pcs_dc_voltage_p",
+                            "offset": 41407,
+                            "name": "DC voltage (P)"
+                        },
+                        {
+                            "id": "pcs_dc_voltage_n",
+                            "offset": 41408,
+                            "name": "DC voltage (N)"
+                        },
+                        {
+                            "id": "pcs_dc_voltage",
+                            "offset": 41409,
+                            "name": "DC voltage"
+                        },
+                        {
+                            "id": "pcs_p",
+                            "offset": 41410,
+                            "scale": 0.1,
+                            "name": "P"
+                        },
+                        {
+                            "id": "pcs_q",
+                            "offset": 41411,
+                            "scale": 0.1,
+                            "name": "Q"
+                        },
+                        {
+                            "id": "pcs_ambient_temperature",
+                            "offset": 41412,
+                            "name": "Ambient temperature"
+                        },
+                        {
+                            "id": "pcs_max_temperature",
+                            "offset": 41413,
+                            "name": "Max temperature"
+                        },
+                        {
+                            "id": "pcs_i_o_status",
+                            "offset": 41414,
+                            "name": "I/O status"
+                        },
+                        {
+                            "id": "pcs_temperature_r1",
+                            "offset": 41417,
+                            "name": "Temperature R1"
+                        },
+                        {
+                            "id": "pcs_temperature_r2",
+                            "offset": 41418,
+                            "name": "Temperature R2"
+                        },
+                        {
+                            "id": "pcs_temperature_r3",
+                            "offset": 41419,
+                            "name": "Temperature R3"
+                        },
+                        {
+                            "id": "pcs_temperature_s1",
+                            "offset": 41420,
+                            "name": "Temperature S1"
+                        },
+                        {
+                            "id": "pcs_temperature_s2",
+                            "offset": 41421,
+                            "name": "Temperature S2"
+                        },
+                        {
+                            "id": "pcs_temperature_s3",
+                            "offset": 41422,
+                            "name": "Temperature S3"
+                        },
+                        {
+                            "id": "pcs_temperature_t1",
+                            "offset": 41423,
+                            "name": "Temperature T1"
+                        },
+                        {
+                            "id": "pcs_temperature_t2",
+                            "offset": 41424,
+                            "name": "Temperature T2"
+                        },
+                        {
+                            "id": "pcs_temperature_t3",
+                            "offset": 41425,
+                            "name": "Temperature T3"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 47424,
+                    "number_of_registers": 108,
+                    "map": [
+                        {
+                            "id": "pcs_du_feedback_status",
+                            "offset": 47424,
+                            "name": "DU Feedback Status"
+                        },
+                        {
+                            "id": "pcs_bms1_status",
+                            "offset": 47451,
+                            "name": "BMS Status"
+                        },
+                        {
+                            "id": "pcs_bms1_strings_in_service",
+                            "offset": 47452,
+                            "name": "Strings In Service"
+                        },
+                        {
+                            "id": "pcs_bms1_total_strings_count",
+                            "offset": 47453,
+                            "name": "Total Strings Count"
+                        },
+                        {
+                            "id": "pcs_bms1_system_voltage",
+                            "offset": 47454,
+                            "scale": 0.1,
+                            "name": "System Voltage"
+                        },
+                        {
+                            "id": "pcs_bms1_system_current",
+                            "offset": 47455,
+                            "name": "System Current"
+                        },
+                        {
+                            "id": "pcs_bms1_system_soc",
+                            "offset": 47456,
+                            "scale": 0.1,
+                            "name": "System SOC"
+                        },
+                        {
+                            "id": "pcs_bms2_status",
+                            "offset": 47457,
+                            "name": "BMS Status"
+                        },
+                        {
+                            "id": "pcs_bms2_strings_in_service",
+                            "offset": 47458,
+                            "name": "Strings In Service"
+                        },
+                        {
+                            "id": "pcs_bms2_total_strings_count",
+                            "offset": 47459,
+                            "name": "Total Strings Count"
+                        },
+                        {
+                            "id": "pcs_bms2_system_voltage",
+                            "offset": 47460,
+                            "scale": 0.1,
+                            "name": "System Voltage"
+                        },
+                        {
+                            "id": "pcs_bms2_system_current",
+                            "offset": 47461,
+                            "name": "System Current"
+                        },
+                        {
+                            "id": "pcs_bms2_system_soc",
+                            "offset": 47462,
+                            "scale": 0.1,
+                            "name": "System SOC"
+                        },
+                        {
+                            "id": "pcs_bms3_status",
+                            "offset": 47463,
+                            "name": "BMS Status"
+                        },
+                        {
+                            "id": "pcs_bms3_strings_in_service",
+                            "offset": 47464,
+                            "name": "Strings In Service"
+                        },
+                        {
+                            "id": "pcs_bms3_total_strings_count",
+                            "offset": 47465,
+                            "name": "Total Strings Count"
+                        },
+                        {
+                            "id": "pcs_bms3_system_voltage",
+                            "offset": 47466,
+                            "scale": 0.1,
+                            "name": "System Voltage"
+                        },
+                        {
+                            "id": "pcs_bms3_system_current",
+                            "offset": 47467,
+                            "scale": 0.1,
+                            "name": "System Current"
+                        },
+                        {
+                            "id": "pcs_bms3_system_soc",
+                            "offset": 47468,
+                            "name": "System SOC"
+                        },
+                        {
+                            "id": "pcs_bms_select",
+                            "offset": 47501,
+                            "scale": 0.1,
+                            "name": "BMS Select"
+                        },
+                        {
+                            "id": "pcs_bms_sys_heartbeat",
+                            "offset": 47502,
+                            "name": "Sys heartbeat"
+                        },
+                        {
+                            "id": "pcs_bms_strings_service",
+                            "offset": 47503,
+                            "name": "Strings In Service"
+                        },
+                        {
+                            "id": "pcs_bms_total_strings_count",
+                            "offset": 47504,
+                            "name": "Total Strings Count"
+                        },
+                        {
+                            "id": "pcs_bms_service_voltage",
+                            "offset": 47505,
+                            "scale": 0.1,
+                            "name": "Service Voltage"
+                        },
+                        {
+                            "id": "pcs_bms_service_soc",
+                            "offset": 47506,
+                            "scale": 0.1,
+                            "name": "Service SOC"
+                        },
+                        {
+                            "id": "pcs_bms_voltage",
+                            "offset": 47507,
+                            "scale": 0.1,
+                            "name": "System Voltage"
+                        },
+                        {
+                            "id": "pcs_bms_current",
+                            "offset": 47508,
+                            "name": "System Current"
+                        },
+                        {
+                            "id": "pcs_bms_soc",
+                            "offset": 47509,
+                            "scale": 0.1,
+                            "name": "System SOC"
+                        },
+                        {
+                            "id": "pcs_bms_soh",
+                            "offset": 47510,
+                            "scale": 0.1,
+                            "name": "System SOH"
+                        },
+                        {
+                            "id": "pcs_bms_mode",
+                            "offset": 47511,
+                            "name": "System Mode"
+                        },
+                        {
+                            "id": "pcs_bms_max_v",
+                            "offset": 47512,
+                            "name": "Max Cell Volt Sys"
+                        },
+                        {
+                            "id": "pcs_bms_min_v",
+                            "offset": 47513,
+                            "name": "Min Cell Volt Sys"
+                        },
+                        {
+                            "id": "pcs_bms_max_temp",
+                            "offset": 47514,
+                            "scale": 0.01,
+                            "name": "Max Cell Temp Sys"
+                        },
+                        {
+                            "id": "pcs_bms_min_temp",
+                            "offset": 47515,
+                            "scale": 0.01,
+                            "name": "Min Cell Temp Sys"
+                        },
+                        {
+                            "id": "pcs_bms_min_partial_strings",
+                            "offset": 47516,
+                            "name": "Min. Partial String"
+                        },
+                        {
+                            "id": "pcs_bms_partial_voltage",
+                            "offset": 47517,
+                            "name": "Partial Diff Voltage"
+                        },
+                        {
+                            "id": "pcs_bms_config_status",
+                            "offset": 47518,
+                            "name": "Sys Config Status"
+                        },
+                        {
+                            "id": "pcs_bms_protection_4",
+                            "offset": 47519,
+                            "name": "Protection #4"
+                        },
+                        {
+                            "id": "pcs_bms_protection_3",
+                            "offset": 47520,
+                            "name": "Protection #3"
+                        },
+                        {
+                            "id": "pcs_bms_protection_2",
+                            "offset": 47521,
+                            "name": "Protection #2"
+                        },
+                        {
+                            "id": "pcs_bms_protection_1",
+                            "offset": 47522,
+                            "name": "Protection #1"
+                        },
+                        {
+                            "id": "pcs_bms_alarm_4",
+                            "offset": 47523,
+                            "name": "Alarm #4"
+                        },
+                        {
+                            "id": "pcs_bms_alarm_3",
+                            "offset": 47524,
+                            "name": "Alarm #3"
+                        },
+                        {
+                            "id": "pcs_bms_alarm_2",
+                            "offset": 47525,
+                            "name": "Alarm #2"
+                        },
+                        {
+                            "id": "pcs_bms_alarm_1",
+                            "offset": 47526,
+                            "name": "Alarm #1"
+                        },
+                        {
+                            "id": "pcs_bms_dcl",
+                            "offset": 47527,
+                            "scale": 0.1,
+                            "name": "DCL"
+                        },
+                        {
+                            "id": "pcs_bms_ccl",
+                            "offset": 47528,
+                            "scale": 0.1,
+                            "name": "CCL"
+                        },
+                        {
+                            "id": "pcs_bms_watchdog_response",
+                            "offset": 47529,
+                            "name": "Watchdog response"
+                        },
+                        {
+                            "id": "pcs_bms_dio_status",
+                            "offset": 47530,
+                            "name": "Digital Input Status"
+                        },
+                        {
+                            "id": "pcs_bms_alarm_status",
+                            "offset": 47531,
+                            "name": "System Alarm Status"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 47651,
+                    "number_of_registers": 44,
+                    "map": [
+                        {
+                            "id": "pcs_bmsenc_door_contact",
+                            "offset": 47651,
+                            "name": "Door Contact"
+                        },
+                        {
+                            "id": "pcs_bmsenc_fcp_alarm",
+                            "offset": 47652,
+                            "name": "FCP Alarm"
+                        },
+                        {
+                            "id": "pcs_bmsenc_fcp_predischarge",
+                            "offset": 47653,
+                            "name": "FCP Predischarge"
+                        },
+                        {
+                            "id": "pcs_bmsenc_fcp_release",
+                            "offset": 47654,
+                            "name": "FCP Agent Release"
+                        },
+                        {
+                            "id": "pcs_bmsenc_fcp_sup",
+                            "offset": 47655,
+                            "name": "FCP Trouble Sup"
+                        },
+                        {
+                            "id": "pcs_bmsenc_dc_disconnected_1",
+                            "offset": 47656,
+                            "name": "DC 1 Disconnected"
+                        },
+                        {
+                            "id": "pcs_bmsenc_dc_disconnected_2",
+                            "offset": 47657,
+                            "name": "DC 2 Disconnected"
+                        },
+                        {
+                            "id": "pcs_bmsenc_emergency_stop",
+                            "offset": 47658,
+                            "name": "Emergency Stop"
+                        },
+                        {
+                            "id": "pcs_bmsenc_ups_failure",
+                            "offset": 47659,
+                            "name": "UPS Battery Failure"
+                        },
+                        {
+                            "id": "pcs_bmsenc_ups_ok",
+                            "offset": 47660,
+                            "name": "UPS DC OK"
+                        },
+                        {
+                            "id": "pcs_bmsenc_temp_humidity_t",
+                            "offset": 47661,
+                            "name": "Temp Humidity T"
+                        },
+                        {
+                            "id": "pcs_bmsenc_temp_humidity_h",
+                            "offset": 47662,
+                            "name": "Temp Humidity H"
+                        },
+                        {
+                            "id": "pcs_bmsenc_temp_1",
+                            "offset": 47663,
+                            "scale": 0.1,
+                            "name": "Temp 1"
+                        },
+                        {
+                            "id": "pcs_bmsenc_temp_2",
+                            "offset": 47664,
+                            "scale": 0.1,
+                            "name": "Temp 2"
+                        },
+                        {
+                            "id": "pcs_bmsenc_temp_3",
+                            "offset": 47665,
+                            "scale": 0.1,
+                            "name": "Temp 3"
+                        },
+                        {
+                            "id": "pcs_bmsenc_temp_4",
+                            "offset": 47666,
+                            "scale": 0.1,
+                            "name": "Temp 4"
+                        },
+                        {
+                            "id": "pcs_bmsenc_temp_5",
+                            "offset": 47667,
+                            "scale": 0.1,
+                            "name": "Temp 5"
+                        },
+                        {
+                            "id": "pcs_bmsenc_temp_6",
+                            "offset": 47668,
+                            "scale": 0.1,
+                            "name": "Temp 6"
+                        },
+                        {
+                            "id": "pcs_transformer_alarms",
+                            "offset": 47681,
+                            "name": "Transformer Alarms"
+                        },
+                        {
+                            "id": "pcs_hvac_signals_1",
+                            "offset": 47691,
+                            "name": "HVAC signals 1"
+                        },
+                        {
+                            "id": "pcs_hvac_signals_2",
+                            "offset": 47692,
+                            "name": "HVAC signals 2"
+                        },
+                        {
+                            "id": "pcs_hvac_signals_3",
+                            "offset": 47693,
+                            "name": "HVAC signals 3"
+                        },
+                        {
+                            "id": "pcs_hvac_signals_4",
+                            "offset": 47694,
+                            "name": "HVAC signals 4"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

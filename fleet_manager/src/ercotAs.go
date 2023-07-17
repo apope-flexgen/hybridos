@@ -96,6 +96,11 @@ func (ercotAs ercotAsFeature) update() {
 // values being sent to Site Controller such as the response enable bit field, the baseload
 // command, and the inactive response command.
 func (s *site) recalculateErcotFeatureVariables(fPoints *fleetPoints) {
+	// update the feature variables that are sourced from the site but may have customer overrides
+	fPoints.loadPseudoSwitchStatus.actual = s.breakerClosed.status.(bool)
+	fPoints.genMaxCharge.actual = s.chargeablePower.status.(float64)
+	fPoints.genMaxDischarge.actual = s.dischargeablePower.status.(float64)
+
 	// a bit field indicates which types of frequency responses are enabled for the site.
 	// update its value based on the current settings for the site
 	newResponseEnableBitField := calculateResponseEnableBitField(fPoints)
@@ -126,13 +131,8 @@ func (s *site) recalculateErcotFeatureVariables(fPoints *fleetPoints) {
 	s.freqResp.frrsUpCmd.control = fPoints.frrsUp.gen.responsibility.getSelect() + fPoints.frrsUp.load.responsibility.getSelect()
 	s.freqResp.frrsDownCmd.control = fPoints.frrsDown.gen.responsibility.getSelect() + fPoints.frrsDown.load.responsibility.getSelect()
 	s.freqResp.rrsFfrCmd.control = ffrResponsibility
-	s.freqResp.autoPfrDownCmd.control = s.calculateAutoPfrDownCmd()
-	s.freqResp.autoPfrUpCmd.control = s.calculateAutoPfrUpCmd()
-
-	// update miscellaneous outputs
-	fPoints.loadPseudoSwitchStatus.actual = s.breakerClosed.status.(bool)
-	fPoints.genMaxCharge.actual = s.chargeablePower.status.(float64)
-	fPoints.genMaxDischarge.actual = s.dischargeablePower.status.(float64)
+	s.freqResp.autoPfrDownCmd.control = fPoints.calculateAutoPfrDownCmd(s)
+	s.freqResp.autoPfrUpCmd.control = fPoints.calculateAutoPfrUpCmd(s)
 }
 
 // Starts with a response-enable bit field that has all bits set to 0. Sets any bits to 1 whose responses
@@ -181,18 +181,26 @@ func (fPoints *fleetPoints) calculateBaseloadCmd(ffrRequirement float64) (baselo
 	return math.Min(math.Max(fPoints.baseloadCmdMw, fPoints.baseloadCmdMinLimitMw), fPoints.baseloadCmdMaxLimitMw)
 }
 
-// Calculates a site's automatic PFR over-frequency command based on the minimum value of site's chargeable power and the sum of the site's
-// chargeable power and calculated baseload command minus FRRS's over-frequency responsibility
-func (s *site) calculateAutoPfrDownCmd() (autoPfrDownCmd float64) {
-	siteChargeable := s.chargeablePower.status.(float64)
-	return math.Max(math.Min(siteChargeable, siteChargeable-s.freqResp.frrsDownCmd.control.(float64)+s.freqResp.baseloadCmd.control.(float64)), 0)
+// Calculates a site's automatic PFR over-frequency command based on the site's chargeable power
+func (fPoints *fleetPoints) calculateAutoPfrDownCmd(s *site) (autoPfrDownCmd float64) {
+	siteMaxChargeLimit := fPoints.genMaxCharge.getSelect()
+	return math.Max(
+		siteMaxChargeLimit,
+		0,
+	)
 }
 
 // Calculates a site's automatic PFR under-frequency command based on the minimum value of site's dischargeable power and the site's dischargeable power
-// minus the sum of the calculated baseload command, the FRRS under-frequency responsibility, and the RRS-FFR responsibility
-func (s *site) calculateAutoPfrUpCmd() (autoPfrUpCmd float64) {
-	siteDischargeable := s.dischargeablePower.status.(float64)
-	return math.Max(math.Min(siteDischargeable, siteDischargeable-s.freqResp.frrsUpCmd.control.(float64)-s.freqResp.baseloadCmd.control.(float64)-s.freqResp.rrsFfrCmd.control.(float64)), 0)
+// minus the RRS-FFR responsibility
+func (fPoints *fleetPoints) calculateAutoPfrUpCmd(s *site) (autoPfrUpCmd float64) {
+	siteMaxDischargeLimit := fPoints.genMaxDischarge.getSelect()
+	return math.Max(
+		math.Min(
+			siteMaxDischargeLimit,
+			siteMaxDischargeLimit-s.freqResp.rrsFfrCmd.control.(float64),
+		),
+		0,
+	)
 }
 
 // Endpoint for any GETs to a URI beginning with /fleet/features/ercotAs.

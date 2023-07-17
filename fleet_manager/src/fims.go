@@ -41,8 +41,11 @@ func configureFims() (chan fims.FimsMsg, error) {
 // handleFimsMsg is the starting point for handling any and all incoming FIMS messages.
 func handleFimsMsg(msg fims.FimsMsg) error {
 	// need to subscribe to /sites to get PUBs, but do not want to process any other messages sent to /sites
-	if msg.Frags[0] == "sites" && msg.Method != "pub" {
+	if msg.Nfrags > 0 && msg.Frags[0] == "sites" && msg.Method != "pub" {
 		return nil
+	}
+	if msg.Nfrags < 2 {
+		return fmt.Errorf("URI only has %d fragments but at least 2 are required", msg.Nfrags)
 	}
 	switch msg.Method {
 	case "set":
@@ -63,7 +66,7 @@ func handleFimsMsg(msg fims.FimsMsg) error {
 // handleSet routes all received FIMS messages that have the method "set" to their appropriate handler function.
 func handleSet(msg fims.FimsMsg) error {
 	switch {
-	case msg.Uri == "/fleet/sites":
+	case strings.HasPrefix(msg.Uri, "/fleet/sites"):
 		return handleSitesSet(msg)
 	case strings.HasPrefix(msg.Uri, "/fleet/features"):
 		return handleFeaturesSet(msg)

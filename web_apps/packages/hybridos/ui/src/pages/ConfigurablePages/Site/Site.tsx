@@ -2,6 +2,6 @@
 /* eslint-disable import/no-cycle */
 import { AssetsPage } from '..';
 
-const Site = () => <AssetsPage category="site" />;
+const Site = () => <AssetsPage assetKey="site" />;
 
 export default Site;

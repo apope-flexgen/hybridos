@@ -29,6 +29,8 @@ import { RefreshTokenStrategy } from '../../src/auth/strategies/refreshToken.str
 import { IUsersService, USERS_SERVICE } from '../../src/users/interfaces/users.service.interface'
 import * as testUtils from '../testUtils'
 import { AppEnvService } from '../../src/environment/appEnv.service'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
+import path from 'path'
 
 describe('AuthController Login (e2e)', () => {
     let app: INestApplication
@@ -112,12 +114,26 @@ describe('AuthController Login (e2e)', () => {
                 },
                 RefreshTokenService,
                 AppEnvService,
+                {
+                    provide: 'WEB_UI_CONFIG_PATH',
+                    useValue: path.resolve(__dirname, '../../test/configs/test-web_ui.json')
+                },
+                {
+                    provide: 'WEB_SERVER_CONFIG_PATH',
+                    useValue: path.resolve(__dirname, '../../test/configs/test-config.json')
+                },
                 RadiusStrategy,
                 LocalStrategy,
                 AccessTokenStrategy,
                 RefreshTokenStrategy,
                 AccessTokenMfaStrategy,
                 TotpStrategy,
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
+                    },
+                },
             ],
         }).compile()
 

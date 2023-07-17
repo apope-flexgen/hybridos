@@ -1,0 +1,13 @@
+{
+    "/notes/final": {
+        "note01" :" start the processes here"
+    },
+    "/system/commands":{
+        "Run":{
+            "value":0,
+            "amap":"ess",
+            "uri":"/control/pubs:pubBmsHs",
+            "every":0.5,"offset":0,"debug":false
+        }
+    }
+}

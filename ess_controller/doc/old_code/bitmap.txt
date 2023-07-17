@@ -1,0 +1,107 @@
+
+assetVar* VarMapUtils::runActBitMapfromCj(varsmap& vmap, assetVar* av, assetAction* aa)
+{
+    // for now run the sets directly
+    //std::map<int,assetBitField *> bitmap;
+        assetVal* aVal = av->linkVar?av->linkVar->aVal:av->aVal;
+
+    int aval = (int)aVal->valuedouble;
+    char* sval = aVal->valuestring;
+    //double dval = av->aVal->valuedouble;
+    for (auto& x : aa->Abitmap)
+    {
+        assetBitField* abf = x.second;
+        av->abf = abf;
+        //double inValue = abf->getFeat("inValue", &inValue);
+        double mask = abf->getFeat("mask", &mask);
+        int shift = abf->getFeat("shift", &shift);
+        char* uri = abf->getFeat("uri", &uri);
+        int bit = abf->getFeat("bit", &bit);
+        
+        bool gotsval = abf->gotFeat("svalue");
+        char* svalue = abf->getFeat("svalue", &svalue);
+
+        bool gotnval = abf->gotFeat("nvalue");
+        int nvalue = abf->getFeat("nvalue", &nvalue);
+
+        int outval = 0;
+
+        assetVar* avout = getVar(vmap, uri, nullptr);
+        if(avout)
+        {
+            outval = av->getiVal();
+        }
+        if(gotsval)
+        {
+            bool neg = false;
+            if(sval[0] == '!')
+            {
+                neg = true;
+                sval++;
+            }
+            if(strcmp(sval,svalue)==0)
+            {
+                if(neg)
+                {
+                    outval &= ~(int)(1<<bit);
+                }
+                else
+                {
+                    outval |= (int)(1<<bit);
+                }
+            }
+        }
+        else if(gotnval)
+        {
+            bool neg = false;
+            if(aval < 0)
+            {
+                neg = true;
+                aval = -aval;
+            }
+            if(aval == nvalue)
+            {
+                if(neg)
+                {
+                    outval &= ~(int)(1<<bit);
+                }
+                else
+                {
+                    outval |= (int)(1<<bit);
+                }
+            }
+        }
+        else
+        {
+            bit = (int)aval;
+            bit &=(int)mask;
+
+            if(shift > 0)
+            {
+                bit = bit << shift;
+                mask = (int)mask << shift;
+            }
+            outval &= ~(int)mask;
+            outval |= (int)bit;
+
+        }
+
+        if(avout)
+        {
+            avout->setVal((int)outval);
+        }
+
+        if (1)FPS_ERROR_PRINT(" %s >> ######on Set BitMap action av %p mask 0x%04x hbit 0x%04x  shift %d aval %d masked val %d uri [%s] outval 0x%04x\n"
+            , __func__
+            , av
+            , (int)mask
+            , (int)bit
+            , shift
+            , aval
+            , (int)aval & (int)mask
+            , uri ? uri : "NoUri"
+            , outval 
+            );
+    }
+    return av;
+}

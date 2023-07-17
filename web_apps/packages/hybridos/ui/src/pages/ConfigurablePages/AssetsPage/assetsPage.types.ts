@@ -1,10 +1,10 @@
 import { ConfigurablePagesProps } from 'src/pages/ConfigurablePages/configurablePages.hoc';
 
 export interface AssetsPageProps extends ConfigurablePagesProps {
-  category: string
+  assetKey: string;
 }
 
 export type MappedAlerts = {
-  alarms: JSX.Element[]
-  faults: JSX.Element[]
+  alarms: JSX.Element[];
+  faults: JSX.Element[];
 };

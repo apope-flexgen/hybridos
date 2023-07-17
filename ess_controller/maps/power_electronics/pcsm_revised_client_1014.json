@@ -1,0 +1,326 @@
+{
+  "system": {
+    "name": "PCSM Test",
+    "protocol": "Modbus TCP",
+    "version": "6.0 WIP",
+    "id": "pcsm_test",
+    "port": 502,
+    "data_bits": "Columns marked in green are REQUIRED",
+    "off_by_one": false
+  },
+  "connection": {
+    "name": "PCMS",
+    "device protocol": "Modbus TCP",
+    "device protocol version": "6.0 WIP",
+    "device name": "hems_pcs_1",
+    "device id string": "hems_pcs_1",
+    "ip_address": "192.168.202.1",
+    "data bits (8 typical)": "Columns marked in green are REQUIRED"
+  },
+  "components": [
+    {
+      "id": "component_one",
+      "xheartbeat_enabled": true,
+      "xcomponent_heartbeat_read_uri": "life_signal",
+      "xcomponent_heartbeat_write_uri": "life",
+      "xmodbus_heartbeat_timeout_ms": 200,
+      "xcomponent_heartbeat_timeout_ms": 200,
+      "frequency": 400,
+      "offset_time": 20,
+      "xdevice_id": 98,
+      "registers": [
+        {
+          "type": "Input Registers",
+          "starting_offset": 1000,
+          "number_of_registers": 8,
+          "map": [
+            {
+              "id": "grid_voltage_rs",
+              "offset": 1000,
+              "name": "Grid voltage RS",
+              "scale":10
+            },
+            {
+              "id": "grid_voltage_st",
+              "offset": 1001,
+              "name": "Grid voltage ST",
+              "scale":10
+            },
+            {
+              "id": "grid_voltage_tr",
+              "offset": 1002,
+              "name": "Grid voltage TR",
+              "scale":10
+            },
+            {
+              "id": "active_power",
+              "offset": 1007,
+              "name": "Active Power",
+              "scale":1
+            },
+            {
+              "id": "reactive_power",
+              "offset": 1008,
+              "name": "Reactive Power",
+              "scale":1
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 1120,
+          "number_of_registers": 3,
+          "map": [
+            {
+              "id": "current_fault",
+              "offset": 1120,
+              "name": "Current fault"
+            },
+            {
+              "id": "current_warning",
+              "offset": 1121,
+              "name": "Current warning"
+            },
+            {
+              "id": "inverter_status",
+              "offset": 1122,
+              "name": "Inverter Status"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 1192,
+          "number_of_registers": 3,
+          "map": [
+            {
+              "id": "pt100_l1_temperature",
+              "offset": 1192,
+              "name": "PT100 L1 Temperature"
+            },
+            {
+              "id": "pt100_l2_temperature",
+              "offset": 1193,
+              "name": "PT100 L2 Temperature"
+            },
+            {
+              "id": "pt100_l3_temperature",
+              "offset": 1194,
+              "name": "PT100 L3 Temperature"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 7304,
+          "number_of_registers": 2,
+          "map": [
+            {
+              "id": "bess_voltage_bus_1",
+              "offset": 7304,
+              "name": "BESS voltage bus 1",
+              "size":2
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 7400,
+          "number_of_registers": 10,
+          "map": [
+            {
+              "id": "vdc_bus",
+              "offset": 7400,
+              "name": "vdc"
+            },
+            {
+              "id": "dc_input_power_bess1",
+              "offset": 7406,
+              "name": "dc_input_power_bess1"
+            },
+            {
+              "id": "dc_input_current_bess1",
+              "offset": 7409,
+              "name": "dc_input_current_bess1"
+            }
+          ]
+        },
+        {
+          "type": "Input Registers",
+          "starting_offset": 7500,
+          "number_of_registers": 18,
+          "map": [
+            {
+              "id": "bms_select",
+              "offset": 7500,
+              "name": "bms_select"
+            },
+            {
+              "id": "pcs_heartbeat",
+              "offset": 7501,
+              "name": "pcs_heartbeat"
+            },
+            {
+              "id": "pcs_string_in_service",
+              "offset": 7502,
+              "name": "pcs_string_in_service"
+            },
+            {
+              "id": "pcs_total_string_count",
+              "offset": 7503,
+              "name": "pcs_total_string_count"
+            },
+            {
+              "id": "service_voltage",
+              "offset": 7504,
+              "name": "service_voltage"
+            },
+            {
+              "id": "service_soc",
+              "offset": 7505,
+              "name": "service_soc"
+            },
+            {
+              "id": "system_voltage",
+              "offset": 7506,
+              "name": "system_voltage"
+            },
+            {
+              "id": "system_current",
+              "offset": 7507,
+              "name": "system_current"
+            },
+            {
+              "id": "system_soc",
+              "offset": 7508,
+              "name": "system_soc"
+            },
+            {
+              "id": "system_soh",
+              "offset": 7509,
+              "name": "system_soh"
+            },
+            {
+              "id": "system_mode",
+              "offset": 7510,
+              "name": "system_mode"
+            },
+            {
+              "id": "max_cell_voltage",
+              "offset": 7511,
+              "name": "max_cell_voltage"
+            },
+            {
+              "id": "min_cell_voltage",
+              "offset": 7512,
+              "name": "min_cell_voltage"
+            },
+            {
+              "id": "max_cell_temp",
+              "offset": 7513,
+              "name": "max_cell_temp"
+            },
+            {
+              "id": "min_cell_temp",
+              "offset": 7514,
+              "name": "min_cell_temp"
+            },
+            {
+              "id": "partial_min_string",
+              "offset": 7515,
+              "name": "partial_min_string"
+            },
+            {
+              "id": "partial_diff_volt",
+              "offset": 7516,
+              "name": "partial_diff_volt"
+            },
+            {
+              "id": "system_config_status",
+              "offset": 7517,
+              "name": "system_config_status"
+            }
+
+          ]
+        },
+        {
+          "type": "Holding Registers",
+          "starting_offset": 468,
+          "number_of_registers": 1,
+          "map":
+          [
+              {
+                "id": "pcs_keepalive",
+                "offset": 468
+              }
+          ]
+        },
+        {
+
+          "type": "Holding Registers",
+          "starting_offset": 5,
+          "number_of_registers": 7,
+          "map":
+          [
+              {
+                "id": "pcs_rtc_sec",
+                "offset": 5
+              },
+              {
+                "id": "pcs_rtc_min",
+                "offset": 6
+              },
+              {
+                "id": "pcs_rtc_hour",
+                "offset": 7
+              },
+              {
+                "id": "pcs_rtc_day",
+                "offset": 8
+              },
+              {
+                "id": "pcs_rtc_month",
+                "offset": 9
+              },
+              {
+                "id": "pcs_rtc_year",
+                "offset": 10
+              },
+              {
+                "id": "pcs_rtc_utc_offset",
+                "offset": 11
+              }
+          ]
+        },
+        {
+          "type": "Holding Registers",
+          "starting_offset": 552,
+          "number_of_registers": 6,
+          "map":
+          [
+              {
+                  "id": "p_reference",
+                  "offset": 552
+              },
+              {
+                  "id": "q_reference",
+                  "offset": 557
+              }
+          ]
+        },
+        {
+          "type": "Holding Registers",
+          "starting_offset": 2041,
+          "number_of_registers": 1,
+          "map":
+          [
+              {
+                  "id": "enable_main_selector",
+                  "offset": 2041
+              }
+          ]
+        }
+      ]
+    }
+  ]
+}

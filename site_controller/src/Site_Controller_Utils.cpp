@@ -64,7 +64,7 @@ std::string string_format( const std::string& format, Args ... args )
  * @param delimiter The token that, where found in the string to be split, 
  * will mark a point of splitting. The delimiter will not appear anywhere 
  * in the returned string fragments.
- * @return A pointer to a vector of strings that are the substrings 
+ * @return Vector of strings that are the substrings 
  * occurring between the delimiter in the original string.
  */
 std::vector<std::string> split(std::string str, std::string delimiter)
@@ -239,16 +239,16 @@ bool is_naked(cJSON* object){
  * @param name used to get object from fimsbody
  * @return cJSON* updates fimsbody as well 
  */
-cJSON* grab_naked_or_clothed(cJSON* fimsbody, cJSON* object, const char* name){
+cJSON* grab_naked_or_clothed(cJSON &fimsbody, cJSON* object, const char* name){
     cJSON* value = NULL;
-    if((object = cJSON_GetObjectItem(fimsbody, name))) {
+    if((object = cJSON_GetObjectItem(&fimsbody, name))) {
         if((value = cJSON_GetObjectItem(object,"value"))) {
             return object;
         } else if(is_naked(object)) {
-            object = cJSON_DetachItemFromObject(fimsbody, name);
+            object = cJSON_DetachItemFromObject(&fimsbody, name);
             value = clothe_naked_cJSON(object);
-            cJSON_AddItemToObject(fimsbody, name, value);
-            object = cJSON_GetObjectItem(fimsbody, name);
+            cJSON_AddItemToObject(&fimsbody, name, value);
+            object = cJSON_GetObjectItem(&fimsbody, name);
             return value;
         }
     }
@@ -266,16 +266,16 @@ cJSON* grab_naked_or_clothed(cJSON* fimsbody, cJSON* object, const char* name){
  * @param name used to get current_setpoint from fimsbody and then replace it
  * @return cJSON* updates fimsbody as well
  */
-cJSON* grab_naked_or_clothed_and_check_type(cJSON* fimsbody, cJSON* current_setpoint, int CJSONType, const char* name){
+cJSON* grab_naked_or_clothed_and_check_type(cJSON &fimsbody, cJSON* current_setpoint, int CJSONType, const char* name){
     cJSON* value = NULL;
-    if((current_setpoint = cJSON_GetObjectItem(fimsbody, name))) {
+    if((current_setpoint = cJSON_GetObjectItem(&fimsbody, name))) {
         if((value = cJSON_GetObjectItem(current_setpoint, "value")) && value->type == CJSONType) {
             return current_setpoint;
         } else if(current_setpoint->type == CJSONType) {
-            current_setpoint = cJSON_DetachItemFromObject(fimsbody, name);
+            current_setpoint = cJSON_DetachItemFromObject(&fimsbody, name);
             value = clothe_naked_cJSON(current_setpoint);
-            cJSON_AddItemToObject(fimsbody, name, value);
-            current_setpoint = cJSON_GetObjectItem(fimsbody, name);
+            cJSON_AddItemToObject(&fimsbody, name, value);
+            current_setpoint = cJSON_GetObjectItem(&fimsbody, name);
             return current_setpoint;
         }
     }

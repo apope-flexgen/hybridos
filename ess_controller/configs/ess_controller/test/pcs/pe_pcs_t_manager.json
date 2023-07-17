@@ -1,0 +1,23 @@
+{
+    "/doc/03_pcs_manager": {
+        "note1": "This is the power conversion system (PCS) manager config file for Power Electronics (PE)",
+        "note1a": "/assets/pcs/##PCS_ID##        - defines the web UI for the PCS. PCS-related statuses, controls, and faults/alarms are displayed on the UI",
+        "note1b": "/config/pcs                - defines configurable variables used in the ESS Controller source code",
+        "note1c": "/controls/pcs              - defines the control variables for the PCS (ex.: commands to start the PCS, commands to initialize the PCS on system startup, etc.)",
+        "note1d": "/status/pcs                - defines the status variables for the PCS",
+        "note1e": "/components/[id]           - defines the interface for retrieving data from the PCS hardware and converting the data into a useable format (ex.: scaling, remap, etc.)",
+        "note1f": "/links/pcs                 - defines mapping of external interface components to internal variables",
+        "note1g": "/vlinks/pcs                - allows two variables to share the same value",
+        "note1h": "/sched/pcs                 - defines the variables that will run a function on a scheduled basis",
+        "note1i": "/schedule/wake_monitor/pcs - periodically runs a function for a particular variable (default to 100ms; wake_monitor to be removed)",
+        "note1j": "/faults/pcs                - defines faults reported by the ESS Controller (will trigger PCS shutdown)",
+        "note1k": "/alarms/pcs                - defines alarms reported by the ESS Controller",
+        "note2":"To retrieve data from the PCS hardware, the modbus communication protocol will be used. To connect via modbus, use the modbus client (pcs_modbus_client.json)"
+    },
+    "/config/##PCS_ID##":{
+        "RatedApparentPower": 1350,
+        "RatedActivePower": 1200,
+        "RatedReactivePower": 1100,
+        "HandlePowerTrigger": false
+    }
+}

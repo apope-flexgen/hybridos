@@ -1,0 +1,16 @@
+{
+	"/config/ess":	{
+		"MaxVoltageLimit":	{
+			"value":	0
+		},
+		"MaxCurrentLimit":	{
+			"value":	0
+		},
+		"MinCurrentLimit":	{
+			"value":	0
+		},
+		"MinVoltageLimit":	{
+			"value":	0
+		}
+	}
+}

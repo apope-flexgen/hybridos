@@ -1,0 +1,111 @@
+{
+    "connection": {
+        "name": "SEL 2440 DPAC",
+        "ip_address": "192.168.1.10",
+        "port": 502
+      },
+      "components": 
+      [
+        {
+          "id": "sel_2440_dpac",
+          "frequency": 200,
+          "offset_time": 20,
+          "hex_start": "0x0380",
+          "xheartbeat_enabled": true,
+          "xcomponent_heartbeat_read_uri": "life_signal",
+          "xcomponent_heartbeat_write_uri": "life",
+          "xmodbus_heartbeat_timeout_ms": 200,
+          "xcomponent_heartbeat_timeout_ms": 200,
+          "registers": [
+            {
+              "type": "Holding Registers",
+              "starting_offset": 400,
+              "number_of_registers": 3,
+              "note": "EMS->BMS (write/read)",
+              "map": [
+                        {
+                            "id": "seconds",
+                            "offset": 400,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "Frequency",
+                            "signed": true
+                        },
+                        {
+                            "id": "mins",
+                            "offset": 401,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "Frequency",
+                            "signed": true
+                        },
+                        {
+                            "id": "hrs",
+                            "offset": 402,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "Frequency",
+                            "signed": true
+                        }
+                    ]
+		},
+            {
+              "type": "Holding Registers",
+              "starting_offset": 545,
+              "number_of_registers": 6,
+              "note": "EMS->BMS (write/read)",
+              "map": [
+                        {
+                            "id": "ip200",
+                            "offset": 545,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "ip500",
+                            "signed": true
+                        },
+                        {
+                            "id": "ip201",
+                            "offset": 546,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "ip501",
+                            "signed": true
+                        },
+                        {
+                            "id": "ip202",
+                            "offset": 547,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "ip502",
+                            "signed": true
+                        },
+                        {
+                            "id": "ip203",
+                            "offset": 548,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "ip500",
+                            "signed": true
+                        },
+                        {
+                            "id": "ip204",
+                            "offset": 549,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "ip501",
+                            "signed": true
+                        },
+                        {
+                            "id": "ip205",
+                            "offset": 550,
+                            "size": 1,
+                            "scale": 1,
+                            "name": "ip502",
+                            "signed": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

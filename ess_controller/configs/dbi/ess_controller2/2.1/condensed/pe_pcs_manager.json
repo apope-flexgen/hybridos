@@ -1,0 +1,557 @@
+{
+    "/system/commands": {
+        "runOpts": {
+            "value": false,
+            "enabled": false,
+            "targav": "/system/commands:run",
+            "options": [
+                {"uri":"/sched/pcs:pubAssets_pcs","aname":"pcs","value":0,"every":0.1}
+            ],
+            "actions": {
+                "onSet":[{"func":[{"func":"SchedItemOpts"}]}]
+            }
+        }
+    },
+
+    "/sched/pcs": {
+        "pubAssets_pcs": {
+            "value": 0,
+            "mode": "ui",
+            "table": "/assets/pcs/summary",
+            "actions": {
+                "onSet":[{"func":[{"func":"RunPub"}]}]
+            }
+        }
+    },
+    
+    "/assets/pcs/summary": {
+        "name":"PCS Manager",
+        "status": {
+            "name": "Status",
+            "value": "Run",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "com_status": {
+            "name": "Communication Status",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "active_power": {
+            "name": "Active Power",
+            "value": 17,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power": {
+            "name": "Reactive Power",
+            "value": 17.200000762939453,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "apparent_power": {
+            "name": "Apparent Power",
+            "value": 1.2999999523162842,
+            "unit": "kVA",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "power_factor": {
+            "name": "Power Factor",
+            "value": 0,
+            "unit": "",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "active_power_command": {
+            "name": "Active Power Command",
+            "value": 3.0999999046325684,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power_command": {
+            "name": "Reactive Power Command",
+            "value": 0,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l1_l2": {
+            "name": "L1-L2 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l2_l3": {
+            "name": "L2-L3 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l3_l1": {
+            "name": "L3-L1 AC Voltage",
+            "value": 570.7999877929688,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l1_l2_lv": {
+            "name": "L1-L2 AC Voltage LV",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l2_l3_lv": {
+            "name": "L2-L3 AC Voltage LV",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l3_l1_lv": {
+            "name": "L3-L1 AC Voltage LV",
+            "value": 570.7999877929688,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l1": {
+            "name": "L1 AC Current",
+            "value": 40.79999923706055,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l2": {
+            "name": "L2 AC Current",
+            "value": 41.20000076293945,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l3": {
+            "name": "L3 AC Current",
+            "value": 40,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "frequency": {
+            "name": "Frequency",
+            "value": 59.970001220703125,
+            "unit": "Hz",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "power_dc": {
+            "name": "DC Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_dc": {
+            "name": "DC Voltage",
+            "value": 1069.800048828125,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_dc": {
+            "name": "DC Current",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_active_power": {
+            "name": "Max Active Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "derating_active": {
+            "name": "Power Command Derating",
+            "value": "Inactive",
+            "unit": "",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "max_derated_charge_power": {
+            "name": "Max Charge Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_derated_discharge_power": {
+            "name": "Max Discharge Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "num_running_modules": {
+            "name": "Modules Running",
+            "value": 0,
+            "unit": "",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "daily_active_energy_delivered": {
+            "name": "Daily Active Energy Generated",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "daily_active_energy_received": {
+            "name": "Daily Active Energy Consumed",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "total_active_energy_delivered": {
+            "name": "Total Active Energy Generated",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "total_active_energy_received": {
+            "name": "Total Active Energy Consumed",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false,  "uri": "/assets/pcs/summary:stop@enabled"}, 
+                        {"inValue": true, "ifChanged": false,  "uri": "/assets/pcs/summary:shutdown@enabled"}, 
+                        {"inValue": true, "ifChanged": false,  "uri": "/assets/pcs/summary:clear_faults@enabled"},
+                        {"inValue": true, "ifChanged": false,  "uri": "/assets/pcs/summary:maint_active_power_setpoint@enabled"},
+                        {"inValue": true, "ifChanged": false,  "uri": "/assets/pcs/summary:maint_reactive_power_setpoint@enabled"}
+                    ]
+                }]
+            },
+
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "start": {
+            "name": "Start",
+            "note": "UI control variable for running the PCS. We'll either start the PCS from off or standby, depending on the current state",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "xremap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfOff@triggerCmd",     "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfStandby@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfOff",     "outValue": 0},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfStandby", "outValue": 0}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:Start@triggerCmd",  "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:Start",             "outValue": 207, "note": "Send start command to PCS"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+        "stop": {
+            "name": "Standby",
+            "note": "UI control variable for putting the PCS in standby. 0 kW and 0 kVAr power commands are sent to the PCS and then the standby command routine is triggered",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/ess:ActivePowerSetpoint",   "outValue": 0},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/ess:ReactivePowerSetpoint", "outValue": 0},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:Standby@triggerCmd",    "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:Standby",               "outValue": 205}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "shutdown": {
+            "name": "Shutdown",
+            "note": "UI control variable for shutting down the PCS. 0 kW and 0 kVAr power commands are sent to the PCS and then the shutdown command routine is triggered",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "xremap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/ess:ActivePowerSetpoint",   "outValue": 0},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/ess:ReactivePowerSetpoint", "outValue": 0},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StopBeforeShutdown@triggerCmd",    "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StopBeforeShutdown",               "outValue": 1}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/ess:ActivePowerSetpoint",   "outValue": 0},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/ess:ReactivePowerSetpoint", "outValue": 0},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:Shutdown@triggerCmd",   "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:Shutdown",              "outValue": 206,   "note": "Send stop command to PCS after verifying 0 kW and 0 kVAr is set to PCS"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"ifChanged": false, "uri": "/controls/pcs:ClearFaults@triggerCmd", "outValue": true},
+                        {"ifChanged": false, "uri": "/controls/pcs:ClearFaults",            "outValue": 1, "note": "Send clear faults command to PCS"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "Clear Faults", "return_value": "Clear"}
+            ]
+        },
+        "maint_active_power_setpoint": {
+            "name": "Active Power Setpoint (kW)",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"},
+                        {"ifChanged": false, "inAv": "/controls/pcs:ActivePowerCmdReal", "func": "CalculateVar", "amap": "pcs"}
+                    ]
+                }]
+            },
+            "options": []
+        },
+        "maint_reactive_power_setpoint": {
+            "name": "Reactive Power Setpoint (kVAr)",
+            "value": 0,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": []
+        },
+        "active_power_gradient": {
+            "name": "Active Power Ramp Rate (%/s)",
+            "value": 10,
+            "unit": "%/s",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": [],
+            "actions": {
+                "onSet": [{
+                    "remap":[
+                        {"fims": "set", "uri": "/components/pcs_registers_slow:rise_grad_p"},
+                        {"fims": "set", "uri": "/components/pcs_registers_slow:drop_grad_p"},
+                        {"fims": "set", "uri": "/components/pcs_registers_slow:start_grad_p"},
+                        {"fims": "set", "uri": "/components/pcs_registers_slow:stop_grad_p"}
+                    ]
+                }]
+            }
+        },
+        "reactive_power_gradient": {
+            "name": "Reactive Power Ramp Rate (%/s)",
+            "value": 10,
+            "unit": "%/s",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "actions": {
+                "onSet": [{
+                    "remap":[
+                        {"fims": "set", "uri": "/components/pcs_registers_slow:rise_grad_q"},
+                        {"fims": "set", "uri": "/components/pcs_registers_slow:drop_grad_q"},
+                        {"fims": "set", "uri": "/components/pcs_registers_slow:start_grad_q"},
+                        {"fims": "set", "uri": "/components/pcs_registers_slow:stop_grad_q"}
+                    ]
+                }]
+            },
+            "options": []
+        },
+        "e-stop": {
+            "name": "Emergency Stop",
+            "note": "UI control variable for shutting down the PCS using estop. 0 kW and 0 kVAr power commands are sent to the PCS and then the estop command routine is triggered",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/ess:ActivePowerSetpoint",   "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/ess:ReactivePowerSetpoint", "outValue": 0},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:EStop@triggerCmd",      "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:EStop",                 "outValue": 1}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        }
+    }
+}

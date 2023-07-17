@@ -1,0 +1,335 @@
+gpio_pins2.txt
+
+
+I am having difficulties getting the I2C interrupts to work on an
+Intel's Broadwell-DE processors and wondering if someone could help
+with this issue.
+
+When i enable the interrupts on I2c_i801 module by removing the
+"i2c_i801 disable_feature=0x10" in the options.config file under
+/etc/modprobe.d, the I2c commands are failing with transaction
+timeout, see log below. These I2C commands work okay if interrupts are
+disabled. It seems the CPU never sees the interrupt since the
+interrupt counters in /proc/interrupts never increment. see below. If
+you look at the PCI config space for the SMBUS device, it shows
+interrupts pending on PCISTS register (offset 06-07, bit3), see log
+below. Not sure why these are not getting to CPU.
+
+Motherboard is based on Intel's Camelback Mountain CRB. Details are
+shown below. As you can see, I am running Debian (Jesse) 4.9.8 but I
+also tried 4.11 and it had same behavior. In addition, i also tried
+Ubuntu 14.04 but Ubuntu's I2c_i801 driver does not support interrupts.
+
+As shown in /proc/interrupts, linux allocates and activates IRQ=0x12
+(18 dec) for the i801_smbus module. I tried verifying the IO-APIC
+entry for this interrupt. by passing the "apic=debug" to the linux
+command line. As you can see below, the apic entry for pin 12 is
+getting enabled and it seems correct. One thing i noticed, however, is
+that the interrupt flags (IRQF_TRIGGER*) that are passed by
+"devm_request_irq" are ignored. Instead, the ioapic driver hard-wires
+these flags during the setup of the IO-APIC. Just to experiment, I
+tried changing the polarity to high to see what would happen (based on
+spec, it seems these are active low). This actually triggered the
+i801_isr (handler) to execute but it was always running and Linux
+eventually disables it as a spurious or bad interrupt (no pending flag
+in pci space while handler constantly runs).
+
+I tried probing the PIRQC_N (INTC#) signal of the CPU with an
+oscilloscope. According to spec and D31IP (Device 31 interrupt Pin
+register), the SMBUS controller is mapped and drives this signal
+during an interrupt. Signal/scope was not triggering even though the
+interrupt went pending in the PCI config space register (PCISTS).
+
+Please, let me know if you have any suggestions, solutions, or require
+more info to help me solve this problem. Thanks.
+
+~$ sudo i2cdetect -y 0
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+i801_smbus 0000:00:1f.3: Transaction timeout
+-- i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+i801_smbus 0000:00:1f.3: Transaction timeout
+-- i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+i801_smbus 0000:00:1f.3: Transaction timeout
+-- ^Ci801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+i801_smbus 0000:00:1f.3: Transaction timeout
+
+####
+@debian:~$ cat /proc/interrupts
+           CPU0       CPU1       CPU2       CPU3       CPU4       CPU5
+      CPU6       CPU7
+  0:         11          0          0          0          0          0
+         0          0  IR-IO-APIC   2-edge      timer
+  4:          0       3842          0          0          0          0
+         0          0  IR-IO-APIC   4-edge      serial
+  9:          0          0          0          0          0          0
+         0          0  IR-IO-APIC   9-fasteoi   acpi
+ 18:          0          0          0          0          0          0
+         0          0  IR-IO-APIC  18-fasteoi   i801_smbus
+ 24:          0          0          0          0       5981          0
+         0          0  IR-PCI-MSI 512000-edge
+
+###### PCI config space
+######
+@debian:~$ sudo lspci -s 0000:00:1f.3 -vv -xxx -k
+00:1f.3 SMBus: Intel Corporation 8 Series/C220 Series Chipset Family
+SMBus Controller (rev 05)
+    Subsystem: Intel Corporation Device 7270
+    Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop-
+ParErr- Stepping- SERR- FastB2B- DisINTx-
+    Status: Cap- 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort-
+<TAbort- <MAbort- >SERR- <PERR- INTx+
+    Interrupt: pin C routed to IRQ 18
+    Region 0: Memory at fe41a000 (64-bit, non-prefetchable) [size=256]
+    Region 4: I/O ports at 2020 [size=32]
+    Kernel driver in use: i801_smbus
+00: 86 80 22 8c 03 00 88 02 05 00 05 0c 00 00 00 00
+10: 04 a0 41 fe 00 00 00 00 00 00 00 00 00 00 00 00
+20: 21 20 00 00 00 00 00 00 00 00 00 00 86 80 70 72
+30: 00 00 00 00 00 00 00 00 00 00 00 00 07 03 00 00
+40: 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+60: 03 04 04 00 00 00 08 08 00 00 00 00 00 00 00 00
+70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+80: 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+f0: 00 00 00 00 00 00 00 00 b1 0f 06 08 00 00 00 00
+
+###### Details
+######
+@debian:~$ inxi -F
+System:    Host: debian Kernel: 4.9.8-platina-mk1-amd64 x86_64 (64 bit)
+           Console: tty 0 Distro: Debian GNU/Linux 8
+Machine:   Mobo: Intel model: Camelback Mountain Platina DC v: 1.0
+           Bios: coreboot v: 6a724f1-dirty date: 03/14/2017
+CPU:       Quad core Intel Xeon D-1527 (-HT-MCP-) cache: 6144 KB
+           Clock Speeds: 1: 800 MHz 2: 800 MHz 3: 799 MHz 4: 800 MHz
+           5: 800 MHz 6: 799 MHz 7: 799 MHz 8: 799 MHz
+Graphics:  Card: Failed to Detect Video Card!
+           Display Server: N/A driver: N/A
+           tty size: 80x24 Advanced Data: N/A out of X
+Network:   Card-1: Broadcom Device b960
+           IF: N/A state: N/A speed: N/A duplex: N/A mac: N/A
+           Card-2: Broadcom Device b960
+           IF: N/A state: N/A speed: N/A duplex: N/A mac: N/A
+           Card-3: Intel Device 15ab
+           IF: N/A state: N/A speed: N/A duplex: N/A mac: N/A
+           Card-4: Intel Device 15ab
+           IF: N/A state: N/A speed: N/A duplex: N/A mac: N/A
+           Card-5: Intel I210 Gigabit Network Connection driver: igb
+           IF: eth0 state: up speed: 1000 Mbps duplex: full
+           mac: 02:46:8a:00:0b:86
+Drives:    HDD Total Size: 128.0GB (18.3% used)
+           ID-1: /dev/sda model: SanDisk_SD8SMAT1 size: 128.0GB
+Partition: ID-1: / size: 102G used: 6.8G (7%) fs: ext4 dev: /dev/sda2
+           ID-2: swap-1 size: 17.06GB used: 0.00GB (0%) fs: swap dev: /dev/sda3
+RAID:      No RAID devices: /proc/mdstat, md_mod kernel module present
+Sensors:   None detected - is lm-sensors installed and configured?
+Info:      Processes: 110 Uptime: 18:05 Memory: 74.6/16014.7MB
+           Init: systemd runlevel: 5 Client: Shell (bash) inxi: 2.1.28
+
+### dmesg
+###
+[    2.547383] request_threaded_irq: irq:12 flags:8
+[    2.551093] Irq Data=(name:(null), mask:0x00000000, irq:0x00000012,
+hwirq:0x00000012)
+[    2.551096]   ...Activate entry=(Dlvry mode:0x0, Dest mode:0,
+Dest:0x00, Vector:0x12, Trigger:1, Polarity:1, Irr:0, Mask:1)
+[    2.551112] request_threaded_irq: irq:12 flags:8
+[    2.554810] i801_smbus 0000:00:1f.3: SMBus using PCI interrupt
+[    2.560181] intel_pstate: Intel P-state driver initializing
+[    2.565603] ip_tables: (C) 2000-2006 Netfilter Core Team
+[    2.570341] NET: Registered protocol family 10
+[    2.574423] NET: Registered protocol family 17
+[    2.578579]
+printing PIC contents
+[    2.578584] ... PIC  IMR: ffff
+[    2.578588] ... PIC  IRR: 04e1
+[    2.578596] ... PIC  ISR: 0000
+[    2.578600] ... PIC ELCR: 04e0
+[    2.578603] printing local APIC contents on CPU#0/0:
+[    2.578604] ... APIC ID:      00000000 (0)
+[    2.581719] ... APIC VERSION: 01060015
+[    2.584438] ... APIC TASKPRI: 00000000 (00)
+[    2.584439] ... APIC PROCPRI: 00000000
+[    2.584440] ... APIC LDR: 01000000
+[    2.584442] ... APIC DFR: ffffffff
+[    2.584443] ... APIC SPIV: 000001ff
+[    2.584444] ... APIC ISR field:
+[    2.584447] 0000000000000000000000000000000000000000000000000000000000000000
+[    2.590892] ... APIC TMR field:
+[    2.590894] 0000000000000000000000000000000000000000000000000000000000000000
+[    2.597331] ... APIC IRR field:
+[    2.597333] 0000000000000000000000000000000000000000000000000000000000008000
+[    2.603782] ... APIC ESR: 00000000
+[    2.603783] ... APIC ICR: 000008fd
+[    2.603784] ... APIC ICR2: 20000000
+[    2.603786] ... APIC LVTT: 000400ef
+[    2.603787] ... APIC LVTPC: 00000400
+[    2.603788] ... APIC LVT0: 00010700
+[    2.603789] ... APIC LVT1: 00000400
+[    2.603790] ... APIC LVTERR: 000000fe
+[    2.603792] ... APIC TMICT: 00000000
+[    2.603793] ... APIC TMCCT: 00000000
+[    2.603794] ... APIC TDCR: 00000000
+[    2.603808] number of MP IRQ sources: 15.
+[    2.603809] number of IO-APIC #8 registers: 24.
+[    2.603811] number of IO-APIC #9 registers: 24.
+[    2.603812] testing the IO APIC.......................
+[    2.605676] ata3: SATA link down (SStatus 0 SControl 300)
+[    2.605892] ata6: SATA link down (SStatus 0 SControl 300)
+[    2.608643] ata2: SATA link down (SStatus 0 SControl 300)
+[    2.608679] ata5: SATA link down (SStatus 0 SControl 300)
+[    2.609890] ata4: SATA link down (SStatus 0 SControl 300)
+[    2.609914] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[    2.636442] IO APIC #8......
+[    2.636444] .... register #00: 08000000
+[    2.636445] .......    : physical APIC id: 08
+[    2.636447] .......    : Delivery Type: 0
+[    2.636448] .......    : LTS          : 0
+[    2.636449] .... register #01: 00170020
+[    2.636451] .......     : max redirection entries: 17
+[    2.636452] .......     : PRQ implemented: 0
+[    2.636453] .......     : IO APIC version: 20
+[    2.636454] .... IRQ redirection table:
+[    2.636455] IOAPIC 0:
+[    2.636463]  pin00, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636470]  pin01, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636476]  pin02, enabled , edge , high, V(02), IRR(0), S(0),
+remapped, I(8001),  Z(0)
+[    2.636482]  pin03, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636487]  pin04, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636493]  pin05, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636498]  pin06, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636504]  pin07, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636509]  pin08, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636515]  pin09, enabled , level, high, V(09), IRR(0), S(0),
+remapped, I(40008),  Z(0)
+[    2.636520]  pin0a, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636526]  pin0b, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636532]  pin0c, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636538]  pin0d, disabled, edge , high, V(49), IRR(0), S(0),
+remapped, I(3210642),  Z(2)
+[    2.636543]  pin0e, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636549]  pin0f, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636554]  pin10, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636560]  pin11, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636566]  pin12, enabled , level, low , V(12), IRR(0), S(0),
+remapped, I(C0018),  Z(0)
+[    2.636571]  pin13, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636577]  pin14, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636582]  pin15, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636588]  pin16, disabled, edge , high, V(1C), IRR(0), S(0),
+logical , D(FC), M(2)
+[    2.636594]  pin17, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636597] IO APIC #9......
+[    2.636599] .... register #00: 09000000
+[    2.636600] .......    : physical APIC id: 09
+[    2.636601] .......    : Delivery Type: 0
+[    2.636602] .......    : LTS          : 0
+[    2.636603] .... register #01: 00170020
+[    2.636604] .......     : max redirection entries: 17
+[    2.636605] .......     : PRQ implemented: 0
+[    2.636606] .......     : IO APIC version: 20
+[    2.636608] .... register #02: 00000000
+[    2.636609] .......     : arbitration: 00
+[    2.636610] .... register #03: 00000001
+[    2.636611] .......     : Boot DT    : 1
+[    2.636612] .... IRQ redirection table:
+[    2.636613] IOAPIC 1:
+[    2.636617]  pin00, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636621]  pin01, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636626]  pin02, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636630]  pin03, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636634]  pin04, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636638]  pin05, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636642]  pin06, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636646]  pin07, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636650]  pin08, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636654]  pin09, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636658]  pin0a, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636662]  pin0b, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636666]  pin0c, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636670]  pin0d, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636674]  pin0e, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636678]  pin0f, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636682]  pin10, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636687]  pin11, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636691]  pin12, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636695]  pin13, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636699]  pin14, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636703]  pin15, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636707]  pin16, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636711]  pin17, disabled, edge , high, V(00), IRR(0), S(0),
+physical, D(00), M(0)
+[    2.636712] IRQ to pin mappings:
+[    2.636714] IRQ0 -> 0:2
+[    2.636718] IRQ1 -> 0:1
+[    2.636721] IRQ3 -> 0:3
+[    2.636724] IRQ4 -> 0:4
+[    2.636727] IRQ5 -> 0:5
+[    2.636730] IRQ6 -> 0:6
+[    2.636733] IRQ7 -> 0:7
+[    2.636736] IRQ8 -> 0:8
+[    2.636739] IRQ9 -> 0:9
+[    2.636742] IRQ10 -> 0:10
+[    2.636745] IRQ11 -> 0:11
+[    2.636749] IRQ12 -> 0:12
+[    2.636751] IRQ13 -> 0:13
+[    2.636754] IRQ14 -> 0:14
+[    2.636757] IRQ15 -> 0:15
+[    2.636760] IRQ16 -> 0:16
+[    2.636763] IRQ18 -> 0:18
+[    2.636766] IRQ19 -> 0:19
+[    2.636770] .................................... done.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
+the body of a message to majordomo@xxxxxxxxxxxxxxx
+More majordomo info at  http://vger.kernel.org/majordomo-info.html

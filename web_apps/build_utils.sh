@@ -117,9 +117,9 @@ function install_web_server()
 
     sudo cp $build_output/web_server /usr/local/bin/
 
-    echo "creating /var/log/web_server"
-    sudo mkdir -p /var/log/web_server
-    sudo chown -R $(whoami):$(whoami) /var/log/web_server/
+    echo "creating /var/log/flexgen/web_server"
+    sudo mkdir -p /var/log/flexgen/web_server
+    sudo chown -R $(whoami):$(whoami) /var/log/flexgen/web_server/
 }
 
 function install_web_ui()
@@ -153,8 +153,8 @@ function uninstall_web_server()
     echo "removing /usr/local/bin/web_server"
     sudo rm -rf /usr/local/bin/web_server
 
-    echo "removing /var/log/web_server"
-    sudo rm -rf /var/log/web_server
+    echo "removing /var/log/flexgen/web_server"
+    sudo rm -rf /var/log/flexgen/web_server
 }
 
 function uninstall_web_ui()

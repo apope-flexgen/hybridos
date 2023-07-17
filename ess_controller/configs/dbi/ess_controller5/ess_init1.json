@@ -1,0 +1,36 @@
+{
+    "/doc/01_ess_load": {
+        "notes1":" This is the start of the loader process",
+        "notes2":" This will set up load management entries for ess_configure ",
+        "notes3":"                                       ess_manager ",
+        "notes4":"                                       bms_manager ",
+        "notes5":"                                       pcs_manager ",
+        "notes6":"                                 and  site_manager ",
+        "notes7":"     the system will try and load these files from dbi  ",
+        "notes8":"     after completing a successful load the ess_final file will be requested ",
+        "notes9":"     for now, we have to specify the individual cfile and tmpl loaders as well "
+    },
+    "/config/load": {
+            "ess_controller": {
+            "value":false,
+            "file":"ess_controller",
+            "aname":"ess",
+            "final": "ess_final",
+            "new_options": [
+                { "load":"risen_bms_1_init",             "aname":"bms", "pname":"ess"  },
+                { "load":"risen_bms_1_modbus_init",      "aname":"bms", "pname":"ess"  },
+                { "load":"risen_bms_1_modbus_env_init",  "aname":"bms", "pname":"ess"  },
+                { "load":"risen_bms_1_controls_init",    "aname":"bms", "pname":"ess"  },
+                { "load":"risen_bms_1_faults_init",      "aname":"bms", "pname":"ess"  },
+
+                { "load":"sungrow_pcs_1_init",           "aname":"pcs", "pname":"ess"  },
+                { "load":"sungrow_pcs_1_modbus_init",    "aname":"pcs", "pname":"ess"  },
+                { "load":"sungrow_pcs_1_controls_init",  "aname":"pcs", "pname":"ess"  },
+                { "load":"sungrow_pcs_1_faults_init",    "aname":"pcs", "pname":"ess"  },
+
+                { "site":"flexgen_ess_server",            "aname":"site", "pname":"ess" },
+                { "file":"site_manager",  "reps":[],      "aname":"site", "pname":"ess" }
+            ]
+        }
+    }
+}

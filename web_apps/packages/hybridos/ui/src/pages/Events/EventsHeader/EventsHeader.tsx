@@ -1,4 +1,4 @@
-import { CardRow, CardHeader, CardContainer } from '@flexgen/storybook';
+import { CardRow, Typography, CardContainer } from '@flexgen/storybook';
 import { Box } from '@mui/material';
 import React, {
   FC, useEffect, useRef, useContext,
@@ -12,12 +12,12 @@ import EventSeverities from 'src/pages/Events/EventFilters/EventSeverities/Event
 import { cardHeading, buildURI } from './EventsHeader-helpers';
 
 interface EventsProps {
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
-  setDisplayData: React.Dispatch<React.SetStateAction<Event[]>>,
-  setTotal: React.Dispatch<React.SetStateAction<number>>,
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
-  setFilters: React.Dispatch<React.SetStateAction<any>>,
-  filters: EventsRequestParams,
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setDisplayData: React.Dispatch<React.SetStateAction<Event[]>>;
+  setTotal: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  setFilters: React.Dispatch<React.SetStateAction<any>>;
+  filters: EventsRequestParams;
 }
 
 const EventsHeader: FC<EventsProps> = ({
@@ -42,7 +42,7 @@ const EventsHeader: FC<EventsProps> = ({
 
   useEffect(() => {
     let pageToDisplay = filters.page ?? 0;
-    const pageHasNotChanged = (previousFilters?.page === filters.page);
+    const pageHasNotChanged = previousFilters?.page === filters.page;
     setIsLoading(true);
     if (pageHasNotChanged) {
       // Filters other than page have been changed, so reset to page 0.
@@ -54,7 +54,8 @@ const EventsHeader: FC<EventsProps> = ({
 
     const URI = buildURI(filters);
 
-    axiosInstance.get(URI)
+    axiosInstance
+      .get(URI)
       .then((res) => {
         setCurrentPage(pageToDisplay);
         setTotal(res.data.count);
@@ -72,26 +73,25 @@ const EventsHeader: FC<EventsProps> = ({
         setIsLoading(false);
       });
     // TODO: fix lint
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   return (
-    <CardContainer>
-      <CardHeader heading={cardHeading} icon="FilterList" />
+    <CardRow styleOverrides={{ boxShadow: 'none', height: '30%', alignItems: 'flex-start' }}>
       <Box sx={{ marginTop: '16px', width: '100%' }}>
-        <CardContainer flexDirection="row">
+        <CardRow>
+          <Typography text={cardHeading} variant="headingS" />
+        </CardRow>
+        <CardContainer flexDirection="row" styleOverrides={{ boxShadow: 'none' }}>
           <CardRow>
             <EventDateTime filters={filters} setFilters={setFilters} />
+            <EventSeverities filters={filters} setFilters={setFilters} />
           </CardRow>
-          <CardRow justifyContent="flex-end">
-            <EventSearch filters={filters} setFilters={setFilters} />
-          </CardRow>
+
+          <EventSearch filters={filters} setFilters={setFilters} />
         </CardContainer>
-        <CardRow>
-          <EventSeverities filters={filters} setFilters={setFilters} />
-        </CardRow>
       </Box>
-    </CardContainer>
+    </CardRow>
   );
 };
 

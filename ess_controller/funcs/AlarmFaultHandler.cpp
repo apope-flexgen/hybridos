@@ -106,7 +106,7 @@ namespace AlarmFaultHandlerUtils
     void resetMonitorVar(assetVar* monitorAv, const std::string& type)
     {
         // Reset upper limit monitor var alarm/fault state
-        if (monitorAv->gotParam("EnableMaxValCheck") && monitorAv->getbParam("EnableMaxValCheck"))
+        if (monitorAv->gotParam("EnableMaxValCheck"))
         {
             if (type == "fault")
             {
@@ -121,7 +121,7 @@ namespace AlarmFaultHandlerUtils
         }
 
         // Reset lower limit monitor var alarm/fault state
-        if (monitorAv->gotParam("EnableMinValCheck") && monitorAv->getbParam("EnableMinValCheck"))
+        if (monitorAv->gotParam("EnableMinValCheck"))
         {
             if (type == "fault")
             {
@@ -136,7 +136,7 @@ namespace AlarmFaultHandlerUtils
         }
 
         // Reset state monitor var alarm/fault state
-        if (monitorAv->gotParam("EnableStateCheck") && monitorAv->getbParam("EnableStateCheck"))
+        if (monitorAv->gotParam("EnableStateCheck"))
         {
             if (type == "fault")
             {
@@ -150,17 +150,40 @@ namespace AlarmFaultHandlerUtils
             }
         }
         // Reset condition monitor var alarm/fault state
-        if (monitorAv->gotParam("EnableConditionCheck") && monitorAv->getbParam("EnableConditionCheck"))
+        if (monitorAv->gotParam("EnableConditionCheck"))
         {
             if (type == "fault")
             {
                 if (monitorAv->gotParam("seenFault") && monitorAv->getbParam("seenFault"))
                     monitorAv->setParam("seenFault", false);
-                }
+            }
             else
             {
                 if (monitorAv->gotParam("seenAlarm") && monitorAv->getbParam("seenAlarm"))
                     monitorAv->setParam("seenAlarm", false);
+            }
+        }
+
+        // Reset custom monitor var alarm/fault state (e.g. monitoring variables that use CheckMonitorVar_v2)
+        if (monitorAv->gotParam("enableMonitor"))
+        {
+            if (type == "fault")
+            {
+                if (monitorAv->gotParam("seenFault") && monitorAv->getbParam("seenFault"))
+                    monitorAv->setParam("seenFault", false);
+            }
+            else
+            {
+                if (monitorAv->gotParam("seenAlarm") && monitorAv->getbParam("seenAlarm"))
+                    monitorAv->setParam("seenAlarm", false);
+            }
+        }
+        if (monitorAv->gotParam("enableComms"))
+        {
+            if (type == "fault")
+            {
+                if (monitorAv->gotParam("seenFault") && monitorAv->getbParam("seenFault"))
+                    monitorAv->setParam("seenFault", false);
             }
         }
     }

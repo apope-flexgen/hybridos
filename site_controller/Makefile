@@ -4,7 +4,7 @@ $(info PROJECT_ROOT="$(PROJECT_ROOT)")
 $(info MAKEFILE_LIST="$(MAKEFILE_LIST)")
 
 BINS = site_controller Site_Controller_Utils.so
-OBJECTS = Site_Controller.o Asset.o Asset_ESS.o Asset_Feeder.o Asset_Solar.o Asset_Generator.o Asset_Manager.o Value_Object.o 
+OBJECTS = main.o Asset.o Asset_ESS.o Asset_Feeder.o Asset_Solar.o Asset_Generator.o Asset_Manager.o Value_Object.o 
 OBJECTS += Fims_Object.o Sequence.o Slew_Object.o Variable_Regulator.o Step.o Path.o Asset_Cmd_Object.o Site_Manager.o Frequency_Response.o Energy_Arbitrage.o Freq_Resp_Component.o
 OBJECTS += ESS_Manager.o Feeder_Manager.o Generator_Manager.o Solar_Manager.o Site_Controller_Utils.o Data_Endpoint.o Type_Manager.o 
 OBJECTS += version.o git_build.o git_commit.o git_tag.o Configurator.o LDSS.o Input_Sources.o Logger.o
@@ -30,11 +30,9 @@ ifeq ($(BUILD_MODE),debug)
 	# add debugging 
 	CPPFLAGS += -g -D FPS_DEBUG_MODE
 else ifeq ($(BUILD_MODE),test)
-	CPPFLAGS += -D FPS_TEST_MODE
+	CPPFLAGS += -g -D FPS_TEST_MODE
 	LIBS += -lgtest -lgmock
 	INCLUDES_BUILD += -Itests/
-else ifeq ($(BUILD_MODE),devel)
-	CPPFLAGS += -D FPS_DEVELOPER_MODE
 else
 	BUILD_MODE=release
 	CPPFLAGS += -O2

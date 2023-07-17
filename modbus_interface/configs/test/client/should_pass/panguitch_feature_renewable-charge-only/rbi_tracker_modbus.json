@@ -1,0 +1,1047 @@
+{
+    "system":
+    {
+        "id": "tracker",
+        "ip_address": "10.201.112.151",
+        "port": 502,
+        "frequency": 500
+    },
+    "registers":
+    [
+        {
+            "type": "Holding Registers",
+            "starting_offset": 50086,
+            "number_of_registers": 3,
+            "map":
+            [
+                {
+                    "id": "SafePos1RequestGroup1",
+                    "offset": 50086,
+                    "name": "SafePos1RequestGroup1"
+                },
+                {
+                    "id": "SafePos3RequestGroup1",
+                    "offset": 50087,
+                    "name": "SafePos3RequestGroup1"
+                },
+                {
+                    "id": "SafePos4RequestGroup1",
+                    "offset": 50088,
+                    "name": "SafePos4RequestGroup1"
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 30006,
+            "number_of_registers": 2,
+            "map":
+            [
+                {
+                    "id": "Rsu1Status",
+                    "offset": 30006,
+                    "name": "Rsu1Status",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Alarm indicator: Communication Failure with RSU 1",
+                        "Alarm indicator: Wind Alarm detected in RSU 1",
+                        "Wind Level measured in RSU 1 bit 0",
+                        "Wind Level measured in RSU 1 bit 1",
+                        "Wind Level measured in RSU 1 bit 2",
+                        "Alarm indicator: Snow Alarm detected in RSU 1",
+                        "Indicator: Wind direction on RSU 1 (0 = west, 1 = east)",
+                        "Alarm indicator: Gusty Wind is detected in RSU 1",
+                        "Alarm indicator: Wind Sensor communication failure in RSU 1",
+                        "Alarm indicator: Snow Sensor communication failure in RSU 1"
+                    ]
+                },
+                {
+                    "id": "Rsu2Status",
+                    "offset": 30007,
+                    "name": "Rsu2Status",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Alarm indicator: Communication Failure with RSU 1",
+                        "Alarm indicator: Wind Alarm detected in RSU 1",
+                        "Wind Level measured in RSU 1 bit 0",
+                        "Wind Level measured in RSU 1 bit 1",
+                        "Wind Level measured in RSU 1 bit 2",
+                        "Alarm indicator: Snow Alarm detected in RSU 1",
+                        "Indicator: Wind direction on RSU 1 (0 = west, 1 = east)",
+                        "Alarm indicator: Gusty Wind is detected in RSU 1",
+                        "Alarm indicator: Wind Sensor communication failure in RSU 1",
+                        "Alarm indicator: Snow Sensor communication failure in RSU 1"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 30147,
+            "number_of_registers": 111,
+            "map":
+            [
+                {
+                    "id": "SafePositionState_s1",
+                    "offset": 30147,
+                    "name": "SafePositionState_s1",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30147 Bit:0",
+                        "Reserved Address:30147 Bit:1",
+                        "Reserved Address:30147 Bit:2",
+                        "Reserved Address:30147 Bit:3",
+                        "Reserved Address:30147 Bit:4",
+                        "Reserved Address:30147 Bit:5",
+                        "Reserved Address:30147 Bit:6",
+                        "Reserved Address:30147 Bit:7",
+                        "Reserved Address:30147 Bit:8",
+                        "Reserved Address:30147 Bit:9",
+                        "Reserved Address:30147 Bit:10",
+                        "Reserved Address:30147 Bit:11",
+                        "Reserved Address:30147 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s1",
+                    "offset": 30156,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s1",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s2",
+                    "offset": 30169,
+                    "name": "SafePositionState_s2",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30169 Bit:0",
+                        "Reserved Address:30169 Bit:1",
+                        "Reserved Address:30169 Bit:2",
+                        "Reserved Address:30169 Bit:3",
+                        "Reserved Address:30169 Bit:4",
+                        "Reserved Address:30169 Bit:5",
+                        "Reserved Address:30169 Bit:6",
+                        "Reserved Address:30169 Bit:7",
+                        "Reserved Address:30169 Bit:8",
+                        "Reserved Address:30169 Bit:9",
+                        "Reserved Address:30169 Bit:10",
+                        "Reserved Address:30169 Bit:11",
+                        "Reserved Address:30169 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s2",
+                    "offset": 30178,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s2",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s3",
+                    "offset": 30191,
+                    "name": "SafePositionState_s3",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30191 Bit:0",
+                        "Reserved Address:30191 Bit:1",
+                        "Reserved Address:30191 Bit:2",
+                        "Reserved Address:30191 Bit:3",
+                        "Reserved Address:30191 Bit:4",
+                        "Reserved Address:30191 Bit:5",
+                        "Reserved Address:30191 Bit:6",
+                        "Reserved Address:30191 Bit:7",
+                        "Reserved Address:30191 Bit:8",
+                        "Reserved Address:30191 Bit:9",
+                        "Reserved Address:30191 Bit:10",
+                        "Reserved Address:30191 Bit:11",
+                        "Reserved Address:30191 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s3",
+                    "offset": 30200,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s3",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s4",
+                    "offset": 30213,
+                    "name": "SafePositionState_s4",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30213 Bit:0",
+                        "Reserved Address:30213 Bit:1",
+                        "Reserved Address:30213 Bit:2",
+                        "Reserved Address:30213 Bit:3",
+                        "Reserved Address:30213 Bit:4",
+                        "Reserved Address:30213 Bit:5",
+                        "Reserved Address:30213 Bit:6",
+                        "Reserved Address:30213 Bit:7",
+                        "Reserved Address:30213 Bit:8",
+                        "Reserved Address:30213 Bit:9",
+                        "Reserved Address:30213 Bit:10",
+                        "Reserved Address:30213 Bit:11",
+                        "Reserved Address:30213 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s4",
+                    "offset": 30222,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s4",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s5",
+                    "offset": 30235,
+                    "name": "SafePositionState_s5",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30235 Bit:0",
+                        "Reserved Address:30235 Bit:1",
+                        "Reserved Address:30235 Bit:2",
+                        "Reserved Address:30235 Bit:3",
+                        "Reserved Address:30235 Bit:4",
+                        "Reserved Address:30235 Bit:5",
+                        "Reserved Address:30235 Bit:6",
+                        "Reserved Address:30235 Bit:7",
+                        "Reserved Address:30235 Bit:8",
+                        "Reserved Address:30235 Bit:9",
+                        "Reserved Address:30235 Bit:10",
+                        "Reserved Address:30235 Bit:11",
+                        "Reserved Address:30235 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s5",
+                    "offset": 30244,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s5",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s6",
+                    "offset": 30257,
+                    "name": "SafePositionState_s6",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30257 Bit:0",
+                        "Reserved Address:30257 Bit:1",
+                        "Reserved Address:30257 Bit:2",
+                        "Reserved Address:30257 Bit:3",
+                        "Reserved Address:30257 Bit:4",
+                        "Reserved Address:30257 Bit:5",
+                        "Reserved Address:30257 Bit:6",
+                        "Reserved Address:30257 Bit:7",
+                        "Reserved Address:30257 Bit:8",
+                        "Reserved Address:30257 Bit:9",
+                        "Reserved Address:30257 Bit:10",
+                        "Reserved Address:30257 Bit:11",
+                        "Reserved Address:30257 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 30266,
+            "number_of_registers": 112,
+            "map":
+            [
+                {
+                    "id": "TargetAngle_a1_rad_s6",
+                    "offset": 30266,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s6",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s7",
+                    "offset": 30279,
+                    "name": "SafePositionState_s7",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30279 Bit:0",
+                        "Reserved Address:30279 Bit:1",
+                        "Reserved Address:30279 Bit:2",
+                        "Reserved Address:30279 Bit:3",
+                        "Reserved Address:30279 Bit:4",
+                        "Reserved Address:30279 Bit:5",
+                        "Reserved Address:30279 Bit:6",
+                        "Reserved Address:30279 Bit:7",
+                        "Reserved Address:30279 Bit:8",
+                        "Reserved Address:30279 Bit:9",
+                        "Reserved Address:30279 Bit:10",
+                        "Reserved Address:30279 Bit:11",
+                        "Reserved Address:30279 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s7",
+                    "offset": 30288,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s7",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s8",
+                    "offset": 30301,
+                    "name": "SafePositionState_s8",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30301 Bit:0",
+                        "Reserved Address:30301 Bit:1",
+                        "Reserved Address:30301 Bit:2",
+                        "Reserved Address:30301 Bit:3",
+                        "Reserved Address:30301 Bit:4",
+                        "Reserved Address:30301 Bit:5",
+                        "Reserved Address:30301 Bit:6",
+                        "Reserved Address:30301 Bit:7",
+                        "Reserved Address:30301 Bit:8",
+                        "Reserved Address:30301 Bit:9",
+                        "Reserved Address:30301 Bit:10",
+                        "Reserved Address:30301 Bit:11",
+                        "Reserved Address:30301 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s8",
+                    "offset": 30310,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s8",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s9",
+                    "offset": 30323,
+                    "name": "SafePositionState_s9",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30323 Bit:0",
+                        "Reserved Address:30323 Bit:1",
+                        "Reserved Address:30323 Bit:2",
+                        "Reserved Address:30323 Bit:3",
+                        "Reserved Address:30323 Bit:4",
+                        "Reserved Address:30323 Bit:5",
+                        "Reserved Address:30323 Bit:6",
+                        "Reserved Address:30323 Bit:7",
+                        "Reserved Address:30323 Bit:8",
+                        "Reserved Address:30323 Bit:9",
+                        "Reserved Address:30323 Bit:10",
+                        "Reserved Address:30323 Bit:11",
+                        "Reserved Address:30323 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s9",
+                    "offset": 30332,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s9",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s10",
+                    "offset": 30345,
+                    "name": "SafePositionState_s10",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30345 Bit:0",
+                        "Reserved Address:30345 Bit:1",
+                        "Reserved Address:30345 Bit:2",
+                        "Reserved Address:30345 Bit:3",
+                        "Reserved Address:30345 Bit:4",
+                        "Reserved Address:30345 Bit:5",
+                        "Reserved Address:30345 Bit:6",
+                        "Reserved Address:30345 Bit:7",
+                        "Reserved Address:30345 Bit:8",
+                        "Reserved Address:30345 Bit:9",
+                        "Reserved Address:30345 Bit:10",
+                        "Reserved Address:30345 Bit:11",
+                        "Reserved Address:30345 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s10",
+                    "offset": 30354,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s10",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s11",
+                    "offset": 30367,
+                    "name": "SafePositionState_s11",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30367 Bit:0",
+                        "Reserved Address:30367 Bit:1",
+                        "Reserved Address:30367 Bit:2",
+                        "Reserved Address:30367 Bit:3",
+                        "Reserved Address:30367 Bit:4",
+                        "Reserved Address:30367 Bit:5",
+                        "Reserved Address:30367 Bit:6",
+                        "Reserved Address:30367 Bit:7",
+                        "Reserved Address:30367 Bit:8",
+                        "Reserved Address:30367 Bit:9",
+                        "Reserved Address:30367 Bit:10",
+                        "Reserved Address:30367 Bit:11",
+                        "Reserved Address:30367 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s11",
+                    "offset": 30376,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s11",
+                    "signed": true
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 30389,
+            "number_of_registers": 111,
+            "map":
+            [
+                {
+                    "id": "SafePositionState_s12",
+                    "offset": 30389,
+                    "name": "SafePositionState_s12",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30389 Bit:0",
+                        "Reserved Address:30389 Bit:1",
+                        "Reserved Address:30389 Bit:2",
+                        "Reserved Address:30389 Bit:3",
+                        "Reserved Address:30389 Bit:4",
+                        "Reserved Address:30389 Bit:5",
+                        "Reserved Address:30389 Bit:6",
+                        "Reserved Address:30389 Bit:7",
+                        "Reserved Address:30389 Bit:8",
+                        "Reserved Address:30389 Bit:9",
+                        "Reserved Address:30389 Bit:10",
+                        "Reserved Address:30389 Bit:11",
+                        "Reserved Address:30389 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s12",
+                    "offset": 30398,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s12",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s13",
+                    "offset": 30411,
+                    "name": "SafePositionState_s13",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30411 Bit:0",
+                        "Reserved Address:30411 Bit:1",
+                        "Reserved Address:30411 Bit:2",
+                        "Reserved Address:30411 Bit:3",
+                        "Reserved Address:30411 Bit:4",
+                        "Reserved Address:30411 Bit:5",
+                        "Reserved Address:30411 Bit:6",
+                        "Reserved Address:30411 Bit:7",
+                        "Reserved Address:30411 Bit:8",
+                        "Reserved Address:30411 Bit:9",
+                        "Reserved Address:30411 Bit:10",
+                        "Reserved Address:30411 Bit:11",
+                        "Reserved Address:30411 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s13",
+                    "offset": 30420,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s13",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s14",
+                    "offset": 30433,
+                    "name": "SafePositionState_s14",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30433 Bit:0",
+                        "Reserved Address:30433 Bit:1",
+                        "Reserved Address:30433 Bit:2",
+                        "Reserved Address:30433 Bit:3",
+                        "Reserved Address:30433 Bit:4",
+                        "Reserved Address:30433 Bit:5",
+                        "Reserved Address:30433 Bit:6",
+                        "Reserved Address:30433 Bit:7",
+                        "Reserved Address:30433 Bit:8",
+                        "Reserved Address:30433 Bit:9",
+                        "Reserved Address:30433 Bit:10",
+                        "Reserved Address:30433 Bit:11",
+                        "Reserved Address:30433 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s14",
+                    "offset": 30442,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s14",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s15",
+                    "offset": 30455,
+                    "name": "SafePositionState_s15",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30455 Bit:0",
+                        "Reserved Address:30455 Bit:1",
+                        "Reserved Address:30455 Bit:2",
+                        "Reserved Address:30455 Bit:3",
+                        "Reserved Address:30455 Bit:4",
+                        "Reserved Address:30455 Bit:5",
+                        "Reserved Address:30455 Bit:6",
+                        "Reserved Address:30455 Bit:7",
+                        "Reserved Address:30455 Bit:8",
+                        "Reserved Address:30455 Bit:9",
+                        "Reserved Address:30455 Bit:10",
+                        "Reserved Address:30455 Bit:11",
+                        "Reserved Address:30455 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s15",
+                    "offset": 30464,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s15",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s16",
+                    "offset": 30477,
+                    "name": "SafePositionState_s16",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30477 Bit:0",
+                        "Reserved Address:30477 Bit:1",
+                        "Reserved Address:30477 Bit:2",
+                        "Reserved Address:30477 Bit:3",
+                        "Reserved Address:30477 Bit:4",
+                        "Reserved Address:30477 Bit:5",
+                        "Reserved Address:30477 Bit:6",
+                        "Reserved Address:30477 Bit:7",
+                        "Reserved Address:30477 Bit:8",
+                        "Reserved Address:30477 Bit:9",
+                        "Reserved Address:30477 Bit:10",
+                        "Reserved Address:30477 Bit:11",
+                        "Reserved Address:30477 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s16",
+                    "offset": 30486,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s16",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s17",
+                    "offset": 30499,
+                    "name": "SafePositionState_s17",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30499 Bit:0",
+                        "Reserved Address:30499 Bit:1",
+                        "Reserved Address:30499 Bit:2",
+                        "Reserved Address:30499 Bit:3",
+                        "Reserved Address:30499 Bit:4",
+                        "Reserved Address:30499 Bit:5",
+                        "Reserved Address:30499 Bit:6",
+                        "Reserved Address:30499 Bit:7",
+                        "Reserved Address:30499 Bit:8",
+                        "Reserved Address:30499 Bit:9",
+                        "Reserved Address:30499 Bit:10",
+                        "Reserved Address:30499 Bit:11",
+                        "Reserved Address:30499 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 30508,
+            "number_of_registers": 112,
+            "map":
+            [
+                {
+                    "id": "TargetAngle_a1_rad_s17",
+                    "offset": 30508,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s17",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s18",
+                    "offset": 30521,
+                    "name": "SafePositionState_s18",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30521 Bit:0",
+                        "Reserved Address:30521 Bit:1",
+                        "Reserved Address:30521 Bit:2",
+                        "Reserved Address:30521 Bit:3",
+                        "Reserved Address:30521 Bit:4",
+                        "Reserved Address:30521 Bit:5",
+                        "Reserved Address:30521 Bit:6",
+                        "Reserved Address:30521 Bit:7",
+                        "Reserved Address:30521 Bit:8",
+                        "Reserved Address:30521 Bit:9",
+                        "Reserved Address:30521 Bit:10",
+                        "Reserved Address:30521 Bit:11",
+                        "Reserved Address:30521 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s18",
+                    "offset": 30530,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s18",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s19",
+                    "offset": 30543,
+                    "name": "SafePositionState_s19",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30543 Bit:0",
+                        "Reserved Address:30543 Bit:1",
+                        "Reserved Address:30543 Bit:2",
+                        "Reserved Address:30543 Bit:3",
+                        "Reserved Address:30543 Bit:4",
+                        "Reserved Address:30543 Bit:5",
+                        "Reserved Address:30543 Bit:6",
+                        "Reserved Address:30543 Bit:7",
+                        "Reserved Address:30543 Bit:8",
+                        "Reserved Address:30543 Bit:9",
+                        "Reserved Address:30543 Bit:10",
+                        "Reserved Address:30543 Bit:11",
+                        "Reserved Address:30543 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s19",
+                    "offset": 30552,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s19",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s20",
+                    "offset": 30565,
+                    "name": "SafePositionState_s20",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30565 Bit:0",
+                        "Reserved Address:30565 Bit:1",
+                        "Reserved Address:30565 Bit:2",
+                        "Reserved Address:30565 Bit:3",
+                        "Reserved Address:30565 Bit:4",
+                        "Reserved Address:30565 Bit:5",
+                        "Reserved Address:30565 Bit:6",
+                        "Reserved Address:30565 Bit:7",
+                        "Reserved Address:30565 Bit:8",
+                        "Reserved Address:30565 Bit:9",
+                        "Reserved Address:30565 Bit:10",
+                        "Reserved Address:30565 Bit:11",
+                        "Reserved Address:30565 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s20",
+                    "offset": 30574,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s20",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s21",
+                    "offset": 30587,
+                    "name": "SafePositionState_s21",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30587 Bit:0",
+                        "Reserved Address:30587 Bit:1",
+                        "Reserved Address:30587 Bit:2",
+                        "Reserved Address:30587 Bit:3",
+                        "Reserved Address:30587 Bit:4",
+                        "Reserved Address:30587 Bit:5",
+                        "Reserved Address:30587 Bit:6",
+                        "Reserved Address:30587 Bit:7",
+                        "Reserved Address:30587 Bit:8",
+                        "Reserved Address:30587 Bit:9",
+                        "Reserved Address:30587 Bit:10",
+                        "Reserved Address:30587 Bit:11",
+                        "Reserved Address:30587 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s21",
+                    "offset": 30596,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s21",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s22",
+                    "offset": 30609,
+                    "name": "SafePositionState_s22",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30609 Bit:0",
+                        "Reserved Address:30609 Bit:1",
+                        "Reserved Address:30609 Bit:2",
+                        "Reserved Address:30609 Bit:3",
+                        "Reserved Address:30609 Bit:4",
+                        "Reserved Address:30609 Bit:5",
+                        "Reserved Address:30609 Bit:6",
+                        "Reserved Address:30609 Bit:7",
+                        "Reserved Address:30609 Bit:8",
+                        "Reserved Address:30609 Bit:9",
+                        "Reserved Address:30609 Bit:10",
+                        "Reserved Address:30609 Bit:11",
+                        "Reserved Address:30609 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s22",
+                    "offset": 30618,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s22",
+                    "signed": true
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 30631,
+            "number_of_registers": 121,
+            "map":
+            [
+                {
+                    "id": "SafePositionState_s23",
+                    "offset": 30631,
+                    "name": "SafePositionState_s23",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30631 Bit:0",
+                        "Reserved Address:30631 Bit:1",
+                        "Reserved Address:30631 Bit:2",
+                        "Reserved Address:30631 Bit:3",
+                        "Reserved Address:30631 Bit:4",
+                        "Reserved Address:30631 Bit:5",
+                        "Reserved Address:30631 Bit:6",
+                        "Reserved Address:30631 Bit:7",
+                        "Reserved Address:30631 Bit:8",
+                        "Reserved Address:30631 Bit:9",
+                        "Reserved Address:30631 Bit:10",
+                        "Reserved Address:30631 Bit:11",
+                        "Reserved Address:30631 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s23",
+                    "offset": 30640,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s23",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s24",
+                    "offset": 30653,
+                    "name": "SafePositionState_s24",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30653 Bit:0",
+                        "Reserved Address:30653 Bit:1",
+                        "Reserved Address:30653 Bit:2",
+                        "Reserved Address:30653 Bit:3",
+                        "Reserved Address:30653 Bit:4",
+                        "Reserved Address:30653 Bit:5",
+                        "Reserved Address:30653 Bit:6",
+                        "Reserved Address:30653 Bit:7",
+                        "Reserved Address:30653 Bit:8",
+                        "Reserved Address:30653 Bit:9",
+                        "Reserved Address:30653 Bit:10",
+                        "Reserved Address:30653 Bit:11",
+                        "Reserved Address:30653 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s24",
+                    "offset": 30662,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s24",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s25",
+                    "offset": 30675,
+                    "name": "SafePositionState_s25",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30675 Bit:0",
+                        "Reserved Address:30675 Bit:1",
+                        "Reserved Address:30675 Bit:2",
+                        "Reserved Address:30675 Bit:3",
+                        "Reserved Address:30675 Bit:4",
+                        "Reserved Address:30675 Bit:5",
+                        "Reserved Address:30675 Bit:6",
+                        "Reserved Address:30675 Bit:7",
+                        "Reserved Address:30675 Bit:8",
+                        "Reserved Address:30675 Bit:9",
+                        "Reserved Address:30675 Bit:10",
+                        "Reserved Address:30675 Bit:11",
+                        "Reserved Address:30675 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s25",
+                    "offset": 30684,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s25",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s26",
+                    "offset": 30697,
+                    "name": "SafePositionState_s26",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30697 Bit:0",
+                        "Reserved Address:30697 Bit:1",
+                        "Reserved Address:30697 Bit:2",
+                        "Reserved Address:30697 Bit:3",
+                        "Reserved Address:30697 Bit:4",
+                        "Reserved Address:30697 Bit:5",
+                        "Reserved Address:30697 Bit:6",
+                        "Reserved Address:30697 Bit:7",
+                        "Reserved Address:30697 Bit:8",
+                        "Reserved Address:30697 Bit:9",
+                        "Reserved Address:30697 Bit:10",
+                        "Reserved Address:30697 Bit:11",
+                        "Reserved Address:30697 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s26",
+                    "offset": 30706,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s26",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s27",
+                    "offset": 30719,
+                    "name": "SafePositionState_s27",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30719 Bit:0",
+                        "Reserved Address:30719 Bit:1",
+                        "Reserved Address:30719 Bit:2",
+                        "Reserved Address:30719 Bit:3",
+                        "Reserved Address:30719 Bit:4",
+                        "Reserved Address:30719 Bit:5",
+                        "Reserved Address:30719 Bit:6",
+                        "Reserved Address:30719 Bit:7",
+                        "Reserved Address:30719 Bit:8",
+                        "Reserved Address:30719 Bit:9",
+                        "Reserved Address:30719 Bit:10",
+                        "Reserved Address:30719 Bit:11",
+                        "Reserved Address:30719 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s27",
+                    "offset": 30728,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s27",
+                    "signed": true
+                },
+                {
+                    "id": "SafePositionState_s28",
+                    "offset": 30741,
+                    "name": "SafePositionState_s28",
+                    "signed": true,
+                    "bitfield": true,
+                    "bitfield_strings":
+                    [
+                        "Reserved Address:30741 Bit:0",
+                        "Reserved Address:30741 Bit:1",
+                        "Reserved Address:30741 Bit:2",
+                        "Reserved Address:30741 Bit:3",
+                        "Reserved Address:30741 Bit:4",
+                        "Reserved Address:30741 Bit:5",
+                        "Reserved Address:30741 Bit:6",
+                        "Reserved Address:30741 Bit:7",
+                        "Reserved Address:30741 Bit:8",
+                        "Reserved Address:30741 Bit:9",
+                        "Reserved Address:30741 Bit:10",
+                        "Reserved Address:30741 Bit:11",
+                        "Reserved Address:30741 Bit:12",
+                        "Wind Safe Stow Position",
+                        "Snow Safe Stow Position",
+                        "Force Cleaning Stow Position"
+                    ]
+                },
+                {
+                    "id": "TargetAngle_a1_rad_s28",
+                    "offset": 30750,
+                    "size": 2,
+                    "name": "TargetAngle_a1_rad_s28",
+                    "signed": true
+                }
+            ]
+        }
+    ]
+}

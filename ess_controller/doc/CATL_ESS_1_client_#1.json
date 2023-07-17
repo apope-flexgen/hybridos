@@ -1,0 +1,179 @@
+{
+  "fileInfo": {
+    "sourceFileName": "Catl_ESS_Ref.xlsx",
+    "sourceFileCreated": "2020-07-23T05:59:21.000Z",
+    "sourceFileLastModified": "2020-08-11T18:06:59.000Z",
+    "sourceFileCreatedBy": "17576",
+    "sourceFileLastModifiedBy": "pmiller",
+    "outputFileName": "Catl_ESS_client.json",
+    "outputFileType": "client",
+    "outputFileCreated": "2020-08-12T13:00:45.553Z"
+  },
+  "xsystem": {
+    "name": "CATL BMS",
+    "protocol": "Modbus TCP",
+    "version": "6.0 WIP",
+    "id": "catl_BMU_1",
+    "port": 512,
+    "ip_address": "192.168.1.86",
+    "data_bits": "Columns marked in green are REQUIRED",
+    "frequency": 2000
+  },
+  "connection": {
+    "name": "Clou_ESS_Controller",
+    "ip_address": "127.0.0.1",
+    "query_first": true,
+    "port": 1502
+  },
+
+  "components": [
+    {
+      "id": "catl_mbmu_summary_r",
+      "frequency": 1000,
+      "offset_time": 2,
+      "registers": [
+        {
+          "type": "Input Registers",
+          "starting_offset": 0,
+          "number_of_registers": 44,
+          "note": "MBMU Summary messages (read)",
+          "map": [
+            {
+              "id": "mbmu_warning_1",
+              "offset": 0,
+              "name": "System warning (with degrees) Detailed in appendix Ⅰ",
+              "note1": " 000000000000011: 0=norm, 1=cell OV warn 1, 2=cell OV warn2, 3= cell OV warn3",
+              "note2": " 000000000001100: 0=norm, 1=cell UV warn 1, 2=cell UV warn2, 3= cell UV warn3",
+              "note3": " 000000000110000: 0=norm, 1=cell OT warn 1, 2=cell OT warn2, 3= cell OT warn3",
+              "note4": " 000000011000000: 0=norm, 1=cell UT warn 1, 2=cell UT warn2, 3= cell UT warn3",
+              "note5": " 000001100000000: 0=norm, 1=cell Soc warn 1, 2=cell Soc  warn2, 3= cell Soc  warn3"
+            },
+            {
+              "id": "mbmu_warning_2",
+              "offset": 1,
+              "size": 2,
+              "name": "System warning (without degrees) Detailed in appendix Ⅱ",
+              "bit_field": true,
+              "bit_strings": [
+                "Current over limit",
+                "Single Cell over voltage",
+                "Single Cell over temp",
+                "System over voltage",
+                "System under voltage",
+                "Inner Comm warn",
+                "Cell Extreme Temp warn",
+                "Cell Extreme Volt warn",
+                "Ems Hearteat Fault",
+                "Reserve 1-9",
+                "Reserve 1-10",
+                "Reserve 1-11",
+                "Reserve 1-12",
+                "Reserve 1-13",
+                "Reserve 1-14",
+                "Reserve 1-15",
+                "Reserve 2-0",
+                "Reserve 2-1",
+                "Reserve 2-2",
+                "Reserve 2-3",
+                "Reserve 2-5",
+                "Reserve 2-6",
+                "Reserve 2-7",
+                "Reserve 2-8",
+                "Reserve 2-9",
+                "SOC difference warning",
+                "Fire Fault level 2",
+                "Reserve 2-12",
+                "Reserve 2-13",
+                "Reserve 2-14",
+                "Reserve 2-15"
+              ]
+            },
+            {
+              "id": "mbmu_warning_2_2",
+              "offset": 1,
+              "size": 1,
+              "name": "System warning 2 (without degrees) Detailed in appendix Ⅱ"
+            },
+            {
+              "id": "mbmu_status",
+              "offset": 16,
+              "name": "System status",
+              "enum": true,
+              "bit_strings": [
+                "Initialize",
+                "Normal",
+                "Full Charge",
+                "Full Discharge",
+                "Warning Status",
+                "Fault Status"
+              ]
+            },
+            {
+              "id": "mbmu_voltage",
+              "offset": 32,
+              "scale": 10,
+              "name": "System voltage"
+            },
+            {
+              "id": "mbmu_current",
+              "offset": 33,
+              "scale": 10,
+              "signed": true,
+              "name": "System Current"
+            },
+            {
+              "id": "mbmu_soc",
+              "offset": 34,
+              "name": "SOC"
+            },
+            {
+              "id": "mbmu_soh",
+              "offset": 35,
+              "name": "SOH"
+            },
+            {
+              "id": "mbmu_max_cell_voltage",
+              "offset": 36,
+              "name": "Max cell voltage"
+            },
+            {
+              "id": "mbmu_min_cell_voltage",
+              "offset": 37,
+              "name": "Min cell voltage"
+            },
+            {
+              "id": "mbmu_avg_cell_voltage",
+              "offset": 38,
+              "name": "Avg. cell voltage"
+            },
+            {
+              "id": "mbmu_max_cell_temperature",
+              "offset": 39,
+              "name": "Max cell temperature"
+            },
+            {
+              "id": "mbmu_min_cell_temperature",
+              "offset": 40,
+              "name": "Min cell temperature"
+            },
+            {
+              "id": "mbmu_avg_cell_temperature",
+              "offset": 41,
+              "name": "Avg. cell temperature"
+            },
+            {
+              "id": "mbmu_max_charge_current",
+              "offset": 42,
+              "name": "Max charge current allowed"
+            },
+            {
+              "id": "mbmu_max_dischare_current",
+              "offset": 43,
+              "name": "Max discharge current allowed"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

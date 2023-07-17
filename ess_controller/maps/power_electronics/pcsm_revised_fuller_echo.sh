@@ -1,0 +1,21 @@
+/usr/local/bin/fims/fims_echo -u /comp_pcs/component_one -b '{
+ "active_power":{"value":0},
+ "bess_voltage_bus_1":{"value":0},
+ "current_fault":{"value":0},
+ "current_warning":{"value":0},
+ "dc_input_current_bess1":{"value":0},
+ "dc_input_power_bess1":{"value":0},
+ "grid_voltage_rs":{"value":0},
+ "grid_voltage_st":{"value":0},
+ "grid_voltage_tr":{"value":0},
+ "inverter_status":{"value":0},
+ "pt100_l1_temperature":{"value":0},
+ "pt100_l2_temperature":{"value":0},
+ "pt100_l3_temperature":{"value":0},
+ "reactive_power":{"value":0},
+ "vdc_bus":{"value":0},
+ "enable_main_selector":{"value":0},
+ "pcs_tod_sec":{"value":0},
+ "p_reference":{"value":0},
+ "q_reference":{"value":0}
+}'&

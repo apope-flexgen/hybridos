@@ -26,14 +26,12 @@ export const getEventWithException = (
       duration: event.duration,
       mode: event.mode,
       start_time:
-                event.start_time !== event.repeat.start ? event.repeat.start : getNextRepeat(event),
+        event.start_time !== event.repeat.start ? event.repeat.start : getNextRepeat(event),
       variables: event.variables,
       repeat: {
         ...event.repeat,
         id: undefined,
-        exceptions: event.repeat.exceptions
-          ? [...event.repeat.exceptions, startTime]
-          : [startTime],
+        exceptions: event.repeat.exceptions ? [...event.repeat.exceptions, startTime] : [startTime],
       },
     };
   }
@@ -41,12 +39,41 @@ export const getEventWithException = (
 };
 
 export const checkIfStartBeforeEnd = (state: EditEventState): boolean => {
-  let error = false;
+  if (
+    state.date === null
+    || state.startMinutes === ''
+    || state.startHours === ''
+    || state.endMinutes === ''
+    || state.endHours === ''
+    || state.endDate === null
+  ) return false;
   const startTimeOfNewEvent = dayjs(`${state.date?.format('YYYY-MM-DD')} ${state.startTime}`);
   const endTimeOfNewEvent = dayjs(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`);
-  if (startTimeOfNewEvent.isAfter(endTimeOfNewEvent)
-      || startTimeOfNewEvent.isSame(endTimeOfNewEvent)) error = true;
-  return error;
+  return (
+    startTimeOfNewEvent.isAfter(endTimeOfNewEvent) || startTimeOfNewEvent.isSame(endTimeOfNewEvent)
+  );
+};
+
+export const checkIfStartOrEndInPast = (state: EditEventState): boolean => {
+  if (
+    state.date === null
+    || state.endDate === null
+    || state.startMinutes === ''
+    || state.startHours === ''
+    || state.endMinutes === ''
+    || state.endHours === ''
+  ) return false;
+  const startTimeOfNewEvent = dayjs(`${state.date?.format('YYYY-MM-DD')} ${state.startTime}`);
+  const endTimeOfNewEvent = dayjs(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`);
+  const now = dayjs().subtract(1, 'minute');
+  return startTimeOfNewEvent.isBefore(now) || endTimeOfNewEvent.isBefore(now);
+};
+
+export const checkIfEndInPast = (state: EditEventState): boolean => {
+  if (state.endDate === null || state.endMinutes === '' || state.endHours === '') return false;
+  const endTimeOfNewEvent = dayjs(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`);
+  const now = dayjs().subtract(1, 'minute');
+  return endTimeOfNewEvent.isBefore(now);
 };
 
 export function createMuiTheme(theme: ThemeType): Theme {
@@ -120,9 +147,8 @@ export const schedulerLabels = {
   },
   unconfiguredContainer: {
     adminLabel:
-            'Event Scheduler is not configured. As an admin, you may set up the configuration now.',
-    userLabel:
-            'Event Scheduler is not configured. Contact an admin to set up the configuration.',
+      'Event Scheduler is not configured. As an admin, you may set up the configuration now.',
+    userLabel: 'Event Scheduler is not configured. Contact an admin to set up the configuration.',
     adminButton: {
       label: 'Begin Configuration',
       color: 'primary' as ButtonColors,
@@ -130,7 +156,7 @@ export const schedulerLabels = {
     },
   },
   fleetManager: {
-    siteSelector: 'Select Site',
+    siteSelector: 'Select Schedule',
     siteDisconnected: 'Selected Site is Disconnected',
     noSiteSelected: 'Select Site to View Event Scheduler',
   },
@@ -169,22 +195,14 @@ export const getColorList = (theme: ThemeType) => ({
   gray: theme.fgc.scheduler.customColors.gray,
 });
 
-export const noSelectedItemBoxSx = (theme: ThemeType) => ({
-  display: 'flex',
-  height: '100%',
-  minHeight: '500px',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '1rem',
-  flexGrow: 1,
-  backgroundColor: theme.fgd.primary.main_16p,
-});
-
 export const initialEditState: EditEventState = {
   startTime: '',
   endTime: '',
   endDate: null,
+  endHours: '',
+  endMinutes: '',
+  startHours: '',
+  startMinutes: '',
   date: null,
   mode: '',
   // FIXME: is this right

@@ -1,93 +1,78 @@
-import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common'
-import { AppEnvService } from '../environment/appEnv.service'
-import { FIMS_SERVICE, IFimsService } from '../fims/interfaces/fims.interface'
-import { PermissionsService } from '../permissions/permissions.service'
-import { Roles } from '../../../shared/types/api/Users/Users.types'
-import { User } from 'src/users/dtos/user.dto'
-import { RestSetValueResponse } from './responses/restsetvalue.responses'
+import { Inject, Injectable } from '@nestjs/common';
+import { FIMS_SERVICE, FimsMsg, IFimsService } from '../fims/interfaces/fims.interface';
+import { User } from 'src/users/dtos/user.dto';
+import { RestNoReplyResponse } from './responses/restnoreply.response';
+import { RestPutResponse } from './responses/restput.response';
+import { ILegacyRestService, LEGACY_REST_SERVICE } from './legacy/interfaces/rest.legacy.interface';
 
-const PERMISSION_LEVEL = 'read'
-const USER_ROLE = Roles.Rest
+const FIMS_POST_METHOD = 'post';
+const FIMS_SET_METHOD = 'set';
+const FIMS_DEL_METHOD = 'del';
+const FIMS_NO_REPLY_TIMEOUT = 9000;
+const noReplyMessage = (uri: string) => `Message sent to ${uri}. No reply from ${uri}.`;
 
 @Injectable()
-export class RestService implements OnApplicationBootstrap {
-    aggregatedEndpoints: any
+export class RestService {
+  constructor(
+    @Inject(FIMS_SERVICE) private readonly fimsService: IFimsService,
+    @Inject(LEGACY_REST_SERVICE) private readonly legacyRestService: ILegacyRestService,
+  ) {}
 
-    constructor(
-        private readonly appEnvService: AppEnvService,
-        @Inject(FIMS_SERVICE) private readonly fimsService: IFimsService,
-        private readonly permissionsService: PermissionsService
-    ) {}
+  async post(uri: string, body: any, user: User) {
+    const msg: FimsMsg = {
+      method: FIMS_POST_METHOD,
+      uri: uri,
+      replyto: `/rest${uri}`,
+      body: body,
+      username: user.username,
+    };
+    return Promise.race([
+      this.fimsService.send(msg),
+      new Promise((resolve) =>
+        setTimeout(() => {
+          resolve(new RestNoReplyResponse(noReplyMessage(uri)));
+        }, FIMS_NO_REPLY_TIMEOUT),
+      ),
+    ]);
+  }
 
-    async onApplicationBootstrap() {
-        this.aggregatedEndpoints = this.appEnvService.getAggregatedEndpoints()
-        console.log('aggregated: ', this.aggregatedEndpoints)
-    }
+  async get(uri: string, user: User) {
+    return this.legacyRestService.get(uri, user);
+  }
 
-    async getAggregatedEndpoint(topLevelEndpoint: string, user: User) {
-        if (!this.aggregatedEndpoints[topLevelEndpoint]) {
-            this.fimsService.send({
-                method: 'get',
-                uri: topLevelEndpoint,
-                replyto: `/rest${topLevelEndpoint}`,
-                body: null,
-                username: user.username,
-            })
-        } else {
-            const result = await Promise.all(
-                this.aggregatedEndpoints[topLevelEndpoint]
-                    .filter((endpoint) => {
-                        const fullURI = `${topLevelEndpoint}/${endpoint}`
-    
-                        const sufficientPermissions = this.permissionsService.ConfirmRoleAccess(
-                            USER_ROLE,
-                            PERMISSION_LEVEL,
-                            fullURI
-                        )
-    
-                        return sufficientPermissions
-                    })
-                    .map(async (endpoint) => {
-                        const fullURI = `${topLevelEndpoint}/${endpoint}`
-    
-                        const response = await this.fimsService.get(fullURI)
-                        return {
-                            [endpoint]: response.body,
-                        }
-                    })
-            )
-    
-            if (result.length === 0) return {}
-    
-            const formatted = result.reduce((prev, cur) => {
-                return { ...prev, ...cur }
-            })
-    
-            return formatted
-        }
-    }
+  async set(uri: string, body: any, user: User): Promise<RestPutResponse> {
+    const msg = {
+      method: FIMS_SET_METHOD,
+      uri: uri,
+      replyto: `/rest${uri}`,
+      body: body,
+      username: user.username,
+    };
+    return Promise.race([
+      this.fimsService.send(msg),
+      new Promise((resolve) =>
+        setTimeout(() => {
+          resolve(new RestNoReplyResponse(noReplyMessage(uri)));
+        }, FIMS_NO_REPLY_TIMEOUT),
+      ),
+    ]);
+  }
 
-    async setValue(uri: string, value: string, user: User): Promise<RestSetValueResponse>{
-        let theValueCoerced: boolean | string;
-        if ((value === 'true' || value === 'false')) {
-            theValueCoerced = value !== 'false';
-        } else {
-            theValueCoerced = value;
-        }
-        const msg = {
-            method: 'set',
-            uri: uri,
-            replyto: null,
-            body: `{"value":${theValueCoerced}}`,
-            username: user.username
-        }
-        this.fimsService.send(msg)
-        return {
-            status: 202,
-            statusString: 'accepted',
-            method: 'PUT',
-            uri: uri,
-            value: theValueCoerced,
-        }
-    }
+  async delete(uri: string, body: any, user: User) {
+    const msg: FimsMsg = {
+      method: FIMS_DEL_METHOD,
+      uri: uri,
+      replyto: `/rest${uri}`,
+      body: body,
+      username: user.username,
+    };
+    return Promise.race([
+      this.fimsService.send(msg),
+      new Promise((resolve) =>
+        setTimeout(() => {
+          resolve(new RestNoReplyResponse(noReplyMessage(uri)));
+        }, FIMS_NO_REPLY_TIMEOUT),
+      ),
+    ]);
+  }
 }

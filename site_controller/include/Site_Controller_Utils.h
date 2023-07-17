@@ -59,25 +59,9 @@ bool send_buffer_to(const char *uri, fmt::memory_buffer &buff);
 
 // cJSON functions
 cJSON* clothe_naked_cJSON(cJSON* object);
-cJSON* grab_naked_or_clothed(cJSON* fimsbody, cJSON* object, const char* name);
-cJSON* grab_naked_or_clothed_and_check_type(cJSON* fimsbody, cJSON* object, int CJSONType, const char* name);
-double grab_double(cJSON* object);
-int grab_int(cJSON* object);
+cJSON* grab_naked_or_clothed(cJSON &fimsbody, cJSON* object, const char* name);
+cJSON* grab_naked_or_clothed_and_check_type(cJSON &fimsbody, cJSON* object, int CJSONType, const char* name);
 bool is_naked(cJSON* object);
-
-// bufJSON functions for formatting to JSON and adding to a buffer (inline functions are defined in header)
-// inline void bufJSON_AddBool(fmt::memory_buffer &fmt_buf, const char* const name, const bool value);
-// inline void bufJSON_AddBoolCheckVar(fmt::memory_buffer &fmt_buf, const char* const name, const bool value, const char* const var);
-// inline void bufJSON_AddNumber(fmt::memory_buffer &fmt_buf, const char* const name, const double value);
-// inline void bufJSON_AddNumberCheckVar(fmt::memory_buffer &fmt_buf, const char* const name, const double value, const char* const var);
-// inline void bufJSON_AddString(fmt::memory_buffer &fmt_buf, const char* const name, const char* const value);
-// inline void bufJSON_AddStringCheckVar(fmt::memory_buffer &fmt_buf, const char* const name, const char* const value, const char* const var);
-// inline void bufJSON_AddId(fmt::memory_buffer &fmt_buf, const char* const name);
-// inline void bufJSON_StartObject(fmt::memory_buffer &fmt_buf);
-// inline void bufJSON_EndObject(fmt::memory_buffer &fmt_buf);
-// inline void bufJSON_StartArray(fmt::memory_buffer &fmt_buf);
-// inline void bufJSON_EndArray(fmt::memory_buffer &fmt_buf);
-// inline void bufJSON_RemoveTrailingComma(fmt::memory_buffer &fmt_buf);
 
 /**
  * @brief Macro for formatting arguments and appending them to an fmt string buffer
@@ -123,7 +107,7 @@ inline void bufJSON_AddBoolCheckVar(fmt::memory_buffer &fmt_buf, const char* con
  */
 inline void bufJSON_AddNumber(fmt::memory_buffer &fmt_buf, const char* const name, const double value) 
 {
-     FORMAT_TO_BUF(fmt_buf, R"("{}":{},)", name, value);
+    FORMAT_TO_BUF(fmt_buf, R"("{}":{},)", name, value);
 }
 
 /**
@@ -148,7 +132,7 @@ inline void bufJSON_AddNumberCheckVar(fmt::memory_buffer &fmt_buf, const char* c
  */
 inline void bufJSON_AddString(fmt::memory_buffer &fmt_buf, const char* const name, const char* const value) 
 {
-     FORMAT_TO_BUF(fmt_buf, R"("{}":"{}",)", name, value);
+    FORMAT_TO_BUF(fmt_buf, R"("{}":"{}",)", name, value);
 }
 
 /**

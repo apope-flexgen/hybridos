@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common'
 import { WsAdapter } from '@nestjs/platform-ws'
 import { Test, TestingModule } from '@nestjs/testing'
-import { isMongoId } from 'class-validator'
+import { isMongoId, useContainer } from 'class-validator'
 // import * as cookieParser from 'cookie-parser';
 import cookieParser from 'cookie-parser'
 import { MongoMemoryServer } from 'mongodb-memory-server'
@@ -12,6 +12,11 @@ import { Roles } from '../../../shared/types/api/Users/Users.types'
 import { AppModule } from '../../src/app.module'
 import { AppEnvService } from '../../src/environment/appEnv.service'
 import * as testUtils from '../testUtils'
+import { WsThrottlerGuard } from 'src/fims/wsthrottler.guard'
+import { ThrottlerGuard } from '@nestjs/throttler'
+import { ValidPasswordConstraint } from 'src/users/validators/IsValidPassword'
+import { SITE_ADMINS_SERVICE } from 'src/siteAdmins/interfaces/siteAdmin.service.interface'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 describe('Users (Integration)', () => {
     let app: INestApplication
@@ -30,14 +35,25 @@ describe('Users (Integration)', () => {
 
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
+            providers: [
+                ValidPasswordConstraint,
+                {
+                    provide: SITE_ADMINS_SERVICE,
+                    useValue: {
+                        find: jest.fn().mockReturnValue(testUtils.site(false, false, false))
+                    }
+                },
+            ]
         })
-            .overrideProvider(AppEnvService)
-            .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
-            .compile()
+        .overrideProvider(AppEnvService).useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+        .overrideProvider(PermissionsService).useValue({webServerConfigDirectoryPath: () => ''})
+        .overrideGuard(ThrottlerGuard).useValue({ handleRequest: () => true })
+        .compile();
 
         db = mongoServer
 
         app = testUtils.createTestApiApplication(moduleFixture)
+        useContainer(moduleFixture, { fallbackOnErrors: true })
         appEnvService = moduleFixture.get<AppEnvService>(AppEnvService)
         app.useWebSocketAdapter(new WsAdapter(app))
         app.use(cookieParser())

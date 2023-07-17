@@ -88,7 +88,7 @@ func (f *feed) GetLoadLines(input terminal, dt float64) (output terminal) {
 	if f.Closed {
 		return input
 	}
-	f.V2, f.F2, f.Ph = input.v, input.f, input.ph
+	f.V2, f.F2, f.Ph = input.v, input.f, input.ph //TODO GB: This input.f is the result after gridforming assets have corrected phase. Need to store in an overall "f.F" for reporting
 	f.Dactive, f.Dreactive = input.dHertz, input.dVolts
 	return output // Return zeroed terminal when not closed; no droop goes up the tree
 }
@@ -107,7 +107,7 @@ func (f *feed) DistributeVoltage(input terminal) (output terminal) {
 	for i, v := range assetStatus {
 		f.Status[i] = v
 	}
-	output.v, output.f, output.ph = f.V2, f.F2, f.Ph
+	output.v, output.f, output.ph = f.V2, f.F2, f.Ph  //from GetLoadLines() step if !f.Closed
 	return output
 }
 
@@ -171,6 +171,7 @@ func (f *feed) UpdateState(input terminal, dt float64) (output terminal) {
 		f.P, f.Q = -f.P, -f.Q
 	}
 	f.Pf = pf(f.P, f.Q, f.S)
+	//TODO GB: Why do these use f.V instead of f.V1? 
 	f.I, f.Di, f.Qi = sToI(f.S, f.V), sToI(f.P, f.V), sToI(f.Q, f.V)
 	// Return un-reversed polarity for solver
 	if f.Polrev {

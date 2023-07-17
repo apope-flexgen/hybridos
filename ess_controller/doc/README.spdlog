@@ -1,0 +1,14 @@
+
+You need to install spdlog to build this now
+#
+for installing spdlog 1.8.5:
+
+
+wget https://github.com/gabime/spdlog/archive/refs/tags/v1.8.5.tar.gz
+cd spdlog-1.8.5/
+( if you need to ) sudo yum install -y cmake3     // project uses cmake3 to build itself
+cmake3 -H. -B_builds -DCMAKE_BUILD_TYPE=Release   // this makes the _builds directory and builds it inside that directory
+sudo cmake3 --build _builds --target install      // this takes the build and uses the make files install directions
+
+// at the end you should see it install everything inside of /usr/local/include and the .a inside of /usr/local/lib64
+// make sure to use -lspdlog when linking to get the best performance

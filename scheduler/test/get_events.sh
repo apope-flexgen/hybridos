@@ -1,1 +1,1 @@
-/usr/local/bin/fims_send -m get -u /scheduler/events -r /me | jq
+/usr/local/bin/fims_send -m get -u /scheduler/events -r /$$ | jq

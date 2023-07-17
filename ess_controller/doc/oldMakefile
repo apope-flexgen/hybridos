@@ -1,0 +1,122 @@
+PROJECT_ROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
+$(info PROJECT_ROOT="$(PROJECT_ROOT)")
+$(info MAKEFILE_LIST="$(MAKEFILE_LIST)")
+
+BINS = ess_controller ess_controller_test
+OBJECTS = ess_controller.o 
+LIB_OBJECTS = assetFunc.o test_func_lib.o
+BIN_DIR = /usr/local/bin/
+INCLUDES_DIR = /usr/local/include/
+SINCLUDES_DIR= /usr/include/
+
+LIBS_DIR = /usr/local/lib/
+SLIBS_DIR = /usr/lib64/
+
+INCLUDES_BUILD = -Iinclude/
+INCLUDES = -I$(INCLUDES_DIR) -I$(SINCLUDES_DIR)
+THREADS = -pthread
+
+#CPPFLAGS += -g -std=c++11 -Wall -pedantic -Werror  -Wno-format-security -Wno-format-truncation
+CPPFLAGS += -g -std=c++11 -Wall  -Werror  -Wno-format-security -Wno-format-truncation
+
+ifeq ($(BUILD_MODE),debug)
+	CPPFLAGS += -g -DFPS_DEBUG_MODE
+else ifeq ($(BUILD_MODE),test)
+	CPPFLAGS += -DFPS_TEST_MODE
+	LIBS += -lgtest -lgmock
+	INCLUDES_BUILD += -Itests/
+else
+	BUILD_MODE=release
+	CPPFLAGS += -O2
+endif
+
+BUILD_DIR = build/$(BUILD_MODE)/
+OBJ_DIR = build/$(BUILD_MODE)_obj/
+
+LIBS = -L$(LIBS_DIR) -L$(SLIBS_DIR) -Wl,--build-id -Wl,-rpath,$(LIBS_DIR):$(OBJ_DIR) -lcjson -lfims -lpthread
+
+LIBS += -L$(BUILD_DIR)
+LIBS += -L$(OBJ_DIR)
+LIST = $(addprefix $(BUILD_DIR), $(BINS))
+LIB_LIST = $(OBJ_DIR)libess.so, $(OBJ_DIR)libessfunc.so
+SRC_DIR = $(PROJECT_ROOT)funcs/
+
+FUNC_LIST = $(FUNC_DIR)AlarmFaultHandler.cpp  
+FUNC_LIST += $(FUNC_DIR)CheckAmComms.cpp
+FUNC_LIST += $(FUNC_DIR)CheckAmTimestamp.cpp
+FUNC_LIST += $(FUNC_DIR)CheckMonitorVar.cpp      
+FUNC_LIST += $(FUNC_DIR)CheckTableVar.cpp         
+FUNC_LIST += $(FUNC_DIR)module_faultFuncs.cpp      
+FUNC_LIST += $(FUNC_DIR)module_runFuncs.cpp      
+FUNC_LIST += $(FUNC_DIR)SendClearFaultCmd.cpp   
+FUNC_LIST += $(FUNC_DIR)UpdateSysTime.cpp
+FUNC_LIST += $(FUNC_DIR)AlarmsLogsFaults.cpp   
+FUNC_LIST += $(FUNC_DIR)CheckAmHeartbeat.cpp  
+FUNC_LIST += $(FUNC_DIR)CheckEssStatus.cpp    
+FUNC_LIST += $(FUNC_DIR)HandleAssetHeartbeat.cpp  
+FUNC_LIST += $(FUNC_DIR)SimHandleHeartbeat.cpp
+
+#$(FUNC_LIST)
+
+
+OBJ_LIST = $(addprefix $(OBJ_DIR), $(OBJECTS))
+LIB_OBJ_LIST = $(addprefix $(OBJ_DIR), $(LIB_OBJECTS))
+
+SRC_DIR = $(PROJECT_ROOT)src
+INC_DIR = $(PROJECT_ROOT)include
+
+all:	build $(OBJ_DIR)libess.so $(OBJ_DIR)libessfunc.so $(BUILD_DIR)ess_controller $(BUILD_DIR)fims_gpio
+#$(LIB_LIST) $(LIST)
+
+# g++ -std=c++11 -g -o ${LIBS_DIR}/libess.so           $CFLAGS -fPIC -shared    test/assetFunc.cpp     -lpthread  -lcjson -lfims
+
+$(OBJ_DIR)assetFunc_new.o:	$(SRC_DIR)/assetFunc_new.cpp $(INC_DIR)/assetFunc.h
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)ess_controller.o:	$(SRC_DIR)/ess_controller.cpp $(INC_DIR)/assetFunc.h $(INC_DIR)/asset.h $(INC_DIR)/assetVar.h $(INC_DIR)/varMapUtils.h
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)fims_gpio.o:	$(SRC_DIR)/fims_gpio.cpp $(INC_DIR)/assetFunc.h $(INC_DIR)/asset.h $(INC_DIR)/assetVar.h $(INC_DIR)/varMapUtils.h
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)libess.so:  $(SRC_DIR)/assetFunc_new.cpp $(SRC_DIR)/asset.cpp $(SRC_DIR)/assetVar.cpp $(SRC_DIR)/varMapUtils.cpp 
+		$(CXX)  $(CPPFLAGS) -fpic -shared -o $@ $^ $(INCLUDES_BUILD)
+
+$(OBJ_DIR)libessfunc.so:  $(SRC_DIR)/test_func_lib.cpp $(INC_DIR)/asset.h $(INC_DIR)/assetVar.h $(INC_DIR)/varMapUtils.h  
+		$(CXX)  $(CPPFLAGS) -fpic -shared -o $@ $< $(INCLUDES_BUILD)
+
+$(BUILD_DIR)ess_controller:	$(OBJ_DIR)ess_controller.o
+	$(CXX) -o $@ $^ $(INCLUDES) $(LIBS) -lessfunc -less 
+
+$(BUILD_DIR)ess_controller_test:	$(OBJ_DIR)ess_controller_test.o
+	$(CXX) -o $@ $^ $(INCLUDES) $(LIBS) -lessfunc -less 
+
+$(BUILD_DIR)fims_gpio:	$(OBJ_DIR)fims_gpio.o
+	$(CXX) -o $@ $^ $(INCLUDES) $(LIBS) -lessfunc -less 
+
+$(OBJ_DIR)%.o:	$(SRC_DIR)/%.cpp $(INC_DIR)/%.h
+	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+
+
+$(OBJ_DIR)%.so:	$(OBJ_DIR)%.o
+	$(CXX)  $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) $(LIBS)
+
+.PHONY: build
+build:
+	mkdir -p $(BUILD_DIR) $(OBJ_DIR)
+
+.PHONY: clean
+clean:
+	rm -fr build
+
+.PHONY: uninstall
+uninstall:
+	rm -rf $(BIN_DIR)ess_controller
+
+.PHONY: install
+install:
+	mkdir -p $(BIN_DIR)ess_controller
+	cp $(BUILD_DIR)ess_controller $(BIN_DIR)ess_controller
+  

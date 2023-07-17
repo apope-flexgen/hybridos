@@ -8,22 +8,21 @@ import (
 	"testing"
 )
 
-var dir = "/home/vagrant/.cloud_sync/test/data"
-
 func TestCompress(t *testing.T) {
+	testDirPath := t.TempDir()
 	size := 1000
 	n := 10
-	files, err := makeFiles(n, size, dir)
+	files, err := makeFiles(n, size, testDirPath)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	name, err := compress(files, dir, "test_client")
+	name, err := compress(files, testDirPath, "test_client")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	fi, err := os.Stat(filepath.Join(dir, metaArchiveDirName, name))
+	fi, err := os.Stat(filepath.Join(testDirPath, metaArchiveDirName, name))
 	if err != nil {
 		t.Fatal(err)
 	}

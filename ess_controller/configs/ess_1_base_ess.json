@@ -1,0 +1,65 @@
+{
+	"/assets/ess":	{
+		"bms":	{
+			"value":	"configs/bms_manager.json"
+		},
+		"drc":	{
+			"value":	"configs/drc_manager.json"
+		},
+		"pcs":	{
+			"value":	"configs/pcs_manager.json"
+		}
+	},
+	"/components/ess":	{
+		"HeartBeatRelink":	{
+			"value":	5
+		}
+	},
+	"/config/ess":	{
+		"BlockSets":	{
+			"value":	"/status/ess, /status/bms, /status/bms_1, /status/bms_2 "
+		},
+		"Pubs":	{
+			"value":	"/status/ess, /variables/ess, /config/ess, /params/ess "
+		},
+		"Subs":	{
+			"value":	"/ess /components, /assets, /params, /status, /controls, /variables, /config, /tests, /links, /default, /reload, /misc2 "
+		},
+		"pSubs":	{
+			"value":	"/components, /assets, /params, /status, /controls, /variables, /config, /tests, /links, /default, /reload, /misc2 "
+		}
+	},
+	"/controls/ess":	{
+		"ReactivePowerCmd":	{
+			"value":	0
+		},
+		"ReactivePowerSetpoint":	{
+			"value":	0
+		}
+	},
+	"/gets/blocked":	{
+		"components":	{
+			"value":	true
+		}
+	},
+	"/links/ess":	{
+		"HeartBeatLink":	{
+			"value":	"/components/ess:HeartBeatRelink"
+		}
+	},
+	"/params/ess":	{
+		"ReactivePowerDeadband":	{
+			"value":	5
+		}
+	},
+	"/sets/blocked":	{
+		"status":	{
+			"value":	true
+		}
+	},
+	"/status/ess":	{
+		"ReactivePower":	{
+			"value":	0
+		}
+	}
+}

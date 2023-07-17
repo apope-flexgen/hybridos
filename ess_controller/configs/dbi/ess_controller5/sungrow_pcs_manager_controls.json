@@ -1,0 +1,552 @@
+{
+    "/schedule/wake_monitor/pcs": {
+        "/controls/pcs:StartCmd":                { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:ShutdownCmd":             { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:StandbyCmd":              { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyStartup":           { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyShutdown":          { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyStandby":           { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:HeartbeatTimeoutSetting": { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+
+        "/controls/pcs:OffGridMode":             { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:OnGridMode":              { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:OnGridConstACPower":      { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyOffGridMode":       { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyOnGridMode":        { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyOnGridConstACPower":{ "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:CheckIfOffGrid":          { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:FrequencySetpoint":       { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:ActivePowerSetpoint":     { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:ReactivePowerAdjSwitch":  { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:ReactivePowerSetpoint":   { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:CheckIfStopped":          { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:CheckIfOnGrid":           { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VoltageSlewCmd":          { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VoltageSlew":             { "enable": true, "rate": 0.1, "amap": "pcs", "func": "SlewVal"}
+    },
+
+    "/controls/pcs": {
+        "StartCmd": {
+            "value": 207,
+            "note": "Start command to send to PCS if the PCS is either off and the BMS DC contactors are closed or the PCS is in standby. Check the PCS's grid mode as well",
+            "cmdVar": "/components/pcs_parameter_setting:start_stop",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 5,
+            "variable1": "/status/pcs:SystemState",
+            "variable2": "/status/bms:DCClosed",
+            "variable3": "/status/pcs:WorkMode",
+            "variable4": "/components/pcs_parameter_setting:off_grid_voltage_setpoint",
+            "variable5": "/components/pcs_parameter_setting:off_grid_frequency_setpoint",
+            "useExpr": true,
+            "expression": "(({1} == Off and {2}) or {1} == Ready) and ({3} == On-grid or ({3} == Off-grid and {4} != -480 and {5} == 60))",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "ShutdownCmd": {
+            "value": 206,
+            "note": "Shutdown command to send to PCS if 0 kW and 0 kVAr are set to the PCS, we're no longer waiting for DC current to decrease, and the PCS is not off or faulted",
+            "cmdVar": "/components/pcs_parameter_setting:start_stop",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 3,
+            "variable1": "/status/bms:BMSCurrentCheckStop@seenMaxAlarm",
+            "variable2": "/status/bms:BMSCurrentCheckStop@seenMinAlarm",
+            "variable3": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "not {1} and not {2} and ({3} == Ready or {3} == Running or {3} == Starting)",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "StandbyCmd": {
+            "value": 205,
+            "note": "Standby command to send to PCS if the PCS is either off and the BMS DC contactors are closed or the PCS is running",
+            "cmdVar": "/components/pcs_parameter_setting:start_stop",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 2,
+            "variable1": "/status/pcs:SystemState",
+            "variable2": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "({1} == Off and {2}) or {1} == Running",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "VerifyStartup": {
+            "value": 0,
+            "note": "Verify that the PCS system state is now running when the start command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Running",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyShutdown": {
+            "value": 0,
+            "note": "Verify that the PCS system state is now off when the shutdown command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Off or {1} == Fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyStandby": {
+            "value": 0,
+            "note": "Verify that the PCS system state is now in standby (ready) when the standby command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Ready",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "HeartbeatTimeoutSetting": {
+            "value": 60,
+            "note": "Initialize heartbeat timeout interval value on system startup",
+            "cmdVar": "/components/pcs_parameter_setting:hearbeat_timeout_interval",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "triggerCmd": true,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "OffGridMode": {
+            "value": 85,
+            "note": "Set PCS to grid-forming (off-grid) mode",
+            "cmdVar": "/components/pcs_parameter_setting:grid_mode_setting",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == On-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "OnGridMode": {
+            "value": 170,
+            "note": "Set PCS to grid-following (on-grid) mode",
+            "cmdVar": "/components/pcs_parameter_setting:grid_mode_setting",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == Off-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "OnGridConstACPower": {
+            "value": 4,
+            "note": "Set the PCS to on-grid const AC power when the PCS is in grid-following (on-grid) mode",
+            "cmdVar": "/components/pcs_parameter_setting:on_grid_mode",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == On-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "VerifyOffGridMode": {
+            "value": 0,
+            "note": "Verify that the PCS is now in grid-forming (off-grid) mode when the grid-forming command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == Off-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyOnGridMode": {
+            "value": 0,
+            "note": "Verify that the PCS is now in grid-following (on-grid) mode when the grid-following command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == On-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyOnGridConstACPower": {
+            "value": 0,
+            "note": "Verify that the PCS is now set to grid-following const AC power when the on-grid const AC power command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:OnGridChgModeAbbrev",
+            "useExpr": true,
+            "expression": "{1} == AC-Power",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "CheckIfOnGrid": {
+            "value": 0,
+            "note": "Check if the PCS is currently in grid-following (on-grid) mode",
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == On-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "CheckIfOffGrid": {
+            "value": 0,
+            "note": "Check if the PCS is currently in grid-forming (off-grid) mode",
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == Off-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "CheckIfStopped": {
+            "value": 0,
+            "note": "Check if the PCS is in a fault state",
+            "enableAlert": false,
+            "numVars": 1,
+            "sendCmdHoldTimeout": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Fault or {1} == Off",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "FrequencySetpoint": {
+            "value": 60,
+            "note": "Set frequency for the PCS as long as the frequency setpoint is between 55 Hz and 65 Hz",
+            "cmdVar": "/components/pcs_parameter_setting:off_grid_frequency_setpoint",
+            "enableAlert": false,
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "includeCurrVal": true,
+            "useExpr": true,
+            "expression": "{1} >= 55 and {1} <= 65",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VoltageSlewRate": 100,
+        "VoltageSlew": {
+            "value": 0,
+            "enabled": true,
+            "RatedValue": 480,
+            "SlewRate": "/controls/pcs:VoltageSlewRate",
+            "SlewedVal": "/controls/pcs:VoltageSlewCmdTrigger"
+        },
+        "VoltageSlewCmdTrigger": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"ifChanged": true, "uri": "/controls/pcs:VoltageSlewCmd@triggerCmd", "outValue": true},
+                        {"ifChanged": true, "uri": "/controls/pcs:VoltageSlewCmd"}
+                    ]
+                }]
+            }
+        },
+        "VoltageSlewCmd": {
+            "value": 0,
+            "cmdVar": "/components/pcs_parameter_setting:off_grid_voltage_setpoint",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "HandleCmd", "amap": "pcs"}
+                    ]
+                }]
+            }
+        },
+        "ActivePowerSetpoint": {
+            "value": 0,
+            "note": "Set active power",
+            "cmdVar": "/controls/ess:ActivePowerSetpoint",
+            "enableAlert": false,
+            "checkCmdTimeout": 30,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "ReactivePowerAdjSwitch": {
+            "value": 162,
+            "note": "For Sungrow PCS, set the reactive power adjustment switch to 162 (0xA2) to enable reactive power setpoint",
+            "cmdVar": "/components/pcs_parameter_setting:reactive_power_adj_switch",
+            "enableAlert": false,
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "ReactivePowerSetpoint": {
+            "value": 2200.0,
+            "note": "Set reactive power only if the reactive power adjustment switch is set to 162 (0xA2)",
+            "cmdVar": "/controls/ess:ReactivePowerSetpoint",
+            "enableAlert": false,
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/components/pcs_parameter_setting:reactive_power_adj_switch",
+            "useExpr": true,
+            "expression": "{1} == 162",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        }
+    },
+    
+    "/status/pcs": {
+        "StartCmdSuccess": {
+            "value": false,
+            "note": "If the start command has been successfully sent to the PCS, verify that the PCS is now running. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStartup@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStartup",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:start_cmd",                  "outValue": "Failed to send/verify start command (207) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "ShutdownCmdSuccess": {
+            "value": false,
+            "note": "If the shutdown command has been successfully sent to the PCS, verify that the PCS has shutdown. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyShutdown@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyShutdown",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:shutdown_cmd",                "outValue": "Failed to send/verify shutdown command (206) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "StandbyCmdSuccess": {
+            "value": false,
+            "note": "If the standby command has been successfully sent to the PCS, verify that the PCS has transitioned to standby. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStandby@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStandby",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:standby_cmd",                "outValue": "Failed to send/verify standby command (205) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "VerifyStartupSuccess": {
+            "value": false,
+            "note": "If the PCS failed to start after an elasped time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:start_failure", "outValue": "Failed to verify PCS is running"}
+                    ]
+                }]
+            }
+        },
+        "VerifyShutdownSuccess": {
+            "value": false,
+            "note": "If the PCS failed the shutdown after an elapsed time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:shutdown_failure", "outValue": "Failed to verify PCS has shutdown"}
+                    ]
+                }]
+            }
+        },
+        "VerifyStandbySuccess": {
+            "value": false,
+            "note": "If the PCS failed to enter standby after an elasped time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:standby_failure", "outValue": "Failed to verify PCS is in standby"}
+                    ]
+                }]
+            }
+        },
+        "OffGridModeSuccess": {
+            "value": false,
+            "note": "If the off-grid mode command has been successfully sent to the PCS, verify that the PCS has transitioned to grid-forming (off-grid) mode",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VerifyOffGridMode@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VerifyOffGridMode",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:off_grid_mode_command",         "outValue": "Failed to send/verify grid-forming mode command (85) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "OnGridModeSuccess": {
+            "value": false,
+            "note": "If the on-grid mode command has been successfully sent to the PCS, verify that the PCS has transitioned to grid-following (on-grid) mode",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VerifyOnGridMode@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VerifyOnGridMode",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:on_grid_mode_command",         "outValue": "Failed to send/verify grid-following mode command (170) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "OnGridConstACPowerSuccess": {
+            "value": false,
+            "note": "If the on-grid const AC power command has been successfully sent to the PCS, verify that the PCS on-grid charge/discharge mode has been set to on-grid const AC power",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyOnGridConstACPower@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyOnGridConstACPower",            "outValue": 0},
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:on_grid_const_ac_power_cmd",            "outValue": "Failed to send/verify on-grid const AC power command (4) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "VerifyOffGridModeSuccess": {
+            "value": false,
+            "note": "If the PCS is not in grid-forming (off-grid) mode, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false,"ifChanged": false, "uri": "/alarms/pcs:off_grid_mode_failure", "outValue": "Failed to verify PCS is in grid-forming (off-grid) mode"}
+                    ]
+                }]
+            }
+        },
+        "VerifyOnGridModeSuccess": {
+            "value": false,
+            "note": "If the PCS is not in grid-following (on-grid) mode after an elapsed time, send an alarm. Otherwise, set on-grid mode setting on const AC power and enable protections related to grid-following (TODO)",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:OnGridConstACPower@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:OnGridConstACPower",            "outValue": 4},
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:on_grid_mode_failure",            "outValue": "Failed to verify PCS is in grid-following (on-grid) mode"}
+                    ]
+                }]
+            }
+        },
+        "VerifyOnGridConstACPowerSuccess": {
+            "value": false,
+            "note": "If the PCS is not set to on-grid const AC power after an elapsed time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:on_grid_const_ac_power_failure", "outValue": "Failed to set PCS grid-following (on-grid) const AC power setting"}
+                    ]
+                }]
+            }
+        },
+        "CheckIfOnGridSuccess": {
+            "value": false,
+            "note": "If the PCS is in grid-following (on-grid) mode, send the active/reactive power command (0 kW / 0 kVAr) to the PCS",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ActivePowerSetpoint@triggerCmd",    "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ActivePowerSetpoint",               "outValue": 0,     "note": "Send 0 kW command to PCS before proceeding to shutdown"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ReactivePowerAdjSwitch@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ReactivePowerAdjSwitch",            "outValue": 162,   "note": "162 = 0xA2 = Reactive power percentage setting enabled"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ReactivePowerSetpoint",             "outValue": 0,     "note": "Send 0 kVAr command to PCS before proceeding to shutdown"}
+                    ]
+                }]
+            }
+        },
+        "CheckIfOffGridSuccess": {
+            "value": false,
+            "note": "If the PCS is in grid-forming (off-grid) mode, send the voltage/frequency command (480 V / 60 Hz) to the PCS",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:FrequencySetpoint@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:FrequencySetpoint",            "outValue": 60, "note": "Send 60 Hz to PCS"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VoltageSetpoint@triggerCmd",   "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VoltageSetpoint",              "outValue": 480, "note": "Send 480 V to PCS"}
+                    ]
+                }]
+            }
+        },
+        "CheckIfStoppedSuccess": {
+            "value": true,
+            "note": "If the PCS is already in a fault state, we don't need to do a fault shutdown for PCS",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/controls/pcs:ShutdownCmd@triggerCmd", "outValue": true},
+                        {"inValue": false, "ifChanged": false, "uri": "/controls/pcs:ShutdownCmd",            "outValue": 206,   "note": "Send stop command to PCS after verifying 0 kW and 0 kVAr is set to PCS"}
+                    ]
+                }]
+            }
+        },
+        "ReactivePowerAdjSwitchSuccess": {
+            "value": false,
+            "note": "If the reactive power adjustment switch is set to 162, proceed to run the reactive power setpoint command handler. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:ReactivePowerSetpoint@triggerCmd", "outValue": true},
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:reactive_power_adj_switch_cmd",      "outValue": "Failed to send/verify reactive power setpoint enable command (162) to PCS"}
+                    ]
+                }]
+            }
+        }
+    }
+}

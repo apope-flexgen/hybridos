@@ -1,0 +1,17 @@
+{
+    "/system/notes": {
+        "note1": "This FlexPack controller is designed to be an empty FlexPack controller",
+        "note2": "Make it do what ever you want"
+    },
+    "/system/config": {
+        "name":{
+            "note": " this will set up flex and the key word",
+            "value":"flex"
+        },
+	    "sysName":"flex",
+        "Subs": "/flex, /components, /site, /assets, /reload",
+        "LogDir":"/var/log/flex_controller",
+        "cfgFile":"flex_config.json",
+        "debug":0
+    }
+}

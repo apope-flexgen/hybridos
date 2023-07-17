@@ -1,0 +1,42 @@
+Fims Remap Option
+p. wilshire
+02/24/2021
+
+Now we can send an outgoing fims message directly from the remap statement.
+Just add "fims":"set" or "fims":"pub" in the remap
+I'll add a "fims" :"get" with a "replyto"  in a few minutes
+ 
+Here is the config item note the "fims" field
+Untitled 
+"/test/gpio":{
+    "testVar":{
+        "value":"this is a test",
+        "actions":    {
+            "onSet":  [{
+                "remap":  [
+                    {"fims":"set", "uri": "/test/fims_send:new_fims_remap"} 
+                    ]
+                }]
+        }
+    }
+  },
+Here is an incoming test message 
+
+[vagrant@localhost ess_controller]$ /usr/local/bin/fims/fims_send -m set -r /$$ -u /ess/test/gpio/testVar '"xx some new value"'
+{"testVar":"xx some new value"}
+
+
+And this is what we produce.....
+
+Method:  set
+Uri:     /test/fims_send
+ReplyTo: (null)
+Body:    {"new_fims_remap":{"value":"xx some new value"}}
+Timestamp:   2021-02-24 14:55:04.535522
+
+This works too
+{"fims":"get", "replyto": "/ess/status/ess/some_var, "uri": "/test/fims_send:new_fims_remap"} 
+
+But note that the reply must be something like
+set /ess/status/ess/some_var '{"value":"my reply"}'
+

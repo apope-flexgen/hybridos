@@ -1,0 +1,53 @@
+{
+	"system":
+	{
+		"id": "sungrow_pcs_1a",
+		"ip_address": "192.168.0.1",
+		"port": 502,
+		"device_id": 1,
+		"frequency": 500,
+		"off_by_one": true,
+		"byte_swap": true
+	},
+	"registers":
+	[
+		{
+			"type": "Holding Registers",
+			"starting_offset": 10257,
+			"number_of_registers": 8,
+			"map":
+			[
+				{
+					"id": "lower_u",
+					"offset": 10257,
+					"size": 1,
+					"scale": 10
+				},
+				{
+					"id": "upper_u",
+					"offset": 10258,
+					"size": 1,
+					"scale": 10
+				},
+				{
+					"id": "u1_limit",
+					"offset": 10259,
+					"size": 1,
+					"scale": 10
+				},
+				{
+					"id": "u2_limit",
+					"offset": 10260,
+					"size": 1,
+					"scale": 10
+				},
+				{
+					"id": "pcs_nominal_voltage_setting",
+					"offset": 10264,
+					"size": 1,
+					"scale": 10
+				}
+			]
+		}
+	]
+}

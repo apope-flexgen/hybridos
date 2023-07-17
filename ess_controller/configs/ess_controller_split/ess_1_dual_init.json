@@ -1,0 +1,40 @@
+{
+    "amname": "ess",
+    "/docs/01_ess_1_init": {
+        "notes1":" This is the start of the loader process. The initial file is triggered through a command line argument (-c ess_config_lg) ",
+        "notes2":" This is the master controller and will step through the load sequence ",
+        "notes3":" The ess_controller file is requested first, it can be recoved from the dbi system or loaded  from command line",
+        "notes4":" Next the lg_bms_manager_bms loader is requested followed by the lg_bms_manager_modbus loader. The loaders require templates ",
+        "notes5":" The lg_bms_controls  file is loaded next.",
+        "notes6":" The lg_pcs_manager, lg_pcs_modbus_data and lg_pcs_controls are all simpl config files ",
+        "notes7":" The last config file to be loaded is the site_controller interface. This is derived from the modbus_server file used by the system.",
+        "notes8":" After completing the load sequence, the ess_final file  contains the instructions to start the system  ",
+        "notes9":" As each data item is requestd,  a data request is sent to the dbi system. ", 
+        "notesa": "To simulate the dbi component these files can all be loaded from a script"  
+    },
+    "/config/load": {       
+  
+       "ess_controller": {
+          "value":false,
+          "type":"master",
+          "file":"ess_1_controller",
+          "aname":"ess",
+          "final":"ess_1_final",
+          "new_options":[
+             { "xload":"lg_bms_manager_bms",           "aname":"bms",  "pname":"ess", "summary":"bms/summary", "svec":"bms/bms_" },
+             { "load":"risen_bms_1_manager",           "aname":"bms",  "pname":"ess", "summary":"bms/summary", "svec":"bms/bms_" },
+             { "load":"risen_bms_1_manager_modbus",    "aname":"bms",  "pname":"ess", "summary":"bms/summary", "svec":"bms/bms_" },
+             { "xload":"risen_bms_1_modbus_data",      "aname":"bms",  "pname":"ess", "summary":"bms/summary" },
+             { "file":"risen_bms_1_controls",          "aname":"bms",  "pname":"ess", "summary":"bms/summary" },
+
+             { "file":"lg_pcs_manager",             "aname":"pcs",  "pname":"ess", "summary":"pcs/summary", "svec":"pcs/pcs_" },
+             { "file":"lg_pcs_modbus_data",         "aname":"pcs",  "pname":"ess", "summary":"pcs/summary" },
+             { "file":"lg_pcs_controls",            "aname":"pcs",  "pname":"ess", "summary":"pcs/summary" },
+
+             { "xtmpl":"lg_bms_tmpl",                "aname":"rack_1",  "pname":"bms",    "uri":"/config/ctmpl:lg_bms_tmpl" },
+             { "xtmpl":"lg_bms_modbus_data_tmpl",    "aname":"rack_1",  "pname":"bms",    "uri":"/config/ctmpl:lg_bms_modbus_data_tmpl" },
+             { "site":"risen_ess_1_server_tmpl",      "uri":"/config/ctmpl:risen_ess_1_server_tmpl", "aname":"site", "pname":"ess"  }
+          ]
+        }
+    }
+}

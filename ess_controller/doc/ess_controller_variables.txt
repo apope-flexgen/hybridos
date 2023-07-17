@@ -1,0 +1,432 @@
+ESS Controller - List of Common Variables
+
+Note: These variables are used in the global/local data collection (ex.: varsmap).
+Each asset manager or asset will share and/or use some of these variables
+
+Modbus maps used:
+    BMS -> CATL_BMS_1_client_1119.json
+    PCS -> pcsm_client_1122.json
+
+TODO:
+    - Change URI's to be more appropriately mapped, especially regarding commands to be sent to the assets (/commands?)
+    - Need to figure out final Modbus URI's for documentation
+    - Need to simplify logic a little, some of these functions have a bunch of unused variables/links.
+    - Go back and cleanup reload sections (use variadic templates)
+
+using maps
+      CATL_BMS_1_client_1216.json
+      pcsm_client_1210.json
+
+Faults/Alarms:
+Name                         Type             URI                                                           Modbus URI                                      Desc.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+essTempFaultCnt              int              /errors/ess/essTempFaultCnt                                   N/A                                             # of temp faults aggregated by ess
+essTempAlarmCnt              int              /errors/ess/essTempAlarmCnt                                   N/A                                             # of temp alarms aggregated by ess
+essVoltFaultCnt              int              /errors/ess/essVoltFaultCnt                                   N/A                                             # of volt faults aggregated by ess
+essVoltAlarmCnt              int              /errors/ess/essVoltAlarmCnt                                   N/A                                             # of volt alarms aggregated by ess
+essCurrFaultCnt              int              /errors/ess/essCurrFaultCnt                                   N/A                                             # of current faults aggregated by ess
+essCurrAlarmCnt              int              /errors/ess/essCurrAlarmCnt                                   N/A                                             # of current alarms aggregated by ess
+essCommsFaultCnt             int              /errors/ess/essCommsFaultCnt                                  N/A                                             # of comms faults aggregated by ess
+essCommsAlarmCnt             int              /errors/ess/essCommsAlarmCnt                                  N/A                                             # of comms alarms aggregated by ess
+essHeartbeatFaultCnt         int              /errors/ess/essHeartbeatFaultCnt                              N/A                                             # of heartbeat faults aggregated by ess
+essHeartbeatAlarmCnt         int              /errors/ess/essHeartbeatAlarmCnt                              N/A                                             # of heartbeat alarms aggregated by ess
+essTimestampFaultCnt         int              /errors/ess/essTimestampFaultCnt                              N/A                                             # of timestamp faults aggregated by ess
+essTimestampAlarmCnt         int              /errors/ess/essTimestampAlarmCnt                              N/A                                             # of timestamp alarms aggregated by ess
+essBMSStatusFaultCnt         int              /errors/ess/essBMSStatusFaultCnt                              N/A                                             # of bms status faults aggregated by ess
+essBMSStatusAlarmCnt         int              /errors/ess/essBMSStatusAlarmCnt                              N/A                                             # of bms status alarms aggregated by ess
+essPCSStatusFaultCnt         int              /errors/ess/essPCSStatusFaultCnt                              N/A                                             # of pcs status faults aggregated by ess
+essPCSStatusAlarmCnt         int              /errors/ess/essPCSStatusAlarmCnt                              N/A                                             # of pcs status alarms aggregated by ess
+
+
+
+Monitor Limits:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Enable                       bool             /params/[pcs | bms | sbmu]/[var name]_Enable                  N/A                                                            If true, check limits. If false, do not check limits. Note: This is an asset param
+EnableMaxValCheck            bool             /params/[pcs | bms | sbmu]/[var name]_EnableMaxValCheck       N/A                                                            If true, check for limit values over the threshold and under the reset value. If false, do not check. Note: This is an asset param
+EnableMinValCheck            bool             /params/[pcs | bms | sbmu]/[var name]_EnableMinValCheck       N/A                                                            If true, check for limit values under the threshold and over the reset value. If false, do not check. Note: This is an asset param
+ThresholdValue               double           /params/[pcs | bms | sbmu]/[var name]_ThresholdValue          N/A                                                            The threshold value to monitor. If over/under this value after alarm/fault time, send alarm/fault and reset recovery time. Note: This is an asset param
+ResetValue                   double           /params/[pcs | bms | sbmu]/[var name]_ResetValue              N/A                                                            The reset value to monitor. If over/under this value after recovery time, reset fault/alarm time. Note: This is an asset param 
+AlarmTimeout                 double           /params/[pcs | bms | sbmu]/[var name]_AlarmTimeout            N/A                                                            The alarm time defined in config. Note: This is an asset param
+FaultTimeout                 double           /params/[pcs | bms | sbmu]/[var name]_FaultTimeout            N/A                                                            The fault time defined in config. Note: This is an asset param
+RecoverTimeout               double           /params/[pcs | bms | sbmu]/[var name]_RecoverTimeout          N/A                                                            The recovery time defined in config. Note: This is an asset param
+essFaultCnt                  int              /status/ess/[var name]_essFaultCnt                            N/A                                                            The number of [var name] faults aggregated by ess
+essAlarmCnt                  int              /status/ess/[var name]_essAlarmCnt                            N/A                                                            The number of [var name] alarms aggregated by ess
+FaultCnt                     int              /status/[pcs | bms | sbmu]/[var name]_FaultCnt                N/A                                                            The number of [var name] faults found for [pcs, bms, sbmu]
+AlarmCnt                     int              /status/[pcs | bms | sbmu]/[var name]_AlarmCnt                N/A                                                            The number of [var name] alarms found for [pcs, bms, sbmu]
+AlarmTime                    double           /status/[pcs | bms | sbmu]/[var name]                         N/A                                                            The amount of time left before raising an alarm. Note: This is an asset param
+FaultTime                    double           /status/[pcs | bms | sbmu]/[var name]                         N/A                                                            The amount of time left before raising a fault. Note: This is an asset param
+RecoverTime                  double           /status/[pcs | bms | sbmu]/[var name]                         N/A                                                            The amount of time left before recovery. Note: This is an asset param
+maxSeen                      bool             /status/[pcs | bms | sbmu]/[var name]                         N/A                                                            Indicates whether value that is over the threshold has been seen or not. Note: This is an asset param
+minSeen                      bool             /status/[pcs | bms | sbmu]/[var name]                         N/A                                                            Indicates whether value that is under the threshold has been seen or not. Note: This is an asset param
+MaxCellTemperature           double           /status/bms/MaxCellTemperature                                /components/catl_mbmu_control_r:mbmu_max_cell_temperature      The bms max cell temperature to monitor. A var name
+MinCellTemperature           double           /status/bms/MinCellTemperature                                /components/catl_mbmu_control_r:mbmu_min_cell_temperature      The bms min cell temperature to monitor. A var name
+MaxCellVolt                  double           /status/bms/MaxCellVolt                                       /components/catl_mbmu_control_r:mbmu_max_cell_voltage          The bms max cell voltage to monitor. A var name
+MinCellVolt                  double           /status/bms/MinCellVolt                                       /components/catl_mbmu_control_r:mbmu_min_cell_voltage          The bms min cell voltage to monitor. A var name
+SOC                          double           /status/bms/SOC                                               /components/catl_mbmu_control_r:mbmu_soc                       The bms state-of-charge (SOC) to monitor. A var name
+SOH                          double           /status/bms/SOH                                               /components/catl_mbmu_control_r:mbmu_soh                       The bms state-of-health (SOH) to monitor. A var name
+
+
+
+Shutdown Sequence:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SystemState                  char*            /status/ess/SystemState                                       N/A                                                            The state the system (ess) is currently in
+PCSSystemState               char*            /status/pcs/PCSSystemState                                    N/A                                                            The state the PCS is currently in
+BMSSystemState               char*            /status/bms/BMSSystemState                                    N/A                                                            The state the BMS is currently in       
+SystemStateStep              char*            /status/ess/SystemStateStep                                   N/A                                                            The next state the system (ess) can transition into
+PCSSystemStateStep           char*            /status/pcs/PCSSystemStateStep                                N/A                                                            The next state the PCS can transition into
+BMSSystemStateStep           char*            /status/bms/BMSSystemStateStep                                N/A                                                            The next state the BMS can transition into                      
+CurrentSetpoint              double           /status/ess/CurrentSetpoint                                   N/A (need to locate modbus reg)                                The current setpoint (+ = discharge, - = charge). Not used at the moment
+PowerSetpointDeadband        dounle           /config/ess/PowerSetpointDeadband                             N/A                                                            The power setpoint deadband
+PCSActivePower               double           /status/pcs/PCSActivePower                                    N/A (need to locate modbus reg)                                The active power setpoint for PCS (read from modbus)
+PCSReactivePower             double           /status/pcs/PCSReactivePower                                  N/A (need to locate modbus reg)                                The reactive power setpoint for PCS (read from modbus) 
+PCSKeyActivePowerSetpoint    double           /config/ess/PCSKeyActivePowerSetpoint                         N/A (need to locate modbus reg)                                The active power setpoint key command for PCS
+PCSKeyReactivePowerSetpoint  double           /config/ess/PCSKeyReactivePowerSetpoint                       N/A (need to locate modbus reg)                                The reactive power setpoint key command for PCS
+ShutdownTime                 double           /status/ess/ShutdownTime                                      N/A                                                            The amount of time the system (ess) took to shutdown
+PCSShutdownTime              double           /status/pcs/PCSShutdownTime                                   N/A                                                            The amount of time the PCS took to shutdown
+BMSShutdownTime              double           /status/bms/BMSShutdownTime                                   N/A                                                            The amount of time the BMS took to shutdown
+PCSKeyCmdTime                double           /config/pcs/PCSKeyCmdTime                                     N/A                                                            The amount of time the PCS has left before sending another key command
+BMSKeyCmdTime                double           /config/bms/BMSKeyCmdTime                                     N/A                                                            The amount of time the BMS has left before sending another key command
+maxPCSShutdownTime           double           /config/ess/maxPCSShutdownTime                                N/A                                                            The amount of time allowed for the PCS to shutdown
+maxBMSShutdownTime           double           /config/ess/maxBMSShutdownTime                                N/A                                                            The amount of time allowed for the BMS to shutdown
+PCSShutdownStart             double           /status/pcs/PCSShutdownStart                                  N/A                                                            The time the PCS began to shutdown
+BMSShutdownStart             double           /status/bms/BMSShutdownStart                                  N/A                                                            The time the BMS began to shutdown                    
+EStop                        bool             /status/ess/EStop                                             N/A                                                            Emergency stop command
+UiShutdown                   bool             /status/ess/UiShutdown                                        N/A                                                            Shutdown command from user interface
+SMShutdown                   bool             /status/ess/SMShutdown                                        N/A                                                            Shutdown command from Site Controller
+FaultShutdown                bool             /status/ess/FaultShutdown                                     N/A                                                            Shutdown command due to fault condition
+ShutdownCmd                  bool             /status/ess/ShutdownCmd                                       N/A                                                            Initiate shutdown process if we get an e-stop or shutdown commands from UI, SM, or fault
+EMMUFaulted                  bool             /status/ess/EMMUFaulted                                       N/A                                                            Indicates whether EMMU is faulted or not
+BMSFaulted                   bool             /status/ess/BMSFaulted                                        N/A                                                            Indicates whether BMS is faulted or not
+PCSFaulted                   bool             /status/ess/PCSFaulted                                        N/A                                                            Indicates whether PCS is faulted or not
+EMUFaulted                   bool             /status/ess/EMUFaulted                                        N/A                                                            Indicates whether EMU is faulted or not 
+ShutdownRequested            bool             /status/ess/ShutdownRequested                                 N/A                                                            Indicates we have responded to the latest shutdown request
+ShutdownCompleted            bool             /status/ess/ShutdownCompleted                                 N/A                                                            Indicates we have completed the latest shutdown request
+PCSShutdownForced            bool             /status/ess/PCSShutdownForced                                 N/A                                                            Indicates we have forced the PCS to shutdown. It did not respond to the current shutdown request
+BMSShutdownForced            bool             /status/ess/BMSShutdownForced                                 N/A                                                            Indicates we have forced the BMS to shutdown. It did not respond to the current shutdown request
+PCSShutdown                  bool             /status/ess/PCSShutdown                                       N/A                                                            PCS shutdown has been completed
+BMSShutdown                  bool             /status/ess/BMSShutdown                                       N/A                                                            BMS shutdown has been completed
+PCSStatusResp                int              /status/pcs/PCSStatusResp                                     /components/pcs_status/pcs_current_status                      The current PCS status
+BMSStatusResp                int              /status/bms/BMSStatusResp                                     /components/catl_mbmu_stat_r/bms_status                        The current BMS status
+PCSKeyStop                   int              /status/pcs/PCSKeyStop                                        /components/pcs_status/pcs_stop                                The keystop command for PCS
+PCSKeyStopSent               int              /status/pcs/PCSKeyStopSent                                    N/A                                                            Indicates whether the PCS keystop command has been sent or not
+BMSKeyCmdSent                int              /status/bms/BMSKeyCmdSent                                     N/A                                                            Indicates whether the BMS key command has been sent or not                      
+PCSKeyCmdTries               int              /status/pcs/PCSKeyCmdTries                                    N/A                                                            The number of times to send key command for PCS 
+BMSKeyCmdTries               int              /status/bms/BMSKeyCmdTries                                    N/A                                                            The number of times to send key command for BMS                       
+PCSKeyCmd                    int              /status/pcs/PCSKeyCmd                                         N/A                                                            The key command for PCS (not used... may be deprecated)
+BMSKeyCmd                    int              /status/bms/BMSKeyCmd                                         /components/catl_ems_bms_1_rw/ems_cmd                          The key command for the BMS                   
+BMSnumFaults                 int              /status/bms/BMSnumFaults                                      N/A                                                            The number of BMSs that have been faulted
+BMSnumPresent                int              /status/bms/BMSnumPresent                                     N/A                                                            The number of BMSs that are currently running
+
+
+
+Startup Sequence:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SystemState                  char*            /status/ess/SystemState                                       N/A                                                            The state the system (ess) is currently in
+PCSSystemState               char*            /status/pcs/PCSSystemState                                    N/A                                                            The state the PCS is currently in
+BMSSystemState               char*            /status/bms/BMSSystemState                                    N/A                                                            The state the BMS is currently in    
+SystemStateStep              char*            /status/ess/SystemStateStep                                   N/A                                                            The next state the system (ess) can transition into
+PCSSystemStateStep           char*            /status/pcs/PCSSystemStateStep                                N/A                                                            The next state the PCS can transition into
+BMSSystemStateStep           char*            /status/bms/BMSSystemStateStep                                N/A                                                            The next state the BMS can transition into                      
+CurrentSetpoint              double           /status/ess/CurrentSetpoint                                   N/A (need to locate modbus reg)                                The current setpoint (+ = discharge, - = charge). Not used at the moment
+PowerSetpointDeadband        dounle           /config/ess/PowerSetpointDeadband                             N/A                                                            The power setpoint deadband
+PCSActivePower               double           /status/pcs/PCSActivePower                                    N/A (need to locate modbus reg)                                The active power setpoint for PCS (read from modbus)
+PCSReactivePower             double           /status/pcs/PCSReactivePower                                  N/A (need to locate modbus reg)                                The reactive power setpoint for PCS (read from modbus) 
+PCSKeyActivePowerSetpoint    double           /config/ess/PCSKeyActivePowerSetpoint                         N/A (need to locate modbus reg)                                The active power setpoint key command for PCS
+PCSKeyReactivePowerSetpoint  double           /config/ess/PCSKeyReactivePowerSetpoint                       N/A (need to locate modbus reg)                                The reactive power setpoint key command for PCS
+StartupTime                  double           /status/ess/StartupTime                                       N/A                                                            The amount of time the system (ess) took to startup
+PCSStartupTime               double           /status/pcs/PCSStartupTime                                    N/A                                                            The amount of time the PCS took to startup
+BMSStartupTime               double           /status/bms/BMSStartupTime                                    N/A                                                            The amount of time the BMS took to startup
+PCSKeyCmdTime                double           /config/pcs/PCSKeyCmdTime                                     N/A                                                            The amount of time the PCS has left before sending another key command
+BMSKeyCmdTime                double           /config/bms/BMSKeyCmdTime                                     N/A                                                            The amount of time the BMS has left before sending another key command
+maxPCSStartupTime            double           /config/ess/maxPCSStartupTime                                 N/A                                                            The amount of time allowed for the PCS to startup
+maxBMSStartupTime            double           /config/ess/maxBMSStartupTime                                 N/A                                                            The amount of time allowed for the BMS to startup
+PCSStartupStart              double           /status/pcs/PCSStartupStart                                   N/A                                                            The time the PCS began to startup
+BMSStartupStart              double           /status/bms/BMSStartupStart                                   N/A                                                            The time the BMS began to startup
+Estart                       bool             /status/ess/Estart                                            N/A                                                            Emergency start command (is this needed?)
+UiStartup                    bool             /status/ess/UiStartup                                         N/A                                                            Startup command from user interface
+SMStartup                    bool             /status/ess/SMStartup                                         N/A                                                            Startup command from Site Controller
+FaultStartup                 bool             /status/ess/FaultStartup                                      N/A                                                            Startup command due to fault condition
+StartupCmd                   bool             /status/ess/StartupCmd                                        N/A                                                            Initiate startup process if we get an e-start(?) or startup commands from UI, SM, or fault
+EMMUFaulted                  bool             /status/ess/EMMUFaulted                                       N/A                                                            Indicates whether EMMU is faulted or not
+BMSFaulted                   bool             /status/ess/BMSFaulted                                        N/A                                                            Indicates whether BMS is faulted or not
+PCSFaulted                   bool             /status/ess/PCSFaulted                                        N/A                                                            Indicates whether PCS is faulted or not
+EMUFaulted                   bool             /status/ess/EMUFaulted                                        N/A                                                            Indicates whether EMU is faulted or not               
+StartupRequested             bool             /status/ess/StartupRequested                                  N/A                                                            Indicates we have responded to the latest startup request
+StartupCompleted             bool             /status/ess/StartupCompleted                                  N/A                                                            Indicates we have completed the latest startup request
+PCSStartupForced             bool             /status/ess/PCSStartupForced                                  N/A                                                            Indicates we have forced the PCS to startup. It did not respond to the current startup request
+BMSStartupForced             bool             /status/ess/BMSStartupForced                                  N/A                                                            Indicates we have forced the BMS to startup. It did not respond to the current startup request
+PCSStartup                   bool             /status/ess/PCSStartup                                        N/A                                                            PCS startup has been completed
+BMSStartup                   bool             /status/ess/BMSStartup                                        N/A                                                            BMS startup has been completed
+PCSStatusResp                int              /status/pcs/PCSStatusResp                                     /components/pcs_status/pcs_current_status                      The current PCS status
+BMSStatusResp                int              /status/bms/BMSStatusResp                                     /components/catl_bms_1_ems_r/bms_poweron                       The current BMS status
+PCSKeyStart                  int              /status/pcs/PCSKeyStart                                       /components/pcs_status/pcs_start                               The keystart command for PCS
+PCSKeyStartSent              int              /status/pcs/PCSKeyStartSent                                   N/A                                                            Indicates whether the PCS keystart command has been sent or not
+BMSKeyCmdSent                int              /status/bms/BMSKeyCmdSent                                     N/A                                                            Indicates whether the BMS key command has been sent or not
+PCSKeyCmdTries               int              /status/pcs/PCSKeyCmdTries                                    N/A                                                            The number of times to send key command for PCS 
+BMSKeyCmdTries               int              /status/bms/BMSKeyCmdTries                                    N/A                                                            The number of times to send key command for BMS
+PCSKeyCmd                    int              /status/pcs/PCSKeyCmd                                         N/A                                                            The key command for PCS (not used... may be deprecated)
+BMSKeyCmd                    int              /status/bms/BMSKeyCmd                                         /components/catl_ems_bms_1_rw/ems_cmd                          The key command for the BMS                   
+BMSnumFaults                 int              /status/bms/BMSnumFaults                                      N/A                                                            The number of BMSs that have been faulted
+BMSnumPresent                int              /status/bms/BMSnumPresent                                     N/A                                                            The number of BMSs that are currently running
+
+
+
+Check Comms:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Timestamp                    double           /status/[ess | pcs | bms | sbmu]/Timestamp             (bms)  /components/catl_bms_1_ems_r:bms_heartbeat                     The timestamp for [ess, pcs, bms, sbmu_id, etc.]
+                                                                                                     (pcs)  /components/pcs_whatever/Timestamp
+essCommsFaultCnt             int              /errors/ess/essCommsFaultCnt                                  N/A                                                            The number of faults associated with the ess comms
+essCommsAlarmCnt             int              /errors/ess/essCommsAlarmCnt                                  N/A                                                            The number of alarms associated with the ess comms
+essCommsInit                 int              /status/ess/essCommsInit                                      N/A                                                            The init comms state for the ess
+essCommsFaultTimeout         double           /config/ess/essCommsFaultTimeout                              N/A                                                            The fault time allowed for ess comms. Defined in config
+essCommsAlarmTimeout         double           /config/ess/essCommsAlarmTimeout                              N/A                                                            The alarm time allowed for ess comms. Defined in config
+essCommsResetTimeout         double           /config/ess/essCommsResetTimeout                              N/A                                                            The recovery time allowed for ess comms. Defined in config
+amCommsFaultCnt              int              /errors/[pcs | bms]/CommsFaultCnt                             N/A                                                            The number of comms faults found for [pcs, bms]
+amCommsAlarmCnt              int              /errors/[pcs | bms]/CommsAlarmCnt                             N/A                                                            The number of comms alarms found for [pcs, bms]
+amCommsInit                  int              /status/[pcs | bms]/CommsInit                                 N/A                                                            The init comms state for [pcs, bms]         
+CommsFaultCnt                int              /errors/[ess | pcs | bms | sbmu]/CommsFaultCnt                N/A                                                            The number of comms faults found for [ess, pcs, bms, sbmu_id]
+CommsAlarmCnt                int              /errors/[ess | pcs | bms | sbmu]/CommsAlarmCnt                N/A                                                            The number of comms alarms found for [ess, pcs, bms, sbmu_id]                    
+CommsInit                    int              /status/[ess | pcs | bms | sbmu]/CommsInit                    N/A                                                            The init comms state for [ess, pcs, bms, sbmu_id]
+CommsState                   char*            /status/[ess | pcs | bms | sbmu]/CommsState                   N/A                                                            The string representation of the current comms state
+BypassComms                  bool             /config/[ess | pcs | bms | sbmu]/BypassComms                  N/A                                                            Bring comms out of init state 
+AssetState                   int              /status/[ess | pcs | bms | sbmu]/AssetState                   N/A                                                            The state the asset is currently in
+CommsStateNum                int              /status/[ess | pcs | bms | sbmu]/CommsStateNum                N/A                                                            The integer representation of the current comms state
+CommsOK                      bool             /status/[ess | bms | pcs]/CommsOK                             N/A                                                            Indicates whether comms state is OK for [ess, pcs, bms, sbmu_id]. 
+                                                                                                                                                                           TODO: need to add this variable                                              
+
+
+
+Check HeartBeat:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Heartbeat                    int              /status/[ess | pcs | bms | sbmu]/Heartbeat             (bms)  /components/catl_bms_1_ems_r:bms_heartbeat                     The heartbeat for [ess, pcs, bms, sbmu_id, etc.] 
+                                                                                                     (pcs)  TBD
+essHeartbeatFaultCnt         int              /errors/ess/essHeartbeatFaultCnt                              N/A                                                            The heartbeat faults ssociated with ess
+essHeartbeatAlarmCnt         int              /errors/ess/essHeartbeatAlarmCnt                              N/A                                                            The heartbeat alarms associated with ess
+essHeartbeatInit             int              /status/ess/essHeartbeatInit                                  N/A                                                            The init heartbeat state for the ess
+essHeartbeatFaultTimeout     double           /config/ess/essHeartbeatFaultTimeout                          N/A                                                            The fault time allowed for ess heartbeat. Defined in config
+essHeartbeatAlarmTimeout     double           /config/ess/essHeartbeatAlarmTimeout                          N/A                                                            The alarm time allowed for ess heartbeat. Defined in config
+essHeartbeatResetTimeout     double           /config/ess/essHeartbeatResetTimeout                          N/A                                                            The recovery time allowed for ess heartbeat. Defined in config
+essHeartbeatHoldTimeout      double           /config/ess/essHeartbeatHoldTimeout                           N/A                                                            The hold time allowed for ess heartbeat. Defined in config
+amHeartbeatFaultCnt          int              /errors/[pcs | bms]/amHeartbeatFaultCnt                       N/A                                                            The number of heartbeat faults found for [pcs, bms]
+amHeartbeatAlarmCnt          int              /errors/[pcs | bms]/amHeartbeatAlarmCnt                       N/A                                                            The number of heartbeat alarms found for [pcs, bms]
+amHeartbeatInit              int              /status/[pcs | bms]/amHeartbeatInit                           N/A                                                            The init heartbeat state for [pcs, bms]
+HeartbeatFaultCnt            int              /errors/[ess | pcs | bms | sbmu]/HeartbeatFaultCnt            N/A                                                            The number of heartbeat faults found for [ess, pcs, bms, sbmu_id]
+HeartbeatAlarmCnt            int              /errors/[ess | pcs | bms | sbmu]/HeartbeatAlarmCnt            N/A                                                            The number of heartbeat alarms found for [ess, pcs, bms, sbmu_id]
+HeartbeatInit                int              /status/[ess | pcs | bms | sbmu]/HeartbeatInit                N/A                                                            The inti heartbeat state for [ess, pcs, bms, sbmu_id]
+HeartbeatState               char*            /status/[ess | pcs | bms | sbmu]/HeartbeatState               N/A                                                            The string representation of the current heartbeat state
+BypassHeartbeat              bool             /config/[ess | pcs | bms | sbmu]/BypassHeartbeat              N/A                                                            Bring heartbeat out of init state
+AssetState                   int              /status/[ess | pcs | bms | sbmu]/AssetState                   N/A                                                            The state the asset is currently in
+HeartbeatStateNum            int              /status/[ess | pcs | bms | sbmu]/HeartbeatStateNum            N/A                                                            The integer representation of the current heartbeat state
+HeartbeatOK                  bool             /status/[bms | pcs]/HeartbeatOK                               N/A                                                            Indicates whether heartbeat state is OK for [pcs, bms]
+                                                                                                                                                                           TODO: need to add this variable
+
+
+
+Check Timestamp:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Timestamp                    double           /status/[ess | pcs | bms | sbmu]/Timestamp             (bms)  /components/catl_bms_1_ems_r:Timestamp                         The timestamp for [ess, pcs, bms, sbmu_id, etc.]
+
+essTimestampFaultCnt         int              /errors/ess/essTimestampFaultCnt                              N/A                                                            The number of faults associated with the ess timestamp
+essTimestampAlarmCnt         int              /errors/ess/essTimestampAlarmCnt                              N/A                                                            The number of alarms associated with the ess timestamp
+essTimestampInit             int              /status/ess/essTimestampInit                                  N/A                                                            The init timestamp state for the ess
+essTimestampFaultTimeout     double           /config/ess/essTimestampFaultTimeout                          N/A                                                            The fault time allowed for ess timestamp. Defined in config
+essTimestampAlarmTimeout     double           /config/ess/essTimestampAlarmTimeout                          N/A                                                            The alarm time allowed for ess timestamp. Defined in config
+essTimestampResetTimeout     double           /config/ess/essTimestampResetTimeout                          N/A                                                            The recovery time allowed for ess timestamp. Defined in config
+amTimestampFaultCnt          int              /errors/[pcs | bms]/TimestampFaultCnt                         N/A                                                            The number of timestamp faults found for [pcs, bms]
+amTimestampAlarmCnt          int              /errors/[pcs | bms]/TimestampAlarmCnt                         N/A                                                            The number of timestamp alarms found for [pcs, bms]
+amTimestampInit              int              /status/[pcs | bms]/TimestampInit                             N/A                                                            The init timestamp state for [pcs, bms]         
+TimestampFaultCnt            int              /errors/[ess | pcs | bms | sbmu]/TimestampFaultCnt            N/A                                                            The number of timestamp faults found for [ess, pcs, bms, sbmu_id]
+TimestampAlarmCnt            int              /errors/[ess | pcs | bms | sbmu]/TimestampAlarmCnt            N/A                                                            The number of timestamp alarms found for [ess, pcs, bms, sbmu_id]                    
+TimestampInit                int              /status/[ess | pcs | bms | sbmu]/TimestampInit                N/A                                                            The init timestamp state for [ess, pcs, bms, sbmu_id]
+TimestampState               char*            /status/[ess | pcs | bms | sbmu]/TimestampState               N/A                                                            The string representation of the current timestamp state
+BypassTimestamp              bool             /config/[ess | pcs | bms | sbmu]/BypassTimestamp              N/A                                                            Bring timestamp out of init state 
+AssetState                   int              /status/[ess | pcs | bms | sbmu]/AssetState                   N/A                                                            The state the asset is currently in
+TimestampStateNum            int              /status/[ess | pcs | bms | sbmu]/TimestampStateNum            N/A                                                            The integer representation of the current timestamp state
+TimestampOK                  bool             /status/[bms | pcs]/TimestampOK                               N/A                                                            Indicates whether timestamp state is OK for [ess, pcs, bms, sbmu_id]. 
+                                                                                                                                                                           TODO: need to add this variable                                              
+
+
+
+Check ESS Status:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ESSStatus                    int              /status/ess/ESSStatus                                         N/A                                                            The current ESS status
+PCSStatus                    int              /status/pcs/PCSStatus                                         /components/pcs_status/pcs_current_status                      The current PCS status
+BMSStatus                    int              /status/bms/BMSStatus                                         /components/catl_bms_1_ems_r/bms_status                        The current BMS system status
+PCSStatusState               char*            /status/pcs/PCSStatusState                                    N/A                                                            The string representation of the current pcs status state
+BMSStatusState               char*            /status/bms/BMSStatusState                                    N/A                                                            The string representation of the current bms status state
+essPCSStatusFaultCnt         int              /errors/ess/essPCSStatusFaultCnt                              N/A                                                            The number of pcs status faults ess will keep track of
+essPCSStatusAlarmCnt         int              /errors/ess/essPCSStatusAlarmCnt                              N/A                                                            The number of bms status alarms ess will keep track of
+essPCSStatusInit             int              /status/ess/essPCSStatusInit                                  N/A                                                            The init state of the pcs status the ess will keep track of
+essBMSStatusFaultCnt         int              /errors/ess/essBMSStatusFaultCnt                              N/A                                                            The number of bms status faults ess will keep track of
+essBMSStatusAlarmCnt         int              /errors/ess/essBMSStatusAlarmCnt                              N/A                                                            The number of bms status alarms ess will keep track of
+essBMSStatusInit             int              /status/ess/essBMSStatusInit                                  N/A                                                            The init state of the bms status the ess will keep track of
+
+
+
+Check PCS Status:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+PCSStatus                    int              /status/pcs/PCSStatus                                         /components/pcs_status/pcs_current_status                      The current PCS status
+PCSExpStatus                 int              /status/pcs/PCSExpStatus                                      N/A                                                            The PCS status we expect to read
+essPCSStatusFaultCnt         int              /errors/ess/essPCSStatusFaultCnt                              N/A                                                            The number of pcs status faults ess will keep track of
+essPCSStatusAlarmCnt         int              /errors/ess/essPCSStatusAlarmCnt                              N/A                                                            The number of pcs status alarms ess will keep track of
+essPCSStatusInit             int              /status/ess/essPCSStatusInit                                  N/A                                                            The init state of the pcs status the ess will keep track of
+essPCSStatusFaultTimeout     double           /config/ess/essPCSStatusFaultTimeout                          N/A                                                            The fault time allowed for pcs status. Defined in config
+essPCSStatusAlarmTimeout     double           /config/ess/essPCSStatusAlarmTimeout                          N/A                                                            The alarm time allowed for pcs status. Defined in config
+essPCSStatusResetTimeout     double           /config/ess/essPCSStatusResetTimeout                          N/A                                                            The recovery time allowed for pcs status. Defined in config
+PCSStatusFaultCnt            int              /errors/pcs/PCSStatusFaultCnt                                 N/A                                                            The number of pcs status faults for pcs
+PCSStatusAlarmCnt            int              /errors/pcs/PCSStatusAlarmCnt                                 N/A                                                            The number of pcs status alarms for pcs
+PCSStatusInit                int              /status/pcs/PCSStatusInit                                     N/A                                                            The init state of the pcs status that pcs will keep track of
+PCSStatusState               char*            /status/pcs/PCSStatusState                                    N/A                                                            The string representation of the current pcs status state
+BypassPCSStatus              bool             /config/pcs/BypassPCSStatus                                   N/A                                                            Bring pcs status out of init state
+AssetState                   int              /status/pcs/AssetState                                        N/A                                                            The state the asset is currently in
+PCSStatusStateNum            int              /status/pcs/PCSStatusStateNum                                 N/A                                                            The integer representation of the current pcs status state
+StatusOK                     bool             /status/pcs/StatusOK                                          N/A                                                            Indicates whether status state is OK for pcs
+                                                                                                                                                                           TODO: need to add this variable 
+
+
+
+Check BMS Status:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+BMSStatus                    int              /status/bms/BMSStatus                                         /components/catl_mbmu_stat_r/bms_status                        The current BMS system status
+BMSExpStatus                 int              /status/bms/BMSExpStatus                                      N/A                                                            The BMS status we expect to read
+essBMSStatusFaultCnt         int              /errors/ess/essBMSStatusFaultCnt                              N/A                                                            The number of bms status faults ess will keep track of
+essBMSStatusAlarmCnt         int              /errors/ess/essBMSStatusAlarmCnt                              N/A                                                            The number of bms status alarms ess will keep track of
+essBMSStatusInit             int              /status/ess/essBMSStatusInit                                  N/A                                                            The init state of the bms status the ess will keep track of
+essBMSStatusFaultTimeout     double           /config/ess/essBMSStatusFaultTimeout                          N/A                                                            The fault time allowed for bms status. Defined in config
+essBMSStatusAlarmTimeout     double           /config/ess/essBMSStatusAlarmTimeout                          N/A                                                            The alarm time allowed for bms status. Defined in config
+essBMSStatusResetTimeout     double           /config/ess/essBMSStatusResetTimeout                          N/A                                                            The recovery time allowed for bms status. Defined in config
+BMSStatusFaultCnt            int              /errors/bms/BMSStatusFaultCnt                                 N/A                                                            The number of bms status faults for bms
+BMSStatusAlarmCnt            int              /errors/bms/BMSStatusAlarmCnt                                 N/A                                                            The number of bms status alarms for bms
+BMSStatusInit                int              /status/bms/BMSStatusInit                                     N/A                                                            The init state of the bms status that bms will keep track of
+BMSStatusState               char*            /status/bms/BMSStatusState                                    N/A                                                            The string representation of the current bms status state
+BypassBMSStatus              bool             /config/bms/BypassBMSStatus                                   N/A                                                            Bring bms status out of init state
+AssetState                   int              /status/bms/AssetState                                        N/A                                                            The state the asset is currently in
+BMSStatusStateNum            int              /status/bms/BMSStatusStateNum                                 N/A                                                            The integer representation of the current bms status state
+StatusOK                     bool             /status/bms/StatusOK                                          N/A                                                            Indicates whether status state is OK for bms
+                                                                                                                                                                           TODO: need to add this variable   
+
+
+
+Reloads:
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CheckESSStatus               int              /reload/ess/CheckESSStatus                                    N/A                                                            The reload value for checking ess status
+CheckBMSStatus               int              /reload/bms/CheckBMSStatus                                    N/A                                                            The reload value for checking bms status
+CheckPCSStatus               int              /reload/pcs/CheckPCSStatus                                    N/A                                                            The reload value for checking pcs status
+CheckComms                   int              /reload/[ess | pcs | bms | sbmu]/CheckComms                   N/A                                                            The reload value for checking comms state
+CheckHeartbeat               int              /reload/[ess | pcs | bms | sbmu]/CheckHeartbeat               N/A                                                            The reload value for checking heartbeat
+CheckTimestamp               int              /reload/[ess | pcs | bms | sbmu]/CheckTimestamp               N/A                                                            The reload value for checking timestamp         
+
+
+
+Update System Time
+Name                         Type             URI                                                           Modbus URI                                                     Desc.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Year                         int              /status/[ess | pcs | bms]/Year                         (bms)  /components/catl_ems_bms_1_rw/ems_rtc_year                     The current year stored in the system
+                                                                                                     (pcs)  /components/general/year
+Month                        int              /status/[ess | pcs | bms]/Month                        (bms)  /components/catl_ems_bms_1_rw/ems_rtc_month                    The current month stored in the system
+                                                                                                     (pcs)  /components/general/month
+Day                          int              /status/[ess | pcs | bms]/Day                          (bms)  /components/catl_ems_bms_1_rw/ems_rtc_day                      The current day stored in the system
+                                                                                                     (pcs)  /components/general/day
+Hour                         int              /status/[ess | pcs | bms]/Hour                         (bms)  /components/catl_ems_bms_1_rw/ems_rtc_hour                     The current hour stored in the system
+                                                                                                     (pcs)  /components/general/hours
+Min                          int              /status/[ess | pcs | bms]/Min                          (bms)  /components/catl_ems_bms_1_rw/ems_rtc_minute                   The current minute stored in the system
+                                                                                                     (pcs)  /components/general/minutes
+Sec                          int              /status/[ess | pcs | bms]/Sec                          (bms)  /components/catl_ems_bms_1_rw/ems_rtc_second                   The current second stored in the system
+                                                                                                     (pcs)  /components/general/seconds
+
+
+
+Discussion:
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Operations:
+
+To come out of Init
+
+/status/ess/FimsOK      must be set
+/status/bms/CommsOK     must be set   // we can have smbu_x disabled up to max number allowed of disabled units 
+/status/pcs/CommsOK     must be set
+/status/bms/HBOK        must be set   // we can have smbu_x disabled up to max number allowed of disabled units 
+/status/pcs/HBOK        must be set
+/status/bms/StatusOK        must be set   // we can have smbu_x disabled up to max number allowed of disabled units 
+/status/pcs/StatusOK        must be set
+
+
+State enters Ready
+
+
+To Come out of Ready 
+// UI command to go  to Start details
+// start
+or
+// HybridOS command to Start details
+// (ctrlwrord1 etc)
+// both need Charge/Discharge current set   ( todo fill in assetVars and Modbus Vars )
+
+TODO What Faults cause Shtdown.... 
+etc ....
+
+
+CommsInit ess
+We'll accept local uiControls without ess CommsOK
+We will need CommsOK from bms or pcs to run some commands on those units  
+ess commands  are in ctrlwrd1 and crtlwd2   on off contactors etc just like twins with site controller
+uiControls are driven like  SiteController.
+
+CommsInit  bms 
+
+CommsInit pcs
+
+With both up we are ok to go
+with one or the other what can we do.
+Can we stiil send some commands.
+
+
+Monitoring 
+Monitor bms
+  state
+  soc 
+  soh
+
+Warnings plus Alarms.
+
+
+Monitor pcs
+  state
+  active/reactive charge 
+  soh
+
+Here are the bms stat_r regs 
+/components/catl_mbmu_stat_r | jq
+{
+  "bms_heartbeat": 10,  OK mapped
+  "bms_poweron": [
+    {
+      "value": 1,
+      "string": "Power on Ready"
+    }
+  ],
+  "bms_status": [  OK mapped
+    {
+      "value": 1,
+      "string": "Normal status"
+    }
+  ],
+  "num_hv_subsystem": 1,
+  "bms_remain_charge_energy": 1243,
+  "bms_remain_discharge_energy": 1156,
+  "bms_max_discharge_allowed": 1361,
+  "bms_max_charge_allowed": 789,
+  "bms_limit_charge_hv": 15656,
+  "bms_limit_discharge_hv": 10816,
+  "Timestamp": "12-16-2020 15:04:32.414271"
+}

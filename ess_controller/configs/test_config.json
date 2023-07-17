@@ -1,0 +1,94 @@
+
+{
+    "id": "ess_1",
+    "name": "BESS Inverter Block 01",
+    "nominal_voltage": 540.0,
+    "nominal_frequency": 60.0,
+    "rated_active_power": 2200.0,
+    "rated_apparent_power": 2200.0,
+    "priority": 1,
+    "start_timer": 50,
+    "cooldown_timer": 250,
+    "max_load_threshold": 200000,
+    "min_load_threshold": 1000,
+    "control_word_on": 1,
+    "control_word_off": 2,
+    "DC_contactor_open": 1,
+    "DC_contactor_closed": 2,
+    "DC_contactor_reset": 3,
+    "chg_soc_begin": 90.001,
+    "chg_soc_end": 101.5,
+    "dischg_soc_begin": 10.001,
+    "dischg_soc_end": -1.5,
+    "max_soc_raw": 99.5,
+    "min_soc_raw": 1.5,
+    "components":
+    [
+        {
+            "component_id": "sungrow_pcs_1a",
+            "variables":
+            {
+                "pcs_a_nominal_voltage_setting":
+                {
+                    "name": "PCS Nominal Voltage Setting",
+                    "register_id": "pcs_nominal_voltage_setting",
+                    "value": null,
+                    "scaler": 1,
+                    "unit": "V"
+                }
+            }
+        },
+        {
+            "component_id": "sungrow_pcs_1b",
+            "variables":
+            {
+                "pcs_b_nominal_voltage_setting":
+                {
+                    "name": "PCS Nominal Voltage Setting",
+                    "register_id": "pcs_nominal_voltage_setting",
+                    "value": null,
+                    "scaler": 1,
+                    "unit": "V"
+                }
+            }
+        },
+        {
+            "component_id": "sungrow_ess_1",
+            "variables":
+            {
+                "manual_mode":
+                {
+                    "name": "Manual Disable",
+                    "register_id": "manual_mode",
+                    "value": null,
+                    "scaler": null,
+                    "unit": null
+                },
+                "control_word_1":
+                {
+                    "name": "Control Word 1 (Start/Stop)",
+                    "register_id": "control_word_1",
+                    "value": null,
+                    "scaler": null,
+                    "unit": null
+                },
+                "control_word_2":
+                {
+                    "name": "Control Word 2 (DC Contactor)",
+                    "register_id": "control_word_2",
+                    "value": null,
+                    "scaler": null,
+                    "unit": null
+                },
+                "close_dc_contactors":
+                {
+                    "name": "Close DC Contactors",
+                    "register_id": "close_dc_contactors",
+                    "value": null,
+                    "scaler": null,
+                    "unit": null
+                }
+            }
+        }
+    ]
+}

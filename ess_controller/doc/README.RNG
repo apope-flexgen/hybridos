@@ -1,0 +1,19 @@
+P. Wilshire
+10/31/2021
+
+Install RNG and parts
+
+
+#include <random>
+#include "pcg_random.hpp"
+#include "pcg_extras.hpp"
+
+// installation, super easy
+// git clone git@github.com:imneme/pcg-cpp.git
+// cd pcg-cpp
+// make
+// make test
+// sudo make install
+// done
+
+

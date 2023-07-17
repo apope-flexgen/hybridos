@@ -44,26 +44,24 @@ CommandResultCallbackT fpsCommandCallback::Get()
         result.ForeachItem(print);
     };
 }
-// TODO send this to FPS_ERROR_PRINT
 CommandResultCallbackT fpsCommandCallback::Get(sysCfg* _sysdb)
 {
-    //sysdb = _sysdb;
     sysCfg * sys = _sysdb;
     return [sys](const ICommandTaskResult& result) -> void {
         if(sys->debug||((int)result.summary != 0 ))
         {
-            //if(sys->last_result != (int)(result.summary))
+            if(sys->debug>0)
             {
-                if(1)std::cout << "Received command result: summary ["<<int(result.summary)<<"]: " 
+                    std::cout << "Received command result: summary ["<<int(result.summary)<<"]: " 
                                << TaskCompletionSpec::to_human_string(result.summary) << std::endl;
             }
         }
         sys->last_result = (int)(result.summary);
 
         auto print = [sys](const CommandPointResult& res) {
-            if(sys->debug || (res.state != CommandPointState::SUCCESS ))
+            if(sys->debug> 1) // || (res.state != CommandPointState::SUCCESS ))
             {
-                //if(sys->last_res !=  (int)res.state)
+                if(sys->last_res !=  (int)res.state)
                 { 
                     if (1)std::cout  << "Func -:"<<__func__
                         << "Header: " << res.headerIndex << " Index: " << res.index

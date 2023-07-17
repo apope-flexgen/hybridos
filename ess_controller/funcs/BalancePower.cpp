@@ -100,18 +100,18 @@ int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, a
 
     if(!av)
     {
-        if(debug)FPS_ERROR_PRINT("[{}] av is null. Terminating voltage balancing", __func__);
+        if(debug)FPS_ERROR_PRINT("[%s] av is null. Terminating voltage balancing", __func__);
         return -1;
     }
     else if(!av->am && !error)
     {
-        if(debug)FPS_ERROR_PRINT("[{}] am is null. Terminating voltage balancing", __func__);
+        if(debug)FPS_ERROR_PRINT("[%s] am is null. Terminating voltage balancing", __func__);
         return -1;
     }
 	VarMapUtils* vm = av->am->vm;
     if(!vm && !error)
     {
-        if(debug)FPS_ERROR_PRINT("[{}] Error accessing VarMapUtils. Terminating voltage balancing", __func__);
+        if(debug)FPS_ERROR_PRINT("[%s] Error accessing VarMapUtils. Terminating voltage balancing", __func__);
         return -1;
     }
 

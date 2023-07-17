@@ -1,0 +1,18 @@
+export const EventsDescriptions = {
+    startTime: 'Start time of date range, query will return events with timestamps after this time',
+    endTime: 'End time of date range, query will return events with timestamps before this time',
+    source: 'Source filter, query will return events that come from this source',
+    severity: 'Severities filter, query will return events with the listed serverities',
+    search: 'Search term, query will return events with this search term in their message field',
+    limit: 'The maximum number of event records the query will return,',
+    page: 'The desired page in the paginated result set',
+    order: 'Order used for sorting',
+    orderBy: 'Which field to order by when sorting',
+    count: 'Count of total events matching filters',
+    data: 'Events to display on page',
+    eventId: 'ID of particular event',
+    eventSeverity: 'Severity of particular event, typically Alarm, Fault, Info, or Status',
+    eventSource: 'Source where particular event originated',
+    eventMessage: 'Message included with particular event',
+    timestamp: 'Timestamp of when a particular event occured'
+}

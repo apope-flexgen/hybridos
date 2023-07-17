@@ -1,0 +1,58 @@
+ShutDown Sequence
+
+         * @brief Proper shutDownSystem sequence, what the final produce will look like:
+         *
+         * This function will be called by (ESS Controller - where this function is located under) on the following conditions:
+         *     1) eSTOP from ANYWHERE!
+         *     2) stop command from Site_Controller
+         *     3) Internal fault (ANY fault), shut down EVERYTHING! (a "fault stop")
+         *     4) Through the User Interface (press a button!) - Web UI
+         *     ... possibly more? (don't know yet)
+         *
+         * This function will consist of the following sequence (run by ESS controller)
+         *     1) Send to PCS_Manager the shutDownPCS's command 
+                        Check PCS STATE if already off just bypass
+                        Check ActivePOwerSetpoint ReactivePowerSetPoint
+                           Set Reference to 0 if not zero
+                           Wait up to N seconds for ActivePowerSetPoint && ReactivePowerSetPoint within zero deadband.
+                          Send PCS Shutdown command
+                             Wait for response  ( for xxx Seconds)
+                                (to do try  5 times) 
+                             Log Fault if this fails
+                             LOg Power off Fault 
+                                 Log System Fault etc
+
+         *     2) Wait for PCS_Manager to respond (get ok that  PCS is shutdown)
+         *
+         *     3) Send to BMS_Manager the shutDownBMS's command
+                     Check BMS Status fault if needed
+                     Bypass if disabled
+                     Send Power off command
+                     Wait for response ( 5 times , xxx timeout)
+
+         *     4) Wait for BMS_Manager to respond (get ok that all BMS's are shutdown)
+         *     ... add other system as needed
+         *     General form:
+
+         *         - Send shutDownAsset's to their manager
+         *         - Wait for response before proceeding
+         *
+         * NOTE: Whenever we say "wait" we need a "what-if" and a "duration - for how long?"
+         * CLARIFICATION: What do we do when something we tell to shut down doesn't?
+         * OPTIONS:
+         *      1) Set PCS_Manager's [ActivePowerSetPoint && ReactivePowerSetPoint] to 0 - not allow to do anything!
+         *      2) retry 5 times (retry "x" times, variable from config)
+         *      3) issue alarms
+         *      4) bypass wait and move on. These are our "what-ifs"
+         * EMERGENCYACTIONS: (Do if all else fails?)
+         *
+         *      1) Track PCS_Manager's [Status's] - for all PCS's
+         *      2) IMPORTANT: PCS_Managers are responsible for opening/closing DC Contactors, ESS Controller has no control.
+         *
+         * STATECOMMANDS:
+         *      1) We DO NOT manually control each hardware piece, we only send it a single command to shut it down.
+         *          1a) "CATL" is our main battery vendor. "Power electronics" is our main PCS vendor.
+         *      2) NEED TO GET particular asset status's
+         *          2a)
+         *
+         * SUGGESTIONS: (For discussion with Ben Vinay )

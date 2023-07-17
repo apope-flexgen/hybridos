@@ -1,0 +1,114 @@
+{
+	"/assets/ess":	{
+		"bms":	{
+			"value":	"configs/bms_manager.json"
+		},
+		"drc":	{
+			"value":	"configs/drc_manager.json"
+		},
+		"pcs":	{
+			"value":	"configs/pcs_manager.json"
+		}
+	},
+	"/controls/ess":	{
+		"ReactivePowerCmd":	{
+			"value":	0
+		},
+		"ReactivePowerSetpoint":	{
+			"value":	0
+		}
+	},
+	"/links/ess":	{
+		"AcContactor":	{
+			"value":	"/status/ess:AcContactor"
+		},
+		"AcContactorCloseCmd":	{
+			"value":	"/controls/ess:AcContactorCloseCmd"
+		},
+		"AcContactorOpenCmd":	{
+			"value":	"/controls/ess:AcContactorOpenCmd"
+		},
+		"ActivePower":	{
+			"value":	"/status/ess:ActivePower"
+		},
+		"ActivePowerCmd":	{
+			"value":	"/controls/ess:ActivePowerCmd"
+		},
+		"ActivePowerDeadband":	{
+			"value":	"/params/ess:ActivePowerDeadband"
+		},
+		"ActivePowerSetpoint":	{
+			"value":	"/controls/ess:ActivePowerSetpoint"
+		},
+		"DcContactor":	{
+			"value":	"/status/ess:DcContactor"
+		},
+		"DcContactorCloseCmd":	{
+			"value":	"/controls/ess:DcContactorCloseCmd"
+		},
+		"DcContactorOpenCmd":	{
+			"value":	"/controls/ess:DcContactorOpenCmd"
+		},
+		"HeartBeat":	{
+			"value":	"/controls/ess:HeartBeat"
+		},
+		"Off":	{
+			"value":	"/status/ess:Off"
+		},
+		"OffCmd":	{
+			"value":	"/controls/ess:OffCmd"
+		},
+		"On":	{
+			"value":	"/status/ess:On"
+		},
+		"OnCmd":	{
+			"value":	"/controls/ess:OnCmd"
+		},
+		"ReactivePower":	{
+			"value":	"/status/ess:ReactivePower"
+		},
+		"ReactivePowerCmd":	{
+			"value":	"/controls/ess:ReactivePowerCmd"
+		},
+		"ReactivePowerDeadband":	{
+			"value":	"/params/ess:ReactivePowerDeadband"
+		},
+		"ReactivePowerSetpoint":	{
+			"value":	"/controls/ess:ReactivePowerSetpoint"
+		},
+		"StandBy":	{
+			"value":	"/status/ess:Standby"
+		},
+		"StandByCmd":	{
+			"value":	"/controls/ess:StandbyCmd"
+		},
+		"Standby":	{
+			"value":	false
+		},
+		"StandbyCmd":	{
+			"value":	false
+		},
+		"lastActivePowerSetpoint":	{
+			"value":	"/controls/ess:lastActivePowerSetpoint"
+		},
+		"lastReactivePowerSetpoint":	{
+			"value":	"/controls/ess:lastReactivePowerSetpoint"
+		},
+		"maxActivePower":	{
+			"value":	"/params/ess:maxActivePower"
+		},
+		"maxReactivePower":	{
+			"value":	"/params/ess:maxRectivePower"
+		}
+	},
+	"/params/ess":	{
+		"ReactivePowerDeadband":	{
+			"value":	5
+		}
+	},
+	"/status/ess":	{
+		"ReactivePower":	{
+			"value":	0
+		}
+	}
+}

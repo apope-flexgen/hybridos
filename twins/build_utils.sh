@@ -7,6 +7,8 @@ artifacts=(twins.service twins)
 submodules=()
 tests=()
 
+
+
 function prebuild()
 {
     return
@@ -31,6 +33,8 @@ function uninstall()
 
 function postbuild()
 {
+    #build/release
+    cp config/twins_dflt.json build/release
     return
 }
 

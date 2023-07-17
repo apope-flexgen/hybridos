@@ -6,7 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -31,13 +33,36 @@ func (manager *databaseManager) UseDB(clientName string) error {
 	clientDbDir := path.Join(config.DbDir, clientName)
 	err := ensureDirectoryExists(clientDbDir)
 	if err != nil {
-		return fmt.Errorf("failed to ensure DB directory exists: %w", err)
+		return fmt.Errorf("failed to ensure %s client DB directory exists: %w", clientName, err)
 	}
 
 	// open database client pointing at the CloudSync client's key-value store
 	dbClient, err := bitcask.Open(clientDbDir, bitcask.WithMaxKeySize(math.MaxUint32))
 	if err != nil {
-		return fmt.Errorf("failed to open DB: %w", err)
+		// BitCask has a known issue where the config.json and meta.json can become invalid.
+		// The recommendation by the package's author is to simply remove config.json and meta.json in that case.
+		// https://git.mills.io/prologic/bitcask/commit/5429693cc8831c19e8f3580c801c5cfc588ceee6
+
+		// try again after removing config.json and meta.json if the error type indicates one of those files is invalid
+		switch err.(type) {
+		case *bitcask.ErrBadConfig, *bitcask.ErrBadMetadata:
+			log.Errorf("Invalid config.json or meta.json detected in %s client internal DB. Attempting to clear invalid DB files.", clientName)
+			err = os.Remove(filepath.Join(clientDbDir, "config.json"))
+			if err != nil {
+				return fmt.Errorf("failed to open %s client DB and failed to clear internal DB config.json: %w", clientName, err)
+			}
+			err = os.Remove(filepath.Join(clientDbDir, "meta.json"))
+			if err != nil {
+				return fmt.Errorf("failed to open %s client DB and failed to clear internal DB meta.json: %w", clientName, err)
+			}
+			dbClient, err = bitcask.Open(clientDbDir, bitcask.WithMaxKeySize(math.MaxUint32))
+			if err != nil {
+				return fmt.Errorf("failed to open %s DB even after clearing internal DB config.json and meta.json: %w", clientName, err)
+			}
+
+		default:
+			return fmt.Errorf("failed to open %s client DB: %w", clientName, err)
+		}
 	}
 	manager.db = dbClient
 

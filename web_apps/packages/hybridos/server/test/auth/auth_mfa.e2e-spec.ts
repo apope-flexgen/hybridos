@@ -25,6 +25,10 @@ import { RefreshTokenService } from '../../src/auth/refreshTokenService'
 import { RefreshTokenStrategy } from '../../src/auth/strategies/refreshToken.strategy'
 import { AppEnvService } from '../../src/environment/appEnv.service'
 import * as testUtils from '../testUtils'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
+import { useContainer } from 'class-validator'
+import { ValidPasswordConstraint } from 'src/users/validators/IsValidPassword'
+import path from 'path'
 
 describe('AuthController Login (e2e)', () => {
     let app: INestApplication
@@ -51,10 +55,11 @@ describe('AuthController Login (e2e)', () => {
                         enableMfa: jest.fn().mockResolvedValue(USER_MFA_ENABLED),
                     },
                 },
+                ValidPasswordConstraint,
                 {
                     provide: SITE_ADMINS_SERVICE,
                     useValue: {
-                        find: jest.fn(),
+                        find: jest.fn().mockReturnValue(testUtils.site(false, true, false)),
                     },
                 },
                 {
@@ -79,13 +84,28 @@ describe('AuthController Login (e2e)', () => {
                 },
                 RefreshTokenService,
                 AppEnvService,
+                {
+                    provide: 'WEB_UI_CONFIG_PATH',
+                    useValue: path.resolve(__dirname, '../../test/configs/test-web_ui.json')
+                },
+                {
+                    provide: 'WEB_SERVER_CONFIG_PATH',
+                    useValue: path.resolve(__dirname, '../../test/configs/test-config.json')
+                },
                 AccessTokenMfaStrategy,
                 TotpStrategy,
                 RefreshTokenStrategy,
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
+                    },
+                },
             ],
         }).compile()
 
         app = testUtils.createTestApiApplication(moduleFixture)
+        useContainer(moduleFixture, { fallbackOnErrors: true })
         jwtService = moduleFixture.get<JwtService>(JwtService)
         app.use(cookieParser())
         await app.init()
@@ -102,7 +122,7 @@ describe('AuthController Login (e2e)', () => {
             }
             const MFA_ACCESS_TOKEN = `Bearer ${jwtService.sign(payload, {
                 expiresIn: '12d',
-                secret: 'supersecretkey-oneTimeUse-mfa',
+                secret: process.env.JWT_SECRET_KEY_MFA,
             })}`
 
             const CURRENT_TOTP = authenticator.generate(testUtils.VALID_KEY)
@@ -132,7 +152,7 @@ describe('AuthController Login (e2e)', () => {
             }
             const MFA_ACCESS_TOKEN = `Bearer ${jwtService.sign(payload, {
                 expiresIn: '12d',
-                secret: 'supersecretkey-oneTimeUse-mfa',
+                secret: process.env.JWT_SECRET_KEY_MFA
             })}`
 
             const CURRENT_TOTP = authenticator.generate(testUtils.VALID_KEY)

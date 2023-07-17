@@ -5,7 +5,6 @@ import (
 	"fims"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -48,7 +47,7 @@ func main() {
 
 	// unmarshal config
 	if configPath != "" {
-		configJSON, err := ioutil.ReadFile(configPath)
+		configJSON, err := os.ReadFile(configPath)
 		if err != nil {
 			log.Errorf("could not read config file: %v", err)
 			log.Infof("starting DBI without a config...")
@@ -102,7 +101,18 @@ func main() {
 			}
 		}
 
-		frags := strings.SplitN(msg.Uri, "/", 5)[2:] // do not care about the first frag (/dbi)
+		frags := strings.SplitN(msg.Uri, "/", 5)[1:]
+
+		// SPECIAL CASE: frags[1] (collection) == "audit" (#BAD-186)
+		// expected format: /dbi/audit/audit_log_TIMESTAMP
+		//					^	^     ^
+		//			   ignore	db 	  document
+		if frags[1] == "audit" {
+			frags[0] = "audit" // db
+			frags[1] = "log"   // collection
+			// frags[2] is still the document
+		}
+
 		var reply interface{}
 		switch msg.Method { // parse request type
 		case "get":
@@ -129,7 +139,7 @@ func main() {
 			} else {
 				reply = result
 			}
-		case "del":
+		case "del", "delete":
 			result, err := api.DELETE(frags)
 			if err != nil {
 				log.Errorf("DELETE on %s encountered an error: %v", msg.Uri, err)

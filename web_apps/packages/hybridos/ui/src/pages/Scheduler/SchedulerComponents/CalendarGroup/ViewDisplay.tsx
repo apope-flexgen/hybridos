@@ -25,9 +25,9 @@ import {
 } from './CalendarGroupHelpers';
 
 interface ViewDisplayProps {
-  displayEvents: any[] | undefined
-  setDisplayEvents: React.Dispatch<React.SetStateAction<any[] | undefined>>
-  calendarRef: React.RefObject<any>
+  displayEvents: any[] | undefined;
+  setDisplayEvents: React.Dispatch<React.SetStateAction<any[] | undefined>>;
+  calendarRef: React.RefObject<any>;
 }
 
 const ViewDisplay: React.FC<ViewDisplayProps> = ({
@@ -51,36 +51,41 @@ const ViewDisplay: React.FC<ViewDisplayProps> = ({
     [setView, displayEvents, setDisplayEvents],
   );
 
-  const handleDateChange = useCallback((newValue: Dayjs | null) => {
-    setValue(newValue);
-    const calendarInstance = calendarRef.current?.getInstance();
-    const calDate = calendarInstance.getDate();
-    if (newValue) {
-      switch (view) {
-        case 'day':
-          calDate.setFullYear(newValue.year(), newValue.month(), newValue.date());
-          break;
-        default:
-          calendarInstance.setDate(
-            new Date(newValue.year(), newValue.month(), newValue.date()),
-          );
-          break;
+  const handleDateChange = useCallback(
+    (newValue: Dayjs | null) => {
+      setValue(newValue);
+      const calendarInstance = calendarRef.current?.getInstance();
+      const calDate = calendarInstance?.getDate();
+      if (newValue) {
+        switch (view) {
+          case 'day':
+            calDate.setFullYear(newValue.year(), newValue.month(), newValue.date());
+            break;
+          default:
+            calendarInstance?.setDate(new Date(newValue.year(), newValue.month(), newValue.date()));
+            break;
+        }
       }
-    }
-    calendarInstance.render();
-    const displayDate = getDisplayDate(calendarInstance, view);
-    setDateDisplay(displayDate);
-  }, [calendarRef, setValue, view]);
+      calendarInstance?.render();
+      if (calendarInstance) {
+        const displayDate = getDisplayDate(calendarInstance, view);
+        setDateDisplay(displayDate);
+      }
+    },
+    [calendarRef, setValue, view],
+  );
 
   const handleCalendarMove = (type: MoveDirections) => {
     const calendarInstance = calendarRef.current?.getInstance();
     if (type === 'prev') calendarInstance.prev();
     else if (type === 'next') calendarInstance.next();
     else calendarInstance.today();
-    const dayJSDate = getCalendarDayJSDate(calendarInstance);
-    setValue(dayJSDate);
-    const displayDate = getDisplayDate(calendarInstance, view);
-    setDateDisplay(displayDate);
+    if (calendarInstance) {
+      const dayJSDate = getCalendarDayJSDate(calendarInstance);
+      setValue(dayJSDate);
+      const displayDate = getDisplayDate(calendarInstance, view);
+      setDateDisplay(displayDate);
+    }
   };
 
   // set up initial date display and datepicker value
@@ -120,9 +125,13 @@ const ViewDisplay: React.FC<ViewDisplayProps> = ({
         >
           {dateDisplay}
         </Typography>
-        <Box sx={{
-          marginLeft: 'auto', display: 'flex', gap: '16px', alignItems: 'center',
-        }}
+        <Box
+          sx={{
+            marginLeft: 'auto',
+            display: 'flex',
+            gap: '16px',
+            alignItems: 'center',
+          }}
         >
           <MuiButton
             color="inherit"
@@ -130,11 +139,7 @@ const ViewDisplay: React.FC<ViewDisplayProps> = ({
             onClick={() => handleCalendarMove(calendarGroupLabels.todayButton.move)}
             variant="outlined"
           />
-          <DatePicker
-            onChange={handleDateChange}
-            renderInput="iconButton"
-            value={value}
-          />
+          <DatePicker onChange={handleDateChange} renderInput="iconButton" value={value} />
         </Box>
       </CardRow>
     </>

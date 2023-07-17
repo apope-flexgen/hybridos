@@ -1,0 +1,372 @@
+{
+  "name": "BESS Inverter Block 01",
+  "clou_ess_1_hs": 0,
+  "clou_ess_1": 1,
+  "active_power": {
+    "name": "Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "active_power",
+    "component": "clou_ess_1_hs"
+  },
+  "active_power_setpoint": {
+    "name": "Active Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "active_power_setpoint",
+    "component": "clou_ess_1_hs"
+  },
+  "alarms": {
+    "name": "Alarms",
+    "value": 0,
+    "options": [],
+    "unit": "",
+    "scaler": 0,
+    "enabled": true,
+    "ui_type": "alarm",
+    "type": "number",
+    "register_id": "alarms",
+    "component": "clou_ess_1_hs"
+  },
+  "apparent_power": {
+    "name": "Apparent Power",
+    "value": 0,
+    "unit": "VA",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "apparent_power",
+    "component": "clou_ess_1_hs"
+  },
+  "current_l1": {
+    "name": "L1 AC Current",
+    "value": 0,
+    "unit": "A",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "current_l1",
+    "component": "clou_ess_1_hs"
+  },
+  "current_l2": {
+    "name": "L2 AC Current",
+    "value": 0,
+    "unit": "A",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "current_l2",
+    "component": "clou_ess_1_hs"
+  },
+  "current_l3": {
+    "name": "L3 AC Current",
+    "value": 0,
+    "unit": "A",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "current_l3",
+    "component": "clou_ess_1_hs"
+  },
+  "faults": {
+    "name": "Faults",
+    "value": 0,
+    "options": [],
+    "unit": "",
+    "scaler": 0,
+    "enabled": true,
+    "ui_type": "fault",
+    "type": "number",
+    "register_id": "faults",
+    "component": "clou_ess_1_hs"
+  },
+  "frequency": {
+    "name": "Frequency",
+    "value": 0,
+    "unit": "Hz",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "frequency",
+    "component": "clou_ess_1_hs"
+  },
+  "max_temp": {
+    "name": "Current Highest Cell Temp",
+    "value": 0,
+    "unit": "C",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "maximum_cell_temperature",
+    "component": "clou_ess_1"
+  },
+  "min_temp": {
+    "name": "Current Lowest Cell Temp",
+    "value": 0,
+    "unit": "C",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "minimum_cell_temperature",
+    "component": "clou_ess_1"
+  },
+  "reactive_power": {
+    "name": "Reactive Power",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "reactive_power",
+    "component": "clou_ess_1_hs"
+  },
+  "reactive_power_setpoint": {
+    "name": "Reactive Power Setpoint",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "reactive_power_setpoint",
+    "component": "clou_ess_1_hs"
+  },
+  "soc": {
+    "name": "State of Charge",
+    "value": 0,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "bms_soc",
+    "component": "clou_ess_1"
+  },
+  "soh": {
+    "name": "State of Health",
+    "value": 0,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number"
+  },
+  "status": {
+    "name": "Status",
+    "value": "None",
+    "unit": "",
+    "scaler": 0,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "system_state",
+    "component": "clou_ess_1_hs"
+  },
+  "system_chargeable_power": {
+    "name": "System Chargeable Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "chargeable_power",
+    "component": "clou_ess_1_hs"
+  },
+  "system_dischargeable_power": {
+    "name": "System Dischargeable Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "dischargeable_power",
+    "component": "clou_ess_1_hs"
+  },
+  "voltage_dc": {
+    "name": "DC Voltage",
+    "value": 0,
+    "unit": "V",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "voltage_dc",
+    "component": "clou_ess_1_hs"
+  },
+  "voltage_l1_l2": {
+    "name": "L1-L2 AC Voltage",
+    "value": 0,
+    "unit": "V",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "voltage_l1_l2",
+    "component": "clou_ess_1_hs"
+  },
+  "voltage_l2_l3": {
+    "name": "L2-L3 AC Voltage",
+    "value": 0,
+    "unit": "V",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "voltage_l2_l3",
+    "component": "clou_ess_1_hs"
+  },
+  "voltage_l3_l1": {
+    "name": "L3-L1 AC Voltage",
+    "value": 0,
+    "unit": "V",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "status",
+    "type": "number",
+    "register_id": "voltage_l3_l1",
+    "component": "clou_ess_1_hs"
+  },
+  "maint_mode": {
+    "name": "Maintenance Mode",
+    "value": false,
+    "unit": "",
+    "scaler": 0,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "No",
+        "return_value": false
+      },
+      {
+        "name": "Yes",
+        "return_value": true
+      }
+    ]
+  },
+  "start": {
+    "name": "Start",
+    "unit": "",
+    "scaler": 0,
+    "enabled": false,
+    "ui_type": "control",
+    "type": "enum_button",
+    "options": [
+      {
+        "name": "On",
+        "return_value": true
+      },
+      {
+        "name": "Off",
+        "return_value": false
+      }
+    ]
+  },
+  "stop": {
+    "name": "Stop",
+    "unit": "",
+    "scaler": 0,
+    "enabled": false,
+    "ui_type": "control",
+    "type": "enum_button",
+    "options": [
+      {
+        "name": "On",
+        "return_value": true
+      },
+      {
+        "name": "Off",
+        "return_value": false
+      }
+    ]
+  },
+  "enter_standby": {
+    "name": "Enter Standby",
+    "unit": "",
+    "scaler": 0,
+    "enabled": false,
+    "ui_type": "control",
+    "type": "enum_button",
+    "options": [
+      {
+        "name": "On",
+        "return_value": true
+      },
+      {
+        "name": "Off",
+        "return_value": false
+      }
+    ]
+  },
+  "exit_standby": {
+    "name": "Exit Standby",
+    "unit": "",
+    "scaler": 0,
+    "enabled": false,
+    "ui_type": "control",
+    "type": "enum_button",
+    "options": [
+      {
+        "name": "On",
+        "return_value": true
+      },
+      {
+        "name": "Off",
+        "return_value": false
+      }
+    ]
+  },
+  "clear_faults": {
+    "name": "Clear Faults",
+    "unit": "",
+    "scaler": 0,
+    "enabled": false,
+    "ui_type": "control",
+    "type": "enum_button",
+    "options": [
+      {
+        "name": "Clear Faults",
+        "return_value": true
+      }
+    ]
+  },
+  "maint_active_power_setpoint": {
+    "name": "Active Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "maint_reactive_power_setpoint": {
+    "name": "Reactive Power Setpoint",
+    "value": 0,
+    "unit": "VAR",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  }
+}

@@ -2,8 +2,10 @@
     "pkg": {
         "assets": [
             "node_modules/radius/dictionaries/*",
-            "src/radius/dictionaries/*"
+            "dist/**/*.flexgen",
+            ".env",
+            "openai/index.html"
         ],
-        "scripts": "dist/*.ts"
+        "scripts": "dist/**/*.js"
     }
 }

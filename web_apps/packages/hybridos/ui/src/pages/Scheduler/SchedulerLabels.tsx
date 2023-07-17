@@ -36,7 +36,7 @@ export const calendarGroupLabels = {
 
 export const editEventLabels = {
   eventType: { label: 'Mode' },
-  title: { recurringLabel: 'Edit Recurring Event', eventLabel: 'Edit Event' },
+  title: { pastEventLabel: 'View Past Event', activeEventLabel: 'Edit Active Event', eventLabel: 'Edit Event' },
   deleteButton: {
     icon: 'Trash' as IconList,
     seriesIcon: 'DeleteSeries' as IconList,

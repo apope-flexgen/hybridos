@@ -28,11 +28,6 @@
 
 #include "dnp3_utils.h"
 
-// NOTE
-// this starts and stops the pub for the eventthe newSOE handler 
-// The FM master pubs the results of the outstation scan
-// this will have to be picked up by the Fleet Manager outstation and sent back to the ERCOT system
-
 class fpsMasterApplication : public opendnp3::IMasterApplication
 {
 public:
@@ -48,10 +43,7 @@ public:
         if(sysdb->debug)
             FPS_ERROR_PRINT ("Running [%s] IINField %u.%u \n", __FUNCTION__, iin.MSB, iin.LSB);
     }
-    // start the pub object for the master.
-    // 
-    // TODO find a way to detect the scan result. I dont think we'll have more that one of these running at a time
-    // newSOEHandler populates the cJSON object
+
     virtual void OnTaskStart(opendnp3::MasterTaskType type, opendnp3::TaskId id) override final 
     {
         sysdb->taskStart = Now().msSinceEpoch;
@@ -94,19 +86,15 @@ public:
 
     virtual void OnStateChange(opendnp3::LinkStatus value) override final 
     {  
-        //std::cout << "Running ["<<__FUNCTION__<<"] status ["<<LinkStatusToString(value)<<"]\n";
-
         std::string cstate = LinkStatusSpec::to_string(value);
         char message[1024];
-        snprintf(message, sizeof(message), "DNP3  %s Link Status Change [%s]\n"
-                    , sysdb->id 
+        snprintf(message, sizeof(message), "Link Status Change [%s]"
                     , cstate.c_str()
                     );
-        FPS_ERROR_PRINT("State Change [%s] message [%s]\n"
-                , __FUNCTION__
-                , message
-        );    //Code for adding timestamp
-        emit_event(sysdb, __FUNCTION__, message, 1);
+        FPS_ERROR_PRINT("State Change message [%s]\n"
+                        , message
+                        );
+        emit_event_filt(sysdb, nullptr, message, 1);
     }    
     
     sysCfg* sysdb;

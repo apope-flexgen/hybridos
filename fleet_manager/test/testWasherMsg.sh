@@ -1,1 +1,1 @@
-fims_send -m set -u /fleet/caiso/dispatchBatch '{"Id":"testId", "StartTime": "2022-01-14T22:00:00Z", "Data":{"target_soc":40}}'
+fims_send -m set -u /fleet/features/caiso_ads/dispatch_batch '{"id":"testId", "start_time": "2022-01-14T22:00:00Z", "data":{"target_soc":40}}'

@@ -1,0 +1,80 @@
+package ftd
+
+import (
+	"context"
+
+	"github.com/flexgen-power/fims_codec"
+	log "github.com/flexgen-power/go_flexgen/logger"
+	"golang.org/x/sync/errgroup"
+)
+
+// Takes a batch of encoders and archives each encoder into a .tar.gz file.
+type MsgArchiver struct {
+	in <-chan []*fims_codec.Encoder
+}
+
+// Allocates memory for a new msgArchiver.
+func NewMsgArchiver(inputChannel <-chan []*fims_codec.Encoder) *MsgArchiver {
+	return &MsgArchiver{
+		in: inputChannel,
+	}
+}
+
+// Launch a worker pool of archivers to archive encoder batches as they are passed from the collator.
+func (archiver *MsgArchiver) Start(group *errgroup.Group, groupContext context.Context) (StartUpError error) {
+	for i := 0; i < GlobalConfig.NumArchiveWorkers; i++ {
+		group.Go(func() error { return archiver.archiveUntil(groupContext.Done()) })
+	}
+	return nil
+}
+
+// Loop that archives incoming encoded data.
+func (archiver *MsgArchiver) archiveUntil(done <-chan struct{}) error {
+	for {
+		select {
+		case <-done:
+			goto termination
+		case encoderBatch, ok := <-archiver.in:
+			// handle channel close signal
+			if !ok {
+				goto termination
+			}
+			// archive all data in the batch
+			for _, encoder := range encoderBatch {
+				writeArchiveData(encoder)
+			}
+		}
+	}
+termination:
+	// archive all remaining batches
+	log.Infof("Archiver entered termination block. Archiving all remaining batches.")
+	for encoderBatch := range archiver.in {
+		for _, encoder := range encoderBatch {
+			writeArchiveData(encoder)
+		}
+	}
+	log.Infof("Archiver terminating. All remaining batches were archived.")
+	return nil
+}
+
+// Archives a single encoder into a .tar.gz file.
+func writeArchiveData(encoder *fims_codec.Encoder) {
+	// update site state to be primary/secondary which gets passed through metadata.txt in .tar.gz file
+	if ControllerStateIsPrimary() {
+		encoder.AdditionalData["site_state"] = "primary"
+	} else {
+		encoder.AdditionalData["site_state"] = "secondary"
+	}
+
+	// create suffix with name <database>_<measurement>
+	encoderMeasurement, exist := encoder.AdditionalData["measurement"]
+	if !exist {
+		log.Errorf("Measurement does not exist in Additional Data for encoder %s.", encoder.Uri)
+	}
+
+	archivePrefix := GlobalConfig.DbName + "_" + encoderMeasurement
+	_, _, err := encoder.CreateArchive(GlobalConfig.ArchivePath, archivePrefix)
+	if err != nil {
+		log.Errorf("archive creation failed for URI %s with error: %s", encoder.Uri, err.Error())
+	}
+}

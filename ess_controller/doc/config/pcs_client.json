@@ -1,0 +1,2000 @@
+{
+    "fileInfo": {
+        "sourceFileName": "PCS_HEMSW01L1 Vx_Modbus_Map.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2020-08-06T12:01:01.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "17576",
+        "outputFileName": "pcs_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2020-08-05T14:58:42.152Z"
+    },
+    "system": {
+        "name": "HEMSW02L1",
+        "protocol": "Modbus TCP",
+        "version": "6.0 WIP",
+        "id": "hems_pcs_1",
+        "ip_address": "10.x.x.x",
+        "data_bits": "Columns marked in green are REQUIRED"
+    },
+    "registers": [
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40005,
+            "number_of_registers": 101,
+            "map": [
+                {
+                    "id": "pcs_user_pw",
+                    "offset": 40005,
+                    "name": "User Password",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_seconds",
+                    "offset": 40006,
+                    "name": "seconds",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_minutes",
+                    "offset": 40007,
+                    "name": "Minutes",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_hours",
+                    "offset": 40008,
+                    "name": "Hours",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_day",
+                    "offset": 40009,
+                    "name": "Day",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_month",
+                    "offset": 40010,
+                    "name": "Month",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_year",
+                    "offset": 40011,
+                    "name": "Year",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_utc",
+                    "offset": 40012,
+                    "name": "UTC offset",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_vdc_low",
+                    "offset": 40030,
+                    "name": "Vdc Low",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_vac_low",
+                    "offset": 40032,
+                    "scale": 0.1,
+                    "name": "Vac Low",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_vac_high",
+                    "offset": 40033,
+                    "scale": 0.1,
+                    "name": "Vac High",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_start_delay",
+                    "offset": 40036,
+                    "name": "Start Delay",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_p_limit",
+                    "offset": 40101,
+                    "scale": 0.01,
+                    "name": "P Limit"
+                },
+                {
+                    "id": "pcs_q_limit",
+                    "offset": 40102,
+                    "scale": 0.01,
+                    "name": "Q Limit"
+                },
+                {
+                    "id": "pcs_p_q_priority",
+                    "offset": 40103,
+                    "name": "P / Q Priority",
+                    "web_ui_display_type": "enum",
+                    "web_ui_options": "0=P, 1= Q"
+                },
+                {
+                    "id": "pcs_s_limit",
+                    "offset": 40104,
+                    "scale": 0.01,
+                    "name": "S limit"
+                },
+                {
+                    "id": "ps_p_algo_pri",
+                    "offset": 40105,
+                    "name": "P algorithm priority",
+                    "web_ui_display_type": "enum",
+                    "web_ui_options": "0=min, 1=P(f) priority, 2=P(v)piority"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40261,
+            "number_of_registers": 49,
+            "map": [
+                {
+                    "id": "pcs_enable",
+                    "offset": 40261,
+                    "name": "Enable",
+                    "web_ui_display_type": "enum",
+                    "web_ui_options": "0=No, 1=Yes"
+                },
+                {
+                    "id": "pcs_q_ref",
+                    "offset": 40262,
+                    "scale": 0.01,
+                    "name": "Q ref",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_vbus_ref",
+                    "offset": 40263,
+                    "name": "Vbus Ref"
+                },
+                {
+                    "id": "pcs_night_mode_act",
+                    "offset": 40264,
+                    "name": "Night Mode Activate",
+                    "enum": true,
+                    "bit_strings": []
+                },
+                {
+                    "id": "pcs_enable_p_1",
+                    "offset": 40277,
+                    "name": "enable P",
+                    "enum": true,
+                    "bit_strings": []
+                },
+                {
+                    "id": "pcs_p_grad_1",
+                    "offset": 40278,
+                    "scale": 0.01,
+                    "name": "P Gradient"
+                },
+                {
+                    "id": "pcs_enable_q_1",
+                    "offset": 40279,
+                    "name": "enable Q",
+                    "enum": true,
+                    "bit_strings": []
+                },
+                {
+                    "id": "pcs_q_grad_1",
+                    "offset": 40280,
+                    "scale": 0.01,
+                    "name": "Q Gradient"
+                },
+                {
+                    "id": "pcs_enable_p_2",
+                    "offset": 40281,
+                    "name": "enable P",
+                    "enum": true,
+                    "bit_strings": []
+                },
+                {
+                    "id": "pcs_p_grad_2",
+                    "offset": 40282,
+                    "scale": 0.01,
+                    "name": "P Gradient"
+                },
+                {
+                    "id": "pcs_enable_q_2",
+                    "offset": 40283,
+                    "name": "enable Q",
+                    "enum": true,
+                    "bit_strings": []
+                },
+                {
+                    "id": "pcs_q_grad_2",
+                    "offset": 40284,
+                    "scale": 0.01,
+                    "name": "Q Gradient"
+                },
+                {
+                    "id": "pcs_enable_p_3",
+                    "offset": 40285,
+                    "name": "enable P",
+                    "enum": true,
+                    "bit_strings": []
+                },
+                {
+                    "id": "pcs_p_grad_3",
+                    "offset": 40286,
+                    "scale": 0.01,
+                    "name": "P Gradient"
+                },
+                {
+                    "id": "pcs_enable_q_3",
+                    "offset": 40287,
+                    "name": "enable Q",
+                    "enum": true,
+                    "bit_strings": []
+                },
+                {
+                    "id": "pcs_q_grad_3",
+                    "offset": 40288,
+                    "scale": 0.01,
+                    "name": "Q Gradient"
+                },
+                {
+                    "id": "pcs_enable_p_4",
+                    "offset": 40289,
+                    "name": "enable P",
+                    "enum": true,
+                    "bit_strings": []
+                },
+                {
+                    "id": "pcs_p_grad_4",
+                    "offset": 40290,
+                    "scale": 0.01,
+                    "name": "P Gradient"
+                },
+                {
+                    "id": "pcs_enable_q_4",
+                    "offset": 40291,
+                    "name": "enable Q",
+                    "enum": true,
+                    "bit_strings": []
+                },
+                {
+                    "id": "pcs_q_grad_4",
+                    "offset": 40292,
+                    "scale": 0.01,
+                    "name": "Q Gradient"
+                },
+                {
+                    "id": "pcs_enable_1",
+                    "offset": 40293,
+                    "name": "Enable",
+                    "web_ui_display_type": "enum",
+                    "web_ui_options": "0=No, 1= Yes"
+                },
+                {
+                    "id": "pcs_vac_out",
+                    "offset": 40294,
+                    "name": "Vac Out"
+                },
+                {
+                    "id": "pcs_vac_min",
+                    "offset": 40295,
+                    "scale": 0.1,
+                    "name": "Vac min"
+                },
+                {
+                    "id": "pcs_time_start",
+                    "offset": 40296,
+                    "scale": 0.1,
+                    "name": "Time Start"
+                },
+                {
+                    "id": "pcs_enable_g5_1_1",
+                    "offset": 40301,
+                    "name": "Enable G5.1.1",
+                    "bit_strings": [
+                        "Slow Protection",
+                        "Fast Protection",
+                        "Fast 2 Protection",
+                        "Very Fast Protection",
+                        "Very Fast 2 Protection"
+                    ]
+                },
+                {
+                    "id": "pcs_slow_protection_2",
+                    "offset": 40302,
+                    "scale": 0.1,
+                    "name": "Slow Protection",
+                    "web_ui_options": "0 to 100%, 10 to 1000"
+                },
+                {
+                    "id": "pcs_delay_slow_protection",
+                    "offset": 40303,
+                    "scale": 0.1,
+                    "name": "Delay Slow Protection",
+                    "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                },
+                {
+                    "id": "pcs_fast_protection",
+                    "offset": 40304,
+                    "scale": 0.1,
+                    "name": "Fast Protection",
+                    "web_ui_options": "0 to 100%, 10 to 1000"
+                },
+                {
+                    "id": "pcs_delay_fast_protection",
+                    "offset": 40305,
+                    "scale": 0.1,
+                    "name": "Delay Fast Protection",
+                    "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                },
+                {
+                    "id": "pcs_very_fast_protection",
+                    "offset": 40306,
+                    "scale": 0.1,
+                    "name": "Very Fast Protection",
+                    "web_ui_options": "0 to 100%, 10 to 1000"
+                },
+                {
+                    "id": "pcs_delay_very_fast_protection",
+                    "offset": 40307,
+                    "scale": 0.1,
+                    "name": "Delay Very Fast Protection",
+                    "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                },
+                {
+                    "id": "pcs_interpolation",
+                    "offset": 40309,
+                    "name": "Interpolation",
+                    "web_ui_options": "0=No, 1= Yes"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40321,
+            "number_of_registers": 59,
+            "map": [
+                {
+                    "id": "pcs_enable_g5_3_1",
+                    "offset": 40321,
+                    "name": "Enable G5.3.1",
+                    "bit_strings": [
+                        "Slow Protection #2",
+                        "Slow 2 Protection #2",
+                        "Fast Protection #2",
+                        "Very Fast Protection #2",
+                        "Very Fast 2 Protection #2"
+                    ]
+                },
+                {
+                    "id": "pcs_slow_protection_3",
+                    "offset": 40322,
+                    "scale": 0.1,
+                    "name": "Slow Protection #3",
+                    "web_ui_options": "0 to 100%, 10 to 1000"
+                },
+                {
+                    "id": "pcs_delay_slow_prot_3",
+                    "offset": 40323,
+                    "name": "Delay Slow Protection #3"
+                },
+                {
+                    "id": "pcs_fast_prot_3",
+                    "offset": 40324,
+                    "name": "Fast Protection #3"
+                },
+                {
+                    "id": "pcs_delay_fast_prot_3",
+                    "offset": 40325,
+                    "name": "Delay Fast Protection #3"
+                },
+                {
+                    "id": "pcs_delay_very_fast_prot_3",
+                    "offset": 40326,
+                    "name": "Very Fast Protection #3"
+                },
+                {
+                    "id": "pcs_very_fast_2_prot_3",
+                    "offset": 40327,
+                    "name": "Delay Very Fast Protection #3"
+                },
+                {
+                    "id": "pcs_enable_g5_4_1",
+                    "offset": 40331,
+                    "name": "Enable G5.4.1",
+                    "bit_strings": [
+                        "Slow Protection #4",
+                        "Slow 2 Protection #4",
+                        "Fast Protection #4",
+                        "Very Fast Protection #4",
+                        "Very Fast 2 Protection"
+                    ]
+                },
+                {
+                    "id": "pcs_slow_prot_4",
+                    "offset": 40332,
+                    "name": "Slow Protection #4"
+                },
+                {
+                    "id": "pcs_delay_slow_prot_4",
+                    "offset": 40333,
+                    "name": "Delay Slow Protection #4"
+                },
+                {
+                    "id": "pcs_fast_prot_4",
+                    "offset": 40334,
+                    "name": "Fast Protection #4"
+                },
+                {
+                    "id": "pcs_delay_fast_prot_4",
+                    "offset": 40335,
+                    "name": "Delay Fast Protection #4"
+                },
+                {
+                    "id": "pcs_very_fast_prot_4",
+                    "offset": 40336,
+                    "name": "Very Fast Protection #4"
+                },
+                {
+                    "id": "pcs_delay_very_fast_prot_4",
+                    "offset": 40337,
+                    "name": "Delay Very Fast Protection #4"
+                },
+                {
+                    "id": "pcs_enable_5_5_1",
+                    "offset": 40341,
+                    "name": "Enable 5.5.1",
+                    "bit_strings": [
+                        "I unbalance",
+                        "v unbalance"
+                    ]
+                },
+                {
+                    "id": "pcs_i_unbalance",
+                    "offset": 40342,
+                    "name": "I unbalance"
+                },
+                {
+                    "id": "pcs_delay_i_unbalance",
+                    "offset": 40343,
+                    "name": "Delay I unbalance"
+                },
+                {
+                    "id": "pcs_v_unbalance",
+                    "offset": 40344,
+                    "name": "Unbalance V"
+                },
+                {
+                    "id": "pcs_delay_v_unbalance",
+                    "offset": 40345,
+                    "name": "Delay Unbalance V"
+                },
+                {
+                    "id": "pcs_dui_unbal_thresh",
+                    "offset": 40346,
+                    "name": "DUI unbal thresh"
+                },
+                {
+                    "id": "pcs_dui_unbal_tie",
+                    "offset": 40347,
+                    "name": "DUI unbal tie"
+                },
+                {
+                    "id": "pcs_i_unbalance_min",
+                    "offset": 40348,
+                    "name": "I unbalance min"
+                },
+                {
+                    "id": "pcs_enable_5_6_1",
+                    "offset": 40351,
+                    "name": "Enable 5.6.1",
+                    "bit_strings": [
+                        "Enable 5.6.1 off",
+                        "Enable 5.6.1 Active",
+                        "Enable 5.6.1 Passive",
+                        "Enable 5.6.1 Simultaneous"
+                    ]
+                },
+                {
+                    "id": "pcs_mv_transformer_thresh",
+                    "offset": 40359,
+                    "name": "MV transformer threshold =125 deg C"
+                },
+                {
+                    "id": "pcs_mv_transformer_delay",
+                    "offset": 40360,
+                    "name": "MV transformer delay=120 s"
+                },
+                {
+                    "id": "pcs_igbt_temp_thres_fit",
+                    "offset": 40361,
+                    "name": "IGBTs temp thres fit=125 C"
+                },
+                {
+                    "id": "pcs_igbt_temp_hist",
+                    "offset": 40362,
+                    "name": "IGBTs temp hist =10 C"
+                },
+                {
+                    "id": "pcs_module_temp_thres_fit",
+                    "offset": 40363,
+                    "name": "Module temp thres fit=85 C"
+                },
+                {
+                    "id": "pcs_module_temp_hist",
+                    "offset": 40364,
+                    "name": "Module temp thist=10 C"
+                },
+                {
+                    "id": "pcs_internal_temp_thres_fit",
+                    "offset": 40365,
+                    "name": "Internal temp thres fit=85 C"
+                },
+                {
+                    "id": "pcs_enable_5_8_1",
+                    "offset": 40366,
+                    "name": "Enable 5.8.1",
+                    "bit_strings": [
+                        "Enable 5.8.1 No",
+                        "Enable 5.8.1 Yes"
+                    ]
+                },
+                {
+                    "id": "pcs_current_thresh",
+                    "offset": 40367,
+                    "name": "Current Thresh - 4.00 A"
+                },
+                {
+                    "id": "pcs_trip_time",
+                    "offset": 40368,
+                    "name": "Trip Time = 5.0 s"
+                },
+                {
+                    "id": "pcs_measured_curent",
+                    "offset": 40369,
+                    "scale": 100,
+                    "name": "Measured Current=0.00A"
+                },
+                {
+                    "id": "pcs_contactor_gfdi_open",
+                    "offset": 40370,
+                    "name": "Contactor GFDI Open=yes"
+                },
+                {
+                    "id": "pcs_earth_current",
+                    "offset": 40371,
+                    "name": "Earth Current"
+                },
+                {
+                    "id": "pcs_delay_high_vdc_s_s",
+                    "offset": 40372,
+                    "name": "Delay High Vdc = 30 s"
+                },
+                {
+                    "id": "pcs_du_overcurrent_a_0_a",
+                    "offset": 40373,
+                    "name": "DU Overcurrent = 400.0 A"
+                },
+                {
+                    "id": "pcs_du_current_detection_a_0_a",
+                    "offset": 40375,
+                    "name": "DU current detection = 350.0 A"
+                },
+                {
+                    "id": "pcs_fast_protection_2",
+                    "offset": 40376,
+                    "scale": 0.1,
+                    "name": "Fast Protection 2",
+                    "web_ui_options": "0 to 100%, 10 to 1000"
+                },
+                {
+                    "id": "pcs_delay_fast_protection_2",
+                    "offset": 40377,
+                    "scale": 0.1,
+                    "name": "Delay Fast Protection 2",
+                    "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                },
+                {
+                    "id": "pcs_very_fast_protection_2",
+                    "offset": 40378,
+                    "scale": 0.1,
+                    "name": "Very Fast Protection 2",
+                    "web_ui_options": "0 to 100%, 10 to 1000"
+                },
+                {
+                    "id": "pcs_delay_very_fast_protection_2",
+                    "offset": 40379,
+                    "scale": 0.1,
+                    "name": "Delay Very Fast Protection 2",
+                    "web_ui_options": "0.0 to 6550.0S , 0 to 65500"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40384,
+            "number_of_registers": 58,
+            "map": [
+                {
+                    "id": "pcs_slow_2_prot_3",
+                    "offset": 40384,
+                    "name": "Slow 2 Protection #3"
+                },
+                {
+                    "id": "pcs_delay_slow_2_prot_3",
+                    "offset": 40385,
+                    "name": "Delay Slow 2 Protection #3"
+                },
+                {
+                    "id": "pcs_very_fast_2_prot_3",
+                    "offset": 40386,
+                    "name": "Very Fast 2 Protection #3"
+                },
+                {
+                    "id": "pcs_delay_very_fast_2_prot_3",
+                    "offset": 40387,
+                    "name": "Delay Very Fast 2 Protection #3"
+                },
+                {
+                    "id": "pcs_slow_2_prot_4",
+                    "offset": 40388,
+                    "name": "Slow 2 Protection #4"
+                },
+                {
+                    "id": "pcs_delay_slow_2_prot_4",
+                    "offset": 40389,
+                    "name": "Delay Slow 2 Protection #4"
+                },
+                {
+                    "id": "pcs_very_fast_2_prot_4",
+                    "offset": 40390,
+                    "name": "Very Fast 2 Protection #4"
+                },
+                {
+                    "id": "pcs_delay_very_fast_2_prot_4",
+                    "offset": 40391,
+                    "name": "Delay Very Fast 2 Protection #4"
+                },
+                {
+                    "id": "pcs_hpvl_enable",
+                    "offset": 40392,
+                    "name": "HPVL Enable 5.9.1",
+                    "bit_strings": [
+                        "HPVL Enable 5.9.1 No",
+                        "HPVL Enable 5.9.1 Yes"
+                    ]
+                },
+                {
+                    "id": "pcs_hpvl_activation_level_5",
+                    "offset": 40393,
+                    "name": "HPVL Activation Level = 5%"
+                },
+                {
+                    "id": "pcs_hpvl_scale_1000",
+                    "offset": 40394,
+                    "name": "HPVL Scale = 1000"
+                },
+                {
+                    "id": "pcs_hpvl_fault_level_0",
+                    "offset": 40395,
+                    "name": "HPVL Fault Level = 0"
+                },
+                {
+                    "id": "pcs_hvpl_filter_hz_100_hz",
+                    "offset": 40396,
+                    "name": "HVPL filter = 0.100 Hz"
+                },
+                {
+                    "id": "pcs_hpvl_delay_fault_s_0_s",
+                    "offset": 40397,
+                    "name": "HPVL delay fault = 2.0 s"
+                },
+                {
+                    "id": "pcs_hpvl_start_test",
+                    "offset": 40398,
+                    "name": "HPVL Start Test",
+                    "bit_strings": [
+                        "HPVL Start Test no",
+                        "HPVL Start Test yes"
+                    ]
+                },
+                {
+                    "id": "pcs_hvpl_test_level_20",
+                    "offset": 40399,
+                    "name": "HVPL Test Level = -20%"
+                },
+                {
+                    "id": "pcs_mv_transformer_tv_crit_thresh",
+                    "offset": 40400,
+                    "name": "MV trans TV crit thres = 150 deg"
+                },
+                {
+                    "id": "pcs_display_baudrate_115200",
+                    "offset": 40401,
+                    "name": "Display Baudrate = 115200"
+                },
+                {
+                    "id": "pcs_modbus_address_150",
+                    "offset": 40402,
+                    "name": "Modbus Address=150"
+                },
+                {
+                    "id": "pcs_modbus_baudrate_bps_bps",
+                    "offset": 40403,
+                    "name": "Modbus Baudrate=19200 bps"
+                },
+                {
+                    "id": "pcs_modbus_parity",
+                    "offset": 40404,
+                    "name": "Modbus Parity"
+                },
+                {
+                    "id": "pcs_modbus_stop_bits",
+                    "offset": 40405,
+                    "name": "Modbus Stop bits"
+                },
+                {
+                    "id": "pcs_modbus_master",
+                    "offset": 40406,
+                    "name": "Modbus Master"
+                },
+                {
+                    "id": "pcs_automatic_ip",
+                    "offset": 40411,
+                    "name": "Automatic IP"
+                },
+                {
+                    "id": "pcs_assigned_ip_a",
+                    "offset": 40412,
+                    "name": "Assigned IP A"
+                },
+                {
+                    "id": "pcs_assigned_ip_b",
+                    "offset": 40413,
+                    "name": "Assigned IP B"
+                },
+                {
+                    "id": "pcs_assigned_ip_c",
+                    "offset": 40414,
+                    "name": "Assigned IP C"
+                },
+                {
+                    "id": "pcs_assigned_ip_d",
+                    "offset": 40415,
+                    "name": "Assigned IP D"
+                },
+                {
+                    "id": "pcs_assigned_subnet_a",
+                    "offset": 40416,
+                    "name": "Assigned Subnet A"
+                },
+                {
+                    "id": "pcs_assigned_subnet_b",
+                    "offset": 40417,
+                    "name": "Assigned Subnet B"
+                },
+                {
+                    "id": "pcs_assigned_subnet_c",
+                    "offset": 40418,
+                    "name": "Assigned Subnet C"
+                },
+                {
+                    "id": "pcs_assigned_subnet_d",
+                    "offset": 40419,
+                    "name": "Assigned Subnet D"
+                },
+                {
+                    "id": "pcs_assigned_gateway_a",
+                    "offset": 40420,
+                    "name": "Assigned Gateway A"
+                },
+                {
+                    "id": "pcs_assigned_gateway_b",
+                    "offset": 40421,
+                    "name": "Assigned Gateway B"
+                },
+                {
+                    "id": "pcs_assigned_gateway_c",
+                    "offset": 40422,
+                    "name": "Assigned Gateway C"
+                },
+                {
+                    "id": "pcs_assigned_gateway_d",
+                    "offset": 40423,
+                    "name": "Assigned Gateway D"
+                },
+                {
+                    "id": "pcs_ip_address_a",
+                    "offset": 40424,
+                    "name": "IP address A"
+                },
+                {
+                    "id": "pcs_faults_enabled_8",
+                    "offset": 40425,
+                    "name": "Faults exception 8 = No faults"
+                },
+                {
+                    "id": "pcs_ip_address_b",
+                    "offset": 40425,
+                    "name": "IP address B"
+                },
+                {
+                    "id": "pcs_ip_address_c",
+                    "offset": 40426,
+                    "name": "IP address C"
+                },
+                {
+                    "id": "pcs_ip_address_d",
+                    "offset": 40427,
+                    "name": "IP address D"
+                },
+                {
+                    "id": "pcs_subnet_a",
+                    "offset": 40428,
+                    "name": "Subnet A"
+                },
+                {
+                    "id": "pcs_subnet_b",
+                    "offset": 40429,
+                    "name": "Subnet B"
+                },
+                {
+                    "id": "pcs_subnet_c",
+                    "offset": 40430,
+                    "name": "Subnet C"
+                },
+                {
+                    "id": "pcs_subnet_d",
+                    "offset": 40431,
+                    "name": "Subnet D"
+                },
+                {
+                    "id": "pcs_gateway_a",
+                    "offset": 40432,
+                    "name": "Gateway A"
+                },
+                {
+                    "id": "pcs_gateway_b",
+                    "offset": 40433,
+                    "name": "Gateway B"
+                },
+                {
+                    "id": "pcs_gateway_c",
+                    "offset": 40434,
+                    "name": "Gateway C"
+                },
+                {
+                    "id": "pcs_gateway_d",
+                    "offset": 40435,
+                    "name": "Gateway D"
+                },
+                {
+                    "id": "pcs_mac_a",
+                    "offset": 40436,
+                    "name": "Mac A"
+                },
+                {
+                    "id": "pcs_mac_b",
+                    "offset": 40437,
+                    "name": "Mac B"
+                },
+                {
+                    "id": "pcs_mac_c",
+                    "offset": 40438,
+                    "name": "Mac C"
+                },
+                {
+                    "id": "pcs_mac_d",
+                    "offset": 40439,
+                    "name": "Mac D"
+                },
+                {
+                    "id": "pcs_mac_e",
+                    "offset": 40440,
+                    "name": "Mac E"
+                },
+                {
+                    "id": "pcs_mac_f",
+                    "offset": 40441,
+                    "name": "Mac F"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40473,
+            "number_of_registers": 55,
+            "map": [
+                {
+                    "id": "pcs_enable_5_4b_4",
+                    "offset": 40473,
+                    "name": "Enable 5.4b.4.1"
+                },
+                {
+                    "id": "pcs_5_4b_4_V4",
+                    "offset": 40474,
+                    "name": "V4 = 80%"
+                },
+                {
+                    "id": "pcs_5_4b_4_f4",
+                    "offset": 40475,
+                    "name": "f4 = 58.00 Hz"
+                },
+                {
+                    "id": "pcs_5_4b_4_t4",
+                    "offset": 40476,
+                    "name": "t4 = 1.0 s"
+                },
+                {
+                    "id": "pcs_mv_manometer_fault_off",
+                    "offset": 40481,
+                    "name": "MV manometer fault = off"
+                },
+                {
+                    "id": "pcs_mv_manometer_delay_s_s",
+                    "offset": 40482,
+                    "name": "MV manometer delay = 10 s"
+                },
+                {
+                    "id": "pcs_lv_manometer_fault_off",
+                    "offset": 40483,
+                    "name": "LV manometer fault = off"
+                },
+                {
+                    "id": "pcs_lv_manometer_delay_s_s",
+                    "offset": 40484,
+                    "name": "LV manometer delay = 10 s"
+                },
+                {
+                    "id": "pcs_enable_g_1",
+                    "offset": 40501,
+                    "name": "Enable G7.1"
+                },
+                {
+                    "id": "pcs_number_of_retries",
+                    "offset": 40502,
+                    "name": "Number of Retries"
+                },
+                {
+                    "id": "pcs_delay_between_retries_s_s",
+                    "offset": 40503,
+                    "name": "Delay between retries = 30 s"
+                },
+                {
+                    "id": "pcs_reset_retries_timeout",
+                    "offset": 40504,
+                    "name": "Reset Retries timeout"
+                },
+                {
+                    "id": "pcs_all_faults_enabled",
+                    "offset": 40505,
+                    "name": "All Faults enabled"
+                },
+                {
+                    "id": "pcs_faults_allowed_number",
+                    "offset": 40506,
+                    "name": "Faults allowed number = 0"
+                },
+                {
+                    "id": "pcs_faults_allowed_1",
+                    "offset": 40507,
+                    "name": "Faults allowed 1 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_allowed_2",
+                    "offset": 40508,
+                    "name": "Faults allowed 2 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_allowed_3",
+                    "offset": 40509,
+                    "name": "Faults allowed 3 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_allowed_4",
+                    "offset": 40510,
+                    "name": "Faults allowed 4 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_allowed_5",
+                    "offset": 40511,
+                    "name": "Faults allowed 5 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_allowed_6",
+                    "offset": 40512,
+                    "name": "Faults allowed 6 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_allowed_7",
+                    "offset": 40513,
+                    "name": "Faults allowed 7 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_allowed_8",
+                    "offset": 40514,
+                    "name": "Faults allowed 8 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_allowed_9",
+                    "offset": 40515,
+                    "name": "Faults allowed 9 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_allowed_10",
+                    "offset": 40516,
+                    "name": "Faults allowed 10 = No Faults"
+                },
+                {
+                    "id": "pcs_faults_enabled_number",
+                    "offset": 40517,
+                    "name": "Faults exception number = 0"
+                },
+                {
+                    "id": "pcs_faults_enabled_1",
+                    "offset": 40518,
+                    "name": "Faults exception 1 = No faults"
+                },
+                {
+                    "id": "pcs_faults_enabled_2",
+                    "offset": 40519,
+                    "name": "Faults exception 2 = No faults"
+                },
+                {
+                    "id": "pcs_faults_enabled_3",
+                    "offset": 40520,
+                    "name": "Faults exception 3 = No faults"
+                },
+                {
+                    "id": "pcs_faults_enabled_4",
+                    "offset": 40521,
+                    "name": "Faults exception 4 = No faults"
+                },
+                {
+                    "id": "pcs_faults_enabled_5",
+                    "offset": 40522,
+                    "name": "Faults exception 5 = No faults"
+                },
+                {
+                    "id": "pcs_faults_enabled_6",
+                    "offset": 40523,
+                    "name": "Faults exception 6 = No faults"
+                },
+                {
+                    "id": "pcs_faults_enabled_7",
+                    "offset": 40524,
+                    "name": "Faults exception 7 = No faults"
+                },
+                {
+                    "id": "pcs_faults_enabled_9",
+                    "offset": 40526,
+                    "name": "Faults exception 9 = No faults"
+                },
+                {
+                    "id": "pcs_faults_enabled_10",
+                    "offset": 40527,
+                    "name": "Faults exception 10 = No faults"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40542,
+            "number_of_registers": 67,
+            "map": [
+                {
+                    "id": "pcs_grad_recover_p",
+                    "offset": 40542,
+                    "scale": 0.1,
+                    "name": "Grad Recover P",
+                    "web_ui_options": "0.1% to 200.0%, 1 to 2000"
+                },
+                {
+                    "id": "pcs_enable_g4_11_1",
+                    "offset": 40542,
+                    "name": "Enable G4.11.1",
+                    "web_ui_options": "0=No, 1= Yes"
+                },
+                {
+                    "id": "pcs_cosfi_limit",
+                    "offset": 40543,
+                    "scale": 0.01,
+                    "name": "CosFi limit",
+                    "web_ui_options": "0.80 to 1.00. 80 to 100"
+                },
+                {
+                    "id": "pcs_v1_threshold",
+                    "offset": 40544,
+                    "scale": 0.1,
+                    "name": "V1 Threshold",
+                    "web_ui_options": "100.0% to G4.11.7%, 1000 to G4.11.7"
+                },
+                {
+                    "id": "pcs_v2_threshold",
+                    "offset": 40545,
+                    "scale": 0.1,
+                    "name": "V2 Threshold",
+                    "web_ui_options": "G4.11.2% to 120%, G4.11.2 to 1200"
+                },
+                {
+                    "id": "pcs_v1_hysteresis",
+                    "offset": 40546,
+                    "scale": 0.1,
+                    "name": "V1 Hysteresis",
+                    "web_ui_options": "0.5 to 10%, 5 to 100"
+                },
+                {
+                    "id": "pcs_grad_inject",
+                    "offset": 40547,
+                    "scale": 0.1,
+                    "name": "Grad Inj Q",
+                    "web_ui_options": "0.1 to 200.0 %/S, 1 to 2000"
+                },
+                {
+                    "id": "pcs_v2_hysetresis",
+                    "offset": 40548,
+                    "scale": 0.1,
+                    "name": "V2 Hysteresis",
+                    "web_ui_options": "0.5 to 10%, 5 to 100"
+                },
+                {
+                    "id": "pcs_grad_reduction_p",
+                    "offset": 40549,
+                    "scale": 0.1,
+                    "name": "Grad Reduction P",
+                    "web_ui_options": "0.1 to 200 %/S, 1 to 2000"
+                },
+                {
+                    "id": "pcs_grad_recover_q",
+                    "offset": 40550,
+                    "scale": 0.1,
+                    "name": "Grad Recover Q",
+                    "web_ui_options": "0.1% to 200.0%, 1 to 2000"
+                },
+                {
+                    "id": "pcs_p_control_mode_mppt",
+                    "offset": 40551,
+                    "name": "P control Mode = MPPt",
+                    "bit_strings": [
+                        "P control Mode = I",
+                        "P control mode = P",
+                        "P control mode = Vdc"
+                    ]
+                },
+                {
+                    "id": "pcs_q_control_mode_q",
+                    "offset": 40552,
+                    "name": "Q control Mode = Q",
+                    "bit_strings": [
+                        "Q control Mode = Cos phi",
+                        "Q control Mode = Q",
+                        "Q control Mode = I",
+                        "Q control mode = V/Q"
+                    ]
+                },
+                {
+                    "id": "pcs_p_reference_100",
+                    "offset": 40553,
+                    "name": "P reference = 100%"
+                },
+                {
+                    "id": "pcs_id_reference_100",
+                    "offset": 40554,
+                    "name": "Id reference = 100%"
+                },
+                {
+                    "id": "pcs_vdc_reference_v",
+                    "offset": 40556,
+                    "name": "Vdc reference = 1100V"
+                },
+                {
+                    "id": "pcs_cos_phi_reference_1_000",
+                    "offset": 40556,
+                    "name": "Cos phi reference = 1.000"
+                },
+                {
+                    "id": "pcs_iq_reference_0",
+                    "offset": 40557,
+                    "name": "Iq reference = 0"
+                },
+                {
+                    "id": "pcs_q_reference_0_0",
+                    "offset": 40558,
+                    "name": "Q reference = 0.0%"
+                },
+                {
+                    "id": "pcs_excitation_capacitive",
+                    "offset": 40559,
+                    "name": "Excitation = Capacitive"
+                },
+                {
+                    "id": "pcs_vref_100_00",
+                    "offset": 40576,
+                    "name": "Vref = 100.00%"
+                },
+                {
+                    "id": "pcs_v_90",
+                    "offset": 40577,
+                    "name": "V1=90%"
+                },
+                {
+                    "id": "pcs_v_92_00",
+                    "offset": 40578,
+                    "name": "V2 = 92.00%"
+                },
+                {
+                    "id": "pcs_v_108_00",
+                    "offset": 40579,
+                    "name": "V3 = 108.00%"
+                },
+                {
+                    "id": "pcs_v_110_00",
+                    "offset": 40580,
+                    "name": "V4 =  110.00%"
+                },
+                {
+                    "id": "pcs_q_48_43",
+                    "offset": 40581,
+                    "name": "Q1 = 48.43%"
+                },
+                {
+                    "id": "pcs_q_0_00",
+                    "offset": 40582,
+                    "name": "Q2 = 0.00%"
+                },
+                {
+                    "id": "pcs_q_0_00",
+                    "offset": 40583,
+                    "name": "Q3 = 0.00%"
+                },
+                {
+                    "id": "pcs_q_48_43",
+                    "offset": 40584,
+                    "name": "Q4 = 48.43%"
+                },
+                {
+                    "id": "pcs_v_hysterisis_1_0",
+                    "offset": 40585,
+                    "name": "V hysterisis = 1.0%"
+                },
+                {
+                    "id": "pcs_p_activation_20",
+                    "offset": 40586,
+                    "name": "P activation = 20%"
+                },
+                {
+                    "id": "pcs_p_deactivation_5_0",
+                    "offset": 40587,
+                    "name": "P deactivation = 5.0%"
+                },
+                {
+                    "id": "pcs_response_tdelay_s_3_s",
+                    "offset": 40588,
+                    "name": "Response Tdelay = 0.3 s"
+                },
+                {
+                    "id": "pcs_response_time_s_0_s",
+                    "offset": 40589,
+                    "name": "Response Time = 5.0 s"
+                },
+                {
+                    "id": "pcs_leak_protection_type",
+                    "offset": 40601,
+                    "name": "Leak Protection Type"
+                },
+                {
+                    "id": "pcs_fault_threshold_kohms_0kohms",
+                    "offset": 40602,
+                    "name": "Fault Threshold = 5.0kOhms"
+                },
+                {
+                    "id": "pcs_fault_recover_threshold_115",
+                    "offset": 40603,
+                    "name": "Fault Recover Threshold = 115%"
+                },
+                {
+                    "id": "pcs_warning_theshold_kohms_0kohms",
+                    "offset": 40604,
+                    "name": "Warning Theshold=50.0kOhms"
+                },
+                {
+                    "id": "pcs_self_test_xec_per_min",
+                    "offset": 40607,
+                    "name": "Self Test xec per = 1440min"
+                },
+                {
+                    "id": "pcs_self_test_manual_cmd",
+                    "offset": 40608,
+                    "name": "Self Test Manual Cmd"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40621,
+            "number_of_registers": 74,
+            "map": [
+                {
+                    "id": "pcs_leak_protection_type",
+                    "offset": 40621,
+                    "name": "Leak Protection Type"
+                },
+                {
+                    "id": "pcs_fault_threshold_kohms_0kohms",
+                    "offset": 40622,
+                    "name": "Fault Threshold = 5.0kOhms"
+                },
+                {
+                    "id": "pcs_fault_recover_threshold_115",
+                    "offset": 40623,
+                    "name": "Fault Recover Threshold = 115%"
+                },
+                {
+                    "id": "pcs_warning_theshold_kohms_0kohms",
+                    "offset": 40624,
+                    "name": "Warning Theshold=50.0kOhms"
+                },
+                {
+                    "id": "pcs_self_test_exec_per_1440",
+                    "offset": 40627,
+                    "name": "Self Test exec per = 1440"
+                },
+                {
+                    "id": "pcs_self_test_manual_command",
+                    "offset": 40628,
+                    "name": "Self Test Manual Command"
+                },
+                {
+                    "id": "pcs_vmeasure_nec_central_du_du",
+                    "offset": 40643,
+                    "name": "Vmeasure NEC 2014 = Central DU"
+                },
+                {
+                    "id": "pcs_du_measure_boards_0",
+                    "offset": 40644,
+                    "name": "DU measure boards = 0"
+                },
+                {
+                    "id": "pcs_channels_du_meas_1_0",
+                    "offset": 40645,
+                    "name": "Channels DU meas 1 = 0"
+                },
+                {
+                    "id": "pcs_channels_du_meas_2_0",
+                    "offset": 40646,
+                    "name": "Channels DU meas 2 = 0"
+                },
+                {
+                    "id": "pcs_channels_du_meas_3_0",
+                    "offset": 40647,
+                    "name": "Channels DU meas 3 = 0"
+                },
+                {
+                    "id": "pcs_channels_du_meas_4_0",
+                    "offset": 40648,
+                    "name": "Channels DU meas 4 = 0"
+                },
+                {
+                    "id": "pcs_enabled_nec_nec_2017",
+                    "offset": 40649,
+                    "name": "Enabled NEC = NEC 2017"
+                },
+                {
+                    "id": "pcs_du_type_hem",
+                    "offset": 40650,
+                    "name": "Du Type = HEM"
+                },
+                {
+                    "id": "pcs_working_mode_gfdi_imi",
+                    "offset": 40651,
+                    "name": "Working Mode = GFDI + IMI"
+                },
+                {
+                    "id": "pcs_isolation_meas_tout_s",
+                    "offset": 40652,
+                    "name": "Isolation meas tout =300s"
+                },
+                {
+                    "id": "pcs_du_channels_number_0",
+                    "offset": 40653,
+                    "name": "DU channels number = 0"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40654,
+                    "name": "Channel 1 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40655,
+                    "name": "Channel 2 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40656,
+                    "name": "Channel 3 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40657,
+                    "name": "Channel 4 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40658,
+                    "name": "Channel 5 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40659,
+                    "name": "Channel 6 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40660,
+                    "name": "Channel 7 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40661,
+                    "name": "Channel 8 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40662,
+                    "name": "Channel 9 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40663,
+                    "name": "Channel 10 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40664,
+                    "name": "Channel 11 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40665,
+                    "name": "Channel 12 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40666,
+                    "name": "Channel 13 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40667,
+                    "name": "Channel 14 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40668,
+                    "name": "Channel 15 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40669,
+                    "name": "Channel 16 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40670,
+                    "name": "Channel 17 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40671,
+                    "name": "Channel 18 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40672,
+                    "name": "Channel 19 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40673,
+                    "name": "Channel 20 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40674,
+                    "name": "Channel 21 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40675,
+                    "name": "Channel 22 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40676,
+                    "name": "Channel 23 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40677,
+                    "name": "Channel 24 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40678,
+                    "name": "Channel 25 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40679,
+                    "name": "Channel 26 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40680,
+                    "name": "Channel 27 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40681,
+                    "name": "Channel 28 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40682,
+                    "name": "Channel 29 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40683,
+                    "name": "Channel 30 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40684,
+                    "name": "Channel 31 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40685,
+                    "name": "Channel 32 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40686,
+                    "name": "Channel 33 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40687,
+                    "name": "Channel 34 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40688,
+                    "name": "Channel 35 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40689,
+                    "name": "Channel 36 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40690,
+                    "name": "Channel 37 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40691,
+                    "name": "Channel 38 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40692,
+                    "name": "Channel 39 ID = off"
+                },
+                {
+                    "id": "pcs_channel_id_off_off",
+                    "offset": 40693,
+                    "name": "Channel 40 ID = off"
+                },
+                {
+                    "id": "pcs_select_action_disabled",
+                    "offset": 40694,
+                    "name": "Select Action = Disabled"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40731,
+            "number_of_registers": 12,
+            "map": [
+                {
+                    "id": "pcs_enable_5_4b_1",
+                    "offset": 40731,
+                    "name": "Enable 5.4b.1.1"
+                },
+                {
+                    "id": "pcs_5_4b_1_V1",
+                    "offset": 40732,
+                    "name": "V1 = 120%"
+                },
+                {
+                    "id": "pcs_5_4b_1_f1",
+                    "offset": 40733,
+                    "name": "f1 = 62.00 Hz"
+                },
+                {
+                    "id": "pcs_5_4b_1_t1",
+                    "offset": 40734,
+                    "name": "t1 = 1.0 s"
+                },
+                {
+                    "id": "pcs_enable_5_4b_2",
+                    "offset": 40735,
+                    "name": "Enable 5.4b.2.1"
+                },
+                {
+                    "id": "pcs_5_4b_2_V2",
+                    "offset": 40736,
+                    "name": "V2 = 80%"
+                },
+                {
+                    "id": "pcs_5_4b_2_f2",
+                    "offset": 40737,
+                    "name": "f2 = 62.00 Hz"
+                },
+                {
+                    "id": "pcs_5_4b_2_t2",
+                    "offset": 40738,
+                    "name": "t2 = 1.0 s"
+                },
+                {
+                    "id": "pcs_enable_5_4b_3",
+                    "offset": 40739,
+                    "name": "Enable 5.4b.3.1"
+                },
+                {
+                    "id": "pcs_5_4b_3_V3",
+                    "offset": 40740,
+                    "name": "V3 = 120%"
+                },
+                {
+                    "id": "pcs_5_4b_3_f3",
+                    "offset": 40741,
+                    "name": "f3 = 58.00 Hz"
+                },
+                {
+                    "id": "pcs_5_4b_3_t3",
+                    "offset": 40742,
+                    "name": "t3 = 1.0 s"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40801,
+            "number_of_registers": 29,
+            "map": [
+                {
+                    "id": "pcs_enable_g_2",
+                    "offset": 40801,
+                    "name": "Enable G12.2"
+                },
+                {
+                    "id": "pcs_bfps_status",
+                    "offset": 40802,
+                    "name": "BFPS status",
+                    "bit_strings": [
+                        "BFPS online",
+                        "BFPS Contactor",
+                        "BFPS Feeback Contactor",
+                        "BFPS current present error",
+                        "BFPS Feedback close error",
+                        "BFPS Feedback opn error",
+                        "BFPS comms error",
+                        "BFPS No conditions error",
+                        "BFPS Max power fault",
+                        "BFPS Max Current Fault",
+                        "BFPS High voltage fault",
+                        "BFPS Low voltage fault",
+                        "BFPS Contactor fault",
+                        "BFPS Blown Fuse fault"
+                    ]
+                },
+                {
+                    "id": "pcs_action_disabled",
+                    "offset": 40803,
+                    "name": "Action = Disabled"
+                },
+                {
+                    "id": "pcs_current_measureed_a_0_a",
+                    "offset": 40804,
+                    "name": "Current Measureed = 0.0 A"
+                },
+                {
+                    "id": "pcs_voltage_measureed",
+                    "offset": 40805,
+                    "scale": 0.1,
+                    "name": "Voltage Measureed",
+                    "web_ui_options": "0.1% to 200.0%, 1 to 2000"
+                },
+                {
+                    "id": "pcs_max_power_kw",
+                    "offset": 40811,
+                    "name": "Max Power = 10KW"
+                },
+                {
+                    "id": "pcs_delay_max_power_fault_s",
+                    "offset": 40812,
+                    "name": "Delay Max Power fault = 10s"
+                },
+                {
+                    "id": "pcs_max_current_a",
+                    "offset": 40813,
+                    "name": "Max Current = 100A"
+                },
+                {
+                    "id": "pcs_delay_max_current_fault_s_s",
+                    "offset": 40814,
+                    "name": "Delay Max Current Fault - 1 s"
+                },
+                {
+                    "id": "pcs_max_voltage_fault_120",
+                    "offset": 40815,
+                    "name": "Max Voltage Fault - 120%"
+                },
+                {
+                    "id": "pcs_min_voltage_fault_88",
+                    "offset": 40816,
+                    "name": "Min Voltage Fault = 88%"
+                },
+                {
+                    "id": "pcs_ref_power",
+                    "offset": 40819,
+                    "name": "Ref Power Rel",
+                    "web_ui_options": "0=rel, 1= abs"
+                },
+                {
+                    "id": "pcs_rec_mode",
+                    "offset": 40820,
+                    "name": "Recover Mode",
+                    "web_ui_options": "0=Abs, 1= Rel"
+                },
+                {
+                    "id": "pcs_enable_G4_10_1",
+                    "offset": 40821,
+                    "name": "Enable 4.10.1"
+                },
+                {
+                    "id": "pcs_v1",
+                    "offset": 40822,
+                    "scale": 0.01,
+                    "name": "V1",
+                    "web_ui_options": "100 to g4_10_3%"
+                },
+                {
+                    "id": "pcs_v2",
+                    "offset": 40823,
+                    "scale": 0.01,
+                    "name": "V2",
+                    "web_ui_options": "G4.10.2% to 140%, G4.10.2 to 14000"
+                },
+                {
+                    "id": "pcs_p1",
+                    "offset": 40824,
+                    "scale": 0.01,
+                    "name": "P1",
+                    "web_ui_options": "G4.10.5% to 100%, G4.10.5 to 10000"
+                },
+                {
+                    "id": "pcs_p2",
+                    "offset": 40825,
+                    "scale": 0.01,
+                    "name": "P2",
+                    "web_ui_options": "0 to G4.10.4% , 0 to G4.10.4"
+                },
+                {
+                    "id": "pcs_hysteresis",
+                    "offset": 40826,
+                    "scale": 0.1,
+                    "name": "Hysteresis",
+                    "web_ui_options": "0 to 10%, 0 to 100"
+                },
+                {
+                    "id": "pcs_delay_hysteresis",
+                    "offset": 40828,
+                    "scale": 0.1,
+                    "name": "Delay Hysterisis",
+                    "web_ui_options": "0.0 to 90 Sec, 0 to 900"
+                },
+                {
+                    "id": "pcs_response_tiime",
+                    "offset": 40829,
+                    "scale": 0.1,
+                    "name": "Response Time",
+                    "web_ui_options": "0.0 to 90.0s, 0 to 900"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 40971,
+            "number_of_registers": 2,
+            "map": [
+                {
+                    "id": "pcs_inv_curent_prot_a_a",
+                    "offset": 40971,
+                    "name": "Inv Curent Prot = -350 A"
+                },
+                {
+                    "id": "pcs_du_neg_i_detect_a_0_a",
+                    "offset": 40972,
+                    "name": "DU neg I detect = -100.0 A"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 43010,
+            "number_of_registers": 1,
+            "map": [
+                {
+                    "id": "pcs_start",
+                    "offset": 43010,
+                    "name": "Start",
+                    "web_ui_display_type": "enum",
+                    "web_ui_options": "1 = Start"
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 44253,
+            "number_of_registers": 73,
+            "map": [
+                {
+                    "id": "pcs_reset_refs_time_s",
+                    "offset": 44253,
+                    "name": "Reset refs time = 4s"
+                },
+                {
+                    "id": "pcs_comms_fault_time_s_s",
+                    "offset": 44254,
+                    "name": "Comms Fault time = 60 s"
+                },
+                {
+                    "id": "pcs_home_p_ref_0_0",
+                    "offset": 44255,
+                    "name": "Home P ref  = 0.0%"
+                },
+                {
+                    "id": "pcs_home_q_ref_0_0",
+                    "offset": 44256,
+                    "name": "Home Q ref = 0.0%"
+                },
+                {
+                    "id": "pcs_p_reference_100_00",
+                    "offset": 44301,
+                    "name": "P1 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_p_reference_100_00",
+                    "offset": 44302,
+                    "name": "P2 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_p_reference_100_00",
+                    "offset": 44303,
+                    "name": "P3 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_p_reference_100_00",
+                    "offset": 44304,
+                    "name": "P4 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_p_reference_100_00",
+                    "offset": 44305,
+                    "name": "P5 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_p_reference_100_00",
+                    "offset": 44306,
+                    "name": "P6 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_p_reference_100_00",
+                    "offset": 44307,
+                    "name": "P7 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_id_reference_100_00",
+                    "offset": 44311,
+                    "name": "Id1 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_id_reference_100_00",
+                    "offset": 44312,
+                    "name": "Id2 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_id_reference_100_00",
+                    "offset": 44313,
+                    "name": "Id3 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_id_reference_100_00",
+                    "offset": 44314,
+                    "name": "Id4 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_id_reference_100_00",
+                    "offset": 44315,
+                    "name": "Id5 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_id_reference_100_00",
+                    "offset": 44316,
+                    "name": "Id6 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_id_reference_100_00",
+                    "offset": 44317,
+                    "name": "Id7 reference = 100.00%"
+                },
+                {
+                    "id": "pcs_conn_mod_battery",
+                    "offset": 44321,
+                    "name": "Conn Mod Battery"
+                },
+                {
+                    "id": "pcs_start_mod_battery",
+                    "offset": 44322,
+                    "name": "Start Mod Battery"
+                },
+                {
+                    "id": "pcs_isol_mod_battery",
+                    "offset": 44323,
+                    "name": "Isolated Mod Battery"
+                },
+                {
+                    "id": "pcs_reset_mod_battery",
+                    "offset": 44324,
+                    "name": "Reset Mod Battery"
+                },
+                {
+                    "id": "pcs_battery_config",
+                    "offset": 44325,
+                    "name": "Battery Config",
+                    "enum": true,
+                    "bit_strings": []
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 40003,
+            "number_of_registers": 2,
+            "map": [
+                {
+                    "id": "pcs_access",
+                    "offset": 40003,
+                    "name": "Access Code",
+                    "signed": true
+                },
+                {
+                    "id": "pcs_user",
+                    "offset": 40004,
+                    "name": "User",
+                    "signed": true
+                }
+            ]
+        }
+    ]
+}

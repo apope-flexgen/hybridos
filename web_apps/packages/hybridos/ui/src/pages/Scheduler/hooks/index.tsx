@@ -1,14 +1,20 @@
-/* eslint-disable max-lines, max-statements, max-nested-callbacks */
+/* eslint-disable */
+//TODO: fix lint
 import { TimeZones } from '@flexgen/storybook';
 import { useState, useEffect, useCallback } from 'react';
 import { Roles } from 'shared/types/api/Users/Users.types';
-import {
-  ApiMode, Configuration, EventsObject, Connected,
-} from 'shared/types/dtos/scheduler.dto';
+import { ApiMode, Configuration, EventsObject, Connected } from 'shared/types/dtos/scheduler.dto';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { schedulerURLS } from 'src/pages/Scheduler/SchedulerComponents/EventScheduler/EventSchedulerHelper';
-import { ModalStateType, SchedulerModalTypes } from 'src/pages/Scheduler/SchedulerComponents/Modal/Helpers';
-import { initialSCConfig, initialFMConfig, SchedulerTypes } from 'src/pages/Scheduler/SchedulerConfiguration/Helpers';
+import {
+  ModalStateType,
+  SchedulerModalTypes,
+} from 'src/pages/Scheduler/SchedulerComponents/Modal/Helpers';
+import {
+  initialSCConfig,
+  initialFMConfig,
+  SchedulerTypes,
+} from 'src/pages/Scheduler/SchedulerConfiguration/Helpers';
 import { schedulerLabels } from 'src/pages/Scheduler/SchedulerHelpers';
 import { SchedulerTabs, FleetManagerSite } from 'src/pages/Scheduler/SchedulerTypes';
 import QueryService from 'src/services/QueryService';
@@ -29,7 +35,7 @@ export default function useScheduler(currentUser: { role: string }, product: str
   const [modes, setModes] = useState<ApiMode>({});
   const [events, setEvents] = useState<EventsObject>({});
   const [connected, setConnected] = useState<Connected>({});
-  const [schedulerType, setSchedulerType] = useState<SchedulerTypes>('SC');
+  const [schedulerType, setSchedulerType] = useState<SchedulerTypes>();
 
   const [unsavedChange, setUnsavedChange] = useState<boolean>(false);
   const [navigationFlag, setNavigationFlag] = useState<boolean>(false);
@@ -47,33 +53,53 @@ export default function useScheduler(currentUser: { role: string }, product: str
   const disableAllFields = role === Roles.Observer;
 
   const [configured, setConfigured] = useState(false);
+  const [disableModeManager, setDisableModeManager] = useState<boolean>(false);
+
+  useEffect(() => {
+    const disabled =
+      schedulerConfiguration?.scheduler_type === 'SC' &&
+      schedulerConfiguration?.web_sockets?.server?.enabled;
+    setDisableModeManager(disabled || false);
+  }, [schedulerConfiguration]);
 
   const axiosInstance = useAxiosWebUIInstance();
 
   const defaultFleetName = 'Fleet Manager';
 
-  const updateConfigurationData = useCallback((data: Configuration) => {
-    const configData = data as Configuration;
-    setSchedulerConfiguration(configData);
-    if (configData.scheduler_type === 'SC') {
-      setSiteId(configData.local_schedule?.id);
-      setSiteName(configData.local_schedule?.name);
-    } else if (configData.scheduler_type === 'FM') {
-      if (configData?.web_sockets?.clients) {
-        const siteExists = configData.web_sockets.clients.find((obj: any) => obj.id === siteId);
-        if (!siteExists) setSiteId(undefined);
-        const siteArray: FleetManagerSite[] = [];
-        configData.web_sockets.clients.map(
-          (site: FleetManagerSite) => siteArray.push({ id: site.id, name: site.name }),
-        );
-        setFMSites(siteArray);
-      }
+  const updateConfigurationData = useCallback(
+    (data: Configuration) => {
+      const configData = data as Configuration;
+      setSchedulerConfiguration(configData);
+      if (configData.scheduler_type === 'SC') {
+        setSiteId(configData.local_schedule?.id);
+        setSiteName(configData.local_schedule?.name);
+      } else if (configData.scheduler_type === 'FM') {
+        if (configData?.web_sockets?.clients) {
+          const siteExists =
+            configData.web_sockets.clients.find((obj: any) => obj.id === siteId) ||
+            configData.local_schedule?.id === siteId;
+          if (!siteExists) setSiteId(undefined);
+          const siteArray: FleetManagerSite[] = [];
+          configData.web_sockets.clients.map((site: FleetManagerSite) =>
+            siteArray.push({ id: site.id, name: site.name }),
+          );
+          if (configData?.local_schedule?.name && configData?.local_schedule?.id) {
+            siteArray.push({
+              id: configData?.local_schedule?.id,
+              name: configData?.local_schedule?.name,
+              fleetSchedule: true,
+            });
+          }
+          setFMSites(siteArray);
+        }
 
-      if (!configData?.local_schedule?.name || configData?.local_schedule?.name.length === 0) {
-        setSiteName(defaultFleetName);
-      } else setSiteName(configData.local_schedule?.name);
-    }
-  }, [siteId]);
+        if (!configData?.local_schedule?.name || configData?.local_schedule?.name.length === 0) {
+          setSiteName(defaultFleetName);
+        } else setSiteName(configData.local_schedule?.name);
+      }
+    },
+    [siteId],
+  );
 
   const updateTimeZoneData = useCallback(
     (data: any) => {
@@ -105,31 +131,30 @@ export default function useScheduler(currentUser: { role: string }, product: str
     modalState,
     setModalState,
     disableAllFields,
+    disableModeManager,
   };
 
-  /** This checks if the configuration object (if found) is valid */
-  const validateConfig = (
-    res: any,
-  ) => {
-    /** First check if the config is invalid
-       * Invalid configs: no config found, empty object, schedulerType missing
-       */
-      console.log(product)
+  const validateConfig = async (res: any) => {
     if (!res.data || Object.keys(res.data).length === 0 || !res.data.scheduler_type) {
-      // Check web_ui.json product flag to see if we should load SC/FM to the UI
-      const uiSchedulerType = product as SchedulerTypes;
-      setSchedulerType(uiSchedulerType);
+      try {
+        const uiSchedulerType = product as SchedulerTypes;
         if (uiSchedulerType === 'FM') {
-          setConfigured(true);
+          const fmConfig = await axiosInstance.post(
+            schedulerURLS.postConfiguration,
+            initialFMConfig,
+          );
           updateConfigurationData(initialFMConfig);
+          setSchedulerType('FM');
+          setSiteName(defaultFleetName);
+          setConfigured(true);
         } else if (uiSchedulerType === 'SC') {
           setConfigured(false);
+          setSchedulerType('SC');
           updateConfigurationData(initialSCConfig);
         }
-      return;
-    }
-
-    if (res.data.scheduler_type) {
+      } finally {
+      }
+    } else if (res.data.scheduler_type) {
       // Valid FM. (FM only needs a schedulerType field)
       if (res.data.scheduler_type === 'FM') {
         updateConfigurationData(res.data);
@@ -155,59 +180,64 @@ export default function useScheduler(currentUser: { role: string }, product: str
   // get initial site configuration
   useEffect(() => {
     setIsLoading(true);
-    axiosInstance.get(schedulerURLS.getConfiguration)
-      .then((res) => {
-        validateConfig(res);
+    const getConfig = async () => {
+      try {
+        const data = await axiosInstance.get(schedulerURLS.getConfiguration);
+        validateConfig(data);
         setIsLoading(false);
-      });
-  // TODO: fix eslint-ignore
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      } finally {
+      }
+    };
+    getConfig();
   }, [axiosInstance, updateConfigurationData]);
 
   // get initial timezoneconnected, modes, events
   useEffect(() => {
-    axiosInstance.get(schedulerURLS.getTimezones)
-      .then((timezonesResponse) => {
+    if (configured) {
+      axiosInstance.get(schedulerURLS.getTimezones).then((timezonesResponse) => {
         updateTimeZoneData(timezonesResponse.data);
-        axiosInstance.get(schedulerURLS.getConnected)
-          .then((connectedResponse) => {
-            setConnected(connectedResponse.data);
-            axiosInstance.get(schedulerURLS.getModes)
-              .then((modesResponse) => {
-                setModes(modesResponse.data);
-                axiosInstance.get(schedulerURLS.getEvents)
-                  .then((eventsResponse) => {
-                    setEvents(eventsResponse.data);
-                    setIsLoading(false);
-                  });
-              });
+        axiosInstance.get(schedulerURLS.getConnected).then((connectedResponse) => {
+          setConnected(connectedResponse.data);
+          axiosInstance.get(schedulerURLS.getModes).then((modesResponse) => {
+            setModes(modesResponse.data);
+            axiosInstance.get(schedulerURLS.getEvents).then((eventsResponse) => {
+              setEvents(eventsResponse.data);
+              setIsLoading(false);
+            });
           });
+        });
       });
-  // TODO: fix eslint ignore
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [axiosInstance, siteId]);
+    }
+    // TODO: fix eslint ignore
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [axiosInstance, configured, siteId]);
 
   // handle data coming in on socket
-  const handleDataOnSocket = useCallback((newInformationFromSocket: MessageEvent) => {
-    const data = JSON.parse(newInformationFromSocket.data);
-    if (data[schedulerURLS.getConfiguration]) {
-      updateConfigurationData(data[schedulerURLS.getConfiguration]);
-    }
-    if (data[schedulerURLS.getTimezones]) updateTimeZoneData(data[schedulerURLS.getTimezones]);
-    if (data[schedulerURLS.getConnected]) setConnected(data[schedulerURLS.getConnected]);
-    if (data[schedulerURLS.getEvents]) setEvents(data[schedulerURLS.getEvents]);
-    if (data[schedulerURLS.getModes]) setModes(data[schedulerURLS.getModes]);
-  }, [updateConfigurationData, updateTimeZoneData]);
+  const handleDataOnSocket = useCallback(
+    (data: any) => {
+      if (data[schedulerURLS.getConfiguration]) {
+        updateConfigurationData(data[schedulerURLS.getConfiguration]);
+      }
+      if (data[schedulerURLS.getTimezones]) updateTimeZoneData(data[schedulerURLS.getTimezones]);
+      if (data[schedulerURLS.getConnected]) setConnected(data[schedulerURLS.getConnected]);
+      if (data[schedulerURLS.getEvents]) setEvents(data[schedulerURLS.getEvents]);
+      if (data[schedulerURLS.getModes]) setModes(data[schedulerURLS.getModes]);
+    },
+    [updateConfigurationData, updateTimeZoneData],
+  );
 
   // start listening to web sockets
   useEffect(() => {
-    QueryService.getSchedulerPage([
-      schedulerURLS.getModes,
-      schedulerURLS.getEvents,
-      schedulerURLS.getConfiguration,
-      schedulerURLS.getConnected,
-      schedulerURLS.getTimezones,
-    ], handleDataOnSocket);
+    QueryService.getSchedulerPage(
+      [
+        schedulerURLS.getModes,
+        schedulerURLS.getEvents,
+        schedulerURLS.getConfiguration,
+        schedulerURLS.getConnected,
+        schedulerURLS.getTimezones,
+      ],
+      handleDataOnSocket,
+    );
 
     return () => {
       QueryService.cleanupSocket();

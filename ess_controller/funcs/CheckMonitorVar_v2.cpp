@@ -100,6 +100,7 @@ void runCommsCheck(varsmap& vmap, varmap& amap, const char* aname, assetVar* av)
     double resetTimeout        = av->getdParam("resetTimeout");
     double currFaultTime       = av->getdParam("currFaultTime");
     double currResetTime       = av->getdParam("currResetTime");
+    bool enableComms           = av->getbParam("enableComms");
     bool enableAlert           = av->getbParam("enableAlert");
     bool seenFault             = av->getbParam("seenFault");
     bool seenReset             = av->getbParam("seenReset");
@@ -107,6 +108,17 @@ void runCommsCheck(varsmap& vmap, varmap& amap, const char* aname, assetVar* av)
     bool resetConditionMet     = false;
 
     av->setParam("tLast", tNow);
+
+    // If comms monitoring is disabled, then reset alarm/fault/reset states and timers and then exit
+    if (!enableComms)
+    {
+        av->setParam("currFaultTime", av->getdParam("faultTimeout"));                
+        av->setParam("currResetTime", av->getdParam("resetTimeout"));
+
+        av->setParam("seenFault", false);                
+        av->setParam("seenReset", false);
+        return;
+    }
 
     // Check fault conditions
     switch (av->type)
@@ -260,6 +272,7 @@ void runMonitor(varsmap& vmap, varmap& amap, const char* aname, assetVar* av)
     double currAlarmTime       = av->getdParam("currAlarmTime");
     double currFaultTime       = av->getdParam("currFaultTime");
     double currResetTime       = av->getdParam("currResetTime");
+    bool enableMonitor         = av->getbParam("enableMonitor");
     bool enableFault           = av->getbParam("enableFault");
     bool enableAlert           = av->getbParam("enableAlert");
     bool seenAlarm             = av->getbParam("seenAlarm");
@@ -270,6 +283,19 @@ void runMonitor(varsmap& vmap, varmap& amap, const char* aname, assetVar* av)
     bool resetConditionMet     = false;
 
     av->setParam("tLast", tNow);
+
+    // If monitoring is disabled, then reset alarm/fault/reset states and timers and then exit
+    if (!enableMonitor)
+    {
+        av->setParam("currAlarmTime", av->getdParam("alarmTimeout"));  
+        av->setParam("currFaultTime", av->getdParam("faultTimeout"));                
+        av->setParam("currResetTime", av->getdParam("resetTimeout"));
+
+        av->setParam("seenAlarm", false);
+        av->setParam("seenFault", false);                
+        av->setParam("seenReset", false);
+        return;
+    }
 
     // If fault check is disabled, set FaultShutdown back to false
     if (!enableFault)
@@ -489,9 +515,9 @@ int CheckMonitorVar_v2(varsmap& vmap, varmap& amap, const char* aname, fims* p_f
     }
 
     // Run monitoring function
-    if (av->gotParam("enableMonitor") && av->getbParam("enableMonitor"))
+    if (av->gotParam("enableMonitor"))
         runMonitor(vmap, amap, aname, av);
-    else if (av->gotParam("enableComms") && av->getbParam("enableComms"))
+    else if (av->gotParam("enableComms"))
         runCommsCheck(vmap, amap, aname, av);
 
     return 0;

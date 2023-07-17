@@ -10,6 +10,10 @@ import request from './../../../testReqAgent'
 import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
+import { useContainer } from 'class-validator'
+import { SITE_ADMINS_SERVICE } from 'src/siteAdmins/interfaces/siteAdmin.service.interface'
+import { ValidPasswordConstraint } from 'src/users/validators/IsValidPassword'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 const isDefaultsiteAdmins = (res) => {
     testUtils.checksiteAdminsFields(res, testUtils.site(false, false, false))
@@ -24,14 +28,26 @@ describe('Authentication (Integration)', () => {
 
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
+            providers: [
+                ValidPasswordConstraint,
+                {
+                    provide: SITE_ADMINS_SERVICE,
+                    useValue: {
+                        find: jest.fn()
+                    }
+                },
+            ]
         })
             .overrideProvider(AppEnvService)
             .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+            .overrideProvider(PermissionsService)
+            .useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer
 
         app = testUtils.createTestApiApplication(moduleFixture)
+        useContainer(moduleFixture, { fallbackOnErrors: true })
         app.useWebSocketAdapter(new WsAdapter(app))
         app.use(cookieParser())
         await app.init()
@@ -100,7 +116,7 @@ describe('Authentication (Integration)', () => {
 
         // test protected route (should pass)
         await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', accessToken)
             .then((res) => {
                 expect(res.status).toBe(200)
@@ -157,7 +173,7 @@ describe('Authentication (Integration)', () => {
 
         // test protected route (should pass)
         await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', accessToken)
             .then((res) => {
                 expect(res.status).toBe(200)
@@ -248,7 +264,7 @@ describe('Authentication (Integration)', () => {
 
         // test protected route (should pass)
         await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', accessToken)
             .set('Cookie', refreshToken)
             .then((res) => {
@@ -297,7 +313,7 @@ describe('Authentication (Integration)', () => {
 
         // test protected route (should pass)
         await request(app.getHttpServer())
-            .get('/app-settings')
+            .get('/site-admins')
             .set('Authorization', accessToken)
             .then((res) => {
                 expect(res.status).toBe(200)

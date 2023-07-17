@@ -1,8 +1,12 @@
-import { DatePicker, DualTimePicker, Select } from '@flexgen/storybook';
+/* eslint-disable max-len */
+import {
+  Box, DatePicker, DualTimePicker, Select,
+} from '@flexgen/storybook';
 import { SelectChangeEvent } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { FC, useState } from 'react';
 import { EventsRequestParams } from 'shared/types/dtos/events.dto';
+import { datePickerSx } from 'src/pages/Events/Styles';
 import {
   checkIfStartBeforeEnd,
   datePickerLabel,
@@ -15,8 +19,8 @@ import {
 } from './EventDateTime-helpers';
 
 interface EventsDateTimeProps {
-  filters: EventsRequestParams
-  setFilters: (value: React.SetStateAction<EventsRequestParams>) => void
+  filters: EventsRequestParams;
+  setFilters: (value: React.SetStateAction<EventsRequestParams>) => void;
 }
 
 const EventDateTime: FC<EventsDateTimeProps> = ({ filters, setFilters }: EventsDateTimeProps) => {
@@ -27,15 +31,17 @@ const EventDateTime: FC<EventsDateTimeProps> = ({ filters, setFilters }: EventsD
 
   return (
     <>
-      <DatePicker
-        label={datePickerLabel}
-        onChange={(newDate: dayjs.Dayjs | null) => {
-          setDateValue(newDate);
-          handleDateChange(newDate, setTimeFrame, startTime, filters, setFilters);
-        }}
-        size="small"
-        value={date}
-      />
+      <Box sx={datePickerSx}>
+        <DatePicker
+          label={datePickerLabel}
+          onChange={(newDate: dayjs.Dayjs | null) => {
+            setDateValue(newDate);
+            handleDateChange(newDate, setTimeFrame, filters, setFilters);
+          }}
+          size="small"
+          value={date}
+        />
+      </Box>
       <Select
         label={timeFrameLabel}
         menuItems={timeFrameOptions}
@@ -53,21 +59,8 @@ const EventDateTime: FC<EventsDateTimeProps> = ({ filters, setFilters }: EventsD
       <DualTimePicker
         disabled={timeFrame !== 'Custom' || date === null}
         error={checkIfStartBeforeEnd(startTime, endTime)}
-        onEndChange={(event: SelectChangeEvent<string>) => handleEndTimeChange(
-          event,
-          setEndTime,
-          date,
-          startTime,
-          filters,
-          setFilters,
-        )}
-        onStartChange={(event: SelectChangeEvent<string>) => handleStartTimeChange(
-          event,
-          setStartTime,
-          date,
-          filters,
-          setFilters,
-        )}
+        onEndChange={(event: SelectChangeEvent<string>) => handleEndTimeChange(event, setEndTime, date, startTime, filters, setFilters)}
+        onStartChange={(event: SelectChangeEvent<string>) => handleStartTimeChange(event, setStartTime, date, filters, setFilters)}
         values={[startTime, endTime]}
       />
     </>

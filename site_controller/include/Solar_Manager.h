@@ -119,8 +119,6 @@ public:
     void process_asset_data(void);
     void update_asset_data(void);
 
-    void set_solar_clear_faults(void);
-
     void start_first_solar(bool enable);
 
     void set_solar_curtailment_enabled(bool enable);

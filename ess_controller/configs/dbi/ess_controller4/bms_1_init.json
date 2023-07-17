@@ -1,0 +1,28 @@
+{
+    "/doc/01ess": {
+        "notes1":" This is the start of the bms loader process",
+        "notes2":" This will set up load management entries for ess_configure ",
+        "notes32":"                                       bms_manager ",
+        "notes41":"                                       bms_1_manager ",
+        "notes5":"                                       pcs_manager ",
+        "notes6":"                                 and  site_manager ",
+        "notes7":"     the system will try and load these files from dbi  ",
+        "notes8":"     after completing a successful load the ess_final file will be requested ",
+        "notes9":"     for now, we have to specify the individual cfile and tmpl loaders as well "
+
+    },
+    "/config/load": {
+
+        "bms_controller": {
+            "value":false,
+            "file":"bms_1_controller",
+            "aname":"bms",
+            "final": "bms_1_final",
+            "new_options": [
+                { "file":"bms_1_manager",    "aname":"bms_1", "pname":"bms"  },
+                { "file":"bms_1_pcs_manager", "aname":"pcs",   "pname":"bms"  },
+                { "file":"bms_1_site_manager", "aname":"site",  "pname":"bms"  }
+            ]
+        }
+    }
+}

@@ -1,0 +1,124 @@
+Variables are in varsMap
+
+  // build object to display or variable
+    fimsMap* fMap = new fimsMap();
+
+    if (fMap == nullptr)
+    {
+        FPS_ERROR_PRINT("fMap or fMapChk nullptr: malloc error insertVarsMap\n");
+        return false;
+    }
+
+    if (componentId > MAX_COMPS || componentId > numAssetComponents || (compNames[componentId] == nullptr))
+    {
+        FPS_ERROR_PRINT("componentId out of range or component name nullptr\n");
+        return false;
+    }
+
+    if (((vUnit = cJSON_GetObjectItem(varJson, "unit")) == nullptr) || (vUnit->valuestring == nullptr))
+        fMap->unit = strdup("");
+    else
+        fMap->unit = strdup(vUnit->valuestring);
+
+    fMap->varName = strdup(vName->valuestring);
+    fMap->scaler = vScaler->valueint;
+
+    fMap->enabled = varEnabled;
+    fMap->vt = numType;
+    fMap->uiType = uitype;
+    fMap->pUpdate = target;
+    fMap->boolString = boolStr;
+    fMap->pDisplay = display;
+
+    if (strcmp(varJson->string, "status") == 0)
+        fMap->bitStrings = statusStrings;
+    else if (strcmp(varJson->string, "faults") == 0)
+        fMap->bitStrings = faultStrings;
+    else if (strcmp(varJson->string, "alarms") == 0)
+        fMap->bitStrings = alarmStrings;
+
+    if (vFunc == controlMp)
+        fMap->vUsage = strdup("control");
+    else if (vFunc == statusMp)
+        fMap->vUsage = strdup("status");
+    else if (vFunc == faultMp)
+        fMap->vUsage = strdup("fault");
+    else if (vFunc == alarmMp)
+        fMap->vUsage = strdup("alarm");
+    else if (vFunc == noneMp)
+        fMap->vUsage = strdup("none");
+
+    std::pair<std::map<std::string, fimsMap *>::iterator, bool> rtn_val;
+    rtn_val = varsMap.insert(std::make_pair(varJson->string, fMap));
+
+compVars map directly to vars by pUpdate
+
+
+  //If register_id is valid, build object to update register
+    cJSON *vregName = cJSON_GetObjectItem(varJson, "register_id");
+    if (vregName == nullptr || vregName->valuestring == nullptr)
+    {
+        FPS_ERROR_PRINT("register_id nullptr: insertVarsMap %s\n", fMap->varName);
+        return (false);
+    }
+    else
+    {
+        //FPS_DEBUG_PRINT("vregName : %s %s %d \n", vregName->valuestring, uriString, numType);
+    }
+
+    fimsMapChk* fMapChk = new fimsMapChk();
+
+    if (fMap == nullptr || fMapChk == nullptr )
+    {
+        FPS_ERROR_PRINT("fMap or fMapChk nullptr: malloc error insertVarsMap\n");
+        return false;
+    }
+
+    if (uriString != nullptr)
+        *uriString = build_uri(compNames[componentId], vregName->valuestring);
+
+    fMapChk->bitStrings= fMap->bitStrings;
+    fMapChk->vt = numType;
+    fMapChk->pUpdate = target;
+    fMapChk->rwrType = rType;
+
+    std::pair<std::map<std::string, fimsMapChk *>::iterator, bool> rtn_chk_val;
+    rtn_chk_val = compVars[componentId].insert(std::make_pair(vregName->valuestring, fMapChk));
+    if (rtn_chk_val.second == false) // check for id exists and is unique
+    {
+        FPS_ERROR_PRINT("Insert into fimsMapChk failed: %s, comp: %s var: %s\n", varJson->string, compNames[componentId], vName->valuestring);
+        return (false)
+
+
+
+pub to a wrong compvar and you get this
+
+
+  {
+            FPS_ERROR_PRINT("Asset::process_pub %s var list looking for [%s]\n", compNames[compIdx], cur->string);
+            std::map <std::string, fimsMapChk* >::iterator it;
+            // = compVars[compIdx].find(cur->string);
+            for (it = compVars[compIdx].begin() ; it!= compVars[compIdx].end() ; ++it)
+            //&& compVarsIT->second->pUpdate != nullptr)
+            { 
+                FPS_ERROR_PRINT("Asset::process_pub   .... [%s]\n", it->first.c_str());
+            }
+        }
+
+pubs cause variables to be set but they have to be via register_id
+sets work on varsmap
+
+
+Can you also get the varmap ??
+
+no not yet
+
+note that we could save the register_id in the var map
+and have a good old get on the component
+set {"maint_mode":true) or false
+
+get /assets/ess/componentid/summary[/ess name]
+
+gets all the vars
+
+

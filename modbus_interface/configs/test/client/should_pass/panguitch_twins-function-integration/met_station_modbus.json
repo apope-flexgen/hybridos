@@ -1,0 +1,381 @@
+{
+	"system":
+	{
+		"id": "met_station",
+		"ip_address": "10.201.112.150",
+		"port": 502,
+		"device_id": 1,
+		"frequency": 1000,
+		"off_by_one": false,
+		"byte_swap": false
+	},
+    "registers": [
+        {
+            "type": "Holding Registers",
+            "starting_offset": 1,
+            "number_of_registers": 104,
+            "map": [
+                {
+                    "id": "heartbeat",
+                    "offset": 1,
+                    "size": 2,
+                    "name": "Heartbeat",
+                    "float": true
+                },
+                {
+                    "id": "supply_voltage",
+                    "offset": 3,
+                    "size": 2,
+                    "name": "Supply Voltage",
+                    "float": true
+                },
+                {
+                    "id": "sensor_1_irradiance",
+                    "offset": 5,
+                    "size": 2,
+                    "name": "Pyranometer 1 (RC18) Irradiance",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_irradiance",
+                    "offset": 7,
+                    "size": 2,
+                    "name": "Pyranometer 2 (SR30) Irradiance - GHI",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_irradiance",
+                    "offset": 9,
+                    "size": 2,
+                    "name": "Pyranometer 3 (SR30) Irradiance - POA_1",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_irradiance",
+                    "offset": 11,
+                    "size": 2,
+                    "name": "Pyranometer 4 (SR30) Irradiance - POA_2",
+                    "float": true
+                },
+                {
+                    "id": "back_mod_temp_1",
+                    "offset": 13,
+                    "size": 2,
+                    "name": "Back of Module 1 (CS240) Temperature",
+                    "float": true
+                },
+                {
+                    "id": "back_mod_temp_2",
+                    "offset": 15,
+                    "size": 2,
+                    "name": "Back of Module 2 (CS240) Temperature",
+                    "float": true
+                },
+                {
+                    "id": "wind_dir",
+                    "offset": 17,
+                    "size": 2,
+                    "name": "Weather (034B) Wind Direction",
+                    "float": true
+                },
+                {
+                    "id": "wind_speed",
+                    "offset": 19,
+                    "size": 2,
+                    "name": "Weather (034B) Wind Speed",
+                    "float": true
+                },
+                {
+                    "id": "air_temp",
+                    "offset": 21,
+                    "size": 2,
+                    "name": "Air Temperature 1 (109) Air Temperature",
+                    "float": true
+                },
+                {
+                    "id": "snow_depth_dist",
+                    "offset": 23,
+                    "size": 2,
+                    "name": "Snow Depth (SR50A) Distance",
+                    "float": true
+                },
+                {
+                    "id": "snow_quality",
+                    "offset": 25,
+                    "size": 2,
+                    "name": "Snow Depth (SR50A) Quality",
+                    "float": true
+                },
+                {
+                    "id": "snow_temp",
+                    "offset": 27,
+                    "size": 2,
+                    "name": "Snow Depth (SR50A) Temperature",
+                    "float": true
+                },
+                {
+                    "id": "snow_depth",
+                    "offset": 29,
+                    "size": 2,
+                    "name": "Snow Depth (SR50A) SnowDepth",
+                    "float": true
+                },
+                {
+                    "id": "precipitation",
+                    "offset": 31,
+                    "size": 2,
+                    "name": "Precipitation (TE525) PPT",
+                    "float": true
+                },
+                {
+                    "id": "one_min_precip",
+                    "offset": 33,
+                    "size": 2,
+                    "name": "OneMin Rain_mm",
+                    "float": true
+                },
+                {
+                    "id": "py_1_code",
+                    "offset": 35,
+                    "size": 2,
+                    "name": "Pyranometer 1 (RC18) Modbus Result"
+                },
+                {
+                    "id": "py_2_code",
+                    "offset": 37,
+                    "size": 2,
+                    "name": "Pyranometer 2 (SR30) Modbus Result"
+                },
+                {
+                    "id": "py_3_code",
+                    "offset": 39,
+                    "size": 2,
+                    "name": "Pyranometer 3 (SR30) Modbus Result"
+                },
+                {
+                    "id": "py_4_code",
+                    "offset": 41,
+                    "size": 2,
+                    "name": "Pyranometer 4 (SR30) Modbus Result"
+                },
+                {
+                    "id": "sensor_1_temp",
+                    "offset": 43,
+                    "size": 2,
+                    "name": "RC18 Temperature",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_ghi_irrad",
+                    "offset": 45,
+                    "size": 2,
+                    "name": "GHI",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_temp",
+                    "offset": 47,
+                    "size": 2,
+                    "name": "GHI_Temp",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_serial",
+                    "offset": 49,
+                    "size": 2,
+                    "name": "SR30SerialNumber_GHI",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_cal_date",
+                    "offset": 51,
+                    "size": 2,
+                    "name": "SR30CalDate_GHI",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_humidity",
+                    "offset": 53,
+                    "size": 2,
+                    "name": "SR30RH_GHI",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_pressure",
+                    "offset": 55,
+                    "size": 2,
+                    "name": "SR30PressureAvg_GHI",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_tilt_angle",
+                    "offset": 57,
+                    "size": 2,
+                    "name": "GHI_Tilt",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_fan_speed",
+                    "offset": 59,
+                    "size": 2,
+                    "name": "GHI_Fanspeed",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_heater_current",
+                    "offset": 61,
+                    "size": 2,
+                    "name": "GHI_HeatCurrent",
+                    "float": true
+                },
+                {
+                    "id": "sensor_2_fan_current",
+                    "offset": 63,
+                    "size": 2,
+                    "name": "SR30FanCurrent_GHI",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_ghi_irrad",
+                    "offset": 65,
+                    "size": 2,
+                    "name": "POA_1",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_temp",
+                    "offset": 67,
+                    "size": 2,
+                    "name": "POA_1_Temp",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_serial",
+                    "offset": 69,
+                    "size": 2,
+                    "name": "SR30SerialNumber_POA_1",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_cal_date",
+                    "offset": 71,
+                    "size": 2,
+                    "name": "SR30CalDate_POA_1",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_humidity",
+                    "offset": 73,
+                    "size": 2,
+                    "name": "SR30RH_POA_1",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_pressure",
+                    "offset": 75,
+                    "size": 2,
+                    "name": "SR30PressureAvg_POA_1",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_tilt_angle",
+                    "offset": 77,
+                    "size": 2,
+                    "name": "POA_1_Tilt",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_fan_speed",
+                    "offset": 79,
+                    "size": 2,
+                    "name": "POA_1_FanSpeed",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_heater_current",
+                    "offset": 81,
+                    "size": 2,
+                    "name": "GHI_HeatCurrent",
+                    "float": true
+                },
+                {
+                    "id": "sensor_3_fan_current",
+                    "offset": 83,
+                    "size": 2,
+                    "name": "SR30FanCurrent)GHI",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_ghi_irrad",
+                    "offset": 85,
+                    "size": 2,
+                    "name": "POA_2",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_temp",
+                    "offset": 87,
+                    "size": 2,
+                    "name": "POA_2_Temp",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_serial",
+                    "offset": 89,
+                    "size": 2,
+                    "name": "SR30SerialNumber_POA_2",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_cal_date",
+                    "offset": 91,
+                    "size": 2,
+                    "name": "SR30CalDate_POA_2",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_humidity",
+                    "offset": 93,
+                    "size": 2,
+                    "name": "SR30RH_POA_2",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_pressure",
+                    "offset": 95,
+                    "size": 2,
+                    "name": "SR30PressureAvg_POA_2",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_tilt_angle",
+                    "offset": 97,
+                    "size": 2,
+                    "name": "POA_2_Tilt",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_fan_speed",
+                    "offset": 99,
+                    "size": 2,
+                    "name": "POA_2_FanSpeed",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_heater_current",
+                    "offset": 101,
+                    "size": 2,
+                    "name": "POA_2_HeatCurrent",
+                    "float": true
+                },
+                {
+                    "id": "sensor_4_fan_current",
+                    "offset": 103,
+                    "size": 2,
+                    "name": "SR30FanCurrent_POA_2",
+                    "float": true
+                }
+            ]
+        }
+    ]
+}

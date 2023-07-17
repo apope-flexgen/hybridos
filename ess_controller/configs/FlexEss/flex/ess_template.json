@@ -1,0 +1,373 @@
+{
+    "/notes/##ESS_ID##": {
+        "note1":"This is the ess component config template.",
+        "note1a":"The ess page of the ui display is outlined in /assets/ess/summay",
+        "note1b":"The /assets/##ESS_ID## table defines the racks or battery management unit, each has a template file with placements for selected key words",
+        "note2": "The /config/ess area is still under development",
+        "note3":"The /components/catl... tables define the incoming control words from the bms modbus interface",
+        "note4":"The /links/<bms> table  defines mapping of external interface components to internal control variables",
+        "note5":"There are some junk/test fields as well... they will removed soon"
+      },
+    "/system/##ESS_ID##": {
+        "id": "##ESS_ID##",
+        "name": "ESS  Manager ##ESS_NUM##"
+    },
+    "/config/##ESS_ID##": {
+        "Pubs": "/assets/ess/##ESS_ID##",
+        "AlarmDestination": {
+            "value": "/assets/ess/summary:alarms"
+        },
+        "FaultDestination": {
+            "value": "/assets/ess/summary:faults"
+        },
+        "NoFaultMsg": {
+            "value": "Normal"
+        },
+        "NoAlarmMsg": {
+            "value": "Normal"
+        }
+    },
+    "/constants/##ESS_ID##": {
+        "note": "These are constant defintions",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 2200.0,
+        "rated_apparent_power": 2200.0,
+        "priority": 1,
+        "start_timer": 50,
+        "cooldown_timer": 250,
+        "max_load_threshold": 200000,
+        "min_load_threshold": 1000,
+        "control_word_on": 1,
+        "control_word_off": 2,
+        "DC_contactor_open": 1,
+        "DC_contactor_closed": 2,
+        "DC_contactor_reset": 3,
+        "chg_soc_begin": 90.001,
+        "chg_soc_end": 101.5,
+        "dischg_soc_begin": 10.001,
+        "dischg_soc_end": -1.5,
+        "max_soc_raw": 99.5,
+        "min_soc_raw": 1.5
+    },
+    "/controls/##ESS_ID##": {
+        "start_stop": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "bitfield": [
+                        {
+                            "bit": 0,
+                            "uri": "/system/new_controls:oncmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 1,
+                            "uri": "/system/new_controls:kacclosecmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 8,
+                            "uri": "/system/new_controls:offcmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 9,
+                            "uri": "/system/new_controls:kacopencmd",
+                            "value": true
+                        }
+                    ]
+                }]
+            }
+        },
+        "ctrlword2": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {
+                            "mask": 3,
+                            "bit": 0,
+                            "uri": "/system/enum_controls:mask_3_bit_0",
+                            "value": true
+                        },
+                        {
+                            "mask": 3,
+                            "bit": 1,
+                            "uri": "/system/enum_controls:mask_3_bit_1",
+                            "value": true
+                        },
+                        {
+                            "mask": 3,
+                            "bit": 2,
+                            "uri": "/system/enum_controls::mask_3_bit_2",
+                            "value": true
+                        },
+                        {
+                            "mask": 3,
+                            "bit": 3,
+                            "uri": "/system/enum_controls:mask_3_bit_3",
+                            "value": true
+                        }
+                    ]
+                }]
+            }
+        }
+    },
+    "/status/##ESS_ID##": {
+        "note": "These are component status vars",
+        "max_cell_temp": 23.4,
+        "min_cell_temp": 23.4,
+        "max_cell_volts": 3.4,
+        "min_cell_volts": 3.2,
+        "current_soc": 85.6,
+        "current_soh": 85.7,
+        "active_current_setpont": 0.0,
+        "reactive_current_setpont": 0.0,
+        "dc_contactor_open": true,
+        "ac_contactor_open": true,
+        "number_of_racks": 18
+    },
+    "/params/##ESS_ID##": {
+        "note": "These are control parameters",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "active_power_setpoint": 2200.0,
+        "reactive_power_setpoint": 2200.0,
+        "oncmd": 0,
+        "onffcmd": 0,
+        "kacclosecmd": 0,
+        "kdcclosecmd": 0,
+        "kacopencmd": 0,
+        "kdccopencmd": 0
+    },
+    "/variables/##ESS_ID##": {
+        "note":"junk to be removed",
+        "q": 1234,
+        "p": 3456,
+        "soc": 100,
+        "soh": 100,
+        "dc_contactor": "off",
+        "ac_contactor": "off",
+        "dc_contactor_cmd": "off",
+        "ac_contactor_cmd": "off",
+        "mode": "init",
+        "mode_cmd": "off",
+        "ess_max_p_charge": 400,
+        "ess_max_p_discharge": 400,
+        "ess_charge_energy": 172,
+        "ess_discharge_energy": 172,
+        "ess_limit_charge_hv": 817,
+        "ess_limit_discharge_hv": 817,
+        "ess_status": 1
+    },
+   
+    "/links/##ESS_ID##": {
+        "ess_heartbeat": {
+            "value": "/site/ess:heartbeat"
+        },
+        "ess_poweron": {
+            "value": "/site/ess_hs:poweron"
+        },
+        "ess_status": {
+            "value": "/site/ess:status"
+        },
+        "Heartbeat": {
+            "value": "/site/ess:HeartBeat"
+        }
+
+    },
+    "/assets/ess/##ESS_ID##": {
+        "name": "ESS ConTroller Status ",
+        "active_power": {
+            "name": "Active Power",
+            "value": 2.5,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "active_power_setpoint": {
+            "name": "Active Power Setpoint",
+            "value": 3.0999999046325684,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "fault",
+            "type": "number"
+        },
+        "apparent_power": {
+            "name": "Apparent Power",
+            "value": 1.2999999523162842,
+            "unit": "VA",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_temp": {
+            "name": "Current Highest Cell Temp",
+            "value": 27,
+            "unit": "C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_temp": {
+            "name": "Current Lowest Cell Temp",
+            "value": 22,
+            "unit": "C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_cell_voltage": {
+            "name": "Current Highest Cell Volts",
+            "value": 27,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "min_cell_voltage": {
+            "name": "Current Lowest Cell Volts",
+            "value": 22,
+            "unit": "C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soc": {
+            "name": "State of Charge",
+            "value": 76.55913543701172,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soh": {
+            "name": "State of Health",
+            "value": 45.45,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "status": {
+            "name": "Status",
+            "value": "Init",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "system_chargeable_power": {
+            "name": "System Chargeable Power",
+            "value": 2749.800048828125,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "system_dischargeable_power": {
+            "name": "System Dischargeable Power",
+            "value": 2750,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/ess/##ESS_ID##:start@enabled"}, 
+                        {"uri":	"/assets/ess/##ESS_ID##:stop@enabled"}, 
+                        {"uri":	"/assets/ess/##ESS_ID##:enter_standby@enabled"}, 
+                        {"uri":	"/assets/ess/##ESS_ID##:exit_standby@enabled"},
+                        {"uri":	"/assets/ess/##ESS_ID##:clear_faults@enabled"},
+                        {"uri":	"/assets/ess/##ESS_ID##:clear_alarms@enabled"},
+                        {"uri":	"/assets/ess/##ESS_ID##:maint_reactive_power_setpoint@enabled"},
+                        {"uri":	"/assets/ess/##ESS_ID##:maint_active_power_setpoint@enabled"}
+                        ]
+                    }]
+            },
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "clear_alarms": {
+            "name": "Clear Alarms",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "Clear Alarms",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "clear_faults": {
+            "name": "Clear Faults",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": true
+                }
+            ]
+        }        
+    }
+}

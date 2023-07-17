@@ -91,7 +91,9 @@ class RadiusSettingResponse {
     @IsPositive()
     wait_time: number
 
-    @ApiProperty({ description: SiteAdminsDescriptions.radiusLocalAuthDisabled })
+    @ApiProperty({
+        description: SiteAdminsDescriptions.radiusLocalAuthDisabled,
+    })
     @IsBoolean()
     is_local_auth_disabled: boolean
 }
@@ -109,5 +111,7 @@ export class SiteAdminsResponse {
 }
 
 export class RadiusTestResponse {
+    @ApiProperty({ description: SiteAdminsDescriptions.radiusTestResponse })
+    @IsString()
     message: string
 }

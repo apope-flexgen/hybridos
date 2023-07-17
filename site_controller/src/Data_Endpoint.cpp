@@ -13,7 +13,6 @@
 #include <Logger.h>
 /* Local Internal Dependencies */
 #include <Data_Endpoint.h>
-#include <Site_Controller.h>
 #include <Site_Controller_Utils.h>
 
 extern Asset_Manager* assetMgr;

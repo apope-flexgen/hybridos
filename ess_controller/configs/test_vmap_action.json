@@ -1,0 +1,22 @@
+
+{
+    "/system/ident":{
+        "id": "bms_1",
+        "name": "BMS Battery Manager 01"
+        },
+    
+    "/assets/bms_1":{
+        "start_stop":{"value":0,
+            "actions":{
+                 "onSet":{
+                    "bitfield":[
+                        { "bit":0, "uri": "/system/new_controls","var":"oncmd",       "bvalue": "nice" },
+                        { "bit":1, "uri": "/system/new_controls","var":"kacclosecmd", "bvalue": 34.5 },
+                        { "bit":8, "uri": "/system/new_controls","var":"offcmd",      "bvalue": true },
+                        { "bit":9, "uri": "/system/new_controls","var":"kacopencmd",  "bvalue": true }
+                    ]
+                }
+            }
+        }
+    }
+}

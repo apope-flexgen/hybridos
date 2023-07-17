@@ -1,0 +1,734 @@
+{
+    "/doc/06_bms_modbus" :{
+        "note01": " Here are the actions related to the modbus inputs"
+    },
+    "/components/##BMS_ID##_info": {
+        "start_connection": 0,
+        "connection_status": -1,
+        "new_connection_status": {
+            "value": 0,
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions": { 
+                "onSet":[{
+                    "enum":[
+                        {"shift": 0, "mask": 255, "inValue": 0, "uri": "/status/bms:RackConnectionStatus", "outValue": 0},
+
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/assets/bms/##BMS_ID##:power_state",  "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/assets/bms/##BMS_ID##:power_state",  "outValue": "On"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/assets/bms/##BMS_ID##:power_state",  "outValue": "Fault"},
+
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/status/bms:BMSPowerOn",           "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/status/bms:BMSPowerOn",           "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/status/bms:BMSPowerOn",           "outValue": "Fault"},
+
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/status/bms:SystemFault",          "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/status/bms:SystemFault",          "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/status/bms:SystemFault",          "outValue": true},
+
+                        {"shift": 0, "mask": 255, "inValue": 0, "uri": "/site/ess_ls:system_state",        "outValue": 1,  "note": "Bit 0 - Stop"},
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/site/ess_ls:system_state",        "outValue": 1,  "note": "Bit 0 - Stop"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/site/ess_ls:system_state",        "outValue": 4,  "note": "Bit 2 - Fault"},
+
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/status/bms:NumRacksInService@EnableMinValCheck",           "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/status/bms:NumRacksInService@EnableMinValCheck",           "outValue": true},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/status/bms:NumRacksInService@EnableMinValCheck",           "outValue": false}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:new_connection_status@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "rack_request_step_in": 0,
+        "rack_request_quit_out": 0,
+        "rack_request_status": 0,
+        "system_operation_state": {
+            "value": -1,
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 0, "uri":"/assets/bms/##BMS_ID##:system_state", "outValue": "Charge/Discharge Allowed"},
+                        {"inValue": 1, "uri":"/assets/bms/##BMS_ID##:system_state", "outValue": "No Charge"},
+                        {"inValue": 2, "uri":"/assets/bms/##BMS_ID##:system_state", "outValue": "No Discharge"},
+                        {"inValue": 3, "uri":"/assets/bms/##BMS_ID##:system_state", "outValue": "Charge/Discharge Disabled"},
+                        {"inValue": 4, "uri":"/assets/bms/##BMS_ID##:system_state", "outValue": "Fault"},
+
+                        {"inValue": 0, "uri":"/status/bms:BMSStatus", "outValue": "Normal"},
+                        {"inValue": 1, "uri":"/status/bms:BMSStatus", "outValue": "Full Discharge"},
+                        {"inValue": 2, "uri":"/status/bms:BMSStatus", "outValue": "Full Charge"},
+                        {"inValue": 3, "uri":"/status/bms:BMSStatus", "outValue": "Initial", "note": "Should be stop"},
+                        {"inValue": 4, "uri":"/status/bms:BMSStatus", "outValue": "Fault"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:system_operation_state@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "system_charge_state": {
+            "value": -1,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": 0, "uri":"/status/bms:ChargeState", "outValue": "Idle"},
+                        {"inValue": 1, "uri":"/status/bms:ChargeState", "outValue": "Discharging"},
+                        {"inValue": 2, "uri":"/status/bms:ChargeState", "outValue": "Charging"}
+                    ]
+                }]
+            }
+        },
+        "system_total_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSVoltage"}]}]
+            }
+        },
+        "system_total_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"uri":"/status/bms:BMSCurrent"},
+                        {"uri":"/status/bms:BMSCurrentCheckStop"},
+                        {"uri":"/status/bms:BMSCurrentCheckDerate"}
+                    ]
+                }]
+            }
+        },
+        "system_enable_charge_energy": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSChargeEnergy"}]}]
+            }
+        },
+        "system_enable_discharge_energy": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSDischargeEnergy"}]}]
+            }
+        },
+        "rack_current_difference": 0,
+        "rack_voltage_difference": 0,
+
+        "note":"these should all be vlinks",
+        "system_max_cell_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSMaxCellVoltage"}]}]
+            }
+        },
+        "system_min_cell_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSMinCellVoltage"}]}]
+            }
+        },
+        "system_avg_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSAvgCellVoltage"}]}]
+            }
+        },
+        "system_max_cell_temperature": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSMaxCellTemp"}]}]
+            }
+        },
+        "system_min_cell_temperature": {
+            "value":0,
+            "actions": {
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSMinCellTemp"}]}]
+            }
+        },
+        "system_avg_temperature": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSAvgCellTemp"}]}]
+            }
+        },
+        "system_soc": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSSOC"}]}]
+            }
+        },
+        "system_soh": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSSOH"}]}]
+            }
+        },
+        "bms_heartbeat": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:BMSHeartbeat"}]}]
+            }
+        },
+        "system_max_charge_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:MaxBMSChargeCurrent"}]}]
+            }
+        },
+        "system_max_discharge_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:MaxBMSDischargeCurrent"}]}]
+            }
+        },
+        "max_discharge_power": {
+            "value":0,
+            "xactions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:MaxBMSDischargePower"}]}]
+            }
+        },
+        "max_charge_power": {
+            "value":0,
+            "xactions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:MaxBMSChargePower"}]}]
+            }
+        },
+        "number_of_racks_in_service": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:NumRacksInService"}]}]
+            }
+        },
+        "number_of_racks_total": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/bms:TotalNumRacks"}]}]
+            }
+        },
+        "accumulation_charge_energy_msb": 0,
+        "accumulation_charge_energy_lsb": 0,
+        "accumulation_discharge_energy_msb": 0,
+        "accumulation_discharge_energy_lsb": 0,
+        "bau_alarm_state": {
+            "value": 0,
+            "note": "BMS information No. 8",
+            "note1": "0: Normal, 1: Alarm",
+            "note2": "Bit0: BMS internal communication failure",
+            "note3": "Bit1-3: Reserved",
+            "note6": "Bit4: Rack vol diff over large warning",
+            "note7": "Bit5: Racks current diff over large warning",
+            "note8": "Bit6: Emergency stop",
+            "note9": "Bit7-15: Reserved",
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/bms:bms_internal_comms_failure", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/bms:bms_internal_comms_failure", "outValue": "Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/bms:racks_vol_diff_over_large", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/bms:racks_vol_diff_over_large", "outValue": "Alarm"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/bms:racks_curr_diff_over_large", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/bms:racks_curr_diff_over_large", "outValue": "Alarm"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/bms:bau_emergency_stop", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/bms:bau_emergency_stop", "outValue": "Triggered"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:bms_alarms[0]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:bms_alarms[1]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:bms_alarms[2]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:bms_alarms[3]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:bau_alarm_state@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "rack_warning": {
+            "value": 0,
+            "note": "BMS information No. 9",
+            "note1": "0x0: Normal, 0x1: Warning",
+            "note2": "Bit0: RackVolHigh warn",
+            "note3": "Bit1: RackVolLow warn",
+            "note4": "Bit2: CellVolHigh warn",
+            "note5": "Bit3: CellVolLow warn",
+            "note6": "Bit4: DsgOverCurr warn",
+            "note7": "Bit5: ChgOverCurr warn",
+            "note8": "Bit6: DsgTempHigh warn",
+            "note9": "Bit7: DsgTempLow warn",
+            "note10": "Bit8: ChgTempHigh warn",
+            "note11": "Bit9: ChgTempLow warn",
+            "note12": "Bit10: InsulationLow warn",
+            "note13": "Bit11: TerminalTempHigh warn",
+            "note14": "Bit12: HVBTempHigh warn",
+            "note15": "Bit13: CellVolDiffHigh warn",
+            "note16": "Bit14: CellTempDiffHigh warn",
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/bms:rack_vol_high_warn", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/bms:rack_vol_high_warn", "outValue": "RackVolHigh warn"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/bms:rack_vol_low_warn", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/bms:rack_vol_low_warn", "outValue": "RackVolLow warn"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/bms:cell_vol_high_warn", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/bms:cell_vol_high_warn", "outValue": "CellVolHigh warn"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/bms:cell_vol_low_warn", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/bms:cell_vol_low_warn", "outValue": "CellVolLow warn"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/bms:dsg_over_curr_warn", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/bms:dsg_over_curr_warn", "outValue": "DsgOverCurr warn"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/bms:chg_over_curr_warn", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/bms:chg_over_curr_warn", "outValue": "ChgOverCurr warn"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/bms:dsg_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/bms:dsg_temp_high_warn", "outValue": "DsgTempHigh warn"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/bms:dsg_temp_low_warn", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/bms:dsg_temp_low_warn", "outValue": "DsgTempLow warn"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/bms:chg_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/bms:chg_temp_high_warn", "outValue": "ChgTempHigh warn"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/bms:chg_temp_low_warn", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/bms:chg_temp_low_warn", "outValue": "ChgTempLow warn"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/bms:insulation_low_warn", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/bms:insulation_low_warn", "outValue": "InsulationLow warn"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/bms:terminal_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/bms:terminal_temp_high_warn", "outValue": "TerminalTempHigh warn"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvb_temp_high_warn", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvb_temp_high_warn", "outValue": "HVBTempHigh warn"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/bms:cell_vol_diff_high_warn", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/bms:cell_vol_diff_high_warn", "outValue": "CellVolDiffHigh warn"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/bms:cell_temp_diff_high_warn", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/bms:cell_temp_diff_high_warn", "outValue": "CellTempDiffHigh warn"},
+
+                        { "shift": 0,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[0]", "outValue": true},
+                        { "shift": 1,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[1]", "outValue": true},
+                        { "shift": 2,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[2]", "outValue": true},
+                        { "shift": 3,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[3]", "outValue": true},
+                        { "shift": 4,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[4]", "outValue": true},
+                        { "shift": 5,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[5]", "outValue": true},
+                        { "shift": 6,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[6]", "outValue": true},
+                        { "shift": 7,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[7]", "outValue": true},
+                        { "shift": 8,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[8]", "outValue": true},
+                        { "shift": 9,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[9]", "outValue": true},
+                        { "shift": 10, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[10]", "outValue": true},
+                        { "shift": 11, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[11]", "outValue": true},
+                        { "shift": 12, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[12]", "outValue": true},
+                        { "shift": 13, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[13]", "outValue": true},
+                        { "shift": 14, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_warnings[14]", "outValue": true}
+                       ]       
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:rack_warning@ifChanged", "useAv":true, "outValue": true}
+                       ]
+                }]
+            }
+        },
+        "rack_alarm":{
+            "value": 0,
+            "note1":  "0x0: Normal, 0x1: Warning",
+            "note2":  "bit0: RackVolHigh Alarm",
+            "note3":  "bit1: RackVolLow Alarm",
+            "note4":  "bit2: CellVolHigh Alarm",
+            "note5":  "bit3: CellVolLow Alarm",
+            "note6":  "Bit4: DsgOverCurr Alarm",
+            "note7":  "Bit5: ChgOverCurr Alarm",
+            "note8":  "bit6: DsgTempHigh Alarm",
+            "note9":  "bit7: DsgTempLow Alarm",
+            "note10": "Bit8: ChgTempHigh Alarm",
+            "note11": "Bit9: ChgTempLow Alarm",
+            "note12": "Bit10: InsulationLow Alarm",
+            "note13": "Bit11: TerminalTempHigh Alarm",
+            "note14": "Bit12: HVBTempHigh Alarm",
+            "note15": "Bit13: CellVolDiffHigh Alarm",
+            "note16": "Bit14: CellTempDiffHigh Alarm",
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions":{
+                "onSet": [{
+                    "enum":[
+                        { "shift": 0,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:rack_vol_high_alarm", "outValue": "Normal"},
+                        { "shift": 0,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:rack_vol_high_alarm", "outValue": "RackVolHigh Alarm"},
+                        { "shift": 1,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:rack_vol_low_alarm", "outValue": "Normal"},
+                        { "shift": 1,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:rack_vol_low_alarm", "outValue": "RackVolLow Alarm"},
+                        { "shift": 2,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:cell_vol_high_alarm", "outValue": "Normal"},
+                        { "shift": 2,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:cell_vol_high_alarm", "outValue": "CellVolHigh Alarm"},
+                        { "shift": 3,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:cell_vol_low_alarm", "outValue": "Normal"},
+                        { "shift": 3,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:cell_vol_low_alarm", "outValue": "CellVolLow Alarm"},
+                        { "shift": 4,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:dsg_over_curr_alarm", "outValue": "Normal"},
+                        { "shift": 4,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:dsg_over_curr_alarm", "outValue": "DsgOverCurr Alarm"},
+                        { "shift": 5,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:chg_over_curr_alarm", "outValue": "Normal"},
+                        { "shift": 5,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:chg_over_curr_alarm", "outValue": "ChgOverCurr Alarm"},
+                        { "shift": 6,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:dsg_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 6,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:dsg_temp_high_alarm", "outValue": "DsgTempHigh Alarm"},
+                        { "shift": 7,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:dsg_temp_low_alarm", "outValue": "Normal"},
+                        { "shift": 7,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:dsg_temp_low_alarm", "outValue": "DsgTempLow Alarm"},
+                        { "shift": 8,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:chg_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 8,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:chg_temp_high_alarm", "outValue": "ChgTempHigh Alarm"},
+                        { "shift": 9,  "mask": 1, "inValue": 0, "uri": "/alarms/bms:chg_temp_low_alarm", "outValue": "Normal"},
+                        { "shift": 9,  "mask": 1, "inValue": 1, "uri": "/alarms/bms:chg_temp_low_alarm", "outValue": "ChgTempLow Alarm"},
+                        { "shift": 10, "mask": 1, "inValue": 0, "uri": "/alarms/bms:insulation_low_alarm", "outValue": "Normal"},
+                        { "shift": 10, "mask": 1, "inValue": 1, "uri": "/alarms/bms:insulation_low_alarm", "outValue": "InsulationLow Alarm"},
+                        { "shift": 11, "mask": 1, "inValue": 0, "uri": "/alarms/bms:terminal_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 11, "mask": 1, "inValue": 1, "uri": "/alarms/bms:terminal_temp_high_alarm", "outValue": "TerminalTempHigh Alarm"},
+                        { "shift": 12, "mask": 1, "inValue": 0, "uri": "/alarms/bms:hvb_temp_high_alarm", "outValue": "Normal"},
+                        { "shift": 12, "mask": 1, "inValue": 1, "uri": "/alarms/bms:hvb_temp_high_alarm", "outValue": "HVBTempHigh Alarm"},
+                        { "shift": 13, "mask": 1, "inValue": 0, "uri": "/alarms/bms:cell_vol_diff_high_alarm", "outValue": "Normal"},
+                        { "shift": 13, "mask": 1, "inValue": 1, "uri": "/alarms/bms:cell_vol_diff_high_alarm", "outValue": "CellVolDiffHigh Alarm"},
+                        { "shift": 14, "mask": 1, "inValue": 0, "uri": "/alarms/bms:cell_temp_diff_high_alarm", "outValue": "Normal"},
+                        { "shift": 14, "mask": 1, "inValue": 1, "uri": "/alarms/bms:cell_temp_diff_high_alarm", "outValue": "CellTempDiffHigh Alarm"},
+
+                        { "shift": 0,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[0]", "outValue": true},
+                        { "shift": 1,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[1]", "outValue": true},
+                        { "shift": 2,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[2]", "outValue": true},
+                        { "shift": 3,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[3]", "outValue": true},
+                        { "shift": 4,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[4]", "outValue": true},
+                        { "shift": 5,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[5]", "outValue": true},
+                        { "shift": 6,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[6]", "outValue": true},
+                        { "shift": 7,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[7]", "outValue": true},
+                        { "shift": 8,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[8]", "outValue": true},
+                        { "shift": 9,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[9]", "outValue": true},
+                        { "shift": 10, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[10]", "outValue": true},
+                        { "shift": 11, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[11]", "outValue": true},
+                        { "shift": 12, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[12]", "outValue": true},
+                        { "shift": 13, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[13]", "outValue": true},
+                        { "shift": 14, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_alarms[14]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:rack_alarm@ifChanged", "useAv":true, "outValue": true}
+                       ]
+                }]
+            }
+        },
+        "rack_critical_alarm":{
+            "value": 0,
+            "note1": "0: Normal, 1: Warning",
+            "note2": "bit0: RackVolHigh Critical Alarm",
+            "note3": "bit1: RackVolLow Critical Alarm",
+            "note4": "bit2: CellVolHigh Critical Alarm",
+            "note5": "bit3: CellVolLow Critical Alarm",
+            "note6": "Bit4: DsgOverCurr Critical Alarm",
+            "note7": "Bit5: ChgOverCurr Critical Alarm",
+            "note8": "bit6: DsgTempHigh Critical Alarm",
+            "note9": "bit7: DsgTempLow Critical Alarm",
+            "note10": "Bit8: ChgTempHigh Critical Alarm",
+            "note11": "Bit9: ChgTempLow Critical Alarm",
+            "note12": "Bit10: InsulationLow Critical Alarm",
+            "note13": "Bit11: TerminalTempHigh Critical Alarm",
+            "note14": "Bit12: HVBTempHigh Critical Alarm",
+            "note15": "Bit13: CellVolDiffHigh Critical Alarm",
+            "note16": "Bit14: CellTempDiffHigh Critical Alarm",
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions":{
+                "onSet":[{
+                    "enum": [
+                        { "shift": 0,  "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_vol_high_critical", "outValue": "Normal"},
+                        { "shift": 0,  "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_vol_high_critical", "outValue": "RackVolHigh Critical Alarm"},
+                        { "shift": 1,  "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_vol_low_critical", "outValue": "Normal"},
+                        { "shift": 1,  "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_vol_low_critical", "outValue": "RackVolLow Critical Alarm"},
+                        { "shift": 2,  "mask": 1, "inValue": 0, "uri": "/faults/bms:cell_vol_high_critical", "outValue": "Normal"},
+                        { "shift": 2,  "mask": 1, "inValue": 1, "uri": "/faults/bms:cell_vol_high_critical", "outValue": "CellVolHigh Critical Alarm"},
+                        { "shift": 3,  "mask": 1, "inValue": 0, "uri": "/faults/bms:cell_vol_low_critical", "outValue": "Normal"},
+                        { "shift": 3,  "mask": 1, "inValue": 1, "uri": "/faults/bms:cell_vol_low_critical", "outValue":"CellVolLow Critical Alarm"},
+                        { "shift": 4,  "mask": 1, "inValue": 0, "uri": "/faults/bms:dsg_over_curr_critical", "outValue": "Normal"},
+                        { "shift": 4,  "mask": 1, "inValue": 1, "uri": "/faults/bms:dsg_over_curr_critical", "outValue": "DsgOverCurr Critical Alarm"},
+                        { "shift": 5,  "mask": 1, "inValue": 0, "uri": "/faults/bms:chg_over_curr_critical", "outValue": "Normal"},
+                        { "shift": 5,  "mask": 1, "inValue": 1, "uri": "/faults/bms:chg_over_curr_critical", "outValue": "ChgOverCurr Critical Alarm"},
+                        { "shift": 6,  "mask": 1, "inValue": 0, "uri": "/faults/bms:dsg_temp_high_critical", "outValue": "Normal"},
+                        { "shift": 6,  "mask": 1, "inValue": 1, "uri": "/faults/bms:dsg_temp_high_critical", "outValue": "DsgTempHigh Critical Alarm"},
+                        { "shift": 7,  "mask": 1, "inValue": 0, "uri": "/faults/bms:dsg_temp_low_critical", "outValue": "Normal"},
+                        { "shift": 7,  "mask": 1, "inValue": 1, "uri": "/faults/bms:dsg_temp_low_critical", "outValue": "DsgTempLow Critical Alarm"},
+                        { "shift": 8,  "mask": 1, "inValue": 0, "uri": "/faults/bms:chg_temp_high_critical", "outValue": "Normal"},
+                        { "shift": 8,  "mask": 1, "inValue": 1, "uri": "/faults/bms:chg_temp_high_critical", "outValue": "ChgTempHigh Critical Alarm"},
+                        { "shift": 9,  "mask": 1, "inValue": 0, "uri": "/faults/bms:chg_temp_low_critical", "outValue": "Normal"},
+                        { "shift": 9,  "mask": 1, "inValue": 1, "uri": "/faults/bms:chg_temp_low_critical", "outValue": "ChgTempLow Critical Alarm"},
+                        { "shift": 10, "mask": 1, "inValue": 0, "uri": "/faults/bms:insulation_low_critical", "outValue": "Normal"},
+                        { "shift": 10, "mask": 1, "inValue": 1, "uri": "/faults/bms:insulation_low_critical", "outValue": "InsulationLow Critical Alarm"},
+                        { "shift": 11, "mask": 1, "inValue": 0, "uri": "/faults/bms:terminal_temp_high_critical", "outValue": "Normal"},
+                        { "shift": 11, "mask": 1, "inValue": 1, "uri": "/faults/bms:terminal_temp_high_critical", "outValue": "TerminalTempHigh Critical Alarm"},
+                        { "shift": 12, "mask": 1, "inValue": 0, "uri": "/faults/bms:hvb_temp_high_critical", "outValue": "Normal"},
+                        { "shift": 12, "mask": 1, "inValue": 1, "uri": "/faults/bms:hvb_temp_high_critical", "outValue": "HVBTempHigh Critical Alarm"},
+                        { "shift": 13, "mask": 1, "inValue": 0, "uri": "/faults/bms:cell_vol_diff_high_critical", "outValue": "Normal"},
+                        { "shift": 13, "mask": 1, "inValue": 1, "uri": "/faults/bms:cell_vol_diff_high_critical", "outValue": "CellVolDiffHigh Critical Alarm"},
+                        { "shift": 14, "mask": 1, "inValue": 0, "uri": "/faults/bms:cell_temp_diff_high_critical", "outValue": "Normal"},
+                        { "shift": 14, "mask": 1, "inValue": 1, "uri": "/faults/bms:cell_temp_diff_high_critical", "outValue": "CellTempDiffHigh Critical Alarm"},
+
+                        { "shift": 0,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[0]", "outValue": true},
+                        { "shift": 1,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[1]", "outValue": true},
+                        { "shift": 2,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[2]", "outValue": true},
+                        { "shift": 3,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[3]", "outValue": true},
+                        { "shift": 4,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[4]", "outValue": true},
+                        { "shift": 5,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[5]", "outValue": true},
+                        { "shift": 6,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[6]", "outValue": true},
+                        { "shift": 7,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[7]", "outValue": true},
+                        { "shift": 8,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[8]", "outValue": true},
+                        { "shift": 9,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[9]", "outValue": true},
+                        { "shift": 10, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[10]", "outValue": true},
+                        { "shift": 11, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[11]", "outValue": true},
+                        { "shift": 12, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[12]", "outValue": true},
+                        { "shift": 13, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[13]", "outValue": true},
+                        { "shift": 14, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bms_rack_critical_alarms[14]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:rack_critical_alarm@ifChanged", "useAv":true, "outValue": true}
+                       ]
+                }]
+            }
+        },
+        "bau_bcu_comm_fault_alarm_1":{
+            "value": 0,
+            "note1": "0: Normal, 1: Alarm",
+            "note2": "Bit0: BCU1 Communication Fault",
+            "note3": "Bit1: BCU2 Communication Fault",
+            "note4": "Bit2: BCU3 Communication Fault",
+            "note5": "Bit3: BCU4 Communication Fault",
+            "note6": "Bit4: BCU5 Communication Fault",
+            "note7": "Bit5: BCU6 Communication Fault",
+            "note8": "Bit6: BCU7 Communication Fault",
+            "note9": "Bit7: BCU8 Communication Fault",
+            "note10": "Bit8: BCU9 Communication Fault",
+            "note11": "Bit9: BCU10 Communication Fault",
+            "note12": "Bit10: BCU11 Communication Fault",
+            "note13": "Bit11: BCU12 Communication Fault",
+            "note14": "Bit12: BCU13 Communication Fault",
+            "note15": "Bit13: BCU14 Communication Fault",
+            "note16": "Bit14: BCU15 Communication Fault",
+            "note17": "Bit15: BCU16 Communication Fault",
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu1_comm_fault", "outValue": "Normal"},
+                        { "shift": 0,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu1_comm_fault", "outValue": "Fault"},
+                        { "shift": 1,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu2_comm_fault", "outValue": "Normal"},
+                        { "shift": 1,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu2_comm_fault", "outValue": "Fault"},
+                        { "shift": 2,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu3_comm_fault", "outValue": "Normal"},
+                        { "shift": 2,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu3_comm_fault", "outValue": "Fault"},
+                        { "shift": 3,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu4_comm_fault", "outValue": "Normal"},
+                        { "shift": 3,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu4_comm_fault", "outValue": "Fault"},
+                        { "shift": 4,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu5_comm_fault", "outValue": "Normal"},
+                        { "shift": 4,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu5_comm_fault", "outValue": "Fault"},
+                        { "shift": 5,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu6_comm_fault", "outValue": "Normal"},
+                        { "shift": 5,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu6_comm_fault", "outValue": "Fault"},
+                        { "shift": 6,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu7_comm_fault", "outValue": "Normal"},
+                        { "shift": 6,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu7_comm_fault", "outValue": "Fault"},
+                        { "shift": 7,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu8_comm_fault", "outValue": "Normal"},
+                        { "shift": 7,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu8_comm_fault", "outValue": "Fault"},
+                        { "shift": 8,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu9_comm_fault", "outValue": "Normal"},
+                        { "shift": 8,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu9_comm_fault", "outValue": "Fault"},
+                        { "shift": 9,  "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu10_comm_fault", "outValue": "Normal"},
+                        { "shift": 9,  "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu10_comm_fault", "outValue": "Fault"},
+                        { "shift": 10, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu11_comm_fault", "outValue": "Normal"},
+                        { "shift": 10, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu11_comm_fault", "outValue": "Fault"},
+                        { "shift": 11, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu12_comm_fault", "outValue": "Normal"},
+                        { "shift": 11, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu12_comm_fault", "outValue": "Fault"},
+                        { "shift": 12, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu13_comm_fault", "outValue": "Normal"},
+                        { "shift": 12, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu13_comm_fault", "outValue": "Fault"},
+                        { "shift": 13, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu14_comm_fault", "outValue": "Normal"},
+                        { "shift": 13, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu14_comm_fault", "outValue": "Fault"},
+                        { "shift": 14, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu15_comm_fault", "outValue": "Normal"},
+                        { "shift": 14, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu15_comm_fault", "outValue": "Fault"},
+                        { "shift": 15, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu16_comm_fault", "outValue": "Normal"},
+                        { "shift": 15, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu16_comm_fault", "outValue": "Fault"},
+
+                        { "shift": 0,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[0]", "outValue": true},
+                        { "shift": 1,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[1]", "outValue": true},
+                        { "shift": 2,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[2]", "outValue": true},
+                        { "shift": 3,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[3]", "outValue": true},
+                        { "shift": 4,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[4]", "outValue": true},
+                        { "shift": 5,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[5]", "outValue": true},
+                        { "shift": 6,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[6]", "outValue": true},
+                        { "shift": 7,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[7]", "outValue": true},
+                        { "shift": 8,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[8]", "outValue": true},
+                        { "shift": 9,  "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[9]", "outValue": true},
+                        { "shift": 10, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[10]", "outValue": true},
+                        { "shift": 11, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[11]", "outValue": true},
+                        { "shift": 12, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[12]", "outValue": true},
+                        { "shift": 13, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[13]", "outValue": true},
+                        { "shift": 14, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[14]", "outValue": true},
+                        { "shift": 15, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[15]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:bau_bcu_comm_fault_alarm_1@ifChanged", "useAv":true, "outValue": true}
+                       ]
+                }]
+            }
+        },
+        "bau_bcu_comm_fault_alarm_2":{
+            "value": 0,
+            "note1":  "0: Normal, 1: Alarm",
+            "note2":  "Bit0: BCU17 Communication Fault",
+            "note3":  "Bit1: BCU18 Communication Fault",
+            "note4":  "Bit2: BCU19 Communication Fault",
+            "note5":  "Bit3: BCU20 Communication Fault",
+            "note6":  "Bit4: BCU21 Communication Fault",
+            "note7":  "Bit5: BCU22 Communication Fault",
+            "note8":  "Bit6: BCU23 Communication Fault",
+            "note9":  "Bit7: BCU24 Communication Fault",
+            "note10": "Bit8: BCU25 Communication Fault",
+            "note11": "Bit9: BCU26 Communication Fault",
+            "note12": "Bit10: BCU27 Communication Fault",
+            "note13": "Bit11: BCU28 Communication Fault",
+            "note14": "Bit12: BCU29 Communication Fault",
+            "note15": "Bit13: BCU30 Communication Fault",
+            "note16": "Bit14: BCU31 Communication Fault",
+            "note17": "Bit15: BCU32 Communication Fault",
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu17_comm_fault", "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu17_comm_fault", "outValue": "Fault"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu18_comm_fault", "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu18_comm_fault", "outValue": "Fault"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu19_comm_fault", "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu19_comm_fault", "outValue": "Fault"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu20_comm_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu20_comm_fault", "outValue": "Fault"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu21_comm_fault", "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu21_comm_fault", "outValue": "Fault"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu22_comm_fault", "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu22_comm_fault", "outValue": "Fault"},
+                        { "shift": 6, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu23_comm_fault", "outValue": "Normal"},
+                        { "shift": 6, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu23_comm_fault", "outValue": "Fault"},
+                        { "shift": 7, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu24_comm_fault", "outValue": "Normal"},
+                        { "shift": 7, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu24_comm_fault", "outValue": "Fault"},
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu25_comm_fault", "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu25_comm_fault", "outValue": "Fault"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu26_comm_fault", "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu26_comm_fault", "outValue": "Fault"},
+                        { "shift": 10, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu27_comm_fault", "outValue": "Normal"},
+                        { "shift": 10, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu27_comm_fault", "outValue": "Fault"},
+                        { "shift": 11, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu28_comm_fault", "outValue": "Normal"},
+                        { "shift": 11, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu28_comm_fault", "outValue": "Fault"},
+                        { "shift": 12, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu29_comm_fault", "outValue": "Normal"},
+                        { "shift": 12, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu29_comm_fault", "outValue": "Fault"},
+                        { "shift": 13, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu30_comm_fault", "outValue": "Normal"},
+                        { "shift": 13, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu30_comm_fault", "outValue": "Fault"},
+                        { "shift": 14, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu31_comm_fault", "outValue": "Normal"},
+                        { "shift": 14, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu31_comm_fault", "outValue": "Fault"},
+                        { "shift": 15, "mask": 1, "inValue": 0, "uri": "/faults/bms:bcu32_comm_fault", "outValue": "Normal"},
+                        { "shift": 15, "mask": 1, "inValue": 1, "uri": "/faults/bms:bcu32_comm_fault", "outValue": "Fault"},
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[16]", "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[17]", "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[18]", "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[19]", "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[20]", "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[21]", "outValue": true},
+                        { "shift": 6, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[22]", "outValue": true},
+                        { "shift": 7, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[23]", "outValue": true},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[24]", "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[25]", "outValue": true},
+                        { "shift": 10, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[26]", "outValue": true},
+                        { "shift": 11, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[27]", "outValue": true},
+                        { "shift": 12, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[28]", "outValue": true},
+                        { "shift": 13, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[29]", "outValue": true},
+                        { "shift": 14, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[30]", "outValue": true},
+                        { "shift": 15, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:bau_bcu_comms_alarms[31]", "outValue": true}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:bau_bcu_comm_fault_alarm_2@ifChanged", "useAv":true, "outValue": true}
+                       ]
+                }]
+            }
+        },
+        "bau_output_dry_contact_status" :{
+            "value": 0,
+            "note1": "0: Closed, 1: Opened",
+            "note2": "Bit0: Dry contact 1 state",
+            "note3": "Bit1: Dry contact 2 state"
+        },
+        "rack_enable_status": {
+            "value": 0,
+            "note1": "0: Disable, 1:Enable",
+            "note2": "bit0: Rack17 enable/disable status",
+            "note3": "bit1: Rack18 enable/disable status",
+            "note4": "bitn: Rackn+17 enable/disable status",
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions": { 
+                "onSet":[{
+                    "enum":[
+                        {"shift": 0, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_01:RackEnableStatus"},
+                        {"shift": 0, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_01:RackEnableStatus"},
+                        {"shift": 1, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_02:RackEnableStatus"},
+                        {"shift": 1, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_02:RackEnableStatus"},
+                        {"shift": 2, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_03:RackEnableStatus"},
+                        {"shift": 2, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_03:RackEnableStatus"},
+                        {"shift": 3, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_04:RackEnableStatus"},
+                        {"shift": 3, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_04:RackEnableStatus"},
+                        {"shift": 4, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_05:RackEnableStatus"},
+                        {"shift": 4, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_05:RackEnableStatus"},
+                        {"shift": 5, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_06:RackEnableStatus"},
+                        {"shift": 5, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_06:RackEnableStatus"},
+                        {"shift": 6, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_07:RackEnableStatus"},
+                        {"shift": 6, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_07:RackEnableStatus"},
+                        {"shift": 7, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_08:RackEnableStatus"},
+                        {"shift": 7, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_08:RackEnableStatus"},
+                        {"shift": 8, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_09:RackEnableStatus"},
+                        {"shift": 8, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_09:RackEnableStatus"},
+                        {"shift": 9, "mask": 1, "bit": 0, "inValue":0, "outValue":false,  "uri": "/status/rack_10:RackEnableStatus"},
+                        {"shift": 9, "mask": 1, "bit": 0, "inValue":1, "outValue":true,   "uri": "/status/rack_10:RackEnableStatus"},
+                        {"shift": 10, "mask": 1, "bit": 0, "inValue":0, "outValue":false, "uri": "/status/rack_11:RackEnableStatus"},
+                        {"shift": 10, "mask": 1, "bit": 0, "inValue":1, "outValue":true,  "uri": "/status/rack_11:RackEnableStatus"},
+                        {"shift": 11, "mask": 1, "bit": 0, "inValue":0, "outValue":false, "uri": "/status/rack_12:RackEnableStatus"},
+                        {"shift": 11, "mask": 1, "bit": 0, "inValue":1, "outValue":true,  "uri": "/status/rack_12:RackEnableStatus"},
+                        {"shift": 12, "mask": 1, "bit": 0, "inValue":0, "outValue":false, "uri": "/status/rack_13:RackEnableStatus"},
+                        {"shift": 12, "mask": 1, "bit": 0, "inValue":1, "outValue":true,  "uri": "/status/rack_13:RackEnableStatus"},
+                        {"shift": 13, "mask": 1, "bit": 0, "inValue":0, "outValue":false, "uri": "/status/rack_14:RackEnableStatus"},
+                        {"shift": 13, "mask": 1, "bit": 0, "inValue":1, "outValue":true,  "uri": "/status/rack_14:RackEnableStatus"},
+                        {"shift": 14, "mask": 1, "bit": 0, "inValue":0, "outValue":false, "uri": "/status/rack_15:RackEnableStatus"},
+                        {"shift": 14, "mask": 1, "bit": 0, "inValue":1, "outValue":true,  "uri": "/status/rack_15:RackEnableStatus"},
+                        {"shift": 15, "mask": 1, "bit": 0, "inValue":0, "outValue":false, "uri": "/status/rack_16:RackEnableStatus"},
+                        {"shift": 15, "mask": 1, "bit": 0, "inValue":1, "outValue":true,  "uri": "/status/rack_16:RackEnableStatus"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:rack_enable_status@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "rack_enable_status_2":{
+            "value": 0,
+            "note1": "0: Disable, 1:Enable",
+            "note2": "bit0: Rack17 enable/disable status",
+            "note3": "bit1: Rack18 enable/disable status",
+            "note4": "bitn: Rackn+17 enable/disable status",
+            "enable": "/config/bms:enable",
+            "ifChanged": false,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "bit": 0, "inValue":0, "outValue":false, "uri": "/status/rack_17:RackEnableStatus"},
+                        {"shift": 0, "mask": 1, "bit": 0, "inValue":1, "outValue":true,  "uri": "/status/rack_17:RackEnableStatus"},
+                        {"shift": 1, "mask": 1, "bit": 0, "inValue":0, "outValue":false, "uri": "/status/rack_18:RackEnableStatus"},
+                        {"shift": 1, "mask": 1, "bit": 0, "inValue":1, "outValue":true,  "uri": "/status/rack_18:RackEnableStatus"}
+                    ]
+                },
+                {
+                    "remap": [
+                        {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_info:rack_enable_status_2@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        }
+    }
+}

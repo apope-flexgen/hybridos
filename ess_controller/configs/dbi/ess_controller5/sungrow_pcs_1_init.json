@@ -1,0 +1,27 @@
+{  
+    "/notes/pcs": {
+        "note1":"This is the power conversion system (PCS) initial config file for Sungrow",
+        "note2":"Specifically, this file is responsible for loading manager configurations (e.g.: controls, modbus, faults) to the system"
+    },
+
+    "/config/load": {
+        "sungrow_pcs_1_init": {
+            "value":false,
+            "file":"sungrow_pcs_1_init",
+            "pname":"ess",
+            "aname":"pcs",
+            "new_options":[
+                {
+                    "tmpl":"sungrow_pcs_manager",
+                    "pname":"ess",
+                    "amname":"pcs",
+                    "from":1,
+                    "to":1,
+                    "reps":[
+                        {"replace":"##PCS_ID##", "with":"pcs_{:01d}"}
+                    ]
+                }
+            ]
+        }
+    }
+}

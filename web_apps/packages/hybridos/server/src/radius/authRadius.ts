@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import * as dgram from 'dgram'
 import * as events from 'events'
-import * as path from 'path'
 import * as radius from 'radius'
+import * as path from 'path'
 
 @Injectable()
 export class AuthRadius {
@@ -47,7 +47,7 @@ export class AuthRadius {
         this.timeoutId
     }
     authenticate(username, password) {
-        radius.add_dictionary(RADIUS_DICTIONARY_PATH)
+        radius.add_dictionary(path.join(__dirname, 'dictionaries/dictionary.flexgen'))
         const packet = radius.encode({
             code: 'Access-Request',
             secret: this.secret,
@@ -64,7 +64,10 @@ export class AuthRadius {
         }, this.connectionTimeout)
 
         this.socket.on('message', (msg) => {
-            const decodedPacket = radius.decode({ packet: msg, secret: this.secret })
+            const decodedPacket = radius.decode({
+                packet: msg,
+                secret: this.secret,
+            })
             if (decodedPacket.code === 'Access-Accept') {
                 this.close(this.Events.accepted, decodedPacket)
             } else if (decodedPacket.code === 'Access-Reject') {
@@ -75,11 +78,18 @@ export class AuthRadius {
             }
         })
 
-        this.socket.send(packet, 0, packet.length, this.port, this.nasIpAddress, (err) => {
-            if (err) {
-                this.error(err.message)
+        this.socket.send(
+            packet,
+            0,
+            packet.length,
+            this.port,
+            this.nasIpAddress,
+            (err) => {
+                if (err) {
+                    this.error(err.message)
+                }
             }
-        })
+        )
 
         return this
     }

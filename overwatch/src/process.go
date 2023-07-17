@@ -309,11 +309,11 @@ func (process *ProcessCollector) getCPUUsage(pid string) (float64, error) {
 			return 0, err
 		}
 
-		cutime, err := strconv.ParseFloat(fields[13], 32) // time spent in user code
+		cutime, err := strconv.ParseFloat(fields[15], 32) // time spent in user code
 		if err != nil {
 			return 0, err
 		}
-		cstime, err := strconv.ParseFloat(fields[14], 32) // time spent in kernel code
+		cstime, err := strconv.ParseFloat(fields[16], 32) // time spent in kernel code
 		if err != nil {
 			return 0, err
 		}
@@ -325,6 +325,23 @@ func (process *ProcessCollector) getCPUUsage(pid string) (float64, error) {
 }
 
 func getPIDFromName(name string) (string, error) {
+	// for systemctl instances (@<config>)
+	if strings.Contains(name, "@") {
+		out, err := exec.Command("bash", "-c", fmt.Sprintf("systemctl show -p MainPID %s | cut -d = -f2", name)).Output()
+		if err != nil {
+			return "", err
+		}
+
+		pid := string(out)
+		pid = pid[:len(pid)-1]
+
+		if pid != "0" {
+			return pid, nil
+		}
+		return "", fmt.Errorf("pid not found - systemctl returned 0")
+	}
+
+	// non-systemctl instance
 	index := 0
 	if strings.Contains(name, "::") {
 		str := strings.Split(name, "::")

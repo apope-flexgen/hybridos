@@ -1,4 +1,4 @@
-export type Actions = 'save' | 'delete';
+export type Actions = 'save' | 'delete' | 'cancel';
 
 export type SetpointActions = 'update' | 'delete';
 
@@ -6,7 +6,9 @@ export type Setpoints = 'variables' | 'constants';
 
 export const SetpointTypes = ['Int', 'Float', 'Bool', 'String'];
 
-export const CreateButtonLabel = (type: string) => `Create New ${type}`;
+export const CreateButtonLabel = (type: string) => `Create New ${type.slice(0, -1)}`;
+
+export const DeleteSetpointLabel = (type: string) => `Delete ${type.slice(0, -1)}`;
 
 export type ModeBody = {
   name: string;
@@ -43,4 +45,4 @@ export const customColorsArr = [
   'gray',
 ] as const;
 
-export type CustomColorType = typeof customColorsArr[number];
+export type CustomColorType = (typeof customColorsArr)[number];

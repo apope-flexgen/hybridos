@@ -1,0 +1,188 @@
+{
+    "/config/load": {
+        "catl_bms_manager_alarms": {
+            "value": false,
+            "type": "master",
+            "file": "catl_bms_manager_alarms",
+            "aname": "bms",
+            "pname": "ess",
+            "new_options": [
+                {
+                    "tmpl": "catl_bms_rack_alarms",
+                    "pname": "bms",
+                    "type": "ai",
+                    "ainame": "##BMS_ID##",
+                    "from": 1,
+                    "to": 9,
+                    "reps": [
+                        {"replace":"##BMS_ID##",   "with":"sbmu_{:01d}"},
+                        {"replace":"##BMS_NUM##",  "with":"{:01d}"}
+                    ]
+                }
+            ]
+        }
+    },
+    "/alarms/bms": {
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "numVars": 11,
+            "variable1": "mbmu_max_cell_voltage",
+            "variable2": "mbmu_min_cell_voltage",
+            "variable3": "mbmu_avg_cell_voltage",
+            "variable4": "mbmu_max_cell_temperature",
+            "variable5": "mbmu_min_cell_temperature",
+            "variable6": "mbmu_avg_cell_temperature",
+            "variable7": "mbmu_soc",
+            "variable8": "mbmu_soh",
+            "variable9": "bms_heartbeat",
+            "variable10": "num_hv_subsystem",
+            "variable11": "BMSPowerOn",
+            "variable12": "mbmu_voltage",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]
+            }
+        },
+        "single_cell_overvoltage":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "single_cell_undervoltage": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "single_cell_overtemp":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "single_cell_undertemp":    {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "SOC_low":                  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "inner_communication":      {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+
+        "sbmu_1_single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_1_aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+
+        "sbmu_2_single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_2_aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        
+        "sbmu_3_single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_3_aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+
+        "sbmu_4_single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_4_aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+
+        "sbmu_5_single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_5_aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+
+        "sbmu_6_single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_6_aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+
+        "sbmu_7_single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_7_aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+
+        "sbmu_8_single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_8_aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+
+        "sbmu_9_single_cell_over_volt":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_single_cell_under_volt": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_single_cell_over_temp":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_single_cell_under_temp": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_SOC_low":                {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_chiller_alarm":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_charge_overcurrent":     {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_discharge_overcurrent":  {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_temp_difference":        {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_balance_function":       {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+        "sbmu_9_aerosol_state":          {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}},
+
+        "close_contactors_cmd":          {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"bms"}]}]}},
+        "open_contactors_cmd":           {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"bms"}]}]}},
+        "clear_faults_cmd":              {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"bms"}]}]}},
+        "close_contactors_failure":      {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"bms"}]}]}},
+        "open_contactors_failure":       {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"bms"}]}]}},
+
+        "MonitorVarAlarm": {
+            "value": "Normal",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue":"bms_heartbeat_state",             "amap": "bms", "uri":	"/alarms/bms:bms_heartbeat", "outValue": "BMS Communication Failure"},
+                        
+                        {"inValue":"mbmu_max_cell_voltage_limit_max", "amap": "bms", "uri":	"/site/ess_ls:ess_alarms[0]", "outValue": true, "note": "Bit 0 - BMS Max Cell Voltage Threshold Exceeded"},
+                        {"inValue":"mbmu_min_cell_voltage_limit_min", "amap": "bms", "uri":	"/site/ess_ls:ess_alarms[1]", "outValue": true, "note": "Bit 1 - BMS Min Cell Voltage Threshold Exceeded"},
+                        {"inValue":"BMSMaxCellTemp_limit_max",        "amap": "bms", "uri":	"/site/ess_ls:ess_alarms[2]", "outValue": true, "note": "Bit 2 - BMS Max Cell Temperature Threshold Exceeded"},
+                        {"inValue":"BMSMinCellTemp_limit_min",        "amap": "bms", "uri":	"/site/ess_ls:ess_alarms[3]", "outValue": true, "note": "Bit 3 - BMS Min Cell Temperature Threshold Exceeded"},
+                        {"inValue":"BMSCurrent_limit_max",            "amap": "bms", "uri":	"/site/ess_ls:ess_alarms[4]", "outValue": true, "note": "Bit 4 - BMS Current Max Threshold Exceeded"},
+                        {"inValue":"BMSCurrent_limit_min",            "amap": "bms", "uri":	"/site/ess_ls:ess_alarms[5]", "outValue": true, "note": "Bit 5 - BMS Current Min Threshold Exceeded"},
+                        {"inValue":"num_hv_subsystem_limit_min",      "amap": "bms", "uri":	"/site/ess_ls:ess_alarms[6]", "outValue": true, "note": "Bit 6 - Number of Closed-in Battery Racks Below Threshold"},
+                        {"inValue":"mbmu_soh_limit_min",              "amap": "bms", "uri":	"/site/ess_ls:ess_alarms[7]", "outValue": true, "note": "Bit 7 - BMS State of Health Below Threshold"}
+                    ]
+                }]
+            }
+        },
+        "bms_heartbeat": {"value": "Normal","type": "alarm","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "bms"}]}]}}
+    }
+}

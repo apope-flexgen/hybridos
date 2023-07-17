@@ -1,0 +1,56 @@
+Rizen 
+Modbud map 1.1 3/21/2021 follow up 
+
+Local Control HMI  
+ip setup.
+
+
+18 per block
+differences between 2 and 18.
+
+admin access
+normal operation.
+
+
+
+
+Heartbeats
+Timeof Day
+Comms check
+Initial Status check
+
+Command on / off / standby sequence
+
+AC unit control 
+
+
+
+. The equipment is installed and 
+inspected
+2. The communication, auxiliary circuit, 
+and main circuit copper bus 
+connections are completed and 
+checked correctly
+
+1. Auxiliary power supply
+2. Close the micro-breaks Q0 and Q3 of the 
+BCP control cabinet
+3. Close Q4-Q13 of the BCP control cabinet
+1、 4. Press the start button of the 2 
+UPSs often
+
+1. Close the DC load switches Q1 and Q2 of the 
+BCP control cabinet
+2. Through BMS (EMS) issuance of high-voltage 
+instructions (complete pre-charge)
+1、 3. Close the isolation switch QS of the high 
+voltage box of each battery cabinet
+
+
+1. After the battery cabinet is powered on, it 
+will enter the normal charging and discharging 
+state
+
+
+Start up Command
+

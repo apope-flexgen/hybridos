@@ -1,0 +1,36 @@
+{
+    "/config/load": {
+        "notes1":" This is the start of the loader process",
+        "notes2":" This will set up load management entries for ess_configure ",
+        "notes3":"                                       ess_manager ",
+        "notes4":"                                       bms_manager ",
+        "notes5":"                                       pcs_manager ",
+        "notes6":"                                 and  site_manager ",
+        "notes7":"     the system will try and load these files from dbi  ",
+        "notes8":"     after completing a successful load the ess_final file will be requested ",
+        "notes9":"     for now, we have to specify the individual cfile and tmpl loaders as well ",
+
+        "ess_controller": {
+            "value":false,
+            "file":"ess_controller",
+            "aname":"ess",
+            "final": "ess_final",
+            "new_options": [
+                { "load":"catl_bms_manager",             "aname":"bms", "pname":"ess"  },
+                { "load":"catl_bms_manager_modbus",      "aname":"bms", "pname":"ess"  },
+                { "file":"catl_bms_manager_controls",    "aname":"bms", "pname":"ess"  },
+                { "load":"catl_bms_manager_alarms",      "aname":"bms", "pname":"ess"  },
+                { "load":"catl_bms_manager_faults",      "aname":"bms", "pname":"ess"  },
+
+                { "load":"pe_pcs_manager",               "aname":"pcs", "pname":"ess"  },
+                { "load":"pe_pcs_manager_modbus",        "aname":"pcs", "pname":"ess"  },
+                { "file":"pe_pcs_manager_controls",      "aname":"pcs", "pname":"ess"  },
+                { "load":"pe_pcs_manager_faults",        "aname":"pcs", "pname":"ess"  },
+                { "load":"pe_pcs_manager_alarms",        "aname":"pcs", "pname":"ess"  },
+
+                { "site":"flexgen_ess_server",           "aname":"site", "pname":"ess" },
+                { "file":"site_manager",                 "aname":"site", "pname":"ess" }
+            ]
+        }
+    }
+}

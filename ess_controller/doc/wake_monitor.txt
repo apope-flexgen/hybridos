@@ -1,0 +1,217 @@
+wake monitor
+p. wilshire   
+       orig   01/28/2022
+
+
+The wake_monitor process gets its name from the early ess_controller scheduling functopns when "wake" signals were sent to sleeping tasks to get them to perform their functions.
+
+It is now used to descripbe a mechanism where we have lists of variables that need to have periodic functions performed on them.
+In other words "every 100mS please check the battery temperature"
+
+These lists were once fixed at initial config time with fixed scan rates ,but those day are over. The lists can be dynamic , have different scan rates and can use different functions.
+Once an item has been added to a list it cannot be removed ( as of yet ) . You can disable the scan and change the function dynamically.
+
+
+Lets look at an example.
+
+fims_send  -m set -r /$$ -u /ess/full/schedule/wake_monitor/ess '{
+        "/status/ess:ChargeCurrent":       { "enable": true, "rate": 0.1, "amap": "ess", "func": "CheckMonitorVar"}
+}'
+
+This tells the system to look at "/status/ess:CurrentCheckStop" ( forget the rate bit we'll cover that later). 
+To be more specific the CheckMonitorVar is run with the "/status/ess:ChargeCurrent" assetVar as an argument.
+
+The variable under test will contain a load of instructions to tell the CheckMonitorVar function how to do its job.
+So lets set up some initial data for this variable.
+
+fims_send  -m set -r /$$ -u /ess/full/status/ess/ChargeCurrent 1234
+
+
+
+Next we have to set up a command to trigger the wake_monitor function 
+
+fims_send  -m set -r /$$ -u /ess/full/system/commands '{
+    "runMon":{
+            "value":"test",
+            "help": "run a wake_monitor list",
+            "ifChanged":false, 
+            "enabled":false, 
+            "actions":{"onSet":[{"func":[{"func":"RunMonitorList"}]}]}
+            }
+}'
+
+Having got this far we can now trigger the RunMonitorList operation.
+
+
+fims_send  -m set -r /$$ -u /ess/full/system/commands '{
+    "runMon":{
+            "value":"test",
+            "mname":"wake_monitor",
+            "aname":"ess",
+            "runChild":false,  (new in 10.1)
+            "enabled":true
+            }
+}'
+
+This will call the RunMonitorList function and trigger a scan on the previously setup wake_monitor list.
+This will cause /status/ess:CurrentCheckStop to be evaluated by the RunMonitorList function.
+
+All we have set up for this assetVar is its value so what does the CheckMonitorVar do with this ?
+
+Lets look at the variable after CheckMonitorVar has touched it.
+
+fims_send  -m get -r /$$ -u /ess/full/status/ess/ChargeCurrent '{
+
+"ChargeCurrent": {
+    "value": 1234,
+    "EnableAlert": true,
+    "EnableFaultCheck": false,
+    "EnableMaxValCheck": false,
+    "EnableMinValCheck": false,
+    "FaultShutdownReset": true,
+    "MaxAlarmThreshold": 0,
+    "MaxAlarmTime": 0,
+    "MaxAlarmTimeout": 0,
+    "MaxFaultThreshold": 0,
+    "MaxFaultTime": 0,
+    "MaxFaultTimeout": 0,
+    "MaxRecoverTime": 0,
+    "MaxRecoverTimeout": 0,
+    "MaxResetValue": 0,
+    "MinAlarmThreshold": 0,
+    "MinAlarmTime": 0,
+    "MinAlarmTimeout": 0,
+    "MinFaultThreshold": 0,
+    "MinFaultTime": 0,
+    "MinFaultTimeout": 0,
+    "MinRecoverTime": 0,
+    "MinRecoverTimeout": 0,
+    "MinResetValue": 0,
+    "seenMaxAlarm": false,
+    "seenMaxFault": false,
+    "seenMaxReset": false,
+    "seenMinAlarm": false,
+    "seenMinFault": false,
+    "seenMinReset": false,
+    "tLast": 777.3314739999987
+    }
+}
+
+The use of the CheckMonitorVar  is now a bit simpler to describe.
+
+"EnableAlert": true,
+    If true, this allows the Function to produce  Alarms
+
+"EnableFaultCheck": false,
+    If true, this allows the Function to produce  Faults
+
+"EnableMaxValCheck": false,
+    If true, this allows the Function to run a MaxValueCheck
+
+"EnableMinValCheck": false,
+    If true, this allows the Function to run a MinValueCheck
+
+"FaultShutdownReset": true,
+    If true, this allows the Function reset any Fault FaultShutdownReset
+
+"MaxAlarmThreshold": 0,
+    Sets the Max Alarm Threshold
+
+"MaxAlarmTime": 0,
+    Sets the Time to exceed  the Alarm  Threshold to produce an alarm
+
+"MaxAlarmTimeout": 0,
+    Sets the Time to exceed  the Alarm  Threshold to produce an alarm
+
+"MaxFaultThreshold": 0,
+    Sets the Max Fault Threshold
+
+"MaxFaultTime": 0,
+    Sets the Time to exceed  the Alarm  Threshold to produce a fault
+
+"MaxFaultTimeout": 0,
+    *Sets the Time to exceed  the Alarm  Threshold to produce an alarm
+
+"MaxRecoverTime": 0,
+    *Sets the Time to exceed  the Alarm  Threshold to produce an alarm
+
+"MaxRecoverTimeout": 0,
+    Sets the Time taken to recover from a Max Value
+
+"MaxResetValue": 0,
+    Sets the value that the variable must fall below  to start the reset timeout
+
+Same for min values
+"MinAlarmThreshold": 0,
+"MinAlarmTime": 0,
+"MinAlarmTimeout": 0,
+"MinFaultThreshold": 0,
+"MinFaultTime": 0,
+"MinFaultTimeout": 0,
+"MinRecoverTime": 0,
+"MinRecoverTimeout": 0,
+"MinResetValue": 0,
+
+
+"seenMaxAlarm": false,
+"seenMaxFault": false,
+  Indicates that we have seen the Max Fault or Alarm values
+
+"seenMaxReset": false,
+  Indicates that we have seen the Max Reset values
+
+"seenMinAlarm": false,
+"seenMinFault": false,
+  Indicates that we have seen the Min Fault or Alarm values
+
+
+"seenMinReset": false,
+  Indicates that we have seen the Min Reset values
+
+    "tLast": 777.3314739999987
+
+
+[437.352s  ] [info    ] [CheckMonitorVar] Fault Destination for ess with assetVar /status/ess:ChargeCurrent is null
+[437.352s  ] [info    ] [CheckMonitorVar] Alarm Destination for ess with assetVar /status/ess:ChargeCurrent is null
+
+[437.352s  ] [info    ] [CheckMonitorVar] Not set up for [ChargeCurrent] reloadStr [ChargeCurrent_reload]
+[1478.05s  ] [info    ] [sendAlarm      ] calling setAlarm [/status/ess:ChargeCurrent] in destAv [/assets/ess/summary:alarms]
+[1478.05s  ] [info    ] [sendEvent      ] sending event  xxx >>>>>>>>>>>>>>>> [{"source":"ess","message":"[ChargeCurrent] value [4100.000] > max alarm threshold [4000.000] for 5.00 seconds at 01/28/2022 11:21:18","severity":3}]
+
+Using the amap links
+
+Using the amap links
+
+The "ess" in the   "/schedule/wake_monitor/ess" definition is special in that it also sets up the "ess" asset as the owner of this process.
+
+This means that this example could be written as :
+
+{
+    "/schedule/wake_monitor/ess":{
+        "CurrentCheckStop":       { "enable": true, "rate": 0.1, "amap": "ess", "func": "CheckMonitorVar"}
+    }
+}
+
+In this case the assetVar associated with the amap entry ( See Links ) "CurrentCheckStop" is used as the CheckMonitorVar argument.
+This allows aggregation of data in a hierarchical system.
+Lets say we are looking at StateOfCharge "SOC".
+The BMS , each Rack , each Module and each Cell will have something called SOC.
+
+
+This single config statement :
+
+{
+    "/schedule/wake_monitor/bms":{
+        "SOC":       { "enable": true, "rate": 0.1, "amap": "ess", "func": "AggregateVar"}
+    }
+}
+
+Can be used to descend into the system, down to cell level if needed, and produce Aggregation data for SOC ( including Max, Min, Avg etc) for the whole system.
+
+we would get, as a result,
+
+BMS                       SOC      avg    min   max 
+RACK_1 .. RACK_n          SOC      avg    min   max 
+MODULE_1 .. MODULE_n      SOC      avg    min   max 
+CELL_1 .. CELL_n          SOC      avg    min   max 
+

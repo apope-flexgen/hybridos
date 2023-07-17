@@ -4,6 +4,7 @@ export class SiteConfiguration {
     ess: boolean
     gen: boolean
     solar: boolean
+    site_status_bar?: boolean
     met_station: boolean
     tracker: boolean
     feeders: boolean
@@ -19,4 +20,8 @@ export class SiteConfiguration {
     inspectorComponentsName: string
     site_name?: string
     fleet_name?: string
+    customer?: {
+      name?: string,
+      server?: string
+    }
 }

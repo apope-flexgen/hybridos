@@ -1,0 +1,30 @@
+{
+    "/assets":        {
+                 "bms":   { 
+                                "template":"configs/bms_manager.json",
+                                "subs":[
+                                {"replace":"@@BMS_ID@@","with":"bms"},
+                                {"replace":"@@BMS_NUM@@","with":"01"},
+                                {"replace":"@@BMS_IP@@","with":"192.168.1.114"}
+                                ]
+                            },
+                 "pcs":   { 
+                                "template":"configs/pcs_manager.json",
+                                "subs":[
+                                {"replace":"@@PCS_ID@@","with":"pcs"},
+                                {"replace":"@@PCD_NUM@@","with":"01"},
+                                {"replace":"@@PCS_IP@@","with":"192.168.1.115"}
+                                ]
+                            },
+                 "drc":   { 
+                                "template":"configs/drc_manager.json",
+                                "subs":[
+                                {"replace":"@@DRC_ID@@","with":"drc"},
+                                {"replace":"@@DRC_NUM@@","with":"01"},
+                                {"replace":"@@DRC_IP@@","with":"192.168.1.116"}
+                                ]
+                            }
+
+            }
+
+}

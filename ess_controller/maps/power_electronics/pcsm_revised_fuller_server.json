@@ -1,0 +1,36 @@
+{
+   "system":
+   {   "name":"PCMS",
+       "protocol": "Modbus TCP",
+       "id": "PCMS",
+       "ip_address": "0.0.0.0",
+       "port": 502 
+   },
+    "registers":
+     {
+      "input_registers":
+       [
+          { "name":"grid_voltage_rs","id":"grid_voltage_rs","offset":1000,"uri":"/comp_pcs/component_one" },
+          { "name":"grid_voltage_st","id":"grid_voltage_st","offset":1001,"uri":"/comp_pcs/component_one" },
+          { "name":"grid_voltage_tr","id":"grid_voltage_tr","offset":1002,"uri":"/comp_pcs/component_one" },
+          { "name":"active_power","id":"active_power","offset":1007,"uri":"/comp_pcs/component_one" },
+          { "name":"reactive_power","id":"reactive_power","offset":1008,"uri":"/comp_pcs/component_one" },
+          { "name":"current_fault","id":"current_fault","offset":1120,"uri":"/comp_pcs/component_one" },
+          { "name":"current_warning","id":"current_warning","offset":1121,"uri":"/comp_pcs/component_one" },
+          { "name":"inverter_status","id":"inverter_status","offset":1122,"uri":"/comp_pcs/component_one" },
+          { "name":"pt100_l1_temperature","id":"pt100_l1_temperature","offset":1192,"uri":"/comp_pcs/component_one" },
+          { "name":"pt100_l2_temperature","id":"pt100_l2_temperature","offset":1193,"uri":"/comp_pcs/component_one" },
+          { "name":"pt100_l3_temperature","id":"pt100_l3_temperature","offset":1194,"uri":"/comp_pcs/component_one" },
+          { "name":"bess_voltage_bus_1","id":"bess_voltage_bus_1","offset":7304,"uri":"/comp_pcs/component_one" },
+          { "name":"vdc_bus","id":"vdc_bus","offset":7400,"uri":"/comp_pcs/component_one" },
+          { "name":"dc_input_power_bess1","id":"dc_input_power_bess1","offset":7406,"uri":"/comp_pcs/component_one" },
+          { "name":"dc_input_current_bess1","id":"dc_input_current_bess1","offset":7409,"uri":"/comp_pcs/component_one" }       ],
+      "holding_registers":
+       [
+         { "name":"pcs_tod_sec","id":"pcs_tod_sec","offset":551,"uri":"/comp_pcs/component_one" },
+         { "name":"p_reference","id":"p_reference","offset":552,"uri":"/comp_pcs/component_one" },
+          { "name":"q_reference","id":"q_reference","offset":557,"uri":"/comp_pcs/component_one" },
+          { "name":"enable_main_selector","id":"enable_main_selector","offset":1122,"uri":"/comp_pcs/component_one" },
+          { "name":"enable_main_selector2","id":"enable_main_selector2","offset":2041,"uri":"/comp_pcs/component_one" }       ]
+    }
+}

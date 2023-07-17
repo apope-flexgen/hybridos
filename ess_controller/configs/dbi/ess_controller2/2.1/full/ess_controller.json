@@ -1,0 +1,664 @@
+{
+  "/notes/ess": {
+    "note1":"Start with this config file, the bms, pcs (and drc) managers are referenced.",
+    "note1a":"The main page of the ui display is outlined in /assets/ess/summay",
+    "note2": " The /config/ess area is still under development",
+    "note3":"The /components/ess table defined the incoming control words from the site controller",
+    "note4":"The /links/<ess> table defines mapping of external interface components to internal variables",
+    "note5":" There are some junk/test fields as well... they will removed soon"
+  },
+  
+  "/config/ess_server":{
+    "note":"This is the modbus server map",
+    "ess":"flexgen_ess_server.json"
+  },
+
+  "/assets/ess/ess_1":{
+    "name": "ESS Summary",
+    "version": {
+        "name": "Version",
+        "value": "version",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+    },
+    "estop_status": {
+      "name": "E-Stop Status",
+      "value": "Off",
+      "unit": "",
+      "scaler": 0,
+      "enabled": true,
+      "ui_type": "status",
+      "type": "string"
+  },
+  "disconnect_switch_status": {
+    "name": "Disconnect Switch Status",
+    "value": "Off",
+    "unit": "",
+    "scaler": 0,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "string"
+  },
+  "door_latch_status": {
+    "name": "Door Latch Status",
+    "value": "Off",
+    "unit": "",
+    "scaler": 0,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "string"
+  },
+  "surge_arrester_status": {
+    "name": "Surge Arrester Status",
+    "value": "Off",
+    "unit": "",
+    "scaler": 0,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "string"
+  },
+  "fire_alarm_status": {
+    "name": "Fire Alarm Status",
+    "value": "Off",
+    "unit": "",
+    "scaler": 0,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "string"
+  },
+  "fuse_monitoring_status": {
+    "name": "Fuse Monitoring Status",
+    "value": "Off",
+    "unit": "",
+    "scaler": 0,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "string"
+  },
+    "max_charge_power": {
+      "name": "Max Charge Power",
+      "value": 0,
+      "unit": "kW",
+      "scaler": 1,
+      "enabled": false,
+      "ui_type": "status",
+      "type": "number"
+    },
+    "max_discharge_power": {
+      "name": "Max Discharge Power",
+      "value": 0,
+      "unit": "kW",
+      "scaler": 1,
+      "enabled": false,
+      "ui_type": "status",
+      "type": "number"
+    },
+    "active_power": {
+        "name": "Active Power",
+        "value": 2.5,
+        "unit": "W",
+        "scaler": 1000,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+    },
+    "active_power_setpoint": {
+        "name": "Active Power Setpoint",
+        "value": 3.0999999046325684,
+        "unit": "W",
+        "scaler": 1000,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+    },
+    "alarms": {
+        "name": "Alarms",
+        "value": 0,
+        "options": [],
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "alarm",
+        "type": "number"
+    },
+    "soc": {
+        "name": "State of Charge",
+        "value": 76.55913543701172,
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+    },
+    "soh": {
+        "name": "State of Health",
+        "value": 65.7,
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+    },
+    "status": {
+        "name": "Status",
+        "value": "Hello Kitty",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+    }
+  },
+  
+
+  "/config/ess/managers": {
+    "bms": "bms_manager.json",
+    "pcs": "pcs_manager.json",
+    "drc": "drc_manager.json",
+    "site": "site_manager.json"
+  },
+
+  "/config/ess": {
+    "Subs": "/ess, /components, /site, /assets, /params, /status, /controls, /links, /variables, /config, /tests, /default, /reload, /misc2",
+    "Pubs": "/assets/ess/summary",
+    "BlockSets": "/status/ess, /status/bms",
+    "BlockPubs": "/assets",
+    "LogDir": "/var/log/ess_controller",
+    "essCommsFaultTimeout": {
+      "value": 10
+    },
+    "essHeartbeatFaultTimeout": {
+      "value": 15
+    },
+    "essCommsAlarmTimeout": {
+      "value": 7
+    },
+    "essCommsRecoverTimeout": {
+      "value": 5
+    },
+    "AlarmDestination": {
+      "value": "/assets/ess/summary:alarms"
+    },
+    "FaultDestination": {
+      "value": "/assets/ess/summary:faults"
+    },
+    "pChargeTbl": {
+      "value": "p_charge_tbl.csv"
+    },
+    "pDischargeTbl": {
+      "value": "p_discharge_tbl.csv"
+    }
+  },
+
+  "/logs/ess": {
+    "CheckAmCommsLog": {
+      "value": "file:CheckAmCommsLog.txt",
+      "enableLog": true
+    },
+    "MonitorVarLog": {
+      "value": "file:MonitorVarLog.txt",
+      "enableLog": true
+    }
+  },
+
+  "/assets/ess/summary": {
+      "name":"ESS Summary",
+      "version": {
+        "name": "Version",
+        "value": "version",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+      },
+      "max_charge_power": {
+        "name": "Max Charge Power",
+        "value": 0,
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "max_discharge_power": {
+        "name": "Max Discharge Power",
+        "value": 0,
+        "unit": "kW",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "estop_status": {
+          "name": "E-Stop Status",
+          "value": "Off",
+          "unit": "",
+          "scaler": 0,
+          "enabled": true,
+          "ui_type": "status",
+          "type": "string"
+      },
+      "disconnect_switch_status": {
+        "name": "Disconnect Switch Status",
+        "value": "Off",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+      },
+      "door_latch_status": {
+        "name": "Door Latch Status",
+        "value": "Off",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+      },
+      "surge_arrester_status": {
+        "name": "Surge Arrester Status",
+        "value": "Off",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+      },
+      "fire_alarm_status": {
+        "name": "Fire Alarm Status",
+        "value": "Off",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+      },
+      "fuse_monitoring_status": {
+        "name": "Fuse Monitoring Status",
+        "value": "Off",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+      },
+      "active_power": {
+        "name": "Active Power",
+        "value": 17,
+        "unit": "W",
+        "scaler": 1000,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "active_power_setpoint": {
+        "name": "Active Power Setpoint",
+        "value": 3.0999999046325684,
+        "unit": "W",
+        "scaler": 1000,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "alarms": {
+        "name": "Alarms",
+        "value": 0,
+        "options": [],
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "alarm",
+        "type": "number"
+      },
+      "soc": {
+        "name": "State of Charge",
+        "value": 76.55913543701172,
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "soh": {
+        "name": "State of Health",
+        "value": 12.34,
+        "unit": "%",
+        "scaler": 1,
+        "enabled": false,
+        "ui_type": "status",
+        "type": "number"
+      },
+      "status": {
+        "name": "Status",
+        "value": "N/A",
+        "unit": "",
+        "scaler": 0,
+        "enabled": true,
+        "ui_type": "status",
+        "type": "string"
+      }
+  },
+
+  "/faults/ess": {
+    "clear_faults": {
+        "value": 0,
+        "type": "fault",
+        "actions": {
+            "onSet": [
+                {
+                    "func": [
+                        {
+                            "func": "process_sys_alarm",
+                            "amap": "ess"
+                        }
+                    ]
+                }
+            ]
+        }
+      }
+  },
+
+  "/controls/ess": {
+    "ReactivePowerSetpoint": {
+      "value": 0
+    },
+    "ActivePowerSetpoint": {
+      "value": 0,
+      "xactions": {
+        "onSet": [{
+            "remap":[
+                {"fims": "set", "uri": "/gpio/components/gpio_out:Gpio Output2", "amap": "ess", "outValue": true},
+                {"fims": "set", "uri": "/gpio/components/gpio_out:Gpio Output2", "amap": "ess", "outValue": false},
+                {"func": "HandlePowerCmd", "amap": "ess"}
+            ]
+        }]
+      }
+    },
+    "PowerPriority": {
+      "value": "q"
+    }
+  },
+
+  "/vlinks/ess": {
+    "note1":" these two assetVars share a common set of values via the linkVar (vlink) pointer",
+    "active_power_ess_1_ui":            { "value": "/assets/ess/ess_1:active_power",                     "vlink": "/components/pcs_registers_fast:active_power"            },
+    "active_power_ess_summary_ui":      { "value": "/assets/ess/summary:active_power",                   "vlink": "/components/pcs_registers_fast:active_power"            },
+    "active_power_setpoint_ess_1_ui":   { "value": "/assets/ess/ess_1:active_power_setpoint",            "vlink": "/controls/ess:ActivePowerSetpoint"                      },
+    "active_power_setpoint_ess_sum_ui": { "value": "/assets/ess/summary:active_power_setpoint",          "vlink": "/controls/ess:ActivePowerSetpoint"                      },
+    "soc_ess_1_ui":                     { "value": "/assets/ess/ess_1:soc",                              "vlink": "/status/bms:BMSSOC"                                     },
+    "soc_ess_summary_ui":               { "value": "/assets/ess/summary:soc",                            "vlink": "/status/bms:BMSSOC"                                     },
+    "soh_ess_1_ui":                     { "value": "/assets/ess/ess_1:soh",                              "vlink": "/components/catl_mbmu_summary_r:mbmu_soh"               },
+    "soh_ess_summary_ui":               { "value": "/assets/ess/summary:soh",                            "vlink": "/components/catl_mbmu_summary_r:mbmu_soh"               },
+    "version_ess_1_ui":                 { "value": "/assets/ess/ess_1:version",                          "vlink": "/status/ess:build"                                      },
+    "version_ess_summary_ui":           { "value": "/assets/ess/summary:version",                        "vlink": "/status/ess:build"                                      },
+    "max_charge_power_ess_summary":     { "value": "/assets/ess/summary:max_charge_power",               "vlink": "/status/ess:MaxESSChargePower"                          },
+    "max_charge_power_ess_1":           { "value": "/assets/ess/ess_1:max_charge_power",                 "vlink": "/status/ess:MaxESSChargePower"                          },
+    "max_discharge_power_ess_summary":  { "value": "/assets/ess/summary:max_discharge_power",            "vlink": "/status/ess:MaxESSDischargePower"                       },
+    "max_discharge_power_ess_1":        { "value": "/assets/ess/ess_1:max_discharge_power",              "vlink": "/status/ess:MaxESSDischargePower"                       },
+    "system_state_ess_summary":         { "value": "/assets/ess/summary:status",                         "vlink": "/status/pcs:SystemState"                                }, 
+    "system_state_ess_1":               { "value": "/assets/ess/ess_1:status",                           "vlink": "/status/pcs:SystemState"                                },    
+
+    "site_max_charge_power":            { "value": "/site/ess_ls:chargeable_power",                      "vlink": "/status/ess:MaxESSChargePower"                          },
+    "site_max_discharge_power":         { "value": "/site/ess_ls:dischargeable_power",                   "vlink": "/status/ess:MaxESSDischargePower"                       }
+  }, 
+  "/test/ess":{
+
+    "set_enable": {
+      "value": false,
+      "actions": { "onSet": [{
+          "enum": [
+                    {"invalue": true,"uri":"/assets/ess:start@enabled","outValue":true},
+                    {"invalue": true,"uri":"/assets/ess:stop@enabled","outValue":true},
+                    {"invalue": false,"uri":"/assets/ess:start@enabled","outValue":false},
+                    {"invalue": false,"uri":"/assets/ess:stop@enabled","outValue":false}
+          ]}
+        ]}
+    }
+  },
+
+  "/links/ess": {
+    "HeartBeatLink": {
+      "value": "/components/ess:HeartBeatRelinkOK"
+    },
+    "DcContactorFbk": {
+      "value": "/components/pcs_1_status:DcContactor"
+    },
+    "AcContactorFbk": {
+      "value": "/components/pcs_1_status:AcContactor"
+    },
+    "xGPIOFault": {
+      "value": "/components/gpio:xgpioBitfield"
+    },
+    "EStop": {
+      "value": "/components/gpio:EStop"
+    },
+    "Disconnect Switch": {
+      "value": "/components/gpio:Disconnect Switch"
+    },
+    "Door Latch": {
+      "value": "/components/gpio:Door Latch"
+    },
+    "Surge Arrester": {
+      "value": "/components/gpio:Surge Arrester"
+    },
+    "Fire Alarm": {
+      "value": "/components/gpio:Fire Alarm"
+    },
+    "Fuse Monitoring": {
+      "value": "/components/gpio:Fuse Monitoring"
+    },
+    "Gpio Output1": {
+      "value": "/components/gpio:Gpio Output1"
+    },
+    "Gpio Output2": {
+      "value": "/components/gpio:Gpio Output2"
+    }
+  },
+  
+  "/status/ess": {
+    "build": "build number",
+    "ReactivePower": {
+      "value": 0
+    },
+    "active_power": {
+      "value": 1234.5
+    },
+    "UiStartup": {
+      "value": false
+    },
+    "MaxChargePower": {
+      "value": 0 
+    },
+    "MaxDischargePower": {
+      "value": 0 
+    },
+    "MaxESSChargePower": {
+      "value": 0 
+    },
+    "MaxESSDischargePower": {
+      "value": 0 
+    },
+    "FaultShutdown": {
+      "value": false,
+      "actions": { 
+          "onSet":[{
+              "remap":[
+                  {"inValue": true, "uri": "/status/pcs:HardShutdown", "outValue": false},
+                  {"inValue": true, "uri": "/status/pcs:FullShutdown", "outValue": true},
+                  {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS@endTime", "outValue": 0},
+                  {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS", "outValue": "schedShutdownPCS"}
+              ]
+          }]
+      }
+    },
+    "gpioFault": {
+        "value": false,
+        "desc": "for keeping track of all the pins",
+        "actions": { 
+          "onSet":[{
+              "remap":[
+                {"inValue": true, "uri": "/status/pcs:FullShutdown@ShutdownBMS"},
+                {"inValue": true, "uri": "/status/pcs:HardShutdown", "outValue": false},
+                {"inValue": true, "uri": "/status/pcs:FullShutdown", "outValue": true},
+                {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS@endTime", "outValue": 0},
+                {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS", "outValue": "schedShutdownPCS"}
+              ]
+          }]
+        }
+    },
+    "ShutdownBMS": {
+      "value": false,
+      "desc": "Only to be called from ShutdownPCS()",
+      "actions": { 
+        "onSet":[{
+            "remap":[
+              {"inValue":true, "uri":	"/sched/bms:schedShutdownBMS@endTime", "outValue": 0},
+              {"inValue":true, "uri":	"/sched/bms:schedShutdownBMS", "outValue": "schedShutdownBMS"}
+            ]
+        }]
+      }
+    }
+  },
+  "/params/ess": {
+    "ReactivePowerDeadband": {
+      "value": 5
+    }
+  },
+
+  "/sets/blocked": {
+    "/status": {"value": true},
+    "/components": {"value": true}
+  },
+
+  "/pubs/blocked": {
+    "/assets": { "value": true},
+    "/site": {"value": true}
+  },
+
+  "/gets/blocked": {
+    "/components": {"value": true}
+  },
+      "/components/gpio": {
+        "EStop": {
+            "value": false,
+            "pin": 9,
+            "dir": "input",
+            "desc": "EStop",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_ls:ems_alarms[0]", "outValue": true},
+                        { "inValue": true, "uri": "/assets/ess/summary:estop_status", "outValue": "Fault"},
+                        { "inValue": true, "uri": "/assets/ess/ess_1:estop_status", "outValue": "Fault"},
+                        { "inValue": false, "uri": "/assets/ess/summary:estop_status", "outValue": "Normal"},
+                        { "inValue": false, "uri": "/assets/ess/ess_1:estop_status", "outValue": "Normal"}
+                    ]
+                }]
+            }
+        },
+        "Disconnect Switch": {
+            "value": false,
+            "pin": 8,
+            "dir": "input",
+            "desc": "Disconnect Switch",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_ls:xems_alarms[1]", "outValue": true},
+                        { "inValue": true, "uri": "/assets/ess/summary:disconnect_switch_status", "outValue": "Fault"},
+                        { "inValue": true, "uri": "/assets/ess/ess_1:disconnect_switch_status", "outValue": "Fault"},
+                        { "inValue": false, "uri": "/assets/ess/summary:disconnect_switch_status", "outValue": "Normal"},
+                        { "inValue": false, "uri": "/assets/ess/ess_1:disconnect_switch_status", "outValue": "Normal"}
+                    ]
+                }]
+            }
+        },
+        "Door Latch": {
+            "value": false,
+            "pin": 7,
+            "dir": "input",
+            "desc": "Door Latch",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_ls:ems_alarms[2]", "outValue": true},
+                        { "inValue": true, "uri": "/assets/ess/summary:door_latch_status", "outValue": "Fault"},
+                        { "inValue": true, "uri": "/assets/ess/ess_1:door_latch_status", "outValue": "Fault"},
+                        { "inValue": false, "uri": "/assets/ess/summary:door_latch_status", "outValue": "Normal"},
+                        { "inValue": false, "uri": "/assets/ess/ess_1:door_latch_status", "outValue": "Normal"}
+                    ]
+                }]
+            }
+        },
+        "Surge Arrester": {
+            "value": false,
+            "pin": 6,
+            "dir": "input",
+            "desc": "Surge Arrester",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_ls:xems_alarms[3]", "outValue": true},
+                        { "inValue": true, "uri": "/assets/ess/summary:surge_arrester_status", "outValue": "Fault"},
+                        { "inValue": true, "uri": "/assets/ess/ess_1:surge_arrester_status", "outValue": "Fault"},
+                        { "inValue": false, "uri": "/assets/ess/summary:surge_arrester_status", "outValue": "Normal"},
+                        { "inValue": false, "uri": "/assets/ess/ess_1:surge_arrester_status", "outValue": "Normal"}
+                    ]
+                }]
+            }
+        },
+        "Fire Alarm": {
+            "value": false,
+            "pin": 4,
+            "dir": "input",
+            "desc": "Fire Alarm",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_ls:ems_alarms[4]", "outValue": true},
+                        { "inValue": true, "uri": "/assets/ess/summary:fire_alarm_status", "outValue": "Fault"},
+                        { "inValue": true, "uri": "/assets/ess/ess_1:fire_alarm_status", "outValue": "Fault"},
+                        { "inValue": false, "uri": "/assets/ess/summary:fire_alarm_status", "outValue": "Normal"},
+                        { "inValue": false, "uri": "/assets/ess/ess_1:fire_alarm_status", "outValue": "Normal"}
+                    ]
+                }]
+            }
+        },
+        "Fuse Monitoring": {
+            "value": false,
+            "pin": 3,
+            "dir": "input",
+            "desc": "Fuse Monitoring",
+            "inverted": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/site/ess_ls:xems_alarms[5]", "outValue": true},
+                        { "inValue": true, "uri": "/assets/ess/summary:fuse_monitoring_status", "outValue": "Fault"},
+                        { "inValue": true, "uri": "/assets/ess/ess_1:fuse_monitoring_status", "outValue": "Fault"},
+                        { "inValue": false, "uri": "/assets/ess/summary:fuse_monitoring_status", "outValue": "Normal"},
+                        { "inValue": false, "uri": "/assets/ess/ess_1:fuse_monitoring_status", "outValue": "Normal"}
+                    ]
+                }]
+            }
+        },
+        "GPIORefTime": {
+          "value": 0,
+          "actions":{
+            "onSet":    [{ "func":      [
+                {"func": "GPIOCalcResponse","amap":        "ess"}
+                ]}]
+          }
+      }
+    }
+}

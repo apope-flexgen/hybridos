@@ -1,5 +1,5 @@
-// TODO - resolve these
-/* eslint-disable max-lines, max-statements */
+/* eslint-disable max-lines, max-statements, no-empty */
+// TODO: resolve these
 import {
   Box,
   IconButton,
@@ -11,12 +11,19 @@ import {
   PageLoadingIndicator,
   CardContainer,
   CheckXConfirm,
+  EmptyContainer,
 } from '@flexgen/storybook';
-import {
-  useCallback, useEffect, useState,
-} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Roles } from 'shared/types/api/Users/Users.types';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import {
+  cardContainerOverrides,
+  containerBoxSx,
+  contextBoxSx,
+  emptyContainerSx,
+  spacerSx,
+  titleBoxSx,
+} from 'src/pages/ErcotOverride/Styles';
 import { PageProps } from 'src/pages/PageTypes';
 import QueryService from 'src/services/QueryService';
 import {
@@ -28,7 +35,6 @@ import {
   VARIABLE_VALUES_URL,
   UPDATE_VARIABLE_OVERRIDE_URL,
 } from './Constants';
-import UnconfiguredContainer from './UnconfiguredContainer/UnconfiguredContainer';
 
 const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: PageProps) => {
   const axiosInstance = useAxiosWebUIInstance();
@@ -40,12 +46,11 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
   const [variableNames, setVariableNames] = useState<string[]>([]);
   const [variableValues, setVariableValues] = useState<{ [key: string]: any }>({});
   const [overrideEdits, setOverrideEdits] = useState<{ [key: string]: any }>({});
-  const [enableEdit, setEnableEdit] = useState<{ [key:string]: boolean }>({});
-  const [selectedSitename, setSelectedSiteName] = useState<string>('');
+  const [enableEdit, setEnableEdit] = useState<{ [key: string]: boolean }>({});
+  const [selectedSiteName, setSelectedSiteName] = useState<string>('');
 
   const handleDataOnSocket = useCallback((newInformationFromSocket: MessageEvent) => {
-    const data = JSON.parse(newInformationFromSocket.data);
-    setVariableValues(data.data);
+    setVariableValues(newInformationFromSocket.data);
   }, []);
 
   const updateVariableOverride = (
@@ -53,23 +58,26 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
     newValue: string | number | undefined | boolean,
     variableName: string,
   ) => {
-    const newOverride = (typeof newValue === 'boolean') ? newValue : Number(newValue);
-    axiosInstance.post(
-      `${UPDATE_VARIABLE_OVERRIDE_URL}/${siteId}/${variableName}_manual`,
-      { value: newOverride },
-    );
+    const newOverride = typeof newValue === 'boolean' ? newValue : Number(newValue);
+    axiosInstance.post(`${UPDATE_VARIABLE_OVERRIDE_URL}/${siteId}/${variableName}_manual`, {
+      value: newOverride,
+    });
   };
 
   const handleOverride = (
-    enableEditValue: { [key:string]: boolean },
+    enableEditValue: { [key: string]: boolean },
     variable: string,
     siteId: string,
   ) => {
-    if (role !== Roles.Observer && enableEditValue[variable] && typeof variableValues[`${variable}_actual`] === 'number') {
+    if (
+      role !== Roles.Observer
+      && enableEditValue[variable]
+      && typeof variableValues[`${variable}_actual`] === 'number'
+    ) {
       return (
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <TextField
-            label="Manual Override"
+            label={variableOverrideLabels.manualOverrideLabel}
             placeholder={variableValues[`${variable}_manual`]}
             type="number"
             variant="standard"
@@ -89,12 +97,16 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
         </Box>
       );
     }
-    if (role !== Roles.Observer && enableEditValue[variable] && typeof variableValues[`${variable}_actual`] === 'boolean') {
+    if (
+      role !== Roles.Observer
+      && enableEditValue[variable]
+      && typeof variableValues[`${variable}_actual`] === 'boolean'
+    ) {
       return (
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Select
             minWidth={160}
-            label="Manual Override"
+            label={variableOverrideLabels.manualOverrideLabel}
             menuItems={['true', 'false']}
             value={overrideEdits[variable].toString()}
             onChange={(e) => {
@@ -122,10 +134,9 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
     enabled: boolean | undefined,
     variableName: string,
   ) => {
-    axiosInstance.post(
-      `${UPDATE_VARIABLE_OVERRIDE_URL}/${siteId}/${variableName}_override`,
-      { value: enabled },
-    );
+    axiosInstance.post(`${UPDATE_VARIABLE_OVERRIDE_URL}/${siteId}/${variableName}_override`, {
+      value: enabled,
+    });
   };
 
   const generateRowData = (
@@ -140,16 +151,18 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
         variable_name: variable,
         ercot_standard: variableValues[`${variable}_actual`].toString(),
         current_value: variableValues[`${variable}_select`].toString(),
-        enable:
-  <Switch
-    disabled={role === Roles.Observer}
-    color="primary"
-    onChange={(value) => { handleEnableOverride(siteId, value, variable); }}
-    value={variableValuesFromAPI[`${variable}_override`]}
-  />,
+        enable: (
+          <Switch
+            disabled={role === Roles.Observer}
+            color="primary"
+            onChange={(value) => {
+              handleEnableOverride(siteId, value, variable);
+            }}
+            value={variableValuesFromAPI[`${variable}_override`]}
+          />
+        ),
         edit_override:
-        role !== Roles.Observer
-          ? (
+          role !== Roles.Observer ? (
             <IconButton
               color="primary"
               icon="Edit"
@@ -158,8 +171,9 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
               }}
               size="small"
             />
-          )
-          : <Box />,
+          ) : (
+            <Box />
+          ),
         manual_override: handleOverride(enableEdit, variable, siteId),
       };
 
@@ -169,17 +183,18 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
     setRowsData(tempRows);
   };
 
-  const updateVariableData = async (siteId: string) => {
+  const updateVariableData = async () => {
     try {
       setIsLoading(true);
       // set up socket connection
-      QueryService.getVariableOverridePage(siteId, handleDataOnSocket);
-      setSelectedSiteName(siteId);
+      QueryService.getErcotOverridePage(selectedSiteName, handleDataOnSocket);
       // get initial data to fill the table (socket will update data)
       const res = await axiosInstance.get(VARIABLE_NAMES_URL);
       const newVariableNames = res.data.sort();
       setVariableNames(newVariableNames);
-      const variableValuesRes = await axiosInstance.get(`${VARIABLE_VALUES_URL}/${siteId}`);
+      const variableValuesRes = await axiosInstance.get(
+        `${VARIABLE_VALUES_URL}/${selectedSiteName}`,
+      );
 
       const newVariableValues = variableValuesRes.data;
       setVariableValues(newVariableValues);
@@ -195,7 +210,7 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
       });
       setEnableEdit(tempEnableEdits);
       setOverrideEdits(tempOverrideEdits);
-      generateRowData(siteId, newVariableNames, newVariableValues);
+      generateRowData(selectedSiteName, newVariableNames, newVariableValues);
     } catch (e: any) {
       // TODO: add error handler
     } finally {
@@ -219,65 +234,61 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
     fetchData();
   }, [fetchData]);
 
-  useEffect(() => () => {
-    QueryService.cleanupSocket();
-  }, []);
+  useEffect(
+    () => () => {
+      QueryService.cleanupSocket();
+    },
+    [],
+  );
 
   useEffect(
     () => {
-      generateRowData(selectedSitename, variableNames, variableValues);
-    }, /* eslint-disable react-hooks/exhaustive-deps */
+      generateRowData(selectedSiteName, variableNames, variableValues);
+    } /* eslint-disable react-hooks/exhaustive-deps */,
     [enableEdit, variableValues, overrideEdits],
   );
 
+  useEffect(() => {
+    QueryService.cleanupSocket();
+    if (selectedSiteName !== '') updateVariableData();
+  }, [selectedSiteName]);
+
   return (
-    <Box sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '12px',
-      width: '100%',
-      marginBottom: '20px',
-    }}
-    >
+    <Box sx={containerBoxSx}>
       <PageLoadingIndicator isLoading={isLoading} type="primary" />
-      <CardContainer
-        flexDirection="column"
-        styleOverrides={{ width: '90%', padding: '12px', gap: '12px' }}
-      >
-        <Typography
-          text={variableOverrideLabels.siteSelectorTitle}
-          variant="headingS"
-        />
+      <CardContainer flexDirection="column" styleOverrides={cardContainerOverrides}>
+        <Typography text={variableOverrideLabels.siteSelectorTitle} variant="headingS" />
         <Select
           label={variableOverrideLabels.siteSelectorLabel}
           menuItems={siteNames}
-          onChange={(e) => { updateVariableData(e.target.value); }}
-          value={selectedSitename}
+          onChange={(e) => {
+            setSelectedSiteName(e.target.value);
+          }}
+          value={selectedSiteName}
         />
       </CardContainer>
-      <CardContainer
-        flexDirection="column"
-        styleOverrides={{ width: '90%', gap: '12px' }}
-      >
-        <Box sx={{ paddingTop: '12px', paddingLeft: '12px', backgroundColor: 'transparent' }}>
+      <CardContainer flexDirection="column" styleOverrides={{ gap: '12px' }}>
+        <Box sx={titleBoxSx}>
           <Typography text={variableOverrideLabels.pageLabel} variant="headingS" />
         </Box>
-        <Box sx={{ width: '100%', backgroundColor: 'transparent' }}>
-          { selectedSitename === ''
-            ? <UnconfiguredContainer />
-            : (
-              <DataTable
-                columns={variableOverrideColumns}
-                dense
-                pagination
-                rowsPerPage={[50, 20, 10, 5]}
-                rowsData={rowsData}
-              />
-            )}
+        <Box sx={contextBoxSx}>
+          {selectedSiteName === '' ? (
+            <EmptyContainer
+              sx={emptyContainerSx}
+              text={variableOverrideLabels.emptyContainerMessage}
+            />
+          ) : (
+            <DataTable
+              columns={variableOverrideColumns}
+              dense
+              pagination
+              rowsPerPage={[50, 20, 10, 5]}
+              rowsData={rowsData}
+            />
+          )}
         </Box>
       </CardContainer>
-      <Box sx={{ width: '100%', backgorundColor: 'transprent', minHeight: '12px' }} />
+      <Box sx={spacerSx} />
     </Box>
   );
 };

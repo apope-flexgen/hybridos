@@ -1,20 +1,19 @@
 {
     "clients": {
         "main" : {
-            "directory" : "/home/vagrant/test/data",
+            "directory" : "/home/vagrant/archives",
             "private_key" : "/home/vagrant/.ssh/id_rsa",
             "known_hosts" : "/home/vagrant/.ssh/known_hosts",
-            "extension" : ".tar.gz",
-            "tar_mode" : {
-                "mode" : "tar",
-                "interval_seconds" : 5,
-                "buffer_size" : 20
-            }
+            "extension" : ".tar.gz"
         }
     },
     "servers": {
         "local": {
             "directory" : "/home/vagrant/local"
+        },
+        "s3-localstack": {
+            "bucket" : "test",
+            "timeout" : 10
         }
     },
     "db_directory" : "/home/vagrant/.cloud_sync/db",

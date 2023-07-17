@@ -1,0 +1,2562 @@
+{
+	"/assets/bms/bms_1":	{
+		"/assets/bms/bms_1":	{
+			"name":	"BMS Battery Block 01",
+			"active_power":	{
+				"value":	17
+			},
+			"active_power_setpoint":	{
+				"value":	3.0999999046325684
+			},
+			"alarms":	{
+				"value":	0,
+				"options":	[],
+				"enabled":	true,
+				"name":	"Alarms",
+				"scaler":	0,
+				"type":	"number",
+				"ui_type":	"alarm",
+				"unit":	""
+			},
+			"apparent_power":	{
+				"value":	1.2999999523162842
+			},
+			"current_l1":	{
+				"value":	40.799999237060547
+			},
+			"current_l2":	{
+				"value":	41.200000762939453
+			},
+			"current_l3":	{
+				"value":	40
+			},
+			"faults":	{
+				"value":	0
+			},
+			"frequency":	{
+				"value":	59.970001220703125
+			},
+			"max_temp":	{
+				"value":	27
+			},
+			"min_temp":	{
+				"value":	22
+			},
+			"reactive_power":	{
+				"value":	17.200000762939453
+			},
+			"reactive_power_setpoint":	{
+				"value":	0
+			},
+			"soc":	{
+				"value":	76.559135437011719
+			},
+			"soh":	{
+				"value":	0
+			},
+			"status":	{
+				"value":	"Run"
+			},
+			"system_chargeable_power":	{
+				"value":	2749.800048828125
+			},
+			"system_dischargeable_power":	{
+				"value":	2750
+			},
+			"voltage_dc":	{
+				"value":	1069.800048828125
+			},
+			"voltage_l1_l2":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l2_l3":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l3_l1":	{
+				"value":	570.79998779296875
+			},
+			"maint_mode":	{
+				"value":	false
+			},
+			"start":	{
+				"value":	false
+			},
+			"stop":	{
+				"value":	false
+			},
+			"enter_standby":	{
+				"value":	false
+			},
+			"exit_standby":	{
+				"value":	false
+			},
+			"clear_faults":	{
+				"value":	false
+			},
+			"maint_active_power_setpoint":	{
+				"value":	0
+			},
+			"maint_reactive_power_setpoint":	{
+				"value":	0
+			}
+		}
+	},
+	"/assets/bms/bms_2":	{
+		"/assets/bms/bms_2":	{
+			"name":	"BMS Battery Block 02",
+			"active_power":	{
+				"value":	17
+			},
+			"active_power_setpoint":	{
+				"value":	3.0999999046325684
+			},
+			"alarms":	{
+				"value":	0,
+				"options":	[],
+				"enabled":	true,
+				"name":	"Alarms",
+				"scaler":	0,
+				"type":	"number",
+				"ui_type":	"alarm",
+				"unit":	""
+			},
+			"apparent_power":	{
+				"value":	1.2999999523162842
+			},
+			"current_l1":	{
+				"value":	40.799999237060547
+			},
+			"current_l2":	{
+				"value":	41.200000762939453
+			},
+			"current_l3":	{
+				"value":	40
+			},
+			"faults":	{
+				"value":	0
+			},
+			"frequency":	{
+				"value":	59.970001220703125
+			},
+			"max_temp":	{
+				"value":	27
+			},
+			"min_temp":	{
+				"value":	22
+			},
+			"reactive_power":	{
+				"value":	17.200000762939453
+			},
+			"reactive_power_setpoint":	{
+				"value":	0
+			},
+			"soc":	{
+				"value":	76.559135437011719
+			},
+			"soh":	{
+				"value":	0
+			},
+			"status":	{
+				"value":	"Run"
+			},
+			"system_chargeable_power":	{
+				"value":	2749.800048828125
+			},
+			"system_dischargeable_power":	{
+				"value":	2750
+			},
+			"voltage_dc":	{
+				"value":	1069.800048828125
+			},
+			"voltage_l1_l2":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l2_l3":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l3_l1":	{
+				"value":	570.79998779296875
+			},
+			"maint_mode":	{
+				"value":	false
+			},
+			"start":	{
+				"value":	false
+			},
+			"stop":	{
+				"value":	false
+			},
+			"enter_standby":	{
+				"value":	false
+			},
+			"exit_standby":	{
+				"value":	false
+			},
+			"clear_faults":	{
+				"value":	false
+			},
+			"maint_active_power_setpoint":	{
+				"value":	0
+			},
+			"maint_reactive_power_setpoint":	{
+				"value":	0
+			}
+		}
+	},
+	"/assets/bms/bms_3":	{
+		"/assets/bms/bms_3":	{
+			"name":	"BMS Battery Block 03",
+			"active_power":	{
+				"value":	17
+			},
+			"active_power_setpoint":	{
+				"value":	3.0999999046325684
+			},
+			"alarms":	{
+				"value":	0,
+				"options":	[],
+				"enabled":	true,
+				"name":	"Alarms",
+				"scaler":	0,
+				"type":	"number",
+				"ui_type":	"alarm",
+				"unit":	""
+			},
+			"apparent_power":	{
+				"value":	1.2999999523162842
+			},
+			"current_l1":	{
+				"value":	40.799999237060547
+			},
+			"current_l2":	{
+				"value":	41.200000762939453
+			},
+			"current_l3":	{
+				"value":	40
+			},
+			"faults":	{
+				"value":	0
+			},
+			"frequency":	{
+				"value":	59.970001220703125
+			},
+			"max_temp":	{
+				"value":	27
+			},
+			"min_temp":	{
+				"value":	22
+			},
+			"reactive_power":	{
+				"value":	17.200000762939453
+			},
+			"reactive_power_setpoint":	{
+				"value":	0
+			},
+			"soc":	{
+				"value":	76.559135437011719
+			},
+			"soh":	{
+				"value":	0
+			},
+			"status":	{
+				"value":	"Run"
+			},
+			"system_chargeable_power":	{
+				"value":	2749.800048828125
+			},
+			"system_dischargeable_power":	{
+				"value":	2750
+			},
+			"voltage_dc":	{
+				"value":	1069.800048828125
+			},
+			"voltage_l1_l2":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l2_l3":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l3_l1":	{
+				"value":	570.79998779296875
+			},
+			"maint_mode":	{
+				"value":	false
+			},
+			"start":	{
+				"value":	false
+			},
+			"stop":	{
+				"value":	false
+			},
+			"enter_standby":	{
+				"value":	false
+			},
+			"exit_standby":	{
+				"value":	false
+			},
+			"clear_faults":	{
+				"value":	false
+			},
+			"maint_active_power_setpoint":	{
+				"value":	0
+			},
+			"maint_reactive_power_setpoint":	{
+				"value":	0
+			}
+		}
+	},
+	"/assets/bms/bms_4":	{
+		"/assets/bms/bms_4":	{
+			"name":	"BMS Battery Block 04",
+			"active_power":	{
+				"value":	17
+			},
+			"active_power_setpoint":	{
+				"value":	3.0999999046325684
+			},
+			"alarms":	{
+				"value":	0,
+				"options":	[],
+				"enabled":	true,
+				"name":	"Alarms",
+				"scaler":	0,
+				"type":	"number",
+				"ui_type":	"alarm",
+				"unit":	""
+			},
+			"apparent_power":	{
+				"value":	1.2999999523162842
+			},
+			"current_l1":	{
+				"value":	40.799999237060547
+			},
+			"current_l2":	{
+				"value":	41.200000762939453
+			},
+			"current_l3":	{
+				"value":	40
+			},
+			"faults":	{
+				"value":	0
+			},
+			"frequency":	{
+				"value":	59.970001220703125
+			},
+			"max_temp":	{
+				"value":	27
+			},
+			"min_temp":	{
+				"value":	22
+			},
+			"reactive_power":	{
+				"value":	17.200000762939453
+			},
+			"reactive_power_setpoint":	{
+				"value":	0
+			},
+			"soc":	{
+				"value":	76.559135437011719
+			},
+			"soh":	{
+				"value":	0
+			},
+			"status":	{
+				"value":	"Run"
+			},
+			"system_chargeable_power":	{
+				"value":	2749.800048828125
+			},
+			"system_dischargeable_power":	{
+				"value":	2750
+			},
+			"voltage_dc":	{
+				"value":	1069.800048828125
+			},
+			"voltage_l1_l2":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l2_l3":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l3_l1":	{
+				"value":	570.79998779296875
+			},
+			"maint_mode":	{
+				"value":	false
+			},
+			"start":	{
+				"value":	false
+			},
+			"stop":	{
+				"value":	false
+			},
+			"enter_standby":	{
+				"value":	false
+			},
+			"exit_standby":	{
+				"value":	false
+			},
+			"clear_faults":	{
+				"value":	false
+			},
+			"maint_active_power_setpoint":	{
+				"value":	0
+			},
+			"maint_reactive_power_setpoint":	{
+				"value":	0
+			}
+		}
+	},
+	"/assets/bms/summary":	{
+		"/assets/bms/summary":	{
+			"name":	"BMS Manager",
+			"active_power":	{
+				"value":	17
+			},
+			"active_power_setpoint":	{
+				"value":	3.0999999046325684
+			},
+			"alarms":	{
+				"value":	0,
+				"options":	[],
+				"enabled":	true,
+				"name":	"Alarms",
+				"scaler":	0,
+				"type":	"number",
+				"ui_type":	"alarm",
+				"unit":	""
+			},
+			"soc":	{
+				"value":	76.559135437011719
+			},
+			"soh":	{
+				"value":	0
+			},
+			"status":	{
+				"value":	"Run"
+			},
+			"maint_mode":	{
+				"value":	false
+			},
+			"start":	{
+				"value":	false
+			},
+			"stop":	{
+				"value":	false
+			},
+			"enter_standby":	{
+				"value":	false
+			},
+			"exit_standby":	{
+				"value":	false
+			},
+			"clear_faults":	{
+				"value":	false
+			}
+		}
+	},
+	"/assets/ess":	{
+		"bms":	{
+			"value":	"configs/bms_manager.json"
+		},
+		"drc":	{
+			"value":	"configs/drc_manager.json"
+		},
+		"pcs":	{
+			"value":	"configs/pcs_manager.json"
+		}
+	},
+	"/assets/ess/summary":	{
+		"/assets/ess/summary":	{
+			"name":	"Ess Controller",
+			"active_power":	{
+				"value":	17
+			},
+			"active_power_setpoint":	{
+				"value":	3.0999999046325684
+			},
+			"alarms":	{
+				"value":	0,
+				"options":	[],
+				"enabled":	true,
+				"name":	"Alarms",
+				"scaler":	0,
+				"type":	"number",
+				"ui_type":	"alarm",
+				"unit":	""
+			},
+			"soc":	{
+				"value":	76.559135437011719
+			},
+			"soh":	{
+				"value":	0
+			},
+			"status":	{
+				"value":	"Run"
+			},
+			"maint_mode":	{
+				"value":	false
+			},
+			"start":	{
+				"value":	false
+			},
+			"stop":	{
+				"value":	false
+			},
+			"enter_standby":	{
+				"value":	false
+			},
+			"exit_standby":	{
+				"value":	false
+			},
+			"clear_faults":	{
+				"value":	false
+			}
+		}
+	},
+	"/assets/pcs":	{
+		"start_grad_p":	{
+			"value":	10
+		}
+	},
+	"/assets/pcs/pcs_1":	{
+		"/assets/pcs/pcs_1":	{
+			"name":	"PCS Power Convertor  01",
+			"active_power":	{
+				"value":	17
+			},
+			"active_power_setpoint":	{
+				"value":	3.0999999046325684
+			},
+			"alarms":	{
+				"value":	0,
+				"options":	[],
+				"enabled":	true,
+				"name":	"Alarms",
+				"scaler":	0,
+				"type":	"number",
+				"ui_type":	"alarm",
+				"unit":	""
+			},
+			"apparent_power":	{
+				"value":	1.2999999523162842
+			},
+			"current_l1":	{
+				"value":	40.799999237060547
+			},
+			"current_l2":	{
+				"value":	41.200000762939453
+			},
+			"current_l3":	{
+				"value":	40
+			},
+			"faults":	{
+				"value":	0
+			},
+			"frequency":	{
+				"value":	59.970001220703125
+			},
+			"max_temp":	{
+				"value":	27
+			},
+			"min_temp":	{
+				"value":	22
+			},
+			"reactive_power":	{
+				"value":	17.200000762939453
+			},
+			"reactive_power_setpoint":	{
+				"value":	0
+			},
+			"soc":	{
+				"value":	76.559135437011719
+			},
+			"soh":	{
+				"value":	0
+			},
+			"status":	{
+				"value":	"Run"
+			},
+			"system_chargeable_power":	{
+				"value":	2749.800048828125
+			},
+			"system_dischargeable_power":	{
+				"value":	2750
+			},
+			"voltage_dc":	{
+				"value":	1069.800048828125
+			},
+			"voltage_l1_l2":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l2_l3":	{
+				"value":	573.5999755859375
+			},
+			"voltage_l3_l1":	{
+				"value":	570.79998779296875
+			},
+			"maint_mode":	{
+				"value":	false
+			},
+			"start":	{
+				"value":	false
+			},
+			"stop":	{
+				"value":	false
+			},
+			"enter_standby":	{
+				"value":	false
+			},
+			"exit_standby":	{
+				"value":	false
+			},
+			"clear_faults":	{
+				"value":	false
+			},
+			"maint_active_power_setpoint":	{
+				"value":	0
+			},
+			"maint_reactive_power_setpoint":	{
+				"value":	0
+			}
+		}
+	},
+	"/assets/pcs/summary":	{
+		"/assets/pcs/summary":	{
+			"name":	"PCS Manager",
+			"active_power":	{
+				"value":	17
+			},
+			"active_power_setpoint":	{
+				"value":	3.0999999046325684
+			},
+			"alarms":	{
+				"value":	0,
+				"options":	[],
+				"enabled":	true,
+				"name":	"Alarms",
+				"scaler":	0,
+				"type":	"number",
+				"ui_type":	"alarm",
+				"unit":	""
+			},
+			"soc":	{
+				"value":	76.559135437011719
+			},
+			"soh":	{
+				"value":	0
+			},
+			"status":	{
+				"value":	"Run"
+			},
+			"maint_mode":	{
+				"value":	false
+			},
+			"start":	{
+				"value":	false
+			},
+			"stop":	{
+				"value":	false
+			},
+			"enter_standby":	{
+				"value":	false
+			},
+			"exit_standby":	{
+				"value":	false
+			},
+			"clear_faults":	{
+				"value":	false
+			}
+		}
+	},
+	"/components/catl01_ems_bms_rw":	{
+		"ems_status":	{
+			"value":	1
+		},
+		"ems_test_status":	{
+			"value":	"Idle"
+		},
+		"start_stop":	{
+			"value":	0
+		}
+	},
+	"/components/catl02_ems_bms_rw":	{
+		"ems_status":	{
+			"value":	1
+		},
+		"ems_test_status":	{
+			"value":	"Idle"
+		},
+		"start_stop":	{
+			"value":	0
+		}
+	},
+	"/components/catl03_ems_bms_rw":	{
+		"ems_status":	{
+			"value":	1
+		},
+		"ems_test_status":	{
+			"value":	"Idle"
+		},
+		"start_stop":	{
+			"value":	0
+		}
+	},
+	"/components/catl04_ems_bms_rw":	{
+		"ems_status":	{
+			"value":	1
+		},
+		"ems_test_status":	{
+			"value":	"Idle"
+		},
+		"start_stop":	{
+			"value":	0
+		}
+	},
+	"/components/catl_1_ems_bms_rw":	{
+		"ems_test_status":	{
+			"value":	"Idle"
+		}
+	},
+	"/components/ess":	{
+		"HeartBeatRelink":	{
+			"value":	5
+		},
+		"ctrlword1cfg":	{
+			"value":	0
+		},
+		"ctrlword2cfg":	{
+			"value":	0
+		},
+		"ctrlword4cfg":	{
+			"value":	0
+		}
+	},
+	"/components/pe_pcs":	{
+		"pcs_drop_grad_p":	{
+			"value":	10
+		},
+		"pcs_drop_grad_p_enable":	{
+			"value":	1
+		},
+		"pcs_drop_grad_q":	{
+			"value":	10
+		},
+		"pcs_drop_grad_q_enable":	{
+			"value":	1
+		},
+		"pcs_p_control_mode":	{
+			"value":	2
+		},
+		"pcs_q_control_mode":	{
+			"value":	1
+		},
+		"pcs_rise_grad_p":	{
+			"value":	10
+		},
+		"pcs_rise_grad_p_enable":	{
+			"value":	1
+		},
+		"pcs_rise_grad_q":	{
+			"value":	10
+		},
+		"pcs_rise_grad_q_enable":	{
+			"value":	1
+		},
+		"pcs_start_grad_p":	{
+			"value":	10
+		},
+		"pcs_start_grad_p_enable":	{
+			"value":	1
+		},
+		"pcs_start_grad_q":	{
+			"value":	10
+		},
+		"pcs_start_grad_q_enable":	{
+			"value":	1
+		},
+		"pcs_stop_grad_p":	{
+			"value":	10
+		},
+		"pcs_stop_grad_p_enable":	{
+			"value":	1
+		},
+		"pcs_stop_grad_q":	{
+			"value":	10
+		},
+		"pcs_stop_grad_q_enable":	{
+			"value":	1
+		}
+	},
+	"/config/bms":	{
+		"BlockSets":	{
+			"value":	"/status/ess, /status/bms, /status/bms_1, /status/bms_2 "
+		},
+		"Pubs":	{
+			"value":	"/assets/bms/summary"
+		}
+	},
+	"/config/bms_1":	{
+		"BlockSets":	{
+			"value":	"/status/ess, /status/bms, /status/bms_1, /status/bms_2 "
+		},
+		"Pubs":	{
+			"value":	"/assets/bms/bms_1"
+		}
+	},
+	"/config/bms_2":	{
+		"BlockSets":	{
+			"value":	"/status/ess, /status/bms, /status/bms_1, /status/bms_2 "
+		},
+		"Pubs":	{
+			"value":	"/assets/bms/bms_2"
+		}
+	},
+	"/config/bms_3":	{
+		"BlockSets":	{
+			"value":	"/status/ess, /status/bms, /status/bms_1, /status/bms_2 "
+		},
+		"Pubs":	{
+			"value":	"/assets/bms/bms_3"
+		}
+	},
+	"/config/bms_4":	{
+		"BlockSets":	{
+			"value":	"/status/ess, /status/bms, /status/bms_1, /status/bms_2 "
+		},
+		"Pubs":	{
+			"value":	"/assets/bms/bms_4"
+		}
+	},
+	"/config/ess":	{
+		"BlockPubs":	{
+			"value":	"/assets"
+		},
+		"BlockSets":	{
+			"value":	"/status/ess, /status/bms"
+		},
+		"Pubs":	{
+			"value":	"/assets/ess/summary"
+		},
+		"Pubs2":	{
+			"value":	"/assets/ess/status, /assets/bms/bms_1, /assets/bms/bms_2, /assets/bms/bms_3, /assets/bms/bms_4 "
+		},
+		"Subs":	{
+			"value":	"/ess, /components, /assets, /params, /status, /controls, /links, /variables, /config, /tests, /default, /reload, /misc2"
+		}
+	},
+	"/config/pcs":	{
+		"BlockSets":	{
+			"value":	"/status/ess, /status/bms, /status/bms_1, /status/bms_2 "
+		},
+		"Pubs":	{
+			"value":	"/assets/pcs"
+		}
+	},
+	"/config/pcs_1":	{
+		"Pubs":	{
+			"value":	"No VAL"
+		}
+	},
+	"/constants/bms_1":	{
+		"DC_contactor_closed":	{
+			"value":	2
+		},
+		"DC_contactor_open":	{
+			"value":	1
+		},
+		"DC_contactor_reset":	{
+			"value":	3
+		},
+		"chg_soc_begin":	{
+			"value":	90.001
+		},
+		"chg_soc_end":	{
+			"value":	101.5
+		},
+		"control_word_off":	{
+			"value":	2
+		},
+		"control_word_on":	{
+			"value":	1
+		},
+		"cooldown_timer":	{
+			"value":	250
+		},
+		"dischg_soc_begin":	{
+			"value":	10.001
+		},
+		"dischg_soc_end":	{
+			"value":	-1.5
+		},
+		"max_load_threshold":	{
+			"value":	200000
+		},
+		"max_soc_raw":	{
+			"value":	99.5
+		},
+		"min_load_threshold":	{
+			"value":	1000
+		},
+		"min_soc_raw":	{
+			"value":	1.5
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are constant defintions"
+		},
+		"priority":	{
+			"value":	1
+		},
+		"rated_active_power":	{
+			"value":	2200
+		},
+		"rated_apparent_power":	{
+			"value":	2200
+		},
+		"start_timer":	{
+			"value":	50
+		}
+	},
+	"/constants/bms_2":	{
+		"DC_contactor_closed":	{
+			"value":	2
+		},
+		"DC_contactor_open":	{
+			"value":	1
+		},
+		"DC_contactor_reset":	{
+			"value":	3
+		},
+		"chg_soc_begin":	{
+			"value":	90.001
+		},
+		"chg_soc_end":	{
+			"value":	101.5
+		},
+		"control_word_off":	{
+			"value":	2
+		},
+		"control_word_on":	{
+			"value":	1
+		},
+		"cooldown_timer":	{
+			"value":	250
+		},
+		"dischg_soc_begin":	{
+			"value":	10.001
+		},
+		"dischg_soc_end":	{
+			"value":	-1.5
+		},
+		"max_load_threshold":	{
+			"value":	200000
+		},
+		"max_soc_raw":	{
+			"value":	99.5
+		},
+		"min_load_threshold":	{
+			"value":	1000
+		},
+		"min_soc_raw":	{
+			"value":	1.5
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are constant defintions"
+		},
+		"priority":	{
+			"value":	1
+		},
+		"rated_active_power":	{
+			"value":	2200
+		},
+		"rated_apparent_power":	{
+			"value":	2200
+		},
+		"start_timer":	{
+			"value":	50
+		}
+	},
+	"/constants/bms_3":	{
+		"DC_contactor_closed":	{
+			"value":	2
+		},
+		"DC_contactor_open":	{
+			"value":	1
+		},
+		"DC_contactor_reset":	{
+			"value":	3
+		},
+		"chg_soc_begin":	{
+			"value":	90.001
+		},
+		"chg_soc_end":	{
+			"value":	101.5
+		},
+		"control_word_off":	{
+			"value":	2
+		},
+		"control_word_on":	{
+			"value":	1
+		},
+		"cooldown_timer":	{
+			"value":	250
+		},
+		"dischg_soc_begin":	{
+			"value":	10.001
+		},
+		"dischg_soc_end":	{
+			"value":	-1.5
+		},
+		"max_load_threshold":	{
+			"value":	200000
+		},
+		"max_soc_raw":	{
+			"value":	99.5
+		},
+		"min_load_threshold":	{
+			"value":	1000
+		},
+		"min_soc_raw":	{
+			"value":	1.5
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are constant defintions"
+		},
+		"priority":	{
+			"value":	1
+		},
+		"rated_active_power":	{
+			"value":	2200
+		},
+		"rated_apparent_power":	{
+			"value":	2200
+		},
+		"start_timer":	{
+			"value":	50
+		}
+	},
+	"/constants/bms_4":	{
+		"DC_contactor_closed":	{
+			"value":	2
+		},
+		"DC_contactor_open":	{
+			"value":	1
+		},
+		"DC_contactor_reset":	{
+			"value":	3
+		},
+		"chg_soc_begin":	{
+			"value":	90.001
+		},
+		"chg_soc_end":	{
+			"value":	101.5
+		},
+		"control_word_off":	{
+			"value":	2
+		},
+		"control_word_on":	{
+			"value":	1
+		},
+		"cooldown_timer":	{
+			"value":	250
+		},
+		"dischg_soc_begin":	{
+			"value":	10.001
+		},
+		"dischg_soc_end":	{
+			"value":	-1.5
+		},
+		"max_load_threshold":	{
+			"value":	200000
+		},
+		"max_soc_raw":	{
+			"value":	99.5
+		},
+		"min_load_threshold":	{
+			"value":	1000
+		},
+		"min_soc_raw":	{
+			"value":	1.5
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are constant defintions"
+		},
+		"priority":	{
+			"value":	1
+		},
+		"rated_active_power":	{
+			"value":	2200
+		},
+		"rated_apparent_power":	{
+			"value":	2200
+		},
+		"start_timer":	{
+			"value":	50
+		}
+	},
+	"/constants/pcs":	{
+		"cooldown_timer":	{
+			"value":	250
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	480
+		},
+		"note":	{
+			"value":	"These are constant defintions"
+		},
+		"rated_active_power":	{
+			"value":	3430
+		},
+		"rated_apparent_power":	{
+			"value":	3430
+		},
+		"start_timer":	{
+			"value":	50
+		}
+	},
+	"/controls/bms_1":	{
+		"ctrlword2":	{
+			"value":	0
+		},
+		"start_stop":	{
+			"value":	0
+		}
+	},
+	"/controls/bms_2":	{
+		"ctrlword2":	{
+			"value":	0
+		},
+		"start_stop":	{
+			"value":	0
+		}
+	},
+	"/controls/bms_3":	{
+		"ctrlword2":	{
+			"value":	0
+		},
+		"start_stop":	{
+			"value":	0
+		}
+	},
+	"/controls/bms_4":	{
+		"ctrlword2":	{
+			"value":	0
+		},
+		"start_stop":	{
+			"value":	0
+		}
+	},
+	"/controls/ess":	{
+		"ReactivePowerCmd":	{
+			"value":	0
+		},
+		"ReactivePowerSetpoint":	{
+			"value":	0
+		}
+	},
+	"/controls/pcs":	{
+		"ActivePowerCmd":	{
+			"value":	0
+		},
+		"ActivePowerDeadband":	{
+			"value":	0
+		},
+		"ActivePowerSetpoint":	{
+			"value":	2200
+		},
+		"pcs_drop_grad_p_enable":	{
+			"value":	1
+		},
+		"pcs_rise_grad_p_enable":	{
+			"value":	1
+		},
+		"pcs_start_grad_p_enable":	{
+			"value":	1
+		},
+		"pcs_stop_grad_p_enable":	{
+			"value":	1
+		},
+		"pcs_drop_grad_q_enable":	{
+			"value":	1
+		},
+		"pcs_rise_grad_q_enable":	{
+			"value":	1
+		},
+		"pcs_start_grad_q_enable":	{
+			"value":	1
+		},
+		"pcs_stop_grad_q_enable":	{
+			"value":	1
+		},
+		"pcs_drop_grad_p":	{
+			"value":	10
+		},
+		"PMode_I":	{
+			"value":	false
+		},
+		"PMode_P":	{
+			"value":	true
+		},
+		"pcs_rise_grad_p":	{
+			"value":	10
+		},
+		"pcs_start_grad_p":	{
+			"value":	10
+		},
+		"pcs_stop_grad_p":	{
+			"value":	10
+		},
+		"pcs_drop_grad_q":	{
+			"value":	10
+		},
+		"QMode_CosPhi":	{
+			"value":	false
+		},
+		"QMode_I":	{
+			"value":	false
+		},
+		"QMode_Q":	{
+			"value":	true
+		},
+		"QMode_VQ":	{
+			"value":	false
+		},
+		"pcs_rise_grad_q":	{
+			"value":	10
+		},
+		"pcs_start_grad_q":	{
+			"value":	10
+		},
+		"pcs_stop_grad_q":	{
+			"value":	10
+		},
+		"ReactivePowerCmd":	{
+			"value":	0
+		},
+		"ReactivePowerDeadband":	{
+			"value":	0
+		},
+		"ReactivePowerSetpoint":	{
+			"value":	2200
+		},
+		"ctrlword2":	{
+			"value":	0
+		},
+		"pcs_p_control_mode":	{
+			"value":	2
+		},
+		"pcs_q_control_mode":	{
+			"value":	1
+		},
+		"lastActivePowerSetpoint":	{
+			"value":	2200
+		},
+		"lastReactivePowerSetpoint":	{
+			"value":	2200
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"offcmd":	{
+			"value":	0
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"start_stop":	{
+			"value":	1
+		},
+		"test_ctrl":	{
+			"value":	72
+		}
+	},
+	"/links/bms_1":	{
+		"Pubs":	{
+			"value":	"/config/bms_1:Pubs"
+		},
+		"bms_heartbeat":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:bms_heartbeat"
+		},
+		"bms_limit_charge_hv":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:bms_limit_charge_hv"
+		},
+		"bms_limit_discharge_hv":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:bms_limit_discharge_hv"
+		},
+		"bms_max_charge_allowed":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:bms_max_charge_allowed"
+		},
+		"bms_max_discharge_allowed":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:bms_max_discharge_allowed"
+		},
+		"bms_poweron":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:bms_poweron"
+		},
+		"bms_remain_charge_energy":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:bms_remain_charge_energy"
+		},
+		"bms_remain_discharge_energy":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:bms_remain_discharge_energy"
+		},
+		"ems_cmd":	{
+			"value":	"/components/catl_bms_1_ems_bms_rw:ems_cmd"
+		},
+		"ems_heartbeat":	{
+			"value":	"/components/catl_bms_1_ems_bms_rw:ems_heartbeat"
+		},
+		"ems_rtc_day":	{
+			"value":	"/components/catl_bms_1_ems_bms_rw:ems_rtc_day"
+		},
+		"ems_rtc_hour":	{
+			"value":	"/components/catl_bms_1_ems_bms_rw:ems_rtc_hour"
+		},
+		"ems_rtc_minute":	{
+			"value":	"/components/catl_bms_1_ems_bms_rw:ems_rtc_minute"
+		},
+		"ems_rtc_second":	{
+			"value":	"/components/catl_bms_1_ems_bms_rw:ems_rtc_second"
+		},
+		"ems_rtc_year":	{
+			"value":	"/components/catl_bms_1_ems_bms_rw:ems_rtc_year"
+		},
+		"ems_status":	{
+			"value":	"/components/catl_bms_1_ems_bms_rw:ems_status"
+		},
+		"fault_clear_cmd":	{
+			"value":	"/components/catl_bms_1_ems_bms_rw:fault_clear_cmd"
+		},
+		"mbmu_avg_cell_temperature":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_avg_cell_temperature"
+		},
+		"mbmu_avg_cell_voltage":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_avg_cell_voltage"
+		},
+		"mbmu_current":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_current"
+		},
+		"mbmu_max_cell_temperature":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_max_cell_temperature"
+		},
+		"mbmu_max_cell_voltage":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_max_cell_voltage"
+		},
+		"mbmu_max_charge_current":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_max_charge_current"
+		},
+		"mbmu_max_discharge_current":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_max_discharge_current"
+		},
+		"mbmu_min_cell_temperature":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_min_cell_temperature"
+		},
+		"mbmu_min_cell_voltage":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_min_cell_voltage"
+		},
+		"mbmu_soc":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_soc"
+		},
+		"mbmu_soh":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_soh"
+		},
+		"mbmu_status":	{
+			"value":	"/components/catl_bms_1_mbmu_stat_r:mbmu_status"
+		},
+		"mbmu_voltage":	{
+			"value":	"/components/catl_bms_1_mbmu_control_r:mbmu_voltage"
+		},
+		"num_hv_subsystem":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:num_hv_subsystem"
+		},
+		"xbms_status":	{
+			"value":	"/components/catl_bms_1_bms_ems_r:bms_status"
+		}
+	},
+	"/links/bms_2":	{
+		"Pubs":	{
+			"value":	"/config/bms_2:Pubs"
+		},
+		"bms_heartbeat":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:bms_heartbeat"
+		},
+		"bms_limit_charge_hv":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:bms_limit_charge_hv"
+		},
+		"bms_limit_discharge_hv":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:bms_limit_discharge_hv"
+		},
+		"bms_max_charge_allowed":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:bms_max_charge_allowed"
+		},
+		"bms_max_discharge_allowed":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:bms_max_discharge_allowed"
+		},
+		"bms_poweron":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:bms_poweron"
+		},
+		"bms_remain_charge_energy":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:bms_remain_charge_energy"
+		},
+		"bms_remain_discharge_energy":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:bms_remain_discharge_energy"
+		},
+		"ems_cmd":	{
+			"value":	"/components/catl_bms_2_ems_bms_rw:ems_cmd"
+		},
+		"ems_heartbeat":	{
+			"value":	"/components/catl_bms_2_ems_bms_rw:ems_heartbeat"
+		},
+		"ems_rtc_day":	{
+			"value":	"/components/catl_bms_2_ems_bms_rw:ems_rtc_day"
+		},
+		"ems_rtc_hour":	{
+			"value":	"/components/catl_bms_2_ems_bms_rw:ems_rtc_hour"
+		},
+		"ems_rtc_minute":	{
+			"value":	"/components/catl_bms_2_ems_bms_rw:ems_rtc_minute"
+		},
+		"ems_rtc_second":	{
+			"value":	"/components/catl_bms_2_ems_bms_rw:ems_rtc_second"
+		},
+		"ems_rtc_year":	{
+			"value":	"/components/catl_bms_2_ems_bms_rw:ems_rtc_year"
+		},
+		"ems_status":	{
+			"value":	"/components/catl_bms_2_ems_bms_rw:ems_status"
+		},
+		"fault_clear_cmd":	{
+			"value":	"/components/catl_bms_2_ems_bms_rw:fault_clear_cmd"
+		},
+		"mbmu_avg_cell_temperature":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_avg_cell_temperature"
+		},
+		"mbmu_avg_cell_voltage":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_avg_cell_voltage"
+		},
+		"mbmu_current":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_current"
+		},
+		"mbmu_max_cell_temperature":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_max_cell_temperature"
+		},
+		"mbmu_max_cell_voltage":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_max_cell_voltage"
+		},
+		"mbmu_max_charge_current":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_max_charge_current"
+		},
+		"mbmu_max_discharge_current":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_max_discharge_current"
+		},
+		"mbmu_min_cell_temperature":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_min_cell_temperature"
+		},
+		"mbmu_min_cell_voltage":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_min_cell_voltage"
+		},
+		"mbmu_soc":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_soc"
+		},
+		"mbmu_soh":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_soh"
+		},
+		"mbmu_status":	{
+			"value":	"/components/catl_bms_2_mbmu_stat_r:mbmu_status"
+		},
+		"mbmu_voltage":	{
+			"value":	"/components/catl_bms_2_mbmu_control_r:mbmu_voltage"
+		},
+		"num_hv_subsystem":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:num_hv_subsystem"
+		},
+		"xbms_status":	{
+			"value":	"/components/catl_bms_2_bms_ems_r:bms_status"
+		}
+	},
+	"/links/bms_21":	{
+		"HeartBeatLink":	{
+			"value":	"/components/bms_21/catl_bms21_rw:HeartBeatRelink"
+		}
+	},
+	"/links/bms_3":	{
+		"Pubs":	{
+			"value":	"/config/bms_3:Pubs"
+		},
+		"bms_heartbeat":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:bms_heartbeat"
+		},
+		"bms_limit_charge_hv":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:bms_limit_charge_hv"
+		},
+		"bms_limit_discharge_hv":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:bms_limit_discharge_hv"
+		},
+		"bms_max_charge_allowed":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:bms_max_charge_allowed"
+		},
+		"bms_max_discharge_allowed":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:bms_max_discharge_allowed"
+		},
+		"bms_poweron":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:bms_poweron"
+		},
+		"bms_remain_charge_energy":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:bms_remain_charge_energy"
+		},
+		"bms_remain_discharge_energy":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:bms_remain_discharge_energy"
+		},
+		"ems_cmd":	{
+			"value":	"/components/catl_bms_3_ems_bms_rw:ems_cmd"
+		},
+		"ems_heartbeat":	{
+			"value":	"/components/catl_bms_3_ems_bms_rw:ems_heartbeat"
+		},
+		"ems_rtc_day":	{
+			"value":	"/components/catl_bms_3_ems_bms_rw:ems_rtc_day"
+		},
+		"ems_rtc_hour":	{
+			"value":	"/components/catl_bms_3_ems_bms_rw:ems_rtc_hour"
+		},
+		"ems_rtc_minute":	{
+			"value":	"/components/catl_bms_3_ems_bms_rw:ems_rtc_minute"
+		},
+		"ems_rtc_second":	{
+			"value":	"/components/catl_bms_3_ems_bms_rw:ems_rtc_second"
+		},
+		"ems_rtc_year":	{
+			"value":	"/components/catl_bms_3_ems_bms_rw:ems_rtc_year"
+		},
+		"ems_status":	{
+			"value":	"/components/catl_bms_3_ems_bms_rw:ems_status"
+		},
+		"fault_clear_cmd":	{
+			"value":	"/components/catl_bms_3_ems_bms_rw:fault_clear_cmd"
+		},
+		"mbmu_avg_cell_temperature":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_avg_cell_temperature"
+		},
+		"mbmu_avg_cell_voltage":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_avg_cell_voltage"
+		},
+		"mbmu_current":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_current"
+		},
+		"mbmu_max_cell_temperature":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_max_cell_temperature"
+		},
+		"mbmu_max_cell_voltage":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_max_cell_voltage"
+		},
+		"mbmu_max_charge_current":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_max_charge_current"
+		},
+		"mbmu_max_discharge_current":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_max_discharge_current"
+		},
+		"mbmu_min_cell_temperature":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_min_cell_temperature"
+		},
+		"mbmu_min_cell_voltage":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_min_cell_voltage"
+		},
+		"mbmu_soc":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_soc"
+		},
+		"mbmu_soh":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_soh"
+		},
+		"mbmu_status":	{
+			"value":	"/components/catl_bms_3_mbmu_stat_r:mbmu_status"
+		},
+		"mbmu_voltage":	{
+			"value":	"/components/catl_bms_3_mbmu_control_r:mbmu_voltage"
+		},
+		"num_hv_subsystem":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:num_hv_subsystem"
+		},
+		"xbms_status":	{
+			"value":	"/components/catl_bms_3_bms_ems_r:bms_status"
+		}
+	},
+	"/links/bms_4":	{
+		"Pubs":	{
+			"value":	"/config/bms_4:Pubs"
+		},
+		"bms_heartbeat":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:bms_heartbeat"
+		},
+		"bms_limit_charge_hv":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:bms_limit_charge_hv"
+		},
+		"bms_limit_discharge_hv":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:bms_limit_discharge_hv"
+		},
+		"bms_max_charge_allowed":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:bms_max_charge_allowed"
+		},
+		"bms_max_discharge_allowed":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:bms_max_discharge_allowed"
+		},
+		"bms_poweron":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:bms_poweron"
+		},
+		"bms_remain_charge_energy":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:bms_remain_charge_energy"
+		},
+		"bms_remain_discharge_energy":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:bms_remain_discharge_energy"
+		},
+		"ems_cmd":	{
+			"value":	"/components/catl_bms_4_ems_bms_rw:ems_cmd"
+		},
+		"ems_heartbeat":	{
+			"value":	"/components/catl_bms_4_ems_bms_rw:ems_heartbeat"
+		},
+		"ems_rtc_day":	{
+			"value":	"/components/catl_bms_4_ems_bms_rw:ems_rtc_day"
+		},
+		"ems_rtc_hour":	{
+			"value":	"/components/catl_bms_4_ems_bms_rw:ems_rtc_hour"
+		},
+		"ems_rtc_minute":	{
+			"value":	"/components/catl_bms_4_ems_bms_rw:ems_rtc_minute"
+		},
+		"ems_rtc_second":	{
+			"value":	"/components/catl_bms_4_ems_bms_rw:ems_rtc_second"
+		},
+		"ems_rtc_year":	{
+			"value":	"/components/catl_bms_4_ems_bms_rw:ems_rtc_year"
+		},
+		"ems_status":	{
+			"value":	"/components/catl_bms_4_ems_bms_rw:ems_status"
+		},
+		"fault_clear_cmd":	{
+			"value":	"/components/catl_bms_4_ems_bms_rw:fault_clear_cmd"
+		},
+		"mbmu_avg_cell_temperature":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_avg_cell_temperature"
+		},
+		"mbmu_avg_cell_voltage":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_avg_cell_voltage"
+		},
+		"mbmu_current":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_current"
+		},
+		"mbmu_max_cell_temperature":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_max_cell_temperature"
+		},
+		"mbmu_max_cell_voltage":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_max_cell_voltage"
+		},
+		"mbmu_max_charge_current":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_max_charge_current"
+		},
+		"mbmu_max_discharge_current":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_max_discharge_current"
+		},
+		"mbmu_min_cell_temperature":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_min_cell_temperature"
+		},
+		"mbmu_min_cell_voltage":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_min_cell_voltage"
+		},
+		"mbmu_soc":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_soc"
+		},
+		"mbmu_soh":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_soh"
+		},
+		"mbmu_status":	{
+			"value":	"/components/catl_bms_4_mbmu_stat_r:mbmu_status"
+		},
+		"mbmu_voltage":	{
+			"value":	"/components/catl_bms_4_mbmu_control_r:mbmu_voltage"
+		},
+		"num_hv_subsystem":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:num_hv_subsystem"
+		},
+		"xbms_status":	{
+			"value":	"/components/catl_bms_4_bms_ems_r:bms_status"
+		}
+	},
+	"/links/ess":	{
+		"AcContactorFbk":	{
+			"value":	"/components/pcs_1_status:AcContactor"
+		},
+		"DcContactorFbk":	{
+			"value":	"/components/pcs_1_status:DcContactor"
+		},
+		"HeartBeatLink":	{
+			"value":	"/components/ess:HeartBeatRelinkOK"
+		}
+	},
+	"/links/pcs":	{
+		"ActiveCurrentCmd":	{
+			"value":	"/components/pe_pcs:pcs_p_id_reference"
+		},
+		"ActivePowerCmd":	{
+			"value":	"/components/pe_pcs:pcs_p_p_reference"
+		},
+		"CosPhiCmd":	{
+			"value":	"/components/pe_pcs:pcs_q_cosphi_reference"
+		},
+		"EnPDropGradient":	{
+			"value":	"/components/pe_pcs:pcs_drop_grad_p_enable"
+		},
+		"EnPRiseGradient":	{
+			"value":	"/components/pe_pcs:pcs_rise_grad_p_enable"
+		},
+		"EnPStartGradient":	{
+			"value":	"/components/pe_pcs:pcs_start_grad_p_enable"
+		},
+		"EnPStopGradient":	{
+			"value":	"/components/pe_pcs:pcs_stop_grad_p_enable"
+		},
+		"EnQDropGradient":	{
+			"value":	"/components/pe_pcs:pcs_drop_grad_q_enable"
+		},
+		"EnQRiseGradient":	{
+			"value":	"/components/pe_pcs:pcs_rise_grad_q_enable"
+		},
+		"EnQStartGradient":	{
+			"value":	"/components/pe_pcs:pcs_start_grad_q_enable"
+		},
+		"EnQStopGradient":	{
+			"value":	"/components/pe_pcs:pcs_stop_grad_q_enable"
+		},
+		"PDropGradient":	{
+			"value":	"/components/pe_pcs:pcs_drop_grad_p"
+		},
+		"PRiseGradient":	{
+			"value":	"/components/pe_pcs:pcs_rise_grad_p"
+		},
+		"PStartGradient":	{
+			"value":	"/components/pe_pcs:pcs_start_grad_p"
+		},
+		"PStopGradient":	{
+			"value":	"/components/pe_pcs:pcs_stop_grad_p"
+		},
+		"QDropGradient":	{
+			"value":	"/components/pe_pcs:pcs_drop_grad_q"
+		},
+		"QRiseGradient":	{
+			"value":	"/components/pe_pcs:pcs_rise_grad_q"
+		},
+		"QStartGradient":	{
+			"value":	"/components/pe_pcs:pcs_start_grad_q"
+		},
+		"QStopGradient":	{
+			"value":	"/components/pe_pcs:pcs_stop_grad_q"
+		},
+		"ReactiveCurrentCmd":	{
+			"value":	"/components/pe_pcs:pcs_q_iq_reference"
+		},
+		"ReactivePowerCmd":	{
+			"value":	"/components/pe_pcs:pcs_q_q_reference"
+		},
+		"ReactiveVoltageCmd":	{
+			"value":	"/components/pe_pcs:pcs_q_v_reference"
+		},
+		"ctrlword2":	{
+			"value":	"/components/pe_pcs:pcs_ctrlword2"
+		},
+		"ctrlword_pmode":	{
+			"value":	"/components/pe_pcs:pcs_p_control_mode"
+		},
+		"ctrlword_qmode":	{
+			"value":	"/components/pe_pcs:pcs_q_control_mode"
+		}
+	},
+	"/links/pcs_1":	{
+		"ActiveLinkSetpoint":	{
+			"value":	"/controls/pcs:ActivLinkSetpointPcs"
+		},
+		"Pubs":	{
+			"value":	"/config/pcs_1:Pubs"
+		}
+	},
+	"/params/bms_1":	{
+		"active_power_setpoint":	{
+			"value":	2200
+		},
+		"kacclosecmd":	{
+			"value":	0
+		},
+		"kacopencmd":	{
+			"value":	0
+		},
+		"kdcclosecmd":	{
+			"value":	0
+		},
+		"kdccopencmd":	{
+			"value":	0
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are control parameters"
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"onffcmd":	{
+			"value":	0
+		},
+		"reactive_power_setpoint":	{
+			"value":	2200
+		}
+	},
+	"/params/bms_2":	{
+		"active_power_setpoint":	{
+			"value":	2200
+		},
+		"kacclosecmd":	{
+			"value":	0
+		},
+		"kacopencmd":	{
+			"value":	0
+		},
+		"kdcclosecmd":	{
+			"value":	0
+		},
+		"kdccopencmd":	{
+			"value":	0
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are control parameters"
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"onffcmd":	{
+			"value":	0
+		},
+		"reactive_power_setpoint":	{
+			"value":	2200
+		}
+	},
+	"/params/bms_3":	{
+		"active_power_setpoint":	{
+			"value":	2200
+		},
+		"kacclosecmd":	{
+			"value":	0
+		},
+		"kacopencmd":	{
+			"value":	0
+		},
+		"kdcclosecmd":	{
+			"value":	0
+		},
+		"kdccopencmd":	{
+			"value":	0
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are control parameters"
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"onffcmd":	{
+			"value":	0
+		},
+		"reactive_power_setpoint":	{
+			"value":	2200
+		}
+	},
+	"/params/bms_4":	{
+		"active_power_setpoint":	{
+			"value":	2200
+		},
+		"kacclosecmd":	{
+			"value":	0
+		},
+		"kacopencmd":	{
+			"value":	0
+		},
+		"kdcclosecmd":	{
+			"value":	0
+		},
+		"kdccopencmd":	{
+			"value":	0
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are control parameters"
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"onffcmd":	{
+			"value":	0
+		},
+		"reactive_power_setpoint":	{
+			"value":	2200
+		}
+	},
+	"/params/ess":	{
+		"/gets/blocked":	{
+			"value":	false
+		},
+		"/sets/blocked":	{
+			"value":	false
+		},
+		"ReactivePowerDeadband":	{
+			"value":	5
+		}
+	},
+	"/params/pcs":	{
+		"active_power_setpoint":	{
+			"value":	2200
+		},
+		"kacclosecmd":	{
+			"value":	0
+		},
+		"kacopencmd":	{
+			"value":	0
+		},
+		"kdcclosecmd":	{
+			"value":	0
+		},
+		"kdccopencmd":	{
+			"value":	0
+		},
+		"nominal_frequency":	{
+			"value":	60
+		},
+		"nominal_voltage":	{
+			"value":	540
+		},
+		"note":	{
+			"value":	"These are control parameters"
+		},
+		"oncmd":	{
+			"value":	0
+		},
+		"onffcmd":	{
+			"value":	0
+		},
+		"rated_active_power":	{
+			"value":	3300
+		},
+		"rated_reactive_power":	{
+			"value":	1000
+		},
+		"reactive_power_setpoint":	{
+			"value":	2200
+		}
+	},
+	"/status/bms_1":	{
+		"ac_contactor_open":	{
+			"value":	true
+		},
+		"active_current_setpont":	{
+			"value":	0
+		},
+		"current_soc":	{
+			"value":	85.6
+		},
+		"current_soh":	{
+			"value":	85.7
+		},
+		"dc_contactor_open":	{
+			"value":	true
+		},
+		"max_cell_temp":	{
+			"value":	23.4
+		},
+		"max_cell_volts":	{
+			"value":	3.4
+		},
+		"min_cell_temp":	{
+			"value":	23.4
+		},
+		"min_cell_volts":	{
+			"value":	3.2
+		},
+		"note":	{
+			"value":	"These are component status vars"
+		},
+		"number_of_racks":	{
+			"value":	18
+		},
+		"reactive_current_setpont":	{
+			"value":	0
+		}
+	},
+	"/status/bms_2":	{
+		"ac_contactor_open":	{
+			"value":	true
+		},
+		"active_current_setpont":	{
+			"value":	0
+		},
+		"current_soc":	{
+			"value":	85.6
+		},
+		"current_soh":	{
+			"value":	85.7
+		},
+		"dc_contactor_open":	{
+			"value":	true
+		},
+		"max_cell_temp":	{
+			"value":	23.4
+		},
+		"max_cell_volts":	{
+			"value":	3.4
+		},
+		"min_cell_temp":	{
+			"value":	23.4
+		},
+		"min_cell_volts":	{
+			"value":	3.2
+		},
+		"note":	{
+			"value":	"These are component status vars"
+		},
+		"number_of_racks":	{
+			"value":	18
+		},
+		"reactive_current_setpont":	{
+			"value":	0
+		}
+	},
+	"/status/bms_3":	{
+		"ac_contactor_open":	{
+			"value":	true
+		},
+		"active_current_setpont":	{
+			"value":	0
+		},
+		"current_soc":	{
+			"value":	85.6
+		},
+		"current_soh":	{
+			"value":	85.7
+		},
+		"dc_contactor_open":	{
+			"value":	true
+		},
+		"max_cell_temp":	{
+			"value":	23.4
+		},
+		"max_cell_volts":	{
+			"value":	3.4
+		},
+		"min_cell_temp":	{
+			"value":	23.4
+		},
+		"min_cell_volts":	{
+			"value":	3.2
+		},
+		"note":	{
+			"value":	"These are component status vars"
+		},
+		"number_of_racks":	{
+			"value":	18
+		},
+		"reactive_current_setpont":	{
+			"value":	0
+		}
+	},
+	"/status/bms_4":	{
+		"ac_contactor_open":	{
+			"value":	true
+		},
+		"active_current_setpont":	{
+			"value":	0
+		},
+		"current_soc":	{
+			"value":	85.6
+		},
+		"current_soh":	{
+			"value":	85.7
+		},
+		"dc_contactor_open":	{
+			"value":	true
+		},
+		"max_cell_temp":	{
+			"value":	23.4
+		},
+		"max_cell_volts":	{
+			"value":	3.4
+		},
+		"min_cell_temp":	{
+			"value":	23.4
+		},
+		"min_cell_volts":	{
+			"value":	3.2
+		},
+		"note":	{
+			"value":	"These are component status vars"
+		},
+		"number_of_racks":	{
+			"value":	18
+		},
+		"reactive_current_setpont":	{
+			"value":	0
+		}
+	},
+	"/status/ess":	{
+		"ReactivePower":	{
+			"value":	0
+		}
+	},
+	"/status/pcs":	{
+		"ac_contactor_open":	{
+			"value":	true
+		},
+		"active_current_setpont":	{
+			"value":	0
+		},
+		"current_soc":	{
+			"value":	85.6
+		},
+		"current_soh":	{
+			"value":	85.7
+		},
+		"dc_contactor_open":	{
+			"value":	true
+		},
+		"max_cell_temp":	{
+			"value":	23.4
+		},
+		"max_cell_volts":	{
+			"value":	3.4
+		},
+		"min_cell_temp":	{
+			"value":	23.4
+		},
+		"min_cell_volts":	{
+			"value":	3.2
+		},
+		"note":	{
+			"value":	"These are component status vars"
+		},
+		"number_of_racks":	{
+			"value":	18
+		},
+		"pcs_vdc_bus_1":	{
+			"value":	800
+		},
+		"reactive_current_setpont":	{
+			"value":	0
+		}
+	},
+	"/system/bms_1":	{
+		"/system/bms_1":	{
+			"name":	"BMS Battery  Block 01",
+			"id":	{
+				"value":	"bms_1"
+			}
+		}
+	},
+	"/system/bms_2":	{
+		"/system/bms_2":	{
+			"name":	"BMS Battery  Block 02",
+			"id":	{
+				"value":	"bms_2"
+			}
+		}
+	},
+	"/system/bms_3":	{
+		"/system/bms_3":	{
+			"name":	"BMS Battery  Block 03",
+			"id":	{
+				"value":	"bms_3"
+			}
+		}
+	},
+	"/system/bms_4":	{
+		"/system/bms_4":	{
+			"name":	"BMS Battery  Block 04",
+			"id":	{
+				"value":	"bms_4"
+			}
+		}
+	},
+	"/system/pcs":	{
+		"/system/pcs":	{
+			"name":	"Power converter system",
+			"id":	{
+				"value":	"PCS"
+			}
+		}
+	},
+	"/variables/bms_1":	{
+		"ac_contactor":	{
+			"value":	"off"
+		},
+		"ac_contactor_cmd":	{
+			"value":	"off"
+		},
+		"bms_charge_energy":	{
+			"value":	172
+		},
+		"bms_discharge_energy":	{
+			"value":	172
+		},
+		"bms_limit_charge_hv":	{
+			"value":	817
+		},
+		"bms_limit_discharge_hv":	{
+			"value":	817
+		},
+		"bms_max_p_charge":	{
+			"value":	400
+		},
+		"bms_max_p_discharge":	{
+			"value":	400
+		},
+		"bms_status":	{
+			"value":	1
+		},
+		"dc_contactor":	{
+			"value":	"off"
+		},
+		"dc_contactor_cmd":	{
+			"value":	"off"
+		},
+		"mode":	{
+			"value":	"init"
+		},
+		"mode_cmd":	{
+			"value":	"off"
+		},
+		"p":	{
+			"value":	3456
+		},
+		"q":	{
+			"value":	1234
+		},
+		"soc":	{
+			"value":	100
+		},
+		"soh":	{
+			"value":	100
+		}
+	},
+	"/variables/bms_2":	{
+		"ac_contactor":	{
+			"value":	"off"
+		},
+		"ac_contactor_cmd":	{
+			"value":	"off"
+		},
+		"bms_charge_energy":	{
+			"value":	172
+		},
+		"bms_discharge_energy":	{
+			"value":	172
+		},
+		"bms_limit_charge_hv":	{
+			"value":	817
+		},
+		"bms_limit_discharge_hv":	{
+			"value":	817
+		},
+		"bms_max_p_charge":	{
+			"value":	400
+		},
+		"bms_max_p_discharge":	{
+			"value":	400
+		},
+		"bms_status":	{
+			"value":	1
+		},
+		"dc_contactor":	{
+			"value":	"off"
+		},
+		"dc_contactor_cmd":	{
+			"value":	"off"
+		},
+		"mode":	{
+			"value":	"init"
+		},
+		"mode_cmd":	{
+			"value":	"off"
+		},
+		"p":	{
+			"value":	3456
+		},
+		"q":	{
+			"value":	1234
+		},
+		"soc":	{
+			"value":	100
+		},
+		"soh":	{
+			"value":	100
+		}
+	},
+	"/variables/bms_3":	{
+		"ac_contactor":	{
+			"value":	"off"
+		},
+		"ac_contactor_cmd":	{
+			"value":	"off"
+		},
+		"bms_charge_energy":	{
+			"value":	172
+		},
+		"bms_discharge_energy":	{
+			"value":	172
+		},
+		"bms_limit_charge_hv":	{
+			"value":	817
+		},
+		"bms_limit_discharge_hv":	{
+			"value":	817
+		},
+		"bms_max_p_charge":	{
+			"value":	400
+		},
+		"bms_max_p_discharge":	{
+			"value":	400
+		},
+		"bms_status":	{
+			"value":	1
+		},
+		"dc_contactor":	{
+			"value":	"off"
+		},
+		"dc_contactor_cmd":	{
+			"value":	"off"
+		},
+		"mode":	{
+			"value":	"init"
+		},
+		"mode_cmd":	{
+			"value":	"off"
+		},
+		"p":	{
+			"value":	3456
+		},
+		"q":	{
+			"value":	1234
+		},
+		"soc":	{
+			"value":	100
+		},
+		"soh":	{
+			"value":	100
+		}
+	},
+	"/variables/bms_4":	{
+		"ac_contactor":	{
+			"value":	"off"
+		},
+		"ac_contactor_cmd":	{
+			"value":	"off"
+		},
+		"bms_charge_energy":	{
+			"value":	172
+		},
+		"bms_discharge_energy":	{
+			"value":	172
+		},
+		"bms_limit_charge_hv":	{
+			"value":	817
+		},
+		"bms_limit_discharge_hv":	{
+			"value":	817
+		},
+		"bms_max_p_charge":	{
+			"value":	400
+		},
+		"bms_max_p_discharge":	{
+			"value":	400
+		},
+		"bms_status":	{
+			"value":	1
+		},
+		"dc_contactor":	{
+			"value":	"off"
+		},
+		"dc_contactor_cmd":	{
+			"value":	"off"
+		},
+		"mode":	{
+			"value":	"init"
+		},
+		"mode_cmd":	{
+			"value":	"off"
+		},
+		"p":	{
+			"value":	3456
+		},
+		"q":	{
+			"value":	1234
+		},
+		"soc":	{
+			"value":	100
+		},
+		"soh":	{
+			"value":	100
+		}
+	},
+	"/variables/pcs":	{
+		"ac_contactor":	{
+			"value":	"off"
+		},
+		"ac_contactor_cmd":	{
+			"value":	"off"
+		},
+		"dc_contactor":	{
+			"value":	"off"
+		},
+		"dc_contactor_cmd":	{
+			"value":	"off"
+		},
+		"mode":	{
+			"value":	"init"
+		},
+		"mode_cmd":	{
+			"value":	"off"
+		},
+		"p":	{
+			"value":	3456
+		},
+		"pcs_capacitive_i_limit":	{
+			"value":	407
+		},
+		"pcs_inductive_i_limit":	{
+			"value":	357
+		},
+		"pcs_p_limit_inst":	{
+			"value":	100
+		},
+		"pcs_q_limit_inst":	{
+			"value":	100
+		},
+		"pcs_s_limit_inst":	{
+			"value":	100
+		},
+		"q":	{
+			"value":	1234
+		},
+		"soc":	{
+			"value":	100
+		},
+		"soh":	{
+			"value":	100
+		}
+	},
+	"_/assets/bms/bms_1":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/assets/bms/bms_2":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/assets/bms/bms_3":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/assets/bms/bms_4":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/assets/bms/summary":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/assets/ess/summary":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/assets/pcs/pcs_1":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/assets/pcs/summary":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/system/bms_1":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/system/bms_2":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/system/bms_3":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/system/bms_4":	{
+		"assetList":	{
+			"value":	true
+		}
+	},
+	"_/system/pcs":	{
+		"assetList":	{
+			"value":	true
+		}
+	}
+}

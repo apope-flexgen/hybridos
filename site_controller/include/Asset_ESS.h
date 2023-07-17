@@ -35,7 +35,7 @@ public:
     void set_grid_mode(gridMode mode);
     void set_power_mode(powerMode mode);
 
-    void set_active_power_setpoint(float);
+    void set_active_power_setpoint(float setpoint, bool use_strict_limits);
     void set_reactive_power_setpoint(float);
     void set_power_factor_setpoint(float);
 
@@ -66,8 +66,6 @@ public:
     float get_min_limited_active_power(void);
     float get_max_limited_active_power(void);
     float get_soc(void);
-    float get_chg_soc_end(void);
-    float get_dischg_soc_end(void);
     float get_max_temp(void);
     setpoint_states get_setpoint_status(void);
 
@@ -77,9 +75,7 @@ public:
     void process_asset();
     void update_asset(void);
     void send_to_components(void) override;
-
-    // utility functions
-    bool process_set(std::string uri, cJSON*);
+    bool handle_set(std::string uri, cJSON &body);
     bool generate_asset_ui(fmt::memory_buffer&, const char* const var = NULL) override;
 
 protected:
@@ -154,51 +150,50 @@ protected:
     // status
     bool energy_configured; // Flag to indicate whether chargeable/dischargeable_energy was configured
 
-    // setpoints
-    Fims_Object* grid_mode_setpoint;
-    Fims_Object* power_mode_setpoint;
-    Fims_Object* power_factor_setpoint;
-    Fims_Object* voltage_slew_setpoint; // units in %/s
-    Fims_Object* voltage_setpoint;
-    Fims_Object* frequency_setpoint;
+    // TODO these should all be regular Fims_Objects rather than pointers. Init'd to NULL for now.
+    // setpoints 
+    Fims_Object* grid_mode_setpoint = NULL;
+    Fims_Object* power_mode_setpoint = NULL;
+    Fims_Object* power_factor_setpoint = NULL;
+    Fims_Object* voltage_slew_setpoint = NULL; // units in %/s
+    Fims_Object* voltage_setpoint = NULL;
+    Fims_Object* frequency_setpoint = NULL;
     // TODO: these are Sungrow specific fields, remove and cleanup
-    Fims_Object* pcs_a_nominal_voltage_setpoint;
-    Fims_Object* pcs_b_nominal_voltage_setpoint;
+    Fims_Object* pcs_a_nominal_voltage_setpoint = NULL;
+    Fims_Object* pcs_b_nominal_voltage_setpoint = NULL;
     // status points
-    Fims_Object* soh; // battery state of health
-    Fims_Object* chargeable_power;
-    Fims_Object* dischargeable_power;
-    Fims_Object* chargeable_power_raw;
-    Fims_Object* dischargeable_power_raw;
-    Fims_Object* soc; // battery state of charge
-    Fims_Object* soc_raw; // unscaled battery state of charge from asset
-    Fims_Object* chargeable_energy;
-    Fims_Object* dischargeable_energy;
-    Fims_Object* chargeable_energy_raw;
-    Fims_Object* dischargeable_energy_raw;
-    Fims_Object* max_temp; // battery max temperature
-    Fims_Object* min_temp; // battery min temperature
-    Fims_Object* racks_in_service;
-    Fims_Object* dc_contactors_closed;
-    Fims_Object* autobalancing_status; // Status of the autobalancing register
-    Fims_Object* voltage_min;
-    Fims_Object* voltage_max;
+    Fims_Object* soh = NULL; // battery state of health
+    Fims_Object* chargeable_power = NULL;
+    Fims_Object* dischargeable_power = NULL;
+    Fims_Object* chargeable_power_raw = NULL;
+    Fims_Object* dischargeable_power_raw = NULL;
+    Fims_Object* soc = NULL; // battery state of charge
+    Fims_Object* soc_raw = NULL; // unscaled battery state of charge from asset
+    Fims_Object* chargeable_energy = NULL;
+    Fims_Object* dischargeable_energy = NULL;
+    Fims_Object* chargeable_energy_raw = NULL;
+    Fims_Object* dischargeable_energy_raw = NULL;
+    Fims_Object* max_temp = NULL; // battery max temperature
+    Fims_Object* min_temp = NULL; // battery min temperature
+    Fims_Object* racks_in_service = NULL;
+    Fims_Object* dc_contactors_closed = NULL;
+    Fims_Object* autobalancing_status = NULL; // Status of the autobalancing register
+    Fims_Object* voltage_min = NULL;
+    Fims_Object* voltage_max = NULL;
 
     // uris
-    char* uri_start;
-    char* uri_stop;
-    char* uri_enter_standby;
-    char* uri_exit_standby;
-    char* uri_open_dc_contacts;
-    char* uri_close_dc_contacts;
-    char* uri_set_autobalancing;
+    std::string uri_start;
+    std::string uri_stop;
+    std::string uri_enter_standby;
+    std::string uri_exit_standby;
+    std::string uri_open_dc_contacts;
+    std::string uri_close_dc_contacts;
+    std::string uri_set_autobalancing;
 
     // internal functions
     void process_potential_active_power(void) override;
 
     float process_soc(float);
-
-    bool send_connected(void);
 
     bool send_grid_mode(void);
     bool send_power_mode(void);

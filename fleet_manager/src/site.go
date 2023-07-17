@@ -80,16 +80,48 @@ func (s *site) backupToDbi() {
 }
 
 // Endpoint for all SETs to URIs beginning with /fleet/sites/<site ID>.
-func (s *site) handleSet(msg fims.FimsMsg) error {
+func (s *site) handleSet(msg fims.FimsMsg) (err error) {
 	// /fleet/sites/<site ID>
-	if msg.Nfrags == 3 {
+	if msg.Nfrags < 4 {
 		err := s.overwrite(msg.Body)
 		if err != nil {
 			return fmt.Errorf("failed to overwrite site %s: %w", s.id, err)
 		}
 		return nil
 	}
-	return errors.New("invalid URI")
+
+	targetVariableId := msg.Frags[3]
+	var valueChanged bool
+	switch targetVariableId {
+	case "name":
+		valueChanged, err = s.setName(msg.Body)
+		if err != nil {
+			return fmt.Errorf("failed to set name: %w", err)
+		}
+	default:
+		return errors.New("invalid URI")
+	}
+
+	if !valueChanged {
+		return nil
+	}
+	err = f.SendSet(fmt.Sprintf("/dbi/fleet_manager/sites/sites/%s/%s", s.id, targetVariableId), "", msg.Body)
+	if err != nil {
+		log.Errorf("Error backing up variable %s of site %s to DBI: %v.", targetVariableId, s.id, err)
+	}
+	return nil
+}
+
+func (s *site) setName(newNameInterface interface{}) (valueChanged bool, err error) {
+	newName, ok := newNameInterface.(string)
+	if !ok {
+		return false, fmt.Errorf("expected string but got %T", newNameInterface)
+	}
+	if newName == s.name {
+		return false, nil
+	}
+	s.name = newName
+	return true, nil
 }
 
 // buildObj builds a map[string]interface{} that represents the receiver site struct for FIMS sending.

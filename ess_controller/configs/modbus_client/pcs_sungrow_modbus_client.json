@@ -1,0 +1,467 @@
+{
+    "fileInfo": {
+        "sourceFileName": "PCS-TI_Sungrow_SC2750UD_Modbus_Map.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2021-08-02T20:32:28.000Z",
+        "sourceFileCreatedBy": "Phil Wilshire",
+        "sourceFileLastModifiedBy": "Jimmy Nguyen",
+        "outputFileName": "pcs_modbus_client_2750.json",
+        "outputFileType": "client",
+        "note1":"no way complete just using this as an overview",
+        "outputFileCreated": "2022-03-11T20:33:31.551Z"
+    },
+    "connection": {
+        "name": "Sungrow_PCS_SC2750UD",
+        "device protocol": "Modbus TCP",
+        "device protocol version": "6.0 WIP",
+        "device name": "sungrow_pcs_sc2750ud",
+        "device id string": "sungrow_pcs_sc2750ud",
+        "ip_address": "172.17.0.3",
+        "port": 5031
+    },
+    "components": [
+        {
+            "id": "pcs_0_running_info",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 1000,
+            "offset_time": 20,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 3250,
+                    "number_of_registers": 61,
+                    "map": [
+                        {"id": "device_type_code",             "offset": 3250, "name": "Device Type Code" },
+                        {"id": "rated_active_power",           "offset": 3251, "name": "Rated Active Power" },
+                        {"id": "overall_grid_voltage_vab",     "offset": 3252, "name": "Overall Grid Voltage VAB" },
+                        {"id": "overall_grid_voltage_vbc",     "offset": 3253, "name": "Overall Grid Voltage VBC" },
+                        {"id": "overall_grid_voltage_vca",     "offset": 3254, "name": "Overall Grid Voltage VCA" },
+                        {"id": "overall_phase_a_current",      "offset": 3255, "name": "Overall Phase A Current" },
+                        {"id": "overall_phase_b_current",      "offset": 3256, "name": "Overall Phase B Current" },
+                        {"id": "overall_phase_c_current",      "offset": 3257, "name": "Overall Phase C Current" },
+
+
+                        {"id": "overall_dc_power",             "offset": 3260, "name": "Overall DC Power",             "signed":true},
+                        {"id": "overall_total_active_power",   "offset": 3261, "name": "Overall Total Active Power",   "signed":true},
+                        {"id": "overall_total_reactive_power", "offset": 3262, "name": "Overall Total Reactive Power", "signed":true},
+                        {"id": "overall_total_apparent_power", "offset": 3263, "name": "Overall Total Apparent Power", "signed":true},
+                        {"id": "overall_power_factor",         "offset": 3264, "name": "Overall Power Factor"       },
+                        {"id": "overall_total_charging",       "offset": 3265, "name": "Overall Total Charging",         "size":2 },
+                        
+                        {"id": "overall_total_discharging",    "offset": 3267, "name": "Overall Total Discharging",      "size":2 },
+                        
+                        {"id": "overall_daily_charging",       "offset": 3269, "name": "Overall Daily Charging",         "size":2 },
+                        
+                        {"id": "overall_daily_discharging",    "offset": 3271, "name": "Overall Daily Discharging",      "size":2 },
+                        
+                        {"id": "overall_daily_running_minutes","offset": 3273, "name": "Overall Daily Running Minutes",  "size":1 },
+                        {"id": "overall_total_running_hours",  "offset": 3274, "name": "Overall Total Running Hours",    "size":2 },
+                        
+                        {"id": "pos_pole_ins_resistance",      "offset": 3276, "name": "Pos Insul Ground Resistance",    "size":2 },
+                        
+                        {"id": "neg_pole_ins_resistance",      "offset": 3278, "name": "Neg Insul Ground Resistance",    "size":2 },
+                        
+                        
+                        
+                        
+                        
+                        {"id": "overall_working_mode",         "offset": 3284, "name": "Overall Working Mode",           "size":1 },
+                        {"id": "overall_working_state",        "offset": 3285, "name": "Overall Working State",          "size":2 },
+                        
+                        {"id": "overall_charge_discharge_state","offset": 3287, "name": "Overall Charge Discharge State","size":1 },
+                        {"id": "overall_fault_state",           "offset": 3288, "name": "Overall Fault State",           "size":1 },
+                        {"id": "overall_alarm_state",           "offset": 3289, "name": "Overall Alarm State",           "size":2 },
+                        
+                        {"id": "MV_node_state",                 "offset": 3291, "name": "MV Node State",                 "size":2 },
+                        
+                        {"id": "Transformer_oil_temp",          "offset": 3293, "name": "Transformer Oil Temp",          "signed":true },
+                        {"id": "HeartbeatCount",               "offset": 3294, "name": "Heartbeat Count",                "size":1  },
+                        {"id": "overall_grid_frequency",       "offset": 3295, "name": "Overall Grid Frequency",         "size":1 },
+
+                        {"id": "overall_leakage_current",      "offset": 3297, "name": "Overall Leakage Current",        "size":1 },
+                        {"id": "MV_node_state_1",              "offset": 3298, "name": "MV Node State 1",                 "size":2 },
+
+                        {"id": "MV_node_state_2",              "offset": 3300, "name": "MV Node State 2",                 "size":2 },
+
+                        {"id": "winding_temperature",          "offset": 3302, "name": "Winding Temperature",             "signed":true},
+                        {"id": "rated_reactive_power",         "offset": 3303, "name": "Rated Reactive Power",            "size":1}
+                    ]
+                }
+            ]
+        },
+
+        {
+            "id": "pcs_1_running_info",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 1000,
+            "offset_time": 20,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 3310,
+                    "number_of_registers": 60,
+                    "map": [
+                        {"id": "dc_voltage",                "offset": 3310, "scale": 10, "name": "DC Voltage", "signed": true },
+                        {"id": "dc_current",                "offset": 3311, "scale": 10, "name": "DC Current", "signed": true },
+                        {"id": "dc_power",                  "offset": 3312, "scale": 10, "name": "DC Power", "signed": true },
+                        {"id": "grid_voltage_vab",          "offset": 3313, "scale": 10, "name": "Grid Voltage Vab" },
+                        {"id": "grid_voltage_vbc",          "offset": 3314, "scale": 10, "name": "Grid Voltage Vbc" },
+                        {"id": "grid_voltage_vca",          "offset": 3315, "scale": 10, "name": "Grid Voltage Vca" },
+                        {"id": "phase_a_current",           "offset": 3316, "scale": 10, "name": "Phase A Current" },
+                        {"id": "phase_b_current",           "offset": 3317, "scale": 10, "name": "Phase B Current" },
+                        {"id": "phase_c_current",           "offset": 3318, "scale": 10, "name": "Phase C Current" },
+                        {"id": "active_power",              "offset": 3319, "size": 2, "scale": 10, "name": "Active Power", "signed": true },
+
+                        {"id": "reactive_power",            "offset": 3321, "size": 2, "scale": 10, "name": "Reactive Power", "signed": true },
+
+                        {"id": "pos_ground_impedence",      "offset": 3323, "size": 2, "scale": 100, "name": "Positive Impedance to Ground" },
+
+                        {"id": "neg_ground_impedence",      "offset": 3325, "size": 2, "scale": 100, "name": "Negative Impedance to Ground" },
+
+                        {"id": "alarm_running_state_1",     "offset": 3327, "name": "Alarm Running State 1" },
+                        {"id": "alarm_running_state_2",     "offset": 3328, "name": "Alarm Running State 2" },
+                        {"id": "fault_state_1",             "offset": 3329, "size": 2, "name": "Fault State 1" },
+
+                        {"id": "fault_state_2",             "offset": 3331, "size": 2, "name": "Fault State 2" },
+
+                        {"id": "charge_state",              "offset": 3333, "name": "Charging/Discharging State" },
+                        {"id": "daily_charging",            "offset": 3334, "size": 2, "scale": 10, "name": "Daily Charging" },
+
+                        {"id": "daily_discharging",         "offset": 3336, "size": 2, "scale": 10, "name": "Daily Discharging" },
+
+                        {"id": "total_charging",            "offset": 3338, "size": 2, "name": "Total Charging" },
+
+                        {"id": "total_discharging",         "offset": 3340, "size": 2, "name": "Total Discharging" },
+
+                        {"id": "work_state",                "offset": 3342, "size": 2, "name": "Work State" },
+
+                        {"id": "operating_mode",            "offset": 3344, "name": "Operating Mode" },
+                        {"id": "daily_running_minutes",     "offset": 3345, "name": "Daily Running Minutes" },
+                        {"id": "total_running_hours",       "offset": 3346, "name": "Total Running Hours",       "size":2},
+
+                        {"id": "nominal_output_power",          "offset": 3348, "scale": 10, "name": "Nominal Output Power" },
+                        {"id": "nominal_reactive_output_power", "offset": 3349, "scale": 10, "name": "Nominal Reactive Output Power" },
+
+
+                        {"id": "grid_frequency",                "offset": 3352, "scale": 100, "name": "Grid Frequency" },
+                        {"id": "power_factor",                  "offset": 3353, "scale": 10, "name": "Power Factor", "signed": true },
+
+                        {"id": "node_state",                    "offset": 3355, "size": 2, "name": "Node State" },
+
+
+
+
+
+
+
+                        {"id": "max_charging_power",            "offset": 3363, "scale": -10, "name": "Max Charging Power", "signed": true },
+                        {"id": "max_discharging_power",         "offset": 3364, "scale": 10, "name": "Max Discharging Power", "signed": true },
+                        {"id": "max_inductive_reactive_power",  "offset": 3365, "scale": 10, "name": "Max Inductive Reactive Power", "signed": true },
+                        {"id": "max_capacitive_reactive_power", "offset": 3366, "scale": 10, "name": "Max Capacitive Reactive Power", "signed": true },
+
+
+                        {"id": "num_black_start_beats",          "offset": 3369, "name": "Current Number of Black Start Beats" }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "pcs_2_running_info",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 1000,
+            "offset_time": 30,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 3370,
+                    "number_of_registers": 60,
+                    "map": [
+                        {"id": "dc_voltage",                "offset": 3370, "scale": 10, "name": "DC Voltage", "signed": true },
+                        {"id": "dc_current",                "offset": 3371, "scale": 10, "name": "DC Current", "signed": true },
+                        {"id": "dc_power",                  "offset": 3372, "scale": 10, "name": "DC Power", "signed": true },
+                        {"id": "grid_voltage_vab",          "offset": 3373, "scale": 10, "name": "Grid Voltage Vab" },
+                        {"id": "grid_voltage_vbc",          "offset": 3374, "scale": 10, "name": "Grid Voltage Vbc" },
+                        {"id": "grid_voltage_vca",          "offset": 3375, "scale": 10, "name": "Grid Voltage Vca" },
+                        {"id": "phase_a_current",           "offset": 3376, "scale": 10, "name": "Phase A Current" },
+                        {"id": "phase_b_current",           "offset": 3377, "scale": 10, "name": "Phase B Current" },
+                        {"id": "phase_c_current",           "offset": 3378, "scale": 10, "name": "Phase C Current" },
+                        {"id": "active_power",              "offset": 3379, "size": 2, "scale": 10, "name": "Active Power", "signed": true },
+
+                        {"id": "reactive_power",            "offset": 3381, "size": 2, "scale": 10, "name": "Reactive Power", "signed": true },
+
+
+
+
+
+                        {"id": "alarm_running_state_1",     "offset": 3387, "name": "Alarm Running State 1" },
+                        {"id": "alarm_running_state_2",     "offset": 3388, "name": "Alarm Running State 2" },
+                        {"id": "fault_state_1",             "offset": 3389, "size": 2, "name": "Fault State 1" },
+
+                        {"id": "fault_state_2",             "offset": 3391, "size": 2, "name": "Fault State 2" },
+
+                        {"id": "charge_state",              "offset": 3393, "name": "Charging/Discharging State" },
+                        {"id": "daily_charging",            "offset": 3394, "size": 2, "scale": 10, "name": "Daily Charging" },
+
+                        {"id": "daily_discharging",         "offset": 3396, "size": 2, "scale": 10, "name": "Daily Discharging" },
+
+                        {"id": "total_charging",            "offset": 3398, "size": 2, "name": "Total Charging" },
+
+                        {"id": "total_discharging",         "offset": 3400, "size": 2, "name": "Total Discharging" },
+
+                        {"id": "work_state",                "offset": 3402, "size": 2, "name": "Work State" },
+
+                        {"id": "operating_mode",            "offset": 3404, "name": "Operating Mode" },
+                        {"id": "daily_running_minutes",     "offset": 3405, "name": "Daily Running Minutes" },
+                        {"id": "total_running_hours",       "offset": 3406, "name": "Total Running Hours",       "size":2},
+
+                        {"id": "nominal_output_power",          "offset": 3408, "scale": 10, "name": "Nominal Output Power" },
+                        {"id": "nominal_reactive_output_power", "offset": 3409, "scale": 10, "name": "Nominal Reactive Output Power" },
+
+
+                        {"id": "grid_frequency",                "offset": 3412, "scale": 100, "name": "Grid Frequency" },
+                        {"id": "power_factor",                  "offset": 3413, "scale": 10, "name": "Power Factor", "signed": true },
+
+                        {"id": "node_state",                    "offset": 3415, "size": 2, "name": "Node State" },
+
+
+
+
+
+
+
+                        {"id": "max_charging_power",            "offset": 3423, "scale": -10, "name": "Max Charging Power", "signed": true },
+                        {"id": "max_discharging_power",         "offset": 3424, "scale": 10, "name": "Max Discharging Power", "signed": true },
+                        {"id": "max_inductive_reactive_power",  "offset": 3425, "scale": 10, "name": "Max Inductive Reactive Power", "signed": true },
+                        {"id": "max_capacitive_reactive_power", "offset": 3426, "scale": 10, "name": "Max Capacitive Reactive Power", "signed": true },
+
+
+                        {"id": "num_black_start_beats",         "offset": 3429, "name": "Current Number of Black Start Beats" }
+                    ]
+                }
+            ]
+        },
+
+        {
+            "id": "pcs_0_parameter_setting",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 100,
+            "offset_time": 20,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 3250,
+                    "number_of_registers": 23,
+                    "map": [
+                        {"id": "year",               "offset": 3250, "name": "Time Year" },
+                        {"id": "month",              "offset": 3251, "name": "Time Month" },
+                        {"id": "day",                "offset": 3252, "name": "Time Day" },
+                        {"id": "hour",               "offset": 3253, "name": "Time Hour" },
+                        {"id": "minute",             "offset": 3254, "name": "Time Minute" },
+                        {"id": "second",             "offset": 3255, "name": "Time Second" },
+                        {"id": "start_stop",         "offset": 3256, "name": "Start/Stop/Standby" },
+                        {"id": "grid_mode_setting",  "offset": 3257, "name": "On/Off-Grid Mode Setting" },
+                        {"id": "reactive_power_adj_switch", "offset": 3258, "name": "Reactive Power Adjustment Switch" },
+                        {"id": "control_state", "offset": 3259, "name": "Remote/Local" },
+                        {"id": "power_priority", "offset": 3260, "name": "Active/Reactive Priority" },
+                        {"id": "power_soft_start", "offset": 3261, "name": "Power Soft Start Enabling" },
+
+
+
+
+
+
+
+
+                        {"id": "ac_precharge", "offset": 3270, "name": "AC Pre-charging Enabling" },
+                        {"id": "quick_dispatch", "offset": 3271, "name": "Quick Dispatch" },
+                        {"id": "zero_power_standby", "offset": 3272, "name": "Zero Power Standby" }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 3300,
+                    "number_of_registers": 35,
+                    "map": [
+                        {"id": "on_grid_mode",                      "offset": 3300, "name": "On-grid Charging/Discharging Mode" },
+                        {"id": "on_grid_const_current",             "offset": 3301, "name": "On-grid Constant Current Value", "signed": true },
+                        {"id": "on_grid_const_voltage",             "offset": 3302, "scale": 10, "name": "On-grid Constant Voltage Value" },
+                        {"id": "on_grid_const_volt_limit_current",  "offset": 3303, "name": "On-grid Constant Voltage Limit Current" },
+                        {"id": "on_grid_const_ac_power",            "offset": 3304, "scale": 10, "name": "On-grid Constant Power (AC)", "signed": true },
+                        {"id": "on_grid_const_dc_power",            "offset": 3305, "scale": 10, "name": "On-grid Constant Power (DC)", "signed": true },
+                        {"id": "off_grid_voltage_setpoint",         "offset": 3306, "scale": 10, "name": "Off-grid Voltage Setpoint" },
+                        {"id": "off_grid_frequency_setpoint",       "offset": 3307, "scale": 100, "name": "Off-grid Frequency Setpoint" },
+
+                        
+                        {"id": "max_batttery_charge_voltage",       "offset": 3310, "scale": 100, "name": "Off-grid Frequency Setpoint" },
+                        {"id": "min_batttery_discharge_voltage",    "offset": 3311, "scale": 100, "name": "Off-grid Frequency Setpoint" },
+                        {"id": "max_batttery_charge_current",       "offset": 3312, "scale": 100, "name": "Off-grid Frequency Setpoint" },
+                        {"id": "max_batttery_discharge_current",    "offset": 3313, "scale": 100, "name": "Off-grid Frequency Setpoint" },                        
+                        {"id": "freq_ride_through_enabling",        "offset": 3314, "scale": 100, "name": "Off-grid Frequency Setpoint" },
+                        {"id": "freq_ride_through_comp",            "offset": 3315, "scale": 100, "name": "Off-grid Frequency Setpoint" },
+                        {"id": "heartbeat",                         "offset": 3316, "name": "Heartbeat" },
+                        {"id": "hearbeat_timeout_interval",         "offset": 3317, "name": "Heartbeat Timeout Interval" },
+
+                        {"id": "reactive_power_pct_setting",        "offset": 3319, "name": "Reactive Power Percentage Setting", "signed": true },
+                        {"id": "power_factor_setting",              "offset": 3320, "name": "Power Factor Setting",               "signed": true },
+                        {"id": "freq_regulation_control_enable",    "offset": 3321, "name": "Frequency Regulation Control Enable"},
+                        {"id": "freq_dead_band_freq",               "offset": 3322, "name": "Frequency Dead Band Freq",            "signed": true },
+
+                        {"id": "max_charge_freq_reg_power",         "offset": 3325, "name": "Max Charge Freq Reg Power"},
+                        {"id": "max_discharge_freq_reg_power",      "offset": 3326, "name": "Max Discharge Freq Reg Power"},
+
+
+
+                        {"id": "vsg_rate_output_voltage",           "offset": 3330, "name": "VSG Rated Output Voltage" },
+                        {"id": "vsg_rate_output_freq",              "offset": 3331, "name": "VSG Rated Output Frequency" },
+                        {"id": "vsg_freq_droop_slope",              "offset": 3332, "name": "VSG Rated Freq Drop Slope"},
+                        {"id": "vsg_voltage_droop_slope",           "offset": 3333, "name": "VSG Rated Freq Drop Slope"},
+                        {"id": "vsg_active_settting_value",         "offset": 3334, "name": "VSG Active Setting Value",    "signed": true },
+                        {"id": "vsg_reactive_settting_value",       "offset": 3335, "name": "VSG Reactive Setting Value",   "signed": true }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 3370,
+                    "number_of_registers": 2,
+                    "map": [
+                        {"id": "bms_comms_exception_switch",      "offset": 3370, "name": "BMS Communication Exception Switch" },
+                        {"id": "bms_comms_exception_time",        "offset": 3371, "name": "BMS Communication Exception Time" }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 3396,
+                    "number_of_registers": 21,
+                    "map": [
+                        {"id": "qu_working_mode",                 "offset": 3396, "name": "QU Working Mode" },
+
+
+
+
+
+
+
+
+
+                        {"id": "dc_mode",                         "offset": 3406, "name": "DC Mode" },
+
+
+
+
+
+
+
+
+
+                        {"id": "active_islanding",                "offset": 3416, "name": "Active Islanding Enabling" }
+                    ]
+                },
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 3520,
+                    "number_of_registers": 93,
+                    "map": [
+                        {"id": "black_start_enabling",           "offset": 3520, "name": "Black Start Enabling" },
+                        {"id": "black_start_beat",               "offset": 3521, "name": "Black Start Beat" },
+                        {"id": "parallel_operation_ctrl",        "offset": 3608, "name": "Parallel Operation Control" },
+                        {"id": "weak_grid_mode",                 "offset": 3609, "name": "Weak Grid Mode" },
+                        {"id": "reactive_power_soft_start",      "offset": 3610, "name": "Reactive Power Soft Start" },
+                        {"id": "hv_load_switch_remote_open",     "offset": 3611, "name": "HV Load Switch Remote Open" },
+                        {"id": "hv_load_switch_remote_closed",   "offset": 3612, "name": "HV Load Switch Remote Closed" }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "pcs_1_parameter_setting",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 100,
+            "offset_time": 20,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 4480,
+                    "number_of_registers": 15,
+                    "map": [
+                        {"id": "start_stop",                           "offset": 4480, "name": "Start/Stop/Standby" },
+                        {"id": "max_battery_charging_voltage",         "offset": 4481, "name": "Max Battery Charging Voltage", "scale": 10 },
+                        {"id": "max_battery_discharging_voltage",      "offset": 4482, "name": "Max Battery Discharging Voltage", "scale": 10 },
+                        {"id": "max_battery_charging_current",         "offset": 4483, "name": "Max Battery Charging Current" ,    "signed":true},
+                        {"id": "max_battery_discharging_current",      "offset": 4484, "name": "Max Battery Discharging Current" },
+                        {"id": "on_grid_const_ac_power",               "offset": 4485, "name": "On Grid Const Power Value",        "signed":true, "scale": 10},
+                        {"id": "reactive_power_percent_setting",       "offset": 4486, "name": "Reactive Power Percent Setting",   "signed":true, "scale": 10},
+                        {"id": "power_factor_setting",                 "offset": 4487, "name": "Power Factor Setting",             "signed":true, "scale": 1000},
+                        {"id": "on_grid_charge_discharge_mode",        "offset": 4488, "name": "On Grid Charge Discharge Mode" },
+                        {"id": "on_grid_CC_current_value",             "offset": 4489, "name": "On Grid CC Current Value",             "signed":true },
+                        {"id": "on_grid_CV_voltage_value",             "offset": 4490, "name": "On Grid CV Voltage Value", "scale": 10},
+                        {"id": "on_grid_CV_current_limiting",          "offset": 4491, "name": "On Grid CV Voltage Value"              },
+                        {"id": "on_grid_const_dc_power",               "offset": 4492, "name": "On Grid DC Const Power",  "scale": 10, "signed": true},
+                        {"id": "max_battery_charging_SOC",             "offset": 4493, "name": "Max Battery Charge SOC"              },
+                        {"id": "min_battery_discharging_SOC",          "offset": 4494, "name": "Min Battery Discharge SOC"           }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "pcs_2_parameter_setting",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 200,
+            "component_heartbeat_timeout_ms": 200,
+            "frequency": 100,
+            "offset_time": 20,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 4505,
+                    "number_of_registers": 15,
+                    "map": [
+                        {"id": "start_stop",                           "offset": 4505, "name": "Start/Stop/Standby" },
+                        {"id": "max_battery_charging_voltage",         "offset": 4506, "name": "Max Battery Charging Voltage", "scale": 10 },
+                        {"id": "max_battery_discharging_voltage",      "offset": 4507, "name": "Max Battery Discharging Voltage", "scale": 10 },
+                        {"id": "max_battery_charging_current",         "offset": 4508, "name": "Max Battery Charging Current" ,    "signed":true},
+                        {"id": "max_battery_discharging_current",      "offset": 4509, "name": "Max Battery Discharging Current" },
+                        {"id": "on_grid_const_ac_power",               "offset": 4510, "name": "On Grid AC Const Power",        "signed":true, "scale": 10},
+                        {"id": "reactive_power_pct_setting",           "offset": 4511, "name": "Reactive Power Percent Setting",   "signed":true, "scale": 10},
+                        {"id": "power_factor_setting",                 "offset": 4512, "name": "Power Factor Setting",             "signed":true, "scale": 1000},
+                        {"id": "on_grid_charge_discharge_mode",        "offset": 4513, "name": "On Grid Charge Discharge Mode" },
+                        {"id": "on_grid_CC_current_value",             "offset": 4514, "name": "On Grid CC Current Value",             "signed":true },
+                        {"id": "on_grid_CV_voltage_value",             "offset": 4515, "name": "On Grid CV Voltage Value", "scale": 10              },
+                        {"id": "on_grid_CV_current_limiting",          "offset": 4516, "name": "On Grid CV Voltage Value"              },
+                        {"id": "on_grid_const_dc_power",               "offset": 4517, "name": "On Grid DC Const Power", "scale": 10, "signed": true},
+                        {"id": "max_battery_charging_SOC",             "offset": 4518, "name": "Max Battery Charge SOC"              },
+                        {"id": "min_battery_discharging_SOC",          "offset": 4519, "name": "Min Battery Discharge SOC"           }
+                    ]
+                }
+            ]
+        }
+
+    ]
+}

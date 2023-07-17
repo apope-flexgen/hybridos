@@ -12,8 +12,8 @@ export const ColumnLeft = styled.div`
 `;
 
 export const Item = styled.div`
- display: flex;
- column-gap: 24px;
+  display: flex;
+  column-gap: 24px;
 `;
 
 export const AccordionSX = {

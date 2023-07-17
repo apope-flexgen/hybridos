@@ -36,11 +36,14 @@ import {
   lightTheme,
   darkTheme,
   MaintModeSlider,
-} from '@flexgen/storybook'
+  NumericInput,
+  Progress,
+} from '@flexgen/storybook';
+import ConfirmCancelButton from './ConfirmCancelButton';
 
 // FIXME: storybook should probably have consistent types
 export interface IComponentHash {
-  [key: string]: any
+  [key: string]: any;
 }
 
 const storybookComponents: IComponentHash = {
@@ -81,16 +84,17 @@ const storybookComponents: IComponentHash = {
   lightTheme,
   darkTheme,
   MaintModeSlider,
-}
+  NumericInput,
+  Progress,
+  ConfirmCancelButton,
+};
 
-export default storybookComponents
+export default storybookComponents;
 
 const controlsSets = {
   onChange: [
     'Checkbox',
     'Slider',
-    'Select',
-    'Select',
     'PureSearch',
     'AutoCompleteSearch',
     'DatePicker',
@@ -98,8 +102,8 @@ const controlsSets = {
     'TimePicker',
     'MuiTimePicker',
   ],
-  onClick: ['IconButton', 'MuiButton'],
-  withConfirm: ['TextField', 'Switch', 'MaintModeSlider'],
-}
+  onClick: ['IconButton', 'MuiButton', 'ConfirmCancelButton'],
+  withConfirm: ['TextField', 'Switch', 'MaintModeSlider', 'Select', 'NumericInput'],
+};
 
-export { controlsSets }
+export { controlsSets };

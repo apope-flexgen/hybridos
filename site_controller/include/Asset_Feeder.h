@@ -32,22 +32,19 @@ public:
     void breaker_reset(void);
 
     void set_active_power_setpoint(float);
-    void set_breaker_close_uri(char* uri);
-    void set_breaker_open_uri(char* uri);
 
     // status
     bool get_breaker_status(void);
     float get_gridside_avg_voltage(void);
     float get_gridside_frequency(void);
+    float get_power_factor();
 
     // internal functions
     void process_asset(bool* status);
     void process_potential_active_power() override;
     void update_asset(void);
     void send_to_components(void) override;
-
-    // utility functions
-    bool process_set(std::string uri, cJSON*);
+    bool handle_set(std::string uri, cJSON &body);
     bool generate_asset_ui(fmt::memory_buffer&, const char* const var = NULL) override;
     
 protected:
@@ -80,11 +77,11 @@ protected:
     bool breaker_close_permissive_status;
 
     // uris
-    char* uri_breaker_open;
-    char* uri_breaker_close;
-    char* uri_breaker_close_permissive;
-    char* uri_breaker_close_permissive_remove;
-    char* uri_breaker_reset;
+    std::string uri_breaker_open;
+    std::string uri_breaker_close;
+    std::string uri_breaker_close_permissive;
+    std::string uri_breaker_close_permissive_remove;
+    std::string uri_breaker_reset;
 };
 
 #endif /* ASSET_FEEDER_H_ */

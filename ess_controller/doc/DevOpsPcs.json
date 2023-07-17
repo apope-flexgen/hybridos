@@ -1,0 +1,9 @@
+{
+    "/notes/pcs": {
+    "note" :" These are owned by the pcs manager"
+    },
+    "/system/pcs":{
+        "status": "Init"
+    }
+    
+}

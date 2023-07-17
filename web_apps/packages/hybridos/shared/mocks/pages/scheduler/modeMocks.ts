@@ -1,5 +1,5 @@
 import { Mode } from '../../../types/dtos/scheduler.dto'
-import { ApiMode } from '../../../types/dtos/scheduler.dto';
+import { ApiMode } from '../../../types/dtos/scheduler.dto'
 
 export const modesData: ApiMode = {
     default: {

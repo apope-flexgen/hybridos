@@ -1,0 +1,86 @@
+{    
+    "/components/pcs_registers_fast": {
+        "##PCS_ID##_status": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 255, "inValue": 55, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Init"},
+                        {"shift": 0, "mask": 255, "inValue": 22, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Idle"},
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Stop"},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Softcharge"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 4, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "LCL"},
+                        {"shift": 0, "mask": 255, "inValue": 5, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Main AC"},
+                        {"shift": 0, "mask": 255, "inValue": 6, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Main AC Wait"},
+                        {"shift": 0, "mask": 255, "inValue": 7, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Run"},
+                        {"shift": 0, "mask": 255, "inValue": 8, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "nMain AC"},
+                        {"shift": 0, "mask": 255, "inValue": 9, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Discharge"},
+                        {"shift": 0, "mask": 255, "inValue": 10, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "LVRT"},
+                        {"shift": 0, "mask": 255, "inValue": 11, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Trackers mode"},
+                        {"shift": 0, "mask": 255, "inValue": 17, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Fault exit OV wait"},
+                        {"shift": 0, "mask": 255, "inValue": 18, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Fault exit wait"},
+                        {"shift": 0, "mask": 255, "inValue": 19, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Softcharge fault"},
+                        {"shift": 0, "mask": 255, "inValue": 20, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Fault"},
+                        {"shift": 0, "mask": 255, "inValue": 159, "uri": "/assets/pcs/##PCS_ID##:module_status", "outValue": "Master FPGA comms error"}
+                    ]
+                }]
+            }
+        },
+        "##PCS_ID##_i_o_status": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:fan_status", "outValue": "Open"},
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:fan_status", "outValue": "Closed"},
+                        {"shift": 1, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:ac_main_status", "outValue": "Open"},
+                        {"shift": 1, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:ac_main_status", "outValue": "Closed"},
+                        {"shift": 2, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:ac_softcharge_status", "outValue": "Open"},
+                        {"shift": 2, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:ac_softcharge_status", "outValue": "Closed"},
+                        {"shift": 3, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:lcl_status", "outValue": "Open"},
+                        {"shift": 3, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:lcl_status", "outValue": "Closed"},
+                        {"shift": 4, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:dc_switch_status", "outValue": "Open"},
+                        {"shift": 4, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:dc_switch_status", "outValue": "Closed"},
+                        {"shift": 6, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:thermal_lcl_status", "outValue": "Open"},
+                        {"shift": 6, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:thermal_lcl_status", "outValue": "Closed"},
+                        {"shift": 7, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:fan_feedback", "outValue": "Open"},
+                        {"shift": 7, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:fan_feedback", "outValue": "Closed"},
+                        {"shift": 8, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:ac_main_feedback", "outValue": "Open"},
+                        {"shift": 8, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:ac_main_feedback", "outValue": "Closed"},
+                        {"shift": 9, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:ac_softcharge_feedback", "outValue": "Open"},
+                        {"shift": 9, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:ac_softcharge_feedback", "outValue": "Closed"},
+                        {"shift": 10, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:lcl_feedback", "outValue": "Open"},
+                        {"shift": 10, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:lcl_feedback", "outValue": "Closed"},
+                        {"shift": 11, "mask": 255, "inValue": 0, "uri": "/assets/pcs/##PCS_ID##:dc_switch_feedback", "outValue": "Open"},
+                        {"shift": 11, "mask": 255, "inValue": 1, "uri": "/assets/pcs/##PCS_ID##:dc_switch_feedback", "outValue": "Closed"}
+                    ]
+                }]
+            }
+        },
+        "##PCS_ID##_current_r": 0,
+        "##PCS_ID##_current_s": 0,
+        "##PCS_ID##_current_t": 0,
+        "##PCS_ID##_dc_current": 0,
+        "##PCS_ID##_dc_voltage_p": 0,
+        "##PCS_ID##_dc_voltage_n": 0,
+        "##PCS_ID##_dc_voltage": 0,
+        "##PCS_ID##_p": 0,
+        "##PCS_ID##_q": 0,
+        "##PCS_ID##_ambient_temp": 0,
+        "##PCS_ID##_max_temp": 0,
+        "##PCS_ID##_hw_version": 0,
+        "##PCS_ID##_sw_version": 0,
+        "##PCS_ID##_temp_r1": 0,
+        "##PCS_ID##_temp_r2": 0,
+        "##PCS_ID##_temp_r3": 0,
+        "##PCS_ID##_temp_s1": 0,
+        "##PCS_ID##_temp_s2": 0,
+        "##PCS_ID##_temp_s3": 0,
+        "##PCS_ID##_temp_t1": 0,
+        "##PCS_ID##_temp_t2": 0,
+        "##PCS_ID##_temp_t3": 0,
+        "current_fault_module": 0,
+        "current_fault": 0
+    }
+}

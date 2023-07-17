@@ -1,0 +1,32 @@
+{
+   "system":
+   {   "name":"power_electronics_pcs_1",
+       "protocol": "Modbus TCP",
+       "id": "power_electronics_pcs_1",
+       "ip_address": "0.0.0.0",
+       "port": 503 
+   },
+    "registers":
+     {
+      "holding_registers":
+       [
+          { "name":"p_reference","id":"p_reference","offset":552,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"q_reference","id":"q_reference","offset":557,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"grid_voltage_rs","id":"grid_voltage_rs","offset":1000,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"grid_voltage_st","id":"grid_voltage_st","offset":1001,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"grid_voltage_tr","id":"grid_voltage_tr","offset":1002,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"active_power","id":"active_power","offset":1007,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"reactive_power","id":"reactive_power","offset":1008,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"current_fault","id":"current_fault","offset":1120,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"current_warning","id":"current_warning","offset":1121,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"inverter_status","id":"inverter_status","offset":1122,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"pt100_l1_temperature","id":"pt100_l1_temperature","offset":1192,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"pt100_l2_temperature","id":"pt100_l2_temperature","offset":1193,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"pt100_l3_temperature","id":"pt100_l3_temperature","offset":1194,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"enable_main_selector","id":"enable_main_selector","offset":2041,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"bess_voltage_bus_1","id":"bess_voltage_bus_1","offset":7304,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"vdc_bus","id":"vdc_bus","offset":7400,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"dc_input_power_bess1","id":"dc_input_power_bess1","offset":7406,"uri":"/components/power_electronics_pcs_1" },
+          { "name":"dc_input_current_bess1","id":"dc_input_current_bess1","offset":7409,"uri":"/components/power_electronics_pcs_1" }       ]
+    }
+}

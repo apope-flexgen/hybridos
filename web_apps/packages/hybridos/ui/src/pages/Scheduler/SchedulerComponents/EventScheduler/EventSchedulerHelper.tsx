@@ -2,11 +2,12 @@
 /* eslint-disable no-param-reassign */
 import { Views } from '@flexgen/storybook';
 import dayjs, { Dayjs, ManipulateType, OpUnitType } from 'dayjs';
+import { ApiMode, RepeatForAPI, SchedulerEvent } from 'shared/types/dtos/scheduler.dto';
 import {
-  ApiMode, RepeatForAPI, SchedulerEvent,
-} from 'shared/types/dtos/scheduler.dto';
-import {
-  DaysSelected, EditEventState, SchedulerUrls, VariableValues,
+  DaysSelected,
+  EditEventState,
+  SchedulerUrls,
+  VariableValues,
 } from 'src/pages/Scheduler/SchedulerTypes';
 import { v4 as uuid } from 'uuid';
 
@@ -31,21 +32,22 @@ export const views = {
   minute: 'minutes',
 };
 
-export const getStartAndEndTimeFrame = (
-  value: Dayjs | null,
-  view: Views,
-) => {
+export const getStartAndEndTimeFrame = (value: Dayjs | null, view: Views) => {
   let startTime: Dayjs = dayjs(value).subtract(48, 'h');
   let endTime: Dayjs = dayjs(value).add(48, 'h');
 
   if (view === (views.month as Views) || view === (views.twoWeeks as Views)) {
-    startTime = dayjs(value).startOf(views.week as OpUnitType).subtract(48, 'h');
+    startTime = dayjs(value)
+      .startOf(views.week as OpUnitType)
+      .subtract(48, 'h');
     const endOfMonth = dayjs(value).endOf(views.month as OpUnitType);
     endTime = dayjs(endOfMonth)
       .add(1, views.day as ManipulateType)
       .endOf(views.month as OpUnitType);
   } else if (view === (views.week as Views)) {
-    startTime = dayjs(value).startOf(views.week as OpUnitType).subtract(48, 'h');
+    startTime = dayjs(value)
+      .startOf(views.week as OpUnitType)
+      .subtract(48, 'h');
     endTime = dayjs(value).endOf(views.week as OpUnitType);
   }
 
@@ -84,16 +86,15 @@ export const handleVariableValues = (
   return typedVariableValues;
 };
 
-export const createRepeatObject = (
-  state: EditEventState,
-  exceptions?: string[],
-  id?: string,
-) => {
+export const createRepeatObject = (state: EditEventState, exceptions?: string[], id?: string) => {
   const cycle: 'day' | 'week' = state.repeatEveryIncrement.Weeks ? 'week' : 'day';
   const frequency: number = parseInt(state.repeatEveryValue, 10);
 
   let repeat: RepeatForAPI = {
-    cycle, frequency, exceptions, id: id || undefined,
+    cycle,
+    frequency,
+    exceptions,
+    id: id || undefined,
   };
   const bitArray: number[] = [];
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -105,7 +106,7 @@ export const createRepeatObject = (
   repeat = { ...repeat, day_mask: dayMask };
 
   if (!state.endsOption.Never) {
-    const endTime: string = (state.endsOption.On && state.endOnDate !== null)
+    const endTime: string = state.endsOption.On && state.endOnDate !== null
       ? state.endOnDate.format()
       : '2000-01-01T00:00:00Z';
     const endCount: number = state.endsOption.After ? parseInt(state.endAfterOccurrences, 10) : 0;
@@ -117,7 +118,7 @@ export const createRepeatObject = (
   return repeat;
 };
 
-const padStart = (num: number, size: number) => (`000000${num}`).substr((`000000${num}`).length - size);
+const padStart = (num: number, size: number) => `000000${num}`.substr(`000000${num}`.length - size);
 
 const checkIfInExceptions = (exceptionsArray: string[], startTime: string) => {
   let returnVar = false;
@@ -129,13 +130,10 @@ const checkIfInExceptions = (exceptionsArray: string[], startTime: string) => {
   return returnVar;
 };
 
-const checkIfBeforeEndDate = (
-  currentStartTime: dayjs.Dayjs,
-  endTime: string,
-) => {
+const checkIfBeforeEndDate = (currentStartTime: dayjs.Dayjs, endTime: string) => {
   if (endTime === '2000-01-01T00:00:00Z') return false;
   const endCheck = dayjs(endTime);
-  return (currentStartTime.isBefore(endCheck) || currentStartTime.isSame(endCheck, 'date'));
+  return currentStartTime.isBefore(endCheck) || currentStartTime.isSame(endCheck, 'date');
 };
 
 const checkIfBeforeEndCount = (numOccurences: number, endCount: number) => {
@@ -155,24 +153,18 @@ const createRecurringEvents = (
 ) => {
   if (event.repeat && event.repeat.frequency) {
     if (event.repeat.cycle && event.repeat.cycle === 'day') {
-      numOccurences += 1;
       recurringStartTime = recurringStartTime.add(event.repeat.frequency, 'days');
       const recurringEndTime = recurringStartTime.add(event.duration, 'minutes');
       if (
         (recurringStartTime.isAfter(startTimeAsDayJs)
-                || recurringStartTime.isSame(startTimeAsDayJs))
-                && (recurringEndTime.isBefore(endTimeAsDayJs)
-                 || recurringEndTime.isSame(endTimeAsDayJs))
-                 && ((event.repeat.end_time
-                  && checkIfBeforeEndDate(recurringStartTime, event.repeat.end_time))
-                 || (event.repeat.end_count
-                  && checkIfBeforeEndCount(numOccurences, event.repeat.end_count))
-                 )
-                && (event.repeat.exceptions === undefined
-                    || !checkIfInExceptions(
-                      event.repeat.exceptions,
-                      recurringStartTime.format(),
-                    ))
+          || recurringStartTime.isSame(startTimeAsDayJs))
+        && (recurringEndTime.isBefore(endTimeAsDayJs) || recurringEndTime.isSame(endTimeAsDayJs))
+        && ((event.repeat.end_time
+          && checkIfBeforeEndDate(recurringStartTime, event.repeat.end_time))
+          || (event.repeat.end_count
+            && checkIfBeforeEndCount(numOccurences, event.repeat.end_count)))
+        && (event.repeat.exceptions === undefined
+          || !checkIfInExceptions(event.repeat.exceptions, recurringStartTime.format()))
       ) {
         const recurringEventInframe: SchedulerEvent = {
           id: uuid(),
@@ -184,6 +176,7 @@ const createRecurringEvents = (
         };
         tempEventsData.push(recurringEventInframe);
       }
+      numOccurences += 1;
     } else if (event.repeat.cycle === 'week') {
       const binary = `${Number(event.repeat.day_mask).toString(2)}`;
       const paddedBinary = padStart(parseInt(binary, 10), 7);
@@ -197,23 +190,18 @@ const createRecurringEvents = (
           const recurringEndTime = recurringStartTime.add(event.duration, 'minutes');
           if (
             (recurringStartTime.isAfter(startTimeAsDayJs)
-                          || recurringStartTime.isSame(startTimeAsDayJs))
-                          && recurringStartTime.isAfter(startTimeFromEvent)
-                        && (recurringEndTime.isBefore(endTimeAsDayJs)
-                         || recurringEndTime.isSame(endTimeAsDayJs))
-                        && (recurringEndTime.isBefore(endTimeAsDayJs)
-                         || recurringEndTime.isSame(endTimeAsDayJs))
-                        && (
-                          (event.repeat?.end_time
-                            && checkIfBeforeEndDate(recurringStartTime, event.repeat.end_time))
-                        || (event.repeat?.end_count
-                          && checkIfBeforeEndCount(numOccurences, event.repeat.end_count))
-                        )
-                        && (event.repeat?.exceptions === undefined
-                            || !checkIfInExceptions(
-                              event.repeat.exceptions,
-                              recurringStartTime.format(),
-                            ))
+              || recurringStartTime.isSame(startTimeAsDayJs))
+            && recurringStartTime.isAfter(startTimeFromEvent)
+            && (recurringEndTime.isBefore(endTimeAsDayJs)
+              || recurringEndTime.isSame(endTimeAsDayJs))
+            && (recurringEndTime.isBefore(endTimeAsDayJs)
+              || recurringEndTime.isSame(endTimeAsDayJs))
+            && ((event.repeat?.end_time
+              && checkIfBeforeEndDate(recurringStartTime, event.repeat.end_time))
+              || (event.repeat?.end_count
+                && checkIfBeforeEndCount(numOccurences, event.repeat.end_count)))
+            && (event.repeat?.exceptions === undefined
+              || !checkIfInExceptions(event.repeat.exceptions, recurringStartTime.format()))
           ) {
             const recurringEventInframe: SchedulerEvent = {
               id: uuid(),
@@ -225,11 +213,14 @@ const createRecurringEvents = (
             };
             tempEventsData.push(recurringEventInframe);
           }
-          numOccurences += 1;
+          if (recurringStartTime.isAfter(startTimeFromEvent)) numOccurences += 1;
         }
         return recurringStartTime;
       });
-      const startOfWeek = (recurringStartTime.startOf('w').add(event.repeat.frequency, 'weeks')).format('MM-DD-YYYY');
+      const startOfWeek = recurringStartTime
+        .startOf('w')
+        .add(event.repeat.frequency, 'weeks')
+        .format('MM-DD-YYYY');
       const startTime = recurringStartTime.format('HH:mm:ss');
       recurringStartTime = dayjs(`${startOfWeek} ${startTime}`);
     }
@@ -258,25 +249,16 @@ export const getAllEventsInTimeFrame = (
     const startTimeFromEvent = dayjs(event.start_time);
     const endTimeFromEvent = startTimeFromEvent.add(event.duration, 'minutes');
     if (
-      (
-        startTimeFromEvent.isAfter(startTime) ||
-        startTimeFromEvent.isSame(startTime) 
-      )
-      && ( 
-        endTimeFromEvent.isBefore(endTime) ||
-        endTimeFromEvent.isSame(endTime)
-      )
+      (startTimeFromEvent.isAfter(startTime) || startTimeFromEvent.isSame(startTime))
+      && (endTimeFromEvent.isBefore(endTime) || endTimeFromEvent.isSame(endTime))
       && (event.repeat?.exceptions === undefined
-          || !checkIfInExceptions(
-            event.repeat?.exceptions,
-            startTimeFromEvent.format(),
-          ))
+        || !checkIfInExceptions(event.repeat?.exceptions, startTimeFromEvent.format()))
     ) {
       filteredEventsData.push(event);
     }
     if (!(event.repeat?.end_count === 1)) {
       const recurringStartTime = startTimeFromEvent;
-      const numOccurences = 0;
+      const numOccurences = 1;
 
       createRecurringEvents(
         event,

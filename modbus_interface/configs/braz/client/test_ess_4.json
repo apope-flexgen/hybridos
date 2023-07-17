@@ -1,0 +1,90 @@
+{
+    "connection": {
+        "name": "Test Local Controller",
+        "ip_address": "192.168.114.14",
+        "port": 502
+    },
+    "components": [
+        {
+            "id": "test_ess",
+            "frequency": 50,
+            "offset_time": 0,
+            "heartbeat_enabled": true,
+            "comment": "Check time values on heartbeat",
+            "component_heartbeat_read_uri": "toggle_bit",
+            "component_heartbeat_write_uri": "toggle_bit",
+            "modbus_heartbeat_timeout_ms": 1000,
+            "add_timings":false,
+            "component_heartbeat_timeout_ms": 1000,
+            "off_by_one":false,
+            "byte_swap": true,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 10056,
+                    "number_of_registers": 4,
+                    "map": [
+                        {
+                            "id": "start_stop",
+                            "offset": 10056,
+                            "name": "Start/Stop"
+                        },
+                        {
+                            "id": "reset",
+                            "offset": 10057,
+                            "name": "BMS Close/Open/Reset"
+                        },
+                        {
+                            "id": "power_mode",
+                            "offset": 10058,
+                            "name": "Selection of reactive power mode"
+                        },
+                        {
+                            "id": "standby_mode",
+                            "offset": 10059,
+                            "name": "PCS standby cmd"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 10053,
+                    "number_of_registers": 4,
+                    "map": [
+                        {
+                            "id": "voltage_ac",
+                            "offset": 10053,
+                            "scale": 10,
+                            "name": "AC bus voltage"
+                        },
+                        {
+                            "id": "frequency",
+                            "offset": 10054,
+                            "scale": 100,
+                            "name": "AC bus frequency"
+                        },
+                        {
+                            "id": "chargeable_power",
+                            "offset": 10055,
+                            "size": 1,
+                            "name": "System chargeable power"
+                        },
+                        {
+                            "id": "dischargeable_power",
+                            "offset": 10056,
+                            "size": 1,
+                            "name": "System dischargeable power"
+                        },
+                        {
+                            "id": "chargeable_energy",
+                            "offset": 10057,
+                            "size": 2,
+                            "name": "System chargeable energy"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

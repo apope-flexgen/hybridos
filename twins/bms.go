@@ -13,7 +13,7 @@ type bms struct {
 	ID      string
 	Aliases []string
 	// BMS physical parameters - limits, losses, etc
-	Cap        float64   // Nominal Capacity in kWh
+	Cap        float64   // Nominal Capacity in kWh. Note this is a measure of battery ENERGY not battery CAPACITY - vendor spec sheets often list this as a 'capacity' value, so it is named such here in twins as well.
 	CapMeas    float64   // Achieved Capacity in kWh, based on capacity of individual SBMUs
 	Vnom       float64   // Battery nominal (or normal) voltage
 	Idleloss   float64   // Fixed losses across load
@@ -348,6 +348,14 @@ func (b *bms) Init() {
 	b.Echarge = b.Cap * (1 - b.Soc.Value/100)
 	b.Edischarge = b.Cap * b.Soc.Value / 100
 
+	//Droop parameters. BMS is modeled as a stiff source
+	if b.Pmax <= 0{
+		b.Pmax = 10000 //TODO GB: move this to default configs. 
+	}
+	b.Dvoltage.Percent = 0.001
+	b.Dvoltage.XNom = b.Vnom
+	b.Dvoltage.YNom = b.Pmax
+
 	if b.Dvoltage.Percent != 0 && b.Dvoltage.XNom != 0 {
 		b.Dvoltage.slope, b.Dvoltage.offset = getSlope(b.Dvoltage.Percent, b.Dvoltage.YNom, b.Dvoltage.XNom)
 	}
@@ -487,8 +495,8 @@ func (b *bms) DistributeVoltage(input terminal) (output terminal) {
 	for i, v := range assetStatus {
 		b.Status[i] = v
 	}
-	// fmt.Println("BMS STATUS", b.Status, "VALUE", b.Status[0].Value, "ADDRESS", &(b.Status[0].Value))
-	// fmt.Printf("Status Address: %p Value Address: %p String: %s Value: %d\n", &b.Status, &(b.Status[0].Value), b.Status[0].String, b.Status[0].Value)
+	// fmt.Println("BMS STATUS", b.Status, "Val", b.Status[0].Value, "ADDRESS", &(b.Status[0].Value))
+	// fmt.Printf("Status Address: %p Val Address: %p String: %s Val: %d\n", &b.Status, &(b.Status[0].Value), b.Status[0].String, b.Status[0].Value)
 	// Find the dc bus voltage based on the SOC of the battery
 	pro_len := len(b.SocProfile)
 	if pro_len == 1 || b.Soc.Value < b.SocProfile[0] {
@@ -594,7 +602,7 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 		b.Icharge = 0
 		b.Idischarge = 0
 	}
-	b.Idc.Value = pToI(b.P*1000, b.Vdc.Value)
+	b.Idc.Value = pToI(b.P, b.Vdc.Value)
 	// Update the SBMU bus and cell voltages and the currents
 	// Prepare to find overall max and min cell voltages by setting up initial comparison to arbitrarily extreme values
 	b.MaxCellVolt.Value = -1000.0
@@ -613,7 +621,7 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 			b.Sbmu[i].Icharge = 0
 			b.Sbmu[i].Idischarge = 0
 		}
-		b.Sbmu[i].Idc.Value = pToI(b.Sbmu[i].P*1000, b.Sbmu[i].Vdc)
+		b.Sbmu[i].Idc.Value = pToI(b.Sbmu[i].P, b.Sbmu[i].Vdc)
 	}
 	// TODO: Implement a thermal model which updates the temperature of the cells based on power flow and external temperature
 
@@ -623,6 +631,7 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 
 	// Send calculated output power to output terminal
 	output.p = b.P
+	output.dVdc = b.Dvoltage
 	// fmt.Printf("BMS %s: P: %.1f\tQ: %.1f\tS: %.1f\tV: %.1f\tF: %.1f\n", b.ID, b.P, b.Q, b.S, b.V, b.F)
 	return output
 }

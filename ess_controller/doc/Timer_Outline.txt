@@ -1,0 +1,93 @@
+Timer Requirement part 2
+The base system has one or more Variable Maps (varsmap), these are two dimensional data maps.
+Each Variable Map has multiple table/data  combinations.
+note that the uri spec holds the comp:var mapping  /assets/bms_1:  
+To provide access to a Vmap collection a VarMaps object is used. This is rather like a library module.
+A system will also need access to timer functions.
+    The assets (BMS /PCS) systems need a heartbeat  updated (up to 10 times a second )
+    The assets (BMS /PCS) systems need a updated system time updated every second
+    Commands are sent to the assets that need to  turn on a signal and then turn off after a period of time (second)
+
+The base control does not need be concerned with setting the heartbeat or updating the time of day.
+The base control will send a timeSpec request where it will issue the initial command and the timer will take care of 
+    the follow up reset of the pulse command.
+    Note this means that the timeer module will need a fims connection.
+
+
+One solution to the timer problem is to abstract completely the timer operation.
+So in addition to having one or more Vmap objects a system can also have a timer controller.
+This means that, when sending a pulsed command to an asset component, the reset command is sent to the timer.
+
+Example:
+    Set vmap_bss /component/bss_1:state from 0 to 1 (ON)
+      and tell timer  to set vmap_bss /component/bss_1:state to 0 in 1000 ms) 
+
+    Tell the timer to send heartbeat to   vmap_bss /components/bss_1:heartbeat every 100mS wrap at 255
+    Tell the timer to send time:date to   vmap_bss /components/bss_1:tod_sec,tod_min,tod_hr,tod_day,tod_mon.tod_year every 1s 
+
+Here is a typical use :
+
+note that the "New" uri notation (/comp:varname) is NOT in the Vmap logic yet .. its my top priority today 
+
+
+#include "asset.h"
+#include "timer.h"
+#include "bms.h"
+
+main ()
+
+    // this is our main data map
+    varsmap vmap;
+
+    // this is our map utils factory
+    VarMaps vm;
+
+    // here is a timer for anyone
+    Timer vtime;
+
+    bms* bm = new bms("bms_1");
+    
+    bm->setVmap(&vmap);
+    bm->setTimer(&vtime);
+
+    printf("bms asset test OK\n");
+    bm->configure("configs/test_vmap_timer.json");
+
+     cJSON* cjr = nullptr; 
+    // 
+    uri = "/asset/bms_1:onCmd";
+    timeSpec->ctime = vm.get_time_dbl();
+    timeSpec->freq = 1000;
+    timeSpec->type=TMOneShot;
+    timeSpec->val = vm.getAssValue(vmap,uri);
+    timeSpec->newval = vm.newAssetVar(1);
+    timeSpec->uri = uri;
+    timeSpec->vmap = vmap;
+
+
+    vm.processTimeReq(vtime, timespec, &cjr);
+
+    uri = "/asset/bms_1:hb";
+    timeSpec->ctime = vm.get_time_dbl();
+    timeSpec->freq = 100;
+    timeSpec->type=TMperiodic;
+    timeSpec->val = vm.getValue(vmap,uri);
+    timeSpec->uri = uri;
+    timeSpec->vmap = vmap;
+    
+    vm.processTimReq(vtime, timespec,  &cjr);
+
+    uri = "/asset/bms_1:date*";     // expands to date_sec, date_min,date_hr, date_day, date_mon, datre_yr
+    timeSpec->ctime = vm.get_time_dbl();
+    timeSpec->freq = 1000;
+    timeSpec->type=TMdate;
+    timeSpec->uri = uri;
+    timeSpec->vmap = vmap;
+
+    vm.processTimeReq(vtime, timespec, &cjr);
+
+
+The timer component will keep a reversed ordered list of timespecs ordered by next target to run. 
+The timer command will be woken up ether by a timeout or an incoming timedMsg request 
+
+        

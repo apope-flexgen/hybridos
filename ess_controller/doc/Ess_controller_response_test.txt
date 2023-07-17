@@ -1,0 +1,73 @@
+An example of responsive operation.
+p. wilshire 02/17/202
+
+The gpio_controller detects changes in a number of gpio pins on the system. 
+It publishes a fims message when it detects those changes.
+We get these messages in every 5mS during an error condition.
+
+
+Method:  pub
+Uri:     /components/gpio
+ReplyTo: (null)
+Body:    {"Disconnect Switch":{"value":true},
+          "Door Latch":{"value":true},
+          "EStop":{"value":true},
+          "Fire Alarm":{"value":true},
+          "Fuse Monitoring":{"value":true},
+          "GPIORefTime":{"value":-61572651301.671753},  // this is time, in seconds, since a fixed ref time 
+          "Surge Arrester":{"value":true}
+          }
+Timestamp:   2021-02-17 21:03:03.710759
+
+
+The ess_controller has a configuration item that causes a small function to be run when ever it detects elements on this pub message.
+
+"/components/gpio" {
+  "GPIORefTime": {
+        "value": 0,
+        "actions":{
+          "onSet":    [{ "func":      [
+              {"func": "GPIOCalcResponse","amap":        "ess"}
+              ]}]
+        }
+  }
+}
+
+Here is the function 
+
+int  GPIOCalcResponse(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar* av)
+{
+    asset_manager* am = av->am;
+    double tNow = am->vm->get_time_dbl();
+    double tRef = am->vm->get_time_ref();  // this is an absolute time with the same value on all systems
+    double respTime = tRef - av->getdVal();
+    av->setParam("respTime", respTime);
+    av->setParam("respTimeuS", respTime*1000000.0);
+    av->setParam("rxTime", tNow);
+    return 0;
+}
+
+The incoming message parser detects the GPIORefTime variable in the incoming message and 
+   immediately runs the function linked to the message value.
+
+Here are the results.
+
+
+GPIORefTime": {
+    "value": -61572652726.37808,
+    "respTime": 0.0002899169921875,
+    "respTimeuS": 289.9169921875,
+    "rxTime": 18.09166399999981
+    
+  },
+  
+  The test system was a fully loaded ess_controller with over 6000 variables 
+  running control loops and pubbing data messages to the site controller every 50mS
+
+The design spec was to ahve this number under 2-3mS but this system id doing a bit better than that.
+
+
+
+
+
+

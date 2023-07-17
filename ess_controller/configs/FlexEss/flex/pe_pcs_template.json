@@ -1,0 +1,789 @@
+{
+    "/notes/pcs_template": {
+        "note1":"This is the bms component config template for PE  subsystem.",
+        "note1a":"The pcs_1 page of the ui display is outlined in /assets/##PCS_ID##/summay",
+        "note1b":"The /assets/##PCS_ID## table defines the template with replacements for selected key words",
+        "note2": "The /config/pcs area is still under development",
+        "note3":"The /components/pcs... tables define the incoming control words from the pcs modbus interface",
+        "note4":"The /links/<pcs> table  defines mapping of external interface components to internal control variables",
+        "note5":"There are some junk/test fields as well... they will removed soon"
+      },
+    "/system/pcs": {
+        "id": "PCS",
+        "name": "Power converter system"
+    },
+    "/config/pcs": {
+        "Pubs": "/assets/pcs",
+        "BlockSets": "/status/ess, /status/bms, /status/bms_1, /status/bms_2",
+        "AlarmDestination": {
+            "value": "/assets/pcs/summary:alarms"
+        },
+        "FaultDestination": {
+            "value": "/assets/pcs/summary:faults"
+        },
+        "NoFaultMsg": {
+            "value": "(NOFLTS) No faults"
+        },
+        "NoAlarmMsg": {
+            "value": "(NOWRN) No warnings"
+        },
+        "RatedApparentPower": {
+            "value": 440
+        }
+    },
+    "/constants/pcs": {
+        "note": "These are constant defintions",
+        "notem":"If used, move this to pcs_manager.json",
+        "nominal_voltage": 480.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 3430.0,
+        "rated_apparent_power": 3430.0,
+        "start_timer": 50,
+        "cooldown_timer": 250
+    },
+    "/controls/pcs": {
+        "notem":"If used, move this to pcs_manager.json",
+
+        "start_stop": {
+            "value": 1,
+            "actions": {
+                "onSet": [{
+                    "bitfield": {
+                        "bitmap": [
+                            {
+                                "bit": 0,
+                                "uri": "/controls/pcs:oncmd",
+                                "value": true
+                            },
+                            {
+                                "bit": 1,
+                                "uri": "/system/controls:kacclosecmd",
+                                "value": true
+                            },
+                            {
+                                "bit": 8,
+                                "uri": "/system/controls:offcmd",
+                                "value": true
+                            },
+                            {
+                                "bit": 9,
+                                "uri": "/system/controls:kacopencmd",
+                                "value": true
+                            }
+                        ]
+                    }
+                }
+            ]
+            }
+        },
+        "ctrlword2": {
+            "value": 0,
+            "actions": {
+                "onSet": [
+                    {"enum": {
+                        "bitmap": [
+                            {
+                                "mask": 3,
+                                "bit": 0,
+                                "uri": "/system/enum_controls:mask_3_bit_0",
+                                "value": true
+                            },
+                            {
+                                "mask": 3,
+                                "bit": 1,
+                                "uri": "/system/enum_controls:mask_3_bit_1",
+                                "value": true
+                            },
+                            {
+                                "mask": 3,
+                                "bit": 2,
+                                "uri": "/system/enum_controls::mask_3_bit_2",
+                                "value": true
+                            },
+                            {
+                                "mask": 3,
+                                "bit": 3,
+                                "uri": "/system/enum_controls:mask_3_bit_3",
+                                "value": true
+                            }
+                        ]
+                    }
+                }
+            ]
+            }
+        },
+        "PMode_I": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 1,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_pmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "PMode_P": {
+            "value": true,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 2,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_pmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "QMode_CosPhi": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 0,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_Q": {
+            "value": true,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 1,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_I": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"bitset": [
+                        {
+                            "bit": 2,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_VQ": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"bitset": [
+                        {
+                            "bit": 3,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "PStartGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "PStopGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "PRiseGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "PDropGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QStartGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QStopGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QRiseGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QDropGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "EnPStartGradient": 1,
+        "EnPStopGradient": 1,
+        "EnPRiseGradient": 1,
+        "EnPDropGradient": 1,
+        "EnQStartGradient": 1,
+        "EnQStopGradient": 1,
+        "EnQRiseGradient": 1,
+        "EnQDropGradient": 1,
+        "ctrlword_pmode": 2,
+        "ctrlword_qmode": 1,
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "ActivePowerSetpoint": 2200.0,
+        "ReactivePowerSetpoint": 2200.0,
+        "lastActivePowerSetpoint": 2200.0,
+        "lastReactivePowerSetpoint": 2200.0,
+        "ActivePowerDeadband": 0.0,
+        "ReactivePowerDeadband": 0.0,
+        "ActivePowerCmd": 0,
+        "ReactivePowerCmd": 0,
+        "oncmd": 0,
+        "offcmd": 0,
+        "test_ctrl": 72
+    },
+    "/links/pcs": {
+        "ctrlword_pmode": {
+            "value": "/components/pcsm_control:p_control_mode"
+        },
+        "ctrlword_qmode": {
+            "value": "/components/pcsm_control:q_control_mode"
+        },
+        "ActivePowerCmd": {
+            "value": "/components/pcsm_control:p_p_reference"
+        },
+        "ActiveCurrentCmd": {
+            "value": "/components/pcsm_control:p_id_reference"
+        },
+        "CosPhiCmd": {
+            "value": "/components/pcsm_control:q_cosphi_reference"
+        },
+        "ReactiveCurrentCmd": {
+            "value": "/components/pcsm_control:q_iq_reference"
+        },
+        "ReactivePowerCmd": {
+            "value": "/components/pcsm_control:q_q_reference"
+        },
+        "ReactiveVoltageCmd": {
+            "value": "/components/pcsm_control:q_v_reference"
+        },
+        "PStartGradient": {
+            "value": "/components/pcsm_control:start_grad_p"
+        },
+        "EnPStartGradient": {
+            "value": "/components/pcsm_control:start_grad_p_enable"
+        },
+        "PStopGradient": {
+            "value": "/components/pcsm_control:stop_grad_p"
+        },
+        "EnPStopGradient": {
+            "value": "/components/pcsm_control:stop_grad_p_enable"
+        },
+        "PRiseGradient": {
+            "value": "/components/pcsm_control:rise_grad_p"
+        },
+        "EnPRiseGradient": {
+            "value": "/components/pcsm_control:rise_grad_p_enable"
+        },
+        "PDropGradient": {
+            "value": "/components/pcsm_control:drop_grad_p"
+        },
+        "EnPDropGradient": {
+            "value": "/components/pcsm_control:drop_grad_p_enable"
+        },
+        "QStartGradient": {
+            "value": "/components/pcsm_control:start_grad_q"
+        },
+        "EnQStartGradient": {
+            "value": "/components/pcsm_control:start_grad_q_enable"
+        },
+        "QStopGradient": {
+            "value": "/components/pcsm_control:stop_grad_q"
+        },
+        "EnQStopGradient": {
+            "value": "/components/pcsm_control:stop_grad_q_enable"
+        },
+        "QRiseGradient": {
+            "value": "/components/pcsm_control:rise_grad_q"
+        },
+        "EnQRiseGradient": {
+            "value": "/components/pcsm_control:rise_grad_q_enable"
+        },
+        "QDropGradient": {
+            "value": "/components/pcsm_control:drop_grad_q"
+        },
+        "EnQDropGradient": {
+            "value": "/components/pcsm_control:drop_grad_q_enable"
+        },
+        "ctrlword2": {
+            "value": "/components/pcsm_control:ctrlword2"
+        }
+    },
+    "/links/##PCS_ID##": {
+        "ActiveLinkSetpoint": {
+            "value": "/controls/pcs:ActivLinkSetpointPcs"
+        }
+    },
+    
+    "/vlinks/pcs": {
+        "##PCS_ID##_status":                 {"value": "/assets/pcs/##PCS_ID##:status",               "vlink":"/status/pcs:PCSSystemState"},
+        "##PCS_ID##_active_power":           {"value": "/assets/pcs/##PCS_ID##:active_power",         "vlink":"/components/pcsm_internal_visualization:active_power"},
+        "##PCS_ID##_reactive_power":         {"value": "/assets/pcs/##PCS_ID##:reactive_power",       "vlink":"/components/pcsm_internal_visualization:reactive_power"},
+        "##PCS_ID##_apparent_power":         {"value": "/assets/pcs/##PCS_ID##:apparent_power",       "vlink":"/components/pcsm_internal_visualization:apparent_power"},
+        "##PCS_ID##_active_power_command":   {"value": "/assets/pcs/##PCS_ID##:active_power_command", "vlink":"/components/pcsm_control:p_p_reference"},
+        "##PCS_ID##_reactive_power_command": {"value": "/assets/pcs/##PCS_ID##:reactive_power_command", "vlink":"/components/pcsm_control:q_q_reference"},
+        "##PCS_ID##_voltage_l1_l2":          {"value": "/assets/pcs/##PCS_ID##:voltage_l1_l2",        "vlink":"/components/pcsm_internal_visualization:grid_voltage_rs"},
+        "##PCS_ID##_voltage_l2_l3":          {"value": "/assets/pcs/##PCS_ID##:voltage_l2_l3",        "vlink":"/components/pcsm_internal_visualization:grid_voltage_st"},
+        "##PCS_ID##_voltage_l3_l1":          {"value": "/assets/pcs/##PCS_ID##:voltage_l3_l1",        "vlink":"/components/pcsm_internal_visualization:grid_voltage_tr"},
+        "##PCS_ID##_current_l1":             {"value": "/assets/pcs/##PCS_ID##:current_l1",           "vlink":"/components/pcsm_internal_visualization:grid_current_1"},
+        "##PCS_ID##_current_l2":             {"value": "/assets/pcs/##PCS_ID##:current_l2",           "vlink":"/components/pcsm_internal_visualization:grid_current_2"},
+        "##PCS_ID##_current_l3":             {"value": "/assets/pcs/##PCS_ID##:current_l3",           "vlink":"/components/pcsm_internal_visualization:grid_current_3"},
+        "##PCS_ID##_frequency":              {"value": "/assets/pcs/##PCS_ID##:frequency",            "vlink":"/components/pcsm_internal_visualization:grid_frequency"},
+        "##PCS_ID##_voltage_dc":             {"value": "/assets/pcs/##PCS_ID##:voltage_dc",           "vlink":"/components/pcsm_dc_inputs:vdc_bus_1"},
+
+        "##PCS_ID##_site_active_power":      {"value": "/site/ess_hs:active_power",                   "vlink":"/components/pcsm_internal_visualization:active_power"},
+        "##PCS_ID##_site_reactive_power":    {"value": "/site/ess_hs:reactive_power",                 "vlink":"/components/pcsm_internal_visualization:reactive_power"},
+        "##PCS_ID##_site_voltage_l1_l2":     {"value": "/site/ess_hs:voltage_l1_l2",                  "vlink":"/components/pcsm_internal_visualization:grid_voltage_rs"},
+        "##PCS_ID##_site_voltage_l2_l3":     {"value": "/site/ess_hs:voltage_l2_l3",                  "vlink":"/components/pcsm_internal_visualization:grid_voltage_st"},
+        "##PCS_ID##_site_voltage_l3_l1":     {"value": "/site/ess_hs:voltage_l3_l1",                  "vlink":"/components/pcsm_internal_visualization:grid_voltage_tr"},
+        "##PCS_ID##_site_current_l1":        {"value": "/site/ess_hs:current_l1",                     "vlink":"/components/pcsm_internal_visualization:grid_current_1"},
+        "##PCS_ID##_site_current_l2":        {"value": "/site/ess_hs::current_l2",                    "vlink":"/components/pcsm_internal_visualization:grid_current_2"},
+        "##PCS_ID##_site_current_l3":        {"value": "/site/ess_hs::current_l3",                    "vlink":"/components/pcsm_internal_visualization:grid_current_3"},
+        "##PCS_ID##_site_frequency":         {"value": "/site/ess_hs::frequency",                     "vlink":"/components/pcsm_internal_visualization:grid_frequency"},
+        "##PCS_ID##_site_voltage_dc":        {"value": "/site/ess_hs::voltage_dc",                    "vlink":"/components/pcsm_dc_inputs:vdc_bus_1"},
+        "pcs1_site_voltage_l1_l2":           { "value": "/site/ess_ls:pcs1_voltage_l1_l2",            "vlink": ""                                                       },
+        "pcs1_site_voltage_l2_l3":           { "value": "/site/ess_ls:pcs1_voltage_l2_l3",            "vlink": "/components/pcsm_grid_visualization:grid_voltage_st"    },
+        "pcs1_site_voltage_l3_l1":           { "value": "/site/ess_ls:pcs1_voltage_l3_l1",            "vlink": "/components/pcsm_grid_visualization:grid_voltage_tr"    },
+        "pcs1_site_current_l1":              { "value": "/site/ess_ls:pcs1_current_l1",               "vlink": "/components/pcsm_grid_visualization:grid_current_1"     },
+        "pcs1_site_current_l2":              { "value": "/site/ess_ls:pcs1_current_l2",               "vlink": "/components/pcsm_grid_visualization:grid_current_2"     },
+        "pcs1_site_current_l3":              { "value": "/site/ess_ls:pcs1_current_l3",               "vlink": "/components/pcsm_grid_visualization:grid_current_3"     },
+        "pcs1_site_active_power":            { "value": "/site/ess_ls:pcs1_active_power",             "vlink": "/components/pcsm_grid_visualization:active_power"       },
+        "pcs1_site_reactive_power":          { "value": "/site/ess_ls:pcs1_reactive_power",           "vlink": "/components/pcsm_grid_visualization:reactive_power"     },
+        "pcs1_site_voltage_dc":              { "value": "/site/ess_ls:pcs1_voltage_dc",               "vlink": "/components/pcsm_modules_information:dc_voltage"        },
+        "pcs1_site_current_dc":              { "value": "/site/ess_ls:pcs1_current_dc",               "vlink": "/components/pcsm_modules_information:dc_current"        },
+        "pcs1_site_active_power_dc":         { "value": "/site/ess_ls:pcs1_active_power_dc",          "vlink": ""                                                       },
+        "pcs1_site_max_charge_pwr_limit":    { "value": "/site/ess_ls:maximum_charging_power_limit_pcs1",    "vlink": ""                                                },
+        "pcs1_site_max_discharge_pwr_limit": { "value": "/site/ess_ls:maximum_discharging_power_limit_pcs1", "vlink": ""                                                },
+        "pcs2_site_voltage_l1_l2":           { "value": "/site/ess_ls:pcs2_voltage_l1_l2",            "vlink": ""                                                       },
+        "pcs2_site_voltage_l2_l3":           { "value": "/site/ess_ls:pcs2_voltage_l2_l3",            "vlink": ""                                                       },
+        "pcs2_site_voltage_l3_l1":           { "value": "/site/ess_ls:pcs2_voltage_l3_l1",            "vlink": ""                                                       },
+        "pcs2_site_current_l1":              { "value": "/site/ess_ls:pcs2_current_l1",               "vlink": ""                                                       },
+        "pcs2_site_current_l2":              { "value": "/site/ess_ls:pcs2_current_l2",               "vlink": ""                                                       },
+        "pcs2_site_current_l3":              { "value": "/site/ess_ls:pcs2_current_l3",               "vlink": ""                                                       },
+        "pcs2_site_active_power":            { "value": "/site/ess_ls:pcs2_active_power",             "vlink": ""                                                       },
+        "pcs2_site_reactive_power":          { "value": "/site/ess_ls:pcs2_reactive_power",           "vlink": ""                                                       },
+        "pcs2_site_voltage_dc":              { "value": "/site/ess_ls:pcs2_voltage_dc",               "vlink": ""                                                       },
+        "pcs2_site_current_dc":              { "value": "/site/ess_ls:pcs2_current_dc",               "vlink": ""                                                       },
+        "pcs2_site_active_power_dc":         { "value": "/site/ess_ls:pcs2_active_power_dc",          "vlink": ""                                                       },
+        "pcs2_site_max_charge_pwr_limit":    { "value": "/site/ess_ls:maximum_charging_power_limit_pcs2",    "vlink": ""                                                },
+        "pcs2_site_max_discharge_pwr_limit": { "value": "/site/ess_ls:maximum_discharging_power_limit_pcs2", "vlink": ""                                                }
+    },
+    "/assetlist":{
+        "/assets/pcs/##PCS_ID##":{
+            "value":false,
+            "mode":"/ui/full",
+            "name": "PCS Power Converter ##PCS_NUM##",
+            "new_options":[
+                {"aV":"status"},
+                {"xaV":"com_status"},
+                {"aV":"active_power"},
+                {"aV":"reactive_power"},
+                {"aV":"apparent_power"},
+                {"xaV":"power_factor"},
+
+                {"aV":"active_power_command"},
+                {"aV":"reactive_power_command"},
+                {"aV":"voltage_l1_l2"},
+                {"aV":"voltage_l2_l3"},
+                {"aV":"voltage_l3_l1"},
+                {"aV":"current_l1"},
+                {"aV":"current_l2"},
+                {"aV":"current_l3"},
+                {"aV":"frequency"},
+                {"xaV":"power_dc"},
+                {"aV":"voltage_dc"},
+                {"xaV":"current_dc"},
+                {"xaV":"num_running_modules"},
+
+                {"aV":"alarms"},
+                {"aV":"faults"},
+                {"aV":"soc"},
+                {"aV":"soh"},
+                {"aV":"max_cell_voltage"},
+                {"aV":"min_cell_voltage"},
+                {"aV":"maint_mode"},
+                {"aV":"start"},
+                {"aV":"enter_standby"},
+                {"aV":"exit_standby"},
+                {"aV":"shutdown"},
+                {"aV":"maint_active_power_setpoint"},
+                {"aV":"maint_reactive_power_setpoint"},
+                {"xaV":"active_power_gradient"},
+                {"xaV":"reactive_power_gradient"},
+                {"aV":"clear_faults"},
+                {"aV":"clear_alarms"}
+            ]
+        }
+    },
+
+    "/assets/pcs/##PCS_ID##": {
+        "name": "PCS Power Converter ##PCS_NUM##",
+        "status": {
+            "name": "Status",
+            "value": "Run",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "active_power": {
+            "name": "Active Power",
+            "value": 17,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power": {
+            "name": "Reactive Power",
+            "value": 17.200000762939453,
+            "unit": "VAR",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "apparent_power": {
+            "name": "Apparent Power",
+            "value": 1.2999999523162842,
+            "unit": "VA",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "active_power_command": {
+            "name": "Active Power Command",
+            "value": 3.0999999046325684,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power_command": {
+            "name": "Reactive Power Command",
+            "value": 0,
+            "unit": "VAR",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l1_l2": {
+            "name": "L1-L2 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l2_l3": {
+            "name": "L2-L3 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l3_l1": {
+            "name": "L3-L1 AC Voltage",
+            "value": 570.7999877929688,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l1": {
+            "name": "L1 AC Current",
+            "value": 40.79999923706055,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l2": {
+            "name": "L2 AC Current",
+            "value": 41.20000076293945,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l3": {
+            "name": "L3 AC Current",
+            "value": 40,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "frequency": {
+            "name": "Frequency",
+            "value": 59.970001220703125,
+            "unit": "Hz",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_dc": {
+            "name": "DC Voltage",
+            "value": 1069.800048828125,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/pcs/##PCS_ID##:start@enabled"}, 
+                        {"uri":	"/assets/pcs/##PCS_ID##:stop@enabled"}, 
+                        {"uri":	"/assets/pcs/##PCS_ID##:enter_standby@enabled"}, 
+                        {"uri":	"/assets/pcs/##PCS_ID##:exit_standby@enabled"},
+                        {"uri":	"/assets/pcs/##PCS_ID##:clear_faults@enabled"},
+                        {"uri":	"/assets/pcs/##PCS_ID##:clear_alarms@enabled"},
+                        {"uri":	"/assets/pcs/##PCS_ID##:maint_reactive_power_setpoint@enabled"},
+                        {"uri":	"/assets/pcs/##PCS_ID##:maint_active_power_setpoint@enabled"}
+                        ]
+                    }]
+            },
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "start": {
+            "name": "Start",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "stop": {
+            "name": "Stop",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "enter_standby": {
+            "name": "Enter Standby",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/pcs/##PCS_ID##:start@enabled"}, 
+                        {"uri":	"/assets/pcs/##PCS_ID##:stop@enabled"}, 
+                        {"uri":	"/assets/pcs/##PCS_ID##:exit_standby@enabled"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "exit_standby": {
+            "name": "Exit Standby",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/pcs/##PCS_ID##:start@enabled"}, 
+                        {"uri":	"/assets/pcs/##PCS_ID##:stop@enabled"}, 
+                        {"uri":	"/assets/pcs/##PCS_ID##:enter_standby@enabled"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "On",
+                    "return_value": true
+                },
+                {
+                    "name": "Off",
+                    "return_value": false
+                }
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": true
+                }
+            ]
+        },
+        "maint_active_power_setpoint": {
+            "name": "Active Power Setpoint",
+            "value": 0,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": []
+        },
+        "maint_reactive_power_setpoint": {
+            "name": "Reactive Power Setpoint",
+            "value": 0,
+            "unit": "VAR",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": []
+        }
+    }
+}

@@ -1,0 +1,211 @@
+Example of componments from brp10MW ess..
+
+
+"sourceFileName": "brp_10MW_uri_conformity_1.2.xlsx",
+        "sourceFileCreated": "2019-07-29T16:48:35.000Z",
+        "sourceFileLastModified": "2020-05-21T20:36:56.000Z",
+        "sourceFileCreatedBy": "Vinay Baliga",
+        "outputFileName": "brp_10MW_uri_conformity_client_1.2.json",
+    "system": {
+        "name": "Clou_ESS_Controller",
+        "protocol": "Modbus_TCP",
+        "version": "1.00.04",
+        "id": "clou_ess_controller",
+        "ip_address": "17.17.17.15",
+        "port": 502
+    },
+            "type": "Holding Registers",
+                    1000,, "life",                    "size": 2
+                    1002,, "control_command",
+                    1003,, "run_mode",
+                    1004,, "on_off_grid_mode_setting",
+                    1005,, "power_set_ac",                    "scale": 10,
+
+                    1006,, "active_set_ac",                    "scale": 10,
+                    1007 "active_power_rising_slope",          "scale": 10,
+                    1008,, "active_power_droop_slope",         "scale": 10,
+                    1009,, "reactive_power_rising_slope",      "scale": 10,
+                    1010,, "reactive_power_droop_slope",       "scale": 10,
+
+            "type": "Input Registers",
+            "starting_offset": 2000,
+                    2000,, "life_signal",              "scale": 10,                    "size": 2
+                    2002 "q_charge",                   "scale": 10,
+                    2003 "q_discharge",                "scale": 10,
+                    2004,, "w_charge",                    "scale": 10,
+                    2005,, "w_discharge",                    "scale": 10,
+                    2006,, "system_state",
+                    2007,, "com_status",
+                    2008,, "pcs_under_power",
+                    2009,, "pcs_over_power",
+
+                    2030,, "uinab_rms",                    "scale": 10,
+
+                    2031,, "uinbc_rms",                    "scale": 10,
+
+                    2032,, "uinca_rms",                    "scale": 10,
+
+                    2033,, "iin(a)_rms",   b,c                   "scale": 10,
+                    2036,, "w",                    "scale": 100,
+                    2037,, "p",                    "scale": 10,
+                    2038,, "q",                    "scale": 10,
+                    2039,, "pf",                    "scale": 1000,
+                    2040,, "ubtra_ever", "scale": 10,
+
+                    2041,, "ibtra_ever",   "scale": 10,
+                    2042,, "pbtra",                    "scale": 10,
+
+                    2043,, "pcs_mode",
+
+                    2044,, "pcs_state1",                    "size": 2
+                    2046,, "pcs_state2",
+                                     "bit_field": true,
+                                     "bit_strings": [ "Charging","Discharging","Non-operating mode"]
+                    2047,, "overall_fault",
+                                    "bit_field": true,
+                                    "bit_strings": ["Smoke Alarm","Door Open Protection"]
+                    2048,, "overall_alarm",
+                    "bit_field": true, "size": 2,
+                                        "bit_strings": [ "Temperature & Humidity Board Communication Error", "Switch Board Communication Error", "Tributary Board Communication Error"]
+                    "2050,, "overall_maximum_charging_power_limit",                    "scale": 10,
+                    2051,, "overall_maximum_discharging_power_limit",                    "scale": 10,
+                    2070,,  "unit1_uinab_rms",                    "scale": 10,
+                    2071,, "unit1_uinbc_rms",                    "scale": 10,
+                    2072, "unit1_uinca_rms",                    "scale": 10,
+
+                    2073,, "unit1_iina_rms",                    "scale": 10,
+                    2074,, "unit1_iinb_rms",                    "scale": 10,
+                    2075,, "unit1_iinc_rms",                    "scale": 10,
+
+                    2076,, "unit1_p",                    "scale": 10,                    "size": 2
+                    2078,,"unit1_q","scale": 10,
+
+                    "size": 2
+                    2080,,"unit(1)_ubtra_ever",  ??? 2 3  + 20
+                                        "scale": 10,
+                    2081,,"unit1_ibtra_ever",                    "scale": 10,
+                    2082,, "unit1_pbtra",                   "scale": 10,
+                    2083,, "unit1_alarm_state1",
+                    2084,, "unit1_alarm_state2",
+                    2085,,"unit1_fault_state1",                    "size": 2
+                    2087,, "unit1_fault_state2",                    "size": 2
+                    2089,, "maximum_charging_power_limit_unit1",                   "scale": 10,
+                    2090,, "maximum_discharging_power", **CHECK  "scale": 10,
+                    2100,, "unit2_uinab_rms",                    "scale": 10,
+                    2101,, "unit2_uinbc_rms",                    "scale": 10,
+                    2102,, "unit2_uinca_rms",                    "scale": 10,
+                    2103,, "unit2_iina_rms",                    "scale": 10,
+                    2104,, "unit2_iinb_rms",                    "scale": 10,
+                    2105,, "unit2_iinc_rms",                    "scale": 10,
+                    2106,, "unit2_p","scale": 10,"size": 2
+                    2108,, "unit2_q", "scale": 10,     ,                    "size": 2
+                    2110,, "unit2_ubtra_ever",                    "scale": 10,
+                    2111,, "unit2_ibtra_ever",                    "scale": 10,
+                    2112,, "unit2_pbtra",                    "scale": 10,
+                    2113,, "unit2_alarm_state1",
+                    2114,, "unit2_alarm_state2",
+                    2115,, "unit2_fault_state1",                    "size": 2
+                    2117,,"unit2_fault_state2",                    "size": 2
+                    2119,, "maximum_charging_power_limit_unit2",                    "scale": 10,
+                    2120,, "maximum_discharging_power_limit_unit2",                    "scale": 10,
+            "type": "Input Registers",
+            "starting_offset": 2130,
+
+                    2130,, "bms_maximum_cell_voltage", "scale": 10000,
+                    2131,, "stackindex_of_the_bms_maximum_cell_voltage",
+                    2132,,"cluster_index_of_the_bms_maximum_cell_voltage",
+                    2133,, "bms_minimum_cell_voltage","scale": 10000,
+                    2134,, "stackindex_of_the_bms_minimum_cell_voltage",
+                    2135,, "cluster_index_of_the_bms_minimum_cell_voltage",
+                    2136,, "bms_maximum_cell_temperature", "scale": 100,
+                    2137,, "stackindex_of_the_bms_maximum_cell_temperature",
+                    2138,, "cluster_index_of_the_bms_maximum_cell_temperature",
+                    2139,,"bms_minimum_cell_temperature",  "scale": 100,
+                    2140,, "stackindex_of_the_bms_minimum_cell_temperature",
+                    2141,, "cluster_index_of_the_bms_minimum_cell_temperature",
+                    2142,, "bms_bus_voltage",       "scale": 10,
+                    2143,, "bms_bus_current",                   "scale": 10,
+                    2144,, "bms_soc", "scale": 10,
+                    2145,, "bms_power", "scale": 10,
+                    2146,, "operation_status",  ** CHECK
+                    2149,, "bms_current_rechargeable_capacity",  "scale": 1000,"size": 2
+                    2151,, "bms_current_dischargeable_capacity", "scale": 1000, "size": 2
+                    2153,, "circuit_breaker_control_word", "size": 2
+                    2155,, "main_circuit_breaker_status", 
+                    2156, "control_circuit_breaker",
+                    2157,, "bms_maximum_charging_power_limit", "scale": 100,
+                    2158,, "bms_maximum_discharging_power_limit", "scale": 100,
+                    2159,, "power_limit_state", "size": 4
+                    2163,, "bma_alarm_state",  "size": 4
+                    2167,, "bma_fault_state",  "size": 4 
+ 
+ 
+ grep \"id\"  ../../ess_controller/doc/examples/clou/brp_10mw_client.json  | grep air_conditioner_1_
+
+ start_3003, repeat_16,
+                   "air_conditioner_${COND}_current_mode",scale1,1,${REG}+=1,1
+                    "air_conditioner_${COND}_temperature",scale100,${REG}+1,1
+                    "air_conditioner_${COND}_humidity",scale100,+1,${REG}+=1,1
+
+
+ grep \"id\"  ../../ess_controller/doc/examples/clou/brp_10mw_client.json  | grep cluster_no_1_
+                   2200, repeat_20, "cluster_no_${CLUS}_battery_cluster_voltage",          scale_10,    ${REG}+1,0
+                   2220, repeat_20, "cluster_no_${CLUS}_battery_cluster_current",          scale_10,    ${REG}+1,0
+                   2240, repeat_20, "cluster_no_${CLUS}_max_cell_voltage",                 scale_10000, ${REG}+2,0
+                   2241, repeat_20, "cluster_no_${CLUS}_max_cell_voltage_pack_num",        scale_1,     ${REG}+2,0
+                   2280, repeat_20, "cluster_no_${CLUS}_second_max_cell_voltage",          scale_10000, ${REG}+2,0
+                   2281, repeat_20, "cluster_no_${CLUS}_second_max_cell_voltage_pack_num", scale_1,     ${REG}+2,0
+                   2320, repeat_20, "cluster_no_${CLUS}_min_cell_voltage",                 scale_10000, ${REG}+2,0
+                   2321, repeat_20, "cluster_no_${CLUS}_min_cell_voltage_pack_num",        scale_1,     ${REG}+2,0
+                   2360, repeat_20, "cluster_no_${CLUS}_second_min_cell_voltage",          scale_10000, ${REG}+2,0
+                   2361, repeat_20, "cluster_no_${CLUS}_second_min_cell_voltage_pack_num", scale_1,     ${REG}+2,0
+                   2400, repeat_20,"cluster_no_${CLUS}_max_cell_temperature",              scale_100,   ${REG}+2,0
+                   2401, repeat_20, "cluster_no_${CLUS}_max_cell_temperature_pack_num",    scale_1,     ${REG}+2,0
+                   2440, repeat_20, "cluster_no_${CLUS}_second_max_cell_temperature",          scale_100,   ${REG}+2, 0
+                   2441, repeat_20, "cluster_no_${CLUS}_second_max_cell_temperature_pack_num", scale_1,     ${REG}+2,0
+                   2480, repeat_20, "cluster_no_${CLUS}_min_cell_temperature",                 scale_100,   ${REG}+2,0
+                   2481, repeat_20, "cluster_no_${CLUS}_min_cell_temperature_pack_num",        scale_1,     ${REG}+2,0
+                   2520, repeat_20, "cluster_no_${CLUS}_second_min_cell_temperature",          scale_100,   ${REG}+2,0
+                   2521, repeat_20, "cluster_no_${CLUS}_second_min_cell_temperature_pack_num", scale_1,     ${REG}+2,0
+                   2560, repeat_20, "cluster_no_${CLUS}_battery_cluster_average_voltage",      scale_1000,  ${REG}+1,0
+
+
+            
+                    2800,, "stack_overall_average_cell_temperature",                           "scale": 100,
+                    2801,, "average_ambient_temperature_inside_the_container",                  "scale": 100,
+                    2802,, "average_ambient_humidity_inside_the_container",                     "scale": 100,
+                    2803,,  "maximum_cell_temperature",                                         "scale": 100,
+                    2804,, "stack_index_of_maximum_cell_temperature",
+                    2805,, "cluster_index_of_maximum_cell_temperature",
+                    2806,, "pack_index_of_maximum_cell_temperature",
+                    2807,,  "minimum_cell_temperature",                                          "scale": 100,
+                    2808,,  "stack_index_of_minimum_cell_temperature",
+                    2809,,  "cluster_index_of_minimum_cell_temperature",
+                    2810,, "pack_index_of_minimum_cell_temperature",
+                    2811,, "bams_online_status",
+                    2812,, "air_conditioner_online_status"
+                    2813,, "temperature_and_humidity_sensor_online_status",
+                    2814,,"meter_online_status",
+                    2815,,"gas_sensor_online_status",
+                    2816, "number_of_online_bams",
+                    2817,, "number_of_online_air_conditioners",
+                    2818,,"number_of_online_temperature_and_humidity",
+                    2819,,"number_of_online_meters",
+                    2820,,"number_of_online_gas_sensors",
+                    2821,, "environmental_alarm_status_1",
+                    2822,, "Environmental alarm status",                    "size": 2   **SUSPECT
+                    2823,, "didevice_alarm_status_2",                       "size": 2
+                    2825 "environmental_fault_status_1",                    "size": 2
+                    2827,, "didevice_fault_status_2",                       "size": 2
+            "type": "Input Registers",
+                    2900,, "carbon_monoxide_concentration",   "scale": 100, "size": 2
+                    2902,, "hydrogen_concentration",          "scale": 100, "size": 2
+                    2904 "oxygen_concentration",               "scale": 100, "size": 2
+                    2906,,"carbon_monoxide_alarm_status",
+                    2907,, "hydrogen_alarm_status",
+                    2908,, "oxygen_alarm_status",
+                    2930,repeat_3, "temperature_reading_of_temperature_and_humidty_sensor_no_${NUM}", +1   "scale": 100,
+                    2933,repeat_3,  "humidity_reading_of_temperature_and_humidty_sensor_no_${NUM}"  , +1      "scale": 100,
+
+
+

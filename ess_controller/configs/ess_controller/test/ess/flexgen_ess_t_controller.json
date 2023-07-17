@@ -1,0 +1,61 @@
+{
+    "/doc/flexgen_ess_t_controller": {
+        "note1": "This is the ess controller config file",
+        "note1a": "/config/ess                - defines configurable variables used in the ESS Controller source code",
+        "note1b": "/master/ess_1_hs             - defines the interface for retrieving data from the ESS modbus server and converting the data into a useable format (ex.: scaling, remap, etc.)",
+        "note1c": "/links/ess                 - defines mapping of external interface components to internal variables",
+        "note1d": "/schedule/wake_monitor/ess - periodically runs a function for a particular variable (default to 100ms; wake_monitor to be removed)",
+        "note2": "To retrieve data from the ESS modbus server, set up the modbus server (flexgen_ess_modbus_server.json)",
+        "note2a": "The ESS modbus client (flexgen_ess_modbus_client.json) can then connect to the ESS modbus server to allow data interchange between the ESS Controller and the Site Controller or other external management systems"
+    },
+
+    "/system/commands": {
+        "runESSOpts": {
+            "value": false,
+            "enabled": false,
+            "targav": "/system/commands:run",
+            "options": [
+                {"uri":"/sched/ess_1:every100ms_ess_1", "aname":"ess_1", "value":0, "every":0.1},
+                {"uri":"/sched/ess_2:every100ms_ess_2", "aname":"ess_2", "value":0, "every":0.1}
+            ],
+            "actions": {
+                "onSet":[{"func":[{"amap": "ess", "func":"SchedItemOpts"}]}]
+            }
+        }
+    },
+
+    "/sched/ess_1": {
+        "every100ms_ess_1":{
+            "value":1,
+            "note": "Run power command handler",
+            "enable": "/config/ess_1:enable",
+            "ess":"ess_1",
+            "bms":"bms_1",
+            "pcs":"pcs_1",
+            "actions":{
+                "onSet":[{
+                    "func":[
+                        {"amap": "ess_1", "func":"HandlePowerCmd"}
+                    ]
+                }]
+            }
+        }
+    },
+    "/sched/ess_2": {
+        "every100ms_ess_2":{
+            "value":1,
+            "note": "Run power command handler",
+            "enable": "/config/ess_2:enable",
+            "ess":"ess_2",
+            "bms":"bms_2",
+            "pcs":"pcs_2",
+            "actions":{
+                "onSet":[{
+                    "func":[
+                        {"amap": "ess_2", "func":"HandlePowerCmd"}
+                    ]
+                }]
+            }
+        }
+    }
+}

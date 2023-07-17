@@ -1,31 +1,44 @@
+/* eslint-disable */
 // TODO: fix lint
-/* eslint-disable max-lines */
 import {
-  Box, IconButton, MuiButton, PageLoadingIndicator, Tab, Tabs, Tooltip, Typography,
+  Box,
+  IconButton,
+  MuiButton,
+  PageLoadingIndicator,
+  Tab,
+  Tabs,
+  Tooltip,
+  Typography,
 } from '@flexgen/storybook';
 import isEqual from 'lodash.isequal';
-import {
-  createContext, useCallback, useContext, useEffect, useMemo, useState,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Asset } from 'shared/types/dtos/assets.dto';
+import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { CANCEL, DUPLICATE, SAVE } from 'src/pages/UIConfig/TabContent/helpers/constants';
 import {
-  BoxSX, ButtonsContainer, Item, ListContainer, MainBoxSX, MuiButtonSX, TabContainer, Toolbar,
+  BoxSX,
+  ButtonsContainer,
+  Item,
+  ListContainer,
+  MainBoxSX,
+  MuiButtonSX,
+  TabContainer,
+  Toolbar,
 } from 'src/pages/UIConfig/TabContent/styles';
-import { axiosWebUIInstance } from 'src/services/axios';
 import TabContent from './TabContent';
-import {
-  tabOptions, ADD_NEW_ASSET, DELETE_ASSET, newAsset, ASSETS_URL,
-} from './helpers';
+import { tabOptions, ADD_NEW_ASSET, DELETE_ASSET, newAsset, ASSETS_URL } from './helpers';
+import { Layout } from 'shared/types/dtos/layouts.dto';
+import { NotifContext, NotifContextType } from 'src/contexts/NotifContext';
+import { useAppContext } from 'src/App/App';
 
 interface IAssetsContext {
-  assets: Asset[],
-  setAssets: React.Dispatch<React.SetStateAction<Asset[] | []>>,
-  selectedAsset: Asset | null,
-  setSelectedAsset: React.Dispatch<React.SetStateAction<Asset | null>>,
-  handleAddAsset: () => void,
-  selectedAssetIndex: number | null,
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+  assets: Asset[];
+  setAssets: React.Dispatch<React.SetStateAction<Asset[] | []>>;
+  selectedAsset: Asset | null;
+  setSelectedAsset: React.Dispatch<React.SetStateAction<Asset | null>>;
+  handleAddAsset: () => void;
+  selectedAssetIndex: number | null;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AssetsContext = createContext<IAssetsContext>({
@@ -33,7 +46,7 @@ const AssetsContext = createContext<IAssetsContext>({
   setAssets: () => [],
   selectedAsset: null,
   setSelectedAsset: () => null,
-  handleAddAsset: () => { },
+  handleAddAsset: () => {},
   selectedAssetIndex: null,
   setIsLoading: () => false,
 });
@@ -50,38 +63,68 @@ const Assets = () => {
   const [selectedAssetIndex, setSelectedAssetIndex] = useState<number | null>(null);
   const [selectedAsset, setSelectedAsset] = useState<null | Asset>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const notifCtx = useContext<NotifContextType | null>(NotifContext);
 
-  const handleAddAsset = useCallback(() => {
-    setAssets((prevAssets) => [
-      newAsset,
-      ...prevAssets,
-    ]);
-    setSelectedTab('info');
-    setSelectedAsset(newAsset);
-    setSelectedAssetIndex(0);
-  }, []);
+  const { layouts } = useAppContext();
+  const axiosInstance = useAxiosWebUIInstance();
 
-  const contextValue = useMemo(() => ({
-    assets,
-    setAssets,
-    selectedAsset,
-    setSelectedAsset,
-    handleAddAsset,
-    selectedAssetIndex,
-    setIsLoading,
-  }), [assets,
-    setAssets,
-    selectedAsset,
-    setSelectedAsset,
-    handleAddAsset,
-    selectedAssetIndex,
-    setIsLoading]);
+  const handleAddAsset = useCallback(
+    async (asset = newAsset) => {
+      try {
+        setIsLoading(true);
+        const newAssets = [asset, ...assets];
+        setAssets(newAssets);
+        setSelectedTab('info');
+        setSelectedAsset(asset);
+        setSelectedAssetIndex(0);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [assets, axiosInstance],
+  );
 
-  const fetchData = async () => {
+  const contextValue = useMemo(
+    () => ({
+      assets,
+      setAssets,
+      selectedAsset,
+      setSelectedAsset,
+      handleAddAsset,
+      selectedAssetIndex,
+      setIsLoading,
+    }),
+    [
+      assets,
+      setAssets,
+      selectedAsset,
+      setSelectedAsset,
+      handleAddAsset,
+      selectedAssetIndex,
+      setIsLoading,
+    ],
+  );
+
+  const parseData = useCallback(
+    (assets: Asset[], layouts: Layout[]) =>
+      assets.map((asset) => {
+        const matchLayout = layouts.find((layout) => layout.info.key === asset.info.assetKey);
+        return {
+          ...asset,
+          info: {
+            ...asset.info,
+            name: matchLayout?.info.name || asset.info.name,
+          },
+        };
+      }),
+    [],
+  );
+
+  const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await axiosWebUIInstance.get(ASSETS_URL);
-      const assetsData: Asset[] = res.data.data;
+      const res = await axiosInstance.get(ASSETS_URL);
+      const assetsData: Asset[] = parseData(res.data.data || [], layouts);
       setAssets(assetsData);
       if (assetsData.length) {
         setSelectedTab('info');
@@ -91,7 +134,7 @@ const Assets = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [axiosInstance, parseData]);
 
   const handleAssetClick = (asset: Asset, index: number) => {
     setSelectedAsset(asset);
@@ -107,19 +150,10 @@ const Assets = () => {
         1,
         selectedAsset || newAsset,
       );
-      data = data.map((item) => ({
-        ...item,
-        info: {
-          ...item.info,
-          name: item.info.name || 'New Item',
-        },
-      }));
-      const res = await axiosWebUIInstance.post(
-        ASSETS_URL,
-        { data },
-      );
-      const updatedAssets = res.data.data;
+      const res = await axiosInstance.post(ASSETS_URL, { data });
+      const updatedAssets = parseData(res.data.data, layouts);
       setAssets(updatedAssets);
+      notifCtx?.notif('success', 'Data successfully saved');
     } finally {
       setIsLoading(false);
     }
@@ -129,11 +163,8 @@ const Assets = () => {
     try {
       setIsLoading(true);
       const data = [...assets].filter((_, index) => index !== selectedAssetIndex);
-      const res = await axiosWebUIInstance.post(
-        ASSETS_URL,
-        { data },
-      );
-      const updatedAssets = res.data.data;
+      const res = await axiosInstance.post(ASSETS_URL, { data });
+      const updatedAssets = parseData(res.data.data, layouts);
       setAssets(updatedAssets);
       if (updatedAssets.length) {
         setSelectedAsset(updatedAssets[0]);
@@ -143,6 +174,7 @@ const Assets = () => {
         setSelectedAsset(null);
         setSelectedAssetIndex(null);
       }
+      notifCtx?.notif('success', 'Data successfully saved');
     } finally {
       setIsLoading(false);
     }
@@ -153,10 +185,7 @@ const Assets = () => {
   };
 
   const handleCopyClick = () => {
-    setAssets((prevAssets) => [assets[selectedAssetIndex || 0], ...prevAssets]);
-    setSelectedAsset(assets[selectedAssetIndex || 0]);
-    setSelectedAssetIndex(0);
-    setSelectedTab('info');
+    handleAddAsset(assets[selectedAssetIndex || 0]);
   };
 
   const disabledCancel = useMemo(
@@ -164,36 +193,57 @@ const Assets = () => {
     [assets, selectedAsset, selectedAssetIndex],
   );
 
-  const disabledSave = useMemo(() => (selectedAsset?.info.name || '').trim() === '', [selectedAsset]);
+  const disabledSave = useMemo(
+    () =>
+      !!assets.length &&
+      (!(selectedAsset?.info.name || '').trim() ||
+        !(selectedAsset?.info.sourceURI || '').trim() ||
+        !(selectedAsset?.info.baseURI || '').trim()),
+    [assets, selectedAsset],
+  );
+
+  const disabledAdd = useMemo(
+    () =>
+      !!assets.length &&
+      assets.some(
+        (asset) =>
+          !(asset?.info.name || '').trim() ||
+          !(asset?.info.sourceURI || '').trim() ||
+          !(asset?.info.baseURI || '').trim(),
+      ),
+    [assets],
+  );
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   return (
     <AssetsContext.Provider value={contextValue}>
       <TabContainer>
         <Box sx={MainBoxSX}>
-          <PageLoadingIndicator isLoading={isLoading} type="primary" />
-          <Typography text="Assets" variant="bodyLBold" />
+          <PageLoadingIndicator isLoading={isLoading} type='primary' />
+          <Typography text='Assets' variant='bodyLBold' />
           <ListContainer>
             {assets.map((asset, index) => (
               // TODO: fix lint
               // eslint-disable-next-line react/no-array-index-key
               <Item key={index}>
                 <MuiButton
-                  color="inherit"
-                  label={asset.info.name || 'New Item'}
+                  color='inherit'
+                  label={asset.info.name}
                   onClick={() => handleAssetClick(asset, index)}
                   sx={MuiButtonSX}
                   variant={index === selectedAssetIndex ? 'contained' : 'outlined'}
+                  disabled={disabledAdd}
                 />
                 {index === selectedAssetIndex && (
                   <Tooltip title={DUPLICATE}>
                     <IconButton
-                      color="action"
-                      icon="ContentCopy"
+                      color='action'
+                      icon='ContentCopy'
                       onClick={handleCopyClick}
+                      disabled={disabledAdd}
                     />
                   </Tooltip>
                 )}
@@ -202,48 +252,44 @@ const Assets = () => {
             <MuiButton
               fullWidth
               label={ADD_NEW_ASSET}
-              onClick={handleAddAsset}
-              size="medium"
-              startIcon="Add"
-              variant="outlined"
+              onClick={() => handleAddAsset()}
+              size='medium'
+              startIcon='Add'
+              variant='outlined'
+              disabled={disabledAdd}
             />
           </ListContainer>
         </Box>
         <Box sx={BoxSX}>
           {selectedAsset && (
             <Toolbar>
-              <Typography text={selectedAsset.info?.name || ''} variant="bodyMBold" />
+              <Typography text={selectedAsset.info?.name || ''} variant='bodyMBold' />
               <ButtonsContainer>
                 <MuiButton
-                  color="inherit"
+                  color='inherit'
                   disabled={disabledCancel}
                   label={CANCEL}
                   onClick={handleCancelClick}
-                  variant="text"
+                  variant='text'
                 />
                 <MuiButton
-                  color="error"
+                  color='error'
                   label={DELETE_ASSET}
                   onClick={handleDeleteClick}
-                  variant="outlined"
+                  variant='outlined'
                 />
                 <MuiButton
                   disabled={disabledSave}
                   label={SAVE}
                   onClick={handleSaveClick}
-                  variant="contained"
+                  variant='contained'
                 />
               </ButtonsContainer>
             </Toolbar>
           )}
           <Tabs onChange={(_, tab) => setSelectedTab(tab as string)} value={selectedTab}>
             {tabOptions.map(({ label, value }) => (
-              <Tab
-                disabled={!assets.length}
-                key={value}
-                label={label}
-                value={value}
-              />
+              <Tab disabled={!assets.length} key={value} label={label} value={value} />
             ))}
           </Tabs>
           <TabContent selectedTab={selectedTab} />

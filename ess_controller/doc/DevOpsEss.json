@@ -1,0 +1,82 @@
+{
+    "/notes/ess": {
+        "note":" These are owned but the ess manager"
+    },
+    "/assets/ess/summary": { 
+        "Run":{
+            "value":false,
+            "actions": {
+                "onSet": [
+                    {"remap":[
+                        {"inValue":true,"uri":"/system/pcs:status","outValue":"Run"}
+                        ]
+                    }]
+            }
+        },
+        "Standby":{
+            "value":false,
+            "actions":{
+                "onSet":[
+                    {"remap":[
+                        {"inValue":true,"uri":"/system/pcs:status","outValue":"Standby"}
+                        ]
+                    }]
+            }
+        },
+        "Stop":{
+            "value":false,
+            "actions":
+                {"onSet":[
+                    {"remap":[
+                        {"inValue":true,"uri":"/system/pcs:status","outValue":"Stop"}
+                        ]
+                    }]
+            }
+        }
+    },
+    "/components/pcs_info":{
+        "power_command_feedback":1.234,
+        "power_command_setpoint":1.134
+    },
+    "/components/bms_current_status":{
+        "num_racks_in_service":12,
+        "number_of_racks":15,
+        "max_charge_current":375
+    },
+
+    "/links/pcs":{
+        "seconds": {
+        "value": "/components/pcsm_general:seconds",
+        "link": "/status/pcs:seconds"
+        }
+    },
+    "/vlinks/pcs":{
+        "voltage": {
+        "value": "/assets/pcs/summary:Volts",
+        "vlink": "/status/pcs:voltage"
+        }
+    },
+    "/system/commands": {
+        "Run":{
+            "value":"test",
+            "help": "run a schedule var",
+            "ifChanged":false, "enabled":true, 
+            "actions":{"onSet":[{"func":[{"amap":"ess","func":"RunSched"}]}]}
+        },
+        "Stop":{
+            "value":"test",
+            "help": "stop a schedule var",
+            "ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"amap":"ess","func":"StopSched"}]}]}
+        }                             
+    },
+    "/control/pubs": {
+        "pubBmsHs": {
+            "value": 0,
+            "table":"/site/bms_hs",
+            "enabled":true, 
+            "actions":{
+                    "onSet":[{"func":[{"amap":"ess","func":"RunPub"}]}]
+            }
+        }
+    }
+}

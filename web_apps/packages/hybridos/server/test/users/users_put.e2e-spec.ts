@@ -9,6 +9,12 @@ import { UserNotFoundException } from '../../src/users/exceptions/exceptions'
 import { IUsersService, USERS_SERVICE } from '../../src/users/interfaces/users.service.interface'
 import { UsersController } from '../../src/users/users.controller'
 import { createTestApiApplication } from './../../test/testUtils'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
+import { SITE_ADMINS_SERVICE } from 'src/siteAdmins/interfaces/siteAdmin.service.interface'
+import { useContainer } from 'class-validator'
+import { ValidPasswordConstraint } from 'src/users/validators/IsValidPassword'
+import * as testUtils from '../testUtils'
 
 describe('UsersController PUT (e2e)', () => {
     let app: INestApplication
@@ -28,10 +34,24 @@ describe('UsersController PUT (e2e)', () => {
                         update: jest.fn(),
                     },
                 },
+                ValidPasswordConstraint,
+                {
+                    provide: SITE_ADMINS_SERVICE,
+                    useValue: {
+                        find: jest.fn().mockReturnValue(testUtils.site(false, false, false))
+                    }
+                },
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
+                    },
+                },
             ],
-        }).compile()
+        }).overrideGuard(RolesGuard).useValue({ canActivate: () => true }).compile();
 
         app = createTestApiApplication(moduleFixture)
+        useContainer(moduleFixture, { fallbackOnErrors: true })
         app.useGlobalPipes(new ValidationPipe())
         app.useGlobalFilters(new HttpExceptionFilter())
         usersService = moduleFixture.get(USERS_SERVICE)

@@ -1,4 +1,5 @@
-/* this is the outline of a master dnp3 controller
+/* 
+* this is the outline of a master  dnp3 controller
 * the system can communicate with a number outstations
 * The confg file will determine the address info on each outstation.
 * each outsation will have a number of data points.
@@ -6,7 +7,7 @@
 * iniitally a copy of the modbus stuff
 * note that modbus_client only responds to gets and sets on the base_url
 * it pubs the result of the query_registers
-*base_uri is set by /components + sys_cfg.name
+* base_uri is set by /components + sys_cfg.name
 */
 /*
  * dnp3_client.cpp
@@ -37,13 +38,10 @@
 #include <fims/libfims.h>
 
 #include <iostream>
-//#include <asiopal/UTCTimeSource.h> 
 #include <opendnp3/logging/LogLevels.h> 
 #include <opendnp3/ConsoleLogger.h> 
 
-//#include <asiodnp3/DefaultMasterApplication.h> 
 #include <opendnp3/channel/PrintingChannelListener.h> 
-//#include <asiodnp3/PrintingCommandCallback.h> 
 #include <opendnp3/channel/ChannelRetry.h>
 #include <opendnp3/master/PrintingSOEHandler.h>
 
@@ -59,13 +57,7 @@
 #include "dnp3_utils.h"
 
 using namespace std; 
-//using namespace openpal; 
-//using namespace asiopal; 
-//using namespace asiodnp3; 
 using namespace opendnp3; 
-// #define MICROSECOND_TO_MILLISECOND 1000
-// #define NANOSECOND_TO_MILLISECOND  1000000
-// #define MAX_FIMS_CONNECT 5
 
 volatile bool running = true;
 int num_configs = 0;
@@ -109,7 +101,14 @@ public:
 void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<TimeAndInterval>>& values) {
     //static sysCfg *static_sysdb = sysdb;
     sysCfg * sys = sysdb; 
-    //static int items = 0;
+    auto ts  = std::chrono::system_clock::now();
+    std::chrono::duration<double> diff = ts - sys->ts_base;
+    sys->setLock.lock();
+    sys->tNow = diff.count();
+    sys->tLastMsg = sys->tNow;
+    sys->setLock.unlock();
+    UTCTimestamp Now();
+
     if(sys->debug)
         FPS_ERROR_PRINT(">> ******************************TimeAndInterval:  enum [%04x] \n", (int)info.gv);
 
@@ -120,16 +119,17 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<B
     sysCfg * sys =  sysdb; 
     auto ts  = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = ts - sys->ts_base;
+    sys->setLock.lock();
     sys->tNow = diff.count();
+    sys->tLastMsg = sys->tNow;
+    sys->setLock.unlock();
     UTCTimestamp Now();
-    //auto now = Now();
 
     static int items = 0;
     if(sysdb->debug)
         FPS_ERROR_PRINT(">> ******************************Bin:  enum [%04x] ->[%s] fmt [%d] events [%s]  tnow [%2.3f]\n"
                     , (int)info.gv, variation_encode((int)info.gv), sys->fmt,sys->events?"true":"false", sys->tNow);
     auto print = [info, sys](const Indexed<Binary>& pair) {
-        //DbVar* db = static_sysdb->getDbVarId(Type_Binary, pair.index);
         auto now = Now();
 
         DbVar* db = sys->getDbVarId(Type_Binary, pair.index);
@@ -153,9 +153,6 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<B
             if(etype != 0x103)
             {
                 db->flags = flags;
-                //inline static Binary From(uint8_t flags, uint16_t time){return From(flags, DNPTime(time));}
-                //auto q = pair.value.flags; 129 = STATE | ONLINE
-                // ONLINE(0x1) RESTART(0x2) COMM_LOST(0x4) REMOTE_FORCED(0x8) LOCAL_FORCED(0x10) CHATTER_FILTER(0x20) RESERVED(0x40),  STATE (0x80)
                 BinaryQuality q = BinaryQuality::RESTART;
                 try 
                 {
@@ -168,13 +165,10 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<B
                             if(add_comma)
                                 db->sflags += ",";
                             q = BinaryQualitySpec::from_type(pair.value.flags.value&(1<<ix));
-                            //q = AnalogQuality::ONLINE;
                             db->sflags += BinaryQualitySpec::to_human_string(q);
                             add_comma = true;
                         }
                     }
-                    //q =BinaryQualitySpec::from_type(pair.value.flags.value & 0x7f);
-                    //db->sflags = BinaryQualitySpec::to_human_string(q);
                 }
                 catch (...)
                 {
@@ -220,11 +214,17 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<B
                 // 0203 etc this is an event with flags and time
                 // 0201 etc this is an event with flags and no time
                 // we send pub immediately on events
-                ptype = sys->fmt;  // = 0 naked 1 = clothed
+                ptype = sys->fmt;  // naked = 0  clothed =1 full = 2
                 int reject = 0;
+                auto fmt = sys->fmt;
+                if (db->format)
+                {
+                    fmt = db->fmt;
+                }
+
                 if((etype != 0x0203) && (etype != 0x0201))
                 {
-                    //ptype = sys->fmt;  // = 0 naked 1 = clothed
+                    //ptype = sys->fmt;  // = 0 naked 1 = clothed 2 = full
                     if (db->format)
                     {
                         ptype = db->fmt;
@@ -240,11 +240,11 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<B
                 if(reject>=0)
                 {
                     db->last_seen = sys->tNow;
+                    sys->setDbVar(db->uri, vname, val);
                     if(sys->event_pub)
                     {
-                        sys->addPubVar(db, val, ptype);  //publishwithtimestamp .. needs to be sent immediately
+                        sys->addPubVar(db, val, ptype, fmt);  //publishwithtimestamp .. needs to be sent immediately
                     }
-                    sys->setDbVar(db->uri, vname, val);
                     items++;
                 }
             }
@@ -264,17 +264,19 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<B
     if(sysdb->debug)
         FPS_ERROR_PRINT("<< ******************************Bin:\n" );
 }
+
 void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<Analog>>& values) {
-    // no more magic static
     sysCfg *sys = sysdb;
 
-    //'std::chrono::_V2::system_clock::time_point'
     auto ts  = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = ts - sys->ts_base;
+    sys->setLock.lock();
     sys->tNow = diff.count();
-
+    sys->tLastMsg = sys->tNow;
+    sys->setLock.unlock();
+    
     UTCTimestamp Now();
-
+ 
     static int items = 0;
     if(sysdb->debug)
         FPS_ERROR_PRINT(">> ******************************An:  enum [%04x] ->[%s]  fmt [%d] events [%s]\n"
@@ -283,8 +285,6 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<A
                 , sys->fmt
                 , sys->events?"true":"false"
                 );
-    //if(sys->debug)
-    //    FPS_ERROR_PRINT(">> ******************************An:\n");
     auto print = [info, sys](const Indexed<Analog>& pair) {
 
         auto now = Now();
@@ -309,11 +309,6 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<A
                 FPS_ERROR_PRINT("***************************** analog event  for idx [%d] name [%s] etype 0x%04x\n"
                                     , pair.index, db->name.c_str(), etype);
             }
-
-
-            //
-            // pair.value.flags.value
-
                 // Group30Var1  Analog Input 32 bit with flags
                 // Group30Var2  Analog Input 16 bit with flags
                 // Group30Var3  Analog Input 32 bit without flags
@@ -349,8 +344,6 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<A
                     FPS_ERROR_PRINT ("****************** ERROR Bad Quality Flag [%d] forcing ONLINE\n", flags);
                     q = AnalogQuality::ONLINE;
                 }
-                //auto q = AnalogQualitySpec::from_type(pair.value.flags.value & 0x7f);
-                //db->sflags = AnalogQualitySpec::to_human_string(q);
             }
         }
         if (db != NULL) 
@@ -383,7 +376,12 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<A
             {
                 //0x2001
                 //0x2003
-                ptype = sys->fmt;  // = 0 naked 1 = clothed
+                auto fmt = sys->fmt;
+                if (db->format)
+                {
+                    fmt = db->fmt;
+                }
+                ptype = sys->fmt;  // = 0 naked 1 = clothed 2 = full
                 int reject = 0;
                 if((etype != 0x2003) && (etype != 0x2001))
                 {
@@ -400,8 +398,8 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<A
                 if(reject>=0)
                 {
                     db->last_seen = sys->tNow;
-                    sys->addPubVar(db, dval, ptype);  // TODO we need to capture each event duplicate events will be lost
                     sys->setDbVar(db->uri, vname, dval);
+                    sys->addPubVar(db, dval, ptype, fmt);  
                     items++;
                 }
             }
@@ -422,6 +420,7 @@ void TestSOEHandler::Process(const HeaderInfo& info, const ICollection<Indexed<A
         FPS_ERROR_PRINT("<< ******************************An:\n");
     return;
 }
+
 DNP3Manager* setupDNP3Manager(sysCfg* ourDB)
 {
     auto manager = new DNP3Manager(1, fpsLogger::Create(ourDB));
@@ -429,25 +428,16 @@ DNP3Manager* setupDNP3Manager(sysCfg* ourDB)
 }
 
 
-//auto channel = setupDNP3channel(manager, sys_cfg.id, &sys_cfg, sys_cfg.ip_address, sys_cfg.port);
-// I think we can have several channels under one manager
 std::shared_ptr<IChannel> setupDNP3channel(DNP3Manager* manager, sysCfg* sys)
 {
 
-     // Specify what log levels to use. NORMAL is warning and above
-    // You can add all the comms logging by uncommenting below
     auto FILTERS = levels::NORMAL;
     if (sys->debug > 2) 
         FILTERS |= levels::ALL_APP_COMMS;
-    // This is the main point of interaction with the stack
-    // Connect via a TCPClient socket to a outstation
-    // repeat for each outstation
-    //std::error_code ec;
 
     std::shared_ptr<IChannel> channel;
     const char* tls_folder_path = 
         "/usr/local/etc/config/dnp3_interface"; // default file path where we put our certificates
-    // TODO setup our own PrintingChannelListener
     if (sys->conn_type && strcmp(sys->conn_type, "TLS") == 0) // TLS client type
     {
         if (sys->tls_folder_path) // if they have a custom path to tls certificates then use that
@@ -473,11 +463,13 @@ std::shared_ptr<IChannel> setupDNP3channel(DNP3Manager* manager, sysCfg* sys)
             std::cout << "privateKey: " << privateKey << " doesn't exist. Please provide it\n";
             return nullptr;
         }
+
         if (!checkFileName(peerCertificate.c_str()))
         {
             std::cout << "peerCertificate: " << peerCertificate << " doesn't exist. Please provide it\n";
             return nullptr;
         }
+
         if (!checkFileName(localCertificate.c_str()))
         {
             std::cout << "localCertificate: " << localCertificate << " doesn't exist. Please provide it\n";
@@ -485,21 +477,6 @@ std::shared_ptr<IChannel> setupDNP3channel(DNP3Manager* manager, sysCfg* sys)
         }
 
 
-        // check for files existences:
-        // if (!std::filesystem::exists(peerCertificate))
-        // {
-        //     std::cout << "peerCertificate: " << peerCertificate << " doesn't exist. Please provide one\n";
-        //     return nullptr;
-        // }
-        // if (!std::filesystem::exists(privateKey))
-        // {
-        //     std::cout << "privateKey: " << privateKey << " doesn't exist. Please provide one\n";
-        //     return nullptr;
-        // }
-
-        // TLSConfig cfg1(cert2, cert1, key1);
-        // TLSConfig cfg2(cert1, cert2, key2);
-        
         // Connect via a TCPClient socket to a outstation
         channel = manager->AddTLSClient(sys->id, 
                                         FILTERS, 
@@ -605,13 +582,6 @@ std::shared_ptr<IChannel> setupDNP3channel(DNP3Manager* manager, sysCfg* sys)
         {
             rtu_settings.deviceName = sys->deviceName;
         }
-        // default values if they do not specify in the config (deviceName is "" by default I believe):
-        //   baud(9600),
-        //   dataBits(8),
-        //   stopBits(opendnp3::StopBits::One),
-        //   parity(opendnp3::Parity::None),
-        //   flowType(opendnp3::FlowControl::None),
-        //   asyncOpenDelay(opendnp3::TimeDuration::Milliseconds(500))
         if (!checkDeviceName(sys->deviceName))
         {
             std::cout << "Serial Device : " << sys->deviceName << " doesn't exist. Please correct config\n";
@@ -627,7 +597,6 @@ std::shared_ptr<IChannel> setupDNP3channel(DNP3Manager* manager, sysCfg* sys)
     }
     else // tcp client type for default strcmp fail (or no conn_type):
     {
-    //std::shared_ptr<IChannel> 
         channel = manager->AddTCPClient(sys->id 
                                         , FILTERS 
                                         , ChannelRetry::Default() 
@@ -640,38 +609,24 @@ std::shared_ptr<IChannel> setupDNP3channel(DNP3Manager* manager, sysCfg* sys)
             std::cout << "Unable to create TCP client: " <<  std::endl;
             return nullptr;
         }
-    // The master config object for a master. The default are
-    // useable, but understanding the options are important.
     }
     return channel;
 }
 
-//  this my need to be out of the scope of the function.
-// TODO add this to sys.
-//MasterStackConfig stackConfig;
 
 std::shared_ptr<IMaster> setupDNP3master (std::shared_ptr<IChannel> channel, const char* mname, sysCfg* sys)
 {
-    //sys->stackConfig = &stackConfig;
     sys->stackConfig = new MasterStackConfig();
-    // you can override application layer settings for the master here
-    // in this example, we've change the application layer timeout to 2 seconds
     sys->stackConfig->master.responseTimeout = TimeDuration::Milliseconds(sys->respTime);
     if(sys->unsol)
         sys->stackConfig->master.disableUnsolOnStartup = false;
     else
         sys->stackConfig->master.disableUnsolOnStartup = true;
-    // You can override the default link layer settings here
-    // in this example we've changed the default link layer addressing
     sys->stackConfig->link.LocalAddr = sys->master_address;//localAddr; // 1
     sys->stackConfig->link.RemoteAddr = sys->station_address;//remoteAddr; //10;
-    // Create a new master on a previously declared port, with a
-    // name, log level, command acceptor, and config info. This
-    // returns a thread-safe interface used for sending commands.
     char tmp [1024];
-    snprintf(tmp,1024,"master_%s", sys->id);
+    snprintf(tmp,1024,"client_%s", sys->id);
 
-    ///cpp/lib/include/opendnp3/channel/IChannel.h:    virtual std::shared_ptr<IMaster> AddMaster(const std::string& id,
     auto master = channel->AddMaster(/*"master"*/ tmp, // id for logging
                                      fpsSOEHandler::Create(sys), // callback for data processing  this generates the pub elements when we get data
                                      fpsMasterApplication::Create(sys), // master application instance this manages the collection of all the pub elements 
@@ -690,34 +645,17 @@ std::shared_ptr<IMaster> setupDNP3master (std::shared_ptr<IChannel> channel, con
     sys->master = master;
     auto test_soe_handler = std::make_shared<TestSOEHandler>(sys);
 
-    // do an integrity poll (Class 3/2/1/0) once per minute
-    //auto integrityScan = master->AddClassScan(ClassField::AllClasses(), TimeDuration::Minutes(1));
     if (sys->frequency > 0)
-    //auto integrityScan = 
         sys->master->AddClassScan(ClassField::AllClasses(), TimeDuration::Milliseconds(sys->frequency), test_soe_handler);
-    //void Scan(const HeaderBuilderT& builder, TaskConfig config = TaskConfig::Default());
 
-    //void ScanClasses(const opendnp3::ClassField& field, const opendnp3::TaskConfig& config) override;
-    // do a exception poll scans as requested
     if (sys->freq1 > 0)
-    //auto exceptionScan = 
         sys->master->AddClassScan(ClassField(ClassField::CLASS_1), TimeDuration::Milliseconds(sys->freq1), test_soe_handler);
     if (sys->freq2 > 0)
-    //auto exceptionScan = 
         sys->master->AddClassScan(ClassField(ClassField::CLASS_2), TimeDuration::Milliseconds(sys->freq2), test_soe_handler);
     if (sys->freq3 > 0)
-    //auto exceptionScan = 
         sys->master->AddClassScan(ClassField(ClassField::CLASS_3), TimeDuration::Milliseconds(sys->freq3), test_soe_handler);
-    // virtual std::shared_ptr<IMasterScan> AddRangeScan(opendnp3::GroupVariationID gvId,
-    //                                                   uint16_t start,
-    //                                                   uint16_t stop,
-    //                                                   opendnp3::TimeDuration period,
-    //                                                   const opendnp3::TaskConfig& config
-    //                                                   = opendnp3::TaskConfig::Default())
-    //     = 0; (edited) 
     if(sys->rangeFreq > 0)
     {
-        //auto rangeScan = 
         if(sys->rangeAStop > 0)
         {
             sys->master->AddRangeScan(GroupVariationID(30,0),
@@ -725,7 +663,6 @@ std::shared_ptr<IMaster> setupDNP3master (std::shared_ptr<IChannel> channel, con
                                     sys->rangeAStop,
                                     TimeDuration::Milliseconds(sys->rangeFreq), test_soe_handler);
         }
-        //TODO binaries
         if(sys->rangeBStop > 0)
         {
             sys->master->AddRangeScan(GroupVariationID(1,0),
@@ -734,89 +671,57 @@ std::shared_ptr<IMaster> setupDNP3master (std::shared_ptr<IChannel> channel, con
                                     TimeDuration::Milliseconds(sys->rangeFreq), test_soe_handler);
         }
     }
-    //auto exceptionScan = master->Scan(ClassField(ClassField::CLASS_1);
-    
-    //auto binscan = 
-    // 1,2 is group 1 without flags
-    //fps Logger ms(1640868183288) <-AL--  master_test_dnp3_client - 001,001 Binary Input - Packed Format, 8-bit start stop [0, 7]
-    //sys->master->AddAllObjectsScan(GroupVariationID(1,1), TimeDuration::Seconds(5), test_soe_handler);
-    //sys->master->AddAllObjectsScan(GroupVariationID(1,1),  TimeDuration::Milliseconds(sys->frequency), test_soe_handler);
-    // 1,2 is group 1 with flags
-    //fps Logger ms(1640868183245) <-AL--  master_test_dnp3_client - 001,002 Binary Input - With Flags, 8-bit start stop [0, 7]
-    ////sys->master->AddAllObjectsScan(GroupVariationID(1,2),  TimeDuration::Milliseconds(sys->frequency), test_soe_handler);
-    //auto objscan = master->AddAllObjectsScan(GroupVariationID(30,1),
-    //                                                               TimeDuration::Seconds(5));
-    if(0)
-        auto objscan2 = sys->master->AddAllObjectsScan(GroupVariationID(32,7),
-                                                                   TimeDuration::Seconds(10), test_soe_handler);
-    // Enable the master. This will start communications.
     sys->master->Enable();
     bool channelCommsLoggingEnabled = true;
     bool masterCommsLoggingEnabled = true;
-    //bool channelCommsLoggingEnabled = false;
-    //bool masterCommsLoggingEnabled = false;
 
     auto levels = channelCommsLoggingEnabled ? levels::ALL_COMMS : levels::NORMAL;
     channel->SetLogFilters(levels);
     levels = masterCommsLoggingEnabled ? levels::ALL_COMMS : levels::NORMAL;
     sys->master->SetLogFilters(levels);
-    // other master controls are :
-    //
     return master;
 }
 
 // this runs whn we get a "set" on a defined value
 // the data is immediately sent to the outstation.
 // these are all scaled and signed if needed onto the wire
-
 void addVarToCommands (CommandSet & commands, std::pair<DbVar*,int>dbp)
 {
     DbVar* db = dbp.first;
-    //int flag = dbp.second;
-
     switch (db->type) 
     {
         case Type_Crob:
         {
-            //FPS_ERROR_PRINT(" Crob   [%d] ", db->crob);
             if(db->crob == 0)
             {
-                //FPS_ERROR_PRINT(" Crob   [NUL] ");
                 ControlRelayOutputBlock crob(OperationType::NUL);
                 commands.Add<ControlRelayOutputBlock>({WithIndex(crob, db->idx)});
             }
             else if(db->crob == 1)
             {
-                //FPS_ERROR_PRINT(" Crob   [PULSE_ON] ");
                 ControlRelayOutputBlock crob(OperationType::PULSE_ON);
                 commands.Add<ControlRelayOutputBlock>({WithIndex(crob, db->idx)});
             }
             else if(db->crob == 2)
             {
-                //FPS_ERROR_PRINT(" Crob   [PULSE_OFF]");
                 ControlRelayOutputBlock crob(OperationType::PULSE_OFF);
                 commands.Add<ControlRelayOutputBlock>({WithIndex(crob, db->idx)});
             }
             else if(db->crob == 3)
             {
-                //FPS_ERROR_PRINT(" Crob   [LATCH_ON]");
                 ControlRelayOutputBlock crob(OperationType::LATCH_ON);
                 commands.Add<ControlRelayOutputBlock>({WithIndex(crob, db->idx)});
             }
             else if(db->crob == 4)
             {
-                //FPS_ERROR_PRINT(" Crob   [LATCH_OFF]");
                 ControlRelayOutputBlock crob(OperationType::LATCH_OFF);
                 commands.Add<ControlRelayOutputBlock>({WithIndex(crob, db->idx)});
             }
             else
             {
-                FPS_ERROR_PRINT(" Crob   [Undefined] \n");
                 ControlRelayOutputBlock crob(OperationType::Undefined);
                 commands.Add<ControlRelayOutputBlock>({WithIndex(crob, db->idx)});
             }
-            //FPS_ERROR_PRINT("\n");
-
             break;
         }
         case AnIn16:
@@ -855,6 +760,15 @@ int main(int argc, char *argv[])
     p_fims = new fims();
     
     running = true;
+    auto ts_base = std::chrono::system_clock::now();
+    auto ts3  = std::chrono::system_clock::now();
+    std::chrono::duration<double> diff = ts3 - ts_base;
+    double tNow = diff.count();
+    double master_timeout = 1000000;
+    double next_check_time = tNow + master_timeout/1000000.0;
+
+    double fims_sleep_time = 1.0;
+
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
 
@@ -865,8 +779,7 @@ int main(int argc, char *argv[])
     const char **subs = NULL;
     bool *bpubs = NULL;
     
-     // TODO make this ppen to subs. Perhaps we need a vector
-    // components is pulled by uri  repeat for exch config
+    // components is pulled by uri  repeat for each config
     int num = getSysUris((sysCfg **)&sys_cfg, DNP3_MASTER, subs, bpubs, num_configs);
     if(num < 0)
     {
@@ -898,7 +811,6 @@ int main(int argc, char *argv[])
     }
 
     FPS_DEBUG_PRINT("Map configured: Initializing data.\n");
-    //if(p_fims->Subscribe((const char**)sub_array, 3, (bool *)publish_only) == false)
     if(p_fims->Subscribe((const char**)subs, num, (bool *)bpubs) == false)
     {
         FPS_ERROR_PRINT("Subscription failed.\n");
@@ -913,15 +825,11 @@ int main(int argc, char *argv[])
 
     free((void *)bpubs);
     free((void *)subs);
-// first sysconfig sets up Manager
     auto manager = setupDNP3Manager(sys_cfg[0]);
     if (!manager){
         FPS_ERROR_PRINT("Error in setupDNP3Manager.\n");
         return 1;
     }
-    // now we use data from the config file
-    //std::shared_ptr<IChannel> 
-    //auto channel = setupDNP3channel(manager, "tcpclient1", "127.0.0.1", 20001);
     auto channel = setupDNP3channel(manager, sys_cfg[0]); //, sys_cfg.ip_address, sys_cfg.port);
     if (!channel){
         FPS_ERROR_PRINT("Error in setupDNP3channel.\n");
@@ -929,10 +837,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // repeat for each config
-    // put returned master into the config context
-        //std::shared_ptr<IChannel> 
-    //int cfg_num = 0;
     for (int ixs = 0 ; ixs < num_configs; ixs++ )
     {
         sysCfg *sys = sys_cfg[ixs];
@@ -942,48 +846,27 @@ int main(int argc, char *argv[])
         if (!master){
             FPS_ERROR_PRINT("Error in setupDNP3master.\n");
             delete manager;
-            //delete channel;
             return 1;
         }
         sys->master = master;
 
     }
-    //we cant do this
-    //auto master2 = setupDNP3master (channel2, "master2", ourDB , 2 /*localAddr*/ , 10 /*RemoteAddr*/);
 
     FPS_DEBUG_PRINT("DNP3 Setup complete: Entering main loop.\n");
     
-    // send out intial gets
-    // set max ticks
-    
-    // no need to do this for the master
-    //sys_cfg.getUris(DNP3_MASTER);
-
-    // set all values to inval  done at the start
-    // start time to complete gets
-    // TODO set for all the getURI responses as todo
-    // done only get outstation vars 
 
     while(running && p_fims->Connected())
     {
-        // once a second
-        fims_message* msg = p_fims->Receive_Timeout(1000000);
-        //sysCfg *sys = sys_cfg[0];
+        fims_message* msg = p_fims->Receive_Timeout((int)(fims_sleep_time *1000000));
         if(msg != NULL)
         {
-//            if (sys->debug)
-//                FPS_ERROR_PRINT("****** Hey %s got a message uri [%s] \n", __FUNCTION__, msg->uri);
             for (int ixs = 0 ; ixs < num_configs; ixs++ )
             {
                 sysCfg *sys = sys_cfg[ixs];
             
                 dbs_type dbs; // collect all the parsed vars here
-                // We can use a single dbs 
-                cJSON* cjb = parseBody(dbs, sys, msg, DNP3_MASTER);
-                //if (sys->debug && ((int)dbs.size() > 0))
-                //if (((int)dbs.size() > 0))
-                //    FPS_ERROR_PRINT("****** Hey %s got a message uri [%s] dbs.size [%d] \n", __FUNCTION__, msg->uri, (int)dbs.size());
 
+                cJSON* cjb = parseBody(dbs, sys, msg, DNP3_MASTER);
                 if(dbs.size() > 0)
                 {
                     //int format = 0;
@@ -1002,7 +885,7 @@ int main(int argc, char *argv[])
                             addVarToCommands(commands, dbp);
                             numCmds++;
                         }
-                        if(cj) addVarToCj(cj, dbp);
+                        if(cj) addVarToCj(sys, cj, dbp);
                         dbs.pop_back();
                     }
 
@@ -1011,8 +894,6 @@ int main(int argc, char *argv[])
                         const char* reply = cJSON_PrintUnformatted(cj);
                         cJSON_Delete(cj);
                         cj = NULL;
-                        // TODO check that SET is the correct thing to do in MODBUS_CLIENT
-                        // probably OK since this is a reply
                         if(msg->replyto)
                             p_fims->Send("set", msg->replyto, NULL, reply);
 
@@ -1020,58 +901,11 @@ int main(int argc, char *argv[])
                     }
                     if(numCmds > 0)
                     {
-                        // we need the "correct" DirectOperate option
-                        // to take a list of commands and process them...
-                        // sigh  
-                        //CommandCallbackQueue queue;
                         if(sys->debug) FPS_ERROR_PRINT("      *****Running  Direct Operate \n");
-                        //cpp/lib/src/master/PrintingCommandResultCallback.cpp:CommandResultCallbackT
-                        //void DirectOperate(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config);
-                        //void MContext::DirectOperate(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config)
-                        //cpp/examples/master-gprs/main.cpp:            session->DirectOperate(ControlRelayOutputBlock(OperationType::LATCH_ON), index,
-
-                        // this is for a single type 
-                        //master->SelectAndOperate(crob, 0, PrintingCommandResultCallback::Get());
-
-                        // This is for a single command how do  do it for a list  
-                        //ControlRelayOutputBlock crob(OperationType::LATCH_ON);
-                        //master->SelectAndOperate(crob, 0, PrintingCommandResultCallback::Get());
-                        //break;
-
-                        
-                        // /// --- command handlers ----
-
-                        // void MContext::DirectOperate(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config)
-                        // {
-                        //     const auto timeout = Timestamp(this->executor->get_time()) + params.taskStartTimeout;
-                        //     this->ScheduleAdhocTask(CommandTask::CreateDirectOperate(this->tasks.context, std::move(commands),
-                        //                                                              this->params.controlQualifierMode, *application, callback,
-                        //                                                              timeout, config, logger));
-                        // }
-                        //Do we need the MContext not the IMaster here !!!
-                        // nope here it is running for a MasterStack
-
-                        // void MasterStack::DirectOperate(CommandSet&& commands, const CommandResultCallbackT& callback, const TaskConfig& config)
-                        // {
-                        //     /// this is to work around the fact that c++11 doesn't have generic move capture
-                        //     auto set = std::make_shared<CommandSet>(std::move(commands));
-
-                        //     auto action = [self = this->shared_from_this(), set, config, callback]() {
-                        //         self->mcontext.DirectOperate(std::move(*set), callback, config);
-                        //     };
-
-                        //     this->executor->post(action);
-                        // }
-
-
-
-                        //sys->master->DirectOperate(std::move(commands), PrintingCommandResultCallback::Get(), *sys->stackConfig);//fpsCommandCallback::Get());
-                        //sys->master->DirectOperate(std::move(commands), PrintingCommandResultCallback::Get(), TaskConfig::Default());//fpsCommandCallback::Get());
                         sys->master->DirectOperate(std::move(commands), fpsCommandCallback::Get(sys), TaskConfig::Default());//fpsCommandCallback::Get());
                     }
                 }
             
-                // TODO master has to be assigned per config
                 if (sys->scanreq > 0)
                 {
                     switch (sys->scanreq)
@@ -1105,30 +939,127 @@ int main(int argc, char *argv[])
             }
             p_fims->free_message(msg);
         }
+        auto ts2  = std::chrono::system_clock::now();
+        std::chrono::duration<double> diff = ts2 - ts_base;
+        tNow = diff.count();
+        sysCfg *sys = sys_cfg[0];
+
+        if(tNow > next_check_time)
+        {
+            sys->setLock.lock();
+            auto tLastMsg = sys->tLastMsg;
+            sys->setLock.unlock();
+
+            next_check_time = tNow + sys->frequency/1000.0;
+            auto pub_delay = tNow - tLastMsg;
+            //if (0)
+            if (sys->pub_timeout_detected)
+            {
+                FPS_ERROR_PRINT("****** pub timeout  detected   delay   [%2.3f]  max_delay [%2.3f]\n", pub_delay, 
+                            sys->max_pub_delay* sys->max_pub_droop);
+
+                // add a little hysteresis
+                if (pub_delay < sys->max_pub_delay * sys->max_pub_droop)
+                {
+                    sys->pub_timeout_detected = false;
+                    char message[1024];
+                    snprintf(message, sizeof(message), "DNP3 Timeout recovered"
+                            );
+                    emit_event(sys, nullptr, message, 1);
+                    sys->batch_sets = sys->batch_sets_in;
+                }
+
+            }
+
+            if ((sys->max_pub_delay> 0) && (pub_delay > sys->max_pub_delay) && !sys->pub_timeout_detected)
+            {
+                sys->pub_timeout_detected = true;
+                FPS_ERROR_PRINT("****** pub timeout   tNow [%2.3f]  delay   [%2.3f]  max_delay [%2.3f]\n", tNow, pub_delay, sys->max_pub_delay);
+                char message[1024];
+                snprintf(message, sizeof(message), "DNP3 Timeout [%2.3f] exceeded  [%2.3f]"
+                        ,  pub_delay
+                        , sys->max_pub_delay
+                        );
+                emit_event(sys, nullptr, message, 1);
+
+                if (sys->batch_sets_max > 0)
+                {
+                    sys->batch_sets = sys->batch_sets_max;
+                }
+            }
+            if (sys->debug > 0)
+            {
+                FPS_ERROR_PRINT("****** master time to check hb tNow [%2.3f]  period [%2.3f] \n", tNow, next_check_time);
+                if (tNow > tLastMsg+10.0)
+                    FPS_ERROR_PRINT("****** comms timeout last  [%2.3f]  tNow [%2.3f] \n", tLastMsg+10.0, tNow);
+            }
+        }
+        
+        double sleep_time = 1.0;
+
+        if(sys->batch_sets > 0 && tNow > sys->next_batch_time)
+        {
+            sys->next_batch_time = tNow + sys->batch_sets;
+
+            for (int ixs = 0 ; ixs < num_configs; ixs++ )
+            {
+                sysCfg *sys = sys_cfg[ixs];
+                CommandSet commands;
+                int numCmds = 0;
+
+                for (int i = 0; i < static_cast<int32_t>(Type_of_Var::NumTypes); i++)
+                {
+                    for (auto db : sys->dbVec[i])
+                    {
+                        if (db->value_set)
+                        {
+                            addVarToCommands(commands, std::make_pair(db, db->flags));
+                            numCmds++;
+                            db->value_set = 0; 
+                        }
+                    }
+                }
+                if(numCmds > 0)
+                {
+                    sys->master->DirectOperate(std::move(commands), fpsCommandCallback::Get(sys), TaskConfig::Default());
+                    if(sys->debug) 
+                        FPS_ERROR_PRINT("      *****Done Running  Direct Operate \n");
+                }   
+            }
+        }
+
+        if (sys->batch_sets > 0) 
+        {
+            if (sys->next_batch_time > 0)
+            {
+                if ((sys->next_batch_time - tNow) < sleep_time)
+                {
+                    sleep_time = sys->next_batch_time - tNow;
+                }
+            }             
+        }
+        if (next_check_time > tNow) 
+        {
+            if ((next_check_time - tNow) < sleep_time)
+            {
+                sleep_time = next_check_time - tNow;
+                //FPS_ERROR_PRINT("      next check sleep  [%2.3f] \n", sleep_time);
+            }
+        }             
+        fims_sleep_time = sleep_time;
     }
 
     //cleanup:
     if (manager){
         delete manager;
-        //delete channel;
     }
     if (p_fims) delete p_fims;
-    // sys_cfg should clean itself up
- 
-    //if(sys_cfg.eth_dev       != NULL) free(sys_cfg.eth_dev);
-    //if(sys_cfg.ip_address    != NULL) free(sys_cfg.ip_address);
-    //if(sys_cfg.name          != NULL) free(sys_cfg.name);
-    //if(sys_cfg.serial_device != NULL) free(sys_cfg.serial_device);
-    //if(sys_cfg.mb != NULL)             modbus_free(sys_cfg.mb);
-    // for(int fd = 0; fd < fd_max; fd++)
-    //     if(FD_ISSET(fd, &all_connections))
-    //         close(fd);
+
     for (int ix = 0; ix < num_configs; ix++)
     {
         FPS_ERROR_PRINT("****** client cleanup sys %d start\n", ix);
 
         sysCfg *sys = sys_cfg[ix];
-        //if (sys->master)  delete sys->master;
         if (sys->stackConfig)  delete sys->stackConfig;
         delete sys;
         FPS_ERROR_PRINT("****** client cleanup sys %d done\n", ix);
@@ -1137,5 +1068,3 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-

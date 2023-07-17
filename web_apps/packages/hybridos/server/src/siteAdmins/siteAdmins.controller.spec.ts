@@ -4,6 +4,8 @@ import { SiteAdminsController } from './siteAdmins.controller'
 import { SiteAdminsDto } from './dto/create-siteAdmins.dto'
 import { SITE_ADMINS_SERVICE } from './interfaces/siteAdmin.service.interface'
 import { User } from 'src/users/dtos/user.dto'
+import { DBI_SERVICE } from 'src/dbi/dbi.interface'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
 
 describe('SiteAdminsController', () => {
     let controller: SiteAdminsController
@@ -45,6 +47,12 @@ describe('SiteAdminsController', () => {
                         create: jest.fn().mockImplementation((siteAdmin: SiteAdminsDto) => {
                             return Promise.resolve({ ...siteAdmin })
                         }),
+                    },
+                },
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
                     },
                 },
             ],

@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { validateOrReject } from 'class-validator'
 import * as fs from 'fs'
-import { LoginInfo, SiteConfiguration } from 'src/app/app.interface'
+import path from 'path'
+import {
+    LoginInfo,
+    SiteConfiguration,
+} from 'src/webuiconfig/webUIConfig.interface'
 import { ValidationErrors } from '../exceptions/validationErrors.exception'
 import { AppConfig } from './AppConfig'
 import * as appConsts from './appEnv.constants'
@@ -9,8 +13,12 @@ import * as appConsts from './appEnv.constants'
 @Injectable()
 export class AppEnvService {
     appConfig: AppConfig
-
-    constructor() {
+    constructor(
+        @Inject('WEB_UI_CONFIG_PATH')
+        private webUiConfigPath: string,
+        @Inject('WEB_SERVER_CONFIG_PATH')
+        private webServerConfigPath: string
+    ) {
         const { serverDataParsed, uiDataParsed } = this.load()
         this.appConfig = new AppConfig(serverDataParsed, uiDataParsed)
         validateOrReject(this.appConfig).catch((errors) => {
@@ -19,15 +27,15 @@ export class AppEnvService {
     }
 
     getMongoUri(): string {
-        return `${appConsts.MONGO_URL}/${appConsts.MONGO_DB_NAME}`
+        return `${process.env.MONGO_URL}/${process.env.MONGO_DB_NAME}`
     }
 
     getMongoName(): string {
-        return appConsts.MONGO_DB_NAME
+        return process.env.MONGO_DB_NAME
     }
 
     getMongoURL(): string {
-        return appConsts.MONGO_URL
+        return process.env.MONGO_URL
     }
 
     getThrottleTTL(): number {
@@ -38,37 +46,56 @@ export class AppEnvService {
         return appConsts.APP_THROTTLE_CONFIG.default_throttle.limit
     }
 
-    getHTTPTimeout(): number {
-        return appConsts.HTTP_TIMEOUT
-    }
-
     getHttpTimeout(): number {
-        return appConsts.HTTP_TIMEOUT
+        return Number(process.env.HTTP_TIMEOUT)
     }
 
     getAccessTokenSecretFimsSocket(): string {
-        return appConsts.ACCESS_TOKEN_SECRET_FIMS_SOCKET
+        return process.env.ACCESS_TOKEN_SECRET_FIMS_SOCKET
     }
 
     getRefreshTokenTimeout(): number {
-        return appConsts.REFRESH_TOKEN_TIMEOUT
+        return Number(process.env.REFRESH_TOKEN_TIMEOUT)
     }
 
     getAccessTokenTimeout(): number {
-        return appConsts.ACCESS_TOKEN_TIMEOUT
+        return Number(process.env.ACCESS_TOKEN_TIMEOUT)
     }
 
     getAppServerPort(): number {
-        return appConsts.APP_SERVER_PORT
+        return Number(process.env.APP_SERVER_PORT)
     }
 
-    getAggregatedEndpoints() {
+    readAggregatedEndpoints() {
         return this.appConfig.aggregatedEndpoints || {}
     }
 
     getLoginInfo(): LoginInfo {
-        const { product } = this.appConfig
-        return { product }
+        const { product, site_name, customer } = this.appConfig
+        return {
+            product,
+            siteName: site_name !== undefined ? site_name : '',
+            customer:
+                customer !== undefined && customer.name !== undefined
+                    ? customer.name
+                    : '',
+            server:
+                customer !== undefined && customer.server !== undefined
+                    ? customer.server
+                    : '',
+        }
+    }
+
+    getJwtSecretKey(): string {
+        return process.env.JWT_SECRET_KEY
+    }
+
+    getJwtSecretKeyMFA(): string {
+        return process.env.JWT_SECRET_KEY_MFA
+    }
+
+    getJwtSecretKeyPasswordExp(): string {
+        return process.env.JWT_SECRET_KEY_PASSWORD_EXPIRATION
     }
 
     getSiteConfiguration(): SiteConfiguration {
@@ -79,6 +106,7 @@ export class AppEnvService {
             gen,
             solar,
             met_station,
+            site_status_bar,
             tracker,
             feeders,
             features,
@@ -91,6 +119,7 @@ export class AppEnvService {
             inspectorComponentsName,
             site_name,
             fleet_name,
+            customer,
         } = this.appConfig
 
         return {
@@ -100,6 +129,7 @@ export class AppEnvService {
             gen,
             solar,
             met_station,
+            site_status_bar,
             tracker,
             feeders,
             features,
@@ -112,13 +142,14 @@ export class AppEnvService {
             inspectorComponentsName,
             site_name,
             fleet_name,
+            customer,
         }
     }
 
     private load() {
-        const serverData = fs.readFileSync(CONFIG_PATH, 'utf8')
+        const serverData = fs.readFileSync(this.webServerConfigPath, 'utf8')
         const serverDataParsed = JSON.parse(serverData)
-        const uiData = fs.readFileSync(WEB_UI_JSON_CONFIG_PATH, 'utf8')
+        const uiData = fs.readFileSync(this.webUiConfigPath, 'utf8')
         const uiDataParsed = JSON.parse(uiData)
         return { serverDataParsed, uiDataParsed }
     }

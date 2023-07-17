@@ -57,6 +57,9 @@ export const BoxSX = {
 };
 
 export const MuiButtonSX = {
+  display: 'block',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
   width: '70%',
   marginRight: '24px',
 };

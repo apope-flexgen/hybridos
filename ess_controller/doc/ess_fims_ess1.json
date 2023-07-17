@@ -1,0 +1,70 @@
+{"name":"BESS Inverter Block 01","active_power":{"name":"Active Power","value":0,"unit":"W","scaler"
+:1000,"enabled":false,"ui_type":"status","type":"number"},"active_power_setpoint":
+{"name":"Active Power Setpoint",
+"value":0,"unit":"W","scaler":1000,"enabled":false,"ui_type":"status","type":"number"},
+"alarms":{"name":
+"Alarms","value":0,"options":[],"unit":"","scaler":0,"enabled":true,"ui_type":"alarm","type":"number"},
+"apparent_power":{"name":"Apparent Power","value":0,"unit":"VA","scaler":1000,"enabled":false,
+"ui_type":"status","type":"number"},
+"current_l1":{"name":"L1 AC Current","value":0,"unit":"A","scaler":1,"enabled":false,
+"ui_type"
+:"status","type":"number"},"current_l2":{"name":"L2 AC Current","value":0,"unit":"A",
+"scaler":1,"enabled":false,"ui_type":"status","type":"number"},"current_l3":
+{"name":"L3 AC Current","value":0,"unit":"A","scaler":1,"enabled":false,"ui_type":"status","type":"number"
+},"faults":{"name":"Faults","value":0,"options":[],"unit":""
+,"scaler":0,"enabled":true,"ui_type":"fault","type":"number"},
+"frequency":{"name":"Frequency","value":0,"unit":"Hz","scaler":1,
+"enabled":false,"ui_type":"status","type":"number"},"max_temp":
+{"name":"Current Highest Cell Temp","value":0,"unit":"C","scaler":1,"enabled":false,
+"ui_type":"status","type":"number"},"min_temp":
+{"name":"Current Lowest Cell Temp","value":0,"unit":"C","scaler":1,
+"enabled":false,"ui_type":"status","type":"number"},
+"reactive_power":{"name":"Reactive Power","value":0,"unit":"VAR","scaler":1000,"enabled":
+false,"ui_type":
+"status","type":"number"},
+"reactive_power_setpoint":{"name":"Reactive Power Setpoint","value":0,"unit":"VAR",
+"scaler":1000,"enabled":false,"ui_type":"status","type":"number"},
+"soc":{"name":"State of Charge","value":0,"unit":"XXPercent","scaler":1,"enabled":false,
+"ui_type":"status","type":"number"},"soh":{"name":"State of Health","value":0,
+"unit":"XXpercent","scaler":1,"enabled":false,"ui_type":"status","type":"number"},"status":{"name":"Status",
+"value":"","unit":"","scaler":0,"enabled":true,"ui_type":"status","type":"number"},
+"system_chargeable_power":{"name":
+"System Chargeable Power","value":0,"unit":"W","scaler":1000,"enabled":false,"ui_type":"status",
+"type":"number"},
+"system_dischargeable_power":{"name":"System Dischargeable Power",
+"value":0,"unit":"W","scaler":1000
+,"enabled":false,"ui_type":"status","type":"number"},"voltage_dc":
+{"name":"DC Voltage","value":0,"unit":"V","scaler":1,"enabled":false,"ui_type":
+"status","type":"number"},"voltage_l1_n":{"name":"L1 AC Voltage","value":
+0,"unit":"V","scaler":1,"enabled":false,"ui_type":"status","type":"number"},
+"voltage_l2_n":{"name":"L2 AC Voltage","value":0,"unit":"V","scaler":1,
+"enabled":false,"ui_type":"status","type":"number"},"voltage_l3_n":{"name":"L3 AC Voltage",
+"value":0,"unit":"V","scaler":1,"enabled":false,"ui_type":"status","type":"number"},
+"maint_mode":{"name":"Maintenance Mode","value":false,"unit":"","scaler":0,
+"enabled":true,"ui_type":"control","type":
+"enum_slider","options":[{"name":"No","return_value":false},
+{"name":"Yes","return_value":true}]},"start":
+{"name":"Start","unit":"","scaler":0,"enabled":false,"ui_type":"control",
+"type":"enum_button","options":[{"name":"On","return_value":true},
+{"name":"Off","return_value":false}]},"stop":{"name":"Stop","unit":"",
+"scaler":0,"enabled":false,"ui_type":"control","type":"enum_button","options":[
+{"name":"On","return_value":true},{"name":"Off","return_value":false}]},
+"enter_standby":{"name":"Enter Standby","unit":"","scaler":0,"enabled":false,
+"ui_type":"control","type":"enum_button","options":[
+{"name":"On","return_value":true},{"name":"Off","return_value":false}]},
+"exit_standby":{"name":"Exit Standby","unit":"","scaler":0,"enabled":false,
+"ui_type":"control","type":"enum_button","options":[
+{"name":"On","return_value":true},{"name":"Off","return_value":false}]},"clear_faults":
+{"name":"Clear Faults","unit":"","scaler":0,"enabled":false,"ui_type":"control","type":"enum_button"
+,"options":[{"name":"Clear Faults","return_value":true}]},
+"close_dc_contactors":{"name":"Close DC Contactors","unit":"",
+"scaler":0,"enabled":false,"ui_type":"control","type":"enum_button","options":
+[{"name":"Close","return_value":true}]},
+"open_dc_contactors":{"name":"Open DC Contactors","unit":"","scaler":0,
+"enabled":false,"ui_type":"control","type":"enum_button","options":
+[{"name":"Open","return_value":true}]},"maint_active_power_setpoint":
+{"name":"Active Power Setpoint","value":0,"unit":"W","scaler":1000,"enabled":false,
+"ui_type":"control","type":"number","options":[]},
+"maint_reactive_power_setpoint":{"name":"Reactive Power Setpoint","value":0,"unit":
+"VAR","scaler":1000,"enabled":false,"ui_type":"control","type":"number","options":[]}}
+

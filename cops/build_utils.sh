@@ -30,16 +30,12 @@ function postbuild()
 {
     # Copy service into build folder
     cp cops.service $build_output
-    cp send_pdu_restart.sh $build_output
 }
 
 function install() # build.sh passes build mode as $1
 {
     sudo cp $build_output/$name /usr/local/bin/
     if [ "$?" -eq 0 ]; then echo "install() - $name installed"; else echo "install() - $anme not installed"; fi
-    # TODO: this is to get the script in the correct location for dev environments. Better way to do this?
-    sudo cp send_pdu_restart.sh /usr/local/bin
-    sudo chmod u+x /usr/local/bin/send_pdu_restart.sh
 }
 
 function uninstall()

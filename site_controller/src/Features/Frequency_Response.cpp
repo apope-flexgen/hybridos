@@ -9,6 +9,7 @@
 /* External Dependencies */
 /* System Internal Dependencies */
 #include <fims/fps_utils.h>
+#include <fims/defer.hpp>
 /* Local Internal Dependencies */
 #include <Frequency_Response.h>
 #include <Site_Controller_Utils.h>
@@ -80,6 +81,8 @@ void Frequency_Response::handle_fims_set(const fims_message& msg) {
         FPS_ERROR_LOG("FIMS message body is NULL or incorrectly formatted: (%s)", JSON_body->valuestring);
         return;
     }
+    defer{ cJSON_Delete(JSON_body); };
+
     cJSON* body_value = cJSON_GetObjectItem(JSON_body, "value");
     float body_float = (body_value) ? body_value->valuedouble : JSON_body->valuedouble;
     int body_int = (body_value) ? body_value->valueint : JSON_body->valueint;

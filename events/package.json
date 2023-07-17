@@ -13,6 +13,7 @@
     },
     "author": "Tony Olivo",
     "dependencies": {
+        "@flexgen/fims": "^1.4.0",
         "mongoose": "^5.13.14",
         "pkg": "^5.7.0"
     },

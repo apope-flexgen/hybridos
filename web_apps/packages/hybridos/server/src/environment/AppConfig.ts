@@ -57,6 +57,10 @@ export class AppConfig {
 
     @IsOptional()
     @IsBoolean()
+    site_status_bar: boolean
+
+    @IsOptional()
+    @IsBoolean()
     fleet_manager_dashboard: boolean
 
     @IsNotEmpty()
@@ -85,9 +89,16 @@ export class AppConfig {
     @IsString()
     fleet_name: string
 
+    @IsOptional()
+    @IsObject()
+    customer: {
+        name?: string,
+        server?: string
+    }
+
     constructor(
         {
-            aggregatedEndpoints
+            aggregatedEndpoints,
         }: {
             aggregatedEndpoints: any
         },
@@ -98,6 +109,7 @@ export class AppConfig {
             gen,
             solar,
             met_station,
+            site_status_bar,
             tracker,
             feeders,
             features,
@@ -110,6 +122,7 @@ export class AppConfig {
             inspectorComponentsName,
             site_name,
             fleet_name,
+            customer,
         }: {
             timezone: string
             product: string
@@ -117,6 +130,7 @@ export class AppConfig {
             gen: boolean
             solar: boolean
             met_station: boolean
+            site_status_bar: boolean
             tracker: boolean
             feeders: boolean
             features: boolean
@@ -131,15 +145,20 @@ export class AppConfig {
             inspectorComponentsName: string
             site_name: string
             fleet_name: string
+            customer: {
+                name?: string,
+                server?: string
+            }
         }
     ) {
-        this.aggregatedEndpoints = aggregatedEndpoints;
-        (this.timezone = timezone),
+        this.aggregatedEndpoints = aggregatedEndpoints
+        ;(this.timezone = timezone),
             (this.product = product),
             (this.ess = ess ?? false),
             (this.gen = gen ?? false),
             (this.solar = solar ?? false),
             (this.met_station = met_station ?? false),
+            (this.site_status_bar = site_status_bar ?? false),
             (this.tracker = tracker ?? false),
             (this.feeders = feeders ?? false),
             (this.features = features ?? false),
@@ -147,10 +166,11 @@ export class AppConfig {
             (this.events = events),
             (this.control_cabinet = control_cabinet ?? false),
             (this.fleet_manager_dashboard = fleet_manager_dashboard),
-            (this.scheduler = scheduler),
+            (this.scheduler = scheduler ?? false),
             (this.units = units),
             (this.inspectorComponentsName = inspectorComponentsName),
             (this.site_name = site_name),
-            (this.fleet_name = fleet_name)
+            (this.fleet_name = fleet_name),
+            (this.customer = customer)
     }
 }

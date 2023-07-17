@@ -1,71 +1,7 @@
 // TODO: fix lint
 /* eslint-disable consistent-return, max-lines */
-import { ThemeType } from '@flexgen/storybook';
-import { createTheme, Theme } from '@mui/material/styles';
 import { v4 as uuidv4 } from 'uuid';
 import { ModeBody } from './Types';
-
-export function createMuiTheme(theme: ThemeType): Theme {
-  return createTheme({
-    components: {
-      MuiPaper: {
-        styleOverrides: {
-          root: {
-            boxShadow: `${theme.fgb.schedulerConfig.shadow.shadow_01} ${theme.fgc.expandingTable.shadow}, 
-                        ${theme.fgb.schedulerConfig.shadow.shadow_02} ${theme.fgc.expandingTable.shadow}, 
-                        ${theme.fgb.schedulerConfig.shadow.shadow_03} ${theme.fgc.expandingTable.shadow}`,
-          },
-        },
-      },
-      MuiTable: {
-        styleOverrides: {
-          root: {
-            backgroundColor: theme.fgc.expandingTable.background,
-          },
-        },
-      },
-    },
-    typography: {
-      h1: {
-        fontFamily: theme.fgb.schedulerConfig.fonts.siteConfigName.fontFamily,
-        fontWeight: theme.fgb.schedulerConfig.fonts.siteConfigName.fontWeight,
-        fontSize: `${theme.fgb.schedulerConfig.fonts.siteConfigName.fontSize}px`,
-        color: theme.fgc.scheduler.fontColor,
-      },
-      h2: {
-        fontFamily: theme.fgb.schedulerConfig.fonts.siteConfigHelper.fontFamily,
-        fontWeight: theme.fgb.schedulerConfig.fonts.siteConfigHelper.fontWeight,
-        fontSize: `${theme.fgb.schedulerConfig.fonts.siteConfigHelper.fontSize}px`,
-        color: theme.fgc.scheduler.fontColor,
-      },
-      h3: {
-        fontFamily: theme.fgb.schedulerConfig.fonts.modes.fontFamily,
-        fontWeight: theme.fgb.schedulerConfig.fonts.modes.fontWeight,
-        fontSize: `${theme.fgb.schedulerConfig.fonts.modes.fontSize}px`,
-        color: theme.fgc.scheduler.fontColor,
-      },
-      body1: {
-        fontFamily: theme.fgb.schedulerConfig.fonts.modeProps.fontFamily,
-        fontWeight: theme.fgb.schedulerConfig.fonts.modeProps.fontWeight,
-        fontSize: `${theme.fgb.schedulerConfig.fonts.modeProps.fontSize}px`,
-        color: theme.fgc.scheduler.fontColor,
-      },
-    },
-  });
-}
-
-export const modeListBoxSx = (theme: ThemeType) => ({
-  width: '23%',
-  height: '100%',
-  padding: theme.fgb.schedulerConfig.sizing.padding,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '10px',
-});
-
-export const headerSx = (theme: ThemeType) => ({
-  backgroundColor: theme.fgc.expandingTable.header,
-});
 
 export const icons = [
   'BatteryVert',
@@ -119,13 +55,12 @@ export function newMode(): [string, ModeBody] {
   return [id, mode];
 }
 
-export const modeInfoSizing = {
-  textWidth: '150px',
-  selectorWidth: '500px',
-  setpointMargin: '10px',
-};
-
 export const schedulerConfigLabels = {
+  notifications: {
+    saveSuccess: 'Mode successfully saved',
+    deleteSuccess: 'Mode deleted',
+    disabled: 'Editing modes is disabled while server is enabled.',
+  },
   siteInformation: {
     sc: 'Site Controller Mode Manager',
     fm: 'Fleet Manager Mode Manager',
@@ -136,9 +71,13 @@ export const schedulerConfigLabels = {
     },
   },
   modeInfo: {
+    name: 'Name',
+    color: 'Color',
+    icon: 'Icon',
+    newMode: 'New Mode',
     title: {
-      selectedModeId: 'Configuration Settings',
-      noselectedModeId: 'Select Mode to View Configuration Settings',
+      selectedModeId: 'Mode Configuration Settings',
+      noselectedModeId: 'Select Mode to View Mode Configuration Settings',
     },
     buttons: {
       cancel: 'Cancel',
@@ -146,27 +85,31 @@ export const schedulerConfigLabels = {
       delete: 'delete',
     },
     tooltip: {
-      defaultMode: 'A default mode is required. It cannot be deleted, and the name cannot be edited.',
+      duplicateURI: 'Cannot have duplicate URIs within the same mode',
+      invalidURI: 'Please enter a valid URI',
+      defaultMode:
+        'A default mode is required. It cannot be deleted, and the name cannot be edited.',
       addModeButton: 'New Mode must have a new unique name before adding more modes.',
       nameFieldHelperText: 'Mode names must be unique',
-      newModeNameHelperText: 'Provide a unique name for the new mode',
+      emptyModeName: 'This field is required',
     },
     setpointRow: {
       name: 'Name',
+      duplicateName: 'Duplicate Names are not allowed',
       type: 'Type',
       unit: 'Unit',
       URI: 'URI',
       value: 'Value',
       defaultValueHelper: 'Type of value entered must match Type chosen above.',
-      delete: 'Delete Variable',
+      required: 'This field is required',
+      fillOutFields: '*Please fill out all required fields',
     },
   },
 };
 
-export const handleIconColor = (
-  icon: string,
-  selectedModeValues: ModeBody | null | undefined,
-) => {
+export const uriRules = "URIs must: start with '/', contain no spaces, and contain no '//'. \nURI's must be unique within a mode.";
+
+export const handleIconColor = (icon: string, selectedModeValues: ModeBody | null | undefined) => {
   if (!selectedModeValues) return;
   if (selectedModeValues.icon === icon) return 'primary';
   return undefined;

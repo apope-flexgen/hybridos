@@ -20,6 +20,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <mutex>
 
 #include "opendnp3/app/AnalogOutput.h"
 #include "opendnp3/app/ControlRelayOutputBlock.h"
@@ -40,7 +41,7 @@ using namespace opendnp3;
 #define NANOSECOND_TO_MILLISECOND  1000000
 #define MAX_FIMS_CONNECT 5
 
-#define DNP3_UTILS_VERSION "10.1"
+#define DNP3_UTILS_VERSION "3.0.6"
 
 const OperationType StringToOperationType(const char* codeWord);
 void addCjTimestamp(cJSON* cj, const char* ts);
@@ -58,7 +59,6 @@ struct char_cmp
 typedef struct maps_t maps;
 typedef std::map<const char*, std::pair<bool*, maps**>, char_cmp> body_map;
 typedef std::map<const char*, body_map*, char_cmp> uri_map;
-//typedef std::vector<std::pair<const char*,int>> bits_map;
 
 int variation_decode(const char* ivar);
 const char *iotypToStr (int t);
@@ -72,6 +72,7 @@ enum Type_of_Var{
     Type_Crob,     // write master
     Type_Analog,  // write outstation
     Type_Binary,     //write outstation
+    Type_Counter,  // auto write outstation
     Type_AnalogOS,  // auto write outstation
     Type_BinaryOS,  //write outstation
     NumTypes
@@ -84,37 +85,128 @@ struct char_dcmp {
         return strcmp(a,b)<0;
     }
 };
-// only allow 1 type for now
-// TODO use EventAnalogVariation::Group32Var0; defs
 
-enum {
-    GroupUndef,
-    Group1Var0,
-    Group1Var1,
-    Group1Var2,
-    Group2Var0,
-    Group2Var1,
-    Group2Var2,
-    Group2Var3,
-    Group30Var1,
-    Group30Var2,
-    Group30Var3,
-    Group30Var4,
-    Group30Var5,
-    Group30Var6,
-    Group32Var0,
-    Group32Var1,
-    Group32Var2,
-    Group32Var3,
-    Group32Var4,
-    Group32Var5,
-    Group32Var6,
-    Group32Var7,
-    Group32Var8,
-    NumVars
+enum 
+{
+  Group1Var0 = 0x100,
+  Group1Var1 = 0x101,
+  Group1Var2 = 0x102,
+  Group2Var0 = 0x200,
+  Group2Var1 = 0x201,
+  Group2Var2 = 0x202,
+  Group2Var3 = 0x203,
+  Group3Var0 = 0x300,
+  Group3Var1 = 0x301,
+  Group3Var2 = 0x302,
+  Group4Var0 = 0x400,
+  Group4Var1 = 0x401,
+  Group4Var2 = 0x402,
+  Group4Var3 = 0x403,
+  Group10Var0 = 0xA00,
+  Group10Var1 = 0xA01,
+  Group10Var2 = 0xA02,
+  Group11Var0 = 0xB00,
+  Group11Var1 = 0xB01,
+  Group11Var2 = 0xB02,
+  Group12Var0 = 0xC00,
+  Group12Var1 = 0xC01,
+  Group13Var1 = 0xD01,
+  Group13Var2 = 0xD02,
+  Group20Var0 = 0x1400,
+  Group20Var1 = 0x1401,
+  Group20Var2 = 0x1402,
+  Group20Var5 = 0x1405,
+  Group20Var6 = 0x1406,
+  Group21Var0 = 0x1500,
+  Group21Var1 = 0x1501,
+  Group21Var2 = 0x1502,
+  Group21Var5 = 0x1505,
+  Group21Var6 = 0x1506,
+  Group21Var9 = 0x1509,
+  Group21Var10 = 0x150A,
+  Group22Var0 = 0x1600,
+  Group22Var1 = 0x1601,
+  Group22Var2 = 0x1602,
+  Group22Var5 = 0x1605,
+  Group22Var6 = 0x1606,
+  Group23Var0 = 0x1700,
+  Group23Var1 = 0x1701,
+  Group23Var2 = 0x1702,
+  Group23Var5 = 0x1705,
+  Group23Var6 = 0x1706,
+  Group30Var0 = 0x1E00,
+  Group30Var1 = 0x1E01,
+  Group30Var2 = 0x1E02,
+  Group30Var3 = 0x1E03,
+  Group30Var4 = 0x1E04,
+  Group30Var5 = 0x1E05,
+  Group30Var6 = 0x1E06,
+  Group32Var0 = 0x2000,
+  Group32Var1 = 0x2001,
+  Group32Var2 = 0x2002,
+  Group32Var3 = 0x2003,
+  Group32Var4 = 0x2004,
+  Group32Var5 = 0x2005,
+  Group32Var6 = 0x2006,
+  Group32Var7 = 0x2007,
+  Group32Var8 = 0x2008,
+  Group40Var0 = 0x2800,
+  Group40Var1 = 0x2801,
+  Group40Var2 = 0x2802,
+  Group40Var3 = 0x2803,
+  Group40Var4 = 0x2804,
+  Group41Var0 = 0x2900,
+  Group41Var1 = 0x2901,
+  Group41Var2 = 0x2902,
+  Group41Var3 = 0x2903,
+  Group41Var4 = 0x2904,
+  Group42Var0 = 0x2A00,
+  Group42Var1 = 0x2A01,
+  Group42Var2 = 0x2A02,
+  Group42Var3 = 0x2A03,
+  Group42Var4 = 0x2A04,
+  Group42Var5 = 0x2A05,
+  Group42Var6 = 0x2A06,
+  Group42Var7 = 0x2A07,
+  Group42Var8 = 0x2A08,
+  Group43Var1 = 0x2B01,
+  Group43Var2 = 0x2B02,
+  Group43Var3 = 0x2B03,
+  Group43Var4 = 0x2B04,
+  Group43Var5 = 0x2B05,
+  Group43Var6 = 0x2B06,
+  Group43Var7 = 0x2B07,
+  Group43Var8 = 0x2B08,
+  Group50Var1 = 0x3201,
+  Group50Var3 = 0x3203,
+  Group50Var4 = 0x3204,
+  Group51Var1 = 0x3301,
+  Group51Var2 = 0x3302,
+  Group52Var1 = 0x3401,
+  Group52Var2 = 0x3402,
+  Group60Var1 = 0x3C01,
+  Group60Var2 = 0x3C02,
+  Group60Var3 = 0x3C03,
+  Group60Var4 = 0x3C04,
+  Group70Var1 = 0x4601,
+  Group70Var2 = 0x4602,
+  Group70Var3 = 0x4603,
+  Group70Var4 = 0x4604,
+  Group70Var5 = 0x4605,
+  Group70Var6 = 0x4606,
+  Group70Var7 = 0x4607,
+  Group70Var8 = 0x4608,
+  Group80Var1 = 0x5001,
+  Group110Var0 = 0x6E00,
+  Group111Var0 = 0x6F00,
+  Group112Var0 = 0x7000,
+  Group113Var0 = 0x7100,
+  GroupUndef = 0xFFFF
 };
 
+
 // flag options for reporting
+//keep these out of the way of the uri_flags
 #define PRINT_VALUE      1
 #define PRINT_PARENT     2
 #define PRINT_URI        4
@@ -133,22 +225,22 @@ enum {
 
 
 // local copy of all inputs and outputs
-// Also used with bit fields
-// if so the "parent" slot is filled and the index refers to the bit number 
-//see https://groups.google.com/forum/#!topic/automatak-dnp3/RvrrCaGM8-8
 typedef struct DbVar_t {
     DbVar_t(const char *iname, int _type, int _offset, const char* iuri, const char*ivariation):site(NULL),type(_type), offset(_offset),site_offset(-1) {
         valuedouble = 0.0;
         flags = 1;
         newFlags=false;
         newTime=false;
+        not_batched = false;
+        value_set = 0;
+        value_changed = 0;
         time = 0;
         
         sflags = "Init";
         crob = 0;
         bit = -1;
         parent = NULL;
-        initSet = 0;
+        init_set = 0;
         //readb = NULL;
         linkb = NULL;  // used to link outstation responses to master vars
         linkback = NULL;
@@ -262,17 +354,16 @@ typedef struct DbVar_t {
         return -1;
     }
 
-    // TODO turn these into char* .... no point the extra strcmp uses more resources
     std::string name;
-    const char* site;    // furute use for site.
+    const char* site;      // future use for site.
     const char* uri;
     int type;
     int variation;         // space to flag different DNP3 variation like Group30var5
-    int evariation;         // space to flag different DNP3 variation like Group30var5
+    int evariation;        // space to flag different DNP3 variation like Group30var5
     int offset;
-    int bit;              // used to indiate which bit in parent
-    DbVar_t* parent;      // I'm a bit and this is daddy 
-    int site_offset;     // future use for site offset
+    int bit;               // used to indiate which bit in parent
+    DbVar_t* parent;       // I'm a bit and this is daddy 
+    int site_offset;       // future use for site offset
     // values , most types use valuedouble
     double valuedouble;
     //we can set flags here
@@ -291,7 +382,7 @@ typedef struct DbVar_t {
     // used for bit fields
     std::vector<std::pair<const char*,int>>/*bits_map*/dbBits;
 
-    uint8_t initSet;
+    uint8_t init_set;
     DbVar_t* linkb;
     const char* linkback;
     const char* linkuri;
@@ -317,6 +408,14 @@ typedef struct DbVar_t {
     bool crob_int;
     int crob_input;
 
+    bool crob_bool;
+    int who;
+    double voffset;
+    bool enable;
+    int debug;
+    bool not_batched;
+    int value_set;
+    int value_changed;
 
 
 } DbVar;
@@ -329,29 +428,6 @@ typedef std::map<int, DbVar_t*>dbix_map;
 
 //typedef std::map<const char*,std::vector<DbVar_t*>, char_dcmp>duri_map;
 typedef std::vector<DbVar_t*> dbvec;
-
-// new thinking 
-// we'll have a map of uris each with a pointer to a map of variables
-// we'll have one of these for pubs , gets , and sets
-// how do we group them together
-// each varuable can have a uri or a default one establised for the component
-// "compname" :{
-//    "uri":" <some uri>",
-//    "varibles":[
-      // "varname":{.....},
-      // "varname":{.....}
-//    ]
-// }
-// 
-// not going to do it this way
-// the uri is fixed for a var
-// we can add _get or _set to the uri for special uses.
-// this structure is still good. the uri points to a map
-// just like john did
-// but it can be a real map we dont need to share them
-// so  when we add a var we include the uri
-//typedef std::map<std::string, dbvar_map> dburi_map;
-
 
 // used in parseBody the int is a print flag to include "value"
 typedef std::vector<std::pair<DbVar*,int>>dbs_type; // collect all the parsed vars here
@@ -368,10 +444,6 @@ bool extractInt32Val(double &dval, DbVar *db);
 bool extractInt16Val(double &dval, DbVar *db);
 
 
-int addVarToCj(cJSON* cj, DbVar*db);
-int addVarToCj(cJSON* cj, std::pair<DbVar*,int>dbp);
-int addVarToCj(cJSON* cj, const char *dname);
-int addVarToCj(cJSON* cj, DbVar* db, int flag);
 // the varlist is a map of vars associated with each uri
 typedef struct varList_t {
     varList_t(const char* iuri)
@@ -405,17 +477,22 @@ typedef struct varList_t {
 typedef std::map<std::string, varList*> dburi_map;
 
 enum {
-    URI_FLAG_REPLY  = 1<<1,
-    URI_FLAG_GET    = 1<<2,
-    URI_FLAG_SET    = 1<<3,
-    URI_FLAG_URIOK  = 1<<4,
-    URI_FLAG_NAMEOK = 1<<5,
-    URI_FLAG_SINGLE = 1<<6,
-    URI_FLAG_SYSTEM = 1<<7,
-    URI_FLAG_DUMP   = 1<<8,
-    URI_FLAG_VALUE  = 1<<9,
-    URI_FLAG_FLAGS  = 1<<10,
-    URI_FLAG_TIME   = 1<<11
+    URI_FLAG_REPLY    = 1<<1,
+    URI_FLAG_GET      = 1<<2,
+    URI_FLAG_SET      = 1<<3,
+    URI_FLAG_URIOK    = 1<<4,
+    URI_FLAG_NAMEOK   = 1<<5,
+    URI_FLAG_SINGLE   = 1<<6,
+    URI_FLAG_SYSTEM   = 1<<7,
+    URI_FLAG_DUMP     = 1<<8,
+    URI_FLAG_VALUE    = 1<<9,
+    URI_FLAG_FLAGS    = 1<<10,
+    URI_FLAG_TIME     = 1<<11,
+    URI_FLAG_SERVER   = 1<<12,
+    URI_FLAG_CLIENT   = 1<<13,
+    URI_FLAG_NAKED    = 1<<14,
+    URI_FLAG_CLOTHED  = 1<<15,
+    URI_FLAG_FULL     = 1<<16
 
 };
 
@@ -425,6 +502,7 @@ typedef struct sysCfg_t {
     {
         cj = NULL;
         cjPub = NULL;
+        cjOut = NULL;
         cjloaded = 0;
         debug = 0;
         scanreq = 0;
@@ -451,6 +529,8 @@ typedef struct sysCfg_t {
         deadband =  0.01;
         timeout =  0.0;
         tNow = 0.0;
+        tLastMsg = 0.0;
+
         base_time = -1.0;
         last_seen = -1.0;
         event_rate = 0;
@@ -466,9 +546,26 @@ typedef struct sysCfg_t {
         master = nullptr;
         format = nullptr;
         fmt = 0; // naked
+
         events = true;
         useGets = false;
         event_pub = false;
+
+        fname =  nullptr;
+        pub_only =  true;
+        batch_sets = 0.0;
+        batch_sets_in = 0.0;
+        batch_sets_max = 0.0;
+        max_pub_droop = 0.9;
+        next_batch_time = 0.0;
+        event_buffer = 100;
+        pub_timeout_detected = false;
+        batch_pubs = 0.0;
+        next_batch_pub_time = 0.0;
+        batch_pub_debug = 0;
+        enable_state_events = true;
+
+
 
         for (int i = 0; i <= static_cast<int32_t>(Type_of_Var::NumTypes) ; i++)
         {
@@ -495,6 +592,9 @@ typedef struct sysCfg_t {
         maxElapsed = 100;
         last_result = 0;
         last_res = -1;
+        fname = NULL;
+        pub_time = 0.0;
+        max_pub_delay = 0.0;
         
     }
     ~sysCfg_t()
@@ -507,6 +607,7 @@ typedef struct sysCfg_t {
         if(ip_address)free(ip_address);
         //if (pub) free(pub);
         if (name) free(name);
+        if(cjOut)cJSON_Delete(cjOut);
 
         cleanUpDbMaps();
 
@@ -546,13 +647,6 @@ typedef struct sysCfg_t {
             {
                 db->uri = strdup(defUri);
             }
-            //dbMap[name] = db;
-            //
-            //db->idx = static_cast<int32_t>(dbVec[type].size());
-            // TODO auto assign see below
-            // TODO deprecated need to set up the maps 
-            // this is OK to keep a master list as a vector 
-            // use to get dbs dbix_map dbMapIxs[Type_of_Var::NumTypes+1];
             dbVec[type].push_back(db);
             db->vindex = dbVec[type].size();
             if (offset > maxIdx[type])
@@ -568,8 +662,6 @@ typedef struct sysCfg_t {
             // we have an extra array do handle auto indexing
             if (type > NumTypes)
                 return 0;
-            //return static_cast<int32_t>(dbVec[type].size());
-            // fix the BRP power bug getting the last value
             if(useVindex)return dbMapIxs[type].size();
             return static_cast<int32_t>(maxIdx[type]+1);
         }
@@ -591,18 +683,8 @@ typedef struct sysCfg_t {
                 FPS_DEBUG_PRINT(" **** %s setting name [%s] typ [%d] idx [%d] Later \n", __FUNCTION__, db->name.c_str(), db->type, db->idx );
                 return;
             }
-            // no need to repeat this
-            //if ((inParse == 0) && (db->idx != -1))
-            //    return;
-            // slight wrinkle 
-            // if useVindex is on we get the index back as the compressed index... ( sigh)
-            // so we need to save the vIndex in the map to find the thing.
-            //  need sys->who and db->vindex
             if(db->idx > -1)
             {
-                //dbMapIxs[opType][db->idx] = db;
-                // repeat here just to make sure
-                // if(opType != db->type)
                 if(debug)
                 {
                     FPS_ERROR_PRINT(" **** %s setting name [%s] typ [%d] idx [%d] NOW \n", __FUNCTION__, db->name.c_str(), db->type, db->idx );
@@ -627,15 +709,11 @@ typedef struct sysCfg_t {
             {
                 opType = NumTypes;
             }
-            // TODO review this
-            // all outputs are merged into one type to ensure unique indexes
             while (dbMapIxs[opType].find(db->idx) != dbMapIxs[opType].end())
             {   
                 db->idx++;
             }
             dbMapIxs[opType][db->idx] = db;
-            // repat here just to make sure
-            //if(opType != db->type)
             FPS_ERROR_PRINT(" **** %s setting name [%s] typ [%d] idx [%d] AGAIN NOW \n", __FUNCTION__, db->name.c_str(), db->type, db->idx );
             dbMapIxs[db->type][db->idx] = db;
         } 
@@ -685,7 +763,7 @@ typedef struct sysCfg_t {
                         }
                     }
                 }
-                db->initSet = 1;
+                db->init_set = 1;
                 if (cjFlag)
                 {
                     setDbFlags(db, cjFlag, nullptr);
@@ -702,12 +780,20 @@ typedef struct sysCfg_t {
                     {
                         // also copy valueint or the group30var5 stuff
 
+                        if(db->valuedouble != fval)
+                        {
+                            db->value_changed++;
+                        }
                         db->valuedouble = fval;
                         return 1;
                     }    
                     case Type_Binary:
                     case Type_BinaryOS:
                     {
+                        if(db->valuedouble != fval)
+                        {
+                            db->value_changed++;
+                        }
                         db->valuedouble = fval;
                         //db->valueint = static_cast<int32_t>(fval);
                         return  1;
@@ -749,7 +835,7 @@ typedef struct sysCfg_t {
                         }
                     }
                 }
-                db->initSet = 1;
+                db->init_set = 1;
                 if (cjFlag)
                 {
                     setDbFlags(db, cjFlag, nullptr);
@@ -764,6 +850,10 @@ typedef struct sysCfg_t {
                     case AnIn32:
                    {
                         // also copy valueint or the group30var5 stuff
+                        if(db->valuedouble != (double)ival)
+                        {
+                            db->value_changed++;
+                        }
                         db->valuedouble = (double)ival;
                         //db->valueint =  ival;
                         return 1;
@@ -771,12 +861,21 @@ typedef struct sysCfg_t {
                     case Type_Binary:
                     case Type_BinaryOS:
                     {
+                        if(db->valuedouble != (double)ival)
+                        {
+                            db->value_changed++;
+                        }
                         db->valuedouble = (double)ival;
                         //db->valueint = ival;
                         return  1;
                     } 
                     case Type_Crob:
                     {
+                        if(db->crob != ival)
+                        {
+                            db->value_changed++;
+                        }
+
                         db->crob = ival;// OperationTypeSpec::to_type(StringToOperationType(cj->valuestring));
                         return  1;
                     }
@@ -787,12 +886,9 @@ typedef struct sysCfg_t {
             return 0;
         };
 
-        // TODO decode string
-        // TODO decode Time
         int setDbFlags(DbVar* db, cJSON* cjFlag, cJSON* cjTime)
         {
                 cJSON* cj = cJSON_GetObjectItem(cjFlag,"flags");
-                // It may not be burried 
                 if (!cj)
                 {
                     cj = cjFlag;
@@ -854,7 +950,9 @@ typedef struct sysCfg_t {
                     } 
                     case Type_Crob:
                     {
-                        // CROB can be a string 
+                        // incoming CROB value  can be a string , int or bool
+                        // if we are using a bool than translate the meaning of true/false into a crob value if crob_true or crob_false are defined
+                        // the default is "LATCH_ON" (3) for true , "LATCH_OFF" (4) for false
                         if (cj->valuestring)
                         {
                             int cval =  OperationTypeSpec::to_type(StringToOperationType(cj->valuestring));
@@ -873,13 +971,11 @@ typedef struct sysCfg_t {
                                 if (db->crob_true >=0)
                                 {
                                     ival = db->crob_true;
-                                    //return setDb(db, db->crob_true);
                                 }
                                 else
                                 {
-                                    // PULSE_ON
-                                    ival = 1;
-                                    //return setDb(db, 1);
+                                    // LATCH_ON
+                                    ival = OperationTypeSpec::to_type(StringToOperationType("LATCH_ON"));
                                 }
                             }
                             else
@@ -887,13 +983,11 @@ typedef struct sysCfg_t {
                                 if (db->crob_false >=0)
                                 {
                                     ival =  db->crob_false;
-                                    //return setDb(db, db->crob_false);
                                 }
                                 else
                                 {
-                                    ival = 2;
-                                    //PULSE_OFF
-                                    //return setDb(db, 2);
+                                    //LATCH_OFF
+                                    ival = OperationTypeSpec::to_type(StringToOperationType("LATCH_OFF"));
                                 }
                             }
                             if(debug)
@@ -904,7 +998,6 @@ typedef struct sysCfg_t {
 
                         }
 
-                        // false is control code 4
                         else 
                         {
                             int ival = cj->valueint;
@@ -923,7 +1016,6 @@ typedef struct sysCfg_t {
 
         int setDbVar(const char* uri, const char* name, cJSON* cj, cJSON* cjFlags, cJSON* cjTime)
         {
-            //FPS_ERROR_PRINT( " *************** %s #1 Var [%s] processed flags %p \n",__FUNCTION__, name, (void *) cjFlags);
             DbVar* db = getDbVar(uri, name);
             if(db)
             {
@@ -948,7 +1040,6 @@ typedef struct sysCfg_t {
             DbVar* db = getDbVar(uri, name);
             if(db != NULL)
             {
-
                 return setDb(db, dval);
             }
             return 0;
@@ -1002,7 +1093,6 @@ typedef struct sysCfg_t {
                     //   LATCH_OFF = 0x4,
                     //   Undefined = 0xFF
                     const char* cmd = OperationTypeSpec::to_string(OperationTypeSpec::from_type(ival));
-                    //db->crob = ival;
                     if(debug)
                     {
                         FPS_ERROR_PRINT(" setting the crob value of [%s] %s to %d [%s] Flags %p\n"
@@ -1059,7 +1149,6 @@ typedef struct sysCfg_t {
             return 0;
         };
 
-        //  fixed
         DbVar* getDbVarId(int dbtype, int idx)
         {
             if (dbtype > Type_of_Var::NumTypes) return NULL;
@@ -1075,7 +1164,6 @@ typedef struct sysCfg_t {
         {
             for (int i = 0; i < static_cast<int32_t>(Type_of_Var::NumTypes); i++)
             {
-                //dbVec[type].push_back(db);
                 FPS_ERROR_PRINT(" cleanup dbvec [%d]\n", i);
                 dbVec[i].clear();
             }
@@ -1085,7 +1173,6 @@ typedef struct sysCfg_t {
             {
                 FPS_ERROR_PRINT(" cleanup dburiMap [%s] [%d]\n", it->first.c_str(), ix);
 
-                //free((void *)it->first);
                 delete it->second;
                 ix++;
 
@@ -1093,7 +1180,6 @@ typedef struct sysCfg_t {
             dburiMap.clear();            
         }
 
-// deprecated
         void showDbMap()
         {
             FPS_ERROR_PRINT(" %s DbVars===> \n\n", __FUNCTION__);
@@ -1104,9 +1190,6 @@ typedef struct sysCfg_t {
                     FPS_ERROR_PRINT("\n dnp3 type [%s]\n", iotypToStr(i)); 
                     for (int j = 0; j < static_cast<int32_t>(dbVec[i].size()); j++)
                     {
-                        // TODO use dbMapIxs[Type_of_Var::NumTypes+1];
-                        // this one is OK
-                        // DbVar* db = getDbVarId(i, j);
                         DbVar* db = dbVec[i][j];
                         if((db != NULL) &&(db->type == i))
                         {
@@ -1119,7 +1202,6 @@ typedef struct sysCfg_t {
                                 );
 
                         }
-                        // try again from tne idx map
                         if(db)
                             db = getDbVarId(i, db->idx);
                         if(db != NULL)// &&(db->type == i))
@@ -1150,8 +1232,7 @@ typedef struct sysCfg_t {
             }           
         }
 
-        // etype == 1 for clothed body
-        void addPubVar(DbVar* db, double val, unsigned int etype = 0)
+        void addPubVar(DbVar* db, double val, unsigned int etype = 0, int fmt = 0)
         {
             int ptype = 0;
             if(etype == 0x2003 /*Group32Var3*/) ptype = 3;
@@ -1171,9 +1252,7 @@ typedef struct sysCfg_t {
             cJSON* cjuri = cJSON_GetObjectItem(cjPub, uri);
             if(cjuri == NULL)
             {
-                //FPS_ERROR_PRINT(" %s  created cjuri [%s] \n", __FUNCTION__, db->uri);
                 cjuri = cJSON_CreateObject();
-                //cJSON_AddNumberToObject(cjv,"value", cmd.value);
                 cJSON_AddItemToObject(cjPub, uri, cjuri);
                 cjuri = cJSON_GetObjectItem(cjPub, uri);
             }
@@ -1184,49 +1263,35 @@ typedef struct sysCfg_t {
                     cJSON_DeleteItemFromObjectCaseSensitive(cjuri, db->name.c_str());
                 }
 
-                // int format = pubType;
-                // if (db->format)
-                // {
-                //     format = db->format;
-                // }
-                // we have naked/ clothed and full
-                // an event will trigger full so we'll add some event stuff into the arguments
-                // this is the naked format
-                if (ptype == 0)  // this is the naked form
+                if (fmt == 0)  // this is the naked form
                 {
                     cJSON_AddNumberToObject(cjuri, db->name.c_str(), val);
                 }
                 else
                 {
-                    // we cannot use a common format field because  the same db var for different events
-                    // static events 
                     cJSON* cjv = cJSON_CreateObject();
                     cJSON_AddNumberToObject(cjv, "value", val);
                    
-                    cJSON_AddNumberToObject(cjv, "flags", db->flags);
-                    if (db->sflags.length() > 0)
-                        cJSON_AddStringToObject(cjv, "sflags", db->sflags.c_str());
-                    if(ptype>1) cJSON_AddStringToObject(cjv, "event", variation_encode(etype) /*db->event*/);
-                    if (db->stime.length() > 0)
+                    if(fmt >= 2)
                     {
-                       if(ptype >= 0)
-                       { 
+                        cJSON_AddNumberToObject(cjv, "flags", db->flags);
+                        if (db->sflags.length() > 0)
+                        {
+                            cJSON_AddStringToObject(cjv, "sflags", db->sflags.c_str());
+                            if(ptype>=2) cJSON_AddStringToObject(cjv, "event", variation_encode(etype) /*db->event*/);
+                        }
+                        if (db->stime.length() > 0)
+                        {
                            cJSON_AddStringToObject(cjv, "stime", db->stime.c_str());
-                       }
-                    }
-                    if (db->ltime.length() > 0)
-                    {
-                       if((ptype == 1)||(ptype == 2))
-                       {
+                        }    
+                        if (db->ltime.length() > 0)
+                        {
                            cJSON_AddStringToObject(cjv, "ltime", db->ltime.c_str());
-                       }
-                    }
-                    if (db->etime.length() > 0)
-                    {
-                       if((ptype == 1) ||(ptype>2))
-                       {
+                        }
+                        if (db->etime.length() > 0)
+                        {
                            cJSON_AddStringToObject(cjv, "etime", db->etime.c_str());
-                       }
+                        }
                     }
                     cJSON_AddItemToObject(cjuri, db->name.c_str(), cjv);
 
@@ -1240,7 +1305,7 @@ typedef struct sysCfg_t {
             }
         }
 
-        void addPubVar(DbVar* db, bool val, unsigned int etype = 0)
+        void addPubVar(DbVar* db, bool val, unsigned int etype = 0, int fmt = 0)
         {
             int ptype = 0;
             if(etype == 0x0203 /*Group2Var3*/) ptype = 3;
@@ -1255,12 +1320,10 @@ typedef struct sysCfg_t {
             if (cjPub == NULL)
             {
                 cjPub = cJSON_CreateObject();
-                //FPS_ERROR_PRINT(" %s  created cjPub (bool) \n", __FUNCTION__);
             }
             cJSON* cjuri = cJSON_GetObjectItem(cjPub, uri);
             if(cjuri == NULL)
             {
-                //FPS_ERROR_PRINT(" %s  created cjuri [%s] \n", __FUNCTION__, db->uri);
                 cjuri = cJSON_CreateObject();
                 cJSON_AddItemToObject(cjPub, uri, cjuri);
                 cjuri = cJSON_GetObjectItem(cjPub, uri);
@@ -1269,17 +1332,11 @@ typedef struct sysCfg_t {
             if(cjuri != NULL)
             {
                 
-                // int format = pubType;
-                // if (db->format)
-                // {
-                //     format = db->format;
-                // }
                 if (db->pref == pref)
                 {
                     cJSON_DeleteItemFromObjectCaseSensitive(cjuri, db->name.c_str());
                 }
-//                if(format == 0)
-                if(ptype == 0)
+                if(fmt == 0)
                 {
                     cJSON_AddBoolToObject(cjuri, db->name.c_str(), val);
                 }
@@ -1287,46 +1344,41 @@ typedef struct sysCfg_t {
                 {
                     cJSON* cjv = cJSON_CreateObject();
                     cJSON_AddBoolToObject(cjv, "value", val);
-                    cJSON_AddNumberToObject(cjv, "flags", db->flags);
-                    if (db->sflags.length() > 0)
+                    if (fmt >= 2) 
                     {
-                        cJSON_AddStringToObject(cjv, "sflags", db->sflags.c_str());
-                    }
-                    if(ptype > 1)
-                    {
-                        cJSON_AddStringToObject(cjv, "event", variation_encode(etype) /*db->event*/);
-                    }
-                    if (db->stime.length() > 0)
-                    {
-                       if(ptype >= 0)
-                       {
-                           cJSON_AddStringToObject(cjv, "stime", db->stime.c_str());
-                       }
-                    }
-                    if (db->ltime.length() > 0)
-                    {
-                       if((ptype == 1)||(ptype == 2))
-                       {
-                           cJSON_AddStringToObject(cjv, "ltime", db->ltime.c_str());
-                       }
-                    }
-                    if (db->etime.length() > 0)
-                    {
-                       if((ptype == 1) ||(ptype>2))
-                       {
-                           cJSON_AddStringToObject(cjv, "etime", db->etime.c_str());
-                       }
+                        cJSON_AddNumberToObject(cjv, "flags", db->flags);
+                        if (db->sflags.length() > 0)
+                        {
+                            cJSON_AddStringToObject(cjv, "sflags", db->sflags.c_str());
+                        }
+                        if(fmt > 1)
+                        {
+                            cJSON_AddStringToObject(cjv, "event", variation_encode(etype) /*db->event*/);
+                        
+                            if (db->stime.length() > 0)
+                            {
+                                cJSON_AddStringToObject(cjv, "stime", db->stime.c_str());
+                            }
+                            if (db->ltime.length() > 0)
+                            {
+                                cJSON_AddStringToObject(cjv, "ltime", db->ltime.c_str());
+                            }
+                            if (db->etime.length() > 0)
+                            {
+                                cJSON_AddStringToObject(cjv, "etime", db->etime.c_str());
+                            }
+                        }
                     }
                     cJSON_AddItemToObject(cjuri, db->name.c_str(), cjv);
                 }
                 db->pref = pref;
             }
-            if(ptype > 1)
+            if(fmt > 1)
             {
                 pubUris(true);
             }
         }
-//runs in fpsMasterApplication.h
+
         void pubUris(bool pubFlag)
         {
             if (cjPub == NULL)
@@ -1338,10 +1390,7 @@ typedef struct sysCfg_t {
                 cJSON* obj;
                 cJSON_ArrayForEach(obj, cjPub)
                 {
-                    //obj->string is the URI 
-                    //obj->child are the data points
                     addCjTimestamp(obj, "Timestamp");
-                    //char* out = cJSON_PrintUnformatted(obj->child);
                     char* out = cJSON_PrintUnformatted(obj);
                     if (out) 
                     {
@@ -1367,10 +1416,6 @@ typedef struct sysCfg_t {
             return;
             for (int i = 0; i < static_cast<int32_t>(Type_of_Var::NumTypes); i++)
             {
-                // for outputs they are all on the Ain16 Vec
-                //if (i == AnIn32) continue;
-                //if (i == AnF32) continue;
-                //if (i == Type_Crob) continue;
 
                 if (dbVec[i].size() > 0)
                 {
@@ -1378,8 +1423,6 @@ typedef struct sysCfg_t {
                         FPS_ERROR_PRINT(" Assign dnp3 type [%s]\n", iotypToStr(i)); 
                     for (int j = 0; j < static_cast<int32_t>(dbVec[i].size()); j++)
                     {
-                        //use dbix_map dbMapIxs[Type_of_Var::NumTypes+1];
-                        //DbVar* db = getDbVarId(i, j);
                         DbVar* db = dbVec[i][j];
                         if(db != NULL)
                         {
@@ -1418,7 +1461,6 @@ typedef struct sysCfg_t {
                 FPS_ERROR_PRINT(" %s DbVars<=== \n\n", __FUNCTION__);
         }
 
-        // add all the vars referenced by this uri
         void addVarsToVec(std::vector<DbVar*>& dbs, const char* uri)
         {
            if(uri != NULL)
@@ -1426,14 +1468,12 @@ typedef struct sysCfg_t {
                 dburi_map::iterator it = dburiMap.find(uri);
                 if (it != dburiMap.end())
                 {
-                    // it.first is the uri
                     if(debug)
                         FPS_DEBUG_PRINT(" %s uris checking [%s] uri [%s] \n ", __FUNCTION__, it->first.c_str(), uri);
-                    // dbvar_map
                     auto dvar = it->second;
                     auto dbm = dvar->dbmap;
                     dbvar_map::iterator itd;
-                    //int flag = 0;
+
                     for (itd = dbm.begin() ; itd != dbm.end(); ++itd)
                     {
                         DbVar* db = itd->second;
@@ -1479,8 +1519,6 @@ typedef struct sysCfg_t {
             }
         }
 
-        //typedef std::map<std::string, varList*> dburi_map;
-        //typedef std::map<std::string, DbVar_t*> dbvar_map;
         void showNewUris()
         {
             FPS_ERROR_PRINT(" %s uris===> \n\n", __FUNCTION__);
@@ -1491,7 +1529,6 @@ typedef struct sysCfg_t {
             {
                 FPS_ERROR_PRINT(" .. uri [%s] num vars %d\n", it->first.c_str(), static_cast<int32_t>(it->second->dbmap.size()));
 
-                // dbvar_map
                 auto dvar = it->second;
                 auto dbm = dvar->dbmap;
                 for (itd = dbm.begin(); itd != dbm.end(); ++itd)
@@ -1502,8 +1539,6 @@ typedef struct sysCfg_t {
             FPS_ERROR_PRINT(" %s<=== New uris \n\n", __FUNCTION__);
         }
 
-        // returns the start of the untangled uri
-        // sets flags to describe how to handle the uri 
         char* confirmUri(DbVar* &db, const char*uri, int who, char* &name, int& flags)
         {
             int old_debug = debug;
@@ -1519,12 +1554,12 @@ typedef struct sysCfg_t {
             {
                 flags |= URI_FLAG_SYSTEM;
                 flags |= URI_FLAG_URIOK;
-                //if(debug>2)
+                if(debug>2)
                     FPS_ERROR_PRINT(" %s confirmUri SYSTEM [_system] found in  [%s], flags set 0x%0x\n",__FUNCTION__, uri, flags);
                debug=old_debug;
                return (char*)uri;
             }
-            // seek reply format
+
             asprintf(&tmp, "%s/reply",base_uri);
             if(debug>2)
                 FPS_ERROR_PRINT(" %s confirmUri seeking REPLY [%s] in [%s]\n",__FUNCTION__, tmp, uri);
@@ -1541,7 +1576,6 @@ typedef struct sysCfg_t {
             else
             {
                 turi = (char *)uri;
-                // seek extended format
                 if(local_uri != NULL)
                 {
                     if(tmp) free((void *)tmp);
@@ -1585,18 +1619,60 @@ typedef struct sysCfg_t {
                             turi += strlen(tmp);
                         }
                     }
-
                 }
             }
 
+            if(tmp) free(tmp);
+            asprintf(&tmp, "%s", "/client");
+            if (strncmp(turi, tmp, strlen(tmp) )== 0)
+            {
+                flags |= URI_FLAG_CLIENT;
+                turi = turi + strlen(tmp);
+                if(debug>2)
+                    FPS_ERROR_PRINT(" %s client [%s] found uri now [%s]\n",__FUNCTION__, tmp, turi);
+            }
+            if(tmp) free(tmp);
+            asprintf(&tmp, "%s", "/server");
+            if (strncmp(turi, tmp, strlen(tmp) )== 0)
+            {
+                flags |= URI_FLAG_SERVER;
+                turi = turi + strlen(tmp);
+                if(debug>2)
+                    FPS_ERROR_PRINT(" %s server [%s] found uri now [%s]\n",__FUNCTION__, tmp, turi);
+            }
+            // look for more prefixes like full/clothed/naked
+            // these must happen after client/server
+            if(tmp) free(tmp);
+            asprintf(&tmp, "%s", "/naked");
+            if (strncmp(turi, tmp, strlen(tmp) )== 0)
+            {
+                flags |= URI_FLAG_NAKED;
+                turi = turi + strlen(tmp);
+                if(debug>2)
+                    FPS_ERROR_PRINT(" %s confirmUri naked [%s] found uri now [%s]\n",__FUNCTION__, tmp, turi);
+            }        
+
+            if(tmp) free(tmp);
+            asprintf(&tmp, "%s", "/full");
+            if (strncmp(turi, tmp, strlen(tmp) )== 0)
+            {
+                flags |= URI_FLAG_FULL;
+                turi += strlen(tmp);
+            }
+            if(tmp) free(tmp);
+            asprintf(&tmp, "%s", "/clothed");
+            if (strncmp(turi, tmp, strlen(tmp) )== 0)
+            {
+                flags |= URI_FLAG_CLOTHED;
+                turi += strlen(tmp);
+            }
+        
             if (tmp)
             {
                 free((void *)tmp);
             }
-            // now look for  matching uri
-            // look for "/interfaces/<id>/<someuri>"
+
             dburi_map::iterator it = dburiMap.find(turi);
-            //bool match = false;
             nuri = NULL;
             for  (it = dburiMap.begin() ; it != dburiMap.end(); it++)
             {
@@ -1657,14 +1733,13 @@ typedef struct sysCfg_t {
             for (int i = 0  ; i < asiz; i++ )
             {
                 cJSON* cji = cJSON_GetArrayItem(bits, i);
-                // just use one copy of valuestring clean up will fix it.
                 const char* bs = strdup(cji->valuestring);
                 db->addBit(bs);
                 bitsMap[bs] == std::make_pair(db, i);
             }
             return asiz;
         }
-        // see if we have any uninitialized vars
+
         bool checkUris(int who)
         {
             dburi_map::iterator it;
@@ -1677,7 +1752,7 @@ typedef struct sysCfg_t {
                 for (itd = dbm.begin(); itd != dbm.end(); ++itd)
                 {
                     DbVar* db = itd->second;
-                    if (db->initSet == 0)
+                    if (db->init_set == 0)
                     {
                         if(who == DNP3_OUTSTATION)
                         {
@@ -1707,7 +1782,6 @@ typedef struct sysCfg_t {
             return ret;
         };
 
-        // get the list of subs
         int getSubs(const char**subs, int num, int who)
         {
             if (num < static_cast<int32_t>(dburiMap.size()))
@@ -1731,7 +1805,6 @@ typedef struct sysCfg_t {
                 }
                 if(debug)
                 {
-                    //FPS_ERROR_PRINT(" %s sub uris===>[       ]<=== \n", __FUNCTION__);
                     for (int i = 0 ; i < idx; i++)
                     {
                         FPS_ERROR_PRINT("      ===>[%s]<=== \n", subs[i]);
@@ -1742,11 +1815,9 @@ typedef struct sysCfg_t {
             {
                 FPS_ERROR_PRINT(" %s No Subs \n", __FUNCTION__);
             }
-            
             return idx;
         }
-        // put out the start up request from fims_echo
-        // only get the ones for vars applied to this application (outstation or master)
+ 
         int getUris(int who)
         {
             if(debug)
@@ -1757,8 +1828,6 @@ typedef struct sysCfg_t {
             {
                 char replyto[1024];
                 char getUri[1024];
-                //sprintf(replyto, "%s/reply%s", server_map->base_uri, it->first);
-                //server_map->p_fims->Send("get", it->first, replyto, NULL);
                 if (it->first[0] == '/') 
                 {
                     snprintf(replyto, sizeof(replyto),"%s/reply%s",  base_uri, it->first.c_str());
@@ -1782,31 +1851,9 @@ typedef struct sysCfg_t {
             return 0;
         }
 
-        // new way of doing this
-        // we may not need this structure in the end
-        // new structure varList  uri name, map of dbVars
-        // struct varList {
-        //    const char* uri;
-        //    dbvar_map dbmap;
-        //};
-        //typedef std::map<std::string, varList*> dburi_map;
-        //typedef std::map<std::string, DbVar_t*> dbvar_map;
-//      typedef struct varList_t {
-//           varList(const char* iuri){
-//           uri = iuri;
-//         };
-//     // TODO delete dbmap
-//        ~varList(){};
-//        const char* uri;
-//        dbvar_map dbmap;
-//      } varList;
-
         void addDbUri(const char *uri, DbVar*db)
         {
             std::string mapUri = uri;
-            // this is a pointer to the uri 
-            // if there is not one in the map then create a new one and then add it
-            //duri_map::iterator it_uris;
             if(dburiMap.find(uri) == dburiMap.end())
             {
                 if(debug > 0)
@@ -1819,13 +1866,8 @@ typedef struct sysCfg_t {
                 if(debug > 0)
                     FPS_ERROR_PRINT("     %s  ==> FOUND varlist [%s]  dburi size %d \n", __FUNCTION__, uri, (int) dburiMap.size());
             }
-            //mymap.insert ( std::pair<char,int>('a',100) );
             varList_t *vl = dburiMap[mapUri];
             vl->addDb(db);
-
-            //dbvar_map dbm = dburiMap[mapUri]->dbmap;
-            //dbm.insert(std::pair<std::string,DbVar*>(db->name, db));
-
             if(debug > 0)
                 FPS_ERROR_PRINT(" %s  ==> added var [%s]  dbm size %d \n", __FUNCTION__, db->name.c_str(), (int) vl->size());
         }
@@ -1859,11 +1901,8 @@ typedef struct sysCfg_t {
         char* id;
         char* ip_address;
         char *defUri;
-        //char* pub;
         int version;
         int port;
-        //int local_address;
-        //int remote_address;
         int master_address;
         int station_address;
         int frequency;
@@ -1886,24 +1925,22 @@ typedef struct sysCfg_t {
         double timeout;  // if non zero use this for all vars
         double last_seen; // time of last update
         double tNow;
+        double tLastMsg;
+
         double base_time;
         double respTime;
 
-        // new way of doing this
-        //dbvar_map dbMap;
         dbvec dbVec[Type_of_Var::NumTypes];
-        // TODO remove the need for +1 we now use idx to position a variable
         dbix_map dbMapIxs[Type_of_Var::NumTypes+1];
         int maxIdx[Type_of_Var::NumTypes+1];
-        //duri_map uriMap;
         bits_map bitsMap;
         dburi_map dburiMap;
 
         int numObjs[Type_of_Var::NumTypes];
-        //bool useReadb[Type_of_Var::NumTypes]; // set true if writes to this type should be diverted to readb if setup
 
         fims* p_fims;
         cJSON* cj;  
+        cJSON* cjOut;  
         cJSON* cjPub;
         int cjloaded;
         int debug;
@@ -1921,7 +1958,7 @@ typedef struct sysCfg_t {
 
         char* conn_type; // TCP or TLS (error out on anything else)
 
-        // TLS stuff (might need another key):
+        // TLS elements (might need another key):
         char* privateKey;
         char* peerCertificate;
         char* localCertificate;
@@ -1930,7 +1967,7 @@ typedef struct sysCfg_t {
         char* caCertificate;
         char* tls_folder_path;
 
-        // RTU stuff:
+        // RTU elements:
         int baud;
         int dataBits;
         double stopBits;
@@ -1939,9 +1976,9 @@ typedef struct sysCfg_t {
         int asyncOpenDelay;
         char* deviceName; // this might just be name really?
 
-        char* format;// overrdden by db->format {"clothed"}
-        bool events;// overrdden by db->events  ( 0 or 1) 
-        int fmt; // decoded "clothed" 
+        char* format;     // overrdden by db->format {"clothed"}
+        bool events;      // overrdden by db->events  ( 0 or 1) 
+        int fmt;          // decoded "clothed" 
         int pubType;
         char* pubTypestr;
 
@@ -1954,6 +1991,22 @@ typedef struct sysCfg_t {
         bool useGets;
         bool event_pub;
 
+        char* fname;
+        bool pub_only;
+        double batch_sets;
+        double batch_sets_in;
+        double batch_sets_max;
+        double max_pub_droop;
+        double next_batch_time;
+        std::mutex setLock;
+        int event_buffer;
+        double pub_time;
+        double max_pub_delay;
+        bool pub_timeout_detected;
+        double batch_pubs;
+        double next_batch_pub_time;
+        int batch_pub_debug;
+        bool enable_state_events;
 
 } sysCfg;
 
@@ -1972,7 +2025,6 @@ class SysCfg {
    }
 
    public:
-
 
    static SysCfg *getInstance() {
         static SysCfg *instance;
@@ -2017,6 +2069,7 @@ class SysCfg {
 
 DbVar* getDbVar(sysCfg* sysdb, const char* name);
 void emit_event(sysCfg *sys, const char* source, const char* message, int severity);
+void emit_event_filt(sysCfg *sys, const char* source, const char* message, int severity);
 cJSON* get_config_json(int argc, char* argv[], int num);
 
 // new mapping
@@ -2032,8 +2085,11 @@ void sysdbAddtoRecord(sysCfg* sysdb, const char* field, const AnalogOutputFloat3
 void sysdbAddtoRecord(sysCfg* sysdb, const char* field, const char* cmd, uint16_t index);
 const char* cfgGetSOEName(sysCfg* sysdb, const char* fname);
 
-int addVarToCj(cJSON* cj,  DbVar* db);
-int addVarToCj(sysCfg* sys, cJSON* cj, const char* dname);
+int addVarToCj(sysCfg*sys, cJSON* cj, DbVar*db);
+int addVarToCj(sysCfg*sys, cJSON* cj, std::pair<DbVar*,int>dbp);
+int addVarToCj(sysCfg*sys, cJSON* cj, const char *dname);
+int addVarToCj(sysCfg*sys, cJSON* cj, DbVar* db, int flag);
+
 
 cJSON* parseBody(dbs_type& dbs, sysCfg* sys, fims_message* msg, int who);
 int addValueToVec(dbs_type& dbs, sysCfg* sys, fims_message* msg, const char* name, cJSON* cjvalue, int flag);
@@ -2051,6 +2107,5 @@ UTCTimestamp Now();
 int HandleEvent(sysCfg *sys,  DbVar* db , int etype);
 bool checkFileName(const char* fname);
 bool checkDeviceName(const char* fname);
-
 
 #endif

@@ -55,7 +55,7 @@ func pToI(p, v float64) float64 {
 	if v == 0 {
 		return 0
 	}
-	return p / v
+	return p * 1000 / v
 }
 
 func sToI(s, v float64) float64 {
@@ -184,7 +184,7 @@ func processCtrlWordConfig(a interface{}, ctrlwordcfg []ctrlwordcfg, ctrlword in
 }
 
 type measurement struct {
-	Value              float64
+	Value                float64
 	FaultHigh          bool
 	FaultHighThreshold float64
 	AlarmHigh          bool
@@ -392,6 +392,44 @@ func updateHeartTime(h *hearttime) {
 	h.Hour = float64(h.Time.Hour())
 	h.Minute = float64(h.Time.Minute())
 	h.Second = float64(h.Time.Second())
+}
+
+//linear interpolation to find yi from xi based on breakpoints supplied by xvec and yvec
+func interpl(xvec []float64, yvec []float64, xi float64) (yi float64, flt bool) {
+	xlen := len(xvec)
+	ylen := len(yvec)
+	var found bool = false
+	if (xlen != ylen) || xlen < 2 {
+		return 0.0, true
+	}
+	//linear interpolation
+	//See https://en.wikipedia.org/wiki/Linear_interpolation for derivation
+	if xvec[1] > xvec[0] {
+		for i := 0; i < (len(xvec) - 1); i++ {
+			if xi >= xvec[i] && xi <= xvec[i+1] {
+				yi = (yvec[i]*(xvec[i+1]-xi) + yvec[i+1]*(xi-xvec[i])) / (xvec[i+1] - xvec[i])
+				found = true
+			}
+		}
+	} else {
+		for i := 0; i < (len(xvec) - 1); i++ {
+			if xi <= xvec[i] && xi >= xvec[i+1] {
+				yi = (yvec[i]*(xvec[i+1]-xi) + yvec[i+1]*(xi-xvec[i])) / (xvec[i+1] - xvec[i])
+				found = true
+			}
+		}
+	}
+	if found {
+		return yi, false
+	}
+	if xi > xvec[xlen-1] { //extrapolate
+		yi = (yvec[xlen-2]*(xvec[xlen-1]-xi) + yvec[xlen-1]*(xi-xvec[xlen-2])) / (xvec[xlen-1] - xvec[xlen-2])
+		return yi, true //indicate to calling function that input was out of bounds. This may be ok or may not be depending on usage.
+	} else if xi < xvec[0] {
+		yi = (yvec[0]*(xvec[1]-xi) + yvec[1]*(xi-xvec[0])) / (xvec[1] - xvec[0])
+		return yi, true
+	}
+	return yi, true
 }
 
 type rack struct {

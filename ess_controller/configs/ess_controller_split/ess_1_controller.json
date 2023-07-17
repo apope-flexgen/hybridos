@@ -1,0 +1,515 @@
+{
+    "amname":"ess",
+    "/docs/02_ess_controller": {
+        "note1": "Start with this config file. The BMS, PCS, and site managers are referenced",
+        "note1a": "/assets/ess/[summary | ess_1] - defines the web UI for the ESS Controller. ESS-related statuses, controls, and faults/alarms are displayed on the UI",
+        "note1b": "/config/ess                   - defines configurable variables used in the ESS Controller source code",
+        "note1c": "/config/ess_server            - loads the ess modbus interface to the ESS Controller",
+        "note1d": "/config/ess/managers          - loads the asset manager config files (ex.: BMS, PCS, site) to the ESS Controller",
+        "note1e": "/controls/ess                 - defines the control variables for the ESS Controller",
+        "note1f": "/status/ess                   - defines the status variables for the ESS Controller",
+        "note1g": "/links/ess                    - defines mapping of external interface components to internal variables",
+        "note1h": "/vlinks/ess                   - allows two variables to share the same value",
+        "note1i": "/sched/ess                    - defines the variables that will run a function on a scheduled basis",
+        "note1j": "/schedule/wake_monitor/ess    - periodically runs a function for a particular variable (default to 100ms; wake_monitor to be removed)",
+        "note1k": "/faults/ess                   - defines faults reported by the ESS Controller (will trigger PCS shutdown; contains only the clear faults variable at the moment)",
+        "note1l": "/[sets | pubs | gets]/blocked - blocks fims set/pub/get for a particular uri",
+        "note12": " As each data item is requestd,  a data request is sent to the dbi system. ",
+        "note12a": "",
+        "note13":" Special for the twin_bms clear_faults is sent to ess_2"
+        
+    },
+        
+    "/schedule/wake_monitor/ess":{
+        "/status/ess:CurrentCheckStop":       { "enable": true, "rate": 0.1, "amap": "ess", "func": "CheckMonitorVar"}
+    },
+
+    "/config/ess": {
+        "LogDir": "/var/log/ess_1_controller",
+        "AlarmDestination": "/assets/ess/summary:alarms",
+        "FaultDestination": "/assets/ess/summary:faults"
+    },
+
+    "/blockeduris/set":
+    {
+         "/components/ess_1/cell": true,
+         "/components/ess_1/hvac": true
+    },
+    "/blockeduris/pub":
+    {
+         "/components/ess_1/cell": true,
+         "/components/ess_1/hvac": true
+    },
+    
+    "/assets/ess/ess_1":{
+        "name": "ESS Summary",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "version": {
+            "name": "Version",
+            "value": "version",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "status": {
+            "name": "Status",
+            "value": "Hello Ess 1",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "work_mode": {
+            "name": "Work Mode",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "on_grid_mode_status": {
+            "name": "On-grid Mode",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "active_power": {
+            "name": "Active Power",
+            "value": 2.5,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "active_power_setpoint": {
+            "name": "Active Power Setpoint",
+            "value": 3.0999999046325684,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_charge_power": {
+            "name": "Max Charge Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_discharge_power": {
+            "name": "Max Discharge Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soc": {
+            "name": "State of Charge",
+            "value": 76.55913543701172,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soh": {
+            "name": "State of Health",
+            "value": 65.7,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        }
+    },
+    "/assets/ess/summary": {
+        "name":"ESS Summary",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "version": {
+            "name": "Version",
+            "value": "version",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "status": {
+            "name": "Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "work_mode": {
+            "name": "Work Mode",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "on_grid_mode_status": {
+            "name": "On-grid Mode",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "active_power": {
+            "name": "Active Power",
+            "value": 17,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "active_power_setpoint": {
+            "name": "Active Power Setpoint",
+            "value": 3.0999999046325684,
+            "unit": "W",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_charge_power": {
+            "name": "Max Charge Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_discharge_power": {
+            "name": "Max Discharge Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soc": {
+            "name": "State of Charge",
+            "value": 76.55913543701172,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "soh": {
+            "name": "State of Health",
+            "value": 12.34,
+            "unit": "%",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        }
+    },
+
+    "/links/ess": {
+        "EssTestLink": {
+            "value": "/components/ess_1:test_link",
+            "default":4567,
+            "linkvar": "/test/ess_1:TestLink"
+        }
+    },
+
+    "/vlinks/ess": {
+        "note1":" these two assetVars share a common set of values via the linkVar (vlink) pointer",
+        "test_power_ess":                   { "value": "/test/ess:test_power",            "vlink": "/status/ess:test_power" , "default":50000          },
+        "active_power_ess_1_ui":            { "value": "/assets/ess/ess_1:active_power",                     "vlink": "/status/pcs:ActivePower"                                },
+        "active_power_ess_summary_ui":      { "value": "/assets/ess/summary:active_power",                   "vlink": "/status/pcs:ActivePower"                                },
+        "active_power_setpoint_ess_1_ui":   { "value": "/assets/ess/ess_1:active_power_setpoint",            "vlink": "/controls/ess:ActivePowerSetpoint"                      },
+        "active_power_setpoint_ess_sum_ui": { "value": "/assets/ess/summary:active_power_setpoint",          "vlink": "/controls/ess:ActivePowerSetpoint"                      },
+        "soc_ess_1_ui":                     { "value": "/assets/ess/ess_1:soc",                              "vlink": "/status/bms:BMSSOC"                                     },
+        "soc_ess_summary_ui":               { "value": "/assets/ess/summary:soc",                            "vlink": "/status/bms:BMSSOC"                                     },
+        "soh_ess_1_ui":                     { "value": "/assets/ess/ess_1:soh",                              "vlink": "/status/bms:BMSSOH"                                     },
+        "soh_ess_summary_ui":               { "value": "/assets/ess/summary:soh",                            "vlink": "/status/bms:BMSSOH"                                     },
+        "version_ess_1_ui":                 { "value": "/assets/ess/ess_1:version",                          "vlink": "/status/ess:build"                                      },
+        "version_ess_summary_ui":           { "value": "/assets/ess/summary:version",                        "vlink": "/status/ess:build"                                      },
+        "max_charge_power_ess_summary":     { "value": "/assets/ess/summary:max_charge_power",               "vlink": "/status/ess:MaxESSChargePower"                          },
+        "max_charge_power_ess_1":           { "value": "/assets/ess/ess_1:max_charge_power",                 "vlink": "/status/ess:MaxESSChargePower"                          },
+        "max_discharge_power_ess_summary":  { "value": "/assets/ess/summary:max_discharge_power",            "vlink": "/status/ess:MaxESSDischargePower"                       },
+        "max_discharge_power_ess_1":        { "value": "/assets/ess/ess_1:max_discharge_power",              "vlink": "/status/ess:MaxESSDischargePower"                       },
+        "system_state_ess_summary":         { "value": "/assets/ess/summary:status",                         "vlink": "/status/pcs:SystemState"                                }, 
+        "system_state_ess_1":               { "value": "/assets/ess/ess_1:status",                           "vlink": "/status/pcs:SystemState"                                },
+        "work_mode_ess_summary":            { "value": "/assets/ess/summary:work_mode",                      "vlink": "/status/pcs:WorkMode"                                   },
+        "work_mode_ess_1":                  { "value": "/assets/ess/ess_1:work_mode",                        "vlink": "/status/pcs:WorkMode"                                   },
+        "on_grid_mode_ess_summary":         { "value": "/assets/ess/summary:on_grid_mode_status",            "vlink": "/status/pcs:OnGridChgMode"                              },
+        "on_grid_mode_ess_1":               { "value": "/assets/ess/ess_1:on_grid_mode_status",              "vlink": "/status/pcs:OnGridChgMode"                              },
+
+        "site_max_charge_power":            { "value": "/site/ess_1_ls:chargeable_power",                      "vlink": "/status/ess:MaxESSChargePower"                          },
+        "site_max_discharge_power":         { "value": "/site/ess_1_ls:dischargeable_power",                   "vlink": "/status/ess:MaxESSDischargePower"                       }
+    },
+    "/controls/ess": {
+        "ReactivePowerSetpoint": 0,
+        "ActivePowerSetpoint": 0,
+        "PowerPriority": "q"
+    },
+    "/status/ess": {
+        "build": "build number",
+        "ReactivePower": 0,
+        "active_power": 1234.5,
+        "UiStartup": false,
+        "MaxChargePower": 0,
+        "MaxDischargePower": 0,
+        "MaxESSChargePower": 0,
+        "MaxESSDischargePower": 0,
+        
+        "CurrentCheckStop": {
+            "value": 0,
+			
+            "EnableMaxValCheck": true,
+            "EnableMinValCheck": true,
+            "EnableAlert": false,
+
+            "MinAlarmThreshold": -35,
+            "MaxAlarmThreshold": 35,
+            "MinResetValue": -35,
+            "MaxResetValue": 35,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "ess"}]}]
+            }
+        }
+    },
+    "/system/commands":
+    {
+        "run":{
+            "value":"test",
+            "help": "run a schedule var",
+            "ifChanged":false, "enabled":false, "actions":{"onSet":[{"func":[{"func":"RunSched"}]}]}},
+
+        "stop":{
+            "value":"test",
+            "help": "stop a schedule var",
+            "ifChanged":false, "enabled":false, "actions":{"onSet":[{"func":[{"func":"StopSched"}]}]}},
+
+        "allvlink":{
+            "value":"test",
+            "help": "link two var values",
+            "ifChanged":false, "enabled":false, "actions":{"onSet":[{"func":[{"func":"RunVLinks"}]}]}},
+
+        "runMonitorList":{
+            "value":"test",
+            "help": "Under Test : run a wake_monitor list",
+            "ifChanged":false, "enabled":false, "actions":{"onSet":[{"func":[{"func":"RunMonitorList"}]}]}},
+
+        "runMonitorListexample":{
+                "value":"test",
+                "mname":"wake_monitor_racks",
+                "aname":"ess",
+                "runchild":false,
+                "enabled":true,
+                "help": "Under Test : run a wake_monitor list example used to wake up racks , does not run any submodules",
+                "ifChanged":false,              "actions":{"onSet":[{"func":[{"func":"xRunMonitorList"}]}]}},
+    
+        "alllink":{
+            "value":"test",
+            "help": "give a single assetvar multiple names",
+            "ifChanged":false, "enabled":false, "actions":{"onSet":[{"func":[{"func":"RunLinks"}]}]}}
+    },
+
+    "/schedule/ess":{
+        "addSchedItem": {
+            "value": "None",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleSchedItem", "amap": "ess"}]}]
+            }
+        }
+    },
+
+    "/sched/ess":{
+        "enable":{ 
+            "value":false,
+            "actions":{
+            "onSet": [{
+                "remap": [
+                    {"ifChanged": false, "uri":"/sched/ess:essSystemInit@enabled"},
+                    {"ifChanged": false, "uri":"/sched/ess:essSystemInit"             ,"outTime":1, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:essSystemInit"             ,"outTime":2, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:every100mSP1@enabled"},
+                    {"ifChanged": false, "uri":"/sched/ess:every100mSP1"              ,"outTime":1, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:every100mSP1"              ,"outTime":2, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:every1000mS@enabled"},
+                    {"ifChanged": false, "uri":"/sched/ess:every1000mS"               ,"outTime":1, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:every1000mS"               ,"outTime":2, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:fastPubUi@enabled"},
+                    {"ifChanged": false, "uri":"/sched/ess:fastPubUi"                 ,"outTime":1, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:fastPubUi"                 ,"outTime":2, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:fastPub@enabled"},
+                    {"ifChanged": false, "uri":"/sched/ess:fastPub"                   ,"outTime":1, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:fastPub"                   ,"outTime":2, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:slowPub@enabled"},
+                    {"ifChanged": false, "uri":"/sched/ess:slowPub"                   ,"outTime":1, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:slowPub"                   ,"outTime":2, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:schedSendClearFaultCmdess@enabled"},
+                    {"ifChanged": false, "uri":"/sched/ess:schedSendClearFaultCmdess" ,"outTime":1, "inValue":true},
+                    {"ifChanged": false, "uri":"/sched/ess:schedSendClearFaultCmdess" ,"outTime":2, "inValue":true}
+                    ]
+                }]
+              }
+          },
+
+        "essSystemInit": { 
+            "value": "EssSystemInit",
+            "aname": "ess",
+            "enabled": false,
+            "uri":   "/sched/ess:essSystemInit",
+            "fcn":   "EssSystemInit",
+            "id":    "EssSystemInit",
+            "refTime":  0.200,
+            "runAfter": 0.200,
+            "repTime":  0.00,
+            "endTime":  0.00,
+            "actions": {
+                "onSet": [{"func": [{ "func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "every1000mS": {
+            "value": "Every1000mS",
+            "aname": "ess",
+            "enabled": false,
+            "uri":   "/sched/ess:every1000mS",
+            "fcn":   "Every1000mS",
+            "id":    "Every1000mSess",
+            "refTime":  0.210,
+            "runAfter": 0.210,
+            "repTime":  1.00,
+            "endTime":  0.00,
+            "actions": {
+                "onSet": [{"func": [{ "func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "every100mSP1": {
+            "value": "Every100mSP1",
+            "aname": "ess",
+            "enabled": false,
+            "uri":   "/sched/ess:every100mSP1",
+            "fcn":   "Every100mSP1",
+            "id":    "Every100mSP1ess",
+            "refTime":  0.220,
+            "runAfter": 0.220,
+            "repTime":  0.100,
+            "endTime":  0.00,
+            "actions":{
+                "onSet": [{"func": [{"func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "slowPub":{
+            "value": "SlowPub",
+            "enabled": false,
+            "uri":   "/sched/ess:slowPub",
+            "fcn":   "SlowPub",
+            "id":    "SlowPub",
+            "table": "/site/ess_ls",
+            "sendas": "/site/ess_1_ls",
+            "refTime":  0.250,
+            "runAfter": 0.250,
+            "repTime":  1.000,
+            "endTime":  0.00,
+            "actions":{
+                "onSet": [{"func": [{ "func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "fastPub":{
+            "value": "FastPub",
+            "enabled": false,
+            "uri":   "/sched/ess:fastPub",
+            "fcn":   "FastPub",
+            "id":    "FastPub",
+            "table": "/site/ess_hs",
+            "sendas": "/site/ess_1_hs",
+            "refTime":  0.270,
+            "runAfter": 0.270,
+            "repTime":  0.050,
+            "endTime":  0.00,
+            "actions":{
+                "onSet": [{"func": [{ "func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "fastPubUi":{
+            "value": "FastPubUi",
+            "enabled": false,
+            "uri":   "/sched/ess:fastPubUi",
+            "fcn":   "FastPub",
+            "id":    "FastPubUi",
+            "table": "/assets/ess/summary",
+            "refTime":  0.270,
+            "runAfter": 0.270,
+            "repTime":  0.050,
+            "endTime":  0.00,
+            "actions":{
+                "onSet": [{"func": [{ "func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        },
+        "schedSendClearFaultCmdess":{
+            "value":    "schedSendClearFaultCmdess",
+            "uri":      "/sched/ess:schedSendClearFaultCmdess",
+            "fcn":      "SendClearFaultCmd",
+            "id":       "schedSendClearFaultCmdess",
+            "amap":     "ess",
+            "refTime":  0.275,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001,
+            "actions":{
+                "onSet": [{"func": [{"enable":"/sched/ess:enable","enabled":false, "func": "HandleSchedLoad", "amap": "ess"}]}]
+            }
+        }
+    },
+    "/faults/ess": {
+        "clear_faults": {
+            "value": "default",
+            "type": "fault",
+            "debug": true,
+            "actions": {
+                "onSet": [
+                    {"remap": [{ "debug":true, "fims": "set", "uri": "/ess_2/faults/ess:clear_faults", "amap": "ess"}]},
+                    {"func": [{"enable":"/sched/ess:enable","enabled":false, "func": "process_sys_alarm", "amap": "ess"}]}
+                    ]
+            }
+        }
+    }
+}

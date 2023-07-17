@@ -1,0 +1,159 @@
+scripts/pcs_test_4.2.3_off.sh
+{"p_reference":{"value":1001}}
+{"q_reference":{"value":501}}
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+{"p_reference":{"value":1000}}
+{"q_reference":{"value":500}}
+p_reference 1000
+q_reference 500
+{"enable_main_selector":{"value":1}}
+enable_main_selector 0
+inverter_status 2
+enable_main_selector 0
+inverter_status 2
+enable_main_selector 0
+inverter_status 2
+enable_main_selector 0
+inverter_status 2
+ last check
+enable_main_selector 1
+inverter_status 19
+enable_main_selector 1
+enable_main_selector 1
+inverter_status 6
+ test 4.2.3 completed invertor status should be 6
+ turning off enable_main_selector
+{"enable_main_selector":{"value":0}}
+scripts/pcs_test_4.2.3.sh
+{"p_reference":{"value":1001}}
+{"q_reference":{"value":501}}
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+{"p_reference":{"value":1000}}
+{"q_reference":{"value":500}}
+p_reference 1000
+q_reference 500
+{"enable_main_selector":{"value":1}}
+enable_main_selector 0
+inverter_status 2
+enable_main_selector 0
+inverter_status 2
+enable_main_selector 0
+inverter_status 2
+enable_main_selector 0
+inverter_status 2
+ last check
+enable_main_selector 1
+inverter_status 19
+enable_main_selector 1
+enable_main_selector 1
+inverter_status 6
+ test 4.2.3 completed invertor status should be 6
+scripts/pcs_test_4.3.sh
+vdc_bus 1100
+p_reference 1000
+active_power 3300
+reactive_power 0
+dc_input_power_bess1 3400
+dc_input_current_bess1 0
+
+
+ after 1 sec
+vdc_bus 1100
+p_reference 1000
+active_power 3300
+reactive_power 0
+dc_input_power_bess1 3400
+dc_input_current_bess1 0
+end of test---
+scripts/pcs_test_4.2.3_off.sh
+{"p_reference":{"value":1001}}
+{"q_reference":{"value":501}}
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+q_reference 500
+p_reference 1001
+{"p_reference":{"value":1000}}
+{"q_reference":{"value":500}}
+p_reference 1000
+q_reference 500
+{"enable_main_selector":{"value":1}}
+enable_main_selector 1
+inverter_status 6
+enable_main_selector 1
+inverter_status 6
+enable_main_selector 1
+inverter_status 6
+enable_main_selector 1
+inverter_status 6
+ last check
+enable_main_selector 1
+inverter_status 6
+enable_main_selector 1
+enable_main_selector 1
+inverter_status 6
+ test 4.2.3 completed invertor status should be 6
+ turning off enable_main_selector
+{"enable_main_selector":{"value":0}}
+scripts/pcs_test_4.3.sh after off
+vdc_bus 1100
+p_reference 1000
+active_power 0
+reactive_power 0
+dc_input_power_bess1 3400
+dc_input_current_bess1 0
+
+
+ after 1 sec
+vdc_bus 1100
+p_reference 1000
+active_power 0
+reactive_power 0
+dc_input_power_bess1 3400
+dc_input_current_bess1 0
+end of test---
+vdc_bus 1100
+p_reference 1000
+active_power 0
+reactive_power 0
+dc_input_power_bess1 3400
+dc_input_current_bess1 0
+
+
+ after 1 sec
+vdc_bus 1100
+p_reference 1000
+active_power 0
+reactive_power 0
+dc_input_power_bess1 3400
+dc_input_current_bess1 0
+end of test---

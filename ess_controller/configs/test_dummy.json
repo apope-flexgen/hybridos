@@ -1,0 +1,97 @@
+
+{
+    "/system/ident":{
+        "id": "ess_1",
+        "name": "BESS Inverter Block 01"
+        },
+
+    "/system/constants":{
+        "note": "These are constant defintions",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 2200.0,
+        "rated_apparent_power": 2200.0,
+        "priority": 1,
+        "start_timer": 50,
+        "cooldown_timer": 250,
+        "max_load_threshold": 200000,
+        "min_load_threshold": 1000,
+        "control_word_on": 1,
+        "control_word_off": 2,
+        "DC_contactor_open": 1,
+        "DC_contactor_closed": 2,
+        "DC_contactor_reset": 3,
+        "chg_soc_begin": 90.001,
+        "chg_soc_end": 101.5,
+        "dischg_soc_begin": 10.001,
+        "dischg_soc_end": -1.5,
+        "max_soc_raw": 99.5,
+        "min_soc_raw": 1.5
+        },
+
+    "/system/controls":{
+            "note": "These are controls defintions",
+            "nominal_voltage": 540.0,
+            "nominal_frequency": 60.0,
+            "active_power_setpoint": 2200.0,
+            "reactive_power_setpoint": 2200.0,
+            "oncmd": 0,
+            "onffcmd": 0,
+            "kacclosecmd": 0,
+            "kdcclosecmd": 0,
+            "kacopencmd": 0,
+            "kdccopencmd": 0
+    },
+    "/system/variables":{
+        "q":1234,
+        "p":3456,
+        "soc":100,
+        "soh":100,
+        "dc_contactor":"off",
+        "ac_contactor":"off",
+        "dc_contactor_cmd":"off",
+        "ac_contactor_cmd":"off",
+        "mode":"init",
+        "mode_cmd": "off"
+
+    },
+
+    "/components/catl_ems_bms_rw":{
+         "ems_test_status":{"value":"Idle",
+            "actions":{"onSet":{
+                      "remap":{"bitmap":[
+			                {"uri": "/system/ems_remap","var":"ems_test_status"}
+                         ]
+                     }                 
+                }
+           }
+        }
+    },
+
+    "/assets/@@DUMMY@@":{
+        "stop_start":{"value":0,
+            "actions":{"onSet":{
+                    "bitfield":{"bitmap":[
+                        { "bit":0, "uri": "/system/new_controls","var":"oncmd",       "value": true },
+                        { "bit":1, "uri": "/system/new_controls","var":"kacclosecmd", "value": true },
+                        { "bit":8, "uri": "/system/new_controls","var":"offcmd",      "value": true },
+                        { "bit":9, "uri": "/system/new_controls","var":"kacopencmd",  "value": true }
+                        ]
+                    }
+                }
+            }
+        },
+        "auxcmd":{"value":0,
+            "actions":{"onSet":{
+                    "enum":{"bitmap":[
+                        { "mask":3,"bit":0, "uri": "/system/enum_controls","var":"mask_3_bit_0",       "value": true },
+                        { "mask":3,"bit":1, "uri": "/system/enum_controls","var":"mask_3_bit_1",       "value": true },
+                        { "mask":3,"bit":2, "uri": "/system/enum_controls","var":"mask_3_bit_2",       "value": true },
+                        { "mask":3,"bit":3, "uri": "/system/enum_controls","var":"mask_3_bit_3",       "value": true }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

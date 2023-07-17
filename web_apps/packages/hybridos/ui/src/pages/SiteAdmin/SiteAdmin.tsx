@@ -1,9 +1,6 @@
+/* eslint-disable no-underscore-dangle, max-statements, max-lines, max-len */
 // TODO: fix lint
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable max-statements */
-/* eslint-disable max-lines */
 import {
-
   CardContainer,
   MuiButton,
   Typography,
@@ -37,6 +34,15 @@ import {
   RADIUS_TEST_URL,
   RADIUS_FAILED_MESSAGE,
 } from './SiteAdmin.constants';
+import {
+  buttonBoxSx,
+  connectionMethodBoxSx,
+  connectionRadiusBoxSx,
+  containerBoxSx,
+  contentBoxSx,
+  saveCancelBoxSx,
+  titleBoxSx,
+} from './styles';
 
 const SiteAdmin = () => {
   const axiosInstance = useAxiosWebUIInstance();
@@ -45,10 +51,7 @@ const SiteAdmin = () => {
   const [connectionMethod, setConnectionMethod] = useState<ConnectionMethods>('onlyLocal');
   const [radiusTestSuccessful, setRadiusTestSuccessful] = useState<boolean>(false);
 
-  const [
-    passwordSettings,
-    setPasswordSettings,
-  ] = useState<PasswordSettings>(initialPasswordSettings);
+  const [passwordSettings, setPasswordSettings] = useState<PasswordSettings>(initialPasswordSettings);
   const [radiusSettings, setRadiusSettings] = useState<RadiusSettings>(initialRadiusSettings);
 
   const [siteAdminsId, setsiteAdminsId] = useState<string>('');
@@ -147,36 +150,16 @@ const SiteAdmin = () => {
   }, [fetchData]);
 
   const theme = useTheme() as ThemeType;
+  const connectionBoxSx = connectionMethodBoxSx(theme);
+  const contentContainerSx = contentBoxSx(theme);
 
   return (
-    <Box sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '12px',
-      width: '100%',
-      flexGrow: 1,
-    }}
-    >
+    <Box sx={containerBoxSx}>
       <PageLoadingIndicator isLoading={isLoading} type="primary" />
-      <Box
-        sx={{
-          width: '90%',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={titleBoxSx}>
         <Typography text={siteAdminLabels.siteAdminPageTitle} variant="headingL" />
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-            alignItems: 'flex-end',
-          }}
-        >
-          <Box sx={{ display: 'flex', gap: '16px' }}>
+        <Box sx={buttonBoxSx}>
+          <Box sx={saveCancelBoxSx}>
             <MuiButton
               color="inherit"
               label="cancel"
@@ -185,44 +168,32 @@ const SiteAdmin = () => {
             />
             <MuiButton
               disabled={
-                                (connectionMethod === 'onlyRadius'
-                                    || connectionMethod === 'localAndRadius')
-                                && !radiusTestSuccessful
-                            }
+                ((connectionMethod === 'onlyRadius' || connectionMethod === 'localAndRadius')
+                  && !radiusTestSuccessful)
+                || passwordSettings.maximum_password_length < passwordSettings.minimum_password_length
+              }
               id="save_button"
               label="save"
               onClick={postNewsiteAdmins}
             />
           </Box>
           {(connectionMethod === 'onlyRadius' || connectionMethod === 'localAndRadius')
-                        && !radiusTestSuccessful && (
-                        <Typography
-                          text={siteAdminLabels.needSuccessfulTestErrorMessage}
-                          variant="bodyS"
-                        />
+            && !radiusTestSuccessful && (
+              <Typography text={siteAdminLabels.needSuccessfulTestErrorMessage} variant="bodyS" />
           )}
         </Box>
       </Box>
       <CardContainer
         flexDirection="row"
-        styleOverrides={{ width: '90%', backgroundColor: theme.fgd.primary.main_4p }}
+        styleOverrides={{
+          backgroundColor: theme.fgd.primary.main_4p,
+          height: ' calc(100% - 72px)',
+        }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            padding: '24px',
-            flexDirection: 'column',
-            height: '100vf',
-            width: '21%',
-            backgroundColor: theme.fgd.primary.main_4p,
-          }}
-        >
-          <Typography
-            text={siteAdminLabels.authenticationMethodTitle}
-            variant="bodyLBold"
-          />
+        <Box sx={connectionBoxSx}>
+          <Typography text={siteAdminLabels.authenticationMethodTitle} variant="bodyLBold" />
           {connectionMethodRadios.map((connectionMethodRadio) => (
-            <Box sx={{paddingTop: '16px'}}>
+            <Box sx={connectionRadiusBoxSx}>
               <RadioButton
                 label={connectionMethodRadio.label}
                 labelPlacement="end"
@@ -254,36 +225,25 @@ const SiteAdmin = () => {
             </Box>
           ))}
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexGrow: 1,
-            width: '60%',
-            flexDirection: 'column',
-            padding: '24px',
-            backgroundColor: theme.fgd.background.paper,
-          }}
-        >
-          {(connectionMethod === 'onlyLocal'
-                        || connectionMethod === 'localAndRadius') && (
-                        <PasswordSettingsFields
-                          passwordSettings={passwordSettings}
-                          setPasswordSettings={setPasswordSettings}
-                        />
+        <Box sx={contentContainerSx}>
+          {(connectionMethod === 'onlyLocal' || connectionMethod === 'localAndRadius') && (
+            <PasswordSettingsFields
+              passwordSettings={passwordSettings}
+              setPasswordSettings={setPasswordSettings}
+            />
           )}
-          {(connectionMethod === 'onlyRadius'
-                        || connectionMethod === 'localAndRadius') && (
-                        <RadiusSettingsFields
-                          isRadiusTestLoading={isRadiusTestLoading}
-                          password={password}
-                          radiusSettings={radiusSettings}
-                          radiusTestSuccessful={radiusTestSuccessful}
-                          sendRadiusTest={sendRadiusTest}
-                          setPassword={setPassword}
-                          setRadiusSettings={setRadiusSettings}
-                          setUsername={setUsername}
-                          username={username}
-                        />
+          {(connectionMethod === 'onlyRadius' || connectionMethod === 'localAndRadius') && (
+            <RadiusSettingsFields
+              isRadiusTestLoading={isRadiusTestLoading}
+              password={password}
+              radiusSettings={radiusSettings}
+              radiusTestSuccessful={radiusTestSuccessful}
+              sendRadiusTest={sendRadiusTest}
+              setPassword={setPassword}
+              setRadiusSettings={setRadiusSettings}
+              setUsername={setUsername}
+              username={username}
+            />
           )}
         </Box>
       </CardContainer>

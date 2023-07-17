@@ -1,0 +1,180 @@
+--- include/varMapUtils.h       2020-10-28 18:59:08.002857751 -0400
++++ include/varMapUtils.h_save  2020-10-28 20:41:31.254999868 -0400
+@@ -27,8 +27,6 @@
+
+ static int setvar_debug = 0;
+ static int process_fims_debug = 0;
+-/* Toggle whether ui options should be processed. */
+-static int uiopt = 1;
+
+ // pull in the process fims stuff
+ // accessor class for varmaps
+@@ -1138,16 +1136,42 @@
+                     av->featDict->addCj(cjparam);
+                 }
+                 cJSON* cjopts = cJSON_GetObjectItem(cj, "options");
+-                if(cjopts)
++                if (cjopts)
+                 {
+-                    if(1)FPS_ERROR_PRINT(" >>Adding options for [%s] av [%p]\n",var, (void*)av);
+-                    if (!av->optDict)
++                    if(1)FPS_ERROR_PRINT("%s >>Adding options for [%s] av [%p] cjopts type %d\n",__func__, var, (void*)av, cjopts->type);
++                    // it may be an array
++                    // in any case addCj should handle it.
++                    if(av)
+                     {
+-                        av->optDict = new assetFeatDict;
++                        if(cjopts->type == cJSON_Array)
++                        {
++                            if (!av->optVec)
++                            {
++                                av->optVec = new assetOptVec;
++                            }
++                            av->optVec->addCj(cjopts);
++                        }
++                        else
++                        {
++                            if (!av->optDict)
++                            {
++                                av->optDict = new assetFeatDict;
++                            }
++                            av->optDict->addCj(cjopts);
++                        }
+                     }
+-                    // TODO make sure this overwrites existing params
+-                    av->optDict->addCj(cjopts);
+                 }
++
++                // if(cjopts)
++                // {
++                //     if(1)FPS_ERROR_PRINT(" >>Adding options for [%s] av [%p]\n",var, (void*)av);
++                //     if (!av->optDict)
++                //     {
++                //         av->optDict = new assetFeatDict;
++                //     }
++                //     // TODO make sure this overwrites existing params
++                //     av->optDict->addCj(cjopts);
++                // }
+
+                 if (av->actMap.size() > 0)
+                 {
+@@ -1281,9 +1305,12 @@
+
+                 }
+             }
++            // just for the uiobject cJSON* cjval =cJSON_DetachItemFromObject(cj, "value");
++            bool uiObject = false; // got to fins a way to turn this on
+             cJSON* cjact = cJSON_GetObjectItem(cj, "actions");
+             cJSON* cjparam = cJSON_GetObjectItem(cj, "params");
+             cJSON* cjopts = cJSON_GetObjectItem(cj, "options");
++
+             if(setvar_debug)FPS_ERROR_PRINT(" %s >>Adding a new Variable from OBJECT actions [%p] params[%p] \n"
+                         , __func__
+                         , (void*)cjact
+@@ -1310,36 +1337,41 @@
+                     av->featDict->addCj(cjparam);
+                 }
+             }
+-            if (cjopts)
++            if (uiObject)
+             {
+-                if(1)FPS_ERROR_PRINT("%s >>Adding options for [%s] av [%p] cjopts type %d\n",__func__, var, (void*)av, cjopts->type);
+-                // it may be an array
+-                // in any case addCj should handle it.
++                if(1)FPS_ERROR_PRINT("%s >>Adding base params for [%s] av [%p]\n",__func__, var, (void*)av);
+                 if(av)
+                 {
+-                    if (!av->optDict)
++                    if (!av->baseDict)
+                     {
+-                        av->optDict = new assetFeatDict;
++                        av->baseDict = new assetFeatDict;
+                     }
+-                    av->optDict->addCj(cjopts);
++                    av->baseDict->addCj(cj);
+                 }
+             }
+-
+-            // For now, uiopt is a global static variable, set to always run. There should be a different way to go about this...
+-            if (uiopt)
++            if (cjopts)
+             {
+-                if(1)FPS_ERROR_PRINT("%s >>Adding base dict for [%s] av [%p]\n",__func__, var, (void*)av);
++                if(1)FPS_ERROR_PRINT("%s >>Adding options for [%s] av [%p] cjopts type %d\n",__func__, var, (void*)av, cjopts->type);
+                 // it may be an array
+                 // in any case addCj should handle it.
+                 if(av)
+                 {
+-                    if (!av->baseDict)
++                    if(cjopts->type == cJSON_Array)
+                     {
+-                        cJSON *detachedItem = cJSON_DetachItemFromObjectCaseSensitive(cj,"value");
+-                        av->baseDict = new assetFeatDict;
+-                        cJSON_Delete(detachedItem);
++                        if (!av->optVec)
++                        {
++                            av->optVec = new assetOptVec;
++                        }
++                        av->optVec->addCj(cjopts);
++                    }
++                    else
++                    {
++                        if (!av->optDict)
++                        {
++                            av->optDict = new assetFeatDict;
++                        }
++                        av->optDict->addCj(cjopts);
+                     }
+-                    av->baseDict->addCj(cj);
+                 }
+             }
+
+@@ -1433,17 +1465,43 @@
+             }
+             if (cjopts)
+             {
+-                if(1)FPS_ERROR_PRINT(" >>Adding options for [%s] av [%p]\n",var, (void*)av);
++                if(1)FPS_ERROR_PRINT("%s >>Adding options for [%s] av [%p] cjopts type %d\n",__func__, var, (void*)av, cjopts->type);
++                // it may be an array
++                // in any case addCj should handle it.
+                 if(av)
+                 {
+-                    if (!av->optDict)
++                    if(cjopts->type == cJSON_Array)
+                     {
+-                        av->optDict = new assetFeatDict;
++                        if (!av->optVec)
++                        {
++                            av->optVec = new assetOptVec;
++                        }
++                        av->optVec->addCj(cjopts);
++                    }
++                    else
++                    {
++                        if (!av->optDict)
++                        {
++                            av->optDict = new assetFeatDict;
++                        }
++                        av->optDict->addCj(cjopts);
+                     }
+-                    av->optDict->addCj(cjopts);
+                 }
+             }
+
++            // if (cjopts)
++            // {
++            //     if(1)FPS_ERROR_PRINT(" >>Adding options for [%s] av [%p]\n",var, (void*)av);
++            //     if(av)
++            //     {
++            //         if (!av->optDict)
++            //         {
++            //             av->optDict = new assetFeatDict;
++            //         }
++            //         av->optDict->addCj(cjopts);
++            //     }
++            // }
++
+                         // todo set the rest
+             // cJSON* cjval = cJSON_GetObjectItem(cj, "value");
+             // if (cjval)
+

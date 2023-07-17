@@ -1,0 +1,506 @@
+{
+    "/notes/@@AC_ID@@": {
+        "note1":"This is the hvac component config template for Rizen AC  subsystems.",
+        "note1a":"The bms page of the ui display is outlined in /assets/bms/summay",
+        "note1b":"The /assets/@@AC_ID@@ table defines the racks or battery management unit, each has a template file with placements for selected key words",
+        "note2": "The /config/bms area is still under development",
+        "note3":"The /components/catl... tables define the incoming control words from the bms modbus interface",
+        "note4":"The /links/<bms> table  defines mapping of external interface components to internal control variables",
+        "note5":"There are some junk/test fields as well... they will removed soon"
+    },
+    "/system/@@AC_ID@@": {
+        "id": "@@AC_ID@@",
+        "name": "Risen Air Conditioner @@AC_NUM@@"
+    },
+    "/faults/@@AC_ID@@": {
+        "note": "Leave as is for now. This definition is needed for clear faults UI cmd to work",
+        "clear_faults": {
+            "value": 0,
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "@@AC_ID@@"}]}]
+            }
+        }
+    },
+    "/alarms/@@AC_ID@@": {
+        "note": "Leave as is for now. These definitions are needed for alarms to populate in UI and for clear alarms UI cmd to work",
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "high_temp": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "low_temp": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "high_humidity": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "low_humidity": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "heat_exchanger_coil_frost": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "exhaust_temp_high": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "heat_exchanger_coil_temp_sensing_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "exterior_temp_sensing_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "condensation_temp_sensing_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "interior_temp_sensing_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "exhaust_temp_sensing_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "humidity_sensing_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "interior_fan_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "exterior_fan_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "compressor_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        },
+        "electric_heating_failure": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]
+            }
+        }
+    },
+    "/config/@@AC_ID@@": {
+        "Pubs": "/assets/hvac/@@AC_ID@@",
+        "BlockSets": "/status/ess, /status/hvac, /status/@@AC_ID@@",
+        "AlarmDestination": {"value": "/assets/hvac/@@AC_ID@@:alarms"},
+        "FaultDestination": {"value": "/assets/hvac/@@AC_ID@@:faults"},
+        "NoFaultMsg": {"value": "Normal"},
+        "NoAlarmMsg": {"value": "Normal"}
+    },
+    "/status/@@AC_ID@@": {
+        "note": "These are component status vars",
+        "unit_running_status": {"value": "Normal"},
+        "internal_fan_status": {"value": "Normal"},
+        "external_fan_status": {"value": "Normal"},
+        "compressor_status": {"value": "Normal"},
+        "inside_return_temp": {"value": 1.0},
+        "outside_temp": {"value": 1.0},
+        "compressor_temp": {"value": 1.0},
+        "ac_input_voltage": {"value": 1.0},
+        "emergency_air_fan_state": {"value": "Normal"},
+        "heat_exchanger_coil_temp": {"value": 1.0},
+        "inside_return_humidity": {"value": 1.0},
+        "electrical_heating_running_status": {"value": "Normal"}
+    },  
+    "/links/@@AC_ID@@": {
+        "unit_running_status": {"value": "/components/bms_info:hvac_@@AC_NUM@@_unit_running_status"},
+        "internal_fan_status": {"value": "/components/bms_info:hvac_@@AC_NUM@@_internal_fan_status"},
+        "external_fan_status": {"value": "/components/bms_info:hvac_@@AC_NUM@@_external_fan_status"},
+        "compressor_status":   {"value": "/components/bms_info:hvac_@@AC_NUM@@_compressor_status"}
+    },
+    "/vlinks/@@AC_ID@@": {
+        "unit_running_status":                { "value": "/assets/hvac/@@AC_ID@@:unit_runninng_status",  
+                                                "vlink": "/components/hvac_info:@@AC_ID@@_unit_running_status"},
+        "internal_fan_status":                { "value": "/assets/hvac/@@AC_ID@@:internal_fan_status",   
+                                                "vlink": "/components/hvac_info:@@AC_ID@@_internal_fan_status"},
+        "external_fan_status":                { "value": "/assets/hvac/@@AC_ID@@:external_fan_status",   
+                                                "vlink": "/components/hvac_info:@@AC_ID@@_external_fan_status"},
+        "compressor_status":                  { "value": "/assets/hvac/@@AC_ID@@:compressor_status",   
+                                                "vlink": "/components/hvac_info:@@AC_ID@@_compressor_status"},
+        "emergency_air_fan_state":            { "value": "/assets/hvac/@@AC_ID@@:emergency_air_fan_status",   
+                                                "vlink": "/components/hvac_info:@@AC_ID@@_emergency_air_fan_state"},
+        "electrical_heating_running_status":  { "value": "/assets/hvac/@@AC_ID@@:electrical_heating_running_status",   
+                                                "vlink": "/components/hvac_info:@@AC_ID@@_electrical_heating_running_status"},
+        "site_@@AC_ID@@_unit_running_status": { "value": "/site/ess_ls:@@AC_ID@@_unit_running_status", 
+                                                "vlink": "/components/hvac_info:@@AC_ID@@_unit_running_status"}
+    },
+    "/assets/hvac/@@AC_ID@@": {
+        "name": "Risen Air Conditioner @@AC_NUM@@",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "unit_running_status": {
+            "name": "Unit Running Status",
+            "value": "Normal",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "internal_fan_status": {
+            "name": "Internal Fan Status",
+            "value": "Normal",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "external_fan_status": {
+            "name": "External Fan Status",
+            "value": "Normal",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "compressor_status": {
+            "name": "Compressor Status",
+            "value": "Normal",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "emergency_air_fan_status": {
+            "name": "Emergency Air Fan Status",
+            "value": "Normal",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "electrical_heating_running_status": {
+            "name": "Electrical Heating Running Status",
+            "value": "Normal",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/bms/@@AC_ID@@:start@enabled"}, 
+                        {"uri":	"/assets/bms/@@AC_ID@@:stop@enabled"}, 
+                        {"uri":	"/assets/bms/@@AC_ID@@:enter_standby@enabled"}, 
+                        {"uri":	"/assets/bms/@@AC_ID@@:exit_standby@enabled"},
+                        {"uri":	"/assets/bms/@@AC_ID@@:clear_faults@enabled"},
+                        {"uri":	"/assets/bms/@@AC_ID@@:clear_alarms@enabled"},
+                        {"uri":	"/assets/bms/@@AC_ID@@:maint_reactive_power_setpoint@enabled"},
+                        {"uri":	"/assets/bms/@@AC_ID@@:maint_active_power_setpoint@enabled"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value":"Init",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"bit":0,"inValue":true, "outValue":"Clear","uri":"/faults/@@AC_ID@@:clear_faults"},
+                        {"bit":0,"inValue":true, "outValue":"Clear","uri":"/alarms/@@AC_ID@@:clear_alarms"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": "Clear"
+                }
+            ]
+        }
+    },
+    "/xschedule/wake_monitor/@@AC_ID@@":{
+        "/status/@@AC_ID@@:SBMUPower": { "enable": true, "rate":0.1, "amap": "@@AC_ID@@", "func":"CalculateVar"}
+    },
+    "/components/hvac_params": {
+        "@@AC_ID@@_remote_ac_on": 0,
+        "@@AC_ID@@_cooling_temp_setting": 0,
+        "@@AC_ID@@_cooling_setpoint_upper_limit": 0,
+        "@@AC_ID@@_ht_warning_setting": 0,
+        "@@AC_ID@@_lt_warning_setting": 0,
+        "@@AC_ID@@_interior_air_fan_stop_setting": 0,
+        "@@AC_ID@@_heating_temp_setting": 0,
+        "@@AC_ID@@_heating_setpoint_lower_limit": 0,
+        "@@AC_ID@@_dehumidity_setting": 0
+    },
+    "/components/hvac_info": {
+        "@@AC_ID@@_unit_running_status": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/@@AC_ID@@:unit_running_status", "outValue": "Stop"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/@@AC_ID@@:unit_running_status", "outValue": "Running"}
+                    ]
+                }]
+            }
+        },
+        "@@AC_ID@@_internal_fan_status": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/@@AC_ID@@:internal_fan_status", "outValue": "Stop"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/@@AC_ID@@:internal_fan_status", "outValue": "Running"}
+                    ]
+                }]
+            }
+        },
+        "@@AC_ID@@_external_fan_status": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/@@AC_ID@@:external_fan_status", "outValue": "Stop"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/@@AC_ID@@:external_fan_status", "outValue": "Running"}
+                    ]
+                }]
+            }
+        },
+        "@@AC_ID@@_compressor_status": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/@@AC_ID@@:compressor_status", "outValue": "Stop"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/@@AC_ID@@:compressor_status", "outValue": "Running"}
+                    ]
+                }]
+            }
+        },
+        "@@AC_ID@@_inside_return_temp": 0,
+        "@@AC_ID@@_outside_temp": 0,
+        "@@AC_ID@@_condenser_temp": 0,
+        "@@AC_ID@@_ac_input_voltage": 0,
+        "@@AC_ID@@_emergency_air_fan_state": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/@@AC_ID@@:emergency_air_fan_state", "outValue": "Stop"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/@@AC_ID@@:emergency_air_fan_state", "outValue": "Running"}
+                    ]
+                }]
+            }
+        },
+        "@@AC_ID@@_heat_exchanger_coil_temp": 0,
+        "@@AC_ID@@_inside_return_humidity": 0,
+        "@@AC_ID@@_electrical_heating_running_status": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/status/@@AC_ID@@:electrical_heating_running_status", "outValue": "Stop"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/status/@@AC_ID@@:electrical_heating_running_status", "outValue": "Running"}
+                    ]
+                }]
+            }
+        },
+        "@@AC_ID@@_alarms_1": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:high_temp", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:high_temp", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:low_temp", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:low_temp", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:high_humidity", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:high_humidity", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:low_humidity", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:low_humidity", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:heat_exchanger_coil_frost", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:heat_exchanger_coil_frost", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:exhaust_temp_high", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:exhaust_temp_high", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:heat_exchanger_coil_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:heat_exchanger_coil_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:exterior_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:exterior_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:condensation_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:condensation_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:interior_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:interior_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:exhaust_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:exhaust_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:humidity_sensing_failure", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:humidity_sensing_failure", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:interior_fan_failure", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:interior_fan_failure", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:exterior_fan_failure", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:exterior_fan_failure", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:compressor_failure", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:compressor_failure", "outValue": "Warning"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:electric_heating_failure", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:electric_heating_failure", "outValue": "Warning"}
+                    ]
+                }]
+            }
+        },
+        "@@AC_ID@@_alarms_2": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:emergency_air_fan_failure", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:emergency_air_fan_failure", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:high_air_pressure", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:high_air_pressure", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:low_air_pressure", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:low_air_pressure", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:flood", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:flood", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:smoke", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:smoke", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:door_open", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:door_open", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:high_air_pressure_lockdown", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:high_air_pressure_lockdown", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:low_air_pressure_lockdown", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:low_air_pressure_lockdown", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:exhaust_lockdown", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:exhaust_lockdown", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:ac_high_voltage", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:ac_high_voltage", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:ac_low_voltage", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:ac_low_voltage", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:ac_drop_out", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:ac_drop_out", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:phase_loss", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:phase_loss", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:freq_abnormal", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:freq_abnormal", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:phase_reversal", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:phase_reversal", "outValue": "Warning"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:dc_high_voltage", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:dc_high_voltage", "outValue": "Warning"}
+                    ]
+                }]
+            }
+        },
+        "@@AC_ID@@_alarms_3": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/@@AC_ID@@:dc_low_voltage", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/@@AC_ID@@:dc_low_voltage", "outValue": "Warning"}
+                    ]
+                }]
+            }
+        }
+    }
+}

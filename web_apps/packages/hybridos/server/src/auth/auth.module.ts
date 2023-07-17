@@ -23,21 +23,26 @@ import { TotpStrategy } from './strategies/totp.strategy'
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy'
 import { RefreshTokenService } from './refreshTokenService'
 import { ValidAccessTokenService } from './validJWT.service'
-import { DBIModule } from 'src/dbi/dbi.module'
-import { DBI_SERVICE } from 'src/dbi/dbi.constants'
-import { DBIService } from 'src/dbi/dbi.service'
 import { BasicAccessStrategy } from './strategies/basicAccessAuth.strategy'
+import { AppEnvService } from 'src/environment/appEnv.service'
+import { AuditLoggingModule } from '../logging/auditLogging/auditLogging.module'
 
 @Module({
     imports: [
         UsersModule,
         PassportModule,
-        JwtModule.register({
-            secret: 'supersecretkey',
+        JwtModule.registerAsync({
+            imports: [AppEnvModule],
+            useFactory: async (appEnvService: AppEnvService) => {
+                return {
+                    secret: appEnvService.getJwtSecretKey(),
+                }
+            },
+            inject: [AppEnvService],
         }),
         SiteAdminsModule,
         AppEnvModule,
-        DBIModule
+        AuditLoggingModule,
     ],
     controllers: [AuthController],
     providers: [
@@ -55,7 +60,7 @@ import { BasicAccessStrategy } from './strategies/basicAccessAuth.strategy'
         },
         {
             provide: RADIUS_SERVICE,
-            useClass: RadiusService, 
+            useClass: RadiusService,
         },
         {
             provide: VALID_JWT_SERVICE,
@@ -69,12 +74,13 @@ import { BasicAccessStrategy } from './strategies/basicAccessAuth.strategy'
         AccessTokenPassExpStrategy,
         TotpStrategy,
         RadiusStrategy,
-        {
-            provide: DBI_SERVICE,
-            useClass: DBIService,
-        },
         BasicAccessStrategy,
     ],
-    // exports: [AuthService],
+    exports: [
+        {
+            provide: VALID_JWT_SERVICE,
+            useClass: ValidAccessTokenService,
+        },
+    ],
 })
 export class AuthModule {}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -11,21 +12,19 @@ import (
 
 // DocumentManager manages a local copy of DBI data synced with MongoDB using a MongoConnector, and responds to DBI requests
 type DocumentManager struct {
-	localData map[string]map[string]map[string]interface{} // structure: map[<coll_name>]map[<doc_name>]<body>
+	localData map[string]map[string]map[string]map[string]interface{} // structure: map[<db_name>]map[<coll_name>]map[<doc_name>]<body>
 	mongoConn mongo.MongoConnector
 }
 
 // connects to a local mongodb instance and downloads contents to localData
 func (docMan *DocumentManager) init(ip, port string) error {
-	docMan.localData = make(map[string]map[string]map[string]interface{})
-
 	docMan.mongoConn = mongo.NewConnector(ip+":"+port, time.Second/10, time.Second*10) // TODO : change configurables
 	err := docMan.mongoConn.Connect()
 	if err != nil {
 		return err
 	}
 
-	return docMan.extractDB()
+	return docMan.extractDBs()
 }
 
 // === REQUEST FUNCS ===
@@ -35,98 +34,99 @@ func (docMan *DocumentManager) init(ip, port string) error {
 
 func (docMan *DocumentManager) GET(frags []string) (interface{}, error) {
 	switch len(frags) {
-	case 0: // err
-		return nil, fmt.Errorf("no frags given for GET command")
-	case 1: // collection
-		switch frags[0] {
+	case 1: // err, only a DB name
+		return nil, fmt.Errorf("not enough frags given for GET command")
+	case 2: // collection
+		switch frags[1] {
 		case "show_collections": // special command
 			res := docMan.listCollections()
 			if len(res) == 0 {
 				return res, fmt.Errorf("no collections found")
 			}
 			return res, nil
-		default: // regulat GET
-			return docMan.getCollection(frags[0])
+		default: // regular GET
+			return docMan.getCollection(frags[0], frags[1])
 		}
-	case 2: // document
-		switch frags[1] {
+	case 3: // document
+		switch frags[2] {
 		case "show_documents": // special command
-			res := docMan.listDocuments(frags[0])
+			res := docMan.listDocuments(frags[1])
 			if len(res) == 0 {
-				return res, fmt.Errorf("no documents found under %s", frags[0])
+				return res, fmt.Errorf("no documents found under %s", frags[1])
 			}
 			return res, nil
 		case "show_map": // special command
-			res := docMan.listDocumentsMap(frags[0])
+			res := docMan.listDocumentsMap(frags[1])
 			if len(res) == 0 {
-				return res, fmt.Errorf("no documents found under %s", frags[0])
+				return res, fmt.Errorf("no documents found under %s", frags[1])
 			}
 			return res, nil
 		default: // regular GET
-			return docMan.getDocument(frags[0], frags[1])
+			return docMan.getDocument(frags[0], frags[1], frags[2])
 		}
 	default: // fields
-		return docMan.getField(frags[0], frags[1], frags[2])
+		return docMan.getField(frags[0], frags[1], frags[2], frags[3])
 	}
 }
 
 func (docMan *DocumentManager) POST(frags []string, data interface{}) (interface{}, error) {
 	switch len(frags) {
-	case 0: // err
-		return nil, fmt.Errorf("no frags given for POST command")
-	case 1: // collection
-		return docMan.editCollection(frags[0], data, false) // "two frag set/post"
-	case 2: // document
-		return docMan.editDocument(frags[0], frags[1], data, false)
+	case 1: // err, only DB name
+		return nil, fmt.Errorf("not enough frags given for POST command")
+	case 2: // collection
+		return docMan.editCollection(frags[0], frags[1], data, false) // "two frag set/post"
+	case 3: // document
+		return docMan.editDocument(frags[0], frags[1], frags[2], data, false)
 	default: // fields
-		return docMan.editField(frags[0], frags[1], frags[2], data, false)
+		return docMan.editField(frags[0], frags[1], frags[2], frags[3], data, false)
 	}
 }
 
 func (docMan *DocumentManager) SET(frags []string, data interface{}) (interface{}, error) {
 	switch len(frags) {
-	case 0: // err
-		return nil, fmt.Errorf("no frags given for SET command")
-	case 1: // collection
-		switch frags[0] {
+	case 1: // err, only DB name
+		return nil, fmt.Errorf("not enough frags given for SET command")
+	case 2: // collection
+		switch frags[1] {
 		case "resync":
-			err := docMan.extractDB()
+			err := docMan.extractDBs()
 			if err != nil {
 				return "FAIL", err
 			}
 			return "SUCCESS", err
 		default:
-			return docMan.editCollection(frags[0], data, true) // "two frag set/post"
+			return docMan.editCollection(frags[0], frags[1], data, true) // "two frag set/post"
 		}
-	case 2: // document
-		return docMan.editDocument(frags[0], frags[1], data, true)
+	case 3: // document
+		return docMan.editDocument(frags[0], frags[1], frags[2], data, true)
 	default: // fields
-		return docMan.editField(frags[0], frags[1], frags[2], data, true)
+		return docMan.editField(frags[0], frags[1], frags[2], frags[3], data, true)
 	}
 }
 
 func (docMan *DocumentManager) DELETE(frags []string) (interface{}, error) {
 	switch len(frags) {
-	case 0: // err
-		return nil, fmt.Errorf("no frags given for DELETE command")
-	case 1: // collection
-		return docMan.deleteCollection(frags[0])
-	case 2: // document
-		return docMan.deleteDocument(frags[0], frags[1])
+	case 1: // err, only DB name
+		return nil, fmt.Errorf("not enough frags given for DELETE command")
+	case 2: // collection
+		return docMan.deleteCollection(frags[0], frags[1])
+	case 3: // document
+		return docMan.deleteDocument(frags[0], frags[1], frags[2])
 	default: // fields
-		return docMan.deleteField(frags[0], frags[1], frags[2])
+		return docMan.deleteField(frags[0], frags[1], frags[2], frags[3])
 	}
 }
 
 // lists all collection names
+// ONLY FOR DBI DATABASE
 func (docMan *DocumentManager) listCollections() []string {
-	if len(docMan.localData) == 0 {
+	if len(docMan.localData["dbi"]) == 0 {
 		return []string{}
 	}
 
-	collections := make([]string, len(docMan.localData))
+	collections := make([]string, len(docMan.localData["dbi"]))
 	i := 0
-	for name := range docMan.localData {
+	for name := range docMan.localData["dbi"] {
 		collections[i] = name
 		i++
 	}
@@ -134,8 +134,9 @@ func (docMan *DocumentManager) listCollections() []string {
 }
 
 // lists all document names in a collection
+// ONLY FOR DBI DATABASE
 func (docMan *DocumentManager) listDocuments(collection string) []string {
-	coll, err := docMan.getCollection(collection)
+	coll, err := docMan.getCollection("dbi", collection)
 	if err != nil {
 		return []string{}
 	}
@@ -151,8 +152,9 @@ func (docMan *DocumentManager) listDocuments(collection string) []string {
 }
 
 // lists documents and their contents
+// ONLY FOR DBI DATABASE
 func (docMan *DocumentManager) listDocumentsMap(collection string) map[string]map[string]interface{} {
-	coll, err := docMan.getCollection(collection)
+	coll, err := docMan.getCollection("dbi", collection)
 	if err != nil {
 		log.Errorf("could not list documents in %s as map: %v", collection, err)
 	}
@@ -167,19 +169,19 @@ func (docMan *DocumentManager) listDocumentsMap(collection string) map[string]ma
 // get requests retrieve information without altering anything
 
 // gets a map of all documents in the collection, if it exists
-func (docMan *DocumentManager) getCollection(collection string) (map[string]map[string]interface{}, error) {
-	if coll, exists := docMan.localData[collection]; exists {
+func (docMan *DocumentManager) getCollection(db, collection string) (map[string]map[string]interface{}, error) {
+	if coll, exists := docMan.localData[db][collection]; exists {
 		return coll, nil
 	}
 
-	return nil, fmt.Errorf("collection %s not found", collection)
+	return nil, fmt.Errorf("collection %s/%s not found", db, collection)
 }
 
 // gets a document from a collection, if it exists
-func (docMan *DocumentManager) getDocument(collection, document string) (map[string]interface{}, error) {
-	coll, err := docMan.getCollection(collection)
+func (docMan *DocumentManager) getDocument(db, collection, document string) (map[string]interface{}, error) {
+	coll, err := docMan.getCollection(db, collection)
 	if err != nil {
-		return nil, fmt.Errorf("document %s not found in collection %s: %w", document, collection, err)
+		return nil, fmt.Errorf("document %s not found in collection %s/%s: %w", document, db, collection, err)
 	}
 
 	if doc, exists := coll[document]; exists {
@@ -190,30 +192,52 @@ func (docMan *DocumentManager) getDocument(collection, document string) (map[str
 }
 
 // retrieves the value of a field in a document in a collection
-func (docMan *DocumentManager) getField(collection, document, field string) (interface{}, error) {
-	doc, err := docMan.getDocument(collection, document)
+func (docMan *DocumentManager) getField(db, collection, document, field string) (interface{}, error) {
+	doc, err := docMan.getDocument(db, collection, document)
 	if err != nil {
-		return nil, fmt.Errorf("field %s not found in document %s in collection %s: %w", field, document, collection, err)
+		return nil, fmt.Errorf("field %s not found in document %s in collection %s/%s: %w", field, document, db, collection, err)
 	}
 
 	return docMan.getFieldRecursive(doc, field)
 }
 
-func (docMan *DocumentManager) getFieldRecursive(layer map[string]interface{}, field string) (interface{}, error) {
+// helper function
+func (docMan *DocumentManager) getFieldRecursive(layer interface{}, field string) (interface{}, error) {
 	frags := strings.SplitN(field, "/", 2)
-	if len(frags) == 2 { // if more frags exist, recurse
-		var next map[string]interface{}
-		switch l := layer[frags[0]].(type) {
-		case map[string]interface{}:
-			next = l
-		default:
-			return nil, fmt.Errorf("could not find frag(s) %s past %s (%s is %T): ", frags[1], frags[0], frags[0], l)
+	var next_untyped interface{}
+
+	switch layer_typed := layer.(type) { // layer can be a map[string]interface{} or []interface{}
+	case map[string]interface{}:
+		// frag is a string -> use frags[0]
+		if _, has := layer_typed[frags[0]]; !has { // verify exists
+			return nil, fmt.Errorf("field %s does not exist", frags[0])
 		}
 
-		return docMan.getFieldRecursive(next, frags[1])
+		next_untyped = layer_typed[frags[0]]
+	case []interface{}:
+		// frag is a slice -> use frags[0] as an integer
+		index, err := strconv.Atoi(frags[0]) // frag is an integer
+		if err != nil {
+			return nil, fmt.Errorf("could not index array with index %s: %w", frags[0], err)
+		}
+		if index > len(layer_typed)-1 || index < 0 { // check bounds
+			return nil, fmt.Errorf("could not index array with index %s: out of bounds for array of length %v", frags[0], len(layer_typed))
+		}
+
+		next_untyped = layer_typed[index]
+	default:
+		if len(frags) == 2 { // there are still frags, so this is a type error
+			return nil, fmt.Errorf("could not find frag(s) %s (is %T): ", frags[0], layer_typed)
+		} else { // final frag
+			next_untyped = layer_typed
+		}
 	}
 
-	return layer[field], nil
+	if len(frags) == 2 { // if more frags exist, recurse
+		return docMan.getFieldRecursive(next_untyped, frags[1])
+	}
+
+	return next_untyped, nil // use frag and return
 }
 
 // === POST/SET (edit) ===
@@ -221,172 +245,255 @@ func (docMan *DocumentManager) getFieldRecursive(layer map[string]interface{}, f
 // set requests override and/or add fields while removing the rest of the document/layer
 
 // posts an entire collection of documents and syncs to mongo. returns updated collection
-func (docMan *DocumentManager) editCollection(collection string, documents interface{}, isSet bool) (map[string]map[string]interface{}, error) {
+func (docMan *DocumentManager) editCollection(db, collection string, documents interface{}, isSet bool) (map[string]map[string]interface{}, error) {
 	if isSet {
-		docMan.localData[collection] = make(map[string]map[string]interface{}) // clear existing data
-		docMan.mongoConn.DeleteCollection("dbi", collection)
+		docMan.localData[db][collection] = make(map[string]map[string]interface{}) // clear existing data
+		docMan.mongoConn.DeleteCollection(db, collection)
 	}
 
 	switch docs := documents.(type) {
 	case map[string]interface{}:
 		for name, doc := range docs {
-			_, err := docMan.editDocument(collection, name, doc, false) // false - don't want to clear every time we add a new doc
+			_, err := docMan.editDocument(db, collection, name, doc, false) // false - don't want to clear every time we add a new doc
 			if err != nil {
 				log.Errorf("failed to add document %s as part of collection edit: %v", name, err)
 			}
 		}
-		return docMan.localData[collection], nil
+		return docMan.localData[db][collection], nil
 	default:
 		return nil, fmt.Errorf("request to edit collection did not have body map[string]interface{}")
 	}
 }
 
 // posts the body of a document in a collection to body, syncs up to mongo. returns updated document
-func (docMan *DocumentManager) editDocument(collection, document string, body interface{}, isSet bool) (map[string]interface{}, error) {
-	if _, exists := docMan.localData[collection]; !exists {
-		docMan.localData[collection] = make(map[string]map[string]interface{})
+func (docMan *DocumentManager) editDocument(db, collection, document string, body interface{}, isSet bool) (map[string]interface{}, error) {
+	if _, exists := docMan.localData[db][collection]; !exists {
+		docMan.localData[db][collection] = make(map[string]map[string]interface{})
 	}
 
 	switch bod := body.(type) {
 	case map[string]interface{}:
-		if _, exists := docMan.localData[collection][document]; !exists || isSet {
-			docMan.localData[collection][document] = bod
+		if _, exists := docMan.localData[db][collection][document]; !exists || isSet {
+			docMan.localData[db][collection][document] = bod
 		} else {
 			for key, value := range bod {
-				docMan.localData[collection][document][key] = value
+				docMan.localData[db][collection][document][key] = value
 			}
 		}
 
-		docMan.updateMetaData(collection, document) // update metadata
+		docMan.updateMetaData(db, collection, document) // update metadata
 
-		return docMan.localData[collection][document], docMan.syncDocument(collection, document)
+		return docMan.localData[db][collection][document], docMan.syncDocument(db, collection, document)
 	default:
 		return nil, fmt.Errorf("request to edit document did not have body map[string]interface{}")
 	}
 }
 
 // adds the key-value pairs in fields to the document in collection, syncing to mongo. will override field if already exists. returns updated document
-func (docMan *DocumentManager) editField(collection, document, field string, data interface{}, isSet bool) (map[string]interface{}, error) {
+func (docMan *DocumentManager) editField(db, collection, document, field string, data interface{}, isSet bool) (map[string]interface{}, error) {
 	if field == "_id" || field == "_version" {
 		return nil, fmt.Errorf("attempted to edit protected field")
 	}
 
-	if _, exists := docMan.localData[collection]; !exists {
-		docMan.localData[collection] = make(map[string]map[string]interface{})
+	if _, exists := docMan.localData[db][collection]; !exists {
+		docMan.localData[db][collection] = make(map[string]map[string]interface{})
 	}
 
-	if _, exists := docMan.localData[collection][document]; !exists {
-		docMan.localData[collection][document] = make(map[string]interface{})
+	if _, exists := docMan.localData[db][collection][document]; !exists {
+		docMan.localData[db][collection][document] = make(map[string]interface{})
 	}
-	doc := docMan.localData[collection][document]
+	doc := docMan.localData[db][collection][document]
 
-	docMan.editFieldRecursive(doc, field, data, isSet) // perform edit
-	docMan.updateMetaData(collection, document)        // update metadata
+	_, err := docMan.editFieldRecursive(doc, field, data, isSet) // perform edit
+	if err != nil {
+		return doc, fmt.Errorf("editing field %s failed: %w", field, err)
+	}
 
-	return doc, docMan.syncDocument(collection, document)
+	docMan.updateMetaData(db, collection, document) // update metadata
+
+	return doc, docMan.syncDocument(db, collection, document)
 }
 
-func (docMan *DocumentManager) editFieldRecursive(layer map[string]interface{}, field string, data interface{}, isSet bool) map[string]interface{} {
+func (docMan *DocumentManager) editFieldRecursive(layer interface{}, field string, insert interface{}, isSet bool) (interface{}, error) {
 	frags := strings.SplitN(field, "/", 2)
-	if len(frags) == 2 { // if more frags exist, recurse
-		var next map[string]interface{}
-		switch l := layer[frags[0]].(type) {
-		case map[string]interface{}:
-			next = l
-		default:
-			next = make(map[string]interface{}) // ensure it is a map -- this will override the current value if used
-		}
 
-		layer[frags[0]] = docMan.editFieldRecursive(next, frags[1], data, isSet)
-	} else { // reached the end of frags
-		switch d := data.(type) {
-		case map[string]interface{}: // if incoming data is a map
-			if val, exists := d["value"]; exists && len(d) == 1 { // check for {"value" : <value>} structure
-				layer[field] = val // if the request has a value pair, it doesn't matter if it is POST/SET -- a singular value will be overridden either way
-			} else { // data is a map of key-value pairs
-				if isSet { // SET, so just override everything here
-					layer[field] = data
-				} else { // POST, so integrate new data with existing
-					switch l := layer[field].(type) {
-					case map[string]interface{}: // see if there is existing data
-						for key, val := range d {
-							l[key] = val // add to the existing map
-						}
-					default:
-						layer[field] = data // it isn't already a map, so we will assume the user wants it to be and override
-					}
-				}
-			}
-		default:
-			layer[field] = data // not a map -- singular values simply override regardless of POST/SET
+	if layer == nil {
+		index, err := strconv.Atoi(frags[0])
+		if err != nil && index > 0 {
+			layer = make([]interface{}, index)
+		} else {
+			layer = make(map[string]interface{})
 		}
 	}
-	return layer
+
+	// check for { "value" : interface{} } idiomatic expression
+	switch insert_typed := insert.(type) {
+	case map[string]interface{}: // if editable layer is a map
+		if val, exists := insert_typed["value"]; exists && len(insert_typed) == 1 { // check for {"value" : <value>} structure
+			insert = val // if the request has a value pair, it doesn't matter if it is POST/SET -- a singular or different value will be overridden either way
+		}
+	}
+
+	switch layer_typed := layer.(type) {
+	case map[string]interface{}:
+		// frag is a string -> use frags[0]
+
+		if field != "" { // if more frags exist, recurse
+			next := ""
+			if len(frags) != 1 {
+				next = frags[1]
+			}
+
+			layer_updated, err := docMan.editFieldRecursive(layer_typed[frags[0]], next, insert, isSet)
+			layer_typed[frags[0]] = layer_updated // update layer
+			return layer_typed, err
+		}
+
+		// reached the end of frags
+		switch insert_typed := insert.(type) {
+		case map[string]interface{}: // if editable layer is a map
+			if isSet { // SET, so just override everything here
+				return insert_typed, nil
+			} else { // POST, so integrate new data with existing
+				for key, val := range insert_typed {
+					layer_typed[key] = val // add to the existing map
+				}
+				return layer_typed, nil
+			}
+		default:
+			return insert, nil // conflicting datatypes, so we will just override
+		}
+
+	case []interface{}:
+		// frag is a slice -> use frags[0] as an integer
+
+		if field != "" { // if more frags exist, recurse
+			next := ""
+			if len(frags) != 1 {
+				next = frags[1]
+			}
+
+			// frag validation
+			index, err := strconv.Atoi(frags[0]) // frag is an integer
+			if err != nil {
+				return layer, fmt.Errorf("could not index array with index %s: %w", frags[0], err)
+			}
+			if index < 0 { // check bounds
+				return layer, fmt.Errorf("could not index array with index %s: out of bounds for array of length %v", frags[0], len(layer_typed))
+			}
+			if index >= len(layer_typed) { // out of scope, add to array at index
+				fill := make([]interface{}, 1+index-len(layer_typed)) // create fill buffer
+				layer_typed = append(layer_typed, fill...)
+			}
+
+			layer_updated, err := docMan.editFieldRecursive(layer_typed[index], next, insert, isSet)
+			layer_typed[index] = layer_updated // update layer
+			return layer_typed, err
+		}
+
+		// reached the end of frags
+		switch insert_typed := insert.(type) {
+		case []interface{}: // if incoming data is an array
+			if isSet { // SET, so just override everything here
+				return insert_typed, nil
+			} else { // POST, so integrate new data with existing
+				return append(layer_typed, insert_typed...), nil
+			}
+		default:
+			return insert_typed, nil // not an array -- singular or different values simply override regardless of POST/SET
+		}
+
+	default:
+		return insert, nil
+	}
 }
 
 // === DELETE ===
 // you know what delete does lol
 
 // deletes a collection and returns the updated collection list
-func (docMan *DocumentManager) deleteCollection(collection string) ([]string, error) {
-	_, err := docMan.getCollection(collection)
+func (docMan *DocumentManager) deleteCollection(db, collection string) ([]string, error) {
+	_, err := docMan.getCollection(db, collection)
 	if err != nil {
 		return nil, fmt.Errorf("local collection deletion failed: %w", err)
 	}
 
-	delete(docMan.localData, collection)
+	delete(docMan.localData[db], collection)
 
-	return docMan.listCollections(), docMan.desyncCollection(collection)
+	return docMan.listCollections(), docMan.desyncCollection(db, collection)
 }
 
 // deletes a document and returns the updated document list
-func (docMan *DocumentManager) deleteDocument(collection, document string) ([]string, error) {
-	_, err := docMan.getDocument(collection, document)
+func (docMan *DocumentManager) deleteDocument(db, collection, document string) ([]string, error) {
+	_, err := docMan.getDocument(db, collection, document)
 	if err != nil {
 		return nil, fmt.Errorf("local document deletion failed: %w", err)
 	}
 
-	delete(docMan.localData[collection], document)
+	delete(docMan.localData[db][collection], document)
 
-	return docMan.listDocuments(collection), docMan.desyncDocument(collection, document)
+	return docMan.listDocuments(collection), docMan.desyncDocument(db, collection, document)
 }
 
 // deletes a field and returns the updated document
-func (docMan *DocumentManager) deleteField(collection, document, field string) (map[string]interface{}, error) {
-	doc, err := docMan.getDocument(collection, document)
+func (docMan *DocumentManager) deleteField(db, collection, document, field string) (map[string]interface{}, error) {
+	doc, err := docMan.getDocument(db, collection, document)
 	if err != nil {
 		return doc, fmt.Errorf("could not delete field locally %s: %w", field, err)
 	}
 
-	err = docMan.deleteFieldRecursive(doc, field)
+	_, err = docMan.deleteFieldRecursive(doc, field)
 	if err != nil {
 		return doc, fmt.Errorf("could not delete field locally %s: %w", field, err)
 	}
 
-	return doc, docMan.syncDocument(collection, document)
+	return doc, docMan.syncDocument(db, collection, document)
 }
 
-func (docMan *DocumentManager) deleteFieldRecursive(layer map[string]interface{}, field string) error {
+func (docMan *DocumentManager) deleteFieldRecursive(layer interface{}, field string) (interface{}, error) {
 	frags := strings.SplitN(field, "/", 2)
-	if len(frags) == 2 { // if more frags exist, recurse
-		var next map[string]interface{}
-		switch l := layer[frags[0]].(type) {
-		case map[string]interface{}:
-			next = l
-		default:
-			return fmt.Errorf("could not find frag(s) %s past %s: ", frags[1], frags[0])
+
+	switch layer_typed := layer.(type) { // layer can be a map[string]interface{} or []interface{}
+	case map[string]interface{}:
+		// frag is a string -> use frags[0]
+
+		if _, has := layer_typed[frags[0]]; !has { // verify exists
+			return layer, fmt.Errorf("field %s does not exist", frags[0])
 		}
 
-		return docMan.deleteFieldRecursive(next, frags[1])
-	}
+		if len(frags) == 2 { // if more frags exist, recurse
+			layer_updated, err := docMan.deleteFieldRecursive(layer_typed[frags[0]], frags[1])
+			layer_typed[frags[0]] = layer_updated // update layer
+			return layer_typed, err               // pass back up
+		} else { // final frag, delete
+			delete(layer_typed, frags[0])
+			return layer_typed, nil // return update layer
+		}
+	case []interface{}:
+		// frag is a slice -> use frags[0] as an integer
+		index, err := strconv.Atoi(frags[0]) // frag is an integer
+		if err != nil {
+			return layer, fmt.Errorf("could not index array with index %s: %w", frags[0], err)
+		}
+		if index > len(layer_typed)-1 || index < 0 { // check bounds
+			return layer, fmt.Errorf("could not index array with index %s: out of bounds for array of length %v", frags[0], len(layer_typed))
+		}
 
-	delete(layer, field)
-	return nil
+		if len(frags) == 2 { // if more frags exist, recurse
+			layer_updated, err := docMan.deleteFieldRecursive(layer_typed[index], frags[1])
+			layer_typed[index] = layer_updated
+			return layer_typed, err
+		} else { // final frag, delete
+			return append(layer_typed[:index], layer_typed[index+1:]...), nil // return update layer
+		}
+	default:
+		return layer, fmt.Errorf("could not find frag(s) %s (layer is %T): ", frags[0], layer_typed)
+	}
 }
 
 // helper method that filters out internal fields from being manually altered
-func (docMan *DocumentManager) updateMetaData(collection, document string) error {
-	doc, err := docMan.getDocument(collection, document)
+func (docMan *DocumentManager) updateMetaData(db, collection, document string) error {
+	doc, err := docMan.getDocument(db, collection, document)
 	if err != nil {
 		return fmt.Errorf("could not update metadata: %w", err)
 	}
@@ -399,23 +506,36 @@ func (docMan *DocumentManager) updateMetaData(collection, document string) error
 
 // === MONGO SYNC FUNCS ===
 
-func (docMan *DocumentManager) extractDB() error {
-	data, err := docMan.mongoConn.ExtractDB("dbi")
+func (docMan *DocumentManager) extractDBs() error {
+	docMan.localData = make(map[string]map[string]map[string]map[string]interface{})
+
+	err := docMan.extractDB("dbi")
 	if err != nil {
-		return fmt.Errorf("could not extract dbi data from mongo: %w", err)
+		return err
 	}
 
-	docMan.localData = make(map[string]map[string]map[string]interface{})
+	return docMan.extractDB("audit")
+}
+
+func (docMan *DocumentManager) extractDB(db string) error {
+	data, err := docMan.mongoConn.ExtractDB(db)
+	if err != nil {
+		return fmt.Errorf("could not extract %s data from mongo: %w", db, err)
+	}
+
+	// create DB structure locally
+	docMan.localData[db] = make(map[string]map[string]map[string]interface{})
 
 	for collection, docs := range data {
-		docMan.localData[collection] = make(map[string]map[string]interface{})
+		// create collection structure locally
+		docMan.localData[db][collection] = make(map[string]map[string]interface{})
 		for _, body := range docs {
 			if name, exists := body["_id"]; exists {
 				switch n := name.(type) {
 				case string:
 					delete(body, "_id") // we don't want the metadata locally
 					delete(body, "_version")
-					docMan.localData[collection][n] = body // add to localData
+					docMan.localData[db][collection][n] = body // add to localData
 				default:
 					log.Errorf("document name (_id) is not a string: %v", body["_id"])
 				}
@@ -428,10 +548,10 @@ func (docMan *DocumentManager) extractDB() error {
 	return nil
 }
 
-func (docMan *DocumentManager) syncDocument(collection, document string) error {
-	doc, err := docMan.getDocument(collection, document)
+func (docMan *DocumentManager) syncDocument(db, collection, document string) error {
+	doc, err := docMan.getDocument(db, collection, document)
 	if err != nil {
-		return fmt.Errorf("could not push document %s from collection %s: %w", document, collection, err)
+		return fmt.Errorf("could not push document %s from collection %s and database %s: %w", document, collection, db, err)
 	}
 
 	doc["_id"] = document
@@ -441,18 +561,18 @@ func (docMan *DocumentManager) syncDocument(collection, document string) error {
 		delete(doc, "_version")
 	}()
 
-	err = docMan.mongoConn.ReplaceDocument("dbi", collection, "_id", true, doc) // replaces or adds document
+	err = docMan.mongoConn.ReplaceDocument(db, collection, "_id", true, doc) // replaces or adds document
 	if err != nil {
-		return fmt.Errorf("synchronization of %s/%s failed: %w", collection, document, err)
+		return fmt.Errorf("synchronization of %s/%s/%s failed: %w", db, collection, document, err)
 	}
 
 	return nil
 }
 
-func (docMan *DocumentManager) desyncDocument(collection, document string) error {
-	return docMan.mongoConn.DeleteDocument("dbi", collection, "_id", document)
+func (docMan *DocumentManager) desyncDocument(db, collection, document string) error {
+	return docMan.mongoConn.DeleteDocument(db, collection, "_id", document)
 }
 
-func (docMan *DocumentManager) desyncCollection(collection string) error {
-	return docMan.mongoConn.DeleteCollection("dbi", collection)
+func (docMan *DocumentManager) desyncCollection(db, collection string) error {
+	return docMan.mongoConn.DeleteCollection(db, collection)
 }

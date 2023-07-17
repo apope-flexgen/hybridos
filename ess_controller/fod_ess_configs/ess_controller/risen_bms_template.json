@@ -1,0 +1,73 @@
+{
+    "/assets/bms/summary": {
+        "@@RACK_ID@@_connection_state": 0,
+        "@@RACK_ID@@_run_state": 0,
+        "@@RACK_ID@@_charge_state": 0
+    },
+    "/schedule/wake_monitor/@@RACK_ID@@":{
+        "/status/@@RACK_ID@@:ChargeState":    { "enable": true, "rate": 0.1, "amap": "@@RACK_ID@@", "func": "CalculateVar"},
+        "/status/@@RACK_ID@@:DischargeState": { "enable": true, "rate": 0.1, "amap": "@@RACK_ID@@", "func": "CalculateVar"},
+        "/status/@@RACK_ID@@:IdleState":      { "enable": true, "rate": 0.1, "amap": "@@RACK_ID@@", "func": "CalculateVar"}
+    },
+    "/status/@@RACK_ID@@": {
+        "ChargeState": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/bms_1:@@RACK_ID@@_idc_value",
+            "expression": "{1} < 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "uri": "/assets/bms/summary:@@RACK_ID@@_charge_state", "outValue": 2}
+                    ]
+                }]
+            }
+        },
+        "DischargeState": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/bms_1:@@RACK_ID@@_idc_value",
+            "expression": "{1} > 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "uri": "/assets/bms/summary:@@RACK_ID@@_charge_state", "outValue": 1}
+                    ]
+                }]
+            }
+        },
+        "IdleState": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/bms_1:@@RACK_ID@@_idc_value",
+            "expression": "{1} == 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "uri": "/assets/bms/summary:@@RACK_ID@@_charge_state", "outValue": 0}
+                    ]
+                }]
+            }
+        }
+    },
+    "/components/bms_1": {
+        "@@RACK_ID@@_dccontactor": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:@@RACK_ID@@_connection_state", "outValue": 0},
+                        {"inValue": false, "uri": "/assets/bms/summary:@@RACK_ID@@_run_state",        "outValue": 3},
+
+                        {"inValue": true,  "uri": "/assets/bms/summary:@@RACK_ID@@_connection_state", "outValue": 5},
+                        {"inValue": true,  "uri": "/assets/bms/summary:@@RACK_ID@@_run_state",        "outValue": 0}
+                    ]
+                }]
+            }
+        },
+        "@@RACK_ID@@_idc_value": 0
+    }
+}

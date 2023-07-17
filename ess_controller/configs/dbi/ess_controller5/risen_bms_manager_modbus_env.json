@@ -1,0 +1,1220 @@
+{
+    "/doc/06/bms_modbus":{
+        "note0":"We have to define  the rack_fss_alarms to allow the bits to be set"
+    },
+
+    "/site/ess_ls":{
+        "rack_01_fss_alarms":0,
+        "rack_02_fss_alarms":0,
+        "rack_03_fss_alarms":0,
+        "rack_04_fss_alarms":0,
+        "rack_05_fss_alarms":0,
+        "rack_06_fss_alarms":0,
+        "rack_07_fss_alarms":0,
+        "rack_08_fss_alarms":0,
+        "rack_09_fss_alarms":0,
+        "rack_10_fss_alarms":0,
+        "rack_11_fss_alarms":0,
+        "rack_12_fss_alarms":0,
+        "rack_13_fss_alarms":0,
+        "rack_14_fss_alarms":0,
+        "rack_15_fss_alarms":0,
+        "rack_16_fss_alarms":0,
+        "rack_17_fss_alarms":0,
+        "rack_18_fss_alarms":0
+    },
+
+    "/components/##BMS_ID##_ems_running_info": {
+        "sys_status": {
+            "value":0,
+            "enable":"/config/bms:enable",
+            "ifChanged" : false,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue":0, "outValue":"Normal",    "uri": "/assets/bms/##BMS_ID##:FSS_fault_signal"},
+                        {"shift": 0, "mask": 1, "inValue":1, "outValue":"Abnormal",  "uri": "/assets/bms/##BMS_ID##:FSS_fault_signal"},
+                        {"shift": 1, "mask": 1, "inValue":0, "outValue":"Normal",    "uri": "/assets/bms/##BMS_ID##:FSS_alarm_signal"},
+                        {"shift": 1, "mask": 1, "inValue":1, "outValue":"Abnormal",  "uri": "/assets/bms/##BMS_ID##:FSS_alarm_signal"},
+                        {"shift": 2, "mask": 1, "inValue":0, "outValue":"Normal",    "uri": "/assets/bms/##BMS_ID##:lightning_protector_status"},
+                        {"shift": 2, "mask": 1, "inValue":1, "outValue":"Abnormal",  "uri": "/assets/bms/##BMS_ID##:lightning_protector_status"},
+                        {"shift": 3, "mask": 1, "inValue":0, "outValue":"Normal",    "uri": "/assets/bms/##BMS_ID##:transformer_high_temp"},
+                        {"shift": 3, "mask": 1, "inValue":1, "outValue":"Abnormal",  "uri": "/assets/bms/##BMS_ID##:transformer_high_temp"},
+                        {"shift": 4, "mask": 1, "inValue":0, "outValue":"Normal",    "uri": "/assets/bms/##BMS_ID##:emergency_stop"},
+                        {"shift": 4, "mask": 1, "inValue":1, "outValue":"Triggered", "uri": "/assets/bms/##BMS_ID##:emergency_stop"},
+                        {"shift": 5, "mask": 1, "inValue":0, "outValue":"Opened",    "uri": "/assets/bms/##BMS_ID##:dc_load_switch"},
+                        {"shift": 5, "mask": 1, "inValue":1, "outValue":"Closed",    "uri": "/assets/bms/##BMS_ID##:dc_load_switch"},
+                        {"shift": 6, "mask": 1, "inValue":0, "outValue":"Closed",    "uri": "/assets/bms/##BMS_ID##:access_control_switch"},
+                        {"shift": 6, "mask": 1, "inValue":1, "outValue":"Opened",    "uri": "/assets/bms/##BMS_ID##:access_control_switch"},
+                        {"shift": 7, "mask": 1, "inValue":0, "outValue":"Abnormal",  "uri": "/assets/bms/##BMS_ID##:dc_fuse"},
+                        {"shift": 7, "mask": 1, "inValue":1, "outValue":"Normal",    "uri": "/assets/bms/##BMS_ID##:dc_fuse"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:sys_status@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "bms_alarms": {
+            "value":0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "bit": 0, "inValue":0, "outValue":"Normal",  "uri": "/alarms/bms:soc_high2"},
+                        {"shift": 0, "mask": 1, "bit": 0, "inValue":1, "outValue":"Abnormal","uri": "/alarms/bms:soc_high2"},
+                        {"shift": 1, "mask": 1, "bit": 1, "inValue":0, "outValue":"Normal",  "uri": "/alarms/bms:soc_high1"},
+                        {"shift": 1, "mask": 1, "bit": 1, "inValue":1, "outValue":"Abnormal","uri": "/alarms/bms:soc_high1"},
+                        {"shift": 2, "mask": 1, "bit": 2, "inValue":0, "outValue":"Normal",  "uri": "/alarms/bms:soc_low1"},
+                        {"shift": 2, "mask": 1, "bit": 2, "inValue":1, "outValue":"Abnormal","uri": "/alarms/bms:soc_low1"},
+                        {"shift": 3, "mask": 1, "bit": 3, "inValue":0, "outValue":"Normal",  "uri": "/alarms/bms:soc_low2"},
+                        {"shift": 3, "mask": 1, "bit": 3, "inValue":1, "outValue":"Abnormal","uri": "/alarms/bms:soc_low2"},
+                        
+                        {"shift": 0, "mask": 1, "bit": 0, "inValue":1, "outValue":true,"uri": "/site/ess_ls:bms_alarms[4]"},
+                        {"shift": 1, "mask": 1, "bit": 1, "inValue":1, "outValue":true,"uri": "/site/ess_ls:bms_alarms[5]"},
+                        {"shift": 2, "mask": 1, "bit": 2, "inValue":1, "outValue":true,"uri": "/site/ess_ls:bms_alarms[6]"},
+                        {"shift": 3, "mask": 1, "bit": 3, "inValue":1, "outValue":true,"uri": "/site/ess_ls:bms_alarms[7]"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:bms_alarms@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "fss_comms_state": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/alarms/bms:fss_comms_state", "outValue": "FSS Comms Abnormal"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/alarms/bms:fss_comms_state", "outValue": "Normal"}
+                    ]
+                }]
+            }
+        },
+        "env_alarms_1": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/ess:enableRacks",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_01_temp_alarm",                   "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_01_temp_alarm",                   "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_01_temp_sensor_fault",            "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_01_temp_sensor_fault",            "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_01_smoke_alarm",                  "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_01_smoke_alarm",                  "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_01_labyrinth_pollution_fault",    "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_01_labyrinth_pollution_fault",    "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_01_smoke_sensor_failure",         "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_01_smoke_sensor_failure",         "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_01_fire_gas_release",             "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_01_fire_gas_release",             "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_02_temp_alarm",                   "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_02_temp_alarm",                   "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_02_temp_sensor_fault",            "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_02_temp_sensor_fault",            "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_02_smoke_alarm",                  "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_02_smoke_alarm",                  "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_02_labyrinth_pollution_fault",    "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_02_labyrinth_pollution_fault",    "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_02_smoke_sensor_failure",         "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_02_smoke_sensor_failure",         "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_02_fire_gas_release",             "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_02_fire_gas_release",             "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/rack_01:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/rack_01:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/rack_01:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/rack_01:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/rack_01:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/rack_01:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/rack_01:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/rack_01:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/rack_01:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/rack_01:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/rack_01:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/rack_01:fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/rack_02:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/rack_02:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/rack_02:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/rack_02:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/rack_02:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/rack_02:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/rack_02:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/rack_02:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/rack_02:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/rack_02:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/rack_02:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/rack_02:fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_01_fss_alarms[0]",         "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_01_fss_alarms[1]",         "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_01_fss_alarms[2]",         "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_01_fss_alarms[3]",         "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_01_fss_alarms[4]",         "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_01_fss_alarms[5]",         "outValue": true},
+
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_02_fss_alarms[0]",         "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_02_fss_alarms[1]",         "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_02_fss_alarms[2]",         "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_02_fss_alarms[3]",         "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_02_fss_alarms[4]",         "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_02_fss_alarms[5]",         "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:env_alarms_1@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]
+            }
+        },
+        "env_alarms_2": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/ess:enableRacks",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_03_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_03_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_03_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_03_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_03_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_03_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_03_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_03_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_03_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_03_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_03_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_03_fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_04_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_04_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_04_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_04_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_04_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_04_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_04_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_04_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_04_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_04_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_04_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_04_fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/rack_03:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/rack_03:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/rack_03:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/rack_03:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/rack_03:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/rack_03:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/rack_03:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/rack_03:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/rack_03:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/rack_03:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/rack_03:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/rack_03:fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/rack_04:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/rack_04:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/rack_04:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/rack_04:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/rack_04:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/rack_04:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/rack_04:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/rack_04:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/rack_04:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/rack_04:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/rack_04:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/rack_04:fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_03_fss_alarms[0]",         "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_03_fss_alarms[1]",         "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_03_fss_alarms[2]",         "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_03_fss_alarms[3]",         "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_03_fss_alarms[4]",         "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_03_fss_alarms[5]",         "outValue": true},
+
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_04_fss_alarms[0]",         "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_04_fss_alarms[1]",         "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_04_fss_alarms[2]",         "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_04_fss_alarms[3]",         "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_04_fss_alarms[4]",         "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_04_fss_alarms[5]",         "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:env_alarms_2@ifChanged", "useAv":true, "outValue": true}
+                    ]
+
+                }]
+            }
+        },
+        "env_alarms_3": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/ess:enableRacks",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_05_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_05_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_05_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_05_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_05_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_05_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_05_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_05_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_05_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_05_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_05_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_05_fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_06_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_06_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_06_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_06_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_06_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_06_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_06_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_06_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_06_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_06_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_06_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_06_fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/rack_05:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/rack_05:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/rack_05:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/rack_05:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/rack_05:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/rack_05:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/rack_05:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/rack_05:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/rack_05:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/rack_05:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/rack_05:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/rack_05:fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/rack_06:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/rack_06:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/rack_06:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/rack_06:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/rack_06:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/rack_06:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/rack_06:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/rack_06:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/rack_06:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/rack_06:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/rack_06:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/rack_06:fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_05_fss_alarms[0]",         "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_05_fss_alarms[1]",         "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_05_fss_alarms[2]",         "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_05_fss_alarms[3]",         "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_05_fss_alarms[4]",         "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_05_fss_alarms[5]",         "outValue": true},
+
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_06_fss_alarms[0]",         "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_06_fss_alarms[1]",         "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_06_fss_alarms[2]",         "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_06_fss_alarms[3]",         "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_06_fss_alarms[4]",         "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_06_fss_alarms[5]",         "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:env_alarms_@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "env_alarms_4": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/ess:enableRacks",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_07_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_07_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_07_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_07_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_07_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_07_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_07_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_07_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_07_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_07_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_07_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_07_fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_08_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_08_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_08_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_08_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_08_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_08_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_08_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_08_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_08_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_08_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_08_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_08_fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/rack_07:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/rack_07:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/rack_07:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/rack_07:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/rack_07:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/rack_07:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/rack_07:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/rack_07:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/rack_07:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/rack_07:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/rack_07:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/rack_07:fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/rack_08:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/rack_08:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/rack_08:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/rack_08:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/rack_08:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/rack_08:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/rack_08:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/rack_08:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/rack_08:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/rack_08:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/rack_08:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/rack_08:fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_07_fss_alarms[0]",         "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_07_fss_alarms[1]",         "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_07_fss_alarms[2]",         "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_07_fss_alarms[3]",         "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_07_fss_alarms[4]",         "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_07_fss_alarms[5]",         "outValue": true},
+
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_08_fss_alarms[0]",         "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_08_fss_alarms[1]",         "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_08_fss_alarms[2]",         "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_08_fss_alarms[3]",         "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_08_fss_alarms[4]",         "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_08_fss_alarms[5]",         "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:env_alarms_4@ifChanged", "useAv":true, "outValue": true}
+                    ]
+
+                }]
+            }
+        },
+        "env_alarms_5": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/ess:enableRacks",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_09_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_09_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_09_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_09_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_09_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_09_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_09_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_09_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_09_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_09_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_09_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_09_fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_10_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_10_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_10_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_10_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_10_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_10_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_10_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_10_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_10_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_10_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_10_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_10_fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/rack_09:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/rack_09:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/rack_09:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/rack_09:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/rack_09:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/rack_09:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/rack_09:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/rack_09:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/rack_09:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/rack_09:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/rack_09:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/rack_09:fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/rack_10:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/rack_10:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/rack_10:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/rack_10:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/rack_10:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/rack_10:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/rack_10:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/rack_10:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/rack_10:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/rack_10:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/rack_10:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/rack_10:fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_09_fss_alarms[0]",         "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_09_fss_alarms[1]",         "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_09_fss_alarms[2]",         "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_09_fss_alarms[3]",         "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_09_fss_alarms[4]",         "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_09_fss_alarms[5]",         "outValue": true},
+
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_10_fss_alarms[0]",         "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_10_fss_alarms[1]",         "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_10_fss_alarms[2]",         "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_10_fss_alarms[3]",         "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_10_fss_alarms[4]",         "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_10_fss_alarms[5]",         "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:env_alarms_5@ifChanged", "useAv":true, "outValue": true}
+                    ]
+
+                }]
+            }
+        },
+        "env_alarms_6": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/ess:enableRacks",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_11_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_11_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_11_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_11_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_11_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_11_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_11_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_11_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_11_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_11_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_11_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_11_fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_12_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_12_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_12_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_12_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_12_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_12_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_12_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_12_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_12_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_12_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_12_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_12_fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/rack_11:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/rack_11:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/rack_11:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/rack_11:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/rack_11:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/rack_11:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/rack_11:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/rack_11:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/rack_11:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/rack_11:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/rack_11:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/rack_11:fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/rack_12:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/rack_12:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/rack_12:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/rack_12:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/rack_12:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/rack_12:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/rack_12:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/rack_12:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/rack_12:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/rack_12:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/rack_12:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/rack_12:fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_11_fss_alarms[0]",         "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_11_fss_alarms[1]",         "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_11_fss_alarms[2]",         "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_11_fss_alarms[3]",         "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_11_fss_alarms[4]",         "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_11_fss_alarms[5]",         "outValue": true},
+
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_12_fss_alarms[0]",         "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_12_fss_alarms[1]",         "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_12_fss_alarms[2]",         "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_12_fss_alarms[3]",         "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_12_fss_alarms[4]",         "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_12_fss_alarms[5]",         "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:env_alarms_6@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "env_alarms_7": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/ess:enableRacks",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_13_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_13_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_13_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_13_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_13_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_13_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_13_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_13_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_13_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_13_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_13_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_13_fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_14_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_14_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_14_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_14_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_14_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_14_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_14_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_14_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_14_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_14_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_14_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_14_fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/rack_13:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/rack_13:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/rack_13:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/rack_13:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/rack_13:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/rack_13:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/rack_13:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/rack_13:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/rack_13:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/rack_13:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/rack_13:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/rack_13:fire_gas_release",          "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/rack_14:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/rack_14:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/rack_14:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/rack_14:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/rack_14:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/rack_14:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/rack_14:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/rack_14:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/rack_14:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/rack_14:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/rack_14:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/rack_14:fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_13_fss_alarms[0]",         "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_13_fss_alarms[1]",         "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_13_fss_alarms[2]",         "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_13_fss_alarms[3]",         "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_13_fss_alarms[4]",         "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_13_fss_alarms[5]",         "outValue": true},
+
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_14_fss_alarms[0]",         "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_14_fss_alarms[1]",         "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_14_fss_alarms[2]",         "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_14_fss_alarms[3]",         "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_14_fss_alarms[4]",         "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_14_fss_alarms[5]",         "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:env_alarms_7@ifChanged", "useAv":true, "outValue": true}
+                    ]
+
+                }]
+            }
+        },
+        "env_alarms_8": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/ess:enableRacks",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_15_temp_alarm",                  "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_15_temp_alarm",                  "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_15_temp_sensor_fault",           "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_15_temp_sensor_fault",           "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_15_smoke_alarm",                 "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_15_smoke_alarm",                 "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_15_labyrinth_pollution_fault",   "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_15_labyrinth_pollution_fault",   "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_15_smoke_sensor_failure",        "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_15_smoke_sensor_failure",        "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_15_fire_gas_release",            "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_15_fire_gas_release",            "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_16_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_16_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_16_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_16_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_16_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_16_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_16_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_16_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_16_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_16_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_16_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_16_fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/rack_15:temp_alarm",                  "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/rack_15:temp_alarm",                  "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/rack_15:temp_sensor_fault",           "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/rack_15:temp_sensor_fault",           "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/rack_15:smoke_alarm",                 "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/rack_15:smoke_alarm",                 "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/rack_15:labyrinth_pollution_fault",   "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/rack_15:labyrinth_pollution_fault",   "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/rack_15:smoke_sensor_failure",        "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/rack_15:smoke_sensor_failure",        "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/rack_15:fire_gas_release",            "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/rack_15:fire_gas_release",            "outValue": "Triggered"},
+                        
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/rack_16:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/rack_16:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/rack_16:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/rack_16:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/rack_16:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/rack_16:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/rack_16:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/rack_16:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/rack_16:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/rack_16:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/rack_16:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/rack_16:fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_15_fss_alarms[0]",         "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_15_fss_alarms[1]",         "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_15_fss_alarms[2]",         "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_15_fss_alarms[3]",         "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_15_fss_alarms[4]",         "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_15_fss_alarms[5]",         "outValue": true},
+                        
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_16_fss_alarms[0]",         "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_16_fss_alarms[1]",         "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_16_fss_alarms[2]",         "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_16_fss_alarms[3]",         "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_16_fss_alarms[4]",         "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_16_fss_alarms[5]",         "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:env_alarms_8@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "env_alarms_9": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/ess:enableRacks",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_17_temp_alarm",                  "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_17_temp_alarm",                  "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_17_temp_sensor_fault",           "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_17_temp_sensor_fault",           "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_17_smoke_alarm",                 "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_17_smoke_alarm",                 "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_17_labyrinth_pollution_fault",   "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_17_labyrinth_pollution_fault",   "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_17_smoke_sensor_failure",        "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_17_smoke_sensor_failure",        "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_17_fire_gas_release",            "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_17_fire_gas_release",            "outValue": "Triggered"},
+
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_18_temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_18_temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/bms:rack_18_temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/bms:rack_18_temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_18_smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_18_smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_18_labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_18_labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_18_smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_18_smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/bms:rack_18_fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/bms:rack_18_fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 0, "uri": "/faults/rack_17:temp_alarm",                  "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/faults/rack_17:temp_alarm",                  "outValue": "Triggered"},
+                        { "shift": 1, "mask": 1, "inValue": 0, "uri": "/faults/rack_17:temp_sensor_fault",           "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/faults/rack_17:temp_sensor_fault",           "outValue": "Triggered"},
+                        { "shift": 2, "mask": 1, "inValue": 0, "uri": "/faults/rack_17:smoke_alarm",                 "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/faults/rack_17:smoke_alarm",                 "outValue": "Triggered"},
+                        { "shift": 3, "mask": 1, "inValue": 0, "uri": "/faults/rack_17:labyrinth_pollution_fault",   "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/faults/rack_17:labyrinth_pollution_fault",   "outValue": "Triggered"},
+                        { "shift": 4, "mask": 1, "inValue": 0, "uri": "/faults/rack_17:smoke_sensor_failure",        "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/faults/rack_17:smoke_sensor_failure",        "outValue": "Triggered"},
+                        { "shift": 5, "mask": 1, "inValue": 0, "uri": "/faults/rack_17:fire_gas_release",            "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/faults/rack_17:fire_gas_release",            "outValue": "Triggered"},
+                        
+                        { "shift": 8, "mask": 1, "inValue": 0, "uri": "/faults/rack_18:temp_alarm",                "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/faults/rack_18:temp_alarm",                "outValue": "Triggered"},
+                        { "shift": 9, "mask": 1, "inValue": 0, "uri": "/faults/rack_18:temp_sensor_fault",         "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/faults/rack_18:temp_sensor_fault",         "outValue": "Triggered"},
+                        { "shift": 10,"mask": 1, "inValue": 0, "uri": "/faults/rack_18:smoke_alarm",               "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/faults/rack_18:smoke_alarm",               "outValue": "Triggered"},
+                        { "shift": 11,"mask": 1, "inValue": 0, "uri": "/faults/rack_18:labyrinth_pollution_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/faults/rack_18:labyrinth_pollution_fault", "outValue": "Triggered"},
+                        { "shift": 12,"mask": 1, "inValue": 0, "uri": "/faults/rack_18:smoke_sensor_failure",      "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/faults/rack_18:smoke_sensor_failure",      "outValue": "Triggered"},
+                        { "shift": 13,"mask": 1, "inValue": 0, "uri": "/faults/rack_18:fire_gas_release",          "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/faults/rack_18:fire_gas_release",          "outValue": "Triggered"},
+
+
+                        { "shift": 0, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_17_fss_alarms[0]",         "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_17_fss_alarms[1]",         "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_17_fss_alarms[2]",         "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_17_fss_alarms[3]",         "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_17_fss_alarms[4]",         "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_17_fss_alarms[5]",         "outValue": true},
+                        
+                        { "shift": 8, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_18_fss_alarms[0]",         "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_18_fss_alarms[1]",         "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_18_fss_alarms[2]",         "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_18_fss_alarms[3]",         "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_18_fss_alarms[4]",         "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 1, "uri": "/site/ess_ls:rack_18_fss_alarms[5]",         "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:env_alarms_9@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "ac_comms_state_1": {
+            "value": 65536,
+            "ifChanged" : false,
+            "xxenable": "/config/bms:enable",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 1,"uri": "/alarms/bms:ems_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 0,"uri": "/alarms/bms:ems_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 1, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_01_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_01_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 2, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_01_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_01_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 3, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_02_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_02_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 4, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_02_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_02_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 5, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_03_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_03_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 6, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_03_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 6, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_03_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 7, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_04_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 7, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_04_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 8, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_04_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_04_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 9, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_05_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_05_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 10,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_05_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_05_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 11,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_06_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_06_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 12,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_06_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_06_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 13,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_07_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_07_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 14,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_07_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_07_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 15,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_08_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_08_hvac_1_comms", "outValue": "Abnormal"},
+
+                        { "shift": 1, "mask": 1, "inValue": 1,"uri": "/alarms/rack_01:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 0,"uri": "/alarms/rack_01:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 2, "mask": 1, "inValue": 1,"uri": "/alarms/rack_01:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 0,"uri": "/alarms/rack_01:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 3, "mask": 1, "inValue": 1,"uri": "/alarms/rack_02:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 0,"uri": "/alarms/rack_02:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 4, "mask": 1, "inValue": 1,"uri": "/alarms/rack_02:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 0,"uri": "/alarms/rack_02:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 5, "mask": 1, "inValue": 1,"uri": "/alarms/rack_03:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 0,"uri": "/alarms/rack_03:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 6, "mask": 1, "inValue": 1,"uri": "/alarms/rack_03:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 6, "mask": 1, "inValue": 0,"uri": "/alarms/rack_03:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 7, "mask": 1, "inValue": 1,"uri": "/alarms/rack_04:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 7, "mask": 1, "inValue": 0,"uri": "/alarms/rack_04:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 8, "mask": 1, "inValue": 1,"uri": "/alarms/rack_04:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 0,"uri": "/alarms/rack_04:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 9, "mask": 1, "inValue": 1,"uri": "/alarms/rack_05:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 0,"uri": "/alarms/rack_05:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 10,"mask": 1, "inValue": 1,"uri": "/alarms/rack_05:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 0,"uri": "/alarms/rack_05:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 11,"mask": 1, "inValue": 1,"uri": "/alarms/rack_06:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 0,"uri": "/alarms/rack_06:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 12,"mask": 1, "inValue": 1,"uri": "/alarms/rack_06:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 0,"uri": "/alarms/rack_06:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 13,"mask": 1, "inValue": 1,"uri": "/alarms/rack_07:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 0,"uri": "/alarms/rack_07:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 14,"mask": 1, "inValue": 1,"uri": "/alarms/rack_07:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1, "inValue": 0,"uri": "/alarms/rack_07:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 15,"mask": 1, "inValue": 1,"uri": "/alarms/rack_08:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1, "inValue": 0,"uri": "/alarms/rack_08:hvac_1_comms", "outValue": "Abnormal"},
+
+                        { "shift": 0, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[0]", "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[1]", "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[2]", "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[3]", "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[4]", "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[5]", "outValue": true},
+                        { "shift": 6, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[6]", "outValue": true},
+                        { "shift": 7, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[7]", "outValue": true},
+                        { "shift": 8, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[8]", "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[9]", "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[10]", "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[11]", "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[12]", "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[13]", "outValue": true},
+                        { "shift": 14,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[14]", "outValue": true},
+                        { "shift": 15,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[15]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:ac_coms_state_1@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "ac_comms_state_2": {
+            "value": 65536,
+            "ifChanged" : false,
+            "xxenable": "/config/bms:enable",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_08_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_08_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 1, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_09_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_09_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 2, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_09_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_09_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 3, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_10_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_10_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 4, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_10_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_10_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 5, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_11_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_11_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 6, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_11_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 6, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_11_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 7, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_12_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 7, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_12_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 8, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_12_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_12_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 9, "mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_13_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_13_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 10,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_13_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_13_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 11,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_14_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_14_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 12,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_14_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_14_hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 13,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_15_hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_15_hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 14,"mask": 1, "inValue": 1,"uri": "/alarms/bms:rack_15_hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1, "inValue": 0,"uri": "/alarms/bms:rack_15_hvac_2_comms", "outValue": "Abnormal"},
+
+                        { "shift": 0, "mask": 1, "inValue": 1,"uri": "/alarms/rack_08:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 0, "mask": 1, "inValue": 0,"uri": "/alarms/rack_08:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 1, "mask": 1, "inValue": 1,"uri": "/alarms/rack_09:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 1, "mask": 1, "inValue": 0,"uri": "/alarms/rack_09:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 2, "mask": 1, "inValue": 1,"uri": "/alarms/rack_09:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 2, "mask": 1, "inValue": 0,"uri": "/alarms/rack_09:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 3, "mask": 1, "inValue": 1,"uri": "/alarms/rack_10:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 3, "mask": 1, "inValue": 0,"uri": "/alarms/rack_10:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 4, "mask": 1, "inValue": 1,"uri": "/alarms/rack_10:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 4, "mask": 1, "inValue": 0,"uri": "/alarms/rack_10:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 5, "mask": 1, "inValue": 1,"uri": "/alarms/rack_11:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 5, "mask": 1, "inValue": 0,"uri": "/alarms/rack_11:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 6, "mask": 1, "inValue": 1,"uri": "/alarms/rack_11:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 6, "mask": 1, "inValue": 0,"uri": "/alarms/rack_11:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 7, "mask": 1, "inValue": 1,"uri": "/alarms/rack_12:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 7, "mask": 1, "inValue": 0,"uri": "/alarms/rack_12:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 8, "mask": 1, "inValue": 1,"uri": "/alarms/rack_12:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 8, "mask": 1, "inValue": 0,"uri": "/alarms/rack_12:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 9, "mask": 1, "inValue": 1,"uri": "/alarms/rack_13:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 9, "mask": 1, "inValue": 0,"uri": "/alarms/rack_13:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 10,"mask": 1, "inValue": 1,"uri": "/alarms/rack_13:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1, "inValue": 0,"uri": "/alarms/rack_13:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 11,"mask": 1, "inValue": 1,"uri": "/alarms/rack_14:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1, "inValue": 0,"uri": "/alarms/rack_14:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 12,"mask": 1, "inValue": 1,"uri": "/alarms/rack_14:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1, "inValue": 0,"uri": "/alarms/rack_14:hvac_2_comms", "outValue": "Abnormal"},
+                        { "shift": 13,"mask": 1, "inValue": 1,"uri": "/alarms/rack_15:hvac_1_comms", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1, "inValue": 0,"uri": "/alarms/rack_15:hvac_1_comms", "outValue": "Abnormal"},
+                        { "shift": 14,"mask": 1, "inValue": 1,"uri": "/alarms/rack_15:hvac_2_comms", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1, "inValue": 0,"uri": "/alarms/rack_15:hvac_2_comms", "outValue": "Abnormal"},
+
+                        { "shift": 0, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[16]", "outValue": true},
+                        { "shift": 1, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[17]", "outValue": true},
+                        { "shift": 2, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[18]", "outValue": true},
+                        { "shift": 3, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[19]", "outValue": true},
+                        { "shift": 4, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[20]", "outValue": true},
+                        { "shift": 5, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[21]", "outValue": true},
+                        { "shift": 6, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[22]", "outValue": true},
+                        { "shift": 7, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[23]", "outValue": true},
+                        { "shift": 8, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[24]", "outValue": true},
+                        { "shift": 9, "mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[25]", "outValue": true},
+                        { "shift": 10,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[26]", "outValue": true},
+                        { "shift": 11,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[27]", "outValue": true},
+                        { "shift": 12,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[28]", "outValue": true},
+                        { "shift": 13,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms1[29]", "outValue": true},
+                        { "shift": 14,"mask": 1, "inValue": 0,"uri": "/site/ess_ls:bms_hvac_comms_alarms2[0]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_ems_running_info:ac_coms_state_2@ifChanged", "useAv":true, "outValue": true}
+                    ]
+
+                }]
+            }
+        }
+    },
+    "/components/##BMS_ID##_hvac_info": {
+        "hvac_1_unit_running_status": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/bms:enable",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 255,"inValue": 0,"uri": "/assets/bms/##BMS_ID##:hvac_1_unit_running_status", "outValue": "Stop"},
+                        { "shift": 0,"mask": 255,"inValue": 1,"uri": "/assets/bms/##BMS_ID##:hvac_1_unit_running_status", "outValue": "Running"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:hvac_1_unit_running_status@ifChanged", "useAv":true, "outValue": true}
+                    ]
+
+                }]
+            }
+        },
+        "hvac_1_inside_return_temp": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri": "/assets/bms/##BMS_ID##:hvac_1_temperature"}
+                    ]
+                }]
+            }
+        },
+        "hvac_1_alarms_1": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/bms:enable",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_high_temp", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_high_temp", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_low_temp", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_low_temp", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_high_humidity", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_high_humidity", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_low_humidity", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_low_humidity", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_heat_exchanger_coil_frost", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_heat_exchanger_coil_frost", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_exhaust_temp_high", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_exhaust_temp_high", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_heat_exchanger_coil_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_heat_exchanger_coil_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_exterior_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_exterior_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_condensation_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_condensation_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_interior_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_interior_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_exhaust_temp_sensing_failure", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_exhaust_temp_sensing_failure", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_humidity_sensing_failure", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_humidity_sensing_failure", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_interior_fan_failure", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_interior_fan_failure", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_exterior_fan_failure", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_exterior_fan_failure", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_compressor_failure", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_compressor_failure", "outValue": "Warning"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_electric_heating_failure", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_electric_heating_failure", "outValue": "Warning"},
+        
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[3]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[4]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[5]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[6]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[7]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[8]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[9]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[10]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[11]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[12]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[13]", "outValue": true},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[14]", "outValue": true},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[15]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:hvac_1_alarms_1@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "hvac_1_alarms_2": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/bms:enable",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_emergency_air_fan_failure", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_emergency_air_fan_failure", "outValue": "Warning"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_high_air_pressure", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_high_air_pressure", "outValue": "Warning"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_low_air_pressure", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_low_air_pressure", "outValue": "Warning"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_flood", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_flood", "outValue": "Warning"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_smoke", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_smoke", "outValue": "Warning"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_door_open", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_door_open", "outValue": "Warning"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_high_air_pressure_lockdown", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_high_air_pressure_lockdown", "outValue": "Warning"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_low_air_pressure_lockdown", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_low_air_pressure_lockdown", "outValue": "Warning"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_exhaust_lockdown", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_exhaust_lockdown", "outValue": "Warning"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_ac_high_voltage", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_ac_high_voltage", "outValue": "Warning"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_ac_low_voltage", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_ac_low_voltage", "outValue": "Warning"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_ac_drop_out", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_ac_drop_out", "outValue": "Warning"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_phase_loss", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_phase_loss", "outValue": "Warning"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_freq_abnormal", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_freq_abnormal", "outValue": "Warning"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_phase_reversal", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_phase_reversal", "outValue": "Warning"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_dc_high_voltage", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_dc_high_voltage", "outValue": "Warning"},
+        
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[16]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[17]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[18]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[19]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[20]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[21]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[22]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[23]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[24]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[25]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[26]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[27]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[28]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[29]", "outValue": true},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[30]", "outValue": true},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:hvac_1_alarms[31]", "outValue": true}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:hvac_1_alarms_2@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "hvac_1_alarms_3": {
+            "value": 0,
+            "ifChanged" : false,
+            "enable": "/config/bms:enable",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/bms:hvac_1_dc_low_voltage", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/bms:hvac_1_dc_low_voltage", "outValue": "Warning"}
+                    ]
+                },
+                {
+                "remap": [
+                       {"enable":"/config/bms:enum_opt","uri": "/components/##BMS_ID##_hvac_info:hvac_1_alarms_3@ifChanged", "useAv":true, "outValue": true}
+                    ]
+                }]
+            }
+        }
+    }
+}

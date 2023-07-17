@@ -17,9 +17,9 @@
 package main
 
 import (
+	"errors"
 	"fims"
 	"fmt"
-	"strings"
 	"time"
 
 	fg "github.com/flexgen-power/go_flexgen"
@@ -33,15 +33,15 @@ type caisoAdsFeature struct {
 	commandId            string    // ID of the command's value. i.e. target_soc, kw_cmd, etc.
 	adsOnFlagId          string    // ID of the ADS On flag variable, used when building Scheduler event
 	eventDurationMinutes int       // duration, in minutes, that each CAISO ADS event should last
-	lastID               string    // ID of the ISO dispatch batch
+	lastId               string    // ID of the ISO dispatch batch
 	lastStartTime        time.Time // start time associated with the dispatch batch
 }
 
-// caisoAdsId is the string that identifies the CAISO ADS feature in all JSONs, maps, etc.
-const caisoAdsId string = "caisoAds"
+// caisoAdsId is the string that identifies the CAISO ADS feature in all JSONs, URIs, etc.
+const caisoAdsId string = "caiso_ads"
 
 // scheduleAdsEvent builds a Scheduler event representing a CAISO ADS command and sends it to Scheduler for dispatch.
-func (ca *caisoAdsFeature) scheduleAdsEvent(batchId string, startTime time.Time, command float64) error {
+func (caiso *caisoAdsFeature) scheduleAdsEvent(startTime time.Time, command float64) error {
 	// for now, assume we only have one site. If that is not the case, this feature logic is currently not valid since
 	// it does not distribute the power to multiple sites.
 	if len(fleet) != 1 {
@@ -55,10 +55,10 @@ func (ca *caisoAdsFeature) scheduleAdsEvent(batchId string, startTime time.Time,
 	}
 
 	// build the Scheduler event
-	event := schedulerEvents.CreateEvent(startTime, time.Duration(ca.eventDurationMinutes)*time.Minute, ca.schedulerMode)
-	event.AddVariable(ca.commandId, command)
+	event := schedulerEvents.CreateEvent(startTime, time.Duration(caiso.eventDurationMinutes)*time.Minute, caiso.schedulerMode)
+	event.AddVariable(caiso.commandId, command)
 	adsOnFlag := false // TODO: logic for deciding adsOnFlag
-	event.AddVariable(ca.adsOnFlagId, adsOnFlag)
+	event.AddVariable(caiso.adsOnFlagId, adsOnFlag)
 
 	// structure the event within an event array that is within an "events" object
 	msgBody := map[string]interface{}{
@@ -68,30 +68,26 @@ func (ca *caisoAdsFeature) scheduleAdsEvent(batchId string, startTime time.Time,
 	}
 
 	// send the event as a POST so existing events are not overwritten
-	log.Infof("Sending a CAISO ADS event to Scheduler with start time %v, duration %d, command %f, and local-remote flag %v", startTime, ca.eventDurationMinutes, command, adsOnFlag)
+	log.Infof("Sending a CAISO ADS event to Scheduler with start time %v, duration %d, command %f, and ADS On flag %v.", startTime, caiso.eventDurationMinutes, command, adsOnFlag)
 	_, err = f.SendAndVerify("all", fims.FimsMsg{
 		Method:  "post",
 		Uri:     fmt.Sprintf("/scheduler/%s", s.id),
-		Replyto: "/fleet/caiso/eventVerification",
+		Replyto: fmt.Sprintf("/fleet/features/%s/event_verification", caisoAdsId),
 		Body:    msgBody,
 	})
 	if err != nil {
-		return fmt.Errorf("failed sending caiso event to scheduler: %w", err)
+		return fmt.Errorf("failed sending CAISO event to scheduler: %w", err)
 	}
 	return nil
 }
 
 // handleCaisoAdsPacket parses out commands sent from CAISO and passes them to the CAISO ADS feature for scheduling.
-func handleCaisoAdsPacket(msg fims.FimsMsg) error {
+func (caiso *caisoAdsFeature) handleCaisoAdsPacket(msg fims.FimsMsg) error {
 	// Replyto verification
 	if msg.Replyto != "" {
-		f.SendSet(msg.Replyto, "", true)
-	}
-
-	// if CAISO ADS feature is not available, ignore this packet
-	caisoAds := features.caisoAds
-	if caisoAds == nil {
-		log.MsgWarn("Received CAISO ADS packet but feature is not available, so ignoring packet.")
+		if err := f.SendSet(msg.Replyto, "", true); err != nil {
+			log.Errorf("Error sending reply-to verification to %s: %v.", msg.Replyto, err)
+		}
 		return nil
 	}
 
@@ -102,16 +98,16 @@ func handleCaisoAdsPacket(msg fims.FimsMsg) error {
 	}
 
 	// parse out CAISO ADS batch ID
-	batchIdInterface, err := fg.ExtractValueWithType(varMap, "Id", fg.STRING)
+	batchIdInterface, err := fg.ExtractValueWithType(varMap, "id", fg.STRING)
 	if err != nil {
-		return fmt.Errorf("failed to extract Id from CAISO ADS packet: %w", err)
+		return fmt.Errorf("failed to extract id from CAISO ADS packet: %w", err)
 	}
 	batchId := batchIdInterface.(string)
 	// update batch record
-	caisoAds.lastID = batchId
+	caiso.lastId = batchId
 
 	// parse out start timestamp
-	startTimeInterface, err := fg.ExtractValueWithType(varMap, "StartTime", fg.STRING)
+	startTimeInterface, err := fg.ExtractValueWithType(varMap, "start_time", fg.STRING)
 	if err != nil {
 		return fmt.Errorf("failed to extract start time from CAISO ADS packet: %w", err)
 	}
@@ -119,96 +115,86 @@ func handleCaisoAdsPacket(msg fims.FimsMsg) error {
 	if err != nil {
 		return err
 	}
-
-	caisoAds.lastStartTime = startTime
+	caiso.lastStartTime = startTime
 
 	// parse out washer data map
-	dataMapInterface, err := fg.ExtractValueWithType(varMap, "Data", fg.MAP_STRING_INTERFACE)
+	dataMapInterface, err := fg.ExtractValueWithType(varMap, "data", fg.MAP_STRING_INTERFACE)
 	if err != nil {
 		return fmt.Errorf("failed to extract washer data map from CAISO ADS packet: %w", err)
 	}
 	dataMap := dataMapInterface.(map[string]interface{})
 
 	// parse out CAISO ADS command
-	commandInterface, err := fg.ExtractValueWithType(dataMap, caisoAds.commandId, fg.FLOAT64)
+	commandInterface, err := fg.ExtractValueWithType(dataMap, caiso.commandId, fg.FLOAT64)
 	if err != nil {
-		return fmt.Errorf("failed to extract %s from CAISO ADS packet: %w", caisoAds.commandId, err)
+		return fmt.Errorf("failed to extract %s from CAISO ADS packet: %w", caiso.commandId, err)
 	}
 	command := commandInterface.(float64)
 
 	// pass commands to feature for scheduling
-	err = caisoAds.scheduleAdsEvent(batchId, startTime, command)
+	err = caiso.scheduleAdsEvent(startTime, command)
 	if err != nil {
 		return fmt.Errorf("failed to schedule ADS event: %w", err)
 	}
 
-	// send this latest batch to dbi for storage, used to make subsequent queries to the ISO
-	caisoAds.backupToDbi()
-
-	return err
+	// send this latest batch to dbi for storage. used to make subsequent queries to the ISO
+	caiso.backupToDbi()
+	return nil
 }
 
-func (ca *caisoAdsFeature) backupToDbi() {
+func (caiso *caisoAdsFeature) backupToDbi() {
 	_, err := f.SendAndVerify("latest", fims.FimsMsg{
 		Method:  "set",
 		Uri:     fmt.Sprintf("/dbi/fleet_manager/features/features/%s", caisoAdsId),
-		Replyto: "/fleet/caiso/latestBatchVerification",
-		Body:    ca.buildObj(),
+		Replyto: fmt.Sprintf("/fleet/features/%s/latest_batch_verification", caisoAdsId),
+		Body:    caiso.buildObj(),
 	})
 	if err != nil {
 		log.Errorf("Error backing up CAISO ADS feature settings to DBI: %v.", err)
 	}
 }
 
-// Checks if the lastDispatchBatch is less than 24 hours old, and sends it along if so, else sends reserved -1
-func sendLatestBatchResponse(uri string) error {
-	// if CAISO ADS feature is not available, ignore this packet
-	caisoAds := features.caisoAds
-	if caisoAds == nil {
-		log.MsgWarn("Received CAISO ADS packet but feature is not available, so ignoring packet.")
-		return nil
+// First, resets the last_id field to "-1" only if the last dispatch batch is older than 24 hours.
+// Then, sends the last_id field to the given URI.
+func (caiso *caisoAdsFeature) sendLatestBatchResponse(uri string) error {
+	// assumes a 24 hour day
+	if time.Since(caiso.lastStartTime) > time.Hour*24 {
+		// if the batch is stale, send the reserved -1 which will request all batches in the last 24 hours from the ISO
+		caiso.lastId = "-1"
 	}
-
-	// Assumes a 24 hour day
-	if time.Since(caisoAds.lastStartTime) > time.Hour*24 {
-		// If the batch is stale, send the reserved -1 which will request all batches in the last 24 hours from the ISO
-		caisoAds.lastID = "-1"
+	if err := f.SendSet(uri, "", caiso.lastId); err != nil {
+		return fmt.Errorf("failed to send last ID in SET: %w", err)
 	}
-	log.Infof("Returned dispatch batch %s to %s", caisoAdsId, uri)
-	f.SendSet(uri, "", caisoAds.lastID)
+	log.Infof("Returned dispatch batch %s to %s.", caisoAdsId, uri)
 	return nil
 }
 
 // buildObj makes a map of the feature for easy JSON sending.
-func (ca *caisoAdsFeature) buildObj() map[string]interface{} {
-	obj := make(map[string]interface{})
-	obj["schedulerMode"] = ca.schedulerMode
-	obj["commandId"] = ca.commandId
-	obj["adsOnFlagId"] = ca.adsOnFlagId
-	obj["eventDurationMinutes"] = ca.eventDurationMinutes
-	obj["lastID"] = ca.lastID
-	obj["lastStartTime"] = ca.lastStartTime
-	return obj
+func (caiso *caisoAdsFeature) buildObj() map[string]interface{} {
+	return map[string]interface{}{
+		"scheduler_mode":         caiso.schedulerMode,
+		"ads_kw_cmd_id":          caiso.commandId,
+		"ads_on_flag_id":         caiso.adsOnFlagId,
+		"event_duration_minutes": caiso.eventDurationMinutes,
+		"last_id":                caiso.lastId,
+		"last_start_time":        caiso.lastStartTime,
+	}
 }
 
-func (ca *caisoAdsFeature) publish() {
+// Publishes the CAISO ADS feature's data if the feature has been configured.
+func (caiso *caisoAdsFeature) publish() {
+	if caiso == nil {
+		return
+	}
 	pubUri := fmt.Sprintf("/fleet/features/%s", caisoAdsId)
-	err := f.SendPub(pubUri, map[string]interface{}{
-		"schedulerMode":        ca.schedulerMode,
-		"commandId":            ca.commandId,
-		"adsOnFlagId":          ca.adsOnFlagId,
-		"eventDurationMinutes": ca.eventDurationMinutes,
-		"lastID":               ca.lastID,
-		"lastStartTime":        ca.lastStartTime,
-	})
-	if err != nil {
-		log.Errorf("Error publishing to %s: %v", pubUri, err)
+	if err := f.SendPub(pubUri, caiso.buildObj()); err != nil {
+		log.Errorf("Error publishing to %s: %v.", pubUri, err)
 	}
 }
 
 // takes CAISO ADS feature configuration settings and parses them into the feature object
-func parseCaisoAdsFeature(inputCfg interface{}) (ca *caisoAdsFeature, err error) {
-	ca = &caisoAdsFeature{}
+func parseCaisoAdsFeature(inputCfg interface{}) (caiso *caisoAdsFeature, err error) {
+	caiso = &caisoAdsFeature{}
 
 	// verify type is map[string]interface{}
 	varMap, ok := inputCfg.(map[string]interface{})
@@ -217,81 +203,169 @@ func parseCaisoAdsFeature(inputCfg interface{}) (ca *caisoAdsFeature, err error)
 	}
 
 	// extract ID of Scheduler mode that feature will use
-	schedulerModeInterface, err := fg.ExtractValueWithType(varMap, "schedulerMode", fg.STRING)
+	schedulerModeInterface, err := fg.ExtractValueWithType(varMap, "scheduler_mode", fg.STRING)
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract schedulerMode: %w", err)
+		return nil, fmt.Errorf("failed to extract scheduler_mode: %w", err)
 	}
-	ca.schedulerMode = schedulerModeInterface.(string)
+	caiso.schedulerMode = schedulerModeInterface.(string)
 
 	// extract ID of command that feature will look for and build Scheduler msg from
-	commandIdInterface, err := fg.ExtractValueWithType(varMap, "commandId", fg.STRING)
+	commandIdInterface, err := fg.ExtractValueWithType(varMap, "ads_kw_cmd_id", fg.STRING)
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract commandId: %w", err)
+		return nil, fmt.Errorf("failed to extract ads_kw_cmd_id: %w", err)
 	}
-	ca.commandId = commandIdInterface.(string)
+	caiso.commandId = commandIdInterface.(string)
 
 	// extract ID of ADS On flag that will be used when building Scheduler event
-	adsOnFlagIdInterface, err := fg.ExtractValueWithType(varMap, "adsOnFlagId", fg.STRING)
+	adsOnFlagIdInterface, err := fg.ExtractValueWithType(varMap, "ads_on_flag_id", fg.STRING)
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract adsOnFlagId: %w", err)
+		return nil, fmt.Errorf("failed to extract ads_on_flag_id: %w", err)
 	}
-	ca.adsOnFlagId = adsOnFlagIdInterface.(string)
+	caiso.adsOnFlagId = adsOnFlagIdInterface.(string)
 
 	// extract duration that will be assigned to CAISO ADS Scheduler events
-	eventDurationMinutesInterface, err := fg.ExtractValueWithType(varMap, "eventDurationMinutes", fg.FLOAT64)
+	caiso.eventDurationMinutes, err = fg.ExtractAsInt(varMap, "event_duration_minutes")
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract eventDurationMinutes: %w", err)
+		return nil, fmt.Errorf("failed to extract event_duration_minutes as integer: %w", err)
 	}
-	ca.eventDurationMinutes = int(eventDurationMinutesInterface.(float64))
 
 	// parse out CAISO ADS batch ID if present
-	batchIdInterface, err := fg.ExtractValueWithType(varMap, "lastID", fg.STRING)
+	batchIdInterface, err := fg.ExtractValueWithType(varMap, "last_id", fg.STRING)
 	if err != nil {
 		// Use default reserved id
-		ca.lastID = "-1"
-		log.MsgWarn("No CAISO latest dispatch batch id in config")
+		caiso.lastId = "-1"
+		log.MsgDebug("No CAISO latest dispatch batch ID in config.")
 	} else {
-		ca.lastID = batchIdInterface.(string)
+		caiso.lastId = batchIdInterface.(string)
 	}
 
 	// parse out timestamp if present
-	timeInterface, err := fg.ExtractValueWithType(varMap, "lastStartTime", fg.STRING)
+	timeInterface, err := fg.ExtractValueWithType(varMap, "last_start_time", fg.STRING)
 	if err != nil {
 		// use empty time as default case
-		log.MsgWarn("No CAISO lastest timestamp in config")
+		log.MsgDebug("No CAISO latest timestamp in config.")
 	} else {
-		ca.lastStartTime, err = time.Parse(time.RFC3339, timeInterface.(string))
+		caiso.lastStartTime, err = time.Parse(time.RFC3339, timeInterface.(string))
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse lastest timestamp: %w", err)
 		}
 	}
-	return ca, nil
+
+	return caiso, nil
 }
 
+// Endpoint for any SETs to a URI beginning in /fleet/features/caiso_ads.
 func handleCaisoSet(msg fims.FimsMsg) error {
-	if msg.Uri == "/fleet/features/caisoAds/dispatchBatch" {
-		return handleCaisoAdsPacket(msg)
-	}
-
-	if strings.HasPrefix(msg.Uri, "/fleet/features/caisoAds/latestBatchVerification") || strings.HasPrefix(msg.Uri, "/fleet/features/caisoAds/eventVerification") {
-		// Verification handled by go_fims, but valid endpoint
-		return nil
-	}
-
-	if msg.Uri == "/fleet/features/caisoAds" {
-		caisoConfig, ok := msg.Body.(map[string]interface{})
-		if !ok {
-			return fmt.Errorf("expected FIMS msg body to be type map[string]interface{}. Type of received FIMS msg body is %T", msg.Body)
-		}
-		caisoFeature, err := parseCaisoAdsFeature(caisoConfig)
+	if msg.Nfrags < 4 {
+		newCaisoFeature, err := parseCaisoAdsFeature(msg.Body)
 		if err != nil {
-			return fmt.Errorf("error configuring CAISO feature: %w", err)
+			return fmt.Errorf("failed to parse CAISO ADS config object: %w", err)
 		}
-		// overwrite features with new config settings
-		features.caisoAds = caisoFeature
-		caisoFeature.backupToDbi()
+		features.caisoAds = newCaisoFeature
+		newCaisoFeature.backupToDbi()
 		return nil
 	}
 
-	return fmt.Errorf("URI %s is not a valid endpoint in CAISO", msg.Uri)
+	if features.caisoAds == nil {
+		return errors.New("CAISO ADS feature pointer is nil")
+	}
+
+	endpointFrag := msg.Frags[3]
+	switch endpointFrag {
+	case "latest_batch_verification", "event_verification":
+		// endpoint for verifying FIMS receipt, which is handled by go_fims so do nothing here
+		return nil
+	case "dispatch_batch": // expected to contain data from CAISO ADS that must be translated into Scheduler event
+		if err := features.caisoAds.handleCaisoAdsPacket(msg); err != nil {
+			return fmt.Errorf("failed to handle CAISO ADS packet: %w", err)
+		}
+		return nil
+	case "scheduler_mode": // rest of these endpoints are configuration edits
+		newSchedulerMode, ok := msg.Body.(string)
+		if !ok {
+			return fmt.Errorf("expected string but got %T", msg.Body)
+		}
+		features.caisoAds.schedulerMode = newSchedulerMode
+	case "ads_kw_cmd_id":
+		newCommandId, ok := msg.Body.(string)
+		if !ok {
+			return fmt.Errorf("expected string but got %T", msg.Body)
+		}
+		features.caisoAds.commandId = newCommandId
+	case "ads_on_flag_id":
+		newAdsOnFlagId, ok := msg.Body.(string)
+		if !ok {
+			return fmt.Errorf("expected string but got %T", msg.Body)
+		}
+		features.caisoAds.adsOnFlagId = newAdsOnFlagId
+	case "event_duration_minutes":
+		newEventDurationMinutes, err := fg.CastToInt(msg.Body)
+		if err != nil {
+			return fmt.Errorf("failed to cast body to int: %w", err)
+		}
+		features.caisoAds.eventDurationMinutes = newEventDurationMinutes
+	default:
+		return fmt.Errorf("%s in an invalid 4th fragment for a CAISO ADS SET", endpointFrag)
+	}
+
+	// cases that did not return upon success are setpoints that must be backed up to DBI when edited
+	if err := f.SendSet(fmt.Sprintf("/dbi/fleet/features/features/%s/%s", caisoAdsId, endpointFrag), "", msg.Body); err != nil {
+		return fmt.Errorf("failed to send CAISO ADS %s to DBI: %w", endpointFrag, err)
+	}
+	return nil
+}
+
+// Endpoint for any GETs to a URI beginning in /fleet/features/caiso_ads.
+func (caiso *caisoAdsFeature) handleGet(msg fims.FimsMsg) error {
+	if caiso == nil {
+		return errors.New("pointer to CAISO ADS feature is nil")
+	}
+
+	if msg.Nfrags < 4 {
+		if err := f.SendSet(msg.Replyto, "", caiso.buildObj()); err != nil {
+			return fmt.Errorf("failed to send CAISO ADS object to %s: %w", msg.Replyto, err)
+		}
+		return nil
+	}
+
+	endpointFrag := msg.Frags[3]
+	switch endpointFrag {
+	case "latest_batch": // special GET endpoint that returns last_id but first does an expiration check
+		if err := caiso.sendLatestBatchResponse(msg.Replyto); err != nil {
+			return fmt.Errorf("failed to send latest batch response: %w", err)
+		}
+		return nil
+	case "scheduler_mode":
+		if err := f.SendSet(msg.Replyto, "", caiso.schedulerMode); err != nil {
+			return fmt.Errorf("failed to send scheduler_mode: %w", err)
+		}
+		return nil
+	case "ads_kw_cmd_id":
+		if err := f.SendSet(msg.Replyto, "", caiso.commandId); err != nil {
+			return fmt.Errorf("failed to send ads_kw_cmd_id: %w", err)
+		}
+		return nil
+	case "ads_on_flag_id":
+		if err := f.SendSet(msg.Replyto, "", caiso.adsOnFlagId); err != nil {
+			return fmt.Errorf("failed to send ads_on_flag_id: %w", err)
+		}
+		return nil
+	case "event_duration_minutes":
+		if err := f.SendSet(msg.Replyto, "", caiso.eventDurationMinutes); err != nil {
+			return fmt.Errorf("failed to send event_duration_minutes: %w", err)
+		}
+		return nil
+	case "last_id":
+		if err := f.SendSet(msg.Replyto, "", caiso.lastId); err != nil {
+			return fmt.Errorf("failed to send last_id: %w", err)
+		}
+		return nil
+	case "last_start_time":
+		if err := f.SendSet(msg.Replyto, "", caiso.lastStartTime); err != nil {
+			return fmt.Errorf("failed to send last_start_time: %w", err)
+		}
+		return nil
+	default:
+		return fmt.Errorf("%s is invalid fragment for CAISO ADS GET", endpointFrag)
+	}
 }

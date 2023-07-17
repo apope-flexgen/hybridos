@@ -1,0 +1,78 @@
+{
+    "connection": {
+        "name": "example_notmp",
+        "xip_address": "192.168.114.##ip##",
+        "ip_address":"10.10.1.37",
+        "port": 502,
+        "frequency": 10,
+        "device_id": 1,
+        "off_by_one": false,
+        "byte_swap": false
+    },
+    "components": [
+        {
+            "id": "comp1",
+            "start_offset":100,
+            "registers": [
+                {
+                    "type": "Holding",
+                    "starting_offset":100,
+                    "number_of_registers":10,
+                    "map": [
+                        { "id": "01", "offset": 100 },
+                        { "id": "02", "offset": 101, "size": 2 },
+                        { "id": "03", "offset": 103, "size": 4 },
+                        { "id": "04", "offset": 110, "size": 1, "scale": 1000 },
+                        { "id": "10", "offset": 107, "size": 1, "signed": true },
+                        { "id": "13", "offset": 108, "size": 1, "random_enum": true, "bit_strings": ["hello", "world"] }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "comp2",
+            "frequency": 200,
+            "device_id": 10,
+            "start_offset":110,
+
+            "registers": [
+                {
+                    "type": "Coil",
+                    "starting_offset":110,
+                    "number_of_registers":1,
+
+                    "map": [
+                        { "id": "24_decode_id", "offset": 110 }
+                    ]
+                },
+                {
+                    "type": "Discrete Input",
+                    "starting_offset":111,
+                    "number_of_registers":1,
+
+                    "map": [
+                        { "id": "25", "offset": 111 }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "xyz_ip_device_id",
+            "off_by_one": true,
+            "byte_swap": true,
+            "start_offset":110,
+
+            "registers": [
+                {
+                    "type": "Input",
+                    "starting_offset":110,
+
+                    "number_of_registers":1,
+                    "map": [
+                        { "id": "26", "offset": 110 }
+                    ]
+                }
+            ]
+        }
+    ]
+}

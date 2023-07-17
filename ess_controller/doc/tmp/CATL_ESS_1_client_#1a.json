@@ -1,0 +1,122 @@
+{
+  "fileInfo": {
+    "sourceFileName": "Catl_ESS_Ref.xlsx",
+    "sourceFileCreated": "2020-07-23T05:59:21.000Z",
+    "sourceFileLastModified": "2020-08-11T18:06:59.000Z",
+    "sourceFileCreatedBy": "17576",
+    "sourceFileLastModifiedBy": "pmiller",
+    "outputFileName": "Catl_ESS_client.json",
+    "outputFileType": "client",
+    "outputFileCreated": "2020-08-12T13:00:45.553Z"
+  },
+  "xsystem": {
+    "name": "CATL BMS",
+    "protocol": "Modbus TCP",
+    "version": "6.0 WIP",
+    "id": "catl_BMU_1",
+    "port": 512,
+    "ip_address": "192.168.1.19",
+    "data_bits": "Columns marked in green are REQUIRED",
+    "frequency": 2000
+  },
+  "connection": {
+    "name": "Clou_ESS_Controller",
+    "ip_address": "127.0.0.1",
+    "port": 2502
+  },
+  "components": [
+    {
+      "id": "catl_mbmu_summary_r",
+      "frequency": 500,
+      "offset_time": 2,
+      "add_timings":true,
+      "registers": [
+        {
+          "type": "Input Registers",
+          "starting_offset": 0,
+          "number_of_registers": 44,
+          "note": "MBMU Summary messages (read)",
+          "map": [
+            {
+              "id": "mbmu_status",
+              "offset": 16,
+              "name": "System status",
+              "enum": true,
+              "bit_strings": [
+                "Initialize",
+                "Normal",
+                "Full Charge",
+                "Full Discharge",
+                "Warning Status",
+                "Fault Status"
+              ]
+            },
+            {
+              "id": "mbmu_voltage",
+              "offset": 32,
+              "scale": 10,
+              "name": "System voltage"
+            },
+            {
+              "id": "mbmu_current",
+              "offset": 33,
+              "scale": 10,
+              "signed": true,
+              "name": "System Current"
+            },
+            {
+              "id": "mbmu_soc",
+              "offset": 34,
+              "name": "SOC"
+            },
+            {
+              "id": "mbmu_soh",
+              "offset": 35,
+              "name": "SOH"
+            },
+            {
+              "id": "mbmu_max_cell_voltage",
+              "offset": 36,
+              "name": "Max cell voltage"
+            },
+            {
+              "id": "mbmu_min_cell_voltage",
+              "offset": 37,
+              "name": "Min cell voltage"
+            },
+            {
+              "id": "mbmu_avg_cell_voltage",
+              "offset": 38,
+              "name": "Avg. cell voltage"
+            },
+            {
+              "id": "mbmu_max_cell_temperature",
+              "offset": 39,
+              "name": "Max cell temperature"
+            },
+            {
+              "id": "mbmu_min_cell_temperature",
+              "offset": 40,
+              "name": "Min cell temperature"
+            },
+            {
+              "id": "mbmu_avg_cell_temperature",
+              "offset": 41,
+              "name": "Avg. cell temperature"
+            },
+            {
+              "id": "mbmu_max_charge_current",
+              "offset": 42,
+              "name": "Max charge current allowed"
+            },
+            {
+              "id": "mbmu_max_dischare_current",
+              "offset": 43,
+              "name": "Max discharge current allowed"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

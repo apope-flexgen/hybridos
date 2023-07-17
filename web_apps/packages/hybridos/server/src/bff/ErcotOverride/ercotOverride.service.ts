@@ -2,14 +2,13 @@ import { Inject, Injectable } from '@nestjs/common'
 import { map, merge, Observable } from 'rxjs';
 import { FimsService } from '../../fims/fims.service'
 import { FimsMsg, FIMS_SERVICE } from '../../fims/interfaces/fims.interface'
-import { EditOverrideParams } from './params/editOverride.params';
-import { VariableParams } from './params/variableNames.params';
-import { VariableOverrideDto } from './ercotOverride.interface';
+import { Site, Variable } from './params/override.params';
+import { ErcotOverrideDto } from './ercotOverride.interface';
 import { IValidJWTService, VALID_JWT_SERVICE } from 'src/auth/interfaces/validJWT.service.interface'
 import { Request } from 'express';
 
 @Injectable()
-export class VariableOverrideService {
+export class ErcotOverrideService {
     constructor(
         @Inject(FIMS_SERVICE) 
         private readonly fimsService: FimsService,
@@ -24,14 +23,15 @@ export class VariableOverrideService {
         const fimsData = await this.fimsService.get('/fleet/features/ercotAs/overridable');
         return fimsData.body
     }
-    async getVariableValues(params: VariableParams): Promise<string | Record<string, unknown>> {
-        const fimsData = await this.fimsService.get(`/fleet/features/ercotAs/${params.siteId}/overridable`);
+    async getVariableValues(site: Site): Promise<string | Record<string, unknown>> {
+        const fimsData = await this.fimsService.get(`/fleet/features/ercotAs/${site.id}/overridable`);
         return fimsData.body
     }
     async setOverrideValue(
         request: Request, 
-        params: EditOverrideParams, 
-        body: {data: number | boolean}
+        site: Site,
+        variable: Variable, 
+        body: {value: number | boolean}
     ): Promise<{ data: string }> 
     {        
         const token = this.validJwtService.extractAccessTokenFromRequest(request)
@@ -39,22 +39,22 @@ export class VariableOverrideService {
 
         this.fimsService.send({
             method: 'set',
-            uri: `/fleet/features/ercotAs/${params.siteId}/${params.variableName}`,
+            uri: `/fleet/features/ercotAs/${site.id}/${variable.name}`,
             replyto: '/ercot-override/variable-values',
             body: body,
             username: user.sub
         })
 
-        return { data: `SET request sent to /fleet/features/ercotAs/${params.siteId}/${params.variableName}` }
+        return { data: `SET request sent to /fleet/features/ercotAs/${site.id}/${variable.name}` }
     }
     getUriSpecificObservable = (
         siteId: string,
-    ): Observable<VariableOverrideDto> => {
+    ): Observable<ErcotOverrideDto> => {
         const fimsSubscribe = this.fimsService.subscribe(`/fleet/features/ercotAs/${siteId}`)
 
-        const newObservable: Observable<VariableOverrideDto> = fimsSubscribe.pipe(
+        const newObservable: Observable<ErcotOverrideDto> = fimsSubscribe.pipe(
             map((event) => {
-                return { data: event.body } as VariableOverrideDto
+                return { data: event.body } as ErcotOverrideDto
             })
         )
         return newObservable

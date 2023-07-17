@@ -7,10 +7,12 @@ import { MongoMemoryServer } from 'mongodb-memory-server'
 import request from '../../../testReqAgent'
 import { Roles } from 'shared/types/api/Users/Users.types'
 
-import { AppModule } from '../../../../src/app/app.module'
+import { AppModule } from '../../../../src/app.module'
 import { AppEnvService } from '../../../../src/environment/appEnv.service'
 import * as testUtils from '../../../testUtils'
 import { hashSync } from 'bcryptjs'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
+import { PermissionsService } from 'src/permissions/permissions.service'
 
 describe('Rest Controller (Integration)', () => {
     let app: INestApplication
@@ -37,6 +39,8 @@ describe('Rest Controller (Integration)', () => {
         })
             .overrideProvider(AppEnvService)
             .useValue(testUtils.mockAppEnvService(mongoServer.getUri()))
+            .overrideProvider(PermissionsService)
+            .useValue({webServerConfigDirectoryPath: () => ''})
             .compile()
 
         db = mongoServer

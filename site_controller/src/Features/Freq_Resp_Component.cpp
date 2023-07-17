@@ -147,8 +147,8 @@ void Freq_Resp_Component::start_active_response()
     trigger_over_time.tv_sec += trigger_duration_sec.value.value_int;
     if(droop_bypass_flag.value.value_bool)
     {
-        FPS_RELEASE_PRINT("Frequency Response: response %s triggered.", component_id.value.value_string);
         #ifndef FPS_TEST_MODE //bypass emit event when running gtest as emit_event() will cause seg fault.
+        FPS_INFO_LOG("Frequency Response: response %s triggered.", component_id.value.value_string);
         emit_event("Site", is_underfrequency_component ?
                                 "Frequency deviation: underfrequency event triggered" :
                                 "Frequency deviation: overfrequency event triggered", 1);

@@ -1,0 +1,247 @@
+{
+"/notes/@@AC_ID@@": {
+        "note1":"This is the bms component config template for Rizen AC  subsystems.",
+        "note1a":"The bms page of the ui display is outlined in /assets/bms/summay",
+        "note1b":"The /assets/@@AC_ID@@ table defines the racks or battery management unit, each has a template file with placements for selected key words",
+        "note2": "The /config/bms area is still under development",
+        "note3":"The /components/catl... tables define the incoming control words from the bms modbus interface",
+        "note4":"The /links/<bms> table  defines mapping of external interface components to internal control variables",
+        "note5":"There are some junk/test fields as well... they will removed soon"
+      },
+
+    "/system/@@AC_ID@@": {
+        "id": "@@AC_ID@@",
+        "name": "BMS Rizen Air Conditioner @@AC_NUM@@"
+    },
+    "/faults/@@AC_ID@@": {
+        "note": "Leave as is for now. This definition is needed for clear faults UI cmd to work",
+        "clear_faults": {
+            "value": 0,
+            "type": "fault",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "process_sys_alarm",
+                                "amap": "@@AC_ID@@"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/alarms/@@AC_ID@@": {
+        "note": "Leave as is for now. These definitions are needed for alarms to populate in UI and for clear alarms UI cmd to work",
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "process_sys_alarm",
+                                "amap": "@@AC_ID@@"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "unit_running_status": {"value": "Normal","type": "alarm",
+            "actions": {"onSet": [{"func": [{"func": "process_sys_alarm","amap": "@@AC_ID@@"}]}]}
+        }
+    },
+    "/config/@@AC_ID@@": {
+        "Pubs": "/assets/bms/@@AC_ID@@",
+        "BlockSets": "/status/ess, /status/bms, /status/bms_1, /status/bms_2 ",
+        "AlarmDestination": {"value": "/assets/bms/@@AC_ID@@:alarms"},
+        "FaultDestination": {"value": "/assets/bms/@@AC_ID@@:faults"},
+        "NoFaultMsg": {"value": "Normal"},
+        "NoAlarmMsg": {"value": "Normal"}
+    },
+    "/constants/@@AC_ID@@": {
+        "note": "These are constant defintions",
+        "max_load_threshold": 200000,
+        "min_load_threshold": 1000,
+        "max_soc_raw": 99.5,
+        "min_soc_raw": 1.5
+    },
+    "/controls/@@AC_ID@@": {
+        "start_stop": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "bitfield": [
+                        {
+                            "bit": 0,
+                            "uri": "/system/new_controls:oncmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 1,
+                            "uri": "/system/new_controls:kacclosecmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 8,
+                            "uri": "/system/new_controls:offcmd",
+                            "value": true
+                        },
+                        {
+                            "bit": 9,
+                            "uri": "/system/new_controls:kacopencmd",
+                            "value": true
+                        }
+                    ]
+                }]
+            }
+        }
+    },
+    "/status/@@AC_ID@@": {
+        "note": "These are component status vars",
+        "unit_running_status": {"value": "Normal"},
+        "internal_fan_status": {"value": "Normal"},
+        "external_fan_status": {"value": "Normal"},
+        "compressor_status": {"value": "Normal"},
+        "inside_return_temp": {"value": 1.0},
+        "outside_temp": {"value": 1.0},
+        "compressor_temp": {"value": 1.0},
+        "ac_input_voltage": {"value": 1.0},
+        "emergency_air_fan_state": {"value": "Normal"},
+        "heat_exchanger_coil_temp": {"value": 1.0},
+        "inside_return_humidity": {"value": 1.0},
+        "electrical_heating_running_status": {"value": "Normal"}
+    },
+    "/params/@@AC_ID@@": {
+        "note": "These are control parameters",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0
+    },
+    "/variables/@@AC_ID@@": {
+        "note":"junk to be removed",
+        "mode": "init",
+        "mode_cmd": "off"
+    },
+
+    "/components/bms_info": {
+        "@@AC_ID@@_unit_running_status": {
+            "value": "Idle",
+            "actions": {
+                "onSet": [{
+                    "remap": [{"uri": "/system/@@AC_ID@@_remap", "var": "remap_ems_test_status_0"},
+                              {"uri": "/system/@@AC_ID@@_remap", "var": "remap_ems_test_status_1"}
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/links/@@AC_ID@@": {
+        "unit_running_status": {"value": "/components/bms_info:hvac_@@AC_NUM@@_unit_running_status"},
+        "internal_fan_status": {"value": "/components/bms_info:hvac_@@AC_NUM@@_internal_fan_status"},
+        "external_fan_status": {"value": "/components/bms_info:hvac_@@AC_NUM@@_external_fan_status"},
+        "compressor_status":   {"value": "/components/bms_info:hvac_@@AC_NUM@@_compressor_status"}
+    },
+    "/vlinks/@@AC_ID@@": {
+        "unit_running_status":                { "value": "/assets/bms/@@AC_ID@@:unit_runninng_status",  
+                                                "vlink": "/components/bms_info:@@AC_ID@@_unit_running_status"},
+        "internal_fan_status":                { "value": "/assets/bms/@@AC_ID@@:internal_fan_status",   
+                                                 "vlink": "/components/bms_info:@@AC_ID@@_internal_fan_status"},
+        "site_@@AC_ID@@_unit_running_status": { "value": "/site/ess_ls:@@AC_ID@@_unit_running_status", 
+              "vlink": "/components/bms_info:@@AC_ID@@_uint_running_status"}
+    },
+    "/assets/bms/@@AC_ID@@": {
+        "name": "Battery Air Conditioner @@AC_NUM@@",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "unit_running_status": {
+            "name": "Unit Running Status",
+            "value": "Normal",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/bms/@@AC_ID@@:start@enabled"}, 
+                        {"uri":	"/assets/bms/@@AC_ID@@:stop@enabled"}, 
+                        {"uri":	"/assets/bms/@@AC_ID@@:enter_standby@enabled"}, 
+                        {"uri":	"/assets/bms/@@AC_ID@@:exit_standby@enabled"},
+                        {"uri":	"/assets/bms/@@AC_ID@@:clear_faults@enabled"},
+                        {"uri":	"/assets/bms/@@AC_ID@@:clear_alarms@enabled"},
+                        {"uri":	"/assets/bms/@@AC_ID@@:maint_reactive_power_setpoint@enabled"},
+                        {"uri":	"/assets/bms/@@AC_ID@@:maint_active_power_setpoint@enabled"}
+                        ]
+                    }]
+            },
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value":"Init",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"bit":0,"inValue":true, "outValue":"Clear","uri":"/faults/@@AC_ID@@:clear_faults"},
+                        {"bit":0,"inValue":true, "outValue":"Clear","uri":"/alarms/@@AC_ID@@:clear_alarms"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": "Clear"
+                }
+            ]
+        }
+    },
+    "/xschedule/wake_monitor/@@AC_ID@@":{
+        "/status/@@AC_ID@@:SBMUPower": { "enable": true, "rate":0.1, "amap": "@@AC_ID@@", "func":"CalculateVar"}
+    }
+}

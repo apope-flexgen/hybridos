@@ -202,6 +202,10 @@ type Fims struct {
 	aes_key               []byte
 }
 
+func (f *Fims) GetMaxDatalen() uint32 {
+	return f.max_expected_Data_len
+}
+
 func Connect(pName string) (Fims, error) {
 	const Max_Name_Len = 255
 
@@ -430,6 +434,33 @@ func (f *Fims) Send(msg FimsMsg) (int, error) {
 	return new_send_bytes(f.fd, msg.Method, msg.Uri, msg.Replyto, msg.ProcessName, msg.Username, body_data, f.aes_key)
 }
 
+// send stuff raw:
+func (f *Fims) SendRaw(msg FimsMsgRaw) (int, error) {
+	// length checks:
+	if len(msg.Method) > Max_Header_Str_Size {
+		return 0, fmt.Errorf("method exceeds %d characters", Max_Header_Str_Size)
+	}
+	if len(msg.Uri) > Max_Header_Str_Size {
+		return 0, fmt.Errorf("uri exceeds %d characters", Max_Header_Str_Size)
+	}
+	if len(msg.Replyto) > Max_Header_Str_Size {
+		return 0, fmt.Errorf("replyto exceeds %d characters", Max_Header_Str_Size)
+	}
+	if len(msg.ProcessName) > Max_Header_Str_Size {
+		return 0, fmt.Errorf("process_name exceeds %d characters", Max_Header_Str_Size)
+	}
+	if len(msg.Username) > Max_Header_Str_Size {
+		return 0, fmt.Errorf("user name exceeds %d characters", Max_Header_Str_Size)
+	}
+	// to support custom calls (with no process_name provided):
+	if len(msg.ProcessName) == 0 {
+		msg.ProcessName = f.name
+	}
+
+	// send it out:
+	return new_send_bytes(f.fd, msg.Method, msg.Uri, msg.Replyto, msg.ProcessName, msg.Username, msg.Body, f.aes_key)	
+}
+
 // SendSet sends a SET message via FIMS
 func (f *Fims) SendSet(uri, replyTo string, body interface{}) error {
 	if f == nil {
@@ -538,16 +569,54 @@ func (f *Fims) ResendUnverifiedMessages() error {
 // Logic to populate data to fims buffer via fims.connection
 func (f *Fims) Receive() (FimsMsg, error) {
 	var msg FimsMsg
+	msg_raw, err := f.ReceiveRaw()
+	if err == nil {
+		// copy over the other stuff (shallow copies of arrays, so no real perf cost):
+		msg.Method = msg_raw.Method
+		msg.Uri = msg_raw.Uri
+		msg.Replyto = msg_raw.Replyto
+		msg.ProcessName = msg_raw.ProcessName
+		msg.Username = msg_raw.Username
+		msg.Nfrags = msg_raw.Nfrags
+		msg.Frags = msg_raw.Frags
 
-	recv_bufs := Receiver_Bufs_Dynamic{}
-	recv_bufs.Data_buf = make([]byte, f.max_expected_Data_len)
-
-	succ, err := f.recv_raw_dynamic(&recv_bufs)
-	if !succ {
-		f.connected = false
-		return FimsMsg{}, fmt.Errorf("error reading fims connection: %v", err)
+		// if there is a message body, attempt to parse it as json
+		if msg_raw.Body != nil {
+			err := json.Unmarshal(msg_raw.Body, &msg.Body)
+			if err != nil {
+				return msg, fmt.Errorf("failed to unmarshal data: %w", err)
+			}
+		}
 	}
+	return msg, err
+}
 
+func (f *Fims) ReceiveChannel(c chan<- FimsMsg) {
+	recv_bufs := Receiver_Bufs_Dynamic{}
+	recv_bufs.Data_buf = make([]byte, f.GetMaxDatalen())
+	for f.connected {
+		msg, err := f.ReceiveBufDynamic(&recv_bufs)
+		if !f.connected {
+			log.Print("No longer connected to FIMS.\n")
+			// send a dummy message to the rx app but it must now check for Connected.
+			c <- FimsMsg{}
+		} else if err != nil {
+			// in the case of an error without a disconnect, don't put a message on the channel
+			log.Printf("Had an error while receiving message with method \"%s\" on uri \"%s\": %v.\n", msg.Method, msg.Uri, err)
+		} else {
+			// fmt.Printf("about to put the msg on the channel %v\n", msg)
+			c <- msg
+		}
+	}
+}
+
+// Logic to populate data to fims buffer via fims.connection
+func (f *Fims) ReceiveRawBufDynamic(recv_bufs *Receiver_Bufs_Dynamic) (FimsMsgRaw, error) {
+	var msg FimsMsgRaw
+	_, err := f.recv_raw_dynamic(recv_bufs)
+	if !f.connected {
+		return FimsMsgRaw{}, fmt.Errorf("error reading fims connection: %v", err)
+	}
 	// new logic to unpack the buffer into msg:
 	curr_idx := 0
 
@@ -574,24 +643,23 @@ func (f *Fims) Receive() (FimsMsg, error) {
 	// data (optional):
 	if recv_bufs.Meta_data.Data_len > 0 {
 		// decrypt data if we have encryption:
-		data := recv_bufs.Data_buf[curr_idx : curr_idx+int(recv_bufs.Meta_data.Data_len)]
-		if f.Has_aes_encryption() {
-			data, err = DecryptAES(f.aes_key, data)
-			if err != nil {
-				return FimsMsg{}, fmt.Errorf("could not decrypt incoming fims message, got: %v", err)
-			}
-		}
 
-		err := json.Unmarshal(data, &msg.Body)
-		if err != nil {
-			return FimsMsg{}, fmt.Errorf("failed to unmarshal data: %w", err)
+		data := recv_bufs.Data_buf[curr_idx : curr_idx+int(recv_bufs.Meta_data.Data_len)]
+		msg.Body = make([]byte, len(data))
+
+		copy(msg.Body, data)
+		if f.Has_aes_encryption() {
+			msg.Body, err = DecryptAES(f.aes_key, msg.Body)
+			if err != nil {
+				return FimsMsgRaw{}, fmt.Errorf("could not decrypt incoming fims message, got: %v", err)
+			}
 		}
 	}
 
 	// Retreieve uri fragments for our message
 	msg.Frags, err = GetFrags(msg.Uri)
 	if err != nil {
-		return FimsMsg{}, fmt.Errorf("error parsing %s into frags: %v", msg.Uri, err)
+		return FimsMsgRaw{}, fmt.Errorf("error parsing %s into frags: %v", msg.Uri, err)
 	}
 
 	// Set our frags back to our message body
@@ -599,16 +667,56 @@ func (f *Fims) Receive() (FimsMsg, error) {
 
 	// Check if the message is a verification response
 	if msg.Method == "set" || msg.Method == "post" {
-		go VerificationRecords.handleVerificationResponse(msg)
+		go VerificationRecords.handleVerificationResponseRaw(msg)
 	}
 	return msg, nil
 }
 
-func (f *Fims) ReceiveChannel(c chan<- FimsMsg) {
+// Logic to populate data to fims buffer via fims.connection
+func (f *Fims) ReceiveRaw() (FimsMsgRaw, error) {
+	recv_bufs := Receiver_Bufs_Dynamic{}
+	recv_bufs.Data_buf = make([]byte, f.max_expected_Data_len)
+	return f.ReceiveRawBufDynamic(&recv_bufs)
+}
+
+
+func (f *Fims) ReceiveBufDynamic(recv_bufs *Receiver_Bufs_Dynamic) (FimsMsg, error) {
+	var msg FimsMsg
+	msg_raw, err := f.ReceiveRawBufDynamic(recv_bufs)
+	if err == nil {
+		// copy over the other stuff (shallow copies of arrays, so no real perf cost):
+		msg.Method = msg_raw.Method
+		msg.Uri = msg_raw.Uri
+		msg.Replyto = msg_raw.Replyto
+		msg.ProcessName = msg_raw.ProcessName
+		msg.Username = msg_raw.Username
+		msg.Nfrags = msg_raw.Nfrags
+		msg.Frags = msg_raw.Frags
+
+		// if there is a message body, attempt to parse it as json
+		if msg_raw.Body != nil {
+			err := json.Unmarshal(msg_raw.Body, &msg.Body)
+			if err != nil {
+				return msg, fmt.Errorf("failed to unmarshal data: %w", err)
+			}
+		}
+	}
+	return msg, err
+
+}
+
+func (f *Fims) ReceiveChannelRaw(c chan<- FimsMsgRaw) {
+	recv_bufs := Receiver_Bufs_Dynamic{}
+	recv_bufs.Data_buf = make([]byte, f.GetMaxDatalen())
 	for f.connected {
-		msg, err := f.Receive()
-		if err != nil {
-			log.Printf("Had an error while receiving on %s: %s\n", msg.Uri, err)
+		msg, err := f.ReceiveRawBufDynamic(&recv_bufs)
+		if !f.connected {
+			log.Print("No longer connected to FIMS.\n")
+			// send a dummy message to the rx app but it must now check for Connected.
+			c <- FimsMsgRaw{}
+		} else if err != nil {
+			// in the case of an error without a disconnect, don't put a message on the channel
+			log.Printf("Had an error while receiving message with method \"%s\" on uri \"%s\": %v.\n", msg.Method, msg.Uri, err)
 		} else {
 			// fmt.Printf("about to put the msg on the channel %v\n", msg)
 			c <- msg

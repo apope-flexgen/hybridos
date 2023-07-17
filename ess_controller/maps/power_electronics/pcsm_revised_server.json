@@ -1,0 +1,24 @@
+{
+   "system":
+   {   "name":"PCMS",
+       "protocol": "Modbus TCP",
+       "id": "PCMS",
+       "ip_address": "0.0.0.0",
+       "port": 502 
+   },
+    "registers":
+     {
+      "holding_registers":
+       [
+          { "name":"grid_voltage_rs","id":"grid_voltage_rs","offset":1000,"uri":"/components/component_one" },
+          { "name":"grid_voltage_st","id":"grid_voltage_st","offset":1001,"uri":"/components/component_one" },
+          { "name":"grid_voltage_tr","id":"grid_voltage_tr","offset":1002,"uri":"/components/component_one" },
+          { "name":"current_fault","id":"current_fault","offset":1120,"uri":"/components/component_one" },
+          { "name":"current_warning","id":"current_warning","offset":1121,"uri":"/components/component_one" },
+          { "name":"inverter_status","id":"inverter_status","offset":1122,"uri":"/components/component_one" },
+          { "name":"pt100_l1_temperature","id":"pt100_l1_temperature","offset":1192,"uri":"/components/component_one" },
+          { "name":"pt100_l2_temperature","id":"pt100_l2_temperature","offset":1193,"uri":"/components/component_one" },
+          { "name":"pt100_l3_temperature","id":"pt100_l3_temperature","offset":1194,"uri":"/components/component_one" },
+          { "name":"bess_voltage_bus_1","id":"bess_voltage_bus_1","offset":7304,"uri":"/components/component_one" }       ]
+    }
+}

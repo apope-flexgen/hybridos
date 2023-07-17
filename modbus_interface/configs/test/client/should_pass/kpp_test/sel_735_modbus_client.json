@@ -1,0 +1,236 @@
+{
+    "fileInfo": {
+        "sourceFileName": "TX100_SEL_735_Modbus_Updated.xlsx",
+        "sourceFileCreated": "2020-01-02T21:16:38.000Z",
+        "sourceFileLastModified": "2021-07-23T17:54:43.000Z",
+        "sourceFileCreatedBy": "Microsoft Office User",
+        "sourceFileLastModifiedBy": "Joseph Carr",
+        "outputFileName": "sel_735_modbus_client_updated.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2021-07-23T17:56:46.663Z"
+    },
+    "connection": {
+        "name": "SEL 735 Power Meter",
+        "ip_address": "192.168.114.59",
+        "port": 502,
+        "device name": "SEL 735 Power Meter",
+        "device id string": "/site"
+    },
+    "components": [
+        {
+            "id": "sel_735",
+            "frequency": 100,
+            "offset_time": 20,
+            "device_id": 98,
+            "registers": [
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 1000,
+                    "number_of_registers": 50,
+                    "map": [
+                        {
+                            "id": "voltage_l1",
+                            "offset": 1000,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "L1-N AC Voltage",
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l2",
+                            "offset": 1002,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "L2-N AC Voltage",
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l3",
+                            "offset": 1004,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "L3-N AC Voltage",
+                            "signed": true
+                        },
+                        {
+                            "id": "current_l1",
+                            "offset": 1006,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "L1 AC Current",
+                            "signed": true
+                        },
+                        {
+                            "id": "current_l2",
+                            "offset": 1008,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "L2 AC Current",
+                            "signed": true
+                        },
+                        {
+                            "id": "current_l3",
+                            "offset": 1010,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "L3 AC Current",
+                            "signed": true
+                        },
+                        {
+                            "id": "current_n",
+                            "offset": 1012,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "N AC Current",
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l1_l2",
+                            "offset": 1014,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "L1-L2 AC Voltage",
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l2_l3",
+                            "offset": 1016,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "L2-L3 AC Voltage",
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l3_l1",
+                            "offset": 1018,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "L3-L1 AC Voltage",
+                            "signed": true
+                        },
+                        {
+                            "id": "active_power",
+                            "offset": 1020,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "Active Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "reactive_power",
+                            "offset": 1022,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "Reactive Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "apparent_power",
+                            "offset": 1024,
+                            "size": 2,
+                            "scale": 100000,
+                            "name": "Apparent Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "frequency",
+                            "offset": 1026,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "Frequency",
+                            "signed": true
+                        },
+                        {
+                            "id": "power_factor",
+                            "offset": 1028,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "Power Factor",
+                            "signed": true
+                        },
+                        {
+                            "id": "kwh_delivered",
+                            "offset": 1030,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "Active Energy Delivered",
+                            "signed": true
+                        },
+                        {
+                            "id": "kwh_received",
+                            "offset": 1032,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "Active Energy Received",
+                            "signed": true
+                        },
+                        {
+                            "id": "kvarh_delivered",
+                            "offset": 1034,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "Reactive Energy Delivered",
+                            "signed": true
+                        },
+                        {
+                            "id": "kvarh_received",
+                            "offset": 1036,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "Reactive Energy Received",
+                            "signed": true
+                        },
+                        {
+                            "id": "thd_i_l1",
+                            "offset": 1038,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "THD Current L1",
+                            "signed": true
+                        },
+                        {
+                            "id": "thd_i_l2",
+                            "offset": 1040,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "THD Current L2",
+                            "signed": true
+                        },
+                        {
+                            "id": "thd_i_l3",
+                            "offset": 1042,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "THD Current L3",
+                            "signed": true
+                        },
+                        {
+                            "id": "thd_v_l1",
+                            "offset": 1044,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "THD Voltage L1",
+                            "signed": true
+                        },
+                        {
+                            "id": "thd_v_l2",
+                            "offset": 1046,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "THD Voltage L2",
+                            "signed": true
+                        },
+                        {
+                            "id": "thd_v_l3",
+                            "offset": 1048,
+                            "size": 2,
+                            "scale": 100,
+                            "name": "THD Voltage L3",
+                            "signed": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

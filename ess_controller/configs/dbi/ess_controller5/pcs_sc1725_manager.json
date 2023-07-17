@@ -1,0 +1,2642 @@
+{
+    "/notes/pcs": {
+        "note1": "This is the power conversion system (PCS) manager config file for Sungrow",
+        "note1a": "/assets/pcs/summary        - defines the web UI for the PCS. PCS-related statuses, controls, and faults/alarms are displayed on the UI",
+        "note1b": "/config/pcs                - defines configurable variables used in the ESS Controller source code",
+        "note1c": "/controls/pcs              - defines the control variables for the PCS (ex.: commands to start the PCS, commands to initialize the PCS on system startup, etc.)",
+        "note1d": "/status/pcs                - defines the status variables for the PCS",
+        "note1e": "/components/[id]           - defines the interface for retrieving data from the PCS hardware and converting the data into a useable format (ex.: scaling, remap, etc.)",
+        "note1f": "/links/pcs                 - defines mapping of external interface components to internal variables",
+        "note1g": "/vlinks/pcs                - allows two variables to share the same value",
+        "note1h": "/sched/pcs                 - defines the variables that will run a function on a scheduled basis",
+        "note1i": "/schedule/wake_monitor/pcs - periodically runs a function for a particular variable (default to 100ms; wake_monitor to be removed)",
+        "note1j": "/faults/pcs                - defines faults reported by the ESS Controller (will trigger PCS shutdown)",
+        "note1k": "/alarms/pcs                - defines alarms reported by the ESS Controller",
+        "note2":"To retrieve data from the PCS hardware, the modbus communication protocol will be used. To connect via modbus, use the modbus client (pcs_modbus_client.json)"
+    },
+    "/config/pcs":{
+        "Pubs": "/assets/pcs/summary",
+        "maxKeyCmdOnTime": 3,
+        "maxKeyCmdTime": 4,
+        "maxKeyCmdTries": 5,
+        "maxShutdownTime": 30,
+        "maxStartupTime": 30,
+        "RatedApparentPower": 1200,
+        "MaxActivePowerSetpoint": 1200,
+        "AlarmDestination": "/assets/pcs/summary:alarms",
+        "FaultDestination": "/assets/pcs/summary:faults",
+        "NoFaultMsg": "Normal",
+        "NoAlarmMsg": "Normal",
+        "PCSstart": 207,
+        "PCSstop": 206,
+        "PCSstandby": 205
+    },
+    "/assets/pcs/summary": {
+        "name":"Sungrow PCS Manager",
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "status": {
+            "name": "Status",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "work_mode": {
+            "name": "Work Mode",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "on_grid_mode_status": {
+            "name": "On-grid Mode",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "charge_discharge_status": {
+            "name": "Charge/Discharge Status",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "com_status": {
+            "name": "Communication Status",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "active_power": {
+            "name": "Active Power",
+            "value": 17,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power": {
+            "name": "Reactive Power",
+            "value": 17.200000762939453,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "apparent_power": {
+            "name": "Apparent Power",
+            "value": 1.2999999523162842,
+            "unit": "kVA",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "power_factor": {
+            "name": "Power Factor",
+            "value": 0,
+            "unit": "",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "active_power_command": {
+            "name": "Active Power Command",
+            "value": 3.0999999046325684,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power_command": {
+            "name": "Reactive Power Command",
+            "value": 0,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "frequency_command": {
+            "name": "Frequency Command",
+            "value": 0,
+            "unit": "Hz",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_command": {
+            "name": "Voltage Command",
+            "value": 0,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l1_l2": {
+            "name": "L1-L2 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l2_l3": {
+            "name": "L2-L3 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l3_l1": {
+            "name": "L3-L1 AC Voltage",
+            "value": 570.7999877929688,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l1": {
+            "name": "L1 AC Current",
+            "value": 40.79999923706055,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l2": {
+            "name": "L2 AC Current",
+            "value": 41.20000076293945,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l3": {
+            "name": "L3 AC Current",
+            "value": 40,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "frequency": {
+            "name": "Frequency",
+            "value": 59.970001220703125,
+            "unit": "Hz",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "power_dc": {
+            "name": "DC Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_dc": {
+            "name": "DC Voltage",
+            "value": 1069.800048828125,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_dc": {
+            "name": "DC Current",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_active_power": {
+            "name": "Max Active Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "derating_active": {
+            "name": "Power Command Derating",
+            "value": "Inactive",
+            "unit": "",
+            "scaler": 1,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "max_derated_charge_power": {
+            "name": "Max Charge Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_derated_discharge_power": {
+            "name": "Max Discharge Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "daily_charge_energy": {
+            "name": "Daily Charge Energy",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "daily_discharge_energy": {
+            "name": "Daily Discharge Energy",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "total_charge_energy": {
+            "name": "Total Charge Energy",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "total_discharge_energy": {
+            "name": "Total Discharge Energy",
+            "value": 0,
+            "unit": "kWh",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "leakage_current": {
+            "name": "Leakage Current",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "ambient_temp": {
+            "name": "Ambient Temperature",
+            "value": 0,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "module_temp_1": {
+            "name": "Module Temperature 1",
+            "value": 0,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "module_temp_2": {
+            "name": "Module Temperature 2",
+            "value": 0,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "module_temp_3": {
+            "name": "Module Temperature 3",
+            "value": 0,
+            "unit": "°C",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "ac_switch_status": {
+            "name": "AC Switch Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "dc_switch_status": {
+            "name": "DC Switch Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "dc_fuse_status": {
+            "name": "DC Fuse Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "dc_aux_switch_1_status": {
+            "name": "DC Auxiliary Switch 1 Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "dc_aux_switch_2_status": {
+            "name": "DC Auxiliary Switch 2 Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "local_estop_status": {
+            "name": "Local E-stop Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "bms_dry_contact_interface_status": {
+            "name": "BMS Dry Contact Interface Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "hv_room_door_status": {
+            "name": "HV Room Door Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "external_estop_status": {
+            "name": "External E-stop Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "hv_room_smoke_status": {
+            "name": "HV Room Smoke Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "hv_remote_ctrl_status": {
+            "name": "HV Remote Control Status",
+            "value": "N/A",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"uri":	"/assets/pcs/summary:clear_faults@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_active_power_setpoint@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_reactive_power_setpoint@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_voltage_setpoint@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_voltage_slewrate@enabled"},
+                        {"xuri": "/assets/pcs/summary:start@enabled"},
+                        {"xuri": "/assets/pcs/summary:shutdown@enabled"},
+                        {"xuri": "/assets/pcs/summary:standby@enabled"}
+
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "start": {
+            "name": "Start",
+            "note": "UI control variable for running the PCS. If the PCS is in grid-forming (off-grid) mode, send a voltage/frequency command to the PCS before we send a start command",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfOffGrid@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfOffGrid",            "outValue": 0,   "note": "Check if the PCS is in off-grid mode. If so, send 480 V / 60 Hz commands to the PCS before starting up the PCS"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StartCmd@triggerCmd",       "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StartCmd",                  "outValue": 207, "note": "Send start command to PCS"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "standby": {
+            "name": "Standby",
+            "note": "UI control variable for setting the PCS to standby mode. The value received is logged first, then the standby command routine is triggered",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfOnGrid@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfOnGrid",            "outValue": 0,     "note": "Check if the PCS is in on-grid mode. If so, send 0 kW and 0 kVAr power commands to the PCS before shutting down the PCS"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StandbyCmd@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:StandbyCmd",            "outValue": 205, "note": "Send standby command to PCS"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "shutdown": {
+            "name": "Shutdown",
+            "note": "UI control variable for shutting down the PCS. The value received is logged first, then the shutdown command routine is triggered",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfOnGrid@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:CheckIfOnGrid",            "outValue": 0,     "note": "Check if the PCS is in on-grid mode. If so, send 0 kW and 0 kVAr power commands to the PCS before shutting down the PCS"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ShutdownCmd@triggerCmd",   "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ShutdownCmd",              "outValue": 206,   "note": "Send stop command to PCS after verifying 0 kW and 0 kVAr is set to PCS"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap":[
+                        {"ifChanged": false, "outValue": "Clear", "uri":"/faults/pcs:clear_faults"},
+                        {"ifChanged": false, "outValue": "Clear", "uri":"/alarms/pcs:clear_alarms"}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "Clear Faults", "return_value": "Clear"}
+            ]
+        },
+        "maint_active_power_setpoint": {
+            "name": "Active Power Setpoint (kW)",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "actions": { 
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap":[
+                        {"ifChanged": false, "uri": "/controls/ess:ActivePowerSetpoint"}
+                    ]
+                }]
+            },
+            "options": []
+        },
+        "maint_reactive_power_setpoint": {
+            "name": "Reactive Power Setpoint (kVAr)",
+            "value": 0,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "actions": { 
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap":[
+                        {"ifChanged": false, "uri": "/controls/pcs:ReactivePowerAdjSwitch@triggerCmd", "outValue": true},
+                        {"ifChanged": false, "uri": "/controls/pcs:ReactivePowerAdjSwitch",            "outValue": 162, "note": "162 = 0xA2 = Reactive power percentage setting enabled"},
+                        {"ifChanged": false, "uri": "/controls/pcs:ReactivePowerSetpoint"}
+                    ]
+                }]
+            },
+            "options": []
+        },
+        "maint_voltage_setpoint": {
+            "name": "Voltage Setpoint (V)",
+            "value": 0,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "actions": { 
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap":[
+                        {"ifChanged": false, "uri": "/controls/pcs:VoltageSlew"}
+                    ]
+                }]
+            },
+            "options": []
+        },
+        "maint_voltage_slewrate": {
+            "name": "Voltage Slew Rate (%/s)",
+            "value": 10,
+            "unit": "%/s",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "actions": { 
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ]
+                }]
+            },
+            "options": []
+        },
+        "grid_forming": {
+            "name": "Grid Forming",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:OffGridMode@triggerCmd","outValue": true, "note": "85 = Off-grid mode"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:OffGridMode",           "outValue": 85}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        },
+        "grid_following": {
+            "name": "Grid Following",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"ifChanged": false, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:OnGridMode@triggerCmd", "outValue": true, "note": "170 = On-grid mode"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:OnGridMode",            "outValue": 170}
+                    ]
+                }]
+            },
+            "options": [
+                {"name": "No", "return_value": false},
+                {"name": "Yes","return_value": true}
+            ]
+        }
+    },
+    "/links/pcs":{
+        "Heartbeat": {
+            "value": "/components/pcs_parameter_setting:heartbeat"
+        },
+        "MaxPCSActivePower": {
+            "value": "/components/pcs_running_info:nominal_output_power"
+        },
+        "MaxPCSReactivePower": {
+            "value": "/components/pcs_running_info:nominal_reactive_output_power"
+        },
+        "MaxPCSChargePower": {
+            "value": "/components/pcs_running_info:max_charging_power"
+        },
+        "MaxPCSDischargePower": {
+            "value": "/components/pcs_running_info:max_discharging_power"
+        },
+        "ActivePowerCmd": {
+            "value": "/components/pcs_parameter_setting:on_grid_const_ac_power"
+        },
+        "ReactivePowerCmd": {
+            "value": "/components/pcs_parameter_setting:reactive_power_pct_setting"
+        }
+    },
+    "/vlinks/pcs": {
+        "status":                           {"value": "/assets/pcs/summary:status",                               "vlink":"/status/pcs:PCSStatusResp"                         },
+        "work_mode":                        {"value": "/assets/pcs/summary:work_mode",                            "vlink":"/status/pcs:WorkMode"                              },
+        "on_grid_mode":                     {"value": "/assets/pcs/summary:on_grid_mode_status",                  "vlink":"/status/pcs:OnGridChgMode"                         },
+        "charge_discharge_status":          {"value": "/assets/pcs/summary:charge_discharge_status",              "vlink":"/status/pcs:ChargeDischargeStatus"                 },
+        "active_power":                     {"value": "/assets/pcs/summary:active_power",                         "vlink":"/status/pcs:ActivePower"                           },
+        "reactive_power":                   {"value": "/assets/pcs/summary:reactive_power",                       "vlink":"/status/pcs:ReactivePower"                         },
+        "apparent_power":                   {"value": "/assets/pcs/summary:apparent_power",                       "vlink":"/status/pcs:ApparentPower"                         },
+        "voltage_l1_l2":                    {"value": "/assets/pcs/summary:voltage_l1_l2",                        "vlink":"/status/pcs:GridVoltage1"                          },
+        "voltage_l2_l3":                    {"value": "/assets/pcs/summary:voltage_l2_l3",                        "vlink":"/status/pcs:GridVoltage2"                          },
+        "voltage_l3_l1":                    {"value": "/assets/pcs/summary:voltage_l3_l1",                        "vlink":"/status/pcs:GridVoltage3"                          },
+        "current_l1":                       {"value": "/assets/pcs/summary:current_l1",                           "vlink":"/status/pcs:GridCurrent1"                          },
+        "current_l2":                       {"value": "/assets/pcs/summary:current_l2",                           "vlink":"/status/pcs:GridCurrent2"                          },
+        "current_l3":                       {"value": "/assets/pcs/summary:current_l3",                           "vlink":"/status/pcs:GridCurrent3"                          },
+        "frequency":                        {"value": "/assets/pcs/summary:frequency",                            "vlink":"/status/pcs:GridFrequency"                         },
+        "power_dc":                         {"value": "/assets/pcs/summary:power_dc",                             "vlink":"/status/pcs:DCPower"                               },
+        "voltage_dc":                       {"value": "/assets/pcs/summary:voltage_dc",                           "vlink":"/status/pcs:DCVoltage"                             },
+        "current_dc":                       {"value": "/assets/pcs/summary:current_dc",                           "vlink":"/status/pcs:DCCurrent"                             },
+        "pf":                               {"value": "/assets/pcs/summary:power_factor",                         "vlink":"/status/pcs:PowerFactor"                           },
+        "active_power_cmd":                 {"value": "/assets/pcs/summary:active_power_command",                 "vlink":"/status/pcs:ActivePowerCmd_adjusted"               },
+        "reactive_power_cmd":               {"value": "/assets/pcs/summary:reactive_power_command",               "vlink":"/status/pcs:ReactivePowerCmd_adjusted"             },
+        "p_gradient":                       {"value": "/assets/pcs/summary:active_power_gradient",                "vlink":"/components/pcs_registers_fast:rise_grad_p"        },
+        "q_gradient":                       {"value": "/assets/pcs/summary:reactive_power_gradient",              "vlink":"/components/pcs_registers_fast:rise_grad_q"        },
+        "daily_charge_energy":              {"value": "/assets/pcs/summary:daily_charge_energy",                  "vlink":"/status/pcs:DailyChargeEnergy"                     },
+        "daily_discharge_energy":           {"value": "/assets/pcs/summary:daily_discharge_energy",               "vlink":"/status/pcs:DailyDischargeEnergy"                  },
+        "total_charge_energy":              {"value": "/assets/pcs/summary:total_charge_energy",                  "vlink":"/status/pcs:TotalChargeEnergy"                     },
+        "total_discharge_energy":           {"value": "/assets/pcs/summary:total_discharge_energy",               "vlink":"/status/pcs:TotalDischargeEnergy"                  },
+        "max_active_power":                 {"value": "/assets/pcs/summary:max_active_power",                     "vlink":"/status/pcs:MaxPCSActivePowerReal"                 },
+        "leakage_current":                  {"value": "/assets/pcs/summary:leakage_current",                      "vlink":"/status/pcs:LeakageCurrent"                        },
+        "ambient_temp":                     {"value": "/assets/pcs/summary:ambient_temp",                         "vlink":"/status/pcs:AmbientTemp"                           },
+        "module_temp_1":                    {"value": "/assets/pcs/summary:module_temp_1",                        "vlink":"/status/pcs:ModuleTemp1"                           },
+        "module_temp_2":                    {"value": "/assets/pcs/summary:module_temp_2",                        "vlink":"/status/pcs:ModuleTemp2"                           },
+        "module_temp_3":                    {"value": "/assets/pcs/summary:module_temp_3",                        "vlink":"/status/pcs:ModuleTemp3"                           },
+        "max_derated_discharge_power":      {"value": "/assets/pcs/summary:max_derated_discharge_power",          "vlink":"/status/pcs:MaxDeratedDischargeCmd"                },
+        "max_derated_charge_power":         {"value": "/assets/pcs/summary:max_derated_charge_power",             "vlink":"/status/pcs:MaxDeratedChargeCmd"                   },
+        "voltage_slew_rate":                {"value": "/assets/pcs/summary:maint_voltage_slewrate",               "vlink":"/controls/pcs:VoltageSlewRate"                     },
+
+        "site_active_power":                { "value": "/site/ess_ls:active_power",                               "vlink": "/status/pcs:ActivePower"                          },
+        "site_reactive_power":              { "value": "/site/ess_ls:reactive_power",                             "vlink": "/status/pcs:ReactivePower"                        },
+        "site_apparent_power":              { "value": "/site/ess_ls:apparent_power",                             "vlink": "/status/pcs:ApparentPower"                        },
+        "site_voltage_l1_l2":               { "value": "/site/ess_ls:voltage_l1_l2",                              "vlink": "/status/pcs:GridVoltage1"                         },
+        "site_voltage_l2_l3":               { "value": "/site/ess_ls:voltage_l2_l3",                              "vlink": "/status/pcs:GridVoltage2"                         },
+        "site_voltage_l3_l1":               { "value": "/site/ess_ls:voltage_l3_l1",                              "vlink": "/status/pcs:GridVoltage3"                         },
+        "site_current_l1":                  { "value": "/site/ess_ls:current_l1",                                 "vlink": "/status/pcs:GridCurrent1"                         },
+        "site_current_l2":                  { "value": "/site/ess_ls:current_l2",                                 "vlink": "/status/pcs:GridCurrent2"                         },
+        "site_current_l3":                  { "value": "/site/ess_ls:current_l3",                                 "vlink": "/status/pcs:GridCurrent3"                         },
+        "site_frequency":                   { "value": "/site/ess_ls:frequency",                                  "vlink": "/status/pcs:GridFrequency"                        },
+        "site_pf":                          { "value": "/site/ess_ls:pf",                                         "vlink": "/status/pcs:PowerFactor"                          },
+        "pcs1_site_voltage_dc":             { "value": "/site/ess_ls:pcs_voltage_dc",                             "vlink": "/status/pcs:DCVoltage"                            },
+        "pcs1_site_current_dc":             { "value": "/site/ess_ls:pcs_current_dc",                             "vlink": "/status/pcs:DCCurrent"                            },
+        "site_derating_active":             { "value": "/site/ess_ls:derating_active",                            "vlink": "/status/pcs:DeratingActive"                       }
+    },
+    "/schedule/wake_monitor/pcs":{
+        "/status/pcs:PCSHeartbeat":              { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CheckMonitorVar"},
+        "/status/pcs:ActivePower":               { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CheckMonitorVar"},
+        "/status/pcs:DCVoltage":                 { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CheckMonitorVar"},
+
+        "/controls/pcs:StartCmd":                { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:ShutdownCmd":             { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:StandbyCmd":              { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyStartup":           { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyShutdown":          { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyStandby":           { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:HeartbeatTimeoutSetting": { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+
+        "/controls/pcs:OffGridMode":             { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:OnGridMode":              { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:OnGridConstACPower":      { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyOffGridMode":       { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyOnGridMode":        { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VerifyOnGridConstACPower":{ "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:CheckIfOffGrid":          { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:FrequencySetpoint":       { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:ActivePowerSetpoint":     { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:ReactivePowerAdjSwitch":  { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:ReactivePowerSetpoint":   { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:CheckIfStopped":          { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:CheckIfOnGrid":           { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VoltageSlewCmd":          { "enable": true, "rate": 0.1, "amap": "pcs", "func":"HandleCmd"},
+        "/controls/pcs:VoltageSlew":             { "enable": true, "rate": 0.1, "amap": "pcs", "func": "SlewVal"},
+
+        "/status/pcs:ActivePowerCmd_adjusted":   { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:ReactivePowerCmd_adjusted": { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:ApparentPower":             { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:MaxPCSApparentPower":       { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:DischargeCalibrationCalc":  { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:ChargeCalibrationCalc":     { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+
+        "/status/pcs:StartEnable":               { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:ShutdownEnable":            { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:StandbyEnable":             { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:GridFormEnable":            { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:GridFollowEnable":          { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:PCSHeartbeatCheckEnable":   { "enable": true, "rate": 0.1, "amap": "pcs", "func":"CalculateVar"}
+    },
+
+    "/sched/pcs": {
+        "schedStartupPCS":{
+            "value":    "schedStartupPCS",
+            "uri":      "/sched/pcs:schedStartupPCS",
+            "fcn":      "StartupPCS",
+            "id":       "schedStartupPCS",
+            "amap":     "pcs",
+            "refTime":  0.269,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001,
+            "actions":{
+                "onSet": [{ "func": [{"func": "HandleSchedLoad", "amap": "pcs"}]}]
+            }
+        },
+        "schedShutdownPCS":{
+            "value":    "schedShutdownPCS",
+            "uri":      "/sched/pcs:schedShutdownPCS",
+            "fcn":      "ShutdownPCS",
+            "id":       "schedShutdownPCS",
+            "amap":     "pcs",
+            "refTime":  0.266,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001,
+            "actions":{
+                "onSet": [{ "func": [{"func": "HandleSchedLoad", "amap": "pcs"}]}]
+            }
+        },
+        "schedSendClearFaultCmdpcs":{
+            "value":    "schedSendClearFaultCmdpcs",
+            "uri":      "/sched/pcs:schedSendClearFaultCmdpcs",
+            "fcn":      "SendClearFaultCmd",
+            "id":       "schedSendClearFaultCmdpcs",
+            "amap":     "pcs",
+            "refTime":  0.272,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001,
+            "actions":{
+                "onSet": [{ "func": [{"func": "HandleSchedLoad", "amap": "pcs"}]}]
+            }
+        }
+    },
+
+    "/controls/pcs": {
+        "StartCmd": {
+            "value": 207,
+            "note": "Start command to send to PCS if the PCS is either off and the BMS DC contactors are closed or the PCS is in standby. Check the PCS's grid mode as well",
+            "cmdVar": "/components/pcs_parameter_setting:start_stop",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 5,
+            "variable1": "/status/pcs:SystemState",
+            "variable2": "/status/bms:DCClosed",
+            "variable3": "/status/pcs:WorkMode",
+            "variable4": "/components/pcs_parameter_setting:off_grid_voltage_setpoint",
+            "variable5": "/components/pcs_parameter_setting:off_grid_frequency_setpoint",
+            "useExpr": true,
+            "expression": "(({1} == Off and {2}) or {1} == Ready) and ({3} == On-grid or ({3} == Off-grid and {4} != -480 and {5} == 60))",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "ShutdownCmd": {
+            "value": 206,
+            "note": "Shutdown command to send to PCS if 0 kW and 0 kVAr are set to the PCS, we're no longer waiting for DC current to decrease, and the PCS is not off or faulted",
+            "cmdVar": "/components/pcs_parameter_setting:start_stop",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 3,
+            "variable1": "/status/bms:BMSCurrentCheckStop@seenMaxAlarm",
+            "variable2": "/status/bms:BMSCurrentCheckStop@seenMinAlarm",
+            "variable3": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "not {1} and not {2} and ({3} == Ready or {3} == Running or {3} == Starting)",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "StandbyCmd": {
+            "value": 205,
+            "note": "Standby command to send to PCS if the PCS is either off and the BMS DC contactors are closed or the PCS is running",
+            "cmdVar": "/components/pcs_parameter_setting:start_stop",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 2,
+            "variable1": "/status/pcs:SystemState",
+            "variable2": "/status/bms:DCClosed",
+            "useExpr": true,
+            "expression": "({1} == Off and {2}) or {1} == Running",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "VerifyStartup": {
+            "value": 0,
+            "note": "Verify that the PCS system state is now running when the start command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Running",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyShutdown": {
+            "value": 0,
+            "note": "Verify that the PCS system state is now off when the shutdown command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Off or {1} == Fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyStandby": {
+            "value": 0,
+            "note": "Verify that the PCS system state is now in standby (ready) when the standby command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Ready",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "HeartbeatTimeoutSetting": {
+            "value": 60,
+            "note": "Initialize heartbeat timeout interval value on system startup",
+            "cmdVar": "/components/pcs_parameter_setting:hearbeat_timeout_interval",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "triggerCmd": true,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "OffGridMode": {
+            "value": 85,
+            "note": "Set PCS to grid-forming (off-grid) mode",
+            "cmdVar": "/components/pcs_parameter_setting:grid_mode_setting",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == On-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "OnGridMode": {
+            "value": 170,
+            "note": "Set PCS to grid-following (on-grid) mode",
+            "cmdVar": "/components/pcs_parameter_setting:grid_mode_setting",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == Off-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "OnGridConstACPower": {
+            "value": 4,
+            "note": "Set the PCS to on-grid const AC power when the PCS is in grid-following (on-grid) mode",
+            "cmdVar": "/components/pcs_parameter_setting:on_grid_mode",
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == On-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "VerifyOffGridMode": {
+            "value": 0,
+            "note": "Verify that the PCS is now in grid-forming (off-grid) mode when the grid-forming command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == Off-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyOnGridMode": {
+            "value": 0,
+            "note": "Verify that the PCS is now in grid-following (on-grid) mode when the grid-following command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == On-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VerifyOnGridConstACPower": {
+            "value": 0,
+            "note": "Verify that the PCS is now set to grid-following const AC power when the on-grid const AC power command is sent",
+            "enableAlert": false,
+            "sendCmdHoldTimeout": 3,
+            "sendCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/status/pcs:OnGridChgModeAbbrev",
+            "useExpr": true,
+            "expression": "{1} == AC-Power",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "CheckIfOnGrid": {
+            "value": 0,
+            "note": "Check if the PCS is currently in grid-following (on-grid) mode",
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == On-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "CheckIfOffGrid": {
+            "value": 0,
+            "note": "Check if the PCS is currently in grid-forming (off-grid) mode",
+            "enableAlert": false,
+            "numVars": 1,
+            "variable1": "/status/pcs:WorkMode",
+            "useExpr": true,
+            "expression": "{1} == Off-grid",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "CheckIfStopped": {
+            "value": 0,
+            "note": "Check if the PCS is in a fault state",
+            "enableAlert": false,
+            "numVars": 1,
+            "sendCmdHoldTimeout": 1,
+            "variable1": "/status/pcs:SystemState",
+            "useExpr": true,
+            "expression": "{1} == Fault or {1} == Off",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+
+        "FrequencySetpoint": {
+            "value": 60,
+            "note": "Set frequency for the PCS as long as the frequency setpoint is between 55 Hz and 65 Hz",
+            "cmdVar": "/components/pcs_parameter_setting:off_grid_frequency_setpoint",
+            "enableAlert": false,
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "sendCmdTimeout": 30,
+            "includeCurrVal": true,
+            "useExpr": true,
+            "expression": "{1} >= 55 and {1} <= 65",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "VoltageSlewRate": 100,
+        "VoltageSlew": {
+            "value": 0,
+            "enabled": true,
+            "RatedValue": 480,
+            "SlewRate": "/controls/pcs:VoltageSlewRate",
+            "SlewedVal": "/controls/pcs:VoltageSlewCmdTrigger"
+        },
+        "VoltageSlewCmdTrigger": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"ifChanged": true, "uri": "/controls/pcs:VoltageSlewCmd@triggerCmd", "outValue": true},
+                        {"ifChanged": true, "uri": "/controls/pcs:VoltageSlewCmd"}
+                    ]
+                }]
+            }
+        },
+        "VoltageSlewCmd": {
+            "value": 0,
+            "cmdVar": "/components/pcs_parameter_setting:off_grid_voltage_setpoint",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "HandleCmd", "amap": "pcs"}
+                    ]
+                }]
+            }
+        },
+        "ActivePowerSetpoint": {
+            "value": 0,
+            "note": "Set active power",
+            "cmdVar": "/controls/ess:ActivePowerSetpoint",
+            "enableAlert": false,
+            "checkCmdTimeout": 30,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "ReactivePowerAdjSwitch": {
+            "value": 162,
+            "note": "For Sungrow PCS, set the reactive power adjustment switch to 162 (0xA2) to enable reactive power setpoint",
+            "cmdVar": "/components/pcs_parameter_setting:reactive_power_adj_switch",
+            "enableAlert": false,
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        },
+        "ReactivePowerSetpoint": {
+            "value": 2200.0,
+            "note": "Set reactive power only if the reactive power adjustment switch is set to 162 (0xA2)",
+            "cmdVar": "/controls/ess:ReactivePowerSetpoint",
+            "enableAlert": false,
+            "checkCmdHoldTimeout": 0.2,
+            "checkCmdTimeout": 30,
+            "numVars": 1,
+            "variable1": "/components/pcs_parameter_setting:reactive_power_adj_switch",
+            "useExpr": true,
+            "expression": "{1} == 162",
+            "actions": {
+                "onSet": [{"func": [{"func": "HandleCmd", "amap": "pcs"}]}]
+            }
+        }
+    },
+
+    "/status/pcs": {
+        "note": "These are component status vars",
+        "MaxPCSActivePower": 0,
+        "MaxPCSReactivePower": 0,
+        "MaxPCSApparentPower": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/pcs:MaxPCSActivePower",
+            "variable2": "/status/pcs:MaxPCSReactivePower",
+            "expression": "sqrt(({1} ** 2 + {2} ** 2))"
+        },
+        "MaxPCSActivePowerReal": 0,
+        "Derate": {
+            "value": 1.0,
+            "Increment": 0.0001,
+            "Decrement": 0.0005,
+            "OverCurrent": false,
+            "Recovery": false,
+            "Hold": false,
+            "Done": false,
+            "LastDerate": 1.0
+        },
+        "DerateThresholdLow": 0.98,
+        "DerateThresholdHigh": 1.0,
+        "DeratingActive": {
+            "value": false,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue": false, "uri": "/assets/pcs/summary:derating_active", "outValue": "Inactive"},
+                        {"inValue": true,  "uri": "/assets/pcs/summary:derating_active", "outValue": "Active"}
+                    ]
+                }]
+            }
+        },
+        "MaxDeratedDischargeCmd": {
+            "value": 0.0,
+            "dbiStatus":"init",
+            "EnableDbiUpdate": true,
+            "UpdateTimeCfg": 5
+        },
+        "MaxDeratedChargeCmd": {
+            "value": 0.0,
+            "dbiStatus":"init",
+            "EnableDbiUpdate": true,
+            "UpdateTimeCfg": 5
+        },
+        "SystemFault": {
+            "value": false,
+            "ifChanged": true,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ]
+                }]
+            }
+        },
+        "FaultShutdown": {
+            "value": false,
+            "ifChanged": true,
+            "actions": { 
+                "onSet":[{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap":[
+                        {"inValue": true, "uri": "/controls/pcs:ActivePowerSetpoint@triggerCmd",    "outValue": true},
+                        {"inValue": true, "uri": "/controls/pcs:ActivePowerSetpoint",               "outValue": 0,     "note": "Send 0 kW command to PCS before proceeding to shutdown"},
+                        {"inValue": true, "uri": "/controls/pcs:ReactivePowerAdjSwitch@triggerCmd", "outValue": true},
+                        {"inValue": true, "uri": "/controls/pcs:ReactivePowerAdjSwitch",            "outValue": 162,   "note": "162 = 0xA2 = Reactive power percentage setting enabled"},
+                        {"inValue": true, "uri": "/controls/pcs:ReactivePowerSetpoint",             "outValue": 0,     "note": "Send 0 kVAr command to PCS before proceeding to shutdown"},
+
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ShutdownCmd@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ShutdownCmd",            "outValue": 206,   "note": "Send stop command to PCS after verifying 0 kW and 0 kVAr is set to PCS"}
+                    ]
+                }]
+            }
+        },
+        "HardShutdown": false,
+        "FullShutdown": false,
+        "SoftStartup": false,
+        "PCSStatusResp": {
+            "value": "Initialization",
+            "ifChanged": true,
+            "actions":	{
+                "onSet": [{"func": [{"func": "LogInfo", "amap": "ess"}]}]
+            }
+        },
+        "SystemState": {
+            "value": "Off",
+            "ifChanged": true,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": "Off",      "uri": "/status/pcs:DCClosed", "outValue": 0},
+                        {"inValue": "Starting", "uri": "/status/pcs:DCClosed", "outValue": 0},
+                        {"inValue": "Ready",    "uri": "/status/pcs:DCClosed", "outValue": 1},
+                        {"inValue": "Running",  "uri": "/status/pcs:DCClosed", "outValue": 1},
+                        {"inValue": "Shutdown", "uri": "/status/pcs:DCClosed", "outValue": 1},
+                        {"inValue": "Fault",    "uri": "/status/pcs:DCClosed", "outValue": 0},
+
+                        {"inValue": "Off",      "uri": "/site/ess_ls:system_state", "outValue": 1,  "note": "Bit 0 - Stop"},
+                        {"inValue": "Shutdown", "uri": "/site/ess_ls:system_state", "outValue": 1,  "note": "Bit 0 - Stop"},
+                        {"inValue": "Running",  "uri": "/site/ess_ls:system_state", "outValue": 2,  "note": "Bit 1 - Run"},
+                        {"inValue": "Fault",    "uri": "/site/ess_ls:system_state", "outValue": 4,  "note": "Bit 2 - Fault"},
+                        {"inValue": "Ready",    "uri": "/site/ess_ls:system_state", "outValue": 8,  "note": "Bit 3 - Standby"},
+
+                        {"inValue": "Off",      "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Starting", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Ready",    "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Running",  "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Shutdown", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Fault",    "uri": "/status/pcs:SystemFault", "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "DCClosed": {
+            "value": 0,
+            "resetChange": false,
+            "xactions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": 0, "uri": "/status/pcs:DCVoltage@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1, "uri": "/status/pcs:DCVoltage@EnableMinValCheck", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "StartEnable": {
+            "value": 0,
+            "note": "Enable the start PCS UI control variable if the BMS DC contactors are closed, the PCS is in maintenance mode, and the PCS is either off or in standby",
+            "useExpr": true,
+            "numVars": 3,
+            "variable1": "/status/bms:DCClosed",
+            "variable2": "/assets/pcs/summary:maint_mode",
+            "variable3": "/status/pcs:SystemState",
+            "expression": "{1} and {2} and ({3} == Off or {3} == Ready)",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/pcs/summary:start@enabled", "outValue":false},
+                        {"inValue":1, "uri":"/assets/pcs/summary:start@enabled", "outValue":true}
+                    ]
+                }]
+            }
+        },
+        "ShutdownEnable": {
+            "value": 0,
+            "note": "Enable the shutdown PCS UI control variable if the PCS is in maintenance mode and the PCS is either running, starting, or in standby",
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/assets/pcs/summary:maint_mode",
+            "variable2": "/status/pcs:SystemState",
+            "expression": "{1} and ({2} == Running or {2} == Ready or {2} == Starting)",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/pcs/summary:shutdown@enabled", "outValue":false},
+                        {"inValue":1, "uri":"/assets/pcs/summary:shutdown@enabled", "outValue":true}
+                    ]
+                }]
+            }
+        },
+        "StandbyEnable": {
+            "value": 0,
+            "note": "Enable the standby PCS UI control variable if the BMS DC contactors are closed, the PCS is in maintenance mode, the PCS is either off or running, and the PCS is in grid-following (on-grid) mode",
+            "useExpr": true,
+            "numVars": 4,
+            "variable1": "/status/bms:DCClosed",
+            "variable2": "/assets/pcs/summary:maint_mode",
+            "variable3": "/status/pcs:SystemState",
+            "variable4": "/status/pcs:WorkMode",
+            "expression": "{1} and {2} and ({3} == Off or {3} == Running) and {4} == On-grid",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/pcs/summary:standby@enabled", "outValue":false},
+                        {"inValue":1, "uri":"/assets/pcs/summary:standby@enabled", "outValue":true}
+                    ]
+                }]
+            }
+        },
+        "GridFormEnable": {
+            "value": 0,
+            "note": "Enable the Grid Forming PCS UI control variable if the ESS UI is in maintenance mode and the PCS is in grid-following (on-grid) mode",
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/assets/pcs/summary:maint_mode",
+            "variable2": "/status/pcs:WorkMode",
+            "expression": "{1} and {2} == On-grid",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/pcs/summary:grid_forming@enabled", "outValue":false},
+                        {"inValue":1, "uri":"/assets/pcs/summary:grid_forming@enabled", "outValue":true}
+                    ]
+                }]
+            }
+        },
+        "GridFollowEnable": {
+            "value": 0,
+            "note": "Enable the Grid Following PCS UI control variable if the ESS UI is in maintenance mode and the PCS is in grid-forming (off-grid) mode",
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/assets/pcs/summary:maint_mode",
+            "variable2": "/status/pcs:WorkMode",
+            "expression": "{1} and {2} == Off-grid",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue":0, "uri":"/assets/pcs/summary:grid_following@enabled", "outValue":false},
+                        {"inValue":1, "uri":"/assets/pcs/summary:grid_following@enabled", "outValue":true}
+                    ]
+                }]
+            }
+        },
+        "PCSResetKeyCmd": 0,
+        "CommsOK": {
+            "value": false,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true,  "uri": "/assets/pcs/summary:com_status", "outValue": "ONLINE", "ifChanged": false},
+                        { "inValue": false, "uri": "/assets/pcs/summary:com_status", "outValue": "OFFLINE", "ifChanged": false},
+                        { "inValue": false, "uri": "/site/ess_ls:com_status[0]",     "outValue": true, "ifChanged": false}
+                    ]
+                }]
+            }
+        },
+        "ActivePowerCmd": 0,
+        "ReactivePowerCmd": 0,
+        "ActivePowerCmd_adjusted": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/status/pcs:ActivePowerCmd",
+            "variable2": "/config/pcs:RatedApparentPower",
+            "operation": "*",
+            "scale": 100
+        },
+        "ReactivePowerCmd_adjusted": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "/status/pcs:ReactivePowerCmd",
+            "variable2": "/config/pcs:RatedApparentPower",
+            "operation": "*",
+            "scale": 100
+        },
+        "ClearFaultsDone": {
+            "value": false,
+            "note": "Set to true if all alarms/faults have been cleared using process_sys_alarm function. If true, reset ESS alarm/fault registers to 0",
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"inValue": true, "ifChanged": false, "outValue": false, "uri": "/site/ess_ls:com_status[0]"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:pcs1_overall_alarms"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:pcs1_alarm_running_state"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:pcs1_overall_faults"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:pcs1_fault_state1"},
+                        {"inValue": true, "ifChanged": false, "outValue": 0, "uri": "/site/ess_ls:pcs1_fault_state2"}
+                    ]
+                }]
+            }
+        },
+        "FaultCnt": 0,
+        "AlarmCnt": 0,
+        "WorkMode": "N/A",
+        "OnGridChgMode": "N/A",
+        "OnGridChgModeAbbrev": "N/A",
+        "ChargeDischargeStatus": "N/A",
+        "ReactivePower": 0,
+        "GridVoltage1": 0,
+        "GridVoltage2": 0,
+        "GridVoltage3": 0,
+        "GridCurrent1": 0,
+        "GridCurrent2": 0,
+        "GridCurrent3": 0,
+        "GridFrequency": 0,
+        "DCPower": 0,
+        "DCCurrent": 0,
+        "PowerFactor": 0,
+        "DailyChargeEnergy": 0,
+        "DailyDischargeEnergy": 0,
+        "TotalChargeEnergy": 0,
+        "TotalDischargeEnergy": 0,
+        "Leakagecurrent": 0,
+        "AmbientTemp": 0,
+        "ModuleTemp1": 0,
+        "ModuleTemp2": 0,
+        "ModuleTemp3": 0,
+
+        "PCSHeartbeat": {
+            "value": 0,
+            "EnableStateCheck": false,
+            "EnableCommsCheck": false,
+            "Type": "int",
+            "AlarmTimeout": 10,
+            "FaultTimeout": 15,
+            "RecoverTimeout": 0.1,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "pcs"}]}]
+            }
+        },
+        "PCSHeartbeatCheckEnable": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/pcs_running_info:work_state",
+            "expression": "{1} > 0",
+            "xactions": {
+                "onSet":[{"remap":[{"ifChanged": false, "uri": "/status/pcs:PCSHeartbeat@EnableStateCheck"}]}]
+            }
+        },
+        "ActivePower": {
+            "value": 0,
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+
+            "MaxAlarmThreshold": 3510,
+            "MaxFaultThreshold": 3525,
+            "MaxResetValue": 3510,
+
+            "MaxAlarmTimeout": 1,
+            "MaxFaultTimeout": 1.5,
+            "MaxRecoverTimeout": 1.4,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "pcs"}]}]
+            }
+        },
+        "DCVoltage": {
+            "value": 0,
+			
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": false,
+
+            "MinAlarmThreshold": 1200,
+            "MaxAlarmThreshold": 3000,
+            "MinFaultThreshold": 1100,
+            "MaxFaultThreshold": 4000,
+            "MinResetValue": 1140,
+            "MaxResetValue": 2000,
+
+            "MinAlarmTimeout": 0,
+            "MaxAlarmTimeout": 0,
+            "MinFaultTimeout": 1,
+            "MaxFaultTimeout": 0,
+            "MinRecoverTimeout": 1,
+            "MaxRecoverTimeout": 0,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "pcs"}]}]
+            }
+        },
+        "ApparentPower": {
+            "value": 0,
+            "useExpr": true,
+            "numVars": 2,
+            "variable1": "/status/pcs:ActivePower",
+            "variable2": "/status/pcs:ReactivePower",
+            "expression": "sqrt( ({1} ** 2 + {2} ** 2) )"
+        },
+        "DischargeCalibrationCalc": {
+            "value": 0,
+            "note": "Disabled remap to DischargeCalibration for now. May need it later",
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/controls/ess:ActivePowerSetpoint",
+            "expression": "{1} * -0.000007 + 1.0032",
+            "xactions": {
+                "onSet": [
+                    {"remap": [{"uri": "/status/pcs:DischargeCalibration"}]}
+                ]
+            }
+        },
+        "ChargeCalibrationCalc": {
+            "value": 0,
+            "note": "Disabled remap to ChargeCalibration for now. May need it later",
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/controls/ess:ActivePowerSetpoint",
+            "expression": "{1} * -0.000004 + 1.0037",
+            "xactions": {
+                "onSet": [
+                    {"remap": [{"uri": "/status/pcs:ChargeCalibration"}]}
+                ]
+            }
+        },
+        "DischargeCalibration": 1,
+        "ChargeCalibration": 1,
+        "StartCmdSuccess": {
+            "value": false,
+            "note": "If the start command has been successfully sent to the PCS, verify that the PCS is now running. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStartup@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStartup",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:start_cmd",                  "outValue": "Failed to send/verify start command (207) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "ShutdownCmdSuccess": {
+            "value": false,
+            "note": "If the shutdown command has been successfully sent to the PCS, verify that the PCS has shutdown. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyShutdown@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyShutdown",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:shutdown_cmd",                "outValue": "Failed to send/verify shutdown command (206) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "StandbyCmdSuccess": {
+            "value": false,
+            "note": "If the standby command has been successfully sent to the PCS, verify that the PCS has transitioned to standby. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStandby@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyStandby",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:standby_cmd",                "outValue": "Failed to send/verify standby command (205) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "VerifyStartupSuccess": {
+            "value": false,
+            "note": "If the PCS failed to start after an elasped time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:start_failure", "outValue": "Failed to verify PCS is running"}
+                    ]
+                }]
+            }
+        },
+        "VerifyShutdownSuccess": {
+            "value": false,
+            "note": "If the PCS failed the shutdown after an elapsed time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:shutdown_failure", "outValue": "Failed to verify PCS has shutdown"}
+                    ]
+                }]
+            }
+        },
+        "VerifyStandbySuccess": {
+            "value": false,
+            "note": "If the PCS failed to enter standby after an elasped time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:standby_failure", "outValue": "Failed to verify PCS is in standby"}
+                    ]
+                }]
+            }
+        },
+        "OffGridModeSuccess": {
+            "value": false,
+            "note": "If the off-grid mode command has been successfully sent to the PCS, verify that the PCS has transitioned to grid-forming (off-grid) mode",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VerifyOffGridMode@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VerifyOffGridMode",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:off_grid_mode_command",         "outValue": "Failed to send/verify grid-forming mode command (85) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "OnGridModeSuccess": {
+            "value": false,
+            "note": "If the on-grid mode command has been successfully sent to the PCS, verify that the PCS has transitioned to grid-following (on-grid) mode",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VerifyOnGridMode@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VerifyOnGridMode",            "outValue": 0},
+
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:on_grid_mode_command",         "outValue": "Failed to send/verify grid-following mode command (170) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "OnGridConstACPowerSuccess": {
+            "value": false,
+            "note": "If the on-grid const AC power command has been successfully sent to the PCS, verify that the PCS on-grid charge/discharge mode has been set to on-grid const AC power",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyOnGridConstACPower@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:VerifyOnGridConstACPower",            "outValue": 0},
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:on_grid_const_ac_power_cmd",            "outValue": "Failed to send/verify on-grid const AC power command (4) to PCS"}
+                    ]
+                }]
+            }
+        },
+        "VerifyOffGridModeSuccess": {
+            "value": false,
+            "note": "If the PCS is not in grid-forming (off-grid) mode, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false,"ifChanged": false, "uri": "/alarms/pcs:off_grid_mode_failure", "outValue": "Failed to verify PCS is in grid-forming (off-grid) mode"}
+                    ]
+                }]
+            }
+        },
+        "VerifyOnGridModeSuccess": {
+            "value": false,
+            "note": "If the PCS is not in grid-following (on-grid) mode after an elapsed time, send an alarm. Otherwise, set on-grid mode setting on const AC power and enable protections related to grid-following (TODO)",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:OnGridConstACPower@triggerCmd", "outValue": true},
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:OnGridConstACPower",            "outValue": 4},
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:on_grid_mode_failure",            "outValue": "Failed to verify PCS is in grid-following (on-grid) mode"}
+                    ]
+                }]
+            }
+        },
+        "VerifyOnGridConstACPowerSuccess": {
+            "value": false,
+            "note": "If the PCS is not set to on-grid const AC power after an elapsed time, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:on_grid_const_ac_power_failure", "outValue": "Failed to set PCS grid-following (on-grid) const AC power setting"}
+                    ]
+                }]
+            }
+        },
+        "CheckIfOnGridSuccess": {
+            "value": false,
+            "note": "If the PCS is in grid-following (on-grid) mode, send the active/reactive power command (0 kW / 0 kVAr) to the PCS",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ActivePowerSetpoint@triggerCmd",    "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ActivePowerSetpoint",               "outValue": 0,     "note": "Send 0 kW command to PCS before proceeding to shutdown"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ReactivePowerAdjSwitch@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ReactivePowerAdjSwitch",            "outValue": 162,   "note": "162 = 0xA2 = Reactive power percentage setting enabled"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:ReactivePowerSetpoint",             "outValue": 0,     "note": "Send 0 kVAr command to PCS before proceeding to shutdown"}
+                    ]
+                }]
+            }
+        },
+        "CheckIfOffGridSuccess": {
+            "value": false,
+            "note": "If the PCS is in grid-forming (off-grid) mode, send the voltage/frequency command (480 V / 60 Hz) to the PCS",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:FrequencySetpoint@triggerCmd", "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:FrequencySetpoint",            "outValue": 60, "note": "Send 60 Hz to PCS"},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VoltageSetpoint@triggerCmd",   "outValue": true},
+                        {"inValue": true, "ifChanged": false, "uri": "/controls/pcs:VoltageSetpoint",              "outValue": 480, "note": "Send 480 V to PCS"}
+                    ]
+                }]
+            }
+        },
+        "CheckIfStoppedSuccess": {
+            "value": true,
+            "note": "If the PCS is already in a fault state, we don't need to do a fault shutdown for PCS",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "ifChanged": false, "uri": "/controls/pcs:ShutdownCmd@triggerCmd", "outValue": true},
+                        {"inValue": false, "ifChanged": false, "uri": "/controls/pcs:ShutdownCmd",            "outValue": 206,   "note": "Send stop command to PCS after verifying 0 kW and 0 kVAr is set to PCS"}
+                    ]
+                }]
+            }
+        },
+        "ReactivePowerAdjSwitchSuccess": {
+            "value": false,
+            "note": "If the reactive power adjustment switch is set to 162, proceed to run the reactive power setpoint command handler. Otherwise, send an alarm",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "ifChanged": false, "uri": "/controls/pcs:ReactivePowerSetpoint@triggerCmd", "outValue": true},
+                        {"inValue": false, "ifChanged": false, "uri": "/alarms/pcs:reactive_power_adj_switch_cmd",      "outValue": "Failed to send/verify reactive power setpoint enable command (162) to PCS"}
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/components/pcs_parameter_setting": {
+        "start_stop": 0,
+        "grid_mode_setting": 0,
+        "on_grid_mode": 0,
+        "reactive_power_adj_switch": 0,
+        "power_priority": 0,
+        "hearbeat_timeout_interval": 0,
+        "on_grid_const_ac_power": 0,
+        "reactive_power_pct_setting": 0,
+        "xoff_grid_voltage_setpoint": 0,
+        "off_grid_voltage_setpoint": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/assets/pcs/summary:voltage_command"}]}]
+            }
+        },
+        "off_grid_frequency_setpoint": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/assets/pcs/summary:frequency_command"}]}]
+            }
+        }
+    },
+    "/components/pcs_running_info": {
+        "active_power": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:ActivePower"}]}]
+            }
+        },
+        "reactive_power": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:ReactivePower"}]}]
+            }
+        },
+        "grid_voltage_vab": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:GridVoltage1"}]}]
+            }
+        },
+        "grid_voltage_vbc": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:GridVoltage2"}]}]
+            }
+        },
+        "grid_voltage_vca": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:GridVoltage3"}]}]
+            }
+        },
+        "phase_a_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:GridCurrent1"}]}]
+            }
+        },
+        "phase_b_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:GridCurrent2"}]}]
+            }
+        },
+        "phase_c_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:GridCurrent3"}]}]
+            }
+        },
+        "grid_frequency": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:GridFrequency"}]}]
+            }
+        },
+        "dc_power": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:DCPower"}]}]
+            }
+        },
+        "dc_voltage": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:DCVoltage"}]}]
+            }
+        },
+        "dc_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:DCCurrent"}]}]
+            }
+        },
+        "power_factor": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:PowerFactor"}]}]
+            }
+        },
+        "heartbeat": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:PCSHeartbeat"}]}]
+            }
+        },
+        "daily_charging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:DailyChargeEnergy"}]}]
+            }
+        },
+        "daily_discharging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:DailyDischargeEnergy"}]}]
+            }
+        },
+        "total_charging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:TotalChargeEnergy"}]}]
+            }
+        },
+        "total_discharging": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:TotalDischargeEnergy"}]}]
+            }
+        },
+        "leakage_current": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:LeakageCurrent"}]}]
+            }
+        },
+        "ambient_temp": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:AmbientTemp"}]}]
+            }
+        },
+        "module_temp_1": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:ModuleTemp1"}]}]
+            }
+        },
+        "module_temp_2": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:ModuleTemp2"}]}]
+            }
+        },
+        "module_temp_3": {
+            "value":0,
+            "actions": { 
+                "onSet":[{"remap":[{"uri":"/status/pcs:ModuleTemp3"}]}]
+            }
+        },
+        "work_state": {
+            "value": 0,
+            "note1": "Bit 00: Running",
+            "note2": "Bit 01-2: Reserved",
+            "note3": "Bit 03: Key stop",
+            "note4": "Bit 04: Standby",
+            "note5": "Bit 05: Reserved",
+            "note6": "Bit 06: Start in process",
+            "note7": "Bit 07-8: Reserved",
+            "note8": "Bit 09: Fault stop",
+            "note9": "Bit 10: Alarm running",
+            "note10": "Bit 11: Derating running",
+            "note11": "Bit 12-14: Reserved",
+            "note12": "Bit 15: DSP communication error",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0,  "mask": 1, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "Running"},
+                        {"shift": 3,  "mask": 1, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "Key Stop"},
+                        {"shift": 4,  "mask": 1, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "Standby"},
+                        {"shift": 6,  "mask": 1, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "Start in process"},
+                        {"shift": 9,  "mask": 1, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "Fault stop"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "Alarm running"},
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "Derating running"},
+                        {"shift": 15, "mask": 1, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "DSP communication error"},
+
+                        {"shift": 0,  "mask": 1, "inValue": 1, "uri": "/status/pcs:SystemState", "outValue": "Running"},
+                        {"shift": 3,  "mask": 1, "inValue": 1, "uri": "/status/pcs:SystemState", "outValue": "Off"},
+                        {"shift": 4,  "mask": 1, "inValue": 1, "uri": "/status/pcs:SystemState", "outValue": "Ready"},
+                        {"shift": 6,  "mask": 1, "inValue": 1, "uri": "/status/pcs:SystemState", "outValue": "Starting"},
+                        {"shift": 9,  "mask": 1, "inValue": 1, "uri": "/status/pcs:SystemState", "outValue": "Fault"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/status/pcs:SystemState", "outValue": "Running"},
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri": "/status/pcs:SystemState", "outValue": "Running"},
+                        {"shift": 15, "mask": 1, "inValue": 1, "uri": "/status/pcs:SystemState", "outValue": "Running", "note": "DSP comms error occurs, but the PCS may still be running"}
+                    ]
+                }]
+            }
+        },
+        "operating_mode": {
+            "value": 0,
+            "note1": "Bit 00: On-grid constant current",
+            "note2": "Bit 01: On-grid constant voltage",
+            "note3": "Bit 02: On-grid constant power (AC)",
+            "note4": "Bit 03: On-grid constant power (DC)",
+            "note5": "Bit 04-8: Reserved",
+            "note6": "Bit 09: On-grid mode",
+            "note7": "Bit 10: Off-grid mode",
+            "note8": "Bit 11: VSG mode",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0,  "mask": 255,"inValue": 0,  "uri": "/status/pcs:OnGridChgMode", "outValue": "N/A"},
+                        {"shift": 0,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant current"},
+                        {"shift": 1,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant voltage"},
+                        {"shift": 2,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant power (AC)"},
+                        {"shift": 3,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:OnGridChgMode", "outValue": "Constant power (DC)"},
+                        {"shift": 9,  "mask": 1,  "inValue": 1,  "uri": "/status/pcs:WorkMode",      "outValue": "On-grid"},
+                        {"shift": 10, "mask": 1,  "inValue": 1,  "uri": "/status/pcs:WorkMode",      "outValue": "Off-grid"},
+                        {"shift": 11, "mask": 1,  "inValue": 1,  "uri": "/status/pcs:WorkMode",      "outValue": "VSG"},
+
+                        {"shift": 0, "mask": 1, "inValue": 1,  "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Current"},
+                        {"shift": 1, "mask": 1, "inValue": 1,  "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "Voltage"},
+                        {"shift": 2, "mask": 1, "inValue": 1,  "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "AC-Power"},
+                        {"shift": 3, "mask": 1, "inValue": 1,  "uri": "/status/pcs:OnGridChgModeAbbrev", "outValue": "DC-Power"}
+                    ]
+                }]
+            }
+        },
+        "charge_state": {
+            "value": -1,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": 0,  "uri": "/status/pcs:ChargeDischargeStatus", "outValue": "Charging"},
+                        {"inValue": 1,  "uri": "/status/pcs:ChargeDischargeStatus", "outValue": "Discharging"},
+                        {"inValue": 2,  "uri": "/status/pcs:ChargeDischargeStatus", "outValue": "Non-operating mode"}
+                    ]
+                }]
+            }
+        },
+        "fault_state": {
+            "value": 0,
+            "note": "0: Normal, 1: Fault",
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: Door-opening Protection",
+            "note3": "Bit 02: Local emergency stop",
+            "note4": "Bit 03: Remote emergency stop",
+            "note5": "Bit 04: Reserved",
+            "note6": "Bit 05: LV room smoke sensor",
+            "note7": "Bit 06-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:door_opening_protection",    "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:door_opening_protection",    "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:local_estop",                "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:local_estop",                "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:remote_estop",               "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:remote_estop",               "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:lv_room_smoke_sensor",       "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:lv_room_smoke_sensor",       "outValue": "Fault"},
+
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/assets/pcs/summary:local_estop_status", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/assets/pcs/summary:local_estop_status", "outValue": "Fault"},
+
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_overall_faults[0]",    "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_overall_faults[1]",    "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_overall_faults[2]",    "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_overall_faults[3]",    "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "fault_state_1": {
+            "value": 0,
+            "note1": "Bit 00: DC undervoltage",
+            "note2": "Bit 01: DC overvoltage",
+            "note3": "Bit 02: AC undervoltage",
+            "note4": "Bit 03: AC overvoltage",
+            "note5": "Bit 04: AC underfrequency",
+            "note6": "Bit 05: AC overfrequency",
+            "note7": "Bit 06: AC contactor fault",
+            "note8": "Bit 07: Islanding protection",
+            "note9": "Bit 08: Reserved",
+            "note10": "Bit 09: PDP protection",
+            "note11": "Bit 10: Module overtemperature",
+            "note12": "Bit 11: Reactor overtemperature",
+            "note13": "Bit 12: Transformer overtemperature",
+            "note14": "Bit 13: Leakage current protection",
+            "note15": "Bit 14: Reserved",
+            "note16": "Bit 15: Overload protection",
+            "note17": "Bit 16: Reserved",
+            "note18": "Bit 17: Fan 1 fault",
+            "note19": "Bit 18: DC fuse fault",
+            "note20": "Bit 19: Reserved",
+            "note21": "Bit 20: DC overcurrent",
+            "note22": "Bit 21: AC overcurrent",
+            "note23": "Bit 22: Reserved",
+            "note24": "Bit 23: Ambient temperature abnormal",
+            "note25": "Bit 24: Hardware fault",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_undervoltage", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_undervoltage", "outValue": "Fault"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_overvoltage", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_overvoltage", "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_undervoltage", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_undervoltage", "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_overvoltage", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_overvoltage", "outValue": "Fault"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_underfrequency", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_underfrequency", "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_overfrequency", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_overfrequency", "outValue": "Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_contactor_fault", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_contactor_fault", "outValue": "Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/pcs:islanding_protection", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/pcs:islanding_protection", "outValue": "Fault"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/faults/pcs:pdp_protection", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/faults/pcs:pdp_protection", "outValue": "Fault"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/pcs:module_overtemperature", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/pcs:module_overtemperature", "outValue": "Fault"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/pcs:reactor_overtemperature", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/pcs:reactor_overtemperature", "outValue": "Fault"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/pcs:transformer_overtemperature", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/pcs:transformer_overtemperature", "outValue": "Fault"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/pcs:leakage_current_protection", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/pcs:leakage_current_protection", "outValue": "Fault"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/faults/pcs:overload_protection", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/faults/pcs:overload_protection", "outValue": "Fault"},
+                        { "shift": 17,"mask": 1,"inValue": 0,"uri": "/faults/pcs:fan_1_fault", "outValue": "Normal"},
+                        { "shift": 17,"mask": 1,"inValue": 1,"uri": "/faults/pcs:fan_1_fault", "outValue": "Fault"},
+                        { "shift": 18,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_fuse_fault", "outValue": "Normal"},
+                        { "shift": 18,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_fuse_fault", "outValue": "Fault"},
+                        { "shift": 20,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_overcurrent", "outValue": "Normal"},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_overcurrent", "outValue": "Fault"},
+                        { "shift": 21,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_overcurrent", "outValue": "Normal"},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_overcurrent", "outValue": "Fault"},
+                        { "shift": 23,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ambient_temperature_abnormal", "outValue": "Normal"},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ambient_temperature_abnormal", "outValue": "Fault"},
+                        { "shift": 24,"mask": 1,"inValue": 0,"uri": "/faults/pcs:hardware_fault", "outValue": "Normal"},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/faults/pcs:hardware_fault", "outValue": "Fault"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[3]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[4]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[5]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[6]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[7]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[8]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[9]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[10]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[11]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[12]", "outValue": true},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[13]", "outValue": true},
+                        { "shift": 17,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[14]", "outValue": true},
+                        { "shift": 18,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[15]", "outValue": true},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[16]", "outValue": true},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[17]", "outValue": true},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[18]", "outValue": true},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state1[19]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "fault_state_2": {
+            "value": 0,
+            "note1": "Bit 00: Insulation resistance",
+            "note2": "Bit 01: AC SPD fault",
+            "note3": "Bit 02: Sampling fault",
+            "note4": "Bit 03: Battery polarity reversed",
+            "note5": "Bit 04: Reserved",
+            "note6": "Bit 05: LCD-DSP fault",
+            "note7": "Bit 06: AC current unbalance 1",
+            "note8": "Bit 07: Host fault",
+            "note9": "Bit 08: DC SPD fault",
+            "note10": "Bit 09: Reserved",
+            "note11": "Bit 10: DC injection fault",
+            "note12": "Bit 11: DC switch fault",
+            "note13": "Bit 12: Device code repeat fault",
+            "note14": "Bit 13: Parallel communication error",
+            "note15": "Bit 14: Control cabinet temperature abnormal",
+            "note16": "Bit 15: Reserved",
+            "note17": "Bit 16: AC voltage unbalance",
+            "note18": "Bit 17-18: Reserved",
+            "note19": "Bit 19: AC switch fault",
+            "note20": "Bit 20: Soft start fault",
+            "note21": "Bit 21: DC voltage sampling fault",
+            "note22": "Bit 22: Fan 2 fault",
+            "note23": "Bit 23: AC current unbalance 2",
+            "note24": "Bit 24: AC current unbalance 3",
+            "note25": "Bit 25: Drive board fault",
+            "note26": "Bit 26: Neutral point potential shift",
+            "note27": "Bit 27: Carrier sync fault",
+            "note28": "Bit 28-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/pcs:insulation_resistance", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/pcs:insulation_resistance", "outValue": "Fault"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_spd_fault", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_spd_fault", "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:sampling_fault", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:sampling_fault", "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:batt_polarity_reversed", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:batt_polarity_reversed", "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:lcd_dsp_fault", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:lcd_dsp_fault", "outValue": "Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_current_unbalance_1", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_current_unbalance_1", "outValue": "Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/pcs:host_fault", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/pcs:host_fault", "outValue": "Fault"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_spd_fault", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_spd_fault", "outValue": "Fault"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_injection_fault", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_injection_fault", "outValue": "Fault"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_switch_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_switch_fault", "outValue": "Fault"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/pcs:device_code_repeat_fault", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/pcs:device_code_repeat_fault", "outValue": "Fault"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/pcs:parallel_comms_err", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/pcs:parallel_comms_err", "outValue": "Fault"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/faults/pcs:control_cabinet_temperature_abnormal", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/faults/pcs:control_cabinet_temperature_abnormal", "outValue": "Fault"},
+                        { "shift": 16,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_voltage_unbalance", "outValue": "Normal"},
+                        { "shift": 16,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_voltage_unbalance", "outValue": "Fault"},
+                        { "shift": 19,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_switch_fault", "outValue": "Normal"},
+                        { "shift": 19,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_switch_fault", "outValue": "Fault"},
+                        { "shift": 20,"mask": 1,"inValue": 0,"uri": "/faults/pcs:soft_start_fault", "outValue": "Normal"},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/faults/pcs:soft_start_fault", "outValue": "Fault"},
+                        { "shift": 21,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_voltage_sampling_fault", "outValue": "Normal"},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_voltage_sampling_fault", "outValue": "Fault"},
+                        { "shift": 22,"mask": 1,"inValue": 0,"uri": "/faults/pcs:fan_2_fault", "outValue": "Normal"},
+                        { "shift": 22,"mask": 1,"inValue": 1,"uri": "/faults/pcs:fan_2_fault", "outValue": "Fault"},
+                        { "shift": 23,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_current_unbalance_2", "outValue": "Normal"},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_current_unbalance_2", "outValue": "Fault"},
+                        { "shift": 24,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_current_unbalance_3", "outValue": "Normal"},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_current_unbalance_3", "outValue": "Fault"},
+                        { "shift": 25,"mask": 1,"inValue": 0,"uri": "/faults/pcs:drive_board_fault", "outValue": "Normal"},
+                        { "shift": 25,"mask": 1,"inValue": 1,"uri": "/faults/pcs:drive_board_fault", "outValue": "Fault"},
+                        { "shift": 26,"mask": 1,"inValue": 0,"uri": "/faults/pcs:neutral_point_potential_shift", "outValue": "Normal"},
+                        { "shift": 26,"mask": 1,"inValue": 1,"uri": "/faults/pcs:neutral_point_potential_shift", "outValue": "Fault"},
+                        { "shift": 27,"mask": 1,"inValue": 0,"uri": "/faults/pcs:carrier_sync_fault", "outValue": "Normal"},
+                        { "shift": 27,"mask": 1,"inValue": 1,"uri": "/faults/pcs:carrier_sync_fault", "outValue": "Fault"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[2]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[3]", "outValue": true},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[4]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[5]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[6]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[7]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[8]", "outValue": true},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[9]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[10]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[11]", "outValue": true},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[12]", "outValue": true},
+                        { "shift": 16,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[13]", "outValue": true},
+                        { "shift": 19,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[14]", "outValue": true},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[15]", "outValue": true},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[16]", "outValue": true},
+                        { "shift": 22,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[17]", "outValue": true},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[18]", "outValue": true},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[19]", "outValue": true},
+                        { "shift": 25,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[20]", "outValue": true},
+                        { "shift": 26,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[21]", "outValue": true},
+                        { "shift": 27,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_fault_state2[22]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "alarm_state": {
+            "value": 0,
+            "note": "0: Normal, 1: Alarm",
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: Heartbeat stop",
+            "note3": "Bit 02: SCU-metering board communication error",
+            "note4": "Bit 03-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:heartbeat_stop", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:heartbeat_stop", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:scu_metering_board_comms_err", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:scu_metering_board_comms_err", "outValue": "Alarm"},
+
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_overall_alarms[0]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_overall_alarms[1]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "alarm_running_state_1": {
+            "value": 0,
+            "note1": "Bit 00: Temperature abnormal alarm",
+            "note2": "Bit 01: Low insulation resistance alarm",
+            "note3": "Bit 02: GFRT running",
+            "note4": "Bit 03: Reserved",
+            "note5": "Bit 04: DC fuse abnormal",
+            "note6": "Bit 05: Reserved",
+            "note7": "Bit 06: DC sensor abnormal",
+            "note8": "Bit 07: DC SPD alarm",
+            "note9": "Bit 08: AC SPD alarm",
+            "note10": "Bit 09: Battery voltage high",
+            "note11": "Bit 10: Battery voltage low",
+            "note12": "Bit 11: Reserved",
+            "note13": "Bit 12: DC switch abnormal",
+            "note14": "Bit 13: Fan 1 abnormal",
+            "note15": "Bit 14-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:temp_abnormal", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:temp_abnormal", "outValue": "Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:low_insulation_resistance", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:low_insulation_resistance", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:gfrt_running", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:gfrt_running", "outValue": "Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_fuse_normal", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_fuse_normal", "outValue": "Alarm"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_sensor_abnormal", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_sensor_abnormal", "outValue": "Alarm"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_spd_alarm", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_spd_alarm", "outValue": "Alarm"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ac_spd_alarm", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ac_spd_alarm", "outValue": "Alarm"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:batt_volt_high", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:batt_volt_high", "outValue": "Alarm"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:batt_volt_low", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:batt_volt_low", "outValue": "Alarm"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_switch_abnormal", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_switch_abnormal", "outValue": "Alarm"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:fan_1_abnormal", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:fan_1_abnormal", "outValue": "Alarm"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[0]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[1]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[2]", "outValue": true},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[3]", "outValue": true},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[4]", "outValue": true},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[5]", "outValue": true},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[6]", "outValue": true},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[7]", "outValue": true},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[8]", "outValue": true},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[9]", "outValue": true},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[10]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "alarm_running_state_2": {
+            "value": 0,
+            "note1": "Bit 00: Branch circuit board communication error",
+            "note2": "Bit 01: AC switch abnormal",
+            "note3": "Bit 02: Fan 2 abnormal",
+            "note4": "Bit 03: AC main contactor abnormal",
+            "note5": "Bit 04-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:branch_circuit_board_comms_err", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:branch_circuit_board_comms_err", "outValue": "Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ac_switch_abnormal", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ac_switch_abnormal", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:fan_2_abnormal", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:fan_2_abnormal", "outValue": "Alarm"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ac_main_contactor_abnormal", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ac_main_contactor_abnormal", "outValue": "Alarm"},
+
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[11]", "outValue": true},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[12]", "outValue": true},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[13]", "outValue": true},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/site/ess_ls:pcs1_alarm_running_state[14]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "node_state": {
+            "value": 0,
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: AC switch abnormal",
+            "note3": "Bit 02: Fan 2 abnormal",
+            "note4": "Bit 03: Fan 2 abnormal",
+            "note5": "Bit 04-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 1, "mask": 1, "inValue":0, "uri": "/assets/pcs/summary:ac_switch_status",       "outValue": "Opened"},
+                        {"shift": 1, "mask": 1, "inValue":1, "uri": "/assets/pcs/summary:ac_switch_status",       "outValue": "Closed"},
+                        {"shift": 2, "mask": 1, "inValue":0, "uri": "/assets/pcs/summary:dc_switch_status",       "outValue": "Opened"},
+                        {"shift": 2, "mask": 1, "inValue":1, "uri": "/assets/pcs/summary:dc_switch_status",       "outValue": "Closed"},
+                        {"shift": 3, "mask": 1, "inValue":0, "uri": "/assets/pcs/summary:dc_fuse_status",         "outValue": "Opened"},
+                        {"shift": 3, "mask": 1, "inValue":1, "uri": "/assets/pcs/summary:dc_fuse_status",         "outValue": "Closed"},
+                        {"shift": 4, "mask": 1, "inValue":0, "uri": "/assets/pcs/summary:dc_aux_switch_1_status", "outValue": "Opened"},
+                        {"shift": 4, "mask": 1, "inValue":1, "uri": "/assets/pcs/summary:dc_aux_switch_1_status", "outValue": "Closed"},
+                        {"shift": 5, "mask": 1, "inValue":0, "uri": "/assets/pcs/summary:dc_aux_switch_2_status", "outValue": "Opened"},
+                        {"shift": 5, "mask": 1, "inValue":1, "uri": "/assets/pcs/summary:dc_aux_switch_2_status", "outValue": "Closed"}
+                    ]
+                }]
+            }
+        },
+        "mv_node_state": {
+            "value": 0,
+            "note1": "Bit 00: Gas Relay Trip (0: normal, 1: tripping)",
+            "note2": "Bit 01: Gas Relay Alarm (0: normal, 1: alarm)",
+            "note3": "Bit 02: Oil Temperature Alarm (0: normal, 1: alarm)",
+            "note4": "Bit 03: Oil Temperature Trip (0: normal, 1: tripping)",
+            "note5": "Bit 04: Low Oil Level Trip (0: normal, 1: tripping)",
+            "note6": "Bit 06: Pressure Relief Trip (0: normal, 1: tripping)",
+            "note7": "Bit 08: MV Load Switch 1 (0: Open, 1: Close)",
+            "note8": "Bit 09: MV Load Switch 2 (0: Open, 1: Close)",
+            "note9": "Bit 10: MV Vacuum Circuit-Breaker (0: Open, 1: Close)",
+            "note10": "Bit 11: MV Disconnector Switch (0: Open, 1: Close)",
+            "note11": "Bit 12-13: Reserved",
+            "note12": "Bit 14: Winding Temperature Trip (0: normal, 1: tripping)",
+            "note13": "Bit 15: Winding Temperature Alarm (0: normal, 1: alarm)",
+            "note14": "Bit 16-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:gas_relay_alarm", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:gas_relay_alarm", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:oil_temp_alarm", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:oil_temp_alarm", "outValue": "Alarm"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:winding_temp_alarm", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:winding_temp_alarm", "outValue": "Alarm"}
+                    ]
+                }]
+            }
+        },
+        "mv_node_state_1": {
+            "value": 0,
+            "note1": "Bit 00-5: Reserved",
+            "note2": "Bit 06: HV Room Door (0: Open, 1: Close)",
+            "note3": "Bit 07-10: Reserved",
+            "note4": "Bit 11: External E-stop (0: normal, 1: tripping)",
+            "note5": "Bit 12: Reserved",
+            "note6": "Bit 13: HV Room Smoke (0: normal, 1: tripping)",
+            "note7": "Bit 14: HV Remote Control (0: remote, 1: local)",
+            "note8": "Bit 15-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 6,"mask": 1,"inValue": 0, "uri": "/assets/pcs/summary:hv_room_door_status",   "outValue": "Open"},
+                        { "shift": 6,"mask": 1,"inValue": 1, "uri": "/assets/pcs/summary:hv_room_door_status",   "outValue": "Close"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/assets/pcs/summary:external_estop_status", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/assets/pcs/summary:external_estop_status", "outValue": "Tripping"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/assets/pcs/summary:hv_room_smoke_status",  "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/assets/pcs/summary:hv_room_smoke_status",  "outValue": "Tripping"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/assets/pcs/summary:hv_remote_ctrl_status",  "outValue": "Remote"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/assets/pcs/summary:hv_remote_ctrl_status",  "outValue": "Local"}
+                    ]
+                }]
+            }
+        },
+        "mv_node_state_2": {
+            "value": 0,
+            "note1": "Bit 00: MV Load Switch (0: disconnected. 1: connected)",
+            "note2": "Bit 01: HV Remote Control Trip (0: normal, 1: tripping)",
+            "note3": "Bit 02: Reserved",
+            "note4": "Bit 03: BMS Dry Contact Interface (0: Normal, 1: Fault)",
+            "note5": "Bit 04: Fast Response Control Interface (0: normal, 1: close)",
+            "note6": "Bit 05-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:bms_dry_contact_interface", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:bms_dry_contact_interface", "outValue": "Fault"},
+
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/assets/pcs/summary:bms_dry_contact_interface_status", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/assets/pcs/summary:bms_dry_contact_interface_status", "outValue": "Fault"}
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/faults/pcs": {
+        "clear_faults": {
+            "value": "Normal",
+            "type": "fault",
+            "numVars": 3,
+            "variable1": "PCSHeartbeat",
+            "variable2": "ActivePower",
+            "variable3": "DCVoltage",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "MonitorVarFault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue":"DCVoltage_limit_min",   "ifChanged": false, "amap": "pcs", "uri": "/site/ess_ls:ess_faults[8]",  "outValue": "PCS DC Voltage Threshold Exceeded"},
+                        {"inValue":"ActivePower_limit_max", "ifChanged": false, "amap": "pcs", "uri": "/site/ess_ls:ess_faults[10]", "outValue": "PCS Active Power Threshold Exceeded"}
+                    ]
+                }]
+            }
+        },
+
+        "door_opening_protection":              {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "local_estop":                          {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "remote_estop":                         {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "lv_room_smoke_sensor":                 {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_undervoltage":                      {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_overvoltage":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_undervoltage":                      {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_overvoltage":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_underfrequency":                    {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_overfrequency":                     {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_contactor_fault":                   {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "islanding_protection":                 {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "pdp_protection":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "module_overtemperature":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "reactor_overtemperature":              {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "transformer_overtemperature":          {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "leakage_current_protection":           {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "overload_protection":                  {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "fan_1_fault":                          {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_fuse_fault":                        {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_overcurrent":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_overcurrent":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ambient_temperature_abnormal":         {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "hardware_fault":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "insulation_resistance":                {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_spd_fault":                         {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "sampling_fault":                       {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "batt_polarity_reversed":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "lcd_dsp_fault":                        {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_current_unbalance_1":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "host_fault":                           {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_spd_fault":                         {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_injection_fault":                   {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_switch_fault":                      {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "device_code_repeat_fault":             {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "parallel_comms_err":                   {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "control_cabinet_temperature_abnormal": {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_voltage_unbalance":                 {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_switch_fault":                      {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "soft_start_fault":                     {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_voltage_sampling_fault":            {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "fan_2_fault":                          {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_current_unbalance_2":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_current_unbalance_3":               {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "drive_board_fault":                    {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "neutral_point_potential_shift":        {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "carrier_sync_fault":                   {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "bms_dry_contact_interface":            {"value":"Normal","type":"fault","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}}
+    },
+    "/alarms/pcs": {
+        "clear_alarms": {
+            "value": "Normal",
+            "type": "alarm",
+            "numVars": 3,
+            "variable1": "PCSHeartbeat",
+            "variable2": "ActivePower",
+            "variable3": "DCVoltage",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "MonitorVarAlarm": {
+            "value": "Normal",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue":"DCVoltage_limit_min",   "ifChanged": false, "amap": "pcs", "uri": "/site/ess_ls:ess_alarms[8]",  "outValue": "PCS DC Voltage Threshold Exceeded"},
+                        {"inValue":"ActivePower_limit_max", "ifChanged": false, "amap": "pcs", "uri": "/site/ess_ls:ess_alarms[10]", "outValue": "PCS Active Power Threshold Exceeded"}
+                    ]
+                }]
+            }
+        },
+
+        "heartbeat_stop":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "scu_metering_board_comms_err":   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "temp_abnormal":                  {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "low_insulation_resistance":      {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "gfrt_running":                   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_fuse_normal":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_sensor_abnormal":             {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_spd_alarm":                   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_spd_alarm":                   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "batt_volt_high":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "batt_volt_low":                  {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "dc_switch_abnormal":             {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "fan_1_abnormal":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "branch_circuit_board_comms_err": {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_switch_abnormal":             {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "fan_2_abnormal":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "ac_main_contactor_abnormal":     {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "gas_relay_alarm":                {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "oil_temp_alarm":                 {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "winding_temp_alarm":             {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+
+        "start_cmd":                      {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "shutdown_cmd":                   {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "standby_cmd":                    {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "off_grid_mode_cmd":              {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "on_grid_mode_cmd":               {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "on_grid_const_ac_power_cmd":     {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "reactive_power_adj_switch_cmd":  {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        
+        "start_failure":                  {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "shutdown_failure":               {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "standby_failure":                {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "off_grid_mode_failure":          {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "on_grid_mode_failure":           {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}},
+        "on_grid_const_ac_power_failure": {"value":"Normal","type":"alarm","actions":{"onSet":[{"func":[{"func":"process_sys_alarm","amap":"pcs"}]}]}}
+    }
+}

@@ -1,0 +1,38 @@
+Notes
+pwilshire
+    07/24/2020
+
+    Thread per asset
+
+    The current system scans all the fims messages for 1000 uS then processes the assets
+    With LOTS of incoming data this can provide nasty bottlnecks and data aliasing.
+
+
+    Suggest using a thread for each asset with its own fims connection and a smaller set of subscriptions.
+    This will limit the fims traffic to the asset and allow  a timely response to events regardlss of other fims traffic.
+
+
+    All vars lookup via a map.
+    Copy the dnp3 model
+    Var "sets" and "pubs" can have actions associated with them performed at the time the data is changed.
+    We can collect a list of all affected variables in a single message and perform all the actions once all the data has been collected.
+
+
+    Create sums / aggregates /avg etc on the fly
+    sum = sum -lastval + newval
+
+Important story to have for ESS controller that Clou does not have. 
+      If the DC contactors open, the PCS needs to shut down and it should cause a fault to be reported.
+
+
+
+cat /proc/sys/net/core/wmem_max
+212992
+
+sudo sysctl net.core.wmem_max=924288
+we then modified sysctl.conf to make it perstent.
+sudo vi /etc/sysctl.conf
+added:
+net.core.wmem_max=924288
+
+

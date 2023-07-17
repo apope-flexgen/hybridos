@@ -1,0 +1,15 @@
+
+Actions : set output value, useAv directs the appliction of the action 
+p.wilshire 
+12/09/2021
+
+"useAv":true  causes  the inner av->setval function to be used in the action.
+
+If  any  action sets a uri value the external  vm->setVal is usd to perform the operation.
+This operation is automatically blocked when such an action would caese a programming loop.
+Using the "useAv" feature allows the value to be set without trigging the program loop.
+
+
+This allow remap actions to modify the inAv value as it executes.
+
+Complex but may have some use.

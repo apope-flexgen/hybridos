@@ -1,0 +1,25 @@
+{
+   "/controls/ess": {
+
+              		"ReactivePowerCmd":     {
+                        	"value":        0.0
+                	},
+                	"ReactivePowerSetpoint":        {
+                        "value":        0.0
+	                }
+              },
+
+   "/status/ess": {
+
+              		"ReactivePower":     {
+                        	"value":        0.0
+                	}
+              },
+
+   "/params/ess": {
+                	"ReactivePowerDeadband":        {
+                        	"value":        5.0
+                	}
+                 }
+ 
+}

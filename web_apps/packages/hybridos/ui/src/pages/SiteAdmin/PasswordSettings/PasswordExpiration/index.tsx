@@ -30,6 +30,7 @@ const PasswordExpiration: FC<PasswordExpirationProps> = ({
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <Box sx={{ display: 'flex' }}>
             <Switch
+              autoLayout
               color="primary"
               id="enable_password_expiration"
               label={siteAdminLabels.passwordExpirationSwitch}

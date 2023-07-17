@@ -11,6 +11,7 @@
     "author": "Tony Olivo",
     "license": "UNLICENSED",
     "dependencies": {
+        "@flexgen/fims": "^1.4.0",
         "pkg": "^5.7.0"
     },
     "devDependencies": {

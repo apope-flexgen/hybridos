@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
-const path = require('path');
-const { configs } = require('eslint-plugin-prettier');
+const Dotenv = require('dotenv-webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // Options for node_env:
 // devTools - use dev tools, such as hot module reload
@@ -21,18 +21,15 @@ const aggregates = {
   debug: ['fims', 'noTimeout'],
 };
 
-const WEB_UI_BUILD_PATH = '/usr/local/bin/web_ui/'
-const WEB_UI_CONFIG_PATH = '/usr/local/etc/config/web_ui'
-const WEB_SERVER_CONFIG_PATH = '/usr/local/etc/config/web_server'
+const WEB_UI_BUILD_PATH = '/usr/local/bin/web_ui/';
+const WEB_UI_CONFIG_PATH = '/usr/local/etc/config/web_ui';
+const WEB_SERVER_CONFIG_PATH = '/usr/local/etc/config/web_server';
 
 module.exports = function (options, webpack) {
   const node_env = process.env.NODE_ENV.trim();
-  const envArgs =
-    node_env in aggregates ? aggregates[node_env] : node_env.split('-');
+  const envArgs = node_env in aggregates ? aggregates[node_env] : node_env.split('-');
 
-  console.log(
-    "##### IF YOU DON'T SEE THIS, YOUR WEBPACK IS NOT BUILDING CORRECTLY #####",
-  );
+  console.log('##### IF YOU SEE THIS, YOUR WEBPACK IS BUILDING CORRECTLY #####');
 
   // default config - we will always want these options, regardless of run mode
   const config = {
@@ -42,6 +39,20 @@ module.exports = function (options, webpack) {
       ...options.plugins,
       new webpack.optimize.LimitChunkCountPlugin({
         maxChunks: 1,
+      }),
+      new Dotenv(),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: 'src/fims/worker/fimsWorker.js',
+            to: 'fims/worker/fimsWorker.js',
+          },
+          {
+            from: 'src/fims/worker/fimsWorker_replyto.js',
+            to: 'fims/worker/fimsWorker_replyto.js',
+          },
+          { from: 'src/radius/dictionaries', to: 'dictionaries' },
+        ],
       }),
     ],
     module: {
@@ -59,40 +70,6 @@ module.exports = function (options, webpack) {
     },
   };
 
-  config.plugins.push(
-    new webpack.DefinePlugin({
-      RADIUS_DICTIONARY_PATH: JSON.stringify(
-        path.resolve(__dirname, 'src/radius/dictionaries/dictionary.flexgen'),
-      ),
-    }),
-  );
-
-  // use real or mock fims?
-  if (envArgs.includes('fims')) {
-    config.plugins.push(
-      new webpack.ProvidePlugin({
-        FIMS: 'fims',
-      }),
-      new webpack.DefinePlugin({
-        WORKER_PATH: `"${path.resolve(
-          __dirname,
-          'src/fims/worker/fimsWorker.ts',
-        )}"`,
-      }),
-    );
-  } else {
-    config.plugins.push(
-      new webpack.ProvidePlugin({
-        FIMS: path.resolve(__dirname, 'src/fims/mocks/fims.stubs.ts'),
-      }),
-      new webpack.DefinePlugin({
-        WORKER_PATH: JSON.stringify(
-          path.resolve(__dirname, 'src/fims/mocks/mockWorker.ts'),
-        ),
-      }),
-    );
-  }
-
   // dev toolkit, like HMR
   if (envArgs.includes('devTools')) {
     config.plugins.push(new webpack.HotModuleReplacementPlugin());
@@ -104,29 +81,31 @@ module.exports = function (options, webpack) {
     ];
   }
 
-  // autostart after build (for commands like start:dev)
-  if (envArgs.includes('start')) {
+  //Added this check so that the paths can be set by process in prod
+  if (node_env !== 'prod') {
+    // autostart after build (for commands like start:dev)
+    if (envArgs.includes('start')) {
+      config.plugins.push(
+        new RunScriptWebpackPlugin({
+          name: options.output.filename,
+          autoRestart: false,
+          args: [WEB_UI_BUILD_PATH, WEB_UI_CONFIG_PATH, WEB_SERVER_CONFIG_PATH],
+        }),
+      );
+    }
+
     config.plugins.push(
-      new RunScriptWebpackPlugin({
-        name: options.output.filename,
-        autoRestart: false,
-        args: [WEB_UI_BUILD_PATH, WEB_UI_CONFIG_PATH, WEB_SERVER_CONFIG_PATH]
+      new webpack.DefinePlugin({
+        CONFIG_PATH: `"${WEB_SERVER_CONFIG_PATH}/web_server.json"`,
+      }),
+    );
+
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        WEB_UI_JSON_CONFIG_PATH: `"${WEB_UI_CONFIG_PATH}/web_ui.json"`,
       }),
     );
   }
-
-  config.plugins.push(
-    new webpack.DefinePlugin({
-      CONFIG_PATH: `"${WEB_SERVER_CONFIG_PATH}/web_server.json"`,
-    }),
-  );
-
-  config.plugins.push(
-    new webpack.DefinePlugin({
-      WEB_UI_JSON_CONFIG_PATH: `"${WEB_UI_CONFIG_PATH}/web_ui.json"`,
-    }),
-  );
-
   if (envArgs.includes('noTimeout')) {
     config.plugins.push(
       new webpack.DefinePlugin({

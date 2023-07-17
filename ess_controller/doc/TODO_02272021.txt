@@ -1,0 +1,123 @@
+TODO 02272021
+
+
+Try unordered_map for varsmap and varmap.
+
+Put in place a proper dict for options []
+Convert calcfcn to use a variables:[] array.
+
+In general the new scheduler API is a bit rough.
+
+I would prefer some thing like 
+
+Scheduler API
+        run Func with Av once [[ after xxx seconds] with yy priority] as SchedId
+        run Func with Av every [aa seconds]  [[ after xxx seconds] with yy priority] as SchedId
+        stop schedId [after xxx seconds]
+
+     The complexity of the schedInstance could be hidden.
+
+The wake system in the assets asset_manager structure can be removed.
+The cascade AI stuff can go too.
+
+The GPIO stuff needs to be reworked
+define the pins and names in the gpio config and pick it up in the ess_controller.
+this probably means we have to send the pin information over with the pub.
+
+The getmapscj takes far too long. must be able to speed this up.
+opts are a mess maybe clean them up.
+
+Need to put all the subs in the template file and finally do the fims connetc/sub when all of these are in place.
+
+At the moment we receive all the pubs from modbus. Only a few are needed, we could auto determine the actual pubs we need to subscribe to in the lins / vlinks.
+Unless a varaible is mentioned there we dont need to know about it.
+
+Consider how to do 
+
+
+
+
+include/assetFunc.h:// TODO review after MVP this is so much like the HB test. We should subclass again.
+include/asset.h:// TODO combine the  asset and asset manager after MVP
+                    for discussion I think we may be OK with it as is for a while 
+include/asset.h:// TODO remove old wake level stuff  after MVP
+include/asset.h:// TODO  run_init / run_wakeup deprecated after MVP
+include/asset.h:// TODO  send_command ... old code remove after MVP
+include/asset.h:// TODO runchildren . manager loop . man_timer_loop all old code remove after MVP
+src/asset.cpp:// TODO after MVP remove ass_timer_loop it is deprecated
+src/asset.cpp:// TODO after MVP remove asset_manager::timer_loop stuff
+src/asset.cpp:// TODO after MVP remove asset_manager fims_loop
+include/asset.h:// TODO cascadeAI cascade AM, old Code remove after MVP
+include/asset.h:// TODO remove chan_data stuff after MVP
+src/asset.cpp:// TODO after MVP remove the asset / asset manager wakeup structure is is deprecated
+include/assetVar.h:// TODO after MVP loose IsDiff
+include/assetVar.h:// TODO map_lock  is not used remove after <MVP
+include/assetVar.h:// TODO loose IsDiff after MVP
+src/assetVar.cpp:// TODO after MVP ,loose IsDiff in extras
+                 yup needs to be done
+include/asset.h:// TODO remove default log dir
+include/asset.h:// TODO after MVP find out which (debugConfig assConfigure) is now used
+include/assetVar.h:// TODO AFTER MVP use featdict for options
+include/channel.h:// TODO work out how [&](){....} ( enclosure)  works...
+include/channel.h:// TODO deprecated remove after MVP
+[vagrant@localhost ess_controller]$ grep TODO src/*.cpp
+src/asset.cpp:// TODO after MVP remove the asset/asset manager split make them the same structure
+src/asset.cpp:// TODO after MVP tidy up amConfig
+src/asset.cpp:// TODO after MVP make full use of the Vlists for pubs subs and blocks
+src/assetVar.cpp:// TODO after MVP review the cj outValue system do we use it ??
+src/assetVar.cpp:// TODO after MVP get full data from an AAVAR Param not just the name
+src/assetVar.cpp:// TODO after MVP add all assetAction  into a Feat Dict
+src/assetVar.cpp:// TODO after MVP Rework single and options for showVarcJ  to make more sense
+src/assetVar.cpp:// TODO after MVP get showvarCJ to work properly for naked stuff
+src/assetVar.cpp:// TODO after MVP possibly search for alarm already posted
+src/ess_controller.cpp:// TODO after MVP shut down threads individually
+src/ess_controller.cpp:// TODO after MVP collect all the vList subs Then do the fims subscribe THe distribute fims to all ams and ais.
+src/scheduler.cpp:// TODO For discussion after MVP we may use as->func if it is defined
+src/scheduler.cpp:// TODO For discussion after MVP refine / define the use of schedAv (actAv) and targAv
+src/scheduler.cpp:// TODO For discussion after MVP move the action iterators into av->extras so we can use them to return to for sequences. (for varMapUtils really)
+src/varMapUtils.cpp:// TODO after MVP add selective debug for actions/functions
+src/varMapUtils.cpp:// TODO allow replyto for a fims get action .. this leads into the promise implimentation
+src/varMapUtils.cpp:// TODO baseVec review/rework after MVP
+src/varMapUtils.cpp:// TODO rework uriSplit  , move to assetUri after MVP
+src/varMapUtils.cpp:// TODO Urgh createUriListCj is  UGLY needs review/rework adfter MVP
+src/varMapUtils.cpp:// TODO resolve after MVP "get" needs captive replyto address, at the moment its set to nullptr
+src/varMapUtils.cpp:// TODO checkSingleUri review after MVP
+src/varMapUtils.cpp:// TODO after MVP proper mask design for opts and single when creating reply to get
+src/varMapUtils.cpp:// TODO review checkdBlockedUri after MVP
+src/varMapUtils.cpp:// TODO runFimsMsgAm after MVP we need an option to remove the baseuri
+src/varMapUtils.cpp:// TODO review after MVP allow multi level base uris (/assets/bms/bms_1/thing)
+src/varMapUtils.cpp:// TODO review addCjFrags after MVP
+src/varMapUtils.cpp:// TODO review ues of opts after MVP need opts here
+src/varMapUtils.cpp:// TODO is getSubCount still used?  check after MVP
+src/varMapUtils.cpp:// TODO review use of single and opts after MVP merge single and opts
+src/varMapUtils.cpp:// TODO after MVP make "options":{ ...} and "options":[....]  do the same sort of thing (options:[..] just stored cjson encoded values)
+src/varMapUtils.cpp:// TODO review after MVP possibly add more options here like deadband
+src/varMapUtils.cpp:// TODO is get_nfrags used ?? we should use assetUri, review after MVP
+src/varMapUtils.cpp:// TODO after MVP we may expand the actions for sequencing, at least put the x1 and x iterators into av->extras for sequencing use
+src/varMapUtils.cpp:// TODO get /assets/xxx/summary:faults  from an av param "faults" review after MVP
+[vagrant@localhost ess_controller]$ grep TODO funcs/*.cpp
+funcs/CalculateVar.cpp:// TODO after MVP send undefined action to log as well
+funcs/CheckAmComms.cpp:// TODO is CheckAmComms Used ??
+funcs/CheckAmComms.cpp:// TODO put state strings  into a config assetVar so we can set it up from config
+funcs/CheckEssStatus.cpp:// TODO PCSStatus / BmsStatus .. log changes After MVP
+funcs/CheckEssStatus.cpp:// TODO  review after MVP rdAlsrm rdFault after reset increment these up to toAlarm , toFault
+funcs/FaultFuncs.cpp:// TODO review after MVP allow a state change in any input command to change ShutdownCompleted
+funcs/FaultFuncs.cpp:// TODO  after MVP double check faults and alarms we also need a way to pin any aV to give us an alarm/fault
+funcs/FaultFuncs.cpp:// TODO: review ShutdownBMS BEFORE MVP Will just send out a single command to an MBMU register.
+funcs/FaultFuncs.cpp:// TODO after MVP put the command definitions into config
+funcs/FaultFuncs.cpp:// TODO before MVP BMSShutdown  Is this logic complete below?
+funcs/FaultFuncs.cpp:// TODO after MVP put state strings into config
+funcs/FaultFuncs.cpp:// TODO before MVP  Send Alarm for Forced Shutdown
+funcs/GpioControllerFuncs.cpp:// TODO after MVP put config details into an assetVar
+funcs/GpioControllerFuncs.cpp:// TODO after MVP get these GPIO names from config file
+funcs/GpioControllerFuncs.cpp:// TODO after MVP navigate through al the config GPIO items and get pin numbers from them
+funcs/RunFuncs.cpp:// TODO: Similar to BMS, we might only need a single register, just set global active/reactivepower setpoints to zero.
+funcs/RunFuncs.cpp:// TODO after MVP put command defs into config
+funcs/RunFuncs.cpp:// TODO Send Alarm for forced BMS Startup
+funcs/SchedFunctions.cpp:// TODO SendPub after MVP, allow config to define opt for getMapsCj ( fixed at 0x0100  means send for ui)
+funcs/SchedFunctions.cpp:// TODO  (possibly deferred) zero out params after creating the schedItem
+funcs/SchedFunctions.cpp:// TODO  after MVP we use the repTime and endTime to create songle shots or run forever categories but this could be done a bit better
+funcs/SchedFunctions.cpp:// TODO after MVP add amap to the schedItem
+funcs/SchedFunctions.cpp:// TODO review after MVP  needs a pointer to the sysVec
+funcs/SchedFunctions.cpp:// TODO after MVP remove hard code for site/ess
+funcs/UpdateSysTime.cpp:// TODO after MVP put the Max HB value  into a param

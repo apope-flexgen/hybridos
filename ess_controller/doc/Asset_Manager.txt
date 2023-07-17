@@ -1,0 +1,8 @@
+Base Uri components or assets
+Base methods
+ pub   /components/<pfrag1>
+ get
+ set
+ post
+ del
+

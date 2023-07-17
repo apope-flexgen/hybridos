@@ -1,0 +1,122 @@
+{
+    "/system/final": {
+        "notes01":" This is the end of the loader process",
+        "notes02":" All load management entries are complete for ess_configure ",
+        "notes03":"                                       ess_manager ",
+        "notes04":"                                       bms_manager ",
+        "notes05":"                                       pcs_manager ",
+        "notes06":"                                 and  site_manager ",
+        "notes07":"     the system has loaded these files from dbi and evaluated the templates where needed  ",
+        "notes08":"     this system has to satisfy and links or vlinks",
+        "notes09":"     then it has to start all the scheculed processes",
+        "notes10": "rc = loadEssConfig(&vm, vmap, ess_schedule.json, ess_man, &sched)"
+        
+    },
+
+    "/scheduler/ess": {
+        "sched_items":	{
+            "value": true,
+            "targfunc":"xRunSched",
+            "amap":"ess",
+            "note":"send each option as a uri to RunSched or not",
+            "debug":true,
+            "ifChanged": false,
+            "new_options":[ 
+                {"uri":"/sched/ess:essSystemInit"},
+                {"uri":"/sched/ess:every100mSP1", "every":0.1, "offset":0.01},
+                {"uri":"/sched/ess:every100mSP2", "every":0.1, "offset":0.02},
+                {"uri":"/sched/ess:every100mSP3","every":0.1, "offset":0.03},
+                {"uri":"/sched/ess:fastPub","every":0.1, "offset":0.04},
+                {"uri":"/sched/ess:slowPub","every":1, "offset":0.05}
+            ],
+            "actions":	{
+                "onSet":	[{
+                    "func":	[{
+                            "func":	"xSchedItemOpts",
+                            "amap":	"ess",
+                            "initDone":true
+                        }]
+            
+                }]
+            }
+        },
+        "sched_commands":	{
+            "value": true,
+            "xtargav":"/xsystem/commands:vlink",
+            "amap":"ess",
+            "note":"send each option as a uri to HandleSchedItem",
+            "debug":true,
+            "ifChanged": false,
+            "new_options":[ 
+                {"value":"Ok",  "uri":"/system/commands:allalist"},
+                {"value":"Ok",  "uri":"/system/commands:allvlink"},
+                {"value":"Ok",  "uri":"/system/commands:alllink"}
+            ],
+            "actions":	{
+                "onSet":	[{
+                    "func":	[{
+                            "func":	"SchedItemOpts",
+                            "amap":	"ess",
+                            "initDone":true
+                        }]
+            
+                }]
+            }
+        },
+        "sched_run":	{
+            "value": true,
+            "targav":"/system/commands:run",
+            "amap":"ess",
+            "note":"send each option as a uri to HandleSchedItem via the run command",
+            "debug":true,
+            "ifChanged": false,
+            "new_options":[ 
+                {"value":0.11,  "uri":"/sched/ess:essSystemInit"},
+                {"value":0.115, "uri":"/sched/ess:every1000mS",   "every":1.0,  "offset":0.005},
+                {"value":0.12,  "xuri":"/sched/ess:every100mSP1", "every":0.1, "offset":0.01},
+                {"value":0.13,  "xuri":"/sched/ess:every100mSP2", "every":0.1, "offset":0.02},
+                {"value":0.14,  "xuri":"/sched/ess:every100mSP3", "every":0.1, "offset":0.03},
+                {"value":0.141, "uri";"/xschedule/ess:wake100mS", "every":0.1, "offset":0.004   },
+                {"value":0.141, "uri";"/xschedule/pcs:wake100mS", "every":0.1, "offset":0.001   },
+                {"value":0.141, "uri";"/xschedule/bms:wake100mS", "every":0.1, "offset":0.001   },
+                {"value":0.15,  "uri":"/sched/ess:fastPub",       "every":1.05, "offset":0.04},
+                {"value":0.16,  "uri":"/sched/ess:slowPub",       "every":2,  "offset":0.05 }
+            ],
+            "actions":	{
+                "onSet":	[{
+                    "func":	[{
+                            "func":	"SchedItemOpts",
+                            "amap":	"ess",
+                            "initDone":true
+                        }]
+            
+                }]
+            }
+        },
+        "run_monitor": {
+            "value":true,
+            "targav":"/xsystem/commands:runMon",
+            "note":"send each option as a body to runMon",
+            "debug":true,
+            "ifChanged": false,
+            "new_options":[
+
+                {"value":1,"aname":"ess","monitor":"wake_monitor","debug":1},
+                {"value":1,"aname":"bms","monitor":"wake_monitor","debug":1},
+                {"value":1,"aname":"pcs","monitor":"wake_monitor","debug":1}
+
+            ],
+            "actions":	{
+                "onSet":	[{
+                    "func":	[{
+                            "func":	"SchedItemOpts",
+                            "amap":	"ess",
+                            "initDone":true
+                        }]
+            
+                }]
+            }            
+        }
+    }
+}
+

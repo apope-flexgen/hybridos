@@ -61,7 +61,7 @@ Asset::Asset ()
 
     numPhases = 3;
 
-    prev_modbus_heartbeat = -1;    // Value of -1 forces check_fims_timeout() to initialize fims_timer in the first function call
+    prev_watchdog_heartbeat = -1;    // Value of -1 forces check_fims_timeout() to initialize fims_timer in the first function call
 
     // status variables
     numAssetComponents = 0;
@@ -75,7 +75,6 @@ Asset::Asset ()
 
     memset(compNames, 0, sizeof(char*) * MAX_COMPS);
 
-    watchdog_enable = NULL;
     connected_rising_edge_detect = true;
 
     active_power_slew.reset_slew_target();
@@ -90,9 +89,6 @@ Asset::Asset ()
     throttle_timeout_slow_ms = 0.0;
     throttle_deadband_percentage = 0.0;
 
-    // uris
-    uri_clear_faults = NULL;
-
     assetControl = Uncontrolled;
 
     send_FIMS_buf = fmt::memory_buffer();
@@ -102,9 +98,6 @@ Asset::~Asset ()
 {
     if (name != NULL) free(name);
     if (asset_id != NULL) free(asset_id);
-    if (uri_clear_faults != NULL) free(uri_clear_faults);
-    if (uri_component_connected != NULL) free(uri_component_connected);
-    if (uri_modbus_connected != NULL) free(uri_modbus_connected);
 
     for (uint i = 0; i < numAssetComponents; i++)
     {
@@ -166,16 +159,12 @@ Asset::~Asset ()
     current_l3 = NULL;
     if (power_factor)   delete power_factor;
     power_factor = NULL;
-    if (modbus_heartbeat)   delete modbus_heartbeat;
-    modbus_heartbeat = NULL;
+    if (watchdog_heartbeat)   delete watchdog_heartbeat;
+    watchdog_heartbeat = NULL;
     if (component_connected)    delete component_connected;
     component_connected = NULL;
-    if (modbus_connected)   delete modbus_connected;
-    modbus_connected = NULL;
-
-    #ifdef FPS_TEST_MODE
-    delete data_endpoint;
-    #endif
+    if (watchdog_status)   delete watchdog_status;
+    watchdog_status = NULL;
 }
 
 fimsCtl::fimsCtl()
@@ -280,10 +269,6 @@ bool Asset::configure(Type_Configurator* configurator)
 bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator)
 {
     Asset_Configurator* assetConfig = &configurator->assetConfig;
-
-    // #ifdef FPS_TEST_MODE
-    // data_endpoint = new Data_Endpoint();
-    // #endif
 
     // The asset id represents the asset instance. Typically is <asset_type>_<2-digit number> E.g. ess_04, gen_03, solar_02, feed_01, etc. The asset id is required
     cJSON *id = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "id");
@@ -512,19 +497,6 @@ bool Asset::configure_component_vars(Type_Configurator* configurator)
             FPS_ERROR_LOG("Asset::configure_component_vars ~ NULL variables or component_id for %d of %s \n", i, name);
             return false;
         }
-
-        // checks if asset is a feeder by looking for "breaker_control" variable in components
-        cJSON* breaker_control = cJSON_GetObjectItem(variables, "breaker_control");
-        if (breaker_control != NULL) {
-            Asset_Feeder* asset_feeder = static_cast<Asset_Feeder*>(this);
-            cJSON* reg_id = cJSON_GetObjectItem(breaker_control, "register_id");
-            char *breaker_close_uri = strdup(build_uri(comp_id->valuestring, reg_id->valuestring).c_str());
-            char *breaker_open_uri = strdup(build_uri(comp_id->valuestring, reg_id->valuestring).c_str());
-            asset_feeder->set_breaker_close_uri(breaker_close_uri);
-            asset_feeder->set_breaker_open_uri(breaker_open_uri);
-            delete [] breaker_close_uri;
-            delete [] breaker_open_uri;
-        }
         compNames[i] = assetConfig->is_template() ? strdup(replace_wildcard_with_number(comp_id->valuestring, assetConfig->template_index)) : strdup(comp_id->valuestring);
 
         // Iterate through each variable in this component and insert its information into a FIMS_Object
@@ -543,9 +515,6 @@ bool Asset::configure_component_vars(Type_Configurator* configurator)
         }
     }
 
-    #ifdef FPS_TEST_MODE
-    data_endpoint = new Data_Endpoint();
-    #endif
     return true;
 }
 
@@ -560,25 +529,28 @@ bool Asset::configure_component_vars(Type_Configurator* configurator)
 */
 bool Asset::configure_common_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map)
 {
-    configure_single_fims_var(asset_var_map,&active_power_setpoint,"active_power_setpoint");
-    configure_single_fims_var(asset_var_map,&reactive_power_setpoint,"reactive_power_setpoint");
-    configure_single_fims_var(asset_var_map,&active_power,"active_power");
-    configure_single_fims_var(asset_var_map,&reactive_power,"reactive_power");
-    configure_single_fims_var(asset_var_map,&apparent_power,"apparent_power");
-    configure_single_fims_var(asset_var_map,&voltage_l1_n,"voltage_l1_n");
-    configure_single_fims_var(asset_var_map,&voltage_l2_n,"voltage_l2_n");
-    configure_single_fims_var(asset_var_map,&voltage_l3_n,"voltage_l3_n");
-    configure_single_fims_var(asset_var_map,&voltage_l1_l2,"voltage_l1_l2");
-    configure_single_fims_var(asset_var_map,&voltage_l2_l3,"voltage_l2_l3");
-    configure_single_fims_var(asset_var_map,&voltage_l3_l1,"voltage_l3_l1");
-    configure_single_fims_var(asset_var_map,&current_l1,"current_l1");
-    configure_single_fims_var(asset_var_map,&current_l2,"current_l2");
-    configure_single_fims_var(asset_var_map,&current_l3,"current_l3");
-    configure_single_fims_var(asset_var_map,&power_factor,"power_factor");
-    configure_single_fims_var(asset_var_map,&modbus_heartbeat,"modbus_heartbeat",Int);
-    configure_single_fims_var(asset_var_map,&component_connected,"component_connected",Bool);
-    configure_single_fims_var(asset_var_map,&modbus_connected,"modbus_connected",Bool);
-    return true;
+    bool configured = true;
+    configured = configured && configure_single_fims_var(asset_var_map,&active_power_setpoint,"active_power_setpoint");
+    configured = configured && configure_single_fims_var(asset_var_map,&reactive_power_setpoint,"reactive_power_setpoint");
+    configured = configured && configure_single_fims_var(asset_var_map,&active_power,"active_power");
+    configured = configured && configure_single_fims_var(asset_var_map,&reactive_power,"reactive_power");
+    configured = configured && configure_single_fims_var(asset_var_map,&apparent_power,"apparent_power");
+    configured = configured && configure_single_fims_var(asset_var_map,&voltage_l1_n,"voltage_l1_n");
+    configured = configured && configure_single_fims_var(asset_var_map,&voltage_l2_n,"voltage_l2_n");
+    configured = configured && configure_single_fims_var(asset_var_map,&voltage_l3_n,"voltage_l3_n");
+    configured = configured && configure_single_fims_var(asset_var_map,&voltage_l1_l2,"voltage_l1_l2");
+    configured = configured && configure_single_fims_var(asset_var_map,&voltage_l2_l3,"voltage_l2_l3");
+    configured = configured && configure_single_fims_var(asset_var_map,&voltage_l3_l1,"voltage_l3_l1");
+    configured = configured && configure_single_fims_var(asset_var_map,&current_l1,"current_l1");
+    configured = configured && configure_single_fims_var(asset_var_map,&current_l2,"current_l2");
+    configured = configured && configure_single_fims_var(asset_var_map,&current_l3,"current_l3");
+    configured = configured && configure_single_fims_var(asset_var_map,&power_factor,"power_factor");
+    configured = configured && configure_single_fims_var(asset_var_map,&watchdog_heartbeat,"watchdog_heartbeat",Int);
+    configured = configured && configure_single_fims_var(asset_var_map,&component_connected,"component_connected",Bool);
+    // Configure watchdog variables if the feature is enabled
+    configured = configured && configure_watchdog_vars(asset_var_map);
+    configured = configured && configure_hardcoded_vars(asset_var_map);
+    return configured;
 }
 
 // Helper function used by configure_single_fims_var. Could maybe be moved into the Fims_Object class
@@ -671,13 +643,13 @@ bool Asset::configure_single_fims_var(std::map <std::string, Fims_Object*> * con
     }
 
     // Make URI key
-    std::string assets_uri = build_assets_uri(varID);
+    std::string variable_uri = build_asset_variable_uri(varID);
 
     // Inputs and special case raw values
     if ( comesFromComponent )
     {
         // Point the pointer at the Fims_Object in the map
-        *fimsVar = asset_var_map->find( assets_uri ) != asset_var_map->end() ? asset_var_map->at( assets_uri ) : NULL;
+        *fimsVar = asset_var_map->find( variable_uri ) != asset_var_map->end() ? asset_var_map->at( variable_uri ) : NULL;
         // If this is not a required variable and it was left out of assets.json, make it a skeleton Fims_Object to avoid seg faulting
         // TODO: Put checks in place so that if a component variable does not exist in assets.json, we do not try to access it in hybridos
         if (*fimsVar == NULL)
@@ -691,13 +663,65 @@ bool Asset::configure_single_fims_var(std::map <std::string, Fims_Object*> * con
         make_new_fimsVar(fimsVar, type, defaultFloat, defaultInt, defaultBool, varID, varName, varUnits, varScaler);
 
         // If this is a special case variable, delete the raw value from asset_var_map so the calculated value can replace it
-        if ( asset_var_map->find( assets_uri ) != asset_var_map->end() )
-            asset_var_map->erase( build_assets_uri(varID) );
+        if ( asset_var_map->find( variable_uri ) != asset_var_map->end() )
+            asset_var_map->erase( variable_uri );
 
         // Insert the newly configured Fims_Object into asset_var_map
-        asset_var_map->insert(std::make_pair(assets_uri, *fimsVar));
+        asset_var_map->insert(std::make_pair(variable_uri, *fimsVar));
     }
     (*fimsVar)->is_primary = is_primary;
+    return true;
+}
+
+/**
+ * Configure watchdog specific variables which are hard-coded and will ignore the values provided in configuration
+ */
+bool Asset::configure_watchdog_vars(std::map <std::string, Fims_Object*> * const asset_var_map)
+{
+    // Startup connected as true, else it will cause a fault on startup before it reads the modbus value
+    if (watchdog_enable)
+        component_connected->value.set(true);
+
+    // Create a watchdog status Fims_Object if the watchdog timer is enabled
+    bool watchdog_status_configured = configure_single_fims_var(asset_var_map,&watchdog_status,"watchdog_status",Bool,0,0,false,false,"Watchdog Status");
+    if (!watchdog_status_configured)
+    {
+        FPS_ERROR_LOG("Failed to configure watchdog_status register for watchdog feature");
+        return false;
+    }
+
+    // Create a watchdog fault Fims_Object if the watchdog timer is enabled and watchdog_status was configured successfully
+    std::string assets_uri = build_asset_variable_uri("watchdog_fault");
+    // Replace the variable provided in configuration if it exists
+    if ( asset_var_map->find( assets_uri ) != asset_var_map->end() )
+        asset_var_map->erase( assets_uri );
+
+    // Manually configure watchdog fault fields
+    watchdog_fault.set_variable_id("watchdog_fault");
+    watchdog_fault.set_name("Watchdog Connection Fault");
+    watchdog_fault.set_type("Int");
+    watchdog_fault.set_ui_type("fault");
+    watchdog_fault.set_value_type(Int);
+    watchdog_fault.num_options = 1;
+    watchdog_fault.options_name.insert(watchdog_fault.options_name.begin(), "Watchdog Component Disconnected");
+    watchdog_fault.options_value.insert(watchdog_fault.options_value.begin(), 0);
+    asset_var_map->insert(std::make_pair(assets_uri, &watchdog_fault));
+    latched_faults.insert(std::make_pair(watchdog_fault.get_variable_id(), 0));
+    return true;
+}
+
+/**
+ * Configure non-watchdog hardcoded variables, in other words variables which aren't supplied inside of config but are
+ * surfaced as part of fims GET requests.
+ */
+bool Asset::configure_hardcoded_vars(std::map<std::string, Fims_Object *> *const asset_var_map)
+{
+    make_new_fimsVar(&is_faulted, Bool, 0, 0, false, "is_faulted", "Is Faulted");
+    make_new_fimsVar(&is_alarmed, Bool, 0, 0, false, "is_alarmed", "Is Alarmed");
+    std::string is_faulted_uri = build_asset_variable_uri("is_faulted");
+    std::string is_alarmed_uri = build_asset_variable_uri("is_alarmed");
+    asset_var_map->insert(std::make_pair(is_faulted_uri, is_faulted));
+    asset_var_map->insert(std::make_pair(is_alarmed_uri, is_alarmed));
     return true;
 }
 
@@ -714,7 +738,7 @@ bool Asset::validate_config(std::map <std::string, Fims_Object*> * const asset_v
     for( auto it = required_variables.begin() ; it != required_variables.end() ; ++it )
     {
         // Construct the expected key of the form "/assets/<asset_type>/<asset_id>/<variable_name>"
-        std::string variable_uri = build_assets_uri( *it );
+        std::string variable_uri = build_asset_variable_uri( *it );
         // Check if the variable is in the asset variables map
         if ( asset_var_map->find( variable_uri ) == asset_var_map->end() )
         {
@@ -742,7 +766,8 @@ bool Asset::validate_config(std::map <std::string, Fims_Object*> * const asset_v
 
 // Tells the component to clear its faults and starts timer to clear alarm/fault registers
 // Timer gives component time to clear faults and stop reporting them so registers do not get reset
-void Asset::clear_component_faults(void)
+// Internal alerts will then be cleared when the timer expires in the process_asset() step
+void Asset::clear_alerts(void)
 {
     send_to_comp_uri(true, uri_clear_faults);
     clear_fault_registers_flag = true;
@@ -756,13 +781,16 @@ void Asset::clear_component_faults(void)
  * unlatched, because some components may only report an alert value when it is 
  * non-zero.
  */
-void Asset::clear_alerts(void)
+void Asset::lower_alert_bits(void)
 {
     // Clear the component-connected unlatched fault registers
     for(auto component_fault_register : component_fault_registers)
     {
         component_fault_register->clear_fims_bit_field();
     }
+
+    // Clear the asset level unlatched fault registers - only modbus connection fault for now
+    watchdog_fault.value.value_bit_field = 0;
 
     // Clear the latched fault values
     for(auto&& latched_fault : latched_faults)
@@ -812,8 +840,7 @@ bool Asset::handle_get(fims_message *pmsg, std::map<std::string, Fims_Object*> *
 
     // URI is /assets/<asset type>/<asset ID>
     if (pmsg->nfrags < 4) {
-        auto asset_var_it = asset_var_map->begin(); // need to instantiate variable to be able to pass as reference
-        if (!add_asset_data_to_buffer(send_FIMS_buf, asset_var_map, asset_var_it, strcmp(asset_type_id, ESS_TYPE_ID) != 0)) {
+        if (!add_asset_data_to_buffer(send_FIMS_buf, asset_var_map, strcmp(asset_type_id, ESS_TYPE_ID) != 0)) {
             return false;
         }
         return send_buffer_to(pmsg->replyto, send_FIMS_buf);
@@ -830,12 +857,9 @@ bool Asset::handle_get(fims_message *pmsg, std::map<std::string, Fims_Object*> *
  * @brief Adds all data for this asset instance to the given buffer.
  * @param buf Buffer to which the data must be added.
  * @param asset_var_map Map of all asset variables across all asset instances.
- * @param search_it Reference to an iterator of the asset_var_map. When several asset instances are being added to the same buffer, the same iterator can be used
- *                  so that the entire asset var map does not have to be re-searched each time. When only one asset instance is being added to a buffer, it is
- *                  expected that asset_var_map::begin() will be passed as the search iterator.
  * @return True if the data was added to the buffer successfully, or false if there was an error.
 */
-bool Asset::add_asset_data_to_buffer(fmt::memory_buffer &buf, std::map<std::string, Fims_Object*> *asset_var_map, std::map<std::string, Fims_Object*>::iterator &search_it, bool clothed)
+bool Asset::add_asset_data_to_buffer(fmt::memory_buffer &buf, std::map<std::string, Fims_Object*> *asset_var_map, bool clothed)
 {
     // begin asset instance object with opening curly brace
     bufJSON_StartObject(buf);
@@ -850,7 +874,8 @@ bool Asset::add_asset_data_to_buffer(fmt::memory_buffer &buf, std::map<std::stri
     }
 
     // search through the map of asset variables until the first variable for this asset instance is found
-    std::string asset_instance_uri = "/assets/" + std::string(asset_type_id) + '/' + std::string(asset_id);
+    std::string asset_instance_uri = "/assets/" + std::string(asset_type_id) + '/' + std::string(asset_id) + '/';
+    auto search_it = asset_var_map->begin();
     for (; search_it != asset_var_map->end(); ++search_it) {
         if (search_it->first.compare(0, asset_instance_uri.size(), asset_instance_uri) == 0)
             break;
@@ -900,7 +925,7 @@ bool Asset::add_variable_to_buffer(std::string uri, const char* variable_id, fmt
     // TODO: can we just index into the map with the provided URI?
     auto asset_it = asset_var_map->begin();
     for (asset_it = asset_it; asset_it != asset_var_map->end(); asset_it++) {
-        if (asset_it->first.compare(0, uri.size(), uri) == 0)
+        if (asset_it->first == uri)
             break;
     }
 
@@ -935,32 +960,20 @@ bool Asset::add_variable_to_buffer(std::string uri, const char* variable_id, fmt
     return true;
 }
 
-void Asset::find_first_appearance_in_asset_var_map(const char* variable_id, std::map<std::string, Fims_Object*> *asset_var_map, std::map<std::string, Fims_Object*>::iterator &search_it)
-{
-    std::string search_uri = "/assets/" + std::string(asset_type_id) + std::string(asset_id);
-    if (variable_id != NULL) {
-        search_uri += '/' + variable_id;
-    }
-
-    for (; search_it != asset_var_map->end(); ++search_it) {
-        if (search_it->first.compare(0, search_uri.size(), search_uri) == 0)
-            return;
-    }
-}
-
-bool Asset::process_set(std::string uri, cJSON* fimsBody)
+/**
+ * @brief Called by an asset's concrete implementation of the handle_set function when the
+ * target endpoint is not a type-specific endpoint.
+ * @param uri URI of the target control.
+ * @param body Desired new value of the target control.
+*/
+bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON &body)
 {
     cJSON* maint_mode_obj = NULL;
     cJSON* lock_mode_obj = NULL;
     cJSON* lockValueObject = NULL;
     cJSON* maintValueObject = NULL;  
-    if (fimsBody == NULL)
-    {
-        //FPS_DEBUG_LOG("Fims Body is Null; exiting out\n");
-        return false;
-    }
-    maint_mode_obj = grab_naked_or_clothed(fimsBody, maint_mode_obj, "maint_mode");
-    lock_mode_obj = grab_naked_or_clothed(fimsBody, lock_mode_obj, "lock_mode");
+    maint_mode_obj = grab_naked_or_clothed(body, maint_mode_obj, "maint_mode");
+    lock_mode_obj = grab_naked_or_clothed(body, lock_mode_obj, "lock_mode");
     if (lock_mode_obj == NULL && maint_mode_obj == NULL)
         return false;
 
@@ -999,7 +1012,7 @@ bool Asset::process_set(std::string uri, cJSON* fimsBody)
     }
 
     //received lockdown mode update
-    else {        
+    else {
         lockValueObject = cJSON_GetObjectItem(lock_mode_obj, "value");
         FPS_INFO_LOG("Received lockdown message\n");
         // allows lockdown sets only when in maintenance mode
@@ -1034,6 +1047,52 @@ bool Asset::process_set(std::string uri, cJSON* fimsBody)
 }
 
 /**
+ * Process watchdog feature to determine availability of the asset
+ */
+bool Asset::process_watchdog_status()
+{
+    if (!watchdog_enable)
+        return true;
+
+    if (!component_connected->value.value_bool)
+        FPS_ERROR_LOG("Component not connected");
+
+    watchdog_status->value.value_bool = !check_fims_timeout() && component_connected->value.value_bool;
+    // Check watchdog_fault after getting first watchdog_status value
+    auto latched_fault_it = latched_faults.find("watchdog_fault");
+    if (latched_fault_it == latched_faults.end())
+    {
+        // map initialized incorrectly when processing configuration
+        FPS_ERROR_LOG("Fault value undefined for watchdog_fault in %s process_asset()", get_id());
+    } 
+    else if ( latched_fault_it->second == 0 && !watchdog_status->value.value_bool ) {
+        char faultMsg[1024];
+        clearFaultsControlEnable = true;
+        watchdog_fault.value.value_bit_field = 1;
+        latched_fault_it->second = 1;
+        snprintf(faultMsg, 1024, "Fault received: %s, asset: %s", watchdog_fault.options_name[0].c_str(), name);
+        emit_event("Assets", faultMsg, 4);
+    }
+
+    if(connected_rising_edge_detect != component_connected->value.value_bool)
+    {
+        char msg[1024];
+        if(component_connected->value.value_bool)
+        {  
+            sprintf(msg, "The Asset %s was connected", get_name());
+            emit_event("Assets", msg, 2);
+        }
+        else
+        {
+            sprintf(msg, "The Asset %s was disconnected", get_name());
+            emit_event("Assets", msg, 3);
+        }
+        connected_rising_edge_detect = component_connected->value.value_bool;   
+    }
+    return watchdog_status->value.value_bool;
+}
+
+/**
  * Publish handling moved to Asset_Manager
  * This function now handles any asset level processing that cannot be accomplished within Asset_Manager
  * Used to update the Asset-instance level status based on publishes from components
@@ -1061,7 +1120,7 @@ void Asset::process_asset(void)
     clock_gettime(CLOCK_MONOTONIC, &now);
     if (clear_fault_registers_flag && check_expired_time(now, clear_faults_time))
     {
-        clear_alerts();
+        lower_alert_bits();
         clear_fault_registers_flag = false;
         send_to_comp_uri(false, uri_clear_faults); // end clear faults pulse to component
     }
@@ -1108,8 +1167,10 @@ void Asset::process_asset(void)
             latched_fault_it->second = fault_register->value.value_bit_field;
         }
     }
-    // if there were previously no faults and there is now a fault, mark this asset as newly faulted
-    newly_faulted = (previously_no_faults && get_num_active_faults() != 0);
+
+    is_faulted->value.set(get_num_active_faults() != 0);
+    newly_faulted = is_faulted->value.value_bool ? previously_no_faults : newly_faulted;
+    is_alarmed->value.set(get_num_active_alarms() != 0);
 
     // process component alarm registers
     for (auto alarm_register : component_alarm_registers)
@@ -1180,29 +1241,9 @@ void Asset::process_asset(void)
     {
         FPS_ERROR_LOG("Asset::process_asset - invalid status type received\n");
     }
-    
-    // process available status: only available if there are no faults, asset is not in maintenance mode, fims has not timed out, and connected
-    if(watchdog_enable){
-        modbus_connected->value.value_bool = !check_fims_timeout() && component_connected->value.value_bool;
-        isAvail = (get_num_active_faults() == 0) && !inMaintenance && modbus_connected->value.value_bool;
-        if(connected_rising_edge_detect != component_connected->value.value_bool)
-        {
-            char msg[1024];
-            if(component_connected->value.value_bool)
-            {  
-                sprintf(msg, "The Asset %s was connected", get_name());
-                emit_event("Assets", msg, 2);
-            }
-            else
-            {
-                sprintf(msg, "The Asset %s was disconnected", get_name());
-                emit_event("Assets", msg, 3);
-            }
-            connected_rising_edge_detect = component_connected->value.value_bool;   
-        }
-    }
-    else
-        isAvail = (get_num_active_faults() == 0) && !inMaintenance;
+
+    // Availability logic, including watchdog status if the feature is enabled
+    isAvail = (get_num_active_faults() == 0) && !inMaintenance && process_watchdog_status();
 
     // process running status
     if (status_type == random_enum)
@@ -1307,8 +1348,9 @@ int Asset::get_num_active_faults(void) const
     int num_faults = 0;
     for (auto&& name_value_pair : latched_faults)
     {
-        if ( name_value_pair.second > 0 )
+        if ( name_value_pair.second > 0 ) {
             ++num_faults;
+        }
     }
     return num_faults;
 }
@@ -1432,6 +1474,14 @@ float Asset::get_power_factor(void) const
     return power_factor->value.value_float;
 }
 
+bool Asset::get_watchdog_fault(void) const
+{
+    if (watchdog_enable) {
+        return watchdog_fault.value.value_bit_field != 0;
+    }
+    return false;
+}
+
 float Asset::get_active_power(void) const
 {
     return active_power->value.value_float;
@@ -1535,10 +1585,9 @@ float Asset::get_rated_apparent_power(void) const
     return rated_apparent_power_kva;
 }
 
-// This function takes as arguments an asset id and a variable id and returns
-// an assets URI of the form "/assets/<asset_type>/<asset id>/<variable id>"
-// Changed from malloc'd string pointer to std::string which is deallocated when outside scope
-std::string Asset::build_assets_uri(const char* var)
+// This function takes as argument a variable id and returns
+// a variable URI of the form "/assets/<asset_type>/<asset id>/<variable id>"
+std::string Asset::build_asset_variable_uri(const char* var)
 {
     char uriWithAsset[1024];
     snprintf(uriWithAsset, 1024, "/assets/%s/%s/%s", asset_type_id, asset_id, var);
@@ -1640,7 +1689,7 @@ bool Asset::var_maps_insert(cJSON* varJson, char* compID, std::map <std::string,
         if (strcmp(type->valuestring,"Float") == 0 ||
             strcmp(type->valuestring,"Int") == 0 ||
             strcmp(type->valuestring,"Bool") == 0 ||
-            strcmp(type->valuestring,"Bit String") == 0 ||
+            strcmp(type->valuestring,"Bit Field") == 0 ||
             strcmp(type->valuestring,"Random Enum") == 0 ||
             strcmp(type->valuestring,"Status") == 0)
         {
@@ -1745,8 +1794,8 @@ bool Asset::var_maps_insert(cJSON* varJson, char* compID, std::map <std::string,
     // both uri build functions create a C-style string, so use the string constructor function to convert it to a string object
     // build_uri prepends "/components/"
     std::string components_uri( build_uri(compID, register_id->valuestring) );
-    // build_assets_uri prepends "/assets/<asset_type>/"
-    std::string assets_uri = build_assets_uri(variable_string);
+    // build_asset_variable_uri prepends "/assets/<asset_type>/"
+    std::string variable_uri = build_asset_variable_uri(variable_string);
     
     // Component uri is held by Fims_Object's `component_uri` member variable
     component_variable->set_component_uri( components_uri.c_str() );
@@ -1762,7 +1811,7 @@ bool Asset::var_maps_insert(cJSON* varJson, char* compID, std::map <std::string,
         component_var_map->insert(std::make_pair(components_uri, std::vector<Fims_Object*>({component_variable})));
     }
     // Insert the Fims_Object pointer into the assets variable map
-    asset_var_map->insert(std::make_pair(assets_uri, component_variable));
+    asset_var_map->insert(std::make_pair(variable_uri, component_variable));
 
     // Add to the alarm/fault data objects as appropriate
     if (strcmp(component_variable->get_ui_type(), "alarm") == 0)
@@ -1830,19 +1879,19 @@ bool fimsCtl::configure(cJSON* cfg_json, jsonBuildOption build_option, void* dis
     return true;
 }
 
-bool Asset::json_object_send(std::string &value, const char* uri)
+bool Asset::json_object_send(std::string &value, const std::string& uri)
 {
     // Disable publish if second controller (shadow mode)
     if (!*is_primary)
         return true;
 
-    if (value.empty() || (uri == NULL))
+    if (value.empty() || (uri.empty()))
     {
         FPS_ERROR_LOG("Asset::json_object_send - value or uri does not exist\n");
         return false;
     }
 
-    p_fims->Send("set", uri, NULL, value.c_str());
+    p_fims->Send("set", uri.c_str(), NULL, value.c_str());
     return true;
 }
 
@@ -1894,12 +1943,12 @@ long Write_Rate_Throttle::current_timestamp(void)
     return ((now.tv_sec*1000) + (now.tv_nsec/1000000)); // convert everything into ms
 }
 
-bool Asset::send_to_comp_uri(bool value, const char* uri)
+bool Asset::send_to_comp_uri(bool value, const std::string& uri)
 {
     // Clear buffer for use
     send_FIMS_buf.clear();
 
-    if (uri == NULL)
+    if (uri.empty())
     {
         FPS_ERROR_LOG("Asset::send_to_comp_uri (bool) - uri does not exist\n");
         return false;
@@ -1916,12 +1965,12 @@ bool Asset::send_to_comp_uri(bool value, const char* uri)
     return true;
 }
 
-bool Asset::send_to_comp_uri(const char* value, const char* uri)
+bool Asset::send_to_comp_uri(const char* value, const std::string& uri)
 {
     // Clear buffer for use
     send_FIMS_buf.clear();
 
-    if ((value == NULL) || (uri == NULL))
+    if ((value == NULL) || (uri.empty()))
     {
         FPS_ERROR_LOG("Asset::send_to_comp_uri (char) - value or uri does not exist\n");
         return false;
@@ -1938,12 +1987,12 @@ bool Asset::send_to_comp_uri(const char* value, const char* uri)
     return true;
 }
 
-bool Asset::send_to_comp_uri(float value, const char* uri)
+bool Asset::send_to_comp_uri(float value, const std::string& uri)
 {
     // Clear buffer for use
     send_FIMS_buf.clear();
 
-    if (uri == NULL)
+    if (uri.empty())
     {
         FPS_ERROR_LOG("Asset::send_to_comp_uri (float) - uri does not exist\n");
         return false;
@@ -1960,12 +2009,12 @@ bool Asset::send_to_comp_uri(float value, const char* uri)
     return true;
 }
 
-bool Asset::send_to_comp_uri(int value, const char* uri)
+bool Asset::send_to_comp_uri(int value, const std::string& uri)
 {
     // Clear buffer for use
     send_FIMS_buf.clear();
 
-    if (uri == NULL)
+    if (uri.empty())
     {
         FPS_ERROR_LOG("Asset::send_to_comp_uri (int) - uri does not exist\n");
         return false;
@@ -2172,8 +2221,7 @@ void build_reset_option(fmt::memory_buffer &bufJresetTargetOption)
 }
 
 // This function takes as arguments a component id and a register id and returns
-// a component URI of the form "/components/<component id>/<register id>"
-// Changed from malloc'd string pointer to std::string which is deallocated when outside scope
+// a component URI of the form "/components/<component id>/<register id>".
 std::string build_uri(char* comp, char* reg)
 {
     char uriWithComp[1024];
@@ -2185,9 +2233,9 @@ std::string build_uri(char* comp, char* reg)
 bool Asset::check_fims_timeout(void)
 {
     bool prev_fims_timeout = fims_timeout;
-    if(modbus_heartbeat->value.value_int != prev_modbus_heartbeat)     // New counter value seen, so reset fims_timer
+    if(watchdog_heartbeat->value.value_int != prev_watchdog_heartbeat)     // New counter value seen, so reset fims_timer
     {
-        prev_modbus_heartbeat = modbus_heartbeat->value.value_int;               // Store most recent counter value
+        prev_watchdog_heartbeat = watchdog_heartbeat->value.value_int;               // Store most recent counter value
         clock_gettime(CLOCK_MONOTONIC, &fims_timer);            // Get current time
         increment_timespec_ms(fims_timer, watchdog_timeout_ms); // Reset fims timeout clock
         fims_timeout = false;                                   // Return false since new counter value means fims has not timed out

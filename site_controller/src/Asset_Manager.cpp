@@ -85,7 +85,7 @@ void Asset_Manager::fims_data_parse(fims_message *pmsg)
     }
     else if (strcmp(pmsg->method, "set") == 0)
     {
-        Asset_Manager::handle_set(pmsg->pfrags, pmsg->nfrags, pmsg->replyto, pmsg->body);
+        Asset_Manager::handle_set(*pmsg);
     }
     else if (strcmp(pmsg->method, "post") == 0)
     {
@@ -237,19 +237,21 @@ void Asset_Manager::handle_pub_status_options(cJSON* cJcomp, Fims_Object* fimsCo
             FPS_ERROR_LOG("Asset_Manager::process_pub Index into component status string array out of bounds, %d, updateAsset()\n", cJitemValue->valueint);
     }
 
-    // Find the matching Fims_Object in the assets map to update Asset-level variables
+    // Find the matching Fims_Objects in the assets map to update Asset-level variables (only if ID name = "status")
+    if (strcmp(fimsComp->get_variable_id(), "status") != 0) {
+        return;
+    }
     auto asset_it = asset_var_map.begin();
     for (asset_it = asset_it; asset_it != asset_var_map.end(); asset_it++) {
-        // Point to the same object in memory (only if ID name = "status")
-        if ((asset_it->second == fimsComp) && (strncmp(fimsComp->get_variable_id(), "status", strlen("status")) == 0))
+        if (asset_it->second == fimsComp)
         {
-            if (asset_it->first.find("/assets/ess") < asset_it->first.size())
+            if (asset_it->first.find("/assets/ess/") < asset_it->first.size())
                 ess_manager->process_pub(asset_it->first, &fimsComp->options_name, fimsComp->value.value_bit_field);
-            else if (asset_it->first.find("/assets/feeders") < asset_it->first.size())
+            else if (asset_it->first.find("/assets/feeders/") < asset_it->first.size())
                 feeder_manager->process_pub(asset_it->first, &fimsComp->options_name, fimsComp->value.value_bit_field);
-            else if (asset_it->first.find("/assets/generators") < asset_it->first.size())
+            else if (asset_it->first.find("/assets/generators/") < asset_it->first.size())
                 generator_manager->process_pub(asset_it->first, &fimsComp->options_name, fimsComp->value.value_bit_field);
-            else if (asset_it->first.find("/assets/solar") < asset_it->first.size())
+            else if (asset_it->first.find("/assets/solar/") < asset_it->first.size())
                 solar_manager->process_pub(asset_it->first, &fimsComp->options_name, fimsComp->value.value_bit_field);
         }
     }
@@ -408,59 +410,38 @@ void Asset_Manager::handle_get(fims_message *pmsg)
     }
 }
 
-/****************************************************************************************/
-void Asset_Manager::handle_set(char** pfrags, int nfrags, char* replyto, char* body)
+/**
+ * @brief Handles SETs to URIs beginning with /assets.
+ * @param msg FIMS SET message.
+*/
+void Asset_Manager::handle_set(fims_message &msg)
 {
-     /* set messages only allowed from UI (with uri starting with '/assets' */
-    if (strncmp(pfrags[0], "assets", strlen("assets")) != 0)
-    {
-        FPS_DEBUG_LOG("Message doesn't start with /assets frag\n");
+    // if SET is to something other than "assets" (example: "components"), do not process it here
+    if (strncmp(msg.pfrags[0], "assets", strlen("assets")) != 0)
+        return;
+    FPS_DEBUG_LOG("Received SET to %s.", msg.uri);
+
+    // only SETs to specific variables are supported so expected URI format is /assets/{asset type}/{instance ID}/{variable ID}
+    if (msg.nfrags != 4) {
+        FPS_ERROR_LOG("Received SET to %s, but URIs beginning with /assets are expected to have exactly 4 fragments.", msg.uri);
+        if (msg.replyto != NULL)
+            p_fims->Send("set", msg.replyto, NULL, "Invalid URI");
         return;
     }
 
-    // Only supporting sets on ui_control variables. If other sets are needed, revert to v1.5.0 implementation
-    if (nfrags == 4)
-    {
-        FPS_DEBUG_LOG("number of uri frags == 4\n");
-        //TODO return error message if either asset type
-        FPS_DEBUG_LOG("Sending message to asset type %s\n", pfrags[1]);
-
-        if (strncmp(pfrags[1], "ess", strlen("ess")) == 0)
-        {
-            ess_manager->handle_set(ESS, pfrags, nfrags, replyto, body);
-            return;
-        }
-        
-        if (strncmp(pfrags[1], "feeders", strlen("feeders")) == 0)
-        {
-            feeder_manager->handle_set(FEEDERS, pfrags, nfrags, replyto, body);
-            return;
-        }
-        
-        if (strncmp(pfrags[1], "generators", strlen("generators")) == 0)
-        {
-            generator_manager->handle_set(GENERATORS, pfrags, nfrags, replyto, body);
-            return;
-        }
-        
-        if (strncmp(pfrags[1], "solar", strlen("solar")) == 0)
-        {
-            solar_manager->handle_set(SOLAR, pfrags, nfrags, replyto, body);
-            return;
-        }
-    }
-    else
-    {
-        if (replyto != NULL)
-            p_fims->Send("set", replyto, NULL, "Error, invalid URI.");
+    // URI starts with /assets/<asset type>. determine which Type Manager should handle the SET
+    Type_Manager* manager = get_type_manager(msg.pfrags[1]);
+    if (manager == NULL) {
+        FPS_ERROR_LOG("Invalid asset type '%s' in SET to URI %s.", msg.pfrags[1], msg.uri);
+        if (msg.replyto != NULL)
+            p_fims->Send("set", msg.replyto, NULL, "Invalid Asset Type");
         return;
     }
 
-    if (replyto != NULL)
-    {
-        p_fims->Send("set", replyto, NULL, body);
-    }
+    // have Type Manager handle the SET
+    manager->handle_set(msg);
 }
+
 void Asset_Manager::handle_post(int nfrags, char* body)
 {
     FPS_DEBUG_LOG("handled post: %s frags: %d\n", body, nfrags);
@@ -468,6 +449,7 @@ void Asset_Manager::handle_post(int nfrags, char* body)
     (void) nfrags;
     (void) body;
 }
+
 void Asset_Manager::handle_del(int nfrags, char* body)
 {
     FPS_DEBUG_LOG("handled del: %s frags: %d\n", body, nfrags);
@@ -710,6 +692,11 @@ float Asset_Manager::get_poi_gridside_frequency(void)
 float Asset_Manager::get_poi_gridside_avg_voltage(void)
 {
     return feeder_manager->get_poi_gridside_avg_voltage();
+}
+
+float Asset_Manager::get_poi_power_factor()
+{
+    return feeder_manager->get_poi_power_factor();
 }
 
 bool Asset_Manager::get_sync_feeder_status(void)

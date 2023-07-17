@@ -30,6 +30,10 @@ import { RefreshTokenStrategy } from '../../src/auth/strategies/refreshToken.str
 import { AppEnvService } from '../../src/environment/appEnv.service'
 import { IUsersService, USERS_SERVICE } from '../../src/users/interfaces/users.service.interface'
 import * as testUtils from '../testUtils'
+import { AUDIT_LOGGING_SERVICE } from 'src/logging/auditLogging/interfaces/auditLogging.service.interface'
+import { ValidPasswordConstraint } from 'src/users/validators/IsValidPassword'
+import { useContainer } from 'class-validator'
+import path from 'path'
 
 describe('AuthController Login - PassExp (e2e)', () => {
     let app: INestApplication
@@ -48,30 +52,6 @@ describe('AuthController Login - PassExp (e2e)', () => {
 
     const USER_MFA_NOT_ENABLED = testUtils.adminUser(true, false)
     const USER_MFA_ENABLED = testUtils.adminUser(true, true)
-
-    const site = (mfa: boolean, passExp: boolean) => {
-        return {
-            password: {
-                password_expiration: passExp,
-                minimum_password_length: 8,
-                maximum_password_length: 128,
-                password_expiration_interval: '8d',
-                old_passwords: 0,
-                password_regular_expression: JSON.stringify(
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!"#\$%&'\*\+,\.\/:;=\\?@\^`\|~])/
-                ),
-                multi_factor_authentication: mfa,
-            },
-            radius: {
-                is_enabled: false,
-                ip_address: '127.0.0.1',
-                port: '1812',
-                secret_phrase: 'secretphrase',
-                wait_time: 5000,
-                is_local_auth_disabled: false
-            },
-        }
-    }
 
     let VALID_ACCESS_TOKEN: string
     let INVALID_ACCESS_TOKEN: string
@@ -97,10 +77,11 @@ describe('AuthController Login - PassExp (e2e)', () => {
                         update: jest.fn().mockResolvedValue(USER_PASS_NOT_EXPIRED),
                     },
                 },
+                ValidPasswordConstraint,
                 {
                     provide: SITE_ADMINS_SERVICE,
                     useValue: {
-                        find: jest.fn(),
+                        find: jest.fn().mockReturnValue(testUtils.site(false, true, false)),
                     },
                 },
                 {
@@ -125,23 +106,38 @@ describe('AuthController Login - PassExp (e2e)', () => {
                 },
                 RefreshTokenService,
                 AppEnvService,
+                {
+                    provide: 'WEB_UI_CONFIG_PATH',
+                    useValue: path.resolve(__dirname, '../../test/configs/test-web_ui.json')
+                },
+                {
+                    provide: 'WEB_SERVER_CONFIG_PATH',
+                    useValue: path.resolve(__dirname, '../../test/configs/test-config.json')
+                },
                 RefreshTokenStrategy,
                 LocalStrategy,
                 AccessTokenStrategy,
                 AccessTokenMfaStrategy,
                 AccessTokenPassExpStrategy,
                 TotpStrategy,
+                {
+                    provide: AUDIT_LOGGING_SERVICE,
+                    useValue: {
+                        postAuditLog: jest.fn()
+                    },
+                },
             ],
         }).compile()
 
         app = testUtils.createTestApiApplication(moduleFixture)
+        useContainer(moduleFixture, { fallbackOnErrors: true })
         usersService = moduleFixture.get<IUsersService>(USERS_SERVICE)
         siteAdminsService = moduleFixture.get<ISiteAdminsService>(SITE_ADMINS_SERVICE)
 
         jwtService = moduleFixture.get<JwtService>(JwtService)
         VALID_ACCESS_TOKEN = `Bearer ${jwtService.sign(payload, {
             expiresIn: '12d',
-            secret: 'supersecretkey-oneTimeUse-password-expiration',
+            secret: process.env.JWT_SECRET_KEY_PASSWORD_EXPIRATION,
         })}`
         INVALID_ACCESS_TOKEN = `Bearer ${jwtService.sign(payload, {
             expiresIn: '12d',
@@ -161,7 +157,7 @@ describe('AuthController Login - PassExp (e2e)', () => {
             }
 
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_PASS_EXPIRED)
-            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(site(false, true))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(false, true, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .set('Authorization', VALID_ACCESS_TOKEN)
@@ -180,7 +176,7 @@ describe('AuthController Login - PassExp (e2e)', () => {
             }
 
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_PASS_EXPIRED)
-            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(site(false, true))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(false, true, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .set('Authorization', VALID_ACCESS_TOKEN)
@@ -202,7 +198,7 @@ describe('AuthController Login - PassExp (e2e)', () => {
             }
 
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_PASS_EXPIRED)
-            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(site(false, true))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(false, true, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .set('Authorization', VALID_ACCESS_TOKEN)
@@ -246,7 +242,7 @@ describe('AuthController Login - PassExp (e2e)', () => {
                 updatedPassword: testUtils.NEW_PASS,
             }
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_MFA_NOT_ENABLED)
-            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(site(true, true))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(true, true, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .set('Authorization', VALID_ACCESS_TOKEN)
@@ -265,7 +261,7 @@ describe('AuthController Login - PassExp (e2e)', () => {
                 updatedPassword: testUtils.NEW_PASS,
             }
             jest.spyOn(usersService, 'readByUsername').mockResolvedValue(USER_MFA_ENABLED)
-            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(site(true, true))
+            jest.spyOn(siteAdminsService, 'find').mockResolvedValue(testUtils.site(true, true, false))
             return request(app.getHttpServer())
                 .post(URL)
                 .set('Authorization', VALID_ACCESS_TOKEN)

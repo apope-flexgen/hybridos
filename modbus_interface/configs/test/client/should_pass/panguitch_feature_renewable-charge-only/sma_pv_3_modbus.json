@@ -1,0 +1,288 @@
+{
+    "system":
+    {
+        "id": "sma_pv_3",
+        "ip_address": "10.201.112.142",
+        "port": 502,
+        "device_id": 3,
+        "frequency": 100,
+        "off_by_one": false,
+        "byte_swap": false
+    },
+    "registers": 
+    [
+        {
+            "type": "Input Registers",
+            "starting_offset": 201,
+            "number_of_registers": 21,
+            "map": 
+            [
+                {
+                    "id": "status",
+                    "offset": 201,
+                    "size": 2,
+                    "random_enum": true,
+                    "bit_strings":
+                    [
+                        {"value": 35, "string": "fault"},
+                        {"value": 303, "string": "off"},
+                        {"value": 307, "string": "ok"},
+                        {"value": 455, "string": "warning"}
+                    ]
+                },
+                {
+                    "id": "grid_contactor",
+                    "offset": 217,
+                    "size": 2,
+                    "random_enum": true,
+                    "bit_strings":
+                    [
+                        {"value": 51, "string": "Closed"},
+                        {"value": 311, "string": "Open"},
+                        {"value": 16777213, "string": "Information not available"}
+                    ]
+                },
+                {
+                    "id": "derating",
+                    "offset": 219,
+                    "size": 2,
+                    "random_enum": true,
+                    "bit_strings":
+                    [
+                        {"value": 557, "string": "Temperature Derating"},
+                        {"value": 884, "string": "No derating active"},
+                        {"value": 1705, "string": "Derating due to Frequency"},
+                        {"value": 3520, "string": "Derating due to Voltage"},
+                        {"value": 16777213, "string": "Information not available"}
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 769,
+            "number_of_registers": 45,
+            "map": 
+            [
+                {
+                    "id": "dc_current",
+                    "offset": 769,
+                    "signed": true,
+                    "scale":1000,
+                    "size": 2
+                },
+                {
+                    "id": "dc_voltage",
+                    "offset": 771,
+                    "size": 2,
+                    "signed": true,
+                    "scale": 100
+                },
+                {
+                    "id": "dc_power",
+                    "offset": 773,
+                    "size": 2,
+                    "signed": true,
+                    "scale":1000
+                },
+                {
+                    "id": "active_power",
+                    "offset": 775,
+                    "signed": true,
+                    "scale":1000,
+                    "size": 2
+                },
+                {
+                    "id": "voltage_ab",
+                    "offset": 789,
+                    "size": 2,
+                    "scale": 100
+                },
+                {
+                    "id": "voltage_bc",
+                    "offset": 791,
+                    "size": 2,
+                    "scale": 100
+                },
+                {
+                    "id": "voltage_ca",
+                    "offset": 793,
+                    "size": 2,
+                    "scale": 100
+                },
+                {
+                    "id": "current_avg",
+                    "offset": 795,
+                    "size": 2,
+                    "scale": 1000
+                },
+                {
+                    "id": "frequency",
+                    "offset": 803,
+                    "size": 2,
+                    "scale": 100
+                },
+                {
+                    "id": "reactive_power",
+                    "offset": 805,
+                    "signed": true,
+                    "scale":1000,
+                    "size": 2
+                },
+                {
+                    "id": "apparent_power",
+                    "offset": 813,
+                    "signed": true,
+                    "scale":1000,
+                    "size": 2
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 977,
+            "number_of_registers": 6,
+            "map": 
+            [
+                {
+                    "id": "current_a",
+                    "offset": 977,
+                    "size": 2,
+                    "signed": true,
+                    "scale": 1000
+                },
+                {
+                    "id": "current_b",
+                    "offset": 979,
+                    "size": 2,
+                    "signed": true,
+                    "scale": 1000
+                },
+                {
+                    "id": "current_c",
+                    "offset": 981,
+                    "size": 2,
+                    "signed": true,
+                    "scale": 1000
+                }
+            ]
+        },
+        {
+            "type": "Input Registers",
+            "starting_offset": 1221,
+            "number_of_registers": 38,
+            "map": 
+            [
+                {
+                    "id": "power_factor",
+                    "offset": 1221,
+                    "signed": true,
+                    "size": 2,
+                    "scale": 1000
+                },
+                {
+                    "id": "voltage_a",
+                    "offset": 1253,
+                    "size": 2,
+                    "scale": 100
+                },
+                {
+                    "id": "voltage_b",
+                    "offset": 1255,
+                    "size": 2,
+                    "scale": 100
+                },
+                {
+                    "id": "voltage_c",
+                    "offset": 1257,
+                    "size": 2,
+                    "scale": 100
+                }
+            ]      
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 29,
+            "number_of_registers": 2,
+            "map": 
+            [
+                {
+                    "id": "operating_status",
+                    "offset": 29,
+                    "size": 2,
+                    "random_enum": true,
+                    "bit_strings":
+                    [
+                        {"value": 295, "string": "MPP"},
+                        {"value": 381, "string": "Stop"},
+                        {"value": 443, "string": "Constant voltage"},
+                        {"value": 455, "string": "Warning"},
+                        {"value": 1392, "string": "Fault"},
+                        {"value": 1393, "string": "Waiting for PV voltage"},
+                        {"value": 1467, "string": "Start"},
+                        {"value": 1469, "string": "Shut down"},
+                        {"value": 1480, "string": "Waiting for utilities company"},
+                        {"value": 2119, "string": "Derating"},
+                        {"value": 16777213, "string": "Information not available"}
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 200,
+            "number_of_registers": 12,
+            "map": 
+            [
+                {
+                    "id": "reactive_power_mode",
+                    "comment": "303 = off, 1072 = q setpoint, 1075 = pf setpoint",
+                    "offset": 200,
+                    "size": 2
+                },
+                {
+                    "id": "active_power_mode",
+                    "comment": "1079 = only good mode",
+                    "offset": 200,
+                    "size": 2
+                }
+            ]
+        },
+        {
+            "type": "Holding Registers",
+            "starting_offset": 1203,
+            "number_of_registers": 56,
+            "map": 
+            [
+                {
+                    "id": "rated_power",
+                    "offset": 1203
+                },
+                {
+                    "comment":"381 = standby, 1467 = start, 1749 = stop",
+                    "id": "start_stop",
+                    "offset": 1253
+                },
+                {
+                    "id": "active_power_percentage_setpoint",
+                    "signed": true,
+                    "offset": 1255,
+                    "scale": 100
+                },
+                {
+                    "id": "reactive_power_percentage_setpoint",
+                    "signed": true,
+                    "offset": 1256,
+                    "scale": 100
+                },
+                {
+                    "id": "power_factor_setpoint",
+                    "signed": true,
+                    "size": 2,
+                    "offset": 1257,
+                    "scale":1000
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,176 @@
+{
+    "/notes/site": {
+        "note1": "This is the site manager config file used for retrieving data from the ESS modbus server",
+        "note1a": "/config/site                - defines configurable variables used in the ESS Controller source code",
+        "note1b": "/site/ess_hs                - defines the interface for retrieving data from the ESS modbus server and converting the data into a useable format (ex.: scaling, remap, etc.)",
+        "note1c": "/links/site                 - defines mapping of external interface components to internal variables",
+        "note1d": "/schedule/wake_monitor/site - periodically runs a function for a particular variable (default to 100ms; wake_monitor to be removed)",
+        "note2": "To retrieve data from the ESS modbus server, set up the modbus server (flexgen_ess_modbus_server.json)",
+        "note2a": "The ESS modbus client (flexgen_ess_modbus_client.json) can then connect to the ESS modbus server to allow data interchange between the ESS Controller and the Site Controller or other external management systems"
+    },
+    "/config/site": {
+        "AlarmDestination": "/assets/site/summary:alarms",
+        "FaultDestination": "/assets/site/summary:faults"
+    },
+    "/links/site": {
+        "Heartbeat": {
+            "value": "/site/ess_ls:life_signal"
+        },
+        "life": {
+            "value": "/site/ess_hs:life"
+        }
+    },
+    "/schedule/wake_monitor/site": {
+        "/site/ess_hs:life": { "enable": true, "rate":1, "func":"CheckMonitorVar" }
+    },
+    "/site/ess_hs": {
+        "life": {
+            "value": 0,
+            "EnableStateCheck": false,
+            "EnableCommsCheck": true,
+            "Type": "int",
+            "AlarmTimeout": 5,
+            "FaultTimeout": 10,
+            "RecoverTimeout": 1
+        },
+        "start_stop": {
+            "value": 0,
+            "note": "Log start, stop, or standby command first (LogInfo), then trigger start, stop, or standby routine (remap)",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": 207, "uri": "/controls/pcs:CheckIfOffGrid@triggerCmd", "outValue": true},
+                        {"inValue": 207, "uri": "/controls/pcs:CheckIfOffGrid",            "outValue": 0,     "note": "Check if the PCS is in off-grid mode. If so, send 480 V / 60 Hz commands to the PCS before starting up the PCS"},
+                        {"inValue": 207, "uri": "/controls/pcs:StartCmd@triggerCmd",       "outValue": true},
+                        {"inValue": 207, "uri": "/controls/pcs:StartCmd",                  "outValue": 207,   "note": "Send start command to PCS"},
+
+                        {"inValue": 206, "uri": "/controls/pcs:CheckIfOnGrid@triggerCmd",  "outValue": true},
+                        {"inValue": 206, "uri": "/controls/pcs:CheckIfOnGrid",             "outValue": 0,     "note": "Check if the PCS is in on-grid mode. If so, send 0 kW and 0 kVAr power commands to the PCS before shutting down the PCS"},
+                        {"inValue": 206, "uri": "/controls/pcs:ShutdownCmd@triggerCmd",    "outValue": true},
+                        {"inValue": 206, "uri": "/controls/pcs:ShutdownCmd",               "outValue": 206,   "note": "Send stop command to PCS after verifying 0 kW and 0 kVAr is set to PCS"},
+
+                        {"inValue": 205, "uri": "/controls/pcs:StandbyCmd@triggerCmd",     "outValue": true},
+                        {"inValue": 205, "uri": "/controls/pcs:StandbyCmd",                "outValue": 205,   "note": "Send standby command to PCS"}
+                    ]
+                }]
+            }
+        },
+        "on_off_grid_mode": {
+            "value": 0,
+            "note": "Switch between on/off-grid mode",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": 85,  "uri": "/controls/pcs:OffGridMode@triggerCmd","outValue": true, "note": "85 = Off-grid mode"},
+                        {"inValue": 85,  "uri": "/controls/pcs:OffGridMode",           "outValue": 85},
+
+                        {"inValue": 170, "uri": "/controls/pcs:OnGridMode@triggerCmd", "outValue": true, "note": "170 = On-grid mode"},
+                        {"inValue": 170, "uri": "/controls/pcs:OnGridMode",            "outValue": 170}
+                    ]
+                }]
+            }
+        },
+        "bms_dc_contactors": {
+            "value": 0,
+            "note": "Trigger command handler that will open or close BMS DC contactors",
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": 1, "uri": "/controls/bms:OpenContactors@triggerCmd",  "outValue": true},
+                        {"inValue": 1, "uri": "/controls/bms:OpenContactors",             "outValue": 2, "note": "Send open contactors command to BMS"},
+
+                        {"inValue": 2, "uri": "/controls/bms:CloseContactors@triggerCmd", "outValue": true},
+                        {"inValue": 2, "uri": "/controls/bms:CloseContactors",            "outValue": 1, "note": "Send close contactors command to BMS"}
+                    ]
+                }]
+            }
+        },
+        "active_power_setpoint": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"uri": "/controls/ess:ActivePowerSetpoint"}
+                    ]
+                }]
+            }
+        },
+        "reactive_power_setpoint": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"uri": "/controls/pcs:ReactivePowerAdjSwitch@triggerCmd", "outValue": true},
+                        {"uri": "/controls/pcs:ReactivePowerAdjSwitch",            "outValue": 162, "note": "162 = 0xA2 = Reactive power percentage setting enabled"},
+                        {"uri": "/controls/pcs:ReactivePowerSetpoint"}
+                    ]
+                }]
+            }
+        },
+        "voltage_setpoint": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"uri": "/controls/pcs:VoltageSetpoint@triggerCmd", "outValue": true},
+                        {"uri": "/controls/pcs:VoltageSetpoint"}
+                    ]
+                }]
+            }
+        },
+        "frequency_setpoint": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"uri": "/controls/pcs:FrequencySetpoint@triggerCmd", "outValue": true},
+                        {"uri": "/controls/pcs:FrequencySetpoint"}
+                    ]
+                }]
+            }
+        },
+        "clear_faults": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "func": [
+                        {"inValue": 1, "func": "LogInfo", "amap": "ess"}
+                    ],
+                    "remap": [
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:ems_alarms"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:ess_faults"},
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_ls:ess_alarms"},
+
+                        {"inValue": 1, "outValue": "Clear", "uri":"/faults/bms:clear_faults"},
+                        {"inValue": 1, "outValue": "Clear", "uri":"/alarms/bms:clear_alarms"},
+                        {"inValue": 1, "outValue": "Clear", "uri":"/faults/pcs:clear_faults"},
+                        {"inValue": 1, "outValue": "Clear", "uri":"/alarms/pcs:clear_alarms"},
+
+                        {"inValue": 1, "outValue": 0, "uri": "/site/ess_hs:clear_faults", "note": "Set the clear faults register back to 0 to allow future clear faults commands to be processed"}
+                    ]
+                }]
+            }
+        }
+    }
+}

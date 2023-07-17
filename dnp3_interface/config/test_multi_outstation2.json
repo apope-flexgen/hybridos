@@ -1,0 +1,181 @@
+{
+    "fileInfo": {
+        "sourceFileName": "dnp3_outstation.xlsx",
+        "sourceFileCreated": "2020-01-02T21:16:38.000Z",
+        "sourceFileLastModified": "2020-05-05T16:29:07.000Z",
+        "sourceFileCreatedBy": "Microsoft Office User",
+        "sourceFileLastModifiedBy": "pmiller",
+        "outputFileName": "dnp3_outstation.json",
+        "outputFileType": "server",
+        "outputFileCreated": "2020-05-05T16:29:13.344Z"
+    },
+    "system": {
+        "name":"dnp3_test_outstation",
+        "protocol": "DNP3",
+        "version": 1,
+        "id": "dnp3_outstation",
+        "ip_address2": "192.168.1.50",
+        "ip_address": "0.0.0.0",
+        "port": 20000,
+	"debug":2,
+	"local_uri":"/local_os",
+        "master_address": 2,
+	"station_address": 20
+    },
+    "objects": {
+        "binary": [
+            {
+                "id": "voltage_regulator",
+                "idx": 0,
+                "scale": -1,
+                "name": "Voltage Regulator"
+            },
+            {
+                "id": "power_system_stabilizer",
+                "idx": 1,
+                "name": "Power System Stabilizer"
+            },
+            {
+                "id": "gen_resource_switches",
+                "idx": 2,
+                "name": "Generation Resource Switches"
+            },
+            {
+                "id": "gen_resource_breaker_status",
+                "idx": 3,
+                "name": "Generation Resource Breaker Status"
+            },
+            {
+                "id": "gen_virtual_breaker_status",
+                "idx": 4,
+                "name": "Gen Virtual Breaker Status"
+            }
+        ],
+
+        "AnOPF32": [
+            {
+                "id": "anopf32",
+                "idx": 0,
+                "name": "anopf32 ",
+                "unit": "MW",
+                "xscale":-20,
+                "xsigned": true
+            },
+            {
+                "id": "anopf32_s20",
+                "idx": 1,
+                "name": "anopf32 ",
+                "unit": "MW",
+                "scale":20,
+                "xsigned": true
+            },
+            {
+                "id": "anopf32_uss20",
+                "idx": 1,
+                "name": "anopf32 ",
+                "unit": "MW",
+                "scale":20,
+                "signed": false
+            }
+        ],
+       "AnOPInt32": [
+            {
+                "id": "anopi32",
+                "idx": 0,
+                "name": "anopi32 ",
+                "unit": "MW",
+                "xscale":-20,
+                "signed": true
+            },
+            {
+                "id": "anopi32_s20",
+                "idx": 1,
+                "name": "anopi32 ",
+                "unit": "MW",
+                "scale":20,
+                "signed": true
+            },
+            {
+                "id": "anopi32_uss1",
+                "idx": 1,
+                "name": "anopi32 ",
+                "unit": "MW",
+                "scale":1,
+                "signed": false
+            }
+        ],
+       "AnOPInt16": [
+            {
+                "id": "anopi16",
+                "idx": 0,
+                "name": "anopi16 ",
+                "unit": "MW",
+                "xscale":-20,
+                "signed": true
+            },
+            {
+                "id": "anopi16_s",
+                "idx": 1,
+                "name": "anopf32 ",
+                "unit": "MW",
+                "scale":20,
+                "xsigned": true
+            },
+            {
+                "id": "anopi16_uss20",
+                "idx": 1,
+                "name": "anopf32 ",
+                "unit": "MW",
+                "scale":1,
+                "signed": false
+            }
+        ],
+
+        "analog": [
+            {
+                "id": "line_flows_mw",
+                "idx": 0,
+                "name": "Line flows MW",
+                "unit": "MW",
+		"scale":-20,
+                "signed": true
+            },
+            {
+                "id": "uline_flows_mw",
+                "idx": 1,
+                "name": "Line flows MW",
+                "unit": "MW",
+		"scale":-2,
+                "signed": false
+            },
+            {
+                "id": "line_flows_mv",
+                "idx": 10,
+                "name": "Line flows MV",
+                "unit": "MW",
+                "signed": true
+            },
+            {
+                "id": "voltage",
+                "idx": 2,
+                "name": "Voltage",
+                "unit": "kV",
+                "signed": true
+            },
+            {
+                "id": "plant_auxiliary_load_mw",
+                "idx": 3,
+                "name": "Plant Auxiliary Load MW",
+                "unit": "MW",
+                "signed": true
+            },
+            {
+                "id": "plant_auxiliary_load_mv",
+                "idx": 4,
+                "name": "Plant Auxiliary Load MV",
+                "unit": "MV",
+                "signed": true
+            }
+        ]
+    }
+}

@@ -1,0 +1,728 @@
+{
+  "data": [
+    {
+      "alarms": {
+        "alarmFields": [],
+        "faultFields": []
+      },
+      "controls": [
+        {
+          "inputType": "switch",
+          "name": "Maintenance Mode",
+          "uri": "/maint_mode"
+        },
+        {
+          "inputType": "button",
+          "name": "Clear Faults",
+          "uri": "/clear_faults"
+        }
+      ],
+      "info": {
+        "asset": "BMS",
+        "baseURI": "/bms",
+        "extension": "/sbmu_",
+        "hasSummary": true,
+        "name": "CATL BMS",
+        "numberOfItems": "9",
+        "sourceURI": "/assets",
+        "alarmFields": [
+          "alarms"
+        ],
+        "faultFields": [
+          "faults"
+        ]
+      },
+      "statuses": [
+        {
+          "name": "State of Charge",
+          "scalar": "1",
+          "units": "%",
+          "uri": "/soc"
+        },
+        {
+          "name": "State of Health",
+          "scalar": "1",
+          "units": "%",
+          "uri": "/soh"
+        },
+        {
+          "name": "System Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/system_voltage"
+        },
+        {
+          "name": "System Current",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/system_current"
+        },
+        {
+          "name": "System Power",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/system_power"
+        },
+        {
+          "name": "Max Cell Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/max_cell_voltage"
+        },
+        {
+          "name": "Min Cell Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/min_cell_voltage"
+        },
+        {
+          "name": "Avg Cell Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/avg_cell_voltage"
+        },
+        {
+          "name": "Max Cell Temperature",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/max_cell_temp"
+        },
+        {
+          "name": "Min Cell Temperature",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/min_cell_temp"
+        },
+        {
+          "name": "Avg Cell Temperature",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/avg_cell_temp"
+        },
+        {
+          "name": "Max Charge Current",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/max_charge_current"
+        },
+        {
+          "name": "Max Discharge Current",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/max_discharge_current"
+        },
+        {
+          "name": "Door State",
+          "scalar": "0",
+          "units": "",
+          "uri": "/sbmu_door_state_ui"
+        },
+        {
+          "name": "Contactor Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/dc_contactor_status"
+        }
+      ],
+      "summary": [
+        {
+          "name": "Power State",
+          "scalar": "0",
+          "units": "",
+          "uri": "/power_state"
+        },
+        {
+          "name": "Batteries Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/system_state"
+        },
+        {
+          "name": "Communication Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/com_status"
+        },
+        {
+          "name": "State of Charge",
+          "scalar": "1",
+          "units": "%",
+          "uri": "/soc"
+        },
+        {
+          "name": "State of Health",
+          "scalar": "1",
+          "units": "%",
+          "uri": "/soh"
+        },
+        {
+          "name": "System Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/system_voltage"
+        },
+        {
+          "name": "System Current",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/system_current"
+        },
+        {
+          "name": "System Power",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/system_power"
+        },
+        {
+          "name": "Max Cell Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/max_cell_voltage"
+        },
+        {
+          "name": "Min Cell Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/min_cell_voltage"
+        },
+        {
+          "name": "Avg Cell Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/avg_cell_voltage"
+        },
+        {
+          "name": "Max Cell Temperature",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/max_cell_temp"
+        },
+        {
+          "name": "Min Cell Temperature",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/min_cell_temp"
+        },
+        {
+          "name": "Avg Cell Temperature",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/avg_cell_temp"
+        },
+        {
+          "name": "Max Charge Current Allowed",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/max_charge_current"
+        },
+        {
+          "name": "Max Discharge Current Allowed",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/max_discharge_current"
+        },
+        {
+          "name": "Max Charge Power Allowed",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/max_charge_power"
+        },
+        {
+          "name": "Max Discharge Power Allowed",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/max_discharge_power"
+        },
+        {
+          "name": "Remaining Charge Energy",
+          "scalar": "1",
+          "units": "kWh",
+          "uri": "/remain_charge_energy"
+        },
+        {
+          "name": "Remaining Discharge Energy",
+          "scalar": "1",
+          "units": "kWh",
+          "uri": "/remain_discharge_energy"
+        },
+        {
+          "name": "Units Connected",
+          "scalar": "1",
+          "units": "",
+          "uri": "/units_connected"
+        }
+      ],
+      "summaryControls": [
+        {
+          "inputType": "switch",
+          "name": "Maintenance Mode",
+          "uri": "/maint_mode"
+        },
+        {
+          "inputType": "button",
+          "name": "Close DC Contactor",
+          "uri": "/start"
+        },
+        {
+          "inputType": "button",
+          "name": "Open DC Contactor",
+          "uri": "/stop"
+        },
+        {
+          "inputType": "button",
+          "name": "Clear Faults",
+          "uri": "/clear_faults"
+        }
+      ]
+    },
+    {
+      "alarms": {
+        "alarmFields": [],
+        "faultFields": []
+      },
+      "controls": [
+        {
+          "inputType": "switch",
+          "name": "Maintenance Mode",
+          "uri": "/maint_mode"
+        },
+        {
+          "inputType": "button",
+          "name": "Clear Faults",
+          "uri": "/clear_faults"
+        }
+      ],
+      "info": {
+        "asset": "PCS",
+        "baseURI": "/pcs",
+        "extension": "/module_",
+        "hasSummary": true,
+        "name": "PE PCS",
+        "numberOfItems": "6",
+        "sourceURI": "/assets",
+        "alarmFields": [
+          "alarms"
+        ],
+        "faultFields": [
+          "faults"
+        ]
+      },
+      "statuses": [
+        {
+          "name": "Module Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/module_status"
+        },
+        {
+          "name": "Current R",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/current_r"
+        },
+        {
+          "name": "Current S",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/current_s"
+        },
+        {
+          "name": "Current T",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/current_t"
+        },
+        {
+          "name": "DC Current",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/dc_current"
+        },
+        {
+          "name": "DC Voltage (P)",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/dc_voltage_p"
+        },
+        {
+          "name": "DC Voltage (N)",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/dc_voltage_n"
+        },
+        {
+          "name": "DC Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/dc_voltage"
+        },
+        {
+          "name": "Active Power",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/active_power"
+        },
+        {
+          "name": "Reactive Power",
+          "scalar": "1",
+          "units": "kVAr",
+          "uri": "/reactive_power"
+        },
+        {
+          "name": "Ambient Temperature",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/ambient_temp"
+        },
+        {
+          "name": "Max Temperature",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/max_temp"
+        },
+        {
+          "name": "Temperature R1",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/temp_r1"
+        },
+        {
+          "name": "Temperature R2",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/temp_r2"
+        },
+        {
+          "name": "Temperature R3",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/temp_r3"
+        },
+        {
+          "name": "Temperature S1",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/temp_s1"
+        },
+        {
+          "name": "Temperature S2",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/temp_s2"
+        },
+        {
+          "name": "Temperature S3",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/temp_s3"
+        },
+        {
+          "name": "Temperature T1",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/temp_t1"
+        },
+        {
+          "name": "Temperature T2",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/temp_t2"
+        },
+        {
+          "name": "Temperature T3",
+          "scalar": "1",
+          "units": "°C",
+          "uri": "/temp_t3"
+        },
+        {
+          "name": "Fan Contactor Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/fan_status"
+        },
+        {
+          "name": "Main AC Contactor Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/ac_main_status"
+        },
+        {
+          "name": "AC Softcharge Contactor Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/ac_softcharge_status"
+        },
+        {
+          "name": "LCL Contactor Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/lcl_status"
+        },
+        {
+          "name": "DC Contactor Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/dc_switch_status"
+        },
+        {
+          "name": "Thermal LCL Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/thermal_lcl_status"
+        },
+        {
+          "name": "Fan Contactor Feedback",
+          "scalar": "0",
+          "units": "",
+          "uri": "/fan_feedback"
+        },
+        {
+          "name": "Main AC Contactor Feedback",
+          "scalar": "0",
+          "units": "",
+          "uri": "/ac_main_feedback"
+        },
+        {
+          "name": "AC Softcharge Contactor Feedback",
+          "scalar": "0",
+          "units": "",
+          "uri": "/ac_softcharge_feedback"
+        },
+        {
+          "name": "LCL Contactor Feedback",
+          "scalar": "0",
+          "units": "",
+          "uri": "/lcl_feedback"
+        },
+        {
+          "name": "DC Contactor Feedback",
+          "scalar": "0",
+          "units": "",
+          "uri": "/dc_switch_feedback"
+        },
+        {
+          "name": "Hardware Version",
+          "scalar": "0",
+          "units": "",
+          "uri": "/hw_version"
+        },
+        {
+          "name": "Software Version",
+          "scalar": "0",
+          "units": "",
+          "uri": "/sw_version"
+        }
+      ],
+      "summary": [
+        {
+          "name": "Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/status"
+        },
+        {
+          "name": "Communication Status",
+          "scalar": "0",
+          "units": "",
+          "uri": "/com_status"
+        },
+        {
+          "name": "Active Power",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/active_power"
+        },
+        {
+          "name": "Reactive Power",
+          "scalar": "1",
+          "units": "kVAr",
+          "uri": "/reactive_power"
+        },
+        {
+          "name": "Apparent Power",
+          "scalar": "1",
+          "units": "kVA",
+          "uri": "/apparent_power"
+        },
+        {
+          "name": "Power Factor",
+          "scalar": "1",
+          "units": "",
+          "uri": "/power_factor"
+        },
+        {
+          "name": "Active Power Command",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/active_power_command"
+        },
+        {
+          "name": "Reactive Power Command",
+          "scalar": "1",
+          "units": "kVAr",
+          "uri": "/reactive_power_command"
+        },
+        {
+          "name": "L1-L2 AC Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/voltage_l1_l2"
+        },
+        {
+          "name": "L2-L3 AC Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/voltage_l2_l3"
+        },
+        {
+          "name": "L3-L1 AC Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/voltage_l3_l1"
+        },
+        {
+          "name": "L1-L2 AC Voltage LV",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/voltage_l1_l2_lv"
+        },
+        {
+          "name": "L2-L3 AC Voltage LV",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/voltage_l2_l3_lv"
+        },
+        {
+          "name": "L3-L1 AC Voltage LV",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/voltage_l3_l1_lv"
+        },
+        {
+          "name": "L1 AC Current",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/current_l1"
+        },
+        {
+          "name": "L2 AC Current",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/current_l2"
+        },
+        {
+          "name": "L3 AC Current",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/current_l3"
+        },
+        {
+          "name": "Frequency",
+          "scalar": "1",
+          "units": "Hz",
+          "uri": "/frequency"
+        },
+        {
+          "name": "DC Power",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/power_dc"
+        },
+        {
+          "name": "DC Voltage",
+          "scalar": "1",
+          "units": "V",
+          "uri": "/voltage_dc"
+        },
+        {
+          "name": "DC Current",
+          "scalar": "1",
+          "units": "A",
+          "uri": "/current_dc"
+        },
+        {
+          "name": "Max Active Power",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/max_active_power"
+        },
+        {
+          "name": "Power Command Derating",
+          "scalar": "0",
+          "units": "",
+          "uri": "/derating_active"
+        },
+        {
+          "name": "Max Charge Power",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/max_derated_charge_power"
+        },
+        {
+          "name": "Max Discharge Power",
+          "scalar": "1",
+          "units": "kW",
+          "uri": "/max_derated_discharge_power"
+        },
+        {
+          "name": "Modules Running",
+          "scalar": "1",
+          "units": "",
+          "uri": "/num_running_modules"
+        }
+      ],
+      "summaryControls": [
+        {
+          "inputType": "switch",
+          "name": "Maintenance Mode",
+          "uri": "/maint_mode"
+        },
+        {
+          "inputType": "button",
+          "name": "Start",
+          "uri": "/start"
+        },
+        {
+          "inputType": "button",
+          "name": "Standby",
+          "uri": "/stop"
+        },
+        {
+          "inputType": "button",
+          "name": "Shutdown",
+          "uri": "/shutdown"
+        },
+        {
+          "inputType": "button",
+          "name": "Clear Faults",
+          "uri": "/clear_faults"
+        },
+        {
+          "inputType": "number",
+          "name": "Active Power Setpoint (kW)",
+          "uri": "/maint_active_power_setpoint"
+        },
+        {
+          "inputType": "number",
+          "name": "Reactive Power Setpoint (kVAr)",
+          "uri": "/maint_reactive_power_setpoint"
+        },
+        {
+          "inputType": "number",
+          "name": "Active Power Ramp Rate (%/s)",
+          "uri": "/active_power_gradient"
+        },
+        {
+          "inputType": "number",
+          "name": "Reactive Power Ramp Rate (%/s)",
+          "uri": "/reactive_power_gradient"
+        },
+        {
+          "inputType": "button",
+          "name": "Emergency Stop",
+          "uri": "/e-stop"
+        }
+      ]
+    }
+  ]
+}

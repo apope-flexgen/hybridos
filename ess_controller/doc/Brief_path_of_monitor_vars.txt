@@ -1,0 +1,167 @@
+Brief path of monitor vars
+p. wilshire
+03/17/2021
+
+
+EssSystemInit is set up in ess_controller.json as a scheduled function.
+
+"/sched/ess":{
+
+"essSystemInit":{ "value":    "EssSystemInit",
+                      "actions":{
+                        "onSet":    [{ "func":      [
+                            {"func": "HandleSchedLoad","amap":        "ess"}
+                            ]}]
+                      },
+                      "uri":      "/sched/ess:essSystemInit",
+                      "fcn":      "EssSystemInit",
+                      "id":      "EssSystemInit",
+                      "refTime":  0.200,
+                      "runAfter": 0.200,
+                      "repTime":  0.00,
+                      "endTime":  0.00
+    },
+
+    It is triggered in ess_schedule.json
+    
+{
+"/sched/ess":{
+    "essSystemInit":{
+        "value":    "EssSystemInit",
+        "uri":      "/sched/ess:essSystemInit",
+        "fcn":      "EssSystemInit",
+        "id":      "EssSystemInit",
+        "refTime":  0.200,
+        "runAfter": 0.200,
+        "repTime":  0.00,
+        "endTime":  0.00
+    },
+
+Loading this config file causes the action "HandleSchedLoad"to be 
+triggered which causes 
+    EssSystemInit
+to be run once
+
+EssSystemInit has these functions included in it.
+
+        am->vm->setMonitorList2(*am->vmap, "bms",    "wake_monitor");
+        am->vm->setMonitorList2(*am->vmap, "pcs",    "wake_monitor");
+        am->vm->setMonitorList2(*am->vmap, "site",   "wake_monitor");
+
+This function causes the config vmap to be scanned for these sort of entries
+
+ "/schedule/wake_monitor/bms":{
+        "/components/catl_mbmu_summary_r:mbmu_max_cell_voltage": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/catl_mbmu_summary_r:mbmu_min_cell_voltage": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/catl_mbmu_summary_r:mbmu_max_cell_temperature": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/catl_mbmu_summary_r:mbmu_min_cell_temperature": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/catl_mbmu_summary_r:mbmu_soc": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/catl_mbmu_summary_r:mbmu_soh": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/catl_bms_ems_r:bms_heartbeat": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/components/catl_bms_ems_r:bms_timestamp": { "enable": true, "rate":0.1, "amap": "bms","func":"CheckMonitorVar"},
+        "/status/bms:BMSPower": { "enable": true, "rate":0.1, "amap": "bms", "func":"CalculateVar"}
+    },
+
+    these add details of the monitor list item to the 
+       av->extras->optVec->cjopts;  ( a cjson array )
+
+    list for  the /schedule/ess/wake_monitor assetVar
+    
+    Here is the item generation
+
+
+    asprintf(&tmp2,"{\"%s:%s\":{"
+                        "\"%s\":\"%s\","
+                        "\"%s\":%ld,"
+                        "\"%s\":\"%s\","
+                        "\"%s\":\"%s\","
+                        "\"%s\":\"%s\","
+                        "\"%s\":%s"
+                        "}}"
+                        , (const char*)av->comp.c_str(),(const char*)av->name.c_str()  
+                        , "func",func
+                        , "funcaddr", (long int)res1
+                        , "aname", comp
+                        , "amap", amap
+                        , "test","this is a test"
+                        , "enabled","true"
+                        );
+if(tmp2)
+        {
+            cj = cJSON_Parse(tmp2);
+            FPS_ERROR_PRINT("%s >> added array item from [%s] cj %p\n"
+                , __func__
+                , tmp2
+                , cj
+                );
+            free(tmp2);
+            tmp2 = nullptr;
+        }
+        if(cj)
+        {
+            cJSON_AddItemToArray(cjopts, cj);
+        }
+
+
+The runMonitorList2 operation scans this list of cjson entries
+and runs the each function.
+This is part of the Every100mSP1 task 
+
+am->vm->runMonitorList2(*am->vmap, am->amap, "ess",am->p_fims, "wake_monitor");
+
+
+So the question is how do we use this system to interface with the dbi system.
+
+Here are some dbi fundamentals
+
+/usr/local/bin/fims/fims_send -m set -u /dbi/ess_controller/bms 
+                '{"nom_vol": 220.0,"nom_freq": 80.0}'
+NOTE: Here is the correct way to update an element within a document:
+
+/usr/local/bin/fims/fims_send -m set 
+         -u /dbi/ess_controller/bms/nom_freq '111.0'
+
+Get a document (GET):
+watch the reply to
+/usr/local/bin/fims/fims_send -r /ess/dbi/assets -m get 
+           -u /dbi/ess_controller/assets ''
+
+returns response to the querying module:
+
+{
+    "bms":[... bms data...],
+    "pcs": [.. pcs data..]
+}
+
+/usr/local/bin/fims/fims_send  -r /ess/dbi/assets/bms
+    -m get -u /dbi/ess_controller/assets/bms ''
+
+returns response to the querying module:
+( TODO fix this up )
+{
+    "assets":{
+        "nom_vol":550,
+        "nom_freq":60
+    },
+    "feeders":{
+        "nom_vol":990,
+        "nom_freq":99
+    }
+}
+
+This means that we can use the same checkmonitor vars 
+    system for our dbi interface
+
+Instead if using the CheckMonitorVar function we'll use  the new CheckDbiVar function.
+
+
+ON the first run the system will detect that the value has not ben updated
+and issue a get to the dbi system.
+
+The return var to a /dbi/ess/somevar 
+    will use a function to validate the incoming data and place it into the system.
+
+After the first run CheckDbiVar will detect time elased or a value change and 
+send updates to the dbi system.
+
+

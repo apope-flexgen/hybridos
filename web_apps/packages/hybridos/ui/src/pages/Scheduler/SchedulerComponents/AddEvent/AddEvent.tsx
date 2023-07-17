@@ -7,8 +7,12 @@ import { Box, SelectChangeEvent } from '@mui/material';
 import React, {
   useEffect, useReducer, useState, useMemo,
 } from 'react';
-
 import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
+import {
+  fullBoxSx,
+  buttonsAndErrorsSx,
+  repeatEverySx,
+} from 'src/pages/Scheduler/SchedulerComponents/AddEvent/AddEvent-styles';
 import {
   addEventLabels,
   createNewEvent,
@@ -19,8 +23,16 @@ import {
 import { formatStartTime } from 'src/pages/Scheduler/SchedulerComponents/CalendarGroup/CalendarGroupHelpers';
 import { reducer } from 'src/pages/Scheduler/SchedulerComponents/EditEventModal/EditEventModal-helpers';
 import { useEventSchedulerContext } from 'src/pages/Scheduler/SchedulerComponents/EventScheduler/EventScheduler';
-import { createRepeatObject, handleVariableValues } from 'src/pages/Scheduler/SchedulerComponents/EventScheduler/EventSchedulerHelper';
-import { checkIfStartBeforeEnd, defaultMode, initialEditState } from 'src/pages/Scheduler/SchedulerHelpers';
+import {
+  createRepeatObject,
+  handleVariableValues,
+} from 'src/pages/Scheduler/SchedulerComponents/EventScheduler/EventSchedulerHelper';
+import {
+  checkIfStartBeforeEnd,
+  checkIfStartOrEndInPast,
+  defaultMode,
+  initialEditState,
+} from 'src/pages/Scheduler/SchedulerHelpers';
 import { EventVariables } from 'src/pages/Scheduler/SchedulerTypes';
 import { useTheme } from 'styled-components';
 import AddClearButtons from './AddClearEvent';
@@ -59,19 +71,35 @@ const AddEvent: React.FC = () => {
 
   const allDisabled = useMemo(() => {
     const {
-      mode, date, startTime, endTime,
+      mode,
+      date,
+      endDate,
+      startTime,
+      endTime,
+      startHours,
+      startMinutes,
+      endHours,
+      endMinutes,
     } = state;
-    return mode === '' || date === null || startTime === '' || endTime === '';
+    return (
+      mode === ''
+      || date === null
+      || endDate === null
+      || startTime === ''
+      || endTime === ''
+      || startHours === ''
+      || startMinutes === ''
+      || endHours === ''
+      || endMinutes === ''
+    );
   }, [state]);
 
-  const addDisabled = useMemo(() => {
-    const {
-      date, startTime, endTime, endDate,
-    } = state;
-    return isOverlappingStartTime(date, startTime, endTime, endDate, eventsForUi)
-            || isDurationOver24Hours(state)
-            || checkIfStartBeforeEnd(state);
-  }, [state, eventsForUi]);
+  const addDisabled = useMemo(() => (
+    isOverlappingStartTime(state, eventsForUi)
+      || isDurationOver24Hours(state)
+      || checkIfStartBeforeEnd(state)
+      || checkIfStartOrEndInPast(state)
+  ), [state, eventsForUi]);
 
   const handleClear = () => {
     setVariables([]);
@@ -108,19 +136,14 @@ const AddEvent: React.FC = () => {
     mapModesToVariables(e, modes, setVariables, dispatch);
   };
 
+  const addEventSx = fullBoxSx(theme);
+
   return (
-    <Box
-      sx={{
-        /*          width: theme.fgb.scheduler.addEventWidth,
-                 */ width: '320px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: theme.fgb.editModal.spacing.padding,
-        padding: theme.fgb.editModal.spacing.padding,
-      }}
-    >
+    <Box sx={addEventSx}>
       <Typography text={addEventLabels.title.label} variant="headingS" />
       <Select
+        fullWidth
+        placeholder=""
         disabled={disableAllFields}
         label={addEventLabels.eventType.label}
         menuItems={eventTypeItems}
@@ -136,39 +159,52 @@ const AddEvent: React.FC = () => {
           }}
           value={recurring}
         />
-        <Typography text="Make Recurring" variant="bodyL" color={disableAllFields ? 'disabled' : 'primary'} />
+        <Typography
+          text="Make Recurring"
+          variant="bodyL"
+          color={disableAllFields ? 'disabled' : 'primary'}
+        />
       </Box>
       {recurring && (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            /*  gap: theme.fgb.scheduler.gap, */
-          }}
-        >
+        <Box sx={repeatEverySx}>
           <RepeatEvery dispatch={dispatch} state={state} />
           <EndsOptions dispatch={dispatch} state={state} />
         </Box>
       )}
-      <Box sx={{
-        display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end', width: '100%',
-      }}
-      >
+      <Box sx={buttonsAndErrorsSx}>
         <AddClearButtons
           addDisabled={disableAllFields || allDisabled || addDisabled}
           handleAddEvent={handleAddEvent}
           handleClear={handleClear}
         />
-        { addDisabled
-        && isOverlappingStartTime(
-          state.date,
-          state.startTime,
-          state.endTime,
-          state.endDate,
-          eventsForUi,
-        )
-        && <Typography text="New event cannot overlap with existing events" variant="labelS" />}
+        {addDisabled && isOverlappingStartTime(state, eventsForUi) && (
+          <Typography
+            text={addEventLabels.cannotOverlapError.label}
+            variant="labelS"
+            color="error"
+          />
+        )}
+        {addDisabled && checkIfStartOrEndInPast(state) && (
+          <Typography
+            text={addEventLabels.startOrEndInPastError.label}
+            variant="labelS"
+            color="error"
+          />
+        )}
+        {addDisabled && checkIfStartBeforeEnd(state) && (
+          <Typography
+            text={addEventLabels.startAfterEndError.label}
+            variant="labelS"
+            color="error"
+          />
+        )}
+        {addDisabled && isDurationOver24Hours(state) && (
+          <Typography
+            text={addEventLabels.durationOver24Error.label}
+            variant="labelS"
+            color="error"
+          />
+        )}
       </Box>
     </Box>
   );

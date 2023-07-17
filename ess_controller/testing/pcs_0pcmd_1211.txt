@@ -1,0 +1,831 @@
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/remote_control | jq
+./fims_send -m get -r /me -u /components/communications | jq
+./fims_send -m get -r /me -u /components/auto_reset | jq
+./fims_send -m get -r /me -u /components/control | jq
+./fims_send -m get -r /me -u /components/leak_protection | jq
+./fims_send -m get -r /me -u /components/du_configuration | jq
+./fims_send -m get -r /me -u /components/battery_configuration | jq
+./fims_send -m get -r /me -u /components/grid_visualization | jq
+./fims_send -m get -r /me -u /components/dc_inputs | jq
+./fims_send -m get -r /me -u /components/insulation_monitoring | jq
+./fims_send -m get -r /me -u /components/internal_visualization | jq
+./fims_send -m get -r /me -u /components/counters | jq
+./fims_send -m get -r /me -u /components/fault_history | jq
+./fims_send -m get -r /me -u /components/warning_history | jq
+./fims_send -m get -r /me -u /components/event_history | jq
+./fims_send -m get -r /me -u /components/modules_information | jq
+./fims_send -m get -r /me -u /components/du | jq
+./fims_send -m get -r /me -u /components/bms_summary | jq
+./fims_send -m get -r /me -u /components/bms_information | jq
+./fims_send -m get -r /me -u /components/bms_enclosure | jq
+./fims_send -m get -r /me -u /components/bms_transformer | jq
+./fims_send -m get -r /me -u /components/bms_hvac | jq
+{
+  "start": 0,
+  "stop": 0,
+  "reset": 0,
+  "e_stop": 0,
+  "Timestamp": "12-11-2020 13:17:47.134875",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/general | jq
+{
+  "user_pw": 0,
+  "seconds": 34,
+  "minutes": 16,
+  "hours": 13,
+  "day": 11,
+  "month": 12,
+  "year": 2020,
+  "utc": 0,
+  "access": 20780,
+  "user": 2,
+  "Timestamp": "12-11-2020 13:17:47.350721",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/running_conditions | jq
+{
+  "vdc_low": 900,
+  "vac_low": 95,
+  "vac_high": 105,
+  "start_delay": 5,
+  "Timestamp": "12-11-2020 13:17:47.302905",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/limits | jq
+{
+  "p_limit": 100,
+  "q_limit": 100,
+  "p_q_priority": 0,
+  "s_limit": 25,
+  "p_algo_pri": 0,
+  "Timestamp": "12-11-2020 13:17:47.223199",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/gradients | jq
+{
+  "lvrt_ref": 10000,
+  "ovrt_ref": 10000,
+  "night_mode_enable": 0,
+  "night_mode_q_ref": 0,
+  "night_mode_vbus_ref": 1125,
+  "night_mode_activate": 0,
+  "start_grad_p_enable": 1,
+  "start_grad_p": 5,
+  "start_grad_q_enable": 1,
+  "start_grad_q": 10,
+  "rise_grad_p_enable": 1,
+  "rise_grad_p": 10,
+  "rise_grad_q_enable": 1,
+  "rise_grad_q": 10,
+  "drop_grad_p_enable": 1,
+  "drop_grad_p": 10,
+  "drop_grad_q_enable": 1,
+  "drop_grad_q": 10,
+  "stop_grad_p_enable": 0,
+  "stop_grad_p": 10,
+  "stop_grad_q_enable": 0,
+  "stop_grad_q": 10,
+  "tracker_enable": 0,
+  "tracker_vac_out": 480,
+  "tracker_vac_min": 80,
+  "tracker_time_start": 1,
+  "svr_enable": 0,
+  "svr_v1_threshold": 105,
+  "svr_v2_threshold": 107,
+  "svr_v1_hysteresis": 2,
+  "svr_v2_hysetresis": 2,
+  "svr_grad_inject": 0.3,
+  "svr_grad_recover_q": 1.7,
+  "svr_grad_reduction_p": 0.3,
+  "svr_grad_recover_p": 1.7,
+  "svr_cosfi_limit": 0.85,
+  "vp_ref_power": 0,
+  "vp_rec_mode": 0,
+  "vp_enable": 0,
+  "vp_v1": 110,
+  "vp_v2": 120,
+  "vp_p1": 100,
+  "vp_p2": 0,
+  "vp_hysteresis": 0,
+  "vp_delay_hysteresis": 60,
+  "vp_response_tiime": 10,
+  "active_bal_activate": 0,
+  "bank_bal_activate": 0,
+  "bank_bal_reconnect_grad": 100,
+  "cvsb_activate": 0,
+  "cvsb_time_to_enter": 1200,
+  "Timestamp": "12-11-2020 13:17:47.448319",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/protections | jq
+{
+  "lv_enable": [
+    {
+      "value": 3,
+      "string": "LV Very Fast Protection"
+    },
+    {
+      "value": 4,
+      "string": "LV Very Fast 2 Protection"
+    }
+  ],
+  "lv_slow": 88,
+  "lv_delay_slow": 0.2,
+  "lv_fast": 50,
+  "lv_delay_fast": 0.16,
+  "lv_very_fast": 40,
+  "lv_delay_very_fast": 0.01,
+  "lv_interpolation": 0,
+  "hv_enable": [
+    {
+      "value": 3,
+      "string": "HV Very Fast Protection"
+    },
+    {
+      "value": 4,
+      "string": "HV Very Fast 2 Protection"
+    }
+  ],
+  "hv_slow": 110,
+  "hv_delay_slow": 0.1,
+  "hv_fast": 120,
+  "hv_delay_fast": 0.16,
+  "hv_very_fast": 130,
+  "hv_delay_very_fast": 0.01,
+  "hv_interpolation": 0,
+  "lf_enable": [
+    {
+      "value": 2,
+      "string": "LF Fast Protection"
+    },
+    {
+      "value": 4,
+      "string": "LF Very Fast 2 Protection"
+    }
+  ],
+  "lf_slow": 59.3,
+  "lf_delay_slow": 30,
+  "lf_fast": 57,
+  "lf_delay_fast": 0.16,
+  "lf_very_fast": 5.6,
+  "lf_delay_very_fast": 0.1,
+  "hf_enable": [
+    {
+      "value": 2,
+      "string": "HF Fast Protection"
+    }
+  ],
+  "hf_slow": 60.3,
+  "hf_delay_slow": 0.01,
+  "hf_fast": 60.5,
+  "hf_delay_fast": 0.16,
+  "hf_very_fast": 61,
+  "hf_delay_very_fast": 0.01,
+  "unbalance_enable": [
+    {
+      "value": 0,
+      "string": "I unbalance"
+    },
+    {
+      "value": 1,
+      "string": "v unbalance"
+    }
+  ],
+  "unbalance_i_threshold": 30,
+  "unbalance_i_delay": 5,
+  "unbalance_v_threshold": 25,
+  "unbalance_v_delay": 5,
+  "unbalance_i_min": 30,
+  "antiislanding_enable": [],
+  "igbt_temp_thres_fit": 125,
+  "igbt_temp_hist": 10,
+  "module_temp_thres_fit": 85,
+  "module_temp_hist": 10,
+  "internal_temp_thres_fit": 85,
+  "earth_current": 30,
+  "high_vdc_delay": 30,
+  "du_overcurrent": 400,
+  "lv_fast_2": 45,
+  "lv_delay_fast_2": 0.01,
+  "lv_very_fast_2": 35,
+  "lv_delay_very_fast_2": 0.01,
+  "hv_fast_2": 125,
+  "hv_delay_fast_2": 0.01,
+  "hv_very_fast_2": 135,
+  "hv_delay_very_fast_2": 0.01,
+  "lf_slow_2": 59.3,
+  "lf_delay_slow_2": 0.01,
+  "lf_very_fast_2": 55,
+  "lf_delay_very_fast_2": 0.5,
+  "hf_slow_2": 60.4,
+  "hf_delay_slow_2": 0.01,
+  "hf_very_fast_2": 61.5,
+  "hf_delay_very_fast_2": 0.5,
+  "hvpl_enable": [],
+  "hvpl_activation_level_5": 5,
+  "hvpl_scale_1000": 1000,
+  "hvpl_fault_level_0": 0,
+  "hvpl_filter_hz_100_hz": 0.1,
+  "hvpl_delay_fault_s_0_s": 2,
+  "hvpl_start_test": [],
+  "hvpl_test_level_20": -20,
+  "lv_lf_enable": 0,
+  "lv_lf_V": 0,
+  "lv_lf_f": 0,
+  "lv_lf_t": 0,
+  "mv_manometer_fault": 0,
+  "mv_manometer_delay": 10,
+  "lv_manometer_fault": 0,
+  "lv_manometer_delay": 10,
+  "hv_hf_enable": 0,
+  "hv_hf_V": 120,
+  "hv_hf_f": 62,
+  "hv_hf_t": 1,
+  "lv_hf_enable": 0,
+  "lv_hf_V": 80,
+  "lv_hf_f": 62,
+  "lv_hf_t": 1,
+  "hv_lf_enable": 0,
+  "hv_lf_V": 120,
+  "hv_lf_f": 58,
+  "hv_lf_t": 1,
+  "Timestamp": "12-11-2020 13:17:46.990863",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/communications | jq
+{
+  "display_baudrate": 5,
+  "modbus_address": 150,
+  "modbus_baudrate": 3,
+  "modbus_parity": 0,
+  "modbus_stop_bits": 0,
+  "modbus_master": 1,
+  "automatic_ip": 0,
+  "assigned_ip_a": 192,
+  "assigned_ip_b": 168,
+  "assigned_ip_c": 41,
+  "assigned_ip_d": 143,
+  "assigned_subnet_a": 255,
+  "assigned_subnet_b": 255,
+  "assigned_subnet_c": 255,
+  "assigned_subnet_d": 0,
+  "assigned_gateway_a": 192,
+  "assigned_gateway_b": 168,
+  "assigned_gateway_c": 1,
+  "assigned_gateway_d": 1,
+  "ip_address_a": 192,
+  "ip_address_b": 168,
+  "ip_address_c": 41,
+  "ip_address_d": 143,
+  "subnet_a": 255,
+  "subnet_b": 255,
+  "subnet_c": 255,
+  "subnet_d": 0,
+  "gateway_a": 192,
+  "gateway_b": 168,
+  "gateway_c": 1,
+  "gateway_d": 1,
+  "mac_a": 112,
+  "mac_b": 179,
+  "mac_c": 213,
+  "mac_d": 189,
+  "mac_e": 177,
+  "mac_f": 149,
+  "reset_refs_time_s": 4,
+  "comms_fault_time_s_s": 6,
+  "home_p_ref_0_0": 0,
+  "home_q_ref_0_0": 0,
+  "Timestamp": "12-11-2020 13:17:47.510737",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/auto_reset | jq
+{
+  "auto_reset_enable": 1,
+  "number_of_retries": 5,
+  "delay_between_retries_s_s": 3,
+  "reset_retries_timeout": 30,
+  "all_faults_enabled": 1,
+  "faults_allowed_number": 0,
+  "faults_allowed_1": 0,
+  "faults_allowed_2": 0,
+  "faults_allowed_3": 0,
+  "faults_allowed_4": 0,
+  "faults_allowed_5": 0,
+  "faults_allowed_6": 0,
+  "faults_allowed_7": 0,
+  "faults_allowed_8": 0,
+  "faults_allowed_9": 0,
+  "faults_allowed_10": 0,
+  "faults_exception_number": 9,
+  "faults_exception_1": 0,
+  "faults_exception_2": 0,
+  "faults_exception_3": 0,
+  "faults_exception_4": 0,
+  "faults_exception_5": 0,
+  "faults_exception_6": 0,
+  "faults_exception_7": 0,
+  "faults_exception_8": 0,
+  "faults_exception_9": 351,
+  "faults_exception_10": 0,
+  "Timestamp": "12-11-2020 13:17:47.271175",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/control | jq
+{
+  "p_control_mode": [
+    {
+      "value": 1,
+      "string": "P control mode = P"
+    }
+  ],
+  "q_control_mode": [
+    {
+      "value": 0,
+      "string": "Q control Mode = Cos phi"
+    }
+  ],
+  "p_p_reference": 0,
+  "p_id_reference": 100,
+  "q_cosphi_reference": 1,
+  "q_iq_reference": 0,
+  "q_q_reference": 0,
+  "excitation": [],
+  "q_v_reference": 100,
+  "vq_v1": 90,
+  "vq_v2": 92,
+  "vq_v3": 108,
+  "vq_v4": 110,
+  "vq_q1": 48.43,
+  "vq_q2": 0,
+  "vq_q3": 0,
+  "vq_q4": 48.43,
+  "vq_hysterisis": 1,
+  "vq_p_activation": 20,
+  "vq_p_deactivation": 5,
+  "vq_response_delay": 0.3,
+  "vq_response_time": 5,
+  "Timestamp": "12-11-2020 13:17:47.183130",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/leak_protection | jq
+{
+  "leak_protection_type_1": 0,
+  "leak_imi_activation_1": 0,
+  "leak_fault_threshold_1": 5,
+  "leak_fault_recover_threshold_1": 0.0575,
+  "leak_warning_theshold_1": 50,
+  "leak_self_test_exec_period_1": 1440,
+  "leak_self_test_manual_command_1": 0,
+  "leak_protection_type_2": 0,
+  "leak_imi_activation_2": 0,
+  "leak_fault_threshold_2": 5,
+  "leak_fault_recover_threshold_2": 0.0575,
+  "leak_warning_theshold_2": 50,
+  "leak_self_test_exec_period_2": 1440,
+  "leak_self_test_manual_command_2": 0,
+  "leak_protection_type_3": 0,
+  "leak_imi_activation_3": 0,
+  "leak_fault_threshold_3": 5,
+  "leak_fault_recover_threshold_3": 0.0575,
+  "leak_warning_theshold_3": 50,
+  "leak_self_test_exec_period_3": 1440,
+  "leak_self_test_manual_command_3": 0,
+  "Timestamp": "12-11-2020 13:17:47.230872",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/du_configuration | jq
+{
+  "enabled_nec": 1,
+  "du_type": 4,
+  "working_mode": 1,
+  "Timestamp": "12-11-2020 13:17:46.271067",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/battery_configuration | jq
+{
+  "battery_module_model": 0,
+  "bms_banks_enabled": 1,
+  "Timestamp": "12-11-2020 13:17:47.526745",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/grid_visualization | jq
+{
+  "grid_voltage_rs": 48.5,
+  "grid_voltage_st": 48.5,
+  "grid_voltage_tr": 49,
+  "grid_current_1": 0.3,
+  "grid_current_2": 0.3,
+  "grid_current_3": 0,
+  "active_power": 0,
+  "reactive_power": 0,
+  "apparent_power": 1,
+  "cosphi": 64.79,
+  "grid_frequency": 595.32,
+  "poi_v_est": 482,
+  "Timestamp": "12-11-2020 13:17:47.167349",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/dc_inputs | jq
+{
+  "vdc_last_linp": 0,
+  "dc_p_input": 5,
+  "dc_total_i_input": 4,
+  "vdc_bus_1": 1375,
+  "vdc_bus_2": 0,
+  "vdc_bus_3": 0,
+  "bess_1_v": 1356.7,
+  "bess_2_v": 0,
+  "bess_3_v": 0,
+  "bess_1_p_input": 5,
+  "bess_2_p_input": 0,
+  "bess_3_p_input": 0,
+  "dc_1_i_input": 4,
+  "dc_2_i_input": 0,
+  "dc_3_i_input": 0,
+  "bess_1_idcref": 0,
+  "bess_2_idcref": 0,
+  "bess_3_idcref": 0,
+  "Timestamp": "12-11-2020 13:17:47.319016",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/insulation_monitoring | jq
+{
+  "insulation_status_1": 0,
+  "insulation_resistor_msb_1": 65535,
+  "insulation_resistor_lsb_1": 65535,
+  "insulation_measurement_started_time_1": 0,
+  "insulation_self_test_started_time_1": 0,
+  "insulation_self_test_exec_countdown_1": 0,
+  "insulation_status_update_1": 0,
+  "insulation_status_2": 0,
+  "insulation_resistor_msb_2": 65535,
+  "insulation_resistor_lsb_2": 65535,
+  "insulation_measurement_started_time_2": 0,
+  "insulation_self_test_started_time_2": 0,
+  "insulation_self_test_exec_countdown_2": 0,
+  "insulation_status_update_2": 0,
+  "insulation_status_3": 0,
+  "insulation_resistor_msb_3": 65535,
+  "insulation_resistor_lsb_3": 65535,
+  "insulation_measurement_started_time_3": 0,
+  "insulation_self_test_started_time_3": 0,
+  "insulation_self_test_exec_countdown_3": 0,
+  "insulation_status_update_3": 0,
+  "Timestamp": "12-11-2020 13:17:46.966822",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/internal_visualization | jq
+{
+  "current_fault": 0,
+  "current_warning": 140,
+  "current_status": 6,
+  "internal_temperature": 24,
+  "max_igbts_temperature": 22,
+  "max_modules_temperature": 24,
+  "internal_input_status": 311,
+  "internal_output_status": 28,
+  "ac_module_admission_temperature": 19,
+  "current_normative": 0,
+  "current_fault_module": 0,
+  "internal_humidity": 29,
+  "lv_manometer": 0,
+  "power_source_1": 23.6,
+  "power_source_2": 0,
+  "p_limit_inst": 0.7216,
+  "q_limit_inst": 0.7216,
+  "r_mohm": 5,
+  "l_uh": 140,
+  "c_uf": 61.5,
+  "lc_uh": 16.2,
+  "start_conditions_all": 0,
+  "start_conditions_v": 1,
+  "start_conditions_f": 1,
+  "start_conditions_vdc": 1,
+  "start_conditions_p": 1,
+  "start_conditions_soc_no": 1,
+  "nominal_ac_voltage": 480,
+  "max_ac_current": 529,
+  "nominal_bus_voltage": 1500,
+  "max_dc_current": 670,
+  "nominal_s": 440,
+  "number_of_modules": 1,
+  "number_of_mpps": 1,
+  "number_of_bus": 1,
+  "inverter_type": 3,
+  "inductive_i_limit": 492,
+  "capacitive_i_limit": 440,
+  "max_p_limit": 100,
+  "max_q_limit": 100,
+  "max_s_limit": 100,
+  "Timestamp": "12-11-2020 13:17:47.151632",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/counters | jq
+{
+  "select_module": 0,
+  "daily_energy_msb": 0,
+  "daily_energy_lsb": 0,
+  "yesterday_energy_msb": 0,
+  "yesterday_energy_lsb": 12,
+  "current_month_energy_msb": 0,
+  "current_month_energy_lsb": 12,
+  "last_month_energy_msb": 0,
+  "last_month_energy_lsb": 0,
+  "total_energy_msb": 0,
+  "total_energy_lsb": 12,
+  "select_module_reactive_energy": 0,
+  "daily_reactive_energy_msb": 0,
+  "daily_reactive_energy_lsb": 0,
+  "yesterday_reactive_energy_msb": 0,
+  "yesterday_reactive_energy_lsb": 5,
+  "current_month_reactive_energy_msb": 0,
+  "current_month_reactive_energy_lsb": 5,
+  "last_month_reactive_energy_msb": 0,
+  "last_month_reactive_energy_lsb": 0,
+  "total_reactive_energy_msb": 0,
+  "total_reactive_energy_lsb": 5,
+  "total_run_time_years": 0,
+  "total_run_time_days": 0,
+  "total_run_time_hours": 0,
+  "partial_run_time_years": 0,
+  "partial_run_time_days": 0,
+  "partial_run_time_hours": 0,
+  "total_grid_connections": 14,
+  "partial_grid_connections": 14,
+  "consum_daily_energy_msb": 0,
+  "consum_daily_energy_lsb": 0,
+  "consum_total_energy_msb": 0,
+  "consum_total_energy_lsb": 15,
+  "Timestamp": "12-11-2020 13:17:47.962916",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/fault_history | jq
+{
+  "last_fault": 1131,
+  "last_fault_date": 22036,
+  "last_fault_time": 1831,
+  "ninth_fault": 13,
+  "ninth_fault_date": 22036,
+  "ninth_fault_time": 1804,
+  "eighth_fault": 57,
+  "eighth_fault_date": 19988,
+  "eighth_fault_time": 2818,
+  "seventh_fault": 44,
+  "seventh_fault_date": 19988,
+  "seventh_fault_time": 2818,
+  "sixth_fault": 57,
+  "sixth_fault_date": 19988,
+  "sixth_fault_time": 2613,
+  "fifth_fault": 44,
+  "fifth_fault_date": 19988,
+  "fifth_fault_time": 2601,
+  "fourth_fault": 14,
+  "fourth_fault_date": 19988,
+  "fourth_fault_time": 2576,
+  "third_fault": 44,
+  "third_fault_date": 19988,
+  "third_fault_time": 2576,
+  "second_fault": 14,
+  "second_fault_date": 19988,
+  "second_fault_time": 2360,
+  "first_fault": 1066,
+  "first_fault_date": 15892,
+  "first_fault_time": 3604,
+  "Timestamp": "12-11-2020 13:17:48.35030",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/warning_history | jq
+{
+  "last_warning": 39,
+  "last_warning_date": 24084,
+  "last_warning_time": 3344,
+  "ninth_warning": 39,
+  "ninth_warning_date": 24084,
+  "ninth_warning_time": 3131,
+  "eighth_warning": 5,
+  "eighth_warning_date": 24084,
+  "eighth_warning_time": 3131,
+  "seventh_warning": 39,
+  "seventh_warning_date": 24084,
+  "seventh_warning_time": 3092,
+  "sixth_warning": 39,
+  "sixth_warning_date": 24084,
+  "sixth_warning_time": 2874,
+  "fifth_warning": 5,
+  "fifth_warning_date": 24084,
+  "fifth_warning_time": 2874,
+  "fourth_warning": 39,
+  "fourth_warning_date": 24084,
+  "fourth_warning_time": 2861,
+  "third_warning": 140,
+  "third_warning_date": 24084,
+  "third_warning_time": 2845,
+  "second_warning": 140,
+  "second_warning_date": 22036,
+  "second_warning_time": 3612,
+  "first_warning": 39,
+  "first_warning_date": 22036,
+  "first_warning_time": 2342,
+  "Timestamp": "12-11-2020 13:17:47.462853",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/event_history | jq
+{
+  "last_event": 2,
+  "last_event_date": 24084,
+  "last_event_time": 3328,
+  "ninth_event": 2,
+  "ninth_event_date": 24084,
+  "ninth_event_time": 3093,
+  "eighth_event": 2,
+  "eighth_event_date": 24084,
+  "eighth_event_time": 3072,
+  "seventh_event": 2,
+  "seventh_event_date": 24084,
+  "seventh_event_time": 2872,
+  "sixth_event": 1,
+  "sixth_event_date": 24084,
+  "sixth_event_time": 2853,
+  "fifth_event": 1,
+  "fifth_event_date": 24084,
+  "fifth_event_time": 2849,
+  "fourth_event": 1,
+  "fourth_event_date": 28052,
+  "fourth_event_time": 2817,
+  "third_event": 1,
+  "third_event_date": 28052,
+  "third_event_time": 2817,
+  "second_event": 1,
+  "second_event_date": 28052,
+  "second_event_time": 2617,
+  "first_event": 1,
+  "first_event_date": 28052,
+  "first_event_time": 2617,
+  "Timestamp": "12-11-2020 13:17:47.978963",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/modules_information | jq
+{
+  "running_modules": 1,
+  "num_running_modules": 1,
+  "next_starting_module": 65535,
+  "modules_start_stop": 1,
+  "modules_enable_reg": 1,
+  "selected_module": 0,
+  "module_status": 7,
+  "current_r": 23,
+  "current_s": 16.2,
+  "current_t": 18.9,
+  "dc_current": 4.1,
+  "dc_voltage_p": 681,
+  "dc_voltage_n": 683,
+  "dc_voltage": 1364,
+  "p": 6552.6,
+  "q": 6536.6,
+  "ambient_temperature": 25,
+  "max_temperature": 22,
+  "i_o_status": 323,
+  "temperature_r1": 21,
+  "temperature_r2": 22,
+  "temperature_r3": 21,
+  "temperature_s1": 21,
+  "temperature_s2": 22,
+  "temperature_s3": 21,
+  "temperature_t1": 21,
+  "temperature_t2": 21,
+  "temperature_t3": 22,
+  "Timestamp": "12-11-2020 13:17:47.215161",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/du | jq
+{
+  "du_feedback_status": 18,
+  "Timestamp": "12-11-2020 13:17:47.946816",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/bms_summary | jq
+{
+  "bms1_status": 0,
+  "bms1_strings_in_service": 0,
+  "bms1_total_strings_count": 0,
+  "bms1_system_voltage": 0,
+  "bms1_system_current": 0,
+  "bms1_system_soc": 0,
+  "bms2_status": 0,
+  "bms2_strings_in_service": 0,
+  "bms2_total_strings_count": 0,
+  "bms2_system_voltage": 0,
+  "bms2_system_current": 0,
+  "bms2_system_soc": 0,
+  "bms3_status": 0,
+  "bms3_strings_in_service": 0,
+  "bms3_total_strings_count": 0,
+  "bms3_system_voltage": 0,
+  "bms3_system_current": 0,
+  "bms3_system_soc": 0,
+  "Timestamp": "12-11-2020 13:17:48.279630",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/bms_information | jq
+{
+  "bms_select": 0.1,
+  "bms_sys_heartbeat": 0,
+  "bms_strings_service": 0,
+  "bms_total_strings_count": 0,
+  "bms_service_voltage": 0,
+  "bms_service_soc": 0,
+  "bms_voltage": 0,
+  "bms_current": 0,
+  "bms_soc": 0,
+  "bms_soh": 0,
+  "bms_mode": 0,
+  "bms_max_v": 0,
+  "bms_min_v": 0,
+  "bms_max_temp": 0,
+  "bms_min_temp": 0,
+  "bms_min_partial_strings": 0,
+  "bms_partial_voltage": 0,
+  "bms_config_status": 0,
+  "bms_protection_4": 0,
+  "bms_protection_3": 0,
+  "bms_protection_2": 0,
+  "bms_protection_1": 0,
+  "bms_alarm_4": 0,
+  "bms_alarm_3": 0,
+  "bms_alarm_2": 0,
+  "bms_alarm_1": 0,
+  "bms_dcl": 0,
+  "bms_ccl": 0,
+  "bms_watchdog_response": 0,
+  "bms_dio_status": 0,
+  "bms_alarm_status": 0,
+  "Timestamp": "12-11-2020 13:17:47.286920",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/bms_enclosure | jq
+{
+  "bmsenc_door_contact": 0,
+  "bmsenc_fcp_alarm": 0,
+  "bmsenc_fcp_predischarge": 0,
+  "bmsenc_fcp_release": 0,
+  "bmsenc_fcp_sup": 0,
+  "bmsenc_dc_disconnected_1": 0,
+  "bmsenc_dc_disconnected_2": 0,
+  "bmsenc_emergency_stop": 0,
+  "bmsenc_ups_failure": 0,
+  "bmsenc_ups_ok": 0,
+  "bmsenc_temp_humidity_t": 0,
+  "bmsenc_temp_humidity_h": 0,
+  "bmsenc_temp_1": 0,
+  "bmsenc_temp_2": 0,
+  "bmsenc_temp_3": 0,
+  "bmsenc_temp_4": 0,
+  "bmsenc_temp_5": 0,
+  "bmsenc_temp_6": 0,
+  "Timestamp": "12-11-2020 13:17:47.62850",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/bms_transformer | jq
+{
+  "transformer_alarms": 0,
+  "Timestamp": "12-11-2020 13:17:48.366890",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$ ./fims_send -m get -r /me -u /components/bms_hvac | jq
+{
+  "hvac_signals_1": 0,
+  "hvac_signals_2": 0,
+  "hvac_signals_3": 0,
+  "hvac_signals_4": 0,
+  "Timestamp": "12-11-2020 13:17:48.50887",
+  "modbus_heartbeat": 0,
+  "component_connected": true
+}
+[vagrant@localhost fims]$

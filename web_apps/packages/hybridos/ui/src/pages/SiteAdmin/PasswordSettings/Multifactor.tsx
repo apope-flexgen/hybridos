@@ -17,6 +17,7 @@ const Multifactor: FC<MultifactorProps> = ({
     <Box sx={{ display: 'flex', gap: '16px', width: '60%' }}>
       <Box sx={{ display: 'flex' }}>
         <Switch
+          autoLayout
           color="primary"
           id="enable_mfa"
           label={siteAdminLabels.mfaSwitch}

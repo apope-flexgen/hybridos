@@ -25,6 +25,10 @@
 #include <climits>
 #include <ctime>
 #include <iomanip>
+#include <string>
+#include <fstream>
+#include <streambuf>
+
 
 #include <fims/libfims.h>
 
@@ -74,6 +78,13 @@ using namespace std;
 // Internal Indications -
 
 // uses unsigned int to extend the range for int
+bool isNumber (const char *line)
+{
+    if (isdigit(atoi(line)))
+        return true;
+    return false;
+}
+
 const char *getVersion()
 {
     return  DNP3_UTILS_VERSION;
@@ -273,41 +284,53 @@ bool extractInt16Val(double &dval, DbVar* db)
     return flag;
 }
 
-// we only really want these events
-//{"source":"DNP3","message":"DNP3  hybridos message [INFO   ] --[fps Logger ms(1592449037729) INFO    server - Listening on: 127.0.0.1:12502]\n","severity":1}
-//{"source":"DNP3","message":"DNP3  xxhybridos message [INFO   ] --[fps Logger ms(1592449067320) INFO    xxhybridos - Connecting to: 127.0.0.1, port 12502]\n","severity":1}
-//{"source":"DNP3","message":"DNP3  xxhybridos message [INFO   ] --[fps Logger ms(1592449067321) INFO    xxhybridos - Connected to: 127.0.0.1, port 12502]\n","severity":1}
-//{"source":"DNP3","message":"DNP3  xxhybridos message [WARN   ] --[fps Logger ms(1592449007315) WARN    xxhybridos - Error Connecting: Connection refused]\n","severity":1}
-//{"source":"DNP3","message":"DNP3  hybridos message [WARN   ] --[fps Logger ms(1592482027367) WARN    server - End of file]\n","severity":1}
 
-// these are the only event states we now get...
+// bypass message filter for opendpn3 messages
 void emit_event(sysCfg* sys, const char* source, const char* message, int severity)
 {
     fims*pFims =  sys->p_fims;
+    cJSON* cj = cJSON_CreateObject();
+    if(cj)
+    {
+
+        if (source == nullptr) 
+        {
+            char sysid[1024];
+            snprintf(sysid, sizeof(sysid), "DNP3_%s:%s"
+                    , sys->master ? "client":"server", sys->id 
+                    );
+            cJSON_AddStringToObject(cj, "source", sysid);
+        }
+        else
+        {
+            cJSON_AddStringToObject(cj, "source", source);
+        }
+
+        cJSON_AddStringToObject(cj, "message", message);
+        cJSON_AddNumberToObject(cj, "severity", severity);
+        char* body = cJSON_PrintUnformatted(cj);
+        if(body && pFims)
+        {                
+            pFims->Send("post", "/events", NULL, body);
+            free(body);
+        }
+        cJSON_Delete(cj);
+    }
+}
+
+// this is used to  filter the flood of messages from openDnp3 
+void emit_event_filt(sysCfg* sys, const char* source, const char* message, int severity)
+{
     if (
-        (strstr(message,"[CLOSED]") != NULL) 
+            (strstr(message,"[CLOSED]") != NULL) 
         || (strstr(message,"[OPENING]") != NULL)
         || (strstr(message,"[OPEN]") != NULL)
         || (strstr(message,"[SHUTDOWN]") != NULL)
         || (strstr(message,"- End of file") != NULL)
         || (sys->debug > 2)
     ) 
-
     {
-        cJSON* cj = cJSON_CreateObject();
-        if(cj)
-        {
-            cJSON_AddStringToObject(cj, "source", source);
-            cJSON_AddStringToObject(cj, "message", message);
-            cJSON_AddNumberToObject(cj, "severity", severity);
-            char* body = cJSON_PrintUnformatted(cj);
-            if(body)
-            {                
-                pFims->Send("post", "/events", NULL, body);
-                free(body);
-            }
-            cJSON_Delete(cj);
-        }
+        emit_event(sys, source, message, severity);
     }
 }
 
@@ -386,9 +409,6 @@ cJSON* get_config_json(int argc, char* argv[], int num)
     return get_config_file(argv[num+1]);
 }
 
-#include <string>
-#include <fstream>
-#include <streambuf>
 
 cJSON* get_config_file(char* fname)
 {
@@ -460,171 +480,198 @@ cJSON* parseJSONConfig(char* file_path)
     return(pJsonRoot);
 }
 
-// "system": {
-//        "protocol": "DNP3",
-//        "version": 1,
-//        "id": "dnp3_outstation",
-//        "ip_address": "192.168.1.50",
-//        "port": 502,
-//        "master_address": 1,
-//		  "station_address": 10
-//    },const char *iotypToStr (int t)
 
 OperationType TypeToOperationType(uint8_t arg)
 {
     return static_cast<OperationType>(arg);
 }
 
-void addCjVal(cJSON* cj, DbVar* db, int flag, double val)
+void addFullVal(cJSON* cji, DbVar* db)
 {
-    if(flag & PRINT_VALUE)
+    cJSON_AddStringToObject(cji, "sflags", db->sflags.c_str());
+    cJSON_AddNumberToObject(cji, "flags", db->flags);
+    if (db->stime.length() > 0)
     {
-        cJSON* cji = cJSON_CreateObject();
-        cJSON_AddNumberToObject(cji, "value", val);
-        if(flag & PRINT_FLAGS)
-        {
-            cJSON_AddStringToObject(cji, "sflags", db->sflags.c_str());
-            cJSON_AddNumberToObject(cji, "flags", db->flags);
-        }
-        cJSON_AddItemToObject(cj, db->name.c_str(), cji);
+        cJSON_AddStringToObject(cji, "stime", db->stime.c_str());
+    }    
+    if (db->ltime.length() > 0)
+    {
+        cJSON_AddStringToObject(cji, "ltime", db->ltime.c_str());
     }
-    else
+    if (db->etime.length() > 0)
+    {
+        cJSON_AddStringToObject(cji, "etime", db->etime.c_str());
+    }
+
+}
+
+// decode format but let uri flags override
+int getDbFmt(sysCfg* sys, DbVar* db, int flag)
+{
+    auto fmt = sys->fmt;
+    if (db->format)
+    {
+        fmt = db->fmt;
+    }
+    if ((flag & URI_FLAG_FULL) == URI_FLAG_FULL)
+    {
+        fmt = 2;
+    }
+    if ((flag & URI_FLAG_CLOTHED) == URI_FLAG_CLOTHED)
+    {
+        fmt = 1;
+    }
+    if ((flag & URI_FLAG_NAKED) == URI_FLAG_NAKED)
+    {
+        fmt = 0;
+    }
+    return fmt;
+
+}
+void addSysCjVal(sysCfg* sys, cJSON* cj, DbVar* db, int flag, double val)
+{
+    auto fmt = getDbFmt(sys,db,flag);
+
+    if (fmt == 0)
     {
         cJSON_AddNumberToObject(cj, db->name.c_str(), val);
     }
-}
-
-void addCjVal(cJSON* cj, DbVar* db,  int flag, uint32_t val)
-{
-    if(flag & PRINT_VALUE)
+    else if (fmt > 0)
     {
         cJSON* cji = cJSON_CreateObject();
         cJSON_AddNumberToObject(cji, "value", val);
-        if(flag & PRINT_FLAGS)
+        if (fmt > 1)
         {
-            cJSON_AddStringToObject(cji, "sflags", db->sflags.c_str());
-            cJSON_AddNumberToObject(cji, "flags", db->flags);
+            addFullVal(cji, db);
         }
         cJSON_AddItemToObject(cj, db->name.c_str(), cji);
     }
-    else
+}
+
+void addSysCjVal(sysCfg* sys, cJSON* cj, DbVar* db,  int flag, uint32_t val)
+{
+    auto fmt = getDbFmt(sys,db,flag);
+
+    if (fmt == 0)
     {
         cJSON_AddNumberToObject(cj, db->name.c_str(), val);
     }
-}
-void addCjVal(cJSON* cj, DbVar* db,  int flag, int32_t val)
-{
-    if(flag & PRINT_VALUE)
+    else if(fmt > 0)
     {
         cJSON* cji = cJSON_CreateObject();
         cJSON_AddNumberToObject(cji, "value", val);
-        if(flag & PRINT_FLAGS)
+        if (fmt > 1)
         {
-            cJSON_AddStringToObject(cji, "sflags", db->sflags.c_str());
-            cJSON_AddNumberToObject(cji, "flags", db->flags);
+            addFullVal(cji, db);
         }
         cJSON_AddItemToObject(cj, db->name.c_str(), cji);
     }
-    else
+}
+
+void addSysCjVal(sysCfg* sys,cJSON* cj, DbVar* db,  int flag, int32_t val)
+{
+    auto fmt = getDbFmt(sys,db,flag);
+
+    if (fmt == 0)
     {
+
         cJSON_AddNumberToObject(cj, db->name.c_str(), val);
+    }
+    else if (fmt > 0)
+    {
+
+        cJSON* cji = cJSON_CreateObject();
+        cJSON_AddNumberToObject(cji, "value", val);
+        if (fmt > 1)
+        {
+            addFullVal(cji, db);
+        }
+        cJSON_AddItemToObject(cj, db->name.c_str(), cji);
     }
 }
 
-void addCjVal(cJSON* cj, DbVar* db,  int flag, uint16_t val)
+void addSysCjVal(sysCfg* sys, cJSON* cj, DbVar* db,  int flag, uint16_t val)
 {
-    if(flag & PRINT_VALUE)
+    auto fmt = getDbFmt(sys,db,flag);
+
+    if (fmt == 0)
+    {
+        cJSON_AddNumberToObject(cj, db->name.c_str(), val);
+    }
+    else if (fmt > 0)
     {
         cJSON* cji = cJSON_CreateObject();
         cJSON_AddNumberToObject(cji, "value", val);
-        if(flag & PRINT_FLAGS)
+        if (fmt > 1)
         {
-            cJSON_AddStringToObject(cji, "sflags", db->sflags.c_str());
-            cJSON_AddNumberToObject(cji, "flags", db->flags);
+            addFullVal(cji, db);
         }
         cJSON_AddItemToObject(cj, db->name.c_str(), cji);
     }
-    else
+}
+
+void addSysCjVal(sysCfg* sys, cJSON* cj, DbVar* db,  int flag, int16_t val)
+{
+    auto fmt = getDbFmt(sys,db,flag);
+
+    if (fmt == 0)
     {
         cJSON_AddNumberToObject(cj, db->name.c_str(), val);
     }
-}
-
-void addCjVal(cJSON* cj, DbVar* db,  int flag, int16_t val)
-{
-    if(flag & PRINT_VALUE)
+    else if (fmt > 0)
     {
         cJSON* cji = cJSON_CreateObject();
         cJSON_AddNumberToObject(cji, "value", val);
-        if(flag & PRINT_FLAGS)
+        if (fmt > 1)
         {
-            cJSON_AddStringToObject(cji, "sflags", db->sflags.c_str());
-            cJSON_AddNumberToObject(cji, "flags", db->flags);
+            addFullVal(cji, db);
         }
         cJSON_AddItemToObject(cj, db->name.c_str(), cji);
     }
-    else
-    {
-        cJSON_AddNumberToObject(cj, db->name.c_str(), val);
-    }
 }
 
-// void addCjVal(cJSON* cj, const char* dname, int flag, int val)
-// {
-//     if((flag & PRINT_VALUE)|| (format > 0))
-//     {
-//         cJSON* cji = cJSON_CreateObject();
-//         cJSON_AddNumberToObject(cji, "value", val);
-//         cJSON_AddItemToObject(cj, dname, cji);
-//     }
-//     else
-//     {
-//         cJSON_AddNumberToObject(cj, dname, val);
-//     }
-// }
-
-void addCjVal(cJSON* cj, DbVar* db, int flag, bool val)
+void addSysCjVal(sysCfg* sys, cJSON* cj, DbVar* db, int flag, bool val)
 {
-    if(flag & PRINT_VALUE)
+    auto fmt = getDbFmt(sys,db,flag);
+
+    if (fmt == 0)
+    {
+        cJSON_AddBoolToObject(cj, db->name.c_str(), val);
+
+    }
+    if(fmt>0)
     {
         cJSON* cji = cJSON_CreateObject();
         cJSON_AddBoolToObject(cji, "value", val);
-        if(flag & PRINT_FLAGS)
+        if (fmt > 1)
         {
-            cJSON_AddStringToObject(cji, "sflags", db->sflags.c_str());
-            cJSON_AddNumberToObject(cji, "flags", db->flags);
+            addFullVal(cji, db);
         }
         cJSON_AddItemToObject(cj, db->name.c_str(), cji);
-    }
-    else
-    {
-        cJSON_AddBoolToObject(cj, db->name.c_str(), val);
     }
 }
 
-void addCjVal(cJSON* cj, DbVar* db, int flag, const char* val)
+void addSysCjVal(sysCfg* sys, cJSON* cj, DbVar* db, int flag, const char* val)
 {
-    if(flag & PRINT_VALUE)
+   auto fmt = getDbFmt(sys,db,flag);
+   if (fmt == 0)
+    {
+        cJSON_AddStringToObject(cj, db->name.c_str(), val);
+    }
+    if(fmt > 0)
     {
         cJSON* cji = cJSON_CreateObject();
         cJSON_AddStringToObject(cji, "value", val);
-        //if((format & 2) && (db->sflags.length() > 0))
-        if(flag & PRINT_FLAGS)
+        if (fmt > 1)
         {
-            cJSON_AddStringToObject(cji, "sflags", db->sflags.c_str());
-            cJSON_AddNumberToObject(cji, "flags", db->flags);
-
+            addFullVal(cji, db);
         }
         cJSON_AddItemToObject(cj, db->name.c_str(), cji);
-    }
-    else
-    {
-        cJSON_AddStringToObject(cj, db->name.c_str(), val);
     }
 }
 
 // This is the root function
-int addVarToCj(cJSON* cj,  DbVar* db, int flag)
+int addVarToCj(sysCfg*sys, cJSON* cj,  DbVar* db, int flag)
 {
     int rc = 0;
     // always use the value from the actual compoent 
@@ -638,7 +685,7 @@ int addVarToCj(cJSON* cj,  DbVar* db, int flag)
         {
             cju = cJSON_CreateObject();
             if(cju == NULL) return 1;
-            cJSON_AddItemToObject(cj,db->uri,cju);
+            cJSON_AddItemToObject(cj,db->uri, cju);
         }
         cj = cju;
     }
@@ -647,20 +694,20 @@ int addVarToCj(cJSON* cj,  DbVar* db, int flag)
         case Type_AnalogOS:
         case Type_Analog:
         {
-            if(db->variation == Group30Var5)
+            if((db->variation == Group30Var5) || (db->variation == Group30Var6))
             {
-                addCjVal(cj, db, flag, db->valuedouble);
+                addSysCjVal(sys, cj, db, flag, db->valuedouble);
                 
             }
             else
             {
                 if(db->sign)
                 {
-                    addCjVal(cj, db, flag, static_cast<double>(static_cast<int32_t>(db->valuedouble)));
+                    addSysCjVal(sys, cj, db, flag, static_cast<double>(static_cast<int32_t>(db->valuedouble)));
                 }
                 else
                 {
-                    addCjVal(cj, db, flag, db->valuedouble);        
+                    addSysCjVal(sys, cj, db, flag, db->valuedouble);        
                 }
             }
 
@@ -672,43 +719,37 @@ int addVarToCj(cJSON* cj,  DbVar* db, int flag)
         {
             bool bval = false;
             if (db->valuedouble > 0.0) bval = true;
-            addCjVal(cj, db, flag, bval);
+            addSysCjVal(sys, cj, db, flag, bval);
             break;
         }
         case Type_Crob:
         {
-            // TODO switch response to suit the original data entry 
-            // Int
-            // flag (true/false)
-            // string
-            // need to reply with the same response.
-            // LATCH_ON etc
             if (db->crob_input == CROB_STRING)
             {
                 const char* cmd = OperationTypeSpec::to_string(OperationTypeSpec::from_type(db->crob));
-                addCjVal(cj, db, flag, cmd);
+                addSysCjVal(sys, cj, db, flag, cmd);
             }
             if (db->crob_input == CROB_INT)
             {
-                addCjVal(cj, db, flag, db->crob);
+                addSysCjVal(sys, cj, db, flag, db->crob);
             }
             if (db->crob_input == CROB_BOOL)
             {
                 if(db->crob_true == db->crob)
                 {
-                    addCjVal(cj, db, flag, true);
+                    addSysCjVal(sys, cj, db, flag, true);
                 }
                 else if(db->crob_false == db->crob)
                 {
-                    addCjVal(cj, db, flag, false);
+                    addSysCjVal(sys, cj, db, flag, false);
                 }
                 else if(0x03 == db->crob)
                 {
-                    addCjVal(cj, db, flag, true);
+                    addSysCjVal(sys, cj, db, flag, true);
                 }
                 else 
                 {
-                    addCjVal(cj, db, flag, false);
+                    addSysCjVal(sys, cj, db, flag, false);
                 }
             }
             if(0)
@@ -725,12 +766,11 @@ int addVarToCj(cJSON* cj,  DbVar* db, int flag)
             {
                 // this can still be an int
                 //addCjVal(cj, dname, flag, static_cast<int32_t>(dval));
-                addCjVal(cj, db, flag, static_cast<uint16_t>(dval));
+                addSysCjVal(sys, cj, db, flag, static_cast<uint16_t>(dval));
             }
             else
             {
-                addCjVal(cj, db, flag, static_cast<int16_t>(dval));
-                //addCjVal(cj, dname, flag, static_cast<int32_t>(db->valuedouble));                
+                addSysCjVal(sys, cj, db, flag, static_cast<int16_t>(dval));
             }
             break;
         }
@@ -741,21 +781,20 @@ int addVarToCj(cJSON* cj,  DbVar* db, int flag)
             {                
                 FPS_DEBUG_PRINT("*** %s Found variable [%s] type  %d sign %d usng dval %f \n"
                                 , __FUNCTION__, db->name.c_str(), db->type, db->sign, dval);
-                addCjVal(cj, db, flag, static_cast<uint32_t>(dval));
+                addSysCjVal(sys, cj, db, flag, static_cast<uint32_t>(dval));
                     
             }
             else
             {
                 FPS_DEBUG_PRINT("*** %s Found variable [%s] type  %d sign %d using valuedouble %f\n"
                                 , __FUNCTION__, db->name.c_str(), db->type, db->sign, db->valuedouble);
-                addCjVal(cj, db, flag, static_cast<int32_t>(dval));
-               // addCjVal(cj, dname, flag, static_cast<int32_t>(db->valuedouble));                
+                addSysCjVal(sys, cj, db, flag, static_cast<int32_t>(dval));
             }            
             break;
         }
         case AnF32:
         {
-            addCjVal(cj, db, flag, db->valuedouble);
+            addSysCjVal(sys, cj, db, flag, db->valuedouble);
             break;
         }
         default:
@@ -771,27 +810,25 @@ int addVarToCj(cJSON* cj,  DbVar* db, int flag)
     return rc;
 }
 
-int addVarToCj(cJSON* cj, std::pair<DbVar*,int>dbp)
+int addVarToCj(sysCfg* sys, cJSON* cj, std::pair<DbVar*,int>dbp)
 {   
     DbVar* db = dbp.first;
     int flag = dbp.second;
-    return addVarToCj(cj, db, flag);
+    return addVarToCj(sys, cj, db, flag);
 }
 
-int addVarToCj(cJSON* cj,  DbVar* db)
+int addVarToCj(sysCfg* sys, cJSON* cj,  DbVar* db)
 {
-    return addVarToCj(cj, db, 0);
+    return addVarToCj(sys, cj, db, 0);
 }
 
 int addVarToCj(sysCfg* sys, cJSON* cj, const char* uri, const char* dname)
 {
     DbVar* db = sys->getDbVar(uri, dname);
 
-    return addVarToCj(cj, db, 0);
+    return addVarToCj(sys, cj, db, 0);
 }
-// these are the types decoded from the config file
-// must match the typedef sequence
-const char* dreg_types[] = { "AnOPInt16", "AnOPInt32", "AnOPF32", "CROB", "analog", "binary", "analogOS","binaryOS", 0 };
+const char* dreg_types[] = { "AnOPInt16", "AnOPInt32", "AnOPF32", "CROB", "analog", "binary", "counter", "analogOS","binaryOS", 0 };
 
 const char* iotypToStr (int t)
 {
@@ -849,6 +886,32 @@ const char* variation_encode(int var)
             return "Group1Var1";
         case 0x0102:
             return "Group1Var2";
+        case 0x0a02:
+            return "Group10Var2";
+        case 0x0b01:
+            return "Group11Var1";
+        case 0x0b02:
+            return "Group11Var2";
+        case 0x1400:
+            return "Group20Var0";
+        case 0x1401:
+            return "Group20Var1";
+        case 0x1402:
+            return "Group20Var2";
+        case 0x1405:
+            return "Group20Var5";
+        case 0x1406:
+            return "Group20Var6";
+        case 0x1600:
+            return "Group22Var0";
+        case 0x1601:
+            return "Group22Var1";
+        case 0x1602:
+            return "Group22Var2";
+        case 0x1605:
+            return "Group22Var5";
+        case 0x1606:
+            return "Group22Var6";
         case 0x1e01:
             return "Group30Var1";
         case 0x1e02:
@@ -867,6 +930,8 @@ const char* variation_encode(int var)
             return "Group32Var3";
         case 0x0201:
             return "Group2Var1";
+        case 0x0202:
+            return "Group2Var2";
         case 0x0203:
             return "Group2Var3";
         default:
@@ -874,12 +939,6 @@ const char* variation_encode(int var)
     }
     return "Undecoded";
 }
-// Group30Var1  Analog Input 32 bit with flags
-// Group30Var2  Analog Input 16 bit with flags
-// Group30Var3  Analog Input 32 bit without flags
-// Group30Var4  Analog Input 16 bit without flags
-// Group30Var5  Analog Input single precision with flags (Float) << these allow floating point numbers
-// Group30Var6  Analog Input double precision with flags (Double)
 int variation_decode(const char* ivar)
 {
     if(ivar)
@@ -898,6 +957,32 @@ int variation_decode(const char* ivar)
             return Group2Var2;
         else if (strcmp(ivar, "Group2Var3") == 0)
             return Group2Var3;
+        else if (strcmp(ivar, "Group10Var2") == 0)
+            return Group10Var2;
+        else if (strcmp(ivar, "Group11Var1") == 0)
+            return Group11Var1;
+        else if (strcmp(ivar, "Group11Var2") == 0)
+            return Group11Var2;
+        else if (strcmp(ivar, "Group20Var0") == 0)
+            return Group20Var0;
+        else if (strcmp(ivar, "Group20Var1") == 0)
+            return Group20Var1;
+        else if (strcmp(ivar, "Group20Var2") == 0)
+            return Group20Var2;
+        else if (strcmp(ivar, "Group20Var5") == 0)
+            return Group20Var5;
+        else if (strcmp(ivar, "Group20Var6") == 0)
+            return Group20Var6;
+        else if (strcmp(ivar, "Group22Var0") == 0)
+            return Group22Var0;
+        else if (strcmp(ivar, "Group22Var1") == 0)
+            return Group22Var1;
+        else if (strcmp(ivar, "Group22Var2") == 0)
+            return Group22Var2;
+        else if (strcmp(ivar, "Group22Var5") == 0)
+            return Group22Var5;
+        else if (strcmp(ivar, "Group22Var6") == 0)
+            return Group22Var6;
         else if (strcmp(ivar, "Group30Var1") == 0)
             return Group30Var1;
         else if (strcmp(ivar, "Group30Var2") == 0)
@@ -928,6 +1013,34 @@ int variation_decode(const char* ivar)
             return Group32Var7;
         else if (strcmp(ivar, "Group32Var8") == 0)
             return Group32Var8;
+        else if (strcmp(ivar, "Group40Var0") == 0)
+            return Group40Var0;
+        else if (strcmp(ivar, "Group40Var1") == 0)
+            return Group40Var1;
+        else if (strcmp(ivar, "Group40Var2") == 0)
+            return Group40Var2;
+        else if (strcmp(ivar, "Group40Var3") == 0)
+            return Group40Var3;
+        else if (strcmp(ivar, "Group40Var4") == 0)
+            return Group40Var4;
+        else if (strcmp(ivar, "Group42Var0") == 0)
+            return Group42Var0;
+        else if (strcmp(ivar, "Group42Var1") == 0)
+            return Group42Var1;
+        else if (strcmp(ivar, "Group42Var2") == 0)
+            return Group42Var2;
+        else if (strcmp(ivar, "Group42Var3") == 0)
+            return Group42Var3;
+        else if (strcmp(ivar, "Group42Var4") == 0)
+            return Group42Var4;
+        else if (strcmp(ivar, "Group42Var5") == 0)
+            return Group42Var5;
+        else if (strcmp(ivar, "Group42Var6") == 0)
+            return Group42Var6;
+        else if (strcmp(ivar, "Group42Var7") == 0)
+            return Group42Var7;
+        else if (strcmp(ivar, "Group42Var8") == 0)
+            return Group42Var8;
     }
     return GroupUndef;
 }
@@ -942,6 +1055,7 @@ bool getCJint (cJSON* cj, const char* name, int& val, bool required)
     }
     return ok;
 }
+
 bool getCJdouble (cJSON* cj, const char* name, double& val, bool required)
 {
     bool ok = !required;
@@ -988,32 +1102,6 @@ bool getCJcj (cJSON* cj, const char* name, cJSON* &val, bool required)
     return ok;
 }
 
-// modbus system example
-// "notes":" a collection of inputs from the system all using default uri",
-// 		"id": "sel_735",
-// 		"ip_address": "127.0.0.1",
-// 		"port": 12502,
-// 		"ip_address2": "192.168.0.136",
-// 		"port2": 502,
-// 		"frequency": 500,
-// 		"freq1": 500,
-// 		"freq2": 500,
-// 		"freq3": 500,
-//      "rangeFreq": 500,
-//      "rangeAStart": 600,
-//      "rangeAStop": 672,
-//      "rangeBStart": 600,
-//      "rangeBStop": 672,
-//
-//      "unsol":1/0,
-// 		"byte_swap": false
-//{
-//   "files":[
-//        "file1",
-//        "file2",
-//        "file3"
-//    ]
-//}
 cJSON* parse_files(cJSON* cji)
 {
     return cJSON_GetObjectItem(cji, "files");
@@ -1039,6 +1127,7 @@ bool parse_system(cJSON* cji, sysCfg* sys, int who)
     sys->deadband = 0.01;
     sys->respTime = 2000; // default response time 2 Sec
     sys->maxElapsed = 100; // default max task elapsed time before we print an error in the log
+    sys->max_pub_delay = 0;
 
     sys->baud = 9600;
     sys->dataBits = 8;
@@ -1046,14 +1135,7 @@ bool parse_system(cJSON* cji, sysCfg* sys, int who)
 
     sys->parity = strdup("None");// opendnp3::Parity::None;
     sys->flowType = strdup("None");//opendnp3::FlowControl::None;
-    //sys->flowType = strdup("None");//opendnp3::FlowControl::None;
     sys->asyncOpenDelay=500; //(opendnp3::TimeDuration::Milliseconds(500));
-     //baud(9600),
-        //   dataBits(8),
-        //   stopBits(opendnp3::StopBits::One),
-        //   parity(opendnp3::Parity::None),
-        //   flowType(opendnp3::FlowControl::None),
-        //   asyncOpenDelay(opendnp3::TimeDuration::Milliseconds(500))
     
     char* tmp_uri = NULL;
     sys->event_pub = true;
@@ -1108,6 +1190,47 @@ bool parse_system(cJSON* cji, sysCfg* sys, int who)
     if(ret) ret = getCJdouble(cj,"event_rate",   sys->event_rate,       false);
     if(ret) ret = getCJbool  (cj,"useGets",      sys->useGets,          false);
     if(ret) ret = getCJbool  (cj,"event_pub",    sys->event_pub,        false);
+    if(ret) ret = getCJint   (cj,"event_buffer", sys->event_buffer,     false);
+    if(ret) ret = getCJint   (cj,"batchPubDebug",sys->batch_pub_debug,  false);
+    if(ret) ret = getCJbool  (cj,"enable_state_events",    sys->enable_state_events,        false);
+
+    if (sys->event_buffer < 0 || sys->event_buffer > 512)
+    {
+        FPS_ERROR_PRINT("Invalid  event buffer  %d  must be from 0 to 512 ,setting to default 100 \n", sys->event_buffer);
+        sys->event_buffer = 100;
+    }
+
+    if(getCJdouble(cj,"max_pub_delay", sys->max_pub_delay,     false)){
+        sys->max_pub_delay /=1000.0;
+    }
+
+    if(getCJdouble(cj,"batchSets",    sys->batch_sets_in,      false)){
+        sys->batch_sets_in /=1000.0;
+        sys->batch_sets = sys->batch_sets_in;
+    }
+    if(getCJdouble(cj,"batchPubs",    sys->batch_pubs,      false)){
+        sys->batch_pubs /=1000.0;
+    }
+
+    if(getCJdouble(cj,"batchSetsMax",    sys->batch_sets_max,      false)){
+        sys->batch_sets_max /=1000.0;
+    }
+    if(getCJdouble(cj,"maxPubDroop",    sys->max_pub_droop,      false)){
+        if (sys->max_pub_droop > 0.0)
+        {
+            // filter out bad values
+            if ((sys->max_pub_droop < 0.2) || (sys->max_pub_droop > 0.98))
+            {
+                FPS_ERROR_PRINT("Invalid maxPubDroop   %2.3f  must be from 0.2 to 0.98 ,setting to 0.0 \n", sys->max_pub_droop);
+                sys->max_pub_droop = 0.0;
+            }
+
+        }
+    }
+
+    if (getCJdouble(cj,"timeoutmS",      sys->timeout,          false)) {
+        sys->timeout /=1000.0;
+    }
  
     
     // fixup base_uri
@@ -1125,6 +1248,11 @@ bool parse_system(cJSON* cji, sysCfg* sys, int who)
         {
             sys->pubType = 1;
             sys->fmt = 1;
+        }
+        else if ( fmt == "full") 
+        {
+            sys->pubType = 2;
+            sys->fmt = 2;
         }
         // else if ( fmt == "flags") 
         // {
@@ -1167,26 +1295,6 @@ bool parse_system(cJSON* cji, sysCfg* sys, int who)
     return ret;
 }
 
-// big wrinkle here.. Lets parse the modbus file  
-// "registers": 
-// 	[
-// 		{
-// 			"type": "Input Registers",
-// 			"dnp3_type": "Analog",
-// 			"starting_offset": 350,
-// 			"number_of_registers": 26,
-// 			"map":
-// 			[
-// 				{
-// 					"id": "current_a",
-// 					"offset": 350,
-// 					"size": 2,
-// 					"scale":100,
-// 					"signed": true
-//               }
-//          ]
-//      }
-//  ]
 
 // parse a map of items
 int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
@@ -1200,7 +1308,7 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
         cJSON *evariation, *linkback, *clazz, *rsize, *sign;
         cJSON *scale, *cjidx, *opvar, *cjfloat, *linkuri, *deadband;
         cJSON *cjfmt, *cjevt, *cjtout, *cjevtr; 
-        cJSON *cjcstring, *cjctrue, *cjcfalse, *cjcint;
+        cJSON *cjcstring, *cjctrue, *cjcfalse, *cjcint, *cjbatched;
 
         if(obj == NULL)
         {
@@ -1235,9 +1343,9 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
         cjctrue    = cJSON_GetObjectItem(obj, "crob_true");  // string like POWER_ON
         cjcfalse   = cJSON_GetObjectItem(obj, "crob_false");  // string like POWER_ON
         cjcint     = cJSON_GetObjectItem(obj, "crob_int");  // true / false
+        cjbatched  = cJSON_GetObjectItem(obj, "notBatched");  // true / false
         
 
-//        if (id == NULL || offset == NULL || id->valuestring == NULL)
         if (id == NULL || id->valuestring == NULL)
         {
             FPS_ERROR_PRINT("NULL variables or component_id \n");
@@ -1276,29 +1384,6 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
             }
         }
 
-        // rework
-        // DbVars are sorted by uri's now.
-        // we can have the same DbVar name for different uris.
-        // incoming messages from master only know type (AnIn16,AnIn32,AF32,CROB) and offset.
-        // for these items offset is still set by the config file.
-        // The return path from outstation to master still has type an index. The system has changed to use the offset from the conig file here too.
-        // so we can no longer use the vector position as an index.
-        // items are added from the config file against a registered uri ot the default one.
-        // pubs, gets and sets from FIMS ues a combination of URI + var name to find vars.
-        // data incoming from master to outstation will use type and offset to find the variable.
-        // each type will have a map <int,DbVar *> to search
-        // Data base for the outstation vars (analog and binary) will no longer use the vector size but max offset as db size ????
-        // the <int , dBVar *> map can also  be used for these vars
-        //
-        // Get this going as follows 
-        //   1.. parse config file using the uri's.
-        //   2.. get the uri/var name search  working for FIMS querues
-        //   3.. get the int, DbVar* search / map  running to find vars for outstation builder.
-        //   4.. get the  mapping working for the incoming commands.
-        //    
-        // 
-
-        // the cjidx fields will ovride the auto idx.
         int vidx = -1;
         if(offset)
         {
@@ -1317,6 +1402,7 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
         if(sys->debug)
             FPS_ERROR_PRINT("****** mtype %d xxvariable [%s] vidx %d debug %d\n",
                         mytype, id->valuestring, vidx, sys->debug);
+
         // set up name uri
         char* nuri = sys->getDefUri(who);
         if (uri && uri->valuestring) 
@@ -1332,6 +1418,10 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
         {
             db->format = strdup(sys->format);
             db->fmt = sys->fmt;
+        }
+        if(cjbatched &&(db != NULL))
+        {
+            db->not_batched = cJSON_IsTrue(cjbatched);
         }
         if(cjevt &&(db != NULL))
         {
@@ -1354,6 +1444,15 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
                     }
                     db->format = strdup(fmt.c_str());
                     db->fmt = 1;
+                }
+                else if(fmt=="full")
+                {
+                    if(db->format)
+                    {
+                        free(db->format);
+                    }
+                    db->format = strdup(fmt.c_str());
+                    db->fmt = 2;
                 }
                 else  // defaults to naked
                 {
@@ -1384,14 +1483,28 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
             db->crob_int = (cjcint->type == cJSON_True);
         }
 
-        if(cjctrue && cjctrue->valuestring && (db!=NULL))
+        if(cjctrue && (db!=NULL))
         {
-            db->crob_true = OperationTypeSpec::to_type(OperationTypeSpec::from_string(cjctrue->valuestring));
+            if(cjctrue->valuestring) 
+            {
+                db->crob_true = OperationTypeSpec::to_type(OperationTypeSpec::from_string(cjctrue->valuestring));
+            }
+            else
+            {
+                db->crob_true = (int)cjctrue->valuedouble;
+            }
         }
 
-        if(cjcfalse && cjcfalse->valuestring && (db!=NULL))
+        if(cjcfalse && (db!=NULL))
         {
-            db->crob_false = OperationTypeSpec::to_type(OperationTypeSpec::from_string(cjcfalse->valuestring));
+            if(cjcfalse->valuestring) 
+            {
+                db->crob_false = OperationTypeSpec::to_type(OperationTypeSpec::from_string(cjcfalse->valuestring));
+            }
+            else
+            {
+                db->crob_false = (int)cjcfalse->valuedouble;
+            }
         }
 
         if(db != NULL)
@@ -1457,7 +1570,6 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
 
             if(sys->debug)
                 FPS_ERROR_PRINT(" config adding name [%s] idx [%d]\n", id->valuestring, vidx);
-            // keep a count of the objects.
             sys->numObjs[mytype]++; 
 
             db->idx = vidx;
@@ -1476,8 +1588,7 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
                     }
                 }            
             }
-            // do it first time in parsing
-            // need to follow up after parse complete to pick up remaining allocations
+
             sys->setDbIdxMap(db, 1);
             if(sys->debug )
                 FPS_ERROR_PRINT("*********** %s after setDbIdxMap name %s idx %d \n", __FUNCTION__, db->name.c_str(), db->idx);
@@ -1490,37 +1601,23 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
                 if(sys->debug)
                     FPS_ERROR_PRINT("***********  name %s type %d idx %d Already in dbMapIxs  \n", db->name.c_str(), db->type, db->idx);
             }
-            // register the uri 
-            // was nuri
+
             sys->addDbUri(db->uri, db);
 
-            // Deal with linkback option
-            // the master SOEhandler will cause the linkback value to be updated.
-            // we may mirror this in the outstation handler too.  
-            // master and outstation have different linkback types
             if((mytype == Type_Analog) || (mytype == Type_Binary)) 
             {
                 if (who == DNP3_MASTER)
                 {
                     if(linkuri)
                     {
-                        // copy the variable uri into the linkuri string.
-                        // char* linkback; 
-                        // DbVar* linkb
-                        // the variable may not exist yet so it will be found later.
                         if (linkuri->valuestring != NULL)
                         {
                             FPS_ERROR_PRINT(" Setting linkuri  name to [%s]\n", linkuri->valuestring);
                             db->linkuri = strdup(linkuri->valuestring);
-                            //db->linkb = sys->getDbVar(nuri, linkback->valuestring);
                         }
                     }
                     if(linkback)
                     {
-                        // copy the variable name into the linkback string.
-                        // char* linkback; 
-                        // DbVar* linkb
-                        // the variable may not exist yet so it will be found later.
                         if (linkback->valuestring != NULL)
                         {
                             FPS_ERROR_PRINT(" Setting linkback variable name to [%s]\n", linkback->valuestring);
@@ -1543,16 +1640,11 @@ int parse_items(sysCfg* sys, cJSON* objs, int type, int who)
                         {
                             FPS_ERROR_PRINT(" Setting linkuri  name to [%s]\n", linkuri->valuestring);
                             db->linkuri = strdup(linkuri->valuestring);
-                            //db->linkb = sys->getDbVar(nuri, linkback->valuestring);
                         }
                     }
 
                     if(linkback)
                     {
-                        // copy the variable name into the linkback string.
-                        // char* linkback; 
-                        // DbVar* linkb
-                        // the variable may not exist yet so it will be found later.
                         if (linkback->valuestring != NULL)
                         {
                             FPS_ERROR_PRINT(" Setting linkback variable name to [%s]\n", linkback->valuestring);
@@ -1580,45 +1672,22 @@ int  parse_object(sysCfg* sys, cJSON* objs, int idx, int who)
     }
     return parse_items(sys, cjlist, idx, who);
 }
-// "registers": 
-// 	[
-// 		{
-// 			"type": "Input Registers",
-// 			"dnp3_type": "Analog",
-// 			"starting_offset": 350,
-// 			"number_of_registers": 26,
-// 			"map":
-// 			[
-// 				{
-// 					"id": "current_a",
-// 					"offset": 350,
-// 					"size": 2,
-// 					"scale":100,
-// 					"signed": true
-//               }
-//          ]
-//      }
-//  ]
 
 bool parse_modbus(cJSON* cj, sysCfg* sys, int who)
 {
-    // config file has "objects" with children groups "binary" and "analog"
-    // who is needd to stop cross referencing linkvars
     cJSON* cji;
     cJSON_ArrayForEach(cji, cj)
     {
         cJSON* cjmap = cJSON_GetObjectItem(cji, "map");
         cJSON* cjdtype = cJSON_GetObjectItem(cji, "dnp3_type");
         cJSON* cjtype = cJSON_GetObjectItem(cji, "type");
-        // dnp3_type can be output, valuedouble holds it all 
+
         if ((cjmap == NULL) || (cjmap->type != cJSON_Array))
         {
             FPS_ERROR_PRINT("modbus registers map object is not an array ! \n");
             return false;
         }
 
-        // here are the tpe options
-        // no dnp3_type then look at type
         int itype = -1;
         if ((cjdtype != NULL) && (cjdtype->type == cJSON_String))
         {
@@ -1658,8 +1727,6 @@ bool parse_variables(cJSON* object, sysCfg* sys, int who)
     for (int idx = 0; idx< Type_of_Var::NumTypes; idx++)
         sys->numObjs[idx] = 0;
 
-    // config file has "objects" with children groups "binary" and "analog"
-    // who is needd to stop cross referencing linkvars
     cJSON* cjregs = cJSON_GetObjectItem(object, "registers");
     if (cjregs != NULL)
     {
@@ -1675,43 +1742,34 @@ bool parse_variables(cJSON* object, sysCfg* sys, int who)
     for (int itype = 0; itype< Type_of_Var::NumTypes; itype++)
         parse_object(sys, JSON_objects, itype, who);
 
-    // after this is done we auto assign the indexes here
     sys->assignIdx();
 
     return true;
 }
-// TODO check out the first blank one 
-// TODO put these in the sys strucure
+
 int getSysUris(sysCfg *sys[], int who, const char** &subs, bool* &bpubs, int nums)
 {
     int num = 0;
     int i;
-    //sysCfg** ss = sys;
     for (i = 0 ; i< nums; i++)
     {
         sys[i]->num_subs = sys[i]->getSubs(NULL, 0, who);
         num += sys[i]->num_subs;
-        //sys++;
     }
-    //int num = sys->getSubs(NULL, 0, who);
+
     subs = (const char **) malloc((num+3) * sizeof(char *));
     if(subs == NULL)
     {
         FPS_ERROR_PRINT("Failed to creae subs array.\n");
-        //rc = 1;
         return -1;
     }
     bpubs = (bool *) malloc((num+3) * sizeof(bool));
     memset(bpubs, false, (num+3) * sizeof(bool)); // all false we hope
     num = 0;
-    //sys = ss;
     for (i = 0 ; i< nums; i++)
     {
         num += sys[i]->getSubs(&subs[num], sys[i]->num_subs, who);
-        //sys++;
     }
-    //num = sys->getSubs(subs, num, who);
-
     return num;
 }
 
@@ -1741,29 +1799,19 @@ bool checkWho(sysCfg*sys, const char* uri, const char *name, int who)
     return checkWho(sys, db, who);
 }
 
-//std::vector<std::pair<DbVar*,int>>dbs; // collect all the parsed vars here
 cJSON* parseValues(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who, cJSON* body_JSON)
 {
     cJSON* itypeValues = body_JSON;
     cJSON* cjit = NULL;
     if(sys->debug)
         FPS_ERROR_PRINT("Found variable list or array uri [%s] \n", msg->uri);
-    // decode values may be in an array 
-    // TODO arrays are DEPRECATED
     if (itypeValues)
     { 
         if (cJSON_IsArray(itypeValues)) 
         {
-            //if(sys->debug)
             FPS_ERROR_PRINT("Error Found array of variables need simple list instead \n");
             return body_JSON;//return dbs.size();
 
-            //cJSON_ArrayForEach(cjit, itypeValues) 
-            //{
-            //    cJSON* cjo = cJSON_GetObjectItem(cjit, "offset");
-            //    cJSON* cjv = cJSON_GetObjectItem(cjit, "value");
-            //    addValueToVec(dbs, sys, msg, cjo->valuestring, cjv, 0);
-            //}
         }
         else
         {
@@ -1792,8 +1840,7 @@ cJSON* parseValues(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who, cJSON* 
                     } 
                 }       
             }
-            // this may not work here
-            // fims_send -m set -u /interfaces/dnp3_outstation/uline_flows_mv '{"value":0}'
+
             while(cjit != NULL)
             {
                 int flag = 0;
@@ -1820,11 +1867,8 @@ cJSON* parseValues(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who, cJSON* 
                                         , msg->uri
                                         , who
                                         );
-                    // this simply adds the valu to the dbs vec
-                    // perhaps we would like to set up some other things from this input
 
                     addValueToVec(dbs, sys, mcuri, cjit->string, cjit, flag);
-                    //addValueToVec(dbs, sys, msg, cjit->string, cjit, flag);
                 }
                 cjit = cjit->next;
             }
@@ -1835,20 +1879,6 @@ cJSON* parseValues(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who, cJSON* 
     return body_JSON;//return dbs.size();
 }
 
-// uri handling
-// reate a list of uris from cofig data
-// a var name can be partly a uri
-//   gateway/system1/voltageSP
-// with a uri /components/fleetmanager/
-// this incoming uri in the fims request will be
-// get  /components/fleetmanager/[gateway/system1/voltageSP]
-// anything past /components/fleetmanager/  must be a name simple
-// but what do we forward to /components/gateway1
-// so we have a set uri , used for pubs
-// and a get uri used to pick up pubs etc.
-// so the test checkUri makes sure we have a name / uri match
-//  
-// si  
 int countUris(const char* uri)
 {
     int nfrags = 0;
@@ -1860,22 +1890,7 @@ int countUris(const char* uri)
     return nfrags;
 }
 
-// we have an incoming uri
-// outstation normal    
-//       /<uri>             set values on pubs
-// outstation reply
-//       /interfaces/id/reply/<uri>    set reply flag , remove /<id>/reply from the uri
-// outstation exception
-//       /local/<uri>           allow gets and sets as well
 
-// master normal    
-//       /<uri>             get/ set values on sets
-// master reply
-//       /reply/id/<uri>    set reply flag , remove /reply from the uri
-// master exception
-//       
-//
-//std::vector<std::pair<DbVar*,int>>dbs; // collect all the parsed vars here
 cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
 {
     cJSON* body_JSON = cJSON_Parse(msg->body);
@@ -1889,8 +1904,10 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
         if((strcmp(msg->method,"set") == 0) || (strcmp(msg->method,"post") == 0))
         {
             if (sys->debug> 1)
+            {
                 FPS_ERROR_PRINT("%s fims message body error  method (%s) uri (%s) nfrags %d \n"
                     ,__FUNCTION__, msg->method, msg->uri, (int)msg->nfrags);
+            }
             if(msg->body != NULL && msg->nfrags > 2)  
             {
                 if (sys->debug> 1)
@@ -1902,7 +1919,7 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
             }
         }
     }
-    
+
     if (msg->nfrags < 2)
     {
         FPS_ERROR_PRINT("fims message uri [%s] error not enough pfrags [%d] id [%s] \n"
@@ -1912,18 +1929,9 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
     if(sys->debug)
         FPS_ERROR_PRINT("fims message uri [%s] PASSED test for enough pfrags [%d] id [%s] \n", msg->uri, msg->nfrags, sys->id);
 
-    // special case [/interfaces/hybridos/reply/interfaces/hybridos] 
-    // valid uri
-    // /assets/feeders/feed_6
-    // 
-    // possible inputs
-    // /assets/feeders/feed_6/feeder_kW_slew_rate  ==> process single  
-    // /assets/feeders/feed_6                      ==> process list
-    // /assets/feeders/feed_6/test/feeder_kW_slew_rate    == reject unless we have a var called "test/feeder_kW_slew_rate"
-    //
     char* name = NULL;
     int flags = 0;
-    //DbVar* db = NULL;
+
     char* newUri = sys->confirmUri(db, msg->uri, who, name, flags);
     if(sys->debug>1)
         FPS_ERROR_PRINT("fims message first test msg->uri [%s]  newUri [%s]  flags 0X%04x   URI_REPLY 0X%04x\n", 
@@ -1949,9 +1957,6 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
         }
     }
 
-    // get is OK codewise..
-    // find a good looking uri and find the number of frags
-    //
     if((strcmp(msg->method, "set") == 0)||(strcmp(msg->method, "post") == 0))
     {
         if(sys->debug)
@@ -1979,7 +1984,6 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
             if(sys->debug)
                 FPS_ERROR_PRINT("Client Set 2 accepted  for [%s]\n"
                         , db?db->name.c_str():"No Dbvar"); 
-
         }
     }
     // allow sets and gets on master
@@ -1987,7 +1991,7 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
         {
         int flag = 0;
         if(sys->debug)
-            FPS_ERROR_PRINT("fims method [%s] almost  supported for [%d]\n", msg->method, who);
+            FPS_ERROR_PRINT("fims method [%s] supported for [%d] flags [%08x]\n", msg->method, who, flags);
 
         if(((flags & URI_FLAG_GET) == 0) && (who != DNP3_MASTER))
         {
@@ -2001,6 +2005,18 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
             return body_JSON;
         }
 
+        if((flags & URI_FLAG_NAKED) == URI_FLAG_NAKED)
+        {
+            flag |= URI_FLAG_NAKED;
+        }
+        if((flags & URI_FLAG_CLOTHED) == URI_FLAG_CLOTHED)
+        {
+            flag |= URI_FLAG_CLOTHED;
+        }
+        if((flags & URI_FLAG_FULL) == URI_FLAG_FULL)
+        {
+            flag |= URI_FLAG_FULL;
+        }
         if((flags & URI_FLAG_FLAGS) == URI_FLAG_FLAGS)
         {
             flag |= PRINT_VALUE;
@@ -2015,14 +2031,9 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
         {
             
             if(sys->debug)
-                FPS_ERROR_PRINT("Found SINGLE variable [%s] type  %d \n", db->name.c_str(), db->type); 
-            // send the var and flag back to the dnp3_outstation code
+                FPS_ERROR_PRINT("Found SINGLE variable [%s] type  %d  flag %08x \n", db->name.c_str(), db->type, flag); 
             dbs.push_back(std::make_pair(db, flag));
-            //return body_JSON;
         }
-        // else get them all
-        // but only the ones associated with the uri
-        // TODO detect flag here
         else
         {
             if((flags & URI_FLAG_DUMP) == URI_FLAG_DUMP)
@@ -2038,11 +2049,8 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
         return body_JSON;
     }
 
-    // Allow "pub" to "set" in the outstation
     if(strcmp(msg->method,"set") == 0 || (strcmp(msg->method,"pub") == 0 && (who == DNP3_OUTSTATION)))
     {
-        // watch out for sets on /interfaces/outstation/dnp3_outstation/reply/dnp3_outstation
-        // handle a single item set getting better 
         if(msg->body == NULL)
         {
             FPS_ERROR_PRINT("fims message uri [%s]  no BODY in Message\n", msg->uri);
@@ -2077,11 +2085,9 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
             }
         }
         
-        //uri = msg->pfrags[fragptr+2];  // TODO check for delim. //components/master/dnp3_outstation/line_voltage/stuff
-        // look for '{"debug":"on"/"off"}' or '{"scan":1,2 or 3} {"unsol": 1 or 0} {"class" '{"<varname>":newclass}}
         if((flags & URI_FLAG_SYSTEM) == URI_FLAG_SYSTEM)
         {
-            FPS_DEBUG_PRINT("fims system command [%s] body [%s]\n", msg->uri, msg->body);
+            FPS_ERROR_PRINT("fims system command [%s] body [%s]\n", msg->uri, msg->body);
             cJSON* cjsys = cJSON_GetObjectItem(body_JSON, "debug");
             if (cjsys != NULL)
             {
@@ -2104,10 +2110,63 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
             {
                 sys->cjclass = cjsys;
             }
+            cjsys = cJSON_GetObjectItem(body_JSON, "max_pub_delay");
+            if (cjsys != NULL)
+            {
+                double val = cjsys->valuedouble/1000.0;
+                if (val < 5000.0)
+                    sys->max_pub_delay = val; 
+            }
+            cjsys = cJSON_GetObjectItem(body_JSON, "batchSets");
+            if (cjsys != NULL)
+            {
+                double val = cjsys->valuedouble/1000.0;
+                if (val>=0 && val < 5000.0)
+                {
+                    if (sys->batch_sets_in == sys->batch_sets)
+                    {
+                        sys->next_batch_time = sys->tNow + val;
+                    }
+                    sys->batch_sets_in = val;
+                    sys->batch_sets = val;
+                }
+            }
+            cjsys = cJSON_GetObjectItem(body_JSON, "batchPubs");
+            if (cjsys != NULL)
+            {
+                double val = cjsys->valuedouble/1000.0;
+                if (val>=0 && val < 10.0)
+                {
+                    sys->next_batch_pub_time = sys->tNow + val;
+                    sys->batch_pubs = val;
+                }
+            }
+            cjsys = cJSON_GetObjectItem(body_JSON, "batchPubDebug");
+            if (cjsys != NULL)
+            {
+                double val = cjsys->valuedouble;
+                sys->batch_pub_debug = (int)val;
+                
+            }
+
+            cjsys = cJSON_GetObjectItem(body_JSON, "batchSetsMax");
+            if (cjsys != NULL)
+            {
+                double val = cjsys->valuedouble/1000.0;
+                if (val>=0 && val < 10.0)
+                    sys->batch_sets_max = val;
+            }
+            cjsys = cJSON_GetObjectItem(body_JSON, "maxPubDroop");
+            if (cjsys != NULL)
+            {
+                double val = cjsys->valuedouble/1000.0;
+                if (val>=0 && val < 0.98)
+                    sys->max_pub_droop = val;
+            }
+
             return body_JSON;
 
         }
-        // TODO redundant
         if((flags & URI_FLAG_REPLY) == URI_FLAG_REPLY)
         {
             if(sys->debug )
@@ -2116,84 +2175,236 @@ cJSON* parseBody(dbs_type& dbs, sysCfg*sys, fims_message*msg, int who)
         
         if((flags & URI_FLAG_SINGLE) == URI_FLAG_SINGLE)
         {
-            // process a single var
             if(sys->debug)
-                FPS_ERROR_PRINT("Found Single variable [%s] type  %d run set %d\n"
+                FPS_ERROR_PRINT("Found Single variable [%s] type  %d  body [%s] run set who = %d json [%p]\n"
                                         , db->name.c_str()
                                         , db->type
+                                        , msg->body?msg->body:"nobody"
                                         , who
+                                        , (void *)body_JSON
                                         );    
             int flag = 0;
-            if(sys->debug)
-                FPS_DEBUG_PRINT("Found variable type  %d \n", db->type);
             itypeValues = body_JSON;
-            // allow '"string"' OR '{"value":"string"}'
+            uint8_t cval = 255;
+            itypeFlag = nullptr;
+            char *vstring = nullptr;
+
             if(!itypeValues)
             {
-                FPS_ERROR_PRINT(" pub not a valid json object\n");
-                return body_JSON;                   
-            }
-            if(itypeValues->type == cJSON_Object)
-            {
-
-                // we can have flag and / or time
-                // just deal with flag for now
-                if(cJSON_GetObjectItem(itypeValues, "flag"))
+                if(db->type == Type_Crob)
                 {
-                    FPS_ERROR_PRINT("%s >>  found flag data\n",__func__);
-                    itypeFlag = itypeValues;
+                    cval = OperationTypeSpec::to_type(StringToOperationType(msg->body));
+                    if (sys->debug)
+                        FPS_ERROR_PRINT(" %s  body [%s] looks like a string  cval %d \n",msg->method,msg->body, cval);
+
+
+                    if (cval != 255)
+                    {
+                        db->crob_input = CROB_STRING;
+                        vstring = msg->body;
+                    }
+                    else
+                    {
+                        FPS_ERROR_PRINT(" ERROR %s  body [%s] not a valid json object  cval %d  db->type Type_Crob\n",msg->method,msg->body, cval);
+                        return body_JSON;
+                    }
+
                 }
                 else
                 {
-                    itypeFlag = nullptr;
+                    if (sys->debug)
+                        FPS_ERROR_PRINT(" type [%d] meth %s  body [%s] not decoded \n",(int)db->type, msg->method,msg->body);
+                    return body_JSON;
                 }
 
-                itypeValues = cJSON_GetObjectItem(itypeValues, "value");
-                if(!itypeValues)
-                {
-                   FPS_ERROR_PRINT(" pub Value data missing\n");
-                   return body_JSON;                   
-                }
-                flag |= PRINT_VALUE;
             }
-            if(sys->debug)
-            {
-                FPS_ERROR_PRINT("Found variable [%s] type  %d  sign %d body [%s]  flag %d \n"
-                                        , db->name.c_str()
-                                        , db->type
-                                        , db->sign
-                                        , msg->body
-                                        , flag);
-            }
-            // Only Crob gets a string 
             if(itypeValues)
             {
+                if(itypeValues->type == cJSON_Object)
+                {
+                    if(cJSON_GetObjectItem(itypeValues, "flag"))
+                    {
+                        if(sys->debug)
+                            FPS_ERROR_PRINT("%s >>  found flag data\n",__func__);
+                        itypeFlag = itypeValues;
+                    }
+                    itypeValues = cJSON_GetObjectItem(itypeValues, "value");
+                    if(!itypeValues)
+                    {
+                        FPS_ERROR_PRINT(" %s  Value data missing\n", msg->method);
+                        return body_JSON;                   
+                    }
+                    flag |= PRINT_VALUE;
+                }
+                if(sys->debug)
+                {
+                    FPS_ERROR_PRINT("Found variable [%s] type  %d  sign %d body [%s]  json type %d flag %d \n"
+                                            , db->name.c_str()
+                                            , db->type
+                                            , db->sign
+                                            , msg->body
+                                            , (int)itypeValues->type
+                                            , flag);
+                }
                 if (itypeValues->type == cJSON_String)
                 {
+                    vstring =itypeValues->valuestring;
                     if(db->type == Type_Crob)
                     {
-                        CommandStatus status = (CommandStatus)0;
-                        uint8_t cval = OperationTypeSpec::to_type(StringToOperationType(itypeValues->valuestring));
+                        cval = OperationTypeSpec::to_type(StringToOperationType(vstring));
                         db->crob_input = CROB_STRING;
-                        sys->setDbVarIx(Type_Crob, db->idx, cval, status, itypeFlag);
-                        db->initSet = 1;
-                        dbs.push_back(std::make_pair(db, flag));
-                        if(sys->debug)
-                        {
-                            FPS_ERROR_PRINT(" ***** %s Adding Direct CROB value %s offset %d idx %d uint8 cval 0x%02x\n"
-                                        , __FUNCTION__, itypeValues->valuestring, db->offset, db->idx
-                                        , cval
-                                        );
-                        }
                     }
-                // TODO any other strings
+                }
+                else if (itypeValues->type == cJSON_Number)
+                {
+                    vstring = msg->body;
+                    if(db->type == Type_Crob)
+                    {
+                        cval = (uint8_t) itypeValues->valuedouble ;//OperationTypeSpec::to_type(StringToOperationType(vstring));
+                        db->crob_input = CROB_INT;
+                    }
+                }
+                else if (itypeValues->type == cJSON_True)
+                {
+                    vstring = msg->body;
+                    if(db->type == Type_Crob)
+                    {
+                        // decode the meaning of true
+                        if (db->crob_true >= 0)
+                        {
+                            cval = db->crob_true;
+                        }
+                        else
+                        {
+                            cval = (uint8_t) 3 ;//OperationTypeSpec::to_type(StringToOperationType(vstring));
+                        }
+                        db->crob_input = CROB_INT;
+                    }
+                }
+                else if (itypeValues->type == cJSON_False)
+                {
+                    vstring = msg->body;
+                    if(db->type == Type_Crob)
+                    {
+                        // decode the meaning of false
+                        if (db->crob_false >= 0)
+                        {
+                            cval = db->crob_false;
+                        }
+                        else
+                        {
+                            cval = (uint8_t) 4 ;//OperationTypeSpec::to_type(StringToOperationType(vstring));
+                        }
+                        db->crob_input = CROB_INT;
+                    }
+                }
+            }
+            if(db->type == Type_Crob)
+            {
+                CommandStatus status = (CommandStatus)0;
+                sys->setDbVarIx(Type_Crob, db->idx, cval, status, itypeFlag);
+                db->init_set = 1;
+                if (sys->batch_sets > 0.0 )
+                {
+                    if (db->not_batched == false)
+                    {
+                        db->value_set++;
+                        if (sys->debug)
+                            FPS_ERROR_PRINT(" ***** %s batching item [%s] val [%s:%d]\n", __func__, db->name.c_str(),vstring, db->crob);
+                    } else {
+                        if (sys->debug)
+                            FPS_ERROR_PRINT(" ***** %s not batching  item [%s] val [%s:%d]\n", __func__, db->name.c_str(), vstring, db->crob);
+                        dbs.push_back(std::make_pair(db, flag));
+                    }
                 }
                 else
                 {
-                    sys->setDbVar(db, itypeValues, itypeFlag, itimeFlag);
-                    // add to dbs for main function to process
+                    if (sys->debug)
+                            FPS_ERROR_PRINT(" ***** %s setting  item [%s] val [%s:%d]\n", __func__, db->name.c_str(), vstring, db->crob);
+
                     dbs.push_back(std::make_pair(db, flag));
-                }     
+                }
+                if(sys->debug)
+                {
+                    FPS_ERROR_PRINT(" ***** %s Adding Direct CROB value %s offset %d idx %d uint8 cval 0x%02x\n"
+                                , __FUNCTION__, vstring, db->offset, db->idx
+                                , cval
+                                );
+                }
+            }
+            else
+            {
+                if (itypeValues)  // recheck here to stop crash
+                {
+
+                    sys->setDbVar(db, itypeValues, itypeFlag, itimeFlag);
+                    if (
+                        (db->type == AnIn16) ||
+                        (db->type == AnIn32) ||
+                        (db->type == AnF32)
+                        ) 
+                        {
+                            if(0)FPS_ERROR_PRINT(" ***** %s  setting value [%s] batchedSets [%2.3f]\n"
+                                , db->name.c_str(), msg->body, sys->batch_sets
+                                );
+
+                            // add to dbs for main function to process
+                            if (sys->batch_sets > 0.0 )
+                            {
+                                if ( db->not_batched == false)
+                                {
+                                    db->value_set++;
+                                } else {
+                                    dbs.push_back(std::make_pair(db, flag));
+                                }
+                            } else {
+                                dbs.push_back(std::make_pair(db, flag));
+                            }
+                        }
+                    if (
+                        (db->type == Type_Analog) ||
+                        (db->type == Type_Binary)
+                        ) 
+                        {
+                            if(0)FPS_ERROR_PRINT(" ***** %s  setting value single [%s] batchedPubs [%2.3f]\n"
+                                    , db->name.c_str(), msg->body, sys->batch_pubs
+                                    );
+                           // add to dbs for main function to process
+                            if (sys->batch_pubs > 0.0 )
+                            {
+                                if ( db->not_batched == false)
+                                {
+                                    db->value_set++;
+                                    if(sys->batch_pub_debug>0)
+                                    {
+                                        FPS_ERROR_PRINT(" ***** %s  batching value single [%s] batchedPubs [%2.3f]\n"
+                                            , db->name.c_str(), msg->body, sys->batch_pubs
+                                        );
+                                    }
+                                } else {
+                                    if(sys->batch_pub_debug>0)
+                                    {
+                                        FPS_ERROR_PRINT(" ***** %s  setting notBatched value single [%s] batchedPubs [%2.3f]\n"
+                                            , db->name.c_str(), msg->body, sys->batch_pubs
+                                        );
+                                    }
+
+                                    dbs.push_back(std::make_pair(db, flag));
+                                }
+
+                            } else {
+
+                                if(sys->batch_pub_debug>0)
+                                {
+                                    FPS_ERROR_PRINT(" ***** %s  setting value single [%s] batchedPubs [%2.3f]\n"
+                                        , db->name.c_str(), msg->body, sys->batch_pubs
+                                    );
+                                }
+
+                                dbs.push_back(std::make_pair(db, flag));
+                            }
+                        }
+                }
             }
             return body_JSON;
         }
@@ -2222,15 +2433,6 @@ int addValueToVec(dbs_type& dbs, sysCfg*sys, char* curi, const char* name, cJSON
     if (cjvalue->type == cJSON_Object)
     {
         flag |= PRINT_VALUE;
-        // TODO pick out other things we may need to add/setup...
-        // Also do we want to dynamically add new items nah the restart is painless.
-        // {
-        //             "id": "test_unsigned_int16",
-        //             "offset": 2,
-        //             "signed":false,
-        //             "name": "test int signed int F 16",
-        //             "uri": "/site/operation"
-        // }
 
         cjFlags = cJSON_GetObjectItem(cjvalue, "flags");
         cjTime = cJSON_GetObjectItem(cjvalue, "time");
@@ -2247,7 +2449,6 @@ int addValueToVec(dbs_type& dbs, sysCfg*sys, char* curi, const char* name, cJSON
 
     if (!cjvalue)
     {
-        //  if(sys->debug)
         FPS_ERROR_PRINT(" ************** %s value object not found\n",__FUNCTION__);
         return -1;
     }
@@ -2265,12 +2466,8 @@ int addValueToVec(dbs_type& dbs, sysCfg*sys, char* curi, const char* name, cJSON
                                                     , cval //static_cast<int32_t>(StringToOperationType(cjvalue->valuestring))
                                                     , cjvalue->valuestring
                                                     );
-            // we have a string so turn it into a crob value , use crob_true / crob_false if we can
             db->crob_input = CROB_STRING;
             sys->setDbVar(curi, name, cjvalue, cjFlags, cjTime);
-
-            //sys->setDbVar(curi, name, cval, cjFlags, cjTime);
-
         }
         else if((cjvalue->type == cJSON_True) || (cjvalue->type == cJSON_False))
         {
@@ -2282,10 +2479,8 @@ int addValueToVec(dbs_type& dbs, sysCfg*sys, char* curi, const char* name, cJSON
                                                     , name
                                                     , cval ? "true":"false"
                                                     );
-            // we have a bool so turn it into a crob value , use crob_true / crob_false if we can
             db->crob_input = CROB_BOOL;
             sys->setDbVar(curi, name, cjvalue, cjFlags, cjTime);
-
         }
         else
         {
@@ -2298,17 +2493,23 @@ int addValueToVec(dbs_type& dbs, sysCfg*sys, char* curi, const char* name, cJSON
                                                     , cval 
                                                     );
 
-            // we have an int  crob value no conversion  needed
             db->crob_input = CROB_INT;
             sys->setDbVar(curi, name, cjvalue, cjFlags, cjTime);
-            //sys->setDbVar(curi, name, cval, cjFlags, cjTime);
             
         }
-        dbs.push_back(std::make_pair(db, flag));
+        if (sys->batch_sets > 0.0 )
+        {
+            if ( db->not_batched == false)
+            {
+                db->value_set++;
+            } else {
+                dbs.push_back(std::make_pair(db, flag));
+            }
+        } else {
+                dbs.push_back(std::make_pair(db, flag));
+        }
     }
     else if (
-            (db->type == Type_Analog) ||
-            (db->type == Type_Binary) ||
             (db->type == AnIn16) ||
             (db->type == AnIn32) ||
             (db->type == AnF32)
@@ -2317,7 +2518,63 @@ int addValueToVec(dbs_type& dbs, sysCfg*sys, char* curi, const char* name, cJSON
         if(sys->debug)
             FPS_ERROR_PRINT( " *************** %s Var [%s] processed flags %p \n",__FUNCTION__, name, (void *) cjFlags);  
         sys->setDbVar(curi, name, cjvalue, cjFlags, cjTime);
-        dbs.push_back(std::make_pair(db, flag));
+        if (sys->batch_sets > 0.0 )
+        {
+            if ( db->not_batched == false)
+            {
+                db->value_set++;
+            } else {
+                dbs.push_back(std::make_pair(db, flag));
+            }
+        } else {
+            dbs.push_back(std::make_pair(db, flag));
+        }
+    }
+    else if (
+            (db->type == Type_Analog) ||
+            (db->type == Type_Binary) 
+            )
+    {
+        if(sys->debug)
+            FPS_ERROR_PRINT( " *************** %s Var [%s] processed flags %p \n",__FUNCTION__, name, (void *) cjFlags);  
+        sys->setDbVar(curi, name, cjvalue, cjFlags, cjTime);
+       if(0)FPS_ERROR_PRINT(" ***** %s  setting cjvalue batchedPubs [%2.3f]\n"
+                                , db->name.c_str(), sys->batch_pubs
+                            );
+
+        if (sys->batch_pubs > 0.0 )
+        {
+            if ( db->not_batched == false)
+            {
+                if(sys->batch_pub_debug>0)
+                {
+                    FPS_ERROR_PRINT(" ***** %s  batching value  batchedPubs [%2.3f]\n"
+                                    , db->name.c_str(),  sys->batch_pubs
+                                    );
+                }
+
+                db->value_set++;
+            } else {
+                if(sys->batch_pub_debug>0)
+                {
+                    FPS_ERROR_PRINT(" ***** %s  setting notBatched value  batchedPubs [%2.3f]\n"
+                                    , db->name.c_str(), sys->batch_pubs
+                                    );
+                }
+
+                dbs.push_back(std::make_pair(db, flag));
+            }
+        } else {
+
+            if(sys->batch_pub_debug>0)
+            {
+                FPS_ERROR_PRINT(" ***** %s  setting value  batchedPubs [%2.3f]\n"
+                                    , db->name.c_str(), sys->batch_pubs
+                                    );
+            }
+            
+            dbs.push_back(std::make_pair(db, flag));
+        }
     }
     else
     {
@@ -2330,20 +2587,14 @@ int addValueToVec(dbs_type& dbs, sysCfg*sys, char* curi, const char* name, cJSON
 
     return dbs.size();   
 }
-// TODO need no dbs option
-// add who to sys
+
 int addValueToVec(dbs_type& dbs, sysCfg*sys, fims_message* msg, const char* name, cJSON *cjvalue, int flag)
 {
     int ret;
-    //sys->confirmUri(db, msg->uri, who, name, flags);
-    // cjoffset must be a name
-    // cjvalue may be an object
-    // msg->uri // just take it up to the name
     char* curi = strdup(msg->uri);
     char* mcuri = strstr(curi, name);
     if(mcuri != NULL)
     {
-        // force a termination at the '/'
         mcuri[-1] = 0;
     }
 
@@ -2371,7 +2622,6 @@ cJSON* sysdbFindAddArray(sysCfg* sys, const char* field)
     return cjf;
 }
 
-// this sends out sets for each command received.
 void sendCmdSet(sysCfg* sys, DbVar*db, cJSON* cj)
 {
     const char *uri;
@@ -2390,7 +2640,40 @@ void sendCmdSet(sysCfg* sys, DbVar*db, cJSON* cj)
         snprintf(turi, sizeof(turi), "components/%s", sys->id );
         uri = (const char *)turi;
     }
-    if (1||cJSON_IsObject(cj))
+    if (sys->batch_sets > 0.0 && db->not_batched == false)
+    {
+        sys->setLock.lock();
+        if (sys->cjOut == NULL)
+        {
+            sys->cjOut = cJSON_CreateObject();
+
+        }
+        cJSON *cjo= cJSON_GetObjectItem(sys->cjOut, uri);
+        if (cjo == NULL)
+        {
+            cjo = cJSON_CreateObject();
+            cJSON_AddItemToObject(sys->cjOut,uri,cjo);
+        }
+        cJSON *cjj= cJSON_Duplicate(cj, true);
+        if(cJSON_HasObjectItem(cjo, db->name.c_str()))
+        {
+            cJSON_DeleteItemFromObject(cjo,db->name.c_str());
+        }
+        cJSON_AddItemToObject(cjo, db->name.c_str(), cjj);
+
+        if (sys->debug > 1)
+        {
+            char *out2 = cJSON_PrintUnformatted(sys->cjOut);
+            if (out2) 
+            {
+                FPS_ERROR_PRINT("sys->cjOut batch  [%s] \n", out2);
+                free(out2);
+            }
+        }
+        sys->setLock.unlock();
+    }
+    
+    if (sys->batch_sets == 0.0 || db->not_batched == true)
     {
         char *out = cJSON_PrintUnformatted(cj);
         if (out) 
@@ -2413,36 +2696,8 @@ void sendCmdSet(sysCfg* sys, DbVar*db, cJSON* cj)
             FPS_ERROR_PRINT("%s Error in cJSON object\n", __FUNCTION__ );
         }
     }
-    else
-    {
-        cJSON*cjv = cJSON_CreateObject();
-        cJSON_AddItemToObject(cjv, db->name.c_str(), cj);
-
-        char *out = cJSON_PrintUnformatted(cjv);
-        cJSON_Delete(cjv);
-        if (out) 
-        {
-            char tmp[2048];
-            snprintf(tmp, sizeof(tmp), "/%s", uri );
-
-            if(sys->p_fims)
-            {
-                sys->p_fims->Send("set", tmp, NULL, out);
-            }
-            else
-            {
-                FPS_ERROR_PRINT("%s Error in sys->p_fims\n", __FUNCTION__ );
-            }    
-            free(out);
-        }
-        else
-        {
-            FPS_ERROR_PRINT("%s Error in cJSON object\n", __FUNCTION__ );
-        }  
-    }
 }
 
-// handle output scaling
 double dbOpScale(DbVar* db, double dval)
 {
     if  ((db->scale > 0.0) || (db->scale < 0.0))
@@ -2453,16 +2708,11 @@ double dbOpScale(DbVar* db, double dval)
     return dval;
 }
 
-// used in outstation comand handler to publish changes  scale after conversion
 void sysdbAddtoRecord(sysCfg* sys, const char* field, const opendnp3::AnalogOutputInt16& cmd, uint16_t index)
 {
     DbVar* db = sys->getDbVarId(AnIn16 , index);
     if (db)
     {
-        // cmd.status has the following fields.
-        //
-
-        //double dval = dbOpScale(db, static_cast<double>(cmd.value));
         double dval = static_cast<double>(cmd.value);
         uint16_t u16val = static_cast<uint16_t>(dval);
         if(sys->debug)
@@ -2475,9 +2725,7 @@ void sysdbAddtoRecord(sysCfg* sys, const char* field, const opendnp3::AnalogOutp
             return;
         }
 
-        // cJSON* cjf = sysdbFindAddArray(sys, field);
         cJSON* cjv = cJSON_CreateObject();
-        //cJSON* cji = cJSON_CreateObject();
 
         if(db->sign == 1)
         {
@@ -2492,28 +2740,26 @@ void sysdbAddtoRecord(sysCfg* sys, const char* field, const opendnp3::AnalogOutp
             }
             if(sys->debug)
                 FPS_ERROR_PRINT("%s signed AnIn16 dval save %f dval %f  at index %d\n", __FUNCTION__
-                          , dval_save,  dval,  static_cast<int32_t>(index) );
+                          , dval_save,  dval,  static_cast<int16_t>(index) );
             dval = dbOpScale(db, dval);
             if (db->fmt == 0) 
             {
                 cJSON_Delete(cjv);
                 cjv = cJSON_CreateNumber(dval);
             } else {
-               cJSON_AddNumberToObject(cjv, "value", static_cast<uint32_t>(dval));         
+               cJSON_AddNumberToObject(cjv, "value", static_cast<int16_t>(dval));         
             } 
-            //cJSON_AddNumberToObject(cjv,"value", static_cast<int16_t>(dval));
         }
         else
         {
             if(sys->debug)
                 FPS_ERROR_PRINT("%s unsigned AnIn16 dval %f  val %u at index %d\n", __FUNCTION__
-                          , dval, u16val, static_cast<int32_t>(index) );
-            // remove -ve value for unsigned turn it into a + ve value between SHRT_MAX and USHRT_MAX 
+                          , dval, u16val, static_cast<int16_t>(index) );
             if(dval < 0)
             {
                 u16val = (SHRT_MAX) + (dval * -1.0);
                 FPS_ERROR_PRINT("%s unsigned adjustment AnIn16 dval %f  new val %u at index %d\n", __FUNCTION__
-                              , dval, u16val, static_cast<int32_t>(index) );
+                              , dval, u16val, static_cast<int16_t>(index) );
             }
             dval = dbOpScale(db, static_cast<double>(u16val));
             if (db->fmt == 0) 
@@ -2521,26 +2767,23 @@ void sysdbAddtoRecord(sysCfg* sys, const char* field, const opendnp3::AnalogOutp
                 cJSON_Delete(cjv);
                 cjv = cJSON_CreateNumber(dval);
             } else {
-               cJSON_AddNumberToObject(cjv, "value", static_cast<uint32_t>(dval));         
+               cJSON_AddNumberToObject(cjv, "value", static_cast<uint16_t>(dval));         
             } 
-            //cJSON_AddNumberToObject(cjv, "value", static_cast<uint16_t>(dval));            
         }
         sendCmdSet(sys, db, cjv);
         cJSON_Delete(cjv);
     }
     else
     {
-        FPS_ERROR_PRINT("%s unable to find AnIn16 at index %d\n", __FUNCTION__, static_cast<int32_t>(index) );
+        FPS_ERROR_PRINT("%s unable to find AnIn16 at index %d\n", __FUNCTION__, static_cast<int16_t>(index) );
     }    
 }
 
-// scale after conversion
 void sysdbAddtoRecord(sysCfg* sys, const char* field, const opendnp3::AnalogOutputInt32& cmd, uint16_t index)
 {
     DbVar* db = sys->getDbVarId(AnIn32 , index);
     if (db)
     {
-        //double dval = dbOpScale(db, static_cast<double>(cmd.value));
         double dval = static_cast<double>(cmd.value);
         uint32_t u32val = static_cast<uint32_t>(dval);
         cJSON* cjv = cJSON_CreateObject();
@@ -2552,7 +2795,7 @@ void sysdbAddtoRecord(sysCfg* sys, const char* field, const opendnp3::AnalogOutp
                 cJSON_Delete(cjv);
                 cjv = cJSON_CreateNumber(dval);
             } else {
-               cJSON_AddNumberToObject(cjv, "value", static_cast<uint32_t>(dval));         
+               cJSON_AddNumberToObject(cjv, "value", static_cast<int32_t>(dval));         
             } 
         }
         else
@@ -2561,7 +2804,6 @@ void sysdbAddtoRecord(sysCfg* sys, const char* field, const opendnp3::AnalogOutp
                 FPS_ERROR_PRINT("%s unsigned AnIn32 dval %f val %u at index %d\n", __FUNCTION__
                         , dval, u32val, static_cast<int32_t>(index) );
 
-            // remove -ve value for unsigned turn it into a + ve value between INT_MAX and UINT_MAX 
             if(dval < 0)
             {
                 u32val = (INT_MAX) + (dval * -1.0);
@@ -2574,9 +2816,8 @@ void sysdbAddtoRecord(sysCfg* sys, const char* field, const opendnp3::AnalogOutp
                 cJSON_Delete(cjv);
                 cjv = cJSON_CreateNumber(dval);
             } else {
-                cJSON_AddNumberToObject(cjv, "value", static_cast<uint32_t>(dval));         
+                cJSON_AddNumberToObject(cjv, "value", static_cast<int32_t>(dval));         
             } 
-//          cJSON_AddNumberToObject(cjv, "value", u32val);            
             
         }        
         sendCmdSet(sys, db, cjv);
@@ -2617,115 +2858,84 @@ void sysdbAddtoRecord(sysCfg* sys, const char* field, const char* cmd, uint16_t 
     DbVar* db = sys->getDbVarId(Type_Crob , index);
     if (db)
     {
-        // cJSON* cjf = sysdbFindAddArray(sys, field);
         cJSON* cjv = cJSON_CreateObject();
         bool sendOK = true;
-        //cJSON* cji = cJSON_CreateObject();
         //   NUL = 0x0,
         //   PULSE_ON = 0x1,
         //   PULSE_OFF = 0x2,
         //   LATCH_ON = 0x3,
         //   LATCH_OFF = 0x4,
         //   Undefined = 0xFF
+        const char* cmd = OperationTypeSpec::to_string(OperationTypeSpec::from_type(db->crob));
+        if(db->crob_int)
         {
-            const char* cmd = OperationTypeSpec::to_string(OperationTypeSpec::from_type(db->crob));
-            if(db->crob_int)
+            if (db->fmt == 0) 
+            {
+                cJSON_Delete(cjv);
+                cjv = cJSON_CreateNumber(db->crob);
+            } else {
+                cJSON_AddNumberToObject(cjv, "value", db->crob);         
+            } 
+        }
+        // Fixed up the crob_string error
+        else if(db->crob_string)
+        {
+            if (db->fmt == 0) 
+            {
+                cJSON_Delete(cjv);
+                cjv = cJSON_CreateString (cmd);
+            } else {
+                cJSON_AddStringToObject(cjv, "value", cmd);
+            }
+        }
+        // default to crob_bool
+        else
+        {
+            if ((db->crob_true >= 0) && (db->crob == db->crob_true))
             {
                 if (db->fmt == 0) 
                 {
                     cJSON_Delete(cjv);
-                    cjv = cJSON_CreateNumber(db->crob);
+                    cjv = cJSON_CreateBool (true);
                 } else {
-                    cJSON_AddNumberToObject(cjv, "value", db->crob);         
-                } 
-            }
-            else if(db->crob_string)
-            {
-                //cJSON_AddStringToObject(cjv, "value", cmd);
-                if (db->crob == db->crob_true)
-                {
-                    if (db->fmt == 0) 
-                    {
-                        cJSON_Delete(cjv);
-                        cjv = cJSON_CreateString (cmd);
-                    } else {
-                       cJSON_AddStringToObject(cjv, "value", cmd);
-                    }
+                    cJSON_AddBoolToObject(cjv, "value", true);
                 }
-                else if (db->crob == db->crob_false)
+            }
+            else if ((db->crob_false>=0)&&(db->crob == db->crob_false))
+            {
+                if (db->fmt == 0) 
                 {
-                    if (db->fmt == 0) 
-                    {
-                        cJSON_Delete(cjv);
-                        cjv = cJSON_CreateString (cmd);
-                    } else {
-                        cJSON_AddStringToObject(cjv, "value", cmd);
-                    }
+                    cJSON_Delete(cjv);
+                    cjv = cJSON_CreateBool (false);
+                } else {
+                    cJSON_AddBoolToObject(cjv, "value", false);
+                }
+            }
+            else if ((db->crob_true<0)&&(db->crob == 3))
+            {
+                if (db->fmt == 0) 
+                {
+                    cJSON_Delete(cjv);
+                    cjv = cJSON_CreateBool (true);
+                } else {
+                    cJSON_AddBoolToObject(cjv, "value", true);
+                }
+            }
+            else if ((db->crob_false <0)&&(db->crob == 4))
+            {
+                if (db->fmt == 0) 
+                {
+                    cJSON_Delete(cjv);
+                    cjv = cJSON_CreateBool (false);
+                } else {
+                    cJSON_AddBoolToObject(cjv, "value", false);
                 }
             }
             else
             {
-                if (db->crob == db->crob_true)
-                {
-                    if (db->fmt == 0) 
-                    {
-                        cJSON_Delete(cjv);
-                        cjv = cJSON_CreateBool (true);
-                    } else {
-                        cJSON_AddBoolToObject(cjv, "value", true);
-                    }
-                    //cJSON_AddBoolToObject(cjv, "value", true);
-
-                }
-                else if (db->crob == db->crob_false)
-                {
-                    if (db->fmt == 0) 
-                    {
-                        cJSON_Delete(cjv);
-                        cjv = cJSON_CreateBool (false);
-                    } else {
-                        cJSON_AddBoolToObject(cjv, "value", false);
-                    }
-                    //cJSON_AddBoolToObject(cjv, "value", false);
-                }
-                else if (db->crob == 3)
-                {
-                    if (db->fmt == 0) 
-                    {
-                        cJSON_Delete(cjv);
-                        cjv = cJSON_CreateBool (true);
-                    } else {
-                        cJSON_AddBoolToObject(cjv, "value3", true);
-                    }
-
-                    //cJSON_AddBoolToObject(cjv, "value3", true);
-                }
-                else if (db->crob == 4)
-                {
-                    if (db->fmt == 0) 
-                    {
-                        cJSON_Delete(cjv);
-                        cjv = cJSON_CreateBool (false);
-                    } else {
-                        cJSON_AddBoolToObject(cjv, "value4", false);
-                    }
-
-                    //cJSON_AddBoolToObject(cjv, "value4", false);
-                }
-                else
-                {
-                    sendOK = false;
-                }
+                sendOK = false;
             }
         }
-        // if(db->crob == 0x01)
-        //     cJSON_AddBoolToObject(cjv, "ovalue", true);
-        // else
-        //     cJSON_AddBoolToObject(cjv, "ovalue", false);
-        // cJSON_AddStringToObject(cjv, "value", cmd);
-        //cJSON_AddItemToObject(cji, db->name.c_str(), cjv);
-        // cJSON_AddItemToArray(cjf, cji);
-        // sys->cjloaded++;
         if(sendOK)
             sendCmdSet(sys, db, cjv);
         cJSON_Delete(cjv);
@@ -2737,42 +2947,22 @@ void sysdbAddtoRecord(sysCfg* sys, const char* field, const char* cmd, uint16_t 
 
 }
 
-// TODO allow a setup option in the config file to supply the SOEname
 const char* cfgGetSOEName(sysCfg* sys, const char* fname)
 {
     return fname;
 }
-//IF it is commented out , it means that it no longer is in OperationType
 const OperationType StringToOperationType(const char* codeWord)
 {
-//    if (strcmp("NUL_CANCEL", codeWord) == 0)
-//        return OperationType::NUL_CANCEL;
     if (strcmp("NUL", codeWord) == 0)
         return OperationType::NUL;
-//    if (strcmp("PULSE_ON_CANCEL", codeWord) == 0)
-//        return OperationType::PULSE_ON_CANCEL;
     if (strcmp("PULSE_ON", codeWord) == 0)
         return OperationType::PULSE_ON;
-//    if (strcmp("PULSE_OFF_CANCEL", codeWord) == 0)
-//        return OperationType::PULSE_OFF_CANCEL;
     if (strcmp("PULSE_OFF", codeWord) == 0)
         return OperationType::PULSE_OFF;
-//    if (strcmp("LATCH_ON_CANCEL", codeWord) == 0)
-//        return OperationType::LATCH_ON_CANCEL;
     if (strcmp("LATCH_ON", codeWord) == 0 || strcmp("true", codeWord) == 0)
         return OperationType::LATCH_ON;
-//    if (strcmp("LATCH_OFF_CANCEL", codeWord) == 0)
-//        return OperationType::LATCH_OFF_CANCEL;
     if (strcmp("LATCH_OFF", codeWord) == 0 || strcmp("false", codeWord) == 0)
         return OperationType::LATCH_OFF;
-//    if (strcmp("CLOSE_PULSE_ON_CANCEL", codeWord) == 0)
-//        return OperationType::CLOSE_PULSE_ON_CANCEL;
-//    if (strcmp("CLOSE_PULSE_ON", codeWord) == 0)
-//        return OperationType::CLOSE_PULSE_ON;
-//    if (strcmp("TRIP_PULSE_ON_CANCEL", codeWord) == 0)
-//        return OperationType::TRIP_PULSE_ON_CANCEL;
-//    if (strcmp("TRIP_PULSE_ON", codeWord) == 0)
-//        return OperationType::TRIP_PULSE_ON;
     return OperationType::Undefined;
 }
 
@@ -2806,8 +2996,6 @@ bool run_config(cJSON* config, sysCfg** sys, int &num_configs, int who, fims* p_
     num_configs += 1;
     return ret;
 }
-// we either have a list in a file or a list of files
-//
 
 int getConfigs(int argc, char *argv[], sysCfg**sys, int who, fims *p_fims)
 {
@@ -2857,23 +3045,45 @@ DatabaseConfig ConfigureDatabase(sysCfg* sys)
 { 
     DatabaseConfig config(0); // 10 of each type with default settings
   
-    // just deal with analog vars and Group30Var5, this allows floating point numbers through the system
-    //auto dsize = sys->dbVec[Type_Analog].size();
     auto dsize = sys->getTypeSize(Type_Analog);
+    FPS_ERROR_PRINT(" %s >>  analog size = [%d] \n", __func__, (int)dsize);
     for (int i = 0; i < static_cast<int32_t>(dsize); i++)
     {
         DbVar* db = sys->getDbVarId(Type_Analog, i);
         if(db != NULL)
         {
-            //config.analog_input[i].value.value = 0;
             config.analog_input[i].clazz = PointClass::Class1;
             if(db->variation == Group30Var5)
             {
                 config.analog_input[i].svariation = StaticAnalogVariation::Group30Var5;
             }
+            else if(db->variation == Group30Var6)
+            {
+                config.analog_input[i].svariation = StaticAnalogVariation::Group30Var6;
+            }
+            else if(db->variation == Group30Var1)
+            {
+                config.analog_input[i].svariation = StaticAnalogVariation::Group30Var1;
+            }
             else if(db->variation == Group30Var2)
             {
                 config.analog_input[i].svariation = StaticAnalogVariation::Group30Var2;
+            }
+            else if(db->variation == Group30Var3)
+            {
+                config.analog_input[i].svariation = StaticAnalogVariation::Group30Var3;
+            }
+            else if(db->variation == Group30Var4)
+            {
+                config.analog_input[i].svariation = StaticAnalogVariation::Group30Var4;
+            }
+            else if(db->variation == Group30Var5)
+            {
+                config.analog_input[i].svariation = StaticAnalogVariation::Group30Var5;
+            }
+            else if(db->variation == Group30Var6)
+            {
+                config.analog_input[i].svariation = StaticAnalogVariation::Group30Var6;
             }
 
             if(db->evariation == Group32Var0)
@@ -2939,16 +3149,171 @@ DatabaseConfig ConfigureDatabase(sysCfg* sys)
                     default:
                         break;
                 }
-                //if (sys->useVindex)
-                //    config.analog_input[i].vIndex = db->idx;
             }
 
-            // else if(db->variation == Group30Var2)
-            // {
-            //     config.analog_input[i].svariation = StaticAnalogVariation::Group30Var2;
-            // }
         }
     }
+    dsize = sys->getTypeSize(Type_AnalogOS);
+    FPS_ERROR_PRINT(" %s >>  analogOS size = [%d] \n", __func__, (int)dsize);
+
+    for (int i = 0; i < static_cast<int32_t>(dsize); i++)
+    {
+        DbVar* db = sys->getDbVarId(Type_AnalogOS, i);
+        if(db != NULL)
+        {
+            config.analog_output_status[i].clazz = PointClass::Class1;
+            if(db->variation == Group40Var1)
+            {
+                config.analog_output_status[i].svariation = StaticAnalogOutputStatusVariation::Group40Var1;
+            }
+            else if(db->variation == Group40Var2)
+            {
+                config.analog_output_status[i].svariation = StaticAnalogOutputStatusVariation::Group40Var2;
+            }
+            else if(db->variation == Group40Var3)
+            {
+                config.analog_output_status[i].svariation = StaticAnalogOutputStatusVariation::Group40Var3;
+            }
+            else if(db->variation == Group40Var4)
+            {
+                config.analog_output_status[i].svariation = StaticAnalogOutputStatusVariation::Group40Var4;
+            }
+
+            if(db->evariation == Group42Var1)
+            {
+                config.analog_output_status[i].evariation = EventAnalogOutputStatusVariation::Group42Var1;
+            }
+            else if(db->evariation == Group42Var2)
+            {
+                config.analog_output_status[i].evariation = EventAnalogOutputStatusVariation::Group42Var2;
+            }
+            else if(db->evariation == Group42Var3)
+            {
+                config.analog_output_status[i].evariation = EventAnalogOutputStatusVariation::Group42Var3;
+            }
+            else if(db->evariation == Group42Var4)
+            {
+                config.analog_output_status[i].evariation = EventAnalogOutputStatusVariation::Group42Var4;
+            }
+            else if(db->evariation == Group42Var5)
+            {
+                config.analog_output_status[i].evariation = EventAnalogOutputStatusVariation::Group42Var5;
+            }
+            else if(db->evariation == Group42Var6)
+            {
+                config.analog_output_status[i].evariation = EventAnalogOutputStatusVariation::Group42Var6;
+            }
+            else if(db->evariation == Group42Var7)
+            {
+                config.analog_output_status[i].evariation = EventAnalogOutputStatusVariation::Group42Var7;
+            }
+            if (db->deadband > 0.0) {
+                config.analog_output_status[i].deadband = db->deadband;
+            }
+            else
+            {
+                config.analog_output_status[i].deadband = sys->deadband;
+            }
+            
+    
+            if(db->clazz != 0)
+            {
+                switch (db->clazz ) 
+                {
+                    case 1:
+                    {
+                        config.analog_output_status[i].clazz = PointClass::Class1;
+                        break;
+                    }
+                    case 2:
+                    {
+                        config.analog_output_status[i].clazz = PointClass::Class2;
+                        break;
+                    }
+                    case 3:
+                    {
+                        config.analog_output_status[i].clazz = PointClass::Class3;
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+    dsize = sys->getTypeSize(Type_Counter);
+    FPS_ERROR_PRINT(" %s >>  counter size = [%d] \n", __func__, (int)dsize);
+
+    for (int i = 0; i < static_cast<int32_t>(dsize); i++)
+    {
+        DbVar* db = sys->getDbVarId(Type_Counter, i);
+        if(db != NULL)
+        {
+            config.counter[i].clazz = PointClass::Class1;
+            if(db->variation == Group20Var1)
+            {
+                config.counter[i].svariation = StaticCounterVariation::Group20Var1;
+            }
+            else if(db->variation == Group20Var2)
+            {
+                config.counter[i].svariation = StaticCounterVariation::Group20Var2;
+            }
+            else if(db->variation == Group20Var5)
+            {
+                config.counter[i].svariation = StaticCounterVariation::Group20Var5;
+            }
+            else if(db->variation == Group20Var6)
+            {
+                config.counter[i].svariation = StaticCounterVariation::Group20Var6;
+            }
+
+            if(db->evariation == Group22Var0)
+            {
+                //TODO config.analog_input[i].evariation = EventAnalogVariation::Group32Var0;
+            }
+            else if(db->evariation == Group22Var1)
+            {
+                config.counter[i].evariation = EventCounterVariation::Group22Var1;
+            }
+            else if(db->evariation == Group22Var2)
+            {
+                config.counter[i].evariation = EventCounterVariation::Group22Var2;
+            }
+            else if(db->evariation == Group22Var5)
+            {
+                config.counter[i].evariation = EventCounterVariation::Group22Var5;
+            }
+            else if(db->evariation == Group22Var6)
+            {
+                config.counter[i].evariation = EventCounterVariation::Group22Var6;
+            }
+    
+            if(db->clazz != 0)
+            {
+                switch (db->clazz ) 
+                {
+                    case 1:
+                    {
+                        config.counter[i].clazz = PointClass::Class1;
+                        break;
+                    }
+                    case 2:
+                    {
+                        config.counter[i].clazz = PointClass::Class2;
+                        break;
+                    }
+                    case 3:
+                    {
+                        config.counter[i].clazz = PointClass::Class3;
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
     auto bsize = sys->getTypeSize(Type_Binary);
     FPS_ERROR_PRINT(" %s >>  binary size = [%d] \n", __func__, (int)bsize);
 
@@ -2977,21 +3342,36 @@ DatabaseConfig ConfigureDatabase(sysCfg* sys)
             {
                 config.binary_input[i].evariation = EventBinaryVariation::Group2Var3;
             }
-
-            //if (sys->useVindex)
-            //    config.binary_input[i].vIndex = db->idx;
+            // 309 allow class designation for binaries
+            if(db->clazz != 0)
+            {
+                switch (db->clazz ) 
+                {
+                    case 1:
+                    {
+                        config.counter[i].clazz = PointClass::Class1;
+                        break;
+                    }
+                    case 2:
+                    {
+                        config.counter[i].clazz = PointClass::Class2;
+                        break;
+                    }
+                    case 3:
+                    {
+                        config.counter[i].clazz = PointClass::Class3;
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
         }
     }
 
-    // example of configuring analog index 0 for Class2 with floating point variations by default
-    //config.analog_input[0].clazz = PointClass::Class2;
-    //config.analog_input[0].svariation = StaticAnalogVariation::Group30Var5;
-    //config.analog_input[0].evariation = EventAnalogVariation::Group32Var7;
-    //config.analog_input[0].deadband = 1.0; ///EventAnalogVariation::Group32Var7;   
     return config;
 }
 
-// Note does not log skipped events 
 int HandleEvent(sysCfg *sys,  DbVar* db , int etype)
 {
 
@@ -3018,12 +3398,4 @@ int HandleEvent(sysCfg *sys,  DbVar* db , int etype)
     }
     return etype;
 }
-
-//
-// MODBUS does a send on each variable 
-// bool process_dnp3_message(int bytes_read, int header_length, datalog* data, system_config* config, server_data* server_map, bool serial, uint8_t * query)
-//sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
-//                     cJSON_AddBoolToObject(send_body, "value", (value == 0xFF00) ? cJSON_True : cJSON_False);
-//                     char* body_msg = cJSON_PrintUnformatted(send_body);
-//                     server_map->p_fims->Send("set", uri, NULL, body_msg);
 

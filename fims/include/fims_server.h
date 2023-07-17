@@ -99,7 +99,7 @@ extern uint32_t non_pub_base_mask[SUB_MASK_SIZE];
 /**
  * Returns whether the URI is valid or not.
  */
-bool valid_uri(char* uri);
+bool valid_uri(const fims::str_view uri);
 
 /**
  * Returns an int which is a hash of a string.
@@ -123,7 +123,12 @@ void remove_subscription(const char* uri, int thread_id);
 /**
  * Builds a mask of connections who are subscribed to the given URI.
  */ 
-void get_connections_for_uri(char* uri, uint32_t* thread_mask, bool pub);
+void get_connections_for_uri(const fims::str_view uri, uint32_t* thread_mask, bool pub);
+
+/**
+* Removes subscriptions from to a connection and closes socket
+*/
+void clean_up_connection(client_info* info);
 
 /**
  * Handles I/O from socket.

@@ -48,24 +48,11 @@ Asset_Generator::Asset_Generator()
 
     asset_type_id = GENERATORS_TYPE_ID;
 
-    uri_active_power_setpoint = NULL;
-    uri_reactive_power_setpoint = NULL;
-    uri_start = NULL;
-    uri_stop = NULL;
-    uri_grid_mode = NULL;
-
     set_required_variables();
 }
 
 Asset_Generator::~Asset_Generator ()
 {
-    free(uri_clear_faults);
-    free(uri_active_power_setpoint);
-    free(uri_reactive_power_setpoint);
-    free(uri_start);
-    free(uri_stop);
-    free(uri_grid_mode);
-
     if (grid_mode_setpoint) free(grid_mode_setpoint);
 }
 
@@ -208,10 +195,6 @@ bool Asset_Generator::configure_typed_asset_instance_vars(Type_Configurator* con
     if (object)
         stopping_status_mask = (uint64_t) std::stoul(object->valuestring, NULL, 16);
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "stopped_status_mask");
-    if (object)
-        stopped_status_mask = object->valuedouble;
-
     object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "start_value");
     if (object)
         start_value = object->valueint;
@@ -273,7 +256,7 @@ bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure clear_faults UI control.");
                 return false;
             }
-            uri_clear_faults = strdup(build_uri(compNames[i], clear_faults_ctl.reg_name).c_str());
+            uri_clear_faults = build_uri(compNames[i], clear_faults_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "start");
@@ -282,7 +265,7 @@ bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure start asset UI control.");
                 return false;
             }
-            uri_start = strdup(build_uri(compNames[i], start_ctl.reg_name).c_str());
+            uri_start = build_uri(compNames[i], start_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "stop");
@@ -291,7 +274,7 @@ bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure stop asset UI control.");
                 return false;
             }
-            uri_stop = strdup(build_uri(compNames[i], stop_ctl.reg_name).c_str());
+            uri_stop = build_uri(compNames[i], stop_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "start_next");
@@ -368,9 +351,6 @@ bool Asset_Generator::generate_asset_ui(fmt::memory_buffer &buf, const char* con
                             (ldss->priority_setting == STATIC ? (get_static_stop_priority() > 1 && !block_ldss_static_stops) : get_dynamic_stop_priority() > 1);
     goodBody = stop_next_ctl.makeJSONObject(buf, var) && goodBody;
 
-    clear_faults_ctl.enabled = (get_num_active_faults() != 0 || get_num_active_alarms() != 0);
-    goodBody = clear_faults_ctl.makeJSONObject(buf, var) && goodBody;
-
     maint_active_power_setpoint_ctl.enabled = (inMaintenance && isRunning);
     goodBody = maint_active_power_setpoint_ctl.makeJSONObject(buf, var) && goodBody;
 
@@ -409,18 +389,8 @@ void Asset_Generator::set_grid_mode(gridMode mode)
 
 //Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case. 
 //Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
-bool Asset_Generator::process_set(std::string uri, cJSON* fimsBody)
+bool Asset_Generator::handle_set(std::string uri, cJSON &body)
 {
-    if (fimsBody == NULL)
-    {
-        FPS_ERROR_LOG("\n NULL parsed data process_set ESS \n");
-        return false;
-    }
-    else
-    {
-        FPS_DEBUG_LOG("\nReceived generator set with %s  maintsetpoint: %f\n", fimsBody->string, maint_active_power_setpoint);
-    }
-
     // The current setpoint being parsed from those available
     cJSON* current_setpoint = NULL;
     // The value of the setpoint object received
@@ -429,47 +399,50 @@ bool Asset_Generator::process_set(std::string uri, cJSON* fimsBody)
     // For instance, sets that modify the system state should not persist as they will default to the published component state on restart
     bool persistent_setpoint = false;
 
-    if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "clear_faults")))
+    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "clear_faults")))
     {
-        clear_component_faults();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "start")))
+        clear_alerts();
+    } 
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start")))
     {
         start(); // issue the start command
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "stop")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop")))
     {
         stop(); // issue the stop command
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_Number, "active_power_setpoint")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "active_power_setpoint")))
     {
         // TODO: unused, replaced by maint_active_power_setpoint?
         value = cJSON_GetObjectItem(current_setpoint, "value");
         set_active_power_setpoint(value->valuedouble);
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_Number, "reactive_power_setpoint")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "reactive_power_setpoint")))
     {
         // TODO: unused, replaced by maint_reactive_power_setpoint?
         value = cJSON_GetObjectItem(current_setpoint, "value");
         set_reactive_power_setpoint(value->valuedouble);
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_Number, "maint_active_power_setpoint")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint")))
     {
         value = cJSON_GetObjectItem(current_setpoint, "value");
         set_active_power_setpoint(maint_active_power_setpoint = value->valuedouble);
         persistent_setpoint = true;
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint")))
     {
         value = cJSON_GetObjectItem(current_setpoint, "value");
         set_reactive_power_setpoint(maint_reactive_power_setpoint = value->valuedouble);
         persistent_setpoint = true;
     }
 
-    // Echo set to storage db if valid (value has been parsed)
-    if (current_setpoint && persistent_setpoint)
-        return Asset::send_setpoint(uri, current_setpoint);
-
-    return (Asset::process_set(uri, fimsBody));
+    // if target setpoint was found, back it up to DBI if it is a persistent setpoint.
+    // otherwise, send it to the generic controls handler
+    if (!current_setpoint)
+        return handle_generic_asset_controls_set(uri, body);
+    if (!persistent_setpoint)
+        return true;
+    return Asset::send_setpoint(uri, current_setpoint);
 }
 
 void Asset_Generator::process_asset(void)

@@ -1,0 +1,379 @@
+{
+    "/assets/bms/summary": {
+        "connection_status": 0,
+        "system_operation_state": 0,
+        "system_charge_state": 0,
+        "rack_enable_status": 0,
+        "rack_enable_status_2": 0,
+        "ac_comms_state_1": 65535,
+        "ac_comms_state_2": 65535,
+        "ac_comms_state_3": 65535
+    },
+    "/templates/bms": {
+        "sbmu_0": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_0"},
+                {"replace": "@@RACK_NUM@@","with": "0"}
+            ]
+        },
+        "sbmu_1": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_1"},
+                {"replace": "@@RACK_NUM@@","with": "1"}
+            ]
+        },
+        "sbmu_2": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_2"},
+                {"replace": "@@RACK_NUM@@","with": "2"}
+            ]
+        },
+        "sbmu_3": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_3"},
+                {"replace": "@@RACK_NUM@@","with": "3"}
+            ]
+        },
+        "sbmu_4": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_4"},
+                {"replace": "@@RACK_NUM@@","with": "4"}
+            ]
+        },
+        "sbmu_5": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_5"},
+                {"replace": "@@RACK_NUM@@","with": "5"}
+            ]
+        },
+        "sbmu_6": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_6"},
+                {"replace": "@@RACK_NUM@@","with": "6"}
+        ]},
+        "sbmu_7": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_7"},
+                {"replace": "@@RACK_NUM@@","with": "7"}
+            ]
+        },
+        "sbmu_8": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_8"},
+                {"replace": "@@RACK_NUM@@","with": "8"}
+            ]
+        },
+        "sbmu_9": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_9"},
+                {"replace": "@@RACK_NUM@@","with": "9"}
+            ]
+        },
+        "sbmu_10": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_10"},
+                {"replace": "@@RACK_NUM@@","with": "10"}
+            ]
+        },
+        "sbmu_11": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_11"},
+                {"replace": "@@RACK_NUM@@","with": "11"}
+            ]
+        },
+        "sbmu_12": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_12"},
+                {"replace": "@@RACK_NUM@@","with": "12"}
+            ]
+        },
+        "sbmu_13": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_13"},
+                {"replace": "@@RACK_NUM@@","with": "13"}
+            ]
+        },
+        "sbmu_14": {
+            "template": "risen_bms_template.json",
+            "subs": [
+                {"replace": "@@RACK_ID@@", "with": "sbmu_14"},
+                {"replace": "@@RACK_NUM@@","with": "14"}
+            ]
+        }
+    },
+    "/schedule/wake_monitor/bms":{
+        "/status/bms:ChargeState":    { "enable": true, "rate": 0.1, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:DischargeState": { "enable": true, "rate": 0.1, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:IdleState":      { "enable": true, "rate": 0.1, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:StartConnection":{ "enable": true, "rate": 0.1, "amap": "bms", "func": "CalculateVar"},
+        "/status/bms:EndConnection":  { "enable": true, "rate": 0.1, "amap": "bms", "func": "CalculateVar"}
+    },
+    "/status/bms": {
+        "ChargeState": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/bms_1:idc_value",
+            "expression": "{1} < 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "uri": "/assets/bms/summary:system_charge_state", "outValue": 2}
+                    ]
+                }]
+            }
+        },
+        "DischargeState": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/bms_1:idc_value",
+            "expression": "{1} > 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "uri": "/assets/bms/summary:system_charge_state", "outValue": 1}
+                    ]
+                }]
+            }
+        },
+        "IdleState": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/bms_1:idc_value",
+            "expression": "{1} == 0",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true,  "uri": "/assets/bms/summary:system_charge_state", "outValue": 0}
+                    ]
+                }]
+            }
+        },
+        "StartConnection": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/bms_1:ctrlword1",
+            "expression": "{1} == 1",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "uri": "/assets/bms/summary:connection_status", "outValue": 1}
+                    ]
+                }]
+            }
+        },
+        "EndConnection": {
+            "value": false,
+            "useExpr": true,
+            "numVars": 1,
+            "variable1": "/components/bms_1:ctrlword1",
+            "expression": "{1} == 2",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": true, "uri": "/assets/bms/summary:connection_status", "outValue": 3}
+                    ]
+                }]
+            }
+        }
+    },
+
+    "/components/bms_1": {
+        "dccontactor": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:system_operation_state", "outValue": 3},
+                        {"inValue": true,  "uri": "/assets/bms/summary:system_operation_state", "outValue": 0}
+                    ]
+                }]
+            }
+        },
+
+        "sbmu_0_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[0]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[0]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_1_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[1]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[1]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_2_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[2]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[2]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_3_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[3]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[3]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_4_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[4]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[4]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_5_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[5]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[5]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_6_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[6]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[6]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_7_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[7]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[7]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_8_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[8]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[8]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_9_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[9]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[9]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_10_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[10]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[10]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_11_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[11]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[11]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_12_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[12]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[12]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_13_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[13]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[13]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "sbmu_14_enabled": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": false, "uri": "/assets/bms/summary:rack_enable_status[14]", "outValue": false},
+                        {"inValue": true,  "uri": "/assets/bms/summary:rack_enable_status[14]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "idc_value": 0,
+        "ctrlword1": 0
+    }
+}

@@ -1,5 +1,7 @@
 [Unit]
 Description=FIMS to Disk (PowerCloud)
+Requires=fims.service
+After=fims.service
 
 [Service]
 User=hybridos

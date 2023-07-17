@@ -1,29 +1,44 @@
 import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
-import { VariableOverrideService } from './ercotOverride.service'
-import { VariableParams } from './params/variableNames.params';
-import { EditOverrideParams } from './params/editOverride.params';
+import { ApiDefaultResponse, ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger'
+import { ErcotOverrideService } from './ercotOverride.service'
+import { Site, Variable } from './params/override.params';
 import { Request } from 'express';
-import { FimsMsg } from 'src/fims/interfaces/fims.interface';
+import { EditVariableRepnse } from './responses/editVariable.response';
+import { NewValue } from './dto/newValue.dto';
+import { DefaultApiError } from 'src/exceptions/defaultResponse.exception';
+import { ErcotOverrideDescriptions } from './ercotOverride.constants';
 
-@ApiTags('variable-override')
-@Controller('variable-override')
-export class VariableOverrideController {
-    constructor(private readonly variableOverrideService: VariableOverrideService) {}
+@ApiTags('ercot-override')
+@ApiSecurity('bearerAuth')
+@ApiDefaultResponse({type: DefaultApiError})
+@Controller('ercot-override')
+export class ErcotOverrideController {
+    constructor(private readonly ercotOverrideService: ErcotOverrideService) {}
+    @ApiOkResponse({description: ErcotOverrideDescriptions.getResponse})
     @Get('sites')
     async siteNames(): Promise<string | Record<string, unknown>> {
-        return await this.variableOverrideService.getSiteNames()
+        return await this.ercotOverrideService.getSiteNames()
     }
+    @ApiOkResponse({description: ErcotOverrideDescriptions.getResponse})
     @Get('variable-names')
     async variableNames(): Promise<string | Record<string, unknown>> {
-        return await this.variableOverrideService.getVariableNames()
+        return await this.ercotOverrideService.getVariableNames()
     }
-    @Get('variable-values/:siteId')
-    async variableValues(@Param() siteId: VariableParams): Promise<string | Record<string, unknown>> {
-        return await this.variableOverrideService.getVariableValues(siteId)
+    @Get('variable-values/:id')
+    @ApiOkResponse({description: ErcotOverrideDescriptions.getResponse})
+    async variableValues(
+        @Param() id: Site
+    ): Promise<string | Record<string, unknown>> {
+        return await this.ercotOverrideService.getVariableValues(id)
     }
-    @Post('override-value/:siteId/:variableName')
-    async editOverride(@Req() request: Request, @Param() params: EditOverrideParams, @Body() newValue: {data: number | boolean}): Promise<{ data: string }>  {
-        return await this.variableOverrideService.setOverrideValue(request, params, newValue)
+    @ApiOkResponse({description: ErcotOverrideDescriptions.setResponse})
+    @Post('override-value/:id/:name')
+    async editOverride(
+        @Req() request: Request,
+        @Param() id: Site,
+        @Param() name: Variable,
+        @Body() newValue: NewValue
+    ): Promise<EditVariableRepnse>  {
+        return await this.ercotOverrideService.setOverrideValue(request, id, name, newValue)
     }
 }

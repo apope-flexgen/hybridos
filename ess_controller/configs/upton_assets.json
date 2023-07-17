@@ -1,0 +1,2257 @@
+{
+	"assets":
+	{
+		"feeders":
+		[
+			{
+				"id": "feed_1",
+				"name": "52-F5",
+				"nominal_voltage": 34500.0,
+				"nominal_frequency": 60.0,
+				"rated_active_power": 1185000.0,
+				"rated_apparent_power": 900000.0,
+				"priority": 1,
+				"control_word_on": 1,
+				"control_word_off": 0,
+				"phase_count": 3,
+				"components":
+				[
+					{
+						"component_id": "m_f5_sel_735",
+						"variables":
+						{
+							"current_l1":
+							{
+								"name": "L1 AC Current",
+								"register_id": "ac_current_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l2":
+							{
+								"name": "L2 AC Current",
+								"register_id": "ac_current_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l3":
+							{
+								"name": "L3 AC Current",
+								"register_id": "ac_current_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"voltage_l1":
+							{
+								"name": "L1 AC Voltage",
+								"register_id": "ac_voltage_l1_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l2":
+							{
+								"name": "L2 AC Voltage",
+								"register_id": "ac_voltage_l2_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l3":
+							{
+								"name": "L3 AC Voltage",
+								"register_id": "ac_voltage_l3_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"active_power":
+							{
+								"name": "AC Active Power",
+								"register_id": "ac_active_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power":
+							{
+								"name": "AC Reactive Power",
+								"register_id": "ac_reactive_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"apparent_power":
+							{
+								"name": "AC Apparent Power",
+								"register_id": "ac_apparent_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VA"
+							},
+							"wh_delivered":
+							{
+								"name": "Wh Delivered",
+								"register_id": "wh_delivered",
+								"value": null,
+								"scaler": 1,
+								"unit": "Wh"
+							},
+							"wh_received":
+							{
+								"name": "Wh Received",
+								"register_id": "wh_received",
+								"value": null,
+								"scaler": 1,
+								"unit": "Wh"
+							},
+							"varh_delivered":
+							{
+								"name": "VARh Delivered",
+								"register_id": "varh_delivered",
+								"value": null,
+								"scaler": 1,
+								"unit": "VARh"
+							},
+							"varh_received":
+							{
+								"name": "VARh Received",
+								"register_id": "varh_received",
+								"value": null,
+								"scaler": 1,
+								"unit": "VARh"
+							},
+							"frequency":
+							{
+								"name": "Frequency",
+								"register_id": "frequency",
+								"value": null,
+								"scaler": 1,
+								"unit": "Hz"
+							},
+							"power_factor":
+							{
+								"name": "Power Factor",
+								"register_id": "power_factor",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"thd_i_l1":
+							{
+								"name": "L1 Current Total Harmonic Distortion",
+								"register_id": "thd_i_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"thd_i_l2":
+							{
+								"name": "L2 Current Total Harmonic Distortion",
+								"register_id": "thd_i_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"thd_i_l3":
+							{
+								"name": "L3 Current Total Harmonic Distortion",
+								"register_id": "thd_i_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"thd_v_l1":
+							{
+								"name": "L1 Voltage Total Harmonic Distortion",
+								"register_id": "thd_v_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"thd_v_l2":
+							{
+								"name": "L2 Voltage Total Harmonic Distortion",
+								"register_id": "thd_v_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"thd_v_l3":
+							{
+								"name": "L3 Voltage Total Harmonic Distortion",
+								"register_id": "thd_v_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							}
+						}
+					},
+					{
+						"component_id": "11_f5_sel_351s",
+						"variables":
+						{
+							"manual_mode":
+							{
+								"name": "Manual Mode",
+								"register_id": "manual_mode",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"breaker_status":
+							{
+								"name": "Breaker Status",
+								"register_id": "breaker_status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"target_reset":
+							{
+								"name": "Clear Faults",
+								"register_id": "target_reset",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"breaker_scada_trip":
+							{
+								"name": "Breaker SCADA Trip",
+								"register_id": "breaker_scada_trip",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"breaker_scada_close":
+							{
+								"name": "Breaker SCADA Close",
+								"register_id": "breaker_scada_close",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							}
+						}
+					},
+					{
+						"component_id":"11_f5_sel_351s_m",
+						"variables":
+						{
+							"faults":
+							{
+								"name": "Faults",
+								"register_id": "breaker_relay_faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							}
+						}
+					}
+				]
+			},
+			{
+				"id": "feed_2",
+				"name": "M-AUX",
+				"phase_count": 2,
+				"components": 
+				[
+					{
+						"component_id": "m_aux_sel_735",
+						"variables":
+						{
+							"current_l1":
+							{
+								"name": "L1 AC Current",
+								"register_id": "ac_current_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l2":
+							{
+								"name": "L2 AC Current",
+								"register_id": "ac_current_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"voltage_l1":
+							{
+								"name": "L1 AC Voltage",
+								"register_id": "ac_voltage_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l2":
+							{
+								"name": "L2 AC Voltage",
+								"register_id": "ac_voltage_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"active_power":
+							{
+								"name": "AC Active Power",
+								"register_id": "ac_active_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power":
+							{
+								"name": "AC Reactive Power",
+								"register_id": "ac_reactive_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"apparent_power":
+							{
+								"name": "AC Apparent Power",
+								"register_id": "ac_apparent_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VA"
+							},
+							"wh_delivered":
+							{
+								"name": "Wh Delivered",
+								"register_id": "wh_delivered",
+								"value": null,
+								"scaler": 1,
+								"unit": "Wh"
+							},
+							"wh_received":
+							{
+								"name": "Wh Received",
+								"register_id": "wh_received",
+								"value": null,
+								"scaler": 1,
+								"unit": "Wh"
+							},
+							"varh_delivered":
+							{
+								"name": "VARh Delivered",
+								"register_id": "varh_delivered",
+								"value": null,
+								"scaler": 1,
+								"unit": "VARh"
+							},
+							"varh_received":
+							{
+								"name": "VARh Received",
+								"register_id": "varh_received",
+								"value": null,
+								"scaler": 1,
+								"unit": "VARh"
+							},
+							"frequency":
+							{
+								"name": "Frequency",
+								"register_id": "frequency",
+								"value": null,
+								"scaler": 1,
+								"unit": "Hz"
+							},
+							"power_factor":
+							{
+								"name": "Power Factor",
+								"register_id": "power_factor",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							}
+						}
+					}
+				]
+			},
+			{
+				"id": "feed_3",
+				"name": "M-BESS-AUX",
+				"phase_count": 3,
+				"components": 
+				[
+					{
+						"component_id": "m_bess_aux_sel_735",
+						"variables":
+						{
+							"current_l1":
+							{
+								"name": "L1 AC Current",
+								"register_id": "ac_current_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l2":
+							{
+								"name": "L2 AC Current",
+								"register_id": "ac_current_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l3":
+							{
+								"name": "L3 AC Current",
+								"register_id": "ac_current_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"voltage_l1":
+							{
+								"name": "L1 AC Voltage",
+								"register_id": "ac_voltage_l1_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l2":
+							{
+								"name": "L2 AC Voltage",
+								"register_id": "ac_voltage_l2_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l3":
+							{
+								"name": "L3 AC Voltage",
+								"register_id": "ac_voltage_l3_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"active_power":
+							{
+								"name": "AC Active Power",
+								"register_id": "ac_active_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power":
+							{
+								"name": "AC Reactive Power",
+								"register_id": "ac_reactive_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"apparent_power":
+							{
+								"name": "AC Apparent Power",
+								"register_id": "ac_apparent_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VA"
+							},
+							"wh_delivered":
+							{
+								"name": "Wh Delivered",
+								"register_id": "wh_delivered",
+								"value": null,
+								"scaler": 1,
+								"unit": "Wh"
+							},
+							"wh_received":
+							{
+								"name": "Wh Received",
+								"register_id": "wh_received",
+								"value": null,
+								"scaler": 1,
+								"unit": "Wh"
+							},
+							"varh_delivered":
+							{
+								"name": "VARh Delivered",
+								"register_id": "varh_delivered",
+								"value": null,
+								"scaler": 1,
+								"unit": "VARh"
+							},
+							"varh_received":
+							{
+								"name": "VARh Received",
+								"register_id": "varh_received",
+								"value": null,
+								"scaler": 1,
+								"unit": "VARh"
+							},
+							"frequency":
+							{
+								"name": "Frequency",
+								"register_id": "frequency",
+								"value": null,
+								"scaler": 1,
+								"unit": "Hz"
+							},
+							"power_factor":
+							{
+								"name": "Power Factor",
+								"register_id": "power_factor",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							}
+						}
+					}
+				]
+			}
+		],
+		"ess":
+		[
+			{
+				"id": "ess_1",
+				"name": "BESS Inverter Block 01",
+				"nominal_voltage": 540.0,
+				"nominal_frequency": 60.0,
+				"rated_active_power": 2200.0,
+				"rated_apparent_power": 2200.0,
+				"priority": 1,
+				"start_timer": 50,
+				"cooldown_timer": 250,
+				"max_load_threshold": 200000,
+				"min_load_threshold": 1000,
+				"control_word_on": 1,
+				"control_word_off": 2,
+				"DC_contactor_open": 1,
+				"DC_contactor_closed": 2,
+				"DC_contactor_reset": 3,
+				"chg_soc_begin": 90.0,
+				"chg_soc_end": 101.5,
+				"dischg_soc_begin": 10.0,
+				"dischg_soc_end": -1.5,
+				"max_soc_raw": 99.5,
+				"min_soc_raw": 1.5,
+				"components":
+				[
+					{
+						"component_id": "sungrow_pcs_1a",
+						"variables":
+						{
+							"pcs_a_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_pcs_1b",
+						"variables":
+						{
+							"pcs_b_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_ess_1",
+						"variables":
+						{
+							"manual_mode":
+							{
+								"name": "Manual Disable",
+								"register_id": "manual_mode",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_1":
+							{
+								"name": "Control Word 1 (Start/Stop)",
+								"register_id": "control_word_1",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_2":
+							{
+								"name": "Control Word 2 (DC Contactor)",
+								"register_id": "control_word_2",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"close_dc_contactors":
+							{
+								"name": "Close DC Contactors",
+								"register_id": "close_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"open_dc_contactors":
+							{
+								"name": "Open DC Contactors",
+								"register_id": "open_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"local_bms_status":
+							{
+								"name": "Racks In Service",
+								"register_id": "local_bms_status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms1_racks_in_service":
+							{
+								"name": "BMS1 DC Contactor Status",
+								"register_id": "bms1_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms2_racks_in_service":
+							{
+								"name": "BMS2 DC Contactor Status",
+								"register_id": "bms2_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms3_racks_in_service":
+							{
+								"name": "BMS3 DC Contactor Status",
+								"register_id": "bms3_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms4_racks_in_service":
+							{
+								"name": "BMS4 DC Contactor Status",
+								"register_id": "bms4_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"active_power_setpoint":
+							{
+								"name": "Active Power Setpoint",
+								"register_id": "active_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power_setpoint":
+							{
+								"name": "Reactive Power Setpoint",
+								"register_id": "reactive_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"soc_setpoint":
+							{
+								"name": "State of Charge Setpoint",
+								"register_id": "soc_setpoint",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"voltage_dc":
+							{
+								"name": "DC Voltage",
+								"register_id": "voltage_dc",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"soc":
+							{
+								"name": "State of Charge",
+								"register_id": "soc",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"soh":
+							{
+								"name": "State of Health",
+								"register_id": "soh",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"max_temp":
+							{
+								"name": "Current Highest Cell Temp",
+								"register_id": "max_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"min_temp":
+							{
+								"name": "Current Lowest Cell Temp",
+								"register_id": "min_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"clear_faults":
+							{
+								"name": "Clear Faults",
+								"register_id": "clear_faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"status":
+							{
+								"name": "Status",
+								"register_id": "status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"alarms":
+							{
+								"name": "Alarms",
+								"register_id": "alarms",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"faults":
+							{
+								"name": "Faults",
+								"register_id": "faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"voltage_l1":
+							{
+								"name": "L1 AC Voltage",
+								"register_id": "voltage_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l2":
+							{
+								"name": "L2 AC Voltage",
+								"register_id": "voltage_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l3":
+							{
+								"name": "L3 AC Voltage",
+								"register_id": "voltage_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"current_l1":
+							{
+								"name": "L1 AC Current",
+								"register_id": "current_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l2":
+							{
+								"name": "L2 AC Current",
+								"register_id": "current_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l3":
+							{
+								"name": "L3 AC Current",
+								"register_id": "current_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"active_power":
+							{
+								"name": "Active Power",
+								"register_id": "active_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power":
+							{
+								"name": "Reactive Power",
+								"register_id": "reactive_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"apparent_power":
+							{
+								"name": "Apparent Power",
+								"register_id": "apparent_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VA"
+							},
+							"frequency":
+							{
+								"name": "Frequency",
+								"register_id": "frequency",
+								"value": null,
+								"scaler": 1,
+								"unit": "Hz"
+							},
+							"system_chargeable_power":
+							{
+								"name": "System Chargeable Power",
+								"register_id": "system_chargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_dischargeable_power":
+							{
+								"name": "System Dischargeable Power",
+								"register_id": "system_dischargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_chargeable_energy":
+							{
+								"name": "System Chargeable Energy",
+								"register_id": "system_chargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							},
+							"system_dischargeable_energy":
+							{
+								"name": "System Dischargeable Energy",
+								"register_id": "system_dischargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							}
+						}
+					}
+				]
+			},
+			{
+				"id": "ess_2",
+				"name": "BESS Inverter Block 02",
+				"nominal_voltage": 540.0,
+				"nominal_frequency": 60.0,
+				"rated_active_power": 2200.0,
+				"rated_apparent_power": 2200.0,
+				"priority": 1,
+				"start_timer": 50,
+				"cooldown_timer": 250,
+				"max_load_threshold": 200000,
+				"min_load_threshold": 1000,
+				"control_word_on": 1,
+				"control_word_off": 2,
+				"DC_contactor_open": 1,
+				"DC_contactor_closed": 2,
+				"DC_contactor_reset": 3,
+				"chg_soc_begin": 90.0,
+				"chg_soc_end": 101.5,
+				"dischg_soc_begin": 10.0,
+				"dischg_soc_end": -1.5,
+				"max_soc_raw": 99.5,
+				"min_soc_raw": 1.5,
+				"components":
+				[
+					{
+						"component_id": "sungrow_pcs_2a",
+						"variables":
+						{
+							"pcs_a_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_pcs_2b",
+						"variables":
+						{
+							"pcs_b_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_ess_2",
+						"variables":
+						{
+							"manual_mode":
+							{
+								"name": "Manual Disable",
+								"register_id": "manual_mode",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_1":
+							{
+								"name": "Control Word 1 (Start/Stop)",
+								"register_id": "control_word_1",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_2":
+							{
+								"name": "Control Word 2 (DC Contactor)",
+								"register_id": "control_word_2",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"local_bms_status":
+							{
+								"name": "Racks In Service",
+								"register_id": "local_bms_status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms1_racks_in_service":
+							{
+								"name": "BMS1 DC Contactor Status",
+								"register_id": "bms1_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms2_racks_in_service":
+							{
+								"name": "BMS2 DC Contactor Status",
+								"register_id": "bms2_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms3_racks_in_service":
+							{
+								"name": "BMS3 DC Contactor Status",
+								"register_id": "bms3_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms4_racks_in_service":
+							{
+								"name": "BMS4 DC Contactor Status",
+								"register_id": "bms4_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"close_dc_contactors":
+							{
+								"name": "Close DC Contactors",
+								"register_id": "close_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"open_dc_contactors":
+							{
+								"name": "Open DC Contactors",
+								"register_id": "open_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"active_power_setpoint":
+							{
+								"name": "Active Power Setpoint",
+								"register_id": "active_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power_setpoint":
+							{
+								"name": "Reactive Power Setpoint",
+								"register_id": "reactive_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"soc_setpoint":
+							{
+								"name": "State of Charge Setpoint",
+								"register_id": "soc_setpoint",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"voltage_dc":
+							{
+								"name": "DC Voltage",
+								"register_id": "voltage_dc",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"soc":
+							{
+								"name": "State of Charge",
+								"register_id": "soc",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"soh":
+							{
+								"name": "State of Health",
+								"register_id": "soh",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"max_temp":
+							{
+								"name": "Current Highest Cell Temp",
+								"register_id": "max_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"min_temp":
+							{
+								"name": "Current Lowest Cell Temp",
+								"register_id": "min_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"clear_faults":
+							{
+								"name": "Clear Faults",
+								"register_id": "clear_faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"status":
+							{
+								"name": "Status",
+								"register_id": "status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"alarms":
+							{
+								"name": "Alarms",
+								"register_id": "alarms",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"faults":
+							{
+								"name": "Faults",
+								"register_id": "faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"voltage_l1":
+							{
+								"name": "L1 AC Voltage",
+								"register_id": "voltage_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l2":
+							{
+								"name": "L2 AC Voltage",
+								"register_id": "voltage_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l3":
+							{
+								"name": "L3 AC Voltage",
+								"register_id": "voltage_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"current_l1":
+							{
+								"name": "L1 AC Current",
+								"register_id": "current_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l2":
+							{
+								"name": "L2 AC Current",
+								"register_id": "current_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l3":
+							{
+								"name": "L3 AC Current",
+								"register_id": "current_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"active_power":
+							{
+								"name": "Active Power",
+								"register_id": "active_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power":
+							{
+								"name": "Reactive Power",
+								"register_id": "reactive_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"apparent_power":
+							{
+								"name": "Apparent Power",
+								"register_id": "apparent_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VA"
+							},
+							"frequency":
+							{
+								"name": "Frequency",
+								"register_id": "frequency",
+								"value": null,
+								"scaler": 1,
+								"unit": "Hz"
+							},
+							"system_chargeable_power":
+							{
+								"name": "System Chargeable Power",
+								"register_id": "system_chargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_dischargeable_power":
+							{
+								"name": "System Dischargeable Power",
+								"register_id": "system_dischargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_chargeable_energy":
+							{
+								"name": "System Chargeable Energy",
+								"register_id": "system_chargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							},
+							"system_dischargeable_energy":
+							{
+								"name": "System Dischargeable Energy",
+								"register_id": "system_dischargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							}
+						}
+					}
+				]
+			},
+			{
+				"id": "ess_3",
+				"name": "BESS Inverter Block 03",
+				"nominal_voltage": 540.0,
+				"nominal_frequency": 60.0,
+				"rated_active_power": 2200.0,
+				"rated_apparent_power": 2200.0,
+				"priority": 1,
+				"start_timer": 50,
+				"cooldown_timer": 250,
+				"max_load_threshold": 200000,
+				"min_load_threshold": 1000,
+				"control_word_on": 1,
+				"control_word_off": 2,
+				"DC_contactor_open": 1,
+				"DC_contactor_closed": 2,
+				"DC_contactor_reset": 3,
+				"chg_soc_begin": 90.0,
+				"chg_soc_end": 101.5,
+				"dischg_soc_begin": 10.0,
+				"dischg_soc_end": -1.5,
+				"max_soc_raw": 99.5,
+				"min_soc_raw": 1.5,
+				"components":
+				[
+					{
+						"component_id": "sungrow_pcs_3a",
+						"variables":
+						{
+							"pcs_a_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_pcs_3b",
+						"variables":
+						{
+							"pcs_b_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_ess_3",
+						"variables":
+						{
+							"manual_mode":
+							{
+								"name": "Manual Disable",
+								"register_id": "manual_mode",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_1":
+							{
+								"name": "Control Word 1 (Start/Stop)",
+								"register_id": "control_word_1",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_2":
+							{
+								"name": "Control Word 2 (DC Contactor)",
+								"register_id": "control_word_2",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"local_bms_status":
+							{
+								"name": "Racks In Service",
+								"register_id": "local_bms_status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms1_racks_in_service":
+							{
+								"name": "BMS1 DC Contactor Status",
+								"register_id": "bms1_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms2_racks_in_service":
+							{
+								"name": "BMS2 DC Contactor Status",
+								"register_id": "bms2_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms3_racks_in_service":
+							{
+								"name": "BMS3 DC Contactor Status",
+								"register_id": "bms3_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms4_racks_in_service":
+							{
+								"name": "BMS4 DC Contactor Status",
+								"register_id": "bms4_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"close_dc_contactors":
+							{
+								"name": "Close DC Contactors",
+								"register_id": "close_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"open_dc_contactors":
+							{
+								"name": "Open DC Contactors",
+								"register_id": "open_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"active_power_setpoint":
+							{
+								"name": "Active Power Setpoint",
+								"register_id": "active_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power_setpoint":
+							{
+								"name": "Reactive Power Setpoint",
+								"register_id": "reactive_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"soc_setpoint":
+							{
+								"name": "State of Charge Setpoint",
+								"register_id": "soc_setpoint",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"voltage_dc":
+							{
+								"name": "DC Voltage",
+								"register_id": "voltage_dc",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"soc":
+							{
+								"name": "State of Charge",
+								"register_id": "soc",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"soh":
+							{
+								"name": "State of Health",
+								"register_id": "soh",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"max_temp":
+							{
+								"name": "Current Highest Cell Temp",
+								"register_id": "max_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"min_temp":
+							{
+								"name": "Current Lowest Cell Temp",
+								"register_id": "min_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"clear_faults":
+							{
+								"name": "Clear Faults",
+								"register_id": "clear_faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"status":
+							{
+								"name": "Status",
+								"register_id": "status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"alarms":
+							{
+								"name": "Alarms",
+								"register_id": "alarms",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"faults":
+							{
+								"name": "Faults",
+								"register_id": "faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"voltage_l1":
+							{
+								"name": "L1 AC Voltage",
+								"register_id": "voltage_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l2":
+							{
+								"name": "L2 AC Voltage",
+								"register_id": "voltage_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l3":
+							{
+								"name": "L3 AC Voltage",
+								"register_id": "voltage_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"current_l1":
+							{
+								"name": "L1 AC Current",
+								"register_id": "current_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l2":
+							{
+								"name": "L2 AC Current",
+								"register_id": "current_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l3":
+							{
+								"name": "L3 AC Current",
+								"register_id": "current_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"active_power":
+							{
+								"name": "Active Power",
+								"register_id": "active_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power":
+							{
+								"name": "Reactive Power",
+								"register_id": "reactive_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"apparent_power":
+							{
+								"name": "Apparent Power",
+								"register_id": "apparent_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VA"
+							},
+							"frequency":
+							{
+								"name": "Frequency",
+								"register_id": "frequency",
+								"value": null,
+								"scaler": 1,
+								"unit": "Hz"
+							},
+							"system_chargeable_power":
+							{
+								"name": "System Chargeable Power",
+								"register_id": "system_chargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_dischargeable_power":
+							{
+								"name": "System Dischargeable Power",
+								"register_id": "system_dischargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_chargeable_energy":
+							{
+								"name": "System Chargeable Energy",
+								"register_id": "system_chargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							},
+							"system_dischargeable_energy":
+							{
+								"name": "System Dischargeable Energy",
+								"register_id": "system_dischargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							}
+						}
+					}
+				]
+			},
+			{
+				"id": "ess_4",
+				"name": "BESS Inverter Block 04",
+				"nominal_voltage": 540.0,
+				"nominal_frequency": 60.0,
+				"rated_active_power": 2200.0,
+				"rated_apparent_power": 2200.0,
+				"priority": 1,
+				"start_timer": 50,
+				"cooldown_timer": 250,
+				"max_load_threshold": 200000,
+				"min_load_threshold": 1000,
+				"control_word_on": 1,
+				"control_word_off": 2,
+				"DC_contactor_open": 1,
+				"DC_contactor_closed": 2,
+				"DC_contactor_reset": 3,
+				"chg_soc_begin": 90.0,
+				"chg_soc_end": 101.5,
+				"dischg_soc_begin": 10.0,
+				"dischg_soc_end": -1.5,
+				"max_soc_raw": 99.5,
+				"min_soc_raw": 1.5,
+				"components":
+				[
+					{
+						"component_id": "sungrow_pcs_4a",
+						"variables":
+						{
+							"pcs_a_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_pcs_4b",
+						"variables":
+						{
+							"pcs_b_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_ess_4",
+						"variables":
+						{
+							"manual_mode":
+							{
+								"name": "Manual Disable",
+								"register_id": "manual_mode",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_1":
+							{
+								"name": "Control Word 1 (Start/Stop)",
+								"register_id": "control_word_1",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_2":
+							{
+								"name": "Control Word 2 (DC Contactor)",
+								"register_id": "control_word_2",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"local_bms_status":
+							{
+								"name": "Racks In Service",
+								"register_id": "local_bms_status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms1_racks_in_service":
+							{
+								"name": "BMS1 DC Contactor Status",
+								"register_id": "bms1_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms2_racks_in_service":
+							{
+								"name": "BMS2 DC Contactor Status",
+								"register_id": "bms2_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms3_racks_in_service":
+							{
+								"name": "BMS3 DC Contactor Status",
+								"register_id": "bms3_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms4_racks_in_service":
+							{
+								"name": "BMS4 DC Contactor Status",
+								"register_id": "bms4_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"close_dc_contactors":
+							{
+								"name": "Close DC Contactors",
+								"register_id": "close_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"open_dc_contactors":
+							{
+								"name": "Open DC Contactors",
+								"register_id": "open_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"active_power_setpoint":
+							{
+								"name": "Active Power Setpoint",
+								"register_id": "active_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power_setpoint":
+							{
+								"name": "Reactive Power Setpoint",
+								"register_id": "reactive_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"soc_setpoint":
+							{
+								"name": "State of Charge Setpoint",
+								"register_id": "soc_setpoint",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"voltage_dc":
+							{
+								"name": "DC Voltage",
+								"register_id": "voltage_dc",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"soc":
+							{
+								"name": "State of Charge",
+								"register_id": "soc",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"soh":
+							{
+								"name": "State of Health",
+								"register_id": "soh",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"max_temp":
+							{
+								"name": "Current Highest Cell Temp",
+								"register_id": "max_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"min_temp":
+							{
+								"name": "Current Lowest Cell Temp",
+								"register_id": "min_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"clear_faults":
+							{
+								"name": "Clear Faults",
+								"register_id": "clear_faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"status":
+							{
+								"name": "Status",
+								"register_id": "status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"alarms":
+							{
+								"name": "Alarms",
+								"register_id": "alarms",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"faults":
+							{
+								"name": "Faults",
+								"register_id": "faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"voltage_l1":
+							{
+								"name": "L1 AC Voltage",
+								"register_id": "voltage_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l2":
+							{
+								"name": "L2 AC Voltage",
+								"register_id": "voltage_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l3":
+							{
+								"name": "L3 AC Voltage",
+								"register_id": "voltage_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"current_l1":
+							{
+								"name": "L1 AC Current",
+								"register_id": "current_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l2":
+							{
+								"name": "L2 AC Current",
+								"register_id": "current_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l3":
+							{
+								"name": "L3 AC Current",
+								"register_id": "current_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"active_power":
+							{
+								"name": "Active Power",
+								"register_id": "active_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power":
+							{
+								"name": "Reactive Power",
+								"register_id": "reactive_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"apparent_power":
+							{
+								"name": "Apparent Power",
+								"register_id": "apparent_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VA"
+							},
+							"frequency":
+							{
+								"name": "Frequency",
+								"register_id": "frequency",
+								"value": null,
+								"scaler": 1,
+								"unit": "Hz"
+							},
+							"system_chargeable_power":
+							{
+								"name": "System Chargeable Power",
+								"register_id": "system_chargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_dischargeable_power":
+							{
+								"name": "System Dischargeable Power",
+								"register_id": "system_dischargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_chargeable_energy":
+							{
+								"name": "System Chargeable Energy",
+								"register_id": "system_chargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							},
+							"system_dischargeable_energy":
+							{
+								"name": "System Dischargeable Energy",
+								"register_id": "system_dischargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							}
+						}
+					}
+				]
+			},
+			{
+				"id": "ess_5",
+				"name": "BESS Inverter Block 05",
+				"nominal_voltage": 540.0,
+				"nominal_frequency": 60.0,
+				"rated_active_power": 2200.0,
+				"rated_apparent_power": 2200.0,
+				"priority": 1,
+				"start_timer": 50,
+				"cooldown_timer": 250,
+				"max_load_threshold": 200000,
+				"min_load_threshold": 1000,
+				"control_word_on": 1,
+				"control_word_off": 2,
+				"DC_contactor_open": 1,
+				"DC_contactor_closed": 2,
+				"DC_contactor_reset": 3,
+				"chg_soc_begin": 90.0,
+				"chg_soc_end": 101.5,
+				"dischg_soc_begin": 10.0,
+				"dischg_soc_end": -1.5,
+				"max_soc_raw": 99.5,
+				"min_soc_raw": 1.5,
+				"components":
+				[
+					{
+						"component_id": "sungrow_pcs_5a",
+						"variables":
+						{
+							"pcs_a_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_pcs_5b",
+						"variables":
+						{
+							"pcs_b_nominal_voltage_setting":
+							{
+								"name": "PCS Nominal Voltage Setting",
+								"register_id": "pcs_nominal_voltage_setting",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							}
+						}
+					},
+					{
+						"component_id": "sungrow_ess_5",
+						"variables":
+						{
+							"manual_mode":
+							{
+								"name": "Manual Disable",
+								"register_id": "manual_mode",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_1":
+							{
+								"name": "Control Word 1 (Start/Stop)",
+								"register_id": "control_word_1",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"control_word_2":
+							{
+								"name": "Control Word 2 (DC Contactor)",
+								"register_id": "control_word_2",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"local_bms_status":
+							{
+								"name": "Racks In Service",
+								"register_id": "local_bms_status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms1_racks_in_service":
+							{
+								"name": "BMS1 DC Contactor Status",
+								"register_id": "bms1_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms2_racks_in_service":
+							{
+								"name": "BMS2 DC Contactor Status",
+								"register_id": "bms2_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms3_racks_in_service":
+							{
+								"name": "BMS3 DC Contactor Status",
+								"register_id": "bms3_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"bms4_racks_in_service":
+							{
+								"name": "BMS4 DC Contactor Status",
+								"register_id": "bms4_racks_in_service",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"close_dc_contactors":
+							{
+								"name": "Close DC Contactors",
+								"register_id": "close_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"open_dc_contactors":
+							{
+								"name": "Open DC Contactors",
+								"register_id": "open_dc_contactors",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"active_power_setpoint":
+							{
+								"name": "Active Power Setpoint",
+								"register_id": "active_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power_setpoint":
+							{
+								"name": "Reactive Power Setpoint",
+								"register_id": "reactive_power_setpoint",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"soc_setpoint":
+							{
+								"name": "State of Charge Setpoint",
+								"register_id": "soc_setpoint",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"voltage_dc":
+							{
+								"name": "DC Voltage",
+								"register_id": "voltage_dc",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"soc":
+							{
+								"name": "State of Charge",
+								"register_id": "soc",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"soh":
+							{
+								"name": "State of Health",
+								"register_id": "soh",
+								"value": null,
+								"scaler": 1,
+								"unit": "%"
+							},
+							"max_temp":
+							{
+								"name": "Current Highest Cell Temp",
+								"register_id": "max_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"min_temp":
+							{
+								"name": "Current Lowest Cell Temp",
+								"register_id": "min_temp",
+								"value": null,
+								"scaler": 1,
+								"unit": "C"
+							},
+							"clear_faults":
+							{
+								"name": "Clear Faults",
+								"register_id": "clear_faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"status":
+							{
+								"name": "Status",
+								"register_id": "status",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"alarms":
+							{
+								"name": "Alarms",
+								"register_id": "alarms",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"faults":
+							{
+								"name": "Faults",
+								"register_id": "faults",
+								"value": null,
+								"scaler": null,
+								"unit": null
+							},
+							"voltage_l1":
+							{
+								"name": "L1 AC Voltage",
+								"register_id": "voltage_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l2":
+							{
+								"name": "L2 AC Voltage",
+								"register_id": "voltage_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"voltage_l3":
+							{
+								"name": "L3 AC Voltage",
+								"register_id": "voltage_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "V"
+							},
+							"current_l1":
+							{
+								"name": "L1 AC Current",
+								"register_id": "current_l1",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l2":
+							{
+								"name": "L2 AC Current",
+								"register_id": "current_l2",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"current_l3":
+							{
+								"name": "L3 AC Current",
+								"register_id": "current_l3",
+								"value": null,
+								"scaler": 1,
+								"unit": "A"
+							},
+							"active_power":
+							{
+								"name": "Active Power",
+								"register_id": "active_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"reactive_power":
+							{
+								"name": "Reactive Power",
+								"register_id": "reactive_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VAR"
+							},
+							"apparent_power":
+							{
+								"name": "Apparent Power",
+								"register_id": "apparent_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "VA"
+							},
+							"frequency":
+							{
+								"name": "Frequency",
+								"register_id": "frequency",
+								"value": null,
+								"scaler": 1,
+								"unit": "Hz"
+							},
+							"system_chargeable_power":
+							{
+								"name": "System Chargeable Power",
+								"register_id": "system_chargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_dischargeable_power":
+							{
+								"name": "System Dischargeable Power",
+								"register_id": "system_dischargeable_power",
+								"value": null,
+								"scaler": 1000,
+								"unit": "W"
+							},
+							"system_chargeable_energy":
+							{
+								"name": "System Chargeable Energy",
+								"register_id": "system_chargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							},
+							"system_dischargeable_energy":
+							{
+								"name": "System Dischargeable Energy",
+								"register_id": "system_dischargeable_energy",
+								"value": null,
+								"scaler": 1000,
+								"unit": "Wh"
+							}
+						}
+					}
+				]
+			}
+		]
+	}
+}

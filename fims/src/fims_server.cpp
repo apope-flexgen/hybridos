@@ -14,6 +14,7 @@
 #include <pthread.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <sys/uio.h>
 #include <sys/wait.h>
 #include <unistd.h>
 /* C Standard Library Dependencies */
@@ -73,7 +74,8 @@ void signal_handler (int sig)
         {
             int sock = connections[i].sock;
             connections[i].sock = 0;
-            close(sock);
+            // when the socket is shutdown, the connection thread is responsible for closing the socket
+            shutdown(sock, SHUT_RDWR);
         }
     }
     FPS_ERROR_PRINT("signal of type %d caught.\n", sig);
@@ -197,6 +199,7 @@ bool valid_uri(const fims::str_view uri)
 // Inserts subscription to hash only; does not change client info
 void insert_subscription(const char* uri, int thread_id, bool pub_only)
 {
+    FPS_DEBUG_PRINT("%s for  [%s]\n", __FUNCTION__, uri);
     // Special case to deal with subscribe to all
     if (strcmp(uri, "/") == 0)
     {
@@ -523,6 +526,32 @@ void get_connections_for_uri(const fims::str_view uri, uint32_t * thread_mask, b
     free(uri_tok);
 }
 
+void clean_up_connection(client_info* info)
+{
+    // if socket is not currently close, close it
+    if (info->sock != 0)
+    {
+        int sock = info->sock;
+        info->sock = 0;
+        close(sock);
+    }
+    // if there's at least one subscription, loop through and remove them all
+    // Need lock to remove the subscriptions from the hash table; clientinfo subscriptions
+    // are removed as well because it's more efficient to do so inside the critical section
+    // even though it increases its length.
+    if (info->subscriptions[0] != NULL)
+    {
+        lock_subscriptions();
+        for (int i = 0; i < MAX_SUBSCRIPTIONS && info->subscriptions[i] != NULL; i++)
+        {
+            remove_subscription(info->subscriptions[i], info->thread_id);
+            delete(info->subscriptions[i]);
+            info->subscriptions[i] = NULL;
+            info->pub_only[i] = false;
+        }
+        unlock_subscriptions();
+    }
+}
 
 /******************************************************************************/
 
@@ -533,41 +562,20 @@ void *receive_messages(void* args)
     Receiver_Bufs<MAX_MESSAGE_SIZE - Meta_Data_Info::Buf_Len - sizeof(Meta_Data_Info), 0> receiver_bufs;
     auto& meta_data = receiver_bufs.meta_data;
     uint32_t          thread_mask[SUB_MASK_SIZE];
+    FPS_DEBUG_PRINT("%s thread starting  sock %d info %p\n", info->process_name, info->sock, (void *) info);
 
     while (running == true && info->sock != 0)
     {
         FPS_DEBUG_PRINT("%s waiting for messages\n", info->process_name);
         FPS_DEBUG_PRINT("Waiting for message on socket %d\n", info->sock);
         const bool recv_ret = recv_raw_message(info->sock, receiver_bufs);
-        //FPS_ERROR_PRINT("Received message on socket %d\n", info->sock);
-
+        auto err = errno;
         if (!recv_ret)
         {
-            FPS_DEBUG_PRINT("\"%s\",  Socket %d, thread %d: closed or error reading.\n"
-                    , info->process_name, info->sock, info->thread_id);
-            // if socket is not currently close, close it
-            if (info->sock != 0)
-            {
-                int sock = info->sock;
-                info->sock = 0;
-                close(sock);
-            }
-            // if there's at least one subscription, loop through and remove them all
-            // Need lock to remove the subscriptions from the hash table; clientinfo subscriptions
-            // are removed as well because it's more efficient to do so inside the critical section
-            // even though it increases its length.
-            if (info->subscriptions[0] != NULL)
-            {
-                lock_subscriptions();
-                for(int i = 0; i < MAX_SUBSCRIPTIONS && info->subscriptions[i] != NULL; i++)
-                {
-                    remove_subscription(info->subscriptions[i], info->thread_id);
-                    delete(info->subscriptions[i]);
-                    info->subscriptions[i] = NULL;
-                    info->pub_only[i] = false;
-                }
-                unlock_subscriptions();
-            }
+            //Typically caused by a connection closing by application
+            FPS_ERROR_PRINT("\"%s\",  Socket %d, thread %d: closed or error reading. rc %ld\n"
+                    , info->process_name, info->sock, info->thread_id, (long int)err);
+            clean_up_connection(info);
             break;
         }
 
@@ -585,11 +593,6 @@ void *receive_messages(void* args)
         const auto method      = receiver_bufs.get_method_view();
         const auto uri         = receiver_bufs.get_uri_view();
         const auto process_name = receiver_bufs.get_process_name_view();
-        //const auto username   = receiver_bufs.get_username_view();
-        //const auto replyto     = receiver_bufs.get_replyto_view();
-
-        //const auto username   = receiver_bufs.get_user_name_view();
-        //const auto replyto     = receiver_bufs.get_replyto_view();
 
         // add subscription
         // TODO consider making full method in mutex
@@ -667,7 +670,11 @@ void *receive_messages(void* args)
             }
             // no errors send "SUCCESS":
             const char success_str[] = "SUCCESS";
-            aes_send_raw_message(info->sock, nullptr, 0, nullptr, 0, nullptr, 0, "fims_server", sizeof("fims_server") - 1, nullptr, 0, (void*) success_str, sizeof(success_str) - 1);
+            bool send_ret = aes_send_raw_message(info->sock, nullptr, 0, nullptr, 0, nullptr, 0, "fims_server", sizeof("fims_server") - 1, nullptr, 0, (void*) success_str, sizeof(success_str) - 1);
+            if (!send_ret) {
+                FPS_ERROR_PRINT("\"%s\",  Socket %d, thread %d: error sending success reply to subscription request. rc %d\n", 
+                    info->process_name, info->sock, info->thread_id, errno);
+            }
 
             // check if subscriptions exist and clean them up
             char* add_subscriptions[MAX_SUBSCRIPTIONS];
@@ -684,7 +691,8 @@ void *receive_messages(void* args)
                 bool found = false;
                 for(int j = 0; info->subscriptions[j] != NULL; j++)
                 {
-                    if (strncmp(info->subscriptions[j], sub_requests[i].data, sub_requests[i].size) == 0)
+                    if ((strncmp(info->subscriptions[j], sub_requests[i].data, sub_requests[i].size) == 0)
+                         && (strlen(info->subscriptions[j]) == sub_requests[i].size))
                     {
                         // if we find it and it's the same type of subscription it was before,
                         // we're already subscribed. Otherwise, we need to remove and re-add
@@ -765,7 +773,6 @@ void *receive_messages(void* args)
             lock_subscriptions_ro();
             get_connections_for_uri(uri, thread_mask, strncmp(method.data, "pub", 3) == 0);
             unlock_subscriptions_ro();
-            //bool msg_sent = false;
 
             for(int i = 0; i < SUB_MASK_SIZE; i++)
             {
@@ -780,7 +787,12 @@ void *receive_messages(void* args)
                         FPS_DEBUG_PRINT("Socket %d sending message to Socket %d\n", info->sock, connections[value].sock);
                         // NOTE this send out the original incoming buffer
                         // NOTE(WALKER): this no longer has MSG_DONTWAIT flag for resending out the data to the appropriate person
-                        if (writev(connections[value].sock, resend_bufs, sizeof(resend_bufs) / sizeof(*resend_bufs)) <= 0)
+                        if (connections[value].sock == 0)
+                        {
+                            continue;
+                        }
+                        auto rc = writev_nonblock(connections[value].sock, resend_bufs, sizeof(resend_bufs) / sizeof(*resend_bufs));
+                        if (rc <= 0)
                         {
                             if (errno == EWOULDBLOCK)
                             {
@@ -796,31 +808,10 @@ void *receive_messages(void* args)
                                     void* ermsg = (char *)malloc(sizeof(err_fmt_str) + Meta_Data_Info::Max_Meta_Data_Str_Size);
                                     defer { if (ermsg) free(ermsg); };
                                     snprintf((char *)ermsg, sizeof(err_fmt_str) + Meta_Data_Info::Max_Meta_Data_Str_Size, err_fmt_str, connections[value].process_name);
-				                    FPS_ERROR_PRINT((char *)ermsg);
+				                    FPS_ERROR_PRINT("%s", (char*)ermsg);
                                     uint32_t elen = strlen((char *)ermsg);
                                     void* to_send = encrypt(ermsg, elen);
                                     defer { if (to_send && g_aesKey) free(to_send); };
-
-                                    // TODO(WALKER): previous this ecnrypted stuff before sending it out multiple times
-                                    // send_raw_message always exptects one send with new data
-                                    // might make an "aes_send_raw_message" to separate them out
-                                    // for this unique situation on the server
-                                    for (int k = 0; k < SUB_MASK_SIZE; k++)
-                                    {
-                                        int val_2 = k*32;
-                                        for (int l = thread_mask[k]; l > 0; l>>=1, val_2++)
-                                        {
-                                            if (((l & 1) == 1) && val_2 != info->thread_id)
-                                            {
-                                                errno = 0;
-                                                // NOTE(WALKER): no aes_send because we don't want to encrypt over and over again
-                                                if (!send_raw_message(connections[val_2].sock, nullptr, 0, nullptr, 0, nullptr, 0, "fims_server", sizeof("fims_server") -1, nullptr, 0, to_send, elen))
-                                                {
-                                                    FPS_ERROR_PRINT("Failed to send message due to: %s\n", strerror(errno));
-                                                }
-                                            }
-                                        }
-                                    }
                                 }
                                 // we've just had a message drop so update the last_time a message dropped to now
                                 connections[value].last_time = current_time;
@@ -828,6 +819,8 @@ void *receive_messages(void* args)
                             else
                             {
                                 FPS_ERROR_PRINT("Failed to send message due to: %s\n", strerror(errno));
+                                //clean up connection for lost server. This should remove our subscription to this connection
+                                clean_up_connection(&connections[value]);
                             }
                         }
                     }
@@ -850,7 +843,7 @@ void *receive_messages(void* args)
             }*/
         }
     }
-    FPS_DEBUG_PRINT("Exit thread %d\n", info->thread_id);
+    FPS_DEBUG_PRINT("Exit thread %d info %p 0\n", info->thread_id, (void *) info);
     pthread_exit((void*)0);
 }
 
@@ -907,7 +900,7 @@ int wait_for_connection()
         if (new_sock > 0)
         {
             // commence handshake with the application:
-            if (writev(new_sock, handhsake_bufs, sizeof(handhsake_bufs) / sizeof(*handhsake_bufs)) <= 0)
+            if (writev_nonblock(new_sock, handhsake_bufs, sizeof(handhsake_bufs) / sizeof(*handhsake_bufs)) <= 0)
             {
                 FPS_ERROR_PRINT("Failed to send handshake to new connection on socket %d.\n", new_sock);
                 close(new_sock);

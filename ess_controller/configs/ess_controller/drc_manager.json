@@ -1,0 +1,22 @@
+{
+    "/notes/drc": {
+        "note1":"This is the drc manager config file.",
+        "note1a":"The drc page of the ui display will be defined  in /assets/drc/summay",
+        "note1b":"The /assets/drc table defines the digital recombiner unit(s), using a template file with placements for selected key words",
+        "note2": " The /config/drc area (if present) is still under development",
+        "note3":"The /components/drc... tables (if present) define the incoming control words from the pcs system",
+        "note4":"The /links/<drc> table  (if present) defines mapping of external interface components to internal variables",
+        "note5":" There may be  some junk/test fields as well... they will removed soon"
+      },
+    "/assets/drc":        {
+                 "drc_1":   { 
+                                "template":"drc_template.json",
+                                "subs":[
+                                {"replace":"@@DRC_ID@@","with":"drc_1"},
+                                {"replace":"@@DRC_NUM@@","with":"01"},
+                                {"replace":"@@DRC_IP@@","with":"192.168.1.213"}
+                                ]
+                            }
+
+            }
+}

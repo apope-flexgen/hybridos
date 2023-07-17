@@ -4,37 +4,21 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
-	"sync/atomic"
+	"syscall"
 
 	"flag"
 
+	"github.com/flexgen-power/ftd/pkg/ftd"
 	flexgen "github.com/flexgen-power/go_flexgen"
 	build "github.com/flexgen-power/go_flexgen/buildinfo"
+	"github.com/flexgen-power/go_flexgen/cfgFetch"
 	log "github.com/flexgen-power/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
 )
 
-var (
-	// listens for messages to come through its FIMS connection and adds
-	// them to the message queue, filtering out messages that are to be
-	// handled uniquely (i.e. COPS messages)
-	listener *fimsListener
-
-	// message queue handles storing messages that need to be processed
-	// while collator is busy so that listener does not get blocked
-	msgQueue fimsMsgBufferManager
-
-	// takes messages from the message queue and loads them into their
-	// respective encoder, periodically passing encoders to the archiver
-	collator *msgCollator
-
-	// takes encoders from the collator and archives the encoded data
-	// into a .tar.gz file
-	archiver *msgArchiver
-)
-
-var controllerState uint32 // A value of 0 indicates primary, anything else is secondary, reads and writes to this variable must be atomic
+var pipeline ftd.Pipeline
 
 func main() {
 	err := configure()
@@ -42,44 +26,18 @@ func main() {
 		log.Fatalf("Error configuring FTD: %s.", err.Error())
 	}
 
-	// create a context to pass to all stages so if one fails, all are shutdown gracefully
-	mainContext, cancelAll := context.WithCancel(context.Background())
-	defer cancelAll()
+	// create a context to pass to the pipeline so if one stage fails, all are shutdown gracefully;
+	// also handle a potential SIGTERM sent by systemd to ensure we gracefully terminate when
+	// commanded to stop or restart (https://www.freedesktop.org/software/systemd/man/systemd.kill.html)
+	mainContext, shutdown := signal.NotifyContext(context.Background(), syscall.SIGTERM)
+	defer shutdown()
 	group, groupContext := errgroup.WithContext(mainContext)
 
-	// fims messages first arrive on the fims channel in the listener, which adds them to the msgQueue to
-	// await processing. filters out messages that must be processed separately/uniquely (i.e. COPS messages)
-	log.MsgDebug("Starting listener")
-	listener = newFimsListener()
-	err = listener.run(group, groupContext)
+	err = pipeline.Run(group, groupContext)
 	if err != nil {
-		log.Fatalf("Failed to start listener stage: %v", err)
-	}
-
-	// messages are stored in the msgQueue until the collator is free to process them
-	msgQueue = newFimsMsgBufferManager(1, listener.out)
-
-	// collator encodes each message into an encoder that manages the message's URI. after a given
-	// "archive period", collator passes a batch of URI encoders to the archiver
-	log.MsgDebug("Starting collator")
-	collator = newCollator(config.ArchivePeriod, msgQueue.out)
-	err = collator.run(group, groupContext)
-	if err != nil {
-		log.Fatalf("Failed to start encoder stage: %v", err)
-	}
-
-	// archiver receives batches of encoders and archives each one into a .tar.gz file
-	log.MsgDebug("Starting archiver")
-	archiver = newMsgArchiver(collator.out)
-	err = archiver.run(group, groupContext)
-	if err != nil {
-		log.Fatalf("Failed to start archiver stage: %v", err)
-	}
-
-	// block until a fatal error
-	err = group.Wait()
-	if err != nil {
-		log.Fatalf("Pipeline encountered a fatal error: %v", err)
+		log.Fatalf("Pipeline closed with error: %v", err)
+	} else {
+		log.Fatalf("Pipeline closed gracefully.")
 	}
 }
 
@@ -105,9 +63,9 @@ func configure() error {
 	}
 
 	// check if output directory exist. If not try creating one
-	if !flexgen.IsFileExist(config.ArchivePath) {
-		log.Infof("%s doesnt exist. Creating directory", config.ArchivePath)
-		err := os.MkdirAll(config.ArchivePath, 0755)
+	if !flexgen.IsFileExist(ftd.GlobalConfig.ArchivePath) {
+		log.Infof("%s doesnt exist. Creating directory", ftd.GlobalConfig.ArchivePath)
+		err := os.MkdirAll(ftd.GlobalConfig.ArchivePath, 0755)
 		if err != nil {
 			return fmt.Errorf("failed to make directory for output archives: %w", err)
 		}
@@ -142,15 +100,15 @@ func configureFlexService() error {
 		ApiDesc: "displays all URIs received from fims server",
 		ApiCallback: flexgen.Callback(func(args []interface{}) (string, error) {
 			var retVal string = ""
-			for uriStr, obj := range collator.fimsMsgs {
+			for uriStr, obj := range pipeline.Collator.FimsMsgs {
 				responseLine := ""
 				responseLine += "-\t" + uriStr
-				if obj.config == nil {
+				if obj.Config == nil {
 					retVal += responseLine + "\n"
 					continue
 				}
-				if obj.config.Group != "" {
-					retVal += responseLine + "\t" + obj.config.Group + "\n"
+				if obj.Config.Group != "" {
+					retVal += responseLine + "\t" + obj.Config.Group + "\n"
 				} else {
 					retVal += responseLine + "\n"
 				}
@@ -167,7 +125,7 @@ func configureFlexService() error {
 		ApiDesc: "displays the state of controller",
 		ApiCallback: flexgen.Callback(func(args []interface{}) (string, error) {
 			var my_state = "Secondary"
-			if atomic.LoadUint32(&controllerState) == 0 {
+			if ftd.ControllerStateIsPrimary() {
 				my_state = "Primary"
 			}
 			retVal := fmt.Sprintf("FTD running as %s instance\n", my_state)
@@ -176,6 +134,22 @@ func configureFlexService() error {
 	})
 	if err != nil {
 		return fmt.Errorf("failed to register show-state API: %w", err)
+	}
+	return nil
+}
+
+// Retrieves and reads in FTD configuration data.
+func retrieveAndReadConfiguration(cfgSource string) error {
+	// retrieve configuration from dbi or from file
+	configBody, err := cfgFetch.Retrieve("ftd", cfgSource)
+	if err != nil {
+		return fmt.Errorf("failed to retrieve configuration data: %w", err)
+	}
+
+	// translate configuration data to internal data structures
+	err = ftd.HandleConfiguration(configBody)
+	if err != nil {
+		return fmt.Errorf("failed to parse configuration data: %w", err)
 	}
 	return nil
 }

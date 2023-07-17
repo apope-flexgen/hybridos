@@ -1,0 +1,152 @@
+
+for all of these use  package_utility/build.sh to make and install
+
+config should look like this ...
+/usr/local/etc/config
+├── dnp3_interface
+├── dnp3_server
+│   └── dnp3_server.json
+
+/ess_controller
+├── bms_catl_template.json
+├── bms_manager.json
+├── bms_test.config
+├── bms_test.json
+├── drc_manager.json
+├── ess_controller.json
+├── pcs_manager.json
+├── pcs_pe_template.json
+└── site_manager.json
+
+├── events
+│   └── events.json
+├── hybridos_controller
+│   ├── assets.json
+│   ├── sequences.json
+│   ├── twins.json
+│   └── variables.json
+├── metrics
+│   └── metrics.json
+├── modbus_client
+│   ├── acuvim.json
+│   ├── apc_ups.json
+│   ├── brainbox_ed538.json
+│   ├── clou_ess_1.json
+│   ├── clou_ess_2.json
+│   ├── clou_ess_3.json
+│   ├── clou_ess_4.json
+│   ├── sel_3530.json
+│   ├── sel_651r.json
+│   └── sel_735.json
+├── storage
+│   └── storage.json
+├── web_server
+│   ├── NOTE_this_dir_is_temporary_until_opt_access_enabled.txt
+│   └── saved\ permissions.json
+└── web_ui
+    ├── ssl
+    │   ├── hybridos-cert.pem
+    │   ├── hybridos-csr.pem
+    │   └── hybridos-key.pem
+    └── web_ui.json
+
+
+web_server:test/ess_controller  
+                      after "make install" 
+    git clone  git@github.com:flexgen-power/web_server.git
+    cd web_server
+    git checkout test/ess_controller
+    git submodule init
+    git submodule update
+    ./package_utility/build.sh
+    cp ess_controller/doc/permissions_0119.json /usr/local/etc/config/web_server/permissions.json  -->fgdefault fgdefault1A!
+
+
+    sudo /usr/local/bin/web_server/web_server  /usr/local/bin/web_ui/ /usr/local/etc/config/web_ui /usr/local/etc/config/web_server
+
+
+web_ui:feature/modular_storage  (use Ben Hu's release)                           ./package_utilty/build.sh  then "sudo npm start"
+
+dont forget scripts/firewalld_setup.sh
+
+(scripts:feature/add_gpio_controller                   node excel_to_config_file.js   flexgen_ess_controller1.xlsx  foo_server.json server)
+
+export LD_LIBRARY_PATH=build/release:/usr/local/bin:
+use bugfix/ramdom_start_crashes2 or dev after merge
+
+still uses local configs dir but will accept arg1 but not use it yet.
+
+DONOT use package_utility just yet.
+
+ess_controller:bugfix/ramdom_start_crashes2
+                   make clean
+                   make 
+                   export LD_LIBRARY_PATH=build/release:/usr/local/bin:
+                   build/release/ess_controller      
+or
+                   build/release/ess_controller      /usr/local/etc/config
+
+
+gpio_controller sill under review
+
+
+
+gpio_controler:temp/demo_01152021                    (make) build/release/gpio_controller <ess_controller_config>/gpio_controller  ( only works on supermicros )
+
+modbus_interface:test/ess_cotroller                  make install (see below)
+config:ess_controller_config                         mkdir -p /usr/local/etc  && ln -sf config/tx10 /usr/local/etc/config
+
+
+Other stuff needed
+
+
+<ess_controller_config> is /usr/local/etc/config 
+
+
+// third_party rpms needed 
+├── release
+│   ├── influxdb-1.7.2.x86_64.rpm
+│   ├── libmodbus-3.1.4-3.release.x86_64.rpm
+│   ├── mongodb-org-3.4.18-1.el7.x86_64.rpm
+│   ├── mongodb-org-mongos-3.4.18-1.el7.x86_64.rpm
+│   ├── mongodb-org-server-3.4.18-1.el7.x86_64.rpm
+│   ├── mongodb-org-shell-3.4.18-1.el7.x86_64.rpm
+│   ├── mongodb-org-tools-3.4.18-1.el7.x86_64.rpm
+
+sudo mongod --config /etc/mongod.conf&
+
+
+sudo influxd 2> /dev/null &
+
+
+/usr/local/bin/fims/fims_server&
+
+
+Not quite got all these in place yet
+
+sudo /usr/local/bin/modbus_interface/modbus_client  <ess_controller_config>/modbus_client/bms_controller_client.json
+sudo /usr/local/bin/modbus_interface/modbus_client  <ess_controller_config>/modbus_clinet/pcs_controller_client.json
+sudo /usr/local/bin/modbus_interface/modbus_server  <ess_controller_config>/modbus_server/site_controller_server.json
+
+
+#eample from hybridos_run scripts
+sleep 3s; sudo influxd 2> /dev/null &
+sleep 3s; sudo mongod --config /etc/mongod.conf
+sleep 3s; $bin_dir/fims/fims_server &
+
+
+
+Building modbus maps
+in scripts (see above) 
+
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_ess_controller.xlsx  <ess_controller_config>/modbus_server/site_controller_server.json server
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_ess_controller.xlsx  <ess_controller_config>/modbus_client/site_controller_client.json client
+??node excel_to_config_file.js   <ess_controller>/maps/flexgen_ess_controller.xlsx  <ess_controller_config>ess_controller_server.json web_ui
+# bms
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_bms_controller.xlsx  <ess_controller_config>bms_controller_server.json server
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_bms_controller.xlsx  <ess_controller_config>bms_controller_clinet.json client
+
+#pcs
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_pcs_controller.xlsx  <ess_controller_config>/modbus_server/pcs_controller_server.json server
+node excel_to_config_file.js   <ess_controller>/maps/flexgen_pcs_controller.xlsx  <ess_controller_config>/modbus_client/pcs_controller_clinet.json client
+

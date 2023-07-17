@@ -1,0 +1,2101 @@
+{
+    "/notes/pcs": {
+        "note1":"This is the pcs manager config file.",
+        "note1a":"The pcs page of the ui display is outlined in /assets/pcs/summay",
+        "note1b":"The /assets/pcs table defines the power generation unit(s), using a template file with placements for selected key words",
+        "note2": " The /config/pcs area is still under development",
+        "note3":"The /components/pcs... tables (if present) define the incoming control words from the pcs system",
+        "note4":"The /links/<pcss> table  (if present) defines mapping of external interface components to internal variables",
+        "note5":" There are some junk/test fields as well... they will removed soon",
+        "note6":"Use ModBus maps/pcsm_client_1218.json"
+    },
+    "/faults/pcs": {
+        "clear_faults": {
+            "value": 0,
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "door_opening_protection": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "local_estop": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "remote_estop": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}
+                ]
+            }
+        },
+        "lv_room_smoke_sensor": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_undervoltage": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_overvoltage": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_undervoltage": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_overvoltage": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_underfrequency": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_overfrequency": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_contactor_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "islanding_protection": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "pdp_protection": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "module_overtemperature": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm","amap": "pcs"}]}]
+            }
+        },
+        "reactor_overtemperature": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "transformer_overtemperature": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "leakage_current_protection": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "overload_protection": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "fan_1_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_fuse_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_overcurrent": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_overcurrent": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ambient_temperature_abnormal": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "hardware_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "insulation_resistance": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_spd_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "sampling_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "batt_polarity_reversed": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "lcd_dsp_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_current_unbalance_1": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "host_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_spd_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_injection_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_switch_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "device_code_repeat_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "parallel_comms_err": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "control_cabinet_temperature_abnormal": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_voltage_unbalance": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_switch_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "soft_start_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_voltage_sampling_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "fan_2_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_current_unbalance_2": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_current_unbalance_3": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "drive_board_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "neutral_point_potential_shift": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "carrier_sync_fault": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "bms_dry_contact_interface": {
+            "value": "Normal",
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        }
+    },
+    "/alarms/pcs": {
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "heartbeat_stop": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "scu_metering_board_comms_err": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "temp_abnormal": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "low_insulation_resistance": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "gfrt_running": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_fuse_normal": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_sensor_abnormal": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_spd_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_spd_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "batt_volt_high": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "batt_volt_low": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "dc_switch_abnormal": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "fan_1_abnormal": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "branch_circuit_board_comms_err": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_switch_abnormal": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "fan_2_abnormal": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "ac_main_contactor_abnormal": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "gas_relay_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "oil_temp_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        },
+        "winding_temp_alarm": {
+            "value": "Normal",
+            "type": "alarm",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "pcs"}]}]
+            }
+        }
+    },
+    "/assets/pcs/summary": {
+        "name":"PCS Manager",
+        "status": {
+            "name": "Status",
+            "value": "Run",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "com_status": {
+            "name": "Communication Status",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "active_power": {
+            "name": "Active Power",
+            "value": 17,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power": {
+            "name": "Reactive Power",
+            "value": 17.200000762939453,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "apparent_power": {
+            "name": "Apparent Power",
+            "value": 1.2999999523162842,
+            "unit": "kVA",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "power_factor": {
+            "name": "Power Factor",
+            "value": 0,
+            "unit": "",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "active_power_command": {
+            "name": "Active Power Command",
+            "value": 3.0999999046325684,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power_command": {
+            "name": "Reactive Power Command",
+            "value": 0,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l1_l2": {
+            "name": "L1-L2 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l2_l3": {
+            "name": "L2-L3 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l3_l1": {
+            "name": "L3-L1 AC Voltage",
+            "value": 570.7999877929688,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l1": {
+            "name": "L1 AC Current",
+            "value": 40.79999923706055,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l2": {
+            "name": "L2 AC Current",
+            "value": 41.20000076293945,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l3": {
+            "name": "L3 AC Current",
+            "value": 40,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "frequency": {
+            "name": "Frequency",
+            "value": 59.970001220703125,
+            "unit": "Hz",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "power_dc": {
+            "name": "DC Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_dc": {
+            "name": "DC Voltage",
+            "value": 1069.800048828125,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_dc": {
+            "name": "DC Current",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "max_active_power": {
+            "name": "Max Active Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/pcs/summary:start@enabled"}, 
+                        {"uri":	"/assets/pcs/summary:stop@enabled"}, 
+                        {"uri":	"/assets/pcs/summary:shutdown@enabled"}, 
+                        {"uri":	"/assets/pcs/summary:enter_standby@enabled"}, 
+                        {"uri":	"/assets/pcs/summary:exit_standby@enabled"},
+                        {"uri":	"/assets/pcs/summary:clear_faults@enabled"},
+                        {"uri":	"/assets/pcs/summary:clear_alarms@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_active_power_setpoint@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_reactive_power_setpoint@enabled"}
+                        ]
+                    }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "start": {
+            "name": "Start",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/status/pcs:SoftStartup", "outValue": false},
+                        {"inValue": true, "uri": "/sched/pcs:schedStartupPCS@endTime", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedStartupPCS", "outValue": "schedStartupPCS"}
+                    ]
+                }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "stop": {
+            "name": "Standby",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue": true, "uri": "/status/pcs:HardShutdown", "outValue": false},
+                        {"inValue": true, "uri": "/status/pcs:FullShutdown", "outValue": false},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS@endTime", 
+                                                    "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS", 
+                                            "outValue": "schedShutdownPCS"}
+                    ]
+                }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "shutdown": {
+            "name": "Shutdown",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue": true, "uri": "/status/pcs:HardShutdown", "outValue": false},
+                        {"inValue": true, "uri": "/status/pcs:FullShutdown", "outValue": true},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS@endTime", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS", "outValue": "schedShutdownPCS"}
+                    ]
+                }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value": "Init",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": true, "uri": "/sched/pcs:schedSendClearFaultCmdpcs@endTime", "amap": "pcs", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedSendClearFaultCmdpcs", "amap": "pcs", "outValue": "schedSendClearFaultCmdpcs"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": "Clear"
+                }
+            ]
+        },
+        "maint_active_power_setpoint": {
+            "name": "Active Power Setpoint (kW)",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": []
+        },
+        "maint_reactive_power_setpoint": {
+            "name": "Reactive Power Setpoint (kVAr)",
+            "value": 0,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": []
+        },
+        "active_power_gradient": {
+            "name": "Active Power Ramp Rate (%/s)",
+            "value": 10,
+            "unit": "%/s",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": [],
+            "actions": {
+                "onSet": [{
+                    "remap":[
+                        {"fims": "set", "uri": "/components/pcs_registers_fast:rise_grad_p"},
+                        {"fims": "set", "uri": "/components/pcs_registers_fast:drop_grad_p"},
+                        {"fims": "set", "uri": "/components/pcs_registers_fast:start_grad_p"},
+                        {"fims": "set", "uri": "/components/pcs_registers_fast:stop_grad_p"}
+                    ]
+                }]
+            }
+        },
+        "reactive_power_gradient": {
+            "name": "Reactive Power Ramp Rate (%/s)",
+            "value": 10,
+            "unit": "%/s",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "actions": {
+                "onSet": [{
+                    "remap":[
+                        {"fims": "set", "uri": "/components/pcs_registers_fast:rise_grad_q"},
+                        {"fims": "set", "uri": "/components/pcs_registers_fast:drop_grad_q"},
+                        {"fims": "set", "uri": "/components/pcs_registers_fast:start_grad_q"},
+                        {"fims": "set", "uri": "/components/pcs_registers_fast:stop_grad_q"}
+                    ]
+                }]
+            },
+            "options": []
+        },
+        "e-stop": {
+            "name": "Emergency Stop",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue": true, "uri": "/status/pcs:HardShutdown", "outValue": true},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS@endTime", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS", "outValue": "schedShutdownPCS"}
+                    ]
+                }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        }
+    },
+    "/vlinks/pcs": {
+        "status":                           {"value": "/assets/pcs/summary:status",                               "vlink":"/status/pcs:PCSStatusResp"},
+        "active_power":                     {"value": "/assets/pcs/summary:active_power",                         "vlink":"/components/pcs_running_info:active_power"},
+        "reactive_power":                   {"value": "/assets/pcs/summary:reactive_power",                       "vlink":"/components/pcs_running_info:reactive_power"},
+        "apparent_power":                   {"value": "/assets/pcs/summary:apparent_power",                       "vlink":"/components/pcs_registers_fast:apparent_power"},
+        "voltage_l1_l2":                    {"value": "/assets/pcs/summary:voltage_l1_l2",                        "vlink":"/components/pcs_running_info:grid_voltage_vab"},
+        "voltage_l2_l3":                    {"value": "/assets/pcs/summary:voltage_l2_l3",                        "vlink":"/components/pcs_running_info:grid_voltage_vbc"},
+        "voltage_l3_l1":                    {"value": "/assets/pcs/summary:voltage_l3_l1",                        "vlink":"/components/pcs_running_info:grid_voltage_vca"},
+        "current_l1":                       {"value": "/assets/pcs/summary:current_l1",                           "vlink":"/components/pcs_running_info:phase_a_current"},
+        "current_l2":                       {"value": "/assets/pcs/summary:current_l2",                           "vlink":"/components/pcs_running_info:phase_b_current"},
+        "current_l3":                       {"value": "/assets/pcs/summary:current_l3",                           "vlink":"/components/pcs_running_info:phase_c_current"},
+        "frequency":                        {"value": "/assets/pcs/summary:frequency",                            "vlink":"/components/pcs_running_info:grid_frequency"},
+        "power_dc":                         {"value": "/assets/pcs/summary:power_dc",                             "vlink":"/components/pcs_running_info:dc_power"},
+        "voltage_dc":                       {"value": "/assets/pcs/summary:voltage_dc",                           "vlink":"/components/pcs_running_info:dc_voltage"},
+        "current_dc":                       {"value": "/assets/pcs/summary:current_dc",                           "vlink":"/components/pcs_running_info:dc_current"},
+        "pf":                               {"value": "/assets/pcs/summary:power_factor",                         "vlink":"/components/pcs_running_info:power_factor"},
+        "maint_active_power_setpoint":      {"value": "/assets/pcs/summary:maint_active_power_setpoint",          "vlink":"/controls/ess:ActivePowerSetpoint"},
+        "maint_reactive_power_setpoint":    {"value": "/assets/pcs/summary:maint_reactive_power_setpoint",        "vlink":"/controls/ess:ReactivePowerSetpoint"},
+        "active_power_cmd":                 {"value": "/assets/pcs/summary:active_power_command",                 "vlink":"/status/pcs:ActivePowerCmd_adjusted"},
+        "reactive_power_cmd":               {"value": "/assets/pcs/summary:reactive_power_command",               "vlink":"/status/pcs:ReactivePowerCmd_adjusted"},
+        "p_gradient":                       {"value": "/assets/pcs/summary:active_power_gradient",                "vlink":"/components/pcs_registers_fast:rise_grad_p"},
+        "q_gradient":                       {"value": "/assets/pcs/summary:reactive_power_gradient",              "vlink":"/components/pcs_registers_fast:rise_grad_q"},
+        "max_active_power":                 {"value": "/assets/pcs/summary:max_active_power",                     "vlink":"/status/pcs:MaxPCSActivePowerReal"},
+
+        "site_active_power":                { "value": "/site/ess_hs:active_power",                               "vlink": "/components/pcs_running_info:active_power"        },
+        "site_reactive_power":              { "value": "/site/ess_hs:reactive_power",                             "vlink": "/components/pcs_running_info:reactive_power"      },
+        "site_apparent_power":              { "value": "/site/ess_hs:apparent_power",                             "vlink": "/components/pcs_registers_fast:apparent_power"    },
+        "site_voltage_l1_l2":               { "value": "/site/ess_hs:voltage_l1_l2",                              "vlink": "/components/pcs_running_info:grid_voltage_vab"    },
+        "site_voltage_l2_l3":               { "value": "/site/ess_hs:voltage_l2_l3",                              "vlink": "/components/pcs_running_info:grid_voltage_vbc"    },
+        "site_voltage_l3_l1":               { "value": "/site/ess_hs:voltage_l3_l1",                              "vlink": "/components/pcs_running_info:grid_voltage_vca"    },
+        "site_current_l1":                  { "value": "/site/ess_hs:current_l1",                                 "vlink": "/components/pcs_running_info:phase_a_current"     },
+        "site_current_l2":                  { "value": "/site/ess_hs:current_l2",                                 "vlink": "/components/pcs_running_info:phase_b_current"     },
+        "site_current_l3":                  { "value": "/site/ess_hs:current_l3",                                 "vlink": "/components/pcs_running_info:phase_c_current"     },
+        "site_frequency":                   { "value": "/site/ess_hs:frequency",                                  "vlink": "/components/pcs_running_info:grid_frequency"      },
+        "site_pf":                          { "value": "/site/ess_hs:pf",                                         "vlink": "/components/pcs_running_info:power_factor"        },
+        "pcs1_site_voltage_dc":             { "value": "/site/ess_ls:pcs_voltage_dc",                             "vlink": "/components/pcs_running_info:dc_voltage"          },
+        "pcs1_site_current_dc":             { "value": "/site/ess_ls:pcs_current_dc",                             "vlink": "/components/pcs_running_info:dc_current"          }
+    },
+    "/config/pcs":{
+        "Pubs": "/assets/pcs/summary",
+        "maxKeyCmdOnTime": {
+            "value": 3
+        },
+        "maxKeyCmdTime": {
+            "value": 4
+        },
+        "maxKeyCmdTries": {
+            "value": 5
+        },
+        "maxShutdownTime": {
+            "value": 30
+        },
+        "maxStartupTime": {
+            "value": 30
+        },
+        "xRatedApparentPower": {
+            "value": 440
+        },
+        "RatedApparentPower": {
+            "value": 3510
+        },
+        "MaxActivePowerSetpoint": {
+            "value": 2500
+        },
+        "AlarmDestination": {
+            "value": "/assets/pcs/summary:alarms"
+        },
+        "FaultDestination": {
+            "value": "/assets/pcs/summary:faults"
+        },
+        "NoFaultMsg": {
+            "value": "(NOFLTS) No faults"
+        },
+        "NoAlarmMsg": {
+            "value": "(NOWRN) No warnings"
+        }
+    },
+    "/constants/pcs": {
+        "note": "These are constant defintions",
+        "notem":"If used, move this to pcs_manager.json",
+        "nominal_voltage": 480.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 3430.0,
+        "rated_apparent_power": 3430.0,
+        "start_timer": 50,
+        "cooldown_timer": 250
+    },
+    "/params/pcs": {
+        "note": "These are control parameters",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 3300.0,
+        "rated_reactive_power": 1000.0,
+        "active_power_setpoint": 2200.0,
+        "reactive_power_setpoint": 2200.0,
+        "oncmd": 0,
+        "onffcmd": 0,
+        "kacclosecmd": 0,
+        "kdcclosecmd": 0,
+        "kacopencmd": 0,
+        "kdccopencmd": 0
+    },
+    "/variables/pcs": {
+        "q": 1234,
+        "p": 3456,
+        "soc": 100,
+        "soh": 100,
+        "dc_contactor": "off",
+        "ac_contactor": "off",
+        "dc_contactor_cmd": "off",
+        "ac_contactor_cmd": "off",
+        "mode": "init",
+        "mode_cmd": "off",
+        "inductive_i_limit": 357,
+        "capacitive_i_limit": 407,
+        "p_limit_inst": 100,
+        "q_limit_inst": 100,
+        "s_limit_inst": 100
+    },
+    "/controls/pcs": {
+        "notem":"If used, move this to pcs_manager.json",
+
+        "start_stop": {
+            "value": 1,
+            "actions": {
+                "onSet": [{
+                    "bitfield": {
+                        "bitmap": [
+                            {
+                                "bit": 0,
+                                "uri": "/controls/pcs:oncmd",
+                                "value": true
+                            },
+                            {
+                                "bit": 1,
+                                "uri": "/system/controls:kacclosecmd",
+                                "value": true
+                            },
+                            {
+                                "bit": 8,
+                                "uri": "/system/controls:offcmd",
+                                "value": true
+                            },
+                            {
+                                "bit": 9,
+                                "uri": "/system/controls:kacopencmd",
+                                "value": true
+                            }
+                        ]
+                    }
+                }
+            ]
+            }
+        },
+        "ctrlword2": {
+            "value": 0,
+            "actions": {
+                "onSet": [
+                    {"enum": {
+                        "bitmap": [
+                            {
+                                "mask": 3,
+                                "bit": 0,
+                                "uri": "/system/enum_controls:mask_3_bit_0",
+                                "value": true
+                            },
+                            {
+                                "mask": 3,
+                                "bit": 1,
+                                "uri": "/system/enum_controls:mask_3_bit_1",
+                                "value": true
+                            },
+                            {
+                                "mask": 3,
+                                "bit": 2,
+                                "uri": "/system/enum_controls::mask_3_bit_2",
+                                "value": true
+                            },
+                            {
+                                "mask": 3,
+                                "bit": 3,
+                                "uri": "/system/enum_controls:mask_3_bit_3",
+                                "value": true
+                            }
+                        ]
+                    }
+                }
+            ]
+            }
+        },
+        "PMode_I": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 1,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_pmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "PMode_P": {
+            "value": true,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 2,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_pmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "QMode_CosPhi": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 0,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_Q": {
+            "value": true,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 1,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_I": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"bitset": [
+                        {
+                            "bit": 2,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_VQ": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"bitset": [
+                        {
+                            "bit": 3,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "PStartGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "PStopGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "PDropGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QStartGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QStopGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QRiseGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QDropGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "EnPStartGradient": 1,
+        "EnPStopGradient": 1,
+        "EnPRiseGradient": 1,
+        "PRiseGradient": 10,
+        "EnPDropGradient": 1,
+        "EnQStartGradient": 1,
+        "EnQStopGradient": 1,
+        "EnQRiseGradient": 1,
+        "EnQDropGradient": 1,
+        "ctrlword_pmode": 2,
+        "ctrlword_qmode": 1,
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "ActivePowerSetpoint": 0,
+        "ReactivePowerSetpoint": 2200.0,
+        "lastActivePowerSetpoint": 2200.0,
+        "lastReactivePowerSetpoint": 2200.0,
+        "ActivePowerDeadband": 0.0,
+        "ReactivePowerDeadband": 0.0,
+        "oncmd": 0,
+        "offcmd": 0,
+        "test_ctrl": 72
+    },
+    "/links/pcs":{
+        "heartbeat_read": {
+            "value": "/components/pcs_running_info:heartbeat"
+        },
+        "Heartbeat": {
+            "value": "/components/pcs_parameter_setting:heartbeat"
+        },
+        "PCSKeyCmd": {
+            "value": "/components/pcs_parameter_setting:start_stop"
+        },
+        "PCSStartKeyCmd": {
+            "value": "/components/pcs_registers_fast:start"
+        },
+        "PCSStopKeyCmd": {
+            "value": "/components/pcs_registers_fast:stop"
+        },
+        "PCSEStopKeyCmd": {
+            "value": "/components/pcs_registers_fast:e_stop"
+        },
+        "ClearFaultCmd": {
+            "value": "/components/pcs_registers_fast:reset"
+        },
+        "dc_voltage": {
+            "value": "/components/pcs_running_info:dc_voltage"
+        },
+        "dc_current": {
+            "value": "/components/pcs_running_info:dc_current"
+        },
+        "dc_power": {
+            "value": "/components/pcs_running_info:dc_power"
+        },
+        "MaxPCSActivePower": {
+            "value": "/components/pcs_registers_fast:p_limit"
+        },
+        "MaxPCSReactivePower": {
+            "value": "/components/pcs_registers_fast:q_limit"
+        },
+        "MaxPCSApparentPower": {
+            "value": "/components/pcs_registers_fast:s_limit"
+        },
+        "ctrlword_pmode": {
+            "value": "/components/pcs_registers_fast:p_control_mode"
+        },
+        "ctrlword_qmode": {
+            "value": "/components/pcs_registers_fast:q_control_mode"
+        },
+        "ActivePowerCmd": {
+            "value": "/components/pcs_registers_fast:p_p_reference"
+        },
+        "ActiveCurrentCmd": {
+            "value": "/components/pcs_registers_fast:p_id_reference"
+        },
+        "CosPhiCmd": {
+            "value": "/components/pcs_registers_fast:q_cosphi_reference"
+        },
+        "ReactiveCurrentCmd": {
+            "value": "/components/pcs_registers_fast:q_iq_reference"
+        },
+        "ReactivePowerCmd": {
+            "value": "/components/pcs_registers_fast:q_q_reference"
+        },
+        "ReactiveVoltageCmd": {
+            "value": "/components/pcs_registers_fast:q_v_reference"
+        },
+        "PStartGradient": {
+            "value": "/components/pcs_registers_fast:start_grad_p"
+        },
+        "EnPStartGradient": {
+            "value": "/components/pcs_registers_fast:start_grad_p_enable"
+        },
+        "PStopGradient": {
+            "value": "/components/pcs_registers_fast:stop_grad_p"
+        },
+        "EnPStopGradient": {
+            "value": "/components/pcs_registers_fast:stop_grad_p_enable"
+        },
+        "EnPRiseGradient": {
+            "value": "/components/pcs_registers_fast:rise_grad_p_enable"
+        },
+        "PDropGradient": {
+            "value": "/components/pcs_registers_fast:drop_grad_p"
+        },
+        "EnPDropGradient": {
+            "value": "/components/pcs_registers_fast:drop_grad_p_enable"
+        },
+        "QStartGradient": {
+            "value": "/components/pcs_registers_fast:start_grad_q"
+        },
+        "EnQStartGradient": {
+            "value": "/components/pcs_registers_fast:start_grad_q_enable"
+        },
+        "QStopGradient": {
+            "value": "/components/pcs_registers_fast:stop_grad_q"
+        },
+        "EnQStopGradient": {
+            "value": "/components/pcs_registers_fast:stop_grad_q_enable"
+        },
+        "EnQRiseGradient": {
+            "value": "/components/pcs_registers_fast:rise_grad_q_enable"
+        },
+        "QDropGradient": {
+            "value": "/components/pcs_registers_fast:drop_grad_q"
+        },
+        "EnQDropGradient": {
+            "value": "/components/pcs_registers_fast:drop_grad_q_enable"
+        },
+        "ctrlword2": {
+            "value": "/components/pcs_registers_fast:ctrlword2"
+        }
+    },
+
+    "/schedule/wake_monitor/pcs":{
+        "/components/pcs_running_info:heartbeat": { "enable": true, "rate":1, "func":"CheckMonitorVar"},
+        "/components/pcs_running_info:active_power": { "enable": true, "rate":1, "func":"CheckMonitorVar"},
+        "/status/pcs:ActivePowerCmd_adjusted": { "enable": true, "rate":0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:ReactivePowerCmd_adjusted": { "enable": true, "rate":0.1, "amap": "pcs", "func":"CalculateVar"}
+    },
+
+    "/sched/pcs": {
+        "schedStartupPCS":{
+            "value":    "schedStartupPCS",
+            "actions":{
+            "onSet": [{ "func": [
+                    {"func": "HandleSchedLoad", "amap": "pcs"}
+                ]}]
+            },
+            "uri":      "/sched/pcs:schedStartupPCS",
+            "fcn":      "StartupPCS",
+            "id":       "schedStartupPCS",
+            "amap":     "pcs",
+            "refTime":  0.269,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        },
+        "schedShutdownPCS":{
+            "value":    "schedShutdownPCS",
+            "actions":{
+            "onSet": [{ "func": [
+                    {"func": "HandleSchedLoad", "amap": "pcs"}
+                ]}]
+            },
+            "uri":      "/sched/pcs:schedShutdownPCS",
+            "fcn":      "ShutdownPCS",
+            "id":       "schedShutdownPCS",
+            "amap":     "pcs",
+            "refTime":  0.266,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        },
+        "schedSendClearFaultCmdpcs":{
+            "value":    "schedSendClearFaultCmdpcs",
+            "actions":{
+            "onSet": [{ "func": [
+                    {"func": "HandleSchedLoad", "amap": "pcs"}
+                ]}]
+            },
+            "uri":      "/sched/pcs:schedSendClearFaultCmdpcs",
+            "fcn":      "SendClearFaultCmd",
+            "id":       "schedSendClearFaultCmdpcs",
+            "amap":     "pcs",
+            "refTime":  0.272,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        }
+    },
+
+    "/components/pcs_registers_fast": {
+        "running_modules": 0,
+        "dc_1_i_input": 0,
+
+        "rise_grad_p": 10,
+        "rise_grad_q": 10,
+
+        "start_grad_p": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "p_p_reference": 0,
+        "q_q_reference": 0,
+
+        "apparent_power": 0,
+        "cosphi": 0
+    },
+    "/components/pcs_parameter_setting": {
+        "start_stop": 0,
+        "grid_mode_setting": 0,
+        "reactive_power_adj_switch": 0,
+        "power_priority": 0
+    },
+    "/components/pcs_running_info": {
+        "active_power": {
+            "value": 0,
+            "EnableFaultCheck": true,
+            "EnableMaxValCheck": true,
+
+            "MaxAlarmThreshold": 2500,
+            "MaxFaultThreshold": 3525,
+            "MaxResetValue": 2500,
+
+            "MaxAlarmTimeout": 1,
+            "MaxFaultTimeout": 1.5,
+            "MaxRecoverTimeout": 1.4,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "pcs"}]}]
+            }
+        },
+        "reactive_power": 0,
+        "grid_voltage_vab": 0,
+        "grid_voltage_vbc": 0,
+        "grid_voltage_vca": 0,
+        "phase_a_current": 0,
+        "phase_b_current": 0,
+        "phase_c_current": 0,
+        "grid_frequency": 0,
+        "dc_power": 0,
+        "dc_voltage": 0,
+        "dc_current": 0,
+        "power_factor": 0,
+        "heartbeat": {
+            "value": 0,
+            "EnableStateCheck": true,
+            "EnableCommsCheck": true,
+            "Type": "int",
+            "AlarmTimeout": 5,
+            "FaultTimeout": 10,
+            "RecoverTimeout": 1,
+            "actions": {
+                "onSet": [{"func": [{"func": "CheckMonitorVar", "amap": "pcs"}]}]
+            }
+        },
+        "work_state": {
+            "value": 0,
+            "note1": "Bit 00: Running",
+            "note2": "Bit 01-2: Reserved",
+            "note3": "Bit 03: Key stop",
+            "note4": "Bit 04: Standby",
+            "note5": "Bit 05: Reserved",
+            "note6": "Bit 06: Start in process",
+            "note7": "Bit 07-8: Reserved",
+            "note8": "Bit 09: Fault stop",
+            "note9": "Bit 10: Alarm running",
+            "note10": "Bit 11: Derating running",
+            "note11": "Bit 12-14: Reserved",
+            "note12": "Bit 15: DSP communication error",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingState", "outValue": "Running"},
+                        {"shift": 3, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingState", "outValue": "Key Stop"},
+                        {"shift": 4, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingState", "outValue": "Standby"},
+                        {"shift": 6, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingState", "outValue": "Start in process"},
+                        {"shift": 9, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingState", "outValue": "Fault stop"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingState", "outValue": "Alarm running"},
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingState", "outValue": "Derating running"},
+                        {"shift": 15, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingState", "outValue": "DSP communication error"}
+                    ]
+                }]
+            }
+        },
+        "operating_mode": {
+            "value": 0,
+            "note1": "Bit 00: On-grid constant current",
+            "note2": "Bit 01: On-grid constant voltage",
+            "note3": "Bit 02: On-grid constant power (AC)",
+            "note4": "Bit 03: On-grid constant power (DC)",
+            "note5": "Bit 04-8: Reserved",
+            "note6": "Bit 09: On-grid mode",
+            "note7": "Bit 10: Off-grid mode",
+            "note8": "Bit 11: VSG mode",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingMode", "outValue": "On-grid constant current"},
+                        {"shift": 1, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingMode", "outValue": "On-grid constant voltage"},
+                        {"shift": 2, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingMode", "outValue": "On-grid constant power (AC)"},
+                        {"shift": 3, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingMode", "outValue": "On-grid constant power (DC)"},
+                        {"shift": 9, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingMode", "outValue": "On-grid mode"},
+                        {"shift": 10, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingMode", "outValue": "Off-grid mode"},
+                        {"shift": 11, "mask": 1, "inValue": 1, "uri": "/status/pcs:WorkingMode", "outValue": "VSG mode"}
+                    ]
+                }]
+            }
+        },
+        "fault_state": {
+            "value": 0,
+            "note": "0: Normal, 1: Fault",
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: Door-opening Protection",
+            "note3": "Bit 02: Local emergency stop",
+            "note4": "Bit 03: Remote emergency stop",
+            "note5": "Bit 04: Reserved",
+            "note6": "Bit 05: LV room smoke sensor",
+            "note7": "Bit 06-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:door_opening_protection", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:door_opening_protection", "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:local_estop", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:local_estop", "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:remote_estop", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:remote_estop", "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:lv_room_smoke_sensor", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:lv_room_smoke_sensor", "outValue": "Fault"}
+                    ]
+                }]
+            }
+        },
+        "fault_state_1": {
+            "value": 0,
+            "note1": "Bit 00: DC undervoltage",
+            "note2": "Bit 01: DC overvoltage",
+            "note3": "Bit 02: AC undervoltage",
+            "note4": "Bit 03: AC overvoltage",
+            "note5": "Bit 04: AC underfrequency",
+            "note6": "Bit 05: AC overfrequency",
+            "note7": "Bit 06: AC contactor fault",
+            "note8": "Bit 07: Islanding protection",
+            "note9": "Bit 08: Reserved",
+            "note10": "Bit 09: PDP protection",
+            "note11": "Bit 10: Module overtemperature",
+            "note12": "Bit 11: Reactor overtemperature",
+            "note13": "Bit 12: Transformer overtemperature",
+            "note14": "Bit 13: Leakage current protection",
+            "note15": "Bit 14: Reserved",
+            "note16": "Bit 15: Overload protection",
+            "note17": "Bit 16: Reserved",
+            "note18": "Bit 17: Fan 1 fault",
+            "note19": "Bit 18: DC fuse fault",
+            "note20": "Bit 19: Reserved",
+            "note21": "Bit 20: DC overcurrent",
+            "note22": "Bit 21: AC overcurrent",
+            "note23": "Bit 22: Reserved",
+            "note24": "Bit 23: Ambient temperature abnormal",
+            "note25": "Bit 24: Hardware fault",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_undervoltage", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_undervoltage", "outValue": "Fault"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_overvoltage", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_overvoltage", "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_undervoltage", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_undervoltage", "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_overvoltage", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_overvoltage", "outValue": "Fault"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_underfrequency", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_underfrequency", "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_overfrequency", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_overfrequency", "outValue": "Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_contactor_fault", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_contactor_fault", "outValue": "Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/pcs:islanding_protection", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/pcs:islanding_protection", "outValue": "Fault"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/faults/pcs:pdp_protection", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/faults/pcs:pdp_protection", "outValue": "Fault"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/pcs:module_overtemperature", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/pcs:module_overtemperature", "outValue": "Fault"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/pcs:reactor_overtemperature", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/pcs:reactor_overtemperature", "outValue": "Fault"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/pcs:transformer_overtemperature", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/pcs:transformer_overtemperature", "outValue": "Fault"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/pcs:leakage_current_protection", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/pcs:leakage_current_protection", "outValue": "Fault"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/faults/pcs:overload_protection", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/faults/pcs:overload_protection", "outValue": "Fault"},
+                        { "shift": 17,"mask": 1,"inValue": 0,"uri": "/faults/pcs:fan_1_fault", "outValue": "Normal"},
+                        { "shift": 17,"mask": 1,"inValue": 1,"uri": "/faults/pcs:fan_1_fault", "outValue": "Fault"},
+                        { "shift": 18,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_fuse_fault", "outValue": "Normal"},
+                        { "shift": 18,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_fuse_fault", "outValue": "Fault"},
+                        { "shift": 20,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_overcurrent", "outValue": "Normal"},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_overcurrent", "outValue": "Fault"},
+                        { "shift": 21,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_overcurrent", "outValue": "Normal"},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_overcurrent", "outValue": "Fault"},
+                        { "shift": 23,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ambient_temperature_abnormal", "outValue": "Normal"},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ambient_temperature_abnormal", "outValue": "Fault"},
+                        { "shift": 24,"mask": 1,"inValue": 0,"uri": "/faults/pcs:hardware_fault", "outValue": "Normal"},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/faults/pcs:hardware_fault", "outValue": "Fault"}
+                    ]
+                }]
+            }
+        },
+        "fault_state_2": {
+            "value": 0,
+            "note1": "Bit 00: Insulation resistance",
+            "note2": "Bit 01: AC SPD fault",
+            "note3": "Bit 02: Sampling fault",
+            "note4": "Bit 03: Battery polarity reversed",
+            "note5": "Bit 04: Reserved",
+            "note6": "Bit 05: LCD-DSP fault",
+            "note7": "Bit 06: AC current unbalance 1",
+            "note8": "Bit 07: Host fault",
+            "note9": "Bit 08: DC SPD fault",
+            "note10": "Bit 09: Reserved",
+            "note11": "Bit 10: DC injection fault",
+            "note12": "Bit 11: DC switch fault",
+            "note13": "Bit 12: Device code repeat fault",
+            "note14": "Bit 13: Parallel communication error",
+            "note15": "Bit 14: Control cabinet temperature abnormal",
+            "note16": "Bit 15: Reserved",
+            "note17": "Bit 16: AC voltage unbalance",
+            "note18": "Bit 17-18: Reserved",
+            "note19": "Bit 19: AC switch fault",
+            "note20": "Bit 20: Soft start fault",
+            "note21": "Bit 21: DC voltage sampling fault",
+            "note22": "Bit 22: Fan 2 fault",
+            "note23": "Bit 23: AC current unbalance 2",
+            "note24": "Bit 24: AC current unbalance 3",
+            "note25": "Bit 25: Drive board fault",
+            "note26": "Bit 26: Neutral point potential shift",
+            "note27": "Bit 27: Carrier sync fault",
+            "note28": "Bit 28-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/faults/pcs:insulation_resistance", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/faults/pcs:insulation_resistance", "outValue": "Fault"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_spd_fault", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_spd_fault", "outValue": "Fault"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/faults/pcs:sampling_fault", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/faults/pcs:sampling_fault", "outValue": "Fault"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:batt_polarity_reversed", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:batt_polarity_reversed", "outValue": "Fault"},
+                        { "shift": 5,"mask": 1,"inValue": 0,"uri": "/faults/pcs:lcd_dsp_fault", "outValue": "Normal"},
+                        { "shift": 5,"mask": 1,"inValue": 1,"uri": "/faults/pcs:lcd_dsp_fault", "outValue": "Fault"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_current_unbalance_1", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_current_unbalance_1", "outValue": "Fault"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/faults/pcs:host_fault", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/faults/pcs:host_fault", "outValue": "Fault"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_spd_fault", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_spd_fault", "outValue": "Fault"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_injection_fault", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_injection_fault", "outValue": "Fault"},
+                        { "shift": 11,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_switch_fault", "outValue": "Normal"},
+                        { "shift": 11,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_switch_fault", "outValue": "Fault"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/faults/pcs:device_code_repeat_fault", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/faults/pcs:device_code_repeat_fault", "outValue": "Fault"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/faults/pcs:parallel_comms_err", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/faults/pcs:parallel_comms_err", "outValue": "Fault"},
+                        { "shift": 14,"mask": 1,"inValue": 0,"uri": "/faults/pcs:control_cabinet_temperature_abnormal", "outValue": "Normal"},
+                        { "shift": 14,"mask": 1,"inValue": 1,"uri": "/faults/pcs:control_cabinet_temperature_abnormal", "outValue": "Fault"},
+                        { "shift": 16,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_voltage_unbalance", "outValue": "Normal"},
+                        { "shift": 16,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_voltage_unbalance", "outValue": "Fault"},
+                        { "shift": 19,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_switch_fault", "outValue": "Normal"},
+                        { "shift": 19,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_switch_fault", "outValue": "Fault"},
+                        { "shift": 20,"mask": 1,"inValue": 0,"uri": "/faults/pcs:soft_start_fault", "outValue": "Normal"},
+                        { "shift": 20,"mask": 1,"inValue": 1,"uri": "/faults/pcs:soft_start_fault", "outValue": "Fault"},
+                        { "shift": 21,"mask": 1,"inValue": 0,"uri": "/faults/pcs:dc_voltage_sampling_fault", "outValue": "Normal"},
+                        { "shift": 21,"mask": 1,"inValue": 1,"uri": "/faults/pcs:dc_voltage_sampling_fault", "outValue": "Fault"},
+                        { "shift": 22,"mask": 1,"inValue": 0,"uri": "/faults/pcs:fan_2_fault", "outValue": "Normal"},
+                        { "shift": 22,"mask": 1,"inValue": 1,"uri": "/faults/pcs:fan_2_fault", "outValue": "Fault"},
+                        { "shift": 23,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_current_unbalance_2", "outValue": "Normal"},
+                        { "shift": 23,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_current_unbalance_2", "outValue": "Fault"},
+                        { "shift": 24,"mask": 1,"inValue": 0,"uri": "/faults/pcs:ac_current_unbalance_3", "outValue": "Normal"},
+                        { "shift": 24,"mask": 1,"inValue": 1,"uri": "/faults/pcs:ac_current_unbalance_3", "outValue": "Fault"},
+                        { "shift": 25,"mask": 1,"inValue": 0,"uri": "/faults/pcs:drive_board_fault", "outValue": "Normal"},
+                        { "shift": 25,"mask": 1,"inValue": 1,"uri": "/faults/pcs:drive_board_fault", "outValue": "Fault"},
+                        { "shift": 26,"mask": 1,"inValue": 0,"uri": "/faults/pcs:neutral_point_potential_shift", "outValue": "Normal"},
+                        { "shift": 26,"mask": 1,"inValue": 1,"uri": "/faults/pcs:neutral_point_potential_shift", "outValue": "Fault"},
+                        { "shift": 27,"mask": 1,"inValue": 0,"uri": "/faults/pcs:carrier_sync_fault", "outValue": "Normal"},
+                        { "shift": 27,"mask": 1,"inValue": 1,"uri": "/faults/pcs:carrier_sync_fault", "outValue": "Fault"}
+                    ]
+                }]
+            }
+        },
+        "alarm_state": {
+            "value": 0,
+            "note": "0: Normal, 1: Alarm",
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: Heartbeat stop",
+            "note3": "Bit 02: SCU-metering board communication error",
+            "note4": "Bit 03-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:heartbeat_stop", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:heartbeat_stop", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:scu_metering_board_comms_err", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:scu_metering_board_comms_err", "outValue": "Alarm"}
+                    ]
+                }]
+            }
+        },
+        "alarm_running_state_1": {
+            "value": 0,
+            "note1": "Bit 00: Temperature abnormal alarm",
+            "note2": "Bit 01: Low insulation resistance alarm",
+            "note3": "Bit 02: GFRT running",
+            "note4": "Bit 03: Reserved",
+            "note5": "Bit 04: DC fuse abnormal",
+            "note6": "Bit 05: Reserved",
+            "note7": "Bit 06: DC sensor abnormal",
+            "note8": "Bit 07: DC SPD alarm",
+            "note9": "Bit 08: AC SPD alarm",
+            "note10": "Bit 09: Battery voltage high",
+            "note11": "Bit 10: Battery voltage low",
+            "note12": "Bit 11: Reserved",
+            "note13": "Bit 12: DC switch abnormal",
+            "note14": "Bit 13: Fan 1 abnormal",
+            "note15": "Bit 14-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:temp_abnormal", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:temp_abnormal", "outValue": "Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:low_insulation_resistance", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:low_insulation_resistance", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:gfrt_running", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:gfrt_running", "outValue": "Alarm"},
+                        { "shift": 4,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_fuse_normal", "outValue": "Normal"},
+                        { "shift": 4,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_fuse_normal", "outValue": "Alarm"},
+                        { "shift": 6,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_sensor_abnormal", "outValue": "Normal"},
+                        { "shift": 6,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_sensor_abnormal", "outValue": "Alarm"},
+                        { "shift": 7,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_spd_alarm", "outValue": "Normal"},
+                        { "shift": 7,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_spd_alarm", "outValue": "Alarm"},
+                        { "shift": 8,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ac_spd_alarm", "outValue": "Normal"},
+                        { "shift": 8,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ac_spd_alarm", "outValue": "Alarm"},
+                        { "shift": 9,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:batt_volt_high", "outValue": "Normal"},
+                        { "shift": 9,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:batt_volt_high", "outValue": "Alarm"},
+                        { "shift": 10,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:batt_volt_low", "outValue": "Normal"},
+                        { "shift": 10,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:batt_volt_low", "outValue": "Alarm"},
+                        { "shift": 12,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:dc_switch_abnormal", "outValue": "Normal"},
+                        { "shift": 12,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:dc_switch_abnormal", "outValue": "Alarm"},
+                        { "shift": 13,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:fan_1_abnormal", "outValue": "Normal"},
+                        { "shift": 13,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:fan_1_abnormal", "outValue": "Alarm"}
+                    ]
+                }]
+            }
+        },
+        "alarm_running_state_2": {
+            "value": 0,
+            "note1": "Bit 00: Branch circuit board communication error",
+            "note2": "Bit 01: AC switch abnormal",
+            "note3": "Bit 02: Fan 2 abnormal",
+            "note4": "Bit 03: AC main contactor abnormal",
+            "note5": "Bit 04-15: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 0,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:branch_circuit_board_comms_err", "outValue": "Normal"},
+                        { "shift": 0,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:branch_circuit_board_comms_err", "outValue": "Alarm"},
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ac_switch_abnormal", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ac_switch_abnormal", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:fan_2_abnormal", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:fan_2_abnormal", "outValue": "Alarm"},
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:ac_main_contactor_abnormal", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:ac_main_contactor_abnormal", "outValue": "Alarm"}
+                    ]
+                }]
+            }
+        },
+        "node_state": {
+            "value": 0,
+            "note1": "Bit 00: Reserved",
+            "note2": "Bit 01: AC switch abnormal",
+            "note3": "Bit 02: Fan 2 abnormal",
+            "note4": "Bit 03: Fan 2 abnormal",
+            "note5": "Bit 04-15: Reserved"
+        },
+        "mv_node_state": {
+            "value": 0,
+            "note1": "Bit 00: Gas Relay Trip (0: normal, 1: tripping)",
+            "note2": "Bit 01: Gas Relay Alarm (0: normal, 1: alarm)",
+            "note3": "Bit 02: Oil Temperature Alarm (0: normal, 1: alarm)",
+            "note4": "Bit 03: Oil Temperature Trip (0: normal, 1: tripping)",
+            "note5": "Bit 04: Low Oil Level Trip (0: normal, 1: tripping)",
+            "note6": "Bit 06: Pressure Relief Trip (0: normal, 1: tripping)",
+            "note7": "Bit 08: MV Load Switch 1 (0: Open, 1: Close)",
+            "note8": "Bit 09: MV Load Switch 2 (0: Open, 1: Close)",
+            "note9": "Bit 10: MV Vacuum Circuit-Breaker (0: Open, 1: Close)",
+            "note10": "Bit 11: MV Disconnector Switch (0: Open, 1: Close)",
+            "note11": "Bit 12-13: Reserved",
+            "note12": "Bit 14: Winding Temperature Trip (0: normal, 1: tripping)",
+            "note13": "Bit 15: Winding Temperature Alarm (0: normal, 1: alarm)",
+            "note14": "Bit 16-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 1,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:gas_relay_alarm", "outValue": "Normal"},
+                        { "shift": 1,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:gas_relay_alarm", "outValue": "Alarm"},
+                        { "shift": 2,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:oil_temp_alarm", "outValue": "Normal"},
+                        { "shift": 2,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:oil_temp_alarm", "outValue": "Alarm"},
+                        { "shift": 15,"mask": 1,"inValue": 0,"uri": "/alarms/pcs:winding_temp_alarm", "outValue": "Normal"},
+                        { "shift": 15,"mask": 1,"inValue": 1,"uri": "/alarms/pcs:winding_temp_alarm", "outValue": "Alarm"}
+                    ]
+                }]
+            }
+        },
+        "mv_node_state_1": {
+            "value": 0,
+            "note1": "Bit 00-5: Reserved",
+            "note2": "Bit 06: HV Room Door (0: Open, 1: Close)",
+            "note3": "Bit 07-10: Reserved",
+            "note4": "Bit 11: External E-stop (0: normal, 1: tripping)",
+            "note5": "Bit 12: Reserved",
+            "note6": "Bit 13: HV Room Smoke (0: normal, 1: tripping)",
+            "note7": "Bit 14: HV Remote Control (0: remote, 1: local)",
+            "note8": "Bit 15-31: Reserved"
+        },
+        "mv_node_state_2": {
+            "value": 0,
+            "note1": "Bit 00: MV Load Switch (0: disconnected. 1: connected)",
+            "note2": "Bit 01: HV Remote Control Trip (0: normal, 1: tripping)",
+            "note3": "Bit 02: Reserved",
+            "note4": "Bit 03: BMS Dry Contact Interface (0: Normal, 1: Fault)",
+            "note5": "Bit 04: Fast Response Control Interface (0: normal, 1: close)",
+            "note6": "Bit 05-31: Reserved",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        { "shift": 3,"mask": 1,"inValue": 0,"uri": "/faults/pcs:bms_dry_contact_interface", "outValue": "Normal"},
+                        { "shift": 3,"mask": 1,"inValue": 1,"uri": "/faults/pcs:bms_dry_contact_interface", "outValue": "Fault"}
+                    ]
+                }]
+            }
+        }
+    },
+    "/status/pcs": {
+        "note": "These are component status vars",
+        "SendClearFault": false,
+        "MaxPCSActivePower": 0,
+        "MaxPCSReactivePower": 0,
+        "MaxPCSApparentPower": 0,
+        "MaxPCSActivePowerReal": 0,
+        "SystemFault": {
+            "value": false,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS@endTime", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS", "outValue": "schedShutdownPCS"}
+                    ]
+                }]
+            }
+        },
+        "SystemStandby": {
+            "value": false,
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/status/pcs:SoftStartup", "outValue": true},
+                        {"inValue": true, "uri": "/sched/pcs:schedStartupPCS@endTime", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedStartupPCS", "outValue": "schedStartupPCS"}
+                    ]
+                }]
+            }
+        },
+        "FaultShutdown": {
+            "value": false,
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"uri":"/assets/pcs/summary:shutdown"}
+                    ]
+                }]
+            }
+        },
+        "HardShutdown": false,
+        "FullShutdown": false,
+        "SoftStartup": false,
+        "PCSStatusResp": {
+            "value": "Initialization",
+            "ifChanged": true,
+            "actions":	{
+                "onSet":	[{
+                    "func": [
+                        {
+                            "func": "LogInfo",
+                            "amap": "ess"
+                        }
+                    ]
+                }
+            ]}
+        },
+        "SystemState": {
+            "value": "Off",
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": "Off",      "uri": "/status/pcs:DCClosed", "outValue": 0},
+                        {"inValue": "Starting", "uri": "/status/pcs:DCClosed", "outValue": 0},
+                        {"inValue": "Ready",    "uri": "/status/pcs:DCClosed", "outValue": 1},
+                        {"inValue": "Running",  "uri": "/status/pcs:DCClosed", "outValue": 1},
+                        {"inValue": "Shutdown", "uri": "/status/pcs:DCClosed", "outValue": 1},
+                        {"inValue": "Fault",    "uri": "/status/pcs:DCClosed", "outValue": 0},
+
+                        {"inValue": "Off",      "uri": "/site/ess_hs:system_state", "outValue": 1,  "note": "Bit 0 - Stop"},
+                        {"inValue": "Shutdown", "uri": "/site/ess_hs:system_state", "outValue": 1,  "note": "Bit 0 - Stop"},
+                        {"inValue": "Running",  "uri": "/site/ess_hs:system_state", "outValue": 2,  "note": "Bit 1 - Run"},
+                        {"inValue": "Fault",    "uri": "/site/ess_hs:system_state", "outValue": 4,  "note": "Bit 2 - Fault"},
+                        {"inValue": "Ready",    "uri": "/site/ess_hs:system_state", "outValue": 8,  "note": "Bit 3 - Standby"},
+
+                        {"inValue": "Off",      "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Starting", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Ready",    "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Running",  "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Shutdown", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"inValue": "Fault",    "uri": "/status/pcs:SystemFault", "outValue": true}
+                    ]
+                }
+            ]}
+        },
+        "DCClosed": {
+            "value": 0,
+            "resetChange": false,
+            "actions": {
+                "onSet": [{
+                    "remap": [
+                        {"inValue": 0, "uri": "/components/pcs_registers_fast:vdc_bus_1@EnableMinValCheck", "outValue": false},
+                        {"inValue": 1, "uri": "/components/pcs_registers_fast:vdc_bus_1@EnableMinValCheck", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "PCSResetKeyCmd": 0,
+        "CommsOK": {
+            "value": false,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/assets/pcs/summary:com_status",      "outValue": "ONLINE"},
+                        { "inValue": false, "uri": "/assets/pcs/summary:com_status",     "outValue": "OFFLINE"},
+                        { "inValue": false, "uri": "/site/ess_hs:com_status[0]", "outValue": true, "ifChanged": true}
+                    ]
+                }]
+            }
+        },
+        "ActivePowerCmd": 0,
+        "ReactivePowerCmd": 0,
+        "ActivePowerCmd_adjusted": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "ActivePowerCmd",
+            "variable2": "RatedApparentPower",
+            "operation": "*",
+            "scale": 100
+        },
+        "ReactivePowerCmd_adjusted": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "ReactivePowerCmd",
+            "variable2": "RatedApparentPower",
+            "operation": "*",
+            "scale": 100
+        },
+        "SystemFaultCleared": {
+            "value": false,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        {"inValue": true, "outValue": "Clear", "uri":"/faults/pcs:clear_faults"},
+                        {"inValue": true, "outValue": "Clear", "uri":"/alarms/pcs:clear_alarms"},
+
+                        {"inValue": true, "outValue": false, "uri": "/site/ess_hs:com_status[0]"},
+                        
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_faults1"},
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_faults2"},
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_faults3"},
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_faults4"},
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_faults5"},
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_alarms1"},
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_alarms2"},
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_alarms3"},
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_alarms4"},
+                        {"inValue": true, "outValue": 0, "uri": "/site/ess_ls:pcs1_alarms5"}
+                    ]
+                }]
+            }
+        },
+        "FaultCnt": 0,
+        "AlarmCnt": 0,
+
+        "WorkingState": "Normal",
+        "WorkingMode": "Normal"
+    },
+    "/assets/pcs": {
+        "start_grad_p": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [
+                    {"limits": [ {"low": 0.1,"high": 3000.0}]},
+                    {"remap": [{"bit": 0,"uri": "/components/pcs_registers_fast","var": "start_grad_p"}]}
+                ]
+            }
+        }
+    }
+}

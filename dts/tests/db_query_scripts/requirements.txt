@@ -1,0 +1,2 @@
+influxdb==5.3.1
+pymongo==3.13.0

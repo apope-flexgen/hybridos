@@ -59,7 +59,7 @@ export class SummaryControl {
 
 export class Asset {
   alarms: Alarm
-  allControls: AllControl[]
+  allControls?: AllControl[]
   controls: Control[]
   info: Info
   statuses: Status[]

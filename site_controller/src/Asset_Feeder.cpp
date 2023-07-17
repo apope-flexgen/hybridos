@@ -26,12 +26,6 @@ Asset_Feeder::Asset_Feeder ()
     reset_value = 0;
     breaker_close_permissive_status = false;
 
-    uri_breaker_open = NULL;
-    uri_breaker_close = NULL;
-    uri_breaker_close_permissive = NULL;
-    uri_breaker_close_permissive_remove = NULL;
-    uri_breaker_reset = NULL;
-
     asset_type_id = FEEDERS_TYPE_ID;
 
     set_required_variables();
@@ -39,12 +33,6 @@ Asset_Feeder::Asset_Feeder ()
 
 Asset_Feeder::~Asset_Feeder ()
 {
-    if (uri_breaker_open != NULL) free(uri_breaker_open);
-    if (uri_breaker_close != NULL) free(uri_breaker_close);
-    if (uri_breaker_close_permissive != NULL) free(uri_breaker_close_permissive);
-    if (uri_breaker_close_permissive_remove != NULL) free(uri_breaker_close_permissive_remove);
-    if (uri_breaker_reset != NULL) free(uri_breaker_reset);
-
     if (grid_voltage_l1)    delete grid_voltage_l1;
     grid_voltage_l1 = NULL;
     if (grid_voltage_l2)    delete grid_voltage_l2;
@@ -66,16 +54,6 @@ void Asset_Feeder::set_required_variables(void)
     required_variables.push_back("reactive_power");
 }
 
-// sets uri_breaker_close
-void Asset_Feeder::set_breaker_close_uri(char* uri) {
-    uri_breaker_close = uri;
-}
-
-// sets uri_breaker_open
-void Asset_Feeder::set_breaker_open_uri(char* uri) {
-    uri_breaker_open = uri;
-}
-
 bool Asset_Feeder::get_breaker_status(void)
 {
     // breaker status can either a mask or a boolean
@@ -93,11 +71,16 @@ float Asset_Feeder::get_gridside_avg_voltage(void)
     return (numPhases != 0.0 ? sumVolts/numPhases : 0);
 }
 
+float Asset_Feeder::get_power_factor()
+{
+    return power_factor->value.value_float;
+}
+
 void Asset_Feeder::breaker_reset(void)
 {
     // component reset command clear should be handled by component
     send_to_comp_uri(reset_value, uri_breaker_reset);
-    clear_component_faults();
+    clear_alerts();
 }
 
 bool Asset_Feeder::breaker_close(void)
@@ -195,38 +178,38 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator)
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_close");
         if (ctrl_obj != NULL) {
-            if (!breaker_close_ctl.configure(ctrl_obj, resetOption, NULL, Int, buttonStr, false)) {
+            if (!breaker_close_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false)) {
                 FPS_ERROR_LOG("Failed to configure breaker_close UI control.");
                 return false;
             }
-            uri_breaker_close = strdup(build_uri(compNames[i], breaker_close_ctl.reg_name).c_str());
+            uri_breaker_close = build_uri(compNames[i], breaker_close_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_close_permissive");
         if (ctrl_obj != NULL) {
-            if (!breaker_close_perm_ctl.configure(ctrl_obj, resetOption, NULL, Int, buttonStr, false)) {
+            if (!breaker_close_perm_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false)) {
                 FPS_ERROR_LOG("Failed to configure breaker_close_permissive UI control.");
                 return false;
             }
-            uri_breaker_close_permissive = strdup(build_uri(compNames[i], breaker_close_perm_ctl.reg_name).c_str());
+            uri_breaker_close_permissive = build_uri(compNames[i], breaker_close_perm_ctl.reg_name);
         }
         
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_close_permissive_remove");
         if (ctrl_obj != NULL) {
-            if (!breaker_close_perm_remove_ctl.configure(ctrl_obj, resetOption, NULL, Int, buttonStr, false)) {
+            if (!breaker_close_perm_remove_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false)) {
                 FPS_ERROR_LOG("Failed to configure breaker_close_permissive_remove UI control.");
                 return false;
             }
-            uri_breaker_close_permissive_remove = strdup(build_uri(compNames[i], breaker_close_perm_remove_ctl.reg_name).c_str());
+            uri_breaker_close_permissive_remove = build_uri(compNames[i], breaker_close_perm_remove_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_open");
         if (ctrl_obj != NULL) {
-            if (!breaker_open_ctl.configure(ctrl_obj, resetOption, NULL, Int, buttonStr, false)) {
+            if (!breaker_open_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false)) {
                 FPS_ERROR_LOG("Failed to configure breaker_open UI control.");
                 return false;
             }
-            uri_breaker_open = strdup(build_uri(compNames[i], breaker_open_ctl.reg_name).c_str());
+            uri_breaker_open = build_uri(compNames[i], breaker_open_ctl.reg_name);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_reset");
@@ -235,7 +218,7 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator)
                 FPS_ERROR_LOG("Failed to configure breaker_reset UI control.");
                 return false;
             }
-            uri_breaker_reset = strdup(build_uri(compNames[i], breaker_reset_ctl.reg_name).c_str());
+            uri_breaker_reset = build_uri(compNames[i], breaker_reset_ctl.reg_name);
         }
     }
     return true;
@@ -292,14 +275,8 @@ bool Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configur
 
 //Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case. 
 //Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
-bool Asset_Feeder::process_set(std::string uri, cJSON* fimsBody)
+bool Asset_Feeder::handle_set(std::string uri, cJSON &body)
 {
-    if (fimsBody == NULL)
-    {
-        FPS_ERROR_LOG("\n  process_set Feeder NULL parsed data \n");
-        return false;
-    }
-
     // The current setpoint being parsed from those available
     cJSON* current_setpoint = NULL;
 
@@ -307,41 +284,44 @@ bool Asset_Feeder::process_set(std::string uri, cJSON* fimsBody)
     // For instance, sets that modify the system state should not persist as they will default to the published component state on restart
     bool persistent_setpoint = false;
 
-    if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "breaker_close")) && inMaintenance)
+    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_close")) && inMaintenance)
     {
         breaker_close();
         persistent_setpoint = true;
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "breaker_close_permissive")) && inMaintenance)
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_close_permissive")) && inMaintenance)
     {
         breaker_close_permissive_status = true;
         breaker_close_permissive();
         persistent_setpoint = true;
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "breaker_close_permissive_remove")) && inMaintenance)
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_close_permissive_remove")) && inMaintenance)
     {
         breaker_close_permissive_status = false;
         breaker_close_permissive_remove();
         persistent_setpoint = true;
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "breaker_open")) && inMaintenance)
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_open")) && inMaintenance)
     {
         breaker_open();
         persistent_setpoint = true;
     }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(fimsBody, current_setpoint, cJSON_True, "breaker_reset")))
+    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_reset")))
     {
         if (inMaintenance)
             breaker_reset(); // hard reset, only when in maint mode
-        else
-            clear_component_faults(); // graceful, component-level reset
+        else {            
+            clear_alerts(); // graceful, component-level reset
+        }
     }
 
-    // Echo set to storage db if valid (value has been parsed)
-    if (current_setpoint && persistent_setpoint)
-        return Asset::send_setpoint(uri, current_setpoint);
-
-    return (Asset::process_set(uri, fimsBody));
+    // if target setpoint was found, back it up to DBI if it is a persistent setpoint.
+    // otherwise, send it to the generic controls handler
+    if (!current_setpoint)
+        return handle_generic_asset_controls_set(uri, body);
+    if (!persistent_setpoint)
+        return true;
+    return Asset::send_setpoint(uri, current_setpoint);
 }
 
 void Asset_Feeder::process_asset(bool* status)

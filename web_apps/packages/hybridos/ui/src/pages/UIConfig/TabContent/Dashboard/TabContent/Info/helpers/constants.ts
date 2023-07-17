@@ -12,4 +12,6 @@ export const DELETE_ITEM = 'Delete Item';
 export const NAME = 'Name';
 export const URI = 'URI';
 export const SOURCE_URI = 'Source URI';
+export const BATTERY_VIEW_SOURCE_URI = 'Battery View Source URI';
+export const BATTERY_VIEW_URI = 'Battery View URI';
 export const BASE_URI = 'Base URI';

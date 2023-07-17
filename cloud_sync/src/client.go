@@ -42,6 +42,8 @@ type ClientConfig struct {
 	Servers    []string
 	Ext        string    `json:"extension"`
 	Tar        TarConfig `json:"tar_mode"`
+	AWSId      string    `json:"aws_id"`
+	AWSSecret  string    `json:"aws_secret_key"`
 }
 
 type TarConfig struct {
@@ -218,7 +220,7 @@ func (cl *client) retry(serv *server) {
 
 	for fileName := range cl.retryQ[serv.name] {
 		// send a transfer request and wait for response
-		cl.sendRequestQsToServers[serv.name] <- transferRequest{fileName: fileName, srcDirPath: path.Join(cl.config.Dir, "error"), responseChannel: transferResponseChannel}
+		cl.retryRequestQsToServers[serv.name] <- transferRequest{fileName: fileName, srcDirPath: path.Join(cl.config.Dir, "error"), responseChannel: transferResponseChannel}
 		resp := <-transferResponseChannel
 
 		if resp.err != nil {

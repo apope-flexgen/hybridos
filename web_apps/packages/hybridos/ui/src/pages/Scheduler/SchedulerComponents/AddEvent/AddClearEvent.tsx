@@ -1,14 +1,15 @@
 import { MuiButton, ThemeType } from '@flexgen/storybook';
 import { Box } from '@mui/material';
 import React from 'react';
+import { useSchedulerContext } from 'src/pages/Scheduler/Scheduler';
 import { ButtonSizes, ButtonVariants } from 'src/pages/Scheduler/SchedulerTypes';
 import { useTheme } from 'styled-components';
 import { addEventLabels } from './AddEventHelpers';
 
 interface AddClearProps {
-  handleClear?: () => void
-  handleAddEvent: () => void
-  addDisabled: boolean
+  handleClear?: () => void;
+  handleAddEvent: () => void;
+  addDisabled: boolean;
 }
 
 const AddClearButons: React.FC<AddClearProps> = ({
@@ -17,6 +18,7 @@ const AddClearButons: React.FC<AddClearProps> = ({
   addDisabled,
 }: AddClearProps) => {
   const theme = useTheme() as ThemeType;
+  const { disableAllFields } = useSchedulerContext();
 
   return (
     <Box
@@ -27,13 +29,14 @@ const AddClearButons: React.FC<AddClearProps> = ({
       }}
     >
       <MuiButton
+        disabled={disableAllFields}
         label={addEventLabels.clearButton.label}
         onClick={handleClear}
         size={addEventLabels.clearButton.size as ButtonSizes}
         variant={addEventLabels.clearButton.variant as ButtonVariants}
       />
       <MuiButton
-        disabled={addDisabled}
+        disabled={addDisabled || disableAllFields}
         label={addEventLabels.addEventButton.label}
         onClick={handleAddEvent}
         size={addEventLabels.addEventButton.size as ButtonSizes}

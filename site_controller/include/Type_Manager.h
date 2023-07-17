@@ -58,7 +58,7 @@ public:
     bool add_type_data_to_buffer(fmt::memory_buffer &buf, std::map<std::string, Fims_Object*> *asset_var_map);
     bool handle_get(fims_message *pmsg, std::map<std::string, Fims_Object*> *asset_var_map);
     bool handle_summary_get(fims_message *pmsg);
-    void handle_set(assetType type, char** pfrags, int nfrags, char* replyto, char* body);
+    void handle_set(fims_message &msg);
     bool process_pub(std::string uri, std::vector<std::string>* names, uint64_t value);
 
     int get_num_avail(void);
@@ -72,7 +72,9 @@ public:
     void set_reactive_power_priority(bool priority);
 
     int get_num_active_alarms() const;
+    int get_num_alarmed() const;
     int get_num_active_faults() const;
+    int get_num_faulted() const;
     bool check_asset_for_alert(std::string& asset_id, std::string& alert_id, uint64_t& mask);
 };
 

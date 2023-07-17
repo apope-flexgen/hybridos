@@ -2,9 +2,10 @@
 export const ControlTypeMap: { [key: string]: string } = {
   enum_button: 'MuiButton',
   button: 'MuiButton',
-  number: 'TextField',
+  number: 'NumericInput',
   enum_slider: 'Switch',
   switch: 'Switch',
   TextField: 'TextField',
   maint_mode_slider: 'MaintModeSlider',
+  enum: 'Select',
 };

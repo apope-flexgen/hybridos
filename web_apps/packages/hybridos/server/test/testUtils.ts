@@ -36,12 +36,16 @@ export const FORBIDDEN_RESPONSE = {
 export const createTestApiApplication = (moduleFixture: TestingModule) => {
     const app = moduleFixture.createNestApplication()
     app.setGlobalPrefix('api', {
-        exclude: [{path: 'rest/:endpoint*', method: RequestMethod.ALL}]
+        exclude: [{ path: 'rest/:endpoint*', method: RequestMethod.ALL }],
     })
     return app
-  }
+}
 
-export const site = (mfa: boolean, passExp: boolean, radius: boolean) => {
+export const site = (
+    mfa: boolean,
+    passExp: boolean,
+    radius: boolean
+): SiteAdmin => {
     return {
         password: {
             multi_factor_authentication: mfa,
@@ -53,6 +57,10 @@ export const site = (mfa: boolean, passExp: boolean, radius: boolean) => {
             password_regular_expression: JSON.stringify(
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!"#\$%&'\*\+,\.\/:;=\\?@\^`\|~])/
             ),
+            lowercase: true,
+            uppercase: true,
+            special: true,
+            digit: true,
         },
         radius: {
             is_enabled: radius,
@@ -73,7 +81,10 @@ export const userUser = async (pwdExpired: boolean, mfaEnabled: boolean) => {
     return await userTemplate(pwdExpired, mfaEnabled, USER_ROLE)
 }
 
-export const mockAppEnvService = (mongoUri: string, accessTokenGetter?: jest.Mock<any, any>) => {
+export const mockAppEnvService = (
+    mongoUri: string,
+    accessTokenGetter?: jest.Mock<any, any>
+) => {
     return {
         getMongoUri: jest.fn().mockImplementation(() => {
             return `${mongoUri}integrationTestDb`
@@ -98,13 +109,29 @@ export const mockAppEnvService = (mongoUri: string, accessTokenGetter?: jest.Moc
         getThrottleLimit: jest.fn().mockImplementation(() => {
             return 100
         }),
-        getAggregatedEndpoints: jest.fn().mockImplementation(() => {
+        readAggregatedEndpoints: jest.fn().mockImplementation(() => {
             return []
+        }),
+        getJwtSecretKey: jest.fn().mockImplementation(() => {
+            return 'jwt_secret_key'
+        }),
+        getSiteConfiguration: jest.fn().mockImplementation(() => {
+            return {}
+        }),
+        getJwtSecretKeyMFA: jest.fn().mockImplementation(() => {
+            return 'supersecretkey-oneTimeUse-mfa'
+        }),
+        getJwtSecretKeyPasswordExp: jest.fn().mockImplementation(() => {
+            return 'supersecretkey-oneTimeUse-password-expiration'
         }),
     }
 }
 
-const userTemplate = async (pwdExpired: boolean, mfaEnabled: boolean, role: Roles) => {
+const userTemplate = async (
+    pwdExpired: boolean,
+    mfaEnabled: boolean,
+    role: Roles
+) => {
     return {
         role: role,
         username: VALID_USERNAME,
@@ -119,7 +146,9 @@ export const checksiteAdminsFields = (res, app) => {
     for (const property in app) {
         expect(res.body[property]).toBeDefined()
         for (const subProperty in app[property]) {
-            expect(res.body[property][subProperty]).toBe(app[property][subProperty])
+            expect(res.body[property][subProperty]).toBe(
+                app[property][subProperty]
+            )
         }
     }
 }
@@ -129,14 +158,17 @@ export const initializeSite = async (uri: string, site: SiteAdmin) => {
     const tdb = con.db('integrationTestDb')
 
     expect(tdb).toBeDefined()
-    const col = tdb.collection('siteAdmins')
+    const col = tdb.collection('siteadmins')
     const result = await col.insertMany([{ ...site }])
     expect(result.insertedCount).toStrictEqual(1)
     expect(await col.countDocuments({})).toBe(1)
     await con.close()
 }
 
-export const initializeUser = async (uri: string, user: User): Promise<ObjectId> => {
+export const initializeUser = async (
+    uri: string,
+    user: User
+): Promise<ObjectId> => {
     const con = await MongoClient.connect(uri, {})
     const tdb = con.db('integrationTestDb')
 
@@ -165,7 +197,11 @@ export const generateUserAccessToken = async (app, db): Promise<string> => {
     return await accessTokenTemplate(app, db, USER_ROLE)
 }
 
-export const accessTokenTemplate = async (app, db, role: Roles): Promise<string> => {
+export const accessTokenTemplate = async (
+    app,
+    db,
+    role: Roles
+): Promise<string> => {
     let VALID_ACCESS_TOKEN: string
     await initializeUser(db.getUri(), {
         username: VALID_USERNAME,

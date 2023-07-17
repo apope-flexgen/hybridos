@@ -1,0 +1,37 @@
+{    
+    "/faults/##BMS_ID##": {
+        "clear_faults": {
+            "value": 0,
+            "type": "fault",
+            "actions": {
+                "onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]
+            }
+        },
+        "cell_extreme_temp":              {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "cell_extreme_voltage":           {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "main_positive_relay_close_fail": {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "main_negative_relay_close_fail": {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "main_positive_relay_stuck_fail": {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "main_negative_relay_stuck_fail": {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "power_loss":                     {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "CCAN_communications":            {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "SCAN_communications":            {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "current_sensor_abnormal":        {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "single_cell_voltage_sampling":   {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "module_temp_sampling":           {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "high_voltage_open_circuit":      {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "MSD_fault":                      {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "rack_isolate":                   {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "rack_fuse":                      {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "TMS_mode_conflict":              {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "fire_fault_level_1":             {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "temperature_sensor":             {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "smoke_sensor":                   {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "aerosol_close":                  {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "aerosol_open":                   {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "rack_door_switch_state":         {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "control_box_over_temp":          {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "chiller_fault":                  {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}},
+        "TMS_communications":             {"value": "Normal","type": "fault","actions": {"onSet": [{"func": [{"func": "process_sys_alarm", "amap": "##BMS_ID##"}]}]}}
+    }
+}

@@ -1,0 +1,27 @@
+{  
+    "/doc/pe_pcs_1_init": {
+        "note1":"This is the power conversion system (PCS) initial config file for Power Electronics (PE)",
+        "note2":"Specifically, this file is responsible for loading manager configurations (e.g.: controls, modbus, faults) to the system"
+    },
+
+    "/config/load": {
+        "pe_pcs_t_init": {
+            "value":false,
+            "file":"pe_pcs_t_init",
+            "pname":"ess",
+            "aname":"pcs",
+            "new_options":[
+                {
+                    "tmpls": ["pe_pcs_t_manager"],
+                    "pname":"ess",
+                    "amname":"##PCS_ID##",
+                    "from":1,
+                    "to":2,
+                    "reps":[
+                        {"replace":"##PCS_ID##",   "with":"pcs_{:01d}"}
+                    ]
+                }
+            ]
+        }
+    }
+}

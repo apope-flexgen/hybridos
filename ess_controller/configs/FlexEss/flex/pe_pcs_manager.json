@@ -1,0 +1,2385 @@
+
+{
+    "amname":"pcs",
+    "pname":"ess",
+    
+    "/notes/pcs": {
+        "note1":"This is the power electronics pcs manager config file.",
+        "note1a":"The pcs page of the ui display is outlined in /assets/pcs/summay",
+        "note1b":"The /assets/pcs table defines the power generation unit(s), using a template file with placements for selected key words",
+        "note2": " The /config/pcs area is still under development",
+        "note3":"The /components/pcs... tables (if present) define the incoming control words from the pcs system",
+        "note4":"The /links/<pcss> table  (if present) defines mapping of external interface components to internal variables",
+        "note5":" There are some junk/test fields as well... they will removed soon",
+        "note6":"Use ModBus maps/pcsm_client_1218.json"
+    },
+    "/config/load":{
+        "pe_pcs_manager": {
+          "value":false,
+          "file":"pe_pcs_manager",
+          "pname":"ess",
+          "aname":"pcs",
+          "options":[
+            {
+               "tmpl":"pe_pcs_template",  "pname":"pcs", "amname":"##PCS_ID##",
+                "from":1, "to":5, 
+                "reps":[
+                        {"replace":"##PCS_ID##","with":"module_{:02d}"},
+                        {"replace":"##PCS_NUM##","with":"{:02d}"}
+                    ]
+                }
+          ]
+        }
+    },
+    "/config/tmpl": {
+        "pe_pcs_template": {
+            "value":false,
+            "file":"pe_pcs_template",
+            "aname":"pcs",
+            "pname":"ess"
+        }
+    },
+    
+    
+    "/config/pcs":{
+        "Pubs": "/assets/pcs/summary",
+        "maxKeyCmdOnTime": {
+            "value": 3
+        },
+        "maxKeyCmdTime": {
+            "value": 4
+        },
+        "maxKeyCmdTries": {
+            "value": 5
+        },
+        "maxShutdownTime": {
+            "value": 30
+        },
+        "maxStartupTime": {
+            "value": 30
+        },
+        "RatedApparentPower": {
+            "value": 440
+        },
+        "AlarmDestination": {
+            "value": "/assets/pcs/summary:alarms"
+        },
+        "FaultDestination": {
+            "value": "/assets/pcs/summary:faults"
+        },
+        "NoFaultMsg": {
+            "value": "(NOFLTS) No faults"
+        },
+        "NoAlarmMsg": {
+            "value": "(NOWRN) No warnings"
+        },
+        "PCSon":1,
+        "PCSoff":0        
+    },
+    "/faults/pcs": {
+        "note": "Leave as is for now. This definition is needed for clear faults UI cmd to work",
+        "clear_faults": {
+            "value": 0,
+            "type": "fault",
+            "numVars": 3,
+            "variable1": "vdc_bus_1",
+            "variable2": "seconds",
+            "variable3": "num_running_modules",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "process_sys_alarm",
+                                "amap": "pcs"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "sys_fault": {
+            "value": "(NOFLTS) No faults",
+            "type": "fault",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "process_sys_alarm",
+                                "amap": "pcs"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/alarms/pcs": {
+        "note": "Leave as is for now. This definition is needed for clear alarms UI cmd to work",
+        "clear_alarms": {
+            "value": 0,
+            "type": "alarm",
+            "numVars": 3,
+            "variable1": "vdc_bus_1",
+            "variable2": "seconds",
+            "variable3": "num_running_modules",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "process_sys_alarm",
+                                "amap": "pcs"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "sys_warn": {
+            "value": "(NOWRN) No warnings",
+            "type": "alarm",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "process_sys_alarm",
+                                "amap": "pcs"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "no_start_cdn": {
+            "value": "(NOWRN) No warnings",
+            "type": "alarm",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "process_sys_alarm",
+                                "amap": "pcs"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "impulsion_fan": {
+            "value": "(NOWRN) No warnings",
+            "type": "alarm",
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "process_sys_alarm",
+                                "amap": "pcs"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "/assetlist":{
+        "/assets/pcs/summary":{
+            "value":false,
+            "mode":"/ui/full",
+            "name": "Pcs Manager",
+            "new_options":[
+                {"aV":"status"},
+                {"aV":"com_status"},
+                {"aV":"active_power"},
+                {"aV":"reactive_power"},
+                {"aV":"apparent_power"},
+                {"aV":"power_factor"},
+
+                {"aV":"active_power_command"},
+                {"aV":"reactive_power_command"},
+                {"aV":"voltage_l1_l2"},
+                {"aV":"voltage_l2_l3"},
+                {"aV":"voltage_l3_l1"},
+                {"aV":"current_l1"},
+                {"aV":"current_l2"},
+                {"aV":"current_l3"},
+                {"aV":"frequency"},
+                {"aV":"power_dc"},
+                {"aV":"voltage_dc"},
+                {"aV":"current_dc"},
+                {"aV":"num_running_modules"},
+
+                {"aV":"alarms"},
+                {"aV":"faults"},
+                {"aV":"soc"},
+                {"aV":"soh"},
+                {"aV":"max_cell_voltage"},
+                {"aV":"min_cell_voltage"},
+                {"aV":"maint_mode"},
+                {"aV":"start"},
+                {"aV":"standby"},
+                {"aV":"shutdown"},
+                {"aV":"maint_active_power_setpoint"},
+                {"aV":"maint_reactive_power_setpoint"},
+                {"aV":"active_power_gradient"},
+                {"aV":"reactive_power_gradient"},
+                {"aV":"clear_faults"},
+                {"aV":"clear_alarms"}
+            ]
+        }
+    },
+
+    "/assets/pcs/summary": {
+        "name":"PCS Manager",
+        "status": {
+            "name": "Status",
+            "value": "Run",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "com_status": {
+            "name": "Communication Status",
+            "value": "INIT",
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "status",
+            "type": "string"
+        },
+        "active_power": {
+            "name": "Active Power",
+            "value": 17,
+            "unit": "kW",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power": {
+            "name": "Reactive Power",
+            "value": 17.200000762939453,
+            "unit": "kVAr",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "apparent_power": {
+            "name": "Apparent Power",
+            "value": 1.2999999523162842,
+            "unit": "kVA",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "power_factor": {
+            "name": "Power Factor",
+            "value": 0,
+            "unit": "",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "active_power_command": {
+            "name": "Active Power Command",
+            "value": 3.0999999046325684,
+            "unit": "kW",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "reactive_power_command": {
+            "name": "Reactive Power Command",
+            "value": 0,
+            "unit": "kVAr",
+            "scaler": 1000,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l1_l2": {
+            "name": "L1-L2 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l2_l3": {
+            "name": "L2-L3 AC Voltage",
+            "value": 573.5999755859375,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_l3_l1": {
+            "name": "L3-L1 AC Voltage",
+            "value": 570.7999877929688,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l1": {
+            "name": "L1 AC Current",
+            "value": 40.79999923706055,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l2": {
+            "name": "L2 AC Current",
+            "value": 41.20000076293945,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_l3": {
+            "name": "L3 AC Current",
+            "value": 40,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "frequency": {
+            "name": "Frequency",
+            "value": 59.970001220703125,
+            "unit": "Hz",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "power_dc": {
+            "name": "DC Power",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "voltage_dc": {
+            "name": "DC Voltage",
+            "value": 1069.800048828125,
+            "unit": "V",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "current_dc": {
+            "name": "DC Current",
+            "value": 0,
+            "unit": "A",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "num_running_modules": {
+            "name": "Modules Running",
+            "value": 0,
+            "unit": "",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "status",
+            "type": "number"
+        },
+        "alarms": {
+            "name": "Alarms",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "faults": {
+            "name": "Faults",
+            "value": 0,
+            "options": [],
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "alarm",
+            "type": "number"
+        },
+        "maint_mode": {
+            "name": "Maintenance Mode",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": true,
+            "ui_type": "control",
+            "type": "enum_slider",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/pcs/summary:start@enabled"}, 
+                        {"uri":	"/assets/pcs/summary:stop@enabled"}, 
+                        {"uri":	"/assets/pcs/summary:shutdown@enabled"}, 
+                        {"uri":	"/assets/pcs/summary:enter_standby@enabled"}, 
+                        {"uri":	"/assets/pcs/summary:exit_standby@enabled"},
+                        {"uri":	"/assets/pcs/summary:clear_faults@enabled"},
+                        {"uri":	"/assets/pcs/summary:clear_alarms@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_active_power_setpoint@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_reactive_power_setpoint@enabled"}
+                        ]
+                    }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "start": {
+            "name": "Start",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/assets/pcs/summary:start@enabled", "outValue": false}, 
+                        {"uri":	"/assets/pcs/summary:stop@enabled"},
+                        {"uri":	"/assets/pcs/summary:shutdown@enabled"},  
+                        {"uri":	"/assets/pcs/summary:clear_faults@enabled"},
+                        {"uri":	"/assets/pcs/summary:clear_alarms@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_active_power_setpoint@enabled"},
+                        {"uri":	"/assets/pcs/summary:maint_reactive_power_setpoint@enabled"},
+
+                        {"inValue": true, "uri": "/sched/pcs:schedStartupPCS@endTime", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedStartupPCS", "outValue": "schedStartupPCS"},
+                        {"uri": "/status/ess:xUiShutdown@ShutdownPCS", "outValue": false},
+                        {"uri":	"/status/ess:xUiShutdown", "outValue": false} 
+                    ]
+                }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "stop": {
+            "name": "Standby",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"uri":	"/status/pcs:HardShutdown", "outValue": false},
+                        {"inValue": true, "uri": "/sched/pcs:xschedStartupPCS@endTime", "outValue": 1},
+                        {"inValue": true, "uri": "/sched/pcs:xschedStartupPCS", "outValue": "schedStartupPCS"},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS@endTime", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS", "outValue": "schedShutdownPCS"},
+	                    {"uri": "/status/ess:xUiShutdown@ShutdownBMS", "outValue": false},
+                        {"uri": "/status/ess:xUiShutdown@ShutdownPCS"},
+                        {"uri":	"/status/ess:xUiStartup@StartPCS", "outValue": false},
+                        {"uri":	"/status/ess:xUiStartup", "outValue": false},
+                        {"uri":	"/status/ess:xUiShutdown"} 
+                    ]
+                }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+
+        "shutdown": {
+            "name": "Shutdown",
+            "value": false,
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions":	{
+                "onSet":	[{
+                    "remap":	[
+                        {"inValue": true, "uri": "/status/pcs:HardShutdown", "outValue": true},
+                        {"inValue": true, "uri": "/sched/pcs:xschedStartupPCS@endTime", "outValue": 1},
+                        {"inValue": true, "uri": "/sched/pcs:xschedStartupPCS", "outValue": "schedStartupPCS"},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS@endTime", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedShutdownPCS", "outValue": "schedShutdownPCS"},
+                        {"uri":	"/status/ess:xUiStartup", "outValue": false},
+                        {"uri":	"/status/ess:xFaultShutdown"} 
+                    ]
+                }]
+            },
+
+            "options": [
+                {
+                    "name": "No",
+                    "return_value": false
+                },
+                {
+                    "name": "Yes",
+                    "return_value": true
+                }
+            ]
+        },
+        "clear_faults": {
+            "name": "Clear Faults",
+            "value": "Init",
+            "unit": "",
+            "scaler": 0,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "enum_button",
+            "actions": { 
+                "onSet":[{
+                    "remap":[
+                        {"inValue": true, "outValue": "Clear", "uri":"/faults/pcs:clear_faults"},
+                        {"inValue": true, "outValue": "Clear", "uri":"/alarms/pcs:clear_alarms"},
+
+                        {"inValue": true, "outValue": false, "uri": "/site/ess_hs:com_status[0]"},
+                        {"inValue": true, "outValue": 0, "uri":"/site/ess_ls:pcs1_faults1"},
+                        {"inValue": true, "outValue": 0, "uri":"/site/ess_ls:pcs1_faults2"},
+                        {"inValue": true, "outValue": 0, "uri":"/site/ess_ls:pcs1_alarms"},
+
+                        {"inValue": true, "uri": "/sched/pcs:schedSendClearFaultCmdpcs@endTime", "amap": "pcs", "outValue": 0},
+                        {"inValue": true, "uri": "/sched/pcs:schedSendClearFaultCmdpcs", "amap": "pcs", "outValue": "schedSendClearFaultCmdpcs"}
+                    ]
+                }]
+            },
+            "options": [
+                {
+                    "name": "Clear Faults",
+                    "return_value": "Clear"
+                }
+            ]
+        },
+        "maint_active_power_setpoint": {
+            "name": "Active Power Setpoint (kW)",
+            "value": 0,
+            "unit": "kW",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": []
+        },
+        "maint_reactive_power_setpoint": {
+            "name": "Reactive Power Setpoint (kVAr)",
+            "value": 0,
+            "unit": "kVAr",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": []
+        },
+        "active_power_gradient": {
+            "name": "Active Power Ramp Rate (%/s)",
+            "value": 10,
+            "unit": "%/s",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "options": [],
+            "actions": {
+                "onSet": [{
+                    "remap":[
+                        {"fims": "set", "uri": "/components/pcsm_gradients:rise_grad_p"},
+                        {"fims": "set", "uri": "/components/pcsm_gradients:drop_grad_p"},
+                        {"fims": "set", "uri": "/components/pcsm_gradients:start_grad_p"},
+                        {"fims": "set", "uri": "/components/pcsm_gradients:stop_grad_p"}
+                    ]
+                }]
+            }
+        },
+        "reactive_power_gradient": {
+            "name": "Reactive Power Ramp Rate (%/s)",
+            "value": 10,
+            "unit": "%/s",
+            "scaler": 1,
+            "enabled": false,
+            "ui_type": "control",
+            "type": "number",
+            "actions": {
+                "onSet": [{
+                    "remap":[
+                        {"fims": "set", "uri": "/components/pcsm_gradients:rise_grad_q"},
+                        {"fims": "set", "uri": "/components/pcsm_gradients:drop_grad_q"},
+                        {"fims": "set", "uri": "/components/pcsm_gradients:start_grad_q"},
+                        {"fims": "set", "uri": "/components/pcsm_gradients:stop_grad_q"}
+                    ]
+                }]
+            },
+            "options": []
+        }
+    },
+    "/vlinks/pcs": {
+        "status":                           {"value": "/assets/pcs/summary:status",                               "vlink":"/status/pcs:PCSStatusResp"},
+        "active_power":                     {"value": "/assets/pcs/summary:active_power",                         "vlink":"/components/pcsm_grid_visualization:active_power"},
+        "reactive_power":                   {"value": "/assets/pcs/summary:reactive_power",                       "vlink":"/components/pcsm_grid_visualization:reactive_power"},
+        "apparent_power":                   {"value": "/assets/pcs/summary:apparent_power",                       "vlink":"/components/pcsm_grid_visualization:apparent_power"},
+        "voltage_l1_l2":                    {"value": "/assets/pcs/summary:voltage_l1_l2",                        "vlink":"/components/pcsm_grid_visualization:grid_voltage_rs"},
+        "voltage_l2_l3":                    {"value": "/assets/pcs/summary:voltage_l2_l3",                        "vlink":"/components/pcsm_grid_visualization:grid_voltage_st"},
+        "voltage_l3_l1":                    {"value": "/assets/pcs/summary:voltage_l3_l1",                        "vlink":"/components/pcsm_grid_visualization:grid_voltage_tr"},
+        "current_l1":                       {"value": "/assets/pcs/summary:current_l1",                           "vlink":"/components/pcsm_grid_visualization:grid_current_1"},
+        "current_l2":                       {"value": "/assets/pcs/summary:current_l2",                           "vlink":"/components/pcsm_grid_visualization:grid_current_2"},
+        "current_l3":                       {"value": "/assets/pcs/summary:current_l3",                           "vlink":"/components/pcsm_grid_visualization:grid_current_3"},
+        "frequency":                        {"value": "/assets/pcs/summary:frequency",                            "vlink":"/components/pcsm_grid_visualization:grid_frequency"},
+        "power_dc":                         {"value": "/assets/pcs/summary:power_dc",                             "vlink":"/components/pcsm_dc_inputs:dc_p_input"},
+        "voltage_dc":                       {"value": "/assets/pcs/summary:voltage_dc",                           "vlink":"/components/pcsm_dc_inputs:vdc_bus_1"},
+        "current_dc":                       {"value": "/assets/pcs/summary:current_dc",                           "vlink":"/components/pcsm_dc_inputs:dc_total_i_input"},
+        "pf":                               {"value": "/assets/pcs/summary:power_factor",                         "vlink":"/components/pcsm_grid_visualization:cosphi"},
+        "maint_active_power_setpoint":      {"value": "/assets/pcs/summary:maint_active_power_setpoint",          "vlink":"/controls/ess:ActivePowerSetpoint"},
+        "maint_reactive_power_setpoint":    {"value": "/assets/pcs/summary:maint_reactive_power_setpoint",        "vlink":"/controls/ess:ReactivePowerSetpoint"},
+        "active_power_cmd":                 {"value": "/assets/pcs/summary:active_power_command",                 "vlink":"/status/pcs:ActivePowerCmd_adjusted"},
+        "reactive_power_cmd":               {"value": "/assets/pcs/summary:reactive_power_command",               "vlink":"/status/pcs:ReactivePowerCmd_adjusted"},
+        "p_gradient":                       {"value": "/assets/pcs/summary:active_power_gradient",                "vlink":"/components/pcsm_gradients:rise_grad_p"},
+        "q_gradient":                       {"value": "/assets/pcs/summary:reactive_power_gradient",              "vlink":"/components/pcsm_gradients:rise_grad_q"},
+        "num_running_modules":              {"value": "/assets/pcs/summary:num_running_modules",                  "vlink":"/components/pcs_registers_slow:num_running_modules"},
+
+        "site_active_power":                { "value": "/site/ess_hs:active_power",                               "vlink": "/components/pcsm_grid_visualization:active_power"       },
+        "site_reactive_power":              { "value": "/site/ess_hs:reactive_power",                             "vlink": "/components/pcsm_grid_visualization:reactive_power"     },
+        "site_voltage_l1_l2":               { "value": "/site/ess_hs:voltage_l1_l2",                              "vlink": "/components/pcsm_grid_visualization:grid_voltage_rs"    },
+        "site_voltage_l2_l3":               { "value": "/site/ess_hs:voltage_l2_l3",                              "vlink": "/components/pcsm_grid_visualization:grid_voltage_st"    },
+        "site_voltage_l3_l1":               { "value": "/site/ess_hs:voltage_l3_l1",                              "vlink": "/components/pcsm_grid_visualization:grid_voltage_tr"    },
+        "site_current_l1":                  { "value": "/site/ess_hs:current_l1",                                 "vlink": "/components/pcsm_grid_visualization:grid_current_1"     },
+        "site_current_l2":                  { "value": "/site/ess_hs:current_l2",                                 "vlink": "/components/pcsm_grid_visualization:grid_current_2"     },
+        "site_current_l3":                  { "value": "/site/ess_hs:current_l3",                                 "vlink": "/components/pcsm_grid_visualization:grid_current_3"     },
+        "site_frequency":                   { "value": "/site/ess_hs:frequency",                                  "vlink": "/components/pcsm_grid_visualization:grid_frequency"     },
+        "site_pf":                          { "value": "/site/ess_hs:pf",                                         "vlink": "/components/pcsm_grid_visualization:cosphi"             },
+        "pcs1_site_voltage_dc":             { "value": "/site/ess_ls:pcs_voltage_dc",                             "vlink": "/components/pcsm_dc_inputs:vdc_bus_1"                   },
+        "pcs1_site_current_dc":             { "value": "/site/ess_ls:pcs_current_dc",                             "vlink": "/components/pcsm_dc_inputs:dc_total_i_input"            },
+        "site_apparent_power":              { "value": "/site/ess_ls:apparent_power",                             "vlink": "/components/pcsm_grid_visualization:apparent_power"     }
+    },
+    
+
+    "/constants/pcs": {
+        "note": "These are constant defintions",
+        "notem":"If used, move this to pcs_manager.json",
+        "nominal_voltage": 480.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 3430.0,
+        "rated_apparent_power": 3430.0,
+        "start_timer": 50,
+        "cooldown_timer": 250
+    },
+    "/params/pcs": {
+        "note": "These are control parameters",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 3300.0,
+        "rated_reactive_power": 1000.0,
+        "active_power_setpoint": 2200.0,
+        "reactive_power_setpoint": 2200.0,
+        "oncmd": 0,
+        "onffcmd": 0,
+        "kacclosecmd": 0,
+        "kdcclosecmd": 0,
+        "kacopencmd": 0,
+        "kdccopencmd": 0
+    },
+    "/variables/pcs": {
+        "q": 1234,
+        "p": 3456,
+        "soc": 100,
+        "soh": 100,
+        "dc_contactor": "off",
+        "ac_contactor": "off",
+        "dc_contactor_cmd": "off",
+        "ac_contactor_cmd": "off",
+        "mode": "init",
+        "mode_cmd": "off",
+        "inductive_i_limit": 357,
+        "capacitive_i_limit": 407,
+        "p_limit_inst": 100,
+        "q_limit_inst": 100,
+        "s_limit_inst": 100
+    },
+    "/controls/pcs": {
+        "notem":"If used, move this to pcs_manager.json",
+
+        "start_stop": {
+            "value": 1,
+            "actions": {
+                "onSet": [{
+                    "bitfield": {
+                        "bitmap": [
+                            {
+                                "bit": 0,
+                                "uri": "/controls/pcs:oncmd",
+                                "value": true
+                            },
+                            {
+                                "bit": 1,
+                                "uri": "/system/controls:kacclosecmd",
+                                "value": true
+                            },
+                            {
+                                "bit": 8,
+                                "uri": "/system/controls:offcmd",
+                                "value": true
+                            },
+                            {
+                                "bit": 9,
+                                "uri": "/system/controls:kacopencmd",
+                                "value": true
+                            }
+                        ]
+                    }
+                }
+            ]
+            }
+        },
+        "ctrlword2": {
+            "value": 0,
+            "actions": {
+                "onSet": [
+                    {"enum": {
+                        "bitmap": [
+                            {
+                                "mask": 3,
+                                "bit": 0,
+                                "uri": "/system/enum_controls:mask_3_bit_0",
+                                "value": true
+                            },
+                            {
+                                "mask": 3,
+                                "bit": 1,
+                                "uri": "/system/enum_controls:mask_3_bit_1",
+                                "value": true
+                            },
+                            {
+                                "mask": 3,
+                                "bit": 2,
+                                "uri": "/system/enum_controls::mask_3_bit_2",
+                                "value": true
+                            },
+                            {
+                                "mask": 3,
+                                "bit": 3,
+                                "uri": "/system/enum_controls:mask_3_bit_3",
+                                "value": true
+                            }
+                        ]
+                    }
+                }
+            ]
+            }
+        },
+        "PMode_I": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 1,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_pmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "PMode_P": {
+            "value": true,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 2,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_pmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "QMode_CosPhi": {
+            "value": false,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 0,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_Q": {
+            "value": true,
+            "actions": {
+                "onSet": [{
+                    "bitset": [
+                        {
+                            "bit": 1,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_I": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"bitset": [
+                        {
+                            "bit": 2,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+                ]
+            }
+        },
+        "QMode_VQ": {
+            "value": false,
+            "actions": {
+                "onSet": [
+                    {"bitset": [
+                        {
+                            "bit": 3,
+                            "uri": "/controls/pcs",
+                            "var": "ctrlword_qmode",
+                            "soloBit": true
+                        }
+                    ]
+                }
+            ]
+            }
+        },
+        "PStartGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "PStopGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "PDropGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QStartGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QStopGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QRiseGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "QDropGradient": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "EnPStartGradient": 1,
+        "EnPStopGradient": 1,
+        "EnPRiseGradient": 1,
+        "PRiseGradient": 10,
+        "EnPDropGradient": 1,
+        "EnQStartGradient": 1,
+        "EnQStopGradient": 1,
+        "EnQRiseGradient": 1,
+        "EnQDropGradient": 1,
+        "ctrlword_pmode": 2,
+        "ctrlword_qmode": 1,
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "ActivePowerSetpoint": 2200.0,
+        "ReactivePowerSetpoint": 2200.0,
+        "lastActivePowerSetpoint": 2200.0,
+        "lastReactivePowerSetpoint": 2200.0,
+        "ActivePowerDeadband": 0.0,
+        "ReactivePowerDeadband": 0.0,
+        "ActivePowerCmd": 0,
+        "ReactivePowerCmd": 0,
+        "oncmd": 0,
+        "offcmd": 0,
+        "test_ctrl": 72
+    },
+    "/links/pcs":{
+        "seconds": {
+            "value": "/components/pcsm_general:seconds"
+        },
+        "Min": {
+            "value": "/components/pcsm_general:minutes"
+        },
+        "Hour": {
+            "value": "/components/pcsm_general:hours"
+        },
+        "Day": {
+            "value": "/components/pcsm_general:day"
+        },
+        "Month": {
+            "value": "/components/pcsm_general:month"
+        },
+        "Year": {
+            "value": "/components/pcsm_general:year"
+        },
+        "Utc": {
+            "value": "/components/pcsm_general:utc"
+        },
+        "Timestamp": {
+            "value": "/components/pcsm_general:Timestamp"
+        },
+        "Heartbeat": {
+            "value": "/components/pcsm_communications:ppc_watchdog_ref"
+        },
+        "PCSStartKeyCmd": {
+            "value": "/components/pcsm_remote_control:start"
+        },
+        "PCSStopKeyCmd": {
+            "value": "/components/pcsm_remote_control:stop"
+        },
+        "PCSEStopKeyCmd": {
+            "value": "/components/pcsm_remote_control:e_stop"
+        },
+        "ClearFaultCmd": {
+            "value": "/components/pcsm_remote_control:reset"
+        },
+        "vdc_bus_1": {
+            "value": "/components/pcsm_dc_inputs:vdc_bus_1"
+        },
+        "MaxPCSActivePower": {
+            "value": "/components/pcsm_limits:p_limit"
+        },
+        "MaxPCSReactivePower": {
+            "value": "/components/pcsm_limits:q_limit"
+        },
+        "MaxPCSApparentPower": {
+            "value": "/components/pcsm_limits:s_limit"
+        },
+        "ctrlword_pmode": {
+            "value": "/components/pcsm_control:p_control_mode"
+        },
+        "ctrlword_qmode": {
+            "value": "/components/pcsm_control:q_control_mode"
+        },
+        "ActivePowerCmd": {
+            "value": "/components/pcsm_control:p_p_reference"
+        },
+        "ActiveCurrentCmd": {
+            "value": "/components/pcsm_control:p_id_reference"
+        },
+        "CosPhiCmd": {
+            "value": "/components/pcsm_control:q_cosphi_reference"
+        },
+        "ReactiveCurrentCmd": {
+            "value": "/components/pcsm_control:q_iq_reference"
+        },
+        "ReactivePowerCmd": {
+            "value": "/components/pcsm_control:q_q_reference"
+        },
+        "ReactiveVoltageCmd": {
+            "value": "/components/pcsm_control:q_v_reference"
+        },
+        "PStartGradient": {
+            "value": "/components/pcsm_gradients:start_grad_p"
+        },
+        "EnPStartGradient": {
+            "value": "/components/pcsm_gradients:start_grad_p_enable"
+        },
+        "PStopGradient": {
+            "value": "/components/pcsm_gradients:stop_grad_p"
+        },
+        "EnPStopGradient": {
+            "value": "/components/pcsm_gradients:stop_grad_p_enable"
+        },
+        "EnPRiseGradient": {
+            "value": "/components/pcsm_gradients:rise_grad_p_enable"
+        },
+        "PDropGradient": {
+            "value": "/components/pcsm_gradients:drop_grad_p"
+        },
+        "EnPDropGradient": {
+            "value": "/components/pcsm_gradients:drop_grad_p_enable"
+        },
+        "QStartGradient": {
+            "value": "/components/pcsm_gradients:start_grad_q"
+        },
+        "EnQStartGradient": {
+            "value": "/components/pcsm_gradients:start_grad_q_enable"
+        },
+        "QStopGradient": {
+            "value": "/components/pcsm_gradients:stop_grad_q"
+        },
+        "EnQStopGradient": {
+            "value": "/components/pcsm_gradients:stop_grad_q_enable"
+        },
+        "EnQRiseGradient": {
+            "value": "/components/pcsm_gradients:rise_grad_q_enable"
+        },
+        "QDropGradient": {
+            "value": "/components/pcsm_gradients:drop_grad_q"
+        },
+        "EnQDropGradient": {
+            "value": "/components/pcsm_gradients:drop_grad_q_enable"
+        },
+        "ctrlword2": {
+            "value": "/components/pcsm_control:ctrlword2"
+        }
+    },
+
+    "/schedule/wake_monitor/pcs":{
+        "/components/pcsm_dc_inputs:vdc_bus_1": { "enable": true, "rate":1, "amap": "pcs", "func":"CheckMonitorVar"},
+        "/components/pcsm_general:seconds": { "enable": true, "rate":1, "func":"CheckMonitorVar"},
+        "/components/pcs_registers_slow:num_running_modules": { "enable": true, "rate":1, "func":"CheckMonitorVar"},
+        "/status/pcs:ActivePowerCmd_adjusted": { "enable": true, "rate":0.1, "amap": "pcs", "func":"CalculateVar"},
+        "/status/pcs:ReactivePowerCmd_adjusted": { "enable": true, "rate":0.1, "amap": "pcs", "func":"CalculateVar"}
+    },
+
+    "/xschedule/pcs":{
+
+        "wake100mS": {    
+        "note00":" This is run every 100 ms", 
+        "actions": {
+          "onSet": [{"func": [
+                      {"func":"UpdateSystemTime",     "aname":"pcs", "enabled":false},       
+                      {"func":"RunInitCheck",         "aname":"pcs", "enabled":false},
+                      {"func":"RunComsCheck",         "aname":"pcs", "enabled":false},
+                      {"func":"CheckMonitorVar","Av":"/components/pcsm_dc_inputs:vdc_bus_1",                      "enabled": true,"aname":"pcs"},
+                      {"func":"CheckMonitorVar","Av":"/components/pcsm_general:seconds",                          "enabled": true,"aname":"pcs"},
+                      {"func":"CheckMonitorVar","Av":"/components/pcs_registers_slow:num_running_modules",        "enabled": true,"aname":"pcs"},
+                      {"func":"CheckMonitorVar","Av":"/status/pcs:ActivePowerCmd_adjusted",                       "enabled": true,"aname":"pcs"},
+                      {"func":"CheckMonitorVar","Av":"/status/pcs:ReactivePowerCmd_adjusted",                     "enabled": true,"aname":"pcs"},
+                      {"func":"CheckDbiResp",   "Av":"/dbi/status/ess:active_power",                              "enabled": true, "amap":"pcs"}
+        
+                      ]
+                  }
+              ]
+            }
+        }
+    },
+
+    "/sched/pcs": {
+        "schedStartupPCS":{
+            "value":    "schedStartupPCS",
+            "actions":{
+            "onSet": [{ "func": [
+                    {"func": "HandleSchedLoad", "amap": "pcs"}
+                ]}]
+            },
+            "uri":      "/sched/pcs:schedStartupPCS",
+            "fcn":      "StartupPCS",
+            "id":       "schedStartupPCS",
+            "amap":     "pcs",
+            "refTime":  0.269,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        },
+        "schedShutdownPCS":{
+            "value":    "schedShutdownPCS",
+            "actions":{
+            "onSet": [{ "func": [
+                    {"func": "HandleSchedLoad", "amap": "pcs"}
+                ]}]
+            },
+            "uri":      "/sched/pcs:schedShutdownPCS",
+            "fcn":      "ShutdownPCS",
+            "id":       "schedShutdownPCS",
+            "amap":     "pcs",
+            "refTime":  0.266,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        },
+        "schedSendClearFaultCmdpcs":{
+            "value":    "schedSendClearFaultCmdpcs",
+            "actions":{
+            "onSet": [{ "func": [
+                    {"func": "HandleSchedLoad", "amap": "pcs"}
+                ]}]
+            },
+            "uri":      "/sched/pcs:schedSendClearFaultCmdpcs",
+            "fcn":      "SendClearFaultCmd",
+            "id":       "schedSendClearFaultCmdpcs",
+            "amap":     "pcs",
+            "refTime":  0.272,
+            "runAfter": 0.270,
+            "repTime":  0.100,
+            "endTime":  0.001
+        }
+    },
+
+    "/components/pcsm_general": {
+        "seconds": {
+            "value": 0,
+            "EnableStateCheck": true,
+            "EnableCommsCheck": true,
+            "Type": "int",
+            "AlarmTimeout": 5,
+            "FaultTimeout": 10,
+            "RecoverTimeout": 1,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "CheckMonitorVar",
+                                "amap": "pcs"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+
+    "/components/pcs_registers_slow": {
+        "num_running_modules": {
+            "value": 0,
+			
+            "EnableFaultCheck": false,
+            "EnableMinValCheck": false,
+            "MinAlarmThreshold": 6,
+            "MinFaultThreshold": 5,
+            "MinResetValue": 5,
+
+            "MinAlarmTimeout": 1,
+            "MinFaultTimeout": 1,
+            "MinRecoverTimeout": 1,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "CheckMonitorVar",
+                                "amap": "pcs"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+
+    "/components/pcsm_gradients": {
+        "rise_grad_p": 10,
+        "rise_grad_q": 10
+    },
+
+    "/components/pcsm_dc_inputs": {
+        "vdc_bus_1": {
+            "value": 0,
+			
+            "EnableFaultCheck": false,
+            "EnableMaxValCheck": false,
+            "EnableMinValCheck": true,
+
+            "MinAlarmThreshold": 1200,
+            "MaxAlarmThreshold": 3000,
+            "MinFaultThreshold": 1100,
+            "MaxFaultThreshold": 4000,
+            "MinResetValue": 1140,
+            "MaxResetValue": 2000,
+
+            "MinAlarmTimeout": 0,
+            "MaxAlarmTimeout": 0,
+            "MinFaultTimeout": 1,
+            "MaxFaultTimeout": 0,
+            "MinRecoverTimeout": 0,
+            "MaxRecoverTimeout": 0,
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "func": "CheckMonitorVar",
+                                "amap": "pcs"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "dc_1_i_input": 0,
+        "dc_total_i_input": 0,
+        "dc_p_input": 0
+    },
+
+    "/components/pcs_status":{
+        "sys_heartbeat" : {
+            "value":0
+        },
+        "sys_timestamp" : {
+            "value":"No Time"
+        }
+    },
+    "/components/pcsm_control": {
+        "start_grad_p": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        },
+        "p_p_reference": 0,
+        "q_q_reference": 0
+    },
+    "/components/pcsm_grid_visualization": {
+        "active_power": 0,
+        "reactive_power": 0,
+        "apparent_power": 0,
+        "grid_voltage_rs": 0,
+        "grid_voltage_st": 0,
+        "grid_voltage_tr": 0,
+        "grid_current_1": 0,
+        "grid_current_2": 0,
+        "grid_current_3": 0,
+        "grid_frequency": 0,
+        "cosphi": 0
+    },
+    "/components/pcsm_internal_visualization": {
+        "current_warning": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 65535, "inValue": 0, "uri": "/alarms/pcs:sys_warn",      "outValue": "(NOWRN) No warnings"},
+                        {"shift": 0, "mask": 65535, "inValue": 0, "uri": "/alarms/pcs:no_start_cdn",  "outValue": "(NOWRN) No warnings"},
+                        {"shift": 0, "mask": 65535, "inValue": 0, "uri": "/alarms/pcs:impulsion_fan", "outValue": "(NOWRN) No warnings"},
+
+                        {"shift": 0, "mask": 65535, "inValue": 1, "uri": "/alarms/pcs:sys_warn", "outValue": "(HVAC) High input voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 2, "uri": "/alarms/pcs:sys_warn", "outValue": "(LVAC) Low input voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 3, "uri": "/alarms/pcs:sys_warn", "outValue": "(HFRQ) High frequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 4, "uri": "/alarms/pcs:sys_warn", "outValue": "(LFRQ) Low frequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 5, "uri": "/alarms/pcs:no_start_cdn", "outValue": "(NSC) No start conditions"},
+                        {"shift": 0, "mask": 65535, "inValue": 6, "uri": "/alarms/pcs:sys_warn", "outValue": "(NOMD) No modules"},
+                        {"shift": 0, "mask": 65535, "inValue": 7, "uri": "/alarms/pcs:sys_warn", "outValue": "(PLIM) P limit has been reached"},
+                        {"shift": 0, "mask": 65535, "inValue": 8, "uri": "/alarms/pcs:sys_warn", "outValue": "(QLIM) Q limit has been reached"},
+                        {"shift": 0, "mask": 65535, "inValue": 9, "uri": "/alarms/pcs:sys_warn", "outValue": "(ISLIM) Is limit has been reached"},
+                        {"shift": 0, "mask": 65535, "inValue": 10, "uri": "/alarms/pcs:sys_warn", "outValue": "(IDCLIM) Idc limit has been reached"},
+                        {"shift": 0, "mask": 65535, "inValue": 11, "uri": "/alarms/pcs:sys_warn", "outValue": "(PDVDC) Reduct P - A derating is active"},
+                        {"shift": 0, "mask": 65535, "inValue": 12, "uri": "/alarms/pcs:sys_warn", "outValue": "(HEAT) Heating is active"},
+                        {"shift": 0, "mask": 65535, "inValue": 13, "uri": "/alarms/pcs:sys_warn", "outValue": "(NIGHT) Night mode is active"},
+                        {"shift": 0, "mask": 65535, "inValue": 14, "uri": "/alarms/pcs:sys_warn", "outValue": "(LP) Low P - Active power is lower than the minimum AC power set"},
+                        {"shift": 0, "mask": 65535, "inValue": 15, "uri": "/alarms/pcs:sys_warn", "outValue": "(LVDC_W) Low Vdc - DC voltage is lower than the minimum DC voltage set"},
+                        {"shift": 0, "mask": 65535, "inValue": 16, "uri": "/alarms/pcs:sys_warn", "outValue": "(PDT) Derating T - Inverter is limiting power due to high internal temperature"},
+                        {"shift": 0, "mask": 65535, "inValue": 17, "uri": "/alarms/pcs:sys_warn", "outValue": "(PPF) Power Per Frequency - Power is reduced due to a high frequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 18, "uri": "/alarms/pcs:sys_warn", "outValue": "(REDUN) Redun warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 19, "uri": "/alarms/pcs:sys_warn", "outValue": "(HVDC_W) High Vdc - DC voltage > 1500 V"},
+                        {"shift": 0, "mask": 65535, "inValue": 20, "uri": "/alarms/pcs:sys_warn", "outValue": "(UMF) Module fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 21, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKNM) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 22, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKLV) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 23, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKCC) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 24, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKOC) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 25, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKBF) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 26, "uri": "/alarms/pcs:sys_warn", "outValue": "(LCFB) LC feedback - LC contactors are not operating adequately in the stop procedure"},
+                        {"shift": 0, "mask": 65535, "inValue": 27, "uri": "/alarms/pcs:sys_warn", "outValue": "(QFV) Curve Q vs V - Grid support QV ongoing"},
+                        {"shift": 0, "mask": 65535, "inValue": 28, "uri": "/alarms/pcs:sys_warn", "outValue": "(PFV) Curve P vs V - Grid support PV ongoing"},
+                        {"shift": 0, "mask": 65535, "inValue": 29, "uri": "/alarms/pcs:sys_warn", "outValue": "(VDCDS) Vdc discordance - Discordance between bus voltage and input voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 40, "uri": "/alarms/pcs:sys_warn", "outValue": "(OVP) AC overvoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 41, "uri": "/alarms/pcs:sys_warn", "outValue": "(RTC) The RTC is not configured. Set the time"},
+                        {"shift": 0, "mask": 65535, "inValue": 42, "uri": "/alarms/pcs:sys_warn", "outValue": "(MSWM) Modules version - There are one or more modules with different software versions"},
+                        {"shift": 0, "mask": 65535, "inValue": 43, "uri": "/alarms/pcs:sys_warn", "outValue": "(VSWM) uP DSP version - Software versions are not compatible"},
+                        {"shift": 0, "mask": 65535, "inValue": 44, "uri": "/alarms/pcs:sys_warn", "outValue": "(NOSD) SD not present"},
+                        {"shift": 0, "mask": 65535, "inValue": 45, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMI) Battery module isolated - One or more modules of the equipment has been isolated due to a fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 46, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUIUN) DU I unbalance - Current unbalance in the DU channels"},
+                        {"shift": 0, "mask": 65535, "inValue": 47, "uri": "/alarms/pcs:sys_warn", "outValue": "(SPRLD) Spring loaded - Some of the circuit break triggers are not loaded"},
+                        {"shift": 0, "mask": 65535, "inValue": 48, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUVDC) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 50, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUCOMS_W) Comms lost - There is a problem in the disconnecting unit communications"},
+                        {"shift": 0, "mask": 65535, "inValue": 51, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHISL) Channel isolated - DU channel isolated because it is derived, feedback has failed, or it did not measure voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 52, "uri": "/alarms/pcs:sys_warn", "outValue": "(INSA) Algorithm on - Derived channels detection algorithm is running. once finished, the warning will automatically disappear"},
+                        {"shift": 0, "mask": 65535, "inValue": 53, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUOF) Fb open error - Problem with feedback from one of the DU channels in an opening event"},
+                        {"shift": 0, "mask": 65535, "inValue": 54, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUCF) Fb close error - Problem with feedback from one of the Du channels in a closing event"},
+                        {"shift": 0, "mask": 65535, "inValue": 55, "uri": "/alarms/pcs:sys_warn", "outValue": "(OVDCP) DC overvoltage - Check the status of the disconnecting unit and J7 connector digital input"},
+                        {"shift": 0, "mask": 65535, "inValue": 56, "uri": "/alarms/pcs:sys_warn", "outValue": "(ISFLT) Isolation fault - warning not used currently"},
+                        {"shift": 0, "mask": 65535, "inValue": 57, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHCOM) Acq comms error - Communications problem between the disconnecting unit and acquisition channels"},
+                        {"shift": 0, "mask": 65535, "inValue": 58, "uri": "/alarms/pcs:sys_warn", "outValue": "(NOCHN) No channel available"},
+                        {"shift": 0, "mask": 65535, "inValue": 59, "uri": "/alarms/pcs:sys_warn", "outValue": "(GRIDIN) Isolat flt AC grid - Isulation fault has occurred in the AC side"},
+                        {"shift": 0, "mask": 65535, "inValue": 60, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUBSY) Processing cont - Contactors processing event ongoing"},
+                        {"shift": 0, "mask": 65535, "inValue": 61, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHSWM) Acq version - DU acquisition channels with different versions have been detected"},
+                        {"shift": 0, "mask": 65535, "inValue": 62, "uri": "/alarms/pcs:sys_warn", "outValue": "(PCHM) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 63, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHCD) Current detected during DU channels opening event"},
+                        {"shift": 0, "mask": 65535, "inValue": 64, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHMW) Channel miswired - One or more acquisition channels did not measure any voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 65, "uri": "/alarms/pcs:sys_warn", "outValue": "(OC) Mod. AC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 66, "uri": "/alarms/pcs:sys_warn", "outValue": "(UV) Unbal DC bus - Unbalance between high side and low side of DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 67, "uri": "/alarms/pcs:sys_warn", "outValue": "(DOC) Mod. DC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 69, "uri": "/alarms/pcs:sys_warn", "outValue": "(POV) Mod. DC overvoltage (P) - Overvoltage present in DC positive side"},
+                        {"shift": 0, "mask": 65535, "inValue": 70, "uri": "/alarms/pcs:sys_warn", "outValue": "(NOV) Mod. DC overvoltage (N) - Overvoltage present in DC negative side"},
+                        {"shift": 0, "mask": 65535, "inValue": 71, "uri": "/alarms/pcs:sys_warn", "outValue": "(DR1) Desat R1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 72, "uri": "/alarms/pcs:sys_warn", "outValue": "(DR2P) Desat R2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 73, "uri": "/alarms/pcs:sys_warn", "outValue": "(DR2N) Desat R2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 74, "uri": "/alarms/pcs:sys_warn", "outValue": "(DR3) Desat R3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 75, "uri": "/alarms/pcs:sys_warn", "outValue": "(DS1) Desat S1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 76, "uri": "/alarms/pcs:sys_warn", "outValue": "(DS2P) Desat S2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 77, "uri": "/alarms/pcs:sys_warn", "outValue": "(DS2N) Desat S2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 78, "uri": "/alarms/pcs:sys_warn", "outValue": "(DS3) Desat S3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 79, "uri": "/alarms/pcs:sys_warn", "outValue": "(DT1) Desat T1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 80, "uri": "/alarms/pcs:sys_warn", "outValue": "(DT2P) Desat T2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 81, "uri": "/alarms/pcs:sys_warn", "outValue": "(DT2N) Desat T2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 82, "uri": "/alarms/pcs:sys_warn", "outValue": "(DT3) Desat T3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 83, "uri": "/alarms/pcs:sys_warn", "outValue": "(DMLT) Multiple unlock - Desaturation in more than one IGBT controller at the same time. Could indicate power failure in module control card"},
+                        {"shift": 0, "mask": 65535, "inValue": 84, "uri": "/alarms/pcs:sys_warn", "outValue": "(COMMS_W) Mod. Comms - Communication between central FPGA and module FPGA, or between module FPGA and DSP, is lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 86, "uri": "/alarms/pcs:sys_warn", "outValue": "(FBDC) Mod. DC contactor - DC contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 87, "uri": "/alarms/pcs:sys_warn", "outValue": "(FBSC) Mod. ACSC contactor - Module AC soft charge contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 88, "uri": "/alarms/pcs:sys_warn", "outValue": "(FBAC) Mod. AC contactor - Command to activate the AC contactors of the modules was sent, but did not close in 1s"},
+                        {"shift": 0, "mask": 65535, "inValue": 89, "uri": "/alarms/pcs:sys_warn", "outValue": "(FBLC) Mod. LCL contactor feedback - LCL contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 90, "uri": "/alarms/pcs:sys_warn", "outValue": "(TIGH) Mod. IGBTs Temperature HW - The temperature of any IGBT overcomes 127 degrees, or IGBT temperature sensor is disconnected"},
+                        {"shift": 0, "mask": 65535, "inValue": 91, "uri": "/alarms/pcs:sys_warn", "outValue": "(GUV) Mod. Great unbal DC - DC bus unbalanced more than 500V"},
+                        {"shift": 0, "mask": 65535, "inValue": 92, "uri": "/alarms/pcs:sys_warn", "outValue": "(DIS) Mod. Discharge fault - Module FPGA attempts to discharge the module bus and voltage did not drop below 50V in 40s"},
+                        {"shift": 0, "mask": 65535, "inValue": 93, "uri": "/alarms/pcs:sys_warn", "outValue": "(TLCL) Mod. Thermal LCL - Termal LCL contactor of a module inductance has been opened"},
+                        {"shift": 0, "mask": 65535, "inValue": 95, "uri": "/alarms/pcs:sys_warn", "outValue": "(PS) Mod Power 15V - Internal power supply of the board does not provide the adequate voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 96, "uri": "/alarms/pcs:sys_warn", "outValue": "(TAMH) Mod. Amb Temperature HW - The temperature of the module's electronic board has overcome 85 degrees C"},
+                        {"shift": 0, "mask": 65535, "inValue": 97, "uri": "/alarms/pcs:sys_warn", "outValue": "(IDCD) Mod. Idc derivation"},
+                        {"shift": 0, "mask": 65535, "inValue": 98, "uri": "/alarms/pcs:sys_warn", "outValue": "(IACD) Mod. Iac derivation"},
+                        {"shift": 0, "mask": 65535, "inValue": 100, "uri": "/alarms/pcs:sys_warn", "outValue": "(DCOMS_W) Display comms - Communications between display and control board lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 101, "uri": "/alarms/pcs:sys_warn", "outValue": "(DCF) Mod. DC Fuse - Module DC voltage measure is below the average value of all modules"},
+                        {"shift": 0, "mask": 65535, "inValue": 102, "uri": "/alarms/pcs:sys_warn", "outValue": "(UC) Unbalance current - A module output current unbalance greater than 30A has been detected for 5s"},
+                        {"shift": 0, "mask": 65535, "inValue": 103, "uri": "/alarms/pcs:sys_warn", "outValue": "(TIGBT_W) IGBTs temperature - The temperature of one or more IFBTs has overcome the maximum threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 104, "uri": "/alarms/pcs:sys_warn", "outValue": "(TAMB_W) Ambient temperature - Ambient temperature is over the maximum threshol"},
+                        {"shift": 0, "mask": 65535, "inValue": 105, "uri": "/alarms/pcs:sys_warn", "outValue": "(PWUNB_W) Pac/Pdc unbalanced - Unbalance between Pac and Pdc values. They differ a percentage defined (30% by default)"},
+                        {"shift": 0, "mask": 65535, "inValue": 106, "uri": "/alarms/pcs:sys_warn", "outValue": "(BUSUN_W) Vbus unbalanced - Unbalance between the high side and low side of DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 107, "uri": "/alarms/pcs:sys_warn", "outValue": "(NRIDC) Iac not reached - Not enough bus voltage, or the 3 AC fuses have blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 108, "uri": "/alarms/pcs:sys_warn", "outValue": "(HBMX_W) Half bus Vmax"},
+                        {"shift": 0, "mask": 65535, "inValue": 109, "uri": "/alarms/pcs:sys_warn", "outValue": "(LMVDC_W) Low module Vdc - Start command has been received but bus voltage is insufficient to start and maintain operation"},
+                        {"shift": 0, "mask": 65535, "inValue": 110, "uri": "/alarms/pcs:sys_warn", "outValue": "(BACF_W) Blown AC fuse - All AC fuses have blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 111, "uri": "/alarms/pcs:sys_warn", "outValue": "(RSV_W) Reserved warning"},
+                        {"shift": 0, "mask": 65535, "inValue": 112, "uri": "/alarms/pcs:sys_warn", "outValue": "(OCACE_W) OCAC emergency - Overcurrent has been detected in communication between module-x and central control"},
+                        {"shift": 0, "mask": 65535, "inValue": 113, "uri": "/alarms/pcs:sys_warn", "outValue": "(CCHK_W) Comms checksum - Communication error between module-x and central control"},
+                        {"shift": 0, "mask": 65535, "inValue": 114, "uri": "/alarms/pcs:sys_warn", "outValue": "(MDFN_W) Mod. fans - Feedback has not been received from the module fan"},
+                        {"shift": 0, "mask": 65535, "inValue": 115, "uri": "/alarms/pcs:sys_warn", "outValue": "(MDSN_W) Mod. sensor - One, or more, of the three current sensors of the module are not measuring properly, there is an offset error"},
+                        {"shift": 0, "mask": 65535, "inValue": 116, "uri": "/alarms/pcs:sys_warn", "outValue": "(MDSC_W) Mod. disabled DC - Disabled by DSP due to software or module has failed too many times"},
+                        {"shift": 0, "mask": 65535, "inValue": 117, "uri": "/alarms/pcs:sys_warn", "outValue": "(CMTHR_W) Mod. common thermal - Inductance in a module has overheated"},
+                        {"shift": 0, "mask": 65535, "inValue": 118, "uri": "/alarms/pcs:sys_warn", "outValue": "(CNBFPS) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 119, "uri": "/alarms/pcs:sys_warn", "outValue": "(BFBFPS) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 120, "uri": "/alarms/pcs:sys_warn", "outValue": "(BFPSCM) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 130, "uri": "/alarms/pcs:sys_warn", "outValue": "(ISODCCM) DC insulation monitor comms - Communication with the DC insulation monitor cannot be established"},
+                        {"shift": 0, "mask": 65535, "inValue": 131, "uri": "/alarms/pcs:sys_warn", "outValue": "(INSDC) Insulation DC - DC insulation monitor detected an insulation resistance below the threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 132, "uri": "/alarms/pcs:sys_warn", "outValue": "(IRTHDC) Insulation resistor high DC - DC insulation monitor has detected a higher insulation resistance than the admissible"},
+                        {"shift": 0, "mask": 65535, "inValue": 135, "uri": "/alarms/pcs:sys_warn", "outValue": "(ISOACCM) AC insulation monitor comms - Communication with the AC insulation monitor cannot be established"},
+                        {"shift": 0, "mask": 65535, "inValue": 136, "uri": "/alarms/pcs:sys_warn", "outValue": "(INSAC) Insulation AC - AC insulation monitor has detected an insulation resistance below the threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 137, "uri": "/alarms/pcs:sys_warn", "outValue": "(IRTHAC) Insulation resistor high AC - AC insulation monitor has detected a higher insulation resistance than the admissible"},
+                        {"shift": 0, "mask": 65535, "inValue": 140, "uri": "/alarms/pcs:impulsion_fan", "outValue": "(FNIMCM_W) Impulsion fans comms - Communication with the impulsion fans (cyclone) cannot be established"},
+                        {"shift": 0, "mask": 65535, "inValue": 141, "uri": "/alarms/pcs:sys_warn", "outValue": "(FNIMER_W) Impulsion fans - The impulsion fan (cyclone) has reported an error"},
+                        {"shift": 0, "mask": 65535, "inValue": 142, "uri": "/alarms/pcs:sys_warn", "outValue": "(FNXCER_W) Extract fans control - Feedback from extraction fans in the low voltage side has not been received"},
+                        {"shift": 0, "mask": 65535, "inValue": 143, "uri": "/alarms/pcs:sys_warn", "outValue": "(FNXMER_W) Extract fans MV - Feedback from extraction fans in the medium voltage side has not been received"},
+                        {"shift": 0, "mask": 65535, "inValue": 147, "uri": "/alarms/pcs:sys_warn", "outValue": "(BBON) Blackbox on"},
+                        {"shift": 0, "mask": 65535, "inValue": 148, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUFB1) DU FB1 error. DC Circuit breaker (Q8) failure"},
+                        {"shift": 0, "mask": 65535, "inValue": 149, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUFB2) DU FB2 error. DC Circuit breaker (Q9) failure"},
+                        {"shift": 0, "mask": 65535, "inValue": 300, "uri": "/alarms/pcs:sys_warn", "outValue": "(ACTBAL) Active Balance"},
+                        {"shift": 0, "mask": 65535, "inValue": 350, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSA) Battery Manage System is stopped because a BMS alarm is active. Check the BMS active alarms to restart"},
+                        {"shift": 0, "mask": 65535, "inValue": 351, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSIA) There is imbalance inside the BMS, some strings are disconnected witin one bank. Power reduction is applied"},
+                        {"shift": 0, "mask": 65535, "inValue": 352, "uri": "/alarms/pcs:sys_warn", "outValue": "(SNTPF) Synchronization of NTP server has failed"},
+                        {"shift": 0, "mask": 65535, "inValue": 353, "uri": "/alarms/pcs:sys_warn", "outValue": "(EMBD) Battery bank is disabled by MPCSK (IGBTs are stopped and DC breaker is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 354, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSCL) MPCSK has lost communication with BMS. Heartbeat time has been exceeded"},
+                        {"shift": 0, "mask": 65535, "inValue": 355, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSFE) Fuse Sensor Error BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 356, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSVSD) Voltage Sensor Error BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 357, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSFSC) Current Sensor Error BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 358, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSFF) Fan fault BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 359, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSSS) System Stop BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 360, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSSD) BMS Status Discordance"},
+                        {"shift": 0, "mask": 65535, "inValue": 361, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSWC) BMS Wrong Configuration"},
+                        {"shift": 0, "mask": 65535, "inValue": 369, "uri": "/alarms/pcs:sys_warn", "outValue": "(HVACNOP_W) HVAC Not Operative"},
+                        {"shift": 0, "mask": 65535, "inValue": 370, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCDORCN) ENC Door Contact - container battery enclosure is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 371, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCALARTR) ENC Alarm/Trouble"},
+                        {"shift": 0, "mask": 65535, "inValue": 372, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCDCDIS) ENC DC Disconnect - One of the container DC switch disconnectors is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 373, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCHHUM) ENC High Humidity"},
+                        {"shift": 0, "mask": 65535, "inValue": 374, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCUPSBAT) ENC UPS Battery"},
+                        {"shift": 0, "mask": 65535, "inValue": 390, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRTEMP_W) Transformerr over oil temperature detected"},
+                        {"shift": 0, "mask": 65535, "inValue": 391, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRPRESU_W) Transformer over pressure detected"},
+                        {"shift": 0, "mask": 65535, "inValue": 392, "uri": "/alarms/pcs:sys_warn", "outValue": "(TROIL_W) Transformer oil low level detected"},
+
+                        {"shift": 0, "mask": 65535, "inValue": 16, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+						{"shift": 0, "mask": 65535, "inValue": 90, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+						{"shift": 0, "mask": 65535, "inValue": 96, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+						{"shift": 0, "mask": 65535, "inValue": 103, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+                        {"shift": 0, "mask": 65535, "inValue": 104, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+                        {"shift": 0, "mask": 65535, "inValue": 390, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+                        {"shift": 0, "mask": 65535, "inValue": 101, "uri": "/site/ess_ls:pcs1_alarms[20]", "outValue": true, "note": "Bit 20 - DC fuse abnormal"},
+                        {"shift": 0, "mask": 65535, "inValue": 372, "uri": "/site/ess_ls:pcs1_alarms[28]", "outValue": true, "note": "Bit 28 - DC switch abnormal"}
+                    ]
+                }]
+            }
+        },
+        "current_fault": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 65535, "inValue": 0, "uri": "/faults/pcs:sys_fault", "outValue": "(NOFLTS) No faults"},
+                        {"shift": 0, "mask": 65535, "inValue": 1, "uri": "/faults/pcs:sys_fault", "outValue": "(WD) Watchdog - Fault in DSP has occurred"},
+                        {"shift": 0, "mask": 65535, "inValue": 2, "uri": "/faults/pcs:sys_fault", "outValue": "(HWVBS) HW Vbus - DC overvoltage detected. Threshold: 1520 Vdc"},
+                        {"shift": 0, "mask": 65535, "inValue": 3, "uri": "/faults/pcs:sys_fault", "outValue": "(SFTCHR) Softcharge - Wrong configuration (central AC without DU) OR Timeout, one of soft charge processes did not end successfully"},
+                        {"shift": 0, "mask": 65535, "inValue": 4, "uri": "/faults/pcs:sys_fault", "outValue": "(DISCHR) Discharge - Timeout, one of the modules has not discharged correctly (< 50 Vdc)"},
+                        {"shift": 0, "mask": 65535, "inValue": 5, "uri": "/faults/pcs:sys_fault", "outValue": "(HGHVAC) High Vac - High AC voltage fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 6, "uri": "/faults/pcs:sys_fault", "outValue": "(LWVAC) Low Vac - Low AC voltage fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 7, "uri": "/faults/pcs:sys_fault", "outValue": "(HGHFRE) High frequency fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 8, "uri": "/faults/pcs:sys_fault", "outValue": "(LWFRE) Low frequency fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 9, "uri": "/faults/pcs:sys_fault", "outValue": "(FPGACMS) FPGA comms - 2 frames to the central FPGA are wrong"},
+                        {"shift": 0, "mask": 65535, "inValue": 10, "uri": "/faults/pcs:sys_fault", "outValue": "(MSTFPGA) Master FPGA - Central FPGA has not been configured correctly. Check that the 3 joined leds are turned on"},
+                        {"shift": 0, "mask": 65535, "inValue": 11, "uri": "/faults/pcs:sys_fault", "outValue": "(ACANTISL) Active anti-island - Fault produced by a variation in the measured frequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 13, "uri": "/faults/pcs:sys_fault", "outValue": "(NOMOD) No modules enabled in the enabled busbars"},
+                        {"shift": 0, "mask": 65535, "inValue": 14, "uri": "/faults/pcs:sys_fault", "outValue": "(DRVSLT_1) Drive select - Wrong drive select configuration"},
+                        {"shift": 0, "mask": 65535, "inValue": 15, "uri": "/faults/pcs:sys_fault", "outValue": "(SYNC) Synchronization - Wrong equipment configuration"},
+                        {"shift": 0, "mask": 65535, "inValue": 16, "uri": "/faults/pcs:sys_fault", "outValue": "(DCMSW) DC miswired - There is a problem with the DC measurement from central control. It occurs when the bus voltage < 100V during 30s"},
+                        {"shift": 0, "mask": 65535, "inValue": 17, "uri": "/faults/pcs:sys_fault", "outValue": "(DUFB) DU feedback - The DU is not closing when required"},
+                        {"shift": 0, "mask": 65535, "inValue": 18, "uri": "/faults/pcs:sys_fault", "outValue": "(ACSCFB) ACSC feedback - Feedback from the soft charge contactor does not match the order during 5s"},
+                        {"shift": 0, "mask": 65535, "inValue": 19, "uri": "/faults/pcs:sys_fault", "outValue": "(ACSCNV) ACSC no voltage - The central soft charge contactor is closed, but buses are not changing at the expected rate (50% of the target value in 4s)"},
+                        {"shift": 0, "mask": 65535, "inValue": 20, "uri": "/faults/pcs:sys_fault", "outValue": "(MODFLT) Module fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 21, "uri": "/faults/pcs:sys_fault", "outValue": "(DUSTCK) DU stuck - Voltage during soft charge process is anomalous when the DU is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 22, "uri": "/faults/pcs:sys_fault", "outValue": "(MVF) Medium V fuse - A medium voltage fuse has been blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 23, "uri": "/faults/pcs:sys_fault", "outValue": "(UNBVAC) Unbalanced Vac - Abnormal AC unbalanced voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 24, "uri": "/faults/pcs:sys_fault", "outValue": "(HVDC_F) High Vdc - Overvoltage in the DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 25, "uri": "/faults/pcs:sys_fault", "outValue": "(LVDC_F) Low Vdc - Voltage is too low"},
+                        {"shift": 0, "mask": 65535, "inValue": 27, "uri": "/faults/pcs:sys_fault", "outValue": "(MSF) Modules start fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 28, "uri": "/faults/pcs:sys_fault", "outValue": "(PSANTISL) Passive anti-island - Fault produced when the frequency changes abruptly in a certain time"},
+                        {"shift": 0, "mask": 65535, "inValue": 29, "uri": "/faults/pcs:sys_fault", "outValue": "(HWIDCDIF) HW Idc Dif - A current derivation has been detected on the panels side"},
+                        {"shift": 0, "mask": 65535, "inValue": 30, "uri": "/faults/pcs:sys_fault", "outValue": "(MVCMS) MV comms - Failure in communication with the medium voltage measure board"},
+                        {"shift": 0, "mask": 65535, "inValue": 31, "uri": "/faults/pcs:sys_fault", "outValue": "(DIAGTIM) Selfdiagnosis Fault - Triggered while performing auto diagnosis process, e.g.: there is no DU or the bus loading time is excessive"},
+                        {"shift": 0, "mask": 65535, "inValue": 32, "uri": "/faults/pcs:sys_fault", "outValue": "(ERMDDIAG) Error Mod Selfdiagnosis - Triggered while performing auto diagnosis process after the equipment has stopped due to special protection"},
+                        {"shift": 0, "mask": 65535, "inValue": 33, "uri": "/faults/pcs:sys_fault", "outValue": "(UNREC) Unable Reconnect - Inverter could not restart after the last grid event"},
+                        {"shift": 0, "mask": 65535, "inValue": 34, "uri": "/faults/pcs:sys_fault", "outValue": "(HOMDIFLV) Hom Diff LV - A zero-sequence current (earth leakage) has been detected on the low voltage side of the transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 35, "uri": "/faults/pcs:sys_fault", "outValue": "(MVPRE) MV Premag - There was a problem during MV transformer premagnetization"},
+                        {"shift": 0, "mask": 65535, "inValue": 36, "uri": "/faults/pcs:sys_fault", "outValue": "(OVOLIRLV) Ovc Inrush LV - One of the current thresholds (overload, overcurrent, or inrush) has been overcome in the low voltage side of the transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 37, "uri": "/faults/pcs:sys_fault", "outValue": "(OVOLIRMV) Ovc Inrush MV - One of the current thresholds (overload, overcurrent, or inrush) has been overcome in the medium voltage side of the transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 38, "uri": "/faults/pcs:sys_fault", "outValue": "(CUROFFLV) CurrentOff LV - A current measure has been detected in the low voltage side of the transformer while equipment is not running"},
+                        {"shift": 0, "mask": 65535, "inValue": 39, "uri": "/faults/pcs:sys_fault", "outValue": "(CURROFFMV) CurrentOff MV - A current measure has been detected in the medium voltage side of the transformer while the equipment is not running"},
+                        {"shift": 0, "mask": 65535, "inValue": 40, "uri": "/faults/pcs:sys_fault", "outValue": "(OVTMPACM) AC mod overtemperature"},
+                        {"shift": 0, "mask": 65535, "inValue": 41, "uri": "/faults/pcs:sys_fault", "outValue": "(GFDI) GFDI fault - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 42, "uri": "/faults/pcs:sys_fault", "outValue": "(DCCNTLCK) DC contactor locked"},
+                        {"shift": 0, "mask": 65535, "inValue": 43, "uri": "/faults/pcs:sys_fault", "outValue": "(EMRGSTP) Emergency stop - Stop pushbutton (at the main control cabinet door) has been pushed, or the DC disconnect switch is set to OFF"},
+                        {"shift": 0, "mask": 65535, "inValue": 44, "uri": "/faults/pcs:sys_fault", "outValue": "(DRVSLT_2) Drive select - Drive select parameters out of range"},
+                        {"shift": 0, "mask": 65535, "inValue": 45, "uri": "/faults/pcs:sys_fault", "outValue": "(INSL) Insulation - Isolation monitor measures an impedance value lower than the one configured"},
+                        {"shift": 0, "mask": 65535, "inValue": 46, "uri": "/faults/pcs:sys_fault", "outValue": "(DTFLT) Data fault - Out-of-range parameters detected"},
+                        {"shift": 0, "mask": 65535, "inValue": 47, "uri": "/faults/pcs:sys_fault", "outValue": "(WTCHDG) Watchdog uP - Fault in microcontroller"},
+                        {"shift": 0, "mask": 65535, "inValue": 48, "uri": "/faults/pcs:sys_fault", "outValue": "(INTCMS) Internal comms"},
+                        {"shift": 0, "mask": 65535, "inValue": 49, "uri": "/faults/pcs:sys_fault", "outValue": "(IMISLFT) IMI autotest - Periodic insulation monitoring devices auto test has finished with errors"},
+                        {"shift": 0, "mask": 65535, "inValue": 50, "uri": "/faults/pcs:sys_fault", "outValue": "(NODUCNL) No DU channels - All DU channels have been isolated, and it is not possible to establish a connection with the plant"},
+                        {"shift": 0, "mask": 65535, "inValue": 51, "uri": "/faults/pcs:sys_fault", "outValue": "(PPCC) PPC comms - PPC and inverter communication problem"},
+                        {"shift": 0, "mask": 65535, "inValue": 52, "uri": "/faults/pcs:sys_fault", "outValue": "(SCDUFB) Softcharge DU feedback - Softcharge timeout has expired and no feedback was received (DU softcharge contactors ordered to close, but did not)"},
+                        {"shift": 0, "mask": 65535, "inValue": 53, "uri": "/faults/pcs:sys_fault", "outValue": "(EARTHL) GFDI current leak - GFDI current has exceeded the threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 54, "uri": "/faults/pcs:sys_fault", "outValue": "(DUCNOV) DU channel overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 55, "uri": "/faults/pcs:sys_fault", "outValue": "(EXT_OVGR) External fault/OVFR - Problem with external protections associated with DI6. External OVGR relay has tripped"},
+                        {"shift": 0, "mask": 65535, "inValue": 56, "uri": "/faults/pcs:sys_fault", "outValue": "(REMRSTP) Remote emergenency stop"},
+                        {"shift": 0, "mask": 65535, "inValue": 57, "uri": "/faults/pcs:sys_fault", "outValue": "(DUMWR) DU channel miswired - Command to close DU has been received, but one or more channels are measuring negative voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 58, "uri": "/faults/pcs:sys_fault", "outValue": "(SWCMM) Control SW mismatch - Microcontroller and DSP software versions not compatible"},
+                        {"shift": 0, "mask": 65535, "inValue": 59, "uri": "/faults/pcs:sys_fault", "outValue": "(MODSWI) Module SW mismatch - Not all modules have the same software version"},
+                        {"shift": 0, "mask": 65535, "inValue": 60, "uri": "/faults/pcs:sys_fault", "outValue": "(MODHWI) Module HW mismatch - Not all modules have the same electronic board revision"},
+                        {"shift": 0, "mask": 65535, "inValue": 61, "uri": "/faults/pcs:sys_fault", "outValue": "(DUSD) DU smoke detector - DU smoke detector activated"},
+                        {"shift": 0, "mask": 65535, "inValue": 62, "uri": "/faults/pcs:sys_fault", "outValue": "(DUCOM_F) DU comms - Communication between DU and central control lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 63, "uri": "/faults/pcs:sys_fault", "outValue": "(GRNDCN) Ground connection - Ground contactor closed, but the insulator detector detects that pole is isolated"},
+                        {"shift": 0, "mask": 65535, "inValue": 64, "uri": "/faults/pcs:sys_fault", "outValue": "(INVMAC) Invalid MAC address"},
+                        {"shift": 0, "mask": 65535, "inValue": 65, "uri": "/faults/pcs:sys_fault", "outValue": "(ACOVCRR) Mod. AC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 66, "uri": "/faults/pcs:sys_fault", "outValue": "(UNBVDC) Unbal DC bus - Unbalance between high side and low side of DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 67, "uri": "/faults/pcs:sys_fault", "outValue": "(DCOVCRR) Mod. DC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 69, "uri": "/faults/pcs:sys_fault", "outValue": "(DCOVVP) Mod. DC overvoltage (P) - Overvoltage present in DC positive side"},
+                        {"shift": 0, "mask": 65535, "inValue": 70, "uri": "/faults/pcs:sys_fault", "outValue": "(DCOVVN) Mod. DC overvoltage (N) - Overvoltage present in DC negative side"},
+                        {"shift": 0, "mask": 65535, "inValue": 71, "uri": "/faults/pcs:sys_fault", "outValue": "(DESR1) Desat R1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 72, "uri": "/faults/pcs:sys_fault", "outValue": "(DESR2P) Desat R2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 73, "uri": "/faults/pcs:sys_fault", "outValue": "(DESR2N) Desat R2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 74, "uri": "/faults/pcs:sys_fault", "outValue": "(DESR3) Desat R3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 75, "uri": "/faults/pcs:sys_fault", "outValue": "(DESS1) Desat S1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 76, "uri": "/faults/pcs:sys_fault", "outValue": "(DESS2P) Desat S2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 77, "uri": "/faults/pcs:sys_fault", "outValue": "(DESS2N) Desat S2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 78, "uri": "/faults/pcs:sys_fault", "outValue": "(DESS3) Desat S3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 79, "uri": "/faults/pcs:sys_fault", "outValue": "(DEST1) Desat T1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 80, "uri": "/faults/pcs:sys_fault", "outValue": "(DEST2P) Desat T2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 81, "uri": "/faults/pcs:sys_fault", "outValue": "(DEST2N) Desat T2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 82, "uri": "/faults/pcs:sys_fault", "outValue": "(DEST3) Desat T3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 83, "uri": "/faults/pcs:sys_fault", "outValue": "(DESMLT) Multiple unlock - Desaturation in more than one IGBT controller at the same time. Could indicate power failure in module control card"},
+                        {"shift": 0, "mask": 65535, "inValue": 84, "uri": "/faults/pcs:sys_fault", "outValue": "(COMMS_F) Mod. Comms - Communication between central FPGA and module FPGA, or between module FPGA and DSP, is lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 86, "uri": "/faults/pcs:sys_fault", "outValue": "(DCCNT) Mod. DC contactor - DC contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 87, "uri": "/faults/pcs:sys_fault", "outValue": "(ACSCC) Mod. ACSC contactor - Module AC soft charge contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 88, "uri": "/faults/pcs:sys_fault", "outValue": "(ACCNT) Mod. AC contactor - Command to activate the AC contactors of the modules was sent, but did not close in 1s"},
+                        {"shift": 0, "mask": 65535, "inValue": 89, "uri": "/faults/pcs:sys_fault", "outValue": "(LCLFB) Mod. LCL contactor feedback - LCL contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 90, "uri": "/faults/pcs:sys_fault", "outValue": "(TIGHW) Mod. IGBTs Temperature HW - The temperature of any IGBT overcomes 127 degrees, or IGBT temperature sensor is disconnected"},
+                        {"shift": 0, "mask": 65535, "inValue": 91, "uri": "/faults/pcs:sys_fault", "outValue": "(GUNBDC) Mod. Great unbal DC - DC bus unbalanced more than 500V"},
+                        {"shift": 0, "mask": 65535, "inValue": 92, "uri": "/faults/pcs:sys_fault", "outValue": "(DISFLT) Mod. Discharge fault - Module FPGA attempts to discharge the module bus and voltage did not drop below 50V in 40s"},
+                        {"shift": 0, "mask": 65535, "inValue": 93, "uri": "/faults/pcs:sys_fault", "outValue": "(THLCL) Mod. Thermal LCL - Termal LCL contactor of a module inductance has been opened"},
+                        {"shift": 0, "mask": 65535, "inValue": 95, "uri": "/faults/pcs:sys_fault", "outValue": "(PW15V) Mod Power 15V - Internal power supply of the board does not provide the adequate voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 96, "uri": "/faults/pcs:sys_fault", "outValue": "(TAMHW) Mod. Amb Temperature HW - The temperature of the module's electronic board has overcome 85 degrees C"},
+                        {"shift": 0, "mask": 65535, "inValue": 98, "uri": "/faults/pcs:sys_fault", "outValue": "(MIDCD) Mod. Idc derivation"},
+                        {"shift": 0, "mask": 65535, "inValue": 99, "uri": "/faults/pcs:sys_fault", "outValue": "(MIACD) Mod. Iac derivation"},
+                        {"shift": 0, "mask": 65535, "inValue": 100, "uri": "/faults/pcs:sys_fault", "outValue": "(DCOMS_F) Display comms - Communications between display and control board lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 101, "uri": "/faults/pcs:sys_fault", "outValue": "(DCFS) Mod. DC Fuse - Module DC voltage measure is below the average value of all modules"},
+                        {"shift": 0, "mask": 65535, "inValue": 102, "uri": "/faults/pcs:sys_fault", "outValue": "(IUNB) Unbalance current - A module output current unbalance greater than 30A has been detected for 5s"},
+                        {"shift": 0, "mask": 65535, "inValue": 103, "uri": "/faults/pcs:sys_fault", "outValue": "(TIGBT_F) IGBTs temperature - The temperature of one or more IFBTs has overcome the maximum threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 104, "uri": "/faults/pcs:sys_fault", "outValue": "(TAMB_F) Ambient temperature - Ambient temperature is over the maximum threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 105, "uri": "/faults/pcs:sys_fault", "outValue": "(PWUNB_F) Pac/Pdc unbalanced - Unbalance between Pac and Pdc values. They differ a percentage defined (30% by default)"},
+                        {"shift": 0, "mask": 65535, "inValue": 106, "uri": "/faults/pcs:sys_fault", "outValue": "(BUSUN_F) Vbus unbalanced - Unbalance between the high side and low side of DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 107, "uri": "/faults/pcs:sys_fault", "outValue": "(NRIAC) Iac not reached - Not enough bus voltage, or the 3 AC fuses have blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 108, "uri": "/faults/pcs:sys_fault", "outValue": "(HBMX_F) Half bus Vmax"},
+                        {"shift": 0, "mask": 65535, "inValue": 109, "uri": "/faults/pcs:sys_fault", "outValue": "(LMVDC_F) Low module Vdc - Start command has been receivedm but bus voltage is insufficient to start and maintain operation"},
+                        {"shift": 0, "mask": 65535, "inValue": 110, "uri": "/faults/pcs:sys_fault", "outValue": "(BACF_F) Blown AC fuse - All AC fuses have blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 111, "uri": "/faults/pcs:sys_fault", "outValue": "(RSV_F) Reserved fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 112, "uri": "/faults/pcs:sys_fault", "outValue": "(OCACE_F) OCAC emergency - Overcurrent has been detected in communication between module-x and central control"},
+                        {"shift": 0, "mask": 65535, "inValue": 113, "uri": "/faults/pcs:sys_fault", "outValue": "(CCHK_F) Comms checksum - Communication error between module-x and central control"},
+                        {"shift": 0, "mask": 65535, "inValue": 114, "uri": "/faults/pcs:sys_fault", "outValue": "(MDFN_F) Mod. fans - Feedback has not been received from the module fan"},
+                        {"shift": 0, "mask": 65535, "inValue": 115, "uri": "/faults/pcs:sys_fault", "outValue": "(MDSN_F) Mod. sensor - One, or more, of the three current sensors of the module are not measuring properly, there is an offset error"},
+                        {"shift": 0, "mask": 65535, "inValue": 116, "uri": "/faults/pcs:sys_fault", "outValue": "(MDSC_F) Mod. disabled DC - Disabled by DSP due to software or module has failed too many times"},
+                        {"shift": 0, "mask": 65535, "inValue": 117, "uri": "/faults/pcs:sys_fault", "outValue": "(CMTHR) Mod. common thermal - Inductance in a module has overheated"},
+                        {"shift": 0, "mask": 65535, "inValue": 140, "uri": "/faults/pcs:sys_fault", "outValue": "(INDTHR) Inductance thermal - Feedback not received from the LCL filter inductance thermal"},
+                        {"shift": 0, "mask": 65535, "inValue": 141, "uri": "/faults/pcs:sys_fault", "outValue": "(MVTT) MV transformer temperature - Temperature in medium voltage transformer (PT100 readings) too high"},
+                        {"shift": 0, "mask": 65535, "inValue": 142, "uri": "/faults/pcs:sys_fault", "outValue": "(AFLV) Air flow LV - Air flow temperature in the low voltage side is too high"},
+                        {"shift": 0, "mask": 65535, "inValue": 143, "uri": "/faults/pcs:sys_fault", "outValue": "(AFMV) Air flow MV - Air flow temperature in the medium voltage side is too high"},
+                        {"shift": 0, "mask": 65535, "inValue": 144, "uri": "/faults/pcs:sys_fault", "outValue": "(FNIMER_F) Impulsion fans - One of the impulsion fans (cyclone) has reported an error"},
+                        {"shift": 0, "mask": 65535, "inValue": 145, "uri": "/faults/pcs:sys_fault", "outValue": "(FNXCER_F) Extract fans control - Feedback from low voltage extraction fans not received"},
+                        {"shift": 0, "mask": 65535, "inValue": 146, "uri": "/faults/pcs:sys_fault", "outValue": "(FNXMER_F) Extract fans MV - Feedback from medium voltage extraction fans not received"},
+                        {"shift": 0, "mask": 65535, "inValue": 147, "uri": "/faults/pcs:sys_fault", "outValue": "(FNIMCM_F) Impulsion comms - Communication with impulsion fans (cyclone) cannot be established"},
+                        {"shift": 0, "mask": 65535, "inValue": 148, "uri": "/faults/pcs:sys_fault", "outValue": "(MVTTC) MV critical temperature trans - The temperature threshold of medium voltage transformer has been overcome"},
+                        {"shift": 0, "mask": 65535, "inValue": 150, "uri": "/faults/pcs:sys_fault", "outValue": "(CPMVO) MV cell protection open - Protection contractor of medium voltage cell is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 151, "uri": "/faults/pcs:sys_fault", "outValue": "(SDMV) Smoke detector MV - Medium voltage smoke detector activated"},
+                        {"shift": 0, "mask": 65535, "inValue": 155, "uri": "/faults/pcs:sys_fault", "outValue": "(PRDID) Product ID invalid"},
+                        {"shift": 0, "mask": 65535, "inValue": 181, "uri": "/faults/pcs:sys_fault", "outValue": "(HOMDIFMV) Hom Diff MV - A zero-sequence current (earth leakage) has been detected on medium voltage side of the transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 182, "uri": "/faults/pcs:sys_fault", "outValue": "(CRBALVMV) Curr Bal LVMV - A current unbalance has been detected between low and medium voltage sides (measures do not match"},
+                        {"shift": 0, "mask": 65535, "inValue": 183, "uri": "/faults/pcs:sys_fault", "outValue": "(NEGPWLV) Neg Pow LV - Active power in the low voltage side of the transformer has overcome the threshold set during the time adjusted"},
+                        {"shift": 0, "mask": 65535, "inValue": 184, "uri": "/faults/pcs:sys_fault", "outValue": "(NEGPWMV) Neg Pow MV"},
+                        {"shift": 0, "mask": 65535, "inValue": 185, "uri": "/faults/pcs:sys_fault", "outValue": "(CRUNBALV) Cur Unbl LV - Unbalance threshold between phases in low voltage side has been overcome. Grid event occurs, voltage unbalance causes current unbalance"},
+                        {"shift": 0, "mask": 65535, "inValue": 186, "uri": "/faults/pcs:sys_fault", "outValue": "(CRUNBAMV) Cur Unbl MV - Unbalance threshold between phases in medium voltage side has been overcome. Grid event occurs, voltage unbalance causes current unbalance"},
+                        {"shift": 0, "mask": 65535, "inValue": 187, "uri": "/faults/pcs:sys_fault", "outValue": "(CRBLDSPMD) Cur Bal DSPMD - Current measurement made by central control does not match sum of measurements of all modules"},
+                        {"shift": 0, "mask": 65535, "inValue": 188, "uri": "/faults/pcs:sys_fault", "outValue": "(PWBALLVMV) Pow Bal LVMV"},
+                        {"shift": 0, "mask": 65535, "inValue": 189, "uri": "/faults/pcs:sys_fault", "outValue": "(THDIMV) THDi MV - The threshold of harmonic distortion (THDi) has been overcome during the timeout set internally"},
+                        {"shift": 0, "mask": 65535, "inValue": 190, "uri": "/faults/pcs:sys_fault", "outValue": "(CPVF) Comb prot Volt Frq - One of the protection thresholds has been overcome"},
+                        {"shift": 0, "mask": 65535, "inValue": 191, "uri": "/faults/pcs:sys_fault", "outValue": "(CLBV) Crit Low Vdc Batt - Voltage in any of the buses is too low and DU is closed"},
+                        {"shift": 0, "mask": 65535, "inValue": 300, "uri": "/faults/pcs:sys_fault", "outValue": "(IEMB) Unbalance Bank - Difference between each input busbar voltage is higher than expected"},
+                        {"shift": 0, "mask": 65535, "inValue": 350, "uri": "/faults/pcs:sys_fault", "outValue": "(NOBNK) No Banks Enabled - No battery banks have been enabled. There is a mistake in the setting, or there is a fault in all the banks"},
+                        {"shift": 0, "mask": 65535, "inValue": 368, "uri": "/faults/pcs:sys_fault", "outValue": "(HVACCOMMS) Timeout communication fault with the HVAC control unit"},
+                        {"shift": 0, "mask": 65535, "inValue": 369, "uri": "/faults/pcs:sys_fault", "outValue": "(HVACNOP_F) Two or more HVAC units are not operational, and the battery container cooling is not guranteed"},
+                        {"shift": 0, "mask": 65535, "inValue": 370, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCCOMMS) Enclosure Comms - TCP Modbus communication timeout failure with the device"},
+                        {"shift": 0, "mask": 65535, "inValue": 371, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCTEMPH) Temperature in some of the enclosure sensors or the average temperature higher than expected"},
+                        {"shift": 0, "mask": 65535, "inValue": 372, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCDIG) Enclosure Digital - Emergency stop press-button on battery enclosure has been pushed"},
+                        {"shift": 0, "mask": 65535, "inValue": 373, "uri": "/faults/pcs:sys_fault", "outValue": "(ENC24VDC) Enclosure 24VDC - Voltage is out of range or the UPS is offline. 24V voltage is out of range when it is out of 3% (21-29V)"},
+                        {"shift": 0, "mask": 65535, "inValue": 374, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCPREDIS) Enclosure system is in gas pre-discharge mode"},
+                        {"shift": 0, "mask": 65535, "inValue": 375, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCAGREL) Enclosure Agent Release - System has acted"},
+                        {"shift": 0, "mask": 65535, "inValue": 376, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCTEMPL) Enclosure Temp Low - Average temperature in the enclosure is lower than expected"},
+                        {"shift": 0, "mask": 65535, "inValue": 390, "uri": "/faults/pcs:sys_fault", "outValue": "(TRCOMMS) Communication timeout failure with medium voltage transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 391, "uri": "/faults/pcs:sys_fault", "outValue": "(TRTEMP_F) Transformer over oil temperature alarm has been activated"},
+                        {"shift": 0, "mask": 65535, "inValue": 392, "uri": "/faults/pcs:sys_fault", "outValue": "(TRPRESU_F) Transformer over pressure alarm has been activated"},
+                        {"shift": 0, "mask": 65535, "inValue": 393, "uri": "/faults/pcs:sys_fault", "outValue": "(TROIL_F) Transformer oil low level alarm has been activated"},
+
+                        {"shift": 0, "mask": 65535, "inValue": 45, "uri": "/site/ess_ls:pcs1_faults1[0]", "outValue": true, "note": "Bit 0 - Insulation Resistance"},
+                        {"shift": 0, "mask": 65535, "inValue": 1, "uri": "/site/ess_ls:pcs1_faults1[5]", "outValue": true, "note": "Bit 5 - LCD_DSP fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 58, "uri": "/site/ess_ls:pcs1_faults1[5]", "outValue": true, "note": "Bit 5 - LCD_DSP fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 116, "uri": "/site/ess_ls:pcs1_faults1[5]", "outValue": true, "note": "Bit 5 - LCD_DSP fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 102, "uri": "/site/ess_ls:pcs1_faults1[6]", "outValue": true, "note": "Bit 6 - AC current unbalanced"},
+                        {"shift": 0, "mask": 65535, "inValue": 182, "uri": "/site/ess_ls:pcs1_faults1[6]", "outValue": true, "note": "Bit 6 - AC current unbalanced"},
+                        {"shift": 0, "mask": 65535, "inValue": 185, "uri": "/site/ess_ls:pcs1_faults1[6]", "outValue": true, "note": "Bit 6 - AC current unbalanced"},
+                        {"shift": 0, "mask": 65535, "inValue": 186, "uri": "/site/ess_ls:pcs1_faults1[6]", "outValue": true, "note": "Bit 6 - AC current unbalanced"},
+                        {"shift": 0, "mask": 65535, "inValue": 43, "uri": "/site/ess_ls:pcs1_faults1[11]", "outValue": true, "note":"Bit 11 - DC Switch Fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 15, "uri": "/site/ess_ls:pcs1_faults1[27]", "outValue": true, "note": "Bit 27 - Carrier sync fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 25, "uri": "/site/ess_ls:pcs1_faults2[0]", "outValue": true, "note": "Bit 0 - DC undervoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 24, "uri": "/site/ess_ls:pcs1_faults2[1]", "outValue": true, "note": "Bit 1 - DC overvoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 6, "uri": "/site/ess_ls:pcs1_faults2[2]", "outValue": true, "note": "Bit 2 - AC undervoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 5, "uri": "/site/ess_ls:pcs1_faults2[3]", "outValue": true, "note": "Bit 3 - AC overvoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 7, "uri": "/site/ess_ls:pcs1_faults2[4]", "outValue": true, "note": "Bit 4 - AC underfrequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 8, "uri": "/site/ess_ls:pcs1_faults2[5]", "outValue": true, "note": "Bit 5 - AC overfrequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 88, "uri": "/site/ess_ls:pcs1_fault2[6]", "outValue": true, "note": "Bit 6 - AC contactor fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 40, "uri": "/site/ess_ls:pcs1_faults2[10]", "outValue": true, "note": "Bit 10 - Module overtemperature"},
+                        {"shift": 0, "mask": 65535, "inValue": 34, "uri": "/site/ess_ls:pcs1_faults2[13]", "outValue": true, "note": "Bit 13 - Leakage current"},
+                        {"shift": 0, "mask": 65535, "inValue": 181, "uri": "/site/ess_ls:pcs1_faults2[13]", "outValue": true, "note": "Bit 13 - Leakage current"},
+                        {"shift": 0, "mask": 65535, "inValue": 36, "uri": "/site/ess_ls:pcs1_faults2[15]", "outValue": true, "note": "Bit 15 - Overload protection"},
+                        {"shift": 0, "mask": 65535, "inValue": 37, "uri": "/site/ess_ls:pcs1_faults2[15]", "outValue": true, "note": "Bit 15 - Overload protection"},
+                        {"shift": 0, "mask": 65535, "inValue": 101, "uri": "/site/ess_ls:pcs1_faults2[17]", "outValue": true, "note": "Bit 17 - DC fuse fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 67, "uri": "/site/ess_ls:pcs1_faults2[20]", "outValue": true, "note": "Bit 20 - DC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 65, "uri": "/site/ess_ls:pcs1_faults2[21]", "outValue": true, "note": "Bit 21 - AC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 104, "uri": "/site/ess_ls:pcs1_faults2[23]", "outValue": true, "note": "Bit 23 - Ambient temperature abnormal"}
+                    ]
+                }]
+            }
+        },
+        "current_status": {
+            "value": 0,
+            "defUri":"/status/pcs:PCSStatusResp",
+            "defVal":"PUP",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 255, "inValue": 0, "uri": "/status/pcs:PCSStatusResp", "outValue": "Power up"},
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "Initialization"},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/status/pcs:PCSStatusResp", "outValue": "Off"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/status/pcs:PCSStatusResp", "outValue": "Precharge"},
+                        {"shift": 0, "mask": 255, "inValue": 4, "uri": "/status/pcs:PCSStatusResp", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 5, "uri": "/status/pcs:PCSStatusResp", "outValue": "Wait"},
+                        {"shift": 0, "mask": 255, "inValue": 6, "uri": "/status/pcs:PCSStatusResp", "outValue": "On"},
+                        {"shift": 0, "mask": 255, "inValue": 7, "uri": "/status/pcs:PCSStatusResp", "outValue": "Stop"},
+                        {"shift": 0, "mask": 255, "inValue": 8, "uri": "/status/pcs:PCSStatusResp", "outValue": "Discharge"},
+                        {"shift": 0, "mask": 255, "inValue": 9, "uri": "/status/pcs:PCSStatusResp", "outValue": "Fault"},
+                        {"shift": 0, "mask": 255, "inValue": 10, "uri": "/status/pcs:PCSStatusResp", "outValue": "LVRT"},
+                        {"shift": 0, "mask": 255, "inValue": 11, "uri": "/status/pcs:PCSStatusResp", "outValue": "OVRT"},
+                        {"shift": 0, "mask": 255, "inValue": 12, "uri": "/status/pcs:PCSStatusResp", "outValue": "Night"},
+                        {"shift": 0, "mask": 255, "inValue": 13, "uri": "/status/pcs:PCSStatusResp", "outValue": "Night DC off"},
+                        {"shift": 0, "mask": 255, "inValue": 14, "uri": "/status/pcs:PCSStatusResp", "outValue": "Standby"},
+                        {"shift": 0, "mask": 255, "inValue": 15, "uri": "/status/pcs:PCSStatusResp", "outValue": "HVPL"},
+                        {"shift": 0, "mask": 255, "inValue": 17, "uri": "/status/pcs:PCSStatusResp", "outValue": "Pre-on"},
+                        {"shift": 0, "mask": 255, "inValue": 18, "uri": "/status/pcs:PCSStatusResp", "outValue": "Self-diagnosis"},
+                        {"shift": 0, "mask": 255, "inValue": 19, "uri": "/status/pcs:PCSStatusResp", "outValue": "Filter contactors"},
+                        {"shift": 0, "mask": 255, "inValue": 20, "uri": "/status/pcs:PCSStatusResp", "outValue": "Premagnetization"},
+                        {"shift": 0, "mask": 255, "inValue": 21, "uri": "/status/pcs:PCSStatusResp", "outValue": "Bank balancing"},
+                        {"shift": 0, "mask": 255, "inValue": 22, "uri": "/status/pcs:PCSStatusResp", "outValue": "CV stand by"},
+                        {"shift": 0, "mask": 255, "inValue": 0, "uri": "/status/pcs:SystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/status/pcs:SystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/status/pcs:SystemState", "outValue": "Off"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/status/pcs:SystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 4, "uri": "/status/pcs:SystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 5, "uri": "/status/pcs:SystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 6, "uri": "/status/pcs:SystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 7, "uri": "/status/pcs:SystemState", "outValue": "Shutdown"},
+                        {"shift": 0, "mask": 255, "inValue": 8, "uri": "/status/pcs:SystemState", "outValue": "Shutdown"},
+                        {"shift": 0, "mask": 255, "inValue": 9, "uri": "/status/pcs:SystemState", "outValue": "Fault"},
+                        {"shift": 0, "mask": 255, "inValue": 10, "uri": "/status/pcs:SystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 11, "uri": "/status/pcs:SystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 12, "uri": "/status/pcs:SystemState", "outValue": "Shutdown"},
+                        {"shift": 0, "mask": 255, "inValue": 13, "uri": "/status/pcs:SystemState", "outValue": "Shutdown"},
+                        {"shift": 0, "mask": 255, "inValue": 14, "uri": "/status/pcs:SystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 15, "uri": "/status/pcs:SystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 17, "uri": "/status/pcs:SystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 18, "uri": "/status/pcs:SystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 19, "uri": "/status/pcs:SystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 20, "uri": "/status/pcs:SystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 21, "uri": "/status/pcs:SystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 22, "uri": "/status/pcs:SystemState", "outValue": "Running"}
+                    ]
+                }]
+            }
+        }
+    },
+    "/status/pcs": {
+        "note": "These are component status vars",
+        "max_cell_temp": 23.4,
+        "min_cell_temp": 23.4,
+        "max_cell_volts": 3.4,
+        "min_cell_volts": 3.2,
+        "current_soc": 85.6,
+        "current_soh": 85.7,
+        "active_current_setpont": 0.0,
+        "reactive_current_setpont": 0.0,
+        "dc_contactor_open": true,
+        "ac_contactor_open": true,
+        "number_of_racks": 18,
+        "vdc_bus_1": 800,
+        "SendClearFault": false,
+        "SystemFault": {
+            "value": false,
+            "aname": "SystemState",
+            "debug": true,
+            "actions": {
+                "onSet":[{
+                    "func": [
+                        {
+                            "debug":true,
+                            "inValue": true,
+                            "func": "LogIt",
+                            "amap": "ess"
+                        }
+                    ]
+                }]
+            }
+        },
+        "HardShutdown": false,
+        "PCSStatusResp": "Initialization",
+        "SystemState": {
+            "value": "Off",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 255, "inValue": "Off",      "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Starting", "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Ready",    "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": true},
+                        {"shift": 0, "mask": 255, "inValue": "Running",  "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": true},
+                        {"shift": 0, "mask": 255, "inValue": "Shutdown", "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Fault",    "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Off",      "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Starting", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Ready",    "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Running",  "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Shutdown", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Fault",    "uri": "/status/pcs:SystemFault", "outValue": true},
+                        {"shift": 0, "mask": 255, "inValue": "Off",      "uri": "/assets/bms/summary:stop@enabled", "outValue": true},
+                        {"shift": 0, "mask": 255, "inValue": "Starting", "uri": "/assets/bms/summary:stop@enabled", "outValue": true},
+                        {"shift": 0, "mask": 255, "inValue": "Ready",    "uri": "/assets/bms/summary:stop@enabled", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Running",  "uri": "/assets/bms/summary:stop@enabled", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Shutdown", "uri": "/assets/bms/summary:stop@enabled", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Fault",    "uri": "/assets/bms/summary:stop@enabled", "outValue": true},
+
+                        {"inValue": "Off",      "uri": "/site/ess_hs:system_state", "outValue": 1,  "note": "Bit 0 - Stop"},
+                        {"inValue": "Shutdown", "uri": "/site/ess_hs:system_state", "outValue": 1,  "note": "Bit 0 - Stop"},
+                        {"inValue": "Running",  "uri": "/site/ess_hs:system_state", "outValue": 2,  "note": "Bit 1 - Run"},
+                        {"inValue": "Fault",    "uri": "/site/ess_hs:system_state", "outValue": 4,  "note": "Bit 2 - Fault"},
+                        {"inValue": "Ready",    "uri": "/site/ess_hs:system_state", "outValue": 8,  "note": "Bit 3 - Standby"}
+                    ]
+                }
+            ]}
+        },
+        "PCSResetKeyCmd": 0,
+        "CommsOK": {
+            "value": true,
+            "actions": {
+                "onSet":[{
+                    "remap":[
+                        { "inValue": true, "uri": "/assets/pcs/summary:com_status",      "outValue": "ONLINE"},
+                        { "inValue": false, "uri": "/assets/pcs/summary:com_status",     "outValue": "OFFLINE"},
+                        { "inValue": false, "uri": "/site/ess_hs:com_status[0]", "outValue": true}
+                    ]
+                }]
+            }
+        },
+        "ActivePowerCmd_adjusted": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "ActivePowerCmd",
+            "variable2": "RatedApparentPower",
+            "operation": "*",
+            "scale": 100
+        },
+        "ReactivePowerCmd_adjusted": {
+            "value": 0,
+            "numVars": 2,
+            "variable1": "ReactivePowerCmd",
+            "variable2": "RatedApparentPower",
+            "operation": "*",
+            "scale": 100
+        }
+    },
+    "/assets/pcs": {
+        "start_grad_p": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [
+                    {"limits": [ {"low": 0.1,"high": 3000.0}]},
+                    {"remap": [{"bit": 0,"uri": "/components/pcsm_control:start_grad_p"}]}
+                ]
+            }
+        }
+    },
+
+    "/status/pcs": {
+        "note": "These are component status vars",
+        "max_cell_temp": 23.4,
+        "min_cell_temp": 23.4,
+        "max_cell_volts": 3.4,
+        "min_cell_volts": 3.2,
+        "current_soc": 85.6,
+        "current_soh": 85.7,
+        "active_current_setpont": 0.0,
+        "reactive_current_setpont": 0.0,
+        "dc_contactor_open": true,
+        "ac_contactor_open": true,
+        "number_of_racks": 18,
+        "vdc_bus_1": 800,
+        "SystemFault": false,
+        "SystemState": {
+            "value": "Off",
+            "debug":true,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 255, "inValue": "Off", "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Starting", "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Ready", "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": true},
+                        {"shift": 0, "mask": 255, "inValue": "Running", "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": true},
+                        {"shift": 0, "mask": 255, "inValue": "Shutdown", "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Fault", "uri": "/status/pcs:vdc_bus_1@EnableFaultCheck", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Off", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Starting", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Ready", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Running", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Shutdown", "uri": "/status/pcs:SystemFault", "outValue": false},
+                        {"shift": 0, "mask": 255, "inValue": "Fault", "uri": "/status/pcs:SystemFault", "outValue": true}
+                    ]
+                }
+            ]}
+        }
+    },
+    "/params/pcs": {
+        "note": "These are control parameters",
+        "nominal_voltage": 540.0,
+        "nominal_frequency": 60.0,
+        "rated_active_power": 3300.0,
+        "rated_reactive_power": 1000.0,
+        "active_power_setpoint": 2200.0,
+        "reactive_power_setpoint": 2200.0,
+        "oncmd": 0,
+        "onffcmd": 0,
+        "kacclosecmd": 0,
+        "kdcclosecmd": 0,
+        "kacopencmd": 0,
+        "kdccopencmd": 0
+    },
+    "/variables/pcs": {
+        "q": 1234,
+        "p": 3456,
+        "soc": 100,
+        "soh": 100,
+        "dc_contactor": "off",
+        "ac_contactor": "off",
+        "dc_contactor_cmd": "off",
+        "ac_contactor_cmd": "off",
+        "mode": "init",
+        "mode_cmd": "off",
+        "inductive_i_limit": 357,
+        "capacitive_i_limit": 407,
+        "p_limit_inst": 100,
+        "q_limit_inst": 100,
+        "s_limit_inst": 100
+    },
+    "/components/catl_1_ems_bms_rw": {
+        "ems_test_status": {
+            "value": "Idle",
+            "actions": {
+                "onSet": {
+                    "remap": {
+                        "bitmap": [
+                            {
+                                "uri": "/system/ems_remap",
+                                "var": "ems_test_status"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "/components/pcsm_control": {
+        "start_grad_p": {
+            "value": 10.0,
+            "actions": {
+                "onSet": [ 
+                    {"limits": [{"low": 0.1,"high": 3000.0} ]}
+                ]
+            }
+        }
+    },
+    "/components/pcsm_internal_visualization": {
+        "active_power": {
+            "value": 0
+        },
+        "reactive_power": {
+            "value": 0
+        },
+        "apparent_power": {
+            "value": 0
+        },
+        "grid_voltage_rs": {
+            "value": 0
+        },
+        "grid_voltage_st": {
+            "value": 0
+        },
+        "grid_voltage_tr": {
+            "value": 0
+        },
+        "grid_current_1": {
+            "value": 0
+        },
+        "grid_current_2": {
+            "value": 0
+        },
+        "grid_current_3": {
+            "value": 0
+        },
+        "grid_frequency": {
+            "value": 0
+        },
+        "current_warning": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 65535, "inValue": 0, "uri": "/alarms/pcs:sys_warn", "outValue": "(NOWRN) No warnings"},
+                        {"shift": 0, "mask": 65535, "inValue": 1, "uri": "/alarms/pcs:sys_warn", "outValue": "(HVAC) High input voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 2, "uri": "/alarms/pcs:sys_warn", "outValue": "(LVAC) Low input voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 3, "uri": "/alarms/pcs:sys_warn", "outValue": "(HFRQ) High frequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 4, "uri": "/alarms/pcs:sys_warn", "outValue": "(LFRQ) Low frequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 5, "uri": "/alarms/pcs:sys_warn", "outValue": "(NSC) No start conditions"},
+                        {"shift": 0, "mask": 65535, "inValue": 6, "uri": "/alarms/pcs:sys_warn", "outValue": "(NOMD) No modules"},
+                        {"shift": 0, "mask": 65535, "inValue": 7, "uri": "/alarms/pcs:sys_warn", "outValue": "(PLIM) P limit has been reached"},
+                        {"shift": 0, "mask": 65535, "inValue": 8, "uri": "/alarms/pcs:sys_warn", "outValue": "(QLIM) Q limit has been reached"},
+                        {"shift": 0, "mask": 65535, "inValue": 9, "uri": "/alarms/pcs:sys_warn", "outValue": "(ISLIM) Is limit has been reached"},
+                        {"shift": 0, "mask": 65535, "inValue": 10, "uri": "/alarms/pcs:sys_warn", "outValue": "(IDCLIM) Idc limit has been reached"},
+                        {"shift": 0, "mask": 65535, "inValue": 11, "uri": "/alarms/pcs:sys_warn", "outValue": "(PDVDC) Reduct P - A derating is active"},
+                        {"shift": 0, "mask": 65535, "inValue": 12, "uri": "/alarms/pcs:sys_warn", "outValue": "(HEAT) Heating is active"},
+                        {"shift": 0, "mask": 65535, "inValue": 13, "uri": "/alarms/pcs:sys_warn", "outValue": "(NIGHT) Night mode is active"},
+                        {"shift": 0, "mask": 65535, "inValue": 14, "uri": "/alarms/pcs:sys_warn", "outValue": "(LP) Low P - Active power is lower than the minimum AC power set"},
+                        {"shift": 0, "mask": 65535, "inValue": 15, "uri": "/alarms/pcs:sys_warn", "outValue": "(LVDC_W) Low Vdc - DC voltage is lower than the minimum DC voltage set"},
+                        {"shift": 0, "mask": 65535, "inValue": 16, "uri": "/alarms/pcs:sys_warn", "outValue": "(PDT) Derating T - Inverter is limiting power due to high internal temperature"},
+                        {"shift": 0, "mask": 65535, "inValue": 17, "uri": "/alarms/pcs:sys_warn", "outValue": "(PPF) Power Per Frequency - Power is reduced due to a high frequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 18, "uri": "/alarms/pcs:sys_warn", "outValue": "(REDUN) Redun warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 19, "uri": "/alarms/pcs:sys_warn", "outValue": "(HVDC_W) High Vdc - DC voltage > 1500 V"},
+                        {"shift": 0, "mask": 65535, "inValue": 20, "uri": "/alarms/pcs:sys_warn", "outValue": "(UMF) Module fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 21, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKNM) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 22, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKLV) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 23, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKCC) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 24, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKOC) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 25, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRKBF) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 26, "uri": "/alarms/pcs:sys_warn", "outValue": "(LCFB) LC feedback - LC contactors are not operating adequately in the stop procedure"},
+                        {"shift": 0, "mask": 65535, "inValue": 27, "uri": "/alarms/pcs:sys_warn", "outValue": "(QFV) Curve Q vs V - Grid support QV ongoing"},
+                        {"shift": 0, "mask": 65535, "inValue": 28, "uri": "/alarms/pcs:sys_warn", "outValue": "(PFV) Curve P vs V - Grid support PV ongoing"},
+                        {"shift": 0, "mask": 65535, "inValue": 29, "uri": "/alarms/pcs:sys_warn", "outValue": "(VDCDS) Vdc discordance - Discordance between bus voltage and input voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 40, "uri": "/alarms/pcs:sys_warn", "outValue": "(OVP) AC overvoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 41, "uri": "/alarms/pcs:sys_warn", "outValue": "(RTC) The RTC is not configured. Set the time"},
+                        {"shift": 0, "mask": 65535, "inValue": 42, "uri": "/alarms/pcs:sys_warn", "outValue": "(MSWM) Modules version - There are one or more modules with different software versions"},
+                        {"shift": 0, "mask": 65535, "inValue": 43, "uri": "/alarms/pcs:sys_warn", "outValue": "(VSWM) uP DSP version - Software versions are not compatible"},
+                        {"shift": 0, "mask": 65535, "inValue": 44, "uri": "/alarms/pcs:sys_warn", "outValue": "(NOSD) SD not present"},
+                        {"shift": 0, "mask": 65535, "inValue": 45, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMI) Battery module isolated - One or more modules of the equipment has been isolated due to a fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 46, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUIUN) DU I unbalance - Current unbalance in the DU channels"},
+                        {"shift": 0, "mask": 65535, "inValue": 47, "uri": "/alarms/pcs:sys_warn", "outValue": "(SPRLD) Spring loaded - Some of the circuit break triggers are not loaded"},
+                        {"shift": 0, "mask": 65535, "inValue": 48, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUVDC) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 50, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUCOMS_W) Comms lost - There is a problem in the disconnecting unit communications"},
+                        {"shift": 0, "mask": 65535, "inValue": 51, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHISL) Channel isolated - DU channel isolated because it is derived, feedback has failed, or it did not measure voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 52, "uri": "/alarms/pcs:sys_warn", "outValue": "(INSA) Algorithm on - Derived channels detection algorithm is running. once finished, the warning will automatically disappear"},
+                        {"shift": 0, "mask": 65535, "inValue": 53, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUOF) Fb open error - Problem with feedback from one of the DU channels in an opening event"},
+                        {"shift": 0, "mask": 65535, "inValue": 54, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUCF) Fb close error - Problem with feedback from one of the Du channels in a closing event"},
+                        {"shift": 0, "mask": 65535, "inValue": 55, "uri": "/alarms/pcs:sys_warn", "outValue": "(OVDCP) DC overvoltage - Check the status of the disconnecting unit and J7 connector digital input"},
+                        {"shift": 0, "mask": 65535, "inValue": 56, "uri": "/alarms/pcs:sys_warn", "outValue": "(ISFLT) Isolation fault - warning not used currently"},
+                        {"shift": 0, "mask": 65535, "inValue": 57, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHCOM) Acq comms error - Communications problem between the disconnecting unit and acquisition channels"},
+                        {"shift": 0, "mask": 65535, "inValue": 58, "uri": "/alarms/pcs:sys_warn", "outValue": "(NOCHN) No channel available"},
+                        {"shift": 0, "mask": 65535, "inValue": 59, "uri": "/alarms/pcs:sys_warn", "outValue": "(GRIDIN) Isolat flt AC grid - Isulation fault has occurred in the AC side"},
+                        {"shift": 0, "mask": 65535, "inValue": 60, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUBSY) Processing cont - Contactors processing event ongoing"},
+                        {"shift": 0, "mask": 65535, "inValue": 61, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHSWM) Acq version - DU acquisition channels with different versions have been detected"},
+                        {"shift": 0, "mask": 65535, "inValue": 62, "uri": "/alarms/pcs:sys_warn", "outValue": "(PCHM) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 63, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHCD) Current detected during DU channels opening event"},
+                        {"shift": 0, "mask": 65535, "inValue": 64, "uri": "/alarms/pcs:sys_warn", "outValue": "(CHMW) Channel miswired - One or more acquisition channels did not measure any voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 65, "uri": "/alarms/pcs:sys_warn", "outValue": "(OC) Mod. AC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 66, "uri": "/alarms/pcs:sys_warn", "outValue": "(UV) Unbal DC bus - Unbalance between high side and low side of DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 67, "uri": "/alarms/pcs:sys_warn", "outValue": "(DOC) Mod. DC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 69, "uri": "/alarms/pcs:sys_warn", "outValue": "(POV) Mod. DC overvoltage (P) - Overvoltage present in DC positive side"},
+                        {"shift": 0, "mask": 65535, "inValue": 70, "uri": "/alarms/pcs:sys_warn", "outValue": "(NOV) Mod. DC overvoltage (N) - Overvoltage present in DC negative side"},
+                        {"shift": 0, "mask": 65535, "inValue": 71, "uri": "/alarms/pcs:sys_warn", "outValue": "(DR1) Desat R1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 72, "uri": "/alarms/pcs:sys_warn", "outValue": "(DR2P) Desat R2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 73, "uri": "/alarms/pcs:sys_warn", "outValue": "(DR2N) Desat R2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 74, "uri": "/alarms/pcs:sys_warn", "outValue": "(DR3) Desat R3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 75, "uri": "/alarms/pcs:sys_warn", "outValue": "(DS1) Desat S1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 76, "uri": "/alarms/pcs:sys_warn", "outValue": "(DS2P) Desat S2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 77, "uri": "/alarms/pcs:sys_warn", "outValue": "(DS2N) Desat S2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 78, "uri": "/alarms/pcs:sys_warn", "outValue": "(DS3) Desat S3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 79, "uri": "/alarms/pcs:sys_warn", "outValue": "(DT1) Desat T1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 80, "uri": "/alarms/pcs:sys_warn", "outValue": "(DT2P) Desat T2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 81, "uri": "/alarms/pcs:sys_warn", "outValue": "(DT2N) Desat T2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 82, "uri": "/alarms/pcs:sys_warn", "outValue": "(DT3) Desat T3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 83, "uri": "/alarms/pcs:sys_warn", "outValue": "(DMLT) Multiple unlock - Desaturation in more than one IGBT controller at the same time. Could indicate power failure in module control card"},
+                        {"shift": 0, "mask": 65535, "inValue": 84, "uri": "/alarms/pcs:sys_warn", "outValue": "(COMMS_W) Mod. Comms - Communication between central FPGA and module FPGA, or between module FPGA and DSP, is lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 86, "uri": "/alarms/pcs:sys_warn", "outValue": "(FBDC) Mod. DC contactor - DC contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 87, "uri": "/alarms/pcs:sys_warn", "outValue": "(FBSC) Mod. ACSC contactor - Module AC soft charge contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 88, "uri": "/alarms/pcs:sys_warn", "outValue": "(FBAC) Mod. AC contactor - Command to activate the AC contactors of the modules was sent, but did not close in 1s"},
+                        {"shift": 0, "mask": 65535, "inValue": 89, "uri": "/alarms/pcs:sys_warn", "outValue": "(FBLC) Mod. LCL contactor feedback - LCL contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 90, "uri": "/alarms/pcs:sys_warn", "outValue": "(TIGH) Mod. IGBTs Temperature HW - The temperature of any IGBT overcomes 127 degrees, or IGBT temperature sensor is disconnected"},
+                        {"shift": 0, "mask": 65535, "inValue": 91, "uri": "/alarms/pcs:sys_warn", "outValue": "(GUV) Mod. Great unbal DC - DC bus unbalanced more than 500V"},
+                        {"shift": 0, "mask": 65535, "inValue": 92, "uri": "/alarms/pcs:sys_warn", "outValue": "(DIS) Mod. Discharge fault - Module FPGA attempts to discharge the module bus and voltage did not drop below 50V in 40s"},
+                        {"shift": 0, "mask": 65535, "inValue": 93, "uri": "/alarms/pcs:sys_warn", "outValue": "(TLCL) Mod. Thermal LCL - Termal LCL contactor of a module inductance has been opened"},
+                        {"shift": 0, "mask": 65535, "inValue": 95, "uri": "/alarms/pcs:sys_warn", "outValue": "(PS) Mod Power 15V - Internal power supply of the board does not provide the adequate voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 96, "uri": "/alarms/pcs:sys_warn", "outValue": "(TAMH) Mod. Amb Temperature HW - The temperature of the module's electronic board has overcome 85 degrees C"},
+                        {"shift": 0, "mask": 65535, "inValue": 97, "uri": "/alarms/pcs:sys_warn", "outValue": "(IDCD) Mod. Idc derivation"},
+                        {"shift": 0, "mask": 65535, "inValue": 98, "uri": "/alarms/pcs:sys_warn", "outValue": "(IACD) Mod. Iac derivation"},
+                        {"shift": 0, "mask": 65535, "inValue": 100, "uri": "/alarms/pcs:sys_warn", "outValue": "(DCOMS_W) Display comms - Communications between display and control board lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 101, "uri": "/alarms/pcs:sys_warn", "outValue": "(DCF) Mod. DC Fuse - Module DC voltage measure is below the average value of all modules"},
+                        {"shift": 0, "mask": 65535, "inValue": 102, "uri": "/alarms/pcs:sys_warn", "outValue": "(UC) Unbalance current - A module output current unbalance greater than 30A has been detected for 5s"},
+                        {"shift": 0, "mask": 65535, "inValue": 103, "uri": "/alarms/pcs:sys_warn", "outValue": "(TIGBT_W) IGBTs temperature - The temperature of one or more IFBTs has overcome the maximum threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 104, "uri": "/alarms/pcs:sys_warn", "outValue": "(TAMB_W) Ambient temperature - Ambient temperature is over the maximum threshol"},
+                        {"shift": 0, "mask": 65535, "inValue": 105, "uri": "/alarms/pcs:sys_warn", "outValue": "(PWUNB_W) Pac/Pdc unbalanced - Unbalance between Pac and Pdc values. They differ a percentage defined (30% by default)"},
+                        {"shift": 0, "mask": 65535, "inValue": 106, "uri": "/alarms/pcs:sys_warn", "outValue": "(BUSUN_W) Vbus unbalanced - Unbalance between the high side and low side of DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 107, "uri": "/alarms/pcs:sys_warn", "outValue": "(NRIDC) Iac not reached - Not enough bus voltage, or the 3 AC fuses have blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 108, "uri": "/alarms/pcs:sys_warn", "outValue": "(HBMX_W) Half bus Vmax"},
+                        {"shift": 0, "mask": 65535, "inValue": 109, "uri": "/alarms/pcs:sys_warn", "outValue": "(LMVDC_W) Low module Vdc - Start command has been received but bus voltage is insufficient to start and maintain operation"},
+                        {"shift": 0, "mask": 65535, "inValue": 110, "uri": "/alarms/pcs:sys_warn", "outValue": "(BACF_W) Blown AC fuse - All AC fuses have blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 111, "uri": "/alarms/pcs:sys_warn", "outValue": "(RSV_W) Reserved warning"},
+                        {"shift": 0, "mask": 65535, "inValue": 112, "uri": "/alarms/pcs:sys_warn", "outValue": "(OCACE_W) OCAC emergency - Overcurrent has been detected in communication between module-x and central control"},
+                        {"shift": 0, "mask": 65535, "inValue": 113, "uri": "/alarms/pcs:sys_warn", "outValue": "(CCHK_W) Comms checksum - Communication error between module-x and central control"},
+                        {"shift": 0, "mask": 65535, "inValue": 114, "uri": "/alarms/pcs:sys_warn", "outValue": "(MDFN_W) Mod. fans - Feedback has not been received from the module fan"},
+                        {"shift": 0, "mask": 65535, "inValue": 115, "uri": "/alarms/pcs:sys_warn", "outValue": "(MDSN_W) Mod. sensor - One, or more, of the three current sensors of the module are not measuring properly, there is an offset error"},
+                        {"shift": 0, "mask": 65535, "inValue": 116, "uri": "/alarms/pcs:sys_warn", "outValue": "(MDSC_W) Mod. disabled DC - Disabled by DSP due to software or module has failed too many times"},
+                        {"shift": 0, "mask": 65535, "inValue": 117, "uri": "/alarms/pcs:sys_warn", "outValue": "(CMTHR_W) Mod. common thermal - Inductance in a module has overheated"},
+                        {"shift": 0, "mask": 65535, "inValue": 118, "uri": "/alarms/pcs:sys_warn", "outValue": "(CNBFPS) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 119, "uri": "/alarms/pcs:sys_warn", "outValue": "(BFBFPS) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 120, "uri": "/alarms/pcs:sys_warn", "outValue": "(BFPSCM) warning - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 130, "uri": "/alarms/pcs:sys_warn", "outValue": "(ISODCCM) DC insulation monitor comms - Communication with the DC insulation monitor cannot be established"},
+                        {"shift": 0, "mask": 65535, "inValue": 131, "uri": "/alarms/pcs:sys_warn", "outValue": "(INSDC) Insulation DC - DC insulation monitor detected an insulation resistance below the threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 132, "uri": "/alarms/pcs:sys_warn", "outValue": "(IRTHDC) Insulation resistor high DC - DC insulation monitor has detected a higher insulation resistance than the admissible"},
+                        {"shift": 0, "mask": 65535, "inValue": 135, "uri": "/alarms/pcs:sys_warn", "outValue": "(ISOACCM) AC insulation monitor comms - Communication with the AC insulation monitor cannot be established"},
+                        {"shift": 0, "mask": 65535, "inValue": 136, "uri": "/alarms/pcs:sys_warn", "outValue": "(INSAC) Insulation AC - AC insulation monitor has detected an insulation resistance below the threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 137, "uri": "/alarms/pcs:sys_warn", "outValue": "(IRTHAC) Insulation resistor high AC - AC insulation monitor has detected a higher insulation resistance than the admissible"},
+                        {"shift": 0, "mask": 65535, "inValue": 140, "uri": "/alarms/pcs:sys_warn", "outValue": "(FNIMCM_W) Impulsion fans comms - Communication with the impulsion fans (cyclone) cannot be established"},
+                        {"shift": 0, "mask": 65535, "inValue": 141, "uri": "/alarms/pcs:sys_warn", "outValue": "(FNIMER_W) Impulsion fans - The impulsion fan (cyclone) has reported an error"},
+                        {"shift": 0, "mask": 65535, "inValue": 142, "uri": "/alarms/pcs:sys_warn", "outValue": "(FNXCER_W) Extract fans control - Feedback from extraction fans in the low voltage side has not been received"},
+                        {"shift": 0, "mask": 65535, "inValue": 143, "uri": "/alarms/pcs:sys_warn", "outValue": "(FNXMER_W) Extract fans MV - Feedback from extraction fans in the medium voltage side has not been received"},
+                        {"shift": 0, "mask": 65535, "inValue": 147, "uri": "/alarms/pcs:sys_warn", "outValue": "(BBON) Blackbox on"},
+                        {"shift": 0, "mask": 65535, "inValue": 148, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUFB1) DU FB1 error. DC Circuit breaker (Q8) failure"},
+                        {"shift": 0, "mask": 65535, "inValue": 149, "uri": "/alarms/pcs:sys_warn", "outValue": "(DUFB2) DU FB2 error. DC Circuit breaker (Q9) failure"},
+                        {"shift": 0, "mask": 65535, "inValue": 300, "uri": "/alarms/pcs:sys_warn", "outValue": "(ACTBAL) Active Balance"},
+                        {"shift": 0, "mask": 65535, "inValue": 350, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSA) Battery Manage System is stopped because a BMS alarm is active. Check the BMS active alarms to restart"},
+                        {"shift": 0, "mask": 65535, "inValue": 351, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSIA) There is imbalance inside the BMS, some strings are disconnected witin one bank. Power reduction is applied"},
+                        {"shift": 0, "mask": 65535, "inValue": 352, "uri": "/alarms/pcs:sys_warn", "outValue": "(SNTPF) Synchronization of NTP server has failed"},
+                        {"shift": 0, "mask": 65535, "inValue": 353, "uri": "/alarms/pcs:sys_warn", "outValue": "(EMBD) Battery bank is disabled by MPCSK (IGBTs are stopped and DC breaker is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 354, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSCL) MPCSK has lost communication with BMS. Heartbeat time has been exceeded"},
+                        {"shift": 0, "mask": 65535, "inValue": 355, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSFE) Fuse Sensor Error BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 356, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSVSD) Voltage Sensor Error BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 357, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSFSC) Current Sensor Error BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 358, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSFF) Fan fault BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 359, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSSS) System Stop BMS"},
+                        {"shift": 0, "mask": 65535, "inValue": 360, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSSD) BMS Status Discordance"},
+                        {"shift": 0, "mask": 65535, "inValue": 361, "uri": "/alarms/pcs:sys_warn", "outValue": "(BMSWC) BMS Wrong Configuration"},
+                        {"shift": 0, "mask": 65535, "inValue": 369, "uri": "/alarms/pcs:sys_warn", "outValue": "(HVACNOP_W) HVAC Not Operative"},
+                        {"shift": 0, "mask": 65535, "inValue": 370, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCDORCN) ENC Door Contact - container battery enclosure is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 371, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCALARTR) ENC Alarm/Trouble"},
+                        {"shift": 0, "mask": 65535, "inValue": 372, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCDCDIS) ENC DC Disconnect - One of the container DC switch disconnectors is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 373, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCHHUM) ENC High Humidity"},
+                        {"shift": 0, "mask": 65535, "inValue": 374, "uri": "/alarms/pcs:sys_warn", "outValue": "(ENCUPSBAT) ENC UPS Battery"},
+                        {"shift": 0, "mask": 65535, "inValue": 390, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRTEMP_W) Transformerr over oil temperature detected"},
+                        {"shift": 0, "mask": 65535, "inValue": 391, "uri": "/alarms/pcs:sys_warn", "outValue": "(TRPRESU_W) Transformer over pressure detected"},
+                        {"shift": 0, "mask": 65535, "inValue": 392, "uri": "/alarms/pcs:sys_warn", "outValue": "(TROIL_W) Transformer oil low level detected"},
+
+                        {"shift": 0, "mask": 65535, "inValue": 16, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+						{"shift": 0, "mask": 65535, "inValue": 90, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+						{"shift": 0, "mask": 65535, "inValue": 96, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+						{"shift": 0, "mask": 65535, "inValue": 103, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+                        {"shift": 0, "mask": 65535, "inValue": 104, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+                        {"shift": 0, "mask": 65535, "inValue": 390, "uri": "/site/ess_ls:pcs1_alarms[16]", "outValue": true, "note": "Bit 16 - Temp abnormal"},
+                        {"shift": 0, "mask": 65535, "inValue": 101, "uri": "/site/ess_ls:pcs1_alarms[20]", "outValue": true, "note": "Bit 20 - DC fuse abnormal"},
+                        {"shift": 0, "mask": 65535, "inValue": 372, "uri": "/site/ess_ls:pcs1_alarms[28]", "outValue": true, "note": "Bit 28 - DC switch abnormal"}
+                    ]
+                }]
+            }
+        },
+        "current_fault": {
+            "value": 0,
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 65535, "inValue": 0, "uri": "/faults/pcs:sys_fault", "outValue": "(NOFLTS) No faults"},
+                        {"shift": 0, "mask": 65535, "inValue": 1, "uri": "/faults/pcs:sys_fault", "outValue": "(WD) Watchdog - Fault in DSP has occurred"},
+                        {"shift": 0, "mask": 65535, "inValue": 2, "uri": "/faults/pcs:sys_fault", "outValue": "(HWVBS) HW Vbus - DC overvoltage detected. Threshold: 1520 Vdc"},
+                        {"shift": 0, "mask": 65535, "inValue": 3, "uri": "/faults/pcs:sys_fault", "outValue": "(SFTCHR) Softcharge - Wrong configuration (central AC without DU) OR Timeout, one of soft charge processes did not end successfully"},
+                        {"shift": 0, "mask": 65535, "inValue": 4, "uri": "/faults/pcs:sys_fault", "outValue": "(DISCHR) Discharge - Timeout, one of the modules has not discharged correctly (< 50 Vdc)"},
+                        {"shift": 0, "mask": 65535, "inValue": 5, "uri": "/faults/pcs:sys_fault", "outValue": "(HGHVAC) High Vac - High AC voltage fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 6, "uri": "/faults/pcs:sys_fault", "outValue": "(LWVAC) Low Vac - Low AC voltage fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 7, "uri": "/faults/pcs:sys_fault", "outValue": "(HGHFRE) High frequency fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 8, "uri": "/faults/pcs:sys_fault", "outValue": "(LWFRE) Low frequency fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 9, "uri": "/faults/pcs:sys_fault", "outValue": "(FPGACMS) FPGA comms - 2 frames to the central FPGA are wrong"},
+                        {"shift": 0, "mask": 65535, "inValue": 10, "uri": "/faults/pcs:sys_fault", "outValue": "(MSTFPGA) Master FPGA - Central FPGA has not been configured correctly. Check that the 3 joined leds are turned on"},
+                        {"shift": 0, "mask": 65535, "inValue": 11, "uri": "/faults/pcs:sys_fault", "outValue": "(ACANTISL) Active anti-island - Fault produced by a variation in the measured frequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 13, "uri": "/faults/pcs:sys_fault", "outValue": "(NOMOD) No modules enabled in the enabled busbars"},
+                        {"shift": 0, "mask": 65535, "inValue": 14, "uri": "/faults/pcs:sys_fault", "outValue": "(DRVSLT_1) Drive select - Wrong drive select configuration"},
+                        {"shift": 0, "mask": 65535, "inValue": 15, "uri": "/faults/pcs:sys_fault", "outValue": "(SYNC) Synchronization - Wrong equipment configuration"},
+                        {"shift": 0, "mask": 65535, "inValue": 16, "uri": "/faults/pcs:sys_fault", "outValue": "(DCMSW) DC miswired - There is a problem with the DC measurement from central control. It occurs when the bus voltage < 100V during 30s"},
+                        {"shift": 0, "mask": 65535, "inValue": 17, "uri": "/faults/pcs:sys_fault", "outValue": "(DUFB) DU feedback - The DU is not closing when required"},
+                        {"shift": 0, "mask": 65535, "inValue": 18, "uri": "/faults/pcs:sys_fault", "outValue": "(ACSCFB) ACSC feedback - Feedback from the soft charge contactor does not match the order during 5s"},
+                        {"shift": 0, "mask": 65535, "inValue": 19, "uri": "/faults/pcs:sys_fault", "outValue": "(ACSCNV) ACSC no voltage - The central soft charge contactor is closed, but buses are not changing at the expected rate (50% of the target value in 4s)"},
+                        {"shift": 0, "mask": 65535, "inValue": 20, "uri": "/faults/pcs:sys_fault", "outValue": "(MODFLT) Module fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 21, "uri": "/faults/pcs:sys_fault", "outValue": "(DUSTCK) DU stuck - Voltage during soft charge process is anomalous when the DU is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 22, "uri": "/faults/pcs:sys_fault", "outValue": "(MVF) Medium V fuse - A medium voltage fuse has been blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 23, "uri": "/faults/pcs:sys_fault", "outValue": "(UNBVAC) Unbalanced Vac - Abnormal AC unbalanced voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 24, "uri": "/faults/pcs:sys_fault", "outValue": "(HVDC_F) High Vdc - Overvoltage in the DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 25, "uri": "/faults/pcs:sys_fault", "outValue": "(LVDC_F) Low Vdc - Voltage is too low"},
+                        {"shift": 0, "mask": 65535, "inValue": 27, "uri": "/faults/pcs:sys_fault", "outValue": "(MSF) Modules start fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 28, "uri": "/faults/pcs:sys_fault", "outValue": "(PSANTISL) Passive anti-island - Fault produced when the frequency changes abruptly in a certain time"},
+                        {"shift": 0, "mask": 65535, "inValue": 29, "uri": "/faults/pcs:sys_fault", "outValue": "(HWIDCDIF) HW Idc Dif - A current derivation has been detected on the panels side"},
+                        {"shift": 0, "mask": 65535, "inValue": 30, "uri": "/faults/pcs:sys_fault", "outValue": "(MVCMS) MV comms - Failure in communication with the medium voltage measure board"},
+                        {"shift": 0, "mask": 65535, "inValue": 31, "uri": "/faults/pcs:sys_fault", "outValue": "(DIAGTIM) Selfdiagnosis Fault - Triggered while performing auto diagnosis process, e.g.: there is no DU or the bus loading time is excessive"},
+                        {"shift": 0, "mask": 65535, "inValue": 32, "uri": "/faults/pcs:sys_fault", "outValue": "(ERMDDIAG) Error Mod Selfdiagnosis - Triggered while performing auto diagnosis process after the equipment has stopped due to special protection"},
+                        {"shift": 0, "mask": 65535, "inValue": 33, "uri": "/faults/pcs:sys_fault", "outValue": "(UNREC) Unable Reconnect - Inverter could not restart after the last grid event"},
+                        {"shift": 0, "mask": 65535, "inValue": 34, "uri": "/faults/pcs:sys_fault", "outValue": "(HOMDIFLV) Hom Diff LV - A zero-sequence current (earth leakage) has been detected on the low voltage side of the transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 35, "uri": "/faults/pcs:sys_fault", "outValue": "(MVPRE) MV Premag - There was a problem during MV transformer premagnetization"},
+                        {"shift": 0, "mask": 65535, "inValue": 36, "uri": "/faults/pcs:sys_fault", "outValue": "(OVOLIRLV) Ovc Inrush LV - One of the current thresholds (overload, overcurrent, or inrush) has been overcome in the low voltage side of the transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 37, "uri": "/faults/pcs:sys_fault", "outValue": "(OVOLIRMV) Ovc Inrush MV - One of the current thresholds (overload, overcurrent, or inrush) has been overcome in the medium voltage side of the transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 38, "uri": "/faults/pcs:sys_fault", "outValue": "(CUROFFLV) CurrentOff LV - A current measure has been detected in the low voltage side of the transformer while equipment is not running"},
+                        {"shift": 0, "mask": 65535, "inValue": 39, "uri": "/faults/pcs:sys_fault", "outValue": "(CURROFFMV) CurrentOff MV - A current measure has been detected in the medium voltage side of the transformer while the equipment is not running"},
+                        {"shift": 0, "mask": 65535, "inValue": 40, "uri": "/faults/pcs:sys_fault", "outValue": "(OVTMPACM) AC mod overtemperature"},
+                        {"shift": 0, "mask": 65535, "inValue": 41, "uri": "/faults/pcs:sys_fault", "outValue": "(GFDI) GFDI fault - description unknown"},
+                        {"shift": 0, "mask": 65535, "inValue": 42, "uri": "/faults/pcs:sys_fault", "outValue": "(DCCNTLCK) DC contactor locked"},
+                        {"shift": 0, "mask": 65535, "inValue": 43, "uri": "/faults/pcs:sys_fault", "outValue": "(EMRGSTP) Emergency stop - Stop pushbutton (at the main control cabinet door) has been pushed, or the DC disconnect switch is set to OFF"},
+                        {"shift": 0, "mask": 65535, "inValue": 44, "uri": "/faults/pcs:sys_fault", "outValue": "(DRVSLT_2) Drive select - Drive select parameters out of range"},
+                        {"shift": 0, "mask": 65535, "inValue": 45, "uri": "/faults/pcs:sys_fault", "outValue": "(INSL) Insulation - Isolation monitor measures an impedance value lower than the one configured"},
+                        {"shift": 0, "mask": 65535, "inValue": 46, "uri": "/faults/pcs:sys_fault", "outValue": "(DTFLT) Data fault - Out-of-range parameters detected"},
+                        {"shift": 0, "mask": 65535, "inValue": 47, "uri": "/faults/pcs:sys_fault", "outValue": "(WTCHDG) Watchdog uP - Fault in microcontroller"},
+                        {"shift": 0, "mask": 65535, "inValue": 48, "uri": "/faults/pcs:sys_fault", "outValue": "(INTCMS) Internal comms"},
+                        {"shift": 0, "mask": 65535, "inValue": 49, "uri": "/faults/pcs:sys_fault", "outValue": "(IMISLFT) IMI autotest - Periodic insulation monitoring devices auto test has finished with errors"},
+                        {"shift": 0, "mask": 65535, "inValue": 50, "uri": "/faults/pcs:sys_fault", "outValue": "(NODUCNL) No DU channels - All DU channels have been isolated, and it is not possible to establish a connection with the plant"},
+                        {"shift": 0, "mask": 65535, "inValue": 51, "uri": "/faults/pcs:sys_fault", "outValue": "(PPCC) PPC comms - PPC and inverter communication problem"},
+                        {"shift": 0, "mask": 65535, "inValue": 52, "uri": "/faults/pcs:sys_fault", "outValue": "(SCDUFB) Softcharge DU feedback - Softcharge timeout has expired and no feedback was received (DU softcharge contactors ordered to close, but did not)"},
+                        {"shift": 0, "mask": 65535, "inValue": 53, "uri": "/faults/pcs:sys_fault", "outValue": "(EARTHL) GFDI current leak - GFDI current has exceeded the threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 54, "uri": "/faults/pcs:sys_fault", "outValue": "(DUCNOV) DU channel overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 55, "uri": "/faults/pcs:sys_fault", "outValue": "(EXT_OVGR) External fault/OVFR - Problem with external protections associated with DI6. External OVGR relay has tripped"},
+                        {"shift": 0, "mask": 65535, "inValue": 56, "uri": "/faults/pcs:sys_fault", "outValue": "(REMRSTP) Remote emergenency stop"},
+                        {"shift": 0, "mask": 65535, "inValue": 57, "uri": "/faults/pcs:sys_fault", "outValue": "(DUMWR) DU channel miswired - Command to close DU has been received, but one or more channels are measuring negative voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 58, "uri": "/faults/pcs:sys_fault", "outValue": "(SWCMM) Control SW mismatch - Microcontroller and DSP software versions not compatible"},
+                        {"shift": 0, "mask": 65535, "inValue": 59, "uri": "/faults/pcs:sys_fault", "outValue": "(MODSWI) Module SW mismatch - Not all modules have the same software version"},
+                        {"shift": 0, "mask": 65535, "inValue": 60, "uri": "/faults/pcs:sys_fault", "outValue": "(MODHWI) Module HW mismatch - Not all modules have the same electronic board revision"},
+                        {"shift": 0, "mask": 65535, "inValue": 61, "uri": "/faults/pcs:sys_fault", "outValue": "(DUSD) DU smoke detector - DU smoke detector activated"},
+                        {"shift": 0, "mask": 65535, "inValue": 62, "uri": "/faults/pcs:sys_fault", "outValue": "(DUCOM_F) DU comms - Communication between DU and central control lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 63, "uri": "/faults/pcs:sys_fault", "outValue": "(GRNDCN) Ground connection - Ground contactor closed, but the insulator detector detects that pole is isolated"},
+                        {"shift": 0, "mask": 65535, "inValue": 64, "uri": "/faults/pcs:sys_fault", "outValue": "(INVMAC) Invalid MAC address"},
+                        {"shift": 0, "mask": 65535, "inValue": 65, "uri": "/faults/pcs:sys_fault", "outValue": "(ACOVCRR) Mod. AC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 66, "uri": "/faults/pcs:sys_fault", "outValue": "(UNBVDC) Unbal DC bus - Unbalance between high side and low side of DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 67, "uri": "/faults/pcs:sys_fault", "outValue": "(DCOVCRR) Mod. DC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 69, "uri": "/faults/pcs:sys_fault", "outValue": "(DCOVVP) Mod. DC overvoltage (P) - Overvoltage present in DC positive side"},
+                        {"shift": 0, "mask": 65535, "inValue": 70, "uri": "/faults/pcs:sys_fault", "outValue": "(DCOVVN) Mod. DC overvoltage (N) - Overvoltage present in DC negative side"},
+                        {"shift": 0, "mask": 65535, "inValue": 71, "uri": "/faults/pcs:sys_fault", "outValue": "(DESR1) Desat R1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 72, "uri": "/faults/pcs:sys_fault", "outValue": "(DESR2P) Desat R2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 73, "uri": "/faults/pcs:sys_fault", "outValue": "(DESR2N) Desat R2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 74, "uri": "/faults/pcs:sys_fault", "outValue": "(DESR3) Desat R3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 75, "uri": "/faults/pcs:sys_fault", "outValue": "(DESS1) Desat S1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 76, "uri": "/faults/pcs:sys_fault", "outValue": "(DESS2P) Desat S2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 77, "uri": "/faults/pcs:sys_fault", "outValue": "(DESS2N) Desat S2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 78, "uri": "/faults/pcs:sys_fault", "outValue": "(DESS3) Desat S3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 79, "uri": "/faults/pcs:sys_fault", "outValue": "(DEST1) Desat T1 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 80, "uri": "/faults/pcs:sys_fault", "outValue": "(DEST2P) Desat T2 (P) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 81, "uri": "/faults/pcs:sys_fault", "outValue": "(DEST2N) Desat T2 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 82, "uri": "/faults/pcs:sys_fault", "outValue": "(DEST3) Desat T3 (N) - Desaturation in IGBT driver"},
+                        {"shift": 0, "mask": 65535, "inValue": 83, "uri": "/faults/pcs:sys_fault", "outValue": "(DESMLT) Multiple unlock - Desaturation in more than one IGBT controller at the same time. Could indicate power failure in module control card"},
+                        {"shift": 0, "mask": 65535, "inValue": 84, "uri": "/faults/pcs:sys_fault", "outValue": "(COMMS_F) Mod. Comms - Communication between central FPGA and module FPGA, or between module FPGA and DSP, is lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 86, "uri": "/faults/pcs:sys_fault", "outValue": "(DCCNT) Mod. DC contactor - DC contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 87, "uri": "/faults/pcs:sys_fault", "outValue": "(ACSCC) Mod. ACSC contactor - Module AC soft charge contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 88, "uri": "/faults/pcs:sys_fault", "outValue": "(ACCNT) Mod. AC contactor - Command to activate the AC contactors of the modules was sent, but did not close in 1s"},
+                        {"shift": 0, "mask": 65535, "inValue": 89, "uri": "/faults/pcs:sys_fault", "outValue": "(LCLFB) Mod. LCL contactor feedback - LCL contactor is activated, but did not respond"},
+                        {"shift": 0, "mask": 65535, "inValue": 90, "uri": "/faults/pcs:sys_fault", "outValue": "(TIGHW) Mod. IGBTs Temperature HW - The temperature of any IGBT overcomes 127 degrees, or IGBT temperature sensor is disconnected"},
+                        {"shift": 0, "mask": 65535, "inValue": 91, "uri": "/faults/pcs:sys_fault", "outValue": "(GUNBDC) Mod. Great unbal DC - DC bus unbalanced more than 500V"},
+                        {"shift": 0, "mask": 65535, "inValue": 92, "uri": "/faults/pcs:sys_fault", "outValue": "(DISFLT) Mod. Discharge fault - Module FPGA attempts to discharge the module bus and voltage did not drop below 50V in 40s"},
+                        {"shift": 0, "mask": 65535, "inValue": 93, "uri": "/faults/pcs:sys_fault", "outValue": "(THLCL) Mod. Thermal LCL - Termal LCL contactor of a module inductance has been opened"},
+                        {"shift": 0, "mask": 65535, "inValue": 95, "uri": "/faults/pcs:sys_fault", "outValue": "(PW15V) Mod Power 15V - Internal power supply of the board does not provide the adequate voltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 96, "uri": "/faults/pcs:sys_fault", "outValue": "(TAMHW) Mod. Amb Temperature HW - The temperature of the module's electronic board has overcome 85 degrees C"},
+                        {"shift": 0, "mask": 65535, "inValue": 98, "uri": "/faults/pcs:sys_fault", "outValue": "(MIDCD) Mod. Idc derivation"},
+                        {"shift": 0, "mask": 65535, "inValue": 99, "uri": "/faults/pcs:sys_fault", "outValue": "(MIACD) Mod. Iac derivation"},
+                        {"shift": 0, "mask": 65535, "inValue": 100, "uri": "/faults/pcs:sys_fault", "outValue": "(DCOMS_F) Display comms - Communications between display and control board lost"},
+                        {"shift": 0, "mask": 65535, "inValue": 101, "uri": "/faults/pcs:sys_fault", "outValue": "(DCFS) Mod. DC Fuse - Module DC voltage measure is below the average value of all modules"},
+                        {"shift": 0, "mask": 65535, "inValue": 102, "uri": "/faults/pcs:sys_fault", "outValue": "(IUNB) Unbalance current - A module output current unbalance greater than 30A has been detected for 5s"},
+                        {"shift": 0, "mask": 65535, "inValue": 103, "uri": "/faults/pcs:sys_fault", "outValue": "(TIGBT_F) IGBTs temperature - The temperature of one or more IFBTs has overcome the maximum threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 104, "uri": "/faults/pcs:sys_fault", "outValue": "(TAMB_F) Ambient temperature - Ambient temperature is over the maximum threshold"},
+                        {"shift": 0, "mask": 65535, "inValue": 105, "uri": "/faults/pcs:sys_fault", "outValue": "(PWUNB_F) Pac/Pdc unbalanced - Unbalance between Pac and Pdc values. They differ a percentage defined (30% by default)"},
+                        {"shift": 0, "mask": 65535, "inValue": 106, "uri": "/faults/pcs:sys_fault", "outValue": "(BUSUN_F) Vbus unbalanced - Unbalance between the high side and low side of DC bus"},
+                        {"shift": 0, "mask": 65535, "inValue": 107, "uri": "/faults/pcs:sys_fault", "outValue": "(NRIAC) Iac not reached - Not enough bus voltage, or the 3 AC fuses have blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 108, "uri": "/faults/pcs:sys_fault", "outValue": "(HBMX_F) Half bus Vmax"},
+                        {"shift": 0, "mask": 65535, "inValue": 109, "uri": "/faults/pcs:sys_fault", "outValue": "(LMVDC_F) Low module Vdc - Start command has been receivedm but bus voltage is insufficient to start and maintain operation"},
+                        {"shift": 0, "mask": 65535, "inValue": 110, "uri": "/faults/pcs:sys_fault", "outValue": "(BACF_F) Blown AC fuse - All AC fuses have blown"},
+                        {"shift": 0, "mask": 65535, "inValue": 111, "uri": "/faults/pcs:sys_fault", "outValue": "(RSV_F) Reserved fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 112, "uri": "/faults/pcs:sys_fault", "outValue": "(OCACE_F) OCAC emergency - Overcurrent has been detected in communication between module-x and central control"},
+                        {"shift": 0, "mask": 65535, "inValue": 113, "uri": "/faults/pcs:sys_fault", "outValue": "(CCHK_F) Comms checksum - Communication error between module-x and central control"},
+                        {"shift": 0, "mask": 65535, "inValue": 114, "uri": "/faults/pcs:sys_fault", "outValue": "(MDFN_F) Mod. fans - Feedback has not been received from the module fan"},
+                        {"shift": 0, "mask": 65535, "inValue": 115, "uri": "/faults/pcs:sys_fault", "outValue": "(MDSN_F) Mod. sensor - One, or more, of the three current sensors of the module are not measuring properly, there is an offset error"},
+                        {"shift": 0, "mask": 65535, "inValue": 116, "uri": "/faults/pcs:sys_fault", "outValue": "(MDSC_F) Mod. disabled DC - Disabled by DSP due to software or module has failed too many times"},
+                        {"shift": 0, "mask": 65535, "inValue": 117, "uri": "/faults/pcs:sys_fault", "outValue": "(CMTHR) Mod. common thermal - Inductance in a module has overheated"},
+                        {"shift": 0, "mask": 65535, "inValue": 140, "uri": "/faults/pcs:sys_fault", "outValue": "(INDTHR) Inductance thermal - Feedback not received from the LCL filter inductance thermal"},
+                        {"shift": 0, "mask": 65535, "inValue": 141, "uri": "/faults/pcs:sys_fault", "outValue": "(MVTT) MV transformer temperature - Temperature in medium voltage transformer (PT100 readings) too high"},
+                        {"shift": 0, "mask": 65535, "inValue": 142, "uri": "/faults/pcs:sys_fault", "outValue": "(AFLV) Air flow LV - Air flow temperature in the low voltage side is too high"},
+                        {"shift": 0, "mask": 65535, "inValue": 143, "uri": "/faults/pcs:sys_fault", "outValue": "(AFMV) Air flow MV - Air flow temperature in the medium voltage side is too high"},
+                        {"shift": 0, "mask": 65535, "inValue": 144, "uri": "/faults/pcs:sys_fault", "outValue": "(FNIMER_F) Impulsion fans - One of the impulsion fans (cyclone) has reported an error"},
+                        {"shift": 0, "mask": 65535, "inValue": 145, "uri": "/faults/pcs:sys_fault", "outValue": "(FNXCER_F) Extract fans control - Feedback from low voltage extraction fans not received"},
+                        {"shift": 0, "mask": 65535, "inValue": 146, "uri": "/faults/pcs:sys_fault", "outValue": "(FNXMER_F) Extract fans MV - Feedback from medium voltage extraction fans not received"},
+                        {"shift": 0, "mask": 65535, "inValue": 147, "uri": "/faults/pcs:sys_fault", "outValue": "(FNIMCM_F) Impulsion comms - Communication with impulsion fans (cyclone) cannot be established"},
+                        {"shift": 0, "mask": 65535, "inValue": 148, "uri": "/faults/pcs:sys_fault", "outValue": "(MVTTC) MV critical temperature trans - The temperature threshold of medium voltage transformer has been overcome"},
+                        {"shift": 0, "mask": 65535, "inValue": 150, "uri": "/faults/pcs:sys_fault", "outValue": "(CPMVO) MV cell protection open - Protection contractor of medium voltage cell is open"},
+                        {"shift": 0, "mask": 65535, "inValue": 151, "uri": "/faults/pcs:sys_fault", "outValue": "(SDMV) Smoke detector MV - Medium voltage smoke detector activated"},
+                        {"shift": 0, "mask": 65535, "inValue": 155, "uri": "/faults/pcs:sys_fault", "outValue": "(PRDID) Product ID invalid"},
+                        {"shift": 0, "mask": 65535, "inValue": 181, "uri": "/faults/pcs:sys_fault", "outValue": "(HOMDIFMV) Hom Diff MV - A zero-sequence current (earth leakage) has been detected on medium voltage side of the transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 182, "uri": "/faults/pcs:sys_fault", "outValue": "(CRBALVMV) Curr Bal LVMV - A current unbalance has been detected between low and medium voltage sides (measures do not match"},
+                        {"shift": 0, "mask": 65535, "inValue": 183, "uri": "/faults/pcs:sys_fault", "outValue": "(NEGPWLV) Neg Pow LV - Active power in the low voltage side of the transformer has overcome the threshold set during the time adjusted"},
+                        {"shift": 0, "mask": 65535, "inValue": 184, "uri": "/faults/pcs:sys_fault", "outValue": "(NEGPWMV) Neg Pow MV"},
+                        {"shift": 0, "mask": 65535, "inValue": 185, "uri": "/faults/pcs:sys_fault", "outValue": "(CRUNBALV) Cur Unbl LV - Unbalance threshold between phases in low voltage side has been overcome. Grid event occurs, voltage unbalance causes current unbalance"},
+                        {"shift": 0, "mask": 65535, "inValue": 186, "uri": "/faults/pcs:sys_fault", "outValue": "(CRUNBAMV) Cur Unbl MV - Unbalance threshold between phases in medium voltage side has been overcome. Grid event occurs, voltage unbalance causes current unbalance"},
+                        {"shift": 0, "mask": 65535, "inValue": 187, "uri": "/faults/pcs:sys_fault", "outValue": "(CRBLDSPMD) Cur Bal DSPMD - Current measurement made by central control does not match sum of measurements of all modules"},
+                        {"shift": 0, "mask": 65535, "inValue": 188, "uri": "/faults/pcs:sys_fault", "outValue": "(PWBALLVMV) Pow Bal LVMV"},
+                        {"shift": 0, "mask": 65535, "inValue": 189, "uri": "/faults/pcs:sys_fault", "outValue": "(THDIMV) THDi MV - The threshold of harmonic distortion (THDi) has been overcome during the timeout set internally"},
+                        {"shift": 0, "mask": 65535, "inValue": 190, "uri": "/faults/pcs:sys_fault", "outValue": "(CPVF) Comb prot Volt Frq - One of the protection thresholds has been overcome"},
+                        {"shift": 0, "mask": 65535, "inValue": 191, "uri": "/faults/pcs:sys_fault", "outValue": "(CLBV) Crit Low Vdc Batt - Voltage in any of the buses is too low and DU is closed"},
+                        {"shift": 0, "mask": 65535, "inValue": 300, "uri": "/faults/pcs:sys_fault", "outValue": "(IEMB) Unbalance Bank - Difference between each input busbar voltage is higher than expected"},
+                        {"shift": 0, "mask": 65535, "inValue": 350, "uri": "/faults/pcs:sys_fault", "outValue": "(NOBNK) No Banks Enabled - No battery banks have been enabled. There is a mistake in the setting, or there is a fault in all the banks"},
+                        {"shift": 0, "mask": 65535, "inValue": 368, "uri": "/faults/pcs:sys_fault", "outValue": "(HVACCOMMS) Timeout communication fault with the HVAC control unit"},
+                        {"shift": 0, "mask": 65535, "inValue": 369, "uri": "/faults/pcs:sys_fault", "outValue": "(HVACNOP_F) Two or more HVAC units are not operational, and the battery container cooling is not guranteed"},
+                        {"shift": 0, "mask": 65535, "inValue": 370, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCCOMMS) Enclosure Comms - TCP Modbus communication timeout failure with the device"},
+                        {"shift": 0, "mask": 65535, "inValue": 371, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCTEMPH) Temperature in some of the enclosure sensors or the average temperature higher than expected"},
+                        {"shift": 0, "mask": 65535, "inValue": 372, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCDIG) Enclosure Digital - Emergency stop press-button on battery enclosure has been pushed"},
+                        {"shift": 0, "mask": 65535, "inValue": 373, "uri": "/faults/pcs:sys_fault", "outValue": "(ENC24VDC) Enclosure 24VDC - Voltage is out of range or the UPS is offline. 24V voltage is out of range when it is out of 3% (21-29V)"},
+                        {"shift": 0, "mask": 65535, "inValue": 374, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCPREDIS) Enclosure system is in gas pre-discharge mode"},
+                        {"shift": 0, "mask": 65535, "inValue": 375, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCAGREL) Enclosure Agent Release - System has acted"},
+                        {"shift": 0, "mask": 65535, "inValue": 376, "uri": "/faults/pcs:sys_fault", "outValue": "(ENCTEMPL) Enclosure Temp Low - Average temperature in the enclosure is lower than expected"},
+                        {"shift": 0, "mask": 65535, "inValue": 390, "uri": "/faults/pcs:sys_fault", "outValue": "(TRCOMMS) Communication timeout failure with medium voltage transformer"},
+                        {"shift": 0, "mask": 65535, "inValue": 391, "uri": "/faults/pcs:sys_fault", "outValue": "(TRTEMP_F) Transformer over oil temperature alarm has been activated"},
+                        {"shift": 0, "mask": 65535, "inValue": 392, "uri": "/faults/pcs:sys_fault", "outValue": "(TRPRESU_F) Transformer over pressure alarm has been activated"},
+                        {"shift": 0, "mask": 65535, "inValue": 393, "uri": "/faults/pcs:sys_fault", "outValue": "(TROIL_F) Transformer oil low level alarm has been activated"},
+
+                        {"shift": 0, "mask": 65535, "inValue": 45, "uri": "/site/ess_ls:pcs1_faults1[0]", "outValue": true, "note": "Bit 0 - Insulation Resistance"},
+                        {"shift": 0, "mask": 65535, "inValue": 1, "uri": "/site/ess_ls:pcs1_faults1[5]", "outValue": true, "note": "Bit 5 - LCD_DSP fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 58, "uri": "/site/ess_ls:pcs1_faults1[5]", "outValue": true, "note": "Bit 5 - LCD_DSP fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 116, "uri": "/site/ess_ls:pcs1_faults1[5]", "outValue": true, "note": "Bit 5 - LCD_DSP fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 102, "uri": "/site/ess_ls:pcs1_faults1[6]", "outValue": true, "note": "Bit 6 - AC current unbalanced"},
+                        {"shift": 0, "mask": 65535, "inValue": 182, "uri": "/site/ess_ls:pcs1_faults1[6]", "outValue": true, "note": "Bit 6 - AC current unbalanced"},
+                        {"shift": 0, "mask": 65535, "inValue": 185, "uri": "/site/ess_ls:pcs1_faults1[6]", "outValue": true, "note": "Bit 6 - AC current unbalanced"},
+                        {"shift": 0, "mask": 65535, "inValue": 186, "uri": "/site/ess_ls:pcs1_faults1[6]", "outValue": true, "note": "Bit 6 - AC current unbalanced"},
+                        {"shift": 0, "mask": 65535, "inValue": 43, "uri": "/site/ess_ls:pcs1_faults1[11]", "outValue": true, "note": "Bit 11 - DC Switch Fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 15, "uri": "/site/ess_ls:pcs1_faults1[27]", "outValue": true, "note": "Bit 27 - Carrier sync fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 25, "uri": "/site/ess_ls:pcs1_faults2[0]", "outValue": true, "note": "Bit 0 - DC undervoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 24, "uri": "/site/ess_ls:pcs1_faults2[1]", "outValue": true, "note": "Bit 1 - DC overvoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 6, "uri": "/site/ess_ls:pcs1_faults2[2]", "outValue": true, "note": "Bit 2 - AC undervoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 5, "uri": "/site/ess_ls:pcs1_faults2[3]", "outValue": true, "note": "Bit 3 - AC overvoltage"},
+                        {"shift": 0, "mask": 65535, "inValue": 7, "uri": "/site/ess_ls:pcs1_faults2[4]", "outValue": true, "note": "Bit 4 - AC underfrequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 8, "uri": "/site/ess_ls:pcs1_faults2[5]", "outValue": true, "note": "Bit 5 - AC overfrequency"},
+                        {"shift": 0, "mask": 65535, "inValue": 88, "uri": "/site/ess_ls:pcs1_fault2[6]", "outValue": true, "note": "Bit 6 - AC contactor fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 40, "uri": "/site/ess_ls:pcs1_faults2[10]", "outValue": true, "note": "Bit 10 - Module overtemperature"},
+                        {"shift": 0, "mask": 65535, "inValue": 34, "uri": "/site/ess_ls:pcs1_faults2[13]", "outValue": true, "note": "Bit 13 - Leakage current"},
+                        {"shift": 0, "mask": 65535, "inValue": 181, "uri": "/site/ess_ls:pcs1_faults2[13]", "outValue": true, "note": "Bit 13 - Leakage current"},
+                        {"shift": 0, "mask": 65535, "inValue": 36, "uri": "/site/ess_ls:pcs1_faults2[15]", "outValue": true, "note": "Bit 15 - Overload protection"},
+                        {"shift": 0, "mask": 65535, "inValue": 37, "uri": "/site/ess_ls:pcs1_faults2[15]", "outValue": true, "note": "Bit 15 - Overload protection"},
+                        {"shift": 0, "mask": 65535, "inValue": 101, "uri": "/site/ess_ls:pcs1_faults2[17]", "outValue": true, "note": "Bit 17 - DC fuse fault"},
+                        {"shift": 0, "mask": 65535, "inValue": 67, "uri": "/site/ess_ls:pcs1_faults2[20]", "outValue": true, "note": "Bit 20 - DC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 65, "uri": "/site/ess_ls:pcs1_faults2[21]", "outValue": true, "note": "Bit 21 - AC overcurrent"},
+                        {"shift": 0, "mask": 65535, "inValue": 104, "uri": "/site/ess_ls:pcs1_faults2[23]", "outValue": true, "note": "Bit 23 - Ambient temperature abnormal"}
+                    ]
+                }]
+            }
+        },
+        "current_status": {
+            "value": 0,
+            "defUri":"/status/pcs:PCSStatusResp",
+            "defVal":"PUP",
+            "actions": {
+                "onSet": [{
+                    "enum": [
+                        {"shift": 0, "mask": 255, "inValue": 0, "uri": "/status/pcs:PCSStatusResp", "outValue": "PUP"},
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/status/pcs:PCSStatusResp", "outValue": "INIT"},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/status/pcs:PCSStatusResp", "outValue": "OFF"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/status/pcs:PCSStatusResp", "outValue": "PCHG"},
+                        {"shift": 0, "mask": 255, "inValue": 4, "uri": "/status/pcs:PCSStatusResp", "outValue": "REA"},
+                        {"shift": 0, "mask": 255, "inValue": 5, "uri": "/status/pcs:PCSStatusResp", "outValue": "WAIT"},
+                        {"shift": 0, "mask": 255, "inValue": 6, "uri": "/status/pcs:PCSStatusResp", "outValue": "ON"},
+                        {"shift": 0, "mask": 255, "inValue": 7, "uri": "/status/pcs:PCSStatusResp", "outValue": "STOP"},
+                        {"shift": 0, "mask": 255, "inValue": 8, "uri": "/status/pcs:PCSStatusResp", "outValue": "DISC"},
+                        {"shift": 0, "mask": 255, "inValue": 9, "uri": "/status/pcs:PCSStatusResp", "outValue": "FLT"},
+                        {"shift": 0, "mask": 255, "inValue": 10, "uri": "/status/pcs:PCSStatusResp", "outValue": "LVRT"},
+                        {"shift": 0, "mask": 255, "inValue": 11, "uri": "/status/pcs:PCSStatusResp", "outValue": "OVRT"},
+                        {"shift": 0, "mask": 255, "inValue": 12, "uri": "/status/pcs:PCSStatusResp", "outValue": "NGHT"},
+                        {"shift": 0, "mask": 255, "inValue": 13, "uri": "/status/pcs:PCSStatusResp", "outValue": "NDCO"},
+                        {"shift": 0, "mask": 255, "inValue": 14, "uri": "/status/pcs:PCSStatusResp", "outValue": "STB"},
+                        {"shift": 0, "mask": 255, "inValue": 15, "uri": "/status/pcs:PCSStatusResp", "outValue": "HVPL"},
+                        {"shift": 0, "mask": 255, "inValue": 17, "uri": "/status/pcs:PCSStatusResp", "outValue": "PRON"},
+                        {"shift": 0, "mask": 255, "inValue": 18, "uri": "/status/pcs:PCSStatusResp", "outValue": "DIAG"},
+                        {"shift": 0, "mask": 255, "inValue": 19, "uri": "/status/pcs:PCSStatusResp", "outValue": "LCON"},
+                        {"shift": 0, "mask": 255, "inValue": 20, "uri": "/status/pcs:PCSStatusResp", "outValue": "PRMG"},
+                        {"shift": 0, "mask": 255, "inValue": 21, "uri": "/status/pcs:PCSStatusResp", "outValue": "BBAL"},
+                        {"shift": 0, "mask": 255, "inValue": 22, "uri": "/status/pcs:PCSStatusResp", "outValue": "CVSB"},
+                        {"shift": 0, "mask": 255, "inValue": 0, "uri": "/status/pcs:PCSSystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 1, "uri": "/status/pcs:PCSSystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 2, "uri": "/status/pcs:PCSSystemState", "outValue": "Off"},
+                        {"shift": 0, "mask": 255, "inValue": 3, "uri": "/status/pcs:PCSSystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 4, "uri": "/status/pcs:PCSSystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 5, "uri": "/status/pcs:PCSSystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 6, "uri": "/status/pcs:PCSSystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 7, "uri": "/status/pcs:PCSSystemState", "outValue": "Shutdown"},
+                        {"shift": 0, "mask": 255, "inValue": 8, "uri": "/status/pcs:PCSSystemState", "outValue": "Shutdown"},
+                        {"shift": 0, "mask": 255, "inValue": 9, "uri": "/status/pcs:PCSSystemState", "outValue": "Shutdown"},
+                        {"shift": 0, "mask": 255, "inValue": 10, "uri": "/status/pcs:PCSSystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 11, "uri": "/status/pcs:PCSSystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 12, "uri": "/status/pcs:PCSSystemState", "outValue": "Shutdown"},
+                        {"shift": 0, "mask": 255, "inValue": 13, "uri": "/status/pcs:PCSSystemState", "outValue": "Shutdown"},
+                        {"shift": 0, "mask": 255, "inValue": 14, "uri": "/status/pcs:PCSSystemState", "outValue": "Starting"},
+                        {"shift": 0, "mask": 255, "inValue": 15, "uri": "/status/pcs:PCSSystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 17, "uri": "/status/pcs:PCSSystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 18, "uri": "/status/pcs:PCSSystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 19, "uri": "/status/pcs:PCSSystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 20, "uri": "/status/pcs:PCSSystemState", "outValue": "Ready"},
+                        {"shift": 0, "mask": 255, "inValue": 21, "uri": "/status/pcs:PCSSystemState", "outValue": "Running"},
+                        {"shift": 0, "mask": 255, "inValue": 22, "uri": "/status/pcs:PCSSystemState", "outValue": "Running"}
+                    ]
+                }]
+            }
+        }
+    },
+    "/assets/pcs": {
+        "start_grad_p": {
+            "value": 10.0,
+            "debug":true,
+            "actions": {
+                "onSet": [
+                    { "limits": [ {"debug":true,"low": 0.1,"high": 3000.0}]},
+                    { "remap":  [ {"debug":true,"bit": 0,"uri": "/components/pcsm_control:start_grad_p"}]}
+                ]
+            }
+        }
+    }
+}

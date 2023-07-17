@@ -1,0 +1,15 @@
+{
+    "/system/sbmu_##sbmu##":{
+        "module_##module##_cell_##cell##":{
+            "aman":"/bms/sbmu_##sbmu##/module_##sbmu##_##module##/",
+            "aitem":"cell_##sbmu##_##module##_##cell##",
+            "soc":50.0,
+            "soh":100,
+            "voltage":3.2,
+            "maxCapacity":280.0,
+            "currCapacity":140.0,
+            "temp":25.0,
+            "current":5.0
+        }
+    }
+}

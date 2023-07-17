@@ -1,42 +1,7 @@
 {
 	"openapi": "3.0.0",
 	"paths": {
-		"/app": {
-			"get": {
-				"operationId": "appInit",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SiteConfigurationResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"app"
-				]
-			}
-		},
-		"/login-info": {
-			"get": {
-				"operationId": "loginInfo",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": ""
-					}
-				},
-				"tags": [
-					"app"
-				]
-			}
-		},
-		"/users": {
+		"/api/users": {
 			"get": {
 				"operationId": "all",
 				"parameters": [
@@ -44,7 +9,7 @@
 						"name": "role",
 						"required": false,
 						"in": "query",
-						"description": "HybridOS user role.",
+						"description": "HybridOS user role - valid roles: [user,admin,rest,developer,observer,restreadwrite]",
 						"schema": {
 							"type": "string"
 						}
@@ -60,10 +25,25 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"users"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			},
 			"post": {
@@ -89,17 +69,42 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"users"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/users/{id}": {
+		"/api/users/{id}": {
 			"put": {
 				"operationId": "update",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"description": "HybridOS user ID.",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -120,15 +125,40 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"users"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			},
 			"delete": {
 				"operationId": "delete",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"description": "HybridOS user ID.",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"responses": {
 					"200": {
 						"description": "",
@@ -139,15 +169,40 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"users"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			},
 			"get": {
 				"operationId": "read",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"description": "HybridOS user ID.",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"responses": {
 					"200": {
 						"description": "",
@@ -158,14 +213,29 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"users"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/site-admins": {
+		"/api/site-admins": {
 			"get": {
 				"operationId": "find",
 				"parameters": [],
@@ -179,10 +249,25 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"site-admins"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			},
 			"post": {
@@ -208,14 +293,29 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"site-admins"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/site-admins/radius-test": {
+		"/api/site-admins/radius-test": {
 			"post": {
 				"operationId": "radiusTest",
 				"parameters": [],
@@ -230,38 +330,161 @@
 					}
 				},
 				"responses": {
-					"201": {
-						"description": ""
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RadiusTestResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"site-admins"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/fims/one-time-auth": {
+		"/api/audit-logging": {
+			"post": {
+				"operationId": "logData",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AuditLogDTO"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": ""
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"audit-logging"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/fims/one-time-auth": {
 			"get": {
 				"operationId": "oneTimeAuth",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OneTimeAuthResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
-				}
+				},
+				"tags": [
+					"fims"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
 			}
 		},
-		"/fims/get": {
+		"/api/fims/get": {
 			"get": {
 				"operationId": "get",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "uri",
+						"required": true,
+						"in": "query",
+						"description": "URI of the GET message, indicates what data is requested",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "replyto",
+						"required": true,
+						"in": "query",
+						"description": "Field containing another URI that receiver processes should send an acknowledgement message.",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"responses": {
 					"200": {
 						"description": ""
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
-				}
+				},
+				"tags": [
+					"fims"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
 			}
 		},
-		"/fims/set": {
+		"/api/fims/set": {
 			"put": {
 				"operationId": "set",
 				"parameters": [],
@@ -278,11 +501,29 @@
 				"responses": {
 					"200": {
 						"description": ""
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
-				}
+				},
+				"tags": [
+					"fims"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
 			}
 		},
-		"/fims/post": {
+		"/api/fims/post": {
 			"post": {
 				"operationId": "post",
 				"parameters": [],
@@ -299,11 +540,29 @@
 				"responses": {
 					"201": {
 						"description": ""
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
-				}
+				},
+				"tags": [
+					"fims"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
 			}
 		},
-		"/fims/delete": {
+		"/api/fims/delete": {
 			"delete": {
 				"operationId": "delete",
 				"parameters": [],
@@ -320,22 +579,29 @@
 				"responses": {
 					"200": {
 						"description": ""
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
-				}
+				},
+				"tags": [
+					"fims"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
 			}
 		},
-		"/permissions": {
-			"get": {
-				"operationId": "findAll",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": ""
-					}
-				}
-			}
-		},
-		"/login": {
+		"/api/login": {
 			"post": {
 				"operationId": "login",
 				"parameters": [],
@@ -349,6 +615,16 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -356,7 +632,7 @@
 				]
 			}
 		},
-		"/login/mfa": {
+		"/api/login/mfa": {
 			"post": {
 				"operationId": "mfa",
 				"parameters": [],
@@ -380,6 +656,16 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -387,7 +673,7 @@
 				]
 			}
 		},
-		"/login/passExp": {
+		"/api/login/passExp": {
 			"post": {
 				"operationId": "passExpLogin",
 				"parameters": [],
@@ -407,7 +693,17 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiLoginPassExpResponse"
+									"$ref": "#/components/schemas/LoginSuccessResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
 								}
 							}
 						}
@@ -418,13 +714,30 @@
 				]
 			}
 		},
-		"/refresh_token": {
+		"/api/refresh_token": {
 			"get": {
 				"operationId": "refreshTokens",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginSuccessResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -432,21 +745,7 @@
 				]
 			}
 		},
-		"/superauth": {
-			"post": {
-				"operationId": "superauth",
-				"parameters": [],
-				"responses": {
-					"201": {
-						"description": ""
-					}
-				},
-				"tags": [
-					"auth"
-				]
-			}
-		},
-		"/authenticate-user-token": {
+		"/api/authenticate-user-token": {
 			"get": {
 				"operationId": "authenticateUserToken",
 				"parameters": [],
@@ -460,14 +759,29 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"auth"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/logout": {
+		"/api/logout": {
 			"post": {
 				"operationId": "logout",
 				"parameters": [],
@@ -481,68 +795,29 @@
 								}
 							}
 						}
-					}
-				},
-				"tags": [
-					"auth"
-				]
-			}
-		},
-		"/accessToken-test": {
-			"get": {
-				"operationId": "accessTokenTest",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": ""
-					}
-				},
-				"tags": [
-					"auth"
-				]
-			}
-		},
-		"/layouts": {
-			"get": {
-				"operationId": "getLayouts",
-				"parameters": [],
-				"responses": {
-					"200": {
+					},
+					"default": {
 						"description": "",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/LayoutsResponse"
+									"$ref": "#/components/schemas/DefaultApiError"
 								}
 							}
 						}
 					}
 				},
 				"tags": [
-					"layouts"
-				]
-			},
-			"post": {
-				"operationId": "postLayouts",
-				"parameters": [],
-				"responses": {
-					"200": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/LayoutsResponse"
-								}
-							}
-						}
+					"auth"
+				],
+				"security": [
+					{
+						"bearerAuth": []
 					}
-				},
-				"tags": [
-					"layouts"
 				]
 			}
 		},
-		"/assets": {
+		"/api/assets": {
 			"get": {
 				"operationId": "getAssets",
 				"parameters": [],
@@ -556,15 +831,40 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"assets"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			},
 			"post": {
 				"operationId": "postAssets",
 				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Assets"
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "",
@@ -575,14 +875,109 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"assets"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/dashboards": {
+		"/api/layouts": {
+			"get": {
+				"operationId": "getLayouts",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LayoutsResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"layouts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			},
+			"post": {
+				"operationId": "postLayouts",
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddLayout"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LayoutsResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"layouts"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/dashboards": {
 			"get": {
 				"operationId": "getDashboards",
 				"parameters": [],
@@ -596,15 +991,40 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"dashboards"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			},
 			"post": {
 				"operationId": "postDashboards",
 				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DashboardCard"
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "",
@@ -615,121 +1035,733 @@
 								}
 							}
 						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"dashboards"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/rest/v2/{endpoint}": {
+			"post": {
+				"operationId": "post",
+				"parameters": [
+					{
+						"name": "endpoint",
+						"required": true,
+						"in": "path",
+						"description": "URI",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"description": "Body formatted as plain text",
+					"content": {
+						"text/plain": {
+							"schema": {
+								"type": "string"
+							},
+							"examples": {
+								"naked value": {
+									"value": true,
+									"description": "pass just the raw value"
+								},
+								"clothed value": {
+									"value": {
+										"value": true
+									},
+									"description": "pass the value as a JSON object"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"202": {
+						"description": "Refer to documentation of target uri / resource.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RestPostResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"rest/v2"
+				],
+				"security": [
+					{
+						"basicAuth": []
+					}
+				]
+			},
+			"get": {
+				"operationId": "get",
+				"parameters": [
+					{
+						"name": "endpoint",
+						"required": true,
+						"in": "path",
+						"description": "URI",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "If the requested URI is an aggregated endpoint, this JSON object will contain the data for each child URI.\nIf the requested URI is not an aggregated endpoint and the requested data is clothed, then the JSON response will contain the entire body of the clothed data.\nIf the requested URI is not an aggregated endpoint and the requested data is naked, then the JSON response will be {uri: <requested_uri>, value: <value>}",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RestGetResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"rest/v2"
+				],
+				"security": [
+					{
+						"basicAuth": []
+					}
+				]
+			},
+			"put": {
+				"operationId": "put",
+				"parameters": [
+					{
+						"name": "endpoint",
+						"required": true,
+						"in": "path",
+						"description": "URI",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"description": "Body formatted as plain text",
+					"content": {
+						"text/plain": {
+							"schema": {
+								"type": "string"
+							},
+							"examples": {
+								"naked value": {
+									"value": true,
+									"description": "pass just the raw value"
+								},
+								"clothed value": {
+									"value": {
+										"value": true
+									},
+									"description": "pass the value as a JSON object"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"202": {
+						"description": "Refer to documentation of target uri / resource.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RestPutResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"rest/v2"
+				],
+				"security": [
+					{
+						"basicAuth": []
+					}
+				]
+			},
+			"delete": {
+				"operationId": "delete",
+				"parameters": [
+					{
+						"name": "endpoint",
+						"required": true,
+						"in": "path",
+						"description": "URI",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": false,
+					"description": "Body formatted as plain text",
+					"content": {
+						"text/plain": {
+							"schema": {
+								"type": "string"
+							},
+							"examples": {
+								"naked value": {
+									"value": true,
+									"description": "pass just the raw value"
+								},
+								"clothed value": {
+									"value": {
+										"value": true
+									},
+									"description": "pass the value as a JSON object"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"202": {
+						"description": "Refer to documentation of target uri / resource.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RestDeleteResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"rest/v2"
+				],
+				"security": [
+					{
+						"basicAuth": []
+					}
+				]
+			}
+		},
+		"/rest/v1/{endpoint}": {
+			"get": {
+				"operationId": "get",
+				"parameters": [
+					{
+						"name": "endpoint",
+						"required": true,
+						"in": "path",
+						"description": "URI",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "If the requested URI is an aggregated endpoint, this JSON object will contain the data for each child URI.\nIf the requested URI is not an aggregated endpoint and the requested data is clothed, then the JSON response will contain the entire body of the clothed data.\nIf the requested URI is not an aggregated endpoint and the requested data is naked, then the JSON response will be {uri: <requested_uri>, value: <value>}",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LegacyRestGetResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"rest"
+				],
+				"security": [
+					{
+						"basicAuth": []
+					}
 				]
 			}
 		},
 		"/rest/{endpoint}": {
 			"get": {
 				"operationId": "get",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "endpoint",
+						"required": true,
+						"in": "path",
+						"description": "URI",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"responses": {
 					"200": {
-						"description": ""
-					}
-				}
-			}
-		},
-		"/rest/{endpoint}/{value}": {
-			"put": {
-				"operationId": "put",
-				"parameters": [],
-				"responses": {
+						"description": "If the requested URI is an aggregated endpoint, this JSON object will contain the data for each child URI.\nIf the requested URI is not an aggregated endpoint and the requested data is clothed, then the JSON response will contain the entire body of the clothed data.\nIf the requested URI is not an aggregated endpoint and the requested data is naked, then the JSON response will be {uri: <requested_uri>, value: <value>}",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LegacyRestGetResponse"
+								}
+							}
+						}
+					},
 					"default": {
 						"description": "",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/AggregatedPutResponse"
+									"$ref": "#/components/schemas/DefaultApiError"
 								}
 							}
 						}
 					}
-				}
+				},
+				"tags": [
+					"rest"
+				],
+				"security": [
+					{
+						"basicAuth": []
+					}
+				]
 			}
 		},
-		"/scheduler/events": {
+		"/rest/v1/{endpoint}/{value}": {
+			"put": {
+				"operationId": "put",
+				"parameters": [
+					{
+						"name": "value",
+						"required": true,
+						"in": "path",
+						"description": "Naked Value",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "endpoint",
+						"required": true,
+						"in": "path",
+						"description": "URI",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"202": {
+						"description": "Refer to documentation of target uri / resource.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LegacyRestPutResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"rest"
+				],
+				"security": [
+					{
+						"basicAuth": []
+					}
+				]
+			}
+		},
+		"/rest/{endpoint}/{value}": {
+			"put": {
+				"operationId": "put",
+				"parameters": [
+					{
+						"name": "value",
+						"required": true,
+						"in": "path",
+						"description": "Naked Value",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "endpoint",
+						"required": true,
+						"in": "path",
+						"description": "URI",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"202": {
+						"description": "Refer to documentation of target uri / resource.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LegacyRestPutResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"rest"
+				],
+				"security": [
+					{
+						"basicAuth": []
+					}
+				]
+			}
+		},
+		"/api/scheduler/events": {
 			"get": {
 				"operationId": "allEvents",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fevents\">Scheduler Events Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/scheduler/events/{siteId}/{eventId}": {
+		"/api/scheduler/events/{siteId}/{eventId}": {
 			"delete": {
 				"operationId": "delete",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "siteId",
+						"required": true,
+						"in": "path",
+						"description": "ID of the Site Scheduler",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "eventId",
+						"required": true,
+						"in": "path",
+						"description": "ID of the specific id being added/deleted/edited",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fevents\">Scheduler Events Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			},
 			"post": {
 				"operationId": "updateEvent",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "siteId",
+						"required": true,
+						"in": "path",
+						"description": "ID of the Site Scheduler",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "eventId",
+						"required": true,
+						"in": "path",
+						"description": "ID of the specific id being added/deleted/edited",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Event"
+							}
+						}
+					}
+				},
 				"responses": {
 					"201": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fevents\">Scheduler Events Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/scheduler/events/{siteId}": {
+		"/api/scheduler/events/{siteId}": {
 			"post": {
 				"operationId": "create",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "siteId",
+						"required": true,
+						"in": "path",
+						"description": "ID of the Site Scheduler",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Event"
+							}
+						}
+					}
+				},
 				"responses": {
 					"201": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fevents\">Scheduler Events Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/scheduler/events/{siteId}/{eventId}/exceptions": {
+		"/api/scheduler/events/{siteId}/{eventId}/exceptions": {
 			"post": {
 				"operationId": "addException",
-				"parameters": [],
+				"parameters": [
+					{
+						"name": "siteId",
+						"required": true,
+						"in": "path",
+						"description": "ID of the Site Scheduler",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "eventId",
+						"required": true,
+						"in": "path",
+						"description": "ID of the specific id being added/deleted/edited",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"responses": {
 					"201": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fevents\">Scheduler Events Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/scheduler/modes": {
+		"/api/scheduler/modes": {
 			"get": {
 				"operationId": "modes",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fmodes\">Scheduler Modes Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			},
 			"post": {
@@ -737,175 +1769,624 @@
 				"parameters": [],
 				"responses": {
 					"201": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fmodes\">Scheduler Modes Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/scheduler/configuration": {
+		"/api/scheduler/modes/{modeId}": {
+			"delete": {
+				"operationId": "deleteMode",
+				"parameters": [
+					{
+						"name": "modeId",
+						"required": true,
+						"in": "path",
+						"description": "ID of the mode being deleted/edited",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fmodes\">Scheduler Modes Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			},
+			"post": {
+				"operationId": "updateMode",
+				"parameters": [
+					{
+						"name": "modeId",
+						"required": true,
+						"in": "path",
+						"description": "ID of the mode being deleted/edited",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ModeBody"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fmodes\">Scheduler Modes Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/scheduler/configuration": {
 			"get": {
 				"operationId": "configuration",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fconfiguration\">Scheduler Configuration Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			},
 			"post": {
 				"operationId": "createConfig",
 				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SchedulerConfiguration"
+							}
+						}
+					}
+				},
 				"responses": {
 					"201": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fconfiguration\">Scheduler Configuration Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/scheduler/timezones": {
+		"/api/scheduler/timezones": {
 			"get": {
 				"operationId": "timezones",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Ftimezones\">Scheduler Timezones Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/scheduler/connected": {
+		"/api/scheduler/connected": {
 			"get": {
 				"operationId": "connected",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/9371888/Scheduler+-+REST+API+HTTPS#https%3A%2F%2FIP_ADDRESS_HERE%2Fscheduler%2Fconnected\">Scheduler Connected Rest API Documenation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"scheduler"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/events": {
+		"/api/events": {
 			"get": {
 				"operationId": "events",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/EventsResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
 					"events"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/sitestatus": {
+		"/api/sitestatus": {
 			"get": {
 				"operationId": "getSiteStatus",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SiteStatusResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
-				}
+				},
+				"tags": [
+					"sitestatus"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
 			}
 		},
-		"/variable-override/sites": {
+		"/api/ercot-override/sites": {
 			"get": {
 				"operationId": "siteNames",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/43646981/API#GETs\">See ERCOT Ancillary Service API Documentation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
-					"variable-override"
+					"ercot-override"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/variable-override/variable-names": {
+		"/api/ercot-override/variable-names": {
 			"get": {
 				"operationId": "variableNames",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/43646981/API#GETs\">See ERCOT Ancillary Service API Documentation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
-					"variable-override"
+					"ercot-override"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/variable-override/variable-values/{siteId}": {
+		"/api/ercot-override/variable-values/{id}": {
 			"get": {
 				"operationId": "variableValues",
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"description": "ID of the Site in the Fleet Manager that the variables are associated with",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/43646981/API#GETs\">See ERCOT Ancillary Service API Documentation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"ercot-override"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/ercot-override/override-value/{id}/{name}": {
+			"post": {
+				"operationId": "editOverride",
+				"parameters": [
+					{
+						"name": "id",
+						"required": true,
+						"in": "path",
+						"description": "ID of the Site in the Fleet Manager that the variables are associated with",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "name",
+						"required": true,
+						"in": "path",
+						"description": "Variable that is being edited",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/NewValue"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "<a href=\"https://flexgen.atlassian.net/wiki/spaces/API/pages/43646981/API#SETs\">See ERCOT Ancillary Service API Documentation</a>"
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"ercot-override"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/web-ui-config": {
+			"get": {
+				"operationId": "appInit",
 				"parameters": [],
 				"responses": {
 					"200": {
-						"description": ""
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SiteConfigurationResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
-					"variable-override"
+					"web-ui-config"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
 				]
 			}
 		},
-		"/variable-override/override-value/{siteId}/{variableName}": {
-			"post": {
-				"operationId": "editOverride",
+		"/api/login-info": {
+			"get": {
+				"operationId": "loginInfo",
 				"parameters": [],
 				"responses": {
-					"201": {
-						"description": ""
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginInfoResponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
-					"variable-override"
+					"web-ui-config"
 				]
 			}
 		}
 	},
 	"info": {
 		"title": "HybridOS Web Server",
-		"description": "Web Server REST API Documentation.",
-		"version": "1.0",
+		"description": "\n<h2>Web Server REST API Documentation</h2>\n<a href=\"https://flexgen.atlassian.net/wiki/spaces/AP/pages/edit-v2/223215617\">Authentication Guide</a>\n",
+		"version": "1.0.0",
 		"contact": {}
 	},
 	"tags": [
 		{
-			"name": "nest_web_server",
+			"name": "web_server",
 			"description": ""
+		},
+		{
+			"name": "assets",
+			"description": "Allows users to get and edit configured assets from dbi"
+		},
+		{
+			"name": "ercot-override",
+			"description": "Allows users to get and override ERCOT standard variables"
+		},
+		{
+			"name": "events",
+			"description": "Allows users to get a list of filtered events"
+		},
+		{
+			"name": "scheduler",
+			"description": "Allows users to get, add, delete, and edit Scheduler events and modes, as well as get and edit the Scheduler configuration"
+		},
+		{
+			"name": "site",
+			"description": "Allows users to get, add, delete, and edit Scheduler events and modes, as well as get and edit the Scheduler configuration"
+		},
+		{
+			"name": "dashboards",
+			"description": "Allows users to get and edit configured dashboard cards from dbi"
+		},
+		{
+			"name": "fims",
+			"description": "Allows users to get a fims one-time-auth token, as well as send fims get, post, set, and delete messages"
+		},
+		{
+			"name": "layouts",
+			"description": "Allows users to get and edit configured layouts from dbi"
+		},
+		{
+			"name": "site-admins",
+			"description": "Allows users to get and edit site settings (password settings, radius settings), send radius tests"
+		},
+		{
+			"name": "users",
+			"description": "Allows users to get, add, edit, read, and delete users"
+		},
+		{
+			"name": "web-ui-config",
+			"description": "Allows users to get the full site configuration data object as well as a subset of config data used on the login page"
 		}
 	],
 	"servers": [],
 	"components": {
+		"securitySchemes": {
+			"basicAuth": {
+				"type": "http",
+				"scheme": "basic"
+			},
+			"bearerAuth": {
+				"scheme": "bearer",
+				"bearerFormat": "JWT",
+				"type": "http"
+			}
+		},
 		"schemas": {
-			"SiteConfigurationResponse": {
+			"DefaultApiError": {
 				"type": "object",
 				"properties": {
-					"siteConfiguration": {
-						"type": "object",
-						"description": "Site Configuration from web ui config file"
+					"statusCode": {
+						"type": "number",
+						"description": "HTTP status code"
+					},
+					"message": {
+						"type": "string",
+						"description": "Message attached to error."
+					},
+					"error": {
+						"type": "string",
+						"description": "Error description"
 					}
 				},
 				"required": [
-					"siteConfiguration"
+					"statusCode",
+					"message",
+					"error"
 				]
 			},
 			"UserResponse": {
@@ -917,19 +2398,19 @@
 					},
 					"username": {
 						"type": "object",
-						"description": "HybridOS username."
+						"description": "HybridOS username - username must be between 5 and 25 characters; username may only include letters, numbers, periods, and underscores"
 					},
 					"role": {
 						"type": "object",
-						"description": "HybridOS user role."
+						"description": "HybridOS user role - valid roles: [user,admin,rest,developer,observer,restreadwrite]"
 					},
 					"password": {
 						"type": "object",
-						"description": "HybridOS user hashed password."
+						"description": "HybridOS user password."
 					},
 					"old_passwords": {
 						"type": "object",
-						"description": "Previous hashed passwords."
+						"description": "List of previous user passwords, used for password expiration (when users password expires and certain password settings are set, they may not use new passwords that are in this list)."
 					},
 					"pwdUpdatedDate": {
 						"type": "object",
@@ -969,7 +2450,7 @@
 				"properties": {
 					"username": {
 						"type": "string",
-						"description": "HybridOS username."
+						"description": "HybridOS username - username must be between 5 and 25 characters; username may only include letters, numbers, periods, and underscores"
 					},
 					"role": {
 						"type": "string",
@@ -977,7 +2458,7 @@
 					},
 					"password": {
 						"type": "string",
-						"description": "HybridOS user hashed password."
+						"description": "HybridOS user password."
 					}
 				},
 				"required": [
@@ -1019,7 +2500,7 @@
 					},
 					"password_expiration_interval": {
 						"type": "string",
-						"description": "Time until password expires"
+						"description": "Time until password expires, in format length (numeric) interval (m - minutes, d -days); ex: 8d would mean 8 days"
 					},
 					"old_passwords": {
 						"type": "number",
@@ -1077,7 +2558,7 @@
 					},
 					"secret_phrase": {
 						"type": "string",
-						"description": "Radius server's secret"
+						"description": "Radius server's secret phrase"
 					},
 					"wait_time": {
 						"type": "number",
@@ -1143,7 +2624,7 @@
 					},
 					"password_expiration_interval": {
 						"type": "string",
-						"description": "Time until password expires"
+						"description": "Time until password expires, in format length (numeric) interval (m - minutes, d -days); ex: 8d would mean 8 days"
 					},
 					"old_passwords": {
 						"type": "number",
@@ -1201,7 +2682,7 @@
 					},
 					"secret_phrase": {
 						"type": "string",
-						"description": "Radius server's secret"
+						"description": "Radius server's secret phrase"
 					},
 					"wait_time": {
 						"type": "number",
@@ -1248,22 +2729,101 @@
 			},
 			"RadiusTestDto": {
 				"type": "object",
+				"properties": {
+					"ip_address": {
+						"type": "string",
+						"description": "Ip address of radius server"
+					},
+					"port": {
+						"type": "string",
+						"description": "Port of radius server"
+					},
+					"secret_phrase": {
+						"type": "string",
+						"description": "Radius server's secret phrase"
+					},
+					"wait_time": {
+						"type": "number",
+						"description": "Timeout length when connecting to radius server"
+					},
+					"username": {
+						"type": "string",
+						"description": "Username credential sent to test radius server"
+					},
+					"password": {
+						"type": "string",
+						"description": "Password credential sent to test radius server"
+					}
+				},
+				"required": [
+					"ip_address",
+					"port",
+					"secret_phrase",
+					"wait_time",
+					"username",
+					"password"
+				]
+			},
+			"RadiusTestResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "A response message describing whether or not the test of radius credentials passed or failed"
+					}
+				},
+				"required": [
+					"message"
+				]
+			},
+			"AuditLogDTO": {
+				"type": "object",
 				"properties": {}
+			},
+			"OneTimeAuthResponse": {
+				"type": "object",
+				"properties": {
+					"token": {
+						"type": "string",
+						"description": "Token for gaining access websocket gateway."
+					}
+				},
+				"required": [
+					"token"
+				]
 			},
 			"BodyDTO": {
 				"type": "object",
-				"properties": {}
+				"properties": {
+					"uri": {
+						"type": "string",
+						"description": "The URI string associated with the message. All processes subscribed to this URI will receive the message."
+					},
+					"replyto": {
+						"type": "string",
+						"description": "Field containing another URI that receiver processes should send an acknowledgement message."
+					},
+					"body": {
+						"type": "string",
+						"description": "Optional body of the fims message; Typically either a single value or a stringified JSON object."
+					}
+				},
+				"required": [
+					"uri",
+					"replyto",
+					"body"
+				]
 			},
 			"ApiLoginResponse": {
 				"type": "object",
 				"properties": {
 					"username": {
 						"type": "string",
-						"description": "HybridOS username."
+						"description": "HybridOS username - username must be between 5 and 25 characters; username may only include letters, numbers, periods, and underscores"
 					},
 					"role": {
 						"type": "string",
-						"description": "HybridOS user role."
+						"description": "HybridOS user role - valid roles: [user,admin,rest,developer,observer,restreadwrite]"
 					},
 					"qrCode": {
 						"type": "string",
@@ -1279,7 +2839,7 @@
 					},
 					"accessToken": {
 						"type": "string",
-						"description": "URL of a qrcode to allow users to set up mfa"
+						"description": "Authorization access token"
 					}
 				},
 				"required": [
@@ -1291,7 +2851,7 @@
 				"properties": {
 					"username": {
 						"type": "string",
-						"description": "HybridOS username."
+						"description": "HybridOS username - username must be between 5 and 25 characters; username may only include letters, numbers, periods, and underscores"
 					},
 					"totp": {
 						"type": "string",
@@ -1308,15 +2868,15 @@
 				"properties": {
 					"username": {
 						"type": "string",
-						"description": "HybridOS username."
+						"description": "HybridOS username - username must be between 5 and 25 characters; username may only include letters, numbers, periods, and underscores"
 					},
 					"role": {
 						"type": "string",
-						"description": "HybridOS user role."
+						"description": "HybridOS user role - valid roles: [user,admin,rest,developer,observer,restreadwrite]"
 					},
 					"accessToken": {
 						"type": "string",
-						"description": "URL of a qrcode to allow users to set up mfa"
+						"description": "Authorization access token"
 					}
 				},
 				"required": [
@@ -1328,36 +2888,16 @@
 				"properties": {
 					"username": {
 						"type": "string",
-						"description": "HybridOS username."
+						"description": "HybridOS username - username must be between 5 and 25 characters; username may only include letters, numbers, periods, and underscores"
 					},
 					"updatedPassword": {
 						"type": "string",
-						"description": "HybridOS user hashed password."
+						"description": "HybridOS user password."
 					}
 				},
 				"required": [
 					"username",
 					"updatedPassword"
-				]
-			},
-			"ApiLoginPassExpResponse": {
-				"type": "object",
-				"properties": {
-					"username": {
-						"type": "string",
-						"description": "HybridOS username."
-					},
-					"role": {
-						"type": "string",
-						"description": "HybridOS user role."
-					},
-					"passwordExpired": {
-						"type": "boolean",
-						"description": "Denotes whether the user's password has expired"
-					}
-				},
-				"required": [
-					"username"
 				]
 			},
 			"Logout": {
@@ -1372,6 +2912,176 @@
 					"message"
 				]
 			},
+			"AssetsResponse": {
+				"type": "object",
+				"properties": {
+					"assets": {
+						"type": "object",
+						"description": "List of asset tabs from dbi."
+					}
+				},
+				"required": [
+					"assets"
+				]
+			},
+			"Alarm": {
+				"type": "object",
+				"properties": {
+					"alarmFields": {
+						"description": "Array of alarm fields associated with this asset",
+						"type": "array",
+						"items": {
+							"type": "array"
+						}
+					},
+					"faultFields": {
+						"description": "Array of fault fields associated with this asset",
+						"type": "array",
+						"items": {
+							"type": "array"
+						}
+					}
+				},
+				"required": [
+					"alarmFields",
+					"faultFields"
+				]
+			},
+			"Control": {
+				"type": "object",
+				"properties": {
+					"inputType": {
+						"type": "string",
+						"description": "Input type of a particular control"
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of a control, what is displayed to the UI"
+					},
+					"scalar": {
+						"type": "string",
+						"description": "Scalar used for particular control"
+					},
+					"units": {
+						"type": "string",
+						"description": "Unit used for a particular control"
+					},
+					"uri": {
+						"type": "string",
+						"description": "URI associated with a particular control"
+					}
+				},
+				"required": [
+					"inputType",
+					"name",
+					"scalar",
+					"units",
+					"uri"
+				]
+			},
+			"Status": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "Name of a status, what is displayed to the UI"
+					},
+					"scalar": {
+						"type": "string",
+						"description": "Scalar used for particular status"
+					},
+					"units": {
+						"type": "string",
+						"description": "Unit used for particular status"
+					},
+					"uri": {
+						"type": "string",
+						"description": "URI associated with a particular status"
+					}
+				},
+				"required": [
+					"name",
+					"scalar",
+					"units",
+					"uri"
+				]
+			},
+			"Asset": {
+				"type": "object",
+				"properties": {
+					"alarms": {
+						"description": "Array of information about alarms and faults associated with this asset",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Alarm"
+							}
+						]
+					},
+					"allControls": {
+						"description": "Array of all controls associated with this asset",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Control"
+						}
+					},
+					"controls": {
+						"description": "Array of controls associated with this asset",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Control"
+						}
+					},
+					"info": {
+						"type": "object",
+						"description": "Array of info objects associated with this asset"
+					},
+					"statuses": {
+						"description": "Array of statuses associated with this asset",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Status"
+						}
+					},
+					"summary": {
+						"description": "Array of summary objects associated with this asset",
+						"type": "array",
+						"items": {
+							"type": "array"
+						}
+					},
+					"summaryControls": {
+						"description": "Array of Summary Controls associated with this asset",
+						"type": "array",
+						"items": {
+							"type": "array"
+						}
+					}
+				},
+				"required": [
+					"alarms",
+					"allControls",
+					"controls",
+					"info",
+					"statuses",
+					"summary",
+					"summaryControls"
+				]
+			},
+			"Assets": {
+				"type": "object",
+				"properties": {
+					"data": {
+						"description": "Array of asset objects",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Asset"
+						}
+					}
+				},
+				"required": [
+					"data"
+				]
+			},
 			"LayoutsResponse": {
 				"type": "object",
 				"properties": {
@@ -1384,16 +3094,52 @@
 					"layouts"
 				]
 			},
-			"AssetsResponse": {
+			"Info": {
 				"type": "object",
 				"properties": {
-					"assets": {
-						"type": "object",
-						"description": "List of asset tabs from dbi."
+					"key": {
+						"type": "string",
+						"description": " A reference key used with other configs, Typically should be relevant to the page"
+					},
+					"name": {
+						"type": "string",
+						"description": "The name of the item, This will appear on the left side drawer of the UI as well as the relevant page."
 					}
 				},
 				"required": [
-					"assets"
+					"key",
+					"name"
+				]
+			},
+			"Layout": {
+				"type": "object",
+				"properties": {
+					"info": {
+						"description": "Object containing info objects - each with a key and name",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Info"
+							}
+						]
+					}
+				},
+				"required": [
+					"info"
+				]
+			},
+			"AddLayout": {
+				"type": "object",
+				"properties": {
+					"data": {
+						"description": "Array of layout objects",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Layout"
+						}
+					}
+				},
+				"required": [
+					"data"
 				]
 			},
 			"DashboardsResponse": {
@@ -1408,7 +3154,59 @@
 					"dashboards"
 				]
 			},
-			"AggregatedPutResponse": {
+			"Dashboard": {
+				"type": "object",
+				"properties": {
+					"info": {
+						"description": "Information about the dashboard card itself",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Info"
+							}
+						]
+					},
+					"status": {
+						"description": "An array of statuses to display on the dashboard card",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Status"
+						}
+					}
+				},
+				"required": [
+					"info",
+					"status"
+				]
+			},
+			"DashboardCard": {
+				"type": "object",
+				"properties": {
+					"data": {
+						"description": "An array of data about a specific dashboard card",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Dashboard"
+						}
+					}
+				},
+				"required": [
+					"data"
+				]
+			},
+			"RestPostResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Information about message request or reply."
+					}
+				}
+			},
+			"RestGetResponse": {
+				"type": "object",
+				"properties": {}
+			},
+			"RestPutResponse": {
 				"type": "object",
 				"properties": {
 					"status": {
@@ -1430,8 +3228,645 @@
 					"value": {
 						"type": "object",
 						"description": "Value set"
+					},
+					"message": {
+						"type": "string",
+						"description": "Information about message request or reply."
 					}
 				}
+			},
+			"RestDeleteResponse": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "Information about message request or reply."
+					}
+				}
+			},
+			"LegacyRestGetResponse": {
+				"type": "object",
+				"properties": {}
+			},
+			"LegacyRestPutResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "number",
+						"description": "HTTP status code"
+					},
+					"statusString": {
+						"type": "string",
+						"description": "Status desciption"
+					},
+					"method": {
+						"type": "string",
+						"description": "HTTP method"
+					},
+					"uri": {
+						"type": "string",
+						"description": "Target URI"
+					},
+					"value": {
+						"type": "object",
+						"description": "Value set"
+					},
+					"message": {
+						"type": "string",
+						"description": "Information about message request or reply."
+					}
+				}
+			},
+			"Repeat": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "ID of repeat object associated with an Event"
+					},
+					"cycle": {
+						"type": "string",
+						"description": "Cycle of repeat object - whether event recurs weekly or daily"
+					},
+					"frequency": {
+						"type": "number",
+						"description": "Frequency of repeat object - how often an event recurs"
+					},
+					"day_mask": {
+						"type": "number",
+						"description": "Day mask for repeat object of event that recurs weekly - which days event occurs"
+					},
+					"end_time": {
+						"type": "string",
+						"description": "End date/time for repeating event - the date/time the event should stop recurring"
+					},
+					"end_count": {
+						"type": "number",
+						"description": "End count for repeating event - after this number of events, the event should stop recurring"
+					},
+					"exceptions": {
+						"description": "Exceptions of the repeat object - the event will not occur on dates listed in this array",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				},
+				"required": [
+					"id",
+					"cycle",
+					"frequency",
+					"day_mask",
+					"end_time",
+					"end_count",
+					"exceptions"
+				]
+			},
+			"Event": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "object",
+						"description": "ID of Event Object"
+					},
+					"duration": {
+						"type": "object",
+						"description": "Duration of Event"
+					},
+					"mode": {
+						"type": "object",
+						"description": "Mode of Event"
+					},
+					"start_time": {
+						"type": "object",
+						"description": "Start Time of Event"
+					},
+					"variables": {
+						"type": "object",
+						"description": "Variable object associated with Event"
+					},
+					"repeat": {
+						"description": "Repeat object associated with Event",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Repeat"
+							}
+						]
+					}
+				},
+				"required": [
+					"id",
+					"duration",
+					"mode",
+					"start_time",
+					"variables",
+					"repeat"
+				]
+			},
+			"Setpoint": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "ID of Setpoint"
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of Setpoint"
+					},
+					"type": {
+						"type": "string",
+						"description": "Data type of setpoint"
+					},
+					"unit": {
+						"type": "string",
+						"description": "Unit of setpoint data"
+					},
+					"uri": {
+						"type": "string",
+						"description": "URI associated with setpoint"
+					},
+					"value": {
+						"type": "object",
+						"description": "Value of setpoint data"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"type",
+					"unit",
+					"uri",
+					"value"
+				]
+			},
+			"ModeBody": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "Name of Mode"
+					},
+					"color_code": {
+						"type": "string",
+						"description": "Color associated with mode"
+					},
+					"icon": {
+						"type": "string",
+						"description": "Icon associated with mode"
+					},
+					"variables": {
+						"description": "Array of mode variables",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Setpoint"
+						}
+					},
+					"constants": {
+						"description": "Array of mode constants",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Setpoint"
+						}
+					}
+				},
+				"required": [
+					"name",
+					"color_code",
+					"icon",
+					"variables",
+					"constants"
+				]
+			},
+			"SetPointEnforcement": {
+				"type": "object",
+				"properties": {
+					"enabled": {
+						"type": "boolean",
+						"description": "When true, Scheduler will send GETs to event setpoints during the duration of the event. If a value found in a GET reply does not match its setpoint value, a fresh SET will be sent to the setpoint’s URI."
+					},
+					"frequency_seconds": {
+						"type": "number",
+						"description": "How many seconds between setpoint enforcement GETs being sent out."
+					}
+				},
+				"required": [
+					"enabled",
+					"frequency_seconds"
+				]
+			},
+			"LocalSchedule": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "ID of the local schedule"
+					},
+					"name": {
+						"type": "string",
+						"description": "Display name of the local schedule"
+					},
+					"clothed_setpoints": {
+						"type": "boolean",
+						"description": "True/False value representing whether to send setpoints as clothed body requests"
+					},
+					"setpoint_enforcement": {
+						"description": "Object used to configure the Setpoint Enforcement feature",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/SetPointEnforcement"
+							}
+						]
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"clothed_setpoints",
+					"setpoint_enforcement"
+				]
+			},
+			"Clients": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "The ID of the Site Scheduler. Used in URIs, so spaces and slashes are not allowed."
+					},
+					"name": {
+						"type": "string",
+						"description": "Display name of the Site Scheduler"
+					},
+					"ip": {
+						"type": "string",
+						"description": "IP of the Site Scheduler’s server"
+					},
+					"port": {
+						"type": "object",
+						"description": "The port that the Site Scheduler’s HTTPS WebSocket server is hosted on"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"ip",
+					"port"
+				]
+			},
+			"Server": {
+				"type": "object",
+				"properties": {
+					"enabled": {
+						"type": "boolean",
+						"description": "When true, an HTTPS WebSocket will be served to which a Fleet Scheduler can connect"
+					},
+					"port": {
+						"type": "object",
+						"description": "The port that the HTTPS WebSocket server should be hosted on."
+					}
+				},
+				"required": [
+					"enabled",
+					"port"
+				]
+			},
+			"WebSockets": {
+				"type": "object",
+				"properties": {
+					"clients": {
+						"description": "An array, where each element of the array is an object that represents a Site Scheduler",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Clients"
+						}
+					},
+					"server": {
+						"description": "Fields associated with the server in the Fleet-Site interface",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Server"
+							}
+						]
+					}
+				},
+				"required": [
+					"clients",
+					"server"
+				]
+			},
+			"Scada": {
+				"type": "object",
+				"properties": {
+					"stage_size": {
+						"type": "number",
+						"description": "The number of event slots in the Staging Area"
+					},
+					"max_num_configurations": {
+						"type": "number",
+						"description": "The number of event slots the SCADA interface will maintain"
+					},
+					"num_floats": {
+						"type": "number",
+						"description": "The number of float variables that will be represented per event slot"
+					},
+					"num_ints": {
+						"type": "number",
+						"description": "The number of integer variables that will be represented per event slot"
+					},
+					"num_bools": {
+						"type": "number",
+						"description": "The number of boolean variables that will be represented per event slot"
+					},
+					"num_strings": {
+						"type": "number",
+						"description": "The number of string variables that will be represented per event slot"
+					}
+				},
+				"required": [
+					"stage_size",
+					"max_num_configurations",
+					"num_floats",
+					"num_ints",
+					"num_bools",
+					"num_strings"
+				]
+			},
+			"SchedulerConfiguration": {
+				"type": "object",
+				"properties": {
+					"scheduler_type": {
+						"type": "string",
+						"description": "Type of scheduler for configuration - FM (fleet manager) or SC (site controller)"
+					},
+					"local_schedule": {
+						"description": "Series of fields associated with the local schedule - optional on FM, required on SC",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/LocalSchedule"
+							}
+						]
+					},
+					"web_sockets": {
+						"description": "Object used to configure Fleet-Site interface feature",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/WebSockets"
+							}
+						]
+					},
+					"scada": {
+						"description": "Fields used to configure the SCADA interface to communicate with Scheduler over Modbus or DNP3",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Scada"
+							}
+						]
+					}
+				},
+				"required": [
+					"scheduler_type",
+					"local_schedule",
+					"web_sockets",
+					"scada"
+				]
+			},
+			"EventsResponse": {
+				"type": "object",
+				"properties": {
+					"count": {
+						"type": "number",
+						"description": "Count of total events matching filters"
+					},
+					"data": {
+						"description": "Events to display on page",
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Event"
+						}
+					}
+				},
+				"required": [
+					"count",
+					"data"
+				]
+			},
+			"SiteStatusDataPointsDTO": {
+				"type": "object",
+				"properties": {}
+			},
+			"SiteStatusDataObject": {
+				"type": "object",
+				"properties": {
+					"siteName": {
+						"type": "string",
+						"description": "Label to display on the left hand side of the site status bar, comes from site_status.json config file"
+					},
+					"activeFaults": {
+						"type": "number",
+						"description": "A count of the total number of active faults on the site, comes from /site/summary fims response, active_faults field"
+					},
+					"activeAlarms": {
+						"type": "number",
+						"description": "A count of the total number of active alarms on the site, comes from /site/summary fims response, active_alarms field"
+					},
+					"siteState": {
+						"type": "string",
+						"description": "The site status to display on the right hand side of the siste status bar, comes from /site/summary fims response, site_status field"
+					},
+					"dataPoints": {
+						"description": "Object containing data points to display in the site status bar, comes from the site_status.json config file",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/SiteStatusDataPointsDTO"
+							}
+						]
+					}
+				},
+				"required": [
+					"siteName",
+					"activeFaults",
+					"activeAlarms",
+					"siteState",
+					"dataPoints"
+				]
+			},
+			"SiteStatusResponse": {
+				"type": "object",
+				"properties": {
+					"data": {
+						"description": "Data object containing all information being passed to the Site Status Bar - label, active faults, active alarms, site status, and data points",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/SiteStatusDataObject"
+							}
+						]
+					}
+				},
+				"required": [
+					"data"
+				]
+			},
+			"NewValue": {
+				"type": "object",
+				"properties": {
+					"value": {
+						"type": "object",
+						"description": "New value for variable value (numeric values) or variable override flag (boolean values)"
+					}
+				},
+				"required": [
+					"value"
+				]
+			},
+			"SiteConfigurationDetailedResponse": {
+				"type": "object",
+				"properties": {
+					"timezone": {
+						"type": "string",
+						"description": "The timezone to be utilized by the user interface, used to display the time in the top app bar"
+					},
+					"product": {
+						"type": "string",
+						"description": "The HybridOS product - a product flag of “SC” or “ESS” will display HybridOS Control and a product flag of “FM” will display HybridOS Coordinate"
+					},
+					"ess": {
+						"type": "boolean",
+						"description": "Whether or not to display the ESS page"
+					},
+					"gen": {
+						"type": "boolean",
+						"description": "Whether or not to display the Generators page"
+					},
+					"solar": {
+						"type": "boolean",
+						"description": "Whether or not to display the Solar page"
+					},
+					"met_station": {
+						"type": "boolean",
+						"description": "Whether or not to display the Met Station page (deprecation)"
+					},
+					"tracker": {
+						"type": "boolean",
+						"description": "Whether or not to display the Tracker page (deprecated)"
+					},
+					"feeders": {
+						"type": "boolean",
+						"description": "Whether or not to display the Feeders page"
+					},
+					"features": {
+						"type": "boolean",
+						"description": "Whether or not to display the Features page"
+					},
+					"site": {
+						"type": "boolean",
+						"description": "Whether or not to display the Site page"
+					},
+					"events": {
+						"type": "boolean",
+						"description": "Whether or not to display the Events page"
+					},
+					"control_cabinet": {
+						"type": "boolean",
+						"description": "Whether or not to display the Control Cabinet page (deprecated)"
+					},
+					"fleet_manager_dashboard": {
+						"type": "boolean",
+						"description": "Whether or not to display the Fleet Manager Dashboard page (deprecated)"
+					},
+					"scheduler": {
+						"type": "boolean",
+						"description": "Whether or not to display the Scheduler page"
+					},
+					"units": {
+						"type": "object",
+						"description": "An object containing the units to be used on the Configurable Asset Pages (generic) throughout the UI"
+					},
+					"inspectorComponentsName": {
+						"type": "string",
+						"description": "(deprecated)"
+					},
+					"site_name": {
+						"type": "string",
+						"description": "The site name displayed in the Site Status Bar, App Bar, and the login page"
+					},
+					"fleet_name": {
+						"type": "string",
+						"description": "Used to determine which fleet is using the UI, currently only being used to display the ERCOT Overrides Page (flag must be set to “ERCOT”)"
+					},
+					"site_status_bar": {
+						"type": "boolean",
+						"description": "Whether or not to display the Site Status Bar component"
+					},
+					"customer": {
+						"type": "object",
+						"description": "Object containing information about the customer. Displayed on the login page of the UI.Contains sub fields for customer name and server name."
+					}
+				},
+				"required": [
+					"timezone",
+					"product",
+					"ess",
+					"gen",
+					"solar",
+					"met_station",
+					"tracker",
+					"feeders",
+					"features",
+					"site",
+					"events",
+					"control_cabinet",
+					"fleet_manager_dashboard",
+					"scheduler",
+					"units",
+					"inspectorComponentsName",
+					"site_name",
+					"fleet_name",
+					"site_status_bar",
+					"customer"
+				]
+			},
+			"SiteConfigurationResponse": {
+				"type": "object",
+				"properties": {
+					"siteConfiguration": {
+						"description": "Site Configuration from web ui config file",
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/SiteConfigurationDetailedResponse"
+							}
+						]
+					}
+				},
+				"required": [
+					"siteConfiguration"
+				]
+			},
+			"LoginInfoResponse": {
+				"type": "object",
+				"properties": {
+					"product": {
+						"type": "object",
+						"description": "Product type from site configuration found in web ui config file"
+					},
+					"customer": {
+						"type": "object",
+						"description": "Customer name from site configuration found in web ui config file"
+					},
+					"siteName": {
+						"type": "object",
+						"description": "Site name from site configuration found in web ui config file"
+					},
+					"server": {
+						"type": "object",
+						"description": "Hardware/server name found in web ui config file"
+					}
+				},
+				"required": [
+					"product",
+					"customer",
+					"siteName",
+					"server"
+				]
 			}
 		}
 	}

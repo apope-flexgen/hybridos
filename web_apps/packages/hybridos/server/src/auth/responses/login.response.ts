@@ -22,6 +22,6 @@ export class ApiLoginResponse {
     })
     passwordExpired?: boolean
 
-    @ApiProperty({ description: AuthDescriptions.qrCode, required: false })
+    @ApiProperty({ description: AuthDescriptions.accessToken, required: false })
     accessToken?: string
 }

@@ -1,0 +1,35 @@
+promises
+
+p. wilshire
+02/19/2021
+
+Some ideas.
+
+Special vars called /promise/aname/idx
+
+issue a fims send with a reply to /ess/promise/aname/idx...
+
+
+The fims message is simply saved in that aV
+assetVar* promAv vm.GetFims(vmap, aname, uri[[], timeout[,autoload]]) will seek/make a promise AV
+the replyto will contain /ess/promise/aname/idx
+
+we can save that in a param.
+we then
+promAv->getcParam("status");
+   waiting
+   recieved
+   timedout
+we can then run 
+
+vm.loadFims(vmap,promAv);
+vm.clearFims(vmap,promAv);
+
+when the promise fims arrives in /ess/promise/aname/idx we simply put the fims message 
+in the av , if autoload is set we load it 
+
+else we just mark it as recieved
+clearFims will make the av as ready for use.
+
+all done in a week....
+

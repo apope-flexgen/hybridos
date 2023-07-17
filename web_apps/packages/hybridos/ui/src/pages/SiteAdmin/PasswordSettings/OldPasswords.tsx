@@ -4,6 +4,7 @@ import {
 import { FC } from 'react';
 import { PasswordSettings } from 'shared/types/api/SiteAdmin.types';
 import { onArrow, siteAdminLabels } from 'src/pages/SiteAdmin/SiteAdmin.constants';
+import { mainBoxSx } from './styles';
 
 export interface OldPasswordsProps {
   passwordSettings: PasswordSettings;
@@ -23,7 +24,7 @@ const OldPasswords: FC<OldPasswordsProps> = ({
         color="secondary"
       />
     </Box>
-    <Box sx={{ display: 'flex', gap: '16px', width: '60%' }}>
+    <Box sx={mainBoxSx}>
       <Box sx={{ width: '100px' }}>
         <NumericInput
           endComponentAdorment={(
@@ -41,6 +42,11 @@ const OldPasswords: FC<OldPasswordsProps> = ({
           value={passwordSettings.old_passwords.toString()}
         />
       </Box>
+      <Typography
+        text={siteAdminLabels.disableOldPasswordsFieldHelper}
+        variant="bodyS"
+        color="secondary"
+      />
     </Box>
   </>
 );

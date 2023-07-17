@@ -9,7 +9,7 @@ export interface IUsersService {
     delete(id: string): Promise<DeleteUserResponse>
     readById(id: string): Promise<UserResponse>
     readByUsername(username: string): Promise<UserResponse>
-    all(role: string): Promise<AllUsersResponse>
+    all(role: string, currentUserRole?: string): Promise<AllUsersResponse>
     enableMfa(id: string): Promise<boolean>
     update(id: string, updateBody: User): Promise<UserResponse>
 }

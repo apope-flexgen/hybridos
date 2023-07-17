@@ -1,0 +1,13 @@
+
+metrics and influxdb rpms are installed
+/usr/local/etc/config is linked to config/tx10/standalone storage
+ /usr/local/bin/metrics/metrics  /home/centos/config/standalone_storage/metrics/
+ sudo chown -R influxdb:influxdb /var/lib/influxdb
+
+/usr/local/bin/influxdb_setup/setup /usr/local/etc/config/storage/
+/usr/local/bin/storage/storage /usr/local/etc/config/storaage
+ps aux | grep influxdb
+ps aux | grep storage
+ps aux | grep metrics
+/usr/local/bin/fims/fims_listen
+

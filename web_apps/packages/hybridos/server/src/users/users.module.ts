@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common'
-import { JwtModule } from '@nestjs/jwt'
+import { APP_GUARD } from '@nestjs/core'
 import { MongooseModule } from '@nestjs/mongoose'
-import { VALID_JWT_SERVICE } from 'src/auth/interfaces/validJWT.service.interface'
-import { ValidAccessTokenService } from 'src/auth/validJWT.service'
-import { DBI_SERVICE } from 'src/dbi/dbi.constants'
-import { DBIModule } from 'src/dbi/dbi.module'
-import { DBIService } from 'src/dbi/dbi.service'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
+import { AuditLoggingModule } from '../logging/auditLogging/auditLogging.module'
 import { SiteAdminsModule } from '../siteAdmins/siteAdmins.module'
 import { DefaultUserService } from './defaultUser.service'
 import { DEFAULT_USER_SERVICE } from './interfaces/defaultUser.service.interface'
@@ -19,10 +16,7 @@ import { ValidPasswordConstraint } from './validators/IsValidPassword'
     imports: [
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
         SiteAdminsModule,
-        JwtModule.register({
-            secret: 'supersecretkey',
-        }),
-        DBIModule,
+        AuditLoggingModule,
     ],
     controllers: [UsersController],
     providers: [
@@ -30,14 +24,6 @@ import { ValidPasswordConstraint } from './validators/IsValidPassword'
         {
             useClass: UsersService,
             provide: USERS_SERVICE,
-        },
-        {
-            provide: VALID_JWT_SERVICE,
-            useClass: ValidAccessTokenService,
-        },
-        {
-            provide: DBI_SERVICE,
-            useClass: DBIService,
         },
         ValidPasswordConstraint,
     ],

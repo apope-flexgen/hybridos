@@ -1,47 +1,47 @@
 // TODO: figure out what's wrong with eslint
-import { CardContainer, Tabs, ThemeType } from '@flexgen/storybook'
-import { Box } from '@mui/material'
-import { useTheme } from 'styled-components'
+import { CardContainer, Tabs, ThemeType } from '@flexgen/storybook';
+import { Box } from '@mui/material';
 import {
   AlertState,
   ConfigurablePageStateStructure,
   DisplayGroupFunctions,
-} from '../configurablePages.types'
-import AssetStatus from './AssetStatus'
-import AssetControl from './AssetControl'
+} from 'src/pages/ConfigurablePages/configurablePages.types';
+import { useTheme } from 'styled-components';
+import AssetControl from './AssetControl';
+import AssetStatus from './AssetStatus';
 
 export type AssetsPageLayoutProps = {
-  tabValue: string
-  handleTabChange: (event: React.ChangeEvent<object>, newValue: unknown) => void
-  tabComponents: React.ReactElement[]
-  assetState: ConfigurablePageStateStructure
-  alertState?: AlertState[string]
-  componentFunctions?: DisplayGroupFunctions
-}
+  tabValue: string;
+  handleTabChange: (event: React.ChangeEvent<object>, newValue: unknown) => void;
+  tabComponents: React.ReactElement[];
+  assetState: ConfigurablePageStateStructure;
+  alertState?: AlertState[string];
+  componentFunctions?: DisplayGroupFunctions;
+  allControlsState?: any;
+  currentUser?: any;
+};
 
-const Window = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
-        padding: '2rem',
-      }}
-    >
-      {children}
-    </Box>
-  )
-}
+const Window = ({ children }: { children: React.ReactNode }) => (
+  <Box
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
+      padding: '2rem',
+    }}
+  >
+    {children}
+  </Box>
+);
 
 type TabsColumnProps = {
-  tabComponents: React.ReactElement[]
-  handleTabChange: (event: React.ChangeEvent<object>, newValue: unknown) => void
-  tabValue: string
-}
+  tabComponents: React.ReactElement[];
+  handleTabChange: (event: React.ChangeEvent<object>, newValue: unknown) => void;
+  tabValue: string;
+};
 
 const TabsColumn = ({ tabComponents, handleTabChange, tabValue }: TabsColumnProps) => {
-  const theme = useTheme() as ThemeType
+  const theme = useTheme() as ThemeType;
 
   return (
     <Box
@@ -53,36 +53,26 @@ const TabsColumn = ({ tabComponents, handleTabChange, tabValue }: TabsColumnProp
         height: '100%',
       }}
     >
-      <Tabs onChange={handleTabChange} orientation='vertical' value={tabValue}>
+      <Tabs onChange={handleTabChange} orientation="vertical" value={tabValue} variant="scrollable">
         {tabComponents}
       </Tabs>
     </Box>
-  )
-}
+  );
+};
 
 const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
-  const { tabValue, handleTabChange, tabComponents, assetState, alertState, componentFunctions } =
-    props
+  const {
+    tabValue,
+    handleTabChange,
+    tabComponents,
+    assetState,
+    alertState,
+    componentFunctions,
+    allControlsState,
+    currentUser,
+  } = props;
 
-  const alertsToDisplay = alertState || { faultInformation: [], alarmInformation: [] }
-  // const alertsToDisplay = {
-  //   faultInformation: [
-  //     'test',
-  //     'test',
-  //     'test',
-  //     'test',
-  //     'test',
-  //     'test',
-  //     'test',
-  //     'test',
-  //     'test',
-  //     'test',
-  //     'test',
-  //   ],
-  //   alarmInformation: [
-  //     'test',
-  //   ],
-  // }
+  const alertsToDisplay = alertState || { faultInformation: [], alarmInformation: [] };
 
   return (
     <>
@@ -114,9 +104,16 @@ const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
           </Box>
         </CardContainer>
       </Box>
-      <AssetControl componentFunctions={componentFunctions} assetState={assetState} />
+      <Box sx={{ width: '20%', flexShrink: 0 }}>
+        <AssetControl
+          componentFunctions={componentFunctions}
+          assetState={assetState}
+          allControlsState={allControlsState}
+          currentUser={currentUser}
+        />
+      </Box>
     </>
-  )
-}
+  );
+};
 
-export default AssetsPageLayout
+export default AssetsPageLayout;

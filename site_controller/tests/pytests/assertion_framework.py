@@ -1,7 +1,11 @@
 # Framework for more flexible test assertions
 from enum import Enum
-
+import time
+from typing import Union
 from pytest import approx
+import logging
+from .pytest_report import report_actual
+from .fims import fims_get
 
 
 class Tolerance_Type(Enum):
@@ -9,29 +13,35 @@ class Tolerance_Type(Enum):
     rel = 1
     both = 2
 
-
 class Assertion_Type(Enum):
     approx_eq = 0
     less_than_eq = 1
     greater_than_eq = 2
-    in_range = 3  # Value between two numbers, TODO this is actually a headache to use, reevaluate
+    approx_neq = 3
+    obj_eq = 4
 
 
 # Framework for flexible assertions
 class Flex_Assertion():
     # type: type of assertion
+    # uri: fims URI that holds the value to compare against
     # value: one or more values to compare against (ascending order)
     #               if type is a range check, the first value is the min, and the second value is the max
     # tolerance_type: the type of tolerance used by the assertion (see Assertion_Type)
     # tolerances: one or more tolerances used based on the assertion type
     #               if type is both, abs tolerance is given first and relative tolerance is given second
     # max_limit: Max limit on the value, used by features like edp (0) and agg asset limit to prevent further discharge
-    def __init__(self, type, value, tolerance_type=Tolerance_Type.rel, tolerance=0.05, max_limit=None):
+    # wait_secs: How long to wait before querying the uri for the value (in seconds)
+    # pattern: eg."active_faults.options", only used in Assertion_type.obj_eq
+    def __init__(self, type: Assertion_Type, uri: str, value: Union[int, float, bool], wait_secs=3.0, tolerance_type=Tolerance_Type.rel, tolerance=0.05, max_limit=None, pattern=None):
         self.type = type
+        self.uri = uri
         self.value = value
         self.tolerance = tolerance
         self.tolerance_type = tolerance_type
         self.max_limit = max_limit
+        self.wait = wait_secs
+        self.pattern = pattern 
 
     # Less than comparison of this class against other value
     def __lt__(self, other):
@@ -49,6 +59,9 @@ class Flex_Assertion():
 
     # Actual value is equal to expected within tolerance
     def is_approx_equal(self, this_value, other):
+        if type(this_value) == bool:
+            # no tolerance used for bools
+            return other == this_value
         if self.tolerance_type == Tolerance_Type.abs:
             return other == approx(this_value, abs=self.tolerance)
         elif self.tolerance_type == Tolerance_Type.rel:
@@ -79,15 +92,6 @@ class Flex_Assertion():
     # Greater than or equal to comparison of this class against other value
     def __ge__(self, other):
         return self.is_approx_greater_than(self.value, other)
-
-    # Assert based on type
-    def make_assertion(self, actual_value):
-        if self.type == Assertion_Type.approx_eq:
-            assert actual_value == self
-        elif self.type == Assertion_Type.less_than_eq:
-            assert actual_value <= self
-        elif self.type == Assertion_Type.greater_than_eq:
-            assert actual_value >= self
 
     # Substraction operation using this class and another value
     def __sub__(self, other):
@@ -162,8 +166,58 @@ class Flex_Assertion():
         else:
             self.tolerance = other_tolerance
 
+    # Get the actual value
+    # TODO: Possibly move the get_asset_agg logic here as well to aggregate multiple uris as needed
+    def get_actual(self):
+        response = fims_get(self.uri)
+        # Extract clothed value
+        if isinstance(response, dict) and len(response.keys()) == 1:
+            response = response[list(response.keys())[0]] # Flatten if == 1 key
+        if isinstance(response, dict) and "value" in response.keys():
+            response = response["value"]
+        return response
+
+    # Assert based on type
+    def make_assertion(self):
+        time.sleep(self.wait)
+        actual_value = self.get_actual()
+        report_actual(self.uri, actual_value)
+        if self.type == Assertion_Type.approx_eq:
+            assert actual_value == self, f"{self.uri}:"
+        elif self.type == Assertion_Type.less_than_eq:
+            assert actual_value <= self, f"{self.uri}:"
+        elif self.type == Assertion_Type.greater_than_eq:
+            assert actual_value >= self, f"{self.uri}:"
+        elif self.type == Assertion_Type.approx_neq:
+            assert actual_value != self, f"{self.uri}:"
+        elif self.type == Assertion_Type.obj_eq:
+            self.tolerance = Tolerance_Type.abs
+            if self.pattern:
+                for key in self.pattern.split("."):
+                    if (not isinstance(actual_value, dict) or key not in actual_value.keys()):
+                        logging.error(f"Key [{key}] not found for response [{actual_value}]")
+                        assert False
+                    actual_value = actual_value[key]
+            assert actual_value == self, f"{self.uri}:"
+
+    # Construct string representation for reporting that includes both the type and tolerance
+    # Called manually for reporting
+    def report(self) -> str:
+        type_str = ""
+        if self.type in [Assertion_Type.approx_eq, Assertion_Type.obj_eq]:
+            type_str = "=="
+        elif self.type == Assertion_Type.less_than_eq:
+            type_str = "<="
+        elif self.type == Assertion_Type.greater_than_eq:
+            type_str = ">="
+        return type_str + " " + self.__str__()
+
     # Str representation used in displaying pytest results
-    def __str__(self):
+    # Called automatically on failure
+    def __str__(self) -> str:
+        # Bools + objs don't use tolerance
+        if type(self.value) == bool or self.type == Assertion_Type.obj_eq:
+            return str(self.value)
         ret = f"{self.value} "
         if self.tolerance_type == Tolerance_Type.both:
             ret += f"\u00B1{self.tolerance[0]} (abs) or \u00B1{self.tolerance[1] * abs(self.value)} (rel)"
@@ -174,5 +228,5 @@ class Flex_Assertion():
         return ret
 
     # Only used for logging so just use str representation
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()

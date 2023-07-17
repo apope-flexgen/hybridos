@@ -1,0 +1,883 @@
+{
+  "name": "Active Power Management",
+  "local_features_kW_mode_cmd": {
+    "name": "Mode Select - Active Power",
+    "value": 4,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": [
+      {
+        "name": "Frequency Response",
+        "return_value": 4
+      }
+    ]
+  },
+  "grid_target_kW_cmd": {
+    "name": "Grid Target Power Setpoint",
+    "value": 500,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "local_ess_charge_control_target_soc": {
+    "name": "Target SOC Setpoint",
+    "value": 75,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": false,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "local_export_target_kW_cmd": {
+    "name": "Site Export Target Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "export_target_max_soc": {
+    "name": "Site Export Target Max SOC Setpoint",
+    "value": 85,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "export_target_min_soc": {
+    "name": "Site Export Target Min SOC Setpoint",
+    "value": 15,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "local_manual_solar_kW_cmd": {
+    "name": "Solar Active Power Curtailment Setpoint",
+    "value": 650,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "local_manual_ess_kW_cmd": {
+    "name": "ESS Active Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": false,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "features_kW_mode_status": {
+    "name": "Active Power Mode",
+    "value": "Frequency Response",
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "string",
+    "options": []
+  },
+  "curtailment_status_flag": {
+    "name": "Solar Curtailment Status",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "peak_power_limit_status_flag": {
+    "name": "Peak Power Limit Status",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "grid_target_mode_enable_flag": {
+    "name": "Grid Target Enable",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "False Case Not Used",
+        "return_value": false
+      },
+      {
+        "name": "Grid Target Enable",
+        "return_value": true
+      }
+    ]
+  },
+  "target_soc_mode_enable_flag": {
+    "name": "Target SOC Mode Enable",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "False Case Not Used",
+        "return_value": false
+      },
+      {
+        "name": "Target SOC Mode Enable",
+        "return_value": true
+      }
+    ]
+  },
+  "export_target_mode_enable_flag": {
+    "name": "Site Export Target Mode Enable",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "False Case Not Used",
+        "return_value": false
+      },
+      {
+        "name": "Site Export Target Mode Enable",
+        "return_value": true
+      }
+    ]
+  },
+  "manual_mode_enable_flag": {
+    "name": "Manual Mode Enable",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "False Case Not Used",
+        "return_value": false
+      },
+      {
+        "name": "Manual Mode Enable",
+        "return_value": true
+      }
+    ]
+  },
+  "ess_charge_support_enable_flag": {
+    "name": "ESS Charge Support Enable",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum_slider",
+    "options": [
+      {
+        "name": "False Case Not Used",
+        "return_value": false
+      },
+      {
+        "name": "ESS Charge Support Enable",
+        "return_value": true
+      }
+    ]
+  },
+  "fr_mode_enable_flag": {
+    "name": "Enable Frequency Response Mode",
+    "value": 0,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "remote_features_kW_mode_cmd": {
+    "name": "Remote Mode Select - Active Power",
+    "value": 3,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "remote_ess_charge_control_target_soc": {
+    "name": "Remote Target SOC Setpoint",
+    "value": 75,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "remote_export_target_kW_cmd": {
+    "name": "Remote Site Export Target Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "remote_manual_solar_kW_cmd": {
+    "name": "Remote Solar Active Power Curtailment Setpoint",
+    "value": 650,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "remote_manual_ess_kW_cmd": {
+    "name": "Remote ESS Active Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "present_features_kW_mode_cmd": {
+    "name": "Present Mode Select - Active Power",
+    "value": 4,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum",
+    "options": []
+  },
+  "present_ess_charge_control_target_soc": {
+    "name": "Present Target SOC Setpoint",
+    "value": 75,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "present_export_target_kW_cmd": {
+    "name": "Present Site Export Target Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "present_manual_solar_kW_cmd": {
+    "name": "Present Solar Active Power Curtailment Setpoint",
+    "value": 650,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "present_manual_ess_kW_cmd": {
+    "name": "Present ESS Active Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "site_kW_load": {
+    "name": "Site Load Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "site_kW_demand": {
+    "name": "Site Demand Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "ess_kW_cmd": {
+    "name": "ESS Active Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "gen_kW_cmd": {
+    "name": "Generator Active Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "solar_kW_cmd": {
+    "name": "Solar Active Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "feeder_kW_cmd": {
+    "name": "POI Active Power Setpoint",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "max_potential_ess_kW": {
+    "name": "Max ESS Potential Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "min_potential_ess_kW": {
+    "name": "Min ESS Potential Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "max_potential_gen_kW": {
+    "name": "Max Generator Potential Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "min_potential_gen_kW": {
+    "name": "Min Generator Potential Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "max_potential_solar_kW": {
+    "name": "Max Solar Potential Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "min_potential_solar_kW": {
+    "name": "Min Solar Potential Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "max_potential_feeder_kW": {
+    "name": "Max POI Potential Active Power",
+    "value": 9950,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "min_potential_feeder_kW": {
+    "name": "Min POI Potential Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "ess_actual_kW": {
+    "name": "ESS Actual Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "gen_actual_kW": {
+    "name": "Generator Actual Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "solar_actual_kW": {
+    "name": "Solar Actual Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "number",
+    "options": []
+  },
+  "feeder_actual_kW": {
+    "name": "POI Actual Active Power",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "site_frequency": {
+    "name": "Site Frequency",
+    "value": 0,
+    "unit": "Hz",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_status_flag": {
+    "name": "Underfrequency Trigger Status",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_cooldown_status": {
+    "name": "UF Post-Trigger Cooldown",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_status_flag": {
+    "name": "Overfrequency Trigger Status",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_cooldown_status": {
+    "name": "OF Post-Trigger Cooldown",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "fr_total_kW_cmd": {
+    "name": "Calculated Total Power Command",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "status",
+    "type": "number",
+    "options": []
+  },
+  "fr_site_nominal_hz": {
+    "name": "Nominal Frequency",
+    "value": 60,
+    "unit": "Hz",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_offset_hz": {
+    "name": "Frequency Offset",
+    "value": 0,
+    "unit": "Hz",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_baseload_kW_cmd": {
+    "name": "Basepoint (ERCOT SCED)",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_inactive_kW_cmd": {
+    "name": "FR Requirement (ERCOT AS Dispatch)",
+    "value": 0,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_enable_flag": {
+    "name": "Enable Underfrequency Response",
+    "value": true,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_UF_active_kW_cmd": {
+    "name": "Underfrequency Responsibility",
+    "value": 9950,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_hz_trigger_percent": {
+    "name": "Underfrequency Trigger Frequency: Percent of Nominal",
+    "value": 0.25,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_trigger_time": {
+    "name": "Underfrequency Trigger Duration",
+    "value": 30,
+    "unit": "s",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_cooldown_time": {
+    "name": "Underfrequency Trigger Cooldown Time",
+    "value": 5,
+    "unit": "s",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_hz_recover_percent": {
+    "name": "Underfrequency Begin Recovery Frequency: Percent of Nominal",
+    "value": 0.019999999552965164,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_hz_instant_recover_percent": {
+    "name": "Underfrequency Instant Recovery Frequency: Percent of Nominal",
+    "value": -0.019999999552965164,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_recover_time": {
+    "name": "Underfrequency Recovery Duration",
+    "value": 8,
+    "unit": "s",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_recover_latch": {
+    "name": "Underfrequency Recovery Latch",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_UF_droop_bypass_flag": {
+    "name": "Underfrequency Droop Bypass",
+    "value": true,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_UF_droop_limit_flag": {
+    "name": "Limit Underfrequency Droop Response",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_UF_droop_percent": {
+    "name": "Underfrequency Droop Frequency: Percent of Nominal",
+    "value": 0,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_UF_slew_override_flag": {
+    "name": "Override Underfrequency Slew",
+    "value": true,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_UF_slew_rate": {
+    "name": "Underfrequency Slew Rate",
+    "value": 5000000,
+    "unit": "W/s",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_enable_flag": {
+    "name": "Enable Overfrequency Response",
+    "value": true,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_OF_active_kW_cmd": {
+    "name": "Overfrequency Responsibility",
+    "value": 7000,
+    "unit": "W",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_hz_trigger_percent": {
+    "name": "Overfrequency Trigger Frequency: Percent of Nominal",
+    "value": 0.15000000596046448,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_trigger_time": {
+    "name": "Overfrequency Response Trigger Duration",
+    "value": 30,
+    "unit": "s",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_cooldown_time": {
+    "name": "Overfrequency Trigger Cooldown Time",
+    "value": 5,
+    "unit": "s",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_hz_recover_percent": {
+    "name": "Overfrequency Begin Recovery Frequency: Percent of Nominal",
+    "value": 0.019999999552965164,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_hz_instant_recover_percent": {
+    "name": "Overfrequency Instant Recovery Frequency: Percent of Nominal",
+    "value": -0.019999999552965164,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_recover_time": {
+    "name": "Overfrequency Recovery Duration",
+    "value": 8,
+    "unit": "s",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_recover_latch": {
+    "name": "Overfrequency Recovery Latch",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "none",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_OF_droop_bypass_flag": {
+    "name": "Overfrequency Droop Bypass",
+    "value": true,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_OF_droop_limit_flag": {
+    "name": "Limit Overfrequency Droop Response",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_OF_droop_percent": {
+    "name": "Overfrequency Droop Frequency: Percent of Nominal",
+    "value": 0,
+    "unit": "%",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  },
+  "fr_OF_slew_override_flag": {
+    "name": "Override Overfrequency Slew",
+    "value": false,
+    "unit": "",
+    "scaler": 1,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "enum_slider",
+    "options": []
+  },
+  "fr_OF_slew_rate": {
+    "name": "Overfrequency Slew Rate",
+    "value": 5000000,
+    "unit": "W/s",
+    "scaler": 1000,
+    "enabled": true,
+    "ui_type": "control",
+    "type": "number",
+    "options": []
+  }
+}

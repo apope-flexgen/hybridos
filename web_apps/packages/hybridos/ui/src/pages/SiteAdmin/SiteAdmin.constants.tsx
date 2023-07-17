@@ -1,9 +1,7 @@
+/* eslint-disable max-lines */
+// TODO: fix lint
 import { numberValidationEnum } from '@flexgen/storybook';
-import {
-  RadiusSettings,
-  PasswordSettings,
-  SiteAdmins,
-} from 'shared/types/api/SiteAdmin.types';
+import { RadiusSettings, PasswordSettings, SiteAdmins } from 'shared/types/api/SiteAdmin.types';
 
 export const initialRadiusSettings: RadiusSettings = {
   _id: '',
@@ -55,12 +53,12 @@ export const passwordExpirationIntervalRadios: {
   value: PasswordExpirationIntervalUnits;
 }[] = [
   {
-    label: 'Days',
-    value: 'd',
+    label: 'Minutes',
+    value: 'm',
   },
   {
-    label: 'Months',
-    value: 'm',
+    label: 'Days',
+    value: 'd',
   },
 ];
 
@@ -74,8 +72,7 @@ export const onArrow = (
   setPasswordSettings: React.Dispatch<React.SetStateAction<PasswordSettings>>,
   field: keyof PasswordSettings,
 ) => {
-  const newValue =
-    direction === 'up' ? Number(passwordSettings[field]) + 1 : Number(passwordSettings[field]) - 1;
+  const newValue = direction === 'up' ? Number(passwordSettings[field]) + 1 : Number(passwordSettings[field]) - 1;
   const regEx = new RegExp(numberValidationEnum.positiveIntegers);
   if (regEx.test(`${newValue}`)) {
     setPasswordSettings({
@@ -110,6 +107,7 @@ export const siteAdminLabels = {
   passwordRequirements: 'Password Content Requirements',
   oldPasswordsField: 'Old Passwords to Store',
   oldPasswordsFieldHelper: 'Stored passwords are not repeatable',
+  disableOldPasswordsFieldHelper: 'To disable password expiration, set this field to 0',
   oldPasswordsTextFieldHelper: 'Passwords',
   mfaField: 'Multifactor Authentication',
   mfaSwitch: 'Enable Multifactor Authentication',

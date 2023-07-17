@@ -9,11 +9,13 @@ export class ProcessArgvValidation {
     webServerConfigPath = undefined
     webUIBuildPath = undefined
     ssl = new SSLValidation()
+    isDev = false
     constructor() {
         this.setWebUIConfigPathArg()
         this.setWebServerConfigPathArg()
         this.setWebUIBuildPathArg()
         this.setSSL()
+       this.isDev = process.env.NODE_ENV === 'dev';
     }
     setWebUIConfigPathArg() {
         try {
