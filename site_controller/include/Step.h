@@ -10,39 +10,46 @@
 
 /* C Standard Library Dependencies */
 /* C++ Standard Library Dependencies */
+#include <vector>
 /* External Dependencies */
 #include <cjson/cJSON.h>
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
 #include <Value_Object.h>
 
+// Struct encapsulating entry action/exit condition
+struct Step_Action {
+    std::string route;
+    Value_Object value;
+    bool result;
+    int tolerance;
+    int reason_for_exit_failure;  // specifies if exit failed due to debounce timer or conditional
+    int debounce_timer_ms; // Time during which the value must match the expected value for the sequence to pass. Default 0
+    timespec debounce_target_time;
+
+    Step_Action()
+    {
+        clock_gettime(CLOCK_MONOTONIC, &debounce_target_time);
+    }
+};
+
 class Step
 {
 private:
-    char* step_name;
-    char* entry_route;
-    char* exit_route;
-    Value_Object entry_value;
-    Value_Object exit_value;
-    int tolerance;
-    int debounce_timer;
+    std::string step_name;
+    std::vector<Step_Action> entry_actions;
+    std::vector<Step_Action> exit_conditions;
     bool path_switch;
     int next_path;
-    int index;
 
 public:
-    Step();
-    ~Step();
     bool configure_step(cJSON* object, int step_index);
+    bool configure_action(std::vector<Step_Action>& action_list, cJSON* JSON_action);
     bool get_path_switch();
     int get_next_path();
-    const char* get_name();
-    const char* get_entry_route();
-    const char* get_exit_route();
-    Value_Object* get_entry_value();
-    Value_Object* get_exit_value();
-    int get_tolerance() const;
-    int get_debounce_timer() const;
+    const std::string get_name();
+    std::vector<Step_Action>& get_entry_actions();
+    std::vector<Step_Action>& get_exit_conditions();
 };
 
 

@@ -56,16 +56,17 @@ public:
     bool set_sync_feeder_close_permissive_remove(void);
     bool set_sync_feeder_close_permissive(void);
     
-    Asset_Feeder* validate_feeder_id(const char* feeder_ID);
-    bool get_feeder_state(Asset_Feeder *found_feeder);
-    float get_feeder_active_power(const char* feeder_ID);
-    float get_feeder_reactive_power(const char* feeder_ID);
-    float get_feeder_nameplate_active_power(const char* feeder_id);
+    Asset_Feeder* validate_feeder_id(const char* feeder);
+    bool get_feeder_state(Asset_Feeder *feeder);
+    bool get_utility_status(Asset_Feeder *feeder);
+    float get_feeder_active_power(const char* feeder);
+    float get_feeder_reactive_power(const char* feeder);
+    float get_feeder_nameplate_active_power(const char* feeder);
 
-    float get_avg_ac_voltage(const char* feeder_ID);
+    float get_avg_ac_voltage(const char* feeder);
 
-    bool set_feeder_state_open(Asset_Feeder *found_feeder);
-    bool set_feeder_state_closed(Asset_Feeder *found_feeder);
+    bool set_feeder_state_open(Asset_Feeder *feeder);
+    bool set_feeder_state_closed(Asset_Feeder *feeder);
 
     void set_poi_target_active_power(float);
 

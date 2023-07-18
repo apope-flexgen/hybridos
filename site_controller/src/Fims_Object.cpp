@@ -108,7 +108,7 @@ bool Fims_Object::set_fims_float(const char* uri_endpoint, float body_float)
     }
     else
     {
-        if ( variable_id.compare(uri_endpoint) == 0 && body_float != value.value_float ) {
+        if ( variable_id.compare(uri_endpoint) == 0 ) {
             value.set(body_float);
             return true;
         }
@@ -139,7 +139,7 @@ bool Fims_Object::set_fims_int(const char* uri_endpoint, int body_int)
     }
     else
     {
-        if ( variable_id.compare(uri_endpoint) == 0 && body_int != value.value_int ) {
+        if ( variable_id.compare(uri_endpoint) == 0 ) {
             value.set(body_int);
             return true;
         }
@@ -170,7 +170,7 @@ bool Fims_Object::set_fims_bool(const char* uri_endpoint, bool body_bool)
     }
     else
     {
-        if ( variable_id.compare(uri_endpoint) == 0 && (body_bool != value.value_bool)) {
+        if ( variable_id.compare(uri_endpoint) == 0 ) {
             value.set(body_bool);
             return true;
         }
@@ -180,7 +180,7 @@ bool Fims_Object::set_fims_bool(const char* uri_endpoint, bool body_bool)
 
 bool Fims_Object::set_fims_bit_field(const char* uri_endpoint, uint64_t body_bit_field)
 {
-    if ( variable_id.compare(uri_endpoint) == 0 && (body_bit_field != value.value_bit_field)) {
+    if ( variable_id.compare(uri_endpoint) == 0 ) {
         value.set(body_bit_field);
         return true;
     }
@@ -212,7 +212,7 @@ bool Fims_Object::set_fims_masked_int(const char* uri_endpoint, int body_int, ui
         }
         else
         {
-            if ( variable_id.compare(uri_endpoint) == 0 && (body_int != value.value_int)) {
+            if ( variable_id.compare(uri_endpoint) == 0 ) {
                 value.set(body_int);
                 return true;
             }

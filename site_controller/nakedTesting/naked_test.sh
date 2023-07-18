@@ -154,8 +154,8 @@ then
     sleep 0.1
 
     printf "        export_target_kw_cmd\n             "
-    fims_send -m set -u /features/active_power/export_target_kW_cmd 12
-    fims_send -m get -u /features/active_power/export_target_kW_cmd -r /reply > currentTest.txt
+    fims_send -m set -u /features/active_power/active_power_setpoint_kW_cmd 12
+    fims_send -m get -u /features/active_power/active_power_setpoint_kW_cmd -r /reply > currentTest.txt
     ./valueParse currentTest.txt 12
     sleep 0.1
 

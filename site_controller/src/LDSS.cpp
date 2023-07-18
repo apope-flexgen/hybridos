@@ -96,6 +96,10 @@ void LDSS::update_settings(LDSS_Settings &settings)
     if (stop_gen_countdown == stop_gen_time)
         stop_gen_countdown = settings.stop_gen_time;
     stop_gen_time = settings.stop_gen_time;
+    max_soc_percent = settings.max_soc_percent;
+    min_soc_percent = settings.min_soc_percent;
+    enable_soc_thresholds_flag = settings.enable_soc_thresholds_flag;
+    pEss = settings.pEss;
 }
 
 /**
@@ -115,60 +119,87 @@ void LDSS::enable(bool flag)
 }
 
 /**
- * Main routine for the LDSS feature. Checks if generators need to be started or stopped and updates timers.
- */
-void LDSS::check(float target_kw)
+ * Helper function for the main check() function to determine whether to turn on a generator.
+ * If load is above configured maximum threshold, attempt to start a generator.
+ * If soc checks are enabled, also start if SoC is below min_soc_percent
+ * @param num_controllable Number of controllable generators
+ * @param max_load_threshold_kw Upper limit of load in kW
+ * @param target_kw Current load in kW
+*/
+void LDSS::check_start_generator(int num_controllable, float max_load_threshold_kw, float target_kw)
 {
-    int num_controllable = get_num_controllable();
-
-    // if there is at least one running/controllable generator, we are not in a state where the first gen is transitioning to running.
-    // lower the first_gen_is_starting flag so that next time no gens are running, the start_first_gen control can be used
-    if (num_controllable > 0)
-        first_gen_is_starting = false;
-
-    // aggregate threshold for controllable (AKA running and non-maintenance-mode) generators
-    float min_load_threshold_kw = 0.0;
-    float max_load_threshold_kw = 0.0;
-    for(auto gen : generators)
-    {
-        if (gen->is_controllable())
-        {
-            min_load_threshold_kw += min_load_threshold_percent/100.0 * gen->get_rated_active_power();
-            max_load_threshold_kw += max_load_threshold_percent/100.0 * gen->get_rated_active_power();
-        }
+    // Do not start generators if SoC is too high
+    if (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() > max_soc_percent) {
+        return;
     }
 
     // start the first gen if start_first_gen is raised
-    if (num_controllable == 0 && start_first_gen)
+    if (num_controllable == 0 && start_first_gen) {
         start_generator();
-    // if the gen power command is above the max threshold, decrement the countdown to when we start the next gen
-    else if (target_kw > max_load_threshold_kw)
-    {
-        if (start_gen_countdown > 0)
-            start_gen_countdown--;
+        return;
+    }
+
+    if (
+        // if the gen power command is above the max threshold, decrement the countdown to when we start the next gen
+        (target_kw > max_load_threshold_kw) ||
+
+        // if soc threshold is enabled and SoC is under min_soc_percent, start a generator.
+        (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() < min_soc_percent)
+    ) {
+        start_gen_countdown = std::max(start_gen_countdown - 1, 0);
         // if the countdown hits zero, start the next gen
-        else if (start_gen_countdown == 0)
+        if (start_gen_countdown <= 0) {
             start_generator();
+        }
+        return;
     }
+
     // if the gen power command is lower than the max threshold and our countdown to next gen start is not at beginning value, increment it
-    else if (start_gen_countdown < start_gen_time)
-        start_gen_countdown++;
+    start_gen_countdown = std::min(start_gen_countdown + 1, start_gen_time);
+}
 
-    // if the gen power command is below the min threshold, decrement the countdown to when we stop the next gen
-    // but do not count down if stopping a gen would cause active generators to fall below the minimum floor
-    if (target_kw < min_load_threshold_kw && num_controllable > min_generators_active)
-    {
-        if (stop_gen_countdown > 0)
-            stop_gen_countdown--;
-        // if the countdown hits zero, stop the next gen
-        else if (stop_gen_countdown == 0)
-            stop_generator();
+/**
+ * Helper function for the main check() function to determine whether to turn off a generator.
+ * If load is below configured minimum threshold, attempt to stop a generator.
+ * If soc checks are enabled, also stop a generator if SoC is above max_soc_percent
+ * @param num_controllable Number of controllable generators
+ * @param min_load_threshold_kw Lower limit of load in kW
+ * @param target_kw Current load in kW
+*/
+void LDSS::check_stop_generator(int num_controllable, float min_load_threshold_kw, float target_kw)
+{
+    // Do not stop generators if SoC is too low
+    if (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() < min_soc_percent) {
+        return;
     }
-    // if the gen power command is higher than the min threshold and our countdown to next gen stop is not at beginning value, increment it
-    else if (stop_gen_countdown < stop_gen_time)
-        stop_gen_countdown++;
+    
+    if (
+        // if the gen power command is below the min threshold, decrement the countdown to when we stop the next gen
+        // but do not count down if stopping a gen would cause active generators to fall below the minimum floor
+        (target_kw < min_load_threshold_kw && num_controllable > min_generators_active) ||
 
-    // update generator warmup/cooldown times and priorities
+        // if soc threshold is enabled and SoC is above max_soc_percent, stop a generator.
+        (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() > max_soc_percent)
+    ) {
+        stop_gen_countdown = std::max(stop_gen_countdown - 1, 0);
+
+        // if the countdown hits zero, stop the next gen
+        if (stop_gen_countdown <= 0) {
+            stop_generator();
+        }
+        return;
+    }
+
+    // if the gen power command is higher than the min threshold and our countdown to next gen stop is not at beginning value, increment it
+    stop_gen_countdown = std::min(stop_gen_countdown + 1, stop_gen_time);
+}
+
+
+/**
+ * Update generator warmup/cooldown times and priorities
+*/
+void LDSS::update_cooldown_and_warmup()
+{
     for(auto gen : generators)
     {
         if (gen->is_stopped())
@@ -198,6 +229,36 @@ void LDSS::check(float target_kw)
             }
         }
     }
+}
+
+/**
+ * Main routine for the LDSS feature. Checks if generators need to be started or stopped and updates timers.
+ */
+void LDSS::check(float target_kw)
+{
+    int num_controllable = get_num_controllable();
+
+    // if there is at least one running/controllable generator, we are not in a state where the first gen is transitioning to running.
+    // lower the first_gen_is_starting flag so that next time no gens are running, the start_first_gen control can be used
+    if (num_controllable > 0)
+        first_gen_is_starting = false;
+
+    // aggregate threshold for controllable (AKA running and non-maintenance-mode) generators
+    float min_load_threshold_kw = 0.0;
+    float max_load_threshold_kw = 0.0;
+    for(auto gen : generators)
+    {
+        if (gen->is_controllable())
+        {
+            min_load_threshold_kw += min_load_threshold_percent/100.0 * gen->get_rated_active_power();
+            max_load_threshold_kw += max_load_threshold_percent/100.0 * gen->get_rated_active_power();
+        }
+    }
+
+    check_start_generator(num_controllable, max_load_threshold_kw, target_kw);
+    check_stop_generator(num_controllable, min_load_threshold_kw, target_kw);
+
+    update_cooldown_and_warmup();
 }
 
 /**

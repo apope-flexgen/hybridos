@@ -139,9 +139,18 @@ Asset_Feeder* Feeder_Manager::validate_feeder_id(const char* feeder_ID) {
     return nullptr;
 }
 
-bool Feeder_Manager::get_feeder_state(Asset_Feeder *found_feeder)
+bool Feeder_Manager::get_feeder_state(Asset_Feeder *feeder)
 {
-    return found_feeder->get_breaker_status();
+    return feeder->get_breaker_status();
+}
+
+/**
+ * Status of the utility tracked by the feeder
+ * @param feeder the validated feeder asset
+ */
+bool Feeder_Manager::get_utility_status(Asset_Feeder *feeder)
+{
+    return feeder->get_utility_status();
 }
 
 float Feeder_Manager::get_feeder_active_power(const char* feeder_ID)
@@ -184,14 +193,14 @@ float Feeder_Manager::get_avg_ac_voltage(const char* feeder_ID)
     return -1; // failure exit
 }
 
-bool Feeder_Manager::set_feeder_state_open(Asset_Feeder *found_feeder)
+bool Feeder_Manager::set_feeder_state_open(Asset_Feeder *feeder)
 {
-    return found_feeder->breaker_open();
+    return feeder->breaker_open();
 }
 
-bool Feeder_Manager::set_feeder_state_closed(Asset_Feeder *found_feeder)
+bool Feeder_Manager::set_feeder_state_closed(Asset_Feeder *feeder)
 {
-    return found_feeder->breaker_close();
+    return feeder->breaker_close();
 }
 
 void Feeder_Manager::set_poi_target_active_power(float desiredkW)

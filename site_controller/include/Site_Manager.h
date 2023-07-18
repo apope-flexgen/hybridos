@@ -110,7 +110,7 @@ public:
     void process_state();
     bool call_sequence_functions(const char* target_asset, const char* asset_cmd, Value_Object* value, int tolerance_percent);
     void set_site_status(const char*);
-    timespec current_time, exit_target_time, debounce_target_time;
+    timespec current_time, exit_target_time;
     states current_state, check_current_state;
     bool step_change, path_change; //true whenever a step or path changes
     bool sequence_reset;  //indication that current sequence has changed. used to handle interrupted sequences
@@ -168,7 +168,7 @@ protected:
     Fims_Object enable_flag, disable_flag, standby_flag, clear_faults_flag;
     Fims_Object faults, active_faults;
     Fims_Object alarms, active_alarms;
-    Fims_Object site_state, site_status;
+    Fims_Object site_state, site_state_enum, site_status;
     Fims_Object running_status_flag, alarm_status_flag, fault_status_flag;
     Fims_Object exit_timer;  //timeout for failed sequence step in ms
     Fims_Object asset_priority_runmode1, asset_priority_runmode2; // Enumeratred integer indiciating the priority of the assets in meeting the demand
@@ -209,6 +209,7 @@ protected:
     Fims_Object ess_actual_kW, ess_actual_kVAR;
     Fims_Object ess_kVAR_slew_rate; // kVAR/s
     Fims_Object start_first_ess_kW;  //kW thresholds to check for issuing start asset request to asset manager
+    Fims_Object allow_ess_auto_restart; // prevent asset from starting up once stopped
     Fims_Object ess_kW_cmd, ess_kVAR_cmd;
     int num_ess_available, num_ess_running, num_ess_controllable;
     float prev_ess_kW_cmd, prev_ess_kVAR_cmd;
@@ -230,6 +231,7 @@ protected:
     Fims_Object gen_kVAR_slew_rate; // kVAR/s
     Fims_Object start_first_gen_kW;  //kW thresholds to check for issuing start asset request to asset manager
     Fims_Object start_first_gen_soc; //min soc to start first generator
+    Fims_Object allow_gen_auto_restart;  // prevent asset from starting up once stopped
     Fims_Object gen_kW_cmd, gen_kVAR_cmd;
     int num_gen_available, num_gen_running, num_gen_active;
     float prev_gen_kW_cmd, prev_gen_kVAR_cmd;
@@ -240,7 +242,8 @@ protected:
     Fims_Object max_potential_solar_kW, min_potential_solar_kW, rated_solar_kW, potential_solar_kVAR;
     Fims_Object solar_actual_kW, solar_actual_kVAR;
     Fims_Object solar_kVAR_slew_rate; // kVAR/s
-    Fims_Object start_first_solar_kW;  //kW thresholds to check for issuing start asset request to asset manager
+    Fims_Object start_first_solar_kW;  // kW thresholds to check for issuing start asset request to asset manager
+    Fims_Object allow_solar_auto_restart; // prevent asset from starting from a stopped state
     Fims_Object solar_kW_cmd, solar_kVAR_cmd;
     int num_solar_available, num_solar_running;
     float prev_solar_kW_cmd, prev_solar_kVAR_cmd;
@@ -304,16 +307,20 @@ protected:
     Fims_Object target_soc_mode_enable_flag;
     Fims_Object target_soc_load_enable_flag;
     //
-    // Site Export Target Mode
+    // Active Power Setpoint Mode
     //
-    Feature site_export_target;
+    Feature active_power_setpoint_mode;
 public:
-    Slew_Object export_target_kW_cmd_slew;
+    Slew_Object active_power_setpoint_kW_slew;
 protected:
-    Fims_Object export_target_mode_enable_flag;
-    Fims_Object export_target_load_enable_flag;
-    Fims_Object export_target_kW_cmd;
-    Fims_Object export_target_kW_slew_rate;
+    Fims_Object active_power_setpoint_mode_enable_flag;
+    Fims_Object active_power_setpoint_kW_cmd;
+    Fims_Object active_power_setpoint_load_method;
+    Fims_Object active_power_setpoint_kW_slew_rate;
+    Fims_Object active_power_setpoint_absolute_mode_flag;
+    Fims_Object active_power_setpoint_direction_flag;
+    Fims_Object active_power_setpoint_maximize_solar_flag;
+    Fims_Object ess_charge_support_enable_flag; //this enables ESS to charge to support underloaded grid - only available in runmode1 (active power setpoint)
     //
     // Manual Power Mode
     //
@@ -322,13 +329,6 @@ protected:
     Fims_Object manual_solar_kW_cmd; //manual setpoint for solar KW
     Fims_Object manual_ess_kW_cmd; //manual setpoint for ess kW
     //
-    // Grid Target Mode
-    //
-    Feature grid_target;
-    Fims_Object grid_target_mode_enable_flag;
-    Fims_Object grid_target_kW_cmd; //offset in grid target mode applied to load calculation to regulate grid to a value
-    Fims_Object ess_charge_support_enable_flag; //this enables ESS to charge to support underloaded grid - only available in runmode1 (grid-tied)
-    //
     // Frequency Response Mode
     //
 protected:
@@ -336,13 +336,6 @@ protected:
     Feature frequency_response_feature;
     void execute_frequency_response_feature();
     Fims_Object frequency_response_enabled; // boolean flag indicating if the Frequency Response active power mode is currently enabled
-    //
-    // Absolute Power Mode
-    //
-    Feature absolute_ess;
-    Fims_Object absolute_ess_kW_cmd;
-    Fims_Object absolute_ess_enable_flag;
-    Fims_Object absolute_ess_direction_flag; // Direction of the charge command
     //
     // ESS Calibration Mode
     //
@@ -377,8 +370,12 @@ public:
     uint64_t available_runmode2_kW_features_mask;
     std::vector<Feature*> runmode2_kW_features_list;
     //
-    // No islanded/runmode2 active power features yet
+    // Generator Charge
     //
+    Feature generator_charge;
+    void run_generator_charge();
+    Fims_Object generator_charge_enable;
+    Fims_Object generator_charge_additional_buffer; // Additional buffer that reduces generator output
     
     ///////////////////////////////////////////////////////////////////
     //                          CHARGE FEATURES                      //
@@ -559,6 +556,7 @@ protected:
     Fims_Object ldss_priority_setting; //static or dynamic priorities
     Fims_Object ldss_max_load_threshold_percent, ldss_min_load_threshold_percent;
     Fims_Object ldss_warmup_time, ldss_cooldown_time, ldss_start_gen_time, ldss_stop_gen_time; // LDSS timers
+    Fims_Object ldss_enable_soc_threshold, ldss_max_soc_threshold_percent, ldss_min_soc_threshold_percent;
     //
     // Load Shed
     //
@@ -682,6 +680,7 @@ protected:
         {&active_faults, "active_faults"},
         {&active_alarms, "active_alarms"},
         {&site_state, "site_state"},
+        {&site_state_enum, "site_state_enum"},
         {&site_status, "site_status"},
         {&running_status_flag, "running_status_flag"},
         {&alarm_status_flag, "alarm_status_flag"},
@@ -724,8 +723,11 @@ protected:
         {&asset_priority_runmode1, "asset_priority_runmode1"},
         {&asset_priority_runmode2, "asset_priority_runmode2"},
         {&start_first_gen_kW, "start_first_gen_kW"},
+        {&allow_gen_auto_restart, "allow_gen_auto_restart"},
         {&start_first_ess_kW, "start_first_ess_kW"},
+        {&allow_ess_auto_restart, "allow_ess_auto_restart"},
         {&start_first_solar_kW, "start_first_ess_kW"},
+        {&allow_solar_auto_restart, "allow_solar_auto_restart"},
         {&soc_min_all, "soc_min_all"},
         {&soc_max_all, "soc_max_all"},
         {&soc_avg_all, "soc_avg_all"},
@@ -744,12 +746,11 @@ protected:
         {&energy_arb_enable_flag, "energy_arb_enable_flag"},
         {&_charge_dispatch_enable_flag, "_charge_dispatch_enable_flag"},
         {&_ess_charge_control_enable_flag, "_ess_charge_control_enable_flag"},
-        {&grid_target_mode_enable_flag, "grid_target_mode_enable_flag"},
         {&target_soc_mode_enable_flag, "target_soc_mode_enable_flag"},
         {&manual_mode_enable_flag, "manual_mode_enable_flag"},
-        {&absolute_ess_enable_flag, "absolute_ess_enable_flag"},
-        {&export_target_mode_enable_flag, "export_target_mode_enable_flag"},
+        {&active_power_setpoint_mode_enable_flag, "active_power_setpoint_mode_enable_flag"},
         {&ess_calibration_enable_flag, "ess_calibration_enable_flag"},
+        {&generator_charge_enable, "generator_charge_enable"},
         {&reactive_setpoint_mode_enable_flag, "reactive_setpoint_mode_enable_flag"},
         {&active_voltage_mode_enable_flag, "active_voltage_mode_enable_flag"},
         {&power_factor_mode_enable_flag, "power_factor_mode_enable_flag"},
@@ -765,7 +766,6 @@ protected:
         {&site_kW_load_inclusion, "site_kW_load_inclusion"},
         {&site_kW_load_interval_ms, "site_kW_load_interval_ms"},
         {&site_frequency, "site_frequency"},
-        {&grid_target_kW_cmd, "grid_target_kW_cmd"},
         {&ess_actual_kW, "ess_actual_kW"},
         {&gen_actual_kW, "gen_actual_kW"},
         {&solar_actual_kW, "solar_actual_kW"},
@@ -810,11 +810,12 @@ protected:
         {&target_soc_load_enable_flag, "target_soc_load_enable_flag"},
         {&manual_solar_kW_cmd, "manual_solar_kW_cmd"},
         {&manual_ess_kW_cmd, "manual_ess_kW_cmd"},
-        {&absolute_ess_kW_cmd, "absolute_ess_kW_cmd"},
-        {&absolute_ess_direction_flag, "absolute_ess_direction_flag"},
-        {&export_target_kW_cmd, "export_target_kW_cmd"},
-        {&export_target_load_enable_flag, "export_target_load_enable_flag"},
-        {&export_target_kW_slew_rate, "export_target_kW_slew_rate"},
+        {&active_power_setpoint_kW_cmd, "active_power_setpoint_kW_cmd"},
+        {&active_power_setpoint_load_method, "active_power_setpoint_load_method"},
+        {&active_power_setpoint_kW_slew_rate, "active_power_setpoint_kW_slew_rate"},
+        {&active_power_setpoint_absolute_mode_flag, "active_power_setpoint_absolute_mode_flag"},
+        {&active_power_setpoint_direction_flag, "active_power_setpoint_direction_flag"},
+        {&active_power_setpoint_maximize_solar_flag, "active_power_setpoint_maximize_solar_flag"},
         {&ess_calibration_kW_cmd, "ess_calibration_kW_cmd"},
         {&ess_calibration_soc_limits_enable, "ess_calibration_soc_limits_enable"},
         {&ess_calibration_min_soc_limit, "ess_calibration_min_soc_limit"},
@@ -825,6 +826,7 @@ protected:
         {&ess_calibration_num_setpoint, "ess_calibration_num_setpoint"},
         {&ess_calibration_num_limited, "ess_calibration_num_limited"},
         {&ess_calibration_num_zero, "ess_calibration_num_zero"},
+        {&generator_charge_additional_buffer, "generator_charge_additional_buffer"},
         {&available_features_runmode1_kW_mode, "available_features_runmode1_kW_mode"},
         {&runmode1_kW_mode_cmd, "runmode1_kW_mode_cmd"},
         {&runmode1_kW_mode_status, "runmode1_kW_mode_status"},
@@ -893,6 +895,9 @@ protected:
         {&ldss_min_load_threshold_percent, "ldss_min_load_threshold_percent"},
         {&ldss_warmup_time, "ldss_warmup_time"},
         {&ldss_cooldown_time, "ldss_cooldown_time"},
+        {&ldss_enable_soc_threshold, "ldss_enable_soc_threshold"},
+        {&ldss_max_soc_threshold_percent, "ldss_max_soc_threshold_percent"},
+        {&ldss_min_soc_threshold_percent, "ldss_min_soc_threshold_percent"},
         {&load_shed_enable, "load_shed_enable"},
         {&load_shed_value, "load_shed_value"},
         {&load_shed_max_value, "load_shed_max_value"},        

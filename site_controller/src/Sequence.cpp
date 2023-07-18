@@ -37,7 +37,6 @@ Sequence::Sequence(Site_Manager* siteref)
     debounce_reset = true;
     sequence_bypass = false;
     entry_exit_flag = ENTRY;
-    debounce_conditional_flag = CONDITIONAL;
 }
 
 Sequence::~Sequence()
@@ -167,7 +166,7 @@ void Sequence::call_sequence()
     if ((paths[current_path_index]->timeout != (-1)) && check_expired_time(pSite->current_time, pSite->exit_target_time))
     {
         char event_message [80] = {};
-        sprintf(event_message, "Site sequence step failed: %s", paths[current_path_index]->get_step(current_step_index)->get_name());
+        sprintf(event_message, "Site sequence step failed: %s", paths[current_path_index]->get_step(current_step_index)->get_name().c_str());
         emit_event("Site", event_message, 1);
         pSite->set_faults(2);
         clock_gettime(CLOCK_MONOTONIC, &pSite->exit_target_time);
@@ -180,69 +179,85 @@ void Sequence::call_sequence()
 //perform call_function function and return true if expected value is found
 bool Sequence::call_function()
 {
-    debounce_conditional_flag = CONDITIONAL;
-
-    //parse exit_route for the target_asset and asset_cmd
-    std::string s;
-    // init added below by gwh to avoid warnings
-    Value_Object* value = NULL;
-    int tolerance_percent = 0;
-    int debounce_timer = 0;
+    // parse exit_conditions for the target_asset and asset_cmd
+    // Aggregated result of all step actions (OR). Ensure every action has a chance to run even if true is found
+    bool return_value = false;
     switch (entry_exit_flag)
     {
     case ENTRY:
-        s = paths[current_path_index]->get_step(current_step_index)->get_entry_route();
-        value = paths[current_path_index]->get_step(current_step_index)->get_entry_value();
-        tolerance_percent = 0;
-        debounce_timer = 0;
+        for (auto& action : paths[current_path_index]->get_step(current_step_index)->get_entry_actions())
+        {
+            // Get the target asset and cmd
+            std::vector<std::string> route_fragments = split(action.route, "/");
+            if (route_fragments.empty())
+            {
+                FPS_ERROR_LOG("Failed to parse entry route %s", action.route);
+                return false;
+            }
+            std::string target_asset = route_fragments[0];
+            std::string asset_cmd = route_fragments.size() < 2 ? target_asset : route_fragments[1];
+
+            if (initial_entry_attempt)
+                FPS_INFO_LOG("    ENTRY ACTION: call_function target_asset: %s, asset_cmd: %s \n", target_asset.c_str(), asset_cmd.c_str());
+
+            action.result = pSite->call_sequence_functions(target_asset.c_str(), asset_cmd.c_str(), &action.value, action.tolerance);
+            return_value = return_value || action.result;
+        }
         break;
     case EXIT:
-        s = paths[current_path_index]->get_step(current_step_index)->get_exit_route();
-        value = paths[current_path_index]->get_step(current_step_index)->get_exit_value();
-        tolerance_percent = paths[current_path_index]->get_step(current_step_index)->get_tolerance();
-        debounce_timer = paths[current_path_index]->get_step(current_step_index)->get_debounce_timer();
+        for (auto& action : paths[current_path_index]->get_step(current_step_index)->get_exit_conditions())
+        {
+            action.reason_for_exit_failure = CONDITIONAL;
+
+            // Get the target asset and cmd
+            std::vector<std::string> route_fragments = split(action.route, "/");
+            if (route_fragments.empty())
+            {
+                FPS_ERROR_LOG("Failed to parse exit condition %s", action.route);
+                return false;
+            }
+            std::string target_asset = route_fragments[0];
+            std::string asset_cmd = route_fragments.size() < 2 ? target_asset : route_fragments[1];
+
+            if (initial_exit_attempt)
+                FPS_INFO_LOG("    EXIT CONDITION: call_function target_asset: %s, asset_cmd: %s \n", target_asset.c_str(), asset_cmd.c_str());
+
+            action.result = pSite->call_sequence_functions(target_asset.c_str(), asset_cmd.c_str(), &action.value, action.tolerance);
+
+            //debounce check
+            if (action.debounce_timer_ms == 0)
+            {
+                return_value = return_value || action.result;
+                continue;
+            }
+            //reset target_time when a new step is entered or the return_value is not within range
+            else if ((debounce_reset == true) || (action.result == false))
+            {
+                debounce_reset = false;
+                clock_gettime(CLOCK_MONOTONIC, &action.debounce_target_time);
+                action.debounce_target_time.tv_sec += action.debounce_timer_ms / 1000;
+                if (action.result == false)
+                    continue;
+            }
+            if (check_expired_time(pSite->current_time, action.debounce_target_time))
+            {
+                //Debounce timer has run out
+                FPS_INFO_LOG("Debounce timer has run out \n");
+                return_value = return_value || action.result;
+            }
+            else
+            {
+                //Debounce timer is still running
+                if (initial_exit_attempt)
+                    FPS_INFO_LOG("Debounce timer started.  %ld milliseconds on clock \n",
+                                get_elapsed_time(pSite->current_time, action.debounce_target_time));
+                action.reason_for_exit_failure = DEBOUNCE;
+                continue;
+            }
+        }
         break;
     }
-    std::string delimiter = "/";
-    s.erase(0, s.find(delimiter) + delimiter.length()); // delete "/"
-    std::string target_asset = s.substr(0, s.find(delimiter)).c_str();
-    s.erase(0, s.find(delimiter) + delimiter.length()); // delete target_asset/
-    std::string asset_cmd = s.substr(0, s.find(delimiter));
-    if (initial_entry_attempt  && entry_exit_flag == ENTRY)
-        FPS_INFO_LOG("    ENTRY ACTION: call_function target_asset: %s, asset_cmd: %s \n", target_asset.c_str(), asset_cmd.c_str());
-    else if (initial_exit_attempt  && entry_exit_flag == EXIT)
-        FPS_INFO_LOG("    EXIT CONDITION: call_function target_asset: %s, asset_cmd: %s \n", target_asset.c_str(), asset_cmd.c_str());
-
-    bool return_value = pSite->call_sequence_functions(target_asset.c_str(), asset_cmd.c_str(), value, tolerance_percent);
-
-    //debounce check
-    if (debounce_timer == 0)
-        return return_value;
-
-    //reset target_time when a new step is entered or the return_value is not within range
-    else if ((debounce_reset == true) || (return_value == false))
-    {
-        debounce_reset = false;
-        clock_gettime(CLOCK_MONOTONIC, &pSite->debounce_target_time);
-        pSite->debounce_target_time.tv_sec += debounce_timer / 1000;
-        if (return_value == false)
-            return return_value;
-    }
-    if (check_expired_time(pSite->current_time, pSite->debounce_target_time))
-    {
-        //Debounce timer has run out
-        FPS_INFO_LOG("Debounce timer has run out \n");
-        return return_value;
-    }
-    else
-    {
-        //Debounce timer is still running
-        if (initial_exit_attempt)
-            FPS_INFO_LOG("Debounce timer started.  %ld milliseconds on clock \n",
-                           get_elapsed_time(pSite->current_time, pSite->debounce_target_time));
-        debounce_conditional_flag = DEBOUNCE;
-        return false;
-    }
+    return return_value;
 }
 
 void Sequence::reset_sequence()
@@ -287,54 +302,67 @@ void Sequence::call_sequence_entry()
 
 void Sequence::call_sequence_exit()
 {
-
     entry_exit_flag = EXIT;
     //perform call_function and increment current_step_index if expected value is found
     if (call_function())
     {
-        FPS_INFO_LOG("Exit condition received.  Proceed to next step \n");
+        for (auto& action : paths[current_path_index]->get_step(current_step_index)->get_exit_conditions())
+        {
+            if (action.result)
+            {
+                FPS_INFO_LOG("Exit condition received for: %s. Proceed to next step\n", action.route);
+            }
+        }
         current_step_index++;  //iterate count for next step on next iteration
         pSite->step_change = true;  //new step will be called
         step_reset = true;
         initial_exit_attempt = true;  //reset this for next step called
     }
-    else
+    //only print on first failure - expected value not found or debounce timer
+    else if (initial_exit_attempt)
     {
-        //only print on first failure - expected value not found or debounce timer
-        if (initial_exit_attempt)
+        initial_exit_attempt = false;  //step called once already, dont print messages repeatedly
+        for (auto& action : paths[current_path_index]->get_step(current_step_index)->get_exit_conditions())
         {
-            initial_exit_attempt = false;  //step called once already, dont print messages repeatedly
-            switch (debounce_conditional_flag)
+            switch (action.reason_for_exit_failure)
             {
-            case DEBOUNCE:
-                if (paths[current_path_index]->timeout != -1)
-                    FPS_INFO_LOG("Exit delay: debounce timer active. Debounce Timer: %ld ms, Timeout: %ld ms \n", get_elapsed_time(pSite->current_time, pSite->debounce_target_time), get_elapsed_time(pSite->current_time, pSite->exit_target_time));
-                else
-                    FPS_INFO_LOG("Exit delay: debounce timer active. Debounce Timer: %ld ms, No Timeout \n", get_elapsed_time(pSite->current_time, pSite->debounce_target_time));
-                break;
-            case CONDITIONAL:
-                FPS_INFO_LOG("Exit failure: exit condition failed. Expected value is %s \n", paths[current_path_index]->get_step(current_step_index)->get_exit_value()->print());
-                break;
+                case DEBOUNCE:
+                    if (action.debounce_timer_ms > 0)
+                    {
+                        std::string timeout_msg;
+                        if (paths[current_path_index]->timeout != -1)
+                            timeout_msg = "Timeout: " + std::to_string(get_elapsed_time(pSite->current_time, pSite->exit_target_time)) + " ms\n";
+                        else
+                            timeout_msg = "No Timeout\n";
+                        FPS_INFO_LOG("Exit delay: %s debounce timer active", action.route);
+                        FPS_INFO_LOG("\tDebounce Timer: %ld ms, %s\n", get_elapsed_time(pSite->current_time, action.debounce_target_time), timeout_msg);
+                    }
+                    if (paths[current_path_index]->timeout != -1)
+                        FPS_WARNING_LOG("Remaining in step until exit conditions are satisfied or step times out \n");
+                    break;
+                case CONDITIONAL:
+                    if (!action.result)
+                    {
+                        const char* value_string = action.value.print();
+                        FPS_INFO_LOG("Exit failure: %s exit condition failed. Expected value is %s \n", action.route, value_string);
+                        delete value_string;
+                    }
+                    // If path_switch true, move from current path to first step of next path, allowing a conditional exit to return early
+                    if (paths[current_path_index]->get_step(current_step_index)->get_path_switch())
+                    {
+                        pSite->path_change = true;  //new path to be called
+                        pSite->step_change = true;  //new step to be called
+                        step_reset = true;
+                        current_path_index = paths[current_path_index]->steps[current_step_index].get_next_path();  //get new path index
+                        current_step_index = 0;  //new step will be the first in the new path
+                        check_current_step_index = 0;  //new step will be the first in the new path
+                        FPS_INFO_LOG("Path switch triggered. Moving to next path in sequence \n\n");
+                        return;
+                    }
+                    break;
             }
-
-            //switch path
-            if (paths[current_path_index]->get_step(current_step_index)->get_path_switch() && debounce_conditional_flag == CONDITIONAL) //If path_switch true, move from current path to first step of next path
-            {
-                pSite->path_change = true;  //new path to be called
-                pSite->step_change = true;  //new step to be called
-                step_reset = true;
-                current_path_index = paths[current_path_index]->steps[current_step_index].get_next_path();  //get new path index
-                current_step_index = 0;  //new step will be the first in the new path
-                check_current_step_index = 0;  //new step will be the first in the new path
-                FPS_INFO_LOG("Path switch triggered. Moving to next path in sequence \n\n");
-                return;
-            }
-            //if we don't switch paths, let user know we're still in the step
-            else if (paths[current_path_index]->timeout != -1)
-                FPS_WARNING_LOG("Remaining in step until exit condition is satisfied or step times out \n");
-            else
-                FPS_WARNING_LOG("Remaining in step until exit condition is satisfied \n");
         }
+        FPS_WARNING_LOG("Remaining in step until exit conditions are satisfied \n");
     }
 }
 
@@ -353,12 +381,12 @@ void Sequence::check_path_step_change()
         if (pSite->step_change)
         {
             //FPS_ERROR_LOG("Site Manager step change to: %s \n", paths[current_path_index].steps[current_step_index].get_name());
-            sprintf(event_message, "Site Manager step changed to %s", paths[current_path_index]->steps[current_step_index].get_name());
+            sprintf(event_message, "Site Manager step changed to %s", paths[current_path_index]->steps[current_step_index].get_name().c_str());
             emit_event("Site", event_message, 2);
             pSite->step_change = false;
         }
         char temp_message [128] = {};
-        sprintf(temp_message, "%s: %s", paths[current_path_index]->get_name(), paths[current_path_index]->steps[current_step_index].get_name());
+        sprintf(temp_message, "%s: %s", paths[current_path_index]->get_name(), paths[current_path_index]->steps[current_step_index].get_name().c_str());
         pSite->set_site_status(temp_message);
         //FPS_ERROR_LOG("\n ---- \n %s \n ---- \n", pSite->site_status.value.value_string);
     }

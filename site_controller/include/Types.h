@@ -7,6 +7,8 @@
 
 /* Local Internal Dependencies */
 #include <macros.h>
+#include <vector>
+#include <string>
 
 #define NUM_UI_TYPES 5
 

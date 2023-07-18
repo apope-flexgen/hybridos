@@ -77,8 +77,6 @@ protected:
     float far_soc_range;
     float charge_control_divisor;
 
-    bool firstAssetStartEss;
-
     std::vector<Asset_ESS*> pEss;
 
     float essTotalChargeableEnergykWh;

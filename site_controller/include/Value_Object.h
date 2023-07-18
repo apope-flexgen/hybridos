@@ -42,9 +42,6 @@ class Value_Object
     uint64_t value_bit_field;
     uint64_t value_mask;
     bool  value_bool;
-
-    private:
-    char*  print_buffer;
 };
 
 #endif /* INCLUDE_VALUE_OBJECT_H_ */

@@ -16,27 +16,6 @@
 #include <fims/libfims.h>
 #include <Step.h>
 
-Step::Step()
-{
-    step_name = NULL;
-    entry_route = NULL;
-    exit_route = NULL;
-    tolerance = 0;
-    debounce_timer = 0;
-    path_switch = false;
-    next_path = 0;
-    index = 0;
-}
-
-Step::~Step()
-{
-    if (step_name != NULL)
-        free(step_name);
-    if (entry_route != NULL)
-        free(entry_route);
-    if (exit_route != NULL)
-        free(exit_route);
-}
 
 bool Step::get_path_switch()
 {
@@ -48,52 +27,37 @@ int Step::get_next_path()
     return next_path;
 }
 
-const char* Step::get_name()
+const std::string Step::get_name()
 {
     return step_name;
 }
 
-const char* Step::get_entry_route()
+std::vector<Step_Action>& Step::get_entry_actions()
 {
-    return entry_route;
+    return entry_actions;
 }
 
-const char* Step::get_exit_route()
+std::vector<Step_Action>& Step::get_exit_conditions()
 {
-    return exit_route;
+    return exit_conditions;
 }
 
-Value_Object* Step::get_entry_value()
-{
-    return &entry_value;
-}
-
-Value_Object* Step::get_exit_value()
-{
-    return & exit_value;
-}
-
-int Step::get_tolerance() const
-{
-    return tolerance;
-}
-
-int Step::get_debounce_timer() const
-{
-    return debounce_timer;
-}
-
+/**
+ * Parse and handle step-level configuration
+ * @param object the current step object being parsed
+ * @param step_index index of the current step, used for logging
+ * @return Whether the step was configured successfully
+ */
 bool Step::configure_step(cJSON* object, int step_index)
 {
-    index = step_index;
     cJSON* JSON_step_name = cJSON_GetObjectItem(object, "step_name");
-    if (JSON_step_name == NULL)
+    if (JSON_step_name == NULL || JSON_step_name->valuestring == NULL)
     {
         FPS_ERROR_LOG("no step_name found");
         return false;
     }
-    step_name = strdup(JSON_step_name->valuestring);
-    FPS_INFO_LOG("    step %i: %s \n",index, step_name);
+    step_name = JSON_step_name->valuestring;
+    FPS_INFO_LOG("    step %i: %s \n",step_index, step_name);
 
     cJSON* JSON_path_switch = cJSON_GetObjectItem(object, "path_switch");
     path_switch = JSON_path_switch == NULL ? false : JSON_path_switch->type == cJSON_True;
@@ -103,98 +67,114 @@ bool Step::configure_step(cJSON* object, int step_index)
     if (path_switch)
         FPS_INFO_LOG("      path_switch - next path: %i \n", next_path);
 
-    cJSON* JSON_entry_action = cJSON_GetObjectItem(object, "entry_actions");
-    if (JSON_entry_action == NULL)
+    cJSON* JSON_entry_actions = cJSON_GetObjectItem(object, "entry_actions");
+    if (JSON_entry_actions == NULL)
     {
-        FPS_ERROR_LOG("no entry_action found");
+        FPS_ERROR_LOG("no entry_actions found");
         return false;
     }
 
-    cJSON* JSON_entry_route = cJSON_GetObjectItem(JSON_entry_action, "route");
-    if (JSON_entry_route == NULL)
+    // (new format) If an array of entry actions is given, parse each action as its own object
+    if (cJSON_IsArray(JSON_entry_actions))
+    {
+        for (int i = 0; i < cJSON_GetArraySize(JSON_entry_actions); ++i)
+        {
+            cJSON* entry_action = cJSON_GetArrayItem(JSON_entry_actions, i);
+            if (!configure_action(entry_actions, entry_action))
+                return false;
+        }
+    }
+    // (legacy format) Parse a single action and insert it into the list of actions
+    else
+    {
+        if (!configure_action(entry_actions, JSON_entry_actions))
+            return false;
+    }
+
+    cJSON* JSON_exit_conditions = cJSON_GetObjectItem(object, "exit_conditions");
+    if (JSON_exit_conditions == NULL) {
+        FPS_ERROR_LOG("no exit_condition found");
+        return false;
+    }
+
+    // (new format) If an array of actions is given, parse each action as its own object
+    if (cJSON_IsArray(JSON_exit_conditions))
+    {
+        for (int i = 0; i < cJSON_GetArraySize(JSON_exit_conditions); ++i)
+        {
+            cJSON* exit_condition = cJSON_GetArrayItem(JSON_exit_conditions, i);
+            if (!configure_action(exit_conditions, exit_condition))
+                return false;
+        }
+    }
+    // (legacy format) Parse a single action and insert it into the list of actions
+    else
+    {
+        if (!configure_action(exit_conditions, JSON_exit_conditions))
+            return false;
+    }
+
+    return true;
+}
+
+/**
+ * Parse and handle action level configuration
+ * @param action_list The entry action/exit condition list to which the action should be added
+ * @param JSON_action The current action being parsed from configuration
+ * @return Whether the action was configured successfully
+ */
+bool Step::configure_action(std::vector<Step_Action>& action_list, cJSON* JSON_action)
+{
+    // Current action being parsed
+    Step_Action current_action;
+
+    cJSON* JSON_entry_route = cJSON_GetObjectItem(JSON_action, "route");
+    if (JSON_entry_route == NULL || JSON_entry_route->valuestring == NULL)
     {
         FPS_ERROR_LOG("no entry route found");
         return false;
     }
-    entry_route = strdup(JSON_entry_route->valuestring);
-    FPS_INFO_LOG("      entry route: %s\n", entry_route);
+    if (JSON_entry_route->valuestring[0] != '/')
+    {
+        FPS_ERROR_LOG("entry route must begin with a slash");
+        return false;
+    }
+    current_action.route = std::string(JSON_entry_route->valuestring);
+    FPS_INFO_LOG("      entry route: %s\n", current_action.route);
 
-    cJSON* JSON_entry_value = cJSON_GetObjectItem(JSON_entry_action, "value");
+    cJSON* JSON_entry_value = cJSON_GetObjectItem(JSON_action, "value");
     if (JSON_entry_value == NULL)
     {
         FPS_ERROR_LOG("no entry value found\n");
         return false;
     }
-    char* body = cJSON_Print(JSON_entry_value);
-    if (body != NULL)
-    {
-        FPS_INFO_LOG("      entry value: %s\n", body);
-        free (body);
-    }
-
     if ((JSON_entry_value->type == cJSON_False) || (JSON_entry_value->type == cJSON_True))
-        entry_value.set(JSON_entry_value->type == cJSON_True);
+        current_action.value.set(JSON_entry_value->type == cJSON_True);
     else if (JSON_entry_value->type == cJSON_Number)
-        entry_value.set((float)JSON_entry_value->valuedouble);
+        current_action.value.set((float)JSON_entry_value->valuedouble);
     else if (JSON_entry_value->type == cJSON_String)
-        entry_value.set(JSON_entry_value->valuestring);
-    else
+        current_action.value.set(JSON_entry_value->valuestring);
+    
+    const char* body = current_action.value.print();
+    if (body == NULL)
     {
-        FPS_ERROR_LOG("entry value type %d not supported\n", JSON_entry_value->type);
+        FPS_ERROR_LOG("failed to print entry value");
         return false;
     }
+    FPS_INFO_LOG("      entry value: %s\n", body);
+    delete body;
 
-    cJSON* JSON_exit_condition = cJSON_GetObjectItem(object, "exit_conditions");
-    if (JSON_exit_condition == NULL) {
-        FPS_ERROR_LOG("no exit_condition found");
-        return false;
-    }
+    cJSON* JSON_tolerance = cJSON_GetObjectItem(JSON_action, "tolerance");
+    current_action.tolerance = JSON_tolerance == NULL ? 0 : JSON_tolerance->valueint;
+    if (current_action.tolerance != 0)
+        FPS_INFO_LOG("      tolerance: %d \n",  current_action.tolerance);
 
-    cJSON* JSON_exit_route = cJSON_GetObjectItem(JSON_exit_condition, "route");
-    if (JSON_exit_route == NULL) {
-        FPS_ERROR_LOG("no exit route found\n");
-        return false;
-    }
-    exit_route = strdup(JSON_exit_route->valuestring);
-    FPS_INFO_LOG("      exit route: %s\n", exit_route);
-
-    cJSON* JSON_exit_value = cJSON_GetObjectItem(JSON_exit_condition, "value");
-    if (JSON_exit_value == NULL)
-    {
-        FPS_ERROR_LOG("no exit value found");
-        return false;
-    }
-    char *body2 = cJSON_Print(JSON_exit_value);
-    if (body2 != NULL)
-    {
-        FPS_INFO_LOG("      exit value: %s\n", body2);
-        free (body2);
-    }
-
-    if ((JSON_exit_value->type == cJSON_False) || (JSON_exit_value->type == cJSON_True))
-        exit_value.set(JSON_exit_value->type == cJSON_True);
-    else if (JSON_exit_value->type == cJSON_Number)
-        exit_value.set((float)JSON_exit_value->valuedouble);
-    else if (JSON_exit_value->type == cJSON_String)
-        exit_value.set(JSON_exit_value->valuestring);
-    else
-    {
-        FPS_ERROR_LOG("exit value type %d not supported\n", JSON_exit_value->type);
-        return false;
-    }
-
-    cJSON* JSON_tolerance = cJSON_GetObjectItem(JSON_exit_condition, "tolerance");
-    tolerance = JSON_tolerance == NULL ? 0 : JSON_tolerance->valueint;
-    if (tolerance != 0)
-        FPS_INFO_LOG("      tolerance: %d \n", tolerance);
-
-    cJSON* JSON_debounce_timer = cJSON_GetObjectItem(JSON_exit_condition, "debounce_timer");
-    debounce_timer = JSON_debounce_timer == NULL ? 0 : JSON_debounce_timer->valueint;
-    if (debounce_timer != 0)
-        FPS_INFO_LOG("      debounce timer: %d ms\n", debounce_timer);
-
+    cJSON* JSON_debounce_timer = cJSON_GetObjectItem(JSON_action, "debounce_timer");
+    current_action.debounce_timer_ms = JSON_debounce_timer == NULL ? 0 : JSON_debounce_timer->valueint;
+    if (current_action.debounce_timer_ms != 0)
+        FPS_INFO_LOG("      debounce timer: %d ms\n", current_action.debounce_timer_ms);
+    
+    action_list.push_back(current_action);
     return true;
 }
-
-
 

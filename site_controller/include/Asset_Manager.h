@@ -37,8 +37,7 @@ public:
 
     void set_min_generators_active(int);
 
-    void start_available_ess_solar(void);
-
+    void start_available_solar(void);
     bool start_all_solar(void);
     bool stop_all_solar(void);
     bool enter_standby_all_solar(void);
@@ -49,6 +48,7 @@ public:
     void set_solar_clear_faults(void);
     void set_feeder_clear_faults(void);
 
+    void start_available_ess(void);
     bool start_all_ess(void);
     bool stop_all_ess(void);
     bool close_all_bms_contactors(void);
@@ -58,8 +58,8 @@ public:
 
     bool set_poi_feeder_state_open();
     bool set_poi_feeder_state_closed();
-    bool set_feeder_state_open(Asset_Feeder *found_feeder);
-    bool set_feeder_state_closed(Asset_Feeder *found_feeder);
+    bool set_feeder_state_open(Asset_Feeder *target_feeder);
+    bool set_feeder_state_closed(Asset_Feeder *target_feeder);
 
     bool set_gen_target_active_power(float);
     bool set_ess_target_active_power(float);
@@ -78,7 +78,6 @@ public:
     void send_to_components(void);
 
     void enable_ldss(bool);
-    void start_first_solar(bool enable);
     void start_first_gen(bool enable);
     void set_first_gen_is_starting_flag(bool flag);
 
@@ -109,7 +108,8 @@ public:
     int get_num_solar_in_standby(void);
 
     Asset_Feeder* validate_feeder_id(const char* feeder_ID);
-    bool get_feeder_state(Asset_Feeder *found_feeder);
+    bool get_feeder_state(Asset_Feeder *target_feeder);
+    bool get_feeder_utility_status(Asset_Feeder *target_feeder);
 
     float get_ess_soc_max(void);
     float get_ess_soc_min(void);

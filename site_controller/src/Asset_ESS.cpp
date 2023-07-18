@@ -996,7 +996,7 @@ void Asset_ESS::process_asset()
             chargeable_power->value.value_float = std::max((chgSocEnd - soc->value.value_float) / (chgSocEnd - chgSocBegin) * rated_chargeable_power, chargeable_min_limit_kW);
         }
         // Ensure it does not exceed the component limit
-        chargeable_power->value.value_float = std::min(chargeable_power->value.value_float, chargeable_power_raw->value.value_float);
+        chargeable_power->value.value_float = std::min(chargeable_power->value.value_float, fabsf(chargeable_power_raw->value.value_float));
     }
     else
         chargeable_power->value.value_float = fabsf(chargeable_power_raw->value.value_float);
@@ -1013,8 +1013,8 @@ void Asset_ESS::process_asset()
             // Ensure dischargeable power is at least as large as its limit if derated or capped here
             dischargeable_power->value.value_float = std::max((dischgSocEnd - soc->value.value_float) / (dischgSocEnd - dischgSocBegin) * rated_dischargeable_power, dischargeable_min_limit_kW);
         }
-        // Ensure it does not exceed the component lilmit
-        dischargeable_power->value.value_float = std::min(dischargeable_power->value.value_float, dischargeable_power_raw->value.value_float);
+        // Ensure it does not exceed the component limit
+        dischargeable_power->value.value_float = std::min(dischargeable_power->value.value_float, fabsf(dischargeable_power_raw->value.value_float));
     }
     else
         dischargeable_power->value.value_float = fabsf(dischargeable_power_raw->value.value_float);

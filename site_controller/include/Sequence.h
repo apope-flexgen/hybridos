@@ -48,7 +48,6 @@ public:
     bool initial_entry_attempt; //makes sure certain fprintf messages are only sent once per instance
     bool initial_exit_attempt; //makes sure exit condition failure message only sent once per exit
     int entry_exit_flag;       //specifies if asset call is for an entry action or exit condition
-    int debounce_conditional_flag;    //specifies if exit failed due to debounce timer or conditional
     int current_step_index, check_current_step_index;  //contains the current state index, and a 2nd copy for comparison/tracking
     int current_path_index, check_current_path_index;  //contains the current path index
 };

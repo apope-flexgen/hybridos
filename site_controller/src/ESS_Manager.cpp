@@ -58,8 +58,6 @@ ESS_Manager::ESS_Manager() : Type_Manager(ESS_TYPE_ID)
     far_soc_range = 0.0;
     charge_control_divisor = 0.0;
 
-    firstAssetStartEss = false;
-
     soc_status = OnTarget;
 
     essTotalChargeableEnergykWh = 0.0;

@@ -32,7 +32,7 @@ ifeq ($(BUILD_MODE),debug)
 else ifeq ($(BUILD_MODE),test)
 	CPPFLAGS += -g -D FPS_TEST_MODE
 	LIBS += -lgtest -lgmock
-	INCLUDES_BUILD += -Itests/
+	INCLUDES_BUILD += -Iunit_tests/
 else
 	BUILD_MODE=release
 	CPPFLAGS += -O2

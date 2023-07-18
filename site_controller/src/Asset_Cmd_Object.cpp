@@ -7,6 +7,7 @@
 
 /* C Standard Library Dependencies */
 #include <cmath>
+#include <numeric>
 /* C++ Standard Library Dependencies */
 /* External Dependencies */
 /* System Internal Dependencies */
@@ -39,6 +40,7 @@ Asset_Cmd_Object::Asset_Cmd_Data::Asset_Cmd_Data()
     min_potential_kW = 0.0;
     start_first_kW = 0.0;
     start_first_flag = false;
+    auto_restart_flag = true; // Allow asset to start unless explicitly told not to. (see runmode2 BESS fault)
 
     kVAR_cmd = 0.0;
     actual_kVAR = 0.0;
@@ -57,7 +59,7 @@ float Asset_Cmd_Object::Asset_Cmd_Data::calculate_source_kW_contribution(float c
     float unused_kW = calculate_unused_dischg_kW();
 
     // set bool to turn on asset if its needed
-    start_first_flag = (cmd >= start_first_kW);
+    start_first_flag = ((cmd >= start_first_kW) && auto_restart_flag);
     
     // if asset is not needed or there is no potential discharge power, do not assign any more power to it
     if (cmd <= 0 || unused_kW <= 0)
@@ -403,29 +405,46 @@ void Asset_Cmd_Object::target_soc_mode(bool load_requirement)
 }
 
 /**
- * SITE EXPORT TARGET MODE takes a single power command (the total site production, ignoring load) that is distributed to assets.
+ * ACTIVE POWER SETPOINT MODE takes a single power command (the total site production, ignoring load) that is distributed to assets.
  * Positive commands are distributed to to all assets as needed, with priority based on the configured asset priority.
  * Negative commands are distributed to ESS as available.
  * If load is not taken into account, the value at the POI will fluctuate as load changes.
  * Load must be handled manually by this feature due to its feature level slew
- * @param load_enable_flag Whether site production should handle load compensation at a minimum
- * @param export_target_slew Slew rate for the feature
- * @param export_target_kW_cmd Single power command to be distributed to assets
+ * kW_cmd can be sent using `absolute_mode` and `direction` to determine sign. false by default.
+ * @param kW_cmd Single power command to be distributed to assets
+ * @param slew_rate Slew rate for the feature
+ * @param load_method Whether site production should handle load compensation minimum, offset, or not at all.
+ * @param absolute_mode_flag Flag determining whether kW_cmd should be interpreted as absolute value.
+ * @param direction_flag Flag used if absolute mode == true; kW_cmd is negative if true, positive if false.
+ * @param maximize_solar Flag used to maximize solar kW_cmd always.
  */
-void Asset_Cmd_Object::site_export_target_mode(bool load_enable_flag, Slew_Object* export_target_slew, float export_target_kW_cmd)
-{
+void Asset_Cmd_Object::active_power_setpoint(
+    float kW_cmd,
+    Slew_Object* slew_rate,
+    load_compensation load_strategy,
+    bool absolute_mode_flag,
+    bool direction_flag,
+    bool maximize_solar
+) {
+    if (absolute_mode_flag) {
+        kW_cmd = fabsf(kW_cmd) * (direction_flag ? -1 : 1);
+    }
+
+    // Uncurtailed solar
+    if (maximize_solar) {
+        solar_data.kW_request = solar_data.max_potential_kW;
+    }
+
     // Setup desired command at the POI
-    poi_cmd = export_target_kW_cmd;
+    poi_cmd = kW_cmd;
+
+    load_method = load_strategy;
     // Load must be included in the reference command and routed through the slewed target
-    load_method = load_compensation(load_enable_flag * LOAD_OFFSET);
     additional_load_compensation = calculate_additional_load_compensation();
-    export_target_kW_cmd += additional_load_compensation;
-
-    // Set site demand to be distributed based on dispatch availability and priority, bypassing load unless specified
-    site_kW_demand = export_target_slew->get_slew_target(export_target_kW_cmd);
-    track_slewed_load(load_method, export_target_kW_cmd, additional_load_compensation, *export_target_slew);
+    kW_cmd += additional_load_compensation;
+    site_kW_demand = slew_rate->get_slew_target(kW_cmd);
+    track_slewed_load(load_method, kW_cmd, additional_load_compensation, *slew_rate);
 }
-
 /**
  * MANUAL MODE takes a solar kW cmd and ESS kW cmd and routes those commands through dispatch and charge control
  * Any site load should be offloaded to the feeder to guarantee the ESS/Solar commands
@@ -445,36 +464,6 @@ void Asset_Cmd_Object::manual_mode(float manual_ess_kW_cmd, float manual_solar_k
     solar_data.max_potential_kW = std::min(solar_data.max_potential_kW, solar_data.kW_request);
     
     // No load compensation
-}
-
-/**
- * GRID TARGET MODE accepts a command indicating the target value at the POI, and distributes a site demand to
- * all available assets based on the current load to ensure this target is met even as load fluctuates.
- * No ess or solar kW requests used. Assets simply respond to the site demand with the power they have available
- * Only export commands are allowed
- * @param grid_target_kW_cmd Site command to be distributed in addition to the load
- */
-void Asset_Cmd_Object::grid_target_mode(float grid_target_kW_cmd)
-{
-    site_kW_demand = zero_check(-1.0f * grid_target_kW_cmd);
-    // This feature tracks load in all cases
-    track_unslewed_load(LOAD_OFFSET);
-}
-
-/**
- * Absolute ESS Mode takes an absolute value ESS command and assigns it as a charge/discharge based on the direction flag
- * provided. Solar is independently fully uncurtailed, but a portion is set aside for ESS charging as needed.
- * @param absolute_direction_flag Flag determining the charging direction. True if charging (default), false if discharging
- * @param absolute_ess_cmd The absolute value command to request
- */
-void Asset_Cmd_Object::absolute_ess(bool absolute_direction_flag, float absolute_ess_cmd)
-{
-    // Apply sign based on provided flag (true: charge, false: discharge)
-    ess_data.kW_request = fabsf(absolute_ess_cmd) * (absolute_direction_flag ? -1.0f : 1.0f);
-
-    // Solar uncurtailed
-    solar_data.kW_request = solar_data.max_potential_kW;
-    // This feature does not track load
 }
 
 /**
@@ -895,16 +884,34 @@ bool Asset_Cmd_Object::get_ess_start_first_flag()
     return ess_data.start_first_flag;
 }
 
+//return ess auto_restart_flag
+bool Asset_Cmd_Object::get_ess_auto_restart_flag()
+{
+    return ess_data.auto_restart_flag;
+}
+
 //return gen start_first_flag
 bool Asset_Cmd_Object::get_gen_start_first_flag()
 {
     return gen_data.start_first_flag;
 }
 
+//return gen auto_restart_flag
+bool Asset_Cmd_Object::get_gen_auto_restart_flag()
+{
+    return gen_data.auto_restart_flag;
+}
+
 //return solar start_first_flag
 bool Asset_Cmd_Object::get_solar_start_first_flag()
 {
     return solar_data.start_first_flag;
+}
+
+//return solar auto_restart_flag
+bool Asset_Cmd_Object::get_solar_auto_restart_flag()
+{
+    return solar_data.auto_restart_flag;
 }
 
 // Return the aggregate of available active chargeable power
@@ -1113,16 +1120,34 @@ void Asset_Cmd_Object::set_ess_start_first_flag(bool value)
     ess_data.start_first_flag = value;
 }
 
+//set ess_data.start_first_flag
+void Asset_Cmd_Object::set_ess_auto_restart_flag(bool value)
+{
+    ess_data.auto_restart_flag = value;
+}
+
 //set gen_data.start_first_flag
 void Asset_Cmd_Object::set_gen_start_first_flag(bool value)
 {
     gen_data.start_first_flag = value;
 }
 
+//set gen_data.start_first_flag
+void Asset_Cmd_Object::set_gen_auto_restart_flag(bool value)
+{
+	gen_data.auto_restart_flag = value;
+}
+
 //set solar_data.start_first_flag
 void Asset_Cmd_Object::set_solar_start_first_flag(bool value)
 {
     solar_data.start_first_flag = value;
+}
+
+//set solar_data.start_first_flag
+void Asset_Cmd_Object::set_solar_auto_restart_flag(bool value)
+{
+	solar_data.auto_restart_flag = value;
 }
 
 // Save asset vars and demand before their modification so that they can be restored at a future point

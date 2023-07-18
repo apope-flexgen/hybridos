@@ -15,6 +15,7 @@
 /* Local Internal Dependencies */
 #include <macros.h>
 #include <Asset_Generator.h>
+#include <ESS_Manager.h>
 
 /**
  * @param enabled LDSS feature enable flag.
@@ -25,6 +26,9 @@
  * @param cooldown_time Amount of time a gen should stay stopped before it is allowed to start.
  * @param start_gen_time How long to wait after max load threshold is hit to start a gen.
  * @param stop_gen_time How long to wait after min load threshold is hit to stop a gen.
+ * @param enable_soc_thresholds_flag Whether to manage SoC thresholds as part of this feature
+ * @param min_soc_percent Min SoC until a generator should be started iff enable_soc_thresholds_flag
+ * @param max_soc_percent Max SoC until a generator should be stopped iff enable_soc_thresholds_flag
  */
 struct LDSS_Settings {
     bool enabled;
@@ -35,11 +39,20 @@ struct LDSS_Settings {
     int cooldown_time;
     int start_gen_time;
     int stop_gen_time;
+    bool enable_soc_thresholds_flag;
+    float min_soc_percent;
+    float max_soc_percent;
+    ESS_Manager* pEss;
 };
 
 class Asset_Generator;
 
 class LDSS {
+private:
+    // check() helper functions
+    void check_start_generator(int num_controllable, float max_load_threshold_kw, float target_kw);
+    void check_stop_generator(int num_controllable, float min_load_threshold_kw, float target_kw);
+    void update_cooldown_and_warmup();
 public:
     std::vector<Asset_Generator*> generators;
     LDSS_Priority_Setting priority_setting;
@@ -56,6 +69,11 @@ public:
     bool enabled_rising_edge;
     bool start_first_gen;
     bool first_gen_is_starting;
+
+    bool enable_soc_thresholds_flag;
+    float min_soc_percent;
+    float max_soc_percent;
+    ESS_Manager* pEss;
 
     LDSS();
     bool configure_priorities(std::vector<Asset_Generator*> const &pg, cJSON* static_run_priorities);

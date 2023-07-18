@@ -6,6 +6,7 @@
  */
 
 /* C Standard Library Dependencies */
+#include "Types.h"
 #include <cstring>
 #include <unistd.h>
 #include <sys/types.h>
@@ -13,6 +14,7 @@
 #include <stdexcept>
 #include <string>
 #include <limits>
+#include <vector>
 /* External Dependencies */
 /* System Internal Dependencies */
 #include <Logger.h>
@@ -61,6 +63,7 @@ Site_Manager::Site_Manager(Version* release_version)
     asset_pf_flag = false;
     prev_asset_pf_flag = true;
     current_runmode1_kW_feature = -1;
+    current_runmode2_kW_feature = -1;
     current_runmode1_kVAR_feature = -1;
     prev_active_power_feature_cmd = 0.0f;
     prev_reactive_power_feature_cmd = 0.0f;
@@ -82,7 +85,6 @@ Site_Manager::Site_Manager(Version* release_version)
 
     clock_gettime(CLOCK_MONOTONIC, &current_time);
     clock_gettime(CLOCK_MONOTONIC, &exit_target_time);
-    clock_gettime(CLOCK_MONOTONIC, &debounce_target_time);
     clock_gettime(CLOCK_MONOTONIC, &heartbeat_timer);
     clock_gettime(CLOCK_MONOTONIC, &watchdog_timeout);
     increment_timespec_ms(watchdog_timeout, watchdog_duration_ms.value.value_int);
@@ -138,12 +140,17 @@ void Site_Manager::configure_feature_objects(void)
     target_soc.feature_vars = {
         &target_soc_load_enable_flag,
     };
-    // Site Export Target Mode
-    site_export_target.enable_flag = &export_target_mode_enable_flag;
-    site_export_target.feature_vars = {
-        &export_target_load_enable_flag,
-        &export_target_kW_cmd,
-        &export_target_kW_slew_rate
+    // Active Power Setpoint Mode
+    active_power_setpoint_mode.enable_flag = &active_power_setpoint_mode_enable_flag;
+    active_power_setpoint_mode.feature_vars = {
+        &active_power_setpoint_mode_enable_flag,
+        &active_power_setpoint_kW_cmd,
+        &active_power_setpoint_kW_slew_rate,
+        &active_power_setpoint_load_method,
+        &active_power_setpoint_absolute_mode_flag,
+        &active_power_setpoint_direction_flag,
+        &active_power_setpoint_maximize_solar_flag,
+        &ess_charge_support_enable_flag
     };
     // Manual Power Mode
     manual_power_mode.enable_flag = &manual_mode_enable_flag;
@@ -151,22 +158,11 @@ void Site_Manager::configure_feature_objects(void)
         &manual_solar_kW_cmd,
         &manual_ess_kW_cmd
     };
-    // Grid Target Mode
-    grid_target.enable_flag = &grid_target_mode_enable_flag;
-    grid_target.feature_vars = {
-        &grid_target_kW_cmd,
-        &ess_charge_support_enable_flag
-    };
     // Frequency Response Mode
     frequency_response_feature.enable_flag = &frequency_response_enabled;
     frequency_response.get_feature_vars(frequency_response_feature.feature_vars);
     frequency_response.get_summary_vars(frequency_response_feature.summary_vars);
 
-    absolute_ess.enable_flag = &absolute_ess_enable_flag;
-    absolute_ess.feature_vars = {
-        &absolute_ess_kW_cmd,
-        &absolute_ess_direction_flag
-    };
     ess_calibration.enable_flag = &ess_calibration_enable_flag;
     ess_calibration.feature_vars = {
         &ess_calibration_kW_cmd,
@@ -185,11 +181,9 @@ void Site_Manager::configure_feature_objects(void)
     // add features to list
     runmode1_kW_features_list.push_back(&energy_arbitrage_feature);
     runmode1_kW_features_list.push_back(&target_soc);
-    runmode1_kW_features_list.push_back(&site_export_target);
+    runmode1_kW_features_list.push_back(&active_power_setpoint_mode);
     runmode1_kW_features_list.push_back(&manual_power_mode);
-    runmode1_kW_features_list.push_back(&grid_target);
     runmode1_kW_features_list.push_back(&frequency_response_feature);
-    runmode1_kW_features_list.push_back(&absolute_ess);
     runmode1_kW_features_list.push_back(&ess_calibration);
     // Disable all features as part of initial configuration in case any are accidentally enabled
     for (auto feature : runmode1_kW_features_list)
@@ -198,8 +192,14 @@ void Site_Manager::configure_feature_objects(void)
     //
     // Run Mode 2 Active Power Features
     //
-    // no runmode2 active power features yet
-
+    // Generator Charge
+    generator_charge.enable_flag = &generator_charge_enable;
+    generator_charge.feature_vars = {&generator_charge_additional_buffer};
+    // Add features to list
+    runmode2_kW_features_list.push_back(&generator_charge);
+    // Disable all features as part of initial configuration in case any are accidentally enabled
+    for (auto feature : runmode2_kW_features_list)
+        feature->enable_flag->value.set(false);
 
     //
     // Charge features
@@ -330,7 +330,10 @@ void Site_Manager::configure_feature_objects(void)
         &ldss_warmup_time,
         &ldss_cooldown_time,
         &ldss_start_gen_time,
-        &ldss_stop_gen_time
+        &ldss_stop_gen_time,
+        &ldss_enable_soc_threshold,
+        &ldss_max_soc_threshold_percent,
+        &ldss_min_soc_threshold_percent
     };
     // Load Shed
     load_shed.enable_flag = &load_shed_enable;
@@ -461,7 +464,9 @@ void Site_Manager::build_JSON_features_summary(fmt::memory_buffer &buf, bool clo
 
     // mode status
     runmode1_kW_mode_status.add_to_JSON_buffer(buf, var, clothed);
+    runmode2_kW_mode_status.add_to_JSON_buffer(buf, var, clothed);
     runmode1_kVAR_mode_status.add_to_JSON_buffer(buf, var, clothed);
+    runmode2_kVAR_mode_status.add_to_JSON_buffer(buf, var, clothed);
 
     //status
     site_frequency.add_to_JSON_buffer(buf, var, clothed);
@@ -485,8 +490,11 @@ void Site_Manager::build_JSON_features_active_power(fmt::memory_buffer &buf, con
 
     // feature selection
     available_features_runmode1_kW_mode.add_to_JSON_buffer(buf, var);
+    available_features_runmode2_kW_mode.add_to_JSON_buffer(buf, var);
     runmode1_kW_mode_status.add_to_JSON_buffer(buf, var);
     runmode1_kW_mode_cmd.add_to_JSON_buffer(buf, var);
+    runmode2_kW_mode_status.add_to_JSON_buffer(buf, var);
+    runmode2_kW_mode_cmd.add_to_JSON_buffer(buf, var);
 
     // active power features feature variables
     add_feature_group_feature_vars_to_JSON_buffer(runmode1_kW_features_list, buf, var);
@@ -606,6 +614,9 @@ void Site_Manager::build_JSON_features_site_operation(fmt::memory_buffer &buf, c
 
     // site operation features feature variables
     power_priority_flag.add_to_JSON_buffer(buf, var);
+    allow_ess_auto_restart.add_to_JSON_buffer(buf, var);
+    allow_solar_auto_restart.add_to_JSON_buffer(buf, var);
+    allow_gen_auto_restart.add_to_JSON_buffer(buf, var);
     add_feature_group_feature_vars_to_JSON_buffer(site_operation_features_list, buf, var);
 
     if (var == NULL) bufJSON_EndObject(buf); // } JSON_object
@@ -632,6 +643,7 @@ void Site_Manager::build_JSON_site_summary(fmt::memory_buffer &buf, bool clothed
 
     //ops status
     site_state.add_to_JSON_buffer(buf, var, clothed);
+    site_state_enum.add_to_JSON_buffer(buf, var, clothed);
     site_status.add_to_JSON_buffer(buf, var, clothed);
     input_source_status.add_to_JSON_buffer(buf, var, clothed);
     disable_flag.add_to_JSON_buffer(buf, var, clothed);
@@ -676,6 +688,7 @@ void Site_Manager::build_JSON_site_operation(fmt::memory_buffer &buf, const char
 
     //ops status
     site_state.add_to_JSON_buffer(buf, var);
+    site_state_enum.add_to_JSON_buffer(buf, var);
     site_status.add_to_JSON_buffer(buf, var);
     running_status_flag.add_to_JSON_buffer(buf, var);
     disable_flag.add_to_JSON_buffer(buf, var);
@@ -1142,6 +1155,7 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                         frequency_response.handle_fims_set(*msg);
 
                         runmode1_kW_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode1_kW_features_mask);
+                        runmode2_kW_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode2_kW_features_mask);
                         asset_priority_runmode1.set_fims_int(msg->pfrags[2], range_check(body_int, NUM_ASSET_PRIORITIES, 0));
                         asset_priority_runmode2.set_fims_int(msg->pfrags[2], range_check(body_int, NUM_ASSET_PRIORITIES, 0));
                         site_kW_load_interval_ms.set_fims_int(msg->pfrags[2], range_check(body_int, 1, 60000)); // Interval between 1ms and 60s
@@ -1150,14 +1164,11 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                         manual_solar_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
                         manual_ess_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
 
-                        //Grid Target 
-                        grid_target_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
-
-                        //Site Export Target 
-                        export_target_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
+                        // Active Power Setpoint
+                        active_power_setpoint_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
                         //update slew rate internally if changed
-                        if(export_target_kW_slew_rate.set_fims_int(msg->pfrags[2], range_check(body_int, 100000000, 1)))
-                            export_target_kW_cmd_slew.set_slew_rate(export_target_kW_slew_rate.value.value_int);
+                        if(active_power_setpoint_kW_slew_rate.set_fims_int(msg->pfrags[2], range_check(body_int, 100000000, 1)))
+                            active_power_setpoint_kW_slew.set_slew_rate(active_power_setpoint_kW_slew_rate.value.value_int);
 
                         // Energy_Arbitrage
                         energy_arb_obj.threshold_charge_1.set_fims_float(msg->pfrags[2], body_float);
@@ -1169,9 +1180,6 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                         energy_arb_obj.max_dischg_1.set_fims_float(msg->pfrags[2], body_float);
                         energy_arb_obj.max_dischg_2.set_fims_float(msg->pfrags[2], body_float);
                         energy_arb_obj.price.set_fims_float(msg->pfrags[2], body_float);
-
-                        // Absolute Power, absolute value of command
-                        absolute_ess_kW_cmd.set_fims_float(msg->pfrags[2], fabsf(body_float));
 
                         // ESS Calibration
                         ess_calibration_min_voltage_limit.set_fims_float(msg->pfrags[2], fabsf(body_float));
@@ -1232,6 +1240,8 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                         ldss_stop_gen_time.set_fims_int(msg->pfrags[2], body_int);
                         ldss_max_load_threshold_percent.set_fims_float(msg->pfrags[2], range_check(body_float, 100.0f, ldss_min_load_threshold_percent.value.value_float));
                         ldss_min_load_threshold_percent.set_fims_float(msg->pfrags[2], range_check(body_float, ldss_max_load_threshold_percent.value.value_float, 0.0f));
+                        ldss_max_soc_threshold_percent.set_fims_float(msg->pfrags[2], range_check(body_float, 100.0f, ldss_min_soc_threshold_percent.value.value_float));
+                        ldss_min_soc_threshold_percent.set_fims_float(msg->pfrags[2], range_check(body_float, ldss_max_soc_threshold_percent.value.value_float, 0.0f));
                         start_first_gen_soc.set_fims_float(msg->pfrags[2], range_check(body_float, 100.0f, 0.0f));
                         // ess discharge prevention
                         edp_soc.set_fims_float(msg->pfrags[2], range_check(body_float, 100.0f, 0.0f));
@@ -1295,7 +1305,6 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                     if (strncmp(msg->pfrags[1], "active_power", strlen("active_power")) == 0)
                     {
                         frequency_response.handle_fims_set(*msg);
-                        absolute_ess_direction_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         ess_calibration_soc_limits_enable.set_fims_bool(msg->pfrags[2], body_bool);
                         ess_calibration_voltage_limits_enable.set_fims_bool(msg->pfrags[2], body_bool);
                         // Charge Control
@@ -1307,8 +1316,9 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                         charge_dispatch_feeder_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         // Target SoC load requirement
                         target_soc_load_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
-                        // Site Export Target
-                        export_target_load_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
+                        // Active Power Setpoint
+                        active_power_setpoint_mode_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
+                        active_power_setpoint_direction_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         valid_set = true;
                     }
                     else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0)
@@ -1334,6 +1344,9 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                                 feature->enable_flag->set_fims_bool(msg->pfrags[2], body_bool);
 
                         power_priority_flag.set_fims_bool(msg->pfrags[2], body_bool);
+                        allow_ess_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
+                        allow_solar_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
+                        allow_gen_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
                         valid_set = true;
                     }
                 }
@@ -1671,6 +1684,10 @@ void Site_Manager::get_values()
     asset_cmd.set_gen_start_first_kW(start_first_gen_kW.value.value_float);
     asset_cmd.set_solar_start_first_kW(start_first_solar_kW.value.value_float);
 
+    asset_cmd.set_ess_auto_restart_flag(allow_ess_auto_restart.value.value_bool);
+    asset_cmd.set_gen_auto_restart_flag(allow_gen_auto_restart.value.value_bool);
+    asset_cmd.set_solar_auto_restart_flag(allow_solar_auto_restart.value.value_bool);
+
     //reset all asset kW and kVAR cmds to 0
     asset_cmd.reset_kW_dispatch();
     asset_cmd.reset_kVAR_dispatch();
@@ -1732,7 +1749,6 @@ void Site_Manager::set_values()
 
     //if any command variables have changed, write them to Asset Manager
     pAssets->start_first_gen(asset_cmd.get_gen_start_first_flag()); 
-    pAssets->start_first_solar(asset_cmd.get_solar_start_first_flag());
 
     if (prev_ess_kW_cmd != ess_kW_cmd.value.value_float)
     {
@@ -1868,7 +1884,7 @@ void Site_Manager::remove_active_poi_corrections_from_slew_targets()
     if (active_power_closed_loop_enable.value.value_bool)
         slew_target -= active_power_closed_loop_total_correction.value.value_float;
     // Reset feature slews
-    export_target_kW_cmd_slew.update_slew_target(slew_target);
+    active_power_setpoint_kW_slew.update_slew_target(slew_target);
 }
 
 /**
@@ -1902,29 +1918,31 @@ void Site_Manager::calculate_total_site_kW_limits()
 // set/clear ui_enable flags
 void Site_Manager::ui_configuration(void)
 {    
-	//site disabled
-	if (disable_flag.value.value_bool)
-	{
-		enable_flag.ui_enabled = false;
+    //site disabled
+    if (disable_flag.value.value_bool)
+    {
+        enable_flag.ui_enabled = false;
         set_enable_flag(false);
-	}
-	else
-	{
-		// hide start button if not in ready state
-		enable_flag.ui_enabled = (current_state == Ready);
+    }
+    else
+    {
+        // hide start button if not in ready state
+        enable_flag.ui_enabled = (current_state == Ready);
         // Manually set the enable flag false for all states except Init
         // This allows a persistent settings set to be received on startup but all other redundant enable sets to be ignored
         // In most cases a persistent settings start should be delayed 10 seconds, but this provides additional tolerance if it's sent too early
         set_enable_flag(enable_flag.value.value_bool && current_state == Init);
-	}
+    }
 
-	disable_flag.ui_enabled = true;
-	runmode1_kW_mode_cmd.ui_enabled = true;
-	runmode1_kVAR_mode_cmd.ui_enabled = true;
-	active_power_poi_limits_enable.ui_enabled = true;
-	watchdog_enable.ui_enabled = true;
-	watchdog_duration_ms.ui_enabled = watchdog_enable.value.value_bool;
-	ess_charge_control_kW_limit.ui_enabled = true;
+    disable_flag.ui_enabled = true;
+    runmode1_kW_mode_cmd.ui_enabled = true;
+    runmode1_kVAR_mode_cmd.ui_enabled = true;
+    runmode2_kW_mode_cmd.ui_enabled = true;
+    runmode2_kVAR_mode_cmd.ui_enabled = true;
+    active_power_poi_limits_enable.ui_enabled = true;
+    watchdog_enable.ui_enabled = true;
+    watchdog_duration_ms.ui_enabled = watchdog_enable.value.value_bool;
+    ess_charge_control_kW_limit.ui_enabled = true;
 
     //disable clear faults button if no faults or alarms
     clear_faults_flag.ui_enabled = fault_status_flag.value.value_bool || alarm_status_flag.value.value_bool || num_path_faults != 0 || num_path_alarms != 0;
@@ -2620,7 +2638,7 @@ void Site_Manager::set_site_status(const char* message)
     site_status.value.set(std::string(temp_message));
 }
 
-bool Site_Manager::call_sequence_functions(const char* target_asset, const char* asset_cmd, Value_Object* value, int tolerance_percent)
+bool Site_Manager::call_sequence_functions(const char* target_asset, const char* cmd, Value_Object* value, int tolerance_percent)
 {
     bool command_found = true;
     bool return_value = true;
@@ -2634,53 +2652,53 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
     //all generic boolean and floats for site-specific configuration
     else if (strcmp(target_asset, "reserved") == 0)
     {
-        if (strcmp(asset_cmd, "bool_1") == 0)
+        if (strcmp(cmd, "bool_1") == 0)
             return_value = (reserved_bool_1.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_2") == 0)
+        else if (strcmp(cmd, "bool_2") == 0)
             return_value = (reserved_bool_2.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_3") == 0)
+        else if (strcmp(cmd, "bool_3") == 0)
             return_value = (reserved_bool_3.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_4") == 0)
+        else if (strcmp(cmd, "bool_4") == 0)
             return_value = (reserved_bool_4.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_5") == 0)
+        else if (strcmp(cmd, "bool_5") == 0)
             return_value = (reserved_bool_5.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_6") == 0)
+        else if (strcmp(cmd, "bool_6") == 0)
             return_value = (reserved_bool_6.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_7") == 0)
+        else if (strcmp(cmd, "bool_7") == 0)
             return_value = (reserved_bool_7.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_8") == 0)
+        else if (strcmp(cmd, "bool_8") == 0)
             return_value = (reserved_bool_8.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_9") == 0)
+        else if (strcmp(cmd, "bool_9") == 0)
             return_value = (reserved_bool_9.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_10") == 0)
+        else if (strcmp(cmd, "bool_10") == 0)
             return_value = (reserved_bool_10.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_11") == 0)
+        else if (strcmp(cmd, "bool_11") == 0)
             return_value = (reserved_bool_11.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_12") == 0)
+        else if (strcmp(cmd, "bool_12") == 0)
             return_value = (reserved_bool_12.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_13") == 0)
+        else if (strcmp(cmd, "bool_13") == 0)
             return_value = (reserved_bool_13.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_14") == 0)
+        else if (strcmp(cmd, "bool_14") == 0)
             return_value = (reserved_bool_14.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_15") == 0)
+        else if (strcmp(cmd, "bool_15") == 0)
             return_value = (reserved_bool_15.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "bool_16") == 0)
+        else if (strcmp(cmd, "bool_16") == 0)
             return_value = (reserved_bool_16.value.value_bool == value->value_bool);
-        else if (strcmp(asset_cmd, "float_1") == 0)
+        else if (strcmp(cmd, "float_1") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_1.value.value_float, tolerance_percent));
-        else if (strcmp(asset_cmd, "float_2") == 0)
+        else if (strcmp(cmd, "float_2") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_2.value.value_float, tolerance_percent));
-        else if (strcmp(asset_cmd, "float_3") == 0)
+        else if (strcmp(cmd, "float_3") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_3.value.value_float, tolerance_percent));
-        else if (strcmp(asset_cmd, "float_4") == 0)
+        else if (strcmp(cmd, "float_4") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_4.value.value_float, tolerance_percent));
-        else if (strcmp(asset_cmd, "float_5") == 0)
+        else if (strcmp(cmd, "float_5") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_5.value.value_float, tolerance_percent));
-        else if (strcmp(asset_cmd, "float_6") == 0)
+        else if (strcmp(cmd, "float_6") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_6.value.value_float, tolerance_percent));
-        else if (strcmp(asset_cmd, "float_7") == 0)
+        else if (strcmp(cmd, "float_7") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_7.value.value_float, tolerance_percent));
-        else if (strcmp(asset_cmd, "float_8") == 0)
+        else if (strcmp(cmd, "float_8") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, reserved_float_8.value.value_float, tolerance_percent));
         else
             command_found = false;
@@ -2688,73 +2706,93 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
     //put all ess commands here
     else if (strcmp(target_asset, "ess") == 0)
     {
-        if (strcmp(asset_cmd, "get_num_ess_available") == 0)
+        if (strcmp(cmd, "get_num_ess_available") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_available, tolerance_percent));
-        else if (strcmp(asset_cmd, "get_num_ess_running") == 0)
+        else if (strcmp(cmd, "get_num_ess_running") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_running, tolerance_percent));
-        else if (strcmp(asset_cmd, "get_num_ess_controllable") == 0)
+        else if (strcmp(cmd, "get_num_ess_controllable") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_ess_controllable, tolerance_percent));
-        else if (strcmp(asset_cmd, "get_ess_active_power") == 0)
+        else if (strcmp(cmd, "get_ess_active_power") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, ess_actual_kW.value.value_float, tolerance_percent));
-        else if (strcmp(asset_cmd, "start_all_ess") == 0)
+        else if (strcmp(cmd, "start_all_ess") == 0)
             return_value = pAssets->start_all_ess();
-        else if (strcmp(asset_cmd, "stop_all_ess") == 0)
+        else if (strcmp(cmd, "stop_all_ess") == 0)
             return_value = pAssets->stop_all_ess();
-        else if (strcmp(asset_cmd, "set_all_ess_grid_form") == 0)
+        else if (strcmp(cmd, "set_all_ess_grid_form") == 0)
             pAssets->set_all_ess_grid_form();
-        else if (strcmp(asset_cmd, "set_all_ess_grid_follow") == 0)
+        else if (strcmp(cmd, "set_all_ess_grid_follow") == 0)
             pAssets->set_all_ess_grid_follow();
-        else if (strcmp(asset_cmd, "set_voltage_slope") == 0)
+        else if (strcmp(cmd, "set_voltage_slope") == 0)
             pAssets->set_grid_forming_voltage_slew(value->value_float);
-        else if (strcmp(asset_cmd, "open_contactors") == 0)
+        else if (strcmp(cmd, "open_contactors") == 0)
             pAssets->open_all_bms_contactors();
-        else if (strcmp(asset_cmd, "close_contactors") == 0)
+        else if (strcmp(cmd, "close_contactors") == 0)
             pAssets->close_all_bms_contactors();
-        else if (strcmp(asset_cmd, "synchronize_ess") == 0)
+        else if (strcmp(cmd, "synchronize_ess") == 0)
             return_value = synchronize_ess();
+        else if (strcmp(cmd, "has_faults") == 0)
+            return_value = ((pAssets->get_num_active_faults(ESS) > 0) == value->value_bool);
+        else if (strcmp(cmd, "allow_auto_restart") == 0)
+            allow_ess_auto_restart.value.set(value->value_bool);
+        else if (strcmp(cmd, "controllable_soc_above") == 0)
+            return_value = ((value->type == Float) && soc_avg_running.value.value_float > value->value_float);
+        else if (strcmp(cmd, "controllable_soc_below") == 0)
+            return_value = ((value->type == Float) && soc_avg_running.value.value_float < value->value_float);
+        else if (strcmp(cmd, "all_soc_above") == 0)
+            return_value = ((value->type == Float) && soc_avg_all.value.value_float > value->value_float);
+        else if (strcmp(cmd, "all_soc_below") == 0)
+            return_value = ((value->type == Float) && soc_avg_all.value.value_float < value->value_float); 
         else
             command_found = false;
     }
-    //put all gen commands here
     else if (strcmp(target_asset, "gen") == 0)
     {
-        if (strcmp(asset_cmd, "get_num_gen_available") == 0)
+        //put all gen commands here
+        if (strcmp(cmd, "get_num_gen_available") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_gen_available, tolerance_percent));
-        else if (strcmp(asset_cmd, "get_num_gen_running") == 0)
+        else if (strcmp(cmd, "get_num_gen_running") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_gen_running, tolerance_percent));
-        else if (strcmp(asset_cmd, "get_num_gen_active") == 0)
+        else if (strcmp(cmd, "get_num_gen_active") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_gen_active, tolerance_percent));
-        else if (strcmp(asset_cmd, "min_generators_active") == 0)
+        else if (strcmp(cmd, "min_generators_active") == 0)
             pAssets->set_min_generators_active(value->value_float);
-        else if (strcmp(asset_cmd, "direct_start_gen") == 0)
+        else if (strcmp(cmd, "direct_start_gen") == 0)
         {
             return_value = pAssets->direct_start_gen();
         }
-        else if (strcmp(asset_cmd, "start_all_gen") == 0)
+        else if (strcmp(cmd, "start_all_gen") == 0)
         {
             return_value = true;
             pAssets->start_all_gen();
         }
-        else if (strcmp(asset_cmd, "stop_all_gen") == 0)
+        else if (strcmp(cmd, "stop_all_gen") == 0)
             return_value = pAssets->stop_all_gen();
-        else if (strcmp(asset_cmd, "set_all_gen_grid_follow") == 0)
+        else if (strcmp(cmd, "set_all_gen_grid_follow") == 0)
             pAssets->set_all_gen_grid_follow();
-        else if (strcmp(asset_cmd, "set_all_gen_grid_form") == 0)
+        else if (strcmp(cmd, "set_all_gen_grid_form") == 0)
             pAssets->set_all_gen_grid_form();    
+        else if (strcmp(cmd, "has_faults") == 0)
+            return_value = ((pAssets->get_num_active_faults(GENERATORS) > 0) == value->value_bool);
+        else if (strcmp(cmd, "allow_auto_restart") == 0)
+            allow_gen_auto_restart.value.set(value->value_bool); // set the config bool for set_values
         else
             command_found = false;
     }
     //put all solar commands here
     else if (strcmp(target_asset, "solar") == 0)
     {
-        if (strcmp(asset_cmd, "get_num_solar_available") == 0)
+        if (strcmp(cmd, "get_num_solar_available") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_solar_available, tolerance_percent));
-        else if (strcmp(asset_cmd, "get_num_solar_running") == 0)
+        else if (strcmp(cmd, "get_num_solar_running") == 0)
             return_value = ((value->type == Float) && get_tolerance(value->value_float, num_solar_running, tolerance_percent));
-        else if (strcmp(asset_cmd, "start_all_solar") == 0)
+        else if (strcmp(cmd, "start_all_solar") == 0)
             return_value = pAssets->start_all_solar();
-        else if (strcmp(asset_cmd, "stop_all_solar") == 0)
+        else if (strcmp(cmd, "stop_all_solar") == 0)
             return_value = pAssets->stop_all_solar();
+        else if (strcmp(cmd, "has_faults") == 0)
+            return_value = ((pAssets->get_num_active_faults(SOLAR) > 0) == value->value_bool);
+        else if (strcmp(cmd, "allow_auto_restart") == 0)
+            allow_solar_auto_restart.value.set(value->value_bool);
         else
             command_found = false;
     }
@@ -2762,23 +2800,23 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
     else if (strcmp(target_asset, "feeder") == 0)
     {
         //sync breaker state
-        if (strcmp(asset_cmd, "get_sync_feeder_state") == 0)
+        if (strcmp(cmd, "get_sync_feeder_state") == 0)
             return_value = pAssets->get_sync_feeder_status() ? (value->type == Bool) && (value->value_bool == true)
                            : (value->type == Bool) && (value->value_bool == false);
         //get poi breaker state
-        else if (strcmp(asset_cmd, "get_poi_feeder_state") == 0) {
+        else if (strcmp(cmd, "get_poi_feeder_state") == 0) {
             bool poi_state = pAssets->get_poi_feeder_state(); //DEBUG
             return_value = (value->type == Bool) && (value->value_bool == poi_state);
         }
         //set poi breaker state open
-        else if (strcmp(asset_cmd, "set_poi_feeder_state_open") == 0)
+        else if (strcmp(cmd, "set_poi_feeder_state_open") == 0)
             return_value = pAssets->set_poi_feeder_state_open();
         //set poi breaker state closed
-        else if (strcmp(asset_cmd, "set_poi_feeder_state_closed") == 0)
+        else if (strcmp(cmd, "set_poi_feeder_state_closed") == 0)
             return_value = pAssets->set_poi_feeder_state_closed();
-        else if (strcmp(asset_cmd, "set_sync_feeder_close_permissive_remove") == 0)
+        else if (strcmp(cmd, "set_sync_feeder_close_permissive_remove") == 0)
             return_value = pAssets->set_sync_feeder_close_permissive_remove();
-        else if (strcmp(asset_cmd, "set_sync_feeder_close_permissive") == 0)
+        else if (strcmp(cmd, "set_sync_feeder_close_permissive") == 0)
             return_value = pAssets->set_sync_feeder_close_permissive();
         else
             command_found = false;
@@ -2786,9 +2824,9 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
     //put all site state/operation commands here
     else if (strcmp(target_asset, "config") == 0)
     {
-        if (strcmp(asset_cmd, "clear_faults") == 0)
+        if (strcmp(cmd, "clear_faults") == 0)
             clear_faults();
-        else if (strcmp(asset_cmd, "get_standby_flag") == 0)
+        else if (strcmp(cmd, "get_standby_flag") == 0)
             return_value = standby_flag.value.value_bool == value->value_bool; //get standby flag status
         else
             command_found = false;
@@ -2796,7 +2834,7 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
     //feature commands
     else if (strcmp(target_asset, "features") == 0)
     {
-        if (strcmp(asset_cmd, "reset_load_shed") == 0)
+        if (strcmp(cmd, "reset_load_shed") == 0)
         {
             int configured_shed_value = int(value->value_float);
             if (configured_shed_value < load_shed_min_value.value.value_int || configured_shed_value > load_shed_max_value.value.value_int) {
@@ -2807,6 +2845,10 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
                 load_shed_calculator.offset = configured_shed_value;
             }
         }
+        else if (strcmp(cmd, "enable_ldss") == 0)
+            ldss_enable_flag.value.set(value->value_bool);
+        else
+            command_found = false;
     }
     
     //check for specific feeder id for setting and getting specific feeder states
@@ -2819,16 +2861,21 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
         }
         else {
             //set_feeder_state_open
-            if (strcmp(asset_cmd, "set_feeder_state_open") == 0) {
+            if (strcmp(cmd, "set_feeder_state_open") == 0) {
                 return_value = pAssets->set_feeder_state_open(found_feeder);
             }
             //set_feeder_state_closed
-            else if (strcmp(asset_cmd, "set_feeder_state_closed") == 0) {
+            else if (strcmp(cmd, "set_feeder_state_closed") == 0) {
                 return_value = pAssets->set_feeder_state_closed(found_feeder);
             }
             //get_feeder_state : return feeder (as target_asset) state as true for closed (on) and false for open (off)
-            else if (strcmp(asset_cmd, "get_feeder_state") == 0) {
+            else if (strcmp(cmd, "get_feeder_state") == 0) {
                 bool fdr_state = pAssets->get_feeder_state(found_feeder); 
+                return_value = (value->type == Bool) && (value->value_bool == fdr_state);
+            }
+            //get_feeder_utility_status : return feeder (as target_asset) utility status as true for online and false for offline
+            else if (strcmp(cmd, "get_utility_status") == 0) {
+                bool fdr_state = pAssets->get_feeder_utility_status(found_feeder);
                 return_value = (value->type == Bool) && (value->value_bool == fdr_state);
             }
             else 
@@ -2839,7 +2886,7 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
     //no command executed
     if (command_found == false)
     {
-        FPS_ERROR_LOG("call_function command not found. target_asset: %s asset_cmd: %s \n", target_asset, asset_cmd);
+        FPS_ERROR_LOG("call_function command not found. target_asset: %s cmd: %s \n", target_asset, cmd);
         return false;
     }
 
@@ -2875,6 +2922,7 @@ void Site_Manager::check_state(void)
         sequences[check_current_state]->sequence_bypass = false; //ensure previous state executes next time its called
         check_current_state = current_state;
         site_state.value.set(state_name[current_state]);
+        site_state_enum.value.set(current_state);
         sequence_reset = true;
     }
 }
@@ -2962,7 +3010,7 @@ void Site_Manager::init_state(void)
     ess_kVAR_cmd.value.set(0.0f);
     gen_kVAR_cmd.value.set(0.0f);
     solar_kVAR_cmd.value.set(0.0f);
-    export_target_kW_cmd_slew.reset_slew_target();
+    active_power_setpoint_kW_slew.reset_slew_target();
     gen_kVAR_cmd_slew.reset_slew_target();
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
@@ -3036,7 +3084,7 @@ void Site_Manager::init_state(void)
     reactive_power_closed_loop_regulator.set_increase_timer_duration_ms(reactive_power_closed_loop_increase_timer_ms.value.value_int);
 
     //initialize internal variables with config vars
-    export_target_kW_cmd_slew.set_slew_rate(export_target_kW_slew_rate.value.value_int);
+    active_power_setpoint_kW_slew.set_slew_rate(active_power_setpoint_kW_slew_rate.value.value_int);
     ess_kVAR_cmd_slew.set_slew_rate(ess_kVAR_slew_rate.value.value_int);
     gen_kVAR_cmd_slew.set_slew_rate(gen_kVAR_slew_rate.value.value_int);
     solar_kVAR_cmd_slew.set_slew_rate(solar_kVAR_slew_rate.value.value_int);
@@ -3131,7 +3179,7 @@ void Site_Manager::runmode1_state(void)
     // charge ess to unload gen + solar during their rampdown if they're too slow
     if (ess_charge_support_enable_flag.value.value_bool) 
     {
-        asset_cmd.ess_overload_support(grid_target_kW_cmd.value.value_float);
+        asset_cmd.ess_overload_support(active_power_setpoint_kW_cmd.value.value_float);
     }
 
     // Reactive Power Features
@@ -3159,10 +3207,15 @@ void Site_Manager::runmode1_state(void)
     calculate_total_site_kW_limits();
 
     // start first gen if ESS SOC < setpoint
-    asset_cmd.set_gen_start_first_flag((asset_cmd.get_gen_start_first_flag()) || (soc_avg_running.value.value_float <= start_first_gen_soc.value.value_float));
+    pAssets->start_first_gen(((asset_cmd.get_gen_start_first_flag()) || (soc_avg_running.value.value_float <= start_first_gen_soc.value.value_float)) && (asset_cmd.get_gen_auto_restart_flag()));
 
-    // start any "startable" ESS/solar and take any that are in standby out of standby
-    pAssets->start_available_ess_solar();
+    // start any available ESS stopped or in standby
+    if (asset_cmd.get_ess_auto_restart_flag())
+        pAssets->start_available_ess();
+
+    // start any available Solar stopped or in standby
+    if (asset_cmd.get_solar_auto_restart_flag())
+        pAssets->start_available_solar();
 
     // enter standby mode
     if (standby_flag.value.value_bool)
@@ -3201,8 +3254,16 @@ void Site_Manager::runmode2_state(void)
     // after deciding which assets get how much power, send out the power commands
     set_asset_power_commands();
 
-    // start any "startable" ESS/solar and take any that are in standby out of standby
-    pAssets->start_available_ess_solar();
+    // start any available ESS stopped or in standby
+    if (asset_cmd.get_ess_auto_restart_flag())
+        pAssets->start_available_ess();
+
+    // start any available Solar stopped or in standby
+    if (asset_cmd.get_solar_auto_restart_flag())
+        pAssets->start_available_solar();
+
+    // start first gen if ESS SOC < setpoint
+    pAssets->start_first_gen(((asset_cmd.get_gen_start_first_flag()) || (soc_avg_running.value.value_float <= start_first_gen_soc.value.value_float)) && (asset_cmd.get_gen_auto_restart_flag()));
 }
 
 //standby state - site is running, but no power features enabled.
@@ -3258,7 +3319,7 @@ void Site_Manager::shutdown_state(void)
     ess_kVAR_cmd.value.set(0.0f);
     gen_kVAR_cmd.value.set(0.0f);
     solar_kVAR_cmd.value.set(0.0f);
-    export_target_kW_cmd_slew.reset_slew_target();
+    active_power_setpoint_kW_slew.reset_slew_target();
     gen_kVAR_cmd_slew.reset_slew_target();
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
@@ -3316,19 +3377,21 @@ void Site_Manager::process_runmode1_kW_feature()
         asset_cmd.target_soc_mode(target_soc_load_enable_flag.value.value_bool);
     }
     //SITE EXPORT TARGET MODE takes a single power command that is distributed to solar and ess, using dispatch and charge control
-    else if (export_target_mode_enable_flag.value.value_bool)
+    else if (active_power_setpoint_mode_enable_flag.value.value_bool)
     {
-        asset_cmd.site_export_target_mode(export_target_load_enable_flag.value.value_bool, &export_target_kW_cmd_slew, export_target_kW_cmd.value.value_float);
+        asset_cmd.active_power_setpoint(
+            active_power_setpoint_kW_cmd.value.value_float,
+            &active_power_setpoint_kW_slew,
+            load_compensation(active_power_setpoint_load_method.value.value_int),
+            active_power_setpoint_absolute_mode_flag.value.value_bool,
+            active_power_setpoint_direction_flag.value.value_bool,
+            active_power_setpoint_maximize_solar_flag.value.value_bool
+        );
     }
     //MANUAL MODE takes a solar kW cmd and PV kW cmd and routes those commands through dispatch and charge control
     else if (manual_mode_enable_flag.value.value_bool)
     {
         asset_cmd.manual_mode(manual_ess_kW_cmd.value.value_float, manual_solar_kW_cmd.value.value_float);
-    }
-    //GRID TARGET MODE determine site demand to be distributed to assets (plus baseload)
-    else if (grid_target_mode_enable_flag.value.value_bool)
-    {
-        asset_cmd.grid_target_mode(grid_target_kW_cmd.value.value_float);
     }
     //FR MODE (frequency response) - output or absorb additional power if frequency deviates by a set amount
     else if (frequency_response_enabled.value.value_bool)
@@ -3339,11 +3402,6 @@ void Site_Manager::process_runmode1_kW_feature()
     else if (energy_arb_enable_flag.value.value_bool)
     {
         energy_arbitrage_helper();
-    }
-    // Absolute ESS Mode takes an ESS kW_cmd and routes those commands through dispatch and charge control
-    else if (absolute_ess_enable_flag.value.value_bool)
-    {
-        asset_cmd.absolute_ess(absolute_ess_direction_flag.value.value_bool, absolute_ess_kW_cmd.value.value_float);
     }
     // ESS Calibration Mode takes an ESS kW_cmd and routes it to each ESS without balancing, and with optional soc and voltage limits
     else if (ess_calibration_enable_flag.value.value_bool)
@@ -3403,20 +3461,43 @@ void Site_Manager::energy_arbitrage_helper() {
  * 
  * The active power features listed in this function are islanded-compatible, whereas non-listed active power 
  * features are only allowed during runmode1 mode.
- * 
- * Note: right now there is no "list" because there is only one runmode2 calculation, and that calculation might end up
- * being considered a hard-coded protection.
  */
 void Site_Manager::process_runmode2_kW_feature()
 {
+    // Base case behavior
     // site_kW_demand should start by covering the site load
-    asset_cmd.set_load_compensation_method(LOAD_MINIMUM);
+    asset_cmd.track_unslewed_load(LOAD_MINIMUM);
 
     // Request full charge which may be satisfied based on availability of other assets
     // If no other assets available, ESS will discharge to compensate for load
     asset_cmd.set_ess_kW_request(asset_cmd.get_ess_min_potential_kW());
 
+    // Feature selection. Currently, only Generator Charge is offered
+    if (generator_charge_enable.value.value_bool)
+        run_generator_charge();
+
     asset_cmd.calculate_feature_kW_demand(asset_priority_runmode2.value.value_float);
+}
+
+/**
+ * Calculate a generator command based on the current ESS active power and solar shedding buffers.
+ * This feature is entirely coupled with solar shedding and LDSS
+ */
+void Site_Manager::run_generator_charge()
+{
+    // ESS should be controlled by Solar + Gen, leaving enough room for solar to always increase (high threshold) if it wants
+    // Determine if solar needs room to increase (remember min_offset = no shedding = full solar output)
+    float solar_additional_buffer = (solar_shed_calculator.offset == solar_shed_calculator.min_offset) ? 0.0f : solar_shed_high_threshold.value.value_float;
+    // Determine how much solar power will actually go to the ESS, and not load
+    float actual_solar_compensation = asset_cmd.get_solar_max_potential_kW() - asset_cmd.get_site_kW_load();
+    // Determine the ESS's unsatisfied charge capability that can be handled by the generator
+    float available_ess_after_solar = zero_check(zero_check(-1.0f * asset_cmd.get_ess_min_potential_kW()) - actual_solar_compensation);
+    // Further reduce this value by the buffers
+    float calc_gen_limit = zero_check(available_ess_after_solar - solar_additional_buffer - generator_charge_additional_buffer.value.value_float);
+    // Take the final value as the command, and make sure gen power does not exceed this value
+    float max_gen_limit = std::min(calc_gen_limit, asset_cmd.get_gen_max_potential_kW());
+    asset_cmd.set_gen_max_potential_kW(max_gen_limit);
+    max_potential_gen_kW.value.set(max_gen_limit);
 }
 
 /**
@@ -3807,16 +3888,19 @@ void Site_Manager::watt_watt_poi_adjustment()
  */
 void Site_Manager::set_ldss_variables()
 {
-    pAssets->update_ldss_settings(LDSS_Settings{
-        ldss_enable_flag.value.value_bool,
-        (LDSS_Priority_Setting)ldss_priority_setting.value.value_int,
-        ldss_max_load_threshold_percent.value.value_float,
-        ldss_min_load_threshold_percent.value.value_float,
-        ldss_warmup_time.value.value_int,
-        ldss_cooldown_time.value.value_int,
-        ldss_start_gen_time.value.value_int,
-        ldss_stop_gen_time.value.value_int
-    });
+    auto ldss_settings = LDSS_Settings();
+    ldss_settings.enabled                        = ldss_enable_flag.value.value_bool;
+    ldss_settings.priority_setting               = (LDSS_Priority_Setting) ldss_priority_setting.value.value_int;
+    ldss_settings.max_load_threshold_percent     = ldss_max_load_threshold_percent.value.value_float;
+    ldss_settings.min_load_threshold_percent     = ldss_min_load_threshold_percent.value.value_float;
+    ldss_settings.warmup_time                    = ldss_warmup_time.value.value_int;
+    ldss_settings.cooldown_time                  = ldss_cooldown_time.value.value_int;
+    ldss_settings.start_gen_time                 = ldss_start_gen_time.value.value_int;
+    ldss_settings.stop_gen_time                  = ldss_stop_gen_time.value.value_int;
+    ldss_settings.enable_soc_thresholds_flag     = ldss_enable_soc_threshold.value.value_bool;
+    ldss_settings.min_soc_percent                = ldss_min_soc_threshold_percent.value.value_float;
+    ldss_settings.max_soc_percent                = ldss_max_soc_threshold_percent.value.value_float;
+    pAssets->update_ldss_settings(std::move(ldss_settings));
 }
 
 // Updates the load shed value and writes out the value if it changes

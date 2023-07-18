@@ -43,6 +43,8 @@ Asset_Feeder::~Asset_Feeder ()
     grid_frequency = NULL;
     if (breaker_status)     delete breaker_status;
     breaker_status = NULL;
+    if (utility_status)     delete utility_status;
+    utility_status = NULL;
 }
 
 // required variables checked for in configuration validation
@@ -58,6 +60,15 @@ bool Asset_Feeder::get_breaker_status(void)
 {
     // breaker status can either a mask or a boolean
     return (is_running() || breaker_status->value.value_bool);
+}
+
+/**
+ * Status of the utility tracked by this feed register
+ * Only supported for some sites, else will always be false
+ */
+bool Asset_Feeder::get_utility_status(void)
+{
+    return utility_status->value.value_bool;
 }
 
 float Asset_Feeder::get_gridside_frequency(void)
@@ -235,6 +246,7 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator)
 bool Asset_Feeder::configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map)
 {
     configure_single_fims_var(asset_var_map,&breaker_status,"breaker_status",Bool);
+    configure_single_fims_var(asset_var_map,&utility_status,"utility_status",Bool);
     configure_single_fims_var(asset_var_map,&grid_voltage_l1,"grid_voltage_l1");
     configure_single_fims_var(asset_var_map,&grid_voltage_l2,"grid_voltage_l2");
     configure_single_fims_var(asset_var_map,&grid_voltage_l3,"grid_voltage_l3");

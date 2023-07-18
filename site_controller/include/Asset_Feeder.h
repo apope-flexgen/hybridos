@@ -35,6 +35,7 @@ public:
 
     // status
     bool get_breaker_status(void);
+    bool get_utility_status(void);
     float get_gridside_avg_voltage(void);
     float get_gridside_frequency(void);
     float get_power_factor();
@@ -65,6 +66,7 @@ protected:
     Fims_Object* grid_voltage_l3;
     Fims_Object* grid_frequency;
     Fims_Object* breaker_status;
+    Fims_Object* utility_status;    // Register tracking the status of the utility for sites that support it
 
     // control
     fimsCtl breaker_open_ctl;

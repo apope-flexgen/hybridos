@@ -43,8 +43,6 @@ Solar_Manager::Solar_Manager() : Type_Manager(SOLAR_TYPE_ID)
     solarTargetActivePowerkW = 0.0;
     solarTargetReactivePowerkVAR = 0.0;
 
-    firstAssetStartSolar = false;
-    
     solar_curtailment_enabled = false;
     solar_curtailment_state = no_curtailment;
     solar_prime_index = 0;
@@ -137,8 +135,8 @@ bool Solar_Manager::stop_all_solar(void)
 {
     bool return_value = true;
     for (int i=0; i < numParsed; i++)
-        if (pSolar[i]->is_controllable())
-            return_value = pSolar[i]->stop() && return_value;
+        // Asset does not need to be controllable to send stop command
+        return_value = pSolar[i]->stop() && return_value;
     return return_value;
 }
 
@@ -607,11 +605,6 @@ std::tuple<float,float> Solar_Manager::calculate_solar_reactive_power_commands(v
         bnq *= -1.0;
     }
     return std::make_tuple(spq, bnq);
-}
-
-void Solar_Manager::start_first_solar(bool enable)
-{
-    firstAssetStartSolar = enable;
 }
 
 /**

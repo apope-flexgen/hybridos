@@ -22,9 +22,9 @@ enum discharge_type
 // Types of load compensation available
 enum load_compensation
 {
-    NO_COMPENSATION,    // No load compensation being provided
-    LOAD_OFFSET,             // Always increase discharge to offset load
-    LOAD_MINIMUM             // Only increase discharge if load is not met
+    NO_COMPENSATION,        // No load compensation being provided
+    LOAD_OFFSET,            // Always increase discharge to offset load
+    LOAD_MINIMUM            // Only increase discharge if load is not met
 };
 
 class Asset_Cmd_Object
@@ -46,6 +46,7 @@ class Asset_Cmd_Object
         float actual_kW;        // Actual active power measured by the asset
         float start_first_kW;   // Power above which the asset should be started
         bool start_first_flag;  // Flag indicating whether to enable the start_first_kW check
+        bool auto_restart_flag;  // Flag indicating whether to allow asset to start at all
 
         float min_potential_kW; //minimum possible instantaneous active power available from asset
         float max_potential_kW; //maximum possible instantaneous active power available from asset
@@ -73,10 +74,8 @@ class Asset_Cmd_Object
     float dispatch_site_kW_charge_cmd(int asset_priority, bool solar_source_flag, bool gen_source_flag, bool feeder_source_flag);
     float ess_overload_support(float grid_target_kW_cmd);
     void target_soc_mode(bool load_requirement);
-    void site_export_target_mode(bool load_enable_flag, Slew_Object* export_target_slew, float export_target_kW_cmd);
+    void active_power_setpoint(float kw_cmd, Slew_Object* slew_rate, load_compensation load_strategy, bool absolute_mode_flag, bool direction_flag, bool maximize_solar);
     void manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd);
-    void grid_target_mode(float grid_target_kW_cmd);
-    void absolute_ess(bool chg_dischg_flag, float absolute_ess_kW_cmd);
     void ess_calibration_mode(float ess_calibration_kW_cmd, int num_ess_controllable);
     void dispatch_reactive_power();
     void reactive_setpoint_mode(Slew_Object* reactive_setpoint_slew, float reactive_setpoint_kVAR_cmd);
@@ -140,8 +139,11 @@ class Asset_Cmd_Object
     float get_gen_kVAR_cmd();
     float get_solar_kVAR_cmd();
     bool get_ess_start_first_flag();
+    bool get_ess_auto_restart_flag();
     bool get_gen_start_first_flag();
+    bool get_gen_auto_restart_flag();
     bool get_solar_start_first_flag();
+    bool get_solar_auto_restart_flag();
     float get_total_available_charge_kW();
     float get_total_available_discharge_kW();
     float get_total_available_charge_kVAR();
@@ -179,8 +181,11 @@ class Asset_Cmd_Object
     void set_gen_start_first_kW(float value);
     void set_solar_start_first_kW(float value);
     void set_ess_start_first_flag(bool value);
+    void set_ess_auto_restart_flag(bool value);
     void set_gen_start_first_flag(bool value);
+    void set_gen_auto_restart_flag(bool value);
     void set_solar_start_first_flag(bool value);
+    void set_solar_auto_restart_flag(bool value);
 
     void save_state();
     void restore_state();

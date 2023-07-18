@@ -774,10 +774,20 @@ float Asset_Manager::get_gen_total_uncontrollable_active_power(void)
     return generator_manager->get_gen_total_uncontrollable_active_power();
 }
 
-bool Asset_Manager::get_feeder_state(Asset_Feeder *found_feeder)
+bool Asset_Manager::get_feeder_state(Asset_Feeder *target_feeder)
 {
-    return feeder_manager->get_feeder_state(found_feeder);
+    return feeder_manager->get_feeder_state(target_feeder);
 }
+
+/**
+ * Status of the utility tracked by the feeder
+ * @param target_feeder the validated feeder asset
+ */
+bool Asset_Manager::get_feeder_utility_status(Asset_Feeder *target_feeder)
+{
+    return feeder_manager->get_utility_status(target_feeder);
+}
+
 Asset_Feeder* Asset_Manager::validate_feeder_id(const char* feeder_ID) {
     return feeder_manager->validate_feeder_id(feeder_ID);
 }
@@ -973,19 +983,16 @@ float Asset_Manager::get_avg_ac_voltage(const char* feeder_ID)
 }
 
 /**
- * Starts any available but not running ESSs/solar and tells ESSs/solar to exit standby if any are in standby.
+ * Starts any available Solar that are currently stopped/in standby.
+ * Recall functionality like auto_restart before calling this function.
  */
-void Asset_Manager::start_available_ess_solar(void)
+void Asset_Manager::start_available_solar(void)
 {
-    // if any ESSs/solar are available but not running, start them
-    if (ess_manager->get_num_ess_startable() > 0)
-        ess_manager->start_all_ess();
+    // if any solar are available but not running, start them
     if (solar_manager->get_num_solar_startable() > 0)
         solar_manager->start_all_solar();
 
-    // if any ESSs/solar are in standby, have them exit standby
-    if (ess_manager->get_num_ess_in_standby() > 0)
-        ess_manager->exit_standby_all_ess();
+    // if any solar are in standby, have them exit standby
     if (solar_manager->get_num_solar_in_standby() > 0)
         solar_manager->exit_standby_all_solar();
 }
@@ -1044,6 +1051,21 @@ void Asset_Manager::set_solar_curtailment_enabled(bool enable)
     return;
 }
 
+/**
+ * Starts any available ESS that are currently stopped/in standby.
+ * Recall functionality like auto_restart before calling this function.
+ */
+void Asset_Manager::start_available_ess(void)
+{
+    // if any ESSs/solar are available but not running, start them
+    if (ess_manager->get_num_ess_startable() > 0)
+        ess_manager->start_all_ess();
+
+    // if any ESSs/solar are in standby, have them exit standby
+    if (ess_manager->get_num_ess_in_standby() > 0)
+        ess_manager->exit_standby_all_ess();
+}
+
 bool Asset_Manager::enter_standby_all_ess(void)
 {
     return ess_manager->enter_standby_all_ess();
@@ -1089,14 +1111,14 @@ bool Asset_Manager::stop_all_gen(void)
     return generator_manager->stop_all_gen();
 }
 
-bool Asset_Manager::set_feeder_state_open(Asset_Feeder* found_feeder)
+bool Asset_Manager::set_feeder_state_open(Asset_Feeder* target_feeder)
 {
-    return feeder_manager->set_feeder_state_open(found_feeder);
+    return feeder_manager->set_feeder_state_open(target_feeder);
 }
 
-bool Asset_Manager::set_feeder_state_closed(Asset_Feeder* found_feeder)
+bool Asset_Manager::set_feeder_state_closed(Asset_Feeder* target_feeder)
 {
-    return feeder_manager->set_feeder_state_closed(found_feeder);
+    return feeder_manager->set_feeder_state_closed(target_feeder);
 }
 
 bool Asset_Manager::set_poi_feeder_state_open()
@@ -1220,6 +1242,7 @@ void Asset_Manager::set_grid_forming_voltage_slew(float slope)
  */
 void Asset_Manager::update_ldss_settings(LDSS_Settings &&settings)
 {
+    settings.pEss = ess_manager;
     generator_manager->update_ldss_settings(settings);
 }
 
@@ -1455,11 +1478,6 @@ void Asset_Manager::set_first_gen_is_starting_flag(bool flag)
     generator_manager->set_first_gen_is_starting_flag(flag);
 }
 
-void Asset_Manager::start_first_solar(bool enable)
-{
-    solar_manager->start_first_solar(enable);
-}
-
 void Asset_Manager::set_min_generators_active(int minGensActive)
 {
     generator_manager->set_min_generators_active(minGensActive); 
@@ -1537,7 +1555,9 @@ void Asset_Manager::print_component_var_map()
                 FPS_INFO_LOG("Component URI: %s\n", (*var_it)->get_component_uri());
                 FPS_INFO_LOG("Type: %s\n", (*var_it)->get_type());
                 FPS_INFO_LOG("UI Type: %s\n", (*var_it)->get_ui_type());
-                FPS_INFO_LOG("Initial Value: %s\n", (*var_it)->value.type == 3 || (*var_it)->value.type == 4 ? "Bit field or Random enum" : (*var_it)->value.print());
+                const char* value_string = (*var_it)->value.print();
+                FPS_INFO_LOG("Initial Value: %s\n", (*var_it)->value.type == 3 || (*var_it)->value.type == 4 ? "Bit field or Random enum" : value_string);
+                delete value_string;
                 FPS_INFO_LOG("Scaler: %d\n", (*var_it)->scaler);
                 FPS_INFO_LOG("Unit: %s\n", (*var_it)->get_unit() == NULL ? "Unit not provided in assets.json" : (*var_it)->get_unit() );
             }
@@ -1565,7 +1585,9 @@ void Asset_Manager::print_asset_var_map()
             FPS_INFO_LOG("Component URI: %s\n", it->second->get_component_uri());
             FPS_INFO_LOG("Type: %s\n", it->second->get_type());
             FPS_INFO_LOG("UI Type: %s\n", it->second->get_ui_type());
-            FPS_INFO_LOG("Initial Value: %s\n", it->second->value.type == 3 || it->second->value.type == 4 ? "Bit field or Random enum" : it->second->value.print());
+            const char* value_string = it->second->value.print();
+            FPS_INFO_LOG("Initial Value: %s\n", it->second->value.type == 3 || it->second->value.type == 4 ? "Bit field or Random enum" : value_string);
+            delete value_string;
             FPS_INFO_LOG("Scaler: %d\n", it->second->scaler);
             FPS_INFO_LOG("Unit: %s\n", it->second->get_unit() == NULL ? "Unit not provided in assets.json" : it->second->get_unit() );
         }

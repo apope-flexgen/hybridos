@@ -1,0 +1,39 @@
+{
+    "tasks": [
+        {
+            "type": "process",
+            "label": "build_tests",
+            "command": "/bin/bash",
+            "args": [
+                "./package_utility/build.sh",
+                "-bm",
+                "test",
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+            },
+        },
+
+        {
+            "type": "process",
+            "label": "build_debug",
+            "command": "/bin/bash",
+            "args": [
+                "./package_utility/build.sh",
+                "-bi",
+                "-m",
+                "debug"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+            },
+        }
+    ],
+    "version": "2.0.0"
+}

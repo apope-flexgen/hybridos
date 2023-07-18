@@ -24,7 +24,6 @@ Value_Object::Value_Object()
     value_bit_field = 0;
     value_mask   = 0;
     value_string = NULL;
-    print_buffer = NULL;
 }
 
 Value_Object::Value_Object(int value)
@@ -36,7 +35,6 @@ Value_Object::Value_Object(int value)
     value_bit_field = 0;
     value_mask   = 0;
     value_string = NULL;
-    print_buffer = NULL;
     set(value);
 }
 
@@ -44,8 +42,7 @@ Value_Object::~Value_Object()
 {
     if (value_string != NULL)
         free(value_string);
-    if (print_buffer != NULL)
-        free(print_buffer);
+    value_string = NULL;
 }
 
 void Value_Object::set(bool value)
@@ -114,10 +111,13 @@ void Value_Object::set(Value_Object &new_value)
     };
 }
 
+/**
+ * Construct the string representation of the value
+ * Caller is responsible for memory management
+ */
 const char* Value_Object::print()
 {
-    if (print_buffer == NULL)
-        print_buffer = new char[64];
+    char* print_buffer = new char[64];
 
     switch (type)
     {

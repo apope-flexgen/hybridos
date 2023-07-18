@@ -55,8 +55,6 @@ protected:
     float solarTargetActivePowerkW;
     float solarTargetReactivePowerkVAR;
 
-    bool firstAssetStartSolar;
-
     std::vector<Asset_Solar*> pSolar;
 
     bool solar_curtailment_enabled;
@@ -118,8 +116,6 @@ public:
 
     void process_asset_data(void);
     void update_asset_data(void);
-
-    void start_first_solar(bool enable);
 
     void set_solar_curtailment_enabled(bool enable);
 };
