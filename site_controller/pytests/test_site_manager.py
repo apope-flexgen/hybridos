@@ -4,19 +4,18 @@ import pytest
 from pytest_cases import parametrize
 
 
-from .pytest_framework import Site_Controller_Instance
-from .pytest_steps import Steps
-from .cases.active_clc import test_fr_clc, test_ess_tsoc_clc, test_solar_tsoc_clc
-from .cases.reactive_clc import test_reactive_setpoint_clc
-from .cases.reactive_power_poi_lims import test_reactive_poi_lims
-from .cases.constant_power_factor import test_constant_power_factor
-from .cases.active_power_poi_lims import test_fr_poi_lims, test_ess_tsoc_poi_lims
-from .cases.reactive_setpoint import test_reactive_power_setpoint
-from .cases.site_state import test_site_state
-from .cases.sequences import test_num_ess_transitions, test_auto_restart_prevention, test_auto_restart_prevention_agt, test_agt_sequences
-from .cases.alerts import test_alerts
-from .cases.ldss import test_ldss
-from .cases.sequences import test_auto_restart_prevention
+from pytests.pytest_framework import Site_Controller_Instance
+from pytests.pytest_steps import Steps
+from pytests.cases.active_clc import test_fr_clc, test_ess_tsoc_clc, test_solar_tsoc_clc
+from pytests.cases.reactive_clc import test_reactive_setpoint_clc
+from pytests.cases.reactive_power_poi_lims import test_reactive_poi_lims
+from pytests.cases.constant_power_factor import test_constant_power_factor
+from pytests.cases.active_power_poi_lims import test_fr_poi_lims, test_ess_tsoc_poi_lims
+from pytests.cases.reactive_setpoint import test_reactive_power_setpoint
+from pytests.cases.site_state import test_site_state
+from pytests.cases.sequences import test_init, test_num_ess_transitions, test_auto_restart_prevention, test_auto_restart_prevention_agt, test_agt_sequences
+from pytests.cases.alerts import test_alerts
+from pytests.cases.ldss import test_ldss
 from pytests.cases.active_power import test_ess_chargeable_derate, test_ess_dischargeable_derate
 from pytests.cases.agt_runmode1 import test_agt_runmode1
 
@@ -37,6 +36,7 @@ from pytests.cases.agt_runmode1 import test_agt_runmode1
     test_ess_dischargeable_derate,
     test_alerts,
     test_ldss,
+    test_init,
     test_num_ess_transitions,
     test_auto_restart_prevention,
     test_auto_restart_prevention_agt,

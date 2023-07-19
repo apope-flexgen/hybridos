@@ -2900,7 +2900,7 @@ void Site_Manager::check_state(void)
     Path* current_path = current_sequence->get_path(current_sequence->current_path_index);
 
     //if faulted or shutdown cmd, enter shutdown state
-    if (current_sequence->check_faults() || (disable_flag.value.value_bool))
+    if (current_state != Init && (current_sequence->check_faults() || (disable_flag.value.value_bool)))
        current_state = Shutdown;
 
     // check if alarms are present

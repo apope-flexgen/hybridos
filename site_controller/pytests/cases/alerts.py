@@ -5,6 +5,36 @@ from ..assertion_framework import Assertion_Type, Flex_Assertion
 from ..pytest_steps import Setup, Steps, Teardown
 
 
+# Generate configs changes for alerts
+def generate_alerts_config():
+    keys = ["faults", "alarms"]
+    sequence_names = ["Init", "Ready", "RunMode1", "RunMode2", "Shutdown", "Standby", "Startup"]
+    seq_uris = [f"/dbi/site_controller/sequences/sequences/{name}/paths/0" for name in sequence_names]
+    seq_migs = [{"uri": f"{uri}/active_{key}", "up": [{"name": f"/assets/get_any_ess_{key}"}], "down": [{"name": "/bypass"}]}
+                for uri in seq_uris for key in keys]
+    alert_edits: list[dict] = [
+        # Enable site level alarms and faults for all sequence types
+        *seq_migs,
+        # Modify register_ids to not compete with modbus_clients
+        {
+            "uri": "/dbi/site_controller/assets/assets/ess/asset_instances/0/components/0/variables/faults",
+            "up": {"name": "Faults", "register_id": "test_faults", "type": "Int", "ui_type": "fault"},
+            "down": {"name": "Faults", "register_id": "faults", "type": "Int", "ui_type": "fault"}
+        },
+        {
+            "uri": "/dbi/site_controller/assets/assets/ess/asset_instances/0/components/0/variables/alarms",
+            "up": {"name": "Alarms", "register_id": "test_alarms", "type": "Int", "ui_type": "alarm"},
+            "down": {"name": "Alarms", "register_id": "alarms", "type": "Int", "ui_type": "alarm"}
+        },
+        {
+            "uri": "/dbi/site_controller/sequences/sequences/RunMode1/paths/0/timeout",
+            "up": {"value": 15},
+            "down": {"value": 45}
+        },
+    ]
+    return alert_edits
+
+
 # Fault testing
 @ fixture
 @ parametrize("test", [
@@ -44,7 +74,7 @@ from ..pytest_steps import Setup, Steps, Teardown
             Flex_Assertion(Assertion_Type.approx_eq, "/assets/feeders/feed_1/is_alarmed", False, wait_secs=.1),
         ],
         post_lambda=[
-            Site_Controller_Instance.get_instance().mig.before_alerts,
+            Site_Controller_Instance.get_instance().mig.upload(generate_alerts_config()),
             Site_Controller_Instance.get_instance().restart_site_controller
         ]
 
@@ -139,7 +169,7 @@ from ..pytest_steps import Setup, Steps, Teardown
         },
         Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/running_status_flag", True, wait_secs=8),
         post_lambda=[
-            Site_Controller_Instance.get_instance().mig.after_alerts,
+            lambda: Site_Controller_Instance.get_instance().mig.download(generate_alerts_config()),
             Site_Controller_Instance.get_instance().restart_site_controller
         ]
     )

@@ -36,7 +36,8 @@ class Site_Controller_Instance:
         running_status.run_steps()
 
     # Start site_controller with custom configuration
-    def restart_site_controller(self):
+    # auto_restart: whether to automatically restart the site after the process has restarted
+    def restart_site_controller(self, auto_restart=True):
         """
             Restart site_controller with custom configuration and no persistent setpoints
         """
@@ -48,6 +49,10 @@ class Site_Controller_Instance:
         run(f"kill {pid}", shell=True, check=True)
         logging.info("Sleeping 2s until site controller is rebooted by MCP")
         time.sleep(2)
+        # Don't automatically restart the site if specified
+        if not auto_restart:
+            return
+
         running_status = Setup(
             "start_site",
             {"/site/operation/enable_flag": True},

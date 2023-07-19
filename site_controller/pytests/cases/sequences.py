@@ -1,9 +1,77 @@
 # Sequences tests
 from pytest_cases import parametrize, fixture
-from pytests.fims import fims_set
+from pytests.fims import fims_get, fims_set
 from time import sleep
-from ..assertion_framework import Assertion_Type, Flex_Assertion
-from ..pytest_steps import Setup, Steps, Teardown
+from pytests.pytest_framework import Site_Controller_Instance
+from pytests.assertion_framework import Assertion_Type, Flex_Assertion
+from pytests.pytest_steps import Setup, Steps, Teardown
+
+
+# Generate config changes for init tests
+def generate_init_config():
+    current_aps_slew = fims_get("/dbi/site_controller/variables/variables/features/active_power/active_power_setpoint_kW_slew_rate/value")
+    config_edits: list[dict] = [
+        # Modify register_ids to not compete with modbus_clients
+        {
+            "uri": "/dbi/site_controller/variables/variables/site/operation/disable_flag/value",
+            "up": True,
+            "down": False
+        },
+        {
+            "uri": "/dbi/site_controller/variables/variables/features/active_power/active_power_setpoint_kW_slew_rate",
+            "up": 10,
+            "down": current_aps_slew
+        },
+    ]
+    return config_edits
+
+
+# Make sure the init state is always run, handling previous error cases such as disable flag being set
+@ fixture
+@ parametrize("test", [
+    Setup(
+        "init",
+        # First ensure the disable state is reached to make sure we reach the old error state
+        {
+            "/components/bess_aux/active_power_setpoint": 0
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/disable_flag", True, wait_secs=5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/site_state_enum", 6),  # Disabled state
+        ],
+        # Restart with the overwritten configs
+        pre_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.upload(generate_init_config()),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller(False)
+        ]
+    ),
+    # Confirm shutdown
+    Steps(
+        # Send a power command and ensure it slews at the new, slower rate
+        {
+            "/site/operation/enable_flag": True,
+            "/features/active_power/runmode1_kW_mode_cmd": 2,
+            "/features/active_power/active_power_setpoint_kW_cmd": 10000
+        },
+        [
+            # Should have slewed -30kWs in 3 seconds +50kWs of losses at zero
+            # Really we just care about the order of magnitude though
+            Flex_Assertion(Assertion_Type.greater_than_eq, "/features/active_power/feeder_actual_kW", 0),
+        ]
+    ),
+    # Restart site
+    Teardown(
+        {"/features/active_power/active_power_setpoint_kW_cmd": 0},
+        [Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0)],
+        # Restart with the original configs
+        pre_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.download(generate_init_config()),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller()
+        ]
+    )
+])
+def test_init(test):
+    return test
 
 
 # TODO: dynamic configuration so other endpoints (num_running/avail) can be tested as well
