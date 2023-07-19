@@ -145,7 +145,14 @@ const char* Value_Object::print()
     return print_buffer;
 }
 
-bool Value_Object::add_value_to_JSON_buffer(fmt::memory_buffer &buf)
+/**
+ * Determine the appropriate value based on the type of the variable, then add it to the constructed memory buffer.
+ * Currently used for rounding (re)active_power_setpoint's values, and these controls will alway be clothed. This
+ * functionality is not available for the equivalent add_naked_value_to_JSON_buffer() for this reason.
+ * @param buf Reference to the buffer to which the value will be added
+ * @param round_float Optional variable defaulting to false. If true, round the value of the float to the nearest integer
+ */
+bool Value_Object::add_value_to_JSON_buffer(fmt::memory_buffer &buf, bool round_float)
 {
     switch (type) {
     case Bool:
@@ -155,7 +162,7 @@ bool Value_Object::add_value_to_JSON_buffer(fmt::memory_buffer &buf)
         bufJSON_AddNumber(buf, "value", value_int);
         break;
     case Float:
-        bufJSON_AddNumber(buf, "value", value_float);
+        bufJSON_AddNumber(buf, "value", round_float ? round(value_float) : value_float);
         break;
     case String:
         if (value_string == NULL) {

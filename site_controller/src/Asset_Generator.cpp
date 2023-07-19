@@ -120,8 +120,8 @@ void Asset_Generator::set_balanced(bool flag)
 
 bool Asset_Generator::send_active_power_setpoint(void)
 {
-    if ((int)active_power_setpoint->component_control_value.value_float != (int)active_power_setpoint->value.value_float)
-        return active_power_setpoint->send_to_component();
+    if (round(active_power_setpoint->component_control_value.value_float) != round(active_power_setpoint->value.value_float))
+        return active_power_setpoint->send_to_component(false, true);
     return false;
 }
 
@@ -152,8 +152,8 @@ void Asset_Generator::process_potential_active_power(void) // overriden from the
 
 bool Asset_Generator::send_reactive_power_setpoint(void)
 {
-    if ((int)reactive_power_setpoint->component_control_value.value_float != (int)reactive_power_setpoint->value.value_float)
-        return reactive_power_setpoint->send_to_component();
+    if (round(reactive_power_setpoint->component_control_value.value_float) != round(reactive_power_setpoint->value.value_float))
+        return reactive_power_setpoint->send_to_component(false, true);
     return true;
 }
 

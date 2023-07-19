@@ -307,7 +307,7 @@ bool Asset_ESS::send_active_power_setpoint(void)
     {
         if(round(active_power_setpoint->component_control_value.value_float) != round(active_power_setpoint->value.value_float))
         {
-            return active_power_setpoint->send_to_component();
+            return active_power_setpoint->send_to_component(false, true);
         }
     }
     return false;
@@ -336,7 +336,7 @@ bool Asset_ESS::send_reactive_power_setpoint(void)
     {
         if(round(reactive_power_setpoint->component_control_value.value_float) != round(reactive_power_setpoint->value.value_float))
         {
-            return reactive_power_setpoint->send_to_component();
+            return reactive_power_setpoint->send_to_component(false, true);
         }
     }
     return false;

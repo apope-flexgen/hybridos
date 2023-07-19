@@ -67,7 +67,7 @@ public:
     const char* get_ui_type()const;
     const char* get_type()const;
     int get_scaler()const;
-    bool send_to_component(bool use_write_uri = false);
+    bool send_to_component(bool use_write_uri = false, bool round_float = false);
     void update_present_register(uint input_source_index);
     void parse_json_config(cJSON* JSON_object, const Fims_Object &default_vals);
     bool configure(const std::string& var_id, bool* p_flag, Input_Source_List* input_sources, cJSON* JSON_config, const Fims_Object& default_vals, std::vector<Fims_Object*>& multi_input_command_vars);

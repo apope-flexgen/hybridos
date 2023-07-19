@@ -1,6 +1,23 @@
+import logging
+import subprocess
+from unittest.result import failfast
 from pytest_cases import parametrize, fixture
 from pytests.assertion_framework import Assertion_Type, Flex_Assertion, Tolerance_Type
 from pytests.pytest_steps import Setup, Steps, Teardown
+
+
+# Listen to the given uri and return true if any sets were captured
+def no_fims_sets(uri: str, duration_secs=5) -> bool:
+    result = None
+
+    try:
+        result = subprocess.run(["fims_listen", "-m", "set", "-u", uri, "-n", "1"], stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE, timeout=duration_secs, universal_newlines=True)
+    except subprocess.TimeoutExpired as result:
+        # output = stdout. Neither stdout nor stderr should have any output after the listen
+        assert not result.output and not result.stderr
+    else:
+        raise Exception(f"Test failed, received fims set: {result.stdout} when none was expected")
 
 
 # Generic feature (active power setpoint) testing ess chargeable power derating
@@ -149,4 +166,146 @@ def test_ess_chargeable_derate(test):
     )
 ])
 def test_ess_dischargeable_derate(test):
+    return test
+
+
+# Maint mode testing active power setpoint rounding
+@ fixture
+@ parametrize("test", [
+    # Preconditions
+    Setup(
+        "maint_active_power_rounding",
+        {
+            "/assets/solar/solar_2/maint_mode": True,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/summary/num_solar_available", 1),
+        ]
+    ),
+    Steps(
+        {
+            # Set a fractional command and ensure only sets are not spammed and the component has a rounded value as well
+            "/assets/solar/solar_2/maint_active_power_setpoint": 4.57
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/pv_2/active_power_setpoint", 5),
+        ],
+        post_lambda=[
+            lambda: no_fims_sets("/components/pv_2/active_power_setpoint")
+        ]
+    ),
+    Steps(
+        {
+            "/assets/generators/gen_1/maint_mode": True,
+            # Repeat for Gen, round down this time
+            "/assets/generators/gen_1/maint_active_power_setpoint": 4.3
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/summary/num_gen_available", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/easygen_3500xt/active_power_setpoint", 4),
+        ],
+        post_lambda=[
+            lambda: no_fims_sets("/components/easygen_3500xt/active_power_setpoint")
+        ]
+    ),
+    Steps(
+        {
+            "/assets/ess/ess_1/maint_mode": True,
+            # Repeat for ess, negative number this time
+            "/assets/ess/ess_1/maint_active_power_setpoint": -2.5
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/active_power_setpoint", -3),
+        ],
+        post_lambda=[
+            lambda: no_fims_sets("/components/ess_twins/active_power_setpoint")
+        ]
+    ),
+    # Cleanup
+    Teardown(
+        {
+            "/assets/ess/ess_1/maint_mode": False,
+            "/assets/solar/solar_2/maint_mode": False,
+            "/assets/generators/gen_1/maint_mode": False
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 2),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/summary/num_solar_available", 2),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/summary/num_gen_available", 1),
+        ]
+    )
+])
+def test_maint_active_power_rounding(test):
+    return test
+
+
+# Maint mode testing reactive power setpoint rounding
+@ fixture
+@ parametrize("test", [
+    # Preconditions
+    Setup(
+        "maint_reactive_power_rounding",
+        {
+            "/assets/solar/solar_2/maint_mode": True,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/summary/num_solar_available", 1),
+        ]
+    ),
+    Steps(
+        {
+            # Set a fractional command and ensure only sets are not spammed and the component has a rounded value as well
+            "/assets/solar/solar_2/maint_reactive_power_setpoint": 4.57
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/pv_2/reactive_power_setpoint", 5),
+        ],
+        post_lambda=[
+            lambda: no_fims_sets("/components/pv_2/reactive_power_setpoint")
+        ]
+    ),
+    Steps(
+        {
+            "/assets/generators/gen_1/maint_mode": True,
+            # Repeat for Gen, round down this time
+            "/assets/generators/gen_1/maint_reactive_power_setpoint": 4.3
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/summary/num_gen_available", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/easygen_3500xt/reactive_power_setpoint", 4),
+        ],
+        post_lambda=[
+            lambda: no_fims_sets("/components/easygen_3500xt/reactive_power_setpoint")
+        ]
+    ),
+    Steps(
+        {
+            "/assets/ess/ess_1/maint_mode": True,
+            # Repeat for ess, negative number this time
+            "/assets/ess/ess_1/maint_reactive_power_setpoint": -2.5
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 1),
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/ess_twins/reactive_power_setpoint", -3),
+        ],
+        post_lambda=[
+            lambda: no_fims_sets("/components/ess_twins/reactive_power_setpoint")
+        ]
+    ),
+    # Cleanup
+    Teardown(
+        {
+            "/assets/ess/ess_1/maint_mode": False,
+            "/assets/solar/solar_2/maint_mode": False,
+            "/assets/generators/gen_1/maint_mode": False
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/ess/summary/num_ess_controllable", 2),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/solar/summary/num_solar_available", 2),
+            Flex_Assertion(Assertion_Type.approx_eq, "/assets/generators/summary/num_gen_available", 1),
+        ]
+    )
+])
+def test_maint_reactive_power_rounding(test):
     return test

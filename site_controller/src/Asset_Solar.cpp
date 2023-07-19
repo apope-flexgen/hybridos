@@ -103,8 +103,8 @@ float Asset_Solar::get_power_factor_setpoint(void)
 
 bool Asset_Solar::send_active_power_setpoint(void)
 {
-    if ((int)active_power_setpoint->component_control_value.value_float != (int)active_power_setpoint->value.value_float)
-        return active_power_setpoint->send_to_component();
+    if (round(active_power_setpoint->component_control_value.value_float) != round(active_power_setpoint->value.value_float))
+        return active_power_setpoint->send_to_component(false, true);
     return false;
 }
 
@@ -116,8 +116,8 @@ void Asset_Solar::set_active_power_setpoint(float setpoint)
 
 bool Asset_Solar::send_reactive_power_setpoint(void)
 {
-    if ((int)reactive_power_setpoint->component_control_value.value_float != (int)reactive_power_setpoint->value.value_float)
-        return reactive_power_setpoint->send_to_component();
+    if (round(reactive_power_setpoint->component_control_value.value_float) != round(reactive_power_setpoint->value.value_float))
+        return reactive_power_setpoint->send_to_component(false, true);
     return false;
 }
 

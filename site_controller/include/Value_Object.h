@@ -32,7 +32,7 @@ class Value_Object
     void set(std::string value);
     void set(Value_Object &new_value);
     const char* print();
-    bool add_value_to_JSON_buffer(fmt::memory_buffer &buf);
+    bool add_value_to_JSON_buffer(fmt::memory_buffer &buf, bool round_float=false);
     bool add_naked_value_to_JSON_buffer(fmt::memory_buffer &buf);
 
     int   type;

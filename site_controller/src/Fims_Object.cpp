@@ -286,8 +286,10 @@ int Fims_Object::get_scaler() const
 /**
  * Generates and sends a set containing the appropriate value on the uri configured
  * @param use_custom_uri Optional parameter defaults to false. If true, try to send to the configured write_uri instead of the component_uri
+ * @param round_float Optional parameter defaults to false. If true, round the float value of the variable to the nearest integer when sending,
+ *                    but preserve the original value
  */
-bool Fims_Object::send_to_component(bool use_write_uri)
+bool Fims_Object::send_to_component(bool use_write_uri, bool round_float)
 {
     send_FIMS_buf.clear(); // Clear the buffer for use
     // Disable publish if secondary controller (shadow mode)
@@ -301,7 +303,8 @@ bool Fims_Object::send_to_component(bool use_write_uri)
     bufJSON_StartObject(send_FIMS_buf); // rootObject { 
 
     // If typical component write, try to add the component control value, otherwise try to add the value itself
-    if ( (!use_write_uri && !component_control_value.add_value_to_JSON_buffer(send_FIMS_buf)) || (use_write_uri && !value.add_value_to_JSON_buffer(send_FIMS_buf)) )
+    if ( (!use_write_uri && !component_control_value.add_value_to_JSON_buffer(send_FIMS_buf, round_float)) || 
+         ( use_write_uri && !value.add_value_to_JSON_buffer(send_FIMS_buf, round_float)) )
     {
         FPS_ERROR_LOG("Fims_Object::send_to_component - error adding value to JSON buffer\n");
         return false;
