@@ -7,5 +7,5 @@ metaJobPipeline {
     imageNames=["centos7"]
 
     //Does the image need a special tag?
-    imageTag="devel"
+    imageTag="devel-11.1.0"
 }
