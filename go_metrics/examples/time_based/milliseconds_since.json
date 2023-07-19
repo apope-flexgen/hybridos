@@ -1,0 +1,17 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "initial_time": { "uri": "/components/int1", "type": "int"}
+    },
+    "outputs": {
+        "result1": { "uri": "/some/selected/output" }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "result1",
+            "expression": "MillisecondsSince(initial_time)"
+        }
+    ]
+}

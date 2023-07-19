@@ -1,0 +1,10 @@
+{
+    "inputs": {
+        "input_1": { "uri": "/the/uri/for/input_1", "type": "string", "default": "some random string"  },
+        "input_2": { "internal": true, "type": "int", "default": 5 },
+        "input_3": { "uri": "/the/input/for/input_3",       "type": "bool" },
+        "input_4":        { "uri": "/some/new/uri/input_4",       "type": "uint" },
+        "input_4_repeat": { "uri": "/some/new/uri/input_4",       "type": "uint" },
+        "input_5": { "uri": "/some/other/uri/input_5",       "type": "float", "attributes": ["enabled","scale"], "default": 5.3 }
+    }
+}

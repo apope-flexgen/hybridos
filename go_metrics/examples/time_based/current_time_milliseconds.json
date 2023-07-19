@@ -1,0 +1,35 @@
+{
+    "meta": { "publishRate": 2000 },
+    "outputs": {
+        "timestamp_int1": { "uri": "/some/selected/output" },
+        "timestamp_string1": { "uri": "/some/selected/output" },
+        "timestamp_int2": { "uri": "/some/selected/output" },
+        "timestamp_string2": { "uri": "/some/selected/output" }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "timestamp_int1",
+            "expression": "CurrentTimeMilliseconds()"
+        },
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "timestamp_int2",
+            "expression": "Time()"
+        },
+        {
+            "id": "dummy",
+            "value": "string", 
+            "outputs": "timestamp_string1",
+            "expression": "MillisecondsToRFC3339(CurrentTimeMilliseconds())"
+        },
+        {
+            "id": "dummy",
+            "value": "string", 
+            "outputs": "timestamp_string2",
+            "expression": "RFC3339(Time())"
+        }
+    ]
+}

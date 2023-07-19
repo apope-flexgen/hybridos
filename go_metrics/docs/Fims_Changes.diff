@@ -1,0 +1,490 @@
+--- /home/docker/git/fims/go_fims/fims.go	2023-03-27 14:27:44.551084400 +0000
++++ /usr/lib/golang/src/fims/fims.go	2023-03-03 16:35:59.348405678 +0000
+@@ -14,6 +14,25 @@
+ 	unix "golang.org/x/sys/unix"
+ )
+ 
++//
++// Notes from James Henstridge ( look him up)   https://stackoverflow.com/users/721283/james-henstridge
++// https://cs.opensource.google/go/x/sys/+/refs/tags/v0.4.0:unix/syscall_linux.go
++// see also
++// https://stackoverflow.com/questions/30228482/golang-unix-socket-error-dial-resource-temporarily-unavailable
++
++//Go creates its sockets in non-blocking mode, which means that certain system calls that would usually block instead.
++// In most cases it transparently handles the EAGAIN error (what is indicated by the "resource temporarily unavailable" message)
++// by waiting until the socket is ready to read/write.
++// It doesn't seem to have this logic for the connect call in Dial though.
++
++//It is possible for connect to return EAGAIN when connecting to a UNIX domain socket if its listen queue has filled up.
++// This will happen if clients are connecting to it faster than it is accepting them.
++// Go should probably wait on the socket until it becomes connectable in this case and retry similar to what it does for Read/Write,
++// but it doesn't seem to have that logic.
++
++//So your best bet would be to handle the error by waiting and retrying the Dial call.
++// That, or work out why your server isn't accepting connections in a timely manner.
++
+ // unix functions:
+ 
+ // Single-word zero for use when we need a valid pointer to 0 bytes.
+@@ -22,9 +41,10 @@
+ // Do the interface allocations only once for common
+ // Errno values.
+ var (
+-	errEAGAIN error = unix.EAGAIN
+-	errEINVAL error = unix.EINVAL
+-	errENOENT error = unix.ENOENT
++	errEAGAIN  error = unix.EAGAIN
++	errEINVAL  error = unix.EINVAL
++	errENOENT  error = unix.ENOENT
++	errENOBUFS error = unix.ENOBUFS
+ )
+ 
+ // errnoErr returns common boxed Errno values, to prevent
+@@ -39,6 +59,8 @@
+ 		return errEINVAL
+ 	case unix.ENOENT:
+ 		return errENOENT
++	case unix.ENOBUFS:
++		return errENOBUFS
+ 	}
+ 	return e
+ }
+@@ -51,7 +73,27 @@
+ 	} else {
+ 		_p0 = unsafe.Pointer(&_zero)
+ 	}
+-	r0, _, e1 := unix.Syscall(unix.SYS_READV, uintptr(fd), uintptr(_p0), uintptr(len(iovs)))
++	repeat := true
++	for repeat {
++		repeat = false
++		r0, _, e1 := unix.Syscall(unix.SYS_READV, uintptr(fd), uintptr(_p0), uintptr(len(iovs)))
++		n = int(r0)
++		if e1 != 0 {
++			// this may be bogus
++			if e1 == unix.EAGAIN || e1 == unix.EWOULDBLOCK || e1 == unix.EINTR {
++				repeat = true
++			} else {
++				err = errnoErr(e1)
++				unix.Close(fd)
++			}
++		}
++	}
++	return
++}
++
++// writev:
++func sendmsg(fd int, msg *unix.Msghdr, flags int) (n int, err error) {
++	r0, _, e1 := unix.Syscall(unix.SYS_SENDMSG, uintptr(fd), uintptr(unsafe.Pointer(msg)), uintptr(flags))
+ 	n = int(r0)
+ 	if e1 != 0 {
+ 		err = errnoErr(e1)
+@@ -59,20 +101,24 @@
+ 	return
+ }
+ 
+-// writev:
+-func writev(fd int, iovs []unix.Iovec) (n int, err error) {
++func writevNB(fd int, iovs []unix.Iovec) (n int, err error) {
++	var msg unix.Msghdr
++	msg.Name = nil
++	msg.Namelen = 0
++	msg.Control = nil
++	msg.Controllen = 0
++	msg.Flags = 0
++
+ 	var _p0 unsafe.Pointer
+ 	if len(iovs) > 0 {
+ 		_p0 = unsafe.Pointer(&iovs[0])
+ 	} else {
+ 		_p0 = unsafe.Pointer(&_zero)
+ 	}
+-	r0, _, e1 := unix.Syscall(unix.SYS_WRITEV, uintptr(fd), uintptr(_p0), uintptr(len(iovs)))
+-	n = int(r0)
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
++
++	msg.Iov = (*unix.Iovec)(_p0)
++	msg.Iovlen = uint64(len(iovs))
++	return sendmsg(fd, &msg, unix.MSG_DONTWAIT)
+ }
+ 
+ // non-unix code:
+@@ -180,16 +226,36 @@
+ 		{Base: &bufs.Data_buf[0], Len: uint64(len(bufs.Data_buf))},
+ 	}
+ 	bytes_read, err := readv(f.fd, recv_bufs)
++
++	if bytes_read <= 0 || err != nil {
++		err = fmt.Errorf("read error : bytes %d  err %v", bytes_read, err)
++		fmt.Printf("OK Read Error, bytes %v err: %v\n", bytes_read, err)
++		// 	if err == unix.EPIPE {
++		// EAGAIN EWOULDBLOCK EINTR are all ok
++		// the rest are bad
++		f.connected = false
++		f.fd = -1
++	}
+ 	return bytes_read > 0, err
+ }
+ 
+-// dynamic version:
++// dynamic buffer version:
+ func (f *Fims) recv_raw_dynamic(bufs *Receiver_Bufs_Dynamic) (bool, error) {
+ 	recv_bufs := []unix.Iovec{
+ 		{Base: (*byte)(unsafe.Pointer(&bufs.Meta_data)), Len: uint64(unsafe.Sizeof(bufs.Meta_data))},
+ 		{Base: &bufs.Data_buf[0], Len: uint64(len(bufs.Data_buf))},
+ 	}
+ 	bytes_read, err := readv(f.fd, recv_bufs)
++
++	if bytes_read <= 0 || err != nil {
++		err = fmt.Errorf("read error : bytes %d  err %v", bytes_read, err)
++		fmt.Printf("OK Read Error, bytes %v err: %v\n", bytes_read, err)
++		// 	if err == unix.EPIPE {
++		// EAGAIN EWOULDBLOCK EINTR are all ok
++		// the rest are bad
++		f.connected = false
++		f.fd = -1
++	}
+ 	return bytes_read > 0, err
+ }
+ 
+@@ -200,6 +266,12 @@
+ 	max_expected_Data_len uint32
+ 	name                  string
+ 	aes_key               []byte
++	recv_bufs             Receiver_Bufs_Static          
++}
++
++
++func (f * Fims)GetMaxDatalen()(uint32) {
++	return f.max_expected_Data_len
+ }
+ 
+ func Connect(pName string) (Fims, error) {
+@@ -215,6 +287,8 @@
+ 		return Fims{}, fmt.Errorf("err on socket creation: %v", err)
+ 	}
+ 
++	unix.SetNonblock(fd, false)
++
+ 	sock := unix.SockaddrUnix{Name: Socket_Name}
+ 	err = unix.Connect(fd, &sock)
+ 	if err != nil {
+@@ -253,7 +327,7 @@
+ 	recv_layout_version := handshake.Fims_data_layout_version
+ 	handshake.Fims_data_layout_version = Fims_Data_Layout_Version
+ 
+-	amount_written, err := writev(fd, handshake_buf)
++	amount_written, err := writevNB(fd, handshake_buf)
+ 	if amount_written <= 0 || err != nil {
+ 		return Fims{}, fmt.Errorf("err on sending handshake back: %w", err)
+ 	}
+@@ -269,7 +343,7 @@
+ 		{Base: (*byte)(unsafe.Pointer(pName_header.Data)), Len: uint64(pName_header.Len)},
+ 	}
+ 
+-	amount_written, err = writev(fd, name_buf)
++	amount_written, err = writevNB(fd, name_buf)
+ 	if amount_written <= 0 || err != nil {
+ 		return Fims{}, fmt.Errorf("err on sending pName to server: %w", err)
+ 	}
+@@ -427,7 +501,44 @@
+ 	}
+ 
+ 	// send it out:
+-	return new_send_bytes(f.fd, msg.Method, msg.Uri, msg.Replyto, msg.ProcessName, msg.Username, body_data, f.aes_key)
++	bytes_written, err := new_send_bytes(f.fd, msg.Method, msg.Uri, msg.Replyto, msg.ProcessName, msg.Username, body_data, f.aes_key)
++	if bytes_written <= 0 || err != nil {
++		fmt.Printf("Send Error, err: %v", err)
++		f.connected = false
++	}
++	return bytes_written, err
++}
++
++// send stuff raw:
++func (f *Fims) SendRaw(msg FimsMsgRaw) (int, error) {
++	// length checks:
++	if len(msg.Method) > Max_Header_Str_Size {
++		return 0, fmt.Errorf("method exceeds %d characters", Max_Header_Str_Size)
++	}
++	if len(msg.Uri) > Max_Header_Str_Size {
++		return 0, fmt.Errorf("uri exceeds %d characters", Max_Header_Str_Size)
++	}
++	if len(msg.Replyto) > Max_Header_Str_Size {
++		return 0, fmt.Errorf("replyto exceeds %d characters", Max_Header_Str_Size)
++	}
++	if len(msg.ProcessName) > Max_Header_Str_Size {
++		return 0, fmt.Errorf("process_name exceeds %d characters", Max_Header_Str_Size)
++	}
++	if len(msg.Username) > Max_Header_Str_Size {
++		return 0, fmt.Errorf("user name exceeds %d characters", Max_Header_Str_Size)
++	}
++	// to support custom calls (with no process_name provided):
++	if len(msg.ProcessName) == 0 {
++		msg.ProcessName = f.name
++	}
++
++	// send it out:
++	bytes_written, err := new_send_bytes(f.fd, msg.Method, msg.Uri, msg.Replyto, msg.ProcessName, msg.Username, msg.Body, f.aes_key)
++	if bytes_written <= 0 || err != nil {
++		fmt.Printf("Send Error, err: %v", err)
++		f.connected = false
++	}
++	return bytes_written, err
+ }
+ 
+ // SendSet sends a SET message via FIMS
+@@ -535,19 +646,83 @@
+ 	return nil
+ }
+ 
++
+ // Logic to populate data to fims buffer via fims.connection
+-func (f *Fims) Receive() (FimsMsg, error) {
+-	var msg FimsMsg
++func (f *Fims) ReceiveRawBufStatic(recv_bufs *Receiver_Bufs_Static) (FimsMsgRaw, error) {
++	var msg FimsMsgRaw
++	//var data []byte
++	//recv_bufs := Receiver_Bufs_Static{}
++	//recv_bufs := Receiver_Bufs_Dynamic{}
++	//recv_bufs.Data_buf = make([]byte, f.max_expected_Data_len)
++	//succ
++	_, err := f.recv_raw_static(recv_bufs )
++	if !f.connected {
++		return FimsMsgRaw{}, fmt.Errorf("error reading fims connection: %v", err)
++	}
++    //return FimsMsgRaw{}, nil
++	// new logic to unpack the buffer into msg:
++	curr_idx := 0
+ 
+-	recv_bufs := Receiver_Bufs_Dynamic{}
+-	recv_bufs.Data_buf = make([]byte, f.max_expected_Data_len)
++	// method (mandatory):
++	msg.Method = string(recv_bufs.Data_buf[:recv_bufs.Meta_data.Method_len])
++	curr_idx += int(recv_bufs.Meta_data.Method_len)
++	// uri (mandatory):
++	msg.Uri = string(recv_bufs.Data_buf[curr_idx : curr_idx+int(recv_bufs.Meta_data.Uri_len)])
++	curr_idx += int(recv_bufs.Meta_data.Uri_len)
++	// replyto (optional):
++	if recv_bufs.Meta_data.Replyto_len > 0 {
++		msg.Replyto = string(recv_bufs.Data_buf[curr_idx : curr_idx+int(recv_bufs.Meta_data.Replyto_len)])
++		curr_idx += int(recv_bufs.Meta_data.Replyto_len)
++	}
++	// process_name (mandatory):
++	msg.ProcessName = string(recv_bufs.Data_buf[curr_idx : curr_idx+int(recv_bufs.Meta_data.Process_name_len)])
++	curr_idx += int(recv_bufs.Meta_data.Process_name_len)
++	// username (optional):
++	if recv_bufs.Meta_data.Username_len > 0 {
++		msg.Username = string(recv_bufs.Data_buf[curr_idx : curr_idx+int(recv_bufs.Meta_data.Username_len)])
++		curr_idx += int(recv_bufs.Meta_data.Username_len)
++	}
+ 
+-	succ, err := f.recv_raw_dynamic(&recv_bufs)
+-	if !succ {
+-		f.connected = false
+-		return FimsMsg{}, fmt.Errorf("error reading fims connection: %v", err)
++	// data (optional):
++	if recv_bufs.Meta_data.Data_len > 0 {
++		// decrypt data if we have encryption:
++		msg.Body = recv_bufs.Data_buf[curr_idx : curr_idx+int(recv_bufs.Meta_data.Data_len)]
++		if f.Has_aes_encryption() {
++			msg.Body, err = DecryptAES(f.aes_key, msg.Body)
++			if err != nil {
++				return FimsMsgRaw{}, fmt.Errorf("could not decrypt incoming fims message, got: %v", err)
++			}
++		}
++	}
++
++	// Retreieve uri fragments for our message
++	msg.Frags, err = GetFrags(msg.Uri)
++	if err != nil {
++		return FimsMsgRaw{}, fmt.Errorf("error parsing %s into frags: %v", msg.Uri, err)
+ 	}
+ 
++	// Set our frags back to our message body
++	msg.Nfrags = len(msg.Frags)
++
++	// Check if the message is a verification response
++	if msg.Method == "set" || msg.Method == "post" {
++		go VerificationRecords.handleVerificationResponseRaw(msg)
++	}
++	return msg, nil
++}
++// Logic to populate data to fims buffer via fims.connection
++func (f *Fims) ReceiveRawBufDynamic(recv_bufs *Receiver_Bufs_Dynamic) (FimsMsgRaw, error) {
++	var msg FimsMsgRaw
++	//var data []byte
++	//recv_bufs := Receiver_Bufs_Static{}
++	//recv_bufs := Receiver_Bufs_Dynamic{}
++	//recv_bufs.Data_buf = make([]byte, f.max_expected_Data_len)
++	//succ
++	_, err := f.recv_raw_dynamic(recv_bufs )
++	if !f.connected {
++		return FimsMsgRaw{}, fmt.Errorf("error reading fims connection: %v", err)
++	}
++    //return FimsMsgRaw{}, nil
+ 	// new logic to unpack the buffer into msg:
+ 	curr_idx := 0
+ 
+@@ -574,24 +749,19 @@
+ 	// data (optional):
+ 	if recv_bufs.Meta_data.Data_len > 0 {
+ 		// decrypt data if we have encryption:
+-		data := recv_bufs.Data_buf[curr_idx : curr_idx+int(recv_bufs.Meta_data.Data_len)]
++		msg.Body = recv_bufs.Data_buf[curr_idx : curr_idx+int(recv_bufs.Meta_data.Data_len)]
+ 		if f.Has_aes_encryption() {
+-			data, err = DecryptAES(f.aes_key, data)
++			msg.Body, err = DecryptAES(f.aes_key, msg.Body)
+ 			if err != nil {
+-				return FimsMsg{}, fmt.Errorf("could not decrypt incoming fims message, got: %v", err)
++				return FimsMsgRaw{}, fmt.Errorf("could not decrypt incoming fims message, got: %v", err)
+ 			}
+ 		}
+-
+-		err := json.Unmarshal(data, &msg.Body)
+-		if err != nil {
+-			return FimsMsg{}, fmt.Errorf("failed to unmarshal data: %w", err)
+-		}
+ 	}
+ 
+ 	// Retreieve uri fragments for our message
+ 	msg.Frags, err = GetFrags(msg.Uri)
+ 	if err != nil {
+-		return FimsMsg{}, fmt.Errorf("error parsing %s into frags: %v", msg.Uri, err)
++		return FimsMsgRaw{}, fmt.Errorf("error parsing %s into frags: %v", msg.Uri, err)
+ 	}
+ 
+ 	// Set our frags back to our message body
+@@ -599,16 +769,121 @@
+ 
+ 	// Check if the message is a verification response
+ 	if msg.Method == "set" || msg.Method == "post" {
+-		go VerificationRecords.handleVerificationResponse(msg)
++		go VerificationRecords.handleVerificationResponseRaw(msg)
+ 	}
+ 	return msg, nil
+ }
+ 
++// Logic to populate data to fims buffer via fims.connection
++func (f *Fims) ReceiveRaw() (FimsMsgRaw, error) {
++	recv_bufs := Receiver_Bufs_Dynamic{}
++	recv_bufs.Data_buf = make([]byte, f.max_expected_Data_len)
++	return 	f.ReceiveRawBufDynamic(&recv_bufs) 
++}
++
++func (f *Fims) ReceiveBufStatic(recv_bufs *Receiver_Bufs_Static ) (FimsMsg, error) {
++	var msg FimsMsg
++	msg_raw,err := f.ReceiveRawBufStatic(recv_bufs) 
++	if err == nil {
++		// copy over the other stuff (shallow copies of arrays, so no real perf cost):
++		msg.Method = msg_raw.Method
++		msg.Uri = msg_raw.Uri
++		msg.Replyto = msg_raw.Replyto
++		msg.ProcessName = msg_raw.ProcessName
++		msg.Username = msg_raw.Username
++		msg.Nfrags = msg_raw.Nfrags
++		msg.Frags = msg_raw.Frags
++
++		// if there is a message body, attempt to parse it as json
++		if msg_raw.Body != nil {
++			err := json.Unmarshal(msg_raw.Body, &msg.Body)
++			if err != nil {
++				return msg, fmt.Errorf("failed to unmarshal data: %w", err)
++			}
++		}
++	}
++	return msg, err
++
++}
++
++func (f *Fims) ReceiveBufDynamic(recv_bufs *Receiver_Bufs_Dynamic) (FimsMsg, error) {
++	var msg FimsMsg
++	msg_raw,err := f.ReceiveRawBufDynamic(recv_bufs) 
++	if err == nil {
++		// copy over the other stuff (shallow copies of arrays, so no real perf cost):
++		msg.Method = msg_raw.Method
++		msg.Uri = msg_raw.Uri
++		msg.Replyto = msg_raw.Replyto
++		msg.ProcessName = msg_raw.ProcessName
++		msg.Username = msg_raw.Username
++		msg.Nfrags = msg_raw.Nfrags
++		msg.Frags = msg_raw.Frags
++
++		// if there is a message body, attempt to parse it as json
++		if msg_raw.Body != nil {
++			err := json.Unmarshal(msg_raw.Body, &msg.Body)
++			if err != nil {
++				return msg, fmt.Errorf("failed to unmarshal data: %w", err)
++			}
++		}
++	}
++	return msg, err
++
++}
++
++func (f *Fims) Receive() (FimsMsg, error) {
++	var msg FimsMsg
++	msg_raw, err := f.ReceiveRaw()
++	if err == nil {
++		// copy over the other stuff (shallow copies of arrays, so no real perf cost):
++		msg.Method = msg_raw.Method
++		msg.Uri = msg_raw.Uri
++		msg.Replyto = msg_raw.Replyto
++		msg.ProcessName = msg_raw.ProcessName
++		msg.Username = msg_raw.Username
++		msg.Nfrags = msg_raw.Nfrags
++		msg.Frags = msg_raw.Frags
++
++		// if there is a message body, attempt to parse it as json
++		if msg_raw.Body != nil {
++			err := json.Unmarshal(msg_raw.Body, &msg.Body)
++			if err != nil {
++				return msg, fmt.Errorf("failed to unmarshal data: %w", err)
++			}
++		}
++	}
++	return msg, err
++}
++
+ func (f *Fims) ReceiveChannel(c chan<- FimsMsg) {
+ 	for f.connected {
+ 		msg, err := f.Receive()
+-		if err != nil {
+-			log.Printf("Had an error while receiving on %s: %s\n", msg.Uri, err)
++		if !f.connected {
++			log.Print("No longer connected to FIMS.\n")
++			// send a dummy message to the rx app but it must now check for Connected.
++			c <- FimsMsg{}
++		} else if err != nil {
++			// in the case of an error without a disconnect, don't put a message on the channel
++			log.Printf("Had an error while receiving message with method \"%s\" on uri \"%s\": %v.\n", msg.Method, msg.Uri, err)
++		} else {
++			// fmt.Printf("about to put the msg on the channel %v\n", msg)
++			c <- msg
++		}
++	}
++}
++
++func (f *Fims) ReceiveChannelRaw(c chan<- FimsMsgRaw) {
++	recv_bufs := Receiver_Bufs_Dynamic{}
++	recv_bufs.Data_buf = make([]byte, f.GetMaxDatalen())
++	for f.connected {
++		msg, err := f.ReceiveRawBufDynamic(&recv_bufs)
++		if !f.connected {
++			log.Print("No longer connected to FIMS.\n")
++			// send a dummy message to the rx app but it must now check for Connected.
++			c <- FimsMsgRaw{}
++		} else if err != nil {
++			// in the case of an error without a disconnect, don't put a message on the channel
++			log.Printf("Had an error while receiving message with method \"%s\" on uri \"%s\": %v.\n", msg.Method, msg.Uri, err)
+ 		} else {
+ 			// fmt.Printf("about to put the msg on the channel %v\n", msg)
+ 			c <- msg
+@@ -705,5 +980,5 @@
+ 		send_amount += 1
+ 	}
+ 
+-	return writev(fd, send_bufs[:send_amount])
++	return writevNB(fd, send_bufs[:send_amount])
+ }

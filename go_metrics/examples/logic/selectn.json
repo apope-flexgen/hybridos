@@ -1,0 +1,23 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "selection_index": { "uri": "/components/feeder_52m1/selection_index", "type": "float" },
+        "v1": { "uri": "/components/feeder_52m1/v1", "type": "float" },
+        "v2": { "uri": "/components/feeder_52m1/v2", "type": "int" },
+        "v3": { "uri": "/components/feeder_52m1/v3", "type": "uint" },
+        "v4": { "uri": "/components/feeder_52m1/v4", "type": "int" },
+        "v5": { "uri": "/components/feeder_52m1/v5", "type": "bool" }
+    },
+    "outputs": {
+        "selection": { "uri": "/some/selected/output" }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "selection",
+            "expression": "SelectN(selection_index, v1, v2, v3, v4, v5)",
+            "note": "because the output value is a float, we would expect the bool value to be represented as 1 rather than true or 0 rathe than false"
+        }
+    ]
+}

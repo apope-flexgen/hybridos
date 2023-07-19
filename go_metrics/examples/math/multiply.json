@@ -1,0 +1,26 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "value1":   { "uri": "/components/float1",  "type": "float",    "default": 5.3  },
+        "value2":   { "uri": "/components/float2",  "type": "float"                     },
+        "value3":   { "uri": "/components/float3",  "type": "float"                     }
+    },
+    "outputs": {
+        "float_output1":     {   "uri": "/some/output"   },
+        "float_output2":     {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "float_output1",
+            "expression": "Mult(value1, value2, value3)"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "float_output2",
+            "expression": "value1 * value2 * value3"
+        }
+    ]
+}

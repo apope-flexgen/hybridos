@@ -1,0 +1,250 @@
+{
+    "meta": {
+        "name": "go_metrics",
+		"publishRate": 2000,
+		"debug": true,
+		"debug_inputs": ["start", "stop"],
+		"debug_filters":["all_enabled_vars", "all_bms_alarm_active"],
+		"debug_outputs": ["ess_1_alarm_echo"]
+    },
+	"templates": [
+		{
+			"from": 1,
+			"to": 10,
+			"step": 1,
+			"token": "##"
+        }
+	],
+    "inputs": {
+        "ess_##_bms_alarm_active": { "uri": "/components/ess_##/bms_alarm_active", "type": "bool", "default": false  },
+        "system_state": {"internal":true, "type": "string", "default":"Stopped"},
+        "selector": { "uri": "/components/feeder_52m1/selector",       "type": "float", "default": 1},
+        "start":    { "uri": "/components/feeder_52m1/start",       "type": "float"},
+        "stop":     { "uri": "/components/feeder_52m1/stop",       "type": "float"},
+        "test_enum": { "uri": "/components/feeder_52m1/test_enum",       "type": "int", "default": 1},
+        "test_attribute": { "uri": "/components/feeder_52m1/test_attribute",   "type": "int", "attributes": ["enabled","scale","Units"],"default": 1},
+        "test_enabled": { "uri": "/components/feeder_52m1/test_enabled",   "type": "bool", "default": false},
+        "test_bitfield": { "uri": "/components/feeder_52m1/test_bitfield",       "type": "int", "default": 1},
+        "always_enabled": { "uri": "/components/always_enabled",       "type": "float", "attributes": ["enabled"], "default": 5.3},
+        "sometimes_enabled": { "uri": "/components/sometimes_enabled",       "type": "float",  "attributes": ["enabled"], "default": 6.3},
+        "max_input": { "uri": "/components/feeder_52m1/max_input",       "type": "int", "default": 1},
+        "min_input": { "uri": "/components/feeder_52m1/min_input",       "type": "int", "default": 1},
+        "avg_input": { "uri": "/components/feeder_52m1/avg_input",       "type": "int", "default": 1},
+        "sum_input": { "uri": "/components/feeder_52m1/sum_input",       "type": "int", "default": 0},
+        "int_input": { "uri": "/components/feeder_52m1/int_input",       "type": "float", "default": 0},
+        "int_ts_input": { "uri": "/components/feeder_52m1/int_ts_input",       "type": "float", "default": 0},
+		"timescale_in_hours": { "uri": "/internal/float2", "type": "float", "default": 0.000277778 }
+    },
+    "filters": {
+        "all_bms_alarm_active": "regex(ess_[0-9]+_bms_alarm_active)",
+        "all_enabled_vars": "type(float) | Attribute(enabled == true)"
+    },
+    "outputs": {
+        "ess_##_alarm_echo": { "uri": "/some/ess_alarms", "publishRate": 100},
+        "ess_alarm_collector": {"name": "any_ess_alarms", "uri": "/some/ess_alarms"},
+        "feeder_52m1_system_state": { "name":"system_state","uri": "/some/feeder_52m1"},
+		"sparse_output": { "uri": "/some/sparse", "flags": ["sparse"]},
+		"attribute_output": { "uri": "/some/attribute", "flags":["clothed","direct_set"], "attributes":{"scale":1000, "Units":"degC","enabled":true}},
+		"not_sparse_output": { "uri": "/some/not_sparse"},
+		"enum_output": {
+						"name": "status", "uri": "/some/status/output", "flags": ["enum"],
+						"enum": [
+							"Power up",
+							"Initialization",
+							{"value": 10,"string": "Off"},
+							"Precharge",
+							{"value":20, "string":"some other value"}
+						]
+					},
+		"bitfield_output": {
+			"name": "status2", "uri": "/some/status/output","flags": ["bitfield"],
+			"bitfield": [
+				"Power up",
+				"Initialization",
+				"Off",
+				"Precharge"
+			]
+		},
+		"bitfield_test": {
+			"name": "status3", "uri": "/some/status/output","flags": ["bitfield"],
+			"bitfield": [
+				"Power up",
+				"Initialization",
+				"Off",
+				"Precharge"
+			]
+
+		},
+		"max_output": { "uri": "/some/max_status/max_output",       "type": "int", "default": 1, "noval":0},
+		"min_output": { "uri": "/some/min_status/min_output",       "type": "int", "default": 1},
+		"avg_output": { "uri": "/some/avg_status/avg_output",       "type": "int", "default": 1},
+		"val_changed": { "uri": "/some/bool_status/val_changed",       "type": "bool", "default": false},
+		"sum_output": { "uri": "/some/sum_status/sum_output",       "type": "float", "default": 0},
+		"int_output": { "uri": "/some/int_status/int_output",       "type": "float", "default": 0},
+		"int_ts_output": { "uri": "/some/int_ts_status/int_ts_output",       "type": "float", "default": 0}
+
+	},
+    "metrics": [
+        { 
+            "id": "0",
+            "type": "bool", 
+            "outputs": ["ess_##_alarm_echo"],
+            "expression": "ess_##_bms_alarm_active"
+        },
+        {
+            "id": "1",
+            "type": "bool", 
+            "outputs": "ess_alarm_collector",
+            "expression": "Or(all_bms_alarm_active)"
+        },
+		{
+            "id": "2",
+            "type": "int", 
+            "outputs": "enum_output",
+            "expression": "test_enum"
+        },
+		{
+            "id": "3",
+            "type": "int", 
+            "outputs": "bitfield_output",
+            "expression": "true | false << 1 | true << 2 | true << 3"
+        },
+		{
+            "id": "3.1",
+            "type": "int", 
+            "outputs": "bitfield_test",
+            "expression": "test_bitfield"
+        },
+		{
+            "id": "4",
+            "type": "float", 
+            "outputs": "sparse_output",
+            "expression": "Add(all_enabled_vars)"
+        },
+		{
+            "id": "4.1",
+            "type": "int", 
+            "outputs": "not_sparse_output",
+            "expression": "Add(all_enabled_vars)"
+        },
+		{
+            "id": "5",
+            "type": "string", 
+            "internal_output": "system_state",
+            "expression": "If(selector == 0, \"Stopped\", \"Standby\")"
+        },
+		{
+            "id": "6",
+            "type": "string",
+			"outputs": "feeder_52m1_system_state",
+			"internal_output": "system_state",
+            "expression": "If(start && ValueChanged(start) && selector == 1, \"Run\", system_state)"
+        },
+		{
+            "id": "7",
+            "type": "string",
+			"outputs": "feeder_52m1_system_state",
+			"internal_output": "system_state",
+            "expression": "If(stop && ValueChanged(stop) && selector == 1, \"Standby\", system_state)"
+        },
+		{
+            "id": "8",
+            "type": "int",
+			"outputs": "attribute_output",
+            "expression": "test_attribute"
+        },
+		{
+            "id": "9",
+            "type": "bool",
+			"note" :" use this to modify an output attribute",
+			"outputs": "attribute_output@enabled",
+            "expression": "test_enabled"
+		},
+		{
+			"id": "demo_10",
+			"type": "int", 
+			"outputs": "max_output",
+			"expression": "MaxOverTimescale(max_input, 10000)"
+		},
+		{
+			"id": "demo_11",
+			"type": "int", 
+			"outputs": "min_output",
+			"expression": "MinOverTimescale(min_input, 10000)"
+		},
+		{
+			"id": "demo_12",
+			"type": "int", 
+			"outputs": "avg_output",
+			"expression": "AvgOverTimescale(avg_input, 10000)"
+		},
+		{
+			"id": "demo_13",
+			"type": "bool", 
+			"outputs": "val_changed",
+			"expression": "ValueChangedOverTimescale(avg_input, 10000)"
+		},
+		{
+			"id": "demo_14",
+			"type": "float", 
+			"outputs": "sum_output",
+			"expression": "SumOverTimescale(sum_input, 10000)"
+		},  
+		{
+			"id": "demo_15",
+            "type": "float", 
+            "outputs": "int_output",
+            "expression": "Integrate(int_input)"
+        },
+        {
+			"id": "demo_16",
+            "type": "float", 
+            "outputs": "int_ts_output",
+            "expression": "IntegrateOverTimescale(int_ts_input, 10000)",
+            "xexpression": "IntegrateOverTimescale(int_ts_input, timescale_in_hours)"
+        }      
+    ],
+    "echo": [
+		{
+			"uri": "/echo/uri",
+			"publishRate": 1000,
+			"format": "naked",
+			"inputs": [
+				{
+					"uri": "/components/feeder",
+					"registers": {
+						"f": {"source": "frequency", "default": 60},
+						"p": {"source":"active_power", "default":100},
+						"pf": "power_factor",
+						"q": "reactive_power",
+						"v": "voltage_l1",
+						"v1": "voltage_l2",
+						"v2": "voltage_l3",
+						"s1": {"source":"string_uri_element", "default": "some value for the string"},
+						"b1": {"source":"bool_uri_element", "default": true}
+					}
+				}
+			],
+			"echo": {
+				"apparent_power": 0,
+				"current_l1": 0,
+				"current_l2": 0,
+				"current_l3": 0,
+				"current_n": 0,
+				"kvarh_delivered": 0,
+				"kvarh_received": 0,
+				"kwh_delivered": 0,
+				"kwh_received": 0,
+				"thd_i_l1": 0,
+				"thd_i_l2": 0,
+				"thd_i_l3": 0,
+				"thd_v_l1": 0,
+				"thd_v_l2": 0,
+				"thd_v_l3": 0,
+				"voltage_l1_l2": 0,
+				"voltage_l2_l3": 0,
+				"voltage_l3_l1": 0
+			}
+		}
+	]
+}

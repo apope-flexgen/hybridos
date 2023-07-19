@@ -1,0 +1,17 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "value": { "uri": "/components/value", "type": "uint", "default": 0 }
+    },
+    "outputs": {
+        "max": { "uri": "/some" }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs": "max",
+            "expression": "MaxOverTimescale(value, 10000)"
+        }
+    ]
+}

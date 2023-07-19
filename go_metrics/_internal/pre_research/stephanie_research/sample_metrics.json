@@ -1,0 +1,19 @@
+{
+    "note": "the publishRate dictates the tempo of the timestamp sent out using the currentTimeMilliseconds computation. The listenRate is set to 1000 because the iteration of metrics that would run off of this metrics.json isn't really listening to anything so there is no reason to have a short listen rate as a 'normal' metrics.json file would",
+    "publishRate": 1000,
+    "listenRate": 1000,
+    "metricsUri": "/metrics/kpi",
+    "publishUris": [
+        {
+            "uri": "/metrics/telemetry",
+            "naked": "false",
+            "metrics": [
+                {
+                    "id": "timestamp",
+                    "inputs": [],
+                    "operation": "currentTimeMilliseconds"
+                }
+            ]
+        }
+    ]
+}

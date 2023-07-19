@@ -1,0 +1,26 @@
+{
+    "meta": { "publishRate": 1000 },
+    "inputs": {
+        "selection_index": { "uri": "/components/feeder_52m1/selection_index", "type": "float", "default": 3 },
+        "v1": { "uri": "/components/feeder_52m1/v1", "type": "float" , "note": "use this when index == 1", "default":11},
+        "v2": { "uri": "/components/feeder_52m1/v2", "type": "int" ,   "note": "use this when index == 2", "default":22},
+        "v3": { "uri": "/components/feeder_52m1/v3", "type": "uint",   "note": "use this when index == 3", "default":33},
+        "v4": { "uri": "/components/feeder_52m1/v4", "type": "int" ,   "note": "use this when index == 4", "default":44},
+        "v5": { "uri": "/components/feeder_52m1/v5", "type": "bool",   "note": "use this when index == 5" }
+    },
+    "filters": {
+        "v_vars": "regex(v*)"
+    },
+    "outputs": {
+        "selection123": { "uri": "/some/selected/output"}
+		    },
+    "metrics": [
+        {
+            "value": 2000.0, 
+            "type": "float",
+            "outputs": "selection123",
+            "expression": "SelectN(selection_index, v1,v2,v3,v4 )",
+            "note": "because the output value is a float, we would expect the bool value to be represented as 1 rather than true or 0 rathe than false"
+        }
+    ]
+}

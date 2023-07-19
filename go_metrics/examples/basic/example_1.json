@@ -1,0 +1,55 @@
+{
+    "docinfo":{
+            "name":"config_doc_1.json",
+            "author":"Phil Wilshire",
+            "desc":"test the readme",
+            "date":"04_14_2023"
+    },
+    "meta": { "publishRate": 1000 },
+    "inputs": {
+        "v1": { "uri": "/components/feeder_52m1/v1", "type": "float" },
+        "v2": { "uri": "/components/feeder_52m1/v2", "type": "float" },
+        "v3": { "uri": "/components/feeder_52m1/v3", "type": "float" },
+        "v4": { "uri": "/components/feeder_52m1/v4", "type": "float" }
+    },
+    "outputs": {
+        "v1_times_5": { "uri": "/some/value/output" },
+        "v2_times_5": { "uri": "/some/value/output" },
+        "v3_times_5": { "uri": "/some/value/output" },
+        "v4_times_5": { "uri": "/some/value/output" },
+        "vspecial": { "uri": "/some/special/value", "flags":["clothed", "interval_set"], "publishRate": 50, "attributes":{"scale":345}}
+    	    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "v1_times_5",
+            "expression": "v1 * 5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "v2_times_5",
+            "expression": "v2 * 5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "v3_times_5",
+            "expression": "v3 * 5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "v4_times_5",
+            "expression": "v4 * 5"
+        },
+        {
+            "id": "dummy",
+            "type": "float", 
+            "outputs": "vspecial",
+            "interval_set":100,
+            "expression": "v4 * 5"
+        }
+    ]
+}

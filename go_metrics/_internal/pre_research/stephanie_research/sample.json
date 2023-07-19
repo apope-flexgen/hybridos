@@ -1,0 +1,90 @@
+{
+    "meta": {
+        "name": "some_echo_name",
+        "flags": { // inheritable
+            "clothed": true,
+            "pub_as_set": true
+        }
+
+        // for Phil (just use special flags on the whole thing, probably better):
+        // will respond to a get on /echo/some_echo_name/metrics/ess/soh/ess_01/_debug (from input aliases)
+        // /echo/some_echo_name/components/ess_1/soh/_debug  (from inputs)
+
+        // for Justin (final one, much better):
+        // /echo/some_echo_name/this_is_for_gets/_deubg (the uri itself, with debug)
+    },
+    // what is the format here?
+    "echo": [
+        {
+            "output": "/components/ess_1",
+            "publish_rate": 100,
+            "input": {
+                "uri": "/components/ess_1",
+                "mappings": {
+                    "x": "y", // to <- from
+                    "z": "a"  // in -> out
+                }
+            }
+        }
+    ], // does this need a separate object structure for the echo functionality? (if we're going to combine them?)
+    // have "echo" occur using the inputs as mapped based on the "outputs" uris?
+    "metrics": [
+        {
+            // this is one "echo" remap
+            "id": "some_echo_id",
+            "outputs": [
+                {"uri": "/components/ess_1/x"}
+            ],
+            "inputs": {
+                "something": "/components/ess_1/y"
+            },
+            "initial_value": 0
+        },
+        {
+            "id": "this_is_for_gets", // this is for fims gets (REST API), unique id for metrics/echo
+            "outputs": [
+                {
+                    "uri": "/metrics/ess/soh", 
+                    "publish_rate": 100, // is this needed? (to replace echo as well? -> need to think about this) How to implement?
+                    "flags": { // optional (defaults are naked and pub)
+                        "clothed": true, 
+                        "pub_as_set": true
+                    }
+                },
+                {
+                    "uri": "/some/other/uri", 
+                    "flags": {
+                        "clothed": false,
+                        "pub_as_set": true
+                    }
+                }
+                // many to one mapping
+            ], // this is the fims output (pubs and sets)
+            "inputs": {
+                "ess_01": "/components/ess_1/soh", // acceptable types: bool, (un)signed integer, float, string (needs type checking for these), (maybe) array (needs discussion), objects are a no no
+                "ess_02": {"uri": "/components/ess_2", "id": "soh", "enabled": true }, // maybe, might have enabled (need to think about it more, but for now no)
+                "ess_03": {"uri": "/components/ess_3", "id": "soh"},
+                "ess_04": {"uri": "/components/ess_4", "id": "soh"},
+                "want_to_exclude_from_average": {},
+                "another_one": {},
+                "another_two": {},
+                "another_three": {}
+            },
+            "expression": "average([ess_01], [ess_02], [ess_03], [ess_04])",
+            "expression_simplified": "average([ess_*]) + sum([ess_*])", // regular expressions for inputs
+            "output_type": "float", // this is optional (must match initial_value type if provided, error checking)
+            "initial_value": 0.0
+        },
+        {
+            "uri": "/metrics/ess/something_else",
+            "inputs": {
+                "ess_01": {"uri": "/components/ess_1", "id": "soh", "enabled": true},
+                "ess_02": {"uri": "/components/ess_2", "id": "soh"},
+                "ess_03": {"uri": "/components/ess_3", "id": "soh"},
+                "ess_04": {"uri": "/components/ess_4", "id": "soh"}
+            },
+            "expression": "average([ess_*]) + sum([ess_*])  + sum([ess_*])",
+            "initialValue": 0.0
+        }
+    ]
+}

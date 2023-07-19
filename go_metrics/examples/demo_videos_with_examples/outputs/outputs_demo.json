@@ -1,0 +1,70 @@
+{
+    "meta": {
+		"publishRate": 1000
+    },
+	"templates": [
+		{
+			"from": 1,
+			"to": 3,
+			"token": "##"
+        }
+	],
+    "inputs": {
+        "var_1": { "uri": "/var_1", "type": "float", "default": 5.0 },
+        "var_2": { "uri": "/var_2", "type": "float", "default": 5.0 },
+        "var_3": { "uri": "/var_3", "type": "float", "default": 5.0 },
+        "var_4": { "uri": "/var_4", "type": "int", "default": 0 },
+        "var_5": { "uri": "/var_5", "type": "int", "default": 0 }
+    },
+    "outputs": {
+        "output1_with_attributes": { "uri": "/some/output1", "flags": [ "clothed", "group1"], "publishRate": 1200, "attributes": {"scale": 1000, "units": "deg C", "ui_type": "none"}},
+        "output2_with_attributes": { "uri": "/some/output2", "flags": [ "naked", "group2", "sparse", "no_heartbeat"], "attributes": {"scale": 1000, "units": "deg C", "ui_type": "none"}},
+        "output3_with_attributes": { "uri": "/some/output3", "flags": [ "clothed", "group2", "interval_set"], "attributes": {"scale": 1000, "units": "deg C", "ui_type": "none"}},
+        "output##": { "name":"timestamp","uri": "/some/output##", "flags": ["group1"] },
+		"enum_output": {
+						"uri": "/some/enum", "flags": ["enum"],
+						"enum": [
+							"Power up",
+							"Initialization",
+							{"value": 10,"string": "Off" },
+							"Precharge",
+							{"value":20, "string":"some other value"}
+						]
+					},
+		"bitfield_output": {
+			"uri": "/some/bitfield","flags": ["bitfield"],
+			"bitfield": [
+				"Power up",
+				"Initialization",
+				"Off",
+				"Precharge"
+			]
+		}
+		    },
+    "metrics": [
+        {
+            "id": "0",
+            "type": "float", 
+            "outputs": "output##_with_attributes",
+            "expression": "var_##"
+        },
+        {
+            "id": "1",
+            "type": "string", 
+            "outputs": "output##",
+            "expression": "MillisecondsToRFC3339(Time())"
+        },
+		{
+            "id": "2",
+            "type": "int", 
+            "outputs": "enum_output",
+            "expression": "var_4"
+        },
+		{
+            "id": "3",
+            "type": "int", 
+            "outputs": "bitfield_output",
+            "expression": "var_5"
+        }
+    ]
+}

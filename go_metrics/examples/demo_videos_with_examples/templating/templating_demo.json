@@ -1,0 +1,144 @@
+{
+    "meta": {
+        "name": "go_metrics",
+		"publishRate": 2000
+    },
+	"templates": [
+		{
+            "type": "sequential",
+			"from": 0,
+			"to": 10,
+			"step": 2,
+            "list": ["a", "b", "c"],
+			"token": "!!"
+        },
+        {
+            "type": "list",
+            "from": 0,
+			"to": 10,
+			"step": 2,
+			"list": ["a", "b", "c"],
+			"token": "##"
+        },
+        {
+			"from": 1,
+			"to": 25,
+			"format": "%02d",
+			"token": "**"
+        },
+        {
+			"list": ["u1", "u2", "m1", "m2"],
+			"token": "??"
+        }
+	],
+    "inputs": {
+        "first_template_!!": { "uri": "/first_template_!!", "type": "string", "default": "value_!!"  },
+        "second_template_##": {"internal": true, "type": "string", "default":"value_##"},
+        "ess_**": { "uri": "/ess_**",       "type": "bool", "default": false},
+        "fourth_template_??": { "uri": "/fourth_template_??",       "type": "float", "attributes": ["enabled","templated_attribute_??"], "default": 5.3}
+    },
+    "filters": {
+        "first_filter_template_!!": "regex(first_template_!!)",
+        "second_filter_template_??": "type(float) | Attribute(templated_attribute_?? == true)"
+    },
+    "outputs": {
+        "first_templated_output_!!": { "uri": "/output_!!"},
+        "second_templated_output_##": {"name": "output_name_##", "uri": "/output_##"},
+		"ess_**_alarm_echo": { "uri": "/output_with_attributes_**", "attributes": {"attribute_**": "attribute_value_**"}},
+		"enum_output_??": {
+						"uri": "/enum_??", "flags": ["enum"],
+						"enum": [
+							"?? Power up",
+							"?? Initialization",
+							{"value": 10,"string": "?? Off"},
+							"?? Precharge",
+							{"value":20, "string":"?? some other value"}
+						]
+					},
+		"bitfield_output_??": {
+			"uri": "/bitfield_??","flags": ["bitfield"],
+			"bitfield": [
+				"?? Power up",
+				"?? Initialization",
+				"?? Off",
+				"?? Precharge"
+			]
+		}
+		    },
+    "metrics": [
+        { 
+            "id": "0",
+            "type": "bool", 
+            "outputs": ["ess_**_alarm_echo"],
+            "expression": "ess_**"
+        },
+		{
+            "id": "2",
+            "type": "int", 
+            "outputs": "first_templated_output_!!",
+            "expression": "3"
+        },
+		{
+            "id": "templated_??_id",
+            "type": "float", 
+            "outputs": "enum_output_??",
+            "expression": "fourth_template_??"
+        }
+    ],
+    "echo": [
+		{
+			"uri": "/echo/uri_##",
+			"publishRate": 1000,
+			"format": "naked",
+			"inputs": [
+				{
+					"uri": "/components/feeder_##",
+					"registers": {
+						"s1_##": {"source":"string_uri_element_##", "default": "some value for the string ##"},
+						"b1_##": {"source":"bool_uri_element_##", "default": true}
+					}
+				}
+			],
+			"echo": {
+				"apparent_power_##": "string ##",
+				"current_l1_##": 0
+			}
+		},
+		{
+			"uri": "/echo/uri_without_templating",
+			"publishRate": 1000,
+			"format": "naked",
+			"inputs": [
+				{
+					"uri": "/components/feeder_**",
+					"registers": {
+						"s1_**": {"source":"string_uri_element_**", "default": "some value for the string **"},
+						"b1_**": {"source":"bool_uri_element_**", "default": true}
+					}
+				}
+			],
+			"echo": {
+				"apparent_power_**": "string **",
+				"current_l1_**": 0
+			}
+		},
+		{
+			"uri": "/echo/uri_without_templating_2",
+			"publishRate": 1000,
+			"format": "naked",
+			"inputs": [
+				{
+					"uri": "/components/feeder_no_templating",
+					"registers": {
+						"s1_??": {"source":"string_uri_element_??", "default": "some value for the string ??"},
+						"b1_??": {"source":"bool_uri_element_??", "default": true}
+					}
+				}
+			],
+			"echo": {
+				"apparent_power_??": "string ??",
+				"current_l1_??": 0
+			}
+		}
+	]
+}

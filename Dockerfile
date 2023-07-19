@@ -8,12 +8,14 @@ ARG dockerName
 ARG verNum
 
 RUN yum clean all
+
+RUN yum install -y influxdb-1.8.10
+RUN yum install -y mongodb-org-6.0.4 mongodb-org-database-6.0.4 mongodb-org-database-tools-extras-6.0.4 mongodb-org-mongos-6.0.4 mongodb-org-server-6.0.4 mongodb-org-tools-6.0.4
+RUN yum install -y $productName-$verNum
 # do not edit this <<<
 
-RUN yum install -y $productName-$verNum
-
 # copy over scripts
-COPY ./scripts/$dockerName /home/scripts/
+COPY ./bootstrap/ /home/scripts/
 WORKDIR /home/scripts/
 RUN chmod +x *.sh
 WORKDIR /home/

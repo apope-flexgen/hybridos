@@ -1,0 +1,1301 @@
+{
+	"publishRate": 100,
+	"listenRate": 2,
+	"metricsUri": "/metrics/kpi",
+	"publishUris": [
+		{
+			"uri": "/metrics/commands",
+			"naked": "true",
+			"metrics": [
+				{
+					"id": "active_power_mode_command",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "active_power_mode_command"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/features/active_power",
+							"id": "features_kW_mode_cmd_local"
+						}
+					]
+				},
+				{
+					"id": "reactive_power_mode_command",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_mode_command"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/features/reactive_power",
+							"id": "features_kVAR_mode_cmd_local"
+						}
+					]
+				},
+				{
+					"id": "dcs_reactive_power_command",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "dcs_reactive_power_command"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0
+				},
+				{
+                    "id": "dcs_q_lower_bound_flag",
+                    "inputs": [
+                        {
+							"uri": "/metrics/commands",
+							"id": "dcs_reactive_power_command"
+                        },
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_capacitive_limit_neg"
+						}
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "lt"
+                    }
+                },
+				{
+                    "id": "dcs_q_upper_bound_flag",
+                    "inputs": [
+                        {
+							"uri": "/metrics/commands",
+							"id": "dcs_reactive_power_command"
+                        },
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_inductive_limit"
+						}
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gt"
+                    }
+                },
+				{
+                    "id": "dcs_q_cmd_lower_limited",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/commands",
+                            "id": "dcs_q_lower_bound_flag"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "reactive_power_capacitive_limit_neg"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "dcs_reactive_power_command"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                    }
+                },
+				{
+                    "id": "dcs_q_cmd_upper_limited",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/commands",
+                            "id": "dcs_q_upper_bound_flag"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "reactive_power_inductive_limit"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "dcs_q_cmd_lower_limited"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                    }
+                },
+				{
+					"id": "dcs_reactive_power_command_echo",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "dcs_q_cmd_upper_limited"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/features/reactive_power",
+							"id": "reactive_setpoint_kVAR_cmd_dcs"
+						}
+					]
+				},
+				{
+					"id": "agc_reactive_power_command",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "agc_reactive_power_command"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0
+				},
+				{
+                    "id": "agc_q_lower_bound_flag",
+                    "inputs": [
+                        {
+							"uri": "/metrics/commands",
+							"id": "agc_reactive_power_command"
+                        },
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_capacitive_limit_neg"
+						}
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "lt"
+                    }
+                },
+				{
+                    "id": "agc_q_upper_bound_flag",
+                    "inputs": [
+                        {
+							"uri": "/metrics/commands",
+							"id": "agc_reactive_power_command"
+                        },
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_inductive_limit"
+						}
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gt"
+                    }
+                },
+				{
+                    "id": "agc_q_cmd_lower_limited",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/commands",
+                            "id": "agc_q_lower_bound_flag"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "reactive_power_capacitive_limit_neg"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "agc_reactive_power_command"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                    }
+                },
+				{
+                    "id": "agc_q_cmd_upper_limited",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/commands",
+                            "id": "agc_q_upper_bound_flag"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "reactive_power_inductive_limit"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "agc_q_cmd_lower_limited"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                    }
+                },
+				{
+					"id": "agc_reactive_power_command_echo",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "agc_q_cmd_upper_limited"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/features/reactive_power",
+							"id": "reactive_setpoint_kVAR_cmd_agc"
+						}
+					]
+				},
+				{
+					"id": "gms_reactive_power_command",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "gms_reactive_power_command"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0
+				},
+				{
+                    "id": "gms_q_lower_bound_flag",
+                    "inputs": [
+                        {
+							"uri": "/metrics/commands",
+							"id": "gms_reactive_power_command"
+                        },
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_capacitive_limit_neg"
+						}
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "lt"
+                    }
+                },
+				{
+                    "id": "gms_q_upper_bound_flag",
+                    "inputs": [
+                        {
+							"uri": "/metrics/commands",
+							"id": "gms_reactive_power_command"
+                        },
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_inductive_limit"
+						}
+                    ],
+                    "operation": "compare",
+                    "param": {
+                        "operation": "gt"
+                    }
+                },
+				{
+                    "id": "gms_q_cmd_lower_limited",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/commands",
+                            "id": "gms_q_lower_bound_flag"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "reactive_power_capacitive_limit_neg"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "gms_reactive_power_command"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                    }
+                },
+				{
+                    "id": "gms_q_cmd_upper_limited",
+                    "inputs": [
+                        {
+                            "uri": "/metrics/commands",
+                            "id": "gms_q_upper_bound_flag"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "reactive_power_inductive_limit"
+                        },
+						{
+                            "uri": "/metrics/commands",
+                            "id": "gms_q_cmd_lower_limited"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                    }
+                },
+				{
+					"id": "gms_reactive_power_command_echo",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "gms_q_cmd_upper_limited"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/features/reactive_power",
+							"id": "reactive_setpoint_kVAR_cmd_gms"
+						}
+					]
+				},
+				{
+					"id": "power_factor_command",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "power_factor_command"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/features/reactive_power",
+							"id": "power_factor_cmd_local"
+						}
+					]
+				},
+				{
+					"id": "power_priority_command",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "power_priority_command"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "run_request_command",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "run_request_command"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "reactive_power_capacitive_limit",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_capacitive_limit"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "reactive_power_capacitive_limit_neg",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_capacitive_limit"
+						}
+					],
+					"operation": "product",
+					"param": {
+						"gain": -1.0
+					}
+				},
+				{
+					"id": "reactive_power_inductive_limit",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "reactive_power_inductive_limit"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "active_power_discharge_limit",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "active_power_discharge_limit"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "active_power_charge_limit",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "active_power_charge_limit"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "max_soc_setpoint",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "max_soc_setpoint"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/features/active_power",
+							"id": "export_target_max_soc_local"
+						}
+					]
+				},
+				{
+					"id": "min_soc_setpoint",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "min_soc_setpoint"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/features/active_power",
+							"id": "export_target_min_soc_local"
+						}
+					]
+				},
+				{
+					"id": "active_power_ramp_rate",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "active_power_ramp_rate"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 10000,
+					"initialInput": 10000,
+					"outputs": [
+						{
+							"uri": "/features/active_power",
+							"id": "export_target_kW_slew_rate"
+						}
+					]
+				},
+				{
+					"id": "clear_faults",
+					"inputs": [
+						{
+							"uri": "/metrics/commands",
+							"id": "clear_faults"
+						}
+					],
+					"operation": "echo"
+				}
+			]
+		},
+		{
+			"uri": "/metrics/info",
+			"naked": "true",
+			"metrics": [
+				{
+					"id": "site_controller_1_active",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "site_controller_1_active"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "site_controller_2_active",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "site_controller_2_active"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "battery_fault",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "battery_fault"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "battery_alarm",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "battery_alarm"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "pcs_fault",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "pcs_fault"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "pcs_alarm",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "pcs_alarm"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "site_e_stop",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "site_e_stop"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "fire_alarm",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "fire_alarm"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "dcs_manual_power_control_enabled",
+					"inputs": [
+                        {
+                            "uri": "/variables/site/input_sources",
+                            "id": "dcs"
+                        }
+                    ],
+                    "operation": "select",
+                    "initialInput": false,
+                    "param": {
+                        "trueCase": 1,
+                        "falseCase": 0
+                    },
+					"outputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "reactive_power_mode"
+						}
+					]
+				},
+				{
+					"id": "agc_iso_power_control_enabled",
+					"inputs": [
+                        {
+                            "uri": "/variables/site/input_sources",
+                            "id": "agc"
+                        }
+                    ],
+                    "operation": "select",
+                    "initialInput": false,
+                    "param": {
+                        "trueCase": 1,
+                        "falseCase": 0
+                    },
+					"outputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "reactive_power_mode"
+						}
+					]
+				},
+				{
+					"id": "scheduler_power_control_enabled",
+					"inputs": [
+                        {
+                            "uri": "/variables/site/input_sources",
+                            "id": "sched"
+                        }
+                    ],
+                    "operation": "select",
+                    "initialInput": false,
+                    "param": {
+                        "trueCase": 1,
+                        "falseCase": 0
+                    },
+					"outputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "reactive_power_mode"
+						}
+					]
+				},
+				{
+					"id": "gms_manual_power_control_enabled",
+					"inputs": [
+                        {
+                            "uri": "/variables/site/input_sources",
+                            "id": "gms"
+                        }
+                    ],
+                    "operation": "select",
+                    "initialInput": false,
+                    "param": {
+                        "trueCase": 1,
+                        "falseCase": 0
+                    },
+					"outputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "reactive_power_mode"
+						}
+					]
+				},
+				{
+					"id": "site_controller_hmi_power_control_enabled",
+					"inputs": [
+                        {
+                            "uri": "/variables/site/input_sources",
+                            "id": "ui"
+                        }
+                    ],
+                    "operation": "select",
+                    "initialInput": false,
+                    "param": {
+                        "trueCase": 1,
+                        "falseCase": 0
+                    },
+					"outputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "reactive_power_mode"
+						}
+					]
+				},
+				{
+					"id": "active_power_mode",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "active_power_mode"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "active_power_mode_command_feedback",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "active_power_mode_command_feedback"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "active_power_command_feedback",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "active_power_command_feedback"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "reactive_power_mode",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "reactive_power_mode"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "reactive_power_mode_command_feedback",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "reactive_power_mode_command_feedback"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "reactive_power_command_feedback",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "reactive_power_mode_command_feedback"
+						}
+					],
+					"operation": "echo"
+				},
+				{																													
+					"id": "bess_site_total_chargeable_power",						
+					"inputs": [
+						{
+							"uri": "/assets",
+							"id": "ess_chargeable_power"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "bess_site_total_dischargeable_power",
+					"inputs": [
+						{
+							"uri": "/assets",
+							"id": "ess_dischargeable_power"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "bess_site_total_chargeable_energy",
+					"inputs": [
+						{
+							"uri": "/assets",
+							"id": "ess_chargeable_energy"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "bess_site_total_dischargeable_energy",
+					"inputs": [
+						{
+							"uri": "/assets",
+							"id": "ess_dischargeable_energy"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "bess_site_soc",
+					"inputs": [
+						{
+							"uri": "/variables/internal",
+							"id": "soc_avg_all"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "available_energy_capacity_contractual",
+					"inputs": [
+						{
+							"uri": "/metrics/info", "id": "available_energy_capacity_contractual"
+						}
+					],
+					"operation": "echo",
+					"unit": "MWh",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 900
+				},
+				{
+					"id": "available_energy_capacity_operational",
+					"unit": "MWh",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 1,
+					"inputs": [
+						{
+							"uri": "/metrics/info",	"id": "available_energy_capacity_operational"
+						},
+						{
+							"uri": "/assets/ess", "id": "rated_capacity"
+						},
+						{
+							"uri": "/assets/ess", "id": "num_ess_running"
+						}
+					],
+					"operation": "product"
+				},
+				{
+					"id": "available_energy_charge_capacity_operational",
+					"unit": "MWh",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 1,
+					"inputs": [
+						{
+							"uri": "/metrics/info", "id": "available_energy_charge_capacity_operational"
+						},
+						{
+							"uri": "/assets/ess", "id": "rated_capacity"
+						},
+						{
+							"uri": "/assets/ess", "id": "num_ess_running"
+						}
+					],
+					"operation": "product"
+				},
+				{
+					"id": "available_energy_discharge_capacity_operational",
+					"unit": "MWh",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 1,
+					"inputs": [
+						{
+							"uri": "/metrics/info", "id": "available_energy_discharge_capacity_operational"
+						},
+						{
+							"uri": "/assets/ess", "id": "rated_capacity"
+						},
+						{
+							"uri": "/assets/ess", "id": "num_ess_running"
+						}
+					],
+					"operation": "product"
+				},
+				{
+					"id": "available_power_charge_contractual",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "available_power_charge_contractual"
+						}
+					],
+					"operation": "echo",
+					"unit": "MW",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 225
+				},
+				{
+					"id": "available_power_charge_operational",
+					"unit": "MW",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 1,
+					"inputs": [
+						{
+							"uri": "/metrics/info", "id": "available_power_charge_operational"
+						},
+						{
+							"uri": "/assets/ess", "id": "rated_active_power_kw"
+						},
+						{
+							"uri": "/assets/ess", "id": "num_ess_running"
+						}
+					],
+					"operation": "product"
+				},
+				{
+					"id": "available_power_discharge_contractual",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "available_power_discharge_contractual"
+						}
+					],
+					"operation": "echo",
+					"unit": "MW",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 225
+				},
+				{
+					"id": "available_power_discharge_operational",
+					"unit": "MW",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 1,
+					"inputs": [
+						{
+							"uri": "/metrics/info", "id": "available_power_discharge_operational"
+						},
+						{
+							"uri": "/assets/ess", "id": "rated_active_power_kw"
+						},
+						{
+							"uri": "/assets/ess", "id": "num_ess_running"
+						}
+					],
+					"operation": "product"
+				},
+				{
+					"id": "available_power_capacitive_contractual",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "available_power_capacitive_contractual"
+						}
+					],
+					"operation": "echo",
+					"unit": "MVar",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 225
+				},
+				{
+					"id": "available_power_capacitive_operational",
+					"unit": "MVar",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 1,
+					"inputs": [
+						{
+							"uri": "/metrics/info", "id": "available_power_capacitive_operational"
+						},
+						{
+							"uri": "/assets/ess", "id": "rated_reactive_power_kvar"
+						},
+						{
+							"uri": "/assets/ess", "id": "num_ess_running"
+						}
+					],
+					"operation": "product"
+				},
+				{
+					"id": "available_power_inductive_contractual",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "available_power_inductive_contractual"
+						}
+					],
+					"operation": "echo",
+					"unit": "MVar",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 225
+				},
+				{
+					"id": "available_power_inductive_operational",
+					"unit": "MVar",
+					"scale": 1000,
+					"timescale": 1,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 1,
+					"inputs": [
+						{
+							"uri": "/metrics/info", "id": "available_power_inductive_operational"
+						},
+						{
+							"uri": "/assets/ess", "id": "rated_reactive_power_kvar"
+						},
+						{
+							"uri": "/assets/ess", "id": "num_ess_running"
+						}
+					],
+					"operation": "product"
+				},
+				{
+					"id": "available_ramp_rate_active_negative_contractual",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "available_ramp_rate_active_negative_contractual"
+						}
+					],
+					"operation": "echo",
+					"unit": "MW/s",
+					"scale": 1000,
+					"timescale": 0.01,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 3
+				},
+				{
+					"id": "available_ramp_rate_active_negative_operational",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "available_ramp_rate_active_negative_operational"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "available_ramp_rate_active_positive_contractual",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "available_ramp_rate_active_positive_contractual"
+						}
+					],
+					"operation": "echo",
+					"unit": "MW/s",
+					"scale": 1000,
+					"timescale": 0.01,
+					"ui_type": "status",
+					"type": "number",
+					"initialValue": 3
+				},
+				{
+					"id": "available_ramp_rate_active_positive_operational",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "available_ramp_rate_active_positive_operational"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "site_controller_1_heartbeat",
+					"inputs": [
+						{
+							"uri": "/features/site_operation",
+							"id": "heartbeat_counter"
+						}
+					],
+					"operation": "echo"
+				},
+				{
+					"id": "site_controller_2_heartbeat",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "site_controller_2_heartbeat"
+						}
+					],
+					"operation": "echo"
+				},																	
+				{
+					"id": "dcs_manual_power_control",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "dcs_manual_power_control"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "dcs"
+						}
+					]
+				},
+				{
+					"id": "agc_iso_power_control",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "agc_iso_power_control"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "agc"
+						}
+					]
+				},
+				{
+					"id": "scheduler_power_control",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "scheduler_power_control"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "sched"
+						}
+					]
+				},
+				{
+					"id": "gms_manual_power_control",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "gms_manual_power_control"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "gms"
+						}
+					]
+				},
+				{
+					"id": "sitecontroller_hmi_power_control",
+					"inputs": [
+						{
+							"uri": "/metrics/info",
+							"id": "sitecontroller_hmi_power_control"
+						}
+					],
+					"operation": "echo",
+					"initialValue": 0,
+					"initialInput": 0,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "ui"
+						}
+					]
+				}
+			]
+		},
+		{
+			"uri": "/metrics/remaps",
+			"naked": "true",
+			"metrics": [
+				{
+					"id": "multiple_inputs_ui_enable",
+					"inputs": [
+						{
+							"uri": "/site/configuration",
+							"id": "reserved_bool_11"
+						}
+					],
+					"operation": "echo",
+					"initialValue": false,
+					"initialInput": false,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "ui"
+						}
+					]
+				},
+				{
+					"id": "multiple_inputs_sched_enable",
+					"inputs": [
+						{
+							"uri": "/site/configuration",
+							"id": "reserved_bool_12"
+						}
+					],
+					"operation": "echo",
+					"initialValue": false,
+					"initialInput": false,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "sched"
+						}
+					]
+				},
+				{
+					"id": "multiple_inputs_dcs_enable",
+					"inputs": [
+						{
+							"uri": "/site/configuration",
+							"id": "reserved_bool_13"
+						}
+					],
+					"operation": "echo",
+					"initialValue": false,
+					"initialInput": false,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "dcs"
+						}
+					]
+				},
+				{
+					"id": "multiple_inputs_agc_enable",
+					"inputs": [
+						{
+							"uri": "/site/configuration",
+							"id": "reserved_bool_14"
+						}
+					],
+					"operation": "echo",
+					"initialValue": false,
+					"initialInput": false,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "agc"
+						}
+					]
+				},
+				{
+					"id": "multiple_inputs_gms_enable",
+					"inputs": [
+						{
+							"uri": "/site/configuration",
+							"id": "reserved_bool_15"
+						}
+					],
+					"operation": "echo",
+					"initialValue": false,
+					"initialInput": false,
+					"outputs": [
+						{
+							"uri": "/site/input_sources",
+							"id": "gms"
+						}
+					]
+				}
+			]
+		}
+	]
+}

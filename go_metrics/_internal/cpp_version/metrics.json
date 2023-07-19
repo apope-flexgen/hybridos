@@ -1,0 +1,22 @@
+{
+    "meta": {
+    },
+    "inputs": {
+        "var_name1": { "uri": "/components/bms_74b/vnom", "type": "float"            },
+        "var_name2": { "uri": "/components/feeder_52m1/v1", "type": "float"            }
+    },
+    "filters": { 
+        "all_vars_simple": "var_name*"
+    },
+    "outputs": {
+        "output1": { "uri": "/some/output1/uri", "flags": [ "clothed", "pub_as_set" ] },
+        "output2": { "uri": "/some/output2/uri", "flags": [] }
+    },
+    "metrics": [
+        {
+            "value": true, 
+            "outputs": ["output1"],
+            "expression": [ "And(var_name1,var_name2)"]
+        }
+    ]
+}

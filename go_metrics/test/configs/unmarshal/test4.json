@@ -1,0 +1,160 @@
+{
+	"templates": [
+		{
+			"to": 3,
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"from": 1,
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"from": 1,
+			"to": 3,
+			"step": 1
+        },
+		{
+			"from": "a",
+			"to": 3,
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"from": 1,
+			"to": "b",
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"from": 1,
+			"to": 3,
+			"step": "c",
+			"token": "##"
+        },
+		{
+			"from": 1,
+			"to": 3,
+			"step": 1,
+			"token": 5
+        },
+		{
+			"type": "sequential",
+			"to": 3,
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"type": "sequential",
+			"from": 1,
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"type": "sequential",
+			"from": 1,
+			"to": 3,
+			"step": 1
+        },
+		{
+			"type": "sequential",
+			"from": "a",
+			"to": 3,
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"type": "sequential",
+			"from": 1,
+			"to": "b",
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"type": "sequential",
+			"from": 1,
+			"to": 3,
+			"step": "c",
+			"token": "##"
+        },
+		{
+			"type": "sequential",
+			"from": 1,
+			"to": 3,
+			"step": 1,
+			"token": 5
+        },
+		{
+			"list": [{"string":"value"}, "cheetah", "lion"],
+			"token": "qq"
+        },
+		{
+			"list": "string",
+			"token": "qq"
+        },
+		{
+			"type": "list",
+			"list": "string",
+			"token": "qq"
+        },
+		{
+			"list": ["bobcat", "cheetah", "lion"],
+			"token": 5
+        },
+		{
+			"list": ["bobcat", "cheetah", "lion"],
+			"token": ""
+        },
+		{
+			"list": ["bobcat", "cheetah", "lion"],
+			"token": "@"
+        },
+		{
+			"list": ["bobcat", "cheetah", "lion"],
+			"token": "qqq"
+        },
+		{
+			"type": "something invalid",
+			"from": "a",
+			"to": 3,
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"type": [],
+			"from": "a",
+			"to": 3,
+			"step": 1,
+			"token": "##"
+        },
+		{
+			"from": 0,
+			"to": 3,
+			"step": 0,
+			"token": "pp"
+        },
+		{
+			"from": 0,
+			"to": 3,
+			"token": "!!"
+        },
+		{
+			"type": "sequential",
+			"from": 0,
+			"to": 3,
+			"step": 0,
+			"token": "cc"
+        },
+		{
+			"type": "list",
+			"token": "nn"
+        },
+		{
+			"type": "sequential",
+			"from": 0,
+			"to": 3,
+			"token": "$!"
+        }
+	]
+}

@@ -1,0 +1,62 @@
+{
+    "outputs": {
+        "output1": { "uri": 8, "flags": [ "clothed", "group1","clothed"]},
+		"output2": { "uri": "/some/output##", "flags": 8},
+		"output3": { "uri": "/some/output##", "flags": [ 3, "group1","clothed"]},
+        "output4": { "uri": "/some/output##", "flags": [ "banana", "group1","clothed"]},
+		"output5": { "uri": "/some/output##", "publishRate": "string"},
+		"output6": { "uri": "/some/output##", "attributes": 8},
+		"output7": { "name":8, "uri": "/some/output##"},
+		"output8": {
+						"uri": "/some/output##",
+						"enum": [
+							"Power up",
+							"Initialization",
+							{"value": 10,"string": "Off", "note": "the next enum string has an implicit value of 11", "note2": "can skip values for enums but not bitfields"},
+							"Precharge",
+							{"value":20, "string":"some other value"}
+						]
+					},
+		"output9": {
+						"uri": "/some/output##", "flags": ["enum"]
+					},
+		"output10": {
+						"uri": "/some/output##", "flags":["enum"],	"enum": 5
+					},
+		"output11": {
+			"uri": "/some/output##","flags": ["bitfield"]
+		},
+		"output12": {
+			"uri": "/some/output##",
+			"bitfield": [
+				"Power up",
+				"Initialization",
+				"Off",
+				"Precharge"
+			]
+		},
+		"output13": {
+			"uri": "/some/output##","flags": ["bitfield"],
+			"bitfield": 5
+		},
+		"output14": { "uri": "/some/output##", "publishRate":-5},
+		"output14": { "uri": "/some/output##"},
+		"output15": {
+			"uri": "/some/output##", "flags":["enum"],
+			"enum": [
+				{},
+				[],
+				{"value": "some string","string": []}
+			]
+		},
+		"output16": {
+			"uri": "/some/output##", "flags":["bitfield"],
+			"bitfield": [
+				{},
+				[],
+				{"value": "some string","string": []},
+				{"value": 20,"string": "string"}
+			]
+		}
+		    }
+}

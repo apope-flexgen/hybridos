@@ -1,0 +1,71 @@
+{
+	"templates": [
+        {
+			"from": 1,
+			"to": 25,
+			"format": "%02d",
+			"token": "**"
+        }
+	],
+    "inputs": {
+        "ess_**_alarm": { "uri": "/ess_**/alarm", "type": "bool", "attributes": ["enabled"] },
+		"var_1": { "uri": "/uri/float_var_1", "type": "float" },
+		"var_2": { "uri": "/uri/float_var_2", "type": "float" },
+		"var_3": { "uri": "/uri/float_var_3", "type": "float" },
+		"var_4": { "uri": "/uri/float_var_4", "type": "float" },
+		"var_5": { "uri": "/uri/float_var_5", "type": "float" },
+		"var_6": { "uri": "/uri/string_var_6", "type": "string" },
+		"var_7": { "uri": "/uri/string_var_7", "type": "string" },
+		"var_8": { "uri": "/uri/string_var_8", "type": "string" },
+		"var_9": { "uri": "/uri/string_var_9", "type": "string" },
+		"var_10": { "uri": "/uri/string_var_10", "type": "string" },
+		"var_with_enabled_1": { "uri": "/some/var_1", "type": "float" , "attributes": ["enabled"]},
+		"var_with_enabled_2": { "uri": "/some/var_2", "type": "float" , "attributes": ["enabled"]},
+		"var_with_enabled_3": { "uri": "/some/var_3", "type": "float" , "attributes": ["enabled"]},
+		"var_with_enabled_4": { "uri": "/some/var_4", "type": "float" , "attributes": ["enabled"]},
+		"var_with_enabled_5": { "uri": "/some/var_5", "type": "float" , "attributes": ["enabled"]},
+		"var_with_scale_6": { "uri": "/some/var_6", "type": "float" , "attributes": ["scale"]},
+		"var_with_scale_7": { "uri": "/some/var_7", "type": "float" , "attributes": ["scale"]},
+		"var_with_scale_8": { "uri": "/some/var_8", "type": "float" , "attributes": ["scale"]},
+		"var_with_scale_9": { "uri": "/some/var_9", "type": "float" , "attributes": ["scale"]},
+		"var_with_scale_10": { "uri": "/some/var_10", "type": "float" , "attributes": ["scale"]}
+    },
+    "filters": {
+        "all_ess_alarms": "Regex(ess_\\d+_alarm)",
+        "float_vars": "Regex(var_\\d+) | type(float)",
+		"all_vars_enabled": "Regex(var_with_enabled_*) | Attribute(enabled == true)",
+		"vars_scale_gt_1000": "Regex(var_with_scale_*) | Attribute(scale > 1000)"
+    },
+    "outputs": {
+        "ess_alarm_active": { "uri": "/ess_alarms" },
+        "sum_output": { "uri": "/sum_output" },
+		"sum_enabled_output": { "uri": "/sum_enabled_output" },
+		"scale_output" : { "uri": "/scale_output"}
+		    },
+    "metrics": [
+        { 
+            "id": "0",
+            "type": "bool", 
+            "outputs": "ess_alarm_active",
+            "expression": "Or(all_ess_alarms)"
+        },
+		{
+            "id": "1",
+            "type": "float", 
+            "outputs": "sum_output",
+            "expression": "Add(float_vars)"
+        },
+		{
+            "id": "2",
+            "type": "float", 
+            "outputs": "sum_enabled_output",
+            "expression": "Add(all_vars_enabled)"
+        },
+		{
+            "id": "3",
+            "type": "float", 
+            "outputs": "scale_output",
+            "expression": "Compareor(\">\", 3000, vars_scale_gt_1000)"
+        }
+    ]
+}

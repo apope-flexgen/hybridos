@@ -1,0 +1,63 @@
+{
+	"templates": [
+		{
+			"from": 1,
+			"to": 3,
+			"token": "##"
+        }
+	],
+    "inputs": {
+        "var_1": { "uri": "/var_1", "type": "float", "default": 5.0 },
+        "var_2": { "uri": "/var_2", "type": "float", "default": 5.0 },
+        "var_3": { "uri": "/var_3", "type": "float", "default": 5.0 },
+        "var_4": { "uri": "/var_4", "type": "int", "default": 0 },
+        "var_5": { "uri": "/var_5", "type": "int", "default": 0 },
+        "var_6": { "internal": true, "type": "int", "default": 0 },
+        "var_7": { "uri": "/var_7", "type": "bool", "default": true },
+        "var_8": { "uri": "/var_8", "type": "bool", "default": false },
+        "var_9": { "uri": "/var_9", "type": "bool", "default": true }
+    },
+    "filters": {
+        "bool_filter": "Type(bool)"
+    },
+    "outputs": {
+        "internal_output_times_5": { "uri": "/some/internal/output" },
+        "output1_with_attributes": { "uri": "/some/output1", "flags": [ "clothed", "group1"], "publishRate": 1200, "attributes": {"scale": 1000, "units": "deg C", "ui_type": "none"}},
+        "output2_with_attributes": { "uri": "/some/output2", "flags": [ "naked", "group2", "sparse", "no_heartbeat"], "attributes": {"scale": 1000, "units": "deg C", "ui_type": "none"}},
+        "output3_with_attributes": { "uri": "/some/output3", "flags": [ "clothed", "group2", "sparse"], "attributes": {"scale": 1000, "units": "deg C", "ui_type": "none"}},
+        "output##": { "name":"timestamp","uri": "/some/output##", "flags": ["clothed", "group1"] },
+		"anything_true": {"uri": "/random/uri"}
+		    },
+    "metrics": [
+        {
+            "id": "0",
+            "type": "float", 
+            "outputs": "output##_with_attributes",
+            "expression": "(var_## + 5)/3 + Mult(3,4,5) - (-7)"
+        },
+        {
+            "id": "1",
+            "type": "string", 
+            "outputs": ["output1","output2","output3"],
+            "expression": "MillisecondsToRFC3339(Time())"
+        },
+        {
+            "id": "2",
+            "type": "int", 
+            "internal_output": "var_6",
+            "expression": "var_5"
+        },
+		{
+            "id": "3",
+            "type": "int",
+            "outputs": "internal_output_times_5",
+            "expression": "var_6 * 5"
+        },
+		{
+            "id": "4",
+            "type": "bool", 
+            "outputs": "anything_true",
+            "expression": "Or(bool_filter)"
+        }
+    ]
+}

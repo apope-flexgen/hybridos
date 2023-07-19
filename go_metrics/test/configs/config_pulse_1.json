@@ -1,0 +1,18 @@
+{
+    "meta": { "publishRate": 250 },
+    "inputs": {
+        "trigger": { "uri": "/components/feeder_52m1/trigger", "type": "bool", "default": false},
+        "reset":   { "uri": "/components/feeder_52m1/reset",   "type": "bool" },
+        "timeout": { "uri": "/components/feeder_52m1/timeout", "type": "int", "default": 5000}
+    },
+    "outputs": {
+        "pulse_on": { "uri": "/some/selected/output" }
+		    },
+    "metrics": [
+        {
+            "value": false, 
+            "outputs": "pulse_on",
+            "expression": "Pulse(trigger, reset, timeout)"
+        }
+    ]
+}

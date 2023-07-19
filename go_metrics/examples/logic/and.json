@@ -1,0 +1,36 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "int1":   { "uri": "/components/int1",  "type": "int",    "default": 0  },
+        "int2":   { "uri": "/components/int2",  "type": "int",    "default": 1  },
+        "bool1":   { "uri": "/components/bool1","type": "bool"                  },
+        "bool2":  { "uri": "/components/bool2", "type": "bool"                  }
+    },
+    "outputs": {
+        "bool_output1":    {   "uri": "/some/output"   },
+        "bool_output2":    {   "uri": "/some/output"   },
+        "bool_output3":    {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output1",
+            "expression": "And(bool1, bool2, int1, int2)",
+            "note": "integers, floats, and uints are 0 == false, anything else == true",
+            "note2": "strings, if \"true\" are true, if \"false\" are false, else truth value is determined by len(string) > 0"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output2",
+            "expression": "bool1 && bool2 && int1 && int2"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output3",
+            "expression": "bool1 && !bool2 && int1 && !int2"
+        }
+    ]
+}

@@ -1,0 +1,112 @@
+{
+    "publishRate": 1000,
+    "listenRate": 2,
+    "publishUris": [
+        {
+            "uri": "/components/magnolia",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "gen_gross_mw",
+                    "inputs": [
+                        {
+                            "uri": "/components/magnolia",
+                            "id": "gen_net_mw"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_gross_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/components/magnolia",
+                            "id": "gen_net_mvar"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_normal_up_ramp_rate",
+                    "inputs": [
+                        {
+                            "uri": "/components/magnolia",
+                            "id": "gen_normal_up_ramp_rate_ip"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 2
+                },
+                {
+                    "id": "gen_normal_up_ramp_rate_manual",
+                    "inputs": [
+                        {
+                            "uri": "/components/magnolia",
+                            "id": "gen_normal_up_ramp_rate_manual_ip"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_normal_up_ramp_rate_override",
+                    "inputs": [
+                        {
+                            "uri": "/components/magnolia",
+                            "id": "gen_normal_up_ramp_rate_override_ip"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                }
+            ]
+        },
+        {
+            "uri": "/components/internal_magnolia",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "OF_slew_override_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/constants",
+                            "id": "FRRS_OF_slew_override_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false,
+                    "outputs": [
+                        {
+                            "uri": "/sites/magnolia",
+                            "id": "fr_OF_slew_override_flag"
+                        }
+                    ]
+                },
+                {
+                    "id": "OF_enable_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/internal_magnolia",
+                            "id": "FR_OF_ENABLE_PULSE_OUTPUT"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": true
+                },
+                {
+                    "id": "UF_enable_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/internal_magnolia",
+                            "id": "FR_UF_ENABLE_PULSE_OUTPUT"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": true
+                }
+           ]
+        }
+    ]
+}

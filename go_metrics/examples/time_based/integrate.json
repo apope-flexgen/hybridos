@@ -1,0 +1,23 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "integrand": { "uri": "/components/feeder_52m1/float1", "type": "float", "default": 5.3 },
+        "timescale_in_hours": { "uri": "/components/feeder_52m1/float2", "type": "float", "default": 0.000277778 }
+    },
+    "outputs": {
+        "result1": { "uri": "/some/selected/output" },
+        "result2": { "uri": "/some/selected/output" }
+		    },
+    "metrics": [
+        {
+            "type": "float", 
+            "outputs": "result1",
+            "expression": "Integrate(integrand)"
+        },
+        {
+            "type": "float", 
+            "outputs": "result2",
+            "expression": "IntegrateOverTimescale(integrand, timescale_in_hours)"
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+[
+    {
+        "Location": ["echo", "0"],
+        "Error": "key 'uri' not found"
+    },
+    {
+        "Location": ["echo", "0"],
+        "Error": "key 'publishRate' not found"
+    },
+    {
+        "Location": ["echo", "1"],
+        "Error": "key 'publishRate' not found"
+    },
+    {
+        "Location": ["echo", "2", "uri"],
+        "Error": "cannot convert type object to string"
+    },
+    {
+        "Location": ["echo", "2"],
+        "Error": "key 'publishRate' not found"
+    },
+    {
+        "Location": ["echo", "3", "inputs"],
+        "Error": "next item is not object"
+    },
+    {
+        "Location": ["echo", "4", "inputs", "0", "uri"],
+        "Error": "type \"l\" found before object was found"
+    },
+    {
+        "Location": ["echo", "5", "inputs", "0"],
+        "Error": "key 'registers' not found"
+    },
+    {
+        "Location": ["echo", "6", "inputs", "0"],
+        "Error": "key 'uri' not found"
+    },
+    {
+        "Location": ["echo", "7", "inputs", "0", "registers"],
+        "Error": "could not convert registers to map[string]interface{}"
+    },
+    {
+        "Location": ["echo", "8", "inputs", "0", "registers"],
+        "Error": "could not convert registers to map[string]string"
+    },
+    {
+        "Location": ["echo", "9", "inputs", "0", "registers", "f", "source"],
+        "Error": "expected value to be string"
+    },
+    {
+        "Location": ["echo", "10", "inputs", "0", "registers", "f"],
+        "Error": "key 'source' not found"
+    },
+    {
+        "Location": ["echo", "11", "echo"],
+        "Error": "could not convert echo object to map[string]interface{}"
+    }
+]

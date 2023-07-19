@@ -1,0 +1,17 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "value": { "uri": "/components/value", "type": "uint", "default": 0 }
+    },
+    "outputs": {
+        "changed": { "uri": "/some" }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "changed",
+            "expression": "ValueChanged(value)"
+        }
+    ]
+}

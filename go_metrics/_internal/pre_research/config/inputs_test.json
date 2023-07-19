@@ -1,0 +1,49 @@
+{
+    "publishRate": 1000,
+    "listenRate": 2,
+    "inputUris": [
+        {
+            "/components/magnolia" : {
+                "gen_gross_mw": {
+                 "initialInput" :0,
+                  "metrics": [
+                   {    "id": "block1",
+                        "inputs": [ 
+                            { "uri": "/components/magnolia:gen_net_mw"}
+                        ],
+                        "operation": "echo" },
+                    { "id": "block2",
+                        "inputs": [
+                            { "uri": "/components/magnolia:gen_net_mvar"}
+                        ],
+                        "operation": "echo"},
+                    { "id": "block3",
+                        "inputs": [
+                        {"uri": "/components/magnolia:gen_normal_up_ramp_rate_ip"}
+                        ],
+                        "operation": "echo"
+                    }
+                   ]
+               }
+            }
+        },
+        {   
+              "/components/internal_magnolia":{
+                "OF_slew_override_flag" :{
+                    "initialInput" :0,
+                    "metrics": [
+                    { "id": "block1",
+                       "inputs": [
+                        { "uri": "/components/constants:FRRS_OF_slew_override_flag"}
+                       ],
+                       "operation": "echo",
+                       "outputs": [
+                         { "uri": "/sites/magnolia:fr_OF_slew_override_flag"}
+                       ]
+                    }
+                ]
+            }           
+        }
+    }
+    ]
+}

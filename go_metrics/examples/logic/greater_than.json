@@ -1,0 +1,43 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "value1":   { "uri": "/components/float1",  "type": "float"                     },
+        "value2":   { "uri": "/components/float2",  "type": "float"                     },
+        "value3":   { "uri": "/components/float3",  "type": "float"                     },
+        "string1":  { "uri": "/components/string1", "type": "string"},
+        "string2":  { "uri": "/components/string2", "type": "string"}
+    },
+    "outputs": {
+        "bool_output1":     {   "uri": "/some/output"   },
+        "bool_output2":    {   "uri": "/some/output"   },
+        "bool_output3":     {   "uri": "/some/output"   },
+        "bool_output4":    {   "uri": "/some/output"   },
+        "bool_output5":     {   "uri": "/some/output"   }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output1",
+            "expression": "GreaterThan(value1, value2, value3)"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output2",
+            "expression": "GreaterThan(string1, string2)"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output3",
+            "expression": "(value1 > value2) && (value2 > value3)"
+        },
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "bool_output4",
+            "expression": "string1 > string2"
+        }
+    ]
+}

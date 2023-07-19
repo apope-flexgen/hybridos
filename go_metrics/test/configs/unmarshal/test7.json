@@ -1,0 +1,13 @@
+{
+    "inputs": {
+        "var_name1": { "uri": 8, "type": "float", "default": 5.0            },
+        "var_name2": { "uri": "/components/feeder_52m1/v1", "type": 8            },
+        "var_name3": { "uri": "/components/feeder_52m1/id", "type": "banana"            },
+        "var_name5": { "uri": "/components/bms_74b/id", "type": "string", "attributes":"not a list"          },
+		"var_name6": { "uri": "/components/bms_74b/id", "internal": true, "type": "string", "attributes":["enabled", "scale"]          },
+		"var_name7": [0,1,2],
+        "var_name8": { "internal":"some string", "type": "float"},
+        "var_name9": { "uri": "", "internal":false, "type": "float"},
+        "var_name10": { "uri": "/components/bms_74b/id","type": "uint", "attributes":[5]          }
+    }
+}

@@ -1,0 +1,78 @@
+{
+    "docinfo":{
+            "name":"config_doc_1.json",
+            "author":"Phil Wilshire",
+            "desc":" run start stop on a selector",
+            "date":"04_14_2023"
+    },
+    "meta": { "publishRate": 1000 },
+    "inputs": {
+        "selector": { "uri": "/components/feeder_52m1/selector",    "type": "float" },
+        "start":    { "uri": "/components/feeder_52m1/start",       "type": "float" },
+        "stop":     { "uri": "/components/feeder_52m1/stop",        "type": "float" },
+        "i_last_start" : {"internal":true, "type":"float"},
+        "i_last_stop" : {"internal":true, "type":"float"},
+        "i_last_selector" : {"internal":true, "type":"float"}
+    },
+    "outputs": {
+        "system_state": { "uri": "/some/state/output"},
+        "last_start":    { "uri": "/some/state/output"},
+        "last_stop":     { "uri": "/some/state/output"}
+    	    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs":    "last_stop",
+            "expression": "i_last_stop"
+        },
+        {
+            "id": "dummy",
+            "type": "int", 
+            "outputs":    "last_start",
+            "expression": "i_last_start"
+        },
+        {
+            "id": "dummy",
+            "type": "string", 
+            "outputs":    "system_state",
+            "expression": "If(!selector, \"Stopped\")"
+        },
+        { 
+            "id": "dummy",
+            "type": "string", 
+            "outputs":    "system_state",
+            "expression": "If(selector && ! i_last_selector , \"Standby\")"
+        },
+        { 
+            "id": "dummy",
+            "type": "string", 
+            "outputs":    "system_state",
+            "expression": "If(start && ! i_last_start && selector, \"Run\")"
+        },
+        { 
+            "id": "dummy",
+            "type": "string", 
+            "outputs":    "system_state",
+            "expression": "If(stop && ! i_last_stop && selector, \"Standby\")"
+        },
+        {
+            "id": "dummy",
+            "type": "int",  
+            "internal_output":    "i_last_start",
+            "expression": "start"
+        },
+        {
+            "id": "dummy",
+            "type": "int",  
+            "internal_output":    "i_last_stop",
+            "expression": "stop"
+        },
+        {
+            "id": "dummy",
+            "type": "int",  
+            "internal_output":    "i_last_selector",
+            "expression": "selector"
+        }
+    ]
+}

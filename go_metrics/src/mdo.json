@@ -1,0 +1,280 @@
+{
+    "meta": {
+        "config": "/home/docker/go_metrics/configs/metrics.json",
+        "name": "go_metrics",
+        "timestamp": "2023-04-26T17:14:10Z"
+    },
+    "inputs": {
+        "intermediate_input": {
+            "value": 0
+        },
+        "var_name1": {
+            "value": 1330
+        },
+        "var_name2": {
+            "value": 34549.172772401085
+        },
+        "var_name3": {
+            "value": "feeder_52m1"
+        },
+        "var_name4": {
+            "value": true
+        },
+        "var_name5": {
+            "enabled": null,
+            "scale": null,
+            "value": "bms_74b"
+        }
+    },
+    "filters": {
+        "all_float_vars": [
+            "var_name1",
+            "var_name2"
+        ],
+        "all_vars_enabled": [
+            ""
+        ]
+    },
+    "outputs": {
+        "bitfield_output": {
+            "value": 13
+        },
+        "enum_output": {
+            "value": 3
+        },
+        "level2_output": {
+            "value": 25
+        },
+        "output1": {
+            "value": "2023-04-26T17:14:10Z"
+        },
+        "output10": {
+            "value": "2023-04-26T17:14:10Z"
+        },
+        "output10_bobcat": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output10_bobcat@scale": {
+            "value": 0
+        },
+        "output10_cheetah": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output10_cheetah@scale": {
+            "value": 0
+        },
+        "output10_lion": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output10_lion@scale": {
+            "value": 0
+        },
+        "output13": {
+            "value": "2023-04-26T17:14:10Z"
+        },
+        "output13_bobcat": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output13_bobcat@scale": {
+            "value": 0
+        },
+        "output13_cheetah": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output13_cheetah@scale": {
+            "value": 0
+        },
+        "output13_lion": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output13_lion@scale": {
+            "value": 0
+        },
+        "output16": {
+            "value": "2023-04-26T17:14:10Z"
+        },
+        "output16_bobcat": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output16_bobcat@scale": {
+            "value": 0
+        },
+        "output16_cheetah": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output16_cheetah@scale": {
+            "value": 0
+        },
+        "output16_lion": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output16_lion@scale": {
+            "value": 0
+        },
+        "output1_bobcat": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output1_bobcat@scale": {
+            "value": 0
+        },
+        "output1_cheetah": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output1_cheetah@scale": {
+            "value": 0
+        },
+        "output1_lion": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output1_lion@scale": {
+            "value": 0
+        },
+        "output4": {
+            "value": "2023-04-26T17:14:10Z"
+        },
+        "output4_bobcat": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output4_bobcat@scale": {
+            "value": 0
+        },
+        "output4_cheetah": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output4_cheetah@scale": {
+            "value": 0
+        },
+        "output4_lion": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output4_lion@scale": {
+            "value": 0
+        },
+        "output7": {
+            "value": "2023-04-26T17:14:10Z"
+        },
+        "output7_bobcat": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output7_bobcat@scale": {
+            "value": 0
+        },
+        "output7_cheetah": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output7_cheetah@scale": {
+            "value": 0
+        },
+        "output7_lion": {
+            "scale": 100,
+            "ui_type": "none",
+            "units": "deg C",
+            "value": null
+        },
+        "output7_lion@scale": {
+            "value": 0
+        }
+    },
+    "metrics": {
+        "3": {
+            "value": 3
+        },
+        "5": {
+            "value": 5
+        },
+        "If(var_name5@enabled < 5, 100, 150)": {
+            "value": 100
+        },
+        "MillisecondsToRFC3339(Time())": {
+            "value": "2023-04-26T17:14:10Z"
+        },
+        "intermediate_input*5": {
+            "value": 25
+        },
+        "true | false << 1 | true << 2 | true << 3": {
+            "value": 13
+        }
+    },
+    "echo": {
+        "/components/sel_735": {
+            "apparent_power": 0,
+            "b1": true,
+            "current_l1": 0,
+            "current_l2": 0,
+            "current_l3": 0,
+            "current_n": 0,
+            "f": 60,
+            "kvarh_delivered": 0,
+            "kvarh_received": 0,
+            "kwh_delivered": 0,
+            "kwh_received": 0,
+            "p": 100,
+            "pf": null,
+            "q": null,
+            "s1": "some value for the string",
+            "thd_i_l1": 0,
+            "thd_i_l2": 0,
+            "thd_i_l3": 0,
+            "thd_v_l1": 0,
+            "thd_v_l2": 0,
+            "thd_v_l3": 0,
+            "v": null,
+            "v1": null,
+            "v2": null,
+            "voltage_l1_l2": 0,
+            "voltage_l2_l3": 0,
+            "voltage_l3_l1": 0
+        }
+    }
+}

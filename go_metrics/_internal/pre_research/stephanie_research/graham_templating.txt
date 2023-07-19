@@ -1,0 +1,14 @@
+Hey folks, working on a method to implement variables and expressions in a templated config. I've come up with an idea and I'd like to get some feedback in an effort to commonize this with at least how echo/metrics will be done if not with how this kind of thing is done company-wide.
+The scenario is I'm trying to create templated configs that have calibrations that are dependent on an asset tree structure. Some of these calibrations depend on calibrations for parent or children assets, number of children assets, etc. To this end I'm developing the following scheme:
+Variables are preceded by a $ character. Functions are preceded by a @ character.
+Variables have scope, and reference entries for the same asset using keyword this, their parent using keyword parent , or their children (collectively) using keyword child. In this way if you wanted to access the parent asset's apparent power limit you would reference $parent.Slim. Likewise if you wanted to access your own Rte you would reference $this.Rte. Accessing a child parameter like $child.Plim would return an array of the Plim field of all children assets.
+You can also access another asset by calling its name. This will access all of the assets of a given type, not necessarily only those that are a child or parent of a given asset. For instance $pcs.Slim will return an array of the same length as the total number of pcs assets.
+Functions are passed variables denoted with $. So far I need the following functions to make my configs work but more could be added
+@MAX(...$)  finds the maximum value of the input arguments
+@MIN(...$) finds the minimum value of the input arguments
+@MULT(...$) multiplies all of the input arguments together
+@DIV($1,$2) Divides $1 by $2. Returns NULL if $2==0
+@SUM(...$) Adds all of the input arguments.
+Functions can be sigilized and passed as arguments to other functions. For example if you wanted bms capacity to be sized for a 4 hour discharge at parent max power (which could be Slim or Plim depending on the asset), and also give a default to fall back on if the parent Slim and Plim does not exist, you would express it as the following:
+@MAX($(@MULT($(@MAX($parent.Slim, $parent.Plim)), 4)),10000)
+In this case the functions are enclosed in parenthesis and then sigilized to indicate that the resulting value is being passed as an input argument to another function.

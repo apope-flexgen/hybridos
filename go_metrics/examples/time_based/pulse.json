@@ -1,0 +1,19 @@
+{
+    "meta": { "publishRate": 2000 },
+    "inputs": {
+        "pulse_on_off": { "uri": "/components/feeder_52m1/bool1", "type": "bool", "default": true },
+        "reset": { "uri": "/components/feeder_52m1/bool2", "type": "bool" },
+        "timeout": { "uri": "/components/feeder_52m1/v2", "type": "int", "default": 5000}
+    },
+    "outputs": {
+        "pulse_on": { "uri": "/some/selected/output" }
+		    },
+    "metrics": [
+        {
+            "id": "dummy",
+            "type": "bool", 
+            "outputs": "pulse_on",
+            "expression": "Pulse(pulse_on_off, reset, timeout)"
+        }
+    ]
+}
