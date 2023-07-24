@@ -13,7 +13,7 @@ from pytests.cases.constant_power_factor import test_constant_power_factor
 from pytests.cases.active_power_poi_lims import test_fr_poi_lims, test_ess_tsoc_poi_lims
 from pytests.cases.reactive_setpoint import test_reactive_power_setpoint
 from pytests.cases.site_state import test_site_state
-from pytests.cases.sequences import test_init, test_num_ess_transitions, test_auto_restart_prevention, test_auto_restart_prevention_agt, test_agt_sequences
+from pytests.cases.sequences import test_init, test_watchdog_fault, test_num_ess_transitions, test_auto_restart_prevention, test_auto_restart_prevention_agt, test_agt_sequences
 from pytests.cases.alerts import test_alerts
 from pytests.cases.ldss import test_ldss
 from pytests.cases.active_power import test_ess_chargeable_derate, test_ess_dischargeable_derate, test_maint_active_power_rounding, test_maint_reactive_power_rounding
@@ -39,6 +39,7 @@ from pytests.cases.agt_runmode1 import test_agt_runmode1
     test_alerts,
     test_ldss,
     test_init,
+    test_watchdog_fault,
     test_num_ess_transitions,
     test_auto_restart_prevention,
     test_auto_restart_prevention_agt,

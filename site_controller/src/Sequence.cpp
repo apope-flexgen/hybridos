@@ -165,8 +165,8 @@ void Sequence::call_sequence()
     //if exit_timer trips, set fault
     if ((paths[current_path_index]->timeout != (-1)) && check_expired_time(pSite->current_time, pSite->exit_target_time))
     {
-        char event_message [80] = {};
-        sprintf(event_message, "Site sequence step failed: %s", paths[current_path_index]->get_step(current_step_index)->get_name().c_str());
+        char event_message[MEDIUM_MSG_LEN];
+        snprintf(event_message, MEDIUM_MSG_LEN, "Site sequence step failed: %s", paths[current_path_index]->get_step(current_step_index)->get_name().c_str());
         emit_event("Site", event_message, 1);
         pSite->set_faults(2);
         clock_gettime(CLOCK_MONOTONIC, &pSite->exit_target_time);
@@ -368,27 +368,26 @@ void Sequence::call_sequence_exit()
 
 void Sequence::check_path_step_change()
 {
-    char event_message [128] = {};
+    char event_message[MEDIUM_MSG_LEN];
     if (pSite->path_change || pSite->step_change)
     {
         if (pSite->path_change)
         {
             //FPS_ERROR_LOG("Site Manager path change to: %s \n", paths[current_path_index].get_name());
-            sprintf(event_message, "Site Manager path changed to %s", paths[current_path_index]->get_name());
+            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager path changed to %s", paths[current_path_index]->get_name());
             emit_event("Site", event_message, 2);
             pSite->path_change = false;
         }
         if (pSite->step_change)
         {
             //FPS_ERROR_LOG("Site Manager step change to: %s \n", paths[current_path_index].steps[current_step_index].get_name());
-            sprintf(event_message, "Site Manager step changed to %s", paths[current_path_index]->steps[current_step_index].get_name().c_str());
+            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager step changed to %s", paths[current_path_index]->steps[current_step_index].get_name().c_str());
             emit_event("Site", event_message, 2);
             pSite->step_change = false;
         }
-        char temp_message [128] = {};
-        sprintf(temp_message, "%s: %s", paths[current_path_index]->get_name(), paths[current_path_index]->steps[current_step_index].get_name().c_str());
-        pSite->set_site_status(temp_message);
-        //FPS_ERROR_LOG("\n ---- \n %s \n ---- \n", pSite->site_status.value.value_string);
+
+        snprintf(event_message, MEDIUM_MSG_LEN, "%s: %s", paths[current_path_index]->get_name(), paths[current_path_index]->steps[current_step_index].get_name().c_str());
+        pSite->set_site_status(event_message);
     }
 }
 

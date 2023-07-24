@@ -229,23 +229,23 @@ void Feeder_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf, c
     {
         bufJSON_AddBoolCheckVar(buf, "sync_feeder_status", pSyncFeeder->get_breaker_status(), var);
     }
+    char temp_name[MEDIUM_MSG_LEN];
     for (auto it : pFeeder)
     {
-        char temp_name[1024];
         char *feeder_id   = it->get_id();
 
-        sprintf(temp_name, "%s_breaker_status",feeder_id);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_breaker_status",feeder_id);
         bufJSON_AddStringCheckVar(buf, temp_name, it->get_breaker_status() ? "Closed" : "Open", var);
-        sprintf(temp_name, "%s_active_power",feeder_id);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_active_power",feeder_id);
         bufJSON_AddNumberCheckVar(buf, temp_name, it->get_active_power(), var);
         if (it == pPointOfInterConnect) {
-            sprintf(temp_name, "%s_voltage",feeder_id);
+            snprintf(temp_name, MEDIUM_MSG_LEN, "%s_voltage",feeder_id);
             bufJSON_AddNumberCheckVar(buf, temp_name, it->get_gridside_avg_voltage(), var);
         }
         // Add a binary 1/0 if any alarms/faults are present for each asset
-        sprintf(temp_name, "%s_alarms",feeder_id);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_alarms",feeder_id);
         bufJSON_AddNumberCheckVar(buf, temp_name, get_num_active_alarms() > 0 ? 1:0, var);
-        sprintf(temp_name, "%s_faults",feeder_id);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_faults",feeder_id);
         bufJSON_AddNumberCheckVar(buf, temp_name, get_num_active_faults() > 0 ? 1:0, var);
     }
     bufJSON_AddNumberCheckVar(buf, "feeder_num_alarmed", get_num_alarmed(), var);

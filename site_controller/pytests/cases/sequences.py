@@ -74,6 +74,65 @@ def test_init(test):
     return test
 
 
+# Generate config changes for init tests
+def generate_watchdog_config():
+    current_ready_state_faults = fims_get("/dbi/site_controller/sequences/sequences/Ready/paths/0/active_faults")
+    config_edits: list[dict] = [
+        # Add watchdog fault to Ready state
+        {
+            "uri": "/dbi/site_controller/sequences/sequences/Ready/paths/0/active_faults",
+            "up": [{"name": "/assets/ess/ess_2/watchdog_fault"}],
+            "down": current_ready_state_faults
+        }
+    ]
+    return config_edits
+
+
+@ fixture
+@ parametrize("test", [
+    Setup(
+        "watchdog_fault",
+        {},
+        [
+            # Enters ready state without any faults
+            Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/active_faults", 0),
+        ],
+        # Restart with the overwritten configs
+        pre_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.upload(generate_watchdog_config()),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller()
+        ]
+    ),
+    Steps(
+        # Trigger watchdog timeout by disconnecting modbus component
+        {"/components/ess_real_ls/component_connected": 0},
+        # Confirm we get the fault instead of segfaulting
+        # Value 2 comes from the mask (bit position 1)
+        Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/active_faults", 2, wait_secs=5)
+    ),
+    # Confirm fault is cleared
+    Steps(
+        {
+            "/components/ess_real_ls/component_connected": 1,
+            "/site/operation/clear_faults_flag": True
+        },
+        Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/active_faults", 0)
+    ),
+    # Restart site
+    Teardown(
+        {"/site/operation/enable_flag": True},
+        [Flex_Assertion(Assertion_Type.approx_eq, "/site/operation/running_status_flag", True, wait_secs=5)],
+        # Restart with the original configs
+        pre_lambda=[
+            lambda: Site_Controller_Instance.get_instance().mig.download(generate_watchdog_config()),
+            lambda: Site_Controller_Instance.get_instance().restart_site_controller()
+        ]
+    )
+])
+def test_watchdog_fault(test):
+    return test
+
+
 # TODO: dynamic configuration so other endpoints (num_running/avail) can be tested as well
 # TODO: can't figure out how to get parametrize to generate (setup, step 1, teardown, setup, step 2, teardown automatically)
 #       instead it generates (setup, step 1, step 2, teardown)

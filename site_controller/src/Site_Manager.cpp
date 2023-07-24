@@ -2475,11 +2475,11 @@ void Site_Manager::update_ess_kpi_values()
 
 void Site_Manager::set_faults(int fault_number)
 {
-    char event_message [80] = {};
+    char event_message[SHORT_MSG_LEN];
 
     active_fault_array[fault_number] = true;
-    sprintf(event_message, "Site Manager Fault: %s", faults.options_name[fault_number].c_str());
-    FPS_ERROR_LOG("%s \n", event_message);
+    snprintf(event_message, SHORT_MSG_LEN, "Site Manager Fault: %s", faults.options_name[fault_number].c_str());
+    FPS_ERROR_LOG("%s", event_message);
 
     emit_event("Site", event_message, 4);
     fault_status_flag.value.value_bool = true;
@@ -2491,8 +2491,8 @@ void Site_Manager::set_alarms(int alarm_number)
 
     #ifndef FPS_TEST_MODE
     // Causes seg faults in test mode as options names undefined
-    char event_message [80] = {};
-    sprintf(event_message, "Site Manager Alarm: %s", alarms.options_name[alarm_number].c_str());
+    char event_message[SHORT_MSG_LEN];
+    snprintf(event_message, SHORT_MSG_LEN, "Site Manager Alarm: %s", alarms.options_name[alarm_number].c_str());
     FPS_ERROR_LOG("%s \n", event_message);
     emit_event("Site", event_message, 3);
     #endif
@@ -2633,9 +2633,7 @@ bool Site_Manager::set_state(states state_request)
 
 void Site_Manager::set_site_status(const char* message)
 {
-    char temp_message [128] = {};
-    sprintf(temp_message, "%s", message);
-    site_status.value.set(std::string(temp_message));
+    site_status.value.set(std::string(message));
 }
 
 bool Site_Manager::call_sequence_functions(const char* target_asset, const char* cmd, Value_Object* value, int tolerance_percent)
@@ -2895,7 +2893,6 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
 
 void Site_Manager::check_state(void)
 {
-    char event_message [128] = {};
     Sequence* current_sequence = sequences[current_state];
     Path* current_path = current_sequence->get_path(current_sequence->current_path_index);
 
@@ -2916,8 +2913,9 @@ void Site_Manager::check_state(void)
     //if new state detected, init vars as needed
     if (check_current_state != current_state)
     {
+        char event_message[SHORT_MSG_LEN];
         FPS_INFO_LOG("\nSite Manager state change to: %s \n\n", state_name[current_state]);
-        sprintf(event_message, "Site Manager state changed to %s", state_name[current_state]);
+        snprintf(event_message, SHORT_MSG_LEN, "Site Manager state changed to %s", state_name[current_state]);
         emit_event("Site", event_message, 2);
         sequences[check_current_state]->sequence_bypass = false; //ensure previous state executes next time its called
         check_current_state = current_state;

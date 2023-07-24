@@ -82,7 +82,7 @@ bool Path::check_alerts(UI_Type alertType)
     for( auto name_mask_pair : (alertType == FAULT ? faults : alarms) )
     {
         // allocate memory for an event message to be sent if alert detected
-        char event_message [80] = {};
+        char event_message[MEDIUM_MSG_LEN];
 
         // split asset/fault name into fragments separated by "/"s
         std::vector<std::string> name_fragments = split(name_mask_pair.first, "/");
@@ -98,7 +98,7 @@ bool Path::check_alerts(UI_Type alertType)
             if (!pSite->get_active_faults(0))
             {
                 FPS_ERROR_LOG("test fault detected: %s \n", name_fragments[0].c_str());
-                sprintf(event_message, "Site Manager %s test fault detected", name_fragments[0].c_str());
+                snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager %s test fault detected", name_fragments[0].c_str());
                 emit_event("Site", event_message, 1);
                 pSite->set_faults(0);
             }
@@ -111,7 +111,7 @@ bool Path::check_alerts(UI_Type alertType)
             if (!pSite->get_active_alarms(0))
             {
                 FPS_ERROR_LOG("test alarm detected: %s \n", name_fragments[0].c_str());
-                sprintf(event_message, "Site Manager %s test alarm detected", name_fragments[0].c_str());
+                snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager %s test alarm detected", name_fragments[0].c_str());
                 emit_event("Site", event_message, 1);
                 pSite->set_alarms(0);
             }
@@ -136,7 +136,7 @@ bool Path::check_alerts(UI_Type alertType)
                         {
                             // print and raise alarm/fault based on type
                             FPS_ERROR_LOG("get_any_ess_faults %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager ESS %s detected: Get Any ESS Faults", alertType == FAULT ? "fault" : "alarm");
+                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager ESS %s detected: Get Any ESS Faults", alertType == FAULT ? "fault" : "alarm");
                             emit_event("Site", event_message, 1);
                             (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
@@ -152,7 +152,7 @@ bool Path::check_alerts(UI_Type alertType)
                         {
                             // print and raise alarm/fault based on type
                             FPS_ERROR_LOG("get_any_ess_alarms %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager ESS %s detected: Get Any ESS Alarms", alertType == FAULT ? "fault" : "alarm");
+                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager ESS %s detected: Get Any ESS Alarms", alertType == FAULT ? "fault" : "alarm");
                             emit_event("Site", event_message, 1);
                             (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
@@ -169,7 +169,7 @@ bool Path::check_alerts(UI_Type alertType)
                         if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
                         {
                             FPS_ERROR_LOG("get_num_ess_running %s detected: %s \n",  alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #ESS running %s detected", alertType == FAULT ? "fault" : "alarm");
+                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager #ESS running %s detected", alertType == FAULT ? "fault" : "alarm");
                             emit_event("Site", event_message, 1);
                             (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
@@ -186,7 +186,7 @@ bool Path::check_alerts(UI_Type alertType)
                         if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
                         {
                             FPS_ERROR_LOG("get_num_ess_available %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #ESS available %s detected", alertType == FAULT ? "fault" : "alarm");
+                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager #ESS available %s detected", alertType == FAULT ? "fault" : "alarm");
                             emit_event("Site", event_message, 1);
                             (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
@@ -203,7 +203,7 @@ bool Path::check_alerts(UI_Type alertType)
                         if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
                         {
                             FPS_ERROR_LOG("get_num_ess_controllable %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #ESS controllable %s detected", alertType == FAULT ? "fault" : "alarm");
+                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager #ESS controllable %s detected", alertType == FAULT ? "fault" : "alarm");
                             emit_event("Site", event_message, 1);
                             (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
@@ -393,7 +393,7 @@ bool Path::check_alerts(UI_Type alertType)
                         if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
                         {
                             FPS_ERROR_LOG("get_num_assets_controllable %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #Assets Controllable %s detected", alertType == FAULT ? "fault" : "alarm");
+                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager #Assets Controllable %s detected", alertType == FAULT ? "fault" : "alarm");
                             emit_event("Site", event_message, 1);
                             (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
@@ -408,7 +408,7 @@ bool Path::check_alerts(UI_Type alertType)
                         if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
                         {
                             FPS_ERROR_LOG("Asset %s detected: %s\n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager Asset %s detected: %s", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
+                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager Asset %s detected: %s", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
                             emit_event("Site", event_message, 1);
                             (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
@@ -428,7 +428,7 @@ bool Path::check_alerts(UI_Type alertType)
                     if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
                     {
                         FPS_ERROR_LOG("get_feeder_on_array %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                        sprintf(event_message, "Site Manager %s open feeder %s detected", name_fragments[0].c_str(), alertType == FAULT ? "fault" : "alarm");
+                        snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager %s open feeder %s detected", name_fragments[0].c_str(), alertType == FAULT ? "fault" : "alarm");
                         emit_event("Site", event_message, 1);
                         (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                     }
@@ -440,7 +440,7 @@ bool Path::check_alerts(UI_Type alertType)
                     if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1))
                     {
                         FPS_ERROR_LOG("get_feeder_on_array %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                        sprintf(event_message, "Site Manager %s closed feeder %s detected", name_fragments[0].c_str(), alertType == FAULT ? "fault" : "alarm");
+                        snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager %s closed feeder %s detected", name_fragments[0].c_str(), alertType == FAULT ? "fault" : "alarm");
                         emit_event("Site", event_message, 1);
                         (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                     }

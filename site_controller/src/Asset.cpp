@@ -968,6 +968,7 @@ bool Asset::add_variable_to_buffer(std::string uri, const char* variable_id, fmt
 */
 bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON &body)
 {
+    char event_msg[MEDIUM_MSG_LEN];
     cJSON* maint_mode_obj = NULL;
     cJSON* lock_mode_obj = NULL;
     cJSON* lockValueObject = NULL;
@@ -984,9 +985,8 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON &body)
         if ((inMaintenance == false) && (maintValueObject->valueint))
         {
             FPS_INFO_LOG("Switching asset to manual mode\n");
-            char msgMess[512];
-            sprintf(msgMess, "Maintenance Mode entered: %s asset: %s", get_asset_type(), get_name());
-            emit_event("Assets", msgMess, 1);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Maintenance Mode entered: %s asset: %s", get_asset_type(), get_name());
+            emit_event("Assets", event_msg, 1);
             inMaintenance = true;
             inLockdown = false;
             lock_mode.enabled = true;
@@ -994,18 +994,16 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON &body)
         else if ((inMaintenance == true) && (!maintValueObject->valueint) && (inLockdown == false))
         {
             FPS_INFO_LOG("Switching asset out of manual mode\n");
-            char msgMess[512];
-            sprintf(msgMess, "Maintenance Mode exited: %s asset: %s", get_asset_type(), get_name());
-            emit_event("Assets", msgMess, 1);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Maintenance Mode exited: %s asset: %s", get_asset_type(), get_name());
+            emit_event("Assets", event_msg, 1);
             inMaintenance = false;
             inLockdown = false;
             lock_mode.enabled = false;
         }
         else {
             FPS_INFO_LOG("Cannot change manual mode status; in lockdown\n");
-            char msgMess[512];
-            sprintf(msgMess, "Cannot change maintenance mode of %s asset: %s; in lockdown", get_asset_type(), get_name());
-            emit_event("Assets", msgMess, 1);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Cannot change maintenance mode of %s asset: %s; in lockdown", get_asset_type(), get_name());
+            emit_event("Assets", event_msg, 1);
             return false;
         }
         return send_setpoint(uri, maint_mode_obj);
@@ -1018,25 +1016,22 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON &body)
         // allows lockdown sets only when in maintenance mode
         if((inMaintenance == true) && (!lockValueObject->valueint)) {
             FPS_INFO_LOG("Switching asset out of lock mode\n");
-            char msgMess[512];
-            sprintf(msgMess, "Lockdown Mode exited: %s asset: %s", get_asset_type(), get_name());
-            emit_event("Assets", msgMess, 1);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Lockdown Mode exited: %s asset: %s", get_asset_type(), get_name());
+            emit_event("Assets", event_msg, 1);
             inLockdown = false;
             maint_mode.enabled = true;
         }
         else if((inMaintenance == true) && (lockValueObject->valueint)) {
             FPS_INFO_LOG("Switching asset into lock mode\n");
-            char msgMess[512];
-            sprintf(msgMess, "Lockdown Mode entered: %s asset: %s", get_asset_type(), get_name());
-            emit_event("Assets", msgMess, 1);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Lockdown Mode entered: %s asset: %s", get_asset_type(), get_name());
+            emit_event("Assets", event_msg, 1);
             inLockdown = true;
             maint_mode.enabled = false;
         }
         else {
             FPS_INFO_LOG("Cannot change lock mode status; not in manual mode\n");
-            char msgMess[512];
-            sprintf(msgMess, "Cannot change lockdown mode of %s asset: %s; not in maintenance", get_asset_type(), get_name());
-            emit_event("Assets", msgMess, 1);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Cannot change lockdown mode of %s asset: %s; not in maintenance", get_asset_type(), get_name());
+            emit_event("Assets", event_msg, 1);
             //default lockdown to false
             inLockdown = false;
             return false;
@@ -1057,6 +1052,7 @@ bool Asset::process_watchdog_status()
     if (!component_connected->value.value_bool)
         FPS_ERROR_LOG("Component not connected");
 
+    char event_msg[MEDIUM_MSG_LEN];
     watchdog_status->value.value_bool = !check_fims_timeout() && component_connected->value.value_bool;
     // Check watchdog_fault after getting first watchdog_status value
     auto latched_fault_it = latched_faults.find("watchdog_fault");
@@ -1066,26 +1062,24 @@ bool Asset::process_watchdog_status()
         FPS_ERROR_LOG("Fault value undefined for watchdog_fault in %s process_asset()", get_id());
     } 
     else if ( latched_fault_it->second == 0 && !watchdog_status->value.value_bool ) {
-        char faultMsg[1024];
         clearFaultsControlEnable = true;
         watchdog_fault.value.value_bit_field = 1;
         latched_fault_it->second = 1;
-        snprintf(faultMsg, 1024, "Fault received: %s, asset: %s", watchdog_fault.options_name[0].c_str(), name);
-        emit_event("Assets", faultMsg, 4);
+        snprintf(event_msg, MEDIUM_MSG_LEN, "Fault received: %s, asset: %s", watchdog_fault.options_name[0].c_str(), name);
+        emit_event("Assets", event_msg, 4);
     }
 
     if(connected_rising_edge_detect != component_connected->value.value_bool)
     {
-        char msg[1024];
         if(component_connected->value.value_bool)
         {  
-            sprintf(msg, "The Asset %s was connected", get_name());
-            emit_event("Assets", msg, 2);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "The Asset %s was connected", get_name());
+            emit_event("Assets", event_msg, 2);
         }
         else
         {
-            sprintf(msg, "The Asset %s was disconnected", get_name());
-            emit_event("Assets", msg, 3);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "The Asset %s was disconnected", get_name());
+            emit_event("Assets", event_msg, 3);
         }
         connected_rising_edge_detect = component_connected->value.value_bool;   
     }
@@ -2248,16 +2242,16 @@ bool Asset::check_fims_timeout(void)
     }
     if(prev_fims_timeout != fims_timeout)
     {
-        char msgMess[512];
+        char event_msg[MEDIUM_MSG_LEN];
         if(fims_timeout)
         {   // If there was a FIMS timeout, emit an event
-            sprintf(msgMess, "FIMS timeout detected at %s", get_name());
-            emit_event("Assets", msgMess, 3);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "FIMS timeout detected at %s", get_name());
+            emit_event("Assets", event_msg, 3);
         }
         else
         {   // If FIMS gets reconnected, emit an event
-            sprintf(msgMess, "FIMS connected at %s", get_name());
-            emit_event("Assets", msgMess, 2);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "FIMS connected at %s", get_name());
+            emit_event("Assets", event_msg, 2);
         }
     }
     return fims_timeout;
