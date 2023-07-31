@@ -27,7 +27,7 @@ enum load_compensation
     LOAD_MINIMUM            // Only increase discharge if load is not met
 };
 
-class Asset_Cmd_Object
+struct Asset_Cmd_Object
 {
     public:
 
@@ -60,7 +60,6 @@ class Asset_Cmd_Object
     ~Asset_Cmd_Object();
 
     float calculate_net_poi_export();
-    float poi_cmd; // Command desired at the POI. Used by closed loop control to avoid potential feedback loops with site demand
     void calculate_site_kW_load();
     float calculate_additional_load_compensation();
     void track_unslewed_load(load_compensation method_of_compensation);
@@ -69,7 +68,6 @@ class Asset_Cmd_Object
     void calculate_total_potential_kVAR();
     void calculate_site_kW_production_limits();
     bool determine_ess_load_requirement(int asset_priority);
-    float dispatch_discharge_requests(int asset_priority, float cmd);
     float dispatch_site_kW_discharge_cmd(int asset_priority, float cmd, discharge_type command_type);
     float dispatch_site_kW_charge_cmd(int asset_priority, bool solar_source_flag, bool gen_source_flag, bool feeder_source_flag);
     float ess_overload_support(float grid_target_kW_cmd);
@@ -82,123 +80,31 @@ class Asset_Cmd_Object
     void constant_power_factor_mode(float power_factor_setpoint, bool power_factor_direction);
     void active_voltage_mode(float deadband, float cmd, float actual_volts, float droop_percent, float rated_kVAR);
     
-    //accessor functions
-    float get_site_kW_demand();
-    float get_site_kW_load();
     bool get_site_kW_load_inclusion();
-    load_compensation get_load_method();
-    float get_additional_load_compensation();
-    float get_feature_kW_demand();
-    float get_site_kW_charge_production();
-    float get_site_kW_discharge_production();
-    float get_site_kVAR_demand();
-    float get_ess_kW_request();
-    float get_gen_kW_request();
-    float get_solar_kW_request();
 
-    void set_site_kW_demand(float value);
     void preserve_uncorrected_site_kW_demand();
-    void set_site_kW_load(float value);
-    void set_additional_load_compensation(float value); // test endpoint only
     void create_site_kW_load_buffer(int size);
     void set_load_compensation_method(load_compensation method);
-    void set_feature_kW_demand(float value);
-    void set_site_kW_charge_production(float value);
-    void set_site_kW_discharge_production(float value);
-    void set_site_kVAR_demand(float value);
-    void set_ess_kW_request(float value);
-    void set_gen_kW_request(float value);
-    void set_solar_kW_request(float value);
 
-    //Asset_Dmd_Data accessor functions
+    //Asset_Cmd_Data accessor functions
     float get_limited_ess_kW_cmd();
     float get_limited_feeder_kW_cmd();
     float get_limited_gen_kW_cmd();
     float get_limited_solar_kW_cmd();
-    float get_ess_kW_cmd();
-    float get_feeder_kW_cmd();
-    float get_gen_kW_cmd();
-    float get_solar_kW_cmd();
-    float get_ess_actual_kW();
-    float get_feeder_actual_kW();
-    float get_gen_actual_kW();
-    float get_solar_actual_kW();
-    float get_ess_uncontrollable_kW();
-    float get_gen_uncontrollable_kW();
-    float get_solar_uncontrollable_kW();
-    float get_total_uncontrollable_kW();
-    float get_ess_max_potential_kW();
-    float get_feeder_max_potential_kW();
-    float get_gen_max_potential_kW();
-    float get_solar_max_potential_kW();
-    float get_ess_min_potential_kW();
-    float get_feeder_min_potential_kW();
-    float get_gen_min_potential_kW();
-    float get_solar_min_potential_kW();
-    float get_ess_kVAR_cmd();
-    float get_gen_kVAR_cmd();
-    float get_solar_kVAR_cmd();
-    bool get_ess_start_first_flag();
-    bool get_ess_auto_restart_flag();
-    bool get_gen_start_first_flag();
-    bool get_gen_auto_restart_flag();
-    bool get_solar_start_first_flag();
-    bool get_solar_auto_restart_flag();
     float get_total_available_charge_kW();
     float get_total_available_discharge_kW();
     float get_total_available_charge_kVAR();
     float get_total_available_discharge_kVAR();
-
-    void set_ess_kW_cmd(float value);
-    void set_feeder_kW_cmd(float value);
-    void set_gen_kW_cmd(float value);
-    void set_solar_kW_cmd(float value);
-    void set_ess_actual_kW(float value);
-    void set_feeder_actual_kW(float value);
-    void set_gen_actual_kW(float value);
-    void set_solar_actual_kW(float value);
-    void set_ess_uncontrollable_kW(float value);
-    void set_gen_uncontrollable_kW(float value);
-    void set_solar_uncontrollable_kW(float value);
-    void set_ess_actual_kVAR(float value);
-    void set_gen_actual_kVAR(float value);
-    void set_solar_actual_kVAR(float value);
-    void set_ess_max_potential_kW(float value);
-    void set_feeder_max_potential_kW(float value);
-    void set_gen_max_potential_kW(float value);
-    void set_solar_max_potential_kW(float value);
-    void set_ess_min_potential_kW(float value);
-    void set_feeder_min_potential_kW(float value);
-    void set_gen_min_potential_kW(float value);
-    void set_solar_min_potential_kW(float value);
-    void set_ess_kVAR_cmd(float value);
-    void set_gen_kVAR_cmd(float value);
-    void set_solar_kVAR_cmd(float value);
-    void set_ess_potential_kVAR(float value);
-    void set_gen_potential_kVAR(float value);
-    void set_solar_potential_kVAR(float value);
-    void set_ess_start_first_kW(float value);
-    void set_gen_start_first_kW(float value);
-    void set_solar_start_first_kW(float value);
-    void set_ess_start_first_flag(bool value);
-    void set_ess_auto_restart_flag(bool value);
-    void set_gen_start_first_flag(bool value);
-    void set_gen_auto_restart_flag(bool value);
-    void set_solar_start_first_flag(bool value);
-    void set_solar_auto_restart_flag(bool value);
 
     void save_state();
     void restore_state();
     void reset_kW_dispatch();
     void reset_kVAR_dispatch();
 
-    private:
 
     Asset_Cmd_Data ess_data, feeder_data, gen_data, solar_data;
-    std::vector<Asset_Cmd_Data*> list_assets_by_discharge_priority(int asset_priority, std::vector<Asset_Cmd_Data*> exclusions = {});
-    void remove_asset_types(std::vector<Asset_Cmd_Data*> &data_list, const std::vector<Asset_Cmd_Data*> asset_types);
-    float aggregate_unused_kW(std::vector<Asset_Cmd_Data*> const &data_list);
 
+    float poi_cmd;                      // Command desired at the POI. Used by closed loop control to avoid potential feedback loops with site demand
     float site_kW_load;                 // Rolling average calculation of site load. + means power flowing INTO site. - means power flowing OUT of site.
     std::vector<float> load_buffer;     // Circular buffer for tracking configurable duration of load
     int load_iterator;                  // Position in the load circular buffer
@@ -212,6 +118,12 @@ class Asset_Cmd_Object
     float total_potential_kVAR;
     float site_kW_charge_production;    // Charge up to this amount during dispatch
     float site_kW_discharge_production; // Discharge up to this amount during dispatch
+
+private:
+
+    std::vector<Asset_Cmd_Data*> list_assets_by_discharge_priority(int asset_priority, std::vector<Asset_Cmd_Data*> exclusions = {});
+    void remove_asset_types(std::vector<Asset_Cmd_Data*> &data_list, const std::vector<Asset_Cmd_Data*> asset_types);
+    float aggregate_unused_kW(std::vector<Asset_Cmd_Data*> const &data_list);
 };
 
 #endif /* INCLUDE_ASSET_CMD_OBJECT_H_ */
