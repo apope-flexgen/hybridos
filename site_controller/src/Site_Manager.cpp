@@ -1166,6 +1166,7 @@ void Site_Manager::fims_data_parse(fims_message* msg)
 
                         // Active Power Setpoint
                         active_power_setpoint_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
+                        active_power_setpoint_load_method.set_fims_int(msg->pfrags[2], body_int);
                         //update slew rate internally if changed
                         if(active_power_setpoint_kW_slew_rate.set_fims_int(msg->pfrags[2], range_check(body_int, 100000000, 1)))
                             active_power_setpoint_kW_slew.set_slew_rate(active_power_setpoint_kW_slew_rate.value.value_int);
@@ -1318,7 +1319,10 @@ void Site_Manager::fims_data_parse(fims_message* msg)
                         target_soc_load_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         // Active Power Setpoint
                         active_power_setpoint_mode_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
+                        active_power_setpoint_absolute_mode_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         active_power_setpoint_direction_flag.set_fims_bool(msg->pfrags[2], body_bool);
+                        active_power_setpoint_maximize_solar_flag.set_fims_bool(msg->pfrags[2], body_bool);
+                        ess_charge_support_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         valid_set = true;
                     }
                     else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0)
