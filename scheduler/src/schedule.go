@@ -527,6 +527,42 @@ func (sched *schedule) handleFullSchedulePost(inputEventList eventList) error {
 	return nil
 }
 
+// A PATCH request accepts a list of events and will add all of the events to the schedule, similar to a POST.
+// However, if an input event has the same start time as an existing event, the existing event will be updated
+// with the input event's settings (as opposed to rejecting the input event which is what a POST would do).
+func (sched *schedule) handleFullSchedulePatch(inputEventList eventList) error {
+	// do overlap check upfront just in case there are two events in the input list with the same start time.
+	// that would result in the first event overwriting the existing event then the second event overwriting the first event.
+	// that would be hard to debug
+	if overlapFound, e1, e2 := inputEventList.hasOverlaps(); overlapFound {
+		return fmt.Errorf("input event list has overlapping events %v with repeat settings %v and %v with repeat settings %v", e1, e1.Repeat, e2, e2.Repeat)
+	}
+
+	// for each input event, identify if there is an existing event with the same start time as it.
+	// if an existing event is found, update that event with the input event's settings and maintain the existing ID.
+	// otherwise, create a new ID for the input event add it to the schedule as a new event
+	newCache := sched.cache.Copy()
+	newSchedule := sched.aggregateAllEvents()
+	for i, inputEvent := range inputEventList {
+		if existingEventWithSameStartTime, _ := newSchedule.get(inputEvent.StartTime); existingEventWithSameStartTime != nil {
+			existingEventWithSameStartTime.Update(inputEvent)
+			continue
+		}
+		newId, err := newCache.GenerateId()
+		if err != nil {
+			return fmt.Errorf("failed to generate new unique ID for input event %d: %w", i+1, err)
+		}
+		inputEvent.Id = newId
+		inputEvent.Repeat.Id = newId
+		newSchedule.add(inputEvent)
+	}
+
+	if err := sched.overwrite(newSchedule, newCache, true); err != nil {
+		return fmt.Errorf("failed to overwrite schedule: %w", err)
+	}
+	return nil
+}
+
 // Handles DELs with URIs that start with /scheduler/events/<schedule ID>.
 func (sched *schedule) handleFimsDel(msg fims.FimsMsg) error {
 	if msg.Nfrags < 3 {

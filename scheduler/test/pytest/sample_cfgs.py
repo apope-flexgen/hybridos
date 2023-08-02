@@ -36,7 +36,8 @@ site_scheduler_cfg = {
         'num_floats': 1,
         'num_ints': 0,
         'num_bools': 1,
-        'num_strings': 0
+        'num_strings': 0,
+        'append_can_edit': False
     }
 }
 
@@ -49,6 +50,7 @@ fleet_scheduler_cfg = {
         'num_floats': 1,
         'num_ints': 0,
         'num_bools': 1,
-        'num_strings': 0
+        'num_strings': 0,
+        'append_can_edit': False
     }
 }

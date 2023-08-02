@@ -47,12 +47,16 @@ type scadaSlot struct {
 }
 
 type scadaConfiguration struct {
-	StageSize    int `json:"stage_size"`     // total number of events that can be written at once
-	MaxNumEvents int `json:"max_num_events"` // total number of event slots that will be maintained and broadcasted
-	NumFloats    int `json:"num_floats"`     // total number of float variable slots a single SCADA event slot will contain
-	NumInts      int `json:"num_ints"`       // total number of int variable slots a single SCADA event slot will contain
-	NumBools     int `json:"num_bools"`      // total number of bool variable slots a single SCADA event slot will contain
-	NumStrings   int `json:"num_strings"`    // total number of string variable slots a single SCADA event slot will contain
+	// When true, the SCADA command Append can edit existing events if they match the start time and site selection of the staged event.
+	// When false, Append can only add new events.
+	AppendCanEdit bool `json:"append_can_edit"`
+
+	StageSize    int `json:"stage_size"`     // Total number of events that can be written at once.
+	MaxNumEvents int `json:"max_num_events"` // Total number of event slots that will be maintained and broadcasted.
+	NumFloats    int `json:"num_floats"`     // Total number of float variable slots a single SCADA event slot will contain.
+	NumInts      int `json:"num_ints"`       // Total number of int variable slots a single SCADA event slot will contain.
+	NumBools     int `json:"num_bools"`      // Total number of bool variable slots a single SCADA event slot will contain.
+	NumStrings   int `json:"num_strings"`    // Total number of string variable slots a single SCADA event slot will contain.
 	// if, for any given type of slot, there are more slots than data items, the extra slots will be zero-valued.
 	// if, for any given type of slot, there are more data items than slots, the extra data items will be invisible to the SCADA interface (not broadcasted)
 }
@@ -79,23 +83,23 @@ type scadaCommand int
 
 // NONE: no action
 //
-// POST_STAGE: insert staged event(s) into the schedule via append (not overwrite)
+// APPEND: insert staged event(s) into the schedule. Only allowed to overwrite if append_can_edit configuration flag is turned on.
 //
-// SET_STAGE: overwrite existing schedule with staged event(s)
+// OVERWRITE: overwrite existing schedule with staged event(s).
 //
-// LOAD: load stage with details of identified event
+// LOAD_STAGE: load stage with details of identified event.
 //
-// DEL_STAGE: delete identified event from schedule
+// DELETE: delete identified event(s) from schedule.
 //
-// CLEAR_STAGE: zero/nil out all fields in the stage
+// CLEAR_STAGE: zero/nil out all fields in the stage.
 //
-// CLEAR_SCHEDULE: end all active events and delete all scheduled events
+// CLEAR_SCHEDULE: end all active events and delete all scheduled events.
 const (
 	NONE = iota
-	POST_STAGE
-	SET_STAGE
-	LOAD
-	DEL_STAGE
+	APPEND
+	OVERWRITE
+	LOAD_STAGE
+	DELETE
 	CLEAR_STAGE
 	CLEAR_SCHEDULE
 )
@@ -934,26 +938,45 @@ func handleScadaFullConfigSet(input []byte) (newCfg scadaConfiguration, err erro
 }
 
 // Handles a FIMS SET to /scheduler/configuration/scada/<field ID>.
-func handleScadaConfigFieldSet(fieldId string, input []byte) (newValue int, err error) {
+func handleScadaConfigFieldSet(fieldId string, input []byte) (newValue interface{}, err error) {
 	input = parsemap.UnwrapBytes(input)
-	if err = json.Unmarshal(input, &newValue); err != nil {
-		return newValue, fmt.Errorf("failed to unmarshal unwrapped input: %w", err)
-	}
-
 	newCfg := schedCfg.Scada
 	switch fieldId {
+	case "append_can_edit":
+		if err = json.Unmarshal(input, &newCfg.AppendCanEdit); err != nil {
+			return newValue, fmt.Errorf("failed to unmarshal append_can_edit: %w", err)
+		}
+		newValue = newCfg.AppendCanEdit
 	case "stage_size":
-		newCfg.StageSize = newValue
+		if err = json.Unmarshal(input, &newCfg.StageSize); err != nil {
+			return newValue, fmt.Errorf("failed to unmarshal stage_size: %w", err)
+		}
+		newValue = newCfg.StageSize
 	case "max_num_events":
-		newCfg.MaxNumEvents = newValue
+		if err = json.Unmarshal(input, &newCfg.MaxNumEvents); err != nil {
+			return newValue, fmt.Errorf("failed to unmarshal max_num_events: %w", err)
+		}
+		newValue = newCfg.MaxNumEvents
 	case "num_floats":
-		newCfg.NumFloats = newValue
+		if err = json.Unmarshal(input, &newCfg.NumFloats); err != nil {
+			return newValue, fmt.Errorf("failed to unmarshal num_floats: %w", err)
+		}
+		newValue = newCfg.NumFloats
 	case "num_ints":
-		newCfg.NumInts = newValue
+		if err = json.Unmarshal(input, &newCfg.NumInts); err != nil {
+			return newValue, fmt.Errorf("failed to unmarshal num_ints: %w", err)
+		}
+		newValue = newCfg.NumInts
 	case "num_bools":
-		newCfg.NumBools = newValue
+		if err = json.Unmarshal(input, &newCfg.NumBools); err != nil {
+			return newValue, fmt.Errorf("failed to unmarshal num_bools: %w", err)
+		}
+		newValue = newCfg.NumBools
 	case "num_strings":
-		newCfg.NumStrings = newValue
+		if err = json.Unmarshal(input, &newCfg.NumStrings); err != nil {
+			return newValue, fmt.Errorf("failed to unmarshal num_strings: %w", err)
+		}
+		newValue = newCfg.NumStrings
 	default:
 		return newValue, ErrInvalidUri
 	}
@@ -1005,6 +1028,8 @@ func (cfg *scadaConfiguration) handleGet(msg fims.FimsMsg) error {
 	}
 
 	switch msg.Frags[3] {
+	case "append_can_edit":
+		sendReply(msg.Replyto, cfg.AppendCanEdit)
 	case "stage_size":
 		sendReply(msg.Replyto, cfg.StageSize)
 	case "max_num_events":
@@ -1029,14 +1054,14 @@ func commandScada(command scadaCommand) error {
 	switch command {
 	case NONE:
 		return nil
-	case POST_STAGE:
-		scadaEdit("post")
-	case SET_STAGE:
-		scadaEdit("set")
-	case LOAD:
+	case APPEND:
+		scadaEdit(command)
+	case OVERWRITE:
+		scadaEdit(command)
+	case LOAD_STAGE:
 		return loadStage()
-	case DEL_STAGE:
-		scadaEdit("del")
+	case DELETE:
+		scadaEdit(command)
 	case CLEAR_STAGE:
 		clearStage()
 	case CLEAR_SCHEDULE:
@@ -1049,8 +1074,8 @@ func commandScada(command scadaCommand) error {
 
 // scadaEdit modifies the schedule with the events found in the SCADA stage.
 // The passed-in editing method determines how the staged events modify the
-// schedule ("set", "post", or "del").
-func scadaEdit(editingMethod string) {
+// schedule (Append, Overwrite, or Delete).
+func scadaEdit(editingMethod scadaCommand) {
 	eLists := make(map[string]*eventList)
 
 	// if there is only one schedule in the schedule map, allow it to be used as the default schedule
@@ -1089,19 +1114,25 @@ func scadaEdit(editingMethod string) {
 		}
 
 		switch editingMethod {
-		case "set":
+		case OVERWRITE:
 			if err := sched.handleFullScheduleSet(*inputEventList); err != nil {
-				log.Errorf("Error handling SCADA SET for schedule %s: %v.", scheduleId, err)
+				log.Errorf("Error handling SCADA Overwrite for schedule %s: %v.", scheduleId, err)
 			}
-		case "post":
-			if err := sched.handleFullSchedulePost(*inputEventList); err != nil {
-				log.Errorf("Error handling SCADA POST for schedule %s: %v.", scheduleId, err)
+		case APPEND:
+			if schedCfg.Scada.AppendCanEdit {
+				if err := sched.handleFullSchedulePatch(*inputEventList); err != nil {
+					log.Errorf("Error handling SCADA edit-enabled Append for schedule %s: %v.", scheduleId, err)
+				}
+			} else {
+				if err := sched.handleFullSchedulePost(*inputEventList); err != nil {
+					log.Errorf("Error handling SCADA Append for schedule %s: %v.", scheduleId, err)
+				}
 			}
-		case "del":
+		case DELETE:
 			startTimes := inputEventList.getStartTimes()
 			idsToDelete := sched.getIdsOfEventsWithStartTimes(startTimes)
 			if err := sched.deleteMultipleEvents(idsToDelete); err != nil {
-				log.Errorf("Error handling SCADA DEL for schedule %s: %v.", scheduleId, err)
+				log.Errorf("Error handling SCADA Delete for schedule %s: %v.", scheduleId, err)
 			}
 		}
 	}

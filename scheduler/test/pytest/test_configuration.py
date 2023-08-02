@@ -6,10 +6,10 @@ from sample_events import event_0, event_1
 from sample_modes import modes_cfg
 import subprocess
 
-# highest-level GET on /scheduler
-
-
 def test_get_scheduler():
+    """
+        Highest-level GET on /scheduler.
+    """
     response = send_get('/scheduler')
     assert response['configuration'] == site_scheduler_cfg
     assert response['timezones'] == { 'durham': 'America/New_York' }
@@ -266,6 +266,7 @@ def test_set_web_socket_clients_pub():
 
 def test_set_scada_cfg():
     cfg = {
+        'append_can_edit': False,
         'stage_size': 1,
         'max_num_events': 100,
         'num_floats': 2,
@@ -275,6 +276,12 @@ def test_set_scada_cfg():
     }
     assert cfg == send_set('/scheduler/configuration/scada', cfg)
     assert cfg == send_get('/scheduler/configuration/scada')
+
+
+def test_set_scada_append_can_edit():
+    append_can_edit = True
+    assert append_can_edit == send_set('/scheduler/configuration/scada/append_can_edit', append_can_edit)
+    assert append_can_edit == send_get('/scheduler/configuration/scada/append_can_edit')
 
 
 def test_set_scada_stage_size():

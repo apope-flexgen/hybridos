@@ -1,4 +1,4 @@
-import { ThemeType, NumericInput } from '@flexgen/storybook';
+import { ThemeType, NumericInput, Switch } from '@flexgen/storybook';
 import { Box } from '@mui/system';
 import React from 'react';
 import { Configuration } from 'shared/types/dtos/scheduler.dto';
@@ -72,6 +72,24 @@ const SCADASettings: React.FC<SCADASettingsProps> = ({
           size="small"
           value={settings?.num_strings?.toString() || ''}
           validationRegEx="positiveIntegers"
+        />
+      </Box>
+      <Box sx={sx.boxRow}>
+        <Switch
+          autoLayout
+          color='primary'
+          label={labels.SCADA.appendCanEdit}
+          labelPlacement='right'
+          onChange={(event) => 
+            setConfigEdits((prevState: any) => ({
+              ...prevState,
+              scada : {
+                ...prevState.scada,
+                append_can_edit: !prevState.scada.append_can_edit || event
+              }
+            }))
+          }
+          value={settings?.append_can_edit || false}
         />
       </Box>
     </Box>

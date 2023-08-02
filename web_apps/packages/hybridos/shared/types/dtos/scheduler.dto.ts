@@ -94,6 +94,7 @@ export class Configuration {
         }
     }
     scada?: {
+        append_can_edit: boolean
         stage_size: number
         max_num_events: number
         num_floats: number

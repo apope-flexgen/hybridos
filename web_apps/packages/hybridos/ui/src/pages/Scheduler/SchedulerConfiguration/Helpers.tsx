@@ -128,6 +128,7 @@ export const siteFleetConfigLabels = {
     floats: 'Floats',
     booleans: 'Booleans',
     strings: 'Strings',
+    appendCanEdit: 'Append Can Edit',
   },
 };
 
@@ -207,6 +208,7 @@ export const initialSCConfig: Configuration = {
     },
   },
   scada: {
+    append_can_edit: false,
     stage_size: 1,
     max_num_events: 100,
     num_floats: 5,
@@ -222,6 +224,7 @@ export const initialFMConfig: Configuration = {
     clients: [],
   },
   scada: {
+    append_can_edit: false,
     stage_size: 1,
     max_num_events: 100,
     num_floats: 5,
