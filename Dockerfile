@@ -7,6 +7,7 @@ ARG productName
 ARG dockerName
 ARG verNum
 
+RUN yum makecache
 RUN yum clean all
 
 RUN yum install -y influxdb-1.8.10
