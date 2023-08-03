@@ -864,6 +864,14 @@
             "default": 1000.0,
             "units": "kW/s",
             "note0": "PCS reactive power ramp-down rate during operation"
+        },
+        "RampEnable": {
+            "default": false,
+            "note0": "Enables all PCS ramp rate operations"
+        },
+        "AbsRampRate": {
+            "default": false,
+            "note0": "Signals that ramp rates are measured in absolute value of power per second instead of percentage of maximum power per second"
         }
     }
 }
