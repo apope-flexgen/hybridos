@@ -28,22 +28,22 @@ func (cpu *CPUCollector) init() error {
 	if !cpu.DataMan.Active {
 		return fmt.Errorf("cpu is inactive")
 	}
-	if cpu.LoadAvg == 0 && !cpu.Temp && cpu.Uptime {
+	if cpu.LoadAvg == 0 && !cpu.Temp && !cpu.Uptime {
 		return fmt.Errorf("cpu is set to active but provides no stats to track")
 	}
 
 	cpu.zones = make(map[string]string)
 
-	contents, err := ioutil.ReadDir("/sys/class/thermal/")
+	contents, err := ioutil.ReadDir(dataDir + "/sys/class/thermal/")
 	if err != nil {
 		return fmt.Errorf("could not read /sys/class/thermal: %v", err)
 	}
 
 	for n, item := range contents {
-		if strings.Contains(item.Name(), "thermal_zone") {
+		if strings.Contains(item.Name(), "thermal_zone") { // /sys/class/thermal/...thermal_zone/type
 			var name string
 			// read in type file
-			f, err := os.Open("/sys/class/thermal/" + item.Name() + "/type")
+			f, err := os.Open(dataDir + "/sys/class/thermal/" + item.Name() + "/type")
 			if err != nil {
 				return fmt.Errorf("could not read %s: %v", "/sys/class/thermal/"+item.Name()+"/type", err)
 			}
@@ -95,7 +95,7 @@ func (cpu *CPUCollector) getUptimeInfo() map[string]interface{} {
 	data := make(map[string]interface{})
 
 	// read in the uptime stats kept by the OS
-	f, err := os.Open("/proc/uptime")
+	f, err := os.Open(dataDir + "/proc/uptime")
 	if err != nil {
 		log.Errorf("could not read /proc/uptime: %v", err)
 		return data
@@ -137,7 +137,7 @@ func (cpu *CPUCollector) getLoadInfo() map[string]interface{} {
 	data := make(map[string]interface{})
 
 	// read in the loadavg stats kept by the OS
-	f, err := os.Open("/proc/loadavg")
+	f, err := os.Open(dataDir + "/proc/loadavg")
 	if err != nil {
 		log.Errorf("could not read /proc/loadavg: %v", err)
 		return data
@@ -154,8 +154,13 @@ func (cpu *CPUCollector) getLoadInfo() map[string]interface{} {
 			return data
 		}
 
-		ind := (cpu.LoadAvg - 5) / 5
-		if ind > 2 {
+		//1:0, 5: 1, 15: 2
+		var ind int
+		if cpu.LoadAvg >= 0 && cpu.LoadAvg < 5 {
+			ind = 0
+		} else if cpu.LoadAvg >= 5 && cpu.LoadAvg < 15 {
+			ind = 1
+		} else {
 			ind = 2
 		}
 
@@ -178,7 +183,7 @@ func (cpu *CPUCollector) getTempInfo() map[string]interface{} {
 
 	for zone, name := range cpu.zones {
 		// get the temperature of the zone
-		temp, err := parseSoloUIntFile("/sys/class/thermal/" + zone + "/temp")
+		temp, err := parseSoloUIntFile(dataDir + "/sys/class/thermal/" + zone + "/temp")
 		if err != nil {
 			data[fmt.Sprintf("%s_tempC", name)] = "NA"
 			log.Errorf("could not get temp for zone %s", name)

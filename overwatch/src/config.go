@@ -44,7 +44,7 @@ func configureDefaults(configFile string) error {
 		// parse config and unmarshal
 		configJSON, err := ioutil.ReadFile(configFile)
 		if err != nil {
-			log.Errorf("could not read config file: %w", err)
+			log.Errorf("could not read config file: %v", err)
 			log.Infof("using default config...")
 		} else {
 			err = json.Unmarshal(configJSON, &config)
@@ -88,19 +88,20 @@ func configureDefaults(configFile string) error {
 			MBSizeLimit:    5000,
 		},
 		Net: NetCollector{
-			DataMan: defaultDataMan,
-			Fims:    true,
-			Ports:   true,
-			IPs:     map[string]string{},
-			Stats:   []string{"wmem_max", "rmem_max"},
+			DataMan:    defaultDataMan,
+			Fims:       true,
+			Interfaces: true,
+			IPs:        map[string]string{},
+			Stats:      []string{"wmem_max", "rmem_max"},
 		},
 		Process: ProcessCollector{
 			DataMan:   defaultDataMan,
 			Refresh:   10,
-			Processes: []string{"influxd", "mongod"},
+			HybridOS:  true,
+			Processes: []string{"influxd", "mongod", "overwatch"},
 			Databases: map[string]string{
 				"influx": "localhost:8086",
-				"mongo":  "127.0.0.1.27017",
+				"mongo":  "127.0.0.1:27017",
 			},
 		},
 		Device: DeviceCollector{

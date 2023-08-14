@@ -24,6 +24,7 @@ var (
 	writeCh = make(chan map[string]interface{})
 	f       fims.Fims
 	conn    influx.InfluxConnector
+	dataDir string
 )
 
 func main() {
@@ -117,6 +118,8 @@ func startCollectors() {
 		log.Infof("started %s", name)
 		time.Sleep(time.Second)
 	}
+
+	log.Infof("initial collector startup complete.")
 }
 
 func write() {

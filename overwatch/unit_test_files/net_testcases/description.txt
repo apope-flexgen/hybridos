@@ -1,0 +1,9 @@
+sock:
+    testcese_1: valid
+    testcese_2: no net/unix
+    testcese_3: rmem_max cannot be parsed to int
+port:
+    testcase_1: valid
+    testcase_2: eno missing operstate
+    testcase_3: eno operstate status not up or down
+

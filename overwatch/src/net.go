@@ -18,17 +18,17 @@ import (
 
 type NetCollector struct {
 	// configurable options
-	DataMan DataManager `json:"collection"`
-	Fims    bool
-	Ports   bool
-	IPs     map[string]string
-	Stats   []string
+	DataMan    DataManager `json:"collection"`
+	Fims       bool
+	Interfaces bool
+	IPs        map[string]string
+	Stats      []string
 
 	// internal vars
-	ports  []string
-	packet ICMPEchoPacket
-	laddr  net.IPAddr
-	buffer bytes.Buffer
+	interfaces []string
+	packet     ICMPEchoPacket
+	laddr      net.IPAddr
+	buffer     bytes.Buffer
 }
 
 type ICMPEchoPacket struct {
@@ -45,20 +45,20 @@ func (nett *NetCollector) init() error {
 	if !nett.DataMan.Active {
 		return fmt.Errorf("net is inactive")
 	}
-	if !nett.Fims && !nett.Ports && len(nett.IPs) == 0 && len(nett.Stats) == 0 {
+	if !nett.Fims && !nett.Interfaces && len(nett.IPs) == 0 && len(nett.Stats) == 0 {
 		return fmt.Errorf("net is set to active but provides no stats to track")
 	}
 
-	contents, err := ioutil.ReadDir("/sys/class/net/")
+	contents, err := ioutil.ReadDir(dataDir + "/sys/class/net/")
 	if err != nil {
 		return fmt.Errorf("could not read /sys/class/net: %v", err)
 	}
 
 	// port setup
-	nett.ports = make([]string, 0)
+	nett.interfaces = make([]string, 0)
 	for _, item := range contents {
-		if strings.Contains(item.Name(), "eth") {
-			nett.ports = append(nett.ports, item.Name())
+		if strings.Contains(item.Name(), "eth") || strings.Contains(item.Name(), "eno") {
+			nett.interfaces = append(nett.interfaces, item.Name())
 		}
 	}
 
@@ -83,7 +83,7 @@ func (nett *NetCollector) scrape() map[string]interface{} {
 	if nett.Fims || len(nett.Stats) > 0 {
 		data = mergeMaps(data, nett.getSockInfo())
 	}
-	if nett.Ports {
+	if nett.Interfaces {
 		data = mergeMaps(data, nett.getPortInfo())
 	}
 	if len(nett.IPs) > 0 {
@@ -99,10 +99,20 @@ func (nett *NetCollector) scrape() map[string]interface{} {
 func (nett *NetCollector) getSockInfo() map[string]interface{} {
 	data := make(map[string]interface{})
 
+	// additional global socket info
+	for _, file := range nett.Stats {
+		val, err := parseSoloUIntFile(dataDir + "/proc/sys/net/core/" + file)
+		if err != nil {
+			log.Errorf("problem parsing %s: %v", file, err)
+		} else {
+			data[file] = (int)(val)
+		}
+	}
+
 	// fims socket info
 	if nett.Fims {
 		// read in the unix stats kept by the OS
-		f, err := os.Open("/proc/net/unix")
+		f, err := os.Open(dataDir + "/proc/net/unix")
 		if err != nil {
 			log.Errorf("could not read /proc/net/unix: %v", err)
 			return data
@@ -132,25 +142,15 @@ func (nett *NetCollector) getSockInfo() map[string]interface{} {
 		data["fims_connections"] = num_connections
 	}
 
-	// additional global socket info
-	for _, file := range nett.Stats {
-		val, err := parseSoloUIntFile("/proc/sys/net/core/" + file)
-		if err != nil {
-			log.Errorf("problem parsing %s: %v", file, err)
-		} else {
-			data[file] = (int)(val)
-		}
-	}
-
 	return data
 }
 
 func (nett *NetCollector) getPortInfo() map[string]interface{} {
 	data := make(map[string]interface{})
 
-	if nett.Ports {
-		for _, port := range nett.ports {
-			f, err := os.Open("/sys/class/net/" + port + "/operstate")
+	if nett.Interfaces {
+		for _, port := range nett.interfaces {
+			f, err := os.Open(dataDir + "/sys/class/net/" + port + "/operstate")
 			if err != nil {
 				log.Errorf("could not read dir %s: %v", "/sys/class/net/"+port+"/operstate", err)
 			}
@@ -187,7 +187,7 @@ func (nett *NetCollector) getConnectionInfo() map[string]interface{} {
 
 			result, err := nett.ping(name, ip)
 			if err != nil {
-				log.Debugf("%v", err)
+				log.Errorf("%s failed ping: %v", name, err)
 			}
 
 			mutex.Lock()

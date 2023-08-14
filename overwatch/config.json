@@ -45,7 +45,7 @@
             "interval" : 5
         },
         "fims" : true, 
-        "ports" : true, 
+        "interfaces" : true, 
         "ips" : { "aux1" : "172.24.78.48", "aux2" : "172.24.24.79" }, 
         "stats" : [ "wmem_max", "rmem_max" ]
     },
@@ -56,6 +56,7 @@
             "interval" : 2
         },
         "refresh" : 10,
+        "hybridos" : true,
         "process_names" : [ "influxd::2", "mongod", "overwatch" ],
         "databases" : {"influx" : "localhost:8086", "mongo" : "127.0.0.1:27017"}
     },

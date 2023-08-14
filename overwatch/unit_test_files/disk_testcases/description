@@ -1,0 +1,7 @@
+testcase_1: valid case
+testcase_2: diskstats has fields that cannnot be parsed to uint
+testcase_3: missing file mounts
+testcase_4: missing file partition
+testcase_5: one line of diskstats has more than 14 fields
+testcase_6: partition blocks of sda3 cannot be parsed to uint
+testcase_7: mount path does not exist in the system (/home2131)

@@ -29,7 +29,7 @@ func (mem *MemCollector) init() error {
 		return fmt.Errorf("mem is set to active but provides no stats to track")
 	}
 
-	f, err := os.Open("/proc/meminfo")
+	f, err := os.Open(dataDir + "/proc/meminfo")
 	if err != nil {
 		return fmt.Errorf("could not read /proc/meminfo: %v", err)
 	}
@@ -70,7 +70,7 @@ func (mem *MemCollector) getMemInfo() map[string]interface{} {
 	data := make(map[string]interface{})
 
 	// read in the meminfo stats kept by the OS
-	f, err := os.Open("/proc/meminfo")
+	f, err := os.Open(dataDir + "/proc/meminfo")
 	if err != nil {
 		log.Errorf("could not read /proc/meminfo: %v", err)
 	}
@@ -93,12 +93,13 @@ func (mem *MemCollector) getMemInfo() map[string]interface{} {
 		fields := strings.Fields(s.Text())
 		if len(fields) < 2 {
 			log.Errorf("/proc/meminfo line error: %q", s.Text())
+			continue
 		}
-
 		name := fields[0][:len(fields[0])-1]
 		v, err := strconv.ParseUint(fields[1], 0, 32)
 		if err != nil {
 			log.Errorf("could not parse uint: %v", err)
+			continue
 		}
 
 		switch name {

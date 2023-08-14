@@ -49,7 +49,7 @@ func (device *DeviceCollector) scrape() map[string]interface{} {
 func (device *DeviceCollector) getMetaRPM() map[string]interface{} {
 	data := make(map[string]interface{})
 
-	out, err := exec.Command("rpm", "-qa", "*_meta-*").Output() // match installed meta rpm string
+	out, err := exec.Command("rpm", "-qa", "*_meta*").Output() // match installed meta rpm string
 	if err != nil {
 		log.Errorf("could not get meta rpm: %v", err)
 	}

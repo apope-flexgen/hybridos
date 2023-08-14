@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"math"
 	"os"
@@ -22,6 +23,7 @@ type ProcessCollector struct {
 	Refresh   int
 	Processes []string `json:"process_names"`
 	Databases map[string]string
+	HybridOS  bool `json:"hybridos"`
 
 	//internal vars
 	hz           float64
@@ -34,12 +36,11 @@ type ProcessCollector struct {
 	mongoOnline  bool
 }
 
-var TESTstart time.Time
-
 type ProcInfo struct {
 	pid             string
 	previousCPUTime float64
 	lastExecute     time.Time
+	getPID_method   string // "s" for systemctl, "b" for binary (pidof)
 }
 
 // === Collector funcs ===
@@ -85,32 +86,64 @@ func (process *ProcessCollector) init() error {
 		process.mem_totalKB = (int)(mt)
 	}
 
+	// add HybridOS process names using a MODIFIED tfc (tony's fancy command -- updated and maintained in github.com/flexgen-power/bootstrap)
+	// added in this version of tfc is the section: `awk 'NR > 1 {print $1}'`` which parses only the first column of info
+	if process.HybridOS { // is enabled
+		out, err := exec.Command("bash", "-c", "systemctl list-units | awk 'NR > 1 {print $1}' | grep -E 'fims|influxdb|mongod|grafana|dbi|fleet_manager|_controller|scheduler|cops|events|web_server|ftd|cloud_sync|dts|storage|overwatch|gpio|modbus|dnp3|metrics|echo|twins|UNIT' | grep -v '.slice'").Output()
+		if err != nil {
+			return fmt.Errorf("failed to find running/installed HybridOS services using tfc: %w", err)
+		}
+
+		s := bufio.NewScanner(bytes.NewReader(out))
+		for s.Scan() {
+			fields := strings.Fields(s.Text())
+			if len(fields) == 0 {
+				log.Errorf("could not parse HybridOS service information from tfc: no data")
+				continue
+			}
+			if !strings.HasSuffix(fields[0], ".service") {
+				log.Errorf("could not parse HybridOS service information from tfc: %s is not a service", fields[0])
+			}
+
+			name := strings.TrimSuffix(fields[0], ".service")
+			if name == "influxdb" || name == "mongod" || name == "overwatch" {
+				// do not want these names because they are already default and not the proper names for the pidof exec
+				continue
+			}
+
+			if name == "fims" {
+				name = "fims_server" // fims is known wrapper name for the fims_server binary it executes
+			}
+
+			process.Processes = append(process.Processes, name) // add trimmed name to process list
+		}
+	}
+
 	// init ProcInfo for each process name
 	for _, name := range process.Processes {
-		pid, err := getPIDFromName(name) // find PID to match name
+		method, pid, err := getPID(name, "") // find PID to match name
 		if err != nil {
 			process.procInfos[name] = ProcInfo{
 				pid:             "0000",
 				previousCPUTime: 0,
 				lastExecute:     time.Now(),
 			}
-			log.Errorf("could not find PID for %s: %v", err)
+			log.Errorf("could not find PID for %s: %v", pid, err)
 			continue
 		}
 
 		cputime, err := process.getCPUUsage(pid) // populate initial data
 		if err != nil {
-			log.Errorf("could not collect process info for %s: %v", err)
+			log.Errorf("could not collect process info for %s: %v", pid, err)
 		}
 
 		process.procInfos[name] = ProcInfo{
 			pid:             pid,
 			previousCPUTime: cputime,
 			lastExecute:     time.Now(),
+			getPID_method:   method,
 		}
 	}
-
-	TESTstart = time.Now()
 
 	// init db health check connectors
 	if len(process.Databases) > 0 {
@@ -253,13 +286,15 @@ func (process *ProcessCollector) getDatabaseInfo() map[string]interface{} {
 
 func (process *ProcessCollector) refreshPID(name string, info ProcInfo) {
 	for {
-		pid, err := getPIDFromName(name)
+		method, pid, err := getPID(name, info.getPID_method)
 		if err != nil {
-			log.Debugf("could not find PID for %s:", name, err)
+			log.Debugf("could not find PID for %s: %v", name, err)
 			log.Tracef("waiting " + fmt.Sprintf("%v", process.Refresh) + " seconds...")
 			time.Sleep(time.Duration(process.Refresh * int(time.Second))) // wait
 			continue
 		}
+
+		info.getPID_method = method
 		info.pid = pid
 		process.safeWriteToProcessInfo(name, info)
 
@@ -324,23 +359,32 @@ func (process *ProcessCollector) getCPUUsage(pid string) (float64, error) {
 	return 0, fmt.Errorf("could not scan /proc/" + pid + "/stat")
 }
 
-func getPIDFromName(name string) (string, error) {
-	// for systemctl instances (@<config>)
-	if strings.Contains(name, "@") {
-		out, err := exec.Command("bash", "-c", fmt.Sprintf("systemctl show -p MainPID %s | cut -d = -f2", name)).Output()
-		if err != nil {
-			return "", err
-		}
-
-		pid := string(out)
-		pid = pid[:len(pid)-1]
-
-		if pid != "0" {
-			return pid, nil
-		}
-		return "", fmt.Errorf("pid not found - systemctl returned 0")
+// receives a process name and the method (systemctl "s" or binary/pidof "b") and execs accordingly
+// returns the method, PID, then error
+func getPID(name, method string) (string, string, error) {
+	if method == "s" {
+		res, err := getPIDFromSystemctl(name)
+		return "s", res, err
+	} else if method == "b" {
+		res, err := getPIDFromName(name)
+		return "b", res, err
 	}
 
+	// method is unknown -- first exec
+	res, err := getPIDFromName(name) // try pidof first
+	if err == nil {
+		return "b", res, err
+	} else {
+		res, err = getPIDFromSystemctl(name) // didnt work, try systemctl
+		if err == nil {
+			return "s", res, err
+		}
+
+		return "", "", fmt.Errorf("could not pull PID for %s or identify proper method for doing so: %w", name, err)
+	}
+}
+
+func getPIDFromName(name string) (string, error) {
 	// non-systemctl instance
 	index := 0
 	if strings.Contains(name, "::") {
@@ -369,4 +413,19 @@ func getPIDFromName(name string) (string, error) {
 	}
 
 	return pid[:len(pid)-1], nil
+}
+
+func getPIDFromSystemctl(name string) (string, error) {
+	out, err := exec.Command("bash", "-c", fmt.Sprintf("systemctl show -p MainPID %s | cut -d = -f2", name)).Output()
+	if err != nil {
+		return "", err
+	}
+
+	pid := string(out)
+	pid = pid[:len(pid)-1]
+
+	if pid != "0" {
+		return pid, nil
+	}
+	return "", fmt.Errorf("pid not found - systemctl returned 0")
 }

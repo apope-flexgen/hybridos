@@ -41,7 +41,7 @@ func (disk *DiskCollector) init() error {
 	}
 
 	// grab mounts for each sda logged in diskstats
-	f, err := os.Open("/proc/diskstats")
+	f, err := os.Open(dataDir + "/proc/diskstats")
 	if err != nil {
 		return fmt.Errorf("could not read /proc/diskstats: %v", err)
 	}
@@ -58,7 +58,7 @@ func (disk *DiskCollector) init() error {
 	delete(disk.mounts, "sda")
 
 	// cross-reference with mounts
-	f, err = os.Open("/proc/mounts")
+	f, err = os.Open(dataDir + "/proc/mounts")
 	if err != nil {
 		return fmt.Errorf("could not read /proc/mounts: %v", err)
 	}
@@ -78,7 +78,7 @@ func (disk *DiskCollector) init() error {
 	}
 
 	// get allocated blocks -> MB
-	f, err = os.Open("/proc/partitions")
+	f, err = os.Open(dataDir + "/proc/partitions")
 	if err != nil {
 		return fmt.Errorf("could not read /proc/partitions: %v", err)
 	}
@@ -150,7 +150,7 @@ func (disk *DiskCollector) getMountInfo() map[string]interface{} {
 	}
 
 	// pull I/O stats from diskstats
-	f, err := os.Open("/proc/diskstats")
+	f, err := os.Open(dataDir + "/proc/diskstats")
 	if err != nil {
 		log.Errorf("could not read diskstats: %v", err)
 	} else {
@@ -210,6 +210,8 @@ func (disk *DiskCollector) getDirInfo() map[string]interface{} {
 
 		if disk.dirDisabled[dir] && time.Since(disk.dirLast[dir]) < time.Minute*30 {
 			continue // skip if we know the dir has gotten too big for performance
+		} else if disk.dirDisabled[dir] && time.Since(disk.dirLast[dir]) >= time.Minute*30 {
+			disk.dirDisabled[dir] = false //pass 30 minnutes, start checking
 		}
 
 		// num files
@@ -231,8 +233,6 @@ func (disk *DiskCollector) getDirInfo() map[string]interface{} {
 			disk.dirDisabled[dir] = true
 			disk.dirLast[dir] = time.Now()
 			log.Errorf("maximum detectable filecount reached for %s... will track again in 30m", dir)
-		} else {
-			disk.dirDisabled[dir] = false
 		}
 
 		data[safeParseDir(dir)+"_files"] = int(num)
@@ -256,9 +256,8 @@ func (disk *DiskCollector) getDirInfo() map[string]interface{} {
 			disk.dirDisabled[dir] = true
 			disk.dirLast[dir] = time.Now()
 			log.Errorf("maximum detectable size reached for %s... will track again in 30m", dir)
-		} else {
-			disk.dirDisabled[dir] = false
 		}
+
 		data[safeParseDir(dir)+"_sizeMB"] = int(num)
 	}
 
