@@ -49,7 +49,6 @@ export class AuthController {
     @Inject(AUDIT_LOGGING_SERVICE)
     private readonly auditLoggingService: IAuditLoggingService,
   ) {}
-
   @ApiOkResponse({ type: ApiLoginResponse })
   @Public()
   @Post('login')
@@ -75,7 +74,6 @@ export class AuthController {
       ...user,
     };
   }
-
   @ApiOkResponse({ type: LoginSuccessResponse })
   @Public()
   @Post('login/mfa')
@@ -106,7 +104,6 @@ export class AuthController {
       ...user,
     };
   }
-
   @ApiOkResponse({ type: LoginSuccessResponse })
   @Public()
   @Post('login/passExp')
@@ -169,7 +166,6 @@ export class AuthController {
       role: req.user.role,
     };
   }
-
   @ApiOkResponse({ type: LoginSuccessResponse })
   @ApiSecurity('bearerAuth')
   @Get('authenticate-user-token')
@@ -186,7 +182,6 @@ export class AuthController {
 
     return response;
   }
-
   @ApiOkResponse({ type: Logout })
   @ApiSecurity('bearerAuth')
   @Post('logout')

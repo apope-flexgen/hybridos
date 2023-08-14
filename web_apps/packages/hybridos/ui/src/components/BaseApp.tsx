@@ -172,12 +172,14 @@ const BaseApp = (): JSX.Element => {
   );
 
   useEffect(() => {
-    QueryService.getLayouts(handleNewMessage);
+    if (siteConfiguration && siteConfiguration.product !== FLEET_MANAGER) {
+      QueryService.getLayouts(handleNewMessage);
+    }
 
     return () => {
       QueryService.cleanupSocket();
     };
-  }, [handleNewMessage]);
+  }, [handleNewMessage, siteConfiguration]);
 
   useEffect(() => {
     fetchData();

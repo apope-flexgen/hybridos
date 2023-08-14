@@ -85,6 +85,12 @@ class QueryService {
     this.realTimeService.sendOnEveryOpen('layouts', '', 'layouts');
     this.realTimeService.persistentListen(listenerFunction, 'layouts');
   };
+
+  getWsException: (listenerFunction: (data: any) => void) => void = async (
+    listenerFunction: (data: any) => void,
+  ) => {
+    this.realTimeService.persistentListen(listenerFunction, 'exception');
+  };
 }
 
 export default new QueryService();

@@ -76,7 +76,7 @@ const AppRoutes = ({
         );
       })}
       {/* 👇️ only match this when no other routes match */}
-      <Route path="*" element={<NotFound />} />
+      {routes.length && <Route path="*" element={<NotFound />} />}
     </Routes>
   );
 };

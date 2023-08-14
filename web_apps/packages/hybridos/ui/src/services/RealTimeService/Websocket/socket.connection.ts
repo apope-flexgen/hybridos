@@ -92,7 +92,7 @@ export default class SocketConnection {
       return;
     }
 
-    if (this._isOpening) {
+    if (this._isOpening && retries === MAX_RETRIES) {
       return;
     }
 

@@ -1,7 +1,6 @@
-import { Inject, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'ws';
-import { WsThrottleExceptionFilter } from 'src/fims/wsthrottler.filter';
 import { FIMS_SERVICE, FimsMsg, IFimsService } from 'src/fims/interfaces/fims.interface';
 import { LockModeDTO } from './dto/lockMode.dto';
 import { UserFromSocket } from '../../../../decorators/userFromSocket.decorator';
@@ -9,13 +8,14 @@ import { User } from 'shared/types/dtos/auth.dto';
 import { LockModeService } from './lockMode.service';
 import { SocketMessageBody } from '../../../../decorators/socketMessageBody.decorator';
 import { EnableAssetPageControls } from '../../../../decorators/assetPageControls.decorator';
+import { UseWsFilters } from '../../../../decorators/ws.filters.decorator';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
-@UseFilters(new WsThrottleExceptionFilter())
+@UseWsFilters()
 export class LockModeGateway {
   constructor(
     @Inject(FIMS_SERVICE)

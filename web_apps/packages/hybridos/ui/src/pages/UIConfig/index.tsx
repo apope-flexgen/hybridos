@@ -1,13 +1,17 @@
 import {
-  Box, CardContainer, CardRow, Tab, Tabs,
-  Typography,
+  Box, CardContainer, CardRow, Tab, Tabs, Typography,
 } from '@flexgen/storybook';
 import { useState } from 'react';
+import { PageProps } from 'src/pages/PageTypes';
 import TabContent from './TabContent';
 import { BoxSX, CardContainerSX, Container } from './styles';
 
-const UIConfig = () => {
-  const [selectedTab, setSelectedTab] = useState('assets');
+const UIConfig = ({ product }: PageProps) => {
+  const tabs = [<Tab label="ASSETS" value="assets" />, <Tab label="DASHBOARD" value="dashboard" />];
+  const filteredTabs = product === 'FM' ? tabs.filter((tab) => tab.props.value !== 'assets') : tabs;
+
+  const initialTab = product === 'FM' ? 'dashboard' : 'assets';
+  const [selectedTab, setSelectedTab] = useState(initialTab);
 
   return (
     <Container>
@@ -15,18 +19,8 @@ const UIConfig = () => {
       <CardContainer flexDirection="column" styleOverrides={CardContainerSX}>
         <Box sx={BoxSX}>
           <CardRow>
-            <Tabs
-              onChange={(_, tab) => setSelectedTab(tab as string)}
-              value={selectedTab}
-            >
-              <Tab
-                label="ASSETS"
-                value="assets"
-              />
-              <Tab
-                label="DASHBOARD"
-                value="dashboard"
-              />
+            <Tabs onChange={(_, tab) => setSelectedTab(tab as string)} value={selectedTab}>
+              {...filteredTabs}
             </Tabs>
           </CardRow>
           <TabContent selectedTab={selectedTab} />

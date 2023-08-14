@@ -1,12 +1,13 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
+import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { MongoServerError } from 'mongodb';
 
 // This weird import is necessary in order to catch errors thrown by mongoose.
 import * as mongoose from 'mongoose';
+import { CoreHttpExceptionsFilter } from './core.http.exception.filter';
 
 @Catch(mongoose.mongo.MongoServerError)
-export class MongoErrorFilter implements ExceptionFilter {
+export class MongoErrorFilter extends CoreHttpExceptionsFilter {
   async catch(exception: MongoServerError, host: ArgumentsHost) {
     let statusCode: number;
     let message: string;
@@ -20,12 +21,8 @@ export class MongoErrorFilter implements ExceptionFilter {
         message = exception.message;
         break;
     }
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
 
-    response.status(statusCode).json({
-      statusCode: statusCode,
-      message: message,
-    });
+    this.buildResponse({ statusCode, message }, host);
+    this.logException(exception, host);
   }
 }

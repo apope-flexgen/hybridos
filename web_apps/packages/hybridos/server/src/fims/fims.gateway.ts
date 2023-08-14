@@ -1,19 +1,9 @@
-import {
-  Inject,
-  Req,
-  UseFilters,
-  UseGuards,
-  UseInterceptors,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Inject, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
 import { FIMS_WS_LIMIT, FIMS_WS_TTL } from 'src/environment/appEnv.constants';
-import { SocketNamespaceInterceptor } from 'src/interceptors/socketNamespace.interceptor';
-import { AppExceptionsFilter } from 'src/filters/all-exceptions.filter';
-import { Server, WebSocket } from 'ws';
+import { Server } from 'ws';
 
 import { FimsMsgDTO } from './dto/fims.dto';
 import { FimsWebSocketGuard } from './guards/fims.ws.guard';
@@ -21,6 +11,8 @@ import { FIMS_SERVICE, FimsMsg, IFimsService } from './interfaces/fims.interface
 import { WsThrottleExceptionFilter } from './wsthrottler.filter';
 import { WsThrottlerGuard } from './wsthrottler.guard';
 import { SocketMessageBody } from 'src/decorators/socketMessageBody.decorator';
+import { UseWsFilters } from '../decorators/ws.filters.decorator';
+import { UseWsInterceptors } from '../decorators/ws.interceptors.decorator';
 
 @WebSocketGateway({
   cors: {
@@ -29,7 +21,7 @@ import { SocketMessageBody } from 'src/decorators/socketMessageBody.decorator';
 })
 @UseGuards(WsThrottlerGuard, FimsWebSocketGuard)
 @Throttle(FIMS_WS_LIMIT, FIMS_WS_TTL)
-@UseFilters(new WsThrottleExceptionFilter(), AppExceptionsFilter)
+@UseWsFilters(new WsThrottleExceptionFilter())
 export class FimsGateway {
   constructor(@Inject(FIMS_SERVICE) private readonly fimsService: IFimsService) {}
 
@@ -73,7 +65,7 @@ export class FimsGateway {
   }
 
   @SubscribeMessage('subscribe')
-  @UseInterceptors(SocketNamespaceInterceptor)
+  @UseWsInterceptors()
   @UsePipes(new ValidationPipe({ transform: true }))
   subscribe(@SocketMessageBody() uri: string, @Req() req: any): Observable<FimsMsg> {
     return this.fimsService.subscribe(uri, req);

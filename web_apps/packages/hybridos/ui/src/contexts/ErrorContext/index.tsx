@@ -1,20 +1,27 @@
 // TODO: fix lint
 /* eslint-disable @typescript-eslint/no-shadow */
 import {
-  createContext, FC, useContext, useMemo, useState,
+  createContext, FC, useContext, useEffect, useMemo, useState,
 } from 'react';
+import QueryService from 'src/services/QueryService';
 import {
   ErrorProviderProps,
-  ErrorContextType,
   ExtraPropsAndActions,
   ErrorProps,
   ModalErrorProps,
+  ErrorContextFunctionsType,
+  ErrorContextStatesType,
 } from './types';
 
-export const ErrorContext = createContext<ErrorContextType | null>(null);
+export const ErrorContextFunctions = createContext<ErrorContextFunctionsType | null>(null);
+export const ErrorContextStates = createContext<ErrorContextStatesType | null>(null);
 
-export function useErrorContext() {
-  return useContext(ErrorContext);
+export function useErrorContextFunctions() {
+  return useContext(ErrorContextFunctions);
+}
+
+export function useErrorContextStates() {
+  return useContext(ErrorContextStates);
 }
 
 const ErrorProvider: FC<ErrorProviderProps> = ({ children }) => {
@@ -50,15 +57,37 @@ const ErrorProvider: FC<ErrorProviderProps> = ({ children }) => {
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const context: ErrorContextType = useMemo(() => ({
-    extraPropsAndActions,
-    showErrorModal,
-    clearErrorModal,
-    modalIsOpen,
-    modalProps,
-  }), [extraPropsAndActions, modalIsOpen, modalProps]);
+  const functionsContext: ErrorContextType = useMemo(
+    () => ({
+      showErrorModal,
+      clearErrorModal,
+    }),
+    [],
+  );
 
-  return <ErrorContext.Provider value={context}>{children}</ErrorContext.Provider>;
+  const statesContext = useMemo(
+    () => ({ modalProps, modalIsOpen, extraPropsAndActions }),
+    [extraPropsAndActions, modalIsOpen, modalProps],
+  );
+
+  useEffect(() => {
+    QueryService.getWsException((data) => {
+      showErrorModal({
+        title: 'Error',
+        description: data.message,
+      });
+    });
+
+    return () => {
+      QueryService.cleanupSocket();
+    };
+  }, []);
+
+  return (
+    <ErrorContextFunctions.Provider value={functionsContext}>
+      <ErrorContextStates.Provider value={statesContext}>{children}</ErrorContextStates.Provider>
+    </ErrorContextFunctions.Provider>
+  );
 };
 
 export default ErrorProvider;

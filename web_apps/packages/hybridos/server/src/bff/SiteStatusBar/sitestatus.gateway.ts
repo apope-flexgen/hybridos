@@ -1,30 +1,28 @@
-import { UseInterceptors } from '@nestjs/common'
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets'
-import { Observable } from 'rxjs'
-import { SocketNamespaceInterceptor } from 'src/interceptors/socketNamespace.interceptor'
-import { UseFilters } from '@nestjs/common'
-import { AppExceptionsFilter } from 'src/filters/all-exceptions.filter'
-import { Server } from 'ws'
-import { SiteStatusResponse } from './sitestatus.interface'
-import { SiteStatusService } from './sitestatus.service'
+import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Observable } from 'rxjs';
+import { Server } from 'ws';
+import { SiteStatusResponse } from './sitestatus.interface';
+import { SiteStatusService } from './sitestatus.service';
+import { UseWsFilters } from '../../decorators/ws.filters.decorator';
+import { UseWsInterceptors } from '../../decorators/ws.interceptors.decorator';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
-@UseFilters(AppExceptionsFilter)
+@UseWsFilters()
 export class SiteStatusGateway {
   constructor(private readonly siteStatusService: SiteStatusService) {}
 
   @WebSocketServer()
-  server: Server
+  server: Server;
 
-  @UseInterceptors(SocketNamespaceInterceptor)
+  @UseWsInterceptors()
   @SubscribeMessage('sitestatus')
   async siteStatus(): Promise<Observable<SiteStatusResponse>> {
-    const subscribeObservable = await this.siteStatusService.subscribeToSiteStatus()
+    const subscribeObservable = await this.siteStatusService.subscribeToSiteStatus();
 
-    return subscribeObservable
+    return subscribeObservable;
   }
 }

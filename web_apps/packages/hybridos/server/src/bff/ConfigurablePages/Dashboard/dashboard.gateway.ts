@@ -3,19 +3,18 @@ import { Observable } from 'rxjs';
 import { Server } from 'ws';
 import { ConfigurablePageDTO } from 'shared/types/dtos/configurablePages.dto';
 import { DashboardService } from './dashboard.service';
-import { SocketNamespaceInterceptor } from 'src/interceptors/socketNamespace.interceptor';
-import { UseInterceptors } from '@nestjs/common';
-import { UseFilters } from '@nestjs/common';
-import { AppExceptionsFilter } from 'src/filters/all-exceptions.filter';
 import { DashboardLayoutInterceptor } from './tableDashboard.interceptor';
+import { UseWsFilters } from '../../../decorators/ws.filters.decorator';
+import { DashboardConfigNotFoundExceptionsFilter } from './filters/dashboard.filters';
+import { UseWsInterceptors } from '../../../decorators/ws.interceptors.decorator';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
-@UseFilters(AppExceptionsFilter)
-@UseInterceptors(SocketNamespaceInterceptor, DashboardLayoutInterceptor)
+@UseWsFilters(DashboardConfigNotFoundExceptionsFilter)
+@UseWsInterceptors(DashboardLayoutInterceptor)
 export class DashboardGateway {
   constructor(private readonly dashboardService: DashboardService) {}
   @WebSocketServer()

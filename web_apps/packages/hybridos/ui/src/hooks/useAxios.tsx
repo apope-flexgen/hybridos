@@ -2,8 +2,8 @@
 /* eslint-disable no-param-reassign */
 import axios, { InternalAxiosRequestConfig } from 'axios';
 import { useCallback, useEffect } from 'react';
-import { useErrorContext } from 'src/contexts/ErrorContext';
-import { ErrorContextType } from 'src/contexts/ErrorContext/types';
+import { useErrorContextFunctions } from 'src/contexts/ErrorContext';
+import { ErrorContextFunctionsType } from 'src/contexts/ErrorContext/types';
 import RealTimeService from 'src/services/RealTimeService/realtime.service';
 import { axiosWebUIInstance } from 'src/services/axios';
 import {
@@ -15,7 +15,7 @@ import { useAuth } from './useAuth';
 
 const useAxiosWebUIInstance = (skipGenericError?: boolean) => {
   const { auth } = useAuth();
-  const { showErrorModal } = useErrorContext() as ErrorContextType;
+  const { showErrorModal } = useErrorContextFunctions() as ErrorContextFunctionsType;
 
   const appendApiPath = (config: InternalAxiosRequestConfig<any>) => {
     if (config?.url && !config.url.startsWith('/api')) {
@@ -56,21 +56,23 @@ const useAxiosWebUIInstance = (skipGenericError?: boolean) => {
             || errorMessage === 'jwt malformed'
             || errorMessage === 'no auth token';
 
-          if (!isRefreshingTokens()) {
-            setRefreshingTokens(
-              axios.get('/api/refresh_token', {
-                withCredentials: true,
-              }),
-            );
-          }
-          if (jwtError && !prevRequest?.sent) {
-            prevRequest.sent = true;
-            const response = await refreshingTokens;
-            const { accessToken } = response.data;
-            auth!.accessToken = accessToken;
-            prevRequest.headers.Authorization = `${accessToken}`;
-            realTimeService.setAccessToken(accessToken);
-            return await axiosWebUIInstance(prevRequest);
+          if (jwtError) {
+            if (!isRefreshingTokens()) {
+              setRefreshingTokens(
+                axios.get('/api/refresh_token', {
+                  withCredentials: true,
+                }),
+              );
+            }
+            if (!prevRequest?.sent) {
+              prevRequest.sent = true;
+              const response = await refreshingTokens;
+              const { accessToken } = response.data;
+              auth!.accessToken = accessToken;
+              prevRequest.headers.Authorization = `${accessToken}`;
+              realTimeService.setAccessToken(accessToken);
+              return await axiosWebUIInstance(prevRequest);
+            }
           }
           if (!skipGenericError) {
             const {

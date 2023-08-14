@@ -1,17 +1,14 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common'
-import { Response } from 'express'
-import { UserNotFoundException } from '../../users/exceptions/exceptions'
+import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
+import { CoreHttpExceptionsFilter } from '../../filters/core.http.exception.filter';
+import { UserNotFoundException } from '../../users/exceptions/exceptions';
 
 @Catch(UserNotFoundException)
-export class UserNotFoundFilter implements ExceptionFilter {
-    async catch(exception: UserNotFoundException, host: ArgumentsHost) {
-        const ctx = host.switchToHttp()
-        const response = ctx.getResponse<Response>()
-        const status = HttpStatus.UNAUTHORIZED
+export class UserNotFoundFilter extends CoreHttpExceptionsFilter {
+  async catch(exception: UserNotFoundException, host: ArgumentsHost) {
+    const statusCode = HttpStatus.UNAUTHORIZED;
+    const message = 'Unauthorized';
 
-        response.status(status).json({
-            statusCode: status,
-            message: 'Unauthorized',
-        })
-    }
+    this.buildResponse({ statusCode, message }, host);
+    this.logException(exception, host);
+  }
 }

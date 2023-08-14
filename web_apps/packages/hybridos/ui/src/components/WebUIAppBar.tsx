@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {
   AppBar,
   Avatar,
@@ -12,8 +13,9 @@ import {
 import { useState, ReactNode, MouseEvent } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-import { useErrorContext } from 'src/contexts/ErrorContext';
-import { ErrorContextType } from 'src/contexts/ErrorContext/types';
+import { useErrorContextFunctions } from 'src/contexts/ErrorContext';
+
+import { ErrorContextFunctionsType } from 'src/contexts/ErrorContext/types';
 import useAuth from 'src/hooks/useAuth';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 
@@ -36,7 +38,7 @@ const WebUIAppBar = ({
   const axiosInstance = useAxiosWebUIInstance(true);
   const { setAuth } = useAuth();
   const LOGOUT_URL = '/logout';
-  const { showErrorModal, clearErrorModal } = useErrorContext() as ErrorContextType;
+  const { showErrorModal, clearErrorModal } = useErrorContextFunctions() as ErrorContextFunctionsType;
   const navigate = useNavigate();
 
   const logout = async () => {

@@ -34,20 +34,22 @@ axiosSocketConnectionManagerInstance.interceptors.response.use(
         || errorMessage === 'jwt malformed'
         || errorMessage === 'no auth token';
 
-      if (!isRefreshingTokens()) {
-        setRefreshingTokens(
-          axios.get('/api/refresh_token', {
-            withCredentials: true,
-          }),
-        );
-      }
-      if (jwtError && !prevRequest?.sent) {
-        prevRequest.sent = true;
-        const response = await refreshingTokens;
-        const { accessToken } = response.data;
-        prevRequest.headers.Authorization = `${accessToken}`;
-        realTimeService.setAccessToken(accessToken);
-        return await axiosSocketConnectionManagerInstance(prevRequest);
+      if (jwtError) {
+        if (!isRefreshingTokens()) {
+          setRefreshingTokens(
+            axios.get('/api/refresh_token', {
+              withCredentials: true,
+            }),
+          );
+        }
+        if (!prevRequest?.sent) {
+          prevRequest.sent = true;
+          const response = await refreshingTokens;
+          const { accessToken } = response.data;
+          prevRequest.headers.Authorization = `${accessToken}`;
+          realTimeService.setAccessToken(accessToken);
+          return await axiosSocketConnectionManagerInstance(prevRequest);
+        }
       }
     } finally {
       setRefreshingTokens(undefined);

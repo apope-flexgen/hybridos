@@ -1,17 +1,14 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common'
-import { Response } from 'express'
-import { IncorrectTotpCodeException } from '../exceptions/incorrectTotpCode.exception'
+import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
+import { CoreHttpExceptionsFilter } from '../../filters/core.http.exception.filter';
+import { IncorrectTotpCodeException } from '../exceptions/incorrectTotpCode.exception';
 
 @Catch(IncorrectTotpCodeException)
-export class IncorrectCodeFilter implements ExceptionFilter {
-    async catch(exception: IncorrectTotpCodeException, host: ArgumentsHost) {
-        const ctx = host.switchToHttp()
-        const response = ctx.getResponse<Response>()
-        const status = HttpStatus.UNAUTHORIZED
+export class IncorrectCodeFilter extends CoreHttpExceptionsFilter {
+  async catch(exception: IncorrectTotpCodeException, host: ArgumentsHost) {
+    const statusCode = HttpStatus.UNAUTHORIZED;
+    const message = 'Incorrect TOTP Code';
 
-        response.status(status).json({
-            statusCode: status,
-            message: 'Incorrect TOTP Code',
-        })
-    }
+    this.buildResponse({ statusCode, message }, host);
+    this.logException(exception, host);
+  }
 }

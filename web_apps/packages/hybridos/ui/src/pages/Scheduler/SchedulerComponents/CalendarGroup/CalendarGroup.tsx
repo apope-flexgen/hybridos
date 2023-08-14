@@ -23,6 +23,20 @@ const CalendarGroup: React.FC = () => {
   const [displayModes, setDisplayModes] = useState<Mode[]>([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editModalEvent, setEditModalEvent] = useState<SchedulerEvent>(initialEventObject);
+  const [calendarHeight, setCalendarHeight] = useState<string>('50vh');
+  const [windowSize, setWindowSize] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => setWindowSize(window.innerHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (windowSize >= 900) return setCalendarHeight('61vh');
+    if (windowSize >= 700) return setCalendarHeight('50vh');
+    return setCalendarHeight('40vh');
+  }, [windowSize]);
 
   const calendarRef = React.createRef();
 
@@ -131,14 +145,17 @@ const CalendarGroup: React.FC = () => {
         displayEvents={displayEvents}
         setDisplayEvents={setDisplayEvents}
       />
-      <Calendar
-        calendarRef={calendarRef}
-        events={displayEvents}
-        modes={displayModes}
-        onClickEvent={handleEventClick}
-        timezone={timezone}
-        view={view}
-      />
+      <Box>
+        <Calendar
+          height={calendarHeight}
+          calendarRef={calendarRef}
+          events={displayEvents}
+          modes={displayModes}
+          onClickEvent={handleEventClick}
+          timezone={timezone}
+          view={view}
+        />
+      </Box>
       <EditEventModal
         event={editModalEvent}
         open={editModalOpen}

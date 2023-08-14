@@ -32,7 +32,7 @@ import { OneTimeAuthResponse } from './responses/oneTimeAuth.response';
 @UseGuards(HttpThrottlerGuard)
 @Throttle(FIMS_API_LIMIT, FIMS_API_TTL)
 @ApiTags('fims')
-@UseFilters(new HttpThrottleExceptionFilter())
+@UseFilters(HttpThrottleExceptionFilter)
 export class FimsController {
   constructor(
     @Inject(FIMS_SERVICE) private readonly fimsService: IFimsService,
