@@ -51,8 +51,8 @@ type cfg struct {
 	c2cMsgFrequencyMS       int
 	temperatureSource       string
 	enableRedundantFailover bool
-	primaryIP               string
-	primaryNetworkInterface string
+	primaryIP               []string
+	primaryNetworkInterface []string
 	thisCtrlrStaticIP       string
 	otherCtrlrStaticIP      string
 	pduIP                   string
@@ -188,9 +188,13 @@ func configureCOPS(config cfg) error {
 
 	controllerName = config.controllerName
 	if enableRedundantFailover = config.enableRedundantFailover; enableRedundantFailover {
-		// Store the IP address of the primary
-		primaryIP = config.primaryIP
-		primaryNetworkInterface = config.primaryNetworkInterface
+		// Store the IP addresses of the primary
+		for _, ip := range config.primaryIP {
+			primaryIP = append(primaryIP, ip)
+		}
+		for _, netInterface := range config.primaryNetworkInterface {
+			primaryNetworkInterface = append(primaryNetworkInterface, netInterface)
+		}
 
 		// Store the IP of the PDU
 		pduIP = config.pduIP

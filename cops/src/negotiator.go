@@ -48,8 +48,8 @@ var firstIteration = true // Used to determine additional, one-time startup beha
 var pduUser = "hybridos"  // SNMP User and Community names used by the PDU
 var enableRedundantFailover bool
 var controllerName string // Name of the controller machine, used to distinguish the controllers when running failover
-var primaryIP string
-var primaryNetworkInterface string // Virtual interface used to hold the primary IP
+var primaryIP []string
+var primaryNetworkInterface []string // Virtual interface used to hold the primary IP
 var pduIP string
 var pduHashedAuthPath = fp.Join(cfgDir, "encrypted_auth.enc") // Location of hashed password used for encrypting authentication with the PDU
 var pduHashedPrivPath = fp.Join(cfgDir, "encrypted_priv.enc") // Location of hashed password used for encrypting privacy with the PDU
@@ -178,11 +178,21 @@ func validateFailoverConfig(config *cfg) error {
 	if config.controllerName == "" {
 		return fmt.Errorf("no controller name provided")
 	}
-	if net.ParseIP(config.primaryIP) == nil {
-		return fmt.Errorf("invalid primary IP address provided: %s", config.primaryIP)
+	if len(config.primaryIP) < 1 {
+		return fmt.Errorf("at least one primary IP address must be provided when failover is enabled")
 	}
-	if config.primaryNetworkInterface == "" {
-		return fmt.Errorf("no primary network interface provided")
+	for _, ip := range config.primaryIP {
+		if net.ParseIP(ip) == nil {
+			return fmt.Errorf("invalid primary IP address provided: %s", ip)
+		}
+	}
+	if len(config.primaryNetworkInterface) != len(config.primaryIP) {
+		return fmt.Errorf("a network interface must be provided for each ip given when failover is enabled. Got %d ips and %d interfaces.", len(config.primaryIP), len(config.primaryNetworkInterface))
+	}
+	for i, netInterface := range config.primaryNetworkInterface {
+		if netInterface == "" {
+			return fmt.Errorf("no primary network interface provided, entry number %d", i)
+		}
 	}
 	if net.ParseIP(config.thisCtrlrStaticIP) == nil {
 		return fmt.Errorf("invalid static IP provided for this controller: %s", config.thisCtrlrStaticIP)
@@ -225,17 +235,45 @@ func configureFailover(body map[string]interface{}, config *cfg) error {
 	}
 	config.controllerName = controllerNameInterface.(string)
 
-	primaryIPInterface, err := parsemap.ExtractValueWithType(body, "primaryIP", parsemap.STRING)
+	primaryIPInterface, err := parsemap.ExtractValueWithType(body, "primaryIP", parsemap.INTERFACE_SLICE)
 	if err != nil {
-		return fmt.Errorf("failed to extract primaryIP from configuration: %w", err)
+		// Try to extract a single IP
+		primaryIPInterface, err = parsemap.ExtractValueWithType(body, "primaryIP", parsemap.STRING)
+		if err != nil {
+			return fmt.Errorf("failed to extract at least one primaryIP from configuration: %w", err)
+		}
+		config.primaryIP = append(config.primaryIP, primaryIPInterface.(string))
+	} else {
+		primaryIpList := primaryIPInterface.([]interface{})
+		// Insert the IPs into the variable
+		for i, ip := range primaryIpList {
+			singleIP, ok := ip.(string)
+			if !ok {
+				return fmt.Errorf("failed to parse ip entry %d: %v", i, singleIP)
+			}
+			config.primaryIP = append(config.primaryIP, singleIP)
+		}
 	}
-	config.primaryIP = primaryIPInterface.(string)
 
-	primaryNetInterface, err := parsemap.ExtractValueWithType(body, "primaryNetworkInterface", parsemap.STRING)
+	primaryNetInterface, err := parsemap.ExtractValueWithType(body, "primaryNetworkInterface", parsemap.INTERFACE_SLICE)
 	if err != nil {
-		return fmt.Errorf("failed to extract primaryNetworkInterface from configuration: %w", err)
+		// Try to extract a single IP
+		primaryNetInterface, err = parsemap.ExtractValueWithType(body, "primaryNetworkInterface", parsemap.STRING)
+		if err != nil {
+			return fmt.Errorf("failed to extract at least one primaryNetworkInterface from configuration: %w", err)
+		}
+		config.primaryNetworkInterface = append(config.primaryNetworkInterface, primaryNetInterface.(string))
+	} else {
+		netInterfaceList := primaryNetInterface.([]interface{})
+		// Insert the IPs into the variable
+		for i, netInterface := range netInterfaceList {
+			singleInterface, ok := netInterface.(string)
+			if !ok {
+				return fmt.Errorf("failed to parse ip entry %d: %v", i, netInterface)
+			}
+			config.primaryNetworkInterface = append(config.primaryNetworkInterface, singleInterface)
+		}
 	}
-	config.primaryNetworkInterface = primaryNetInterface.(string)
 
 	thisCtrlrIPInterface, err := parsemap.ExtractValueWithType(body, "thisCtrlrStaticIP", parsemap.STRING)
 	if err != nil {
@@ -281,19 +319,23 @@ func configureFailover(body map[string]interface{}, config *cfg) error {
 
 // Claim the virtual interface and add the Primary IP to it
 func setupPrimaryIP() error {
-	if primaryIP == "" || primaryNetworkInterface == "" {
-		return fmt.Errorf("failed to takeover: primary IP or network interface undefined")
+	if len(primaryIP) < 1 || len(primaryNetworkInterface) != len(primaryIP) {
+		return fmt.Errorf("failed to takeover: there must be one network interface for each ip, received %d ips and %d interfaces.", len(primaryIP), len(primaryNetworkInterface))
 	}
-	// Take the primary IP on this machine
-	// Set up virtual device
-	ipCmd := exec.Command("ip", "link", "add", primaryNetworkInterface, "type", "dummy")
-	if ipErr := ipCmd.Run(); ipErr != nil {
-		return fmt.Errorf("error adding virtual interface: %w", ipErr)
-	}
-	// Create IP alias
-	ipAliasCmd := exec.Command("ip", "addr", "add", primaryIP, "dev", primaryNetworkInterface, "label", primaryNetworkInterface)
-	if ipAliasErr := ipAliasCmd.Run(); ipAliasErr != nil {
-		return fmt.Errorf("error setting IP: %w", ipAliasErr)
+
+	for i, ip := range primaryIP {
+		// Take the primary IP on this machine
+		// Set up virtual device
+		ipCmd := exec.Command("ip", "link", "add", primaryNetworkInterface[i], "type", "dummy")
+		if ipErr := ipCmd.Run(); ipErr != nil {
+			return fmt.Errorf("error adding virtual interface: %w", ipErr)
+		}
+		// Create IP alias
+		ipAliasCmd := exec.Command("ip", "addr", "add", ip, "dev", primaryNetworkInterface[i], "label", primaryNetworkInterface[i])
+		if ipAliasErr := ipAliasCmd.Run(); ipAliasErr != nil {
+			return fmt.Errorf("error setting IP: %w", ipAliasErr)
+		}
+		log.Infof("Claimed %s on %s", ip, primaryNetworkInterface[i])
 	}
 	return nil
 }
