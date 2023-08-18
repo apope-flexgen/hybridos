@@ -93,7 +93,7 @@ const TableDashboard = () => {
               return (
                 <Progress
                   orientation='vertical'
-                  width={50}
+                  width={65}
                   fullWidth={false}
                   height={80}
                   label={battery.label}
