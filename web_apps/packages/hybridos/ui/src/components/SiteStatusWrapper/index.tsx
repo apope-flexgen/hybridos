@@ -1,5 +1,5 @@
 import { Box, SiteStatusBar, ThemeType } from '@flexgen/storybook';
-import { DataProps } from '@flexgen/storybook/dist/components/Molecules/SiteStatusBar/Status';
+import { DataProps } from '@flexgen/storybook/dist/components/PlatformSpecific/HosControl/SiteStatusBar/Status';
 import { useState, useEffect, useCallback } from 'react';
 import { generateSiteStatusSx } from 'src/components/SiteStatusWrapper/siteStatus.styles';
 import QueryService from 'src/services/QueryService';
@@ -46,7 +46,7 @@ const SiteStatusWrapper = () => {
         (prevState) => ({
           ...prevState,
           ...parsedData.dataPoints,
-        } as { [uri: string]: DataProps }),
+        }) as { [uri: string]: DataProps },
       );
     }
   }, []);
