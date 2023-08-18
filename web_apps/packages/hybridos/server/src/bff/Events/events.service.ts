@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 import dayjs from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
 import { FimsService } from '../../fims/fims.service'
 import { FIMS_SERVICE } from '../../fims/interfaces/fims.interface'
 import { getformattedTimestamp } from '../../utils/timestamp'
@@ -140,12 +142,14 @@ export class EventsService {
         return severities.map((severity) => severityLookup.indexOf(severity))
     }
     transformData(data: FimsEventBody): Event {
+        dayjs.extend(advancedFormat);
+        dayjs.extend(timezone);
         const transformed = {
             id: data._id,
             severity: severityLookup[data.severity],
             source: data.source,
             message: data.message,
-            timestamp: dayjs(data.timestamp).format('YYYY-MM-DD HH:mm:ss'),
+            timestamp: dayjs(data.timestamp).format('YYYY-MM-DD HH:mm:ss z'),
         }
         return transformed
     }
