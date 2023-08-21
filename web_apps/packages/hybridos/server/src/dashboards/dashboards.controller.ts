@@ -11,7 +11,7 @@ import { IDashboardsService } from './dashboards.interface'
 import { UserFromAccessToken } from 'src/decorators/userFromAccessToken.decorator'
 import { User } from 'src/users/dtos/user.dto'
 import { DashboardCard } from './dtos/dashboard.dto'
-import { DefaultApiError } from 'src/exceptions/defaultResponse.exception'
+import { DefaultApiError } from '../exceptions/defaultResponse.exception'
 
 @ApiTags('dashboards')
 @ApiSecurity('bearerAuth')

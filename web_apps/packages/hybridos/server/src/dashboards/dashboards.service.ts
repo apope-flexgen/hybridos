@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common'
 import { AddDashboardRequest } from 'shared/types/dtos/dashboards.dto'
-import { DBI_SERVICE, DBI_URIs } from 'src/dbi/dbi.interface'
-import { IDBIService } from 'src/dbi/dbi.interface'
+import { DBI_SERVICE, DBI_URIs } from '../dbi/dbi.interface'
+import { IDBIService } from '../dbi/dbi.interface'
 import { IDashboardsService } from './dashboards.interface'
 import { DashboardsResponse } from './responses'
 
