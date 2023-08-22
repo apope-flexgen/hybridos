@@ -61,7 +61,7 @@ void build_yes_no_option(fmt::memory_buffer&);
 void build_close_option(fmt::memory_buffer&);
 void build_open_option(fmt::memory_buffer&);
 void build_reset_option(fmt::memory_buffer&);
-std::string build_uri( char* comp, char* reg);
+std::string build_uri( std::string comp, char* reg);
 
 class Asset
 {
@@ -73,10 +73,10 @@ public:
     bool configure(Type_Configurator* configurator);
 
     // status
-    char* get_name(void);
-    char* get_id(void);
+    std::string get_name(void);
+    std::string get_id(void);
     const char* get_asset_type(void) const;
-    const char* get_comp_name(int) const;
+    const std::string get_comp_name(int) const;
 
     bool is_available(void);
     bool is_running(void);
@@ -144,7 +144,7 @@ protected:
     // Indicates whether this is the primary controller (true) or running in shadow mode (false)
     bool* is_primary;
     // configuration
-    bool var_maps_insert(cJSON* varJson, char* compID, std::map <std::string, std::vector<Fims_Object*>> * const component_var_map, std::map <std::string, Fims_Object*> * const asset_var_map, bool* is_primary);
+    bool var_maps_insert(cJSON* varJson, std::string compID, std::map <std::string, std::vector<Fims_Object*>> * const component_var_map, std::map <std::string, Fims_Object*> * const asset_var_map, bool* is_primary);
     std::string build_asset_variable_uri(const char* var);
     bool validate_config(std::map <std::string, Fims_Object*> * const asset_var_map);
     bool configure_common_asset_instance_vars(Type_Configurator* configurator);
@@ -156,8 +156,8 @@ protected:
     virtual bool configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map) = 0;
     virtual bool configure_typed_asset_instance_vars(Type_Configurator* configurator) = 0;
     virtual bool configure_ui_controls(Type_Configurator* configurator) = 0;
-    char* name;
-    char* asset_id;
+    std::string name;
+    std::string asset_id;
     std::list<const char*> required_variables;
 
     // TODO these should all be regular Fims_Objects rather than pointers. Init'd to NULL for now.
@@ -182,7 +182,7 @@ protected:
     Fims_Object* component_connected = NULL;
     Fims_Object* watchdog_status = NULL;
 
-    char* compNames[MAX_COMPS];
+    std::vector<std::string> compNames;
     const char* statusStrings[MAX_STATUS_BITS];
     
     uint32_t numAssetComponents;

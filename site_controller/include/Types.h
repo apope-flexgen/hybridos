@@ -133,6 +133,11 @@ enum setpoint_states
     ACCEPTED, LIMITED, ZERO
 };
 
+enum template_type
+{
+    TEMPLATING_ERROR = -1, NON_TEMPLATE, TRADITIONAL, RANGED
+}; 
+
 const char UI_Type_Names[][16] = {"status", "control", "alarm", "fault", "none"};
 
 /**

@@ -248,7 +248,7 @@ void Solar_Manager_Mock::configure_solar_manager(int numParse,bool* primary_cont
     std::map <std::string, Fims_Object*> * const asset_var_map = new std::map<std::string, Fims_Object*>;
     solarRoot = this->generate_solarRoot(numParse);
     Type_Configurator* solar_configurator = new Type_Configurator(this, component_var_map, asset_var_map, primary_controller);
-    solar_configurator->assetTypeRoot = solarRoot;
+    solar_configurator->asset_type_root = solarRoot;
     solar_configurator->config_validation = false;
     bool configure_success = solar_configurator->create_assets();
     ASSERT_TRUE(configure_success);

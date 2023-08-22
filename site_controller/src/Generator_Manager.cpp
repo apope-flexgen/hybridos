@@ -276,12 +276,12 @@ void Generator_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf
     char temp_name[MEDIUM_MSG_LEN];
     for (auto it : pGens)
     {
-        char *gen_id   = it->get_id();
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_active_power", gen_id);
+        const char* gen_name = it->get_name().c_str();
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_active_power", gen_name);
         bufJSON_AddNumberCheckVar(buf, temp_name, it->get_active_power(), var);
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_alarms",gen_id);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_alarms",gen_name);
         bufJSON_AddNumberCheckVar(buf, temp_name, it->get_num_active_alarms() > 0 ? 1:0, var);
-        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_faults",gen_id);
+        snprintf(temp_name, MEDIUM_MSG_LEN, "%s_faults",gen_name);
         bufJSON_AddNumberCheckVar(buf, temp_name, it->get_num_active_faults() > 0 ? 1:0, var);
     }
     bufJSON_AddNumberCheckVar(buf, "gen_num_alarmed", get_num_alarmed(), var);
@@ -556,7 +556,7 @@ void Generator_Manager::append_new_asset(Asset* asset)
 // After configuring individual asset instances, this function finishes configuring the Generator Manager
 bool Generator_Manager::configure_type_manager(Type_Configurator* configurator)
 {
-    cJSON* gen_root = configurator->assetTypeRoot;
+    cJSON* gen_root = configurator->asset_type_root;
 
     // give each asset a pointer to the LDSS object so it can reference the state variables
     for(auto gen : pGens)

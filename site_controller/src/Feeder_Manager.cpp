@@ -132,7 +132,7 @@ bool Feeder_Manager::set_sync_feeder_close_permissive()
 Asset_Feeder* Feeder_Manager::validate_feeder_id(const char* feeder_ID) {
     for (int i = 0; i < numParsed; i++)
     {
-        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+        if (pFeeder[i]->get_id() ==  feeder_ID)
             return pFeeder[i];
     }
     FPS_ERROR_LOG("Could not find specified feeder \n");
@@ -157,7 +157,7 @@ float Feeder_Manager::get_feeder_active_power(const char* feeder_ID)
 {
     for (int i = 0; i < numParsed; i++)
     {
-        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+        if (pFeeder[i]->get_id() == feeder_ID)
             return pFeeder[i]->get_active_power();
     }
     return 0;
@@ -167,7 +167,7 @@ float Feeder_Manager::get_feeder_reactive_power(const char* feeder_ID)
 {
     for (int i = 0; i < numParsed; i++)
     {
-        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+        if (pFeeder[i]->get_id() == feeder_ID)
             return pFeeder[i]->get_reactive_power();
     }
     return 0;
@@ -177,7 +177,7 @@ float Feeder_Manager::get_feeder_nameplate_active_power(const char* feeder_ID)
 {
     for (int i = 0; i < numParsed; i++)
     {
-        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+        if (pFeeder[i]->get_id() == feeder_ID)
             return pFeeder[i]->get_rated_active_power();
     }
     return -1; // exit failure
@@ -187,7 +187,7 @@ float Feeder_Manager::get_avg_ac_voltage(const char* feeder_ID)
 {
     for (int i = 0; i < numParsed; i++)
     {
-        if (strcmp(pFeeder[i]->get_id(), feeder_ID) == 0)
+        if (pFeeder[i]->get_id() == feeder_ID)
             return pFeeder[i]->get_voltage_avg_line_to_line();
     }
     return -1; // failure exit
@@ -232,8 +232,7 @@ void Feeder_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf, c
     char temp_name[MEDIUM_MSG_LEN];
     for (auto it : pFeeder)
     {
-        char *feeder_id   = it->get_id();
-
+        const char* feeder_id = it->get_id().c_str();
         snprintf(temp_name, MEDIUM_MSG_LEN, "%s_breaker_status",feeder_id);
         bufJSON_AddStringCheckVar(buf, temp_name, it->get_breaker_status() ? "Closed" : "Open", var);
         snprintf(temp_name, MEDIUM_MSG_LEN, "%s_active_power",feeder_id);
@@ -263,7 +262,7 @@ void Feeder_Manager::process_asset_data(std::map <std::string, Fims_Object*> *as
         for (int i = 0; i < numParsed; i++)
         {
             // Update the Asset status data based on our map
-            std::string base_uri = "/assets/feeders/" + std::string(pFeeder[i]->get_id());
+            std::string base_uri = "/assets/feeders/" + pFeeder[i]->get_id();
             auto feeder_it = asset_var_map->find(base_uri + "/breaker_status");
             bool* status;
             if (feeder_it != asset_var_map->end())
@@ -278,7 +277,7 @@ void Feeder_Manager::process_asset_data(std::map <std::string, Fims_Object*> *as
     }
 }
 
-const char* Feeder_Manager::get_poi_id(void)
+const std::string Feeder_Manager::get_poi_id(void)
 {
     return pPointOfInterConnect->get_id();
 }
@@ -326,7 +325,7 @@ void Feeder_Manager::append_new_asset(Asset* asset)
 // After configuring individual asset instances, this function finishes configuring the Feeder Manager
 bool Feeder_Manager::configure_type_manager(Type_Configurator* configurator)
 {
-    cJSON* feeder_root = configurator->assetTypeRoot;
+    cJSON* feeder_root = configurator->asset_type_root;
     /************************* Identify POI feeder, which is required ******************************/
     cJSON* object = cJSON_HasObjectItem(feeder_root, "poi_feeder") ? cJSON_GetObjectItem(feeder_root, "poi_feeder") : NULL;
     if (object == NULL)
@@ -344,8 +343,8 @@ bool Feeder_Manager::configure_type_manager(Type_Configurator* configurator)
         }
         pPointOfInterConnect = pFeeder[poi_index];
         // point configurator at poi feeder's asset instance json object for validation
-        cJSON* feeder_instances_array = cJSON_GetObjectItem(configurator->assetTypeRoot, "asset_instances");
-        configurator->assetConfig.assetInstanceRoot = cJSON_GetArrayItem(feeder_instances_array, poi_index);
+        cJSON* feeder_instances_array = cJSON_GetObjectItem(configurator->asset_type_root, "asset_instances");
+        configurator->asset_config.asset_instance_root = cJSON_GetArrayItem(feeder_instances_array, poi_index);
     }
     if (pPointOfInterConnect && !pPointOfInterConnect->validate_poi_feeder_configuration(configurator))
     {

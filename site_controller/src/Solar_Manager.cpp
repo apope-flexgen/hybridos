@@ -644,7 +644,7 @@ void Solar_Manager::append_new_asset(Asset* asset)
 // After configuring individual asset instances, this function finishes configuring the Solar Manager
 bool Solar_Manager::configure_type_manager(Type_Configurator* configurator)
 {
-    cJSON* solarRoot = configurator->assetTypeRoot;
+    cJSON* solarRoot = configurator->asset_type_root;
     // Parse deadband percent for solar curtailment
     cJSON* object = cJSON_HasObjectItem(solarRoot, "deadband_percentage") ? cJSON_GetObjectItem(solarRoot, "deadband_percentage") : NULL;
     if (object == NULL)

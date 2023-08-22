@@ -159,29 +159,29 @@ void Asset_Solar::set_power_mode(powerMode mode)
 
 bool Asset_Solar::configure_typed_asset_instance_vars(Type_Configurator* configurator)
 {
-    Asset_Configurator* assetConfig = &configurator->assetConfig;
+    Asset_Configurator* asset_config = &configurator->asset_config;
     
-    cJSON* object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "start_value");
+    cJSON* object = cJSON_GetObjectItem(asset_config->asset_instance_root, "start_value");
     if (object)
         start_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "stop_value");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "stop_value");
     if (object)
         stop_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "enter_standby_value");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "enter_standby_value");
     if (object)
     	enter_standby_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "exit_standby_value");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "exit_standby_value");
     if (object)
     	exit_standby_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "reactive_power_mode_q");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "reactive_power_mode_q");
     if (object)
         reactive_power_mode_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "reactive_power_mode_pf");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "reactive_power_mode_pf");
     if (object)
         power_factor_mode_value = object->valueint;
 
@@ -191,7 +191,7 @@ bool Asset_Solar::configure_typed_asset_instance_vars(Type_Configurator* configu
 bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator)
 {
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
-    cJSON* components_array = cJSON_GetObjectItem(configurator->assetConfig.assetInstanceRoot, "components");
+    cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
         FPS_ERROR_LOG("Components array is NULL.");
         return false;

@@ -185,29 +185,29 @@ float Asset_Generator::get_reactive_power_setpoint_control(void)
 
 bool Asset_Generator::configure_typed_asset_instance_vars(Type_Configurator* configurator)
 {
-    Asset_Configurator* assetConfig = &configurator->assetConfig;
+    Asset_Configurator* asset_config = &configurator->asset_config;
 
-    cJSON *object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "starting_status_mask");
+    cJSON *object = cJSON_GetObjectItem(asset_config->asset_instance_root, "starting_status_mask");
     if (object)
         starting_status_mask = (uint64_t) std::stoul(object->valuestring, NULL, 16);
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "stopping_status_mask");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "stopping_status_mask");
     if (object)
         stopping_status_mask = (uint64_t) std::stoul(object->valuestring, NULL, 16);
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "start_value");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "start_value");
     if (object)
         start_value = object->valueint;
     
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "stop_value");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "stop_value");
     if (object)
         stop_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "grid_form_cmd");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "grid_form_cmd");
     if (object)
         grid_forming_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "grid_follow_cmd");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "grid_follow_cmd");
     if (object)
         grid_following_value = object->valueint;
 
@@ -217,7 +217,7 @@ bool Asset_Generator::configure_typed_asset_instance_vars(Type_Configurator* con
 bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator)
 {
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
-    cJSON* components_array = cJSON_GetObjectItem(configurator->assetConfig.assetInstanceRoot, "components");
+    cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
         FPS_ERROR_LOG("Components array is NULL.");
         return false;

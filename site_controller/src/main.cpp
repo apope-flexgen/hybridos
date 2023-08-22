@@ -199,6 +199,9 @@ void fims_data_pump(fims *p_fims, Site_Manager * siteMgr, Asset_Manager * assetM
 
 int main(int argc, char **argv)
 {
+    // Init Logger, passing optional command line argument for config file path
+    Logging::Init("site_controller", argc, argv);
+
     #ifdef FPS_TEST_MODE
     return test_main(argc, argv);
     #endif
@@ -227,9 +230,6 @@ int main(int argc, char **argv)
         // get path to "assets.json"
         snprintf(assetsFilePath, 256, "%s/assets.json", argv[1]);
     }
-
-    // Init Logger, passing optional command line argument for config file path
-    Logging::Init("site_controller", argc, argv);
 
     char *subscriptions[NUM_CONTROLLER_SUBS];
     int num_subs = NUM_CONTROLLER_SUBS;

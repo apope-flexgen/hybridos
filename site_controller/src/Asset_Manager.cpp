@@ -523,32 +523,32 @@ bool Asset_Manager::asset_create(cJSON *pJsonRoot, bool* primary_controller)
     }
 
     // Extract the "generators" cJSON object and pass it to Generator Manager for configuration
-    generator_configurator->assetTypeRoot = cJSON_GetObjectItem(jsonAssets, "generators");
-    if ( generator_configurator->assetTypeRoot != NULL && !generator_configurator->create_assets() )
+    generator_configurator->asset_type_root = cJSON_GetObjectItem(jsonAssets, "generators");
+    if ( generator_configurator->asset_type_root != NULL && !generator_configurator->create_assets() )
     {
         FPS_ERROR_LOG("Asset_Manager::asset_create ~ Failed to configure generators.\n");
         return false;
     }
 
     // Extract the "feeders" cJSON object and pass it to Feeder Manager for configuration
-    feeder_configurator->assetTypeRoot = cJSON_GetObjectItem(jsonAssets, "feeders");
-    if ( feeder_configurator->assetTypeRoot != NULL && !feeder_configurator->create_assets() )
+    feeder_configurator->asset_type_root = cJSON_GetObjectItem(jsonAssets, "feeders");
+    if ( feeder_configurator->asset_type_root != NULL && !feeder_configurator->create_assets() )
     {
         FPS_ERROR_LOG("Asset_Manager::asset_create ~ Failed to configure feeders.\n");
         return false;
     }
 
     // Extract the "ess" cJSON object and pass it to ESS Manager for configuration
-    ess_configurator->assetTypeRoot = cJSON_GetObjectItem(jsonAssets, "ess");
-    if ( ess_configurator->assetTypeRoot != NULL && !ess_configurator->create_assets() )
+    ess_configurator->asset_type_root = cJSON_GetObjectItem(jsonAssets, "ess");
+    if ( ess_configurator->asset_type_root != NULL && !ess_configurator->create_assets() )
     {
         FPS_ERROR_LOG("Asset_Manager::asset_create ~ Failed to configure ESSs.\n");
         return false;
     }
 
     // Extract the "solar" cJSON object and pass it to Solar Manager for configuration
-    solar_configurator->assetTypeRoot = cJSON_GetObjectItem(jsonAssets, "solar");
-    if ( solar_configurator->assetTypeRoot != NULL && !solar_configurator->create_assets() )
+    solar_configurator->asset_type_root = cJSON_GetObjectItem(jsonAssets, "solar");
+    if ( solar_configurator->asset_type_root != NULL && !solar_configurator->create_assets() )
     {
         FPS_ERROR_LOG("Asset_Manager::asset_create ~ Failed to configure solar.\n");
         return false;
@@ -939,7 +939,7 @@ float Asset_Manager::get_feeder_nameplate_active_power(const char* feeder_id)
 
 float Asset_Manager::get_poi_nameplate_active_power(void)
 {
-    return feeder_manager->get_feeder_nameplate_active_power(feeder_manager->get_poi_id());
+    return feeder_manager->get_feeder_nameplate_active_power(feeder_manager->get_poi_id().c_str());
 }
 
 float Asset_Manager::get_gen_total_rated_active_power(void)
@@ -1483,7 +1483,7 @@ void Asset_Manager::set_min_generators_active(int minGensActive)
     generator_manager->set_min_generators_active(minGensActive); 
 }
 
-const char* Asset_Manager::get_poi_id(void)
+const std::string Asset_Manager::get_poi_id(void)
 {
     return feeder_manager->get_poi_id();
 }

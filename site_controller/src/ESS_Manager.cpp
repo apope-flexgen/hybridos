@@ -621,7 +621,9 @@ void ESS_Manager::calculate_ess_reactive_power(void)
 // uses SOC balancing algorithm to decide how much power each ESS gets
 bool ESS_Manager::calculate_ess_active_power(void)
 {
-    float powerToAssign = essTargetActivePowerkW; // we do not want to change essTargetActivePowerkW, so powerToAssign is value we use to keep track of assigned power
+    // we do not want to change essTargetActivePowerkW, 
+    // so powerToAssign is the value we use to keep track of assigned power
+    float powerToAssign = essTargetActivePowerkW; 
 
     // identify ESSs that are controllable and can take a power command
     std::vector<SOC_Balancing_Data> essAssetsToAssignPowerTo;
@@ -876,7 +878,7 @@ void ESS_Manager::append_new_asset(Asset* asset)
 // After configuring individual asset instances, this function finishes configuring the ESS Manager
 bool ESS_Manager::configure_type_manager(Type_Configurator* configurator)
 {
-    cJSON* essRoot = configurator->assetTypeRoot;
+    cJSON* essRoot = configurator->asset_type_root;
 
     cJSON* object = cJSON_HasObjectItem(essRoot, "soc_balancing_factor") ? cJSON_GetObjectItem(essRoot, "soc_balancing_factor") : NULL;
     if (object == NULL)

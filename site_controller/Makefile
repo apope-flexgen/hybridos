@@ -46,6 +46,7 @@ OBJ_LIST = $(addprefix $(OBJ_DIR), $(OBJECTS))
 vpath %.cpp src
 vpath %.cpp src/Features
 
+
 all:	build $(LIST)
 
 $(BUILD_DIR)Site_Controller_Utils.so:	$(OBJ_DIR)Site_Controller_Utils.o 
@@ -80,3 +81,5 @@ install:
 	rm -rf $(BIN_DIR)site_controller
 	cp $(BUILD_DIR)site_controller $(BIN_DIR)
 	cp $(BUILD_DIR)Site_Controller_Utils.so $(LIBS_DIR)
+
+

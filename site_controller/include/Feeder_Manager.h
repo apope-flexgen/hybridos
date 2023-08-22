@@ -77,7 +77,7 @@ public:
     void process_asset_data(std::map <std::string, Fims_Object*> *asset_var_map);
     // No feeder data in update_asset_data()
 
-    const char* get_poi_id(void);
+    const std::string get_poi_id(void);
     //float get_poi_potential_active_power(void);
     float get_poi_max_potential_active_power(void);
     float get_poi_min_potential_active_power(void);

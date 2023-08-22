@@ -89,7 +89,7 @@ TEST_F(ess_manager_test, calculate_ess_active_power) {
 		std::map <std::string, std::vector<Fims_Object*>> component_var_map;
 		std::map <std::string, Fims_Object*> asset_var_map;
         Type_Configurator ess_configurator(&ess_mgr, &component_var_map, &asset_var_map, &primary_controller);
-        ess_configurator.assetTypeRoot = ess_config;
+        ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
 		bool configure_success = ess_configurator.create_assets();
 		ASSERT_TRUE(configure_success);
@@ -153,7 +153,7 @@ TEST_F(ess_manager_test, calculate_ess_reactive_power) {
 		std::map <std::string, std::vector<Fims_Object*>> component_var_map;
 		std::map <std::string, Fims_Object*> asset_var_map;
         Type_Configurator ess_configurator(&ess_mgr, &component_var_map, &asset_var_map, &primary_controller);
-        ess_configurator.assetTypeRoot = ess_config;
+        ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
 		bool configure_success = ess_configurator.create_assets();
 		ASSERT_TRUE(configure_success);
@@ -313,7 +313,7 @@ TEST_F(ess_manager_test, calculate_ess_active_power_with_reactive_power_priority
 		std::map <std::string, std::vector<Fims_Object*>> component_var_map;
 		std::map <std::string, Fims_Object*> asset_var_map;
         Type_Configurator ess_configurator(&ess_mgr, &component_var_map, &asset_var_map, &primary_controller);
-        ess_configurator.assetTypeRoot = ess_config;
+        ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
 		bool configure_success = ess_configurator.create_assets();
 		ASSERT_TRUE(configure_success);

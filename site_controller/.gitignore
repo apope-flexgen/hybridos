@@ -220,6 +220,10 @@ typings/
 build/
 rpmbuild/
 
+compile_commands.json
+CMakeLists.txt
+cmake_build
+
 site_controller
 
 *.xml

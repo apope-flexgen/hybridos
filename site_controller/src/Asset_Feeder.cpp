@@ -121,25 +121,25 @@ void Asset_Feeder::set_active_power_setpoint(float setpoint)
 
 bool Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* configurator)
 {
-    Asset_Configurator* assetConfig = &configurator->assetConfig;
+    Asset_Configurator* asset_config = &configurator->asset_config;
 
-    cJSON *object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "value_open");
+    cJSON *object = cJSON_GetObjectItem(asset_config->asset_instance_root, "value_open");
     if (object)
         open_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "value_close");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "value_close");
     if (object)
         close_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "value_close_permissive");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "value_close_permissive");
     if (object)
         close_permissive_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "value_close_permissive_remove");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "value_close_permissive_remove");
     if (object)
         close_permissive_remove_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "value_reset");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "value_reset");
     if (object)
         reset_value = object->valueint;
 
@@ -154,7 +154,7 @@ bool Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* config
 bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator)
 {
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
-    cJSON *components_array = cJSON_GetObjectItem(configurator->assetConfig.assetInstanceRoot, "components");
+    cJSON *components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
         FPS_ERROR_LOG("Components array is NULL.");
         return false;
@@ -263,20 +263,20 @@ bool Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configur
     }
 
     // does config validation that was not done earlier since we did not know which feeder was POI at the time
-    if (!validate_config(configurator->pAssetVarMap))
+    if (!validate_config(configurator->p_asset_var_map))
     {
         FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder failed base Asset validate config check\n");
         return false;
     }
 
     // checks to make sure required base class vars were configured. other assets had these checked in configure_base function
-    cJSON* obj = cJSON_GetObjectItem(configurator->assetConfig.assetInstanceRoot, "rated_active_power_kw");
+    cJSON* obj = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "rated_active_power_kw");
     if (obj == NULL)
     {
         FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder missing required rated_active_power_kw variable\n");
         return false;
     }
-    obj = cJSON_GetObjectItem(configurator->assetConfig.assetInstanceRoot, "slew_rate");
+    obj = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "slew_rate");
     if (obj == NULL)
     {
         FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder missing required slew_rate variable\n");

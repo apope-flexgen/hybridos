@@ -117,8 +117,7 @@ bool Type_Manager::add_type_data_to_buffer(fmt::memory_buffer &buf, std::map<std
     // add data for each asset instance
     for(size_t i = 0; i < pAssets.size(); ++i) {
         // add asset instance's ID with colon
-        char *asset_instance_id = pAssets[i]->get_id();
-        bufJSON_AddId(buf, asset_instance_id);
+        bufJSON_AddId(buf, pAssets[i]->get_id().c_str());
         // add asset instance's data
         if (!pAssets[i]->add_asset_data_to_buffer(buf, asset_var_map, strcmp(asset_type_id, ESS_TYPE_ID) != 0)) {
             FPS_ERROR_LOG("Error adding asset instance with type %s and index %zu to the type manager data object.", asset_type_id, i);
@@ -412,7 +411,7 @@ int Type_Manager::map_to_array_translation(std::string name)
 Asset* Type_Manager::get_asset_instance(const char* asset_id)
 {
     for(auto asset : pAssets) {
-        if (strcmp(asset_id, asset->get_id()) == 0)
+        if (asset_id == asset->get_id())
             return asset;
     }
     return NULL;

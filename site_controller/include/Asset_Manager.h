@@ -185,7 +185,7 @@ public:
     int get_num_active_alarms(assetType type) const;
     bool check_asset_alert(std::pair<std::string,uint64_t>& alert);
 
-    const char* get_poi_id(void);
+    const std::string get_poi_id(void);
     bool get_poi_feeder_state(void);
     bool get_poi_feeder_close_permissive_state(void);
     float get_poi_gridside_frequency(void);

@@ -480,19 +480,19 @@ void Asset_ESS::set_voltage_slew_setpoint(float setpoint)
 
 bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configurator)
 {
-    Asset_Configurator* assetConfig = &configurator->assetConfig;
+    Asset_Configurator* asset_config = &configurator->asset_config;
 
     // Set flag if component will be providing chargeable/dischargeable energy values via Modbus
     energy_configured = chargeable_energy_raw->get_component_uri() != NULL && dischargeable_energy_raw->get_component_uri() != NULL;
 
-    cJSON* object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "system_rated_chargeable_power");
+    cJSON* object = cJSON_GetObjectItem(asset_config->asset_instance_root, "system_rated_chargeable_power");
     rated_chargeable_power = object ? object->valuedouble : rated_active_power_kw; // if not present, set to rated active power for backward compatibility
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "system_rated_dischargeable_power");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "system_rated_dischargeable_power");
     rated_dischargeable_power = object ? object->valuedouble : rated_active_power_kw; // if not present, set to rated active power for backward compatibility 
 
     // asset configuration must include rated_capacity
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "rated_capacity");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "rated_capacity");
     if (object)
     {
         rated_capacity = object->valuedouble;
@@ -503,31 +503,31 @@ bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configura
         return false;
     }
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "nominal_voltage");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "nominal_voltage");
     if (object)
         nominal_voltage = object->valuedouble;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "nominal_frequency");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "nominal_frequency");
     if (object)
         nominal_frequency = object->valuedouble;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "start_value");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "start_value");
     if (object)
         start_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "stop_value");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "stop_value");
     if (object)
         stop_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "enter_standby_value");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "enter_standby_value");
     if (object)
     	enter_standby_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "exit_standby_value");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "exit_standby_value");
     if (object)
     	exit_standby_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "standby_status_mask");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "standby_status_mask");
     // if the mask isn't NULL and is a hex string, try to parse it
     if (object && object->valuestring)
         try
@@ -548,67 +548,67 @@ bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configura
         return false;
     }
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "DC_contactor_closed");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "DC_contactor_closed");
     if (object)
     	bms_control_close = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "DC_contactor_open");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "DC_contactor_open");
     if (object)
     	bms_control_open = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "DC_contactor_reset");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "DC_contactor_reset");
     if (object)
     	bms_control_reset = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "DC_contactor_restriction");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "DC_contactor_restriction");
     if (object)
     	dc_contactor_restriction = (object->type == cJSON_True);
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "chg_soc_begin");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "chg_soc_begin");
     if (object)
     	chgSocBegin = object->valuedouble;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "chg_soc_end");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "chg_soc_end");
     if (object)
     	chgSocEnd = object->valuedouble;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "dischg_soc_begin");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "dischg_soc_begin");
     if (object)
     	dischgSocBegin = object->valuedouble;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "dischg_soc_end");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "dischg_soc_end");
     if (object)
     	dischgSocEnd = object->valuedouble;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "min_raw_soc");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "min_raw_soc");
     if (object)
     	minRawSoc = (float)object->valuedouble;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "max_raw_soc");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "max_raw_soc");
     if (object)
     	maxRawSoc = (float)object->valuedouble;
     
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "chargeable_min_limit_kW");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "chargeable_min_limit_kW");
     if (object)
     	chargeable_min_limit_kW = object->valuedouble;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "dischargeable_min_limit_kW");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "dischargeable_min_limit_kW");
     if (object)
     	dischargeable_min_limit_kW = object->valuedouble;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "reactive_power_mode_q");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "reactive_power_mode_q");
     if (object)
     	reactive_power_mode_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "reactive_power_mode_pf");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "reactive_power_mode_pf");
     if (object)
     	power_factor_mode_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "grid_form_cmd");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "grid_form_cmd");
     if (object)
         grid_forming_value = object->valueint;
 
-    object = cJSON_GetObjectItem(assetConfig->assetInstanceRoot, "grid_follow_cmd");
+    object = cJSON_GetObjectItem(asset_config->asset_instance_root, "grid_follow_cmd");
     if (object)
         grid_following_value = object->valueint;
 
@@ -623,7 +623,7 @@ bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configura
 bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator)
 {
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
-    cJSON* components_array = cJSON_GetObjectItem(configurator->assetConfig.assetInstanceRoot, "components");
+    cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
         FPS_ERROR_LOG("Components array is NULL.");
         return false;

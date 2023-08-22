@@ -1633,13 +1633,13 @@ void Site_Manager::get_values()
     ess_actual_kW.value.set(pAssets->get_ess_total_active_power());
     gen_actual_kW.value.set(pAssets->get_gen_total_active_power());
     solar_actual_kW.value.set(pAssets->get_solar_total_active_power());
-    feeder_actual_kW.value.set((invert_poi_kW.value.value_bool ? -1.0f : 1.0f) * pAssets->get_feeder_active_power(pAssets->get_poi_id()));
+    feeder_actual_kW.value.set((invert_poi_kW.value.value_bool ? -1.0f : 1.0f) * pAssets->get_feeder_active_power(pAssets->get_poi_id().c_str()));
 
     ess_actual_kVAR.value.set(pAssets->get_ess_total_reactive_power());
     gen_actual_kVAR.value.set(pAssets->get_gen_total_reactive_power()); 
     solar_actual_kVAR.value.set(pAssets->get_solar_total_reactive_power());
     // Invert using the same flag as active power
-    feeder_actual_kVAR.value.set((invert_poi_kW.value.value_bool ? -1.0f : 1.0f) * pAssets->get_feeder_reactive_power(pAssets->get_poi_id()));
+    feeder_actual_kVAR.value.set((invert_poi_kW.value.value_bool ? -1.0f : 1.0f) * pAssets->get_feeder_reactive_power(pAssets->get_poi_id().c_str()));
     feeder_actual_pf.value.set(pAssets->get_poi_power_factor());
 
     //frequency response values needed
@@ -2931,7 +2931,6 @@ void Site_Manager::check_state(void)
 
 void Site_Manager::process_state(void)
 {
-
     FPS_DEBUG_LOG("\n***HybridOS Step 3: Get and Set Asset Manager Data.\nIn Site_Manager::process_state.\n");
 
     //get all interface variables
