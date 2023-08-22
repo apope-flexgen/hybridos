@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "npx prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "lint:all": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix",
-    "prepare": "husky install",
+    "prepare": "cd .. && husky install web_apps/.husky",
     "ci:all": "pnpm i",
     "ci:shared": "pnpm --filter shared i",
     "ci:hybridos-shared": "pnpm --filter @hybridos/shared i",
