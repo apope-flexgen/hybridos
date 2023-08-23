@@ -16,7 +16,9 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 	}
 	if msg.Method == "pub" || msg.Method == "set" {
 		//check to see if the value is something we care about
-		if _, ok := UriElements[msg.Uri]; ok {
+		_, isEchoOutputRegister := echoOutputToInputNum[msg.Uri]
+		_, isEchoPublishUri := echoPublishUristoEchoNum[msg.Uri]
+		if _, ok := UriElements[msg.Uri]; ok || isEchoOutputRegister || isEchoPublishUri {
 			// if so, unmarshal the message body
 			var err error
 			pj, err = simdjson.Parse(msg.Body, pj)
@@ -44,6 +46,9 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 			}
 		}
 	} else if msg.Method == "get" && len(msg.Replyto) > 0 {
+		if _, no_response := noGetResponse[msg.Uri]; no_response {
+			return
+		}
 		// find metric in outputs and set back out
 		outputsMutex.RLock()
 		_, last_uri_element_is_output := MetricsConfig.Outputs[msg.Frags[len(msg.Frags)-1]]
@@ -110,6 +115,16 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 			outputsMutex.RUnlock()
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBody})
 			msgBodyMutex.Unlock()
+		} else {
+			echoMutex.RLock()
+			for echoIndex, _ := range MetricsConfig.Echo {
+				if msg.Uri == MetricsConfig.Echo[echoIndex].PublishUri {
+					f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: MetricsConfig.Echo[echoIndex].Echo})
+				} else if echoValue, isVal := MetricsConfig.Echo[echoIndex].Echo[msg.Frags[len(msg.Frags)-1]]; GetParentUri(msg.Uri) == MetricsConfig.Echo[echoIndex].PublishUri && isVal {
+					f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: echoValue})
+				}
+			}
+			echoMutex.RUnlock()
 		}
 	}
 	// } else if msg.Method == "del" {
@@ -150,6 +165,23 @@ func handleNakedMessage(msg *fims.FimsMsgRaw) {
 			echoMutex.Unlock()
 		}
 
+	}
+
+	//check if the uri has a corresponding echo output
+	if (*msg).Method == "set" {
+		echoMutex.Lock()
+		if inputNum, ok := echoOutputToInputNum[(*msg).Uri]; ok {
+			echoInput = MetricsConfig.Echo[echoPublishUristoEchoNum[GetParentUri((*msg).Uri)]].Inputs[inputNum]
+			echoInputRegisterName, ok := echoInput.Registers[(*msg).Frags[len((*msg).Frags)-1]] // this should always come out with something, but just in case...
+			if ok {
+				echoInputUri := echoInput.Uri + "/" + echoInputRegisterName
+				err = json.Unmarshal((*msg).Body, &elementValue)
+				if err == nil {
+					f.Send(fims.FimsMsg{Method: "set", Uri: echoInputUri, Replyto: "", Body: elementValue})
+				}
+			}
+		}
+		echoMutex.Unlock()
 	}
 
 	// check if the uri corresponds directly to an input
@@ -433,6 +465,46 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 				}
 			}
 		}
+	}
+	// or it could be a single echo output register or an echo publish URI
+	//check if the uri has a corresponding echo output
+	if (*msg).Method == "set" {
+		echoMutex.RLock()
+		if inputNum, ok := echoOutputToInputNum[(*msg).Uri]; ok {
+			element, err := iter.FindElement(nil, "value")
+			if err == nil {
+				echoInput = MetricsConfig.Echo[echoPublishUristoEchoNum[GetParentUri((*msg).Uri)]].Inputs[inputNum]
+				echoInputRegisterName, ok := echoInput.Registers[(*msg).Frags[len((*msg).Frags)-1]] // this should always come out with something, but just in case...
+				if ok {
+					echoInputUri := echoInput.Uri + "/" + echoInputRegisterName
+					elementValue, _ = element.Iter.Interface()
+					f.Send(fims.FimsMsg{Method: "set", Uri: echoInputUri, Replyto: "", Body: elementValue})
+				}
+			}
+		} else if echoIndex, ok := echoPublishUristoEchoNum[(*msg).Uri]; ok {
+			echoMap := make(map[string]interface{}, 0)
+			err := json.Unmarshal((*msg).Body, &echoMap)
+			if err == nil {
+				echoMsgBodyMutex.Lock()
+				containsOneValue := false
+				for inputIndex, _ := range MetricsConfig.Echo[echoIndex].Inputs {
+					echoMsgBody = make(map[string]interface{}, 0)
+					containsOneValue = false
+					for newName, value := range echoMap {
+						if oldName, ok := MetricsConfig.Echo[echoIndex].Inputs[inputIndex].Registers[newName]; ok {
+							echoMsgBody[oldName] = value
+							containsOneValue = true
+						}
+					}
+					if containsOneValue {
+						f.Send(fims.FimsMsg{Method: "set", Uri: MetricsConfig.Echo[echoIndex].Inputs[inputIndex].Uri, Replyto: "", Body: echoMsgBody})
+					}
+				}
+				echoMsgBodyMutex.Unlock()
+			}
+		}
+		echoMutex.RUnlock()
+
 	}
 }
 

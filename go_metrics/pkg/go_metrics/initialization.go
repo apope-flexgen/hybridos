@@ -2228,6 +2228,9 @@ func combineFlags(outputName string, output *Output) {
 	if outputVarChanged == nil {
 		outputVarChanged = make(map[string]bool, 0)
 	}
+	if noGetResponse == nil {
+		noGetResponse = make(map[string]bool, 0)
+	}
 	outputVarChanged[outputName] = true
 	uriGroup := ""
 
@@ -2254,6 +2257,8 @@ func combineFlags(outputName string, output *Output) {
 		PubUriFlags[uriGroup] = removeDuplicateValues(PubUriFlags[uriGroup])
 		if stringInSlice(PubUriFlags[uriGroup], "interval_set") {
 			uriIsSet[uriGroup] = true
+			noGetResponse[output.Uri] = true
+			noGetResponse[output.Uri+"/"+outputName] = true
 		} else {
 			uriIsSet[uriGroup] = false
 		}
@@ -2269,6 +2274,8 @@ func combineFlags(outputName string, output *Output) {
 		}
 		if stringInSlice(PubUriFlags[uriGroup], "direct_set") {
 			uriToDirectSetActive[uriGroup] = false
+			noGetResponse[output.Uri] = true
+			noGetResponse[output.Uri+"/"+outputName] = true
 		}
 	}
 
@@ -2435,6 +2442,8 @@ func GetSubscribeUris() {
 
 	// each echo input should have a uri to subscribe to
 	uriToEchoObjectInputMap = make(map[string]map[int]int, 0)
+	echoPublishUristoEchoNum = make(map[string]int, 0)
+	echoOutputToInputNum = make(map[string]int, 0)
 	for echoIndex, echoObject := range MetricsConfig.Echo {
 		for inputIndex, echoInput := range echoObject.Inputs {
 			if len(echoInput.Uri) > 0 {
@@ -2443,7 +2452,14 @@ func GetSubscribeUris() {
 					uriToEchoObjectInputMap[echoInput.Uri] = make(map[int]int, 0)
 				}
 				uriToEchoObjectInputMap[echoInput.Uri][echoIndex] = inputIndex
+				for echoRegister, _ := range echoInput.Registers {
+					echoOutputToInputNum[echoObject.PublishUri+"/"+echoRegister] = inputIndex
+				}
 			}
+		}
+		if len(echoObject.PublishUri) > 0 {
+			SubscribeUris = append(SubscribeUris, echoObject.PublishUri)
+			echoPublishUristoEchoNum[echoObject.PublishUri] = echoIndex
 		}
 	}
 

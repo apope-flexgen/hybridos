@@ -61,6 +61,9 @@ var filterNeedsEval map[string]bool                // map of dynamic expressions
 var pubDataChanged map[string]bool                 // if data in a publish uri changes, we need to send out a new pub!!
 var outputToUriGroup map[string]string             // since outputs can get published to the same uri but at different times, we need this to keep track of the groups
 var outputVarChanged map[string]bool               // if an output variable changed, we want to keep track of it for sparse publishes
+var noGetResponse map[string]bool                  // don't respond to get requests for this uri
+var echoOutputToInputNum map[string]int            // full echo register uri to input num
+var echoPublishUristoEchoNum map[string]int        // the pub uri to the echo object number
 
 // local variables used for publishing messages
 var outputElementValue interface{}

@@ -2,11 +2,12 @@ package go_metrics
 
 import (
 	"fmt"
-	simdjson "github.com/minio/simdjson-go"
 	"log"
 	"os"
 	"strings"
 	"testing"
+
+	simdjson "github.com/minio/simdjson-go"
 )
 
 func TestGenerateScope(t *testing.T) {
@@ -6407,6 +6408,7 @@ func TestGetSubscribeUris(t *testing.T) {
 		"/some/output3",
 		"/some/level2",
 		"/some/status/output",
+		"/components/sel_735",
 	}
 	expecteduriToInputNameMap := map[string][]string{
 		"/components/bms_74b/vnom":     []string{"var_name1", "var_name1_copy"},

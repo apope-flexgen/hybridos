@@ -126,67 +126,72 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 		}(j)
 	}
 	go func() {
-		for echoIndex, _ := range MetricsConfig.Echo {
-			select {
-			case <-MetricsConfig.Echo[echoIndex].Ticker.C:
-				if len(MetricsConfig.Echo[echoIndex].Heartbeat) > 0 {
-					MetricsConfig.Echo[echoIndex].Echo[MetricsConfig.Echo[echoIndex].Heartbeat] = float64(time.Since(t0)) / 1000000000.0
-				}
-				if MetricsConfig.Echo[echoIndex].Format == "naked" {
-					echoMsgBodyMutex.Lock()
-					echoMsgBody = make(map[string]interface{}, 0)
-					for key, value := range MetricsConfig.Echo[echoIndex].Echo {
-						switch value.(type) {
-						case map[string]interface{}:
-							if value, ok := value.(map[string]interface{})["value"]; ok {
-								echoMsgBody[key] = value
-							} else {
-								echoMsgBody[key] = nil
-							}
-						default:
-							echoMsgBody[key] = value
-						}
+		if len(MetricsConfig.Echo) == 0 {
+			return
+		}
+		for {
+			for echoIndex, _ := range MetricsConfig.Echo {
+				select {
+				case <-MetricsConfig.Echo[echoIndex].Ticker.C:
+					if len(MetricsConfig.Echo[echoIndex].Heartbeat) > 0 {
+						MetricsConfig.Echo[echoIndex].Echo[MetricsConfig.Echo[echoIndex].Heartbeat] = float64(time.Since(t0)) / 1000000000.0
 					}
-					f.Send(fims.FimsMsg{
-						Method: "pub",
-						Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
-						Body:   echoMsgBody,
-					})
-					echoMsgBodyMutex.Unlock()
-				} else if MetricsConfig.Echo[echoIndex].Format == "clothed" {
-					echoMsgBodyMutex.Lock()
-					echoMsgBody = make(map[string]interface{}, 0)
-					for key, value := range MetricsConfig.Echo[echoIndex].Echo {
-						switch value.(type) {
-						case map[string]interface{}:
-							echoMsgBody[key] = value
-						default:
+					if MetricsConfig.Echo[echoIndex].Format == "naked" {
+						echoMsgBodyMutex.Lock()
+						echoMsgBody = make(map[string]interface{}, 0)
+						for key, value := range MetricsConfig.Echo[echoIndex].Echo {
 							switch value.(type) {
-							case string:
-								outputElementMutex.Lock()
-								json.Unmarshal([]byte(fmt.Sprintf("{\"value\":\"%v\"}", value)), &outputElementValue)
-								echoMsgBody[key] = outputElementValue
-								outputElementMutex.Unlock()
+							case map[string]interface{}:
+								if value, ok := value.(map[string]interface{})["value"]; ok {
+									echoMsgBody[key] = value
+								} else {
+									echoMsgBody[key] = nil
+								}
 							default:
-								outputElementMutex.Lock()
-								json.Unmarshal([]byte(fmt.Sprintf("{\"value\":%v}", value)), &outputElementValue)
-								echoMsgBody[key] = outputElementValue
-								outputElementMutex.Unlock()
+								echoMsgBody[key] = value
 							}
 						}
+						f.Send(fims.FimsMsg{
+							Method: "pub",
+							Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
+							Body:   echoMsgBody,
+						})
+						echoMsgBodyMutex.Unlock()
+					} else if MetricsConfig.Echo[echoIndex].Format == "clothed" {
+						echoMsgBodyMutex.Lock()
+						echoMsgBody = make(map[string]interface{}, 0)
+						for key, value := range MetricsConfig.Echo[echoIndex].Echo {
+							switch value.(type) {
+							case map[string]interface{}:
+								echoMsgBody[key] = value
+							default:
+								switch value.(type) {
+								case string:
+									outputElementMutex.Lock()
+									json.Unmarshal([]byte(fmt.Sprintf("{\"value\":\"%v\"}", value)), &outputElementValue)
+									echoMsgBody[key] = outputElementValue
+									outputElementMutex.Unlock()
+								default:
+									outputElementMutex.Lock()
+									json.Unmarshal([]byte(fmt.Sprintf("{\"value\":%v}", value)), &outputElementValue)
+									echoMsgBody[key] = outputElementValue
+									outputElementMutex.Unlock()
+								}
+							}
+						}
+						f.Send(fims.FimsMsg{
+							Method: "pub",
+							Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
+							Body:   echoMsgBody,
+						})
+						echoMsgBodyMutex.Unlock()
+					} else {
+						f.Send(fims.FimsMsg{
+							Method: "pub",
+							Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
+							Body:   MetricsConfig.Echo[echoIndex].Echo,
+						})
 					}
-					f.Send(fims.FimsMsg{
-						Method: "pub",
-						Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
-						Body:   echoMsgBody,
-					})
-					echoMsgBodyMutex.Unlock()
-				} else {
-					f.Send(fims.FimsMsg{
-						Method: "pub",
-						Uri:    MetricsConfig.Echo[echoIndex].PublishUri,
-						Body:   MetricsConfig.Echo[echoIndex].Echo,
-					})
 				}
 			}
 		}
