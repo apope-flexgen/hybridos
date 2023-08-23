@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common'
-import { DBI_SERVICE, DBI_URIs } from 'src/dbi/dbi.interface'
-import { IDBIService } from 'src/dbi/dbi.interface'
+import { DBI_SERVICE, DBI_URIs } from '../dbi/dbi.interface'
+import { IDBIService } from '../dbi/dbi.interface'
 import { IAssetsService } from './assets.interface'
 import { AssetsResponse } from './responses'
 import { AddAssetRequest } from 'shared/types/dtos/assets.dto'

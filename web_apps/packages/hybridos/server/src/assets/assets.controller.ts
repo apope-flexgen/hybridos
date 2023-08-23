@@ -7,10 +7,11 @@ import { AssetsResponse } from './responses';
 import { IAssetsService } from './assets.interface';
 import { Layout } from '../../../shared/types/dtos/layouts.dto';
 import { Assets } from './dtos/asset.dto';
-import { DefaultApiError } from 'src/exceptions/defaultResponse.exception';
-import { LayoutsGateway } from 'src/bff/Layouts/layouts.gateway';
-import { LogText } from 'src/logging/log_text/log-text';
-import { LoggingService } from 'src/logging/logging.service';
+import { DefaultApiError } from '../exceptions/defaultResponse.exception';
+import { LayoutsGateway } from '../bff/Layouts/layouts.gateway';
+import { LogText } from '../logging/log_text/log-text';
+import { LoggingService } from '../logging/logging.service';
+import { LOGGING_SERVICE } from '../logging/logging.constants';
 
 @ApiTags('assets')
 @ApiDefaultResponse({ type: DefaultApiError })
@@ -18,12 +19,14 @@ import { LoggingService } from 'src/logging/logging.service';
 @ApiSecurity('bearerAuth')
 export class AssetsController {
   constructor(
+    @Inject(LOGGING_SERVICE)
     private readonly loggingService: LoggingService,
     @Inject(ASSETS_SERVICE)
     private readonly assetsService: IAssetsService,
     @Inject(LAYOUTS_SERVICE)
     private readonly layoutsService: ILayoutsService,
-    @Inject(LayoutsGateway) private readonly layoutsGateway: LayoutsGateway,
+    @Inject(LayoutsGateway)
+    private readonly layoutsGateway: LayoutsGateway,
   ) {}
   @ApiOkResponse({ type: AssetsResponse })
   @Get()

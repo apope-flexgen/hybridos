@@ -1,7 +1,7 @@
 import { Catch, ArgumentsHost } from '@nestjs/common';
 import { BaseWsExceptionFilter } from '@nestjs/websockets';
-import { LoggingService } from 'src/logging/logging.service';
-import { LogText } from 'src/logging/log_text/log-text';
+import { LoggingService } from '../logging/logging.service';
+import { LogText } from '../logging/log_text/log-text';
 import {
   CoreExceptionFilter,
   DEFAULT_ERROR_MESSAGE,
