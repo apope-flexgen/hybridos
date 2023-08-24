@@ -3,7 +3,7 @@ import { Observable, map, merge } from 'rxjs'
 import { computeClothedValue } from '../../utils/utils'
 import { FimsService } from '../../fims/fims.service'
 import { FIMS_SERVICE } from '../../fims/interfaces/fims.interface'
-import { SiteStatusConfig, SiteStatusResponse } from './sitestatus.interface'
+import { SiteStatusConfig, SiteStatusDataField, SiteStatusDataFieldConfig, SiteStatusResponse } from './sitestatus.interface'
 import { DBI_URIs, IDBIService } from 'src/dbi/dbi.interface'
 import { DBI_SERVICE } from 'src/dbi/dbi.interface'
 import { AppEnvService } from 'src/environment/appEnv.service'
@@ -38,7 +38,17 @@ export class SiteStatusService {
             return this.config
         }
 
-        this.config = await this.dbiService.getFromDBI(DBI_URIs.SITE_STATUS_BAR)
+        let unindexedConfig = await this.dbiService.getFromDBI(DBI_URIs.SITE_STATUS_BAR);
+        let indexedDataSources = unindexedConfig.dataSources.map(
+            (ds: SiteStatusDataFieldConfig, index: number): SiteStatusDataField => {
+                return {
+                    ...ds,
+                    index,
+                };
+            },
+        );
+        unindexedConfig.dataSources = indexedDataSources;
+        this.config = unindexedConfig;
 
         return this.config
     }
@@ -85,6 +95,7 @@ export class SiteStatusService {
                                                 label: dataSource.label,
                                                 value,
                                                 unit,
+                                                index: dataSource.index,
                                             },
                                     },
                                 },

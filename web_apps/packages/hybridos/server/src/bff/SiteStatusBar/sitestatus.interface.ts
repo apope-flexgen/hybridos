@@ -3,17 +3,22 @@ export type SiteStatusConfig = {
     dataSources: SiteStatusDataField[]
 }
 
-export type SiteStatusDataField = {
+export type SiteStatusDataFieldConfig = {
     uri: string
     field: string
     dataType: string
     label: string
 }
 
+export type SiteStatusDataField = SiteStatusDataFieldConfig & {
+    index: number
+}
+
 export type SiteStatusDataPointInfo = {
     label: string
     value: string
     unit: string
+    index: number
 }
 
 export type SiteStatusDataPointsDTO = {
