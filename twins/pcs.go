@@ -469,16 +469,25 @@ func (p *pcs) CalculateState(input terminal, dt float64) (output terminal) {
 // CalculateState()
 func (p *pcs) DistributeLoad(input terminal) (output terminal) {
 	// TODO: implement losses here from AC power to DC power during conversion
-	if p.GridForming {
-		p.Fadjust = input.f
-		output.p = getY(p.Fadjust, p.Dactive.slope, p.Dactive.offset) // send power down, because we return zero-terminal in CalculateState() in grid-forming TODO GB: should this be p.P?
-		output.vdc = getX(input.p, p.DvoltageExternal.slope, p.DvoltageExternal.offset)
-	} else {
-		//Previously this was p.P, however that includes losses and our convention is to put losses on output and draw pcmd kW from battery.
-		//TODO GB: Is this convention right? Should we instead output pcmd kW and draw pcmd + losses?
-		output.p = p.Pdc // still send power down, because we calculated PCS power at the end of CalculateState() in grid-following.
-		output.vdc = getX(p.P, p.DvoltageExternal.slope, p.DvoltageExternal.offset)
+	if p.On{	
+		if p.GridForming {
+			p.Fadjust = input.f
+			output.p = getY(p.Fadjust, p.Dactive.slope, p.Dactive.offset) // send power down, because we return zero-terminal in CalculateState() in grid-forming TODO GB: should this be p.P?
+			output.vdc = getX(input.p, p.DvoltageExternal.slope, p.DvoltageExternal.offset)
+		} else {
+			//Previously this was p.P, however that includes losses and our convention is to put losses on output and draw pcmd kW from battery.
+			//TODO GB: Is this convention right? Should we instead output pcmd kW and draw pcmd + losses?
+			output.p = p.Pdc // still send power down, because we calculated PCS power at the end of CalculateState() in grid-following.
+			output.vdc = getX(p.P, p.DvoltageExternal.slope, p.DvoltageExternal.offset)
+		}
+		//Limit output to Plim to prevent assets below from being overpowered. This can happen especially in gridforming if the BMS power is particularly low. 
+		if output.p > p.Plim {
+			output.p = p.Plim
+		} else if output.p < -p.Plim {
+			output.p = -p.Plim
+		}
 	}
+
 	return output
 }
 
