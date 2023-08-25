@@ -11,7 +11,7 @@ import {
   ADD_UNITS,
   ALARM_FIELDS,
   BASE_URI,
-  CUSTOM_REGEX,
+  ICON,
   ENABLE_SUMMARY,
   EXTENSION,
   FAULT_FIELDS,
@@ -127,14 +127,14 @@ const Items = () => {
       <Divider orientation="horizontal" variant="fullWidth" />
       <Row>
         <ColumnLeft>
-          <Typography text={CUSTOM_REGEX} variant="bodyL" />
+          <Typography text={ICON} variant="bodyL" />
         </ColumnLeft>
         <TextField
           disableLabelAnimation
-          id="customRegex"
-          label={CUSTOM_REGEX}
+          id="icon"
+          label={ICON}
           onChange={handleTextFieldChange}
-          value={selectedAsset?.info.customRegex || ''}
+          value={selectedAsset?.info.icon || ''}
         />
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />

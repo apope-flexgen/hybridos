@@ -1,5 +1,6 @@
 /* eslint-disable */
 // TODO: fix lint
+import { isValidIconString } from '@flexgen/storybook';
 import { Roles } from 'shared/types/api/Users/Users.types';
 import { FLEET_MANAGER } from 'src/components/BaseApp';
 
@@ -51,17 +52,22 @@ const getRoutes = (
     | Roles.Developer
     | Roles.Observer
     | Roles.RestReadWrite,
-  customAssets: { info: { key: string; name: string } }[],
+  customAssets: { info: { key: string; name: string; icon?: string } }[],
   siteConfiguration: SiteConfiguration,
 ): RouteObject[] => {
   const customAssetsArray = customAssets
-    ? customAssets.map(({ info: { name, key } }) => ({
-        componentName: 'AssetsPage',
-        icon: 'Storage',
-        itemName: name,
-        path: `/${key}`,
-        assetKey: key,
-      }))
+    ? customAssets.map(({ info: { name, key, icon } }) => {
+        const validIcon = icon && isValidIconString(icon) ? icon : 'Storage';
+        console.log('icon stuff', icon, icon && isValidIconString(icon), validIcon);
+
+        return {
+          componentName: 'AssetsPage',
+          icon: validIcon,
+          itemName: name,
+          path: `/${key}`,
+          assetKey: key,
+        };
+      })
     : [];
 
   const routes = [

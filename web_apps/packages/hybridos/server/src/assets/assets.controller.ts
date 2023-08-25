@@ -56,6 +56,7 @@ export class AssetsController {
       acc.push({
         info: {
           name: el.info.name,
+          icon: el.info.icon,
           key,
         },
       });

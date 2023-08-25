@@ -119,7 +119,7 @@ bool Type_Manager::add_type_data_to_buffer(fmt::memory_buffer &buf, std::map<std
         // add asset instance's ID with colon
         bufJSON_AddId(buf, pAssets[i]->get_id().c_str());
         // add asset instance's data
-        if (!pAssets[i]->add_asset_data_to_buffer(buf, asset_var_map, strcmp(asset_type_id, ESS_TYPE_ID) != 0)) {
+        if (!pAssets[i]->add_asset_data_to_buffer(buf, asset_var_map, strcmp(asset_type_id, FEEDERS_TYPE_ID) == 0)) {
             FPS_ERROR_LOG("Error adding asset instance with type %s and index %zu to the type manager data object.", asset_type_id, i);
             return false;
         }
@@ -253,7 +253,7 @@ void Type_Manager::publish_assets(assetType type, std::map <std::string, Fims_Ob
     // publish data for each asset instance
     for(size_t i = 0; i < pAssets.size(); ++i) {
         send_FIMS_buf.clear();
-        if (!pAssets[i]->add_asset_data_to_buffer(send_FIMS_buf, asset_var_map, type != ESS)) {
+        if (!pAssets[i]->add_asset_data_to_buffer(send_FIMS_buf, asset_var_map, type == FEEDERS)) {
             FPS_ERROR_LOG("Error adding asset instance with type %s and index %zu to the type manager publish.", asset_type_id, i);
             return;
         }

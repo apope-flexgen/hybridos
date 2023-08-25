@@ -838,9 +838,11 @@ bool Asset::configure_single_fims_var(std::map <std::string, Fims_Object*> * con
  */
 bool Asset::configure_watchdog_vars(std::map <std::string, Fims_Object*> * const asset_var_map)
 {
+    if (!watchdog_enable)
+        return true;
+
     // Startup connected as true, else it will cause a fault on startup before it reads the modbus value
-    if (watchdog_enable)
-        component_connected->value.set(true);
+    component_connected->value.set(true);
 
     // Create a watchdog status Fims_Object if the watchdog timer is enabled
     bool watchdog_status_configured = configure_single_fims_var(asset_var_map,&watchdog_status,"watchdog_status",Bool,0,0,false,false,"Watchdog Status");
@@ -1013,7 +1015,7 @@ bool Asset::handle_get(fims_message *pmsg, std::map<std::string, Fims_Object*> *
 
     // URI is /assets/<asset type>/<asset ID>
     if (pmsg->nfrags < 4) {
-        if (!add_asset_data_to_buffer(send_FIMS_buf, asset_var_map, strcmp(asset_type_id, ESS_TYPE_ID) != 0)) {
+        if (!add_asset_data_to_buffer(send_FIMS_buf, asset_var_map, strcmp(asset_type_id, FEEDERS_TYPE_ID) == 0)) {
             return false;
         }
         return send_buffer_to(pmsg->replyto, send_FIMS_buf);
@@ -1114,7 +1116,7 @@ bool Asset::add_variable_to_buffer(std::string uri, const char* variable_id, fmt
         }
         
         // Start clothed objects with an opening curly brace
-        bool clothed = strcmp(asset_type_id, ESS_TYPE_ID) != 0;
+        bool clothed = strcmp(asset_type_id, FEEDERS_TYPE_ID) == 0;
         if (clothed) bufJSON_StartObject(buf);
         // Add the Fims_Object data
         asset_it->second->add_to_JSON_buffer(buf, variable_id, clothed);

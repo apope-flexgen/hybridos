@@ -3104,11 +3104,16 @@
 					"name": {
 						"type": "string",
 						"description": "The name of the item, This will appear on the left side drawer of the UI as well as the relevant page."
+					},
+					"icon": {
+						"type": "string",
+						"description": "The icon to display in the drawer tab of the UI"
 					}
 				},
 				"required": [
 					"key",
-					"name"
+					"name",
+					"icon"
 				]
 			},
 			"Layout": {

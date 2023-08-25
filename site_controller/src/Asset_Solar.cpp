@@ -306,35 +306,35 @@ bool Asset_Solar::generate_asset_ui(fmt::memory_buffer &buf, const char* const v
 
     // add the maint mode control if defined
     maint_mode.enabled = !inLockdown;
-    goodBody = maint_mode.makeJSONObject(buf, var) && goodBody;
+    goodBody = maint_mode.makeJSONObject(buf, var, true) && goodBody;
 
     // add the maint mode control if defined
     lock_mode.enabled = inMaintenance;
-    goodBody = lock_mode.makeJSONObject(buf, var) && goodBody;
+    goodBody = lock_mode.makeJSONObject(buf, var, true) && goodBody;
 
     clear_faults_ctl.enabled = (get_num_active_faults() != 0 || get_num_active_alarms() != 0);
-    goodBody = clear_faults_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = clear_faults_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // add the start button
     start_ctl.enabled = (!isRunning && inMaintenance);
-    goodBody = start_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = start_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // add the stop button
     stop_ctl.enabled = (isRunning && inMaintenance);
-    goodBody = stop_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = stop_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     enter_standby_ctl.enabled = (isRunning && inMaintenance && !inStandby && (active_power_setpoint->value.value_float == 0.0) && (reactive_power_setpoint->value.value_float == 0.0));
-    goodBody = enter_standby_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = enter_standby_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     exit_standby_ctl.enabled = (isRunning && inMaintenance && inStandby);
-    goodBody = exit_standby_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = exit_standby_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // now add the rest of the controls
     maint_active_power_setpoint_ctl.enabled = (inMaintenance && isRunning && !inStandby);
-    goodBody = maint_active_power_setpoint_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = maint_active_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     maint_reactive_power_setpoint_ctl.enabled = (inMaintenance && isRunning && !inStandby);
-    goodBody = maint_reactive_power_setpoint_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = maint_reactive_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     return (goodBody);
 }

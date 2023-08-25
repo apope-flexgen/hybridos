@@ -326,36 +326,36 @@ bool Asset_Generator::generate_asset_ui(fmt::memory_buffer &buf, const char* con
 
     // add the manual mode control if defined
     maint_mode.enabled = !inLockdown;
-    goodBody = maint_mode.makeJSONObject(buf, var) && goodBody;
+    goodBody = maint_mode.makeJSONObject(buf, var, true) && goodBody;
 
     // add the manual mode control if defined
     lock_mode.enabled = inMaintenance;
-    goodBody = lock_mode.makeJSONObject(buf, var) && goodBody;
+    goodBody = lock_mode.makeJSONObject(buf, var, true) && goodBody;
 
     clear_faults_ctl.enabled = (get_num_active_faults() != 0 || get_num_active_alarms() != 0);
-    goodBody = clear_faults_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = clear_faults_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // add the start control if defined
     start_ctl.enabled = !isRunning && inMaintenance && isStopped;
-    goodBody = start_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = start_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // now add the rest of the controls
     stop_ctl.enabled = isRunning && inMaintenance;
-    goodBody = stop_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = stop_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     start_next_ctl.enabled = ldss->enabled && !inMaintenance && !isRunning && isAvail &&
                             (ldss->priority_setting == STATIC ? (get_static_start_priority() > 1 && !block_ldss_static_starts) : get_dynamic_start_priority() > 1);
-    goodBody = start_next_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = start_next_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     stop_next_ctl.enabled = ldss->enabled && !inMaintenance && isRunning &&
                             (ldss->priority_setting == STATIC ? (get_static_stop_priority() > 1 && !block_ldss_static_stops) : get_dynamic_stop_priority() > 1);
-    goodBody = stop_next_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = stop_next_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     maint_active_power_setpoint_ctl.enabled = (inMaintenance && isRunning);
-    goodBody = maint_active_power_setpoint_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = maint_active_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     maint_reactive_power_setpoint_ctl.enabled = (inMaintenance && isRunning);
-    goodBody = maint_reactive_power_setpoint_ctl.makeJSONObject(buf, var) && goodBody;
+    goodBody = maint_reactive_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     return (goodBody);
 }
