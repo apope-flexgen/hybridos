@@ -1,1 +1,0 @@
-export const LOGGING_SERVICE = 'LoggingService'

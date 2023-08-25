@@ -11,7 +11,6 @@ import { DefaultApiError } from '../exceptions/defaultResponse.exception';
 import { LayoutsGateway } from '../bff/Layouts/layouts.gateway';
 import { LogText } from '../logging/log_text/log-text';
 import { LoggingService } from '../logging/logging.service';
-import { LOGGING_SERVICE } from '../logging/logging.constants';
 
 @ApiTags('assets')
 @ApiDefaultResponse({ type: DefaultApiError })
@@ -19,7 +18,6 @@ import { LOGGING_SERVICE } from '../logging/logging.constants';
 @ApiSecurity('bearerAuth')
 export class AssetsController {
   constructor(
-    @Inject(LOGGING_SERVICE)
     private readonly loggingService: LoggingService,
     @Inject(ASSETS_SERVICE)
     private readonly assetsService: IAssetsService,
