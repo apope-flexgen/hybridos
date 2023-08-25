@@ -119,7 +119,7 @@ struct Connection
     u64 stop_bits = 1;
 
     // max_num_conns ("contexts" -> ctx_pool) stuff:
-    u64 max_num_conns = 255;
+    u64 max_num_conns = 1;
 
     // inheritable stuff:
     bool off_by_one = false;
