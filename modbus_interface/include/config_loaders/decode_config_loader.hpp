@@ -266,6 +266,8 @@ struct Decode
     u64 size = 1;
     f64 scale = 0.0;
     s64 shift = 0;
+    u64 starting_bit_pos = 0;
+    u64 number_of_bits = 16; // How many bits this register tracks. Used by packed_registers to track a specific portion of the register
     std::string invert_mask_str = "0x0";
     bool multi_write_op_code = false; // inheritance stuff (from component, which inherits from connection)
     bool Signed = false;
@@ -274,6 +276,7 @@ struct Decode
     bool individual_bits = false;
     bool Enum = false;
     bool random_enum = false; // same as "enum"
+    bool packed_register = false; // Whether this register is packed alongside other registers into the same offset
     // experimental (left out for now):
     // bool enum_field = false;
     // bool individual_enums = false;
@@ -286,6 +289,7 @@ struct Decode
     u64 invert_mask = 0;
     bool has_bit_strings = false;
     u64 care_mask = std::numeric_limits<u64>::max(); // dervied from bit_strings array
+    bool uses_masks = false; // Whether this register uses an invert or care mask
     std::vector<Compressed_Bit_String> compressed_bit_strings; // to help remove "unknown" stuff and to make it more in line with what the runtime structs/array will look like (derive once here during config time)
 
     // for sorting purposes:
@@ -294,8 +298,15 @@ struct Decode
         return offset < other.offset;
     }
 
-    bool load(simdjson::ondemand::object& decode, Error_Location& err_loc, bool is_coil_or_discrete_input = false, bool off_by_one = false, bool is_server_config = false)
+    bool load(simdjson::ondemand::object& decode, Error_Location& err_loc, bool is_coil_or_discrete_input = false, bool off_by_one = false, bool is_server_config = false, Decode* parent_config = NULL)
     {
+        if (parent_config)
+        {
+            // Copy any parent configuration to this register
+            // may be overridden if values are provided in the parsing below for this child register
+            *this = *parent_config;
+        }
+
         if (!get_val(decode, "id", id, err_loc, Get_Type::Mandatory)) return false;
         if (!check_str_for_error(id, err_loc)) return false;
         err_loc.decode_id = id; // set error location here once we parse the id (and error check it)
@@ -306,8 +317,8 @@ struct Decode
             if (!get_val(decode, "uri", uri, err_loc, Get_Type::Mandatory)) return false;
             if (!check_str_for_error(uri, err_loc, R"({}\ "%)")) return false; // uri can have '/' in it
         }
-
-        if (!get_val(decode, "offset", offset, err_loc, Get_Type::Mandatory)) return false;
+        // If parent config was provided for a packed register, the offset will have already been provided
+        if (!get_val(decode, "offset", offset, err_loc, packed_register ? Get_Type::Optional : Get_Type::Mandatory)) return false;
         offset -= (1UL * off_by_one);
         if (!check_offset(off_by_one, err_loc)) return false;
 
@@ -336,6 +347,22 @@ struct Decode
             if (!get_val(decode, "enum", Enum, err_loc, Get_Type::Optional)) return false;
             if (!get_val(decode, "random_enum", random_enum, err_loc, Get_Type::Optional)) return false;
             Enum = Enum || random_enum; // set enum = to true for both enum and random_enum (we combine them in the new modbus_client)
+            // For packed registers, configuration can be provided at the parent level, and will be distributed to each of the children here.
+            if (packed_register)
+            {
+                // Starting bit pos is a shift operation that defines where this register will start decoding
+                // for the given offset
+                if (!get_val(decode, "starting_bit_pos", starting_bit_pos, err_loc, Get_Type::Optional)) return false;
+                if (!get_val(decode, "number_of_bits", number_of_bits, err_loc, Get_Type::Mandatory)) return false;
+                if (!check_bitwise_float(err_loc)) return false;
+
+                care_mask = 0UL;
+                for (u64 i = 0UL; i < number_of_bits; i++)
+                    care_mask |= 1 << i;
+                care_mask = care_mask << starting_bit_pos;
+            }
+            // Use masks if either the invert or care mask has been configured with a non default value
+            if (invert_mask != 0 || care_mask != std::numeric_limits<u64>::max()) uses_masks = true;
             // experimental (will do these later):
             // if (!get_val(decode, "enum_field", enum_field, err_loc, Get_Type::Optional)) return false;
             // if (!get_val(decode, "individual_enums", individual_enums, err_loc, Get_Type::Optional)) return false;
@@ -352,7 +379,7 @@ struct Decode
                 if (!get_val(decode, "bit_strings", bit_strs_arr, err_loc, Get_Type::Mandatory)) return false;
 
                 // setting default care_mask based on type:
-                if (bit_field || Enum)
+                if (!packed_register && (bit_field || Enum))
                 {
                     care_mask = std::numeric_limits<u64>::max();
                 }
@@ -441,6 +468,16 @@ struct Decode
         if (Signed && Float)
         {
             err_loc.err_msg = "signed and float cannot both be true at the same time";
+            return false;
+        }
+        return true;
+    }
+
+    bool check_bitwise_float(Error_Location& err_loc)
+    {
+        if (Float && starting_bit_pos != 0)
+        {
+            err_loc.err_msg = "starting bit position must be 0 or unconfigured when float is true";
             return false;
         }
         return true;
@@ -816,12 +853,14 @@ struct fmt::formatter<config_loader::Decode>
         if (presentation == 'c') // client style (default):
         {
             return fmt::format_to(ctx.out(), R"(
-                        {{ "id": "{}", "offset": {}, "size": {}, "scale": {}, "shift": {}, "multi_write_op_code": {}, "signed": {}, "float": {}, "invert_mask": "{}", "bit_field": {}, "individual_bits": {}, "random_enum": {}, "bit_strings": [{}], "compressed_bit_strings": [{}] }})", 
+                        {{ "id": "{}", "offset": {}, "size": {}, "scale": {}, "shift": {}, "starting_bit_pos": {}, "number_of_bits": {}, "multi_write_op_code": {}, "signed": {}, "float": {}, "invert_mask": "{}", "bit_field": {}, "individual_bits": {}, "random_enum": {}, "uses_masks": {}, "packed_register": {}, "bit_strings": [{}], "compressed_bit_strings": [{}] }})", 
                             dc.id,
                             dc.offset,
                             dc.size,
                             dc.scale,
                             dc.shift,
+                            dc.starting_bit_pos,
+                            dc.number_of_bits,
                             dc.multi_write_op_code,
                             dc.Signed,
                             dc.Float,
@@ -829,19 +868,23 @@ struct fmt::formatter<config_loader::Decode>
                             dc.bit_field,
                             dc.individual_bits,
                             dc.Enum,
+                            dc.uses_masks,
+                            dc.packed_register,
                             fmt::join(dc.bit_strings, ", "),
                             fmt::join(dc.compressed_bit_strings, ", "));
         }
         else // server style (includes uri):
         {
             return fmt::format_to(ctx.out(), R"(
-            {{ "id": "{}", "uri": "{}", "offset": {}, "size": {}, "scale": {}, "shift": {}, "multi_write_op_code": {}, "signed": {}, "float": {}, "invert_mask": "{}", "bit_field": {}, "individual_bits": {}, "random_enum": {}, "bit_strings": [{}], "compressed_bit_strings": [{}] }})", 
+            {{ "id": "{}", "uri": "{}", "offset": {}, "size": {}, "scale": {}, "shift": {}, "starting_bit_pos": {}, "number_of_bits": {}, "multi_write_op_code": {}, "signed": {}, "float": {}, "invert_mask": "{}", "bit_field": {}, "individual_bits": {}, "random_enum": {}, "uses_masks": {}, "packed_register": {}, "bit_strings": [{}], "compressed_bit_strings": [{}] }})", 
                 dc.id,
                 dc.uri,
                 dc.offset,
                 dc.size,
                 dc.scale,
                 dc.shift,
+                dc.starting_bit_pos,
+                dc.number_of_bits,
                 dc.multi_write_op_code,
                 dc.Signed,
                 dc.Float,
@@ -849,6 +892,8 @@ struct fmt::formatter<config_loader::Decode>
                 dc.bit_field,
                 dc.individual_bits,
                 dc.Enum,
+                dc.uses_masks,
+                dc.packed_register,
                 fmt::join(dc.bit_strings, ", "),
                 fmt::join(dc.compressed_bit_strings, ", "));
         }

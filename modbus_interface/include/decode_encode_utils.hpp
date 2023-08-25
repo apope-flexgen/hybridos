@@ -39,6 +39,7 @@ struct Decode_Flags
     static constexpr u16 is_bit_field_idx = 9;
     static constexpr u16 is_enum_field_idx = 10;
     static constexpr u16 is_enum_idx = 11; // this doubles as both "enum" and "random_enum"
+    static constexpr u16 use_masks_idx = 12;
 
     static constexpr u16 goes_into_bits_mask =  (1UL << is_individual_bits_idx) | 
                                                 (1UL << is_bit_field_idx) |
@@ -104,6 +105,10 @@ struct Decode_Flags
     {
         flags |= static_cast<u16>((1UL & is_enum) << is_enum_idx);
     }
+    constexpr void set_use_masks(const bool use_masks) noexcept
+    {
+        flags |= static_cast<u16>((1UL & use_masks) << use_masks_idx);
+    }
 
     // getters:
     constexpr u8 get_size() const noexcept // this returns size as a whole number (1, 2, or 4)
@@ -159,6 +164,10 @@ struct Decode_Flags
     {
         return (flags >> is_enum_idx) & 1UL;
     }
+    constexpr bool uses_masks() const noexcept
+    {
+        return (flags >> use_masks_idx) & 1UL;
+    }
     constexpr bool is_goes_into_bits_type() const noexcept // returns whether or not this register type goes into the individual bits themselves (all the bit_strings types except for "enum" really)
     {
         return (flags & goes_into_bits_mask) > 0;
@@ -179,6 +188,8 @@ struct Decode_Info
     u64 invert_mask = 0;
     f64 scale = 0.0;
     s64 shift = 0;
+    u64 starting_bit_pos = 0;
+    u64 care_mask = std::numeric_limits<u64>::max();
 };
 // size info:
 // auto x = sizeof(Decode_Info);
@@ -251,10 +262,13 @@ static constexpr u64 decode(const u16* raw_registers, const Decode_Info& current
         raw_data = raw_registers[0];
 
         current_unsigned_val = raw_data;
-        // invert mask stuff:
-        current_unsigned_val ^= current_decode.invert_mask;
-        // care mask stuff:
-        // current_unsigned_val &= care_mask;
+        if (current_decode.flags.uses_masks())
+        {
+            // invert mask stuff:
+            current_unsigned_val ^= current_decode.invert_mask;
+            // care mask stuff:
+            current_unsigned_val &= current_decode.care_mask;
+        }
         // do signed stuff (size 1 cannot be float):
         if (current_decode.flags.is_signed())
         {
@@ -277,10 +291,13 @@ static constexpr u64 decode(const u16* raw_registers, const Decode_Info& current
             current_unsigned_val =  (static_cast<u64>(raw_registers[0]) <<  0) + 
                                     (static_cast<u64>(raw_registers[1]) << 16);
         }
-        // invert mask stuff:
-        current_unsigned_val ^= current_decode.invert_mask;
-        // care mask stuff:
-        // current_unsigned_val &= care_mask;
+        if (current_decode.flags.uses_masks())
+        {
+            // invert mask stuff:
+            current_unsigned_val ^= current_decode.invert_mask;
+            // care mask stuff:
+            current_unsigned_val &= current_decode.care_mask;
+        }
         // do signed/float stuff:
         if (current_decode.flags.is_signed())
         {
@@ -313,10 +330,13 @@ static constexpr u64 decode(const u16* raw_registers, const Decode_Info& current
                                     (static_cast<u64>(raw_registers[2]) << 32) +
                                     (static_cast<u64>(raw_registers[3]) << 48);
         }
-        // invert mask stuff:
-        current_unsigned_val ^= current_decode.invert_mask;
-        // care mask stuff:
-        // current_unsigned_val &= care_mask;
+        if (current_decode.flags.uses_masks())
+        {
+            // invert mask stuff:
+            current_unsigned_val ^= current_decode.invert_mask;
+            // care mask stuff:
+            current_unsigned_val &= current_decode.care_mask;
+        }
         // do signed/float stuff:
         if (current_decode.flags.is_signed()) // this is only for whole numbers really (signed but not really float):
         {
@@ -347,6 +367,7 @@ static constexpr u64 decode(const u16* raw_registers, const Decode_Info& current
         if (!current_decode.scale) // scale == 0
         {
             current_unsigned_val += current_decode.shift; // add shift
+            current_unsigned_val >>= current_decode.starting_bit_pos;
             current_jval = current_unsigned_val;
         }
         else
@@ -361,6 +382,7 @@ static constexpr u64 decode(const u16* raw_registers, const Decode_Info& current
         if (!current_decode.scale) // scale == 0
         {
             current_signed_val += current_decode.shift; // add shift
+            current_signed_val >>= current_decode.starting_bit_pos;
             current_jval = current_signed_val;
         }
         else
@@ -391,6 +413,7 @@ static constexpr void encode(u16* raw_registers, const Decode_Info& current_deco
         if (to_encode.holds_uint())
         {
             current_unsigned_val = to_encode.get_uint_unsafe();
+            current_unsigned_val <<= current_decode.starting_bit_pos;
             current_unsigned_val -= current_decode.shift;
             if (current_decode.scale) // scale != 0
             {
@@ -401,6 +424,7 @@ static constexpr void encode(u16* raw_registers, const Decode_Info& current_deco
         else if (to_encode.holds_int()) // negative values only:
         {
             current_signed_val = to_encode.get_int_unsafe();
+            current_signed_val <<= current_decode.starting_bit_pos;
             current_signed_val -= current_decode.shift;
             if (current_decode.scale) // scale != 0
             {
@@ -411,6 +435,7 @@ static constexpr void encode(u16* raw_registers, const Decode_Info& current_deco
         else // float:
         {
             current_float_val = to_encode.get_float_unsafe();
+            // TODO: shifting floats?
             current_float_val -= static_cast<f64>(current_decode.shift);
             if (current_decode.scale) // scale != 0
             {

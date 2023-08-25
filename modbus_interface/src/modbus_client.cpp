@@ -1048,9 +1048,7 @@ static bool aggregator_thread(const u8 client_idx, const u8 comp_idx) noexcept
                         if (curr_decoded_info.bit_str_array_idx != Bit_Str_All_Idx) // NOTE(WALKER): do NOT change this to Bit_Str_Array_All_Idx because that is for u16's and NOT u8's (which this array_idx is)
                         {
                             auto& curr_bit_str_info = curr_decoded_cache.bit_strings_arrays[curr_decoded_info.bit_str_array_idx];
-                            auto curr_unsigned_val = val.decoded_val.get_uint_unsafe();
-                            curr_unsigned_val &= curr_bit_str_info.care_mask; // TODO(WALKER): make sure this is all ones except for types that actually need it to not mask out everything by accident (look into config to runtime conversion function, etc.)
-                            val.decoded_val = curr_unsigned_val;
+                            auto curr_unsigned_val = val.decoded_val.get_uint_unsafe();                            val.decoded_val = curr_unsigned_val;
                             curr_bit_str_info.changed_mask = curr_decoded_info.decoded_val.get_uint_unsafe() ^ curr_unsigned_val;
                         }
                         // compare decoded u64 vals for single bit of change (after care_masking of course):

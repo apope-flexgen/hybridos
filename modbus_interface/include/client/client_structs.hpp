@@ -1108,6 +1108,7 @@ is c_str:              {}
                         curr_decoded_val.flags.set_bit_field(curr_config_decode.bit_field);
                         curr_decoded_val.flags.set_individual_bits(curr_config_decode.individual_bits);
                         curr_decoded_val.flags.set_enum(curr_config_decode.Enum);
+                        curr_decoded_val.flags.set_use_masks(curr_config_decode.uses_masks);
 
                         // bit_strings stuff:
                         if (!curr_config_decode.compressed_bit_strings.empty())
@@ -1156,10 +1157,12 @@ is c_str:              {}
 
                     if (curr_config_reg_map.reg_type == Register_Types::Holding || curr_config_reg_map.reg_type == Register_Types::Input)
                     {
-                        curr_decode_info.offset      = static_cast<u16>(curr_config_decode.offset);
-                        curr_decode_info.invert_mask = curr_config_decode.invert_mask;
-                        curr_decode_info.scale       = curr_config_decode.scale;
-                        curr_decode_info.shift       = curr_config_decode.shift;
+                        curr_decode_info.offset           = static_cast<u16>(curr_config_decode.offset);
+                        curr_decode_info.invert_mask      = curr_config_decode.invert_mask;
+                        curr_decode_info.scale            = curr_config_decode.scale;
+                        curr_decode_info.shift            = curr_config_decode.shift;
+                        curr_decode_info.starting_bit_pos = curr_config_decode.starting_bit_pos;
+                        curr_decode_info.care_mask        = curr_config_decode.care_mask;
                         // flags:
                         curr_decode_info.flags.set_size(curr_config_decode.size);
                         curr_decode_info.flags.set_word_swapped(curr_config_comp.word_swap);
@@ -1169,6 +1172,7 @@ is c_str:              {}
                         curr_decode_info.flags.set_bit_field(curr_config_decode.bit_field);
                         curr_decode_info.flags.set_individual_bits(curr_config_decode.individual_bits);
                         curr_decode_info.flags.set_enum(curr_config_decode.Enum);
+                        curr_decode_info.flags.set_use_masks(curr_config_decode.uses_masks);
 
                         if (!curr_config_decode.compressed_bit_strings.empty())
                         {

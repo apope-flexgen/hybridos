@@ -311,10 +311,43 @@ struct Registers_Mapping
             simdjson::ondemand::object decode;
             if (!get_array_val(decode_obj, decode, err_loc)) return false;
 
-            auto& current_decode = map.emplace_back();
-            // inheritance stuff:
-            current_decode.multi_write_op_code = multi_write_op_code;
-            if (!current_decode.load(decode, err_loc, is_coil_or_discrete_input, off_by_one)) return false;
+            bool packed_register = false;
+            get_val(decode, "packed_register", packed_register, err_loc, Get_Type::Optional);
+            if (packed_register)
+            {
+                // As this is a packed register, the offset will be required at this level of configuration,
+                // and additional fields can be provided as well. These fields will then be distributed to
+                // each of the child registers
+                Decode parent_config;
+                parent_config.packed_register = true;
+                get_val(decode, "offset", parent_config.offset, err_loc, Get_Type::Mandatory);
+                get_val(decode, "enum", parent_config.Enum, err_loc, Get_Type::Optional);
+                get_val(decode, "random_enum", parent_config.random_enum, err_loc, Get_Type::Optional);
+                get_val(decode, "bit_field", parent_config.bit_field, err_loc, Get_Type::Optional);
+                get_val(decode, "individual_bits", parent_config.individual_bits, err_loc, Get_Type::Optional);
+                get_val(decode, "size", parent_config.size, err_loc, Get_Type::Optional);
+
+                simdjson::ondemand::array bit_ranges;
+                if (!get_val(decode, "bit_ranges", bit_ranges, err_loc, Get_Type::Mandatory)) return false;
+                // Configure each of the packed_registers as a unique entry in the map with the same offset
+                for (auto bit_register : bit_ranges)
+                {
+                    simdjson::ondemand::object decode_register;
+                    if (!get_array_val(bit_register, decode_register, err_loc)) return false;
+
+                    auto& current_decode = map.emplace_back();
+                    // inheritance stuff:
+                    current_decode.multi_write_op_code = multi_write_op_code;
+                    if (!current_decode.load(decode_register, err_loc, is_coil_or_discrete_input, off_by_one, false, &parent_config)) return false;
+                }
+            }
+            else
+            {
+                auto& current_decode = map.emplace_back();
+                // inheritance stuff:
+                current_decode.multi_write_op_code = multi_write_op_code;
+                if (!current_decode.load(decode, err_loc, is_coil_or_discrete_input, off_by_one)) return false;
+            }
 
             ++err_loc.decode_idx;
         }
@@ -362,7 +395,7 @@ struct Registers_Mapping
 
         for (const auto& decode : map)
         {
-            if ((prev_offset + prev_size - 1) >= static_cast<int>(decode.offset)) // overlap check
+            if (!decode.packed_register && (prev_offset + prev_size - 1) >= static_cast<int>(decode.offset)) // overlap check
             {
                 err_loc.err_msg = fmt::format("decode object \"{}\" (offset: {}, size: {}) overlaps with decode object \"{}\" (offset: {}, size: {})", prev_id, prev_offset, prev_size, decode.id, decode.offset, decode.size);
                 return false;
