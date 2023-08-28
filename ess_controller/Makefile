@@ -138,6 +138,7 @@ ESS_OBJECTS += i2cbusses.o
 ESS_OBJECTS += vmActions.o
 ESS_OBJECTS += vmConfig.o
 ESS_OBJECTS += dbi_funcs.o
+# ESS_OBJECTS += dataMap.o
 
 
 #ESS_OBJECTS += version.o git_build.o git_commit.o git_tag.o
@@ -189,6 +190,9 @@ $(OBJ_DIR)vmConfig.o:  $(SRC_DIR)/vmConfig.cpp
 
 $(OBJ_DIR)dbi_funcs.o:  $(SRC_DIR)/dbi_funcs.cpp
 	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+# $(OBJ_DIR)dataMap.o:  $(SRC_DIR)/dataMap.cpp
+# 	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
 $(BUILD_DIR)gpio_controller:	$(OBJ_DIR)gpio_controller.o $(OBJ_DIR)i2cbusses.o
 	$(CXX) -o $@ $^ $(INCLUDES) -lessfunc -less $(LIBS)

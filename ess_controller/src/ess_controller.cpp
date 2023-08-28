@@ -196,6 +196,8 @@ extern "C++"
     int SendTime(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int SendDb(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
     int BalancePower(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
+
+    // int runDataMaps(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, assetVar* aV);
 }
 
 
@@ -988,6 +990,8 @@ int main_test_new_ess(int argc, char *argv[])
     vm.setFunc(vmap,  essName, "SendDb",             (void*)&SendDb);
     vm.setFunc(vmap,  essName, "HandleCpuStats",     (void*)&HandleCpuStats);
     vm.setFunc(vmap,  essName, "runAllLocks",        (void*)&runAllLocks);
+
+    // vm.setFunc(vmap,  essName, "runDataMaps",      (void*)&runDataMaps);    // dataMap function addition
 
     if(!useArgs)
     {

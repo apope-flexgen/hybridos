@@ -345,6 +345,7 @@ public:
     void setFrom(asset_manager* base);
 
     //int addSchedReq(schAvlist& rreq, double tshot, double trep);
+
 };
 extern "C++" {
     
