@@ -1,5 +1,7 @@
 [Unit]
 Description=Disk to Storage (PowerCloud)
+Requires=influxd.service mongod.service
+After=influxd.service mongod.service
 
 [Service]
 User=hybridos
