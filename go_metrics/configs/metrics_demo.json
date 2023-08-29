@@ -209,6 +209,7 @@
 			"uri": "/echo/uri",
 			"publishRate": 1000,
 			"format": "naked",
+			"null_value_default": 5,
 			"inputs": [
 				{
 					"uri": "/components/feeder",

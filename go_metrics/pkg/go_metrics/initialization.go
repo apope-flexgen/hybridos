@@ -1387,6 +1387,19 @@ func UnmarshalConfig(data []byte) {
 						}
 						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
 
+						// get the null_value_default (optional)
+						var null_value_default interface{}
+						element, internal_err = echoIter.FindElement(nil, "null_value_default")
+						currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "null_value_default", JType: simdjson.TypeString})
+						if internal_err == nil {
+							null_value_default, internal_err = element.Iter.Interface()
+							if internal_err != nil {
+								logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
+								wasError = true
+							}
+						}
+						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+
 						// get the inputs
 						element, internal_err = echoIter.FindElement(nil, "inputs")
 						if internal_err == nil {
@@ -1457,7 +1470,7 @@ func UnmarshalConfig(data []byte) {
 											switch value.(type) {
 											case string:
 												echoInput.Registers[key], _ = value.(string)
-												echo.Echo[key] = nil
+												echo.Echo[key] = null_value_default
 											case map[string]interface{}:
 												sourceDefaultMap, _ := value.(map[string]interface{})
 												source, okSource := sourceDefaultMap["source"]
@@ -1485,7 +1498,7 @@ func UnmarshalConfig(data []byte) {
 												if !okDefault {
 													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("path not found"))
 													wasError = true
-													echo.Echo[key] = nil
+													echo.Echo[key] = null_value_default
 												} else {
 													echo.Echo[key] = defaultVal
 												}
@@ -1538,16 +1551,33 @@ func UnmarshalConfig(data []byte) {
 								wasError = true
 							}
 							for key, value := range echoMap {
-								if _, ok := echo.Echo[key]; !ok {
+								if echoValue, ok := echo.Echo[key]; !ok {
 									echo.Echo[key] = value
 								} else {
-									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: key, JType: simdjson.TypeString})
-									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("found duplicate echo register; using the first occurence"))
-									wasError = true
-									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									if echoValue == nil {
+										echo.Echo[key] = value // set the default based on this register
+									} else {
+										currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: key, JType: simdjson.TypeString})
+										logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("found duplicate echo register; using the first occurence"))
+										wasError = true
+										currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									}
 								}
 							}
 						}
+
+						if null_value_default == nil {
+							for key, value := range echo.Echo {
+								if value == nil {
+									currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: key, JType: simdjson.TypeString})
+									logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", key))
+									wasError = true
+									currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+									echo.Echo[key] = int64(0)
+								}
+							}
+						}
+
 						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
 						if !fatalErr {
 							MetricsConfig.Echo = append(MetricsConfig.Echo, echo)

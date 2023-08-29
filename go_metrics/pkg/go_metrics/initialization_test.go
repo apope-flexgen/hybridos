@@ -2322,11 +2322,11 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					Echo: map[string]interface{}{
 						"f":               int64(60),
 						"p":               int64(100),
-						"pf":              nil,
-						"q":               nil,
-						"v":               nil,
-						"v1":              nil,
-						"v2":              nil,
+						"pf":              int64(0),
+						"q":               int64(0),
+						"v":               int64(0),
+						"v1":              int64(0),
+						"v2":              int64(0),
 						"s1":              "some value for the string",
 						"b1":              true,
 						"apparent_power":  int64(0),
@@ -2485,6 +2485,111 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					},
 				},
 				fmt.Sprintf("output '%v' is never set by a metrics expression; excluding from published outputs", "output3_lion"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "pf",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "pf"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "q",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "q"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "v",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "v1",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v1"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "v2",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v2"),
 			},
 		},
 	},
@@ -2964,6 +3069,111 @@ var UnmarshalConfigTestCase = []CheckUnmarshalConfig{
 					},
 				},
 				fmt.Sprintf("key 'publishRate' not found"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "pf",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "pf"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "q",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "q"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "v",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "v1",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v1"),
+			},
+			ErrorLocation{
+				[]JsonAccessor{
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeArray,
+					},
+					JsonAccessor{
+						Index: 0,
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "echo",
+						JType: simdjson.TypeObject,
+					},
+					JsonAccessor{
+						Key:   "v2",
+						JType: simdjson.TypeString,
+					},
+				},
+				fmt.Sprintf("default value for echo input register '%s' was not specified and echo object does not contain field 'null_value_default' to override the null register value; setting default value of register to 0 (warning only)", "v2"),
 			},
 		},
 	},
