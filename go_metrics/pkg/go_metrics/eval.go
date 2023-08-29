@@ -37,44 +37,13 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 	}
 	log.Infof(sub_string)
 
-	fimsMap = make(chan fims.FimsMsgRaw)
+	fimsMap = make(chan fims.FimsMsgRaw, 100)
 	// listen for messages
 	go f.ReceiveChannelRaw(fimsMap)
 
 	go func() {
 		for {
 			ProcessFims(<-fimsMap) // this is blocking, so we won't create a bajillion instances of the goroutine below
-			go func() {            // handle direct sets
-				EvaluateExpressions()
-				directSetMutex.Lock()
-				for directSetUriGroup, active := range uriToDirectSetActive {
-					if active {
-						pubDataChangedMutex.Lock()
-						msgBodyMutex.Lock()
-						directSetMutex.Unlock()
-						PrepareBody(directSetUriGroup)
-						directSetMutex.Lock()
-						if strings.Contains(directSetUriGroup, "[") {
-							directSetUri = directSetUriGroup[0:strings.Index(directSetUriGroup, "[")]
-						} else {
-							directSetUri = directSetUriGroup
-						}
-
-						if len(setMsgBody) > 0 {
-							_, err = f.Send(fims.FimsMsg{
-								Method: "set",
-								Uri:    directSetUri,
-								Body:   setMsgBody,
-							})
-						}
-						msgBodyMutex.Unlock()
-						pubDataChanged[directSetUriGroup] = false
-						uriToDirectSetActive[directSetUriGroup] = false
-						pubDataChangedMutex.Unlock()
-					}
-				}
-				directSetMutex.Unlock()
-			}()
 		}
 	}()
 	t0 := time.Now()
@@ -84,7 +53,9 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 			for {
 				select {
 				case <-tickers[tickerIndex].C:
+					inputsMutex.Lock()
 					EvaluateExpressions()
+					inputsMutex.Unlock()
 					pubDataChangedMutex.Lock()
 					for _, pubUri := range tickerPubs[tickerIndex] {
 						pubDataChanged[pubUri] = true
@@ -292,6 +263,38 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 	}
 }
 
+func ProcessDirectSets() {
+	// inputsMutex.Lock()
+	EvaluateExpressions()
+	// inputsMutex.Unlock()
+	directSetMutex.Lock()
+	for directSetUriGroup, active := range uriToDirectSetActive {
+		if active {
+			pubDataChangedMutex.Lock()
+			msgBodyMutex.Lock()
+			PrepareBody(directSetUriGroup)
+			if strings.Contains(directSetUriGroup, "[") {
+				directSetUri = directSetUriGroup[0:strings.Index(directSetUriGroup, "[")]
+			} else {
+				directSetUri = directSetUriGroup
+			}
+
+			if len(setMsgBody) > 0 {
+				f.Send(fims.FimsMsg{
+					Method: "set",
+					Uri:    directSetUri,
+					Body:   setMsgBody,
+				})
+			}
+			msgBodyMutex.Unlock()
+			pubDataChanged[directSetUriGroup] = false
+			uriToDirectSetActive[directSetUriGroup] = false
+			pubDataChangedMutex.Unlock()
+		}
+	}
+	directSetMutex.Unlock()
+}
+
 func EvaluateExpressions() {
 	filterNeedsEvalMutex.RLock()
 	filterNeedsEvalCopy := make(map[string]bool, len(filterNeedsEval))
@@ -347,12 +350,13 @@ func EvaluateExpressions() {
 		}
 	}
 	if len(MetricsConfig.Metrics) > 0 {
-		metricsMutex[0].Lock()
+		metricsMutex[0].RLock()
 	}
 	for q, metricsObject := range MetricsConfig.Metrics {
-		expressionNeedsEvalMutex.Lock()
+		metricsMutex[q].RUnlock()
+		expressionNeedsEvalMutex.RLock()
 		needEval := expressionNeedsEval[q]
-		expressionNeedsEvalMutex.Unlock()
+		expressionNeedsEvalMutex.RUnlock()
 		if needEval {
 			var originalType DataType
 			originalType = metricsObject.Type
@@ -365,7 +369,6 @@ func EvaluateExpressions() {
 				if originalType != NIL {
 					castUnionType(&outputVal, originalType)
 				}
-				outputsMutex.Lock()
 				for _, outputVar := range metricsObject.Outputs {
 					if strings.Contains(outputVar, "@") {
 						splitOutputVar := strings.Split(outputVar, "@")
@@ -373,16 +376,21 @@ func EvaluateExpressions() {
 							outputVar = splitOutputVar[0]
 							attribute := splitOutputVar[1]
 							tempValue = getValueFromUnion(&outputVal)
-							if MetricsConfig.Outputs[outputVar].Attributes[attribute] != tempValue {
+							directSetMutex.RLock()
+							_, is_direct_set := uriToDirectSetActive[outputToUriGroup[outputVar]]
+							directSetMutex.RUnlock()
+							is_sparse := uriIsSparse[outputToUriGroup[outputVar]]
+							outputsMutex.Lock()
+							if MetricsConfig.Outputs[outputVar].Attributes[attribute] != tempValue || (is_direct_set && !is_sparse) {
 								pubDataChangedMutex.Lock()
 								outputVarChanged[outputVar] = true
 								pubDataChanged[outputToUriGroup[outputVar]] = true
+								pubDataChangedMutex.Unlock()
 								directSetMutex.Lock()
-								if _, ok := uriToDirectSetActive[outputToUriGroup[outputVar]]; ok {
+								if is_direct_set {
 									uriToDirectSetActive[outputToUriGroup[outputVar]] = true
 								}
 								directSetMutex.Unlock()
-								pubDataChangedMutex.Unlock()
 								if debug {
 									if stringInSlice(debug_outputs, outputVar) {
 										log.Debugf("Output [%s] attribute [%s] changed value to [%v]", outputVar, attribute, tempValue)
@@ -390,21 +398,28 @@ func EvaluateExpressions() {
 								}
 							}
 							MetricsConfig.Outputs[outputVar].Attributes[attribute] = tempValue
+							outputsMutex.Unlock()
 						} else {
 							log.Errorf("Something went wrong when trying to change the value of " + outputVar)
 						}
 					} else {
+						outputsMutex.RLock()
 						output = MetricsConfig.Outputs[outputVar]
-						if output.Value != outputVal {
+						outputsMutex.RUnlock()
+						directSetMutex.RLock()
+						_, is_direct_set := uriToDirectSetActive[outputToUriGroup[outputVar]]
+						directSetMutex.RUnlock()
+						is_sparse := uriIsSparse[outputToUriGroup[outputVar]]
+						if output.Value != outputVal || (is_direct_set && !is_sparse) {
 							pubDataChangedMutex.Lock()
 							outputVarChanged[outputVar] = true
 							pubDataChanged[outputToUriGroup[outputVar]] = true
+							pubDataChangedMutex.Unlock()
 							directSetMutex.Lock()
-							if _, ok := uriToDirectSetActive[outputToUriGroup[outputVar]]; ok {
+							if is_direct_set {
 								uriToDirectSetActive[outputToUriGroup[outputVar]] = true
 							}
 							directSetMutex.Unlock()
-							pubDataChangedMutex.Unlock()
 							if debug {
 								if stringInSlice(debug_outputs, outputVar) {
 									log.Debugf("Output [%s] changed value to [%v]", outputVar, getValueFromUnion(&outputVal))
@@ -412,13 +427,16 @@ func EvaluateExpressions() {
 							}
 						}
 						output.Value = outputVal
+						outputsMutex.Lock()
 						MetricsConfig.Outputs[outputVar] = output
+						outputsMutex.Unlock()
 					}
 				}
 
 				if len(metricsObject.InternalOutput) > 0 {
-					scopeMutex.Lock()
+					scopeMutex.RLock()
 					input = Scope[metricsObject.InternalOutput][0]
+					scopeMutex.RUnlock()
 					if input.Value != outputVal {
 						for _, expNum := range inputToMetricsExpression[metricsObject.InternalOutput] {
 							expressionNeedsEvalMutex.Lock()
@@ -432,23 +450,24 @@ func EvaluateExpressions() {
 						}
 					}
 					input.Value = outputVal
+					scopeMutex.Lock()
 					Scope[metricsObject.InternalOutput] = []Input{input}
 					scopeMutex.Unlock()
 				}
-				outputsMutex.Unlock()
 			}
 
 			metricsObject.State["value"][0] = outputVal
+			metricsMutex[q].Lock()
 			MetricsConfig.Metrics[q] = metricsObject
+			metricsMutex[q].Unlock()
 			if !metricsObject.State["alwaysEvaluate"][0].b {
 				expressionNeedsEvalMutex.Lock()
 				expressionNeedsEval[q] = false
 				expressionNeedsEvalMutex.Unlock()
 			}
 		}
-		metricsMutex[q].Unlock()
 		if q < len(MetricsConfig.Metrics)-1 {
-			metricsMutex[q+1].Lock() // lock this value before we try to access the next metrics object
+			metricsMutex[q+1].RLock() // lock this value before we try to access the next metrics object
 		}
 	}
 }

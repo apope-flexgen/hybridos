@@ -57,14 +57,18 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 		_, last_urilast_uri_element_is_input := MetricsConfig.Inputs[msg.Frags[len(msg.Frags)-1]]
 		inputsMutex.RUnlock()
 		if outputVar, ok := uriToOutputNameMap[msg.Uri]; ok { // asking for a single output value
+			inputsMutex.Lock()
 			EvaluateExpressions()
+			inputsMutex.Unlock()
 			outputsMutex.Lock()
 			output = MetricsConfig.Outputs[outputVar]
 			val := getValueFromUnion(&(output.Value))
 			outputsMutex.Unlock()
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: map[string]interface{}{outputVar: val}})
 		} else if outputVars, ok := PublishUris[msg.Uri]; ok { // asking for data from a single publish URI
+			inputsMutex.Lock()
 			EvaluateExpressions()
+			inputsMutex.Unlock()
 			msgBodyMutex.Lock()
 			pubDataChangedMutex.Lock()
 			pubDataChanged[msg.Uri] = true
@@ -76,7 +80,9 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 			pubDataChangedMutex.Unlock()
 			msgBodyMutex.Unlock()
 		} else if _, ok := OutputUriElements[msg.Uri]; ok { // asking for data from a set of publish URIs
+			inputsMutex.Lock()
 			EvaluateExpressions()
+			inputsMutex.Unlock()
 			msgBodyMutex.Lock()
 			msgBody = GetOutputMsgBody(msg.Uri).(map[string]interface{})
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBody})
@@ -155,10 +161,12 @@ func handleNakedMessage(msg *fims.FimsMsgRaw) {
 			echoMutex.Lock()
 			for newName, oldName := range MetricsConfig.Echo[echoIndex].Inputs[inputIndex].Registers {
 				if oldName == (*msg).Frags[len((*msg).Frags)-1] {
+					elementValueMutex.Lock()
 					err = json.Unmarshal((*msg).Body, &elementValue) // decode the byte array into an interface{}; there are definitely other ways to do this, but it's probably the simplest way to do it
 					if err == nil {
 						MetricsConfig.Echo[echoIndex].Echo[newName] = elementValue // set the echo value
 					}
+					elementValueMutex.Unlock()
 					continue
 				}
 			}
@@ -175,10 +183,12 @@ func handleNakedMessage(msg *fims.FimsMsgRaw) {
 			echoInputRegisterName, ok := echoInput.Registers[(*msg).Frags[len((*msg).Frags)-1]] // this should always come out with something, but just in case...
 			if ok {
 				echoInputUri := echoInput.Uri + "/" + echoInputRegisterName
+				elementValueMutex.Lock()
 				err = json.Unmarshal((*msg).Body, &elementValue)
 				if err == nil {
 					f.Send(fims.FimsMsg{Method: "set", Uri: echoInputUri, Replyto: "", Body: elementValue})
 				}
+				elementValueMutex.Unlock()
 			}
 		}
 		echoMutex.Unlock()
@@ -188,12 +198,14 @@ func handleNakedMessage(msg *fims.FimsMsgRaw) {
 	// i.e.    /path/to/input/var corresponds directly to an input's uri
 	// (if it's naked, it must be a single variable)
 	if inputNames, ok := uriToInputNameMap[(*msg).Uri]; ok {
+		elementValueMutex.Lock()
 		err = json.Unmarshal((*msg).Body, &elementValue) // decode the byte array into an interface{}
 		if err == nil {
 			for i, _ := range inputNames {
 				handleDecodedMetricsInputValue(inputNames[i])
 			}
 		}
+		elementValueMutex.Unlock()
 	}
 
 	// check if the uri corresponds to an input's attribute
@@ -206,10 +218,12 @@ func handleNakedMessage(msg *fims.FimsMsgRaw) {
 			inputsMutex.RUnlock()
 			attributeName := (*msg).Frags[len((*msg).Frags)-1]
 			if len(input.Attributes) > 0 && stringInSlice(input.Attributes, attributeName) {
+				elementValueMutex.Lock()
 				err = json.Unmarshal((*msg).Body, &elementValue)
 				if err == nil {
 					handleDecodedMetricsAttributeValue(inputNames[i], input.AttributesMap[attributeName])
 				}
+				elementValueMutex.Unlock()
 			}
 		}
 	} else if _, ok := UriElements[GetParentUri((*msg).Uri)]; ok { // /path/to/input/attribute is another possible path to the input's attribute
@@ -218,15 +232,19 @@ func handleNakedMessage(msg *fims.FimsMsgRaw) {
 			if len(input.Attributes) > 0 && GetParentUri((*msg).Uri) == GetParentUri(input.Uri) {
 				for _, attributeName := range input.Attributes {
 					if attributeName == (*msg).Frags[len((*msg).Frags)-1] {
+						elementValueMutex.Lock()
 						err = json.Unmarshal((*msg).Body, &elementValue)
 						if err == nil {
 							handleDecodedMetricsAttributeValue(inputName, input.AttributesMap[attributeName])
 						}
+						elementValueMutex.Unlock()
 					} else if strings.Contains((*msg).Frags[len((*msg).Frags)-1], "@") && inputName == strings.Split((*msg).Frags[len((*msg).Frags)-1], "@")[0] && attributeName == strings.Split((*msg).Frags[len((*msg).Frags)-1], "@")[1] {
+						elementValueMutex.Lock()
 						err = json.Unmarshal((*msg).Body, &elementValue)
 						if err == nil {
 							handleDecodedMetricsAttributeValue(inputName, input.AttributesMap[attributeName])
 						}
+						elementValueMutex.Unlock()
 					}
 				}
 			}
@@ -260,6 +278,7 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 						echoMutex.Lock()
 						for newName, oldName := range MetricsConfig.Echo[echoIndex].Inputs[inputIndex].Registers {
 							if oldName == varName {
+								elementValueMutex.Lock()
 								if MetricsConfig.Echo[echoIndex].Format == "naked" {
 									elementValue, _ = (element.Iter.Interface())
 								} else if MetricsConfig.Echo[echoIndex].Format == "clothed" {
@@ -274,6 +293,7 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 									}
 								}
 								MetricsConfig.Echo[echoIndex].Echo[newName] = elementValue
+								elementValueMutex.Unlock()
 							}
 						}
 						echoMutex.Unlock()
@@ -281,6 +301,7 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 				}
 
 				if inputNames, ok_metrics := uriToInputNameMap[(*msg).Uri]; ok_metrics {
+					elementValueMutex.Lock()
 					for i, _ := range inputNames {
 						elementValue, err = element.Iter.Interface()
 						if err == nil {
@@ -299,6 +320,7 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 							}
 						}
 					}
+					elementValueMutex.Unlock()
 				}
 			} else { // it might contain only attributes
 				inputsMutex.RLock()
@@ -308,16 +330,20 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 						for _, attribute := range input.Attributes {
 							element, err := iter.FindElement(nil, attribute)
 							if err == nil {
+								elementValueMutex.Lock()
 								elementValue, _ = element.Iter.Interface()
 								handleDecodedMetricsAttributeValue(inputName, input.AttributesMap[attribute])
+								elementValueMutex.Unlock()
 							}
 						}
 					} else if len(input.Attributes) > 0 && (*msg).Uri == input.Uri {
 						for _, attribute := range input.Attributes {
 							element, err := iter.FindElement(nil, attribute)
 							if err == nil {
+								elementValueMutex.Lock()
 								elementValue, _ = element.Iter.Interface()
 								handleDecodedMetricsAttributeValue(inputName, input.AttributesMap[attribute])
+								elementValueMutex.Unlock()
 							}
 						}
 					}
@@ -339,8 +365,10 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 							echoMutex.Lock()
 							for newName, oldName := range MetricsConfig.Echo[echoIndex].Inputs[inputIndex].Registers {
 								if oldName == json_path[len(json_path)-1] {
+									elementValueMutex.Lock()
 									elementValue, _ = (element.Iter.Interface())
 									MetricsConfig.Echo[echoIndex].Echo[newName] = elementValue
+									elementValueMutex.Unlock()
 									break
 								}
 							}
@@ -359,6 +387,7 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 								if fullUri2 == fullUri {
 									element2, err := element.Iter.FindElement(nil, "value")
 									if err == nil {
+										elementValueMutex.Lock()
 										if MetricsConfig.Echo[echoIndex].Format == "naked" {
 											elementValue, _ = (element2.Iter.Interface())
 										} else if MetricsConfig.Echo[echoIndex].Format == "clothed" {
@@ -367,6 +396,7 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 											elementValue, _ = (element.Iter.Interface())
 										}
 										MetricsConfig.Echo[echoIndex].Echo[newName] = elementValue
+										elementValueMutex.Unlock()
 									}
 									break
 								}
@@ -409,8 +439,10 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 							//      - single-valued clothed input WITH the word "value"     e.g. "/components/bms_1":    {"max_current": {"value":3456, "enabled": true, "scale": 1000}}
 							for i, _ := range inputNames {
 								if element2, err := element.Iter.FindElement(nil, "value"); err == nil {
+									elementValueMutex.Lock()
 									elementValue, _ = element2.Iter.Interface()
 									handleDecodedMetricsInputValue(inputNames[i])
+									elementValueMutex.Unlock()
 								}
 
 								inputsMutex.RLock()
@@ -419,8 +451,10 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 								if len(input.Attributes) > 0 {
 									for _, attributeName := range input.Attributes {
 										if element2, err := element.Iter.FindElement(nil, attributeName); err == nil {
+											elementValueMutex.Lock()
 											elementValue, _ = element2.Iter.Interface()
 											handleDecodedMetricsAttributeValue(inputNames[i], input.AttributesMap[attributeName])
+											elementValueMutex.Unlock()
 										}
 									}
 								}
@@ -429,9 +463,10 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 							//      - multi-valued naked messages (for echo or metrics)     e.g. "/components/bms_1":    {"max_current": 3456, "vnom": 78910, "active_power": 1234}
 							//      - single-valued clothed input WITHOUT the word "value"  e.g. "/components/bms_1":    {"max_current": 3456}
 							for i, _ := range inputNames {
+								elementValueMutex.Lock()
 								elementValue, _ = element.Iter.Interface()
 								handleDecodedMetricsInputValue(inputNames[i])
-
+								elementValueMutex.Unlock()
 								inputsMutex.RLock()
 								input := MetricsConfig.Inputs[inputNames[i]]
 								inputsMutex.RUnlock()
@@ -439,8 +474,10 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 									for _, attribute := range input.Attributes {
 										element, err := iter.FindElement(nil, attribute)
 										if err == nil {
+											elementValueMutex.Lock()
 											elementValue, _ = element.Iter.Interface()
 											handleDecodedMetricsAttributeValue(inputNames[i], input.AttributesMap[attribute])
+											elementValueMutex.Unlock()
 										}
 									}
 								}
@@ -455,8 +492,10 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 							for _, attribute := range input.Attributes {
 								element, err := iter.FindElement(nil, attribute)
 								if err == nil {
+									elementValueMutex.Lock()
 									elementValue, _ = element.Iter.Interface()
 									handleDecodedMetricsAttributeValue(inputName, input.AttributesMap[attribute])
+									elementValueMutex.Unlock()
 								}
 							}
 						}
@@ -477,8 +516,10 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 				echoInputRegisterName, ok := echoInput.Registers[(*msg).Frags[len((*msg).Frags)-1]] // this should always come out with something, but just in case...
 				if ok {
 					echoInputUri := echoInput.Uri + "/" + echoInputRegisterName
+					elementValueMutex.Lock()
 					elementValue, _ = element.Iter.Interface()
 					f.Send(fims.FimsMsg{Method: "set", Uri: echoInputUri, Replyto: "", Body: elementValue})
+					elementValueMutex.Unlock()
 				}
 			}
 		} else if echoIndex, ok := echoPublishUristoEchoNum[(*msg).Uri]; ok {
@@ -521,7 +562,7 @@ func handleDecodedMetricsInputValue(inputName string) {
 			log.Debugf("Received input [%s] value [%v]", inputName, elementValue)
 		}
 	}
-	if input.Value != union || containedInValChanged[inputName] {
+	if input.Value != union || containedInValChanged[inputName] || inputYieldsDirectSet[inputName] {
 		input.Value = union
 		for _, filterName := range inputToFilterExpression[input.Name] {
 			filterNeedsEvalMutex.Lock()
@@ -546,6 +587,11 @@ func handleDecodedMetricsInputValue(inputName string) {
 	scopeMutex.Lock()
 	Scope[inputName] = []Input{input}
 	scopeMutex.Unlock()
+	if containedInValChanged[inputName] || inputYieldsDirectSet[inputName] {
+		inputsMutex.Lock()
+		ProcessDirectSets()
+		inputsMutex.Unlock()
+	}
 }
 
 // make it so that we recalculate all filters using the attribute
@@ -557,15 +603,14 @@ func handleDecodedMetricsAttributeValue(inputName, scopeVar string) {
 			log.Debugf("Received input [%s] attribute [%s] value [%v]", inputName, scopeVar, elementValue)
 		}
 	}
+	scopeMutex.Lock()
 	if len(Scope[scopeVar]) == 0 || attributeUnion != Scope[scopeVar][0].Value {
-		scopeMutex.Lock()
 		attributeObject, ok := MetricsConfig.Attributes[scopeVar]
 		if ok {
 			attributeObject.Value = attributeUnion
 			MetricsConfig.Attributes[scopeVar] = attributeObject
 		}
 		Scope[scopeVar] = []Input{Input{Value: attributeUnion}}
-		scopeMutex.Unlock()
 		for _, filterName := range inputToFilterExpression[inputName] {
 			filterNeedsEvalMutex.Lock()
 			filterNeedsEval[filterName] = true
@@ -592,6 +637,7 @@ func handleDecodedMetricsAttributeValue(inputName, scopeVar string) {
 			expressionNeedsEvalMutex.Unlock()
 		}
 	}
+	scopeMutex.Unlock()
 }
 
 func PrepareBody(outputUri string) {
@@ -604,7 +650,6 @@ func PrepareBody(outputUri string) {
 	interval_set := uriIsSet[outputUri]
 	_, direct_set := uriToDirectSetActive[outputUri]
 
-	outputsMutex.Lock()
 	if stringInSlice(PubUriFlags[outputUri], "clothed") {
 		clothed = true
 	}
@@ -612,15 +657,15 @@ func PrepareBody(outputUri string) {
 		naked = true
 	}
 
-	outputsMutex.Unlock()
 	if naked && clothed {
 		checkFormat = true
 	}
 	for _, outputVar := range PublishUris[outputUri] {
 		if !uriIsSparse[outputUri] || (uriIsSparse[outputUri] && outputVarChanged[outputVar]) {
-			outputsMutex.Lock()
+			outputsMutex.RLock()
 			outputVarChanged[outputVar] = false
 			output = MetricsConfig.Outputs[outputVar]
+			outputsMutex.RUnlock()
 			if checkFormat {
 				if stringInSlice(output.Flags, "clothed") {
 					clothed = true
@@ -731,7 +776,6 @@ func PrepareBody(outputUri string) {
 			} else {
 				pubMsgBody[outputVar] = msgBody[outputVar]
 			}
-			outputsMutex.Unlock()
 		}
 	}
 }

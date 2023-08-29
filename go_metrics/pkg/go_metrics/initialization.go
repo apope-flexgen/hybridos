@@ -2134,7 +2134,14 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 	}
 	(*metricsObject).ParsedExpression = *exp
 
-	containedInValChanged = make(map[string]bool, 0)
+	if containedInValChanged == nil {
+		containedInValChanged = make(map[string]bool, 0)
+	}
+
+	if inputYieldsDirectSet == nil {
+		inputYieldsDirectSet = make(map[string]bool, 0)
+	}
+
 	for _, var_name := range exp.Vars {
 		if _, ok := inputToMetricsExpression[var_name]; !ok {
 			inputToMetricsExpression[var_name] = make([]int, 0)
@@ -2142,6 +2149,7 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 				warning = fmt.Sprintf("metrics expression uses internal_output var '%v' prior to its calculation; results displayed for this metric will lag behind '%v' by one cycle", var_name, var_name)
 			}
 			containedInValChanged[var_name] = false
+			inputYieldsDirectSet[var_name] = false
 		}
 		inputToMetricsExpression[var_name] = append(inputToMetricsExpression[var_name], netIndex)
 
@@ -2191,6 +2199,11 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 		output = MetricsConfig.Outputs[outputVar] // MetricsConfig.Outputs is a map[string]Output of output variable names to Output objects
 		output.Value = outputUnion
 		MetricsConfig.Outputs[outputVar] = output
+		if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "direct_set") {
+			for _, var_name := range exp.Vars {
+				inputYieldsDirectSet[var_name] = true
+			}
+		}
 	}
 	return warning, err
 }
@@ -2431,6 +2444,11 @@ func GetPubTickers() {
 		MetricsConfig.Echo[echoIndex].Ticker = time.NewTicker(time.Duration(MetricsConfig.Echo[echoIndex].PublishRate) * time.Millisecond)
 	}
 	EvaluateExpressions()
+	for directSetUriGroup := range uriToDirectSetActive {
+		directSetMutex.Lock()
+		uriToDirectSetActive[directSetUriGroup] = false
+		directSetMutex.Unlock()
+	}
 }
 
 func GetSubscribeUris() {

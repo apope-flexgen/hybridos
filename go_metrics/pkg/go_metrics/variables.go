@@ -40,6 +40,7 @@ var echoMsgBodyMutex sync.RWMutex
 var evalExpressionsMutex sync.RWMutex
 var directSetMutex sync.RWMutex
 var tempPrepareMsgBodyValueMutex sync.RWMutex
+var elementValueMutex sync.Mutex
 
 // local variables used throughout the package
 // since we want to minimize garbage collection
@@ -109,6 +110,7 @@ var mdoBuf *bytes.Buffer
 var mdoEncoder *json.Encoder
 var containedInValChanged map[string]bool
 var tempPrepareMsgBodyValue interface{}
+var inputYieldsDirectSet map[string]bool
 
 // runtime parsing variables - for process_fims
 var pj *simdjson.ParsedJson
