@@ -36,12 +36,12 @@ protected:
 
     std::vector<std::pair<Fims_Object*, std::string>> variable_ids = {
         // inputs
-        {&enable_mask, "fr_enable_mask"},
-        {&baseload_cmd_kw, "fr_baseload_cmd_kw"},
-        {&target_freq_hz, "fr_target_freq_hz"},
-        {&freq_offset_hz, "fr_freq_offset_hz"},
+        { &enable_mask, "fr_enable_mask" },
+        { &baseload_cmd_kw, "fr_baseload_cmd_kw" },
+        { &target_freq_hz, "fr_target_freq_hz" },
+        { &freq_offset_hz, "fr_freq_offset_hz" },
         // outputs
-        {&total_output_kw, "fr_total_output_kw"}
+        { &total_output_kw, "fr_total_output_kw" }
     };
 };
 

@@ -6,11 +6,10 @@
 #include <Fims_Object.h>
 #include <test_tools.h>
 
-class fims_object_test : public testing::Test
-{ 
+class fims_object_test : public testing::Test {
 public:
-	void SetUp() override {}
-	void TearDown() override {}
+    void SetUp() override {}
+    void TearDown() override {}
 };
 
 TEST_F(fims_object_test, multiple_inputs_alt_ui_types) {
@@ -40,7 +39,7 @@ TEST_F(fims_object_test, multiple_inputs_alt_ui_types) {
 
     Fims_Object defaults;
     fill_in_defaults(defaults);
-    
+
     const char* raw_dummy_var_json = R"(
         {
             "name": "Dummy Var",
@@ -54,7 +53,7 @@ TEST_F(fims_object_test, multiple_inputs_alt_ui_types) {
     cJSON* dummy_var_json = cJSON_Parse(raw_dummy_var_json);
     const char* dummy_var_id = "dummy_var";
     Fims_Object dummy_var;
-    std::vector<Fims_Object*> multiple_inputs_vars; // only needed to satisfy `configure` function call
+    std::vector<Fims_Object*> multiple_inputs_vars;  // only needed to satisfy `configure` function call
     dummy_var.configure(dummy_var_id, NULL, &input_sources, dummy_var_json, defaults, multiple_inputs_vars);
 
     fmt::memory_buffer buff;

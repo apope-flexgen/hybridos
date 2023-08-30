@@ -31,8 +31,7 @@ typedef struct frequency_response_output {
     float ess_min_potential;
 } Frequency_Response_Outputs;
 
-class Freq_Resp_Component
-{
+class Freq_Resp_Component {
 public:
     Frequency_Response_Outputs frequency_response(const Frequency_Response_Inputs& inputs);
 
@@ -68,37 +67,37 @@ protected:
     Fims_Object in_cooldown;
     Fims_Object in_recovery;
     Fims_Object output_kw;
-    
+
     std::vector<std::pair<Fims_Object*, std::string>> variable_ids = {
         // inputs
-        {&active_cmd_kw, "active_cmd_kw"},
-        {&inactive_cmd_kw, "inactive_cmd_kw"},
-        {&trigger_freq_hz, "trigger_freq_hz"},
-        {&trigger_duration_sec, "trigger_duration_sec"},
-        {&droop_freq_hz, "droop_freq_hz"},
-        {&droop_limit_flag, "droop_limit_flag"},
-        {&droop_bypass_flag, "droop_bypass_flag"},
-        {&recovery_freq_hz, "recovery_freq_hz"},
-        {&recovery_duration_sec, "recovery_duration_sec"},
-        {&recovery_latch, "recovery_latch"},
-        {&instant_recovery_freq_hz, "instant_recovery_freq_hz"},
-        {&cooldown_duration_sec, "cooldown_duration_sec"},
-        {&slew_rate_kw, "slew_rate_kw"},
-        {&ess_slew_override, "ess_slew_override"},
+        { &active_cmd_kw, "active_cmd_kw" },
+        { &inactive_cmd_kw, "inactive_cmd_kw" },
+        { &trigger_freq_hz, "trigger_freq_hz" },
+        { &trigger_duration_sec, "trigger_duration_sec" },
+        { &droop_freq_hz, "droop_freq_hz" },
+        { &droop_limit_flag, "droop_limit_flag" },
+        { &droop_bypass_flag, "droop_bypass_flag" },
+        { &recovery_freq_hz, "recovery_freq_hz" },
+        { &recovery_duration_sec, "recovery_duration_sec" },
+        { &recovery_latch, "recovery_latch" },
+        { &instant_recovery_freq_hz, "instant_recovery_freq_hz" },
+        { &cooldown_duration_sec, "cooldown_duration_sec" },
+        { &slew_rate_kw, "slew_rate_kw" },
+        { &ess_slew_override, "ess_slew_override" },
         // outputs
-        {&active_response_status, "active_response_status"},
-        {&in_cooldown, "in_cooldown"},
-        {&in_recovery, "in_recovery"},
-        {&output_kw, "output_kw"}
+        { &active_response_status, "active_response_status" },
+        { &in_cooldown, "in_cooldown" },
+        { &in_recovery, "in_recovery" },
+        { &output_kw, "output_kw" }
     };
 
-    bool is_underfrequency_component; // True when UF, false when OF
-    timespec trigger_over_time;  // After this clock time, a trigger event must take a cooldown break
-    timespec recovery_over_time; // Clock time designating end of recovery countdown
-    timespec cooldown_over_time; // Clock time when next trigger event is allowed to happen
-    std::vector<std::pair<float,float>> droop_curve;
-    Slew_Object slew_cmd_kw; // rate-limits the output
-    float signed_active_cmd_kw; // tracks the Fims_Object but + for UF responses and - for OF responses, whereas Fims_Object is always +
+    bool is_underfrequency_component;  // True when UF, false when OF
+    timespec trigger_over_time;        // After this clock time, a trigger event must take a cooldown break
+    timespec recovery_over_time;       // Clock time designating end of recovery countdown
+    timespec cooldown_over_time;       // Clock time when next trigger event is allowed to happen
+    std::vector<std::pair<float, float>> droop_curve;
+    Slew_Object slew_cmd_kw;     // rate-limits the output
+    float signed_active_cmd_kw;  // tracks the Fims_Object but + for UF responses and - for OF responses, whereas Fims_Object is always +
 
     void sync_active_cmd_kw();
     void build_droop_curve();

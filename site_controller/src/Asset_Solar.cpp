@@ -17,8 +17,7 @@
 #include <Configurator.h>
 #include <Site_Controller_Utils.h>
 
-Asset_Solar::Asset_Solar ()
-{
+Asset_Solar::Asset_Solar() {
     start_value = 0;
     stop_value = 0;
     enter_standby_value = 0;
@@ -39,17 +38,17 @@ Asset_Solar::Asset_Solar ()
     set_required_variables();
 }
 
-Asset_Solar::~Asset_Solar ()
-{
-    if (power_mode_setpoint) delete power_mode_setpoint;
+Asset_Solar::~Asset_Solar() {
+    if (power_mode_setpoint)
+        delete power_mode_setpoint;
     power_mode_setpoint = NULL;
-    if (power_factor_setpoint) delete power_factor_setpoint;
+    if (power_factor_setpoint)
+        delete power_factor_setpoint;
     power_factor_setpoint = NULL;
 }
 
 // required variables checked for in configuration validation
-void Asset_Solar::set_required_variables(void)
-{
+void Asset_Solar::set_required_variables(void) {
     required_variables.push_back("active_power_setpoint");
     required_variables.push_back("reactive_power_setpoint");
     required_variables.push_back("status");
@@ -59,96 +58,80 @@ void Asset_Solar::set_required_variables(void)
     required_variables.push_back("reactive_power");
 }
 
-bool Asset_Solar::start()
-{
+bool Asset_Solar::start() {
     return send_to_comp_uri(start_value, uri_start);
 }
 
-bool Asset_Solar::stop()
-{
+bool Asset_Solar::stop() {
     inStandby = false;
     return (send_to_comp_uri(stop_value, uri_stop));
 }
 
-bool Asset_Solar::enter_standby(void)
-{
-    if (isRunning && !inStandby && (active_power_setpoint->value.value_float == 0.0) && (reactive_power_setpoint->value.value_float == 0.0))
-    {
+bool Asset_Solar::enter_standby(void) {
+    if (isRunning && !inStandby && (active_power_setpoint->value.value_float == 0.0) && (reactive_power_setpoint->value.value_float == 0.0)) {
         inStandby = true;
         return send_to_comp_uri(enter_standby_value, uri_enter_standby);
     }
     return false;
 }
 
-bool Asset_Solar::exit_standby(void)
-{
+bool Asset_Solar::exit_standby(void) {
     inStandby = false;
     return send_to_comp_uri(exit_standby_value, uri_exit_standby);
 }
 
-float Asset_Solar::get_active_power_setpoint(void)
-{
+float Asset_Solar::get_active_power_setpoint(void) {
     return active_power_setpoint->value.value_float;
 }
 
-float Asset_Solar::get_reactive_power_setpoint(void)
-{
+float Asset_Solar::get_reactive_power_setpoint(void) {
     return reactive_power_setpoint->value.value_float;
 }
 
-float Asset_Solar::get_power_factor_setpoint(void)
-{
+float Asset_Solar::get_power_factor_setpoint(void) {
     return power_factor_setpoint->value.value_float;
 }
 
-bool Asset_Solar::send_active_power_setpoint(void)
-{
+bool Asset_Solar::send_active_power_setpoint(void) {
     if (round(active_power_setpoint->component_control_value.value_float) != round(active_power_setpoint->value.value_float))
         return active_power_setpoint->send_to_component(false, true);
     return false;
 }
 
-void Asset_Solar::set_active_power_setpoint(float setpoint)
-{
+void Asset_Solar::set_active_power_setpoint(float setpoint) {
     // solar asset cannot absorb active power, and must also bounded by rated value
     active_power_setpoint->component_control_value.value_float = range_check(setpoint, max_limited_active_power, min_limited_active_power);
 }
 
-bool Asset_Solar::send_reactive_power_setpoint(void)
-{
+bool Asset_Solar::send_reactive_power_setpoint(void) {
     if (round(reactive_power_setpoint->component_control_value.value_float) != round(reactive_power_setpoint->value.value_float))
         return reactive_power_setpoint->send_to_component(false, true);
     return false;
 }
 
-void Asset_Solar::set_reactive_power_setpoint(float setpoint)
-{
+void Asset_Solar::set_reactive_power_setpoint(float setpoint) {
     // solar asset can generate negative reactive power, but has to be bounded by potential
-    reactive_power_setpoint->component_control_value.value_float = range_check(setpoint, potential_reactive_power, -1*potential_reactive_power);
+    reactive_power_setpoint->component_control_value.value_float = range_check(setpoint, potential_reactive_power, -1 * potential_reactive_power);
 }
 
-bool Asset_Solar::send_power_factor_setpoint(void)
-{
+bool Asset_Solar::send_power_factor_setpoint(void) {
     if (power_factor_setpoint->component_control_value.value_float != power_factor_setpoint->value.value_float)
         return power_factor_setpoint->send_to_component();
     return false;
 }
 
-void Asset_Solar::set_power_factor_setpoint(float setpoint)
-{
+void Asset_Solar::set_power_factor_setpoint(float setpoint) {
     // power factor must be bounded between 1.0 and -1.0
-    power_factor_setpoint->component_control_value.value_float =  setpoint > 1.0 ? 1.0 : setpoint < -1.0 ? -1.0 : setpoint;
+    power_factor_setpoint->component_control_value.value_float = setpoint > 1.0 ? 1.0 : setpoint < -1.0 ? -1.0 : setpoint;
 }
 
-bool Asset_Solar::send_power_mode(void)
-{
+bool Asset_Solar::send_power_mode(void) {
     if ((power_mode_setpoint->component_control_value.value_int != powerMode::UNKNOWN) && (power_mode_setpoint->component_control_value.value_int != power_mode_setpoint->value.value_int))
         return power_mode_setpoint->send_to_component();
     return false;
 }
 
-void Asset_Solar::set_power_mode(powerMode mode)
-{
+void Asset_Solar::set_power_mode(powerMode mode) {
     if (mode == powerMode::REACTIVEPWR)
         power_mode_setpoint->component_control_value.value_int = reactive_power_mode_value;
     else if (mode == powerMode::PWRFCTR)
@@ -157,10 +140,9 @@ void Asset_Solar::set_power_mode(powerMode mode)
         FPS_ERROR_LOG("Asset_Solar::set_power_mode received invalid mode.\n");
 }
 
-bool Asset_Solar::configure_typed_asset_instance_vars(Type_Configurator* configurator)
-{
+bool Asset_Solar::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
     Asset_Configurator* asset_config = &configurator->asset_config;
-    
+
     cJSON* object = cJSON_GetObjectItem(asset_config->asset_instance_root, "start_value");
     if (object)
         start_value = object->valueint;
@@ -171,11 +153,11 @@ bool Asset_Solar::configure_typed_asset_instance_vars(Type_Configurator* configu
 
     object = cJSON_GetObjectItem(asset_config->asset_instance_root, "enter_standby_value");
     if (object)
-    	enter_standby_value = object->valueint;
+        enter_standby_value = object->valueint;
 
     object = cJSON_GetObjectItem(asset_config->asset_instance_root, "exit_standby_value");
     if (object)
-    	exit_standby_value = object->valueint;
+        exit_standby_value = object->valueint;
 
     object = cJSON_GetObjectItem(asset_config->asset_instance_root, "reactive_power_mode_q");
     if (object)
@@ -188,8 +170,7 @@ bool Asset_Solar::configure_typed_asset_instance_vars(Type_Configurator* configu
     return true;
 }
 
-bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator)
-{
+bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator) {
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
     cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
@@ -209,7 +190,7 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator)
         cJSON* ui_controls = cJSON_GetObjectItem(component, "ui_controls");
         if (ui_controls == NULL)
             continue;
-        
+
         // when adding a new UI control, make sure to add it to the list of valid UI controls in Asset_Manager.cpp
         cJSON* ctrl_obj;
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_mode");
@@ -292,16 +273,14 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator)
              come from the component
     Ex: `dischargeable_power_raw` must be configured before `dischargeable_power`
 */
-bool Asset_Solar::configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map)
-{
-    configure_single_fims_var(asset_var_map,&power_mode_setpoint,"reactive_power_mode",Int,0,REACTIVEPWR);
-    configure_single_fims_var(asset_var_map,&power_factor_setpoint,"power_factor_setpoint");
+bool Asset_Solar::configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map) {
+    configure_single_fims_var(asset_var_map, &power_mode_setpoint, "reactive_power_mode", Int, 0, REACTIVEPWR);
+    configure_single_fims_var(asset_var_map, &power_factor_setpoint, "power_factor_setpoint");
     return true;
 }
 
 // Variable map moved to ESS_Manager
-bool Asset_Solar::generate_asset_ui(fmt::memory_buffer &buf, const char* const var)
-{
+bool Asset_Solar::generate_asset_ui(fmt::memory_buffer& buf, const char* const var) {
     bool goodBody = true;
 
     // add the maint mode control if defined
@@ -339,10 +318,9 @@ bool Asset_Solar::generate_asset_ui(fmt::memory_buffer &buf, const char* const v
     return (goodBody);
 }
 
-//Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case. 
-//Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
-bool Asset_Solar::handle_set(std::string uri, cJSON &body)
-{
+// Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case.
+// Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
+bool Asset_Solar::handle_set(std::string uri, cJSON& body) {
     // The current setpoint being parsed from those available
     cJSON* current_setpoint = NULL;
     // The value of the setpoint object received
@@ -351,30 +329,23 @@ bool Asset_Solar::handle_set(std::string uri, cJSON &body)
     // For instance, sets that modify the system state should not persist as they will default to the published component state on restart
     bool persistent_setpoint = false;
 
-    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "clear_faults")))
-    {
+    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "clear_faults"))) {
         clear_alerts();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint"))) {
         value = cJSON_GetObjectItem(current_setpoint, "value");
         maint_active_power_setpoint = value->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint"))) {
         value = cJSON_GetObjectItem(current_setpoint, "value");
         maint_reactive_power_setpoint = value->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop"))) {
         stop();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start"))) {
         start();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "enter_standby")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "enter_standby"))) {
         enter_standby();
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "exit_standby")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "exit_standby"))) {
         exit_standby();
     }
 
@@ -387,12 +358,11 @@ bool Asset_Solar::handle_set(std::string uri, cJSON &body)
     return Asset::send_setpoint(uri, current_setpoint);
 }
 
-void Asset_Solar::set_potential_active_power_limit(float limit)
-{
+void Asset_Solar::set_potential_active_power_limit(float limit) {
     curtailed_active_power_limit = limit;
 }
 
-void Asset_Solar::process_potential_active_power(void) // overriden from the base class, called every 100ms
+void Asset_Solar::process_potential_active_power(void)  // overriden from the base class, called every 100ms
 {
     Asset::process_potential_active_power();
 
@@ -401,8 +371,7 @@ void Asset_Solar::process_potential_active_power(void) // overriden from the bas
     //       (curtailed_active_power_limit -> max_potential_active_power -> active_power_setpoint -> active_power -> curtailed_active_power_limit)
     //       curtailed_active_power_limit also appears to not function fully as intended as it can be bypassed in some cases. Revisit if its behavior can
     //       be changed so that it can be included in the active power limit calculation without feedback loop.
-    if (reactive_power_priority)
-    {
+    if (reactive_power_priority) {
         active_power_limit = sqrtf(powf(rated_apparent_power_kva, 2) - powf(reactive_power_setpoint->value.value_float, 2));
         max_limited_active_power = max_potential_active_power = std::min(max_potential_active_power, active_power_limit);
     }
@@ -411,27 +380,23 @@ void Asset_Solar::process_potential_active_power(void) // overriden from the bas
     max_potential_active_power = (max_potential_active_power > curtailed_active_power_limit) ? curtailed_active_power_limit : max_potential_active_power;
 }
 
-void Asset_Solar::process_asset(void)
-{
+void Asset_Solar::process_asset(void) {
     Asset::process_asset();
 
-    if (get_num_active_faults() !=0 && isRunning)
+    if (get_num_active_faults() != 0 && isRunning)
         stop();
 }
 
-void Asset_Solar::update_asset(void)
-{
+void Asset_Solar::update_asset(void) {
     // override setpoints in maintenance mode
-    if (inMaintenance)
-    {
-        set_power_mode(powerMode::REACTIVEPWR); // only allow reactive power mode while in maintenance
+    if (inMaintenance) {
+        set_power_mode(powerMode::REACTIVEPWR);  // only allow reactive power mode while in maintenance
         set_active_power_setpoint(maint_active_power_setpoint);
         set_reactive_power_setpoint(maint_reactive_power_setpoint);
     }
 }
 
-void Asset_Solar::send_to_components(void)
-{
+void Asset_Solar::send_to_components(void) {
     send_active_power_setpoint();
     send_reactive_power_setpoint();
     send_power_factor_setpoint();

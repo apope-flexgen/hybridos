@@ -25,15 +25,14 @@
 #include <Fims_Object.h>
 #include <Types.h>
 
-class Asset_Manager
-{
+class Asset_Manager {
 public:
-    Asset_Manager ();
-    ~Asset_Manager ();
+    Asset_Manager();
+    ~Asset_Manager();
 
     // init methods
     int debugLoopCount;
-    bool asset_create(cJSON *pJsonRoot, bool* primary_controller);
+    bool asset_create(cJSON* pJsonRoot, bool* primary_controller);
 
     void set_min_generators_active(int);
 
@@ -58,8 +57,8 @@ public:
 
     bool set_poi_feeder_state_open();
     bool set_poi_feeder_state_closed();
-    bool set_feeder_state_open(Asset_Feeder *target_feeder);
-    bool set_feeder_state_closed(Asset_Feeder *target_feeder);
+    bool set_feeder_state_open(Asset_Feeder* target_feeder);
+    bool set_feeder_state_closed(Asset_Feeder* target_feeder);
 
     bool set_gen_target_active_power(float);
     bool set_ess_target_active_power(float);
@@ -108,8 +107,8 @@ public:
     int get_num_solar_in_standby(void);
 
     Asset_Feeder* validate_feeder_id(const char* feeder_ID);
-    bool get_feeder_state(Asset_Feeder *target_feeder);
-    bool get_feeder_utility_status(Asset_Feeder *target_feeder);
+    bool get_feeder_state(Asset_Feeder* target_feeder);
+    bool get_feeder_utility_status(Asset_Feeder* target_feeder);
 
     float get_ess_soc_max(void);
     float get_ess_soc_min(void);
@@ -174,7 +173,7 @@ public:
     float get_gen_total_rated_active_power(void);
     float get_gen_total_potential_reactive_power(void);
     float get_gen_total_nameplate_active_power(void);
-    
+
     float get_ess_total_chargeable_power_kW(void);
     float get_ess_total_dischargeable_power_kW(void);
     float get_ess_total_chargeable_energy_kWh(void);
@@ -183,7 +182,7 @@ public:
 
     int get_num_active_faults(assetType type) const;
     int get_num_active_alarms(assetType type) const;
-    bool check_asset_alert(std::pair<std::string,uint64_t>& alert);
+    bool check_asset_alert(std::pair<std::string, uint64_t>& alert);
 
     const std::string get_poi_id(void);
     bool get_poi_feeder_state(void);
@@ -231,19 +230,20 @@ public:
     float get_total_kW_charge_limit(void);
     float get_total_kW_discharge_limit(void);
 
-    void update_ldss_settings(LDSS_Settings &&settings);
+    void update_ldss_settings(LDSS_Settings&& settings);
 
     bool direct_start_gen(void);
     void start_all_gen(void);
     bool stop_all_gen(void);
 
     void publish_assets(void);
+
 protected:
     // Indicates whether this is the primary controller (true) or running in shadow mode (false)
     bool* is_primary;
 
-    fmt::memory_buffer send_FIMS_buf; // Reusable and resizable string buffer used to send FIMS messages
-    
+    fmt::memory_buffer send_FIMS_buf;  // Reusable and resizable string buffer used to send FIMS messages
+
     Type_Manager* get_type_manager(std::string type);
     Type_Manager* get_type_manager(const char* type);
     ESS_Manager* ess_manager;
@@ -257,15 +257,15 @@ protected:
     Type_Configurator* solar_configurator;
 
     // control variables
-    std::map <std::string, std::vector<Fims_Object*>> component_var_map;
-    std::map <std::string, Fims_Object*> asset_var_map;
+    std::map<std::string, std::vector<Fims_Object*>> component_var_map;
+    std::map<std::string, Fims_Object*> asset_var_map;
 
     void handle_pubs(char** pfrags, int nfrags, char* body);
     void handle_pub_status_options(cJSON* cJcomp, Fims_Object* fimsComp, int varArraySize);
     void handle_pub_alarm_or_fault_options(cJSON* cJcomp, Fims_Object* fimsComp, int varArraySize);
     void handle_pub_other_options(cJSON* cJcomp, Fims_Object* fimsComp, int varArraySize);
-    void handle_get(fims_message *pmsg);
-    void handle_set(fims_message &msg);
+    void handle_get(fims_message* pmsg);
+    void handle_set(fims_message& msg);
     void handle_post(int nfrags, char* body);
     void handle_del(int nfrags, char* body);
     void send_all_asset_data(char* uri);

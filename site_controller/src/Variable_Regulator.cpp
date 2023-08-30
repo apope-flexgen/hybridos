@@ -6,7 +6,7 @@
  *      Author: Andrew Kwon (akwon)
  */
 
- /* C Standard Library Dependencies */
+/* C Standard Library Dependencies */
 #include <ctime>
 #include <stdio.h>
 #include <string>
@@ -18,8 +18,7 @@
 #include <Variable_Regulator.h>
 #include <Site_Controller_Utils.h>
 
-Variable_Regulator::Variable_Regulator()
-{
+Variable_Regulator::Variable_Regulator() {
     offset = 0;
     default_offset = 0;
     max_offset = 0;
@@ -27,7 +26,7 @@ Variable_Regulator::Variable_Regulator()
     default_threshold = 0;
     default_comparison = VALUE_BELOW;
     control_high_threshold = 0.0;
-    updates_per_second = 10; // The default update rate is used for most standalone features
+    updates_per_second = 10;  // The default update rate is used for most standalone features
     decrease_timer_count = 0;
     decrease_timer_duration = 0;
     control_low_threshold = 0.0;
@@ -40,39 +39,32 @@ Variable_Regulator::Variable_Regulator()
     clock_gettime(CLOCK_MONOTONIC, &current_time);
 }
 
-Variable_Regulator::~Variable_Regulator()
-{
-}
+Variable_Regulator::~Variable_Regulator() {}
 
 void Variable_Regulator::set_update_rate(int update_rate) {
     updates_per_second = update_rate;
 }
 
-void Variable_Regulator::set_default_condition(float threshold, COMPARISON_TYPE check_below_or_above)
-{
+void Variable_Regulator::set_default_condition(float threshold, COMPARISON_TYPE check_below_or_above) {
     default_threshold = threshold;
     default_comparison = check_below_or_above;
 }
 
-void Variable_Regulator::set_control_high_threshold(float threshold)
-{
+void Variable_Regulator::set_control_high_threshold(float threshold) {
     control_high_threshold = threshold;
 }
 
-void Variable_Regulator::set_decrease_timer_duration_ms(int duration_in_ms)
-{
+void Variable_Regulator::set_decrease_timer_duration_ms(int duration_in_ms) {
     decrease_timer_duration = duration_in_ms * updates_per_second / 1000;
     // set timer
     decrease_timer_count = decrease_timer_duration;
 }
 
-void Variable_Regulator::set_control_low_threshold(float threshold)
-{
+void Variable_Regulator::set_control_low_threshold(float threshold) {
     control_low_threshold = threshold;
 }
 
-void Variable_Regulator::set_increase_timer_duration_ms(int duration_in_ms)
-{
+void Variable_Regulator::set_increase_timer_duration_ms(int duration_in_ms) {
     increase_timer_duration = duration_in_ms * updates_per_second / 1000;
     // set timer
     increase_timer_count = increase_timer_duration;
@@ -80,29 +72,26 @@ void Variable_Regulator::set_increase_timer_duration_ms(int duration_in_ms)
 
 /**
  * @brief Converts the internal increase timer count to a seconds value then to a display string for the UI.
- * 
+ *
  * @return std::string A timer display string in the format of MINUTES_LEFT:SECONDS_LEFT.
  */
-std::string Variable_Regulator::get_increase_display_timer()
-{
-    return seconds_to_timer_string(increase_timer_count/updates_per_second, increase_timer_duration/updates_per_second);
+std::string Variable_Regulator::get_increase_display_timer() {
+    return seconds_to_timer_string(increase_timer_count / updates_per_second, increase_timer_duration / updates_per_second);
 }
 
 /**
  * @brief Converts the internal decrease timer count to a seconds value then to a display string for the UI.
- * 
+ *
  * @return std::string A timer display string in the format of MINUTES_LEFT:SECONDS_LEFT.
  */
-std::string Variable_Regulator::get_decrease_display_timer()
-{
-    return seconds_to_timer_string(decrease_timer_count/updates_per_second, decrease_timer_duration/updates_per_second);
+std::string Variable_Regulator::get_decrease_display_timer() {
+    return seconds_to_timer_string(decrease_timer_count / updates_per_second, decrease_timer_duration / updates_per_second);
 }
 
 /**
  * Reset to default state
  */
-void Variable_Regulator::reset()
-{
+void Variable_Regulator::reset() {
     offset = default_offset;
     reset_timers();
 }
@@ -115,12 +104,10 @@ void Variable_Regulator::reset()
  * @param regulation_input  The input compared against the low and high thresholds to determine the degree of regulation needed
  * @return true if the command was acted upon and false if waiting for timers
  */
-bool Variable_Regulator::regulate_variable_offset(float base_case_input, float regulation_input)
-{
+bool Variable_Regulator::regulate_variable_offset(float base_case_input, float regulation_input) {
     // Check time to see if it's time to update, if not then just return
     clock_gettime(CLOCK_MONOTONIC, &current_time);
-    if (!timerStarted)
-    {
+    if (!timerStarted) {
         timerStarted = true;
         prev_time.tv_sec = current_time.tv_sec;
         prev_time.tv_nsec = current_time.tv_nsec;
@@ -133,14 +120,11 @@ bool Variable_Regulator::regulate_variable_offset(float base_case_input, float r
 
     // Set offset value based on base_case_input and timers
     // Set the offset value to default if appropriate according to the base_case_input comparison
-    if ((base_case_input < default_threshold && default_comparison == VALUE_BELOW) ||
-        (base_case_input > default_threshold && default_comparison == VALUE_ABOVE))
-    {
+    if ((base_case_input < default_threshold && default_comparison == VALUE_BELOW) || (base_case_input > default_threshold && default_comparison == VALUE_ABOVE)) {
         reset();
     }
     // Update the offset decrease/increase timers
-    else
-    {
+    else {
         update_decrease_timer(regulation_input);
         update_increase_timer(regulation_input);
     }
@@ -156,31 +140,24 @@ bool Variable_Regulator::regulate_variable_offset(float base_case_input, float r
  * @param control_value variable used as reference to determine if regulation through offset is needed
  *                      true when this variable is above the highest tolerable threshold configured
  */
-void Variable_Regulator::update_decrease_timer(float control_value)
-{
+void Variable_Regulator::update_decrease_timer(float control_value) {
     // if the offset value is already at its minimum, no need to count down
-    if (offset <= min_offset)
-    {
+    if (offset <= min_offset) {
         return;
     }
 
     // decrement offset value if control is above threshold for long enough
-    if (control_value > control_high_threshold)
-    {
-        if (decrease_timer_count > 0)
-        {
+    if (control_value > control_high_threshold) {
+        if (decrease_timer_count > 0) {
             decrease_timer_count--;
-        }
-        else if (decrease_timer_count == 0)
-        {
+        } else if (decrease_timer_count == 0) {
             offset--;
             // reset timer
             decrease_timer_count = decrease_timer_duration;
         }
     }
     // when below threshold, rewind the timer
-    else if (decrease_timer_count < decrease_timer_duration)
-    {
+    else if (decrease_timer_count < decrease_timer_duration) {
         decrease_timer_count++;
     }
 }
@@ -190,37 +167,29 @@ void Variable_Regulator::update_decrease_timer(float control_value)
  * @param control_value variable used as reference to determine if regulation through offset is needed
  *                      true when this variable is below the lowest tolerable threshold configured
  */
-void Variable_Regulator::update_increase_timer(float control_value)
-{
+void Variable_Regulator::update_increase_timer(float control_value) {
     // if offset value is already at its maximum, no need to count down
-    if (offset >= max_offset)
-    {
+    if (offset >= max_offset) {
         return;
     }
 
     // increment offset value if control is below threshold for long enough
-    if (control_value < control_low_threshold)
-    {
-        if (increase_timer_count > 0)
-        {
+    if (control_value < control_low_threshold) {
+        if (increase_timer_count > 0) {
             increase_timer_count--;
-        }
-        else if (increase_timer_count == 0)
-        {
+        } else if (increase_timer_count == 0) {
             offset++;
             // reset timer
             increase_timer_count = increase_timer_duration;
         }
     }
     // when above threshold, rewind the timer
-    else if (increase_timer_count < increase_timer_duration)
-    {
+    else if (increase_timer_count < increase_timer_duration) {
         increase_timer_count++;
     }
 }
 
-void Variable_Regulator::reset_timers()
-{
+void Variable_Regulator::reset_timers() {
     decrease_timer_count = decrease_timer_duration;
     increase_timer_count = increase_timer_duration;
 }

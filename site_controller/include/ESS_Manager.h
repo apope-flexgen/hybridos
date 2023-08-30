@@ -2,7 +2,7 @@
  * ESS_Manager.h
  * Header for ESS-specific Manager class
  * Refactored from Asset_Manager.h
- * 
+ *
  * Created on Sep 30th, 2020
  *      Author: Jack Shade (jnshade)
  */
@@ -20,10 +20,7 @@
 #include <macros.h>
 #include <Type_Manager.h>
 
-enum SOC_State
-{
-    OnTarget, BelowTarget, FarBelowTarget, AboveTarget, FarAboveTarget
-};
+enum SOC_State { OnTarget, BelowTarget, FarBelowTarget, AboveTarget, FarAboveTarget };
 
 struct SOC_Balancing_Data {
     Asset_ESS* ess;
@@ -31,8 +28,7 @@ struct SOC_Balancing_Data {
     float powerLimit;
 };
 
-class ESS_Manager: public Type_Manager
-{
+class ESS_Manager : public Type_Manager {
 protected:
     int numEssControllable;
     int numEssStartable;
@@ -169,7 +165,7 @@ public:
 
     bool aggregate_ess_data(void);
 
-    void generate_asset_type_summary_json(fmt::memory_buffer &buf, const char* const var = NULL) override;
+    void generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var = NULL) override;
 
     void calculate_ess_reactive_power(void);
     bool calculate_ess_active_power(void);

@@ -11,6 +11,7 @@
 /* External Dependencies */
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
+#include <Fims_Object.h>
 /* C Standard Library Dependencies */
 /* C++ Standard Library Dependencies */
 
@@ -26,8 +27,7 @@ typedef struct energy_arbitrage_output {
     int error_code = 0;
 } Energy_Arbitrage_Output;
 
-class Energy_Arbitrage
-{
+class Energy_Arbitrage {
 public:
     Energy_Arbitrage_Output energy_arbitrage(const Energy_Arbitrage_Inputs&);
     Fims_Object price;

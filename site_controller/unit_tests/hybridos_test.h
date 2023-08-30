@@ -9,10 +9,9 @@
 #include "fims_object_test.h"
 #include "utils_test.h"
 
-int test_main(int argc, char **argv)
-{
-   ::testing::InitGoogleTest(&argc, argv);
-   return RUN_ALL_TESTS();
+int test_main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
 
 #endif /* SITE_TEST_H_ */

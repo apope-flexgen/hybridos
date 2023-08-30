@@ -2,7 +2,7 @@
  * Solar_Manager.h
  * Header for Solar-specific Manager class
  * Refactored from Asset_Manager.h
- * 
+ *
  * Created on Sep 30th, 2020
  *      Author: Jack Shade (jnshade)
  */
@@ -18,14 +18,14 @@
 #include <Asset_Solar.h>
 #include <Type_Manager.h>
 
-enum solar_curtailment_states
-{
-    no_curtailment, partial_curtailment, full_curtailment
+enum solar_curtailment_states { no_curtailment, partial_curtailment, full_curtailment };
+const char curtailment_strings[][20] = {
+    "No Curtailment",
+    "Partial Curtailment",
+    "Full Curtailment",
 };
-const char curtailment_strings[][20] = { "No Curtailment", "Partial Curtailment", "Full Curtailment"};
 
-class Solar_Manager: public Type_Manager
-{
+class Solar_Manager : public Type_Manager {
 protected:
     int numSolarControllable;
     int numSolarStartable;
@@ -70,7 +70,7 @@ protected:
     int solar_prime_inverter_selection(void);
     solar_curtailment_states find_next_curtailment_state(void);
     bool aggregate_solar_data(void);
-    void generate_asset_type_summary_json(fmt::memory_buffer &buf, const char* const var = NULL) override;
+    void generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var = NULL) override;
 
 public:
     Solar_Manager();

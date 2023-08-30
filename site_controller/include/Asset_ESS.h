@@ -15,18 +15,17 @@
 /* Local Internal Dependencies */
 #include <Asset.h>
 
-class Asset_ESS: public Asset
-{
+class Asset_ESS : public Asset {
 public:
-    Asset_ESS ();
-    virtual ~Asset_ESS ();
+    Asset_ESS();
+    virtual ~Asset_ESS();
 
     // control
     bool start(void);
     bool stop(void);
     bool enter_standby(void);
     bool exit_standby(void);
-    
+
     bool close_bms_contactors(void);
     bool open_bms_contactors(void);
 
@@ -70,12 +69,12 @@ public:
     setpoint_states get_setpoint_status(void);
 
     gridMode get_grid_mode(void);
-    
+
     // internal functions
     void process_asset();
     void update_asset(void);
     void send_to_components(void) override;
-    bool handle_set(std::string uri, cJSON &body);
+    bool handle_set(std::string uri, cJSON& body);
     bool generate_asset_ui(fmt::memory_buffer&, const char* const var = NULL) override;
 
 protected:
@@ -83,19 +82,19 @@ protected:
     void set_required_variables(void);
     bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
     bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map);
+    bool configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
     int start_value;
     int stop_value;
     int enter_standby_value;
     int exit_standby_value;
     int grid_forming_value;
     int grid_following_value;
-    setpoint_states setpoint_status; 
+    setpoint_states setpoint_status;
 
     int bms_control_close;
     int bms_control_open;
     int bms_control_reset;
-    bool dc_contactor_restriction; // Bool indicating whether contactors must be closed in order to send maintenance mode commands
+    bool dc_contactor_restriction;  // Bool indicating whether contactors must be closed in order to send maintenance mode commands
 
     int reactive_power_mode_value;
     int power_factor_mode_value;
@@ -107,7 +106,7 @@ protected:
     float chgSocEnd;                    // End of high end SoC derating. Chargeable power is zero when at or above this value
     float dischgSocBegin;               // Beginning of low end SoC derating. Dischargeable power is limited towards zero when below this value
     float dischgSocEnd;                 // End of low end SoC derating. Dischargeable power is zero when at or below this value
-    float maxRawSoc;                    // Highest (raw) SoC value allowed based on configuration as part of derating. Typically 97 and disabled with 100 
+    float maxRawSoc;                    // Highest (raw) SoC value allowed based on configuration as part of derating. Typically 97 and disabled with 100
     float minRawSoc;                    // Lowest (raw) SoC value allowed based on configuration as part of derating. Typically 4 and disabled with 0
     float rated_capacity;               // configurable battery base capacity
     bool calibration_flag;              // Flag indicating in calibration mode
@@ -146,38 +145,38 @@ protected:
     Write_Rate_Throttle reactive_power_setpoint_throttle;
     Write_Rate_Throttle start_command_throttle;
     Write_Rate_Throttle stop_command_throttle;
-    
+
     // status
-    bool energy_configured; // Flag to indicate whether chargeable/dischargeable_energy was configured
+    bool energy_configured;  // Flag to indicate whether chargeable/dischargeable_energy was configured
 
     // TODO these should all be regular Fims_Objects rather than pointers. Init'd to NULL for now.
-    // setpoints 
+    // setpoints
     Fims_Object* grid_mode_setpoint = NULL;
     Fims_Object* power_mode_setpoint = NULL;
     Fims_Object* power_factor_setpoint = NULL;
-    Fims_Object* voltage_slew_setpoint = NULL; // units in %/s
+    Fims_Object* voltage_slew_setpoint = NULL;  // units in %/s
     Fims_Object* voltage_setpoint = NULL;
     Fims_Object* frequency_setpoint = NULL;
     // TODO: these are Sungrow specific fields, remove and cleanup
     Fims_Object* pcs_a_nominal_voltage_setpoint = NULL;
     Fims_Object* pcs_b_nominal_voltage_setpoint = NULL;
     // status points
-    Fims_Object* soh = NULL; // battery state of health
+    Fims_Object* soh = NULL;  // battery state of health
     Fims_Object* chargeable_power = NULL;
     Fims_Object* dischargeable_power = NULL;
     Fims_Object* chargeable_power_raw = NULL;
     Fims_Object* dischargeable_power_raw = NULL;
-    Fims_Object* soc = NULL; // battery state of charge
-    Fims_Object* soc_raw = NULL; // unscaled battery state of charge from asset
+    Fims_Object* soc = NULL;      // battery state of charge
+    Fims_Object* soc_raw = NULL;  // unscaled battery state of charge from asset
     Fims_Object* chargeable_energy = NULL;
     Fims_Object* dischargeable_energy = NULL;
     Fims_Object* chargeable_energy_raw = NULL;
     Fims_Object* dischargeable_energy_raw = NULL;
-    Fims_Object* max_temp = NULL; // battery max temperature
-    Fims_Object* min_temp = NULL; // battery min temperature
+    Fims_Object* max_temp = NULL;  // battery max temperature
+    Fims_Object* min_temp = NULL;  // battery min temperature
     Fims_Object* racks_in_service = NULL;
     Fims_Object* dc_contactors_closed = NULL;
-    Fims_Object* autobalancing_status = NULL; // Status of the autobalancing register
+    Fims_Object* autobalancing_status = NULL;  // Status of the autobalancing register
     Fims_Object* voltage_min = NULL;
     Fims_Object* voltage_max = NULL;
 

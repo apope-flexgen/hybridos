@@ -5,7 +5,7 @@
             "label": "build_tests",
             "command": "/bin/bash",
             "args": [
-                "./package_utility/build.sh",
+                "../package_utility/build.sh",
                 "-bm",
                 "test",
             ],
@@ -22,7 +22,7 @@
             "label": "build_debug",
             "command": "/bin/bash",
             "args": [
-                "./package_utility/build.sh",
+                "../package_utility/build.sh",
                 "-bi",
                 "-m",
                 "debug"

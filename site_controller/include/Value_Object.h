@@ -17,31 +17,30 @@
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
 
-class Value_Object
-{
-    public:
+class Value_Object {
+public:
     Value_Object();
     Value_Object(int val);
     ~Value_Object();
 
-    void set(int   value);
-    void set(bool  value);
+    void set(int value);
+    void set(bool value);
     void set(float value);
     void set(uint64_t value);
     void set(const char* value);
     void set(std::string value);
-    void set(Value_Object &new_value);
+    void set(Value_Object& new_value);
     const char* print();
-    bool add_value_to_JSON_buffer(fmt::memory_buffer &buf, bool round_float=false);
-    bool add_naked_value_to_JSON_buffer(fmt::memory_buffer &buf);
+    bool add_value_to_JSON_buffer(fmt::memory_buffer& buf, bool round_float = false);
+    bool add_naked_value_to_JSON_buffer(fmt::memory_buffer& buf);
 
-    int   type;
-    int   value_int;
+    int type;
+    int value_int;
     char* value_string;
     float value_float;
     uint64_t value_bit_field;
     uint64_t value_mask;
-    bool  value_bool;
+    bool value_bool;
 };
 
 #endif /* INCLUDE_VALUE_OBJECT_H_ */

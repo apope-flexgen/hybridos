@@ -3,7 +3,7 @@
  *
  *  Created on: August 14, 2018
  *      Author: kbrezina
-*/
+ */
 
 /* C Standard Library Dependencies */
 #include <cstring>
@@ -17,8 +17,7 @@
 #include <Data_Endpoint.h>
 #include <Configurator.h>
 
-Asset_Feeder::Asset_Feeder ()
-{
+Asset_Feeder::Asset_Feeder() {
     open_value = 0;
     close_value = 0;
     close_permissive_value = 0;
@@ -31,33 +30,36 @@ Asset_Feeder::Asset_Feeder ()
     set_required_variables();
 }
 
-Asset_Feeder::~Asset_Feeder ()
-{
-    if (grid_voltage_l1)    delete grid_voltage_l1;
+Asset_Feeder::~Asset_Feeder() {
+    if (grid_voltage_l1)
+        delete grid_voltage_l1;
     grid_voltage_l1 = NULL;
-    if (grid_voltage_l2)    delete grid_voltage_l2;
+    if (grid_voltage_l2)
+        delete grid_voltage_l2;
     grid_voltage_l2 = NULL;
-    if (grid_voltage_l3)    delete grid_voltage_l3;
+    if (grid_voltage_l3)
+        delete grid_voltage_l3;
     grid_voltage_l3 = NULL;
-    if (grid_frequency)     delete grid_frequency;
+    if (grid_frequency)
+        delete grid_frequency;
     grid_frequency = NULL;
-    if (breaker_status)     delete breaker_status;
+    if (breaker_status)
+        delete breaker_status;
     breaker_status = NULL;
-    if (utility_status)     delete utility_status;
+    if (utility_status)
+        delete utility_status;
     utility_status = NULL;
 }
 
 // required variables checked for in configuration validation
-void Asset_Feeder::set_required_variables(void)
-{
+void Asset_Feeder::set_required_variables(void) {
     required_variables.push_back("breaker_status");
     required_variables.push_back("grid_frequency");
     required_variables.push_back("active_power");
     required_variables.push_back("reactive_power");
 }
 
-bool Asset_Feeder::get_breaker_status(void)
-{
+bool Asset_Feeder::get_breaker_status(void) {
     // breaker status can either a mask or a boolean
     return (is_running() || breaker_status->value.value_bool);
 }
@@ -66,64 +68,53 @@ bool Asset_Feeder::get_breaker_status(void)
  * Status of the utility tracked by this feed register
  * Only supported for some sites, else will always be false
  */
-bool Asset_Feeder::get_utility_status(void)
-{
+bool Asset_Feeder::get_utility_status(void) {
     return utility_status->value.value_bool;
 }
 
-float Asset_Feeder::get_gridside_frequency(void)
-{
+float Asset_Feeder::get_gridside_frequency(void) {
     return grid_frequency->value.value_float;
 }
 
-float Asset_Feeder::get_gridside_avg_voltage(void)
-{
+float Asset_Feeder::get_gridside_avg_voltage(void) {
     float sumVolts = grid_voltage_l1->value.value_float + grid_voltage_l2->value.value_float + grid_voltage_l3->value.value_float;
-    return (numPhases != 0.0 ? sumVolts/numPhases : 0);
+    return (numPhases != 0.0 ? sumVolts / numPhases : 0);
 }
 
-float Asset_Feeder::get_power_factor()
-{
+float Asset_Feeder::get_power_factor() {
     return power_factor->value.value_float;
 }
 
-void Asset_Feeder::breaker_reset(void)
-{
+void Asset_Feeder::breaker_reset(void) {
     // component reset command clear should be handled by component
     send_to_comp_uri(reset_value, uri_breaker_reset);
     clear_alerts();
 }
 
-bool Asset_Feeder::breaker_close(void)
-{
+bool Asset_Feeder::breaker_close(void) {
     return send_to_comp_uri(close_value, uri_breaker_close);
 }
 
-bool Asset_Feeder::breaker_close_permissive(void)
-{
+bool Asset_Feeder::breaker_close_permissive(void) {
     return send_to_comp_uri(close_permissive_value, uri_breaker_close_permissive);
 }
 
-bool Asset_Feeder::breaker_open(void)
-{
+bool Asset_Feeder::breaker_open(void) {
     return send_to_comp_uri(open_value, uri_breaker_open);
 }
 
-bool Asset_Feeder::breaker_close_permissive_remove(void)
-{
+bool Asset_Feeder::breaker_close_permissive_remove(void) {
     return send_to_comp_uri(close_permissive_remove_value, uri_breaker_close_permissive_remove);
 }
 
-void Asset_Feeder::set_active_power_setpoint(float setpoint)
-{
+void Asset_Feeder::set_active_power_setpoint(float setpoint) {
     active_power_setpoint->component_control_value.value_float = setpoint;
 }
 
-bool Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* configurator)
-{
+bool Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
     Asset_Configurator* asset_config = &configurator->asset_config;
 
-    cJSON *object = cJSON_GetObjectItem(asset_config->asset_instance_root, "value_open");
+    cJSON* object = cJSON_GetObjectItem(asset_config->asset_instance_root, "value_open");
     if (object)
         open_value = object->valueint;
 
@@ -146,15 +137,14 @@ bool Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* config
     // Configure status strings
     // Publishes expected to report one of these strings based on status value
     // Only an integer is received in component publishes so we rely on hard coded values for now
-    statusStrings[close_value] = {"Closed"};
-    statusStrings[open_value] = {"Open"};
+    statusStrings[close_value] = { "Closed" };
+    statusStrings[open_value] = { "Open" };
     return true;
 }
 
-bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator)
-{
+bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator) {
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
-    cJSON *components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
+    cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
         FPS_ERROR_LOG("Components array is NULL.");
         return false;
@@ -162,17 +152,17 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator)
 
     // for each component in the components array, parse out the UI control variables. other component variables are handled by the base class configure function
     for (uint i = 0; i < numAssetComponents; i++) {
-        cJSON *component = cJSON_GetArrayItem(components_array, i);
+        cJSON* component = cJSON_GetArrayItem(components_array, i);
         if (component == NULL) {
             FPS_ERROR_LOG("Component with index %d has NULL configuration.", i);
             return false;
         }
-        
+
         // UI controls are optional
         cJSON* ui_controls = cJSON_GetObjectItem(component, "ui_controls");
         if (ui_controls == NULL)
             continue;
-        
+
         // when adding a new UI control, make sure to add it to the list of valid UI controls in Asset_Manager.cpp
         cJSON* ctrl_obj;
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_mode");
@@ -204,7 +194,7 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator)
             }
             uri_breaker_close_permissive = build_uri(compNames[i], breaker_close_perm_ctl.reg_name);
         }
-        
+
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_close_permissive_remove");
         if (ctrl_obj != NULL) {
             if (!breaker_close_perm_remove_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false)) {
@@ -243,52 +233,45 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator)
              come from the component
     Ex: `dischargeable_power_raw` must be configured before `dischargeable_power`
 */
-bool Asset_Feeder::configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map)
-{
-    configure_single_fims_var(asset_var_map,&breaker_status,"breaker_status",Bool);
-    configure_single_fims_var(asset_var_map,&utility_status,"utility_status",Bool);
-    configure_single_fims_var(asset_var_map,&grid_voltage_l1,"grid_voltage_l1");
-    configure_single_fims_var(asset_var_map,&grid_voltage_l2,"grid_voltage_l2");
-    configure_single_fims_var(asset_var_map,&grid_voltage_l3,"grid_voltage_l3");
-    configure_single_fims_var(asset_var_map,&grid_frequency,"grid_frequency");
+bool Asset_Feeder::configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map) {
+    configure_single_fims_var(asset_var_map, &breaker_status, "breaker_status", Bool);
+    configure_single_fims_var(asset_var_map, &utility_status, "utility_status", Bool);
+    configure_single_fims_var(asset_var_map, &grid_voltage_l1, "grid_voltage_l1");
+    configure_single_fims_var(asset_var_map, &grid_voltage_l2, "grid_voltage_l2");
+    configure_single_fims_var(asset_var_map, &grid_voltage_l3, "grid_voltage_l3");
+    configure_single_fims_var(asset_var_map, &grid_frequency, "grid_frequency");
     return true;
 }
 
-bool Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configurator)
-{
+bool Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configurator) {
     // if config validation flag is false, no need to validate
-    if (!configurator->config_validation)
-    {
+    if (!configurator->config_validation) {
         return true;
     }
 
     // does config validation that was not done earlier since we did not know which feeder was POI at the time
-    if (!validate_config(configurator->p_asset_var_map))
-    {
+    if (!validate_config(configurator->p_asset_var_map)) {
         FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder failed base Asset validate config check\n");
         return false;
     }
 
     // checks to make sure required base class vars were configured. other assets had these checked in configure_base function
     cJSON* obj = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "rated_active_power_kw");
-    if (obj == NULL)
-    {
+    if (obj == NULL) {
         FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder missing required rated_active_power_kw variable\n");
         return false;
     }
     obj = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "slew_rate");
-    if (obj == NULL)
-    {
+    if (obj == NULL) {
         FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder missing required slew_rate variable\n");
         return false;
     }
     return true;
 }
 
-//Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case. 
-//Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
-bool Asset_Feeder::handle_set(std::string uri, cJSON &body)
-{
+// Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case.
+// Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
+bool Asset_Feeder::handle_set(std::string uri, cJSON& body) {
     // The current setpoint being parsed from those available
     cJSON* current_setpoint = NULL;
 
@@ -296,34 +279,25 @@ bool Asset_Feeder::handle_set(std::string uri, cJSON &body)
     // For instance, sets that modify the system state should not persist as they will default to the published component state on restart
     bool persistent_setpoint = false;
 
-    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_close")) && inMaintenance)
-    {
+    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_close")) && inMaintenance) {
         breaker_close();
         persistent_setpoint = true;
-    }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_close_permissive")) && inMaintenance)
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_close_permissive")) && inMaintenance) {
         breaker_close_permissive_status = true;
         breaker_close_permissive();
         persistent_setpoint = true;
-    }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_close_permissive_remove")) && inMaintenance)
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_close_permissive_remove")) && inMaintenance) {
         breaker_close_permissive_status = false;
         breaker_close_permissive_remove();
         persistent_setpoint = true;
-    }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_open")) && inMaintenance)
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_open")) && inMaintenance) {
         breaker_open();
         persistent_setpoint = true;
-    }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_reset")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "breaker_reset"))) {
         if (inMaintenance)
-            breaker_reset(); // hard reset, only when in maint mode
-        else {            
-            clear_alerts(); // graceful, component-level reset
+            breaker_reset();  // hard reset, only when in maint mode
+        else {
+            clear_alerts();  // graceful, component-level reset
         }
     }
 
@@ -336,24 +310,19 @@ bool Asset_Feeder::handle_set(std::string uri, cJSON &body)
     return Asset::send_setpoint(uri, current_setpoint);
 }
 
-void Asset_Feeder::process_asset(bool* status)
-{
-    if (status)
-    {
+void Asset_Feeder::process_asset(bool* status) {
+    if (status) {
         raw_status = *status;
     }
     return Asset::process_asset();
 }
 
-void Asset_Feeder::update_asset(void)
-{
+void Asset_Feeder::update_asset(void) {
     // TODO:: add maintenance mode handling here
 }
 
-void Asset_Feeder::process_potential_active_power(void)
-{
-    if (!get_breaker_status())
-    {
+void Asset_Feeder::process_potential_active_power(void) {
+    if (!get_breaker_status()) {
         max_potential_active_power = 0.0f;
         min_potential_active_power = 0.0f;
         return;
@@ -361,15 +330,13 @@ void Asset_Feeder::process_potential_active_power(void)
     Asset::process_potential_active_power();
 }
 
-void Asset_Feeder::send_to_components(void)
-{
+void Asset_Feeder::send_to_components(void) {
     FPS_DEBUG_LOG("Currently nothing to send to Feeders; Asset_Feeder::send_to_components.\n");
 }
 
 /****************************************************************************************/
 // Variable map moved to Feeder_Manager
-bool Asset_Feeder::generate_asset_ui(fmt::memory_buffer &buf, const char* const var)
-{
+bool Asset_Feeder::generate_asset_ui(fmt::memory_buffer& buf, const char* const var) {
     bool goodBody = true;
 
     // add the manual mode control if defined

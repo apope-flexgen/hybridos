@@ -1,6 +1,6 @@
 /**
  * LDSS.h
- * 
+ *
  * Created October 2021
  */
 
@@ -53,6 +53,7 @@ private:
     void check_start_generator(int num_controllable, float max_load_threshold_kw, float target_kw);
     void check_stop_generator(int num_controllable, float min_load_threshold_kw, float target_kw);
     void update_cooldown_and_warmup();
+
 public:
     std::vector<Asset_Generator*> generators;
     LDSS_Priority_Setting priority_setting;
@@ -76,8 +77,8 @@ public:
     ESS_Manager* pEss;
 
     LDSS();
-    bool configure_priorities(std::vector<Asset_Generator*> const &pg, cJSON* static_run_priorities);
-    void update_settings(LDSS_Settings &settings);
+    bool configure_priorities(std::vector<Asset_Generator*> const& pg, cJSON* static_run_priorities);
+    void update_settings(LDSS_Settings& settings);
     void enable(bool flag);
     void check(float targetActivePowerkW);
     void reset_start_gen_countdown();

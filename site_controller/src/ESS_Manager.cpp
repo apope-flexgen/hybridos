@@ -2,7 +2,7 @@
  * ESS_Manager.cpp
  * Source for ESS-specific Manager class
  * Refactored from Asset_Manager.cpp
- * 
+ *
  * Created on Sep 30th, 2020
  *      Author: Jack Shade (jnshade)
  */
@@ -16,11 +16,10 @@
 #include <Configurator.h>
 #include <Site_Controller_Utils.h>
 
-extern fims *p_fims;
+extern fims* p_fims;
 
 /****************************************************************************************/
-ESS_Manager::ESS_Manager() : Type_Manager(ESS_TYPE_ID)
-{
+ESS_Manager::ESS_Manager() : Type_Manager(ESS_TYPE_ID) {
     numEssControllable = 0;
     numEssStartable = 0;
     numEssStandby = 0;
@@ -69,282 +68,231 @@ ESS_Manager::ESS_Manager() : Type_Manager(ESS_TYPE_ID)
 }
 
 /****************************************************************************************/
-ESS_Manager::~ESS_Manager()
-{
-    if (!pEss.empty()) for (size_t j = 0; j < pEss.size(); j++) if (pEss[j] != NULL) delete pEss[j];
+ESS_Manager::~ESS_Manager() {
+    if (!pEss.empty())
+        for (size_t j = 0; j < pEss.size(); j++)
+            if (pEss[j] != NULL)
+                delete pEss[j];
 }
 
-int ESS_Manager::get_num_ess_startable(void)
-{
+int ESS_Manager::get_num_ess_startable(void) {
     return numEssStartable;
 }
 
-int ESS_Manager::get_num_ess_in_standby(void)
-{
+int ESS_Manager::get_num_ess_in_standby(void) {
     return numEssStandby;
 }
 
-int ESS_Manager::get_num_ess_controllable(void)
-{
+int ESS_Manager::get_num_ess_controllable(void) {
     return numEssControllable;
 }
 
-float ESS_Manager::get_ess_total_active_power(void)
-{
-   return essTotalActivePowerkW;
+float ESS_Manager::get_ess_total_active_power(void) {
+    return essTotalActivePowerkW;
 }
 
-float ESS_Manager::get_ess_total_reactive_power(void)
-{
+float ESS_Manager::get_ess_total_reactive_power(void) {
     return (essTotalReactivePowerkVAR);
 }
 
-float ESS_Manager::get_ess_total_uncontrollable_active_power(void)
-{
+float ESS_Manager::get_ess_total_uncontrollable_active_power(void) {
     return essTotalUncontrollableActivePowerkW;
 }
 
-float ESS_Manager::get_ess_total_max_potential_active_power(void)
-{
+float ESS_Manager::get_ess_total_max_potential_active_power(void) {
     return essTotalMaxPotentialActivePower;
 }
 
-float ESS_Manager::get_ess_total_min_potential_active_power(void)
-{
+float ESS_Manager::get_ess_total_min_potential_active_power(void) {
     return essTotalMinPotentialActivePower;
 }
 
-float ESS_Manager::get_ess_total_potential_reactive_power(void)
-{
+float ESS_Manager::get_ess_total_potential_reactive_power(void) {
     return essTotalPotentialReactivePower;
 }
 
-float ESS_Manager::get_ess_total_rated_active_power(void)
-{
+float ESS_Manager::get_ess_total_rated_active_power(void) {
     return essTotalRatedActivePower;
 }
 
-float ESS_Manager::get_ess_total_rated_reactive_power(void)
-{
+float ESS_Manager::get_ess_total_rated_reactive_power(void) {
     return essTotalRatedReactivePower;
 }
 
-float ESS_Manager::get_ess_total_rated_apparent_power(void)
-{
+float ESS_Manager::get_ess_total_rated_apparent_power(void) {
     return essTotalRatedApparentPower;
 }
 
-float ESS_Manager::get_total_kW_charge_limit(void)
-{
+float ESS_Manager::get_total_kW_charge_limit(void) {
     return total_kW_charge_limit;
 }
 
-float ESS_Manager::get_total_kW_discharge_limit(void)
-{
+float ESS_Manager::get_total_kW_discharge_limit(void) {
     return total_kW_discharge_limit;
 }
 
-float ESS_Manager::get_total_chargeable_power_kW(void)
-{
+float ESS_Manager::get_total_chargeable_power_kW(void) {
     return essTotalChargeablePowerkW;
 }
 
-float ESS_Manager::get_total_dischargeable_power_kW(void)
-{
+float ESS_Manager::get_total_dischargeable_power_kW(void) {
     return essTotalDischargeablePowerkW;
 }
 
-float ESS_Manager::get_total_chargeable_energy_kWh(void)
-{
+float ESS_Manager::get_total_chargeable_energy_kWh(void) {
     return essTotalChargeableEnergykWh;
 }
 
-float ESS_Manager::get_total_dischargeable_energy_kWh(void)
-{
+float ESS_Manager::get_total_dischargeable_energy_kWh(void) {
     return essTotalDischargeableEnergykWh;
 }
 
-float ESS_Manager::get_asset_active_power_setpoint(int essIndex)
-{
+float ESS_Manager::get_asset_active_power_setpoint(int essIndex) {
     return pEss[essIndex]->get_active_power_setpoint_control();
 }
 
-float ESS_Manager::get_asset_reactive_power_setpoint(int essIndex)
-{
+float ESS_Manager::get_asset_reactive_power_setpoint(int essIndex) {
     return pEss[essIndex]->get_reactive_power_setpoint_control();
 }
 
-float ESS_Manager::get_ess_soc_max(void)
-{
-   return controllableEssMaxSoc;
+float ESS_Manager::get_ess_soc_max(void) {
+    return controllableEssMaxSoc;
 }
 
-float ESS_Manager::get_ess_soc_min(void)
-{
-   return controllableEssMinSoc;
+float ESS_Manager::get_ess_soc_min(void) {
+    return controllableEssMinSoc;
 }
 
-float ESS_Manager::get_ess_soc_avg(void)
-{
-   return controllableEssAvgSoc;
+float ESS_Manager::get_ess_soc_avg(void) {
+    return controllableEssAvgSoc;
 }
 
-float ESS_Manager::get_all_ess_soc_max(void)
-{
-   return parsedEssMaxSoc;
+float ESS_Manager::get_all_ess_soc_max(void) {
+    return parsedEssMaxSoc;
 }
 
-float ESS_Manager::get_all_ess_soc_min(void)
-{
-   return parsedEssMinSoc;
+float ESS_Manager::get_all_ess_soc_min(void) {
+    return parsedEssMinSoc;
 }
 
-float ESS_Manager::get_all_ess_soc_avg(void)
-{
-   return parsedEssAvgSoc;
+float ESS_Manager::get_all_ess_soc_avg(void) {
+    return parsedEssAvgSoc;
 }
 
-float ESS_Manager::get_ess_total_nameplate_active_power(void)
-{
+float ESS_Manager::get_ess_total_nameplate_active_power(void) {
     return essTotalNameplateActivePower;
 }
 
-float ESS_Manager::get_ess_total_nameplate_reactive_power(void)
-{
+float ESS_Manager::get_ess_total_nameplate_reactive_power(void) {
     return essTotalNameplateReactivePower;
 }
 
-float ESS_Manager::get_ess_total_nameplate_apparent_power(void)
-{
+float ESS_Manager::get_ess_total_nameplate_apparent_power(void) {
     return essTotalNameplateApparentPower;
 }
 
-float ESS_Manager::get_soc_balancing_factor(void)
-{
+float ESS_Manager::get_soc_balancing_factor(void) {
     return socBalancingFactor;
 }
 
-std::vector<int> ESS_Manager::get_setpoint_statuses(void)
-{
+std::vector<int> ESS_Manager::get_setpoint_statuses(void) {
     std::vector<int> setpoint_statuses(3);
     for (auto ess : pEss)
         setpoint_statuses[ess->get_setpoint_status()]++;
     return setpoint_statuses;
 }
 
-float ESS_Manager::get_pcs_nominal_voltage_setting(void)
-{
-   return pEss[0]->get_pcs_nominal_voltage_setting();
+float ESS_Manager::get_pcs_nominal_voltage_setting(void) {
+    return pEss[0]->get_pcs_nominal_voltage_setting();
 }
 
-bool ESS_Manager::set_pcs_nominal_voltage_setting(float mPcsNominalVoltageSetting)
-{
+bool ESS_Manager::set_pcs_nominal_voltage_setting(float mPcsNominalVoltageSetting) {
     FPS_DEBUG_LOG("Setting PCS nominal voltage setting %f\n", mPcsNominalVoltageSetting);
 
-    for (int i=0; i < numParsed; i++)
+    for (int i = 0; i < numParsed; i++)
         pEss[i]->set_pcs_nominal_voltage_setting(mPcsNominalVoltageSetting);
-   return true;
+    return true;
 }
 
-void ESS_Manager::set_all_ess_grid_form(void)
-{
-    for (int i=0; i < numParsed; i++)
+void ESS_Manager::set_all_ess_grid_form(void) {
+    for (int i = 0; i < numParsed; i++)
         pEss[i]->set_grid_mode(FORMING);
 }
 
-void ESS_Manager::set_all_ess_grid_follow(void)
-{
+void ESS_Manager::set_all_ess_grid_follow(void) {
     for (int i = 0; i < numParsed; i++)
         pEss[i]->set_grid_mode(FOLLOWING);
 }
 
-bool ESS_Manager::enter_standby_all_ess(void)
-{
-    for (int i=0; i < numParsed; i++)
-    {
+bool ESS_Manager::enter_standby_all_ess(void) {
+    for (int i = 0; i < numParsed; i++) {
         if (pEss[i]->is_controllable())
             pEss[i]->enter_standby();
     }
     return true;
 }
 
-bool ESS_Manager::exit_standby_all_ess(void)
-{
-    for (int i=0; i < numParsed; i++)
-    {
+bool ESS_Manager::exit_standby_all_ess(void) {
+    for (int i = 0; i < numParsed; i++) {
         if (pEss[i]->in_standby() && pEss[i]->is_available())
             pEss[i]->exit_standby();
     }
     return true;
 }
 
-bool ESS_Manager::start_all_ess(void)
-{
+bool ESS_Manager::start_all_ess(void) {
     FPS_DEBUG_LOG("\nESS_Manager::start_all_ess()\n");
-    for (int i=0; i < numParsed; i++)
-    {
+    for (int i = 0; i < numParsed; i++) {
         if (pEss[i]->is_available() && !pEss[i]->is_running())
             pEss[i]->start();
     }
     return true;
 }
 
-bool ESS_Manager::stop_all_ess(void)
-{
+bool ESS_Manager::stop_all_ess(void) {
     FPS_DEBUG_LOG("\nESS_Manager::stop_all_ess()\n");
-    for (int i=0; i < numParsed; i++)
-    {
+    for (int i = 0; i < numParsed; i++) {
         if (pEss[i]->is_controllable())
             pEss[i]->stop();
     }
     return true;
 }
 
-bool ESS_Manager::close_all_bms_contactors()
-{
-    for (int i=0; i < numParsed; i++)
-    {
+bool ESS_Manager::close_all_bms_contactors() {
+    for (int i = 0; i < numParsed; i++) {
         if (!pEss[i]->is_running() && !pEss[i]->in_maint_mode())
             pEss[i]->close_bms_contactors();
     }
     return true;
 }
 
-bool ESS_Manager::open_all_bms_contactors()
-{
-    for (int i=0; i < numParsed; i++)
-    {
+bool ESS_Manager::open_all_bms_contactors() {
+    for (int i = 0; i < numParsed; i++) {
         if (!pEss[i]->is_running() && !pEss[i]->in_maint_mode())
             pEss[i]->open_bms_contactors();
     }
     return true;
 }
 
-bool ESS_Manager::set_ess_target_active_power(float desiredkW)
-{
+bool ESS_Manager::set_ess_target_active_power(float desiredkW) {
     essTargetActivePowerkW = desiredkW;
     return true;
 }
 
-bool ESS_Manager::set_ess_target_reactive_power(float desiredkW)
-{
+bool ESS_Manager::set_ess_target_reactive_power(float desiredkW) {
     essTargetReactivePowerkVAR = desiredkW;
     return true;
 }
 
-void ESS_Manager::set_ess_voltage_setpoint(float setpoint)
-{
-    for (int i = 0; i < numParsed; i++)
-    {
+void ESS_Manager::set_ess_voltage_setpoint(float setpoint) {
+    for (int i = 0; i < numParsed; i++) {
         if (!pEss[i]->in_maint_mode())
             pEss[i]->set_voltage_setpoint(setpoint);
     }
 }
 
-void ESS_Manager::set_ess_frequency_setpoint(float setpoint)
-{
-    for (int i = 0; i < numParsed; i++)
-    {
+void ESS_Manager::set_ess_frequency_setpoint(float setpoint) {
+    for (int i = 0; i < numParsed; i++) {
         if (!pEss[i]->in_maint_mode())
             pEss[i]->set_frequency_setpoint(setpoint);
     }
@@ -352,11 +300,10 @@ void ESS_Manager::set_ess_frequency_setpoint(float setpoint)
 
 /**
  * @brief Set the variables used for ESS Calibration mode passed as a struct
- * 
+ *
  * @param settings Struct containing all Calibration settings
  */
-void ESS_Manager::set_all_ess_calibration_vars(ESS_Calibration_Settings settings)
-{
+void ESS_Manager::set_all_ess_calibration_vars(ESS_Calibration_Settings settings) {
     socBalancingFactor = settings.balancing_factor;
     balancePowerDistribution = settings.power_dist_flag;
 
@@ -364,19 +311,15 @@ void ESS_Manager::set_all_ess_calibration_vars(ESS_Calibration_Settings settings
         ess->set_calibration_vars(settings);
 }
 
-void ESS_Manager::set_ess_reactive_kvar_mode(void)
-{
-    for (int i = 0; i < numParsed; i++)
-    {
+void ESS_Manager::set_ess_reactive_kvar_mode(void) {
+    for (int i = 0; i < numParsed; i++) {
         if (!pEss[i]->in_maint_mode())
             pEss[i]->set_power_mode(REACTIVEPWR);
     }
 }
 
-void ESS_Manager::set_ess_pwr_factor_mode(void)
-{
-    for (int i = 0; i < numParsed; i++)
-    {
+void ESS_Manager::set_ess_pwr_factor_mode(void) {
+    for (int i = 0; i < numParsed; i++) {
         if (!pEss[i]->in_maint_mode())
             pEss[i]->set_power_mode(PWRFCTR);
     }
@@ -385,8 +328,7 @@ void ESS_Manager::set_ess_pwr_factor_mode(void)
  * New function to return the maintenance mode status
  * @param index The index of the instance in pEss
  */
-bool ESS_Manager::in_maint_mode(int index)
-{
+bool ESS_Manager::in_maint_mode(int index) {
     // Range check for mismatched number of assets across types
     if (index < 0 || index >= numParsed)
         return false;
@@ -394,28 +336,23 @@ bool ESS_Manager::in_maint_mode(int index)
     return pEss[index]->in_maint_mode();
 }
 
-void ESS_Manager::set_ess_target_power_factor(float pwr_factor)
-{
+void ESS_Manager::set_ess_target_power_factor(float pwr_factor) {
     for (int i = 0; i < numParsed; i++)
         pEss[i]->set_power_factor_setpoint(pwr_factor);
 }
 
-float ESS_Manager::get_grid_forming_voltage_slew(void)
-{
+float ESS_Manager::get_grid_forming_voltage_slew(void) {
     return grid_forming_voltage_slew;
 }
-    
-void ESS_Manager::set_grid_forming_voltage_slew(float slope)
-{
-    for (int i = 0; i < numParsed; i++)
-    {
+
+void ESS_Manager::set_grid_forming_voltage_slew(float slope) {
+    for (int i = 0; i < numParsed; i++) {
         pEss[i]->set_voltage_slew_setpoint(slope);
     }
 }
 
-bool ESS_Manager::aggregate_ess_data(void)
-{
-    //FPS_DEBUG_LOG("Processing ESS data; ESS_Manager::aggregate_ess_data\n");
+bool ESS_Manager::aggregate_ess_data(void) {
+    // FPS_DEBUG_LOG("Processing ESS data; ESS_Manager::aggregate_ess_data\n");
 
     // clear member variables
     numAvail = 0;
@@ -459,22 +396,21 @@ bool ESS_Manager::aggregate_ess_data(void)
     total_kW_discharge_limit = 0.0f;
 
     // aggregate ess
-    for (int i=0; i < numParsed; i++)
-    {
+    for (int i = 0; i < numParsed; i++) {
         // TODO: stop this. stop this now.
         if (i == 0)
             grid_forming_voltage_slew = pEss[i]->get_voltage_slew_setpoint();
 
         // aggregate SOC values
         parsedEssMinSocAgg = (pEss[i]->get_soc() < parsedEssMinSocAgg) ? pEss[i]->get_soc() : parsedEssMinSocAgg;
-        parsedEssMaxSoc   = (pEss[i]->get_soc() > parsedEssMaxSoc) ? pEss[i]->get_soc() : parsedEssMaxSoc;
-        parsedEssAvgSoc  += pEss[i]->get_soc();
+        parsedEssMaxSoc = (pEss[i]->get_soc() > parsedEssMaxSoc) ? pEss[i]->get_soc() : parsedEssMaxSoc;
+        parsedEssAvgSoc += pEss[i]->get_soc();
 
         // aggregate nameplate values
         // TODO: nameplate power values are based on site configuration, move to static section
-        essTotalNameplateActivePower    += pEss[i]->get_rated_active_power();
-        essTotalNameplateReactivePower  += pEss[i]->get_rated_reactive_power();
-        essTotalNameplateApparentPower  += pEss[i]->get_rated_apparent_power();
+        essTotalNameplateActivePower += pEss[i]->get_rated_active_power();
+        essTotalNameplateReactivePower += pEss[i]->get_rated_reactive_power();
+        essTotalNameplateApparentPower += pEss[i]->get_rated_apparent_power();
 
         if (pEss[i]->is_available())
             numAvail++;
@@ -488,51 +424,47 @@ bool ESS_Manager::aggregate_ess_data(void)
         if (pEss[i]->is_available() && pEss[i]->in_standby())
             numEssStandby++;
 
-        if (pEss[i]->is_controllable())
-        {
+        if (pEss[i]->is_controllable()) {
             numEssControllable++;
 
             controllableEssMinSocAgg = (pEss[i]->get_soc() < controllableEssMinSocAgg) ? pEss[i]->get_soc() : controllableEssMinSocAgg;
-            controllableEssMaxSoc    = (pEss[i]->get_soc() > controllableEssMaxSoc) ? pEss[i]->get_soc() : controllableEssMaxSoc;
-            controllableEssAvgSoc   += pEss[i]->get_soc();
+            controllableEssMaxSoc = (pEss[i]->get_soc() > controllableEssMaxSoc) ? pEss[i]->get_soc() : controllableEssMaxSoc;
+            controllableEssAvgSoc += pEss[i]->get_soc();
 
-            essTotalActivePowerkW        += pEss[i]->get_active_power();
-            essTotalReactivePowerkVAR    += pEss[i]->get_reactive_power();
-            essTotalApparentPowerkVA     += pEss[i]->get_apparent_power();
+            essTotalActivePowerkW += pEss[i]->get_active_power();
+            essTotalReactivePowerkVAR += pEss[i]->get_reactive_power();
+            essTotalApparentPowerkVA += pEss[i]->get_apparent_power();
 
-            essTotalChargeablePowerkW    += pEss[i]->get_chargeable_power();
+            essTotalChargeablePowerkW += pEss[i]->get_chargeable_power();
             essTotalDischargeablePowerkW += pEss[i]->get_dischargeable_power();
 
             essTotalMaxPotentialActivePower += pEss[i]->get_max_potential_active_power();
             essTotalMinPotentialActivePower += pEss[i]->get_min_potential_active_power();
 
-            essTotalPotentialReactivePower  += pEss[i]->get_potential_reactive_power();
+            essTotalPotentialReactivePower += pEss[i]->get_potential_reactive_power();
 
-            essTotalRatedActivePower     += pEss[i]->get_rated_active_power();
-            essTotalRatedReactivePower   += pEss[i]->get_rated_reactive_power();
-            essTotalRatedApparentPower   += pEss[i]->get_rated_apparent_power();
+            essTotalRatedActivePower += pEss[i]->get_rated_active_power();
+            essTotalRatedReactivePower += pEss[i]->get_rated_reactive_power();
+            essTotalRatedApparentPower += pEss[i]->get_rated_apparent_power();
 
-            essTotalChargeableEnergykWh    += pEss[i]->get_chargeable_energy();
+            essTotalChargeableEnergykWh += pEss[i]->get_chargeable_energy();
             essTotalDischargeableEnergykWh += pEss[i]->get_dischargeable_energy();
 
             total_kW_charge_limit += pEss[i]->get_min_limited_active_power();
             total_kW_discharge_limit += pEss[i]->get_max_limited_active_power();
-        }
-        else
-        {
+        } else {
             // only add to uncontrollable power if ESS is uncontrollable for reasons besides a modbus disconnect
             if (!pEss[i]->get_watchdog_fault()) {
                 essTotalUncontrollableActivePowerkW += pEss[i]->get_active_power();
             }
         }
-        
     }
 
     FPS_DEBUG_LOG("ESS_Manager::aggregate_ess_data essTotalActivePowerkW: %f essTotalMaxPotentialActivePower: %f essTotalMinPotentialActivePower: %f\n", essTotalActivePowerkW, essTotalMaxPotentialActivePower, essTotalMinPotentialActivePower);
 
     // assign all values used by asset manager and asset
-    parsedEssAvgSoc       = (numParsed != 0) ? (parsedEssAvgSoc / (float) numParsed) : 0;
-    controllableEssAvgSoc = (numEssControllable != 0) ? (controllableEssAvgSoc / (float) numEssControllable) : 0;
+    parsedEssAvgSoc = (numParsed != 0) ? (parsedEssAvgSoc / (float)numParsed) : 0;
+    controllableEssAvgSoc = (numEssControllable != 0) ? (controllableEssAvgSoc / (float)numEssControllable) : 0;
 
     controllableEssMinSoc = controllableEssMinSocAgg;
     parsedEssMinSoc = parsedEssMinSocAgg;
@@ -540,9 +472,9 @@ bool ESS_Manager::aggregate_ess_data(void)
     return false;
 }
 
-void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf, const char* const var)
-{
-    if (var == NULL) bufJSON_StartObject(buf); // summary {
+void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var) {
+    if (var == NULL)
+        bufJSON_StartObject(buf);  // summary {
 
     bufJSON_AddStringCheckVar(buf, "name", "ESS Summary", var);
     bufJSON_AddNumberCheckVar(buf, "num_ess_available", numAvail, var);
@@ -563,17 +495,15 @@ void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer &buf, cons
     // Marked for deprecation
     bufJSON_AddNumberCheckVar(buf, "ess_total_alarms", get_num_active_alarms(), var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_faults", get_num_active_faults(), var);
-    
-    if (var == NULL) bufJSON_EndObjectNoComma(buf); // } summary
+
+    if (var == NULL)
+        bufJSON_EndObjectNoComma(buf);  // } summary
 }
 
-void ESS_Manager::calculate_ess_reactive_power(void)
-{
+void ESS_Manager::calculate_ess_reactive_power(void) {
     // no reactive power requested
-    if (essTargetReactivePowerkVAR == 0 || essTotalPotentialReactivePower == 0)
-    {
-        for (int i = 0; i < numParsed; i++)
-        {
+    if (essTargetReactivePowerkVAR == 0 || essTotalPotentialReactivePower == 0) {
+        for (int i = 0; i < numParsed; i++) {
             if (pEss[i]->is_controllable() && pEss[i]->get_reactive_power_setpoint() != 0)
                 pEss[i]->set_reactive_power_setpoint(0);
         }
@@ -581,20 +511,14 @@ void ESS_Manager::calculate_ess_reactive_power(void)
     }
 
     // full reactive power requested
-    if (fabsf(essTargetReactivePowerkVAR) >= essTotalRatedReactivePower)
-    {
-        if (essTargetReactivePowerkVAR > 0)
-        {
-            for (int i = 0; i < numParsed; i++)
-            {
+    if (fabsf(essTargetReactivePowerkVAR) >= essTotalRatedReactivePower) {
+        if (essTargetReactivePowerkVAR > 0) {
+            for (int i = 0; i < numParsed; i++) {
                 if (pEss[i]->is_controllable() && pEss[i]->get_reactive_power_setpoint() != pEss[i]->get_rated_reactive_power())
                     pEss[i]->set_reactive_power_setpoint(pEss[i]->get_rated_reactive_power());
             }
-        }
-        else
-        {
-            for (int i = 0; i < numParsed; i++)
-            {
+        } else {
+            for (int i = 0; i < numParsed; i++) {
                 if (pEss[i]->is_controllable() && pEss[i]->get_reactive_power_setpoint() != -1 * pEss[i]->get_rated_reactive_power())
                     pEss[i]->set_reactive_power_setpoint(-1 * pEss[i]->get_rated_reactive_power());
             }
@@ -605,12 +529,9 @@ void ESS_Manager::calculate_ess_reactive_power(void)
     // TODO do something smart for requested is larger than available
     // for now do same as if the reactive power is available
     // There is reactive power that can be handled by available
-    for (int i = 0; i < numParsed; i++)
-    {
-        if (pEss[i]->is_controllable())
-        {
-            float weightedShare =  (pEss[i]->get_potential_reactive_power() == 0) ? 0 :
-                essTargetReactivePowerkVAR / (essTotalPotentialReactivePower / pEss[i]->get_potential_reactive_power());
+    for (int i = 0; i < numParsed; i++) {
+        if (pEss[i]->is_controllable()) {
+            float weightedShare = (pEss[i]->get_potential_reactive_power() == 0) ? 0 : essTargetReactivePowerkVAR / (essTotalPotentialReactivePower / pEss[i]->get_potential_reactive_power());
             if (pEss[i]->get_reactive_power_setpoint() != weightedShare)
                 pEss[i]->set_reactive_power_setpoint(weightedShare);
         }
@@ -619,18 +540,15 @@ void ESS_Manager::calculate_ess_reactive_power(void)
 
 // distributes essTargetActivePowerkW (set by Site Manager) to the ESS asset instances
 // uses SOC balancing algorithm to decide how much power each ESS gets
-bool ESS_Manager::calculate_ess_active_power(void)
-{
-    // we do not want to change essTargetActivePowerkW, 
+bool ESS_Manager::calculate_ess_active_power(void) {
+    // we do not want to change essTargetActivePowerkW,
     // so powerToAssign is the value we use to keep track of assigned power
-    float powerToAssign = essTargetActivePowerkW; 
+    float powerToAssign = essTargetActivePowerkW;
 
     // identify ESSs that are controllable and can take a power command
     std::vector<SOC_Balancing_Data> essAssetsToAssignPowerTo;
-    for (auto it = pEss.begin() ; it != pEss.end() ; ++it)
-    {
-        if ((*it)->is_controllable())
-        {
+    for (auto it = pEss.begin(); it != pEss.end(); ++it) {
+        if ((*it)->is_controllable()) {
             // calculate contribution factor: soc^b if discharging or (100-soc)^b if charging
             SOC_Balancing_Data balancingData;
             balancingData.ess = *it;
@@ -646,29 +564,25 @@ bool ESS_Manager::calculate_ess_active_power(void)
 
     // iterate in balancing algorithm until all power assignments are within limits
     bool powerLimitViolated;
-    do
-    {
+    do {
         // Reset powerLimitViolated flag for each iteration attempt
         powerLimitViolated = false;
 
         // calculate K, the power gain that will insure sum of distributed power will equal powerToAssign
         // K = the total power to assign divided by the sum of each ESS's contribution factor
         float aggregateContribution = 0;
-        for (auto it = essAssetsToAssignPowerTo.begin() ; it != essAssetsToAssignPowerTo.end() ; ++it)
-        {
+        for (auto it = essAssetsToAssignPowerTo.begin(); it != essAssetsToAssignPowerTo.end(); ++it) {
             aggregateContribution += it->contributionFactor;
         }
         float k = ((aggregateContribution == 0) ? 0 : (powerToAssign / aggregateContribution));
 
         // set each ESS's active power setpoint to K times its contribution factor
-        for (auto it = essAssetsToAssignPowerTo.begin() ; it != essAssetsToAssignPowerTo.end() ; ++it)
-        {
+        for (auto it = essAssetsToAssignPowerTo.begin(); it != essAssetsToAssignPowerTo.end(); ++it) {
             float setpoint = k * it->contributionFactor;
             // if calculated setpoint is over ESS instance power limit, set it to its power limit, reduce powerToAssign, and remove ESS from algorithm.
             // must reiterate through algorithm if power limit violated
-            if (balancePowerDistribution && fabsf(setpoint) > it->powerLimit)
-            {
-                float signed_power_limit = powerToAssign > 0 ? it->powerLimit : -1*it->powerLimit;
+            if (balancePowerDistribution && fabsf(setpoint) > it->powerLimit) {
+                float signed_power_limit = powerToAssign > 0 ? it->powerLimit : -1 * it->powerLimit;
                 it->ess->set_active_power_setpoint(signed_power_limit, false);
                 powerToAssign -= it->ess->get_active_power_setpoint_control();
                 essAssetsToAssignPowerTo.erase(it);
@@ -676,164 +590,119 @@ bool ESS_Manager::calculate_ess_active_power(void)
                 break;
             }
             // if calculated setpoint is within ESS instance power limit, or a feature has disabled the power distribution balancing, give the setpoint to the ESS
-            else
-            {
+            else {
                 it->ess->set_active_power_setpoint(setpoint, false);
             }
         }
-    }
-    while (powerLimitViolated);
+    } while (powerLimitViolated);
 
     return true;
 }
 
-float ESS_Manager::charge_control(float target_soc_desired, bool charge_disable, bool discharge_disable)
-{
-	// set boundary values
-	float target_soc = target_soc_desired;
-	float leaving_target_below = target_soc - leaving_soc_range;
-	float leaving_target_above = target_soc + leaving_soc_range;
-	float returning_target_below = target_soc - entering_soc_range;
-	float returning_target_above = target_soc + entering_soc_range;
-	float far_below_target = target_soc - far_soc_range;
-	float far_above_target = target_soc + far_soc_range;
+float ESS_Manager::charge_control(float target_soc_desired, bool charge_disable, bool discharge_disable) {
+    // set boundary values
+    float target_soc = target_soc_desired;
+    float leaving_target_below = target_soc - leaving_soc_range;
+    float leaving_target_above = target_soc + leaving_soc_range;
+    float returning_target_below = target_soc - entering_soc_range;
+    float returning_target_above = target_soc + entering_soc_range;
+    float far_below_target = target_soc - far_soc_range;
+    float far_above_target = target_soc + far_soc_range;
 
-	float current_soc = controllableEssAvgSoc;
+    float current_soc = controllableEssAvgSoc;
 
-	// update soc_state
-	switch (soc_status)
-	{
-		case FarAboveTarget:
-			if (current_soc < far_below_target)
-			{
-				soc_status = FarBelowTarget;
-			}
-			else if (current_soc < leaving_target_below)
-			{
-				soc_status = BelowTarget;
-			}
-			else if (current_soc < returning_target_above)
-			{
-				soc_status = OnTarget;
-			}
-			else if (current_soc < far_above_target)
-			{
-				soc_status = AboveTarget;
-			}
-			break;
-		case AboveTarget:
-			if (current_soc > far_above_target)
-			{
-				soc_status = FarAboveTarget;
-			}
-			else if (current_soc < far_below_target)
-			{
-				soc_status = FarBelowTarget;
-			}
-			else if (current_soc < leaving_target_below)
-			{
-				soc_status = BelowTarget;
-			}
-			else if (current_soc < returning_target_above)
-			{
-				soc_status = OnTarget;
-			}
-			break;
-		case OnTarget:
-			if (current_soc > far_above_target)
-			{
-				soc_status = FarAboveTarget;
-			}
-			else if (current_soc > leaving_target_above)
-			{
-				soc_status = AboveTarget;
-			}
-			else if (current_soc < far_below_target)
-			{
-				soc_status = FarBelowTarget;
-			}
-			else if (current_soc < leaving_target_below)
-			{
-				soc_status = BelowTarget;
-			}
-			break;
-		case BelowTarget:
-			if (current_soc > far_above_target)
-			{
-				soc_status = FarAboveTarget;
-			}
-			else if (current_soc > leaving_target_above)
-			{
-				soc_status = AboveTarget;
-			}
-			else if (current_soc > returning_target_below)
-			{
-				soc_status = OnTarget;
-			}
-			else if (current_soc < far_below_target)
-			{
-				soc_status = FarBelowTarget;
-			}
-			break;
-		case FarBelowTarget:
-			if (current_soc > far_above_target)
-			{
-				soc_status = FarAboveTarget;
-			}
-			else if (current_soc > leaving_target_above)
-			{
-				soc_status = AboveTarget;
-			}
-			else if (current_soc > returning_target_below)
-			{
-				soc_status = OnTarget;
-			}
-			else if (current_soc > far_below_target)
-			{
-				soc_status = BelowTarget;
-			}
-			break;
-	}
+    // update soc_state
+    switch (soc_status) {
+        case FarAboveTarget:
+            if (current_soc < far_below_target) {
+                soc_status = FarBelowTarget;
+            } else if (current_soc < leaving_target_below) {
+                soc_status = BelowTarget;
+            } else if (current_soc < returning_target_above) {
+                soc_status = OnTarget;
+            } else if (current_soc < far_above_target) {
+                soc_status = AboveTarget;
+            }
+            break;
+        case AboveTarget:
+            if (current_soc > far_above_target) {
+                soc_status = FarAboveTarget;
+            } else if (current_soc < far_below_target) {
+                soc_status = FarBelowTarget;
+            } else if (current_soc < leaving_target_below) {
+                soc_status = BelowTarget;
+            } else if (current_soc < returning_target_above) {
+                soc_status = OnTarget;
+            }
+            break;
+        case OnTarget:
+            if (current_soc > far_above_target) {
+                soc_status = FarAboveTarget;
+            } else if (current_soc > leaving_target_above) {
+                soc_status = AboveTarget;
+            } else if (current_soc < far_below_target) {
+                soc_status = FarBelowTarget;
+            } else if (current_soc < leaving_target_below) {
+                soc_status = BelowTarget;
+            }
+            break;
+        case BelowTarget:
+            if (current_soc > far_above_target) {
+                soc_status = FarAboveTarget;
+            } else if (current_soc > leaving_target_above) {
+                soc_status = AboveTarget;
+            } else if (current_soc > returning_target_below) {
+                soc_status = OnTarget;
+            } else if (current_soc < far_below_target) {
+                soc_status = FarBelowTarget;
+            }
+            break;
+        case FarBelowTarget:
+            if (current_soc > far_above_target) {
+                soc_status = FarAboveTarget;
+            } else if (current_soc > leaving_target_above) {
+                soc_status = AboveTarget;
+            } else if (current_soc > returning_target_below) {
+                soc_status = OnTarget;
+            } else if (current_soc > far_below_target) {
+                soc_status = BelowTarget;
+            }
+            break;
+    }
 
-	// take action based on updated soc_status
-	float charge_request = 0.0;
-	switch (soc_status)
-	{
-        // For FarAboveTarget and AboveTarget, only discharge if discharge is not disabled, else return 0
-		case FarAboveTarget:
-			charge_request = !discharge_disable * essTotalDischargeablePowerkW;
-			break;
-		case AboveTarget:
-		{
-			charge_request = !discharge_disable * essTotalDischargeablePowerkW*((current_soc - returning_target_below)/charge_control_divisor);
-			charge_request = (charge_request > essTotalDischargeablePowerkW) ? essTotalDischargeablePowerkW : charge_request;
-			break;
-		}
-		case OnTarget:
-			charge_request = 0.0;
-			break;
-        // For BelowTarget and FarBelowTarget, only charge if charge is not disabled, else return 0
-		case BelowTarget:
-		{
-			charge_request = !charge_disable * (-1)*essTotalChargeablePowerkW*((returning_target_above - current_soc)/charge_control_divisor);
-			charge_request = (charge_request < (-1*essTotalChargeablePowerkW)) ? (-1*essTotalChargeablePowerkW) : charge_request;
-			break;
-		}
-		case FarBelowTarget:
-			charge_request = !charge_disable * (-1.0)*essTotalChargeablePowerkW;
-			break;
-	}
+    // take action based on updated soc_status
+    float charge_request = 0.0;
+    switch (soc_status) {
+            // For FarAboveTarget and AboveTarget, only discharge if discharge is not disabled, else return 0
+        case FarAboveTarget:
+            charge_request = !discharge_disable * essTotalDischargeablePowerkW;
+            break;
+        case AboveTarget: {
+            charge_request = !discharge_disable * essTotalDischargeablePowerkW * ((current_soc - returning_target_below) / charge_control_divisor);
+            charge_request = (charge_request > essTotalDischargeablePowerkW) ? essTotalDischargeablePowerkW : charge_request;
+            break;
+        }
+        case OnTarget:
+            charge_request = 0.0;
+            break;
+            // For BelowTarget and FarBelowTarget, only charge if charge is not disabled, else return 0
+        case BelowTarget: {
+            charge_request = !charge_disable * (-1) * essTotalChargeablePowerkW * ((returning_target_above - current_soc) / charge_control_divisor);
+            charge_request = (charge_request < (-1 * essTotalChargeablePowerkW)) ? (-1 * essTotalChargeablePowerkW) : charge_request;
+            break;
+        }
+        case FarBelowTarget:
+            charge_request = !charge_disable * (-1.0) * essTotalChargeablePowerkW;
+            break;
+    }
 
-	return charge_request;
+    return charge_request;
 }
 
 // HybridOS Step 2: Process Asset Data
-void ESS_Manager::process_asset_data()
-{
-    if (numParsed > 0)
-    {
-        for (int i = 0; i < numParsed; i++)
-        {
+void ESS_Manager::process_asset_data() {
+    if (numParsed > 0) {
+        for (int i = 0; i < numParsed; i++) {
             // Update Asset level data with map values
             pEss[i]->process_asset();
         }
@@ -842,47 +711,40 @@ void ESS_Manager::process_asset_data()
 }
 
 // HybridOS Step 4: Update Asset Data
-void ESS_Manager::update_asset_data(void)
-{
+void ESS_Manager::update_asset_data(void) {
     calculate_ess_active_power();
     calculate_ess_reactive_power();
-    for(int i = 0; i < numParsed; i++)
-        pEss[i] -> update_asset();
+    for (int i = 0; i < numParsed; i++)
+        pEss[i]->update_asset();
 }
 
 /****************************************************************************************/
 /*
     Overriding configuration functions
 */
-void ESS_Manager::configure_base_class_list()
-{
+void ESS_Manager::configure_base_class_list() {
     pAssets.assign(pEss.begin(), pEss.end());
 }
 
-Asset* ESS_Manager::build_new_asset(void)
-{
+Asset* ESS_Manager::build_new_asset(void) {
     Asset_ESS* asset = new Asset_ESS;
-    if (asset == NULL)
-    {
-        FPS_ERROR_LOG("ESS_Manager::build_new_asset ~ Ess %ld: Memory allocation error.\n", pEss.size()+1);
+    if (asset == NULL) {
+        FPS_ERROR_LOG("ESS_Manager::build_new_asset ~ Ess %ld: Memory allocation error.\n", pEss.size() + 1);
     }
     numParsed++;
     return asset;
 }
 
-void ESS_Manager::append_new_asset(Asset* asset)
-{
+void ESS_Manager::append_new_asset(Asset* asset) {
     pEss.push_back((Asset_ESS*)asset);
 }
 
 // After configuring individual asset instances, this function finishes configuring the ESS Manager
-bool ESS_Manager::configure_type_manager(Type_Configurator* configurator)
-{
+bool ESS_Manager::configure_type_manager(Type_Configurator* configurator) {
     cJSON* essRoot = configurator->asset_type_root;
 
     cJSON* object = cJSON_HasObjectItem(essRoot, "soc_balancing_factor") ? cJSON_GetObjectItem(essRoot, "soc_balancing_factor") : NULL;
-    if (object == NULL)
-    {
+    if (object == NULL) {
         FPS_ERROR_LOG("ESS_Manager::configure_type_manager ~ Failed to find soc_balancing_factor in config.\n");
         return false;
     }

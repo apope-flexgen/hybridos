@@ -15,9 +15,7 @@
 /* Local Internal Dependencies */
 #include <Path.h>
 
-
-class Sequence
-{
+class Sequence {
 public:
     char* sequence_name;
     int paths_size;
@@ -42,14 +40,14 @@ public:
     void call_sequence_exit();
     void check_path_step_change();
 
-    bool step_reset;  //used to track when a step has completed
-    bool debounce_reset; //used for resetting the debounce timer in sequence steps
-    bool sequence_bypass;  //set when a sequence has completed and no steps need to be called again
-    bool initial_entry_attempt; //makes sure certain fprintf messages are only sent once per instance
-    bool initial_exit_attempt; //makes sure exit condition failure message only sent once per exit
-    int entry_exit_flag;       //specifies if asset call is for an entry action or exit condition
-    int current_step_index, check_current_step_index;  //contains the current state index, and a 2nd copy for comparison/tracking
-    int current_path_index, check_current_path_index;  //contains the current path index
+    bool step_reset;                                   // used to track when a step has completed
+    bool debounce_reset;                               // used for resetting the debounce timer in sequence steps
+    bool sequence_bypass;                              // set when a sequence has completed and no steps need to be called again
+    bool initial_entry_attempt;                        // makes sure certain fprintf messages are only sent once per instance
+    bool initial_exit_attempt;                         // makes sure exit condition failure message only sent once per exit
+    int entry_exit_flag;                               // specifies if asset call is for an entry action or exit condition
+    int current_step_index, check_current_step_index;  // contains the current state index, and a 2nd copy for comparison/tracking
+    int current_path_index, check_current_path_index;  // contains the current path index
 };
 
 #endif /* INCLUDE_SEQUENCE_H_ */

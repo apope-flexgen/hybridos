@@ -17,8 +17,7 @@
 #include <Configurator.h>
 #include <Site_Controller_Utils.h>
 
-Asset_Generator::Asset_Generator()
-{
+Asset_Generator::Asset_Generator() {
     ldss = NULL;
     block_ldss_static_starts = false;
     block_ldss_static_stops = true;
@@ -51,14 +50,13 @@ Asset_Generator::Asset_Generator()
     set_required_variables();
 }
 
-Asset_Generator::~Asset_Generator ()
-{
-    if (grid_mode_setpoint) free(grid_mode_setpoint);
+Asset_Generator::~Asset_Generator() {
+    if (grid_mode_setpoint)
+        free(grid_mode_setpoint);
 }
 
 // required variables checked for in configuration validation
-void Asset_Generator::set_required_variables(void)
-{
+void Asset_Generator::set_required_variables(void) {
     required_variables.push_back("status");
     required_variables.push_back("active_power_setpoint");
     required_variables.push_back("reactive_power_setpoint");
@@ -68,8 +66,7 @@ void Asset_Generator::set_required_variables(void)
     required_variables.push_back("faults");
 }
 
-bool Asset_Generator::start(void)
-{
+bool Asset_Generator::start(void) {
     // isStarting is set to true when start command is sent, and is set to false once gen reports it is Running
     isStarting = true;
     isStopping = false;
@@ -80,8 +77,7 @@ bool Asset_Generator::start(void)
     return send_to_comp_uri(start_value, uri_start);
 }
 
-bool Asset_Generator::stop(void)
-{
+bool Asset_Generator::stop(void) {
     isStarting = false;
     // isStopping is set to true while a generator is ramped down (done when in grid following mode)
     // but once stop command is sent, generator is considered stopped
@@ -93,45 +89,38 @@ bool Asset_Generator::stop(void)
     return send_to_comp_uri(stop_value, uri_stop);
 }
 
-bool Asset_Generator::is_starting(void) const
-{
+bool Asset_Generator::is_starting(void) const {
     return isStarting;
 }
 
-bool Asset_Generator::is_stopping(void)
-{
+bool Asset_Generator::is_stopping(void) {
     return isStopping;
 }
 
-void Asset_Generator::set_stopping_flag(bool flag)
-{
+void Asset_Generator::set_stopping_flag(bool flag) {
     isStopping = flag;
 }
 
-bool Asset_Generator::is_balanced(void)
-{
+bool Asset_Generator::is_balanced(void) {
     return isBalanced;
 }
 
-void Asset_Generator::set_balanced(bool flag)
-{
+void Asset_Generator::set_balanced(bool flag) {
     isBalanced = flag;
 }
 
-bool Asset_Generator::send_active_power_setpoint(void)
-{
+bool Asset_Generator::send_active_power_setpoint(void) {
     if (round(active_power_setpoint->component_control_value.value_float) != round(active_power_setpoint->value.value_float))
         return active_power_setpoint->send_to_component(false, true);
     return false;
 }
 
-void Asset_Generator::set_active_power_setpoint(float setpoint)
-{
+void Asset_Generator::set_active_power_setpoint(float setpoint) {
     // generator command must be bounded by setpoint and can't be negative
     active_power_setpoint->component_control_value.value_float = range_check(setpoint, max_limited_active_power, min_limited_active_power);
 }
 
-void Asset_Generator::process_potential_active_power(void) // overriden from the base class, called every 100ms
+void Asset_Generator::process_potential_active_power(void)  // overriden from the base class, called every 100ms
 {
     Asset::process_potential_active_power();
 
@@ -142,63 +131,55 @@ void Asset_Generator::process_potential_active_power(void) // overriden from the
         max_potential_active_power = min_potential_active_power = active_power->value.value_float;
 
     // Further limit based on reactive power and apparent power if appropriate
-    if (reactive_power_priority)
-    {
+    if (reactive_power_priority) {
         active_power_limit = sqrtf(powf(rated_apparent_power_kva, 2) - powf(reactive_power_setpoint->value.value_float, 2));
         max_potential_active_power = std::min(max_potential_active_power, active_power_limit);
     }
     max_limited_active_power = max_potential_active_power;
 }
 
-bool Asset_Generator::send_reactive_power_setpoint(void)
-{
+bool Asset_Generator::send_reactive_power_setpoint(void) {
     if (round(reactive_power_setpoint->component_control_value.value_float) != round(reactive_power_setpoint->value.value_float))
         return reactive_power_setpoint->send_to_component(false, true);
     return true;
 }
 
-void Asset_Generator::set_reactive_power_setpoint(float setpoint)
-{
+void Asset_Generator::set_reactive_power_setpoint(float setpoint) {
     // generator command must be bounded by setpoint and TODO: can't be negative?
     reactive_power_setpoint->component_control_value.value_float = range_check(setpoint, potential_reactive_power, 0.0f);
 }
 
-float Asset_Generator::get_active_power_setpoint(void)
-{
+float Asset_Generator::get_active_power_setpoint(void) {
     return active_power_setpoint->value.value_float;
 }
 
-float Asset_Generator::get_active_power_setpoint_control(void)
-{
+float Asset_Generator::get_active_power_setpoint_control(void) {
     return active_power_setpoint->component_control_value.value_float;
 }
 
-float Asset_Generator::get_reactive_power_setpoint(void)
-{
+float Asset_Generator::get_reactive_power_setpoint(void) {
     return reactive_power_setpoint->value.value_float;
 }
 
-float Asset_Generator::get_reactive_power_setpoint_control(void)
-{
+float Asset_Generator::get_reactive_power_setpoint_control(void) {
     return reactive_power_setpoint->component_control_value.value_float;
 }
 
-bool Asset_Generator::configure_typed_asset_instance_vars(Type_Configurator* configurator)
-{
+bool Asset_Generator::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
     Asset_Configurator* asset_config = &configurator->asset_config;
 
-    cJSON *object = cJSON_GetObjectItem(asset_config->asset_instance_root, "starting_status_mask");
+    cJSON* object = cJSON_GetObjectItem(asset_config->asset_instance_root, "starting_status_mask");
     if (object)
-        starting_status_mask = (uint64_t) std::stoul(object->valuestring, NULL, 16);
+        starting_status_mask = (uint64_t)std::stoul(object->valuestring, NULL, 16);
 
     object = cJSON_GetObjectItem(asset_config->asset_instance_root, "stopping_status_mask");
     if (object)
-        stopping_status_mask = (uint64_t) std::stoul(object->valuestring, NULL, 16);
+        stopping_status_mask = (uint64_t)std::stoul(object->valuestring, NULL, 16);
 
     object = cJSON_GetObjectItem(asset_config->asset_instance_root, "start_value");
     if (object)
         start_value = object->valueint;
-    
+
     object = cJSON_GetObjectItem(asset_config->asset_instance_root, "stop_value");
     if (object)
         stop_value = object->valueint;
@@ -214,8 +195,7 @@ bool Asset_Generator::configure_typed_asset_instance_vars(Type_Configurator* con
     return true;
 }
 
-bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator)
-{
+bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator) {
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
     cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
@@ -235,7 +215,7 @@ bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator)
         cJSON* ui_controls = cJSON_GetObjectItem(component, "ui_controls");
         if (ui_controls == NULL)
             continue;
-        
+
         // when adding a new UI control, make sure to add it to the list of valid UI controls in Asset_Manager.cpp
         cJSON* ctrl_obj;
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_mode");
@@ -289,13 +269,13 @@ bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator)
             return false;
         }
 
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_active_power_setpoint"); 
+        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_active_power_setpoint");
         if (ctrl_obj != NULL && !maint_active_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_active_power_setpoint, Float, numberStr, false)) {
             FPS_ERROR_LOG("Failed to configure maint_active_power_setpoint UI control.");
             return false;
         }
 
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_reactive_power_setpoint"); 
+        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_reactive_power_setpoint");
         if (ctrl_obj != NULL && !maint_reactive_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_reactive_power_setpoint, Float, numberStr, false)) {
             FPS_ERROR_LOG("Failed to configure maint_reactive_power_setpoint UI control.");
             return false;
@@ -312,16 +292,14 @@ bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator)
              come from the component
     Ex: `dischargeable_power_raw` must be configured before `dischargeable_power`
 */
-bool Asset_Generator::configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map)
-{
-    configure_single_fims_var(asset_var_map,&grid_mode_setpoint,"grid_mode",Int,0,FOLLOWING);
+bool Asset_Generator::configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map) {
+    configure_single_fims_var(asset_var_map, &grid_mode_setpoint, "grid_mode", Int, 0, FOLLOWING);
     return true;
 }
 
 /****************************************************************************************/
 // Variable map moved to Generator_Manager
-bool Asset_Generator::generate_asset_ui(fmt::memory_buffer &buf, const char* const var)
-{
+bool Asset_Generator::generate_asset_ui(fmt::memory_buffer& buf, const char* const var) {
     bool goodBody = true;
 
     // add the manual mode control if defined
@@ -343,13 +321,11 @@ bool Asset_Generator::generate_asset_ui(fmt::memory_buffer &buf, const char* con
     stop_ctl.enabled = isRunning && inMaintenance;
     goodBody = stop_ctl.makeJSONObject(buf, var, true) && goodBody;
 
-    start_next_ctl.enabled = ldss->enabled && !inMaintenance && !isRunning && isAvail &&
-                            (ldss->priority_setting == STATIC ? (get_static_start_priority() > 1 && !block_ldss_static_starts) : get_dynamic_start_priority() > 1);
-    goodBody = start_next_ctl.makeJSONObject(buf, var, true) && goodBody;
+    start_next_ctl.enabled = ldss->enabled && !inMaintenance && !isRunning && isAvail && (ldss->priority_setting == STATIC ? (get_static_start_priority() > 1 && !block_ldss_static_starts) : get_dynamic_start_priority() > 1);
+    goodBody = start_next_ctl.makeJSONObject(buf, var) && goodBody;
 
-    stop_next_ctl.enabled = ldss->enabled && !inMaintenance && isRunning &&
-                            (ldss->priority_setting == STATIC ? (get_static_stop_priority() > 1 && !block_ldss_static_stops) : get_dynamic_stop_priority() > 1);
-    goodBody = stop_next_ctl.makeJSONObject(buf, var, true) && goodBody;
+    stop_next_ctl.enabled = ldss->enabled && !inMaintenance && isRunning && (ldss->priority_setting == STATIC ? (get_static_stop_priority() > 1 && !block_ldss_static_stops) : get_dynamic_stop_priority() > 1);
+    goodBody = stop_next_ctl.makeJSONObject(buf, var) && goodBody;
 
     maint_active_power_setpoint_ctl.enabled = (inMaintenance && isRunning);
     goodBody = maint_active_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
@@ -360,8 +336,7 @@ bool Asset_Generator::generate_asset_ui(fmt::memory_buffer &buf, const char* con
     return (goodBody);
 }
 
-gridMode Asset_Generator::get_grid_mode(void)
-{
+gridMode Asset_Generator::get_grid_mode(void) {
     if (grid_mode_setpoint->value.value_int == grid_following_value)
         return gridMode::FOLLOWING;
     else if (grid_mode_setpoint->value.value_int == grid_forming_value)
@@ -370,15 +345,13 @@ gridMode Asset_Generator::get_grid_mode(void)
         return gridMode::UNDEFINED;
 }
 
-bool Asset_Generator::send_grid_mode(void)
-{
+bool Asset_Generator::send_grid_mode(void) {
     if (grid_mode_setpoint->component_control_value.value_int != grid_mode_setpoint->value.value_int)
         return grid_mode_setpoint->send_to_component();
     return false;
 }
 
-void Asset_Generator::set_grid_mode(gridMode mode)
-{
+void Asset_Generator::set_grid_mode(gridMode mode) {
     if (mode == gridMode::FOLLOWING)
         grid_mode_setpoint->component_control_value.value_int = grid_following_value;
     else if (mode == gridMode::FORMING)
@@ -387,10 +360,9 @@ void Asset_Generator::set_grid_mode(gridMode mode)
         FPS_ERROR_LOG("Asset_ESS::set_grid_mode received invalid mode.\n");
 }
 
-//Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case. 
-//Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
-bool Asset_Generator::handle_set(std::string uri, cJSON &body)
-{
+// Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case.
+// Todo: grab_naked... is a temporary fix. The real goal should be to do pure naked sets, but dbi expects clothed values so this function clothes naked sets before they are handed to dbi.
+bool Asset_Generator::handle_set(std::string uri, cJSON& body) {
     // The current setpoint being parsed from those available
     cJSON* current_setpoint = NULL;
     // The value of the setpoint object received
@@ -399,38 +371,25 @@ bool Asset_Generator::handle_set(std::string uri, cJSON &body)
     // For instance, sets that modify the system state should not persist as they will default to the published component state on restart
     bool persistent_setpoint = false;
 
-    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "clear_faults")))
-    {
+    if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "clear_faults"))) {
         clear_alerts();
-    } 
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start")))
-    {
-        start(); // issue the start command
-    }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop")))
-    {
-        stop(); // issue the stop command
-    }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "active_power_setpoint")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "start"))) {
+        start();  // issue the start command
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "stop"))) {
+        stop();  // issue the stop command
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "active_power_setpoint"))) {
         // TODO: unused, replaced by maint_active_power_setpoint?
         value = cJSON_GetObjectItem(current_setpoint, "value");
         set_active_power_setpoint(value->valuedouble);
-    }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "reactive_power_setpoint")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "reactive_power_setpoint"))) {
         // TODO: unused, replaced by maint_reactive_power_setpoint?
         value = cJSON_GetObjectItem(current_setpoint, "value");
         set_reactive_power_setpoint(value->valuedouble);
-    }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint"))) {
         value = cJSON_GetObjectItem(current_setpoint, "value");
         set_active_power_setpoint(maint_active_power_setpoint = value->valuedouble);
         persistent_setpoint = true;
-    }
-    else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint")))
-    {
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint"))) {
         value = cJSON_GetObjectItem(current_setpoint, "value");
         set_reactive_power_setpoint(maint_reactive_power_setpoint = value->valuedouble);
         persistent_setpoint = true;
@@ -445,8 +404,7 @@ bool Asset_Generator::handle_set(std::string uri, cJSON &body)
     return Asset::send_setpoint(uri, current_setpoint);
 }
 
-void Asset_Generator::process_asset(void)
-{
+void Asset_Generator::process_asset(void) {
     Asset::process_asset();
 
     // process stopped status (needed for LDSS timing resets)
@@ -459,166 +417,133 @@ void Asset_Generator::process_asset(void)
         isStopped = stopped_status_mask & (1 << status);
 }
 
-bool Asset_Generator::is_stopped(void)
-{
+bool Asset_Generator::is_stopped(void) {
     return isStopped;
 }
 
-void Asset_Generator::update_asset(void)
-{
-    if (get_num_active_faults() != 0 && !isStopped)
-    {
+void Asset_Generator::update_asset(void) {
+    if (get_num_active_faults() != 0 && !isStopped) {
         stop();
         set_active_power_setpoint(0.0);
         set_reactive_power_setpoint(0.0);
-    }
-    else if (inMaintenance)
-    {
+    } else if (inMaintenance) {
         set_active_power_setpoint(maint_active_power_setpoint);
         set_reactive_power_setpoint(maint_reactive_power_setpoint);
     }
 
-    if (isRunning)
-    {
+    if (isRunning) {
         isStarting = false;
-    }
-    else if (isStopped)
-    {
-        set_active_power_setpoint(0.0); /* added to handle cases where a generator could be stopped outside of 
-                                    * Asset_Mananger::process_gen_power() control. This will ensure that 
-                                    * the internal state of the generator remains at 0kW while stopped.
-                                    */
+    } else if (isStopped) {
+        set_active_power_setpoint(0.0); /* added to handle cases where a generator could be stopped outside of
+                                         * Asset_Mananger::process_gen_power() control. This will ensure that
+                                         * the internal state of the generator remains at 0kW while stopped.
+                                         */
         set_reactive_power_setpoint(0.0);
     }
 }
 
-void Asset_Generator::send_to_components(void)
-{    
+void Asset_Generator::send_to_components(void) {
     send_grid_mode();
     send_active_power_setpoint();
     send_reactive_power_setpoint();
 }
 
-bool Asset_Generator::set_dynamic_start_priority(int priority_desired)
-{
+bool Asset_Generator::set_dynamic_start_priority(int priority_desired) {
     dynamic_start_priority = priority_desired;
     return true;
 }
 
-bool Asset_Generator::set_dynamic_stop_priority(int priority_desired)
-{
+bool Asset_Generator::set_dynamic_stop_priority(int priority_desired) {
     dynamic_stop_priority = priority_desired;
     return true;
 }
 
-int Asset_Generator::get_dynamic_start_priority(void) const
-{
+int Asset_Generator::get_dynamic_start_priority(void) const {
     return dynamic_start_priority;
 }
 
-int Asset_Generator::get_dynamic_stop_priority(void) const
-{
+int Asset_Generator::get_dynamic_stop_priority(void) const {
     return dynamic_stop_priority;
 }
 
-int Asset_Generator::get_static_start_priority(void) const
-{
+int Asset_Generator::get_static_start_priority(void) const {
     return static_start_priority;
 }
 
-void Asset_Generator::set_static_start_priority(int target)
-{
+void Asset_Generator::set_static_start_priority(int target) {
     static_start_priority = target;
 }
 
-int Asset_Generator::get_static_stop_priority(void) const
-{
+int Asset_Generator::get_static_stop_priority(void) const {
     return static_stop_priority;
 }
 
-void Asset_Generator::set_static_stop_priority(int target)
-{
+void Asset_Generator::set_static_stop_priority(int target) {
     static_stop_priority = target;
 }
 
-bool Asset_Generator::is_warmup_timer_active(void) const
-{
+bool Asset_Generator::is_warmup_timer_active(void) const {
     return warmup_countdown > 0;
 }
 
-bool Asset_Generator::is_cooldown_timer_active(void) const
-{
+bool Asset_Generator::is_cooldown_timer_active(void) const {
     return cooldown_countdown > 0;
 }
 
-void Asset_Generator::reset_warmup_timer()
-{
+void Asset_Generator::reset_warmup_timer() {
     warmup_countdown = ldss->warmup_time;
 }
 
-void Asset_Generator::reset_cooldown_timer()
-{
+void Asset_Generator::reset_cooldown_timer() {
     cooldown_countdown = ldss->cooldown_time;
 }
 
-void Asset_Generator::tick_warmup_timer(void)
-{
+void Asset_Generator::tick_warmup_timer(void) {
     if (warmup_countdown > 0)
         warmup_countdown--;
 }
 
-void Asset_Generator::tick_cooldown_timer(void)
-{
+void Asset_Generator::tick_cooldown_timer(void) {
     if (cooldown_countdown > 0)
         cooldown_countdown--;
 }
 
-int Asset_Generator::get_warmup_timer(void) const
-{
+int Asset_Generator::get_warmup_timer(void) const {
     return warmup_countdown;
 }
 
-int Asset_Generator::get_cooldown_timer(void) const
-{
+int Asset_Generator::get_cooldown_timer(void) const {
     return cooldown_countdown;
 }
 
-bool Asset_Generator::get_cooling_down_flag(void)
-{
+bool Asset_Generator::get_cooling_down_flag(void) {
     return cooling_down;
 }
 
-void Asset_Generator::set_cooling_down_flag(bool flag)
-{
+void Asset_Generator::set_cooling_down_flag(bool flag) {
     cooling_down = flag;
 }
 
-bool Asset_Generator::get_warming_up_flag(void)
-{
+bool Asset_Generator::get_warming_up_flag(void) {
     return warming_up;
 }
 
-void Asset_Generator::set_warming_up_flag(bool flag)
-{
+void Asset_Generator::set_warming_up_flag(bool flag) {
     warming_up = flag;
 }
 
-bool Asset_Generator::get_block_ldss_static_starts_flag(void)
-{
+bool Asset_Generator::get_block_ldss_static_starts_flag(void) {
     return block_ldss_static_starts;
 }
 
-bool Asset_Generator::get_block_ldss_static_stops_flag(void)
-{
+bool Asset_Generator::get_block_ldss_static_stops_flag(void) {
     return block_ldss_static_stops;
 }
 
-void Asset_Generator::block_starts_based_on_static_priority(bool block_flag)
-{
+void Asset_Generator::block_starts_based_on_static_priority(bool block_flag) {
     block_ldss_static_starts = block_flag;
 }
 
-void Asset_Generator::block_stops_based_on_static_priority(bool block_flag)
-{
+void Asset_Generator::block_stops_based_on_static_priority(bool block_flag) {
     block_ldss_static_stops = block_flag;
 }

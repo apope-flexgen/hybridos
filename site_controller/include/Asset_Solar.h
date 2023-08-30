@@ -15,11 +15,10 @@
 /* Local Internal Dependencies */
 #include <Asset.h>
 
-class Asset_Solar: public Asset
-{
+class Asset_Solar : public Asset {
 public:
-    Asset_Solar ();
-    virtual ~Asset_Solar ();
+    Asset_Solar();
+    virtual ~Asset_Solar();
 
     // control
     bool start(void);
@@ -44,7 +43,7 @@ public:
     void process_asset(void);
     void update_asset(void);
     void send_to_components(void) override;
-    bool handle_set(std::string uri, cJSON &body);
+    bool handle_set(std::string uri, cJSON& body);
     bool generate_asset_ui(fmt::memory_buffer&, const char* const var = NULL) override;
 
 protected:
@@ -52,7 +51,7 @@ protected:
     void set_required_variables(void);
     bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
     bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map);
+    bool configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
     int start_value;
     int stop_value;
     int enter_standby_value;
@@ -87,10 +86,10 @@ protected:
     std::string uri_stop;
     std::string uri_enter_standby;
     std::string uri_exit_standby;
-  
+
     // internal functions
     void process_potential_active_power(void) override;
-    
+
     bool send_active_power_setpoint(void);
     bool send_reactive_power_setpoint(void);
     bool send_power_factor_setpoint(void);

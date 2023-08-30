@@ -19,21 +19,19 @@
 /**
  * @brief Construct a new Input_Source::Input_Source object.
  * Initialize enabled to the given value, which is false by default if not passed by caller.
- * 
+ *
  */
-Input_Source::Input_Source(bool init_enabled)
-{
+Input_Source::Input_Source(bool init_enabled) {
     enabled = init_enabled;
 }
 
 /**
  * @brief Parses an input source's configuration JSON into the Input_Source object.
- * 
+ *
  * @param JSON_input_source Pointer to the cJSON object containing the configuration data.
  * @throws runtime_error if parsing fails.
  */
-void Input_Source::parse_json_obj(cJSON* JSON_input_source)
-{
+void Input_Source::parse_json_obj(cJSON* JSON_input_source) {
     // caller must not pass a NULL cJSON*
     if (JSON_input_source == NULL) {
         throw std::runtime_error("JSON_input_source is NULL");
@@ -72,8 +70,7 @@ void Input_Source::parse_json_obj(cJSON* JSON_input_source)
     cJSON* JSON_alt_ui_types = cJSON_GetObjectItem(JSON_input_source, "alt_ui_types");
     if (JSON_alt_ui_types != NULL) {
         cJSON* JSON_array_object = NULL;
-        cJSON_ArrayForEach(JSON_array_object, JSON_alt_ui_types)
-        {
+        cJSON_ArrayForEach(JSON_array_object, JSON_alt_ui_types) {
             // parse the ID of the variable that wants an alternative UI type for this input source
             cJSON* JSON_var_id = cJSON_GetObjectItem(JSON_array_object, "var_id");
             if (JSON_var_id == NULL || JSON_var_id->valuestring == NULL) {
@@ -104,7 +101,7 @@ void Input_Source::parse_json_obj(cJSON* JSON_input_source)
     // parse initial value of enabled boolean
     cJSON* JSON_enabled = cJSON_GetObjectItem(JSON_input_source, "enabled");
     if (JSON_enabled == NULL) {
-        enabled = false; // default to false if not found
+        enabled = false;  // default to false if not found
     } else {
         if (JSON_enabled->type > cJSON_True) {
             throw std::runtime_error("value of 'enabled' for input_source " + name + " is not a boolean");
@@ -116,50 +113,45 @@ void Input_Source::parse_json_obj(cJSON* JSON_input_source)
 /**
  * @brief Returns the UI type of the variable's input register for this input source.
  * Will either be the default UI type of this input source or something else if the variable is found in the alt_ui_types map.
- * 
+ *
  * @param var_id ID of the variable.
  * @return std::string UI type of the variable's input register for this input source.
  */
-std::string Input_Source::get_ui_type_of_var(std::string var_id)
-{
+std::string Input_Source::get_ui_type_of_var(std::string var_id) {
     // check the alt_ui_type map for the variable. if not found, then use the default ui_type for this input source
-    try
-    {
+    try {
         UI_Type alt_ui_type = alt_ui_types.at(var_id);
-        switch(alt_ui_type) {
-        case STATUS:
-            return "status";
-        case NONE:
-            return "none";
-        default:
-            throw std::runtime_error("alt_ui_type of variable " + var_id + " for input source " + name + "is an invalid value. May only be STATUS or NONE.");
+        switch (alt_ui_type) {
+            case STATUS:
+                return "status";
+            case NONE:
+                return "none";
+            default:
+                throw std::runtime_error("alt_ui_type of variable " + var_id + " for input source " + name + "is an invalid value. May only be STATUS or NONE.");
         }
-    }
-    catch(...)
-    {
-        switch(ui_type) {
-        case STATUS:
-            return "status";
-        case CONTROL:
-            return "control";
-        case NONE:
-            return "none";
-        default: // this case should be prevented from happening by the configuration code
-            FPS_ERROR_LOG("Variable %s has an invalid ui_type for the input register %s!\n", var_id.c_str(), name.c_str());
-            return "none";
+    } catch (...) {
+        switch (ui_type) {
+            case STATUS:
+                return "status";
+            case CONTROL:
+                return "control";
+            case NONE:
+                return "none";
+            default:  // this case should be prevented from happening by the configuration code
+                FPS_ERROR_LOG("Variable %s has an invalid ui_type for the input register %s!\n", var_id.c_str(), name.c_str());
+                return "none";
         }
     }
 }
 
 /**
  * @brief Parses the JSON array of input source configuration data into the input_sources vector.
- * 
+ *
  * @param JSON_input_sources Pointer to the cJSON array of input sources configuration data.
  * @returns How many input sources were parsed from the JSON array.
  * @throws runtime_error on parsing failure.
  */
-void Input_Source_List::parse_json_obj(cJSON* JSON_input_sources)
-{
+void Input_Source_List::parse_json_obj(cJSON* JSON_input_sources) {
     if (!cJSON_IsArray(JSON_input_sources)) {
         throw std::runtime_error("parsed input_sources object is not an array");
     }
@@ -167,10 +159,9 @@ void Input_Source_List::parse_json_obj(cJSON* JSON_input_sources)
     if (cJSON_GetArraySize(JSON_input_sources) == 0) {
         throw std::runtime_error("input_sources array was found but is empty. Please add entries or remove object");
     }
-    
+
     cJSON* JSON_input_source = NULL;
-    cJSON_ArrayForEach(JSON_input_source, JSON_input_sources)
-    {
+    cJSON_ArrayForEach(JSON_input_source, JSON_input_sources) {
         // instantiate new Input_Source object
         auto new_source = std::make_shared<Input_Source>();
 
@@ -194,7 +185,7 @@ void Input_Source_List::parse_json_obj(cJSON* JSON_input_sources)
     // create the map of input source IDs to input source vector indices. this will avoid having to brute force search through the vector later.
     // while iterating over newly configured input sources, also initialize selected_input_source_index variable.
     selected_input_source_index = input_sources.size() - 1;
-    for(uint i = 0; i < input_sources.size(); ++i) {
+    for (uint i = 0; i < input_sources.size(); ++i) {
         id_to_index[input_sources[i]->uri_suffix] = i;
         if (input_sources[i]->enabled && i < selected_input_source_index) {
             selected_input_source_index = i;
@@ -204,25 +195,23 @@ void Input_Source_List::parse_json_obj(cJSON* JSON_input_sources)
 
 /**
  * @brief Adds one item per input source to the given object, where the key of the item is the input source's URI suffix and the value of the item is the enabled boolean.
- * 
+ *
  * @param JSON_object JSON object to which the input source's objects should be added.
  */
-void Input_Source_List::add_to_JSON_buffer(fmt::memory_buffer &buf, const char* const var)
-{
-    for(auto input_source : input_sources) {
+void Input_Source_List::add_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var) {
+    for (auto input_source : input_sources) {
         bufJSON_AddBoolCheckVar(buf, input_source->uri_suffix.c_str(), input_source->enabled, var);
     }
 }
 
 /**
  * @brief Sets one of the input sources in the list to be enabled/disabled.
- * 
+ *
  * @param source_id ID / uri_suffix of the input source that is to be enabled/disabled.
  * @param enable_flag True for enabling; false for disabling.
  * @return std::string Name of the selected input source after the effect of the enabling/disabling (could have changed or remained the same).
  */
-std::string Input_Source_List::set_source_enable_flag(std::string source_id, bool enable_flag)
-{
+std::string Input_Source_List::set_source_enable_flag(std::string source_id, bool enable_flag) {
     // do not attempt to process SET to /site/input_sources/<input source id> if input_source array is empty
     if (input_sources.size() == 0) {
         FPS_ERROR_LOG("Site Manager received a FIMS SET to /site/input_sources/%s but input_sources array is empty! \n", source_id.c_str());
@@ -231,18 +220,15 @@ std::string Input_Source_List::set_source_enable_flag(std::string source_id, boo
 
     // check if identified input source exists
     uint source_index;
-    try
-    {
+    try {
         source_index = id_to_index.at(source_id);
-    }
-    catch(...)
-    {
+    } catch (...) {
         FPS_ERROR_LOG("Site Manager received set to enable/disable input source %s but that source does not exist!\n", source_id.c_str());
         return input_sources[selected_input_source_index]->name;
     }
 
     // update the input source's enabled flag. last input source in list (lowest priority) can never be disabled
-    if (source_index != input_sources.size()-1) {
+    if (source_index != input_sources.size() - 1) {
         input_sources[source_index]->enabled = enable_flag;
     }
 
@@ -252,7 +238,7 @@ std::string Input_Source_List::set_source_enable_flag(std::string source_id, boo
         selected_input_source_index = source_index;
     } else if (!enable_flag && source_index == selected_input_source_index) {
         // if the currently selected input source is being disabled, need to search for new selected input source
-        for(uint i = 0; i < input_sources.size(); ++i) {
+        for (uint i = 0; i < input_sources.size(); ++i) {
             if (input_sources[i]->enabled) {
                 selected_input_source_index = i;
                 break;
@@ -267,42 +253,38 @@ std::string Input_Source_List::set_source_enable_flag(std::string source_id, boo
 /**
  * @return The index of the selected input source.
  */
-uint Input_Source_List::get_selected_input_source_index()
-{
+uint Input_Source_List::get_selected_input_source_index() {
     return selected_input_source_index;
 }
 
 /**
  * @brief Accesses the URI suffix of a given input source.
- * 
+ *
  * @param i Index of the input source to be queried.
  * @return std::string URI suffix of the queried input source.
  */
-std::string Input_Source_List::get_uri_suffix_of_input(uint i)
-{
+std::string Input_Source_List::get_uri_suffix_of_input(uint i) {
     return input_sources[i]->uri_suffix;
 }
 
 /**
  * @brief Accesses the name of a given input source.
- * 
+ *
  * @param i Index of the input source to be queried.
  * @return std::string Name of the queried input source.
  */
-std::string Input_Source_List::get_name_of_input(uint i)
-{
+std::string Input_Source_List::get_name_of_input(uint i) {
     return input_sources[i]->name;
 }
 
 /**
  * @brief Accesses the specified input source and queries it for what ui_type should be used for the given variable.
- * 
+ *
  * @param source_index Index of the input source to be queried.
  * @param var_id ID of the variable that is asking for the UI type.
  * @return std::string UI type for the variable's specified input register.
  */
-std::string Input_Source_List::get_ui_type_of_input(uint source_index, std::string var_id)
-{
+std::string Input_Source_List::get_ui_type_of_input(uint source_index, std::string var_id) {
     return input_sources[source_index]->get_ui_type_of_var(var_id);
 }
 

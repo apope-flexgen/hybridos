@@ -15,8 +15,7 @@
 /* Local Internal Dependencies */
 #include <Asset.h>
 
-class Asset_Feeder: public Asset
-{
+class Asset_Feeder : public Asset {
 public:
     Asset_Feeder();
     virtual ~Asset_Feeder();
@@ -45,15 +44,15 @@ public:
     void process_potential_active_power() override;
     void update_asset(void);
     void send_to_components(void) override;
-    bool handle_set(std::string uri, cJSON &body);
+    bool handle_set(std::string uri, cJSON& body);
     bool generate_asset_ui(fmt::memory_buffer&, const char* const var = NULL) override;
-    
+
 protected:
     // configuration
     void set_required_variables(void);
     bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
     bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map);
+    bool configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
     int open_value;
     int close_value;
     int close_permissive_value;
@@ -66,7 +65,7 @@ protected:
     Fims_Object* grid_voltage_l3;
     Fims_Object* grid_frequency;
     Fims_Object* breaker_status;
-    Fims_Object* utility_status;    // Register tracking the status of the utility for sites that support it
+    Fims_Object* utility_status;  // Register tracking the status of the utility for sites that support it
 
     // control
     fimsCtl breaker_open_ctl;

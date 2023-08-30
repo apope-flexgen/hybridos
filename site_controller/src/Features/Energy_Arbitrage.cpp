@@ -18,15 +18,11 @@
 /**
  * Energy Arbitrage piecewise algorithm
  */
-Energy_Arbitrage_Output Energy_Arbitrage::energy_arbitrage(const Energy_Arbitrage_Inputs& in)
-{
+Energy_Arbitrage_Output Energy_Arbitrage::energy_arbitrage(const Energy_Arbitrage_Inputs& in) {
     Energy_Arbitrage_Output out;
 
     // check of invalid pricing
-    if (!(threshold_charge_2.value.value_float < threshold_charge_1.value.value_float &&
-         threshold_charge_1.value.value_float < threshold_dischg_1.value.value_float &&
-         threshold_dischg_1.value.value_float < threshold_dischg_2.value.value_float))
-    {
+    if (!(threshold_charge_2.value.value_float < threshold_charge_1.value.value_float && threshold_charge_1.value.value_float < threshold_dischg_1.value.value_float && threshold_dischg_1.value.value_float < threshold_dischg_2.value.value_float)) {
         out.error_code = 1;
         return out;
     }
@@ -38,8 +34,7 @@ Energy_Arbitrage_Output Energy_Arbitrage::energy_arbitrage(const Energy_Arbitrag
         out.ess_kW_power = fabsf(max_dischg_2.value.value_float);
     }
     // price indicates regular discharge
-    else if ((price.value.value_float >= threshold_dischg_1.value.value_float) &&
-            (in.soc_avg_running > soc_min_limit.value.value_float)) {
+    else if ((price.value.value_float >= threshold_dischg_1.value.value_float) && (in.soc_avg_running > soc_min_limit.value.value_float)) {
         out.ess_kW_power = fabsf(max_dischg_1.value.value_float);
     }
     // price indicates max charge
@@ -47,8 +42,7 @@ Energy_Arbitrage_Output Energy_Arbitrage::energy_arbitrage(const Energy_Arbitrag
         out.ess_kW_power = -1.0f * fabsf(max_charge_2.value.value_float);
     }
     // price indicate regular charge
-    else if ((price.value.value_float <= threshold_charge_1.value.value_float) &&
-            (in.soc_avg_running < soc_max_limit.value.value_float)) {
+    else if ((price.value.value_float <= threshold_charge_1.value.value_float) && (in.soc_avg_running < soc_max_limit.value.value_float)) {
         out.ess_kW_power = -1.0f * fabsf(max_charge_1.value.value_float);
     }
 
@@ -58,7 +52,7 @@ Energy_Arbitrage_Output Energy_Arbitrage::energy_arbitrage(const Energy_Arbitrag
     } else {
         out.solar_max_potential_kW = in.solar_max_potential_kW;
     }
-    
+
     // Solar uncurtailed
     out.solar_kW_request = out.solar_max_potential_kW;
     return out;

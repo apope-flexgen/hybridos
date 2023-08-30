@@ -2,7 +2,7 @@
  * Generator_Manager.h
  * Header for Generator-specific Manager class
  * Refactored from Asset_Manager.h
- * 
+ *
  * Created on Sep 30th, 2020
  *      Author: Jack Shade (jnshade)
  */
@@ -21,8 +21,7 @@
 #include <macros.h>
 #include <Type_Manager.h>
 
-class Generator_Manager: public Type_Manager
-{
+class Generator_Manager : public Type_Manager {
 protected:
     int numGenControllable;
 
@@ -76,7 +75,7 @@ public:
     void set_all_gen_grid_form(void);
     void set_all_gen_grid_follow(void);
 
-    void update_ldss_settings(LDSS_Settings &settings);
+    void update_ldss_settings(LDSS_Settings& settings);
 
     bool direct_start_gen(void);
     void start_all_gen(void);
@@ -84,7 +83,7 @@ public:
 
     bool aggregate_gen_data(void);
 
-    void generate_asset_type_summary_json(fmt::memory_buffer &buf, const char* const var = NULL) override;
+    void generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var = NULL) override;
 
     bool calculate_gen_power(void);
 

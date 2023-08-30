@@ -1,9 +1,9 @@
 /**
  * test_tools.h
- * 
+ *
  * Helper data structures for writing unit tests.
- * 
-*/
+ *
+ */
 #ifndef TEST_TOOLS_H_
 #define TEST_TOOLS_H_
 
@@ -28,8 +28,8 @@ typedef struct range_result {
     float actual;
     std::string id;
     // Use tolerance as absolute if expected is 0
-    float get_lower_limit() { return expected - float(fabs(tolerance*(expected == 0.0f ? 1.0f : expected))); };
-    float get_upper_limit() { return expected + float(fabs(tolerance*(expected == 0.0f ? 1.0f : expected))); };
+    float get_lower_limit() { return expected - float(fabs(tolerance * (expected == 0.0f ? 1.0f : expected))); };
+    float get_upper_limit() { return expected + float(fabs(tolerance * (expected == 0.0f ? 1.0f : expected))); };
 } range_result;
 
 typedef struct bool_result {
@@ -64,40 +64,40 @@ void test_logger::check_solution(void) {
     bool failure = false;
     // load all expected values into stringstream
     ss << "expected values:" << std::endl;
-    for(auto& result : int_results) {
+    for (auto& result : int_results) {
         ss << result.id.data() << " = " << result.expected << std::endl;
     }
-    for(auto& result : bool_results) {
-        ss << result.id.data() << " = " << (result.expected ? "true":"false") << std::endl;
+    for (auto& result : bool_results) {
+        ss << result.id.data() << " = " << (result.expected ? "true" : "false") << std::endl;
     }
-    for(auto& result : float_results) {
+    for (auto& result : float_results) {
         ss << result.id.data() << " = " << result.expected << std::endl;
     }
-    for(auto& result : range_results) {
+    for (auto& result : range_results) {
         ss << result.id.data() << " between " << result.get_lower_limit() << " and " << result.get_upper_limit() << std::endl;
     }
     // load all actual values into stringstream.
     // also check for failures
     ss << "actual values:" << std::endl;
-    for(auto& result : int_results) {
+    for (auto& result : int_results) {
         ss << result.id.data() << " = " << result.actual << std::endl;
         if (result.expected != result.actual) {
             failure = true;
         }
     }
-    for(auto& result : bool_results) {
-        ss << result.id.data() << " = " << (result.actual ? "true":"false") << std::endl;
+    for (auto& result : bool_results) {
+        ss << result.id.data() << " = " << (result.actual ? "true" : "false") << std::endl;
         if (result.expected != result.actual) {
             failure = true;
         }
     }
-    for(auto& result : float_results) {
+    for (auto& result : float_results) {
         ss << result.id.data() << " = " << result.actual << std::endl;
         if (result.expected != result.actual) {
             failure = true;
         }
     }
-    for(auto& result : range_results) {
+    for (auto& result : range_results) {
         ss << result.id.data() << " = " << result.actual << std::endl;
         if (result.actual < result.get_lower_limit() || result.actual > result.get_upper_limit()) {
             failure = true;
@@ -107,17 +107,17 @@ void test_logger::check_solution(void) {
     release_stdout(failure);
 
     // invoke gtest checkers
-    for(auto& result : int_results) {
+    for (auto& result : int_results) {
         EXPECT_EQ(result.actual, result.expected);
     }
-    for(auto& result : bool_results) {
+    for (auto& result : bool_results) {
         EXPECT_EQ(result.actual, result.expected);
     }
-    for(auto& result : float_results) {
+    for (auto& result : float_results) {
         EXPECT_FLOAT_EQ(result.actual, result.expected);
     }
-    for(auto& result : range_results) {
-        EXPECT_NEAR(result.actual, result.expected, fabs(result.tolerance*(result.expected == 0.0f ? 1.0f : result.expected)));
+    for (auto& result : range_results) {
+        EXPECT_NEAR(result.actual, result.expected, fabs(result.tolerance * (result.expected == 0.0f ? 1.0f : result.expected)));
     }
     // print stringstream if test failed
     if (failure) {

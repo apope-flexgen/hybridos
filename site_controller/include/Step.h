@@ -24,17 +24,13 @@ struct Step_Action {
     bool result;
     int tolerance;
     int reason_for_exit_failure;  // specifies if exit failed due to debounce timer or conditional
-    int debounce_timer_ms; // Time during which the value must match the expected value for the sequence to pass. Default 0
+    int debounce_timer_ms;        // Time during which the value must match the expected value for the sequence to pass. Default 0
     timespec debounce_target_time;
 
-    Step_Action()
-    {
-        clock_gettime(CLOCK_MONOTONIC, &debounce_target_time);
-    }
+    Step_Action() { clock_gettime(CLOCK_MONOTONIC, &debounce_target_time); }
 };
 
-class Step
-{
+class Step {
 private:
     std::string step_name;
     std::vector<Step_Action> entry_actions;
@@ -51,7 +47,5 @@ public:
     std::vector<Step_Action>& get_entry_actions();
     std::vector<Step_Action>& get_exit_conditions();
 };
-
-
 
 #endif /* INCLUDE_STEP_H_ */

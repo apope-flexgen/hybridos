@@ -18,13 +18,12 @@
 extern Asset_Manager* assetMgr;
 extern Site_Manager* siteMgr;
 
-/** 
+/**
  * Setpoints can be read in before site state is changed to init
  * This means the ESS instances have not received their start from components yet so site/enter standby cannot succeed
  * Wait for init to complete before sending the specific setpoints
  */
-void delayed_set(fims_message* msg)
-{
+void delayed_set(fims_message* msg) {
     sleep(10);
     // Send the msg to the appropriate manager
     if (strncmp(msg->pfrags[0], "site", strlen("site")) == 0)
@@ -34,13 +33,12 @@ void delayed_set(fims_message* msg)
     free_fims_msg(msg);
 }
 
-Data_Endpoint::Data_Endpoint()
-{
+Data_Endpoint::Data_Endpoint() {
     // Construct the setpoint pairs hash table
     // Currently map is one-to-one, but could be one-to-many
-    opposite_setpoints.insert(std::make_pair(std::string("breaker_close"), std::vector<std::string>({"breaker_open"})));
-    opposite_setpoints.insert(std::make_pair(std::string("breaker_close_permissive_remove"), std::vector<std::string>({"breaker_close_permissive"})));
-    opposite_setpoints.insert(std::make_pair(std::string("disable_flag"),std::vector<std::string>({"enable_flag"})));
+    opposite_setpoints.insert(std::make_pair(std::string("breaker_close"), std::vector<std::string>({ "breaker_open" })));
+    opposite_setpoints.insert(std::make_pair(std::string("breaker_close_permissive_remove"), std::vector<std::string>({ "breaker_close_permissive" })));
+    opposite_setpoints.insert(std::make_pair(std::string("disable_flag"), std::vector<std::string>({ "enable_flag" })));
 }
 
 /**
@@ -49,11 +47,10 @@ Data_Endpoint::Data_Endpoint()
  * @param replyto The replyto URI of the request
  * @return A malloc'd char pointer to the response
  *         Caller is responsible for memory management
- */ 
-char* Data_Endpoint::get_from_uri(std::string uri, std::string replyto)
-{
+ */
+char* Data_Endpoint::get_from_uri(std::string uri, std::string replyto) {
     bool response_received = false;
-    fims_message *pmsg = NULL;
+    fims_message* pmsg = NULL;
     char* response_body = NULL;
     timespec entry_time, exit_time;
     int perioduS = 0;
@@ -62,30 +59,24 @@ char* Data_Endpoint::get_from_uri(std::string uri, std::string replyto)
         FPS_INFO_LOG("Requesting storage entries for uri: %s\n", uri.c_str());
 
     // Mock sending the request to storage
-    if (!p_fims->Send("get", uri.c_str(), replyto.c_str(), NULL))
-    {
+    if (!p_fims->Send("get", uri.c_str(), replyto.c_str(), NULL)) {
         FPS_ERROR_LOG("Failed to send configuration request to storage for uri: %s\n", uri.c_str());
         return NULL;
     }
 
     // Block until a response is received or timeout
-    while (!response_received && p_fims->Connected() && perioduS < DB_RESPONSE_TIMEOUT)
-    {
+    while (!response_received && p_fims->Connected() && perioduS < DB_RESPONSE_TIMEOUT) {
         clock_gettime(CLOCK_MONOTONIC, &entry_time);
 
-        pmsg = p_fims->Receive_Timeout(DB_RESPONSE_TIMEOUT); // blocking with timeout in uSec.
-        if (pmsg != NULL)
-        {
+        pmsg = p_fims->Receive_Timeout(DB_RESPONSE_TIMEOUT);  // blocking with timeout in uSec.
+        if (pmsg != NULL) {
             // Check that the response uri matches
-            if (pmsg->nfrags > 0 && replyto.find(pmsg->pfrags[0]) < replyto.size())
-            {
+            if (pmsg->nfrags > 0 && replyto.find(pmsg->pfrags[0]) < replyto.size()) {
                 response_body = strdup(pmsg->body);
                 response_received = true;
             }
             p_fims->free_message(pmsg);
-        }
-        else
-        {
+        } else {
             FPS_ERROR_LOG("Failed to get response from dbi for: %s\n", uri.c_str());
         }
 
@@ -101,12 +92,9 @@ char* Data_Endpoint::get_from_uri(std::string uri, std::string replyto)
  * @param endpoint the endpoint of the uri e.g. the logical setting
  * @param valueObject the body of the request containing the updated value
  */
-bool Data_Endpoint::setpoint_writeout(std::string uri, std::string endpoint, cJSON** valueObject)
-{
-
-    //Temp variable that will be used when clothing naked sets
-    if (p_fims == NULL)
-    {
+bool Data_Endpoint::setpoint_writeout(std::string uri, std::string endpoint, cJSON** valueObject) {
+    // Temp variable that will be used when clothing naked sets
+    if (p_fims == NULL) {
         FPS_ERROR_LOG("Fims not configured\n");
         return false;
     }
@@ -114,8 +102,7 @@ bool Data_Endpoint::setpoint_writeout(std::string uri, std::string endpoint, cJS
     // Create a list of uris to which the setpoint will be sent (DBI)
     // Includes replacement for default setpoint pairs e.g. stop -> start
     std::vector<std::string> uris = construct_writeout_uris(uri, endpoint);
-    if (uris.size() == 0 || valueObject == NULL)
-    {
+    if (uris.size() == 0 || valueObject == NULL) {
         FPS_ERROR_LOG("Received invalid arguments for writeout Data_Endpoint::setpoint_writeout()\n");
         return false;
     }
@@ -123,9 +110,8 @@ bool Data_Endpoint::setpoint_writeout(std::string uri, std::string endpoint, cJS
     // Now complete all invalidation after the setpoint has had a chance to be sent to the other controller
     // Negate the value of the opposite setpoint in DBI
     cJSON* parsed_value = cJSON_GetObjectItem(*valueObject, "value");
-    if (parsed_value == NULL)
-    {
-        //cloth the value if Null do not throw an error
+    if (parsed_value == NULL) {
+        // cloth the value if Null do not throw an error
         FPS_DEBUG_LOG("In Data_Endpoint::setpoint_writeout() parsed_value was NULL causing a clothing sequence on valueObject.");
         *valueObject = clothe_naked_cJSON(*valueObject);
         parsed_value = cJSON_GetObjectItem(*valueObject, "value");
@@ -135,22 +121,18 @@ bool Data_Endpoint::setpoint_writeout(std::string uri, std::string endpoint, cJS
     // std::string does not free the allocated memory properly
     char* original_value = cJSON_PrintUnformatted(*valueObject);
 
-    for (size_t i = 0; i < uris.size(); ++i)
-    {
-        if (uris[i].empty())
-        {
+    for (size_t i = 0; i < uris.size(); ++i) {
+        if (uris[i].empty()) {
             FPS_ERROR_LOG("Received NULL URI for writeout Data_Endpoint::setpoint_writeout()\n");
             return false;
         }
 
         // Searched through our auxilliary list of setpoint pairs and found a default value match
-        if (opposite_setpoints.find(endpoint) != opposite_setpoints.end())
-        {
+        if (opposite_setpoints.find(endpoint) != opposite_setpoints.end()) {
             // There is an additional case to handle, which is if the secondary controller is currently running
             // The majority of work done invalidates the setpoint in both DBs through negation, which is important for when either restarts
             // Also handle the case where the secondary controller is still running and needs to perform the opposite action as well
-            if (uris[i].find("dbi") < uris[i].size())
-            {
+            if (uris[i].find("dbi") < uris[i].size()) {
                 // First send along the original setpoint
                 // e.g. stop: true, exit_standby:true, disable_site:true
                 std::string original_dbi_uri = "/dbi/site_controller/setpoints" + uri;
@@ -168,7 +150,7 @@ bool Data_Endpoint::setpoint_writeout(std::string uri, std::string endpoint, cJS
         p_fims->Send("set", uris[i].c_str(), NULL, value_string);
         free(value_string);
     }
-    
+
     free(original_value);
     return true;
 }
@@ -179,10 +161,8 @@ bool Data_Endpoint::setpoint_writeout(std::string uri, std::string endpoint, cJS
  * @param asset_manager Reference to Asset_Manager to manually call its fims_data_parse()
  * @param site_manager Reference to Site_Manager to manually call its fims_data_parse()
  */
-bool Data_Endpoint::setpoint_readin()
-{
-    if (p_fims == NULL)
-    {
+bool Data_Endpoint::setpoint_readin() {
+    if (p_fims == NULL) {
         FPS_ERROR_LOG("Fims not configured\n");
         return false;
     }
@@ -193,8 +173,7 @@ bool Data_Endpoint::setpoint_readin()
 
     // Get the setpoints
     char* response_body = get_from_uri(uri, replyto);
-    if (!response_body || strcmp(response_body, "{}") == 0)
-    {
+    if (!response_body || strcmp(response_body, "{}") == 0) {
         free(response_body);
         // It's acceptable that DBI wasn't running or setpoints weren't present
         return true;
@@ -202,59 +181,49 @@ bool Data_Endpoint::setpoint_readin()
 
     cJSON* pJsonRoot = cJSON_Parse(response_body);
 
-    free (response_body);
+    free(response_body);
     // Only error if we failed to parse the json
-    if (pJsonRoot == NULL)
-    {
+    if (pJsonRoot == NULL) {
         FPS_ERROR_LOG("HybridOS_Controller received NULL response for configuration.\n");
         return false;
     }
 
     // Iterate through responses and echo sets
     // The current hook (/assets, /features, /site)
-    for (cJSON* cur_hook = pJsonRoot->child; cur_hook != NULL; cur_hook = cur_hook->next)
-    {
+    for (cJSON* cur_hook = pJsonRoot->child; cur_hook != NULL; cur_hook = cur_hook->next) {
         // Parse for the supported site controller setpoint types
         if (cur_hook->string && strcmp(cur_hook->string, "assets") != 0 && strcmp(cur_hook->string, "site") != 0 && strcmp(cur_hook->string, "features") != 0)
             // Other objects such as the id and version number will be included as well, so skip them
             continue;
 
         // It's acceptable to receive nothing, but if we receive a valid root the rest of the object should be present
-        if (!cur_hook->child)
-        {
+        if (!cur_hook->child) {
             FPS_ERROR_LOG("Missing type level Data_Endpoint::setpoint_readin()\n");
             return false;
         }
 
         // Type level (Assets: ess/feeder/gen/solar, Features:active power/charge control, Site: operation/configuration)
-        for (cJSON* cur_type = cur_hook->child; cur_type != NULL; cur_type = cur_type->next)
-        {
+        for (cJSON* cur_type = cur_hook->child; cur_type != NULL; cur_type = cur_type->next) {
             // It's acceptable to receive nothing, but if we receive a valid root the rest of the object should be present
-            if (!cur_type->child)
-            {
+            if (!cur_type->child) {
                 FPS_ERROR_LOG("Missing instance or variable level Data_Endpoint::setpoint_readin()\n");
                 return false;
             }
-            
+
             // /assets case
-            if (strcmp(cur_hook->string, "assets") == 0)
-            {
+            if (strcmp(cur_hook->string, "assets") == 0) {
                 // Assets require an additional level of parsing for the Asset instance (ess_1, ess_2, ... feed_1, etc)
-                for (cJSON* cur_instance = cur_type->child; cur_instance != NULL; cur_instance = cur_instance->next)
-                {
+                for (cJSON* cur_instance = cur_type->child; cur_instance != NULL; cur_instance = cur_instance->next) {
                     // It's acceptable to receive nothing, but if we receive a valid root the rest of the object should be present
-                    if (!cur_instance->child)
-                    {
+                    if (!cur_instance->child) {
                         FPS_ERROR_LOG("Missing asset variable level Data_Endpoint::setpoint_readin()\n");
                         return false;
                     }
 
                     // First handle maintenance mode so we can then support any variables dependent on it
                     cJSON* maint_mode_obj = cJSON_GetObjectItem(cur_instance, "maint_mode");
-                    if (maint_mode_obj != NULL)
-                    {
-                        fims_message* msg = construct_fims_message(maint_mode_obj, "set", 4, cur_hook->string, cur_type->string,
-                                                                   cur_instance->string, maint_mode_obj->string);
+                    if (maint_mode_obj != NULL) {
+                        fims_message* msg = construct_fims_message(maint_mode_obj, "set", 4, cur_hook->string, cur_type->string, cur_instance->string, maint_mode_obj->string);
                         if (msg == NULL)
                             return false;
 
@@ -267,14 +236,12 @@ bool Data_Endpoint::setpoint_readin()
                     // Send all remaining sets. Any dependency checks will be handled by Asset_<type>::process_set()
 
                     // Variable level (e.g. active_power_setpoint)
-                    for (cJSON* variable = cur_instance->child; variable != NULL; variable = variable->next)
-                    {
+                    for (cJSON* variable = cur_instance->child; variable != NULL; variable = variable->next) {
                         // Already handled these setpoints, skip to the next iteration of the loop
                         if (strcmp(variable->string, "maint_mode") == 0)
                             continue;
 
-                        fims_message* msg = construct_fims_message(variable, "set", 4, cur_hook->string, cur_type->string,
-                                                                   cur_instance->string, variable->string);
+                        fims_message* msg = construct_fims_message(variable, "set", 4, cur_hook->string, cur_type->string, cur_instance->string, variable->string);
                         if (msg == NULL)
                             return false;
 
@@ -285,26 +252,19 @@ bool Data_Endpoint::setpoint_readin()
                 }
             }
             // /site and /features case
-            else
-            {
+            else {
                 // Variable level
-                for (cJSON* variable = cur_type->child; variable != NULL; variable = variable->next)
-                {
+                for (cJSON* variable = cur_type->child; variable != NULL; variable = variable->next) {
                     fims_message* msg = construct_fims_message(variable, "set", 3, cur_hook->string, cur_type->string, variable->string, "");
                     if (msg == NULL)
                         return false;
 
                     // If the site start command was received
-                    if (strcmp(cur_hook->string, "site") == 0 && strcmp(cur_type->string, "operation") == 0
-                        && (strncmp(variable->string, "enable_flag", strlen("enable_flag")) == 0 || strcmp(variable->string, "disable_flag") == 0))
-                    {
+                    if (strcmp(cur_hook->string, "site") == 0 && strcmp(cur_type->string, "operation") == 0 && (strncmp(variable->string, "enable_flag", strlen("enable_flag")) == 0 || strcmp(variable->string, "disable_flag") == 0)) {
                         // Wait to send the command in a new thread so the system can finish configuring first
                         std::thread site_starter(delayed_set, msg);
                         site_starter.detach();
-
-                    }
-                    else
-                    {
+                    } else {
                         // Send the response to Site_Manager mocking a fims set
                         siteMgr->fims_data_parse(msg);
                         free_fims_msg(msg);
@@ -313,7 +273,7 @@ bool Data_Endpoint::setpoint_readin()
             }
         }
     }
-    
+
     cJSON_Delete(pJsonRoot);
     return true;
 }
@@ -323,8 +283,7 @@ bool Data_Endpoint::setpoint_readin()
  * @param uri The base uri of the setpoint
  * @param endpoint the endpoint of the uri e.g. the logical setting
  */
-std::vector<std::string> Data_Endpoint::construct_writeout_uris(std::string uri, std::string endpoint)
-{
+std::vector<std::string> Data_Endpoint::construct_writeout_uris(std::string uri, std::string endpoint) {
     // Base URIs (modules)
     std::string dbi_uri = "/dbi/site_controller/setpoints";
     // URIs to be returned
@@ -339,10 +298,8 @@ std::vector<std::string> Data_Endpoint::construct_writeout_uris(std::string uri,
     // This will effectively remove the setpoint from DBI, resetting the status register to its default value
     std::unordered_map<std::string, std::vector<std::string>>::iterator opposite_pair = opposite_setpoints.find(endpoint);
     // Searched through our auxilliary list of setpoint pairs and found a default value match (examples above)
-    if (opposite_pair != opposite_setpoints.end())
-    {
-        for (size_t i = 0; i < opposite_pair->second.size(); ++i)
-        {
+    if (opposite_pair != opposite_setpoints.end()) {
+        for (size_t i = 0; i < opposite_pair->second.size(); ++i) {
             // Replace the endpoint in the uri: replace(<starting position>, <length>, <value>)
             // e.g. /assets/ess/ess_1/stop -> /assets/ess/ess_1/start
             std::string uri_copy = uri;
@@ -351,8 +308,7 @@ std::vector<std::string> Data_Endpoint::construct_writeout_uris(std::string uri,
             // Add the appropriate strings to the return array
             constructed_uris.push_back(dbi_uri + uri_copy);
         }
-    }
-    else
+    } else
         // Add the appropriate strings to the return array
         constructed_uris.push_back(dbi_uri + uri);
 
@@ -363,8 +319,7 @@ std::vector<std::string> Data_Endpoint::construct_writeout_uris(std::string uri,
  * Construct a fims_message from the parameters provided, returning a pointer to the allocated object
  * Caller is responsible for memory management (free)
  */
-fims_message* Data_Endpoint::construct_fims_message(cJSON* variable, std::string method, int nfrags, std::string pfrags_0, std::string pfrags_1, std::string pfrags_2, std::string pfrags_3)
-{
+fims_message* Data_Endpoint::construct_fims_message(cJSON* variable, std::string method, int nfrags, std::string pfrags_0, std::string pfrags_1, std::string pfrags_2, std::string pfrags_3) {
     fims_message* msg = new fims_message();
     // Setpoints from dbi are naked, clothe them
     char* json_body = cJSON_PrintUnformatted(variable);
@@ -374,23 +329,18 @@ fims_message* Data_Endpoint::construct_fims_message(cJSON* variable, std::string
     msg->nfrags = nfrags;
     msg->pfrags = new char*[msg->nfrags];
     // Construct based on the number of fragments
-    if (nfrags == 4)
-    {
+    if (nfrags == 4) {
         // In the case of 4, start adding at index 3, and add the previous fragment for index 2
         msg->pfrags[3] = strdup(pfrags_3.c_str());
         msg->pfrags[2] = strdup(std::string(pfrags_2 + "/" + pfrags_3).c_str());
-    }
-    else if (nfrags == 3)
-    {
+    } else if (nfrags == 3) {
         // In the case of 3, start adding at index 2 (no other fragments to add)
         msg->pfrags[2] = strdup(pfrags_2.c_str());
-    }
-    else
-    {
+    } else {
         FPS_ERROR_LOG("Received unsupported number of fragments: %d, Data_Endpoint::construct_fims_message()\n", nfrags);
         return NULL;
     }
-    // Standard for all 
+    // Standard for all
     msg->pfrags[1] = strdup(std::string(pfrags_1 + "/" + msg->pfrags[2]).c_str());
     msg->pfrags[0] = strdup(std::string(pfrags_0 + "/" + msg->pfrags[1]).c_str());
 
@@ -409,10 +359,10 @@ void Data_Endpoint::turn_off_start_cmd(void) {
         send_FIMS_buf.clear();
 
         // make json object
-        bufJSON_StartObject(send_FIMS_buf); // object {
+        bufJSON_StartObject(send_FIMS_buf);  // object {
         // add 'false' to the object, which represents turning the start cmd "off"
         bufJSON_AddBool(send_FIMS_buf, "value", false);
-        bufJSON_EndObject(send_FIMS_buf); // } object
+        bufJSON_EndObject(send_FIMS_buf);  // } object
 
         bufJSON_RemoveTrailingComma(send_FIMS_buf);
         std::string body = to_string(send_FIMS_buf);

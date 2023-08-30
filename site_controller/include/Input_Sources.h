@@ -21,7 +21,7 @@
 #include <Types.h>
 
 struct Input_Source {
-    Input_Source(bool init_enabled=false);
+    Input_Source(bool init_enabled = false);
     std::string name;
     std::string uri_suffix;
     UI_Type ui_type;

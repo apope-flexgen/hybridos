@@ -18,8 +18,7 @@
 
 class LDSS;
 
-class Asset_Generator: public Asset
-{
+class Asset_Generator : public Asset {
 public:
     Asset_Generator();
     virtual ~Asset_Generator();
@@ -32,8 +31,8 @@ public:
 
     void set_active_power_setpoint(float);
     void set_reactive_power_setpoint(float);
-    
-    void set_stopping_flag (bool flag);
+
+    void set_stopping_flag(bool flag);
     void set_balanced(bool flag);
 
     // status
@@ -46,7 +45,7 @@ public:
 
     bool is_starting(void) const;
 
-    bool is_stopped(void); // raw status from the component
+    bool is_stopped(void);  // raw status from the component
 
     float get_active_power_setpoint(void);
     float get_reactive_power_setpoint(void);
@@ -55,20 +54,20 @@ public:
     float get_reactive_power_setpoint_control(void);
 
     gridMode get_grid_mode(void);
-    
+
     // internal functions
     void process_asset(void);
     void update_asset(void);
     void send_to_components(void) override;
-    bool handle_set(std::string uri, cJSON &body);
+    bool handle_set(std::string uri, cJSON& body);
     bool generate_asset_ui(fmt::memory_buffer&, const char* const var = NULL) override;
-    
+
 protected:
     // configuration
     void set_required_variables(void);
     bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
     bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map);
+    bool configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
     uint64_t starting_status_mask;
     uint64_t stopping_status_mask;
 
@@ -101,13 +100,13 @@ protected:
     // uris
     std::string uri_start;
     std::string uri_stop;
-    
+
     // internal functions
     bool send_grid_mode(void);
-    
+
     bool send_active_power_setpoint(void);
     bool send_reactive_power_setpoint(void);
-    
+
     void process_potential_active_power(void) override;
 
     //////////////////////////////////////////////////
@@ -149,7 +148,8 @@ public:
     //
     // configuration
     //
-    LDSS *ldss;
+    LDSS* ldss;
+
 protected:
     // flags
     bool block_ldss_static_starts;

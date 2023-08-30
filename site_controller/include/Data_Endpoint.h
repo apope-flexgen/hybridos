@@ -11,19 +11,18 @@
 
 // Give enough time to send a response by hand
 // Will be reduced based on db response time when the storage module is completed
-#define DB_RESPONSE_TIMEOUT 1000000 // in uS
+#define DB_RESPONSE_TIMEOUT 1000000  // in uS
 
 extern fims* p_fims;
 
-class Data_Endpoint
-{
+class Data_Endpoint {
 private:
-    fmt::memory_buffer send_FIMS_buf; // Reusable and resizable string buffer used to send FIMS messages
+    fmt::memory_buffer send_FIMS_buf;  // Reusable and resizable string buffer used to send FIMS messages
 
 public:
     std::unordered_map<std::string, std::vector<std::string>> opposite_setpoints;
 
-    Data_Endpoint ();
+    Data_Endpoint();
     // Send get to storage module
     char* get_from_uri(std::string uris, std::string replyto);
     // Echo sets to storage module

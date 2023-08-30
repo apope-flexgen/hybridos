@@ -39,7 +39,7 @@ struct statusData {
 struct fimsCtl {
     fimsCtl();
     ~fimsCtl();
-    bool makeJSONObject(fmt::memory_buffer &buf, const char* const var = NULL, bool configurable_asset = false);
+    bool makeJSONObject(fmt::memory_buffer& buf, const char* const var = NULL, bool configurable_asset = false);
     bool configure(cJSON* varJson, jsonBuildOption cJoption, void* display, valueType numType, displayType uitype, bool varEnabled = true, bool boolStr = false);
     void* pDisplay;
     char* varName;
@@ -61,13 +61,12 @@ void build_yes_no_option(fmt::memory_buffer&);
 void build_close_option(fmt::memory_buffer&);
 void build_open_option(fmt::memory_buffer&);
 void build_reset_option(fmt::memory_buffer&);
-std::string build_uri( std::string comp, char* reg);
+std::string build_uri(std::string comp, char* reg);
 
-class Asset
-{
+class Asset {
 public:
-    Asset ();
-    virtual ~Asset ();
+    Asset();
+    virtual ~Asset();
 
     // configuration
     bool configure(Type_Configurator* configurator);
@@ -83,7 +82,7 @@ public:
     bool is_controllable(void);
     bool in_maint_mode(void);
     bool in_standby(void);
-    
+
     uint64_t get_status(void) const;
 
     int get_num_comps(void) const;
@@ -124,36 +123,37 @@ public:
     demandMode get_demand_mode(void) const;
 
     // internal functions
-    virtual void process_asset(); // process incoming component data
+    virtual void process_asset();  // process incoming component data
     bool process_watchdog_status();
 
     // pure virtual functions that child classes must implement
-    virtual void update_asset() = 0; // update outgoing component data
-    virtual void send_to_components() = 0; // send data to components (send_to_comp_uri)
+    virtual void update_asset() = 0;        // update outgoing component data
+    virtual void send_to_components() = 0;  // send data to components (send_to_comp_uri)
 
     // FIMS
-    bool handle_get(fims_message *pmsg, std::map<std::string, Fims_Object*> *asset_var_map);
-    bool add_asset_data_to_buffer(fmt::memory_buffer &buf, std::map<std::string, Fims_Object*> *asset_var_map, bool clothed);
-    bool add_variable_to_buffer(std::string uri, const char* variable, fmt::memory_buffer &buf, std::map<std::string, Fims_Object*> *asset_var_map);
-    virtual bool handle_set(std::string uri, cJSON &body) = 0;
-    bool handle_generic_asset_controls_set(std::string uri, cJSON &body);
+    bool handle_get(fims_message* pmsg, std::map<std::string, Fims_Object*>* asset_var_map);
+    bool add_asset_data_to_buffer(fmt::memory_buffer& buf, std::map<std::string, Fims_Object*>* asset_var_map, bool clothed);
+    bool add_variable_to_buffer(std::string uri, const char* variable, fmt::memory_buffer& buf, std::map<std::string, Fims_Object*>* asset_var_map);
+    virtual bool handle_set(std::string uri, cJSON& body) = 0;
+    bool handle_generic_asset_controls_set(std::string uri, cJSON& body);
     bool process_status_pub(std::vector<std::string>* names, uint64_t value);
-    virtual bool generate_asset_ui(fmt::memory_buffer &buf, const char* const var = NULL) = 0;
+    virtual bool generate_asset_ui(fmt::memory_buffer& buf, const char* const var = NULL) = 0;
 
 protected:
     // Indicates whether this is the primary controller (true) or running in shadow mode (false)
     bool* is_primary;
     // configuration
-    bool var_maps_insert(cJSON* varJson, std::string compID, std::map <std::string, std::vector<Fims_Object*>> * const component_var_map, std::map <std::string, Fims_Object*> * const asset_var_map, bool* is_primary);
+    bool var_maps_insert(cJSON* varJson, std::string compID, std::map<std::string, std::vector<Fims_Object*>>* const component_var_map, std::map<std::string, Fims_Object*>* const asset_var_map, bool* is_primary);
     std::string build_asset_variable_uri(const char* var);
-    bool validate_config(std::map <std::string, Fims_Object*> * const asset_var_map);
+    bool validate_config(std::map<std::string, Fims_Object*>* const asset_var_map);
     bool configure_common_asset_instance_vars(Type_Configurator* configurator);
     bool configure_component_vars(Type_Configurator* configurator);
-    bool configure_common_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map);
-    bool configure_single_fims_var(std::map <std::string, Fims_Object*> * const asset_var_map, Fims_Object** fimsVar, const char* varID, valueType type=Float, float defaultFloat=0.0, int defaultInt=0, bool defaultBool=false, bool comesFromComponent=true, const char* varName="", const char* varUnits="", int varScaler=1);
-    bool configure_watchdog_vars(std::map <std::string, Fims_Object*> * const asset_var_map);
-    bool configure_hardcoded_vars(std::map <std::string, Fims_Object*> * const asset_var_map);
-    virtual bool configure_typed_asset_fims_vars(std::map <std::string, Fims_Object*> * const asset_var_map) = 0;
+    bool configure_common_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
+    bool configure_single_fims_var(std::map<std::string, Fims_Object*>* const asset_var_map, Fims_Object** fimsVar, const char* varID, valueType type = Float, float defaultFloat = 0.0, int defaultInt = 0, bool defaultBool = false,
+                                   bool comesFromComponent = true, const char* varName = "", const char* varUnits = "", int varScaler = 1);
+    bool configure_watchdog_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
+    bool configure_hardcoded_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
+    virtual bool configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map) = 0;
     virtual bool configure_typed_asset_instance_vars(Type_Configurator* configurator) = 0;
     virtual bool configure_ui_controls(Type_Configurator* configurator) = 0;
     std::string name;
@@ -168,12 +168,12 @@ protected:
     Fims_Object* reactive_power = NULL;
     Fims_Object* apparent_power = NULL;
     // status points
-    Fims_Object* voltage_l1_l2 = NULL; // Line 1 - Line 2
-    Fims_Object* voltage_l2_l3 = NULL; // Line 2 - Line 3
-    Fims_Object* voltage_l3_l1 = NULL; // Line 3 - Line 1
-    Fims_Object* voltage_l1_n = NULL; // Line 1 - N
-    Fims_Object* voltage_l2_n = NULL; // Line 2 - N
-    Fims_Object* voltage_l3_n = NULL; // Line 3 - N
+    Fims_Object* voltage_l1_l2 = NULL;  // Line 1 - Line 2
+    Fims_Object* voltage_l2_l3 = NULL;  // Line 2 - Line 3
+    Fims_Object* voltage_l3_l1 = NULL;  // Line 3 - Line 1
+    Fims_Object* voltage_l1_n = NULL;   // Line 1 - N
+    Fims_Object* voltage_l2_n = NULL;   // Line 2 - N
+    Fims_Object* voltage_l3_n = NULL;   // Line 3 - N
     Fims_Object* current_l1 = NULL;
     Fims_Object* current_l2 = NULL;
     Fims_Object* current_l3 = NULL;
@@ -184,11 +184,11 @@ protected:
 
     std::vector<std::string> compNames;
     const char* statusStrings[MAX_STATUS_BITS];
-    
+
     uint32_t numAssetComponents;
 
     uint64_t running_status_mask;
-    uint64_t standby_status_mask; // Mask indicating the standby status value
+    uint64_t standby_status_mask;  // Mask indicating the standby status value
     uint64_t stopped_status_mask;
 
     int prev_watchdog_heartbeat;
@@ -206,7 +206,7 @@ protected:
     float nominal_voltage;
     float nominal_frequency;
     float numPhases;
-    bool connected_rising_edge_detect; //Variable that tells if an Asset is connected or disconnect from the modbus_client
+    bool connected_rising_edge_detect;  // Variable that tells if an Asset is connected or disconnect from the modbus_client
 
     double throttle_timeout_fast_ms;
     double throttle_timeout_slow_ms;
@@ -221,7 +221,7 @@ protected:
     fimsCtl lock_mode;
     Slew_Object active_power_slew;
 
-    // status 
+    // status
     bool isAvail;
     bool isRunning;
     bool inMaintenance;
@@ -234,8 +234,8 @@ protected:
 
     float max_potential_active_power;
     float min_potential_active_power;
-    float min_limited_active_power; // Active power values limited by reactive power when prioritized to maintain apparent power rating
-    float max_limited_active_power; 
+    float min_limited_active_power;  // Active power values limited by reactive power when prioritized to maintain apparent power rating
+    float max_limited_active_power;
     float potential_reactive_power;
 
     // uris
@@ -250,11 +250,11 @@ protected:
     bool send_to_comp_uri(int value, const std::string& uri);
     bool send_to_comp_uri(float value, const std::string& uri);
     bool send_to_comp_uri(bool value, const std::string& uri);
-    bool json_object_send(std::string &value, const std::string& uri);
+    bool json_object_send(std::string& value, const std::string& uri);
 
     bool send_setpoint(std::string uri, cJSON* valueObject);
 
-    fmt::memory_buffer send_FIMS_buf; // Reusable and resizable string buffer for generating FIMS messages
+    fmt::memory_buffer send_FIMS_buf;  // Reusable and resizable string buffer for generating FIMS messages
 
     ////////////////////////////////////////////////////////////////////////////////////////
     //                                 FAULT & ALARM HANDLING                             //
@@ -267,6 +267,7 @@ public:
     bool check_alert(std::string& id, uint64_t& mask);
     bool check_fault(std::string& id, uint64_t& mask);
     bool check_alarm(std::string& id, uint64_t& mask);
+
 protected:
     void lower_alert_bits(void);
     // fault values are latched, meaning even if a component starts reporting a previously-active
@@ -297,17 +298,16 @@ protected:
     friend class Solar_Manager_Mock;
 };
 
-class Write_Rate_Throttle
-{
+class Write_Rate_Throttle {
 public:
     Write_Rate_Throttle();
     virtual ~Write_Rate_Throttle();
 
     void reset(void);
     void configure(long timeout, float rated = 0, float deadband = 0);
-    
-    bool command_trigger(void); // time throttle
-    bool setpoint_trigger(float control); // time and deadband throttle
+
+    bool command_trigger(void);            // time throttle
+    bool setpoint_trigger(float control);  // time and deadband throttle
     long current_timestamp(void);
 
 private:
@@ -315,7 +315,7 @@ private:
     float rated_power;
     long throttle_timeout;
     float deadband_percentage;
-    
+
     // previous iteration variables
     long status_time;
     float control_feedback;
