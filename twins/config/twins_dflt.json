@@ -560,6 +560,53 @@
                     "units": "percent SOC"
                 }
         },
+        "MaxCellTemp": {
+            "value":{
+                "default": 30.0,
+                "units": "Degrees C"
+            },"faulthighthreshold": {
+                "default": 60.0,
+                "units": "Degrees C"
+            },
+            "alarmhighthreshold": {
+                "default": 55.0,
+                "units": "Degrees C"
+            },
+            "alarmlowthreshold": {
+                "default": -30.0,
+                "units": "Degrees C"
+            },
+            "faultlowthreshold": {
+                "default": -35.0,
+                "units": "Degrees C"
+            }
+        },
+        "MinCellTemp": {
+            "value":{
+                "default": 24.0,
+                "units": "Degrees C"
+            },"faulthighthreshold": {
+                "default": 60.0,
+                "units": "Degrees C"
+            },
+            "alarmhighthreshold": {
+                "default": 55.0,
+                "units": "Degrees C"
+            },
+            "alarmlowthreshold": {
+                "default": -30.0,
+                "units": "Degrees C"
+            },
+            "faultlowthreshold": {
+                "default": -35.0,
+                "units": "Degrees C"
+            }
+        },
+        "AvgCellTemp": {
+            "default": 25.0,
+            "units": "count",
+            "note0": "Average CellTemp"
+        },
         "StatusCfg": {
             "default": [
                 {
@@ -574,6 +621,18 @@
                     "invert":true
                 }
             ]
+        },
+        "SocChargeVec": {
+            "default": [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 91, 92, 93, 94, 95, 100]
+        },
+        "PChargeVec": {
+            "default": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.7, 0.3, 0.1, 0, 0]
+        },
+        "SocDischargeVec": {
+            "default": [0, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+        },
+        "PDischargeVec": {
+            "default": [0, 0, 0.1, 0.3, 0.7, 0.95, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         },
         "CtrlWord1Cfg": {
             "default": [

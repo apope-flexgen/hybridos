@@ -5,6 +5,7 @@ import (
 	"math"
 	"math/rand"
 	"time"
+	// "fmt"
 	//"reflect"
 )
 
@@ -48,6 +49,13 @@ type bms struct {
 	MaxCellTemp measurement // maximum cell temperature in the BMS
 	AvgCellTemp float64     // average cell temperature in the BMS
 	MinCellTemp measurement // minimum cell temperature in the BMS
+
+	SocChargeVec	[]float64
+	PChargeVec		[]float64
+	SocDischargeVec	[]float64
+	PDischargeVec	[]float64
+	DisableLUTs		bool 		//flag to disable look-up-table based power limiting from BMS.
+
 	// BMS Communications - includes configurable I/O
 	Heart        hearttime
 	Status       []bitfield
@@ -165,10 +173,6 @@ func (b *bms) Init() {
 	// Initialize the sbmus and extract overall data such as capacity and system max cell voltage
 	// If not specified, randomize capacity, losses, and cell voltages
 	b.NumSbmus = len(b.Sbmu)
-	b.MaxCellVolt.Value = -1000.0
-	b.MaxCellTemp.Value = -1000.0
-	b.MinCellVolt.Value = 1000.0
-	b.MinCellTemp.Value = 1000.0
 	b.DcContactor = false
 	b.NumRacks = 0
 	b.NumRacksEnabled = b.NumSbmus // Racks are enabled by default
@@ -222,9 +226,9 @@ func (b *bms) Init() {
 		b.Sbmu[i].MaxCellVolt.Value = (1 + b.Sbmu[i].cellVoltOver) * b.Sbmu[i].AvgCellVolt
 		b.Sbmu[i].MinCellVolt.Value = (1 - b.Sbmu[i].cellVoltUnder) * b.Sbmu[i].AvgCellVolt
 		// Temperature model is not implemented, so cell temperatures are set to an unobjectionable value in degrees C
-		b.Sbmu[i].MaxCellTemp.Value = 51
-		b.Sbmu[i].AvgCellTemp = 50
-		b.Sbmu[i].MinCellTemp.Value = 49
+		b.Sbmu[i].MaxCellTemp.Value = b.MaxCellTemp.Value
+		b.Sbmu[i].AvgCellTemp = b.AvgCellTemp
+		b.Sbmu[i].MinCellTemp.Value = b.MinCellTemp.Value
 		// Set the warning and fault thresholds
 		// Idc - overloading
 		if b.Sbmu[i].Idc.FaultHighThreshold <= sbmuImax || b.Sbmu[i].Idc.FaultHighThreshold > (3*sbmuImax) {
@@ -360,6 +364,12 @@ func (b *bms) Init() {
 		b.Dvoltage.slope, b.Dvoltage.offset = getSlope(b.Dvoltage.Percent, b.Dvoltage.YNom, b.Dvoltage.XNom)
 	}
 	// fmt.Println(b.ID, b.Dactive, b.Dreactive)
+
+	//check configured soc power limit vectors, and disable the lookup tables if any issue found.
+	if len(b.SocChargeVec) != len(b.PChargeVec) || len(b.SocDischargeVec) != len(b.PDischargeVec) {
+		log.Println("[", b.ID, "] Incorrect vector lengths for chargeable and dischargeable power limits. Reverting to default behavior")
+		b.DisableLUTs = true
+	}
 }
 
 // BMS UpdateMode() processes commands either through control words or direct
@@ -548,27 +558,21 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 				// Get losses and update soc
 				socloss = b.Sbmu[i].Idleloss + b.Sbmu[i].pesr*math.Pow(p_sbmu, 2)
 				b.Sbmu[i].Pdc = b.Sbmu[i].P + socloss // power drawn from battery is delivered power plus losses
-				soc, plimited, under, over = getIntegral(b.Sbmu[i].Soc.Value/100, -(b.Sbmu[i].Pdc)/b.Sbmu[i].Cap, dt/3600, b.Soc.FaultLowThreshold/100, b.Soc.FaultHighThreshold/100)
+				soc, plimited, under, over = getIntegral(b.Sbmu[i].Soc.Value/100, -(b.Sbmu[i].Pdc)/b.Sbmu[i].Cap, dt/3600, 0, 1)
 				// Find the actual charging and discharging power based on SOC capacity
 				// TODO: implement a lookup table (C-rates) for this calculation
 				b.Sbmu[i].Soc.Value = soc * 100
-				b.Sbmu[i].Pcharge = b.Sbmu[i].Pmax
-				b.Sbmu[i].Pdischarge = b.Sbmu[i].Pmax
 				if over {
 					b.Sbmu[i].Pdc = -plimited * b.Sbmu[i].Cap // limit power drawn by battery for this tick to bring SOC to 100%
 					b.Sbmu[i].P = b.Sbmu[i].Pdc - socloss     // adjust power delivered from battery to account for losses
-					b.Sbmu[i].Pcharge = 0
 				} else if under {
 					b.Sbmu[i].Pdc = -plimited * b.Sbmu[i].Cap // limit power drawn by battery for this tick to bring SOC to 100%
 					b.Sbmu[i].P = b.Sbmu[i].Pdc - socloss     // adjust power delivered from battery to account for losses
-					b.Sbmu[i].Pdischarge = 0
 				}
 				// Update the BMS parameters
 				socsum = socsum + soc
 				b.P = b.P + b.Sbmu[i].P
 				b.Pdc = b.Pdc + b.Sbmu[i].Pdc
-				b.Pcharge = b.Pcharge + b.Sbmu[i].Pcharge
-				b.Pdischarge = b.Pdischarge + b.Sbmu[i].Pdischarge
 			} else {
 				b.Sbmu[i].P, b.Sbmu[i].Pdc, b.Sbmu[i].Pcharge, b.Sbmu[i].Pdischarge = 0, 0, 0, 0
 			}
@@ -578,6 +582,31 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 		b.P, b.Pdc, b.Pcharge, b.Pdischarge = 0, 0, 0, 0
 		for i, _ := range b.Sbmu {
 			b.Sbmu[i].P, b.Sbmu[i].Pdc, b.Sbmu[i].Pcharge, b.Sbmu[i].Pdischarge = 0, 0, 0, 0
+		}
+	}
+	if !b.DisableLUTs {
+		var ChargePCT float64
+		var DischargePCT float64
+		var tempFaultCharge, tempFaultDischarge bool
+		ChargePCT, tempFaultCharge = interpl(b.SocChargeVec, b.PChargeVec, b.Soc.Value)
+		DischargePCT, tempFaultDischarge = interpl(b.SocDischargeVec, b.PDischargeVec, b.Soc.Value)
+		b.Fault = b.Fault || tempFaultCharge || tempFaultDischarge
+		b.Pcharge = b.Pmax * ChargePCT * - 1
+		b.Pdischarge = b.Pmax * DischargePCT
+	} else {
+		b.Pcharge = -1 * b.Pmax
+		b.Pdischarge = b.Pmax
+		if b.Soc.Value >= b.Soc.FaultHighThreshold {
+			b.Pcharge = 0
+		}
+		if b.Soc.Value <= b.Soc.FaultLowThreshold {
+			b.Pdischarge = 0
+		}
+	}
+	for i, _ := range b.Sbmu {
+		if b.Sbmu[i].DcContactor {
+			b.Sbmu[i].Pcharge = b.Pcharge / float64(b.NumSbmus)
+			b.Sbmu[i].Pdischarge = b.Pdischarge / float64(b.NumSbmus)
 		}
 	}
 
