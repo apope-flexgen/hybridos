@@ -11,6 +11,7 @@ import (
 )
 
 func ProcessFims(msg fims.FimsMsgRaw) {
+	processFimsTiming.start()
 	if len(msg.Uri) >= len(ProcessName)+1 && msg.Uri[0:len(ProcessName)+1] == "/"+ProcessName {
 		msg.Uri = msg.Uri[len(ProcessName)+1:]
 	}
@@ -121,6 +122,27 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 			outputsMutex.RUnlock()
 			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBody})
 			msgBodyMutex.Unlock()
+		} else if len(msg.Frags) >= 1 && msg.Frags[0] == ProcessName && msg.Frags[1] == "timings" {
+			msgBodyMutex.Lock()
+			msgBody = make(map[string]interface{}, 10)
+			processFimsTiming.calculateAverage()
+			evalExpressionsTiming.calculateAverage()
+			processFimsTiming.mutex.RLock()
+			msgBody["fims_message_process_time_total"] = fmt.Sprintf("%fs", float64(processFimsTiming.total)/1000000000.0)
+			msgBody["fims_message_process_count"] = processFimsTiming.count
+			msgBody["fims_message_process_time_average"] = fmt.Sprintf("%.3fus", float64(processFimsTiming.average)/1000)
+			msgBody["fims_message_process_time_min"] = fmt.Sprintf("%.3fus", float64(processFimsTiming.min)/1000)
+			msgBody["fims_message_process_time_max"] = fmt.Sprintf("%.3fus", float64(processFimsTiming.max)/1000)
+			processFimsTiming.mutex.RUnlock()
+			evalExpressionsTiming.mutex.RLock()
+			msgBody["eval_expressions_time_total"] = fmt.Sprintf("%fs", float64(evalExpressionsTiming.total)/1000000000.0)
+			msgBody["eval_expressions_func_calls"] = evalExpressionsTiming.count
+			msgBody["eval_expressions_time_average"] = fmt.Sprintf("%.3fus", float64(evalExpressionsTiming.average)/1000)
+			msgBody["eval_expressions_time_min"] = fmt.Sprintf("%.3fus", float64(evalExpressionsTiming.min)/1000)
+			msgBody["eval_expressions_time_max"] = fmt.Sprintf("%.3fus", float64(evalExpressionsTiming.max)/1000)
+			evalExpressionsTiming.mutex.RUnlock()
+			f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBody})
+			msgBodyMutex.Unlock()
 		} else {
 			echoMutex.RLock()
 			for echoIndex, _ := range MetricsConfig.Echo {
@@ -145,6 +167,7 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 	// 		f.Send(fims.FimsMsg{Method: "set", Uri: msg.Replyto, Replyto: "", Body: msgBody})
 	// 	}
 	// }
+	processFimsTiming.stop()
 }
 
 // naked messages with a single value can be:

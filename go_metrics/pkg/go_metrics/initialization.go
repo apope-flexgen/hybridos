@@ -2516,7 +2516,7 @@ func GetSubscribeUris() {
 	for outputName, output = range MetricsConfig.Outputs {
 		if len(output.Uri) > 0 {
 			if len(output.Name) > 0 {
-				uriToOutputNameMap[output.Uri+"/"+output.Name] = outputName
+				uriToOutputNameMap[output.Uri+"/"+output.Name] = outputName // output.Name might be repeated, so we may overwrite another entry with this one
 				uriToOutputNameMap[output.Uri+"/"+outputName] = outputName
 			} else {
 				uriToOutputNameMap[output.Uri+"/"+outputName] = outputName
@@ -2713,33 +2713,54 @@ func setupConfigLogging() {
 
 func verifyInputConfigLogging() {
 	if _, ok := MetricsConfig.Meta["debug_inputs"]; ok && debug {
-		for i, debug_input := range debug_inputs {
+		copy_debug_inputs := make([]string, len(debug_inputs))
+		copy(copy_debug_inputs, debug_inputs)
+		i := 0
+		for _, debug_input := range copy_debug_inputs {
 			if _, inputExists := MetricsConfig.Inputs[debug_input]; !inputExists {
 				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_inputs", JType: simdjson.TypeArray}, JsonAccessor{Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug input '%s' does not exist; no debug info for this variable will be displayed", debug_input))
-				debug_inputs = append(debug_inputs[:i], debug_inputs[i+1:]...)
+				if i >= 0 && len(debug_inputs)-1 >= i {
+					debug_inputs = append(debug_inputs[:i], debug_inputs[i+1:]...)
+					i -= 1
+				}
 			}
+			i += 1
 		}
 	}
 }
 
 func verifyFilterConfigLogging() {
 	if _, ok := MetricsConfig.Meta["debug_filters"]; ok && debug {
-		for i, debug_filter := range debug_filters {
+		copy_debug_filters := make([]string, len(debug_filters))
+		copy(copy_debug_filters, debug_filters)
+		i := 0
+		for _, debug_filter := range copy_debug_filters {
 			if _, inputExists := MetricsConfig.Filters[debug_filter]; !inputExists {
 				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_filters", JType: simdjson.TypeArray}, JsonAccessor{Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug filter '%s' does not exist; no debug info for this variable will be displayed", debug_filter))
-				debug_filters = append(debug_filters[:i], debug_filters[i+1:]...)
+				if i >= 0 && len(debug_filters)-1 >= i {
+					debug_filters = append(debug_filters[:i], debug_filters[i+1:]...)
+					i -= 1
+				}
 			}
+			i += 1
 		}
 	}
 }
 
 func verifyOutputConfigLogging() {
 	if _, ok := MetricsConfig.Meta["debug_outputs"]; ok && debug {
-		for i, debug_output := range debug_outputs {
+		copy_debug_outputs := make([]string, len(debug_outputs))
+		copy(copy_debug_outputs, debug_outputs)
+		i := 0
+		for _, debug_output := range copy_debug_outputs {
 			if _, outputExists := MetricsConfig.Outputs[debug_output]; !outputExists {
 				logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "meta", JType: simdjson.TypeObject}, JsonAccessor{Key: "debug_outputs", JType: simdjson.TypeArray}, JsonAccessor{Index: i, JType: simdjson.TypeString}}, fmt.Errorf("debug output '%s' does not exist; no debug info for this variable will be displayed", debug_output))
-				debug_outputs = append(debug_outputs[:i], debug_outputs[i+1:]...)
+				if i >= 0 && len(debug_outputs)-1 >= i {
+					debug_outputs = append(debug_outputs[:i], debug_outputs[i+1:]...)
+					i -= 1
+				}
 			}
+			i += 1
 		}
 	}
 }

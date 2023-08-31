@@ -41,6 +41,8 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 	// listen for messages
 	go f.ReceiveChannelRaw(fimsMap)
 
+	processFimsTiming.init()
+	evalExpressionsTiming.init()
 	go func() {
 		for {
 			ProcessFims(<-fimsMap) // this is blocking, so we won't create a bajillion instances of the goroutine below
@@ -296,6 +298,7 @@ func ProcessDirectSets() {
 }
 
 func EvaluateExpressions() {
+	evalExpressionsTiming.start()
 	filterNeedsEvalMutex.RLock()
 	filterNeedsEvalCopy := make(map[string]bool, len(filterNeedsEval))
 	for key, val := range filterNeedsEval {
@@ -470,6 +473,7 @@ func EvaluateExpressions() {
 			metricsMutex[q+1].RLock() // lock this value before we try to access the next metrics object
 		}
 	}
+	evalExpressionsTiming.stop()
 }
 
 /**

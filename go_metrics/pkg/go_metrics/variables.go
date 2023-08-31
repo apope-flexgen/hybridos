@@ -121,3 +121,7 @@ var attributeChanged bool
 var elementValue interface{}
 var msgBodyIn interface{}
 var msgBodyInMutex sync.RWMutex
+
+// timing variables
+var processFimsTiming Timing
+var evalExpressionsTiming Timing
