@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/signal"
 	"strings"
 	"time"
 
@@ -25,6 +26,7 @@ import (
 	"github.com/flexgen-power/scheduler/internal/docfetch"
 	"github.com/flexgen-power/scheduler/internal/flextime"
 	"github.com/flexgen-power/scheduler/internal/websockets"
+	"golang.org/x/sys/unix"
 )
 
 // isPrimaryScheduler indicates if the box Scheduler is running on is operating in primary mode.
@@ -50,6 +52,11 @@ func main() {
 
 	log.Infof("Starting Scheduler")
 	defer log.Infof("Exiting Scheduler")
+
+	// setup os signal handling to catch SIGTERM, SIGINT
+	// (Note: SIGKILL and SIGSTOP cannot be handled. Neither can synchronous signals like segfaults from within the program)
+	processSignalChannel := make(chan os.Signal, 1) // channel buffer required since os/signal package does not block on sending
+	signal.Notify(processSignalChannel, unix.SIGTERM, unix.SIGINT)
 
 	// configure time zone variable
 	localTimezone, err = flextime.GetLocalTimezone()
@@ -118,6 +125,8 @@ func main() {
 			processSiteConnectionUpdate(connUpdate)
 		case <-websockets.SocketServerConnUpdates:
 			f.SendPub("/scheduler/connected", buildConnectionMap())
+		case sig := <-processSignalChannel:
+			log.Fatalf("Terminating after receiving handled process signal: %d (%s)", sig, sig.String())
 		}
 	}
 }
