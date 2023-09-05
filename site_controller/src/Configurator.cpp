@@ -18,18 +18,16 @@
 #include <cjson/cJSON.h>
 
 /**
- * @brief Constructor initializes all pointers
- *
- * @param pMan: Pointer to the type manager
- * @param pCVM: Pointer to the component variable map
- * @param pAVM: Pointer to the asset variable map
- * @param pc: Pointer to the primary controller boolean
+ * Constructor that assigns internal variables.
+ * @param pMan pointer to the Type_Manager being configured
+ * @param pCVM pointer to full component variable map containing all component uris and Fims_Objects
+ * @param pc pointer to the primary status flag for this controller
  */
-Type_Configurator::Type_Configurator(Type_Manager* pMan, std::map<std::string, std::vector<Fims_Object*>>* pCVM, std::map<std::string, Fims_Object*>* pAVM, bool* pc) {
+Type_Configurator::Type_Configurator(Type_Manager* pMan, std::map <std::string, std::vector<Fims_Object*>>* pCVM, bool* pc)
+{
     // Set internal pointers to passed-in pointers
     p_manager = pMan;
-    p_comp_var_map = pCVM;
-    p_asset_var_map = pAVM;
+    pCompVarMap = pCVM;
     p_is_primary_controller = pc;
 
     // config_validation should be true in default case

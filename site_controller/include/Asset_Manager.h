@@ -31,8 +31,7 @@ public:
     ~Asset_Manager();
 
     // init methods
-    int debugLoopCount;
-    bool asset_create(cJSON* pJsonRoot, bool* primary_controller);
+    bool asset_create(cJSON *pJsonRoot, bool* primary_controller);
 
     void set_min_generators_active(int);
 
@@ -256,9 +255,8 @@ protected:
     Type_Configurator* generator_configurator;
     Type_Configurator* solar_configurator;
 
-    // control variables
+    // Map of all component uris to one or more Fims_Objects
     std::map<std::string, std::vector<Fims_Object*>> component_var_map;
-    std::map<std::string, Fims_Object*> asset_var_map;
 
     void handle_pubs(char** pfrags, int nfrags, char* body);
     void handle_pub_status_options(cJSON* cJcomp, Fims_Object* fimsComp, int varArraySize);
@@ -270,8 +268,6 @@ protected:
     void handle_del(int nfrags, char* body);
     void send_all_asset_data(char* uri);
 
-    void print_component_var_map();
-    void print_asset_var_map();
     bool build_configurators(void);
 };
 

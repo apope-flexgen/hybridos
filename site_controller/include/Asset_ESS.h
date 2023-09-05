@@ -17,8 +17,7 @@
 
 class Asset_ESS : public Asset {
 public:
-    Asset_ESS();
-    virtual ~Asset_ESS();
+    Asset_ESS ();
 
     // control
     bool start(void);
@@ -72,6 +71,7 @@ public:
 
     // internal functions
     void process_asset();
+    void set_raw_status() override;
     void update_asset(void);
     void send_to_components(void) override;
     bool handle_set(std::string uri, cJSON& body);
@@ -82,7 +82,8 @@ protected:
     void set_required_variables(void);
     bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
     bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
+    bool configure_typed_asset_fims_vars(Type_Configurator* configurator);
+    bool replace_typed_raw_fims_vars() override;
     int start_value;
     int stop_value;
     int enter_standby_value;
@@ -149,36 +150,35 @@ protected:
     // status
     bool energy_configured;  // Flag to indicate whether chargeable/dischargeable_energy was configured
 
-    // TODO these should all be regular Fims_Objects rather than pointers. Init'd to NULL for now.
-    // setpoints
-    Fims_Object* grid_mode_setpoint = NULL;
-    Fims_Object* power_mode_setpoint = NULL;
-    Fims_Object* power_factor_setpoint = NULL;
-    Fims_Object* voltage_slew_setpoint = NULL;  // units in %/s
-    Fims_Object* voltage_setpoint = NULL;
-    Fims_Object* frequency_setpoint = NULL;
+    Fims_Object grid_mode_setpoint;
+    Fims_Object power_mode_setpoint;
+    Fims_Object power_factor_setpoint;
+    Fims_Object voltage_slew_setpoint; // units in %/s
+    Fims_Object voltage_setpoint;
+    Fims_Object frequency_setpoint;
     // TODO: these are Sungrow specific fields, remove and cleanup
-    Fims_Object* pcs_a_nominal_voltage_setpoint = NULL;
-    Fims_Object* pcs_b_nominal_voltage_setpoint = NULL;
+    Fims_Object pcs_a_nominal_voltage_setpoint;
+    Fims_Object pcs_b_nominal_voltage_setpoint;
     // status points
-    Fims_Object* soh = NULL;  // battery state of health
-    Fims_Object* chargeable_power = NULL;
-    Fims_Object* dischargeable_power = NULL;
-    Fims_Object* chargeable_power_raw = NULL;
-    Fims_Object* dischargeable_power_raw = NULL;
-    Fims_Object* soc = NULL;      // battery state of charge
-    Fims_Object* soc_raw = NULL;  // unscaled battery state of charge from asset
-    Fims_Object* chargeable_energy = NULL;
-    Fims_Object* dischargeable_energy = NULL;
-    Fims_Object* chargeable_energy_raw = NULL;
-    Fims_Object* dischargeable_energy_raw = NULL;
-    Fims_Object* max_temp = NULL;  // battery max temperature
-    Fims_Object* min_temp = NULL;  // battery min temperature
-    Fims_Object* racks_in_service = NULL;
-    Fims_Object* dc_contactors_closed = NULL;
-    Fims_Object* autobalancing_status = NULL;  // Status of the autobalancing register
-    Fims_Object* voltage_min = NULL;
-    Fims_Object* voltage_max = NULL;
+    Fims_Object soh; // battery state of health
+    Fims_Object chargeable_power;
+    Fims_Object dischargeable_power;
+    Fims_Object chargeable_power_raw;
+    Fims_Object dischargeable_power_raw;
+    Fims_Object soc; // battery state of charge
+    Fims_Object soc_raw; // unscaled battery state of charge from asset
+    Fims_Object chargeable_energy;
+    Fims_Object dischargeable_energy;
+    Fims_Object chargeable_energy_raw;
+    Fims_Object dischargeable_energy_raw;
+    Fims_Object max_temp; // battery max temperature
+    Fims_Object min_temp; // battery min temperature
+    Fims_Object racks_in_service;
+    Fims_Object dc_contactors_closed;
+    Fims_Object autobalancing_status; // Status of the autobalancing register
+    Fims_Object voltage_min;
+    Fims_Object voltage_max;
+    Fims_Object status;
 
     // uris
     std::string uri_start;

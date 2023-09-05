@@ -47,14 +47,13 @@ public:
 class Type_Configurator {
 public:
     // functions
-    Type_Configurator(Type_Manager* pMan, std::map<std::string, std::vector<Fims_Object*>>* pCVM, std::map<std::string, Fims_Object*>* pAVM, bool* pc);
+    Type_Configurator(Type_Manager* pMan, std::map <std::string, std::vector<Fims_Object*>>* pCVM, bool* pc);
     bool create_assets(void);
     // variables
     cJSON* asset_type_root;
     Asset_Configurator asset_config;
     Type_Manager* p_manager;
-    std::map<std::string, Fims_Object*>* p_asset_var_map;
-    std::map<std::string, std::vector<Fims_Object*>>* p_comp_var_map;
+    std::map <std::string, std::vector<Fims_Object*>>* pCompVarMap;
     bool* p_is_primary_controller;
     bool config_validation;  // flag to improve readability. removing config validation allows only necessary components to be configured in unit tests
 private:

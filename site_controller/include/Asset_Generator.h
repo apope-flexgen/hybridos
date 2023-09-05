@@ -21,7 +21,6 @@ class LDSS;
 class Asset_Generator : public Asset {
 public:
     Asset_Generator();
-    virtual ~Asset_Generator();
 
     // control
     bool start(void);
@@ -57,6 +56,7 @@ public:
 
     // internal functions
     void process_asset(void);
+    void set_raw_status() override;
     void update_asset(void);
     void send_to_components(void) override;
     bool handle_set(std::string uri, cJSON& body);
@@ -67,7 +67,7 @@ protected:
     void set_required_variables(void);
     bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
     bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
+    bool configure_typed_asset_fims_vars(Type_Configurator* configurator);
     uint64_t starting_status_mask;
     uint64_t stopping_status_mask;
 
@@ -77,7 +77,8 @@ protected:
     int grid_following_value;
 
     // setpoints
-    Fims_Object* grid_mode_setpoint;
+    Fims_Object grid_mode_setpoint;
+    Fims_Object status;
 
     // control
     float maint_active_power_setpoint;

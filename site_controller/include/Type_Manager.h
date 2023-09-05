@@ -48,24 +48,23 @@ public:
     const char* get_asset_type_id();
 
     // configuration functions
-    void print_alarm_fault_map(std::map<std::string, Fims_Object*>* const asset_var_map);
+    void print_alarm_fault_map();
     virtual void configure_base_class_list(void) = 0;
     virtual bool configure_type_manager(Type_Configurator* configurator) = 0;
     virtual Asset* build_new_asset(void) = 0;
     virtual void append_new_asset(Asset*) = 0;
 
     // Fims
-    bool add_type_data_to_buffer(fmt::memory_buffer& buf, std::map<std::string, Fims_Object*>* asset_var_map);
-    bool handle_get(fims_message* pmsg, std::map<std::string, Fims_Object*>* asset_var_map);
-    bool handle_summary_get(fims_message* pmsg);
-    void handle_set(fims_message& msg);
-    bool process_pub(std::string uri, std::vector<std::string>* names, uint64_t value);
+    bool add_type_data_to_buffer(fmt::memory_buffer &buf);
+    bool handle_get(fims_message *pmsg);
+    bool handle_summary_get(fims_message *pmsg);
+    void handle_set(fims_message &msg);
 
     int get_num_avail(void);
     int get_num_parsed(void);
     int get_num_running(void);
 
-    void publish_assets(assetType type, std::map<std::string, Fims_Object*>* asset_var_map);
+    void publish_assets(assetType type);
     void send_to_components(void);
 
     void set_clear_faults(void);

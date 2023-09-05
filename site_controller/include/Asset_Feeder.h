@@ -18,7 +18,6 @@
 class Asset_Feeder : public Asset {
 public:
     Asset_Feeder();
-    virtual ~Asset_Feeder();
 
     // configuration
     bool validate_poi_feeder_configuration(Type_Configurator* configurator);
@@ -40,7 +39,8 @@ public:
     float get_power_factor();
 
     // internal functions
-    void process_asset(bool* status);
+    void process_asset();
+    void set_raw_status() override;
     void process_potential_active_power() override;
     void update_asset(void);
     void send_to_components(void) override;
@@ -52,7 +52,7 @@ protected:
     void set_required_variables(void);
     bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
     bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
+    bool configure_typed_asset_fims_vars(Type_Configurator* configurator);
     int open_value;
     int close_value;
     int close_permissive_value;
@@ -60,12 +60,12 @@ protected:
     int reset_value;
 
     // status points
-    Fims_Object* grid_voltage_l1;
-    Fims_Object* grid_voltage_l2;
-    Fims_Object* grid_voltage_l3;
-    Fims_Object* grid_frequency;
-    Fims_Object* breaker_status;
-    Fims_Object* utility_status;  // Register tracking the status of the utility for sites that support it
+    Fims_Object grid_voltage_l1;
+    Fims_Object grid_voltage_l2;
+    Fims_Object grid_voltage_l3;
+    Fims_Object grid_frequency;
+    Fims_Object breaker_status;
+    Fims_Object utility_status;    // Register tracking the status of the utility for sites that support it
 
     // control
     fimsCtl breaker_open_ctl;

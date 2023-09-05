@@ -50,16 +50,16 @@ const char* Type_Manager::get_asset_type_id() {
 /**
  * @brief Handles GETs to URIs beginning with /assets/<asset type>.
  * @param pmsg Pointer to FIMS message struct containing important data like target URI, reply-to URI, etc.
- * @param asset_var_map Map of all asset variables to be referenced when building the response.
  * @return True if the GET was handled successfully, or false if there was an error.
- */
-bool Type_Manager::handle_get(fims_message* pmsg, std::map<std::string, Fims_Object*>* asset_var_map) {
+*/
+bool Type_Manager::handle_get(fims_message *pmsg)
+{
     // clear buffer for use
     send_FIMS_buf.clear();
 
     // URI is /assets/<asset type>
     if (pmsg->nfrags < 3) {
-        if (!add_type_data_to_buffer(send_FIMS_buf, asset_var_map))
+        if (!add_type_data_to_buffer(send_FIMS_buf))
             return false;
         return send_buffer_to(pmsg->replyto, send_FIMS_buf);
     }
@@ -77,7 +77,7 @@ bool Type_Manager::handle_get(fims_message* pmsg, std::map<std::string, Fims_Obj
     }
 
     // let target asset instance handle the GET
-    return target_asset->handle_get(pmsg, asset_var_map);
+    return target_asset->handle_get(pmsg);
 }
 
 /**
@@ -95,10 +95,10 @@ bool Type_Manager::handle_summary_get(fims_message* pmsg) {
 /**
  * @brief Adds a JSON object to the given buffer with all of the Type Manager's data.
  * @param buf The buffer to which the JSON object must be added.
- * @param asset_var_map The map containing all Asset endpoints in the form of the std::string uri and Fims_Object Asset data.
  * @return True if the data was added successfully, or false if there was an error.
- */
-bool Type_Manager::add_type_data_to_buffer(fmt::memory_buffer& buf, std::map<std::string, Fims_Object*>* asset_var_map) {
+*/
+bool Type_Manager::add_type_data_to_buffer(fmt::memory_buffer &buf)
+{
     // begin asset type data with opening curly brace
     bufJSON_StartObject(buf);
 
@@ -112,7 +112,7 @@ bool Type_Manager::add_type_data_to_buffer(fmt::memory_buffer& buf, std::map<std
         // add asset instance's ID with colon
         bufJSON_AddId(buf, pAssets[i]->get_id().c_str());
         // add asset instance's data
-        if (!pAssets[i]->add_asset_data_to_buffer(buf, asset_var_map, strcmp(asset_type_id, FEEDERS_TYPE_ID) == 0)) {
+        if (!pAssets[i]->add_asset_data_to_buffer(buf, strcmp(asset_type_id, FEEDERS_TYPE_ID) == 0)) {
             FPS_ERROR_LOG("Error adding asset instance with type %s and index %zu to the type manager data object.", asset_type_id, i);
             return false;
         }
@@ -190,26 +190,8 @@ void Type_Manager::handle_set(fims_message& msg) {
     }
 }
 
-/**
- * New function for processing status/alarm/fault. Acts as an endpoint for Asset_Manager and
- * Asset-instance level variables by finding the appropriate Asset instance based on uri
- * @param uri_endpoint The uri of the Fims_Object in the component map
- * @param names The names of the status/alarm/fault
- * @param value The status/alarm/fault value
- */
-bool Type_Manager::process_pub(std::string uri, std::vector<std::string>* names, uint64_t value) {
-    // Find and update the asset level alarm/fault variables
-    for (int i = 0; i < numParsed; i++) {
-        // Find the matching asset instance
-        if (uri.find(std::string(pAssets[i]->get_id()) + '/') < uri.size()) {
-            // Send the updated value
-            return pAssets[i]->process_status_pub(names, value);
-        }
-    }
-    return false;
-}
-
-int Type_Manager::get_num_avail(void) {
+int Type_Manager::get_num_avail(void)
+{
     return numAvail;
 }
 
@@ -224,13 +206,14 @@ int Type_Manager::get_num_running(void) {
 // Sends one PUB for each asset instance and one PUB for the asset type summary data.
 // If there are no configured instances for this asset type, the summary will not be published.
 // The passed type must match the Type_Manager's asset type.
-void Type_Manager::publish_assets(assetType type, std::map<std::string, Fims_Object*>* asset_var_map) {
+void Type_Manager::publish_assets(assetType type)
+{
     std::string asset_type_base_uri = "/assets/" + std::string(asset_type_id) + "/";
 
     // publish data for each asset instance
     for (size_t i = 0; i < pAssets.size(); ++i) {
         send_FIMS_buf.clear();
-        if (!pAssets[i]->add_asset_data_to_buffer(send_FIMS_buf, asset_var_map, type == FEEDERS)) {
+        if (!pAssets[i]->add_asset_data_to_buffer(send_FIMS_buf, type == FEEDERS)) {
             FPS_ERROR_LOG("Error adding asset instance with type %s and index %zu to the type manager publish.", asset_type_id, i);
             return;
         }

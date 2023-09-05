@@ -73,7 +73,7 @@ public:
 
     void generate_asset_type_summary_json(fmt::memory_buffer& buf, const char* const var = NULL) override;
 
-    void process_asset_data(std::map<std::string, Fims_Object*>* asset_var_map);
+    void process_asset_data();
     // No feeder data in update_asset_data()
 
     const std::string get_poi_id(void);

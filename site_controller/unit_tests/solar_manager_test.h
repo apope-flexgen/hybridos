@@ -177,8 +177,9 @@ void Solar_Manager_Mock::set_demand_modes(void) {
 
 void Solar_Manager_Mock::set_all_active_powers(std::vector<float>& active_powers) {
     auto activePowerIT = active_powers.begin();
-    for (auto it = pAssets.begin(); it != pAssets.end(); ++it) {
-        (*it)->active_power->value.set(*(activePowerIT++));
+    for (auto it = pAssets.begin(); it != pAssets.end(); ++it)
+    {
+        (*it)->active_power.value.set(*(activePowerIT++));
     }
 }
 
@@ -201,17 +202,17 @@ void Solar_Manager_Mock::set_all_rated_active_powers(float rated) {
         (*it)->rated_active_power_kw = rated;
 }
 
-float Solar_Manager_Mock::get_activePowerSetpoint(int index) {
-    return pAssets[index]->active_power_setpoint->component_control_value.value_float;
+float Solar_Manager_Mock::get_activePowerSetpoint(int index)
+{
+    return pAssets[index]->active_power_setpoint.component_control_value.value_float;
 }
 
 void Solar_Manager_Mock::configure_solar_manager(int numParse, bool* primary_controller) {
     // Configure ESS Manager with the correct number of ESS instances for this test case
     cJSON* solarRoot = NULL;
-    std::map<std::string, std::vector<Fims_Object*>>* const component_var_map = new std::map<std::string, std::vector<Fims_Object*>>;
-    std::map<std::string, Fims_Object*>* const asset_var_map = new std::map<std::string, Fims_Object*>;
+    std::map <std::string, std::vector<Fims_Object*>> * const component_var_map = new std::map<std::string, std::vector<Fims_Object*>>;
     solarRoot = this->generate_solarRoot(numParse);
-    Type_Configurator* solar_configurator = new Type_Configurator(this, component_var_map, asset_var_map, primary_controller);
+    Type_Configurator* solar_configurator = new Type_Configurator(this, component_var_map, primary_controller);
     solar_configurator->asset_type_root = solarRoot;
     solar_configurator->config_validation = false;
     bool configure_success = solar_configurator->create_assets();

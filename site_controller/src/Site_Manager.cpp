@@ -642,9 +642,9 @@ void Site_Manager::build_JSON_site_cops(fmt::memory_buffer& buf, const char* con
     // cops status
     bufJSON_AddNumberCheckVar(buf, "cops_heartbeat", cops_heartbeat.value.value_int, var);
     bufJSON_AddNumberCheckVar(buf, "pid", process_id.value.value_int, var);
-    bufJSON_AddStringCheckVar(buf, "version_tag", release_version_tag.value.value_string, var);
-    bufJSON_AddStringCheckVar(buf, "version_commit", release_version_commit.value.value_string, var);
-    bufJSON_AddStringCheckVar(buf, "version_build", release_version_build.value.value_string, var);
+    bufJSON_AddStringCheckVar(buf, "version_tag", release_version_tag.value.value_string.c_str(), var);
+    bufJSON_AddStringCheckVar(buf, "version_commit", release_version_commit.value.value_string.c_str(), var);
+    bufJSON_AddStringCheckVar(buf, "version_build", release_version_build.value.value_string.c_str(), var);
 
     if (var == NULL)
         bufJSON_EndObject(buf);  // } JSON_object

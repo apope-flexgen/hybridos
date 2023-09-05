@@ -242,7 +242,7 @@ bool Freq_Resp_Component::parse_json_config(cJSON* JSON_config, bool* p_flag, In
         FPS_ERROR_LOG("Frequency Response components cannot have spaces or slashes in their IDs. '%s' contains a slash.", JSON_component_id->valuestring);
         return false;
     }
-    component_id.value.value_string = strdup(JSON_component_id->valuestring);
+    component_id.value.value_string = JSON_component_id->valuestring;
 
     // parse name string
     cJSON* JSON_component_name = cJSON_GetObjectItem(JSON_config, "component_name");

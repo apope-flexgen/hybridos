@@ -30,27 +30,6 @@ Asset_Feeder::Asset_Feeder() {
     set_required_variables();
 }
 
-Asset_Feeder::~Asset_Feeder() {
-    if (grid_voltage_l1)
-        delete grid_voltage_l1;
-    grid_voltage_l1 = NULL;
-    if (grid_voltage_l2)
-        delete grid_voltage_l2;
-    grid_voltage_l2 = NULL;
-    if (grid_voltage_l3)
-        delete grid_voltage_l3;
-    grid_voltage_l3 = NULL;
-    if (grid_frequency)
-        delete grid_frequency;
-    grid_frequency = NULL;
-    if (breaker_status)
-        delete breaker_status;
-    breaker_status = NULL;
-    if (utility_status)
-        delete utility_status;
-    utility_status = NULL;
-}
-
 // required variables checked for in configuration validation
 void Asset_Feeder::set_required_variables(void) {
     required_variables.push_back("breaker_status");
@@ -61,28 +40,32 @@ void Asset_Feeder::set_required_variables(void) {
 
 bool Asset_Feeder::get_breaker_status(void) {
     // breaker status can either a mask or a boolean
-    return (is_running() || breaker_status->value.value_bool);
+    return (is_running() || breaker_status.value.value_bool);
 }
 
 /**
  * Status of the utility tracked by this feed register
  * Only supported for some sites, else will always be false
  */
-bool Asset_Feeder::get_utility_status(void) {
-    return utility_status->value.value_bool;
+bool Asset_Feeder::get_utility_status(void)
+{
+    return utility_status.value.value_bool;
 }
 
-float Asset_Feeder::get_gridside_frequency(void) {
-    return grid_frequency->value.value_float;
+float Asset_Feeder::get_gridside_frequency(void)
+{
+    return grid_frequency.value.value_float;
 }
 
-float Asset_Feeder::get_gridside_avg_voltage(void) {
-    float sumVolts = grid_voltage_l1->value.value_float + grid_voltage_l2->value.value_float + grid_voltage_l3->value.value_float;
-    return (numPhases != 0.0 ? sumVolts / numPhases : 0);
+float Asset_Feeder::get_gridside_avg_voltage(void)
+{
+    float sumVolts = grid_voltage_l1.value.value_float + grid_voltage_l2.value.value_float + grid_voltage_l3.value.value_float;
+    return (numPhases != 0.0 ? sumVolts/numPhases : 0);
 }
 
-float Asset_Feeder::get_power_factor() {
-    return power_factor->value.value_float;
+float Asset_Feeder::get_power_factor()
+{
+    return power_factor.value.value_float;
 }
 
 void Asset_Feeder::breaker_reset(void) {
@@ -107,8 +90,9 @@ bool Asset_Feeder::breaker_close_permissive_remove(void) {
     return send_to_comp_uri(close_permissive_remove_value, uri_breaker_close_permissive_remove);
 }
 
-void Asset_Feeder::set_active_power_setpoint(float setpoint) {
-    active_power_setpoint->component_control_value.value_float = setpoint;
+void Asset_Feeder::set_active_power_setpoint(float setpoint)
+{
+    active_power_setpoint.component_control_value.value_float = setpoint;
 }
 
 bool Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
@@ -225,22 +209,26 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator) {
     return true;
 }
 
-/*
-    Each asset has Fims_Object pointers to relevant component variables for that asset. This function points
-    those pointers at the correct variables in the variable maps.
-    WARNING: "raw" values MUST be configured BEFORE their associated calculated values. This is because calculated
-             values will sever the asset_var_map connection to the component variable and the raw values need to
-             come from the component
-    Ex: `dischargeable_power_raw` must be configured before `dischargeable_power`
-*/
-bool Asset_Feeder::configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map) {
-    configure_single_fims_var(asset_var_map, &breaker_status, "breaker_status", Bool);
-    configure_single_fims_var(asset_var_map, &utility_status, "utility_status", Bool);
-    configure_single_fims_var(asset_var_map, &grid_voltage_l1, "grid_voltage_l1");
-    configure_single_fims_var(asset_var_map, &grid_voltage_l2, "grid_voltage_l2");
-    configure_single_fims_var(asset_var_map, &grid_voltage_l3, "grid_voltage_l3");
-    configure_single_fims_var(asset_var_map, &grid_frequency, "grid_frequency");
-    return true;
+/**
+ * Each asset has hard-coded Fims_Object member variables that will always be used internally by this asset. This function
+ * the asset_var_map to these variables, which also sets up a connection between these variables and the component_var_map
+ * down the line.
+ * WARNING: "raw" values MUST be configured BEFORE their associated calculated values. This is because calculated
+ *          values will sever the asset_var_map connection to the component variable and the raw values need to
+ *          come from the component
+ * Ex: `dischargeable_power_raw` must be configured here, and `dischargeable_power` must be configured in the 
+ * associated replace_raw_fims_vars() function
+ * 
+ * Raw values are currently unused for this Asset type
+ */
+bool Asset_Feeder::configure_typed_asset_fims_vars(Type_Configurator* configurator)
+{
+    return configure_single_fims_var(&breaker_status,"breaker_status",configurator,Bool) &&
+           configure_single_fims_var(&utility_status,"utility_status",configurator,Bool) &&
+           configure_single_fims_var(&grid_voltage_l1,"grid_voltage_l1",configurator) &&
+           configure_single_fims_var(&grid_voltage_l2,"grid_voltage_l2",configurator) &&
+           configure_single_fims_var(&grid_voltage_l3,"grid_voltage_l3",configurator) &&
+           configure_single_fims_var(&grid_frequency,"grid_frequency",configurator);
 }
 
 bool Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configurator) {
@@ -250,7 +238,8 @@ bool Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configur
     }
 
     // does config validation that was not done earlier since we did not know which feeder was POI at the time
-    if (!validate_config(configurator->p_asset_var_map)) {
+    if (!validate_config())
+    {
         FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder failed base Asset validate config check\n");
         return false;
     }
@@ -310,10 +299,17 @@ bool Asset_Feeder::handle_set(std::string uri, cJSON& body) {
     return Asset::send_setpoint(uri, current_setpoint);
 }
 
-void Asset_Feeder::process_asset(bool* status) {
-    if (status) {
-        raw_status = *status;
-    }
+/**
+ * Update the asset status with the measurement received on the breaker_status Fims_Object
+ */
+void Asset_Feeder::set_raw_status()
+{
+    raw_status = breaker_status.value.value_bit_field;
+}
+
+void Asset_Feeder::process_asset()
+{
+    set_raw_status();
     return Asset::process_asset();
 }
 
@@ -348,19 +344,19 @@ bool Asset_Feeder::generate_asset_ui(fmt::memory_buffer& buf, const char* const 
     goodBody = lock_mode.makeJSONObject(buf, var) && goodBody;
 
     // now add the rest of the controls
-    breaker_close_ctl.enabled = !breaker_status->value.value_bool && inMaintenance;
+    breaker_close_ctl.enabled = !breaker_status.value.value_bool && inMaintenance;
     goodBody = breaker_close_ctl.makeJSONObject(buf, var) && goodBody;
 
-    breaker_close_perm_ctl.enabled = !breaker_status->value.value_bool && !breaker_close_permissive_status && inMaintenance;
+    breaker_close_perm_ctl.enabled = !breaker_status.value.value_bool && !breaker_close_permissive_status && inMaintenance;
     goodBody = breaker_close_perm_ctl.makeJSONObject(buf, var) && goodBody;
 
     breaker_close_perm_remove_ctl.enabled = breaker_close_permissive_status && inMaintenance;
     goodBody = breaker_close_perm_remove_ctl.makeJSONObject(buf, var) && goodBody;
 
-    breaker_open_ctl.enabled = breaker_status->value.value_bool && inMaintenance;
+    breaker_open_ctl.enabled = breaker_status.value.value_bool && inMaintenance;
     goodBody = breaker_open_ctl.makeJSONObject(buf, var) && goodBody;
 
-    breaker_reset_ctl.enabled = !breaker_status->value.value_bool && inMaintenance;
+    breaker_reset_ctl.enabled = !breaker_status.value.value_bool && inMaintenance;
     goodBody = breaker_reset_ctl.makeJSONObject(buf, var) && goodBody;
 
     return (goodBody);

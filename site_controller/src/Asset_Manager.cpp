@@ -28,8 +28,6 @@ Asset_Manager::Asset_Manager() {
     generator_manager = new Generator_Manager();
     solar_manager = new Solar_Manager();
 
-    debugLoopCount = 0;
-
     send_FIMS_buf = fmt::memory_buffer();
 }
 
@@ -44,25 +42,6 @@ Asset_Manager::~Asset_Manager() {
     delete feeder_configurator;
     delete generator_configurator;
     delete solar_configurator;
-
-    // Clear maps
-    for (auto asset_it = asset_var_map.begin(); asset_it != asset_var_map.end(); ++asset_it)
-        if (asset_it->second) {
-            delete asset_it->second;
-            // Assign NULL so pointer in other containers doesn't delete
-            asset_it->second = NULL;
-        }
-
-    for (auto component_it = component_var_map.begin(); component_it != component_var_map.end(); ++component_it) {
-        // Iterate through list of Fims_Objects to which this component URI acts as a source. Delete them
-        for (auto var_it = component_it->second.begin(); var_it != component_it->second.end(); ++var_it) {
-            if (*var_it) {
-                delete *var_it;
-                // Assign NULL so pointer in other containers does not delete
-                *var_it = NULL;
-            }
-        }
-    }
 }
 
 /****************************************************************************************/
@@ -192,24 +171,6 @@ void Asset_Manager::handle_pub_status_options(cJSON* cJcomp, Fims_Object* fimsCo
             fimsComp->value.set((uint64_t)cJitemValue->valueint);
         } else
             FPS_ERROR_LOG("Asset_Manager::process_pub Index into component status string array out of bounds, %d, updateAsset()\n", cJitemValue->valueint);
-    }
-
-    // Find the matching Fims_Objects in the assets map to update Asset-level variables (only if ID name = "status")
-    if (strcmp(fimsComp->get_variable_id(), "status") != 0) {
-        return;
-    }
-    auto asset_it = asset_var_map.begin();
-    for (asset_it = asset_it; asset_it != asset_var_map.end(); asset_it++) {
-        if (asset_it->second == fimsComp) {
-            if (asset_it->first.find("/assets/ess/") < asset_it->first.size())
-                ess_manager->process_pub(asset_it->first, &fimsComp->options_name, fimsComp->value.value_bit_field);
-            else if (asset_it->first.find("/assets/feeders/") < asset_it->first.size())
-                feeder_manager->process_pub(asset_it->first, &fimsComp->options_name, fimsComp->value.value_bit_field);
-            else if (asset_it->first.find("/assets/generators/") < asset_it->first.size())
-                generator_manager->process_pub(asset_it->first, &fimsComp->options_name, fimsComp->value.value_bit_field);
-            else if (asset_it->first.find("/assets/solar/") < asset_it->first.size())
-                solar_manager->process_pub(asset_it->first, &fimsComp->options_name, fimsComp->value.value_bit_field);
-        }
     }
 }
 
@@ -343,7 +304,7 @@ void Asset_Manager::handle_get(fims_message* pmsg) {
 
     // have the appropriate Type Manager handle the GET.
     // the ESS page is currently the only Assets page on the UI that handles naked values
-    if (!manager->handle_get(pmsg, &asset_var_map)) {
+    if (!manager->handle_get(pmsg)) {
         p_fims->Send("set", pmsg->replyto, NULL, "Error building response. Check site_controller logs.");
         return;
     }
@@ -408,7 +369,7 @@ void Asset_Manager::send_all_asset_data(char* uri) {
         // add asset type ID (i.e. "ess", "solar", etc.) with colon
         bufJSON_AddId(send_FIMS_buf, managers[i]->get_asset_type_id());
         // add asset type data surrounded by braces
-        if (!managers[i]->add_type_data_to_buffer(send_FIMS_buf, &asset_var_map)) {
+        if (!managers[i]->add_type_data_to_buffer(send_FIMS_buf)) {
             p_fims->Send("set", uri, NULL, "Error adding data to response.");
             return;
         }
@@ -492,11 +453,12 @@ bool Asset_Manager::asset_create(cJSON* pJsonRoot, bool* primary_controller) {
     return true;
 }
 
-bool Asset_Manager::build_configurators(void) {
-    ess_configurator = new Type_Configurator(ess_manager, &component_var_map, &asset_var_map, is_primary);
-    feeder_configurator = new Type_Configurator(feeder_manager, &component_var_map, &asset_var_map, is_primary);
-    generator_configurator = new Type_Configurator(generator_manager, &component_var_map, &asset_var_map, is_primary);
-    solar_configurator = new Type_Configurator(solar_manager, &component_var_map, &asset_var_map, is_primary);
+bool Asset_Manager::build_configurators(void)
+{
+    ess_configurator = new Type_Configurator(ess_manager, &component_var_map, is_primary);
+    feeder_configurator = new Type_Configurator(feeder_manager, &component_var_map, is_primary);
+    generator_configurator = new Type_Configurator(generator_manager, &component_var_map, is_primary);
+    solar_configurator = new Type_Configurator(solar_manager, &component_var_map, is_primary);
 
     if (!ess_configurator || !feeder_configurator || !generator_configurator || !solar_configurator) {
         FPS_ERROR_LOG("Asset_Manager::build_configurators ~ Error when allocating memory for Type Configurators. Failing configuration.\n");
@@ -1101,10 +1063,10 @@ void Asset_Manager::publish_assets() {
     if (!*is_primary)
         return;
 
-    ess_manager->publish_assets(ESS, &asset_var_map);
-    feeder_manager->publish_assets(FEEDERS, &asset_var_map);
-    generator_manager->publish_assets(GENERATORS, &asset_var_map);
-    solar_manager->publish_assets(SOLAR, &asset_var_map);
+    ess_manager->publish_assets(ESS);
+    feeder_manager->publish_assets(FEEDERS);
+    generator_manager->publish_assets(GENERATORS);
+    solar_manager->publish_assets(SOLAR);
     return;
 }
 
@@ -1115,7 +1077,7 @@ float Asset_Manager::charge_control(float target_soc_desired, bool charge_disabl
 // HybridOS Step 2: Process Asset Data
 void Asset_Manager::process_asset_data(void) {
     ess_manager->process_asset_data();
-    feeder_manager->process_asset_data(&asset_var_map);
+    feeder_manager->process_asset_data();
     generator_manager->process_asset_data();
     solar_manager->process_asset_data();
 }
@@ -1302,55 +1264,4 @@ Type_Manager* Asset_Manager::get_type_manager(const char* type) {
         return feeder_manager;
     else
         return NULL;
-}
-
-// Prints each component register URI along with information about all variables that get sourced from that component register
-void Asset_Manager::print_component_var_map() {
-    FPS_INFO_LOG("\n************** COMPONENT VARIABLES MAP **************\n");
-    try {
-        for (auto it = component_var_map.begin(); it != component_var_map.end(); ++it) {
-            FPS_INFO_LOG("\nURI: %s\n", it->first.c_str());
-            for (auto var_it = it->second.begin(); var_it != it->second.end(); ++var_it) {
-                FPS_INFO_LOG("FIMS Object %ld of %ld for this URI...\n", var_it - it->second.begin() + 1, it->second.size());
-                FPS_INFO_LOG("Fims_Object is at address: %p\n", (void*)*var_it);
-                FPS_INFO_LOG("Name: %s\n", (*var_it)->get_name());
-                FPS_INFO_LOG("UI ID: %s\n", (*var_it)->get_variable_id());
-                FPS_INFO_LOG("Component URI: %s\n", (*var_it)->get_component_uri());
-                FPS_INFO_LOG("Type: %s\n", (*var_it)->get_type());
-                FPS_INFO_LOG("UI Type: %s\n", (*var_it)->get_ui_type());
-                const char* value_string = (*var_it)->value.print();
-                FPS_INFO_LOG("Initial Value: %s\n", (*var_it)->value.type == 3 || (*var_it)->value.type == 4 ? "Bit field or Random enum" : value_string);
-                delete value_string;
-                FPS_INFO_LOG("Scaler: %d\n", (*var_it)->scaler);
-                FPS_INFO_LOG("Unit: %s\n", (*var_it)->get_unit() == NULL ? "Unit not provided in assets.json" : (*var_it)->get_unit());
-            }
-        }
-        FPS_INFO_LOG("**********************************************\n\n");
-    } catch (const std::exception& e) {
-        FPS_ERROR_LOG("%s\n", e.what());
-    }
-}
-
-// Prints each asset variable URI along with information about the asset variable
-void Asset_Manager::print_asset_var_map() {
-    FPS_INFO_LOG("************** ASSET VARIABLES MAP **************\n");
-    try {
-        for (auto it = asset_var_map.begin(); it != asset_var_map.end(); ++it) {
-            FPS_INFO_LOG("\nURI: %s\n", it->first.c_str());
-            FPS_INFO_LOG("Fims_Object is at address: %p\n", (void*)it->second);
-            FPS_INFO_LOG("Name: %s\n", it->second->get_name());
-            FPS_INFO_LOG("UI ID: %s\n", it->second->get_variable_id());
-            FPS_INFO_LOG("Component URI: %s\n", it->second->get_component_uri());
-            FPS_INFO_LOG("Type: %s\n", it->second->get_type());
-            FPS_INFO_LOG("UI Type: %s\n", it->second->get_ui_type());
-            const char* value_string = it->second->value.print();
-            FPS_INFO_LOG("Initial Value: %s\n", it->second->value.type == 3 || it->second->value.type == 4 ? "Bit field or Random enum" : value_string);
-            delete value_string;
-            FPS_INFO_LOG("Scaler: %d\n", it->second->scaler);
-            FPS_INFO_LOG("Unit: %s\n", it->second->get_unit() == NULL ? "Unit not provided in assets.json" : it->second->get_unit());
-        }
-        FPS_INFO_LOG("**********************************************\n\n");
-    } catch (const std::exception& e) {
-        FPS_ERROR_LOG("%s\n", e.what());
-    }
 }

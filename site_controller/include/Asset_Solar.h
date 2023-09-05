@@ -17,8 +17,7 @@
 
 class Asset_Solar : public Asset {
 public:
-    Asset_Solar();
-    virtual ~Asset_Solar();
+    Asset_Solar ();
 
     // control
     bool start(void);
@@ -41,6 +40,7 @@ public:
 
     // internal functions
     void process_asset(void);
+    void set_raw_status() override;
     void update_asset(void);
     void send_to_components(void) override;
     bool handle_set(std::string uri, cJSON& body);
@@ -51,7 +51,7 @@ protected:
     void set_required_variables(void);
     bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
     bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(std::map<std::string, Fims_Object*>* const asset_var_map);
+    bool configure_typed_asset_fims_vars(Type_Configurator* configurator);
     int start_value;
     int stop_value;
     int enter_standby_value;
@@ -61,8 +61,9 @@ protected:
     int power_factor_mode_value;
 
     // setpoints
-    Fims_Object* power_mode_setpoint;
-    Fims_Object* power_factor_setpoint;
+    Fims_Object power_mode_setpoint;
+    Fims_Object power_factor_setpoint;
+    Fims_Object status;
 
     // control
     float maint_active_power_setpoint;

@@ -100,9 +100,10 @@ void Frequency_Response::handle_fims_set(const fims_message& msg) {
     size_t longest_match = 0;
     std::shared_ptr<Freq_Resp_Component> matched_comp = NULL;
     for (auto resp_comp : response_components) {
-        if (strncmp(uri_endpoint.c_str(), resp_comp->component_id.value.value_string, strlen(resp_comp->component_id.value.value_string)) == 0) {
-            if (strlen(resp_comp->component_id.value.value_string) > longest_match) {
-                longest_match = strlen(resp_comp->component_id.value.value_string);
+        if (uri_endpoint.compare(0, resp_comp->component_id.value.value_string.length(), resp_comp->component_id.value.value_string) == 0) {
+            if (resp_comp->component_id.value.value_string.length() > longest_match)
+            {
+                longest_match = resp_comp->component_id.value.value_string.length();
                 matched_comp = resp_comp;
             }
         }

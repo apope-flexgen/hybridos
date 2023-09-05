@@ -89,14 +89,8 @@ enum template_type { TEMPLATING_ERROR = -1, NON_TEMPLATE, TRADITIONAL, RANGED };
 
 const char UI_Type_Names[][16] = { "status", "control", "alarm", "fault", "none" };
 
-/**
- * Settable ui_control variables in handle_set(), defined in Asset_Manager.cpp
- * As these variables are not stored in the asset_var_map they need to be accessed from the Asset Instances
- *      TODO: workaround to avoid hardcoded values
- */
-extern std::vector<std::vector<std::string>> ui_control_set;
-
-struct ESS_Calibration_Settings {
+struct ESS_Calibration_Settings
+{
     bool calibration_flag;
     float balancing_factor;
     bool power_dist_flag;

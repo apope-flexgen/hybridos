@@ -30,39 +30,70 @@ Fims_Object::Fims_Object() {
     send_FIMS_buf = fmt::memory_buffer();
 }
 
-Fims_Object::~Fims_Object() {
-    if (!options_name.empty())
-        options_name.clear();
-    if (!options_value.empty())
-        options_value.clear();
+// Copy constructor. Excludes the fims memory buffer
+Fims_Object::Fims_Object(const Fims_Object& other)
+{
+    options_name = other.options_name;
+    options_value = other.options_value;
+    default_status_value = other.default_status_value;
+    default_status_name = other.default_status_name;
+    scaler = other.scaler;
+    num_options = other.num_options;
+    ui_enabled = other.ui_enabled;
+    write_uri = other.write_uri;
+    is_primary = other.is_primary;
+    multiple_inputs = other.multiple_inputs;
+    inputs = other.inputs;
+    input_source_settings = other.input_source_settings;
+    component_control_value = other.component_control_value;
+    value = other.value;
+    variable_id = other.variable_id;
+    register_id = other.register_id;
+    component_uri = other.component_uri;
+    name = other.name;
+    unit = other.unit;
+    ui_type = other.ui_type;
+    type = other.type;
 }
 
-void Fims_Object::set_component_uri(const char* _uri) {
-    component_uri = (_uri == NULL) ? NULL : _uri;
+Fims_Object& Fims_Object::operator=(Fims_Object other)
+{
+    swap(*this, other);
+    return *this;
 }
 
-void Fims_Object::set_register_id(const char* _id) {
-    register_id = (_id == NULL) ? NULL : _id;
+void Fims_Object::set_component_uri(const char* _uri)
+{
+    component_uri = _uri;
 }
 
-void Fims_Object::set_variable_id(const char* _id) {
-    variable_id = (_id == NULL) ? NULL : _id;
+void Fims_Object::set_register_id(const char* _id)
+{
+    register_id = _id;
+}
+
+void Fims_Object::set_variable_id(const char* _id)
+{
+    variable_id = _id;
 }
 
 void Fims_Object::set_variable_id(const std::string& id) {
     variable_id = id;
 }
 
-void Fims_Object::set_name(const char* _name) {
-    name = (_name == NULL) ? NULL : _name;
+void Fims_Object::set_name(const char* _name)
+{
+    name = _name;
 }
 
-void Fims_Object::set_unit(const char* _unit) {
-    unit = (_unit == NULL) ? NULL : _unit;
+void Fims_Object::set_unit(const char* _unit)
+{
+    unit = _unit;
 }
 
-void Fims_Object::set_ui_type(const char* _ui_type) {
-    ui_type = (_ui_type == NULL) ? NULL : _ui_type;
+void Fims_Object::set_ui_type(const char* _ui_type)
+{
+    ui_type = _ui_type;
 }
 
 void Fims_Object::set_value_type(valueType _value_type) {
@@ -70,8 +101,9 @@ void Fims_Object::set_value_type(valueType _value_type) {
     component_control_value.type = _value_type;
 }
 
-void Fims_Object::set_type(const char* _type) {
-    type = (_type == NULL) ? NULL : _type;
+void Fims_Object::set_type(const char* _type)
+{
+    type = _type;
 }
 
 bool Fims_Object::set_fims_float(const char* uri_endpoint, float body_float) {
@@ -370,9 +402,13 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
         } else {
             bufJSON_AddBool(buf, item_name.c_str(), value.value_bool);
         }
-    } else if (value.type == String) {
-        bufJSON_AddString(buf, item_name.c_str(), value.value_string);
-    } else if (value.type == Bit_Field) {
+    }
+    else if (value.type == String)
+    {
+        bufJSON_AddString(buf, item_name.c_str(), value.value_string.c_str());
+    }
+    else if (value.type == Bit_Field)
+    {
         // Type Bit_Field should currently be unused, as alarms/faults use Int and Status has it's own type now
         // TODO: leave for future support
         if (!options_name.empty() && !options_name[value.value_bit_field].empty()) {
@@ -429,7 +465,7 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
                 else if (options_value[pos].type == Bool)
                     bufJSON_AddBool(buf, "return_value", options_value[pos].value_bool);
                 else if (options_value[pos].type == String)
-                    bufJSON_AddString(buf, "return_value", options_value[pos].value_string);
+                    bufJSON_AddString(buf, "return_value", options_value[pos].value_string.c_str());
                 else if (options_value[pos].type == Bit_Field)
                     bufJSON_AddNumber(buf, "return_value", options_value[pos].value_bit_field);
                 bufJSON_EndObject(buf);  // } JSON_options
@@ -447,7 +483,7 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
                 else if (options_value[i].type == Bool)
                     bufJSON_AddBool(buf, "return_value", options_value[i].value_bool);
                 else if (options_value[i].type == String)
-                    bufJSON_AddString(buf, "return_value", options_value[i].value_string);
+                    bufJSON_AddString(buf, "return_value", options_value[i].value_string.c_str());
                 else if (options_value[i].type == Bit_Field)
                     bufJSON_AddNumber(buf, "return_value", options_value[i].value_bit_field);
                 bufJSON_EndObject(buf);  // } JSON_options

@@ -39,10 +39,11 @@
 class Fims_Object {
 public:
     Fims_Object();
-    virtual ~Fims_Object();
-    void build_JSON_Object(fmt::memory_buffer& buf, bool control2status, bool clothed, const char* const search_id = NULL);
-    void add_to_JSON_buffer(fmt::memory_buffer& buf, const char* const search_id = NULL, bool clothed = true);
-    void add_status_of_control_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL, bool clothed = true);
+    Fims_Object(const Fims_Object& other);
+    Fims_Object& operator=(Fims_Object other);
+    void build_JSON_Object(fmt::memory_buffer &buf, bool control2status, bool clothed, const char* const search_id = NULL);
+    void add_to_JSON_buffer(fmt::memory_buffer &buf, const char* const search_id = NULL, bool clothed = true);
+    void add_status_of_control_to_JSON_buffer(fmt::memory_buffer &buf, const char* const var = NULL, bool clothed = true);
     void set_component_uri(const char* _uri);
     void set_register_id(const char* _id);
     void set_variable_id(const char* _id);
@@ -104,6 +105,32 @@ public:
 
     // current value. See comment above class Fims_Object for explanation about where the source of this value comes from.
     Value_Object value;
+
+    // Swap function for swapping one Fims_Object with another
+    friend void swap(Fims_Object& first, Fims_Object& second) {
+        using std::swap;
+        swap(first.options_name, second.options_name);
+        swap(first.options_value, second.options_value);
+        swap(first.default_status_value, second.default_status_value);
+        swap(first.default_status_name, second.default_status_name);
+        swap(first.scaler, second.scaler);
+        swap(first.num_options, second.num_options);
+        swap(first.ui_enabled, second.ui_enabled);
+        swap(first.write_uri, second.write_uri);
+        swap(first.is_primary, second.is_primary);
+        swap(first.multiple_inputs, second.multiple_inputs);
+        swap(first.inputs, second.inputs);
+        swap(first.input_source_settings, second.input_source_settings);
+        swap(first.component_control_value, second.component_control_value);
+        swap(first.value, second.value);
+        swap(first.variable_id, second.variable_id);
+        swap(first.register_id, second.register_id);
+        swap(first.component_uri, second.component_uri);
+        swap(first.name, second.name);
+        swap(first.unit, second.unit);
+        swap(first.ui_type, second.ui_type);
+        swap(first.type, second.type);
+    }
 
 private:
     std::string variable_id;    // id that the UI expects. Used for both Site Manager and Asset Manager variables

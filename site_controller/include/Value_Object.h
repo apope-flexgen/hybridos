@@ -21,7 +21,6 @@ class Value_Object {
 public:
     Value_Object();
     Value_Object(int val);
-    ~Value_Object();
 
     void set(int value);
     void set(bool value);
@@ -34,9 +33,9 @@ public:
     bool add_value_to_JSON_buffer(fmt::memory_buffer& buf, bool round_float = false);
     bool add_naked_value_to_JSON_buffer(fmt::memory_buffer& buf);
 
-    int type;
-    int value_int;
-    char* value_string;
+    int   type;
+    int   value_int;
+    std::string value_string;
     float value_float;
     uint64_t value_bit_field;
     uint64_t value_mask;
