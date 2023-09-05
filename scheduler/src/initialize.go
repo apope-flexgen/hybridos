@@ -26,6 +26,9 @@ type lastModTimeWrapper struct {
 	Timestamp time.Time `json:"timestamp"`
 }
 
+// Error types for whether or not specific documents were found.
+var ErrDocNotFound = errors.New("document not found")
+
 // Filters initialization documents into a state data object.
 // If there was no valid basic configuration, sits and waits for it to be sent.
 // Finally, initializes Scheduler with the validated initial state.
@@ -74,24 +77,49 @@ func buildInitialStateFromDocs(initializationDocs map[string]json.RawMessage) (s
 		state.Timezones[scheduleId] = ""
 	}
 
-	// allow pre-loading DBI with only basic configuration
+	// Valid Startup Data Case 1: allow pre-loading DBI with only basic configuration
 	if len(initializationDocs) == 1 {
 		return state, nil
+	}
+
+	// allow pre-loading DBI with only basic configuration and either modes or time zones
+	if len(initializationDocs) == 2 {
+		if err = readModesDocIntoState(initializationDocs, state); err == nil {
+			// Valid Startup Data Case 2: basic configuration and modes
+			return state, nil
+		}
+		// error reading modes document
+		if !errors.Is(err, ErrDocNotFound) {
+			// modes document was malformed
+			return nil, fmt.Errorf("failed to read modes document: %w", err)
+		}
+		if err = readTimezoneDocIntoState(initializationDocs, state); err == nil {
+			// Valid Startup Data Case 3: basic configuration and timezones
+			return state, nil
+		}
+		// error reading timezones document
+		if errors.Is(err, ErrDocNotFound) {
+			// basic configuration and some other file found
+			return nil, errors.New("did not include modes OR timezones document in addition to the found configurations document")
+		}
+		// timezones document was malformed
+		return nil, fmt.Errorf("failed to read time zone document: %w", err)
 	}
 
 	if err = readModesDocIntoState(initializationDocs, state); err != nil {
 		return nil, fmt.Errorf("failed to read modes document: %w", err)
 	}
 
-	// allow pre-loading DBI with only basic configuration and modes
-	if len(initializationDocs) == 2 {
-		return state, nil
-	}
-
 	if err = readTimezoneDocIntoState(initializationDocs, state); err != nil {
 		return nil, fmt.Errorf("failed to read time zone document: %w", err)
 	}
 
+	// Valid Startup Data Case 4: allow pre-loading DBI with only basic configuration, modes AND time zones
+	if len(initializationDocs) == 3 {
+		return state, nil
+	}
+
+	// Valid Startup Data Case 5: allow pre-loading DBI when only ALL configuration files are present
 	if err = readEventsDocIntoState(initializationDocs, state); err != nil {
 		return nil, fmt.Errorf("failed to read events document: %w", err)
 	}
@@ -105,7 +133,7 @@ func buildInitialStateFromDocs(initializationDocs map[string]json.RawMessage) (s
 func readConfigurationDocIntoState(initializationDocs map[string]json.RawMessage, state *storedState) error {
 	generalConfigurationJson, ok := initializationDocs["configuration"]
 	if !ok {
-		return errors.New("configuration document not found")
+		return fmt.Errorf("configuration %w", ErrDocNotFound)
 	}
 	if err := json.Unmarshal(generalConfigurationJson, &state.Cfg); err != nil {
 		return fmt.Errorf("failed to unmarshal configuration document: %w", err)
@@ -116,7 +144,7 @@ func readConfigurationDocIntoState(initializationDocs map[string]json.RawMessage
 func readTimezoneDocIntoState(initializationDocs map[string]json.RawMessage, state *storedState) error {
 	timezonesJson, ok := initializationDocs["timezones"]
 	if !ok {
-		return errors.New("time zone document not found")
+		return fmt.Errorf("time zone %w", ErrDocNotFound)
 	}
 	if err := json.Unmarshal(timezonesJson, &state.Timezones); err != nil {
 		return fmt.Errorf("failed to unmarshal time zones: %w", err)
@@ -124,6 +152,7 @@ func readTimezoneDocIntoState(initializationDocs map[string]json.RawMessage, sta
 	for id, timezoneString := range state.Timezones {
 		if _, err := time.LoadLocation(timezoneString); err != nil {
 			log.Errorf("Error loading location from time zone string %s: %v. Removing it from time zone map.", timezoneString, err)
+			println("logged error")
 			delete(state.Timezones, id)
 		}
 	}
@@ -133,7 +162,7 @@ func readTimezoneDocIntoState(initializationDocs map[string]json.RawMessage, sta
 func readModesDocIntoState(initializationDocs map[string]json.RawMessage, state *storedState) error {
 	modesJson, ok := initializationDocs["modes"]
 	if !ok {
-		return errors.New("modes document not found")
+		return fmt.Errorf("modes %w", ErrDocNotFound)
 	}
 	if err := json.Unmarshal(modesJson, &state.Modes); err != nil {
 		return fmt.Errorf("failed to unmarshal modes: %w", err)
@@ -147,7 +176,7 @@ func readModesDocIntoState(initializationDocs map[string]json.RawMessage, state 
 func readEventsDocIntoState(initializationDocs map[string]json.RawMessage, state *storedState) error {
 	eventsJson, ok := initializationDocs["events"]
 	if !ok {
-		return errors.New("events document not found")
+		return fmt.Errorf("events %w", ErrDocNotFound)
 	}
 	if err := json.Unmarshal(eventsJson, &state.EventLists); err != nil {
 		return fmt.Errorf("failed to unmarshal events: %w", err)
@@ -181,7 +210,7 @@ func readEventsDocIntoState(initializationDocs map[string]json.RawMessage, state
 func readLastModificationDocIntoState(initializationDocs map[string]json.RawMessage, state *storedState) error {
 	lastSchedModJson, ok := initializationDocs["last_schedule_modification"]
 	if !ok {
-		return errors.New("last_schedule_modification document not found")
+		return fmt.Errorf("last_schedule_modification %w", ErrDocNotFound)
 	}
 	if err := json.Unmarshal(lastSchedModJson, &state.LastModification); err != nil {
 		return fmt.Errorf("failed to unmarshal last_schedule_modification: %w", err)
@@ -191,7 +220,7 @@ func readLastModificationDocIntoState(initializationDocs map[string]json.RawMess
 
 // Infinitely listens for FIMS message until valid basic configuration is sent to /scheduler/configuration.
 // Will not respond to any other FIMS messages except for GETs to /scheduler/configuration, to which it will reply with an empty object.
-func waitForBasicConfiguration(fimsReceive chan fims.FimsMsg) (schedulerConfig) {
+func waitForBasicConfiguration(fimsReceive chan fims.FimsMsg) schedulerConfig {
 	for {
 		msg := <-fimsReceive
 		if msg.Uri != "/scheduler/configuration" {
