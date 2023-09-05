@@ -50,14 +50,14 @@ type fleetPoints struct {
 	normalUpRamp        genLoadMuxFloat
 	overrideRequestFlag bool // an endpoint set by the site owner and read by ERCOT. site owner sets to true when it wishes to take over manual control of the site
 	overrideAllowedFlag bool // an endpoint set by ERCOT and read by the site owner. ERCOT sets to true when it sees site owner's override request and acknowledges site owner can have control
-	calcRursGen         int
-	calcRupfGen         int
-	calcRdrsGen         int
-	calcRdpfGen         int
-	calcRursLoad        int
-	calcRupfLoad        int
-	calcRdrsLoad        int
-	calcRdpfLoad        int
+	calcRursGen         float64
+	calcRupfGen         float64
+	calcRdrsGen         float64
+	calcRdpfGen         float64
+	calcRursLoad        float64
+	calcRupfLoad        float64
+	calcRdrsLoad        float64
+	calcRdpfLoad        float64
 }
 
 // the ercotAsFeature maps sites to their own fleetPoints struct
@@ -342,68 +342,68 @@ func (fp *fleetPoints) editSetting(variableId, siteId string, newVal interface{}
 		fp.overrideAllowedFlag = newBool
 	case variableId == "calculated_rurs_gen":
 		newVal := fg.UnwrapVariable(newVal)
-		if newInt, err := fg.CastToInt(newVal); err != nil {
-			return fmt.Errorf("failed to cast value to int: %w", err)
-		} else {
-			valueChanged = fp.calcRursGen != newInt
-			fp.calcRursGen = newInt
+		newFloat, ok := newVal.(float64)
+		if !ok {
+			return fmt.Errorf("expected float64 but got %T", newVal)
 		}
+		valueChanged = fp.calcRursGen != newFloat
+		fp.calcRursGen = newFloat
 	case variableId == "calculated_rupf_gen":
 		newVal := fg.UnwrapVariable(newVal)
-		if newInt, err := fg.CastToInt(newVal); err != nil {
-			return fmt.Errorf("failed to cast value to int: %w", err)
-		} else {
-			valueChanged = fp.calcRupfGen != newInt
-			fp.calcRupfGen = newInt
+		newFloat, ok := newVal.(float64)
+		if !ok {
+			return fmt.Errorf("expected float64 but got %T", newVal)
 		}
+		valueChanged = fp.calcRupfGen != newFloat
+		fp.calcRupfGen = newFloat
 	case variableId == "calculated_rdrs_gen":
 		newVal := fg.UnwrapVariable(newVal)
-		if newInt, err := fg.CastToInt(newVal); err != nil {
-			return fmt.Errorf("failed to cast value to int: %w", err)
-		} else {
-			valueChanged = fp.calcRdrsGen != newInt
-			fp.calcRdrsGen = newInt
+		newFloat, ok := newVal.(float64)
+		if !ok {
+			return fmt.Errorf("expected float64 but got %T", newVal)
 		}
+		valueChanged = fp.calcRdrsGen != newFloat
+		fp.calcRdrsGen = newFloat
 	case variableId == "calculated_rdpf_gen":
 		newVal := fg.UnwrapVariable(newVal)
-		if newInt, err := fg.CastToInt(newVal); err != nil {
-			return fmt.Errorf("failed to cast value to int: %w", err)
-		} else {
-			valueChanged = fp.calcRdpfGen != newInt
-			fp.calcRdpfGen = newInt
+		newFloat, ok := newVal.(float64)
+		if !ok {
+			return fmt.Errorf("expected float64 but got %T", newVal)
 		}
+		valueChanged = fp.calcRdpfGen != newFloat
+		fp.calcRdpfGen = newFloat
 	case variableId == "calculated_rurs_load":
 		newVal := fg.UnwrapVariable(newVal)
-		if newInt, err := fg.CastToInt(newVal); err != nil {
-			return fmt.Errorf("failed to cast value to int: %w", err)
-		} else {
-			valueChanged = fp.calcRursLoad != newInt
-			fp.calcRursLoad = newInt
+		newFloat, ok := newVal.(float64)
+		if !ok {
+			return fmt.Errorf("expected float64 but got %T", newVal)
 		}
+		valueChanged = fp.calcRursLoad != newFloat
+		fp.calcRursLoad = newFloat
 	case variableId == "calculated_rupf_load":
 		newVal := fg.UnwrapVariable(newVal)
-		if newInt, err := fg.CastToInt(newVal); err != nil {
-			return fmt.Errorf("failed to cast value to int: %w", err)
-		} else {
-			valueChanged = fp.calcRupfLoad != newInt
-			fp.calcRupfLoad = newInt
+		newFloat, ok := newVal.(float64)
+		if !ok {
+			return fmt.Errorf("expected float64 but got %T", newVal)
 		}
+		valueChanged = fp.calcRupfLoad != newFloat
+		fp.calcRupfLoad = newFloat
 	case variableId == "calculated_rdrs_load":
 		newVal := fg.UnwrapVariable(newVal)
-		if newInt, err := fg.CastToInt(newVal); err != nil {
-			return fmt.Errorf("failed to cast value to int: %w", err)
-		} else {
-			valueChanged = fp.calcRdrsLoad != newInt
-			fp.calcRdrsLoad = newInt
+		newFloat, ok := newVal.(float64)
+		if !ok {
+			return fmt.Errorf("expected float64 but got %T", newVal)
 		}
+		valueChanged = fp.calcRdrsLoad != newFloat
+		fp.calcRdrsLoad = newFloat
 	case variableId == "calculated_rdpf_load":
 		newVal := fg.UnwrapVariable(newVal)
-		if newInt, err := fg.CastToInt(newVal); err != nil {
-			return fmt.Errorf("failed to cast value to int: %w", err)
-		} else {
-			valueChanged = fp.calcRdpfLoad != newInt
-			fp.calcRdpfLoad = newInt
+		newFloat, ok := newVal.(float64)
+		if !ok {
+			return fmt.Errorf("expected float64 but got %T", newVal)
 		}
+		valueChanged = fp.calcRdpfLoad != newFloat
+		fp.calcRdpfLoad = newFloat
 	case strings.HasPrefix(variableId, fp.nonSpin.idRoot):
 		valueChanged, err = fp.nonSpin.setGenLoad(variableId[len(fp.nonSpin.idRoot):], newVal)
 	case strings.HasPrefix(variableId, fp.normalDownRamp.idRoot):
@@ -742,53 +742,53 @@ func parseFleetPoints(cfgInterface interface{}) (*fleetPoints, error) {
 	}
 	fp.overrideAllowedFlag = initVal.(bool)
 
-	initVal, err = fg.ExtractAsInt(cfg, "calculated_rurs_gen")
+	initVal, err = fg.ExtractValueWithType(cfg, "calculated_rurs_gen", fg.FLOAT64)
 	if err != nil {
-		initVal = 0
+		initVal = 0.0
 	}
-	fp.calcRursGen = initVal.(int)
+	fp.calcRursGen = initVal.(float64)
 
-	initVal, err = fg.ExtractAsInt(cfg, "calculated_rupf_gen")
+	initVal, err = fg.ExtractValueWithType(cfg, "calculated_rupf_gen", fg.FLOAT64)
 	if err != nil {
-		initVal = 0
+		initVal = 0.0
 	}
-	fp.calcRupfGen = initVal.(int)
+	fp.calcRupfGen = initVal.(float64)
 
-	initVal, err = fg.ExtractAsInt(cfg, "calculated_rdrs_gen")
+	initVal, err = fg.ExtractValueWithType(cfg, "calculated_rdrs_gen", fg.FLOAT64)
 	if err != nil {
-		initVal = 0
+		initVal = 0.0
 	}
-	fp.calcRdrsGen = initVal.(int)
+	fp.calcRdrsGen = initVal.(float64)
 
-	initVal, err = fg.ExtractAsInt(cfg, "calculated_rdpf_gen")
+	initVal, err = fg.ExtractValueWithType(cfg, "calculated_rdpf_gen", fg.FLOAT64)
 	if err != nil {
-		initVal = 0
+		initVal = 0.0
 	}
-	fp.calcRdpfGen = initVal.(int)
+	fp.calcRdpfGen = initVal.(float64)
 
-	initVal, err = fg.ExtractAsInt(cfg, "calculated_rurs_load")
+	initVal, err = fg.ExtractValueWithType(cfg, "calculated_rurs_load", fg.FLOAT64)
 	if err != nil {
-		initVal = 0
+		initVal = 0.0
 	}
-	fp.calcRursLoad = initVal.(int)
+	fp.calcRursLoad = initVal.(float64)
 
-	initVal, err = fg.ExtractAsInt(cfg, "calculated_rupf_load")
+	initVal, err = fg.ExtractValueWithType(cfg, "calculated_rupf_load", fg.FLOAT64)
 	if err != nil {
-		initVal = 0
+		initVal = 0.0
 	}
-	fp.calcRupfLoad = initVal.(int)
+	fp.calcRupfLoad = initVal.(float64)
 
-	initVal, err = fg.ExtractAsInt(cfg, "calculated_rdrs_load")
+	initVal, err = fg.ExtractValueWithType(cfg, "calculated_rdrs_load", fg.FLOAT64)
 	if err != nil {
-		initVal = 0
+		initVal = 0.0
 	}
-	fp.calcRdrsLoad = initVal.(int)
+	fp.calcRdrsLoad = initVal.(float64)
 
-	initVal, err = fg.ExtractAsInt(cfg, "calculated_rdpf_load")
+	initVal, err = fg.ExtractValueWithType(cfg, "calculated_rdpf_load", fg.FLOAT64)
 	if err != nil {
-		initVal = 0
+		initVal = 0.0
 	}
-	fp.calcRdpfLoad = initVal.(int)
+	fp.calcRdpfLoad = initVal.(float64)
 	return fp, nil
 }
 
