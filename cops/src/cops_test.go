@@ -2,6 +2,7 @@ package main
 
 import (
 	"fims"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -12,11 +13,18 @@ import (
 
 // creates a mock FimsMsg object that contains the data COPS would expect from a process replying to a heartbeat GET request
 func setupMockHeartbeatReplyMsg(processName string, heartbeat, pid interface{}) (replyMsg fims.FimsMsg) {
+	uri := fmt.Sprintf("/cops/heartbeat/%s", processName)
 	msgBody := make(map[string]interface{})
 	msgBody["cops_heartbeat"] = heartbeat
 	msgBody["pid"] = pid
+	msgBody["version_tag"] = 0
+	msgBody["version_commit"] = 0
+	msgBody["version_build"] = 0
 	replyMsg.Body = msgBody
-	replyMsg.Uri = path.Join("cops", processName)
+	frags, _ := fims.GetFrags(uri)
+	replyMsg.Nfrags = len(frags)
+	replyMsg.Frags = frags
+	replyMsg.Uri = uri
 	return
 }
 
@@ -225,7 +233,7 @@ func TestHandleSet(t *testing.T) {
 
 	// test new heartbeat and new PID
 	processJurisdiction["site_controller"].heartbeat = 4
-	mockMsg := setupMockHeartbeatReplyMsg("/cops/site_controller", 4, 123)
+	mockMsg := setupMockHeartbeatReplyMsg("site_controller", 4, 123)
 	passedTest = false
 	helpingTestHandleSet(mockMsg)
 	result1 := processJurisdiction["site_controller"].heartbeat
@@ -239,7 +247,7 @@ func TestHandleSet(t *testing.T) {
 
 	// test old heartbeat and new PID
 	processJurisdiction["site_controller"].heartbeat = 4
-	mockMsg = setupMockHeartbeatReplyMsg("/cops/site_controller", 3, 456)
+	mockMsg = setupMockHeartbeatReplyMsg("site_controller", 3, 456)
 	passedTest = false
 	helpingTestHandleSet(mockMsg)
 	result1 = processJurisdiction["site_controller"].heartbeat
@@ -270,7 +278,7 @@ func TestHandleSet(t *testing.T) {
 	// test bad heartbeat
 	log.SetOutput(ioutil.Discard)
 	processJurisdiction["site_controller"].heartbeat = 4
-	mockMsg = setupMockHeartbeatReplyMsg("/cops/site_controller", "4", 789)
+	mockMsg = setupMockHeartbeatReplyMsg("site_controller", "4", 789)
 	passedTest = false
 	helpingTestHandleSet(mockMsg)
 	result1 = processJurisdiction["site_controller"].heartbeat
@@ -286,7 +294,7 @@ func TestHandleSet(t *testing.T) {
 	// test bad PID
 	log.SetOutput(ioutil.Discard)
 	processJurisdiction["site_controller"].heartbeat = 4
-	mockMsg = setupMockHeartbeatReplyMsg("/cops/site_controller", 4, "456")
+	mockMsg = setupMockHeartbeatReplyMsg("site_controller", 4, "456")
 	passedTest = false
 	helpingTestHandleSet(mockMsg)
 	result1 = processJurisdiction["site_controller"].heartbeat
