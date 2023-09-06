@@ -410,21 +410,31 @@ void Asset_Cmd_Object::active_power_setpoint(float kW_cmd, Slew_Object* slew_rat
     track_slewed_load(load_method, kW_cmd, additional_load_compensation, *slew_rate);
 }
 /**
- * MANUAL MODE takes a solar kW cmd and ESS kW cmd and routes those commands through dispatch and charge control
- * Any site load should be offloaded to the feeder to guarantee the ESS/Solar commands
+ * MANUAL MODE takes a solar kW cmd, ESS kW cmd, generator kW cmd, solar slew rate,
+ * ESS slew rate, and generator slew rate and routes those commands through dispatch and charge control
+ * Any site load should be offloaded to the feeder to guarantee the manual kW commands
  * @param manual_ess_kW_cmd Command to be dispatched to ESS
  * @param manual_solar_kW_cmd Command to be dispatched to Solar
+ * @param manual_gen_kW_cmd Command to be dispatched to Generator
+ * @param ess_slew_rate Slew rate for ESS
+ * @param solar_slew_rate Slew rate for Solar
+ * @param gen_slew_rate Slew rate for Generator
  */
-void Asset_Cmd_Object::manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd) {
+void Asset_Cmd_Object::manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd, float manual_gen_kW_cmd, Slew_Object* ess_slew_rate, Slew_Object* solar_slew_rate, Slew_Object* gen_slew_rate) {
     // Assign ess request, passing off limits check to dispatch
-    ess_data.kW_request = manual_ess_kW_cmd;
+    ess_data.kW_request = ess_slew_rate->get_slew_target(manual_ess_kW_cmd);
     // Ensure that any extra available ESS is not used to service the site demand
     ess_data.max_potential_kW = std::min(ess_data.max_potential_kW, zero_check(ess_data.kW_request));
 
     // Assign positive solar request, passing off limits check to dispatch
-    solar_data.kW_request = zero_check(manual_solar_kW_cmd);
+    solar_data.kW_request = solar_slew_rate->get_slew_target(zero_check(manual_solar_kW_cmd));
     // Ensure that any extra available solar is not used to service the site demand
     solar_data.max_potential_kW = std::min(solar_data.max_potential_kW, solar_data.kW_request);
+
+    // Assign positive generator request, passing off limits check to dispatch
+    gen_data.kW_request = gen_slew_rate->get_slew_target(zero_check(manual_gen_kW_cmd));
+    // Ensure that any extra available generator power is not used to service the site demand
+    gen_data.max_potential_kW = std::min(gen_data.max_potential_kW, gen_data.kW_request);
 
     // No load compensation
 }

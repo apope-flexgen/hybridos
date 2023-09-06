@@ -68,7 +68,7 @@ public:
     float ess_overload_support(float grid_target_kW_cmd);
     void target_soc_mode(bool load_requirement);
     void active_power_setpoint(float kw_cmd, Slew_Object* slew_rate, load_compensation load_strategy, bool absolute_mode_flag, bool direction_flag, bool maximize_solar);
-    void manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd);
+    void manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd, float manual_gen_kW_cmd, Slew_Object* ess_slew_rate, Slew_Object* solar_slew_rate, Slew_Object* gen_slew_rate);
     void ess_calibration_mode(float ess_calibration_kW_cmd, int num_ess_controllable);
     void dispatch_reactive_power();
     void reactive_setpoint_mode(Slew_Object* reactive_setpoint_slew, float reactive_setpoint_kVAR_cmd);

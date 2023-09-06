@@ -331,9 +331,20 @@ protected:
     // Manual Power Mode
     //
     Feature manual_power_mode;
+
+public:
+    Slew_Object manual_solar_kW_slew;
+    Slew_Object manual_ess_kW_slew;
+    Slew_Object manual_gen_kW_slew;
+
+protected:
     Fims_Object manual_mode_enable_flag;
-    Fims_Object manual_solar_kW_cmd;  // manual setpoint for solar KW
+    Fims_Object manual_solar_kW_cmd;  // manual setpoint for solar kW
     Fims_Object manual_ess_kW_cmd;    // manual setpoint for ess kW
+    Fims_Object manual_gen_kW_cmd;    // manual setpoint for gen kW
+    Fims_Object manual_solar_kW_slew_rate;
+    Fims_Object manual_ess_kW_slew_rate;
+    Fims_Object manual_gen_kW_slew_rate;
     //
     // Frequency Response Mode
     //
@@ -818,6 +829,10 @@ protected:
         { &target_soc_load_enable_flag, "target_soc_load_enable_flag" },
         { &manual_solar_kW_cmd, "manual_solar_kW_cmd" },
         { &manual_ess_kW_cmd, "manual_ess_kW_cmd" },
+        { &manual_gen_kW_cmd, "manual_gen_kW_cmd" },
+        { &manual_solar_kW_slew_rate, "manual_solar_kW_slew_rate" },
+        { &manual_ess_kW_slew_rate, "manual_ess_kW_slew_rate" },
+        { &manual_gen_kW_slew_rate, "manual_gen_kW_slew_rate" },
         { &active_power_setpoint_kW_cmd, "active_power_setpoint_kW_cmd" },
         { &active_power_setpoint_load_method, "active_power_setpoint_load_method" },
         { &active_power_setpoint_kW_slew_rate, "active_power_setpoint_kW_slew_rate" },

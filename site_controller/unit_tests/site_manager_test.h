@@ -608,56 +608,57 @@ TEST_F(site_manager_test, active_power_setpoint_1) {
 // manual mode
 // Ensure that asset requests are produced for each asset cmd and that no excess potential exists that could be used by another asset/load/feature
 TEST_F(site_manager_test, manual_mode) {
-    int const num_tests = 5;  // total number of test cases
-
     // struct that has variables to configure for each test case
-    struct tests {
-        float ess_max_potential;
-        float solar_max_potential;
+    struct mm_test {
         float ess_cmd;
         float solar_cmd;
+        float gen_cmd;
+        int ess_slew_rate;
+        int solar_slew_rate;
+        int gen_slew_rate;
         float expected_ess_charge_kW_request;
         float expected_solar_kW_request;
+        float expected_gen_kW_request;
         float expected_ess_max_potential;
         float expected_solar_max_potential;
+        float expected_gen_max_potential;
     };
 
-    tests array[num_tests];  // an array with an element for each test case
-
-    // configure variables each test case
-    array[0] = { 1000.0f, 2000.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
-    array[1] = { 1000.0f, 2000.0f, 500.0f, 0.0f, 500.0f, 0.0f, 500.0f, 0.0f };
-    array[2] = { 1000.0f, 2000.0f, 500.0f, 750.0f, 500.0f, 750.0f, 500.0f, 750.0f };
-    array[3] = { 1000.0f, 2000.0f, 500.0f, 750.0f, 500.0f, 750.0f, 500.0f, 750.0f };
-    array[4] = { 1000.0f, 2000.0f, -500.0f, 750.0f, -500.0f, 750.0f, 0.0f, 750.0f };
-
-    // iterate through each test case and get results
-    for (int i = 0; i < num_tests; i++) {
-        // Only print messages to log if a test fails
-        bool failure = false;
-        std::stringstream errorLog;
-        // Capture any prints within site controller that might be present in debug mode
-        capture_stdout();
-
+    std::vector<mm_test> tests = {
+        { 0.0f, 0.0f, 0.0f, 100000, 100000, 100000, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+        { 500.0f, 0.0f, 0.0f, 100000, 100000, 100000, 500.0f, 0.0f, 0.0f, 500.0f, 0.0f, 0.0f },
+        { 500.0f, 750.0f, 750.0f, 100000, 100000, 100000, 500.0f, 750.0f, 750.0f, 500.0f, 750.0f, 750.0f },
+        { 500.0f, 750.0f, 750.0f, 100000, 100000, 100000, 500.0f, 750.0f, 750.0f, 500.0f, 750.0f, 750.0f },
+        { -500.0f, 750.0f, 750.0f, 100000, 100000, 100000, -500.0f, 750.0f, 750.0f, 0.0f, 750.0f, 750.0f }
+    }; 
+    
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("manual_mode", test_id++, tests.size());
+        // Increment export target cmd slew prior to test
+        manual_solar_kW_slew.set_slew_rate(test.solar_slew_rate);
+        manual_ess_kW_slew.set_slew_rate(test.ess_slew_rate);
+        manual_gen_kW_slew.set_slew_rate(test.gen_slew_rate);
+        manual_solar_kW_slew.update_slew_target(0);  // call once for each asset to set time vars
+        manual_ess_kW_slew.update_slew_target(0);
+        manual_gen_kW_slew.update_slew_target(0);
+        usleep(10000);                               // wait 10ms (total range +/-10MW)
+        manual_solar_kW_slew.update_slew_target(0);  // call again to get delta time for non-zero slew range
+        manual_ess_kW_slew.update_slew_target(0);
+        manual_gen_kW_slew.update_slew_target(0);
         // Set potentials to some abritrary nonzero value to ensure they are modified appropriately
         asset_cmd.solar_data.max_potential_kW = 5000;
         asset_cmd.ess_data.max_potential_kW = 2500;
-        asset_cmd.manual_mode(array[i].ess_cmd, array[i].solar_cmd);
-        errorLog << "manual_mode() test " << i + 1 << " of " << num_tests << std::endl;
-        // failure conditions
-        failure = (asset_cmd.solar_data.kW_request != array[i].expected_solar_kW_request || asset_cmd.ess_data.kW_request != array[i].expected_ess_charge_kW_request || asset_cmd.ess_data.max_potential_kW != array[i].expected_ess_max_potential ||
-                   asset_cmd.solar_data.max_potential_kW != array[i].expected_solar_max_potential || asset_cmd.get_site_kW_load_inclusion() != false);  // Ensure this feature does not track load
-        EXPECT_EQ(asset_cmd.solar_data.kW_request, array[i].expected_solar_kW_request);
-        EXPECT_EQ(asset_cmd.ess_data.kW_request, array[i].expected_ess_charge_kW_request);
-        EXPECT_EQ(asset_cmd.ess_data.max_potential_kW, array[i].expected_ess_max_potential);
-        EXPECT_EQ(asset_cmd.solar_data.max_potential_kW, array[i].expected_solar_max_potential);
-        EXPECT_FALSE(asset_cmd.get_site_kW_load_inclusion());
-
-        // Release stdout so we can write again
-        release_stdout(failure);
-        // Print the test id if failure
-        if (failure)
-            std::cout << errorLog.str() << std::endl;
+        asset_cmd.gen_data.max_potential_kW = 5000;
+        asset_cmd.manual_mode(test.ess_cmd, test.solar_cmd, test.gen_cmd, &manual_ess_kW_slew, &manual_solar_kW_slew, &manual_gen_kW_slew);
+        t_log.float_results.push_back({test.expected_ess_charge_kW_request, asset_cmd.ess_data.kW_request, "ESS kW Request"});
+        t_log.float_results.push_back({test.expected_solar_kW_request, asset_cmd.solar_data.kW_request, "Solar kW Request"});
+        t_log.float_results.push_back({test.expected_gen_kW_request, asset_cmd.gen_data.kW_request, "Generator kW Request"});
+        t_log.float_results.push_back({test.expected_ess_max_potential, asset_cmd.ess_data.max_potential_kW, "ESS Max Potential"});
+        t_log.float_results.push_back({test.expected_solar_max_potential, asset_cmd.solar_data.max_potential_kW, "Solar Max Potential"});
+        t_log.float_results.push_back({test.expected_gen_max_potential, asset_cmd.gen_data.max_potential_kW, "Generator Max Potential"});
+        t_log.bool_results.push_back({false, asset_cmd.get_site_kW_load_inclusion(), "Site kW Load Inclusion"});
+        t_log.check_solution();
     }
 }
 

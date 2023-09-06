@@ -116,7 +116,7 @@ void Site_Manager::configure_feature_objects(void) {
     };
     // Manual Power Mode
     manual_power_mode.enable_flag = &manual_mode_enable_flag;
-    manual_power_mode.feature_vars = { &manual_solar_kW_cmd, &manual_ess_kW_cmd };
+    manual_power_mode.feature_vars = { &manual_solar_kW_cmd, &manual_ess_kW_cmd, &manual_gen_kW_cmd, &manual_solar_kW_slew_rate, &manual_ess_kW_slew_rate, &manual_gen_kW_slew_rate };
     // Frequency Response Mode
     frequency_response_feature.enable_flag = &frequency_response_enabled;
     frequency_response.get_feature_vars(frequency_response_feature.feature_vars);
@@ -1003,6 +1003,14 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         // Manual Mode
                         manual_solar_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
                         manual_ess_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
+                        manual_gen_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
+                        // Update slew rates
+                        if (manual_solar_kW_slew_rate.set_fims_int(msg->pfrags[2], range_check(body_int, 100000000, 1)))
+                            manual_solar_kW_slew.set_slew_rate(manual_solar_kW_slew_rate.value.value_int);
+                        if (manual_ess_kW_slew_rate.set_fims_int(msg->pfrags[2], range_check(body_int, 100000000, 1)))
+                            manual_ess_kW_slew.set_slew_rate(manual_ess_kW_slew_rate.value.value_int);
+                        if (manual_gen_kW_slew_rate.set_fims_int(msg->pfrags[2], range_check(body_int, 100000000, 1)))
+                            manual_gen_kW_slew.set_slew_rate(manual_gen_kW_slew_rate.value.value_int);
 
                         // Active Power Setpoint
                         active_power_setpoint_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
@@ -1528,6 +1536,9 @@ void Site_Manager::set_values() {
     solar_kVAR_cmd_slew.update_slew_target(solar_kVAR_cmd.value.value_float);
     remove_active_poi_corrections_from_slew_targets();
     remove_reactive_poi_corrections_from_slew_targets();
+    manual_solar_kW_slew.update_slew_target(solar_kW_cmd.value.value_float);
+    manual_ess_kW_slew.update_slew_target(ess_kW_cmd.value.value_float);
+    manual_gen_kW_slew.update_slew_target(gen_kW_cmd.value.value_float);
 
     pAssets->set_reactive_power_priority(power_priority_flag.value.value_bool);
 
@@ -2654,6 +2665,9 @@ void Site_Manager::init_state(void) {
     gen_kVAR_cmd.value.set(0.0f);
     solar_kVAR_cmd.value.set(0.0f);
     active_power_setpoint_kW_slew.reset_slew_target();
+    manual_solar_kW_slew.reset_slew_target();
+    manual_ess_kW_slew.reset_slew_target();
+    manual_gen_kW_slew.reset_slew_target();
     gen_kVAR_cmd_slew.reset_slew_target();
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
@@ -2728,6 +2742,9 @@ void Site_Manager::init_state(void) {
 
     // initialize internal variables with config vars
     active_power_setpoint_kW_slew.set_slew_rate(active_power_setpoint_kW_slew_rate.value.value_int);
+    manual_solar_kW_slew.set_slew_rate(manual_solar_kW_slew_rate.value.value_int);
+    manual_ess_kW_slew.set_slew_rate(manual_ess_kW_slew_rate.value.value_int);
+    manual_gen_kW_slew.set_slew_rate(manual_gen_kW_slew_rate.value.value_int);
     ess_kVAR_cmd_slew.set_slew_rate(ess_kVAR_slew_rate.value.value_int);
     gen_kVAR_cmd_slew.set_slew_rate(gen_kVAR_slew_rate.value.value_int);
     solar_kVAR_cmd_slew.set_slew_rate(solar_kVAR_slew_rate.value.value_int);
@@ -2947,6 +2964,9 @@ void Site_Manager::shutdown_state(void) {
     gen_kVAR_cmd.value.set(0.0f);
     solar_kVAR_cmd.value.set(0.0f);
     active_power_setpoint_kW_slew.reset_slew_target();
+    manual_solar_kW_slew.reset_slew_target();
+    manual_ess_kW_slew.reset_slew_target();
+    manual_gen_kW_slew.reset_slew_target();
     gen_kVAR_cmd_slew.reset_slew_target();
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
@@ -3006,9 +3026,9 @@ void Site_Manager::process_runmode1_kW_feature() {
         asset_cmd.active_power_setpoint(active_power_setpoint_kW_cmd.value.value_float, &active_power_setpoint_kW_slew, load_compensation(active_power_setpoint_load_method.value.value_int), active_power_setpoint_absolute_mode_flag.value.value_bool,
                                         active_power_setpoint_direction_flag.value.value_bool, active_power_setpoint_maximize_solar_flag.value.value_bool);
     }
-    // MANUAL MODE takes a solar kW cmd and PV kW cmd and routes those commands through dispatch and charge control
+    // MANUAL MODE takes an ESS kW cmd, solar kW cmd, generator kW cmd, ESS slew rate, solar slew rate, and generator slew rate and routes those commands through dispatch and charge control
     else if (manual_mode_enable_flag.value.value_bool) {
-        asset_cmd.manual_mode(manual_ess_kW_cmd.value.value_float, manual_solar_kW_cmd.value.value_float);
+        asset_cmd.manual_mode(manual_ess_kW_cmd.value.value_float, manual_solar_kW_cmd.value.value_float, manual_gen_kW_cmd.value.value_float, &manual_ess_kW_slew, &manual_solar_kW_slew, &manual_gen_kW_slew);
     }
     // FR MODE (frequency response) - output or absorb additional power if frequency deviates by a set amount
     else if (frequency_response_enabled.value.value_bool) {
