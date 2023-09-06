@@ -65,7 +65,7 @@ std::string build_uri(std::string comp, char* reg);
 
 class Asset {
 public:
-    Asset ();
+    Asset();
     virtual ~Asset() = default;
 
     // configuration
@@ -123,7 +123,7 @@ public:
     demandMode get_demand_mode(void) const;
 
     // internal functions
-    virtual void process_asset(); // process incoming component data
+    virtual void process_asset();  // process incoming component data
     virtual void set_raw_status() = 0;
     bool process_watchdog_status();
 
@@ -132,12 +132,12 @@ public:
     virtual void send_to_components() = 0;  // send data to components (send_to_comp_uri)
 
     // FIMS
-    bool handle_get(fims_message *pmsg);
-    bool add_asset_data_to_buffer(fmt::memory_buffer &buf, bool clothed);
-    bool add_variable_to_buffer(std::string uri, const char* variable, fmt::memory_buffer &buf);
-    virtual bool handle_set(std::string uri, cJSON &body) = 0;
-    bool handle_generic_asset_controls_set(std::string uri, cJSON &body);
-    virtual bool generate_asset_ui(fmt::memory_buffer &buf, const char* const var = NULL) = 0;
+    bool handle_get(fims_message* pmsg);
+    bool add_asset_data_to_buffer(fmt::memory_buffer& buf, bool clothed);
+    bool add_variable_to_buffer(std::string uri, const char* variable, fmt::memory_buffer& buf);
+    virtual bool handle_set(std::string uri, cJSON& body) = 0;
+    bool handle_generic_asset_controls_set(std::string uri, cJSON& body);
+    virtual bool generate_asset_ui(fmt::memory_buffer& buf, const char* const var = NULL) = 0;
 
 protected:
     // Indicates whether this is the primary controller (true) or running in shadow mode (false)
@@ -150,8 +150,9 @@ protected:
     bool configure_common_asset_instance_vars(Type_Configurator* configurator);
     bool configure_component_vars(Type_Configurator* configurator);
     bool configure_common_asset_fims_vars(Type_Configurator* configurator);
-    bool configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type=Float, float default_float=0.0, int default_int=0, bool default_bool=false, bool comes_from_component=true, const char* var_name="", const char* var_units="", int var_scaler=1);
-    void update_fims_var(Fims_Object* fims_var, valueType type, float default_float, int default_int, bool default_bool, const char* var_id="", const char* var_name="", const char* var_units="", int var_scaler=1);
+    bool configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type = Float, float default_float = 0.0, int default_int = 0, bool default_bool = false, bool comes_from_component = true,
+                                   const char* var_name = "", const char* var_units = "", int var_scaler = 1);
+    void update_fims_var(Fims_Object* fims_var, valueType type, float default_float, int default_int, bool default_bool, const char* var_id = "", const char* var_name = "", const char* var_units = "", int var_scaler = 1);
     bool configure_watchdog_vars();
     void add_dynamic_variables_to_maps(Type_Configurator* configurator);
     virtual bool configure_typed_asset_fims_vars(Type_Configurator* configurator) = 0;
@@ -179,12 +180,12 @@ protected:
     Fims_Object reactive_power;
     Fims_Object apparent_power;
     // status points
-    Fims_Object voltage_l1_l2; // Line 1 - Line 2
-    Fims_Object voltage_l2_l3; // Line 2 - Line 3
-    Fims_Object voltage_l3_l1; // Line 3 - Line 1
-    Fims_Object voltage_l1_n; // Line 1 - N
-    Fims_Object voltage_l2_n; // Line 2 - N
-    Fims_Object voltage_l3_n; // Line 3 - N
+    Fims_Object voltage_l1_l2;  // Line 1 - Line 2
+    Fims_Object voltage_l2_l3;  // Line 2 - Line 3
+    Fims_Object voltage_l3_l1;  // Line 3 - Line 1
+    Fims_Object voltage_l1_n;   // Line 1 - N
+    Fims_Object voltage_l2_n;   // Line 2 - N
+    Fims_Object voltage_l3_n;   // Line 3 - N
     Fims_Object current_l1;
     Fims_Object current_l2;
     Fims_Object current_l3;

@@ -51,9 +51,8 @@ const char* Type_Manager::get_asset_type_id() {
  * @brief Handles GETs to URIs beginning with /assets/<asset type>.
  * @param pmsg Pointer to FIMS message struct containing important data like target URI, reply-to URI, etc.
  * @return True if the GET was handled successfully, or false if there was an error.
-*/
-bool Type_Manager::handle_get(fims_message *pmsg)
-{
+ */
+bool Type_Manager::handle_get(fims_message* pmsg) {
     // clear buffer for use
     send_FIMS_buf.clear();
 
@@ -96,9 +95,8 @@ bool Type_Manager::handle_summary_get(fims_message* pmsg) {
  * @brief Adds a JSON object to the given buffer with all of the Type Manager's data.
  * @param buf The buffer to which the JSON object must be added.
  * @return True if the data was added successfully, or false if there was an error.
-*/
-bool Type_Manager::add_type_data_to_buffer(fmt::memory_buffer &buf)
-{
+ */
+bool Type_Manager::add_type_data_to_buffer(fmt::memory_buffer& buf) {
     // begin asset type data with opening curly brace
     bufJSON_StartObject(buf);
 
@@ -190,8 +188,7 @@ void Type_Manager::handle_set(fims_message& msg) {
     }
 }
 
-int Type_Manager::get_num_avail(void)
-{
+int Type_Manager::get_num_avail(void) {
     return numAvail;
 }
 
@@ -206,8 +203,7 @@ int Type_Manager::get_num_running(void) {
 // Sends one PUB for each asset instance and one PUB for the asset type summary data.
 // If there are no configured instances for this asset type, the summary will not be published.
 // The passed type must match the Type_Manager's asset type.
-void Type_Manager::publish_assets(assetType type)
-{
+void Type_Manager::publish_assets(asset_type type) {
     std::string asset_type_base_uri = "/assets/" + std::string(asset_type_id) + "/";
 
     // publish data for each asset instance

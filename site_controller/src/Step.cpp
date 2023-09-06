@@ -15,25 +15,14 @@
 /* Local Internal Dependencies */
 #include <fims/libfims.h>
 #include <Step.h>
+#include <Site_Controller_Utils.h>
 
 bool Step::get_path_switch() {
     return path_switch;
 }
 
-int Step::get_next_path() {
-    return next_path;
-}
-
 const std::string Step::get_name() {
     return step_name;
-}
-
-std::vector<Step_Action>& Step::get_entry_actions() {
-    return entry_actions;
-}
-
-std::vector<Step_Action>& Step::get_exit_conditions() {
-    return exit_conditions;
 }
 
 /**
@@ -49,15 +38,15 @@ bool Step::configure_step(cJSON* object, int step_index) {
         return false;
     }
     step_name = JSON_step_name->valuestring;
-    FPS_INFO_LOG("    step %i: %s \n", step_index, step_name);
+    FPS_INFO_LOG("    step %i: %s", step_index, step_name);
 
     cJSON* JSON_path_switch = cJSON_GetObjectItem(object, "path_switch");
     path_switch = JSON_path_switch == NULL ? false : JSON_path_switch->type == cJSON_True;
 
     cJSON* JSON_next_path = cJSON_GetObjectItem(object, "next_path");
-    next_path = JSON_next_path == NULL ? 0 : JSON_next_path->valueint;
+    next_path = JSON_next_path == NULL ? 0 : zero_check(JSON_next_path->valueint);
     if (path_switch)
-        FPS_INFO_LOG("      path_switch - next path: %i \n", next_path);
+        FPS_INFO_LOG("      path_switch - next path: %i", next_path);
 
     cJSON* JSON_entry_actions = cJSON_GetObjectItem(object, "entry_actions");
     if (JSON_entry_actions == NULL) {
@@ -109,51 +98,50 @@ bool Step::configure_step(cJSON* object, int step_index) {
  * @return Whether the action was configured successfully
  */
 bool Step::configure_action(std::vector<Step_Action>& action_list, cJSON* JSON_action) {
-    // Current action being parsed
-    Step_Action current_action;
+    // New object for the current action being parsed
+    action_list.emplace_back();
+    Step_Action& current_action = action_list.back();
 
-    cJSON* JSON_entry_route = cJSON_GetObjectItem(JSON_action, "route");
-    if (JSON_entry_route == NULL || JSON_entry_route->valuestring == NULL) {
-        FPS_ERROR_LOG("no entry route found");
+    cJSON* JSON_action_route = cJSON_GetObjectItem(JSON_action, "route");
+    if (JSON_action_route == NULL || JSON_action_route->valuestring == NULL) {
+        FPS_ERROR_LOG("no route found for action");
         return false;
     }
-    if (JSON_entry_route->valuestring[0] != '/') {
-        FPS_ERROR_LOG("entry route must begin with a slash");
+    if (JSON_action_route->valuestring[0] != '/') {
+        FPS_ERROR_LOG("action route must begin with a slash");
         return false;
     }
-    current_action.route = std::string(JSON_entry_route->valuestring);
-    FPS_INFO_LOG("      entry route: %s\n", current_action.route);
+    current_action.route = std::string(JSON_action_route->valuestring);
+    FPS_INFO_LOG("      action route: %s", current_action.route);
 
-    cJSON* JSON_entry_value = cJSON_GetObjectItem(JSON_action, "value");
-    if (JSON_entry_value == NULL) {
-        FPS_ERROR_LOG("no entry value found\n");
+    cJSON* JSON_action_value = cJSON_GetObjectItem(JSON_action, "value");
+    if (JSON_action_value == NULL) {
+        FPS_ERROR_LOG("no value found for action %s", current_action.route);
         return false;
     }
-    if ((JSON_entry_value->type == cJSON_False) || (JSON_entry_value->type == cJSON_True))
-        current_action.value.set(JSON_entry_value->type == cJSON_True);
-    else if (JSON_entry_value->type == cJSON_Number)
-        current_action.value.set((float)JSON_entry_value->valuedouble);
-    else if (JSON_entry_value->type == cJSON_String)
-        current_action.value.set(JSON_entry_value->valuestring);
+    if ((JSON_action_value->type == cJSON_False) || (JSON_action_value->type == cJSON_True))
+        current_action.value.set(JSON_action_value->type == cJSON_True);
+    else if (JSON_action_value->type == cJSON_Number)
+        current_action.value.set((float)JSON_action_value->valuedouble);
+    else if (JSON_action_value->type == cJSON_String)
+        current_action.value.set(JSON_action_value->valuestring);
 
-    const char* body = current_action.value.print();
-    if (body == NULL) {
-        FPS_ERROR_LOG("failed to print entry value");
+    std::string body = current_action.value.print();
+    if (body.compare("Invalid Type") == 0) {
+        FPS_ERROR_LOG("received invalid action type");
         return false;
     }
-    FPS_INFO_LOG("      entry value: %s\n", body);
-    delete body;
+    FPS_INFO_LOG("      action value: %s", body);
 
     cJSON* JSON_tolerance = cJSON_GetObjectItem(JSON_action, "tolerance");
     current_action.tolerance = JSON_tolerance == NULL ? 0 : JSON_tolerance->valueint;
     if (current_action.tolerance != 0)
-        FPS_INFO_LOG("      tolerance: %d \n", current_action.tolerance);
+        FPS_INFO_LOG("      tolerance: %d", current_action.tolerance);
 
     cJSON* JSON_debounce_timer = cJSON_GetObjectItem(JSON_action, "debounce_timer");
     current_action.debounce_timer_ms = JSON_debounce_timer == NULL ? 0 : JSON_debounce_timer->valueint;
     if (current_action.debounce_timer_ms != 0)
-        FPS_INFO_LOG("      debounce timer: %d ms\n", current_action.debounce_timer_ms);
+        FPS_INFO_LOG("      debounce timer: %d ms", current_action.debounce_timer_ms);
 
-    action_list.push_back(current_action);
     return true;
 }

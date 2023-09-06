@@ -77,7 +77,7 @@ enum valueType {
     Invalid
 };
 
-enum assetType { ESS, FEEDERS, GENERATORS, SOLAR, NUM_ASSET_TYPES };
+enum asset_type { ESS, FEEDERS, GENERATORS, SOLAR, NUM_ASSET_TYPES };
 
 enum statusType { bit_field, random_enum, invalid };
 
@@ -89,8 +89,7 @@ enum template_type { TEMPLATING_ERROR = -1, NON_TEMPLATE, TRADITIONAL, RANGED };
 
 const char UI_Type_Names[][16] = { "status", "control", "alarm", "fault", "none" };
 
-struct ESS_Calibration_Settings
-{
+struct ESS_Calibration_Settings {
     bool calibration_flag;
     float balancing_factor;
     bool power_dist_flag;

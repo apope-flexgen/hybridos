@@ -62,30 +62,30 @@ TEST_F(ess_manager_test, calculate_ess_active_power) {
     };
 
     std::vector<test_case> tests = {
-	//   id   	num_ess rated_kw   			target_kw  		  socs                   result_kw_setpoints    		    soc_balancing_factor
-		{1,		4,		100,                100,           	  {50,50,50,50},         {25,25,25,25},     				3}, // equal discharge
-		{2,		4,		100,               -100,           	  {50,50,50,50},         {-25,-25,-25,-25},     			3}, // equal charge
-		{3,		4,		100,                100,           	  {10,45,55,90},         {0.101,9.228,16.848,73.823},     	3}, // wide spread discharge
-		{4,		4,		100,               -100,           	  {10,45,55,90},     	 {-73.823,-16.848,-9.228,-0.101},   3}, // wide spread charge
-		{5,		4,		100,                100,       	 	  {49,49.5,50.5,51},     {23.512,24.239,25.738,26.510},     3}, // narrow spread discharge
-		{6,		4,		100,               -100,       	 	  {49,49.5,50.5,51},     {-26.510,-25.738,-24.239,-23.512}, 3}, // narrow spread charge
-		{7,		4,		100,                300,           	  {10,45,55,90},         {1.085,98.915,100,100},     		3}, // wide spread high power discharge
-		{8,		4,		100,               -300,           	  {10,45,55,90},         {-100,-100,-98.915,-1.085},     	3}, // wide spread high power charge
-		{9,		4,		100,               -400,       	 	  {100,100,100,100},     {-100,-100,-100,-100},     		3}, // attempt to charge fully-charged batteries
-		{10,	4,		100,                400,           	  {0,0,0,0},             {100,100,100,100},     			3} 	// attempt to discharge fully-discharged batteries
-	};
+        //   id   	num_ess rated_kw   			target_kw  		  socs                   result_kw_setpoints    		    soc_balancing_factor
+        { 1, 4, 100, 100, { 50, 50, 50, 50 }, { 25, 25, 25, 25 }, 3 },                           // equal discharge
+        { 2, 4, 100, -100, { 50, 50, 50, 50 }, { -25, -25, -25, -25 }, 3 },                      // equal charge
+        { 3, 4, 100, 100, { 10, 45, 55, 90 }, { 0.101, 9.228, 16.848, 73.823 }, 3 },             // wide spread discharge
+        { 4, 4, 100, -100, { 10, 45, 55, 90 }, { -73.823, -16.848, -9.228, -0.101 }, 3 },        // wide spread charge
+        { 5, 4, 100, 100, { 49, 49.5, 50.5, 51 }, { 23.512, 24.239, 25.738, 26.510 }, 3 },       // narrow spread discharge
+        { 6, 4, 100, -100, { 49, 49.5, 50.5, 51 }, { -26.510, -25.738, -24.239, -23.512 }, 3 },  // narrow spread charge
+        { 7, 4, 100, 300, { 10, 45, 55, 90 }, { 1.085, 98.915, 100, 100 }, 3 },                  // wide spread high power discharge
+        { 8, 4, 100, -300, { 10, 45, 55, 90 }, { -100, -100, -98.915, -1.085 }, 3 },             // wide spread high power charge
+        { 9, 4, 100, -400, { 100, 100, 100, 100 }, { -100, -100, -100, -100 }, 3 },              // attempt to charge fully-charged batteries
+        { 10, 4, 100, 400, { 0, 0, 0, 0 }, { 100, 100, 100, 100 }, 3 }                           // attempt to discharge fully-discharged batteries
+    };
 
-    for (auto &test : tests) {
-		test_logger t_log("calculate_ess_active_power", test.id, tests.size());
-		ESS_Manager_Mock ess_mgr;
+    for (auto& test : tests) {
+        test_logger t_log("calculate_ess_active_power", test.id, tests.size());
+        ESS_Manager_Mock ess_mgr;
 
-		// build a JSON with this test case's number of ESS and power rating
-		cJSON* ess_config = ess_mgr.generate_calculatePower_essRoot(test.num_ess, test.rated_kw / test.num_ess, 0);
-		defer { cJSON_Delete(ess_config); };
+        // build a JSON with this test case's number of ESS and power rating
+        cJSON* ess_config = ess_mgr.generate_calculatePower_essRoot(test.num_ess, test.rated_kw / test.num_ess, 0);
+        defer { cJSON_Delete(ess_config); };
 
-		// configure ESS Manager
-		std::map <std::string, std::vector<Fims_Object*>> component_var_map;
-		std::map <std::string, Fims_Object*> asset_var_map;
+        // configure ESS Manager
+        std::map<std::string, std::vector<Fims_Object*>> component_var_map;
+        std::map<std::string, Fims_Object*> asset_var_map;
         Type_Configurator ess_configurator(&ess_mgr, &component_var_map, &primary_controller);
         ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
@@ -131,25 +131,25 @@ TEST_F(ess_manager_test, calculate_ess_reactive_power) {
     };
 
     std::vector<test_case> tests = {
-	//	 id	num_ess     num_running     target_kvar             total_potential_kvar   total_rated_kvar     result_asset_kvar_setpoint
-		{1,	1,			1,				100,					100,				   100,					100}, // request full rated react pow from a single ESS
-		{2,	2,			2,				200,					200,				   200,					100}, // request full rated react pow from 2 ESSs, both running
-		{3,	2,			1,				200,					100,				   200,					100}, // request full rated react pow from 2 ESSs, only 1 running
-		{4,	3,			3,				600,					300,				   600,					100}, // request full pow from 3 ESSs, potential pow limits response
-		{5,	3,			3,				600,					300,				   601,					100}  // request partial pow from 3 ESSs, potential pow limits response
-	};
+        //	 id	num_ess     num_running     target_kvar             total_potential_kvar   total_rated_kvar     result_asset_kvar_setpoint
+        { 1, 1, 1, 100, 100, 100, 100 },  // request full rated react pow from a single ESS
+        { 2, 2, 2, 200, 200, 200, 100 },  // request full rated react pow from 2 ESSs, both running
+        { 3, 2, 1, 200, 100, 200, 100 },  // request full rated react pow from 2 ESSs, only 1 running
+        { 4, 3, 3, 600, 300, 600, 100 },  // request full pow from 3 ESSs, potential pow limits response
+        { 5, 3, 3, 600, 300, 601, 100 }   // request partial pow from 3 ESSs, potential pow limits response
+    };
 
-    for(auto &test : tests) {
-		test_logger t_log("calculate_ess_reactive_power", test.id, tests.size());
-		ESS_Manager_Mock ess_mgr;
+    for (auto& test : tests) {
+        test_logger t_log("calculate_ess_reactive_power", test.id, tests.size());
+        ESS_Manager_Mock ess_mgr;
 
-		// build a JSON with this test case's number of ESS and power rating
-		cJSON* ess_config = ess_mgr.generate_calculatePower_essRoot(test.num_ess, 0, test.total_rated_kvar / test.num_ess);
-		defer { cJSON_Delete(ess_config); };
+        // build a JSON with this test case's number of ESS and power rating
+        cJSON* ess_config = ess_mgr.generate_calculatePower_essRoot(test.num_ess, 0, test.total_rated_kvar / test.num_ess);
+        defer { cJSON_Delete(ess_config); };
 
-		// configure ESS Manager
-		std::map <std::string, std::vector<Fims_Object*>> component_var_map;
-		std::map <std::string, Fims_Object*> asset_var_map;
+        // configure ESS Manager
+        std::map<std::string, std::vector<Fims_Object*>> component_var_map;
+        std::map<std::string, Fims_Object*> asset_var_map;
         Type_Configurator ess_configurator(&ess_mgr, &component_var_map, &primary_controller);
         ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
@@ -304,9 +304,9 @@ TEST_F(ess_manager_test, calculate_ess_active_power_with_reactive_power_priority
         cJSON* ess_config = ess_mgr.generate_calculatePower_essRoot(test.num_ess, test.rated_kw / test.num_ess, 0);
         defer { cJSON_Delete(ess_config); };
 
-		// configure ESS Manager
-		std::map <std::string, std::vector<Fims_Object*>> component_var_map;
-		std::map <std::string, Fims_Object*> asset_var_map;
+        // configure ESS Manager
+        std::map<std::string, std::vector<Fims_Object*>> component_var_map;
+        std::map<std::string, Fims_Object*> asset_var_map;
         Type_Configurator ess_configurator(&ess_mgr, &component_var_map, &primary_controller);
         ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
@@ -391,33 +391,28 @@ void ESS_Manager_Mock::set_ess_potential_reactive_power(float target, int numRun
     }
 }
 
-void ESS_Manager_Mock::set_ess_soh(float _soh, int num_parse)
-{
-    for (int i = 0; i < num_parse; i++)
-    {
+void ESS_Manager_Mock::set_ess_soh(float _soh, int num_parse) {
+    for (int i = 0; i < num_parse; i++) {
         pEss[i]->soh.value.value_float = _soh;
     }
 }
 
-void ESS_Manager_Mock::set_ess_all_socs(const std::vector<float> &socs)
-{
-	for(size_t i = 0; i < pEss.size(); ++i) {
-		pEss[i]->soc.value.set(socs[i]);
-	}
+void ESS_Manager_Mock::set_ess_all_socs(const std::vector<float>& socs) {
+    for (size_t i = 0; i < pEss.size(); ++i) {
+        pEss[i]->soc.value.set(socs[i]);
+    }
 }
 
-void ESS_Manager_Mock::set_ess_all_dischargeable_powers(float _dp)
-{
-	for(auto ess : pEss) {
-		ess->dischargeable_power.value.set(_dp);
-	}
+void ESS_Manager_Mock::set_ess_all_dischargeable_powers(float _dp) {
+    for (auto ess : pEss) {
+        ess->dischargeable_power.value.set(_dp);
+    }
 }
 
-void ESS_Manager_Mock::set_ess_all_chargeable_powers(float _cp)
-{
-    for(auto ess : pEss) {
-		ess->chargeable_power.value.set(_cp);
-	}
+void ESS_Manager_Mock::set_ess_all_chargeable_powers(float _cp) {
+    for (auto ess : pEss) {
+        ess->chargeable_power.value.set(_cp);
+    }
 }
 
 void ESS_Manager_Mock::set_ess_all_max_limited_active_powers(float max_ap) {

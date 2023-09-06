@@ -74,8 +74,6 @@ Site_Manager::Site_Manager(Version* release_version) {
     }
     num_path_faults = 0;
     num_path_alarms = 0;
-    for (int i = 0; i < NUM_STATES; i++)
-        sequences[i] = NULL;
 
     watchdog_old_pet = 0;
 
@@ -90,15 +88,6 @@ Site_Manager::Site_Manager(Version* release_version) {
 
     // Initialize variable id's of variables that are not in variables.json but still receive FIMS sets
     cops_heartbeat.set_variable_id("cops_heartbeat");
-}
-
-Site_Manager::~Site_Manager() {
-    for (int i = 0; i < NUM_STATES; i++) {
-        if (sequences[i] != NULL) {
-            delete (sequences[i]);
-            sequences[i] = NULL;
-        }
-    }
 }
 
 void Site_Manager::configure_feature_objects(void) {
@@ -691,9 +680,10 @@ bool Site_Manager::configure(Asset_Manager* man, fims* fim, cJSON* sequenceRoot,
                 return false;
             }
             // create a Sequence class instance for each state and set Site_Manager pointer to access Site_Manager vars/functions
-            sequences[i] = new Sequence(this);
+            sequences.emplace_back(this);
+            Sequence& current_sequence = sequences.back();
 
-            if (!sequences[i]->parse_sequence(JSON_single_sequence, (states)i)) {
+            if (!current_sequence.parse_sequence(JSON_single_sequence, (states)i)) {
                 FPS_ERROR_LOG("Failed to parse %s sequence.\n", state_name[i]);
                 return false;
             }
@@ -2554,19 +2544,19 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
 }
 
 void Site_Manager::check_state(void) {
-    Sequence* current_sequence = sequences[current_state];
-    Path* current_path = current_sequence->get_path(current_sequence->current_path_index);
+    Sequence current_sequence = sequences[current_state];
+    Path current_path = current_sequence.paths[current_sequence.current_path_index];
 
     // if faulted or shutdown cmd, enter shutdown state
-    if (current_state != Init && (current_sequence->check_faults() || (disable_flag.value.value_bool)))
+    if (current_state != Init && (current_sequence.check_faults() || (disable_flag.value.value_bool)))
         current_state = Shutdown;
 
     // check if alarms are present
-    current_sequence->check_alarms();
+    current_sequence.check_alarms();
 
     // count number of asset faults and asset alarms
-    num_path_faults = current_path->num_active_faults;
-    num_path_alarms = current_path->num_active_alarms;
+    num_path_faults = current_path.num_active_faults;
+    num_path_alarms = current_path.num_active_alarms;
 
     // boolean running status check
     running_status_flag.value.set((current_state == RunMode1) || current_state == RunMode2);
@@ -2577,7 +2567,7 @@ void Site_Manager::check_state(void) {
         FPS_INFO_LOG("\nSite Manager state change to: %s \n\n", state_name[current_state]);
         snprintf(event_message, SHORT_MSG_LEN, "Site Manager state changed to %s", state_name[current_state]);
         emit_event("Site", event_message, 2);
-        sequences[check_current_state]->sequence_bypass = false;  // ensure previous state executes next time its called
+        sequences[check_current_state].sequence_bypass = false;  // ensure previous state executes next time its called
         check_current_state = current_state;
         site_state.value.set(state_name[current_state]);
         site_state_enum.value.set(current_state);
@@ -2610,7 +2600,7 @@ void Site_Manager::process_state(void) {
     check_state();
 
     // run the sequence for the current state
-    sequences[current_state]->call_sequence();
+    sequences[current_state].call_sequence();
 
     // run the current state function
     switch (current_state) {
@@ -2981,7 +2971,7 @@ void Site_Manager::shutdown_state(void) {
         data_endpoint->turn_off_start_cmd();
     }
 
-    if (sequences[Shutdown]->sequence_bypass == true)
+    if (sequences[Shutdown].sequence_bypass == true)
         current_state = Ready;
 
     // set all inputs to enable_flag to false

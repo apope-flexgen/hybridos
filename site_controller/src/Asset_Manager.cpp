@@ -453,8 +453,7 @@ bool Asset_Manager::asset_create(cJSON* pJsonRoot, bool* primary_controller) {
     return true;
 }
 
-bool Asset_Manager::build_configurators(void)
-{
+bool Asset_Manager::build_configurators(void) {
     ess_configurator = new Type_Configurator(ess_manager, &component_var_map, is_primary);
     feeder_configurator = new Type_Configurator(feeder_manager, &component_var_map, is_primary);
     generator_configurator = new Type_Configurator(generator_manager, &component_var_map, is_primary);
@@ -1138,7 +1137,7 @@ void Asset_Manager::set_solar_clear_faults(void) {
  * @param type The asset type that is being checked.
  * @return The number of alarms that are active.
  */
-int Asset_Manager::get_num_active_alarms(assetType type) const {
+int Asset_Manager::get_num_active_alarms(asset_type type) const {
     switch (type) {
         case ESS:
             return ess_manager->get_num_active_alarms();
@@ -1159,7 +1158,7 @@ int Asset_Manager::get_num_active_alarms(assetType type) const {
  * @param type The asset type that is being checked.
  * @return The number of faults that are active.
  */
-int Asset_Manager::get_num_active_faults(assetType type) const {
+int Asset_Manager::get_num_active_faults(asset_type type) const {
     switch (type) {
         case ESS:
             return ess_manager->get_num_active_faults();

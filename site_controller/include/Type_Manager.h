@@ -55,16 +55,16 @@ public:
     virtual void append_new_asset(Asset*) = 0;
 
     // Fims
-    bool add_type_data_to_buffer(fmt::memory_buffer &buf);
-    bool handle_get(fims_message *pmsg);
-    bool handle_summary_get(fims_message *pmsg);
-    void handle_set(fims_message &msg);
+    bool add_type_data_to_buffer(fmt::memory_buffer& buf);
+    bool handle_get(fims_message* pmsg);
+    bool handle_summary_get(fims_message* pmsg);
+    void handle_set(fims_message& msg);
 
     int get_num_avail(void);
     int get_num_parsed(void);
     int get_num_running(void);
 
-    void publish_assets(assetType type);
+    void publish_assets(asset_type type);
     void send_to_components(void);
 
     void set_clear_faults(void);

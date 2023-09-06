@@ -15,45 +15,15 @@
 #include <Logger.h>
 /* Local Internal Dependencies */
 #include <Path.h>
+#include <Site_Manager.h>
 #include <Site_Controller_Utils.h>
 
 Path::Path(Site_Manager* siteref) {
     pSite = siteref;
-    path_name = NULL;
-    return_id = NULL;
-    steps = NULL;
     return_state = Error;
-    steps_size = 0;
     timeout = 0;
     num_active_faults = 0;
     num_active_alarms = 0;
-}
-
-Path::~Path() {
-    if (steps != NULL)
-        delete[] steps;
-    if (path_name != NULL)
-        free(path_name);
-    if (return_id != NULL)
-        delete[] return_id;
-}
-
-const char* Path::get_name() {
-    return path_name;
-}
-
-Step* Path::get_step(int n) {
-    if (n < steps_size)
-        return &(steps[n]);
-    return NULL;
-}
-
-int Path::get_steps_size() {
-    return steps_size;
-}
-
-states Path::get_return_state() {
-    return return_state;
 }
 
 /**
@@ -485,7 +455,7 @@ bool Path::configure_path(cJSON* object, int current_path_index) {
         FPS_ERROR_LOG("No path_name found \n");
         return false;
     }
-    path_name = strdup(JSON_path_name->valuestring);
+    path_name = JSON_path_name->valuestring;
     cJSON* JSON_return_id = cJSON_GetObjectItem(object, "return_id");
     if (JSON_return_id == NULL || JSON_return_id->valuestring == NULL) {
         FPS_ERROR_LOG("No return_id found \n");
@@ -612,16 +582,18 @@ bool Path::configure_path(cJSON* object, int current_path_index) {
         FPS_ERROR_LOG("No steps found or steps array empty\n");
         return false;
     }
-    steps_size = cJSON_GetArraySize(JSON_steps);
-    steps = new Step[steps_size];
 
-    for (int i = 0; i < steps_size; i++) {
+    for (int i = 0; i < cJSON_GetArraySize(JSON_steps); i++) {
+        // Current step being configured
+        steps.emplace_back();
+        Step& current_step = steps.back();
+
         cJSON* JSON_steps_index = cJSON_GetArrayItem(JSON_steps, i);
         if (JSON_steps_index == NULL) {
             FPS_ERROR_LOG("No object found in steps array index %d found \n", i);
             return false;
         }
-        if (steps[i].configure_step(JSON_steps_index, i) == false) {
+        if (current_step.configure_step(JSON_steps_index, i) == false) {
             FPS_ERROR_LOG("Failed to parse step %d\n", i);
             return false;
         }

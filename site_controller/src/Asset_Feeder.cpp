@@ -47,24 +47,20 @@ bool Asset_Feeder::get_breaker_status(void) {
  * Status of the utility tracked by this feed register
  * Only supported for some sites, else will always be false
  */
-bool Asset_Feeder::get_utility_status(void)
-{
+bool Asset_Feeder::get_utility_status(void) {
     return utility_status.value.value_bool;
 }
 
-float Asset_Feeder::get_gridside_frequency(void)
-{
+float Asset_Feeder::get_gridside_frequency(void) {
     return grid_frequency.value.value_float;
 }
 
-float Asset_Feeder::get_gridside_avg_voltage(void)
-{
+float Asset_Feeder::get_gridside_avg_voltage(void) {
     float sumVolts = grid_voltage_l1.value.value_float + grid_voltage_l2.value.value_float + grid_voltage_l3.value.value_float;
-    return (numPhases != 0.0 ? sumVolts/numPhases : 0);
+    return (numPhases != 0.0 ? sumVolts / numPhases : 0);
 }
 
-float Asset_Feeder::get_power_factor()
-{
+float Asset_Feeder::get_power_factor() {
     return power_factor.value.value_float;
 }
 
@@ -90,8 +86,7 @@ bool Asset_Feeder::breaker_close_permissive_remove(void) {
     return send_to_comp_uri(close_permissive_remove_value, uri_breaker_close_permissive_remove);
 }
 
-void Asset_Feeder::set_active_power_setpoint(float setpoint)
-{
+void Asset_Feeder::set_active_power_setpoint(float setpoint) {
     active_power_setpoint.component_control_value.value_float = setpoint;
 }
 
@@ -216,19 +211,15 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator) {
  * WARNING: "raw" values MUST be configured BEFORE their associated calculated values. This is because calculated
  *          values will sever the asset_var_map connection to the component variable and the raw values need to
  *          come from the component
- * Ex: `dischargeable_power_raw` must be configured here, and `dischargeable_power` must be configured in the 
+ * Ex: `dischargeable_power_raw` must be configured here, and `dischargeable_power` must be configured in the
  * associated replace_raw_fims_vars() function
- * 
+ *
  * Raw values are currently unused for this Asset type
  */
-bool Asset_Feeder::configure_typed_asset_fims_vars(Type_Configurator* configurator)
-{
-    return configure_single_fims_var(&breaker_status,"breaker_status",configurator,Bool) &&
-           configure_single_fims_var(&utility_status,"utility_status",configurator,Bool) &&
-           configure_single_fims_var(&grid_voltage_l1,"grid_voltage_l1",configurator) &&
-           configure_single_fims_var(&grid_voltage_l2,"grid_voltage_l2",configurator) &&
-           configure_single_fims_var(&grid_voltage_l3,"grid_voltage_l3",configurator) &&
-           configure_single_fims_var(&grid_frequency,"grid_frequency",configurator);
+bool Asset_Feeder::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
+    return configure_single_fims_var(&breaker_status, "breaker_status", configurator, Bool) && configure_single_fims_var(&utility_status, "utility_status", configurator, Bool) &&
+           configure_single_fims_var(&grid_voltage_l1, "grid_voltage_l1", configurator) && configure_single_fims_var(&grid_voltage_l2, "grid_voltage_l2", configurator) && configure_single_fims_var(&grid_voltage_l3, "grid_voltage_l3", configurator) &&
+           configure_single_fims_var(&grid_frequency, "grid_frequency", configurator);
 }
 
 bool Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configurator) {
@@ -238,8 +229,7 @@ bool Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configur
     }
 
     // does config validation that was not done earlier since we did not know which feeder was POI at the time
-    if (!validate_config())
-    {
+    if (!validate_config()) {
         FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder failed base Asset validate config check\n");
         return false;
     }
@@ -302,13 +292,11 @@ bool Asset_Feeder::handle_set(std::string uri, cJSON& body) {
 /**
  * Update the asset status with the measurement received on the breaker_status Fims_Object
  */
-void Asset_Feeder::set_raw_status()
-{
+void Asset_Feeder::set_raw_status() {
     raw_status = breaker_status.value.value_bit_field;
 }
 
-void Asset_Feeder::process_asset()
-{
+void Asset_Feeder::process_asset() {
     set_raw_status();
     return Asset::process_asset();
 }

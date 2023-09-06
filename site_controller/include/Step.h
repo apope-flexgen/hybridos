@@ -31,21 +31,17 @@ struct Step_Action {
 };
 
 class Step {
-private:
+public:
     std::string step_name;
     std::vector<Step_Action> entry_actions;
     std::vector<Step_Action> exit_conditions;
     bool path_switch;
-    int next_path;
+    uint next_path;
 
-public:
     bool configure_step(cJSON* object, int step_index);
     bool configure_action(std::vector<Step_Action>& action_list, cJSON* JSON_action);
     bool get_path_switch();
-    int get_next_path();
     const std::string get_name();
-    std::vector<Step_Action>& get_entry_actions();
-    std::vector<Step_Action>& get_exit_conditions();
 };
 
 #endif /* INCLUDE_STEP_H_ */

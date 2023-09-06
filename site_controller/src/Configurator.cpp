@@ -23,8 +23,7 @@
  * @param pCVM pointer to full component variable map containing all component uris and Fims_Objects
  * @param pc pointer to the primary status flag for this controller
  */
-Type_Configurator::Type_Configurator(Type_Manager* pMan, std::map <std::string, std::vector<Fims_Object*>>* pCVM, bool* pc)
-{
+Type_Configurator::Type_Configurator(Type_Manager* pMan, std::map<std::string, std::vector<Fims_Object*>>* pCVM, bool* pc) {
     // Set internal pointers to passed-in pointers
     p_manager = pMan;
     pCompVarMap = pCVM;

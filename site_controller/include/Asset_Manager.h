@@ -31,7 +31,7 @@ public:
     ~Asset_Manager();
 
     // init methods
-    bool asset_create(cJSON *pJsonRoot, bool* primary_controller);
+    bool asset_create(cJSON* pJsonRoot, bool* primary_controller);
 
     void set_min_generators_active(int);
 
@@ -179,8 +179,8 @@ public:
     float get_ess_total_dischargeable_energy_kWh(void);
     std::vector<int> get_ess_setpoint_statuses(void);
 
-    int get_num_active_faults(assetType type) const;
-    int get_num_active_alarms(assetType type) const;
+    int get_num_active_faults(asset_type type) const;
+    int get_num_active_alarms(asset_type type) const;
     bool check_asset_alert(std::pair<std::string, uint64_t>& alert);
 
     const std::string get_poi_id(void);

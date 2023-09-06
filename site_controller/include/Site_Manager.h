@@ -23,10 +23,9 @@
 #include <Asset_Cmd_Object.h>
 #include <Fims_Object.h>
 #include <Energy_Arbitrage.h>
+#include <Sequence.h>
 #include <macros.h>
 #include <version.h>
-
-class Sequence;
 
 struct Feature {
     Feature();
@@ -45,7 +44,6 @@ class Site_Manager {
     ////////////////////////////////////////////////////////////////////////////////////////
 public:
     Site_Manager(Version* release_version);
-    virtual ~Site_Manager();
     bool configure(Asset_Manager* man, fims* fim, cJSON* sequenceRoot, cJSON* varRoot, bool* primary_controller);
 
 protected:
@@ -146,7 +144,7 @@ protected:
     void shutdown_state();
     void error_state();
     bool set_state(states state_request);
-    Sequence* sequences[NUM_STATES];
+    std::vector<Sequence> sequences;
 
     ////////////////////////////////////////////////////////////////////////////////////////
     //                                  SITE CONFIGURATION                                //

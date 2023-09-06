@@ -31,8 +31,7 @@ Fims_Object::Fims_Object() {
 }
 
 // Copy constructor. Excludes the fims memory buffer
-Fims_Object::Fims_Object(const Fims_Object& other)
-{
+Fims_Object::Fims_Object(const Fims_Object& other) {
     options_name = other.options_name;
     options_value = other.options_value;
     default_status_value = other.default_status_value;
@@ -56,53 +55,45 @@ Fims_Object::Fims_Object(const Fims_Object& other)
     type = other.type;
 }
 
-Fims_Object& Fims_Object::operator=(Fims_Object other)
-{
+Fims_Object& Fims_Object::operator=(Fims_Object other) {
     swap(*this, other);
     return *this;
 }
 
-void Fims_Object::set_component_uri(const char* _uri)
-{
-    component_uri = _uri;
+void Fims_Object::set_component_uri(const char* uri) {
+    component_uri = uri;
 }
 
-void Fims_Object::set_register_id(const char* _id)
-{
-    register_id = _id;
+void Fims_Object::set_register_id(const char* id) {
+    register_id = id;
 }
 
-void Fims_Object::set_variable_id(const char* _id)
-{
-    variable_id = _id;
+void Fims_Object::set_variable_id(const char* id) {
+    variable_id = id;
 }
 
 void Fims_Object::set_variable_id(const std::string& id) {
     variable_id = id;
 }
 
-void Fims_Object::set_name(const char* _name)
-{
+void Fims_Object::set_name(const char* _name) {
     name = _name;
 }
 
-void Fims_Object::set_unit(const char* _unit)
-{
+void Fims_Object::set_unit(const char* _unit) {
     unit = _unit;
 }
 
-void Fims_Object::set_ui_type(const char* _ui_type)
-{
+void Fims_Object::set_ui_type(const char* _ui_type) {
     ui_type = _ui_type;
 }
 
-void Fims_Object::set_value_type(valueType _value_type) {
-    value.type = _value_type;
-    component_control_value.type = _value_type;
+void Fims_Object::set_value_type(valueType value_type) {
+    value.type = value_type;
+    component_control_value.type = value_type;
 }
 
-void Fims_Object::set_type(const char* _type)
-{
+void Fims_Object::set_type(const char* _type) {
     type = _type;
 }
 
@@ -402,13 +393,9 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
         } else {
             bufJSON_AddBool(buf, item_name.c_str(), value.value_bool);
         }
-    }
-    else if (value.type == String)
-    {
+    } else if (value.type == String) {
         bufJSON_AddString(buf, item_name.c_str(), value.value_string.c_str());
-    }
-    else if (value.type == Bit_Field)
-    {
+    } else if (value.type == Bit_Field) {
         // Type Bit_Field should currently be unused, as alarms/faults use Int and Status has it's own type now
         // TODO: leave for future support
         if (!options_name.empty() && !options_name[value.value_bit_field].empty()) {

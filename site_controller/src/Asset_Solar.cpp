@@ -58,10 +58,8 @@ bool Asset_Solar::stop() {
     return (send_to_comp_uri(stop_value, uri_stop));
 }
 
-bool Asset_Solar::enter_standby(void)
-{
-    if (isRunning && !inStandby && (active_power_setpoint.value.value_float == 0.0) && (reactive_power_setpoint.value.value_float == 0.0))
-    {
+bool Asset_Solar::enter_standby(void) {
+    if (isRunning && !inStandby && (active_power_setpoint.value.value_float == 0.0) && (reactive_power_setpoint.value.value_float == 0.0)) {
         inStandby = true;
         return send_to_comp_uri(enter_standby_value, uri_enter_standby);
     }
@@ -73,23 +71,19 @@ bool Asset_Solar::exit_standby(void) {
     return send_to_comp_uri(exit_standby_value, uri_exit_standby);
 }
 
-float Asset_Solar::get_active_power_setpoint(void)
-{
+float Asset_Solar::get_active_power_setpoint(void) {
     return active_power_setpoint.value.value_float;
 }
 
-float Asset_Solar::get_reactive_power_setpoint(void)
-{
+float Asset_Solar::get_reactive_power_setpoint(void) {
     return reactive_power_setpoint.value.value_float;
 }
 
-float Asset_Solar::get_power_factor_setpoint(void)
-{
+float Asset_Solar::get_power_factor_setpoint(void) {
     return power_factor_setpoint.value.value_float;
 }
 
-bool Asset_Solar::send_active_power_setpoint(void)
-{
+bool Asset_Solar::send_active_power_setpoint(void) {
     if (round(active_power_setpoint.component_control_value.value_float) != round(active_power_setpoint.value.value_float))
         return active_power_setpoint.send_to_component(false, true);
     return false;
@@ -100,8 +94,7 @@ void Asset_Solar::set_active_power_setpoint(float setpoint) {
     active_power_setpoint.component_control_value.value_float = range_check(setpoint, max_limited_active_power, min_limited_active_power);
 }
 
-bool Asset_Solar::send_reactive_power_setpoint(void)
-{
+bool Asset_Solar::send_reactive_power_setpoint(void) {
     if (round(reactive_power_setpoint.component_control_value.value_float) != round(reactive_power_setpoint.value.value_float))
         return reactive_power_setpoint.send_to_component(false, true);
     return false;
@@ -109,11 +102,10 @@ bool Asset_Solar::send_reactive_power_setpoint(void)
 
 void Asset_Solar::set_reactive_power_setpoint(float setpoint) {
     // solar asset can generate negative reactive power, but has to be bounded by potential
-    reactive_power_setpoint.component_control_value.value_float = range_check(setpoint, potential_reactive_power, -1*potential_reactive_power);
+    reactive_power_setpoint.component_control_value.value_float = range_check(setpoint, potential_reactive_power, -1 * potential_reactive_power);
 }
 
-bool Asset_Solar::send_power_factor_setpoint(void)
-{
+bool Asset_Solar::send_power_factor_setpoint(void) {
     if (power_factor_setpoint.component_control_value.value_float != power_factor_setpoint.value.value_float)
         return power_factor_setpoint.send_to_component();
     return false;
@@ -121,11 +113,10 @@ bool Asset_Solar::send_power_factor_setpoint(void)
 
 void Asset_Solar::set_power_factor_setpoint(float setpoint) {
     // power factor must be bounded between 1.0 and -1.0
-    power_factor_setpoint.component_control_value.value_float =  setpoint > 1.0 ? 1.0 : setpoint < -1.0 ? -1.0 : setpoint;
+    power_factor_setpoint.component_control_value.value_float = setpoint > 1.0 ? 1.0 : setpoint < -1.0 ? -1.0 : setpoint;
 }
 
-bool Asset_Solar::send_power_mode(void)
-{
+bool Asset_Solar::send_power_mode(void) {
     if ((power_mode_setpoint.component_control_value.value_int != powerMode::UNKNOWN) && (power_mode_setpoint.component_control_value.value_int != power_mode_setpoint.value.value_int))
         return power_mode_setpoint.send_to_component();
     return false;
@@ -272,16 +263,14 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator) {
  * WARNING: "raw" values MUST be configured BEFORE their associated calculated values. This is because calculated
  *          values will sever the asset_var_map connection to the component variable and the raw values need to
  *          come from the component
- * Ex: `dischargeable_power_raw` must be configured here, and `dischargeable_power` must be configured in the 
+ * Ex: `dischargeable_power_raw` must be configured here, and `dischargeable_power` must be configured in the
  * associated replace_raw_fims_vars() function
- * 
+ *
  * Raw values are currently unused for this Asset type
  */
-bool Asset_Solar::configure_typed_asset_fims_vars(Type_Configurator* configurator)
-{
-    return configure_single_fims_var(&power_mode_setpoint,"reactive_power_mode",configurator,Int,0,REACTIVEPWR) &&
-           configure_single_fims_var(&power_factor_setpoint,"power_factor_setpoint",configurator) &&
-           configure_single_fims_var(&status,"status",configurator,Status);
+bool Asset_Solar::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
+    return configure_single_fims_var(&power_mode_setpoint, "reactive_power_mode", configurator, Int, 0, REACTIVEPWR) && configure_single_fims_var(&power_factor_setpoint, "power_factor_setpoint", configurator) &&
+           configure_single_fims_var(&status, "status", configurator, Status);
 }
 
 // Variable map moved to ESS_Manager
@@ -376,8 +365,7 @@ void Asset_Solar::process_potential_active_power(void)  // overriden from the ba
     //       (curtailed_active_power_limit -> max_potential_active_power -> active_power_setpoint -> active_power -> curtailed_active_power_limit)
     //       curtailed_active_power_limit also appears to not function fully as intended as it can be bypassed in some cases. Revisit if its behavior can
     //       be changed so that it can be included in the active power limit calculation without feedback loop.
-    if (reactive_power_priority)
-    {
+    if (reactive_power_priority) {
         active_power_limit = sqrtf(powf(rated_apparent_power_kva, 2) - powf(reactive_power_setpoint.value.value_float, 2));
         max_limited_active_power = max_potential_active_power = std::min(max_potential_active_power, active_power_limit);
     }
@@ -389,13 +377,11 @@ void Asset_Solar::process_potential_active_power(void)  // overriden from the ba
 /**
  * Update the asset status with the measurement received on the status Fims_Object
  */
-void Asset_Solar::set_raw_status()
-{
+void Asset_Solar::set_raw_status() {
     raw_status = status.value.value_bit_field;
 }
 
-void Asset_Solar::process_asset(void)
-{
+void Asset_Solar::process_asset(void) {
     set_raw_status();
     Asset::process_asset();
 

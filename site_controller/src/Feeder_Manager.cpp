@@ -219,10 +219,8 @@ void Feeder_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, c
 }
 
 // HybridOS Step 2: Process Asset Data
-void Feeder_Manager::process_asset_data()
-{
-    if (numParsed > 0)
-    {
+void Feeder_Manager::process_asset_data() {
+    if (numParsed > 0) {
         for (int i = 0; i < numParsed; i++)
             pFeeder[i]->process_asset();
         aggregate_feeder_data();
@@ -253,12 +251,10 @@ void Feeder_Manager::configure_base_class_list() {
     pAssets.assign(pFeeder.begin(), pFeeder.end());
 }
 
-Asset* Feeder_Manager::build_new_asset(void)
-{
+Asset* Feeder_Manager::build_new_asset(void) {
     Asset_Feeder* asset = new Asset_Feeder();
-    if (asset == NULL)
-    {
-        FPS_ERROR_LOG("Feeder %zu: Memory allocation error.", pFeeder.size()+1);
+    if (asset == NULL) {
+        FPS_ERROR_LOG("Feeder %zu: Memory allocation error.", pFeeder.size() + 1);
     }
     numParsed++;
     return asset;

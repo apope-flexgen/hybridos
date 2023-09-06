@@ -17,7 +17,7 @@
 
 class Asset_Solar : public Asset {
 public:
-    Asset_Solar ();
+    Asset_Solar();
 
     // control
     bool start(void);

@@ -29,12 +29,12 @@ public:
     void set(const char* value);
     void set(std::string value);
     void set(Value_Object& new_value);
-    const char* print();
+    std::string print();
     bool add_value_to_JSON_buffer(fmt::memory_buffer& buf, bool round_float = false);
     bool add_naked_value_to_JSON_buffer(fmt::memory_buffer& buf);
 
-    int   type;
-    int   value_int;
+    int type;
+    int value_int;
     std::string value_string;
     float value_float;
     uint64_t value_bit_field;

@@ -17,7 +17,7 @@
 
 class Asset_ESS : public Asset {
 public:
-    Asset_ESS ();
+    Asset_ESS();
 
     // control
     bool start(void);
@@ -153,29 +153,29 @@ protected:
     Fims_Object grid_mode_setpoint;
     Fims_Object power_mode_setpoint;
     Fims_Object power_factor_setpoint;
-    Fims_Object voltage_slew_setpoint; // units in %/s
+    Fims_Object voltage_slew_setpoint;  // units in %/s
     Fims_Object voltage_setpoint;
     Fims_Object frequency_setpoint;
     // TODO: these are Sungrow specific fields, remove and cleanup
     Fims_Object pcs_a_nominal_voltage_setpoint;
     Fims_Object pcs_b_nominal_voltage_setpoint;
     // status points
-    Fims_Object soh; // battery state of health
+    Fims_Object soh;  // battery state of health
     Fims_Object chargeable_power;
     Fims_Object dischargeable_power;
     Fims_Object chargeable_power_raw;
     Fims_Object dischargeable_power_raw;
-    Fims_Object soc; // battery state of charge
-    Fims_Object soc_raw; // unscaled battery state of charge from asset
+    Fims_Object soc;      // battery state of charge
+    Fims_Object soc_raw;  // unscaled battery state of charge from asset
     Fims_Object chargeable_energy;
     Fims_Object dischargeable_energy;
     Fims_Object chargeable_energy_raw;
     Fims_Object dischargeable_energy_raw;
-    Fims_Object max_temp; // battery max temperature
-    Fims_Object min_temp; // battery min temperature
+    Fims_Object max_temp;  // battery max temperature
+    Fims_Object min_temp;  // battery min temperature
     Fims_Object racks_in_service;
     Fims_Object dc_contactors_closed;
-    Fims_Object autobalancing_status; // Status of the autobalancing register
+    Fims_Object autobalancing_status;  // Status of the autobalancing register
     Fims_Object voltage_min;
     Fims_Object voltage_max;
     Fims_Object status;

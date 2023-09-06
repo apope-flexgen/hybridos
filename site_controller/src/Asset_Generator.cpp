@@ -104,8 +104,7 @@ void Asset_Generator::set_balanced(bool flag) {
     isBalanced = flag;
 }
 
-bool Asset_Generator::send_active_power_setpoint(void)
-{
+bool Asset_Generator::send_active_power_setpoint(void) {
     if (round(active_power_setpoint.component_control_value.value_float) != round(active_power_setpoint.value.value_float))
         return active_power_setpoint.send_to_component(false, true);
     return false;
@@ -127,16 +126,14 @@ void Asset_Generator::process_potential_active_power(void)  // overriden from th
         max_potential_active_power = min_potential_active_power = active_power.value.value_float;
 
     // Further limit based on reactive power and apparent power if appropriate
-    if (reactive_power_priority)
-    {
+    if (reactive_power_priority) {
         active_power_limit = sqrtf(powf(rated_apparent_power_kva, 2) - powf(reactive_power_setpoint.value.value_float, 2));
         max_potential_active_power = std::min(max_potential_active_power, active_power_limit);
     }
     max_limited_active_power = max_potential_active_power;
 }
 
-bool Asset_Generator::send_reactive_power_setpoint(void)
-{
+bool Asset_Generator::send_reactive_power_setpoint(void) {
     if (round(reactive_power_setpoint.component_control_value.value_float) != round(reactive_power_setpoint.value.value_float))
         return reactive_power_setpoint.send_to_component(false, true);
     return true;
@@ -147,23 +144,19 @@ void Asset_Generator::set_reactive_power_setpoint(float setpoint) {
     reactive_power_setpoint.component_control_value.value_float = range_check(setpoint, potential_reactive_power, 0.0f);
 }
 
-float Asset_Generator::get_active_power_setpoint(void)
-{
+float Asset_Generator::get_active_power_setpoint(void) {
     return active_power_setpoint.value.value_float;
 }
 
-float Asset_Generator::get_active_power_setpoint_control(void)
-{
+float Asset_Generator::get_active_power_setpoint_control(void) {
     return active_power_setpoint.component_control_value.value_float;
 }
 
-float Asset_Generator::get_reactive_power_setpoint(void)
-{
+float Asset_Generator::get_reactive_power_setpoint(void) {
     return reactive_power_setpoint.value.value_float;
 }
 
-float Asset_Generator::get_reactive_power_setpoint_control(void)
-{
+float Asset_Generator::get_reactive_power_setpoint_control(void) {
     return reactive_power_setpoint.component_control_value.value_float;
 }
 
@@ -293,15 +286,13 @@ bool Asset_Generator::configure_ui_controls(Type_Configurator* configurator) {
  * WARNING: "raw" values MUST be configured BEFORE their associated calculated values. This is because calculated
  *          values will sever the asset_var_map connection to the component variable and the raw values need to
  *          come from the component
- * Ex: `dischargeable_power_raw` must be configured here, and `dischargeable_power` must be configured in the 
+ * Ex: `dischargeable_power_raw` must be configured here, and `dischargeable_power` must be configured in the
  * associated replace_raw_fims_vars() function
- * 
+ *
  * Raw variables are currently unused for this Asset type
  */
-bool Asset_Generator::configure_typed_asset_fims_vars(Type_Configurator* configurator)
-{
-    return configure_single_fims_var(&grid_mode_setpoint,"grid_mode",configurator,Int,0,FOLLOWING) &&
-           configure_single_fims_var(&status,"status",configurator,Status);
+bool Asset_Generator::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
+    return configure_single_fims_var(&grid_mode_setpoint, "grid_mode", configurator, Int, 0, FOLLOWING) && configure_single_fims_var(&status, "status", configurator, Status);
 }
 
 /****************************************************************************************/
@@ -343,8 +334,7 @@ bool Asset_Generator::generate_asset_ui(fmt::memory_buffer& buf, const char* con
     return (goodBody);
 }
 
-gridMode Asset_Generator::get_grid_mode(void)
-{
+gridMode Asset_Generator::get_grid_mode(void) {
     if (grid_mode_setpoint.value.value_int == grid_following_value)
         return gridMode::FOLLOWING;
     else if (grid_mode_setpoint.value.value_int == grid_forming_value)
@@ -353,8 +343,7 @@ gridMode Asset_Generator::get_grid_mode(void)
         return gridMode::UNDEFINED;
 }
 
-bool Asset_Generator::send_grid_mode(void)
-{
+bool Asset_Generator::send_grid_mode(void) {
     if (grid_mode_setpoint.component_control_value.value_int != grid_mode_setpoint.value.value_int)
         return grid_mode_setpoint.send_to_component();
     return false;
@@ -416,13 +405,11 @@ bool Asset_Generator::handle_set(std::string uri, cJSON& body) {
 /**
  * Update the asset status with the measurement received on the status Fims_Object
  */
-void Asset_Generator::set_raw_status()
-{
+void Asset_Generator::set_raw_status() {
     raw_status = status.value.value_bit_field;
 }
 
-void Asset_Generator::process_asset(void)
-{
+void Asset_Generator::process_asset(void) {
     set_raw_status();
     Asset::process_asset();
 
