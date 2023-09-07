@@ -1,0 +1,13 @@
+[Unit]
+Description=FlexGen HybridOS fims_relay
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=root
+ExecStart=/usr/local/bin/fims_relay
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
