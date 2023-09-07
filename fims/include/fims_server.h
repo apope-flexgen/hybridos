@@ -30,10 +30,6 @@
 extern volatile bool running;
 extern volatile int sock_fd;
 
-extern pthread_mutex_t subscription_mutex;
-extern pthread_cond_t  subscription_lock_cv;
-extern pthread_cond_t  subscription_reading_cv;
-
 struct subscription_lock
 {
     bool lock = false;

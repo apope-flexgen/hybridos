@@ -59,8 +59,6 @@ extern uint8_t* g_aesKey;
 
 
 /******************************************************************************/
-
-
 // catch any signals for exiting to clean up nicely
 void signal_handler (int sig)
 {
@@ -81,6 +79,8 @@ void signal_handler (int sig)
     FPS_ERROR_PRINT("signal of type %d caught.\n", sig);
     signal(sig, SIG_DFL);
 }
+
+/******************************************************************************/
 
 
 //read only lock of subscriptions allows multiple threads to read simultaneously
@@ -132,7 +132,6 @@ void unlock_subscriptions()
     pthread_mutex_unlock(&subscription_mutex);
 }
 
-/******************************************************************************/
 
 // simple hash function to return a number from the input string
 // assumes the string in null terminated
@@ -533,6 +532,7 @@ void clean_up_connection(client_info* info)
     {
         int sock = info->sock;
         info->sock = 0;
+        shutdown(sock, SHUT_RDWR);
         close(sock);
     }
     // if there's at least one subscription, loop through and remove them all
@@ -826,21 +826,6 @@ void *receive_messages(void* args)
                     }
                 }
             }
-            // TODO send response if error
-            /*
-            if (msg_sent == false)
-            {
-                cJSON* replyto = cJSON_GetObjectItem(message, "replyto");
-                if (replyto != NULL)
-                {
-                    cJSON* reply = cJSON_CreateObject();
-                    cJSON_AddStringToObject(reply, "method", "set");
-                    cJSON_AddStringToObject(reply, "uri", replyto->valuestring);
-                    cJSON_AddStringToObject(reply, "body", "Error: Invalid URI");
-                    char* reply_str = cJSON_PrintUnformatted(reply);
-                    send()
-                }
-            }*/
         }
     }
     FPS_DEBUG_PRINT("Exit thread %d info %p 0\n", info->thread_id, (void *) info);
@@ -903,24 +888,28 @@ int wait_for_connection()
             if (writev_nonblock(new_sock, handhsake_bufs, sizeof(handhsake_bufs) / sizeof(*handhsake_bufs)) <= 0)
             {
                 FPS_ERROR_PRINT("Failed to send handshake to new connection on socket %d.\n", new_sock);
+                shutdown(new_sock, SHUT_RDWR);
                 close(new_sock);
                 continue;
             }
             if (readv(new_sock, handhsake_bufs, sizeof(handhsake_bufs) / sizeof(*handhsake_bufs)) <= 0)
             {
                 FPS_ERROR_PRINT("Failed to receive handshake back from new connection on socket %d.\n", new_sock);
+                shutdown(new_sock, SHUT_RDWR);
                 close(new_sock);
                 continue;
             }
             if (handshake.fims_data_layout_version != FIMS_DATA_LAYOUT_VERSION) // server has different layout interpretation than the application
             {
                 FPS_ERROR_PRINT("application's fims_data_layout_version (got: %d) is different from the server's (should be: %d) on socket %d.\n", handshake.fims_data_layout_version, FIMS_DATA_LAYOUT_VERSION, new_sock);
+                shutdown(new_sock, SHUT_RDWR);
                 close(new_sock);
                 continue;
             }
             if (handshake.max_message_size != MAX_MESSAGE_SIZE)
             {
                 FPS_ERROR_PRINT("application's max_message_size (got: %d) is different from the server's (should be: %d) on socket %d.\n", handshake.fims_data_layout_version, FIMS_DATA_LAYOUT_VERSION, new_sock);
+                shutdown(new_sock, SHUT_RDWR);
                 close(new_sock);
                 continue;
             }
@@ -948,6 +937,7 @@ int wait_for_connection()
             if (first_available == MAX_CONNECTS)
             {
                 FPS_ERROR_PRINT("No available connections.\n");
+                shutdown(new_sock, SHUT_RDWR);
                 close(new_sock);
                 continue;
             }
@@ -993,7 +983,10 @@ int wait_for_connection()
         }
     }
     if (sock_fd != 0)
+    {
+        shutdown(sock_fd, SHUT_RDWR);
         close(sock_fd);
+    }
     return 0;
 }
 
@@ -1009,7 +1002,6 @@ int main(int argc, char **argv)
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
 
-    FPS_RELEASE_PRINT("mutex: lock %d reading: %d\n", sub_lock.lock, sub_lock.reading);
 
     //initialize our connections array
     memset(connections, 0, sizeof(struct client_info) * MAX_CONNECTS);
@@ -1017,12 +1009,14 @@ int main(int argc, char **argv)
     // remove the socket in case program did not clean up properly on close
     unlink(SOCKET_NAME);
     
+
     g_aesKey = NULL; 
     loadAesKey(AESKEY_FILE);
     if (g_aesKey == NULL) 
     {
         FPS_RELEASE_PRINT(" Note: No Key in File : %s\n", AESKEY_FILE);
     }
+
     pthread_mutex_init(&subscription_mutex, NULL);
     pthread_cond_init(&subscription_lock_cv, NULL);
     pthread_cond_init(&subscription_reading_cv, NULL);
