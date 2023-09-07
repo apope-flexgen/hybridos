@@ -714,12 +714,10 @@ bool Asset_ESS::handle_set(std::string uri, cJSON& body) {
         // Write the autobalancing status (enabled) to the component register
         // Since enable and disable share the same register, a single function will write for both controls
         set_autobalancing(true);
-        persistent_setpoint = true;
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "autobalancing_disable")) && inMaintenance) {
         // Write the autobalancing status (enabled) to the component register
         // Since enable and disable share the same register, a single function will write for both controls
         set_autobalancing(false);
-        persistent_setpoint = true;
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_active_power_setpoint"))) {
         maint_active_power_setpoint = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
@@ -728,12 +726,8 @@ bool Asset_ESS::handle_set(std::string uri, cJSON& body) {
         persistent_setpoint = true;
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "open_dc_contactors"))) {
         open_bms_contactors();
-        persistent_setpoint = true;
-        // TODO persistent?
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "close_dc_contactors"))) {
         close_bms_contactors();
-        persistent_setpoint = true;
-        // TODO persistent?
     }
 
     // if target setpoint was found, back it up to DBI if it is a persistent setpoint.

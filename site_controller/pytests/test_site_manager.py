@@ -19,6 +19,8 @@ from pytests.cases.ldss import test_ldss
 from pytests.cases.active_power import test_ess_chargeable_derate, test_ess_dischargeable_derate, test_maint_active_power_rounding, test_maint_reactive_power_rounding
 from pytests.cases.agt_runmode1 import test_agt_runmode1
 from pytests.cases.manual_mode import test_manual_solar_slew_rate_1, test_manual_solar_slew_rate_2, test_manual_ess_slew_rate_1, test_manual_ess_slew_rate_2, test_manual_ess_slew_rate_3, test_manual_gen_slew_rate_1, test_manual_gen_slew_rate_2, test_manual_gen_slew_rate_3
+from pytests.cases.templating_revamp import test_ranged, test_traditional
+from pytests.cases.persistent_settings import test_persistent_contactors, test_persistent_autobalancing, test_persistent_setpoint
 
 
 # Test runner AKA main() for each individual test
@@ -52,7 +54,12 @@ from pytests.cases.manual_mode import test_manual_solar_slew_rate_1, test_manual
     test_manual_ess_slew_rate_3,
     test_manual_gen_slew_rate_1,
     test_manual_gen_slew_rate_2,
-    test_manual_gen_slew_rate_3
+    test_manual_gen_slew_rate_3,
+    test_ranged,
+    test_traditional,
+    test_persistent_setpoint,
+    test_persistent_contactors,
+    test_persistent_autobalancing
 ])
 def test_site_manager(request: pytest.FixtureRequest, current_test: Steps):
     # Extract the pytest id
