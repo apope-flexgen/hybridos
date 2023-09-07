@@ -26,8 +26,9 @@ tidy() {
         h_files=$(find include -type f | grep "\.h")
     else
         printf '\n=== Running clang-tidy on all changed files ===\n'
-        cpp_files=$(git status | grep "\.cpp" | awk '{print $3}')
-        h_files=$(git status | grep "\.h" | awk '{print $3}')
+        # Regexes designed to only find .ccp and .h files which exist inside of the hybridos/site_controller directory and which contain changes compared to dev.
+        cpp_files=$(git diff --name-only dev | grep -oP '(?<=^site_controller\/).*\.cpp')
+        h_files=$(git diff --name-only dev | grep -oP '(?<=^site_controller\/).*\.h')
     fi
 
     failures=""
