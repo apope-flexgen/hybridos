@@ -624,14 +624,12 @@ TEST_F(site_manager_test, manual_mode) {
         float expected_gen_max_potential;
     };
 
-    std::vector<mm_test> tests = {
-        { 0.0f, 0.0f, 0.0f, 100000, 100000, 100000, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-        { 500.0f, 0.0f, 0.0f, 100000, 100000, 100000, 500.0f, 0.0f, 0.0f, 500.0f, 0.0f, 0.0f },
-        { 500.0f, 750.0f, 750.0f, 100000, 100000, 100000, 500.0f, 750.0f, 750.0f, 500.0f, 750.0f, 750.0f },
-        { 500.0f, 750.0f, 750.0f, 100000, 100000, 100000, 500.0f, 750.0f, 750.0f, 500.0f, 750.0f, 750.0f },
-        { -500.0f, 750.0f, 750.0f, 100000, 100000, 100000, -500.0f, 750.0f, 750.0f, 0.0f, 750.0f, 750.0f }
-    }; 
-    
+    std::vector<mm_test> tests = { { 0.0f, 0.0f, 0.0f, 100000, 100000, 100000, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+                                   { 500.0f, 0.0f, 0.0f, 100000, 100000, 100000, 500.0f, 0.0f, 0.0f, 500.0f, 0.0f, 0.0f },
+                                   { 500.0f, 750.0f, 750.0f, 100000, 100000, 100000, 500.0f, 750.0f, 750.0f, 500.0f, 750.0f, 750.0f },
+                                   { 500.0f, 750.0f, 750.0f, 100000, 100000, 100000, 500.0f, 750.0f, 750.0f, 500.0f, 750.0f, 750.0f },
+                                   { -500.0f, 750.0f, 750.0f, 100000, 100000, 100000, -500.0f, 750.0f, 750.0f, 0.0f, 750.0f, 750.0f } };
+
     int test_id = 1;
     for (auto test : tests) {
         test_logger t_log("manual_mode", test_id++, tests.size());
@@ -651,13 +649,13 @@ TEST_F(site_manager_test, manual_mode) {
         asset_cmd.ess_data.max_potential_kW = 2500;
         asset_cmd.gen_data.max_potential_kW = 5000;
         asset_cmd.manual_mode(test.ess_cmd, test.solar_cmd, test.gen_cmd, &manual_ess_kW_slew, &manual_solar_kW_slew, &manual_gen_kW_slew);
-        t_log.float_results.push_back({test.expected_ess_charge_kW_request, asset_cmd.ess_data.kW_request, "ESS kW Request"});
-        t_log.float_results.push_back({test.expected_solar_kW_request, asset_cmd.solar_data.kW_request, "Solar kW Request"});
-        t_log.float_results.push_back({test.expected_gen_kW_request, asset_cmd.gen_data.kW_request, "Generator kW Request"});
-        t_log.float_results.push_back({test.expected_ess_max_potential, asset_cmd.ess_data.max_potential_kW, "ESS Max Potential"});
-        t_log.float_results.push_back({test.expected_solar_max_potential, asset_cmd.solar_data.max_potential_kW, "Solar Max Potential"});
-        t_log.float_results.push_back({test.expected_gen_max_potential, asset_cmd.gen_data.max_potential_kW, "Generator Max Potential"});
-        t_log.bool_results.push_back({false, asset_cmd.get_site_kW_load_inclusion(), "Site kW Load Inclusion"});
+        t_log.float_results.push_back({ test.expected_ess_charge_kW_request, asset_cmd.ess_data.kW_request, "ESS kW Request" });
+        t_log.float_results.push_back({ test.expected_solar_kW_request, asset_cmd.solar_data.kW_request, "Solar kW Request" });
+        t_log.float_results.push_back({ test.expected_gen_kW_request, asset_cmd.gen_data.kW_request, "Generator kW Request" });
+        t_log.float_results.push_back({ test.expected_ess_max_potential, asset_cmd.ess_data.max_potential_kW, "ESS Max Potential" });
+        t_log.float_results.push_back({ test.expected_solar_max_potential, asset_cmd.solar_data.max_potential_kW, "Solar Max Potential" });
+        t_log.float_results.push_back({ test.expected_gen_max_potential, asset_cmd.gen_data.max_potential_kW, "Generator Max Potential" });
+        t_log.bool_results.push_back({ false, asset_cmd.get_site_kW_load_inclusion(), "Site kW Load Inclusion" });
         t_log.check_solution();
     }
 }

@@ -2,6 +2,7 @@
 #define ASSET_TEST_H
 
 #include <gtest/gtest.h>
+#include <test_tools.h>
 #include "Asset_ESS.h"
 
 class Asset_Mock : public Asset_ESS, public testing::Test {
@@ -53,6 +54,84 @@ TEST_F(Asset_Mock, add_variable_to_buffer) {
 
     ASSERT_EQ("",  // Naked therefore has no value
               to_string(test_buf));
+}
+
+TEST_F(Asset_Mock, handle_generic_asset_controls_maintenance_set) {
+    // struct that has variables to configure for each test case
+    struct test_struct {
+        bool maint_mode;
+        bool lockdown_mode;
+        bool maint_mode_set;
+        bool expected_maint_mode;
+        bool expected_lockdown_mode;
+        bool expected_return;
+    };
+
+    std::vector<test_struct> tests = {
+        { false, false, false, false, false, true },
+        { false, false, true, true, false, false /* returns false due to failure to send setpoint */ },
+        { false, true, false, false, true, true },
+        { false, true, true, true, false, false /* returns false due to failure to send setpoint */ },
+        { true, false, false, false, false, false /* returns false due to failure to send setpoint */ },
+        { true, false, true, true, false, true },
+        { true, true, false, true, true, false },
+        { true, true, true, true, true, true },
+    };
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("asset maintenance mode set", test_id++, tests.size());
+
+        inMaintenance = test.maint_mode;
+        inLockdown = test.lockdown_mode;
+
+        cJSON* msg = cJSON_Parse((std::string(R"({"maint_mode":)") + (test.maint_mode_set ? "true" : "false") + std::string("}")).c_str());
+        bool result = handle_generic_asset_controls_set("/assets/ess/ess_1/maint_mode", *msg);
+        cJSON_Delete(msg);
+
+        t_log.bool_results.push_back({ test.expected_maint_mode, inMaintenance, "Maintenance mode" });
+        t_log.bool_results.push_back({ test.expected_lockdown_mode, inLockdown, "Lockdown mode" });
+        t_log.bool_results.push_back({ test.expected_return, result, "Set success" });
+        t_log.check_solution();
+    }
+}
+
+TEST_F(Asset_Mock, handle_generic_asset_controls_lockdown_set) {
+    // struct that has variables to configure for each test case
+    struct test_struct {
+        bool maint_mode;
+        bool lockdown_mode;
+        bool lockdown_mode_set;
+        bool expected_maint_mode;
+        bool expected_lockdown_mode;
+        bool expected_return;
+    };
+
+    std::vector<test_struct> tests = {
+        { false, false, false, false, false, true },
+        { false, false, true, false, false, false },
+        { false, true, false, false, false, true },
+        { false, true, true, false, false, false },
+        { true, false, false, true, false, true },
+        { true, false, true, true, true, false /* returns false due to failure to send setpoint */ },
+        { true, true, false, true, false, false /* returns false due to failure to send setpoint */ },
+        { true, true, true, true, true, true },
+    };
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("asset lockdown mode set", test_id++, tests.size());
+
+        inMaintenance = test.maint_mode;
+        inLockdown = test.lockdown_mode;
+
+        cJSON* msg = cJSON_Parse((std::string(R"({"lock_mode":)") + (test.lockdown_mode_set ? "true" : "false") + std::string("}")).c_str());
+        bool result = handle_generic_asset_controls_set("/assets/ess/ess_1/lock_mode", *msg);
+        cJSON_Delete(msg);
+
+        t_log.bool_results.push_back({ test.expected_maint_mode, inMaintenance, "Maintenance mode" });
+        t_log.bool_results.push_back({ test.expected_lockdown_mode, inLockdown, "Lockdown mode" });
+        t_log.bool_results.push_back({ test.expected_return, result, "Set success" });
+        t_log.check_solution();
+    }
 }
 
 #endif /* ASSET_TEST_H */

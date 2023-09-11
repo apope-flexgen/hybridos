@@ -132,8 +132,7 @@ inline void bufJSON_AddNumberCheckVar(fmt::memory_buffer& fmt_buf, const char* c
  * @param name The name of the item we are adding.
  * @param value The value of the item we are adding.
  */
-inline void bufJSON_AddString(fmt::memory_buffer &fmt_buf, const char* const name, const char* const value)
-{
+inline void bufJSON_AddString(fmt::memory_buffer& fmt_buf, const char* const name, const char* const value) {
     FORMAT_TO_BUF(fmt_buf, R"("{}":"{}",)", name, value);
 }
 

@@ -930,26 +930,34 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON& body) {
     // Received maintenance mode update
     if (maint_mode_obj != NULL) {
         maintValueObject = cJSON_GetObjectItem(maint_mode_obj, "value");
-        FPS_INFO_LOG("Received manual mode message.");
-        if ((inMaintenance == false) && (maintValueObject->valueint)) {
-            FPS_INFO_LOG("Switching asset to manual mode.");
+        bool maint_mode_set = (bool)maintValueObject->valueint;
+        if (!inMaintenance && maint_mode_set) {
+            FPS_INFO_LOG("Switching %s asset %s to maintenance mode.", get_asset_type(), get_name());
             char msgMess[MEDIUM_MSG_LEN];
             snprintf(msgMess, MEDIUM_MSG_LEN, "Maintenance Mode entered: %s asset: %s", get_asset_type(), get_name().c_str());
             emit_event("Assets", msgMess, 1);
             inMaintenance = true;
             inLockdown = false;
             lock_mode.enabled = true;
-        } else if ((inMaintenance == true) && (!maintValueObject->valueint) && (inLockdown == false)) {
-            FPS_INFO_LOG("Switching asset out of manual mode\n");
+        } else if (inMaintenance && !maint_mode_set && !inLockdown) {
+            FPS_INFO_LOG("Switching %s asset %s out of maintenance mode.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Maintenance Mode exited: %s asset: %s", get_asset_type(), get_name().c_str());
             emit_event("Assets", event_msg, 1);
             inMaintenance = false;
             inLockdown = false;
             lock_mode.enabled = false;
-        } else {
-            FPS_INFO_LOG("Cannot change manual mode status; in lockdown\n");
-            snprintf(event_msg, MEDIUM_MSG_LEN, "Cannot change maintenance mode of %s asset: %s; in lockdown", get_asset_type(), get_name().c_str());
+        } else if (inMaintenance && !maint_mode_set && inLockdown) {
+            FPS_INFO_LOG("Cannot switch %s asset %s out of maintenance mode due to lockdown.", get_asset_type(), get_name());
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Cannot switch %s asset out of maintenance mode due to lockdown: %s", get_asset_type(), get_name().c_str());
             emit_event("Assets", event_msg, 1);
+            return false;
+        } else if (inMaintenance == maint_mode_set) {
+            // ignore set to maintenance mode since asset is already in desired state
+            return true;
+        } else {
+            // this case should be unreachable
+            FPS_ERROR_LOG("Reached invalid maintenance mode set handling case for %s asset: %s with maintenance %s, lockdown %s, set %s", get_asset_type(), get_name(), inMaintenance ? "true" : "false", inLockdown ? "true" : "false",
+                          maint_mode_set ? "true" : "false");
             return false;
         }
         return send_setpoint(uri, maint_mode_obj);
@@ -958,26 +966,41 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON& body) {
     // Received lockdown mode update
     else {
         lockValueObject = cJSON_GetObjectItem(lock_mode_obj, "value");
-        FPS_INFO_LOG("Received lockdown message.");
+        bool lockdown_set = (bool)lockValueObject->valueint;
         // Allows lockdown sets only when in maintenance mode
-        if ((inMaintenance == true) && (!lockValueObject->valueint)) {
-            FPS_INFO_LOG("Switching asset out of lock mode\n");
+        if (inLockdown && !inMaintenance) {
+            // this case should be unreachable since maintenance mode can't be exited if in lockdown
+            FPS_ERROR_LOG("Switching asset out of lockdown mode to rectify invalid lockdown state seen in lockdown mode set handling case for %s asset: %s with maintenance %s, lockdown %s, set %s", get_asset_type(), get_name().c_str(),
+                          inMaintenance ? "true" : "false", inLockdown ? "true" : "false", lockdown_set ? "true" : "false");
+            inLockdown = false;
+            // return true if the set wanted to exit lockdown mode, otherwise return false
+            return !lockdown_set;
+        } else if (inLockdown && inMaintenance && !lockdown_set) {
+            FPS_INFO_LOG("Switching %s asset %s out of lockdown mode.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Lockdown Mode exited: %s asset: %s", get_asset_type(), get_name().c_str());
             emit_event("Assets", event_msg, 1);
             inLockdown = false;
             maint_mode.enabled = true;
-        } else if ((inMaintenance == true) && (lockValueObject->valueint)) {
-            FPS_INFO_LOG("Switching asset into lock mode\n");
+        } else if (!inLockdown && inMaintenance && lockdown_set) {
+            FPS_INFO_LOG("Switching %s asset %s into lockdown mode.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Lockdown Mode entered: %s asset: %s", get_asset_type(), get_name().c_str());
             emit_event("Assets", event_msg, 1);
             inLockdown = true;
             maint_mode.enabled = false;
-        } else {
-            FPS_INFO_LOG("Cannot change lock mode status; not in manual mode\n");
-            snprintf(event_msg, MEDIUM_MSG_LEN, "Cannot change lockdown mode of %s asset: %s; not in maintenance", get_asset_type(), get_name().c_str());
+        } else if (!inLockdown && !inMaintenance && lockdown_set) {
+            FPS_INFO_LOG("Cannot enter lockdown mode when not in maintenance mode for %s asset %s.", get_asset_type(), get_name());
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Cannot enter lockdown mode for %s asset: %s not in maintenance", get_asset_type(), get_name().c_str());
             emit_event("Assets", event_msg, 1);
             // default lockdown to false
             inLockdown = false;
+            return false;
+        } else if (inLockdown == lockdown_set) {
+            // ignore set to lockdown mode since asset is already in desired state
+            return true;
+        } else {
+            // this case should be unreachable
+            FPS_ERROR_LOG("Reached invalid lockdown mode set handling case for %s asset: %s with maintenance %s, lockdown %s, set %s", get_asset_type(), get_name(), inMaintenance ? "true" : "false", inLockdown ? "true" : "false",
+                          lockdown_set ? "true" : "false");
             return false;
         }
         // Echo set to storage db
