@@ -114,22 +114,22 @@ public:
     states current_state, check_current_state;
     bool step_change, path_change;  // true whenever a step or path changes
     bool sequence_reset;            // indication that current sequence has changed. used to handle interrupted sequences
-    bool get_reserved_bool_1();
-    bool get_reserved_bool_2();
-    bool get_reserved_bool_3();
-    bool get_reserved_bool_4();
-    bool get_reserved_bool_5();
-    bool get_reserved_bool_6();
-    bool get_reserved_bool_7();
-    bool get_reserved_bool_8();
-    bool get_reserved_bool_9();
-    bool get_reserved_bool_10();
-    bool get_reserved_bool_11();
-    bool get_reserved_bool_12();
-    bool get_reserved_bool_13();
-    bool get_reserved_bool_14();
-    bool get_reserved_bool_15();
-    bool get_reserved_bool_16();
+    Fims_Object get_reserved_bool_1();
+    Fims_Object get_reserved_bool_2();
+    Fims_Object get_reserved_bool_3();
+    Fims_Object get_reserved_bool_4();
+    Fims_Object get_reserved_bool_5();
+    Fims_Object get_reserved_bool_6();
+    Fims_Object get_reserved_bool_7();
+    Fims_Object get_reserved_bool_8();
+    Fims_Object get_reserved_bool_9();
+    Fims_Object get_reserved_bool_10();
+    Fims_Object get_reserved_bool_11();
+    Fims_Object get_reserved_bool_12();
+    Fims_Object get_reserved_bool_13();
+    Fims_Object get_reserved_bool_14();
+    Fims_Object get_reserved_bool_15();
+    Fims_Object get_reserved_bool_16();
 
 protected:
     void get_values();

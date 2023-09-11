@@ -57,6 +57,7 @@ public:
     // internal functions
     void process_asset(void);
     void set_raw_status() override;
+    const char* get_status_string() const override;
     void update_asset(void);
     void send_to_components(void) override;
     bool handle_set(std::string uri, cJSON& body);

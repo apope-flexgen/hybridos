@@ -41,7 +41,7 @@ public:
 
     Path(Site_Manager* siteref);
     bool configure_path(cJSON* object, int path_index);
-    bool check_alerts(UI_Type type);
+    bool check_alerts(alert_type type);
 };
 
 #endif /* INCLUDE_PATH_H_ */

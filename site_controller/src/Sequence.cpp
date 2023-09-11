@@ -37,11 +37,11 @@ Sequence::Sequence(Site_Manager* siteref) {
 }
 
 bool Sequence::check_faults() {
-    return paths[current_path_index].check_alerts(FAULT);
+    return paths[current_path_index].check_alerts(FAULT_ALERT);
 }
 
 bool Sequence::check_alarms() {
-    return paths[current_path_index].check_alerts(ALARM);
+    return paths[current_path_index].check_alerts(ALARM_ALERT);
 }
 
 // code to parse each sequence from sequences.json (filling out local Sequences variables)
@@ -122,8 +122,8 @@ void Sequence::call_sequence() {
     // if exit_timer trips, set fault
     if ((paths[current_path_index].timeout != (-1)) && check_expired_time(pSite->current_time, pSite->exit_target_time)) {
         char event_message[MEDIUM_MSG_LEN];
-        snprintf(event_message, MEDIUM_MSG_LEN, "Site sequence step failed: %s", paths[current_path_index].steps[current_step_index].get_name().c_str());
-        emit_event("Site", event_message, 1);
+        snprintf(event_message, MEDIUM_MSG_LEN, "Sequence step failed: %s", paths[current_path_index].steps[current_step_index].get_name().c_str());
+        emit_event("Site", event_message, FAULT_ALERT);
         pSite->set_faults(2);
         clock_gettime(CLOCK_MONOTONIC, &pSite->exit_target_time);
         pSite->exit_target_time.tv_sec += paths[current_path_index].timeout;
@@ -312,14 +312,14 @@ void Sequence::check_path_step_change() {
     if (pSite->path_change || pSite->step_change) {
         if (pSite->path_change) {
             // FPS_ERROR_LOG("Site Manager path change to: %s", paths[current_path_index].get_name());
-            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager path changed to %s", paths[current_path_index].path_name.c_str());
-            emit_event("Site", event_message, 2);
+            snprintf(event_message, MEDIUM_MSG_LEN, "Path changed to %s", paths[current_path_index].path_name.c_str());
+            emit_event("Site", event_message, STATUS_ALERT);
             pSite->path_change = false;
         }
         if (pSite->step_change) {
             // FPS_ERROR_LOG("Site Manager step change to: %s", paths[current_path_index].steps[current_step_index].get_name());
-            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager step changed to %s", paths[current_path_index].steps[current_step_index].step_name.c_str());
-            emit_event("Site", event_message, 2);
+            snprintf(event_message, MEDIUM_MSG_LEN, "Step changed to %s", paths[current_path_index].steps[current_step_index].step_name.c_str());
+            emit_event("Site", event_message, STATUS_ALERT);
             pSite->step_change = false;
         }
 

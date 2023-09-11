@@ -316,6 +316,28 @@ void Fims_Object::update_present_register(uint input_source_index) {
 }
 
 /**
+ * Return a string representing the status for appropriate Fims_Objects (status, breaker_status).
+ * If an invalid register is requested, an empty string will be returned
+ */
+const char* Fims_Object::get_status_string() const {
+    if (value.type == Bool && variable_id.compare("breaker_status") == 0) {
+        return value.value_bool ? "Closed" : "Open";
+    } else if (type.compare("Status") == 0) {
+        // Status with valid options array
+        if (!options_name.empty() && !options_name[value.value_bit_field].empty()) {
+            // Add the string representing the Bit_Field value
+            return options_name[value.value_bit_field].c_str();
+        }
+        // Status with empty options array (error state, possible missing publish from components)
+        else {
+            // Invalid publish received, add the default value instead
+            return default_status_name.c_str();
+        }
+    }
+    return "";
+}
+
+/**
  * @brief Constructs the JSON representation of this Fims_Object and adds it to a buffer.
  * Acts as a helper function for other functions that add this object to a buffer, i.e. add_to_JSON_buffer()
  * and add_status_of_control_to_JSON_buffer()
@@ -385,11 +407,8 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
             bufJSON_AddNumber(buf, item_name.c_str(), value.value_int);
         }
     } else if (value.type == Bool) {
-        // Fix for the unique case of breaker status which gets reported as "Open/Closed"
-        // If more cases come up, switch to using a "boolstring" flag as is done in assets instead
         if (variable_id.compare("breaker_status") == 0) {
-            const char* return_bool = value.value_bool ? "Closed" : "Open";
-            bufJSON_AddString(buf, item_name.c_str(), return_bool);
+            bufJSON_AddString(buf, item_name.c_str(), get_status_string());
         } else {
             bufJSON_AddBool(buf, item_name.c_str(), value.value_bool);
         }
@@ -405,16 +424,7 @@ void Fims_Object::build_JSON_Object(fmt::memory_buffer& buf, bool control2status
     }
     // Only type, not value.type should be Status
     else if (type.compare("Status") == 0) {
-        // Status with valid options array
-        if (!options_name.empty() && !options_name[value.value_bit_field].empty()) {
-            // Add the string representing the Bit_Field value
-            bufJSON_AddString(buf, item_name.c_str(), options_name[value.value_bit_field].c_str());
-        }
-        // Status with empty options array (error state, possible missing publish from components)
-        else {
-            // Invalid publish received, add the default value instead
-            bufJSON_AddString(buf, item_name.c_str(), default_status_name.c_str());
-        }
+        bufJSON_AddString(buf, item_name.c_str(), get_status_string());
     }
 
     // If not clothed, do not need to add auxiliary data

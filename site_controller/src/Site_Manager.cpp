@@ -1186,9 +1186,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         if (strcmp(msg->pfrags[2], "primary_controller") == 0) {
                             *is_primary = body_bool;
 
-                            std::string event_message = "Site_Manager primary_controller status changed to: ";
-                            event_message += (body_bool) ? "true" : "false";
-                            emit_event("Site", event_message.c_str(), 1);
+                            emit_event("Site", "Assumed primary controller", INFO_ALERT);
                         }
                         // Special endpoint indicating there has been an update in DBI settings
                         // This endpoint is only used if Site_Controller starts before COPS and missed DBI changes after its configuration
@@ -1196,12 +1194,12 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         else if (strcmp(msg->pfrags[2], "dbi_update") == 0) {
                             // Wait for DBI to update before requesting the new data
                             sleep(1);
-                            std::string event_message = "Read new configuration data from DBI\n";
                             if (!data_endpoint->setpoint_readin()) {
-                                FPS_ERROR_LOG("Site_Manager failed to read in latest configuration data from primary\n");
+                                FPS_ERROR_LOG("Site_Manager failed to read in latest configuration data from primary");
+                                emit_event("Site", "Failed to read in new configuration from primary controller after failover event", ALARM_ALERT);
                                 return;
                             }
-                            emit_event("Site", event_message.c_str(), 1);
+                            emit_event("Site", "Read new configuration from primary controller after failover event", INFO_ALERT);
                         } else {
                             enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
                             disable_flag.set_fims_bool(msg->pfrags[2], body_bool);
@@ -2181,10 +2179,10 @@ void Site_Manager::set_faults(int fault_number) {
     char event_message[SHORT_MSG_LEN];
 
     active_fault_array[fault_number] = true;
-    snprintf(event_message, SHORT_MSG_LEN, "Site Manager Fault: %s", faults.options_name[fault_number].c_str());
+    snprintf(event_message, SHORT_MSG_LEN, "Fault: %s", faults.options_name[fault_number].c_str());
     FPS_ERROR_LOG("%s", event_message);
 
-    emit_event("Site", event_message, 4);
+    emit_event("Site", event_message, FAULT_ALERT);
     fault_status_flag.value.value_bool = true;
 }
 
@@ -2194,9 +2192,9 @@ void Site_Manager::set_alarms(int alarm_number) {
 #ifndef FPS_TEST_MODE
     // Causes seg faults in test mode as options names undefined
     char event_message[SHORT_MSG_LEN];
-    snprintf(event_message, SHORT_MSG_LEN, "Site Manager Alarm: %s", alarms.options_name[alarm_number].c_str());
-    FPS_ERROR_LOG("%s \n", event_message);
-    emit_event("Site", event_message, 3);
+    snprintf(event_message, SHORT_MSG_LEN, "Alarm: %s", alarms.options_name[alarm_number].c_str());
+    FPS_ERROR_LOG("%s", event_message);
+    emit_event("Site", event_message, ALARM_ALERT);
 #endif
 
     alarm_status_flag.value.value_bool = true;
@@ -2239,8 +2237,8 @@ bool Site_Manager::get_active_alarms(int index) {
 
 void Site_Manager::clear_faults() {
     // Tell user Clear Faults button was pressed
-    FPS_ERROR_LOG("Site Manager clear faults executed \n");
-    emit_event("Site", "Site Manager clear faults executed", 1);
+    FPS_ERROR_LOG("Site Manager clear faults executed");
+    emit_event("Site", "Clear faults executed", INFO_ALERT);
 
     // Tell Asset Manager to do its part in clearing faults, including clearing component faults
     pAssets->site_clear_faults();
@@ -2575,9 +2573,9 @@ void Site_Manager::check_state(void) {
     // if new state detected, init vars as needed
     if (check_current_state != current_state) {
         char event_message[SHORT_MSG_LEN];
-        FPS_INFO_LOG("\nSite Manager state change to: %s \n\n", state_name[current_state]);
-        snprintf(event_message, SHORT_MSG_LEN, "Site Manager state changed to %s", state_name[current_state]);
-        emit_event("Site", event_message, 2);
+        FPS_INFO_LOG("Site Manager state change to: %s", state_name[current_state]);
+        snprintf(event_message, SHORT_MSG_LEN, "State changed to %s", state_name[current_state]);
+        emit_event("Site", event_message, STATUS_ALERT);
         sequences[check_current_state].sequence_bypass = false;  // ensure previous state executes next time its called
         check_current_state = current_state;
         site_state.value.set(state_name[current_state]);
@@ -2651,7 +2649,7 @@ void Site_Manager::process_state(void) {
 // initialization state - run once at program boot to initialize variables
 void Site_Manager::init_state(void) {
     // FPS_ERROR_LOG("site manager Init State executed \n");
-    emit_event("Site", "Site Manager Initialized", 1);
+    emit_event("Site", "System initialized", INFO_ALERT);
     current_state = Ready;
 
     // set internal vars to 0
@@ -3668,68 +3666,68 @@ void Site_Manager::apply_aggregated_asset_limit(float uncontrolled_ess_kw, float
     }
 }
 
-bool Site_Manager::get_reserved_bool_1() {
-    return reserved_bool_1.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_1() {
+    return reserved_bool_1;
 }
 
-bool Site_Manager::get_reserved_bool_2() {
-    return reserved_bool_2.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_2() {
+    return reserved_bool_2;
 }
 
-bool Site_Manager::get_reserved_bool_3() {
-    return reserved_bool_3.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_3() {
+    return reserved_bool_3;
 }
 
-bool Site_Manager::get_reserved_bool_4() {
-    return reserved_bool_4.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_4() {
+    return reserved_bool_4;
 }
 
-bool Site_Manager::get_reserved_bool_5() {
-    return reserved_bool_5.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_5() {
+    return reserved_bool_5;
 }
 
-bool Site_Manager::get_reserved_bool_6() {
-    return reserved_bool_6.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_6() {
+    return reserved_bool_6;
 }
 
-bool Site_Manager::get_reserved_bool_7() {
-    return reserved_bool_7.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_7() {
+    return reserved_bool_7;
 }
 
-bool Site_Manager::get_reserved_bool_8() {
-    return reserved_bool_8.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_8() {
+    return reserved_bool_8;
 }
 
-bool Site_Manager::get_reserved_bool_9() {
-    return reserved_bool_9.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_9() {
+    return reserved_bool_9;
 }
 
-bool Site_Manager::get_reserved_bool_10() {
-    return reserved_bool_10.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_10() {
+    return reserved_bool_10;
 }
 
-bool Site_Manager::get_reserved_bool_11() {
-    return reserved_bool_11.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_11() {
+    return reserved_bool_11;
 }
 
-bool Site_Manager::get_reserved_bool_12() {
-    return reserved_bool_12.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_12() {
+    return reserved_bool_12;
 }
 
-bool Site_Manager::get_reserved_bool_13() {
-    return reserved_bool_13.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_13() {
+    return reserved_bool_13;
 }
 
-bool Site_Manager::get_reserved_bool_14() {
-    return reserved_bool_14.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_14() {
+    return reserved_bool_14;
 }
 
-bool Site_Manager::get_reserved_bool_15() {
-    return reserved_bool_15.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_15() {
+    return reserved_bool_15;
 }
 
-bool Site_Manager::get_reserved_bool_16() {
-    return reserved_bool_16.value.value_bool;
+Fims_Object Site_Manager::get_reserved_bool_16() {
+    return reserved_bool_16;
 }
 
 float Site_Manager::get_ess_total_rated_active_power() {

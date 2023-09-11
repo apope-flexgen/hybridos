@@ -125,6 +125,7 @@ public:
     // internal functions
     virtual void process_asset();  // process incoming component data
     virtual void set_raw_status() = 0;
+    virtual const char* get_status_string() const = 0;
     bool process_watchdog_status();
 
     // pure virtual functions that child classes must implement
@@ -195,7 +196,6 @@ protected:
     Fims_Object watchdog_status;
 
     std::vector<std::string> compNames;
-    const char* statusStrings[MAX_STATUS_BITS];
 
     uint32_t numAssetComponents;
 
@@ -225,6 +225,7 @@ protected:
     double throttle_deadband_percentage;
 
     const char* asset_type_id = "";
+    asset_type asset_type_value;
     statusType status_type;
     demandMode assetControl;
 

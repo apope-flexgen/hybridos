@@ -448,7 +448,7 @@ bool Asset_Manager::asset_create(cJSON* pJsonRoot, bool* primary_controller) {
         // print_asset_var_map();
 
 #ifndef FPS_TEST_MODE
-    emit_event("Assets", "Asset Manager Initialized", 1);
+    emit_event("Assets", "Assets initialized", INFO_ALERT);
 #endif
     return true;
 }
@@ -1176,7 +1176,6 @@ int Asset_Manager::get_num_active_faults(asset_type type) const {
 
 /**
  * Checks if the given alert is active for the asset instance(s) that the alert name references
- * @param alertType Either FAULT or ALARM, depending on what type the given alert is.
  * @param alert The name-mask pair for the alert that is being checked. Expected name format is "/assets/<asset type>/<asset ID>/<alert ID>".
  * If <asset ID> field is "aggregate", all assets of type <asset type> are checked.
  * @return True if the alert is found to be active on the identified asset instance(s).

@@ -26,6 +26,7 @@ Asset_Solar::Asset_Solar() {
     power_factor_mode_value = 0;
 
     asset_type_id = SOLAR_TYPE_ID;
+    asset_type_value = SOLAR;
 
     maint_active_power_setpoint = 0.0;
     maint_reactive_power_setpoint = 0.0;
@@ -379,6 +380,13 @@ void Asset_Solar::process_potential_active_power(void)  // overriden from the ba
  */
 void Asset_Solar::set_raw_status() {
     raw_status = status.value.value_bit_field;
+}
+
+/**
+ * Get the string representation of this asset's status
+ */
+const char* Asset_Solar::get_status_string() const {
+    return status.get_status_string();
 }
 
 void Asset_Solar::process_asset(void) {

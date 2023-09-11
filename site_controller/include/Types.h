@@ -83,11 +83,19 @@ enum statusType { bit_field, random_enum, invalid };
 
 enum UI_Type { STATUS, CONTROL, ALARM, FAULT, NONE };
 
+// Enum representation of alert types, starting with INFO at 1 to match the severity used by the events module
+enum alert_type { INVALID, INFO_ALERT, STATUS_ALERT, ALARM_ALERT, FAULT_ALERT };
+
 enum setpoint_states { ACCEPTED, LIMITED, ZERO };
 
 enum template_type { TEMPLATING_ERROR = -1, NON_TEMPLATE, TRADITIONAL, RANGED };
 
 const char UI_Type_Names[][16] = { "status", "control", "alarm", "fault", "none" };
+
+// Lower case string representation of alert types alert_names_upper
+const std::vector<const char*> alert_names_lower = { "invalid", "info", "status", "alarm", "fault" };
+// Upper case string representation of alert types
+const std::vector<const char*> alert_names_upper = { "Invalid", "Info", "Status", "Alarm", "Fault" };
 
 struct ESS_Calibration_Settings {
     bool calibration_flag;

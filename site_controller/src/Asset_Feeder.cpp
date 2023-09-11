@@ -26,6 +26,7 @@ Asset_Feeder::Asset_Feeder() {
     breaker_close_permissive_status = false;
 
     asset_type_id = FEEDERS_TYPE_ID;
+    asset_type_value = FEEDERS;
 
     set_required_variables();
 }
@@ -113,11 +114,6 @@ bool Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* config
     if (object)
         reset_value = object->valueint;
 
-    // Configure status strings
-    // Publishes expected to report one of these strings based on status value
-    // Only an integer is received in component publishes so we rely on hard coded values for now
-    statusStrings[close_value] = { "Closed" };
-    statusStrings[open_value] = { "Open" };
     return true;
 }
 
@@ -293,7 +289,14 @@ bool Asset_Feeder::handle_set(std::string uri, cJSON& body) {
  * Update the asset status with the measurement received on the breaker_status Fims_Object
  */
 void Asset_Feeder::set_raw_status() {
-    raw_status = breaker_status.value.value_bit_field;
+    raw_status = breaker_status.value.value_bool;
+}
+
+/**
+ * Get the string representation of this asset's status
+ */
+const char* Asset_Feeder::get_status_string() const {
+    return breaker_status.get_status_string();
 }
 
 void Asset_Feeder::process_asset() {

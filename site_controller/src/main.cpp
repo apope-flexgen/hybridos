@@ -5,6 +5,7 @@
 /* External Dependencies */
 /* System Internal Dependencies */
 #include <Logger.h>
+#include <Site_Controller_Utils.h>
 /* Local Internal Dependencies */
 #include <Data_Endpoint.h>
 #include <Asset_Manager.h>
@@ -224,12 +225,14 @@ int main(int argc, char** argv) {
     printf("tag: %s\n", version->get_tag());
 
     if ((p_fims = new fims()) == NULL) {
-        FPS_ERROR_LOG("Failed to initialize fims class.\n");
-        return (1);
+        FPS_ERROR_LOG("Failed to initialize fims class.");
+        emit_event("Site", "Failed to create internal communication", FAULT_ALERT);
+        return 1;
     }
 
     if (!p_fims->Connect((char*)"site_controller")) {
-        FPS_ERROR_LOG("Failed to connect to fims server.\n");
+        FPS_ERROR_LOG("Failed to connect to fims server.");
+        emit_event("Site", "Failed to connect to internal communication", FAULT_ALERT);
         delete p_fims;
         return 1;
     }
@@ -256,12 +259,14 @@ int main(int argc, char** argv) {
         }
         // Parsing dependent on the configuration type (storage/file)
         if ((read_from_storage && (jSonRoot = parseJSONConfig(p_fims, "assets")) == NULL) || (!read_from_storage && (jSonRoot = parseJSONConfig(assetsFilePath)) == NULL)) {
-            FPS_ERROR_LOG("Failed to create JSON map.\n");
+            FPS_ERROR_LOG("Failed to create JSON map.");
+            emit_event("Site", "Failed to read assets from configuration", FAULT_ALERT);
             rtn_val = 1;
             goto cleanup;
         }
         if (!assetMgr->asset_create(jSonRoot, primary_controller)) {
-            FPS_ERROR_LOG("Failed to create asset instance(s).\n");
+            FPS_ERROR_LOG("Failed to create asset instance(s).");
+            emit_event("Site", "Failed to initialize assets from configuration", FAULT_ALERT);
             cJSON_Delete(jSonRoot);
             rtn_val = 1;
             goto cleanup;
@@ -275,23 +280,27 @@ int main(int argc, char** argv) {
         cJSON_Delete(sequenceRoot);
         cJSON_Delete(varRoot);
         if (rtn_val_bool == false) {
-            FPS_ERROR_LOG("Site Manager Failed to configure properly.\n");
+            FPS_ERROR_LOG("Site Manager Failed to configure properly.");
+            emit_event("Site", "Failed to initialize system from configuration", FAULT_ALERT);
             rtn_val = 1;
         } else {
             // Main configuration has completed, now read in setpoints from last instance
             if (!(data_endpoint->setpoint_readin())) {
-                FPS_ERROR_LOG("HybridOS failed to read in user setpoints.\n");
+                FPS_ERROR_LOG("HybridOS failed to read in user setpoints.");
                 rtn_val = 1;
                 goto cleanup;
             }
             fims_data_pump(p_fims, siteMgr, assetMgr);  // if all goes well we stay in the loop in fims_data_pump()
         }
-    } else
-        FPS_ERROR_LOG("(p_fims->Subscribe() failed\n");
+    } else {
+        FPS_ERROR_LOG("(p_fims->Subscribe() failed.");
+        emit_event("Site", "Failed to establish internal communication", FAULT_ALERT);
+    }
 
 cleanup:
     FPS_ERROR_LOG("Flushing on Cleanup.");
-    FPS_DEBUG_LOG("\nLeaving HybridOS_Control\n");
+    FPS_DEBUG_LOG("Leaving HybridOS_Control");
+    emit_event("Site", "System Exiting", FAULT_ALERT);
     delete primary_controller;
     delete data_endpoint;
     p_fims->Close();

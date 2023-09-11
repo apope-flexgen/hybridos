@@ -44,6 +44,7 @@ public:
     void build_JSON_Object(fmt::memory_buffer& buf, bool control2status, bool clothed, const char* const search_id = NULL);
     void add_to_JSON_buffer(fmt::memory_buffer& buf, const char* const search_id = NULL, bool clothed = true);
     void add_status_of_control_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL, bool clothed = true);
+    const char* get_status_string() const;
     void set_component_uri(const char* uri);
     void set_register_id(const char* id);
     void set_variable_id(const char* id);

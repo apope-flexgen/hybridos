@@ -65,7 +65,6 @@ Asset::Asset() {
 
     // go ahead and make the vector long enough
     compNames.resize(MAX_COMPS, "");
-    memset(statusStrings, 0, sizeof(char*) * MAX_STATUS_BITS);
 
     connected_rising_edge_detect = true;
 
@@ -935,21 +934,21 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON& body) {
             FPS_INFO_LOG("Switching %s asset %s to maintenance mode.", get_asset_type(), get_name());
             char msgMess[MEDIUM_MSG_LEN];
             snprintf(msgMess, MEDIUM_MSG_LEN, "Maintenance Mode entered: %s asset: %s", get_asset_type(), get_name().c_str());
-            emit_event("Assets", msgMess, 1);
+            emit_event("Assets", msgMess, INFO_ALERT);
             inMaintenance = true;
             inLockdown = false;
             lock_mode.enabled = true;
         } else if (inMaintenance && !maint_mode_set && !inLockdown) {
             FPS_INFO_LOG("Switching %s asset %s out of maintenance mode.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Maintenance Mode exited: %s asset: %s", get_asset_type(), get_name().c_str());
-            emit_event("Assets", event_msg, 1);
+            emit_event("Assets", event_msg, INFO_ALERT);
             inMaintenance = false;
             inLockdown = false;
             lock_mode.enabled = false;
         } else if (inMaintenance && !maint_mode_set && inLockdown) {
             FPS_INFO_LOG("Cannot switch %s asset %s out of maintenance mode due to lockdown.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Cannot switch %s asset out of maintenance mode due to lockdown: %s", get_asset_type(), get_name().c_str());
-            emit_event("Assets", event_msg, 1);
+            emit_event("Assets", event_msg, INFO_ALERT);
             return false;
         } else if (inMaintenance == maint_mode_set) {
             // ignore set to maintenance mode since asset is already in desired state
@@ -978,19 +977,19 @@ bool Asset::handle_generic_asset_controls_set(std::string uri, cJSON& body) {
         } else if (inLockdown && inMaintenance && !lockdown_set) {
             FPS_INFO_LOG("Switching %s asset %s out of lockdown mode.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Lockdown Mode exited: %s asset: %s", get_asset_type(), get_name().c_str());
-            emit_event("Assets", event_msg, 1);
+            emit_event("Assets", event_msg, INFO_ALERT);
             inLockdown = false;
             maint_mode.enabled = true;
         } else if (!inLockdown && inMaintenance && lockdown_set) {
             FPS_INFO_LOG("Switching %s asset %s into lockdown mode.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Lockdown Mode entered: %s asset: %s", get_asset_type(), get_name().c_str());
-            emit_event("Assets", event_msg, 1);
+            emit_event("Assets", event_msg, INFO_ALERT);
             inLockdown = true;
             maint_mode.enabled = false;
         } else if (!inLockdown && !inMaintenance && lockdown_set) {
             FPS_INFO_LOG("Cannot enter lockdown mode when not in maintenance mode for %s asset %s.", get_asset_type(), get_name());
             snprintf(event_msg, MEDIUM_MSG_LEN, "Cannot enter lockdown mode for %s asset: %s not in maintenance", get_asset_type(), get_name().c_str());
-            emit_event("Assets", event_msg, 1);
+            emit_event("Assets", event_msg, INFO_ALERT);
             // default lockdown to false
             inLockdown = false;
             return false;
@@ -1032,16 +1031,16 @@ bool Asset::process_watchdog_status() {
         watchdog_fault.value.value_bit_field = 1;
         latched_fault_it->second = 1;
         snprintf(event_msg, MEDIUM_MSG_LEN, "Fault received: %s, asset: %s", watchdog_fault.options_name[0].c_str(), name.c_str());
-        emit_event("Assets", event_msg, 4);
+        emit_event("Assets", event_msg, FAULT_ALERT);
     }
 
     if (connected_rising_edge_detect != component_connected.value.value_bool) {
         if (component_connected.value.value_bool) {
             snprintf(event_msg, MEDIUM_MSG_LEN, "The Asset %s was connected", get_name().c_str());
-            emit_event("Assets", event_msg, 2);
+            emit_event("Assets", event_msg, STATUS_ALERT);
         } else {
             snprintf(event_msg, MEDIUM_MSG_LEN, "The Asset %s was disconnected", get_name().c_str());
-            emit_event("Assets", event_msg, 3);
+            emit_event("Assets", event_msg, FAULT_ALERT);
         }
         connected_rising_edge_detect = component_connected.value.value_bool;
     }
@@ -1086,8 +1085,8 @@ void Asset::process_asset(void) {
                     for (int i = 0; new_faults != 0; i++) {
                         // The current bit to check
                         if ((new_faults & 1) == 1) {
-                            snprintf(faultMsg, MEDIUM_MSG_LEN, "Fault received :  %s, asset: %s", fault_register->options_name[i].c_str(), name.c_str());
-                            emit_event("Assets", faultMsg, 4);
+                            snprintf(faultMsg, MEDIUM_MSG_LEN, "Asset %s received fault: %s", name.c_str(), fault_register->options_name[i].c_str());
+                            emit_event("Assets", faultMsg, FAULT_ALERT);
                         }
                         new_faults >>= 1;
                     }
@@ -1125,8 +1124,8 @@ void Asset::process_asset(void) {
                     // Translate fault bit to fault message
                     for (int i = 0; new_alarms != 0; i++) {
                         if ((new_alarms & 1) == 1) {
-                            snprintf(alarmMsg, MEDIUM_MSG_LEN, "alarm received :  %s, asset: %s", alarm_register->options_name[i].c_str(), name.c_str());
-                            emit_event("Assets", alarmMsg, 3);
+                            snprintf(alarmMsg, MEDIUM_MSG_LEN, "Asset %s received alarm: %s", name.c_str(), alarm_register->options_name[i].c_str());
+                            emit_event("Assets", alarmMsg, ALARM_ALERT);
                         }
                         new_alarms >>= 1;
                     }
@@ -1144,9 +1143,11 @@ void Asset::process_asset(void) {
         // emit event if status has changed
         if (internal_status != raw_status) {
             char statusMsg[SHORT_MSG_LEN];
-            snprintf(statusMsg, SHORT_MSG_LEN, "Asset %s status changed to:  %s", name.c_str(), statusStrings[raw_status]);
-            emit_event("Assets", statusMsg, 2);
             internal_status = raw_status;
+            // For ess/gen/solar use the status string received from components
+            // For feeder, status is a boolean so use the hard-coded values
+            snprintf(statusMsg, SHORT_MSG_LEN, "Asset %s status changed to: %s", name.c_str(), get_status_string());
+            emit_event("Assets", statusMsg, STATUS_ALERT);
         }
     }
 
@@ -2069,11 +2070,11 @@ bool Asset::check_fims_timeout(void) {
     if (prev_fims_timeout != fims_timeout) {
         char event_msg[MEDIUM_MSG_LEN];
         if (fims_timeout) {  // If there was a FIMS timeout, emit an event
-            snprintf(event_msg, MEDIUM_MSG_LEN, "FIMS timeout detected at %s", get_name().c_str());
-            emit_event("Assets", event_msg, 3);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Asset %s watchdog timeout", get_name().c_str());
+            emit_event("Assets", event_msg, ALARM_ALERT);
         } else {  // If FIMS gets reconnected, emit an event
-            snprintf(event_msg, MEDIUM_MSG_LEN, "FIMS connected at %s", get_name().c_str());
-            emit_event("Assets", event_msg, 2);
+            snprintf(event_msg, MEDIUM_MSG_LEN, "Asset %s watchdog reconnected", get_name().c_str());
+            emit_event("Assets", event_msg, STATUS_ALERT);
         }
     }
     return fims_timeout;

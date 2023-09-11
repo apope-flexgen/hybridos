@@ -42,6 +42,7 @@ Asset_ESS::Asset_ESS() {
     potential_reactive_power = 0.0;
 
     asset_type_id = ESS_TYPE_ID;
+    asset_type_value = ESS;
     maxRawSoc = 0;
     minRawSoc = 0;
     rated_capacity = 0;
@@ -808,6 +809,13 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
  */
 void Asset_ESS::set_raw_status() {
     raw_status = status.value.value_bit_field;
+}
+
+/**
+ * Get the string representation of this asset's status
+ */
+const char* Asset_ESS::get_status_string() const {
+    return status.get_status_string();
 }
 
 /**

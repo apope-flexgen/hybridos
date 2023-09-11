@@ -28,20 +28,19 @@ Path::Path(Site_Manager* siteref) {
 
 /**
  * Checks either alarms or faults depending on the alert type passed.
- * @param alertType indicates checking alarms or checking faults.
+ * @param type_of_alert indicates checking alarms or checking faults. Valid values are ALARM_ALERT and FAULT_ALERT
  * @return True if there are alerts of the given type, or false if there are none.
  */
-bool Path::check_alerts(UI_Type alertType) {
-    // only UI Types that are alerts are ALARM and FAULT
-    if (alertType != ALARM && alertType != FAULT) {
-        FPS_ERROR_LOG("Function check_alerts(UI_Type alertType) only accepts ALARM or FAULT as an argument. Returning false...\n");
+bool Path::check_alerts(alert_type type_of_alert) {
+    if (type_of_alert != ALARM_ALERT && type_of_alert != FAULT_ALERT) {
+        FPS_ERROR_LOG("This function only accepts ALARM_ALERT or FAULT_ALERT as an argument. Returning false...\n");
         return false;
     }
 
     // count how many active alerts there are
     int num_active_alerts = 0;
 
-    for (auto name_mask_pair : (alertType == FAULT ? faults : alarms)) {
+    for (auto name_mask_pair : (type_of_alert == FAULT_ALERT ? faults : alarms)) {
         // allocate memory for an event message to be sent if alert detected
         char event_message[MEDIUM_MSG_LEN];
 
@@ -52,24 +51,24 @@ bool Path::check_alerts(UI_Type alertType) {
         if (name_fragments[0] == "bypass")
             continue;
         // debug test fault "test_fault"
-        else if (alertType == FAULT && name_fragments[0] == "test_fault") {
+        else if (type_of_alert == FAULT_ALERT && name_fragments[0] == "test_fault") {
             num_active_alerts++;
             // only emit event if new
             if (!pSite->get_active_faults(0)) {
-                FPS_ERROR_LOG("test fault detected: %s \n", name_fragments[0].c_str());
-                snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager %s test fault detected", name_fragments[0].c_str());
-                emit_event("Site", event_message, 1);
+                FPS_ERROR_LOG("test fault detected: %s", name_fragments[0]);
+                snprintf(event_message, MEDIUM_MSG_LEN, "Test fault detected");
+                emit_event("Site", event_message, type_of_alert);
                 pSite->set_faults(0);
             }
         }
         // debug test alarm "test_alarm"
-        else if (alertType == ALARM && name_fragments[0] == "test_alarm") {
+        else if (type_of_alert == ALARM_ALERT && name_fragments[0] == "test_alarm") {
             num_active_alerts++;
             // only emit event if new
             if (!pSite->get_active_alarms(0)) {
-                FPS_ERROR_LOG("test alarm detected: %s \n", name_fragments[0].c_str());
-                snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager %s test alarm detected", name_fragments[0].c_str());
-                emit_event("Site", event_message, 1);
+                FPS_ERROR_LOG("test alarm detected: %s", name_fragments[0]);
+                snprintf(event_message, MEDIUM_MSG_LEN, "Test alarm detected");
+                emit_event("Site", event_message, type_of_alert);
                 pSite->set_alarms(0);
             }
         }
@@ -85,12 +84,12 @@ bool Path::check_alerts(UI_Type alertType) {
                 if (asset_cmd == "get_any_ess_faults") {
                     if (pSite->pAssets->get_num_active_faults(ESS) > 0) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
                             // print and raise alarm/fault based on type
-                            FPS_ERROR_LOG("get_any_ess_faults %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager ESS %s detected: Get Any ESS Faults", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                            FPS_ERROR_LOG("get_any_ess_faults %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: ESS fault(s) detected", alert_names_upper[type_of_alert]);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
@@ -98,40 +97,44 @@ bool Path::check_alerts(UI_Type alertType) {
                 else if (asset_cmd == "get_any_ess_alarms") {
                     if (pSite->pAssets->get_num_active_alarms(ESS) > 0) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
                             // print and raise alarm/fault based on type
-                            FPS_ERROR_LOG("get_any_ess_alarms %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager ESS %s detected: Get Any ESS Alarms", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                            FPS_ERROR_LOG("get_any_ess_alarms %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: ESS alarm(s) detected", alert_names_upper[type_of_alert]);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
                 // check for number of ess running. compare read value to first element and fault if less/equal
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_ess_running") {
-                    // asset the number of expected running based on type
-                    if ((int)name_mask_pair.second >= pSite->pAssets->get_num_ess_running()) {
+                    // assert the number of expected running based on type
+                    int expected_num_running = (int)name_mask_pair.second;
+                    int actual_num_running = pSite->pAssets->get_num_ess_running();
+                    if (expected_num_running >= actual_num_running) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_ess_running %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager #ESS running %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_ess_running %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of ESS running. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_running + 1, actual_num_running);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
                 // check for number of ess available. compare read value to first element and fault if less/equal
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_ess_available") {
-                    // asset the number of expected available based on type
-                    if ((int)name_mask_pair.second >= pSite->pAssets->get_num_ess_avail()) {
+                    // assert the number of expected available based on type
+                    int expected_num_avail = (int)name_mask_pair.second;
+                    int actual_num_avail = pSite->pAssets->get_num_ess_avail();
+                    if (expected_num_avail >= actual_num_avail) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_ess_available %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager #ESS available %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_ess_available %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of ESS available. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_avail + 1, actual_num_avail);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
@@ -139,13 +142,15 @@ bool Path::check_alerts(UI_Type alertType) {
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_ess_controllable") {
                     // assert the number of expected controllable based on type
-                    if ((int)name_mask_pair.second >= pSite->pAssets->get_num_ess_controllable()) {
+                    int expected_num_controllable = (int)name_mask_pair.second;
+                    int actual_num_controllable = pSite->pAssets->get_num_ess_controllable();
+                    if (expected_num_controllable >= actual_num_controllable) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_ess_controllable %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager #ESS controllable %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_ess_controllable %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of ESS controllable. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_controllable + 1, actual_num_controllable);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
@@ -156,12 +161,12 @@ bool Path::check_alerts(UI_Type alertType) {
                 else if (asset_cmd == "get_any_solar_faults") {
                     if (pSite->pAssets->get_num_active_faults(SOLAR) > 0) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
                             // print and raise alarm/fault based on type
-                            FPS_ERROR_LOG("get_any_solar_faults %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager SOLAR %s detected: Get Any SOLAR Faults", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                            FPS_ERROR_LOG("get_any_solar_faults %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: solar fault(s) detected", alert_names_upper[type_of_alert]);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
@@ -169,54 +174,60 @@ bool Path::check_alerts(UI_Type alertType) {
                 else if (asset_cmd == "get_any_solar_alarms") {
                     if (pSite->pAssets->get_num_active_alarms(SOLAR) > 0) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
                             // print and raise alarm/fault based on type
-                            FPS_ERROR_LOG("get_any_solar_alarms %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager SOLAR %s detected: Get Any SOLAR Alarms", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                            FPS_ERROR_LOG("get_any_solar_alarms %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: solar alarm(s) detected", alert_names_upper[type_of_alert]);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
                 // check for number of solar running. compare read value to first element and fault if less/equal
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_solar_running") {
-                    // asset the number of expected running based on type
-                    if ((int)name_mask_pair.second >= pSite->pAssets->get_num_solar_running()) {
+                    // assert the number of expected running based on type
+                    int expected_num_running = (int)name_mask_pair.second;
+                    int actual_num_running = pSite->pAssets->get_num_solar_running();
+                    if (expected_num_running >= actual_num_running) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_solar_running %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #SOLAR running %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_solar_running %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of solar running. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_running + 1, actual_num_running);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
                 // check for number of solar available. compare read value to first element and fault if less/equal
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_solar_available") {
-                    // asset the number of expected available based on type
-                    if ((int)name_mask_pair.second >= pSite->pAssets->get_num_solar_avail()) {
+                    // assert the number of expected available based on type
+                    int expected_num_avail = (int)name_mask_pair.second;
+                    int actual_num_avail = pSite->pAssets->get_num_solar_avail();
+                    if (expected_num_avail >= actual_num_avail) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_solar_available %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #SOLAR available %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_solar_available %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of solar available. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_avail + 1, actual_num_avail);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
-                // check for number of solar controllable.  compare read value to first element and fault if less/equal
+                // check for number of solar controllable. compare read value to first element and fault if less/equal
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_solar_controllable") {
                     // assert the number of expected controllable based on type
-                    if ((int)name_mask_pair.second >= pSite->pAssets->get_num_solar_controllable()) {
+                    int expected_num_controllable = (int)name_mask_pair.second;
+                    int actual_num_controllable = pSite->pAssets->get_num_solar_controllable();
+                    if (expected_num_controllable >= actual_num_controllable) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_solar_controllable %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #SOLAR controllable %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_solar_controllable %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of solar controllable. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_controllable + 1, actual_num_controllable);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
@@ -227,12 +238,12 @@ bool Path::check_alerts(UI_Type alertType) {
                 else if (asset_cmd == "get_any_gen_faults") {
                     if (pSite->pAssets->get_num_active_faults(GENERATORS) > 0) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
                             // print and raise alarm/fault based on type
-                            FPS_ERROR_LOG("get_any_gen_faults %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager GENERATORS %s detected: Get Any GENERATORS Faults", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                            FPS_ERROR_LOG("get_any_gen_faults %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: generator fault(s) detected", alert_names_upper[type_of_alert]);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
@@ -240,69 +251,77 @@ bool Path::check_alerts(UI_Type alertType) {
                 else if (asset_cmd == "get_any_gen_alarms") {
                     if (pSite->pAssets->get_num_active_alarms(GENERATORS) > 0) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
                             // print and raise alarm/fault based on type
-                            FPS_ERROR_LOG("get_any_gen_alarms %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager GENERATORS %s detected: Get Any GENERATORS Alarms", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                            FPS_ERROR_LOG("get_any_gen_alarms %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: generator alarm(s) detected", alert_names_upper[type_of_alert]);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
-                // check for number of gen running.  compare read value to first element and fault if less/equal
+                // check for number of generators running. compare read value to first element and fault if less/equal
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_gen_running") {
-                    // asset the number of expected running based on type
-                    if ((int)name_mask_pair.second >= pSite->pAssets->get_num_gen_running()) {
+                    // assert the number of expected running based on type
+                    int expected_num_running = (int)name_mask_pair.second;
+                    int actual_num_running = pSite->pAssets->get_num_gen_running();
+                    if (expected_num_running >= actual_num_running) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_gen_running %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #GENERATORS running %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_gen_running %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of generators running. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_running + 1, actual_num_running);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
                 // check for number of gen available. compare read value to first element and fault if less/equal
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_gen_available") {
-                    // asset the number of expected available based on type
-                    if ((int)name_mask_pair.second >= pSite->pAssets->get_num_gen_avail()) {
+                    // assert the number of expected available based on type
+                    int expected_num_avail = (int)name_mask_pair.second;
+                    int actual_num_avail = pSite->pAssets->get_num_gen_avail();
+                    if (expected_num_avail >= actual_num_avail) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_gen_available %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #GENERATORS available %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_gen_available %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of generators available. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_avail + 1, actual_num_avail);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
-                // check for number of gen controllable.  compare read value to first element and fault if less/equal
+                // check for number of gen controllable. compare read value to first element and fault if less/equal
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_gen_controllable") {
                     // assert the number of expected controllable based on type
-                    if ((int)name_mask_pair.second >= pSite->pAssets->get_num_gen_controllable()) {
+                    int expected_num_controllable = (int)name_mask_pair.second;
+                    int actual_num_controllable = pSite->pAssets->get_num_gen_controllable();
+                    if (expected_num_controllable >= actual_num_controllable) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_gen_controllable %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            sprintf(event_message, "Site Manager #GENERATORS controllable %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_gen_controllable %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of generators controllable. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_controllable + 1, actual_num_controllable);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
                 // check for number of solar, ess, gen controllable.  if none controllable, fault
                 // In this case asset_active_faults value is used as the expected number
                 else if (asset_cmd == "get_num_assets_controllable") {
-                    // asset the number of expected controllable based on type
-                    // TODO: the mask value is not checked, faults if there are 0 only
-                    if (pSite->pAssets->get_num_ess_controllable() == 0 && pSite->pAssets->get_num_solar_controllable() == 0 && pSite->pAssets->get_num_gen_controllable() == 0) {
+                    // assert the number of expected controllable based on type
+                    int expected_num_controllable = (int)name_mask_pair.second;
+                    int actual_num_controllable = pSite->pAssets->get_num_ess_controllable() + pSite->pAssets->get_num_gen_controllable() + pSite->pAssets->get_num_solar_controllable();
+                    if (expected_num_controllable >= actual_num_controllable) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("get_num_assets_controllable %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager #Assets Controllable %s detected", alertType == FAULT ? "fault" : "alarm");
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            FPS_ERROR_LOG("get_num_assets_controllable %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: insufficient number of assets controllable across all types. Expected at least %d but detected %d", alert_names_upper[type_of_alert], expected_num_controllable + 1,
+                                     actual_num_controllable);
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
@@ -310,37 +329,41 @@ bool Path::check_alerts(UI_Type alertType) {
                 else {
                     if (pSite->pAssets->check_asset_alert(name_mask_pair)) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                            FPS_ERROR_LOG("Asset %s detected: %s\n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager Asset %s detected: %s", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                            emit_event("Site", event_message, 1);
-                            (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                            if (name_fragments.size() != 4) {
+                                FPS_WARNING_LOG("Received invalid sequence %s endpoint %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                                break;
+                            }
+                            FPS_ERROR_LOG("Asset %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: %s alert(s) detected on %s register", alert_names_upper[type_of_alert], name_fragments[2].c_str(), name_fragments[3].c_str());
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                         }
                     }
                 }
             } else if (asset_cmd == "get_feeder_on_array") {
                 Asset_Feeder* feeder_instance = pSite->pAssets->validate_feeder_id(name_fragments[0].c_str());
                 if (feeder_instance == nullptr) {
-                    FPS_ERROR_LOG("feeder ID: %s was not found in the assets list\n", name_fragments[0].c_str());
+                    FPS_ERROR_LOG("feeder ID: %s was not found in the assets list", name_fragments[0]);
                 }
                 // if first element is 0, then alert if feeder_state is false (alert on open breaker)
                 else if (name_mask_pair.second == 0 && !pSite->pAssets->get_feeder_state(feeder_instance)) {
                     num_active_alerts++;
-                    if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                        FPS_ERROR_LOG("get_feeder_on_array %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                        snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager %s open feeder %s detected", name_fragments[0].c_str(), alertType == FAULT ? "fault" : "alarm");
-                        emit_event("Site", event_message, 1);
-                        (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                    if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                        FPS_ERROR_LOG("get_feeder_on_array %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first);
+                        snprintf(event_message, MEDIUM_MSG_LEN, "%s: %s breaker is open", alert_names_upper[type_of_alert], name_fragments[0].c_str());
+                        emit_event("Site", event_message, type_of_alert);
+                        (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                     }
                 }
                 // if first element is 1, then alert if feeder_state is true (alert on closed breaker)
                 else if (name_mask_pair.second == 1 && pSite->pAssets->get_feeder_state(feeder_instance)) {
                     num_active_alerts++;
-                    if (alertType == FAULT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
-                        FPS_ERROR_LOG("get_feeder_on_array %s detected: %s \n", alertType == FAULT ? "fault" : "alarm", name_mask_pair.first.c_str());
-                        snprintf(event_message, MEDIUM_MSG_LEN, "Site Manager %s closed feeder %s detected", name_fragments[0].c_str(), alertType == FAULT ? "fault" : "alarm");
-                        emit_event("Site", event_message, 1);
-                        (alertType == FAULT) ? pSite->set_faults(1) : pSite->set_alarms(1);
+                    if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(1) : !pSite->get_active_alarms(1)) {
+                        FPS_ERROR_LOG("get_feeder_on_array %s detected: %s", alert_names_lower[type_of_alert], name_mask_pair.first.c_str());
+                        snprintf(event_message, MEDIUM_MSG_LEN, "%s: %s breaker is closed", alert_names_upper[type_of_alert], name_fragments[0].c_str());
+                        emit_event("Site", event_message, type_of_alert);
+                        (type_of_alert == FAULT_ALERT) ? pSite->set_faults(1) : pSite->set_alarms(1);
                     }
                 }
             }
@@ -368,55 +391,56 @@ bool Path::check_alerts(UI_Type alertType) {
                 }
 
                 if (bool_index != 0) {
-                    int checkVal = 0;
+                    Fims_Object reserved_bool;
+                    std::string fault_name;
                     switch (bool_index) {  // sequences.json can't store "true" or "false" in asset_active_faults, so 0 stands for false and 1 stands for true
                         case 1:
-                            checkVal = pSite->get_reserved_bool_1() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_1();
                             break;
                         case 2:
-                            checkVal = pSite->get_reserved_bool_2() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_2();
                             break;
                         case 3:
-                            checkVal = pSite->get_reserved_bool_3() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_3();
                             break;
                         case 4:
-                            checkVal = pSite->get_reserved_bool_4() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_4();
                             break;
                         case 5:
-                            checkVal = pSite->get_reserved_bool_5() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_5();
                             break;
                         case 6:
-                            checkVal = pSite->get_reserved_bool_6() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_6();
                             break;
                         case 7:
-                            checkVal = pSite->get_reserved_bool_7() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_7();
                             break;
                         case 8:
-                            checkVal = pSite->get_reserved_bool_8() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_8();
                             break;
                         case 9:
-                            checkVal = pSite->get_reserved_bool_9() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_9();
                             break;
                         case 10:
-                            checkVal = pSite->get_reserved_bool_10() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_10();
                             break;
                         case 11:
-                            checkVal = pSite->get_reserved_bool_11() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_11();
                             break;
                         case 12:
-                            checkVal = pSite->get_reserved_bool_12() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_12();
                             break;
                         case 13:
-                            checkVal = pSite->get_reserved_bool_13() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_13();
                             break;
                         case 14:
-                            checkVal = pSite->get_reserved_bool_14() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_14();
                             break;
                         case 15:
-                            checkVal = pSite->get_reserved_bool_15() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_15();
                             break;
                         case 16:
-                            checkVal = pSite->get_reserved_bool_16() ? 1 : 0;
+                            reserved_bool = pSite->get_reserved_bool_16();
                             break;
                         default:
                             FPS_ERROR_LOG("reserved_bool_%d not found!\n", bool_index);
@@ -424,12 +448,15 @@ bool Path::check_alerts(UI_Type alertType) {
                     }
 
                     // compare Site Manager's stored value with the expected value that is configured in sequences.json
+                    // TODO: this creates duplicate faults, and requires extra faults to be configured in variables
                     int fault_alarm_index = RESERVED_BOOL_FAULTS_OFFSET + bool_index;
-                    if (checkVal != (int)name_mask_pair.second) {
+                    if (reserved_bool.value.value_bool != (int)name_mask_pair.second) {
                         num_active_alerts++;
-                        if (alertType == FAULT ? !pSite->get_active_faults(fault_alarm_index) : !pSite->get_active_alarms(fault_alarm_index)) {
-                            FPS_ERROR_LOG("Site Manager reserved_bool_%d %s detected\n", bool_index, alertType == FAULT ? "fault" : "alarm");
-                            (alertType == FAULT) ? pSite->set_faults(fault_alarm_index) : pSite->set_alarms(fault_alarm_index);
+                        if (type_of_alert == FAULT_ALERT ? !pSite->get_active_faults(fault_alarm_index) : !pSite->get_active_alarms(fault_alarm_index)) {
+                            FPS_ERROR_LOG("Site Manager reserved_bool_%d %s detected", bool_index, alert_names_lower[type_of_alert]);
+                            snprintf(event_message, MEDIUM_MSG_LEN, "%s: %s", alert_names_upper[type_of_alert], reserved_bool.get_name());
+                            emit_event("Site", event_message, type_of_alert);
+                            (type_of_alert == FAULT_ALERT) ? pSite->set_faults(fault_alarm_index) : pSite->set_alarms(fault_alarm_index);
                         }
                     }
                 }
@@ -440,13 +467,13 @@ bool Path::check_alerts(UI_Type alertType) {
     }
 
     // update total active alerts
-    if (alertType == FAULT)
+    if (type_of_alert == FAULT_ALERT)
         num_active_faults = num_active_alerts;
-    else if (alertType == ALARM)
+    else if (type_of_alert == ALARM_ALERT)
         num_active_alarms = num_active_alerts;
 
     // return true/false if any alerts were set
-    return (alertType == FAULT) ? pSite->get_faults() : pSite->get_alarms();
+    return (type_of_alert == FAULT_ALERT) ? pSite->get_faults() : pSite->get_alarms();
 }
 
 bool Path::configure_path(cJSON* object, int current_path_index) {

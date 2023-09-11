@@ -46,6 +46,7 @@ Asset_Generator::Asset_Generator() {
     stopping_status_mask = 0;
 
     asset_type_id = GENERATORS_TYPE_ID;
+    asset_type_value = GENERATORS;
 
     set_required_variables();
 }
@@ -407,6 +408,13 @@ bool Asset_Generator::handle_set(std::string uri, cJSON& body) {
  */
 void Asset_Generator::set_raw_status() {
     raw_status = status.value.value_bit_field;
+}
+
+/**
+ * Get the string representation of this asset's status
+ */
+const char* Asset_Generator::get_status_string() const {
+    return status.get_status_string();
 }
 
 void Asset_Generator::process_asset(void) {
