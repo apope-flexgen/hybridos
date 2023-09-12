@@ -75,17 +75,45 @@ func StartEvalsAndPubs(wg *sync.WaitGroup) {
 								}
 
 								if uriIsSet[uriGroup] && (len(setMsgBody) > 0 || uriHeartbeat[uriGroup]) {
-									_, err = f.Send(fims.FimsMsg{
-										Method: "set",
-										Uri:    temp_uri,
-										Body:   setMsgBody,
-									})
+									if uriIsLonely[uriGroup] {
+										outputsMutex.RLock()
+										lonelyVarName := uriGroup[strings.Index(uriGroup, "[")+1 : strings.Index(uriGroup, "]")]
+										if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
+											lonelyVarName = MetricsConfig.Outputs[lonelyVarName].Name
+										}
+										outputsMutex.RUnlock()
+										_, err = f.Send(fims.FimsMsg{
+											Method: "set",
+											Uri:    temp_uri + "/" + lonelyVarName,
+											Body:   setMsgBody[lonelyVarName],
+										})
+									} else {
+										_, err = f.Send(fims.FimsMsg{
+											Method: "set",
+											Uri:    temp_uri,
+											Body:   setMsgBody,
+										})
+									}
 								} else if len(pubMsgBody) > 0 || uriHeartbeat[uriGroup] {
-									_, err = f.Send(fims.FimsMsg{
-										Method: "pub",
-										Uri:    temp_uri,
-										Body:   pubMsgBody,
-									})
+									if uriIsLonely[uriGroup] {
+										outputsMutex.RLock()
+										lonelyVarName := uriGroup[strings.Index(uriGroup, "[")+1 : strings.Index(uriGroup, "]")]
+										if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
+											lonelyVarName = MetricsConfig.Outputs[lonelyVarName].Name
+										}
+										outputsMutex.RUnlock()
+										_, err = f.Send(fims.FimsMsg{
+											Method: "pub",
+											Uri:    temp_uri + "/" + lonelyVarName,
+											Body:   pubMsgBody[lonelyVarName],
+										})
+									} else {
+										_, err = f.Send(fims.FimsMsg{
+											Method: "pub",
+											Uri:    temp_uri,
+											Body:   pubMsgBody,
+										})
+									}
 								}
 								msgBodyMutex.Unlock()
 								pubDataChanged[uriGroup] = false
@@ -282,11 +310,25 @@ func ProcessDirectSets() {
 			}
 
 			if len(setMsgBody) > 0 {
-				f.Send(fims.FimsMsg{
-					Method: "set",
-					Uri:    directSetUri,
-					Body:   setMsgBody,
-				})
+				if uriIsLonely[directSetUriGroup] {
+					outputsMutex.RLock()
+					lonelyVarName := directSetUriGroup[strings.Index(directSetUriGroup, "[")+1 : strings.Index(directSetUriGroup, "]")]
+					if _, ok := MetricsConfig.Outputs[lonelyVarName]; ok && len(MetricsConfig.Outputs[lonelyVarName].Name) > 0 {
+						lonelyVarName = MetricsConfig.Outputs[lonelyVarName].Name
+					}
+					outputsMutex.RUnlock()
+					f.Send(fims.FimsMsg{
+						Method: "set",
+						Uri:    (directSetUri + "/" + lonelyVarName),
+						Body:   setMsgBody[lonelyVarName],
+					})
+				} else {
+					f.Send(fims.FimsMsg{
+						Method: "set",
+						Uri:    directSetUri,
+						Body:   setMsgBody,
+					})
+				}
 			}
 			msgBodyMutex.Unlock()
 			pubDataChanged[directSetUriGroup] = false

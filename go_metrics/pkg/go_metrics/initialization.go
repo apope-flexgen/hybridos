@@ -2274,16 +2274,22 @@ func combineFlags(outputName string, output *Output) {
 	if noGetResponse == nil {
 		noGetResponse = make(map[string]bool, 0)
 	}
+	if uriIsLonely == nil {
+		uriIsLonely = make(map[string]bool, 0)
+	}
 	outputVarChanged[outputName] = true
 	uriGroup := ""
 
 	if len(output.Uri) > 0 {
 		if stringInSlice(output.Flags, "lonely") {
 			uriGroup = output.Uri + "[" + outputName + "]"
+			uriIsLonely[uriGroup] = true
 		} else if group, hasGroup := regexStringInSlice(output.Flags, `group\d+`); hasGroup {
 			uriGroup = output.Uri + "[" + group + "]"
+			uriIsLonely[uriGroup] = false
 		} else {
 			uriGroup = output.Uri
+			uriIsLonely[uriGroup] = false
 		}
 
 		outputToUriGroup[outputName] = uriGroup

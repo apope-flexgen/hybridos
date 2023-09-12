@@ -44,9 +44,10 @@ var elementValueMutex sync.Mutex
 
 // local variables used throughout the package
 // since we want to minimize garbage collection
-var allOutputFlags = []string{"naked", "clothed", `group\d+`, "interval_set", "enum", "bitfield", "sparse", "no_heartbeat", "direct_set"}
+var allOutputFlags = []string{"naked", "clothed", `group\d+`, "interval_set", "enum", "bitfield", "sparse", "no_heartbeat", "direct_set", "lonely"}
 var uriIsSparse map[string]bool
 var uriIsSet map[string]bool
+var uriIsLonely map[string]bool
 var uriToDirectSetActive map[string]bool // map of uris that have direct sets to whether or not we need to send a pub out now
 var uriHeartbeat map[string]bool
 var uriToInputNameMap map[string][]string          // a map of uri's to input variable names
