@@ -1,5 +1,5 @@
 import { PageLoadingIndicator, ThemeType } from '@flexgen/storybook';
-import { Order } from '@flexgen/storybook/dist/components/DataDisplay/Table/Table-Sorting';
+import { Order } from '@flexgen/storybook/dist/components/PlatformSpecific/HosControl/Table/Table-Sorting';
 import { Box } from '@mui/material';
 import { useState, ChangeEvent } from 'react';
 import { Event, EventsRequestParams } from 'shared/types/dtos/events.dto';

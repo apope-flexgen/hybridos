@@ -9,6 +9,7 @@ import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import EventDateTime from 'src/pages/Events/EventFilters/EventDateTime/EventDateTime';
 import EventSearch from 'src/pages/Events/EventFilters/EventSearch';
 import EventSeverities from 'src/pages/Events/EventFilters/EventSeverities/EventSeverities';
+import EventsDownload from 'src/pages/Events/EventsDownload/EventsDownload';
 import { cardHeading, buildURI } from './EventsHeader-helpers';
 
 interface EventsProps {
@@ -89,6 +90,7 @@ const EventsHeader: FC<EventsProps> = ({
           </CardRow>
 
           <EventSearch filters={filters} setFilters={setFilters} />
+          <EventsDownload filters={filters} setIsLoading={setIsLoading} />
         </CardContainer>
       </Box>
     </CardRow>

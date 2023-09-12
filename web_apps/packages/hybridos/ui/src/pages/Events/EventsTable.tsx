@@ -1,5 +1,5 @@
 import { Table } from '@flexgen/storybook';
-import { Order } from '@flexgen/storybook/dist/components/DataDisplay/Table/Table-Sorting';
+import { Order } from '@flexgen/storybook/dist/components/PlatformSpecific/HosControl/Table/Table-Sorting';
 import { ChangeEvent, FC } from 'react';
 import { Event } from 'shared/types/dtos/events.dto';
 
