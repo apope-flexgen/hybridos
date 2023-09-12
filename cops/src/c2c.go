@@ -17,6 +17,7 @@ import (
 	"crypto/x509"
 	_ "embed"
 	"encoding/json"
+	"fims"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -393,6 +394,16 @@ func sendDBIUpdate(uriParse bool, uri string, msg string) {
 	f.SendSet(uri, "", body)
 }
 
+// Handles the response back from dbi with the latest configuration data
+func handleDBIUpdate(msg fims.FimsMsg) {
+	// As the primary, the other controller (secondary) has requested our latest config on its startup
+	// This controller sent the request to DBI, and has now received the response for each uri (document) requested
+
+	// Send the document we got from DBI for this uri
+	// Sets will be received and written through C2C one-by-one, with the last set containing the uri keyword /dbi_update_complete
+	sendC2CMsg(fimsToC2C("SetDBIUpdate", msg.Uri, msg.Body))
+}
+
 // `handleSetpoints` takes setpoint updates received from the Primary controller and passes them
 // along to the appropriate DBI entry.
 func handleSetpoints(msg string) error {
@@ -417,6 +428,21 @@ func handleSetpoints(msg string) error {
 		}
 	}
 	return fmt.Errorf("target URI %v does not match any writeout URIs in target process %v", targetUri, targetProcess.name)
+}
+
+// Handles writing out setpoint data. If in Update mode, also tracks any processes that have been updated in order to restart them as needed
+func handleSetpointWriteout(msg fims.FimsMsg, process *processInfo) {
+	// Writeout our setpoint sent from our process to the other process
+	if controllerMode == Primary {
+		// Convert the setpoint message to a C2C message and send to the secondary process
+		sendC2CMsg(fimsToC2C("Setpoints", msg.Uri, msg.Body))
+		return
+	} else if controllerMode == Update {
+		// If updating, record all processes that have received updates so they can be restarted on exiting the mode
+		// This will include both the configuration changes uploaded to this Update controller,
+		// and any setpoints that may be received from the primary while updating
+		updatedProcesses = append(updatedProcesses, process)
+	}
 }
 
 // `handleDbiUpdateSet` processes a C2C message from the Primary controller that contains the
