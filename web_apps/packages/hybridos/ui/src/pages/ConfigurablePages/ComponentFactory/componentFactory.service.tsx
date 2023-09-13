@@ -144,6 +144,7 @@ const organizeProps = (
     props.showStepper = false;
     props.size = 'medium';
   } else if (component === 'Switch') {
+    props.labelPlacement = 'right'
     props.value = value;
     props.autoLayout = true;
   } else if (component === 'MaintModeSlider') {
