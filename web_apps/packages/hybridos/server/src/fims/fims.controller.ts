@@ -14,8 +14,8 @@ import {
 import { ApiDefaultResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ApiSecurity } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { FIMS_API_LIMIT, FIMS_API_TTL } from 'src/environment/appEnv.constants';
-import { DefaultApiError } from 'src/exceptions/defaultResponse.exception';
+import { FIMS_API_LIMIT, FIMS_API_TTL } from '../environment/appEnv.constants';
+import { DefaultApiError } from '../exceptions/defaultResponse.exception';
 
 import { BodyDTO, GetDTO } from './dto/fims.dto';
 import { FimsHttpPermissionsGuard } from './guards/fims.http.guard';

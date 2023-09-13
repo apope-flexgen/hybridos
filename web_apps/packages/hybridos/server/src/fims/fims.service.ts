@@ -150,7 +150,8 @@ export class FimsService implements IFimsService {
     }, 5000);
     const respond = (e) => {
       if (!hasResolved && e && e.uri && UriIsRootOfUri(e.uri, uri)) {
-        this.eventEmitter.removeListener('fims.message', respond);
+        // blame Jack S for fims.reply
+        this.eventEmitter.removeListener('fims.reply', respond);
         this.UIDs.delete(uid);
         resolve(e);
       }
