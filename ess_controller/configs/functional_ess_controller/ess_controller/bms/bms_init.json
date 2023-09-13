@@ -1,0 +1,50 @@
+{
+    "/config/load": {
+        "bms_init": {
+            "file": "bms_init",
+            "new_options": [
+                {
+                    "tmpls": [
+                        "std_v_bms_manager",
+                        "std_v_bms_manager_controls",
+                        "std_v_bms_manager_faults"
+                    ],
+                    "pname": "ess",
+                    "amname": "bms",
+                    "from": 1,
+                    "to": 1
+                },
+                {
+                    "tmpls": [
+                        "std_bms_manager",
+                        "std_bms_manager_controls",
+                        "std_bms_manager_faults"
+                    ],
+                    "pname": "bms",
+                    "amname": "##BMS_ID##",
+                    "from": 1,
+                    "to": 2,
+                    "reps": [
+                        { "replace": "##BMS_ID##", "with": "bms_{:01d}" },
+                        { "replace": "##PCS_ID##", "with": "pcs_{:01d}" },
+                        { "replace": "##ESS_ID##", "with": "ess_{:01d}" }
+                    ]
+                },
+                {
+                    "tmpls": [
+                        "std_bms_rack"
+                    ],
+                    "pname": "##BMS_ID##",
+                    "ainame": "##BMS_ID##_##RACK_ID##",
+                    "from": 1,
+                    "to": 2,
+                    "reps": [
+                        { "replace": "##BMS_ID##"        , "with": "bms_{:01d}"  },
+                        { "replace": "##RACK_ID##"       , "with": "rack_{:01d}" },
+                        { "replace": "##RACK_ID_TITLE##" , "with": "Rack{:01d}"  }
+                    ]
+                }
+            ]
+        }
+    }
+}

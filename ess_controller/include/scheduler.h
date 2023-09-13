@@ -113,5 +113,10 @@ class scheduler {
 
 };
 
+int TestRunSchedOpts(varsmap &vmap, varmap &amap, const char* _aname, fims* p_fims, assetVar* aV);
+
+std::string ReplaceString(std::string subject, const std::string& search, const std::string& replace);
+
+
 #endif
 

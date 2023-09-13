@@ -10,7 +10,7 @@
 
 // Source: https://en.cppreference.com/w/cpp/utility/exchange
 // Very useful operation that is not in C++11, so I imported it here (USED IN DUMMY CLASS! DO NOT DELETE!):
-namespace std
+namespace custom_exchange_ns
 {
     template<class T, class U = T>
     T exchange(T& obj, U&& new_value)
@@ -91,7 +91,7 @@ namespace testUtils
 
         // Move constructor:
         Dummy(Dummy&& other, bool debug = true) noexcept
-            : m_name(std::exchange(other.m_name, "null")), m_debug(debug)
+            : m_name(custom_exchange_ns::exchange(other.m_name, "null")), m_debug(debug)
         {
             if (other.m_debug) printf("(Dummy: %s) was moved by constructor!\n", m_name.c_str());
             other.event_history.emplace_back("(Move Constructor, was: " + m_name + ")");
@@ -104,7 +104,7 @@ namespace testUtils
                 if (m_debug) printf("(Dummy: %s) is turning into (Dummy: %s) by move assignment!\n", m_name.c_str(), other.m_name.c_str());
                 event_history.emplace_back("(Move Assignment (taker), was: " + m_name + ")");
                 other.event_history.emplace_back("(Move Assignment (takee), was: " + other.m_name + ")");
-                m_name = std::exchange(other.m_name, "null");
+                m_name = custom_exchange_ns::exchange(other.m_name, "null");
             }
             else
             {

@@ -63,6 +63,7 @@ VarMapUtils::VarMapUtils()
     simdbi = false;
     noLog = false;
     idVec = nullptr; //new std::vector<std::string>;
+    autoLoad = false;
 
 }
 
@@ -1969,6 +1970,8 @@ assetVar* VarMapUtils::setActOptsfromCjxx(assetVar* av, const char* act, const c
 }
 // sets up the options field for the action
 // note this currently deletes any existing actions ans overwrites with new ones.
+
+
 assetVar* VarMapUtils::setActOptsfromCj(assetVar* av, const char* act, cJSON* cj)
 {
     if (0)FPS_PRINT_INFO("starting for av->name [{}], act [{}]"
@@ -1991,7 +1994,7 @@ assetVar* VarMapUtils::setActOptsfromCj(assetVar* av, const char* act, cJSON* cj
         );
         //delete av->actVec[act] = 
         //std::vector<assetAction *>;
-        // this deletes ALL old actions 
+        // this deletes ALL old actions
         while (av->extras->actVec[act].size() > 0 )
         {
             assetAction* aa = av->extras->actVec[act].back();
@@ -2004,14 +2007,13 @@ assetVar* VarMapUtils::setActOptsfromCj(assetVar* av, const char* act, cJSON* cj
     cJSON* cji = cj;
     while(cji)
     {
-        
-        if(0)FPS_PRINT_INFO("string [{}] child [{}] child->string[{}] child->child->string[{}] child->child->next {}"
+        if(0)FPS_PRINT_INFO("string [{}] child [{}]"// child->string[{}] child->child->string[{}] child->child->next {}"
             
             , cji->string
             , fmt::ptr(cji->child)
-            , cji->child->string
-            , cji->child->child->string
-            , fmt::ptr(cji->child->child->next)
+            // , cji->child->string
+            // , cji->child->child->string
+            // , fmt::ptr(cji->child->child->next)
             );
 
         // dont walk past the actions
@@ -3572,6 +3574,7 @@ void VarMapUtils::processMsgSetPubUi(varsmap& vmap, const char* method, const ch
             cj = nullptr;
         }
     }
+
     if(cj)
     {
         // run the config system.
@@ -3584,6 +3587,7 @@ void VarMapUtils::processMsgSetPubUi(varsmap& vmap, const char* method, const ch
         }
         
     }
+
     if (cj)
     {
         if (*cjr == nullptr)
@@ -3679,6 +3683,8 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
         }
         
     }
+
+
     if(0)FPS_ERROR_PRINT("%s >> got cj %p  cj->type [%d]\n", __func__, cj, cj?cj->type:-1);
     if(cj && cj->type == cJSON_Object)
     {
@@ -3737,7 +3743,7 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
 
         }
     }
-    
+
     if (cj)
     {
         // Evaluate this at the head of the table 
@@ -4852,6 +4858,7 @@ int VarMapUtils::configure_vmap(varsmap& vmap, const char* fname,
 
 int VarMapUtils::configure_vmapCJ(varsmap& vmap, cJSON*cjbase, asset_manager* am, asset* ai, bool delCJ)
 {
+
     int rc = 0;
     if (!cjbase)
         rc = -1;
@@ -5919,6 +5926,7 @@ assetVar* VarMapUtils::setValfromCj(varsmap& vmap, const char* comp, const char*
             if (setvar_debug)FPS_PRINT_INFO("new Adding actions starting for [{}] av [{}]", var, fmt::ptr(av));
             if (av)
             {
+
                 // this will delete old actions as well
                 setActfromCj(av, cjact);  // note this must delete any old actions
             }
@@ -6661,7 +6669,7 @@ double VarMapUtils::get_time_dbl()
         }
 
         int idx = 5;
-        while (--idx) {
+        while (0 && --idx) {
             int64_t a = tn.rdns();
             int64_t b = tn.rdsysns();
             int64_t c = tn.rdns();

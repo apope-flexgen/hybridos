@@ -1,0 +1,18 @@
+{
+    "/config/load": {
+        "ess_controller": {
+            "value":false,
+            "file":"ess_controller",
+            "aname":"ess",
+            "final": "ess_final",
+            "new_options": [
+                { "load":"bms_init"                    , "aname":"bms", "pname":"ess" },
+                { "load":"pcs_init"                    , "aname":"pcs", "pname":"ess" },
+                { "load":"std_ess_controller_manager"  , "aname":"ess"                },
+                { "load":"std_ess_controller_controls" , "aname":"ess"                },
+                { "load":"std_ess_controller_faults"   , "aname":"ess"                },
+                { "load":"std_site_reporter"           , "aname":"ess"                }
+            ]
+        }
+    }
+}

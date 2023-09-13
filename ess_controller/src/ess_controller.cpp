@@ -374,7 +374,6 @@ void initFuncs(asset_manager* am)
     am->vm->setFunc(*am->vmap, essName, "SimHandleBms", (void*)&SimHandleBms);
     am->vm->setFunc(*am->vmap, "pcs", "SimHandlePcs", (void*)&SimHandlePcs);
     am->vm->setFunc(*am->vmap, essName, "SimHandlePcs", (void*)&SimHandlePcs);
-
  
     for (auto& ix : am->assetManMap)
     {
@@ -484,7 +483,8 @@ void schedThread(scheduler*sc, varsmap *vmap,  schlist *rreqs, asset_manager* am
             //     sc->wakeChan.put(-1);   // but this did not get serviced immediatey
         }
 
-        if(sc->msgChan.get(cmsg, false)) 
+
+        if(sc->msgChan.get(cmsg, false))
         {
             FPS_PRINT_INFO("message -> data [{}]", cstr{cmsg});
             //use the message to set the next delay
@@ -552,12 +552,9 @@ void schedThread(scheduler*sc, varsmap *vmap,  schlist *rreqs, asset_manager* am
                 sc->vm->schedaV = fimsav;
                 if(0)sc->fimsDebug1(*vmap, msg, am);
 
-                //double tNow = vm->get_time_dbl();
-                //sc->vm->syscVec = &syscVec;
-                //bool runFims = true;
-
                 //sc->vm->runFimsMsg(*vmap, msg, sc->p_fims);
                 sc->vm->runFimsMsgAm(*vmap, msg, am, p_fims);
+
                 if(0)sc->fimsDebug2(*vmap, msg, am);
                 //sc->p_fims->free_message(msg);
             }
@@ -570,6 +567,7 @@ void schedThread(scheduler*sc, varsmap *vmap,  schlist *rreqs, asset_manager* am
         if(0)FPS_PRINT_INFO("new delay = {:2.6f}", ddelay);
         delay = ddelay;
         //if ((sc->vm->get_time_dbl() - tStart)  > 15.0) running = 0;
+        // FPS_PRINT_INFO("at end of sc->run while loop");
     }
 
     tNow = sc->vm->get_time_dbl();
@@ -785,6 +783,7 @@ void print_help(VarMapUtils *vm,  const char* fdir, const char* fname, const cha
                               " -h   print help\n"
                               " -v   print version info\n"
                               " -x   disabled cfg dbi auto load\n"
+                              " -a   auto load in the stdcfg files with a specified config file \n"
                               " -s   sets the subs list <:/ess:/components:/site:>\n"
                               " -c   initial dbi config file <ess_config_risen_sungrow>\n"
                               " -n   sets the default name <ess>\n"
@@ -795,7 +794,7 @@ void print_help(VarMapUtils *vm,  const char* fdir, const char* fname, const cha
                                , cfile?cfile:"Undefined" 
                                , subs?subs:"Undefined"
                                );
-    printf("%s\n", tmp.c_str());
+    FPS_PRINT_INFO("{}\n", tmp.c_str());
 
 }
 const char* FimsDir = "/usr/local/bin/";
@@ -806,6 +805,8 @@ void loadFlexFunc(varsmap& vmap, VarMapUtils* vm , const char* FlexName);
 const char* FlexName = "ess";
 char* essName = (char *)"ess";
 const char* FlexDir = "configs/ess_controller";
+const char* StdDir = "ess_controller";
+
 
 // the first sub needs to be the FlexName
 const char* FlexSubs = ":/components:/assets:/system:/site:/reload:/misc2:";
@@ -820,7 +821,54 @@ void load_config_file(const char* cfile)
     std::string fname = "/usr/local/etc/config/ess_controller/";
     fname += cfile;
     fname +=".json";
+
     bool ok =  vm.checkFileName(fname.c_str());
+
+    // but it may be here
+    if (!ok)
+    {
+        fname = FlexDir;
+        fname += "/";
+        fname += cfile;
+        fname +=".json";
+        ok =  vm.checkFileName(fname.c_str());
+
+
+    }
+    if (!ok)
+    {
+        // not found so revert to the -c option
+        FlexConfig = cfile;
+        useArgs = true;
+
+    }
+    else
+    {
+        assetVar* av = nullptr;
+      //bool newFims = vm.checkFileName("/usr/local/bin/fims_server");
+        vm.configure_vmap(vmap, fname.c_str());
+        av = vm.getVar(vmap,"/sysconfig/default","Subs");    if(av) { FlexSubs = av->getcVal();}
+        av = vm.getVar(vmap,"/sysconfig/default","Config");  if(av) { FlexConfig = av->getcVal();}
+        av = vm.getVar(vmap,"/sysconfig/default","EssName");  if(av) { FlexName = av->getcVal();essName = (char*)FlexName;}
+
+        // now pull out all the config items if we find them
+
+    }
+  //loadEssConfig
+  
+}
+
+void load_stdcfg_file(const char* cfile)
+{
+
+
+    // this is where it is supposed to be
+    std::string fname = "/usr/local/etc/config/ess_controller/";
+    fname += cfile;
+    fname +=".json";
+
+    bool ok =  vm.checkFileName(fname.c_str());
+
     // but it may be here
     if (!ok)
     {
@@ -839,21 +887,31 @@ void load_config_file(const char* cfile)
     }
     else
     {
-        /*
-        {
-            "/sysconfig": {
-                "Subs":":/components:/assets:/system:/site:/reload:/misc2:",
-                "Config":"ess_init",
-                "Name": "ess"
-            }
-        }
-        */
+
         assetVar* av = nullptr;
-      //bool newFims = vm.checkFileName("/usr/local/bin/fims_server");
+
+        auto uri = fmt::format("/cfg/cfile/ess/{}", cfile);
+
+
+        std::string stringCFile = cfile;
+        std::string filePath = "configs/functional_ess_controller/ess_controller/" + stringCFile + ".json"; 
+
+
+        std::ifstream jsonFile (filePath);
+        std::string body;
+
+        if (jsonFile.is_open()) {
+            std::string jsonStringHolder((std::istreambuf_iterator<char>(jsonFile)), (std::istreambuf_iterator<char>()));
+            body.clear(); // Clear the string before appending.
+            body = jsonStringHolder;
+            jsonFile.close();
+        }
+
         vm.configure_vmap(vmap, fname.c_str());
         av = vm.getVar(vmap,"/sysconfig/default","Subs");    if(av) { FlexSubs = av->getcVal();}
         av = vm.getVar(vmap,"/sysconfig/default","Config");  if(av) { FlexConfig = av->getcVal();}
         av = vm.getVar(vmap,"/sysconfig/default","EssName");  if(av) { FlexName = av->getcVal();essName = (char*)FlexName;}
+        vm.autoLoad = true;
 
         // now pull out all the config items if we find them
 
@@ -861,16 +919,30 @@ void load_config_file(const char* cfile)
   //loadEssConfig
   
 }
+
+
+
+// load from code funcs
+void print_vmap(){
+    cJSON* cj2 = vm.getMapsCj(vmap, nullptr, nullptr, 0x00);
+    if(cj2) 
+    {
+        char* res = cJSON_Print(cj2);
+        if(res)
+        {
+            FPS_PRINT_INFO("\n{}\n", res);
+            free(res);
+        }
+        cJSON_Delete(cj2);
+    }
+}
+
+
 // TODO V1.0.1 load system.cfg and get the ess name the bms, pcs and site names from it 
 // ue this name for all other things //***
 int main_test_new_ess(int argc, char *argv[])
 {
-    // bool oldFims = vm.checkFileName("/usr/local/bin/fims/fims_server");
-    // //bool newFims = vm.checkFileName("/usr/local/bin/fims_server");
-    // if(oldFims)
-    // {
-    //     FimsDir = "/usr/local/bin/fims/";
-    // }
+
     int rc = 0;
     syscpVec = new std::vector<char*>;
     vm.argc = argc;
@@ -880,9 +952,8 @@ int main_test_new_ess(int argc, char *argv[])
 
 
     int arg;
-    //vm.simdbi = true;
 
-    while((arg = getopt (argc, argv, "?hvxf:n:s:d:c:")) != -1)
+    while((arg = getopt (argc, argv, "?hvxf:a:n:s:d:c:")) != -1)
     {
         switch(arg)
         {
@@ -890,23 +961,34 @@ int main_test_new_ess(int argc, char *argv[])
             vm.simdbi = true;
             useOpts = true;
             useArgs = true;
-            printf(" >>>>>>>>>>>>>>>>>>>>>simdbi setup\n" );
+            FPS_PRINT_INFO(" >>>>>>>>>>>>>>>>>>>>>simdbi setup\n" );
             break;
         case 'c':
             FlexConfig = optarg;
             useOpts = true;
             useArgs = true;
-            printf(" setup FlexConfig [%s]\n", FlexConfig );
+            FPS_PRINT_INFO(" -c option -> setup FlexConfig [{}]\n", FlexConfig );
             break;
         case 'f':
             FlexCfile = optarg;
             useOpts = true;
             useArgs = true;
             
-            printf(" setup FlexCfile [%s]\n", FlexCfile);
+            FPS_PRINT_INFO(" -f option -> setup FlexCfile [{}]\n", FlexCfile);
             if (FlexCfile)
             {
                 load_config_file(FlexCfile);
+            }
+            break;
+        case 'a':
+            FlexCfile = optarg;
+            useOpts = true;
+            useArgs = true;
+            
+            FPS_PRINT_INFO(" -a option -> setup FlexCfile [{}]\n", FlexCfile);
+            if (FlexCfile)
+            {
+                load_stdcfg_file(FlexCfile);
             }
             break;
         case 'n':
@@ -938,6 +1020,7 @@ int main_test_new_ess(int argc, char *argv[])
             }
             break;
         }
+
     }
     //double maxTnow = 15.0;
     // reserve some scheduler slots , it will add more if needed.
@@ -962,6 +1045,7 @@ int main_test_new_ess(int argc, char *argv[])
         vm.setFname(FlexDir);  //**
     }
     
+
     // vm.setRunLog(LOGDIR "/run_logs");
     vm.setRunCfg(LOGDIR "/run_configs");
 
@@ -981,8 +1065,8 @@ int main_test_new_ess(int argc, char *argv[])
 
     SetupEssSched(&sched, ess_man);
     vm.setFunc(vmap,  essName, "process_sys_alarm",  (void*)&process_sys_alarm);
-    vm.setFunc(vmap,  "bms", "process_sys_alarm",  (void*)&process_sys_alarm);
-    vm.setFunc(vmap,  "pcs", "process_sys_alarm",  (void*)&process_sys_alarm);
+    vm.setFunc(vmap,  essName, "process_sys_alarm",  (void*)&process_sys_alarm);
+    vm.setFunc(vmap,  essName, "process_sys_alarm",  (void*)&process_sys_alarm);
     vm.setFunc(vmap,  essName, "LogInfo",            (void*)&LogInfo);
     vm.setFunc(vmap,  essName, "RunPub",             (void*)&RunPub);
     vm.setFunc(vmap,  essName, "SendTrue",           (void*)&SendTrue);
@@ -991,18 +1075,17 @@ int main_test_new_ess(int argc, char *argv[])
     vm.setFunc(vmap,  essName, "HandleCpuStats",     (void*)&HandleCpuStats);
     vm.setFunc(vmap,  essName, "runAllLocks",        (void*)&runAllLocks);
 
-    // vm.setFunc(vmap,  essName, "runDataMaps",      (void*)&runDataMaps);    // dataMap function addition
 
-    if(!useArgs)
+    if(!useArgs)        // run "ess_controller" to get into this block (crashes bc of filepath rn)
     {
+
         // this is the old config setup
-        rc = loadEssConfig(&vm, vmap, "ess_controller.json", ess_man, &sched);  //**
+        rc = loadEssConfig(&vm, vmap, "ess_controller.json", ess_man, &sched);
 
         //vm.showList(mysubs,essName, mysublen);
         //return 0;
 
         //syscvec orders the comps for pub to UI interface
-        // TODO v1.0.1    get these from ess_controller.json config
         if (syscpVec->size() == 0)
         {
             syscpVec->push_back((char*)"ess/summary");
@@ -1018,20 +1101,15 @@ int main_test_new_ess(int argc, char *argv[])
         // next is the site controller
         // This loads in the system_controller interface 
 
-        rc = loadSiteManager(&vm, vmap, "/config/ess_server",essName);  //**
-        //if(rc<0)
-        {
-            if (1) FPS_PRINT_INFO("ess_man >> Setting up site manager rc {}", rc); 
-            //return 0;
-        }
-
+        rc = loadSiteManager(&vm, vmap, "/config/ess_server",essName);
+        if (1) FPS_PRINT_INFO("ess_man >> Setting up site manager rc {}", rc); 
 
         // setup fims with Subs from config
         int ccntam = 0;
         FPS_PRINT_INFO("setting up [{}] manager Subs vecs {} rc {}", essName, fmt::ptr(ess_man->vecs), rc);
         vm.getVList(*ess_man->vecs, vmap, ess_man->amap, essName, "Subs", ccntam);
         FPS_PRINT_INFO("setting up [{}] manager Subs found {} rc {}", essName, ccntam, rc);
-    //vm.showvecMap(*ess_man->vecs, "Subs");
+        //vm.showvecMap(*ess_man->vecs, "Subs");
         int mysublen;
         char** mysubs = vm.getVecListbyName(*ess_man->vecs, "Subs", mysublen);
         FPS_PRINT_INFO("recovered [{}] Subs {} found {}", essName, fmt::ptr(mysubs), mysublen);
@@ -1056,12 +1134,9 @@ int main_test_new_ess(int argc, char *argv[])
         ess_man->p_fims = p_fims;
         if (1) FPS_PRINT_INFO("ess_man >> p_fims {}"
             , fmt::ptr(p_fims)
-            ); 
-        // TODO V1.0.1 distribute the p_fims thing all over the place 
-        //return 0;
-        // next we load the asset managers
-        //int rc = 
+        ); 
 
+        // next we load the asset managers
         vm.p_fims = p_fims;
 
         loadAssetManagers(vmap, ess_man, syscpVec, p_fims, essName);
@@ -1073,7 +1148,6 @@ int main_test_new_ess(int argc, char *argv[])
         FPS_PRINT_INFO("ESS >> Done Setting vlinks");
     
         // run sched startup script here
-        // TODO this can all be done from the Init
         rc = loadEssConfig(&vm, vmap, "ess_schedule.json", ess_man, &sched);
         initFuncs(ess_man);
         double tNow = vm.get_time_dbl();
@@ -1141,14 +1215,13 @@ int main_test_new_ess(int argc, char *argv[])
             if (1)FPS_ERROR_PRINT(" %s >> aV [%s]\n", __func__,aV->getfName());
 
             aV->sendEvent(FlexName, p_fims,  Severity::Info, "%s starting  at %2.3f", FlexName, tNow);
+
             SetupGit(vmap, &vm
                  , GITBRANCH
                  , GITCOMMIT
                  , GITTAG
                  , GITVERSION
                  );
-
-            //GpioInit(vmap, flex_man->amap, "flex", p_fims, aV);
         }
         else
         {
@@ -1166,6 +1239,7 @@ int main_test_new_ess(int argc, char *argv[])
             // TODO allow both 
             int single = 0;
             requestConfig(vmap, &vm, FlexName, FlexConfig);
+
             vm.handleCfile(vmap, nullptr, "set", "/cfg/crun", single, nullptr, nullptr, nullptr, nullptr);
 
             // auto cms = fmt::format(
@@ -1178,8 +1252,6 @@ int main_test_new_ess(int argc, char *argv[])
 
     }
 
-    // NOTE(WALKER): this reads the logging variables from /config/ess_x then if we have them inside of 
-    // /config/ess it overrides them with that one (global override):
 
     char* specific_essName = vm.getSysName(vmap);
     const auto config_name = fmt::format("/config/{}", specific_essName);
@@ -1224,10 +1296,6 @@ int main_test_new_ess(int argc, char *argv[])
         logging_size_av = vm.makeVar(vmap, config_name.c_str(), "logging_size", log_size);
     }
 
-// TODO after MVP shut down threads individually 
-// TODO after MVP collect all the vList subs Then do the fims subscribe THe distribute fims to all ams and ais. 
-    // Use this to trigger a pub from the gpio
-    // {FimsDir}fims_send -m set -r /$$ -u /gpio/control/gpio/getPubs true
 
     std::thread fThread(fimsThread, &sched, p_fims);
 
@@ -1263,13 +1331,12 @@ int main_test_new_ess(int argc, char *argv[])
     FPS_PRINT_INFO("deleting remaining sched items ...");
     for ( auto sr : schreqs)
     {
-        //FPS_PRINT_INFO("%s >>  we got a schedItem %p not deleting it for now .... \n", __func__, sr);
         sr->show();
         delete sr;        
     }
+    
 
     schreqs.clear();
-// TODO v1.0.1 also clear up the remaining csv tables  
     vm.amMap.clear();
     vm.aiMap.clear();
     if(p_fims)delete p_fims;

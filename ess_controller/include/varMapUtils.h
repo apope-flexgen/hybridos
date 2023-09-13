@@ -437,6 +437,7 @@ public:
     fims* p_fims; 
     bool simdbi;
     bool noLog;
+    bool autoLoad;
 
 
 };
@@ -532,5 +533,7 @@ bool getLoggingEnabled(varsmap &vmap, VarMapUtils& vm);
 bool getLoggingTimestamp(varsmap &vmap, VarMapUtils& vm);
 char* getLogDir(varsmap &vmap, VarMapUtils& vm);
 void setLoggingSize(varsmap &vmap, VarMapUtils& vm);
+void *loadFunc(varsmap &vmap, VarMapUtils *vm, char *aname, char *fun, void *fptr);
+
 
 #endif

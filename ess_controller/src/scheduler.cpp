@@ -120,6 +120,7 @@ std::vector<char *> syscVec;
 
 #if defined _JUST_LIB
 // use av->addSchedReq(schAvList*avlist)
+
 schedItem::schedItem()
 {
     av = nullptr;           // old target av
@@ -199,6 +200,7 @@ void schedItem::show()
     , endTime
     );
 }
+
 
         //void schedItem::setUp(const char * _id, const char* _aname, const char * _comp, const char* _name, double _refTime,
         //    double _runTime, double _repTime, double _endTime, char*targaV)
@@ -600,23 +602,38 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
     // TODO For discussion after MVP refine / define the use of schedAv (actAv) and targAv
     // TODO For discussion after MVP move the action iterators into av->extras so we can use them to return to for sequences. (for varMapUtils really)
     
-
+                        bool update =  false;
+                        bool got_update = false;
                         char* fcn = as->func;
                         char* aname = as->aname;
                         //assetVar* targav = av;
-                        if(as->targAv)
+                        char *targ = as->targAv;
+                        if(av->gotParam("targ"))
                         {
-                            targav = vm->getVar(vmap, as->targAv, nullptr);
+                            targ = av->getcParam("targ");
+                        }
+                        if (targ)
+                        {
+                            targav = vm->getVar(vmap, targ, nullptr);
                         
                             if(!targav)
                             {
-                                if (1) FPS_PRINT_WARN("unable to find target Av [{}]"
+                                if (1) FPS_PRINT_WARN("unable to find target Av [{}] using [{}]"
                                     , as->targAv
+                                    , av->getfName()
                                     );
                                 targav = av;
                             }
                         }
                         
+                        if(av->gotParam("update"))
+                        {
+                            got_update = true;
+                            update = av->getbParam("update");
+                            bool updone = false;
+                            av->setParam("update", updone);
+                        }
+
                         if(av->gotParam("debug"))
                         {
                             debug = av->getiParam("debug");
@@ -662,13 +679,34 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
                             }
                             else
                             {
-                                FPS_PRINT_ERROR("Cannot run  fcn [{}] no targ [{}]"
-                                    , fcn, as->targ);
+                                FPS_PRINT_ERROR("Cannot run  fcn [{}] no targ [{}] update [{}]"
+                                    , fcn, as->targ, update);
                                 fcn = nullptr;
                             }
                         }
 
-                        if(fcn && aname)
+                        // this will run and set up
+                        // as->fcnptr
+                        // targav->am
+                        // as->targaVp
+                        // targav->ai
+                        if(aname && as->targaVp && as->fcnptr && got_update && !update)
+                        {
+                            myAvfun_t amFunc = reinterpret_cast<myAvfun_t> (as->fcnptr);
+                            if (as->targaVp->am)
+                            {
+                                av->setParam("fastRun_am", tNow);
+                                amFunc(vmap, as->targaVp->am->amap, aname, as->targaVp->am->p_fims, as->targaVp);
+                            }
+                            else if (as->targaVp->ai)
+                            {
+                                av->setParam("fastRun_ai", tNow);
+                                amFunc(vmap, as->targaVp->ai->amap, aname, as->targaVp->ai->p_fims, as->targaVp);
+                            }
+
+                        }
+
+                        else if(fcn && aname && got_update && update)
                         {
                             void *res1 = vm->getFunc(vmap, aname, fcn);
                             if(!res1)
@@ -677,9 +715,9 @@ double scheduler::getSchedDelay(varsmap &vmap, schlist& rreqs)
                             }
                             as->fcnptr = res1;
 
-                            if(res1)
+                            if(as->fcnptr)
                             {
-                                myAvfun_t amFunc = reinterpret_cast<myAvfun_t> (res1);
+                                myAvfun_t amFunc = reinterpret_cast<myAvfun_t> (as->fcnptr);
 
                                 // scheduler needs to correct the environment  
                                 asset_manager* am = vm->getaM(vmap, aname);
@@ -984,5 +1022,165 @@ void scFimsThread(scheduler *sc, fims* p_fims)
     //if(p_fims)delete p_fims;
     sc->p_fims = nullptr;
 }
+
+// decodes all the fields from aV and runs a direct action sched
+void SetupSched(varsmap &vmap, VarMapUtils *vm, char *schedVar, assetVar *aV , asset_manager *pm)
+{
+    double tNow = vm->get_time_dbl();
+
+    if (!pm){
+        FPS_PRINT_ERROR("no pm found");
+    }
+
+    assetVar* avs = vm->getVar(vmap, schedVar, nullptr);
+    if(!avs)
+    {   
+        double dval = 0.0;
+        avs = vm->makeVar(vmap, schedVar, nullptr, dval);
+    }
+    double offset = 0.0;
+    double every = 1.0;  // get from param
+    if (aV->gotParam("every")) {
+        every = aV->getdParam("every");
+    }
+    if (aV->gotParam("offset")) {
+        offset = aV->getdParam("offset");
+    }
+
+    avs->am = pm;
+    avs->setParam("uri",    schedVar);
+    avs->setParam("every",  every);
+    avs->setParam("offset", offset);
+
+    char* schedUri   = aV->getcParam("uri");     // this is the schedule control uri
+    char* schedFcn   = aV->getcParam("fcn");     // we're going to run this function
+    char* schedTarg  = aV->getcParam("targ");    // with this aV
+    char* schedId    = aV->getcParam("schedid"); // this must be unique for each scheditem
+    //char* schedamap = aV->getcParam("amap");
+    double refTime = aV->getdParam("refTime");   // this is the start time
+    double repTime = aV->getdParam("every");     // this sets repTime
+    double runTime = aV->getdParam("runTime");   // this is the time it was last run
+    //double repTime = aV->getdParam("repTime");
+    //double runAfter = aV->getdParam("runAfter");
+    double runFor = aV->getdParam("runFor");      // this sets endtime
+    double endTime = aV->getdParam("endTime");    // this is the endTime
+    int debug = aV->getiParam("debug");           // debuf on or off
+    double startTime = tNow;
+
+    if (aV->gotParam("refTime") && aV->gotParam("every"))
+    {
+        startTime = refTime;
+    }
+    std::cout << " got start time " << startTime << std::endl;
+    // runAfter will default to 0    
+    // runTime will default to 0    
+    if (aV->gotParam("every") && repTime > 0.0)
+    {
+        // TODO find a better way to do this
+        while (startTime < tNow)
+        {
+            startTime += repTime;
+        }
+    }
+
+    runTime = startTime;
+
+    if (!schedTarg)
+        schedTarg = (char*)"/test/mySched:Targ";
+
+    if (!schedFcn)
+        schedFcn = (char*)"mySchedFcn";
+        
+    if (!schedUri)
+        schedUri = (char*)"/default/sched:mySchedUri";
+
+    if (!schedId)
+        schedId = (char*)"bmsmon";   // need to override this to get unique scheditem in schlist
+
+    if(schedFcn) avs->setParam("fcn", schedFcn);
+    if(schedId) avs->setParam("id", schedId);
+    avs->setParam("targ", schedTarg);
+    avs->setParam("runTime", runTime);
+    avs->setParam("repTime", every);
+    if (aV->gotParam("runFor") && runFor > 0.0)
+    {
+        endTime = runTime + runFor;
+        avs->setParam("runEnd", (runTime + runFor));
+        avs->setParam("endTime", endTime);
+    }
+    else
+    {
+        double dval = 0.0;
+        avs->setParam("runEnd", dval);
+        avs->setParam("endTime", dval);
+    }
+
+    // set up and run scheduler
+    schedItem* as = nullptr;
+    if (aV && aV->am)
+    {
+        as = new schedItem();
+
+        //if (debug) FPS_PRINT_INFO("created new schedItem {}", fmt::ptr(as)); // spdlog
+        as->av = avs;
+        // //if (avs->am)
+        // {
+        //     am = pm;//avs->am;
+        // }
+        // this dummy function will simply send the current time to avi triggering its onSet actions
+        // in fact we'll do this anyway without a function
+        //void schedItem::setUp(const char * _id, const char* _aname, const char * _uri, const char* _func, double _refTime,
+        //    double _runTime, double _repTime, double _endTime, char*targaV)
+
+        std::cout << " try as->setup " << startTime << std::endl;
+
+        // pm name is null, deref err
+        as->setUp(schedId, pm->name.c_str(), schedUri, schedFcn, refTime, runTime, repTime, endTime, schedTarg);
+        std::cout << " done as->setup " << startTime << std::endl;
+
+
+        if (debug)as->show();
+
+        if (pm->reqChan)
+        {
+            channel <schedItem*>* reqChan = (channel <schedItem*>*)pm->reqChan;
+            reqChan->put(as);
+            if (pm->wakeChan)
+            {
+                pm->wakeChan->put(0);
+            }
+
+            avs->setParam("active", true);
+            avs->setParam("enabled", true);
+        }
+        else
+        {
+            delete as;
+            as = nullptr;
+        }
+    }
+}
+
+
+
+int TestRunSchedOpts(varsmap &vmap, varmap &amap, const char* _aname, fims* p_fims, assetVar* aV)
+{
+    VarMapUtils *vm = aV->am->vm;
+    double tNow = vm->get_time_dbl();
+    std::cout <<">>>> running func " << __func__ << " with aV [" << aV->getfName()<< "] time :"<<tNow << std::endl;
+
+    return 0;
+}
+
+std::string ReplaceString(std::string subject, const std::string& search, const std::string& replace) {
+    size_t pos = 0;
+    while((pos = subject.find(search, pos)) != std::string::npos) {
+         subject.replace(pos, search.length(), replace);
+         pos += replace.length();
+    }
+    return subject;
+}
+
+
 #endif
 

@@ -1,0 +1,47 @@
+{  
+    "/config/load": {
+        "pcs_init": {
+            "file":"pcs_init",
+            "new_options":[
+                {
+                    "tmpls": [
+                        "std_v_pcs_manager"             ,
+                        "std_v_pcs_manager_controls"    ,
+                        "std_v_pcs_manager_faults"      
+                    ],
+                    "pname":"ess",
+                    "amname":"pcs",
+                    "from":1,
+                    "to":1
+                },
+                {
+                    "tmpls": [
+                        "std_pcs_manager"
+                    ],
+                    "pname":"pcs",
+                    "amname":"##PCS_ID##",
+                    "from":1,
+                    "to":2,
+                    "reps":[
+                        {"replace":"##PCS_ID##"  , "with":"pcs_{:01d}"},
+                        {"replace":"##PCS_NUM##" , "with":"{:01d}"    }
+                    ]
+                },
+                {
+                    "tmpls":[
+                        "std_pcs_module"
+                    ],
+                    "pname":"##PCS_ID##",
+                    "ainame":"##PCS_ID##_##MODULE_ID##",
+                    "from":1,
+                    "to":2,
+                    "reps": [
+                        { "replace": "##PCS_ID##"          , "with": "pcs_{:01d}"  },
+                        { "replace": "##MODULE_ID##"       , "with": "module_{:01d}" },
+                        { "replace": "##MODULE_ID_TITLE##" , "with": "Module{:01d}"  }
+                    ]
+                }
+            ]
+        }
+    }
+}

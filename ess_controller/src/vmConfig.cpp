@@ -13,8 +13,10 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include "AssetSetupUtility.h"
 
 const char* FimsDir;
+void RunVmapSetup(varsmap& vmap, VarMapUtils *vm, cJSON *cj, cJSON *cjb);
 
 std::string bodymd5 (const char* body, int len)
 {
@@ -79,7 +81,7 @@ void RunAv(varsmap& vmap, VarMapUtils*vm, varmap& amap, const char* aname, asset
                     , const char* mapVar/*"runRackCloseContactor"*/
                     , double tNow, double every /*0.1*/, double offset)
 {
-    if(0)FPS_PRINT_INFO(" running schedvar [{}] mapVal [{}]->[{}]\n"
+    if(1)FPS_PRINT_INFO(" running schedvar [{}] mapVal [{}]->[{}]\n"
         , schedVar
         , mapVar
         , amap[mapVar]->getfName()
@@ -211,9 +213,11 @@ bool checkcFile(varsmap &vmap, VarMapUtils* vm, cJSON* cjsi, const char* cfile)
 {
     bool ret = false;
     auto lstr = fmt::format("/config/cfile:{}", cfile);
+
     assetVar* av = vm->getVar(vmap, lstr.c_str(), nullptr);
-    if(av)
+    if(av){
         ret = av->getbVal();
+    } 
     else
     {
         ret =  false;
@@ -411,7 +415,7 @@ int requestConfig(varsmap &vmap, VarMapUtils*vm, const char* aname, const char* 
         //fname += strlen("cfile:");
         auto fs = fmt::format("{}{}/{}", dbifs, aname, fname);
         auto fr = fmt::format("/{}/cfg/cfile/{}/{}", vm->getSysName(vmap), aname, fname);
-        if(0)FPS_PRINT_INFO(" fims send [{}] reply [{}] cfile [{}]"
+        if(1)FPS_PRINT_INFO(" fims send [{}] reply [{}] cfile [{}]"
                 , fs
                 , fr
                 , fname
@@ -461,7 +465,7 @@ int requestCfile(varsmap &vmap, VarMapUtils*vm, assetVar* av)
 
     bool useConfigDoc = av->getbParam("useConfigDoc");
 
-    if(0)FPS_PRINT_INFO(" fims send fname [{}] simdbi [{}] aname [{}] useConfigDoc [{}]", cstr{fname}, vm->simdbi, cstr{aname}, useConfigDoc);
+    if(1)FPS_PRINT_INFO(" fims send fname [{}] simdbi [{}] aname [{}] useConfigDoc [{}]", cstr{fname}, vm->simdbi, cstr{aname}, useConfigDoc);
     if(fname && aname)
     {
         //fname += strlen("cfile:");
@@ -472,7 +476,52 @@ int requestCfile(varsmap &vmap, VarMapUtils*vm, assetVar* av)
                 , fr.c_str()
                 , fname
                 );
-        if(!vm->simdbi)
+
+        if(vm->autoLoad){
+            int single = 0;
+            auto uri = fmt::format("/cfg/cfile/{}/{}", aname, fname);
+
+
+            std::string filePath = "configs/functional_ess_controller/ess_controller"; 
+
+            std::string fileName = fname;
+
+
+            if (fileName == "ess_file") {
+                filePath += "";
+            } else if (fileName == "ess_init" || fileName == "ess_controller") {
+                filePath += "/ess";
+            } else if (fileName == "bms_init") {
+                filePath += "/bms";
+            } else if (fileName == "pcs_init") {
+                filePath += "/pcs";
+            }
+
+            if (stdcfgEssDirFileNames.find(fileName) != stdcfgEssDirFileNames.end()) {
+                filePath += "/autocfg/ess";
+            } else if (stdcfgPcsDirFileNames.find(fileName) != stdcfgPcsDirFileNames.end()) {
+                filePath += "/autocfg/pcs";
+            } else if (stdcfgBmsDirFileNames.find(fileName) != stdcfgBmsDirFileNames.end()) {
+                filePath += "/autocfg/bms";
+            }
+
+            filePath += "/" + fileName + ".json";
+
+
+
+            std::ifstream jsonFile (filePath);
+            std::string body;
+
+            if (jsonFile.is_open()) {
+                std::string jsonStringHolder((std::istreambuf_iterator<char>(jsonFile)), (std::istreambuf_iterator<char>()));
+                body.clear(); // Clear the string before appending.
+                body = jsonStringHolder;
+                jsonFile.close();
+            }
+
+            vm->handleCfile(vmap, nullptr, "set", uri.c_str(), single, body.c_str(), nullptr, nullptr, nullptr);
+        }
+        else if(!vm->simdbi)
         {
             if (vm->p_fims)
             {
@@ -483,13 +532,13 @@ int requestCfile(varsmap &vmap, VarMapUtils*vm, assetVar* av)
         {
             auto xfile = fmt::format("{}.json", fname);
             auto xname = vm->getFileName(xfile.c_str());
-            if(0)FPS_PRINT_INFO(" >>>>>> xname {}", fmt::ptr(xname));
+            if(1)FPS_PRINT_INFO(" >>>>>> xname {}", fmt::ptr(xname));
 
             auto cms = fmt::format(
                 "{}fims_send -f {}.json -m set  -u {} &"
                 , FimsDir, xname?xname:fname, fr);
             //system(cms.c_str());
-            if(0)FPS_PRINT_INFO(" >>>>>> simdbi {}", cms);
+            if(1)FPS_PRINT_INFO(" >>>>>> simdbi {}", cms);
 
         } 
 
@@ -502,13 +551,9 @@ int requestCfile(varsmap &vmap, VarMapUtils*vm, assetVar* av)
 
 int requestFfile(varsmap &vmap, VarMapUtils*vm, const char*final)
 {
-    //auto dbifs = fmt::format("/xxdbi/ess_controller/configs/");
-    //auto dbiess = fmt::format("{}", vm->getSysName(vmap));
-    //bool bval = false;
-    // set this as false 
-    // it will come back as a cfile so /configs/cfile/<final> will be set true when it arrives 
-    //assetVar* av = vm->setVal(vmap,"/configs/final",final, bval);
-    //char* fname = av->getcParam("file");
+
+    std::string finalFileName = final;
+
     char* aname = vm->getSysName(vmap);
     if(final && aname)
     {
@@ -519,7 +564,31 @@ int requestFfile(varsmap &vmap, VarMapUtils*vm, const char*final)
                 , fr.c_str()
                 , final
                 );
-        if(!vm->simdbi)
+
+        // vm->autoLoad = true;
+        if(vm->autoLoad){
+            // int single = 0;
+            auto uri = fmt::format("/cfg/cfile/{}/{}", aname, final);
+
+            std::string filePath = "configs/functional_ess_controller/ess_controller/ess/" + finalFileName + ".json";
+
+
+            std::ifstream jsonFile (filePath);
+            std::string body;
+
+            if (jsonFile.is_open()) {
+                std::string jsonStringHolder((std::istreambuf_iterator<char>(jsonFile)), (std::istreambuf_iterator<char>()));
+                body.clear(); // Clear the string before appending.
+                body = jsonStringHolder;
+                jsonFile.close();
+            }
+
+            int single = 0;
+
+            vm->handleCfile(vmap, nullptr, "set", uri.c_str(), single, body.c_str(), nullptr, nullptr, nullptr);
+
+        }
+        else if(!vm->simdbi)
         {
             if (vm->p_fims)
                 vm->p_fims->Send("get",fs.c_str(),fr.c_str(),nullptr);
@@ -567,7 +636,54 @@ int requestTmpl(varsmap &vmap, VarMapUtils*vm, assetVar* av)
                 , fs
                 , fname
                 );
-        if(!vm->simdbi)
+
+        if(vm->autoLoad){
+            int single = 0;
+            auto uri = fmt::format("/cfg/ctmpl/{}/{}", aname, fname);
+
+
+            std::string filePath = "configs/functional_ess_controller/ess_controller"; 
+
+            std::string fileName = fname;
+
+
+            if (fileName == "ess_file") {
+                filePath += "";
+            } else if (fileName == "ess_init" || fileName == "ess_controller") {
+                filePath += "/ess";
+            } else if (fileName == "bms_init") {
+                filePath += "/bms";
+            } else if (fileName == "pcs_init") {
+                filePath += "/pcs";
+            }
+
+            if (stdcfgEssDirFileNames.find(fileName) != stdcfgEssDirFileNames.end()) {
+                filePath += "/autocfg/ess";
+            } else if (stdcfgPcsDirFileNames.find(fileName) != stdcfgPcsDirFileNames.end()) {
+                filePath += "/autocfg/pcs";
+            } else if (stdcfgBmsDirFileNames.find(fileName) != stdcfgBmsDirFileNames.end()) {
+                filePath += "/autocfg/bms";
+            }
+
+            filePath += "/" + fileName + ".json";
+
+
+
+            std::ifstream jsonFile (filePath);
+            std::string body;
+
+            if (jsonFile.is_open()) {
+                std::string jsonStringHolder((std::istreambuf_iterator<char>(jsonFile)), (std::istreambuf_iterator<char>()));
+                body.clear(); // Clear the string before appending.
+                body = jsonStringHolder;
+                jsonFile.close();
+            }
+
+            vm->handleCfile(vmap, nullptr, "set", uri.c_str(), single, body.c_str(), nullptr, nullptr, nullptr);
+        }
+        
+
+        else if(!vm->simdbi)
         {
 
             if(1)FPS_PRINT_INFO(" fims send 1a [{}] cfile [{}]"
@@ -693,6 +809,24 @@ int parseItem::Init(varsmap * _vmap, VarMapUtils*_vm)
     if(cjstep) step  = cjstep->valueint;
     if(cjmult) mult  = cjmult->valueint;
     if(cjadd)  add   = cjadd->valueint;
+    cJSON *cjrange   = cJSON_GetObjectItem(cji, "rangevar");
+    if(cjrange) {
+        auto rangeav =  vm->getVar(*vmap, "/config/range", cjrange->valuestring);
+        if(1)FPS_PRINT_INFO(" range found [{}]", cjrange->valuestring);
+        if (rangeav) {
+            if(1)FPS_PRINT_INFO(" rangevar found [{}]", rangeav->getfName());
+            bool bval = true;
+            if (rangeav->gotParam("from")) from = rangeav->getiParam("from");
+            if (rangeav->gotParam("to")) to = rangeav->getiParam("to");
+            if (rangeav->gotParam("step")) step = rangeav->getiParam("step");
+            if (rangeav->gotParam("mult")) mult = rangeav->getiParam("mult");
+            if (rangeav->gotParam("add")) add = rangeav->getiParam("add");
+            rangeav->setVal(bval);
+        }
+    }
+
+
+
     cJSON* cjam      = cJSON_GetObjectItem(cji, "amname");
     cJSON* cjai      = cJSON_GetObjectItem(cji, "ainame");
     cJSON* cjap      = cJSON_GetObjectItem(cji, "pname");
@@ -988,7 +1122,6 @@ bool runpiVec(std::vector<parseItem*>& piVec, int& lvl, int &idx)
             , fmt::ptr(piVec[lvl]->av)
             );
         return false;
-
     }
 
     if(0)FPS_PRINT_INFO(" running  level is [{}] idx [{}] nextIdx [{}] step [{}]"
@@ -1005,12 +1138,12 @@ bool runpiVec(std::vector<parseItem*>& piVec, int& lvl, int &idx)
         //are we done with this level
         if (piVec[lvl]->nextIdx>piVec[lvl]->to)
         {
-            piVec[lvl]->nextIdx=piVec[lvl]->from;
+            piVec[lvl]->nextIdx=piVec[lvl]->from + piVec[lvl]->add;
             // inc the one prior
             if(lvl>0)
             {
                 lvl = lvl -1;
-                piVec[lvl]->nextIdx = piVec[lvl]->nextIdx + piVec[lvl]->step;
+                piVec[lvl]->nextIdx = piVec[lvl]->nextIdx + (piVec[lvl]->step * piVec[lvl]->mult);
                 return true;
             }
             else 
@@ -1028,7 +1161,6 @@ bool runpiVec(std::vector<parseItem*>& piVec, int& lvl, int &idx)
                 , lvl
                 , piVec[lvl]->nextIdx
                 );
-
         piVec[lvl]->setBody();
         if(0)FPS_PRINT_INFO(" running  applyRemap level [{}] next "
                 , lvl
@@ -1054,14 +1186,14 @@ bool runpiVec(std::vector<parseItem*>& piVec, int& lvl, int &idx)
         }
         else 
         {
-            piVec[lvl]->nextIdx = piVec[lvl]->nextIdx+1;
+            piVec[lvl]->nextIdx = piVec[lvl]->nextIdx + (piVec[lvl]->step * piVec[lvl]->mult);
             if (piVec[lvl]->nextIdx > piVec[lvl]->to)
             {
-                piVec[lvl]->nextIdx = piVec[lvl]->from;
+                piVec[lvl]->nextIdx = piVec[lvl]->from + piVec[lvl]->add;
                 if(lvl>0)
                 { 
-                    lvl = lvl -1;
-                    piVec[lvl]->nextIdx = piVec[lvl]->nextIdx+1;
+                    lvl = lvl - 1;
+                    piVec[lvl]->nextIdx = piVec[lvl]->nextIdx + (piVec[lvl]->step * piVec[lvl]->mult);
                     return true;
                 }
                 else
@@ -1072,7 +1204,7 @@ bool runpiVec(std::vector<parseItem*>& piVec, int& lvl, int &idx)
             }
             
         }
-            // configure_vmap
+        // configure_vmap
         runit = true;
     }
     return runit;
@@ -1644,6 +1776,18 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
                     bool bval =  true;
                     avx->setVal(bval);
                     avx->setParam("loadComplete",bval);
+
+
+                    //TODO
+                    //loadComplete is true
+                    //turn autoLoad off
+                    //if avx got param "autoLoad" then turn autoLoad off
+                    // use 2 stage loader to auto load stdcfg then turn auto load off to pull from dbi
+                    //TODO : add code to vmConfig to use autoload to pull from file not dbi
+                    // look for simdbi
+                    //TODO: make sure we have rangeUri
+
+
                     //bval =  false;
                     //vm->setVal(vmap,"/config/cfile:bms_manager_test.json", nullptr, bval);
                     char *fname = avx->getfName();
@@ -1681,6 +1825,8 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
             // this is the end of this load xx.first
         }
     }
+    
+    
     if(0)FPS_PRINT_INFO("done looking for files");
 
     if(nofiles)
@@ -1857,23 +2003,46 @@ int VarMapUtils::configure_vmapStr(varsmap& vmap, const char* body, asset_manage
         const char* amname = nullptr;
         const char* ainame = nullptr;
         const char* pname = nullptr;
-        FPS_PRINT_INFO("process file seeking header stuff am [{}] ai [{}]", am?am->name:"no am" , ai?ai->name:"no ai");
-        cJSON* cjam = cJSON_DetachItemFromObject(cj, "amname");
-        cJSON* cjai = cJSON_DetachItemFromObject(cj, "ainame");
-        cJSON* cjap = cJSON_DetachItemFromObject(cj, "pname");
-        if(0)FPS_PRINT_INFO("process file seeking header stuff am [{}] ai [{}] cjap [{}] cjam [{}] cjai [{}]"
-                , am?am->name:"no am" 
-                , ai?ai->name:"no ai"
-                , cjap?cjap->valuestring:".."
-                , cjam?cjam->valuestring:".."
-                , cjai?cjai->valuestring:".."
-                );
-        
         // Delete fields in the cJSON object that should not be included before processing
         filtercJSONMsg(cj, {"_doc", "_id", "_version"});
 
-        // Iterate through each object in the cJSON body and replace keys, which are uris, containing _ with /
-        FPS_PRINT_INFO("body: {}", cstr{body});
+        cJSON *cjam = cJSON_DetachItemFromObject(cj, "amname");
+        if (cjam == NULL) {
+            const char *error = cJSON_GetErrorPtr();
+            if (error) {
+                printf("Error: %s\n", error);
+            } else {
+                printf("Item 'amname' not found in the cJSON object.\n");
+            }
+        } else {
+            // Detachment was successful.
+        }        
+        
+        cJSON* cjai = cJSON_DetachItemFromObject(cj, "ainame");
+        if (cjai == NULL) {
+            const char *error = cJSON_GetErrorPtr();
+            if (error) {
+                printf("Error: %s\n", error);
+            } else {
+                printf("Item 'ainame' not found in the cJSON object.\n");
+            }
+        } else {
+            // Detachment was successful.
+        }        
+
+        cJSON* cjap = cJSON_DetachItemFromObject(cj, "pname");
+        if (cjap == NULL) {
+            const char *error = cJSON_GetErrorPtr();
+            if (error) {
+                printf("Error: %s\n", error);
+            } else {
+                printf("Item 'pname' not found in the cJSON object.\n");
+            }
+        } else {
+            // Detachment was successful.
+        }        
+
+
         cJSON* currentElem = NULL;
         cJSON_ArrayForEach(currentElem, cj)
         {
@@ -1972,15 +2141,143 @@ int VarMapUtils::configure_vmapStr(varsmap& vmap, const char* body, asset_manage
     return ret;
 }
 //
+// to du put this in the build properly
+//#include "../funcs/setupBMS.cpp"
+
+void RunVmapSetup(varsmap& vmap, VarMapUtils *vm, cJSON *cj, cJSON *cjb)
+{
+    char *amname = nullptr;
+    char *ainame = nullptr;
+    char *pname = nullptr;
+    char *sname = vm->getSysName(vmap);
+
+    cJSON* cjam = cJSON_GetObjectItem(cjb, "amname");
+    cJSON* cjai = cJSON_GetObjectItem(cjb, "ainame");
+    cJSON* cjap = cJSON_GetObjectItem(cjb, "pname");
+    if(cjam)amname   = cjam->valuestring;  // this will be an encoded string 
+    if(cjai)ainame   = cjai->valuestring;
+    if(cjap)pname    = cjap->valuestring;
+    if(!pname)pname  = vm->getSysName(vmap);
+    asset_manager *sam = nullptr;
+    asset_manager *pam = nullptr;
+    asset_manager  *am = nullptr;
+    asset          *ai = nullptr;
+    
+    // get the parent, make it if we have to 
+    sam = vm->getaM(vmap, sname);
+    pam = vm->getaM(vmap, pname);
+
+    if(!pam)
+    {
+        // this will be an unrooted am , we'll root it later perhaps
+        
+        FPS_PRINT_INFO("creating asset_manager pname: [{}]", cstr{pname});
+        pam = new asset_manager (pname);
+        vm->setaM(vmap, pname, pam);
+        //am->setFrom(pname);
+        //ambase->addManAsset(pam, pname);
+        pam->vm = vm;
+        //am->vecs = &vecs;         // used to store pubs , subs and blocks
+        pam->syscVec = sam->syscVec;   // used to store UI publist   
+    }
+
+    if(amname)
+    {
+        am = vm->getaM(vmap, amname);
+    }
+
+    if(!am && amname && pam)
+    {
+        FPS_PRINT_INFO("process file creating asset_manager amname: [{}]", cstr{amname});
+        am = new asset_manager (amname);
+        vm->setaM(vmap, amname, am);
+        am->setFrom(pam);
+        pam->addManAsset(am, amname);
+        am->vm = vm;
+        //am->vecs = &vecs;         // used to store pubs , subs and blocks
+        am->syscVec = sam->syscVec;   // used to store UI publist   
+    }
+
+    if(!am && ainame)
+    {
+        ai = vm->getaI(vmap, ainame);
+        if(!ai && pam)
+        {
+            FPS_PRINT_INFO("process file creating asset  ainame: [{}]", cstr{ainame});
+            ai = new asset(ainame);
+            vm->setaI(vmap, ainame, ai);
+            FPS_PRINT_INFO("Setting asset manager [{}] to asset instance [{}]", pam->name, ai->name);
+            ai->am = pam;
+            ai->vm = vm;
+            pam->assetMap[ainame] = ai;
+            //pam->addAsset(ai, ainame);
+            //ai->syscVec = sam->syscVec;   // used to store UI publist   
+        }
+    }
+
+    if(!am && !ai)
+    {
+        FPS_PRINT_ERROR("Unable to process file , please add amname or ainame, and possible pname fields ");
+        cJSON_Delete(cjb);
+        return;
+    }
+
+    char* aname = vm->getSysName(vmap);
+    auto cjf = cJSON_GetObjectItem(cjb, "func");
+    if (! cjf || cjf->type != cJSON_String)
+    {
+        FPS_PRINT_INFO("  no function in body I'm outta here");
+        //if(cj)cJSON_Delete(cj);
+        if(cjb)cJSON_Delete(cjb);
+
+        return;
+    }
+    auto cjn = cJSON_GetObjectItem(cjb, "name");
+    if (! cjn || cjn->type != cJSON_String)
+    {
+        FPS_PRINT_INFO("  no name in body I'm outta here");
+        if(cjb)cJSON_Delete(cjb);
+        return;
+    }
+    char *fun = cjf->valuestring;
+    sname = cjn->valuestring;
+
+    auto res1 = vm->getFunc(vmap, aname, fun);
+    // function may not be registered
+    if (res1 == nullptr) {
+        // FPS_PRINT_ERROR(" Running Setup  setting up function [{}] uri [{}] aname [{}] body [{}]"
+        //             fun, uri, aname?aname:"I aint got no name",body?body:"I aint got no body"); 
+        FPS_PRINT_INFO( "Missing function called [{}]", fun);
+        //vm->setFunc(vmap, am->name.c_str(), fun, (void*)&setupBMS);     // TODO: change this to set up ESS, BMS, & PCS
+        //res1 = vm->getFunc(vmap, aname, fun);
+    }
+    if (res1 != nullptr) {
+        FPS_PRINT_INFO(" found func [{}]", fun);
+        auto res1Func = reinterpret_cast<myAvfun_t> (res1);
+        // have to create an av from the body (cjb) 
+        auto av = vm->setValfromCj(vmap,"/system/setup",sname, cjb);
+        av->am = am;
+        am->vm = vm;
+
+        res1Func(vmap, am->amap, am->name.c_str(), vm->p_fims, av);
+    }
+
+    //if(cj)cJSON_Delete(cj);
+    if(cjb)cJSON_Delete(cjb);
+    return;
+}
+
+
 // the cfiles are just read straight in, they may call up tmpl files.
 // dummy call to kick off loader 
 //vm->handleCfile(vmap, nullptr, "set", "/cfg/crun", single, nullptr, nullptr, nullptr, nullptr);
+// void setupSched(varsmap &vmap, VarMapUtils *vm, char *schedVar, assetVar *aV , asset_manager *pm)
 void VarMapUtils::handleCfile(varsmap& vmap
    , cJSON* cj, const char* method, const char* uri
    , int& single, const char* body, cJSON** cjr, asset_manager* am, asset* ai)
 {
     
-    if(0)FPS_PRINT_ERROR(" >>>>>> uri [{}]", uri);
+    if(0)FPS_PRINT_INFO(" >>>>>> uri [{}]", uri);
 
     if (dbiess == "")
     {
@@ -1992,6 +2289,67 @@ void VarMapUtils::handleCfile(varsmap& vmap
     VarMapUtils* vm = this; 
 
     double tNow = get_time_dbl();
+
+    if (strncmp(uri,"/cfg/setup", strlen("/cfg/setup"))==0)
+    {
+        char* aname = getSysName(vmap);
+
+        auto cjb = cJSON_Parse(body);
+        if (! cjb)
+        {
+            FPS_PRINT_INFO("  no body I'm outta here");
+            if(cj)cJSON_Delete(cj);
+            return;
+        }
+        FPS_PRINT_INFO("what a body - [{}]", body);
+        //RunVmapSetup(vmap, this, cj, cjb);
+        auto cjf = cJSON_GetObjectItem(cjb, "func");
+        if (! cjf || cjf->type != cJSON_String)
+        {
+            FPS_PRINT_INFO("  no function in body I'm outta here");
+            if(cj)cJSON_Delete(cj);
+            if(cjb)cJSON_Delete(cjb);
+
+            return;
+        }
+        auto cjn = cJSON_GetObjectItem(cjb, "name");
+        if (! cjn || cjn->type != cJSON_String)
+        {
+            FPS_PRINT_INFO("  no name in body I'm outta here");
+            if(cj)cJSON_Delete(cj);
+            if(cjb)cJSON_Delete(cjb);
+
+            return;
+        }
+        char *fun = cjf->valuestring;
+        char *sname = cjn->valuestring;
+
+        auto res1 = getFunc(vmap, aname, fun);
+        // get runSetup function
+        if (res1 == nullptr) {
+            // FPS_PRINT_ERROR(" Running Setup  setting up function [{}] uri [{}] aname [{}] body [{}]"
+            //             fun, uri, aname?aname:"I aint got no name",body?body:"I aint got no body"); 
+            FPS_PRINT_INFO( "Missing function called [{}]", fun);
+            //setFunc(vmap, am->name.c_str(), fun, (void*)&setupBMS);
+            //res1 = getFunc(vmap, aname, fun);
+        }
+        if (res1 != nullptr) {
+            FPS_PRINT_INFO(" found func [{}]", fun);
+            auto res1Func = reinterpret_cast<myAvfun_t> (res1);
+            // have to create an av from the body (cjb) 
+            auto av = setValfromCj(vmap,"/system/setup",sname, cjb);
+            // bool update = true;
+            // av->setParam("update", update);
+            av->am = am;
+            am->vm = this;
+
+            res1Func(vmap, am->amap, am->name.c_str(), p_fims, av);
+        }
+
+        if(cj)cJSON_Delete(cj);
+        if(cjb)cJSON_Delete(cjb);
+        return;
+    }
 
     if (strncmp(uri,"/cfg/cfile/", strlen("/cfg/cfile/"))==0)
     {
@@ -2015,6 +2373,7 @@ void VarMapUtils::handleCfile(varsmap& vmap
         if(0)FPS_PRINT_INFO(" >>>>>> uri [{}] am [{}] spav [{}]", spuri, sp, spav);
         //load it for an am or an ai we got from the loader spec 
         auto cfile = fmt::format("/config/cfile:{}", spav);
+
         asset_manager* pam = nullptr;
         asset_manager* am  = nullptr;
         asset* ai          = nullptr;
@@ -2023,7 +2382,7 @@ void VarMapUtils::handleCfile(varsmap& vmap
         assetVar*avt = vm->getVar(vmap, cfile.c_str(),nullptr);
         if(avt)
         {
-            if(1)FPS_PRINT_INFO(" >>>>>> before getting management #1 info from  [{}]  am at start [{}]"
+            if(0)FPS_PRINT_INFO(" >>>>>> before getting management #1 info from  [{}]  am at start [{}]"
                 , avt->getfName()
                 , am?am->name:"no Am"
                 );
@@ -2066,7 +2425,7 @@ void VarMapUtils::handleCfile(varsmap& vmap
         else
         {
 
-            if(1)FPS_PRINT_INFO(" ERROR >>>>>> am not found using data from file"); 
+            if(0)FPS_PRINT_INFO(" ERROR >>>>>> am not found using data from file"); 
             configure_vmapStr(vmap, body, nullptr, nullptr, true);
 
         }
@@ -2144,6 +2503,7 @@ void VarMapUtils::handleCfile(varsmap& vmap
         spuri = nullptr;
         return;
     }
+    
     if (strncmp(uri,"/cfg/cstop", strlen("/cfg/cstop"))==0)
     {
         char* aname = getSysName(vmap);
@@ -2161,13 +2521,17 @@ void VarMapUtils::handleCfile(varsmap& vmap
 
     if (strncmp(uri,"/cfg/crun", strlen("/cfg/crun"))==0)
     {
+
         char* aname = getSysName(vmap);
         asset_manager* am = getaM(vmap,aname);
+
 
         RunAv(vmap, vm, am->amap, aname, am, vm->p_fims
            , "/schedule/ess:run_config"
            , "runConfig", tNow, 0.1, 0.0);
         FPS_PRINT_INFO(" Running Loader "); 
+
+
     }
 
     if(cj)cJSON_Delete(cj);
@@ -2573,6 +2937,7 @@ cJSON*getAmap(VarMapUtils*vm, varsmap &vmap, char*uri, int opts)
     }
     return nullptr;
 }
+
 
 //if(my.Var == nullptr) this is a reference to a full table (e.g. my.Uri is a full table)
 int runLocks(varsmap &vmap, assetUri &my, const char* pname, bool lockState, assetVar* aV) // maybe void or bool? - return true if locks changed, false if locks not changed?

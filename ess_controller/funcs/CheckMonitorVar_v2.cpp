@@ -468,7 +468,7 @@ int CheckMonitorVar_v2(varsmap& vmap, varmap& amap, const char* aname, fims* p_f
     int reload = vm->CheckReload(vmap, amap, aname, reloadStr.c_str());
     if (reload < 2)
     {
-        FPS_PRINT_INFO("{}  reload first run [{}] [{}:{}]  reload {}", cstr{aname}, av->comp, av->name, reload);
+        FPS_PRINT_INFO("reload first run [{}] [{}:{}]  reload {}", cstr{aname}, av->comp, av->name, reload);
         setupMonitorParams(vmap, amap, aname, av);
 
         int ival = 0;

@@ -2714,7 +2714,7 @@ cJSON* assetVar::getAction(assetAction* aact)
         abf->featDict->showCj(cjix);
 
         cJSON_AddItemToArray(cja, cjix);
-        if (debug_action)FPS_PRINT_INFO("<<<<<<< get action var [{}] bitfield done <<--{}", cstr{ abf->var });
+        if (debug_action)FPS_PRINT_INFO("<<<<<<< get action var [{}] bitfield done <<--", cstr{ abf->var });
     }
 
     cJSON_AddItemToObject(cj, aact->name.c_str(), cja);

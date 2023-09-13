@@ -1494,7 +1494,6 @@ int HandlePowerEst(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims,
 }
 
 
-
 int Every100mSP1(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
 {
     asset_manager* am = aV->am;
@@ -1663,6 +1662,7 @@ int Every1000mS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, as
     }
     return 0;
 }
+
 
 // TODO review after MVP  needs a pointer to the sysVec
 // modify this to do one at a time

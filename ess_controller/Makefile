@@ -5,7 +5,7 @@ $(info MAKEFILE_LIST="$(MAKEFILE_LIST)")
 
 #BINS = libess.so libessfunc.so ess_controller  gpio_controller 
 BINS = libess.so libessfunc.so ess_controller gpio_controller
-TEST_BINS = test_vmap0 test_vmap1 test_vmap_act_remap test_all_func test_valueChanged 
+TEST_BINS = test_vmap0 test_vmap1 test_vmap_act_remap test_all_func test_valueChanged
 # TEST_BINS += test_calculator_func test_deadband gtest_check_table_var 
 #TEST_BINS += gtest_monitor_condition gtest_monitor_var_v2 gtest_calculate_var gtest_dbi gtest_handle_cmd gtest_update_to_dbi
 #TEST_BINS += test_logger_chrono
@@ -31,6 +31,7 @@ THREADS = -pthread
 #CPPFLAGS += -g -std=c++11 -Wall -pedantic -Werror  -Wno-format-security -Wno-format-truncation
 #CPPFLAGS += -g 
 CPPFLAGS += -std=c++11
+
 CPPFLAGS += -Wall -Wno-format-security -Wno-format-truncation -Werror
 GITBRANCH  = $(shell git branch | grep \* | cut -d ' ' -f2)
 GITCOMMIT  = $(shell git log --pretty=format:'%h' -n 1)
@@ -138,7 +139,7 @@ ESS_OBJECTS += i2cbusses.o
 ESS_OBJECTS += vmActions.o
 ESS_OBJECTS += vmConfig.o
 ESS_OBJECTS += dbi_funcs.o
-# ESS_OBJECTS += dataMap.o
+ESS_OBJECTS += AssetSetupUtility.o
 
 
 #ESS_OBJECTS += version.o git_build.o git_commit.o git_tag.o
@@ -257,9 +258,6 @@ $(BUILD_DIR)test_all_func:	$(TEST_DIR)test_all_func.o
 $(BUILD_DIR)test_chan_timeq:	$(TEST_DIR)test_chan_timeq.o
 	$(CXX) -o $@ $^ $(INCLUDES) -lessfunc -less $(LIBS)
 
-$(BUILD_DIR)test_new_sched:	$(TEST_DIR)test_new_sched.o
-	$(CXX) -o $@ $^ $(INCLUDES) -lessfunc -less $(LIBS)
-
 $(BUILD_DIR)test_sched:	$(TEST_DIR)test_sched.o
 	$(CXX) -o $@ $^ $(INCLUDES) -lessfunc -less $(LIBS)
 
@@ -281,6 +279,8 @@ $(OBJ_DIR)assetFunc.o:	$(SRC_DIR)/assetFunc.cpp
 $(OBJ_DIR)scheduler.o:	$(SRC_DIR)/scheduler.cpp 
 	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
+$(OBJ_DIR)AssetSetupUtility.o:	$(SRC_DIR)/AssetSetupUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
 $(OBJ_DIR)ess_controller.o:	$(SRC_DIR)/ess_controller.cpp 
 	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
@@ -296,7 +296,6 @@ $(OBJ_DIR)ess_controller_test.o:	$(SRC_DIR)/ess_controller_test.cpp
 
 $(OBJ_DIR)gpio_controller.o:	$(SRC_DIR)/gpio_controller.cpp 
 	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
-
 
 $(FUN_DIR)AlarmFaultHandler.o:	$(FUNC_DIR)/AlarmFaultHandler.cpp 
 	$(CXX) -c $(CPPFLAGS) -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(INC_DIR)
@@ -315,7 +314,6 @@ $(TEST_DIR)test_ess.o:	$(SRC_DIR)/scheduler.cpp
 
 $(TEST_DIR)%.o:	$(TSRC_DIR)/%.cpp 
 	$(CXX) -c $(CPPFLAGS) -D_MAIN -shared -fpic -o $@ $^ $(INCLUDES_BUILD) -I$(INC_DIR)
-
 
 $(OBJ_DIR)%.so:	$(OBJ_DIR)%.o
 	$(CXX)  $(CPPFLAGS) -shared -fpic -o $@ $< $(INCLUDES_BUILD) $(LIBS)
