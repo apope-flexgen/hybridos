@@ -63,3 +63,5 @@ for componentName in "${components[@]}"; do
 		exit 1
 	fi
 done
+
+docker builder prune --force
