@@ -128,7 +128,7 @@ void unlock_subscriptions()
 {
     pthread_mutex_lock(&subscription_mutex);
     sub_lock.lock = false;
-    pthread_cond_signal(&subscription_lock_cv);
+    pthread_cond_broadcast(&subscription_lock_cv);
     pthread_mutex_unlock(&subscription_mutex);
 }
 
