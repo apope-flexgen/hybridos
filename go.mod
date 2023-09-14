@@ -1,4 +1,4 @@
-module github.com/hybridos
+module github.com/flexgen-power/hybridos
 
 go 1.18
 
