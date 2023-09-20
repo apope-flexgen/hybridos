@@ -15,7 +15,6 @@ void Feature::add_summary_vars_to_JSON_buffer(fmt::memory_buffer& buf, const cha
         it->add_status_of_control_to_JSON_buffer(buf, var, false);
 }
 
-// set the ui_enabled field of all feature variables
 void Feature::toggle_ui_enabled(bool flag) {
     for (auto it : feature_vars) {
         it->ui_enabled = flag;

@@ -12,10 +12,48 @@
 /* System Internal Dependencies */
 #include <Logger.h>
 /* Local Internal Dependencies */
-#include <LDSS.h>
+#include <Features/LDSS.h>
 #include <Site_Controller_Utils.h>
 
-LDSS::LDSS() {
+features::LDSS::LDSS() {
+    feature_vars = { &ldss_priority_setting,     &ldss_max_load_threshold_percent, &ldss_min_load_threshold_percent, &ldss_warmup_time, &ldss_cooldown_time, &ldss_start_gen_time, &ldss_stop_gen_time,
+                     &ldss_enable_soc_threshold, &ldss_max_soc_threshold_percent,  &ldss_min_soc_threshold_percent };
+
+    variable_ids = {
+        { &enable_flag, "ldss_enable_flag" },
+        { &ldss_priority_setting, "ldss_priority_setting" },
+        { &ldss_start_gen_time, "ldss_start_gen_time" },
+        { &ldss_stop_gen_time, "ldss_stop_gen_time" },
+        { &ldss_max_load_threshold_percent, "ldss_max_load_threshold_percent" },
+        { &ldss_min_load_threshold_percent, "ldss_min_load_threshold_percent" },
+        { &ldss_warmup_time, "ldss_warmup_time" },
+        { &ldss_cooldown_time, "ldss_cooldown_time" },
+        { &ldss_enable_soc_threshold, "ldss_enable_soc_threshold" },
+        { &ldss_max_soc_threshold_percent, "ldss_max_soc_threshold_percent" },
+        { &ldss_min_soc_threshold_percent, "ldss_min_soc_threshold_percent" },
+    };
+}
+
+void features::LDSS::handle_fims_set(std::string uri_endpoint, const cJSON& msg_value) {
+    if (msg_value.type == cJSON_Number) {
+        ldss_priority_setting.set_fims_int(uri_endpoint.c_str(), msg_value.valueint);
+        ldss_warmup_time.set_fims_int(uri_endpoint.c_str(), msg_value.valueint);
+        ldss_cooldown_time.set_fims_int(uri_endpoint.c_str(), msg_value.valueint);
+        ldss_start_gen_time.set_fims_int(uri_endpoint.c_str(), msg_value.valueint);
+        ldss_stop_gen_time.set_fims_int(uri_endpoint.c_str(), msg_value.valueint);
+        ldss_max_load_threshold_percent.set_fims_float(uri_endpoint.c_str(), range_check(msg_value.valuedouble, 100.0f, ldss_min_load_threshold_percent.value.value_float));
+        ldss_min_load_threshold_percent.set_fims_float(uri_endpoint.c_str(), range_check(msg_value.valuedouble, ldss_max_load_threshold_percent.value.value_float, 0.0f));
+        ldss_max_soc_threshold_percent.set_fims_float(uri_endpoint.c_str(), range_check(msg_value.valuedouble, 100.0f, ldss_min_soc_threshold_percent.value.value_float));
+        ldss_min_soc_threshold_percent.set_fims_float(uri_endpoint.c_str(), range_check(msg_value.valuedouble, ldss_max_soc_threshold_percent.value.value_float, 0.0f));
+    } else if (msg_value.type == cJSON_True || msg_value.type == cJSON_False) {
+        bool value_bool = msg_value.type != cJSON_False;
+        if (available) {
+            enable_flag.set_fims_bool(uri_endpoint.c_str(), value_bool);
+        }
+    }
+}
+
+LDSS_Internal::LDSS_Internal() {
     priority_setting = STATIC;
     max_load_threshold_percent = 0.0;
     min_load_threshold_percent = 0.0;
@@ -34,7 +72,7 @@ LDSS::LDSS() {
  * @param static_run_priorities Pointer to cJSON object containing an array of the gen priorities, in the order of the gen indices.
  * @return True if configuration is successful. False if configuration fails.
  */
-bool LDSS::configure_priorities(std::vector<Asset_Generator*> const& pg, cJSON* static_run_priorities) {
+bool LDSS_Internal::configure_priorities(std::vector<Asset_Generator*> const& pg, cJSON* static_run_priorities) {
     // give LDSS access to generator assets
     generators = pg;
 
@@ -75,7 +113,7 @@ bool LDSS::configure_priorities(std::vector<Asset_Generator*> const& pg, cJSON* 
  * Updates LDSS feature settings with setpoints passed-down from Site Manager.
  * @param settings Group of settings from Site Manager.
  */
-void LDSS::update_settings(LDSS_Settings& settings) {
+void LDSS_Internal::update_settings(LDSS_Settings& settings) {
     // update feature settings
     enabled = settings.enabled;
     priority_setting = settings.priority_setting;
@@ -99,7 +137,7 @@ void LDSS::update_settings(LDSS_Settings& settings) {
  * Enables and configures or disables LDSS.
  * @param flag If true, turns on LDSS and configures it. If false, turns off LDSS.
  */
-void LDSS::enable(bool flag) {
+void LDSS_Internal::enable(bool flag) {
     if (enabled == flag)
         return;
 
@@ -118,7 +156,7 @@ void LDSS::enable(bool flag) {
  * @param max_load_threshold_kw Upper limit of load in kW
  * @param target_kw Current load in kW
  */
-void LDSS::check_start_generator(int num_controllable, float max_load_threshold_kw, float target_kw) {
+void LDSS_Internal::check_start_generator(int num_controllable, float max_load_threshold_kw, float target_kw) {
     // Do not start generators if SoC is too high
     if (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() > max_soc_percent) {
         return;
@@ -156,7 +194,7 @@ void LDSS::check_start_generator(int num_controllable, float max_load_threshold_
  * @param min_load_threshold_kw Lower limit of load in kW
  * @param target_kw Current load in kW
  */
-void LDSS::check_stop_generator(int num_controllable, float min_load_threshold_kw, float target_kw) {
+void LDSS_Internal::check_stop_generator(int num_controllable, float min_load_threshold_kw, float target_kw) {
     // Do not stop generators if SoC is too low
     if (enable_soc_thresholds_flag && pEss->get_ess_soc_avg() < min_soc_percent) {
         return;
@@ -185,7 +223,7 @@ void LDSS::check_stop_generator(int num_controllable, float min_load_threshold_k
 /**
  * Update generator warmup/cooldown times and priorities
  */
-void LDSS::update_cooldown_and_warmup() {
+void LDSS_Internal::update_cooldown_and_warmup() {
     for (auto gen : generators) {
         if (gen->is_stopped()) {
             // if gen is cooling down, tick its cooldown timer
@@ -214,7 +252,7 @@ void LDSS::update_cooldown_and_warmup() {
 /**
  * Main routine for the LDSS feature. Checks if generators need to be started or stopped and updates timers.
  */
-void LDSS::check(float target_kw) {
+void LDSS_Internal::check(float target_kw) {
     int num_controllable = get_num_controllable();
 
     // if there is at least one running/controllable generator, we are not in a state where the first gen is transitioning to running.
@@ -241,7 +279,7 @@ void LDSS::check(float target_kw) {
 /**
  * Decrements all start priorities at and after the passed-in gen's start priority. Called after the passed-in gen is started.
  */
-void LDSS::adjust_dynamic_start_priorities(Asset_Generator* started_gen) {
+void LDSS_Internal::adjust_dynamic_start_priorities(Asset_Generator* started_gen) {
     int started_gen_old_priority = started_gen->get_dynamic_start_priority();
     for (auto gen : generators) {
         if (gen->get_dynamic_start_priority() >= started_gen_old_priority)
@@ -252,7 +290,7 @@ void LDSS::adjust_dynamic_start_priorities(Asset_Generator* started_gen) {
 /**
  * Decrements all stop priorities at and after the passed-in gen's stop priority. Called after the passed-in gen is stopped.
  */
-void LDSS::adjust_dynamic_stop_priorities(Asset_Generator* stopped_gen) {
+void LDSS_Internal::adjust_dynamic_stop_priorities(Asset_Generator* stopped_gen) {
     int stopped_gen_old_priority = stopped_gen->get_dynamic_stop_priority();
     for (auto gen : generators) {
         if (gen->get_dynamic_stop_priority() >= stopped_gen_old_priority)
@@ -264,7 +302,7 @@ void LDSS::adjust_dynamic_stop_priorities(Asset_Generator* stopped_gen) {
  * Makes the given generator the highest priority to start next for both dynamic and static priority lists.
  * Triggered by the user pressing the "Start Next" button.
  */
-void LDSS::move_gen_to_front_of_both_start_priority_lists(Asset_Generator* gen_to_start_next) {
+void LDSS_Internal::move_gen_to_front_of_both_start_priority_lists(Asset_Generator* gen_to_start_next) {
     int old_dynamic_priority = gen_to_start_next->get_dynamic_start_priority();
     int old_static_priority = gen_to_start_next->get_static_start_priority();
     for (auto gen : generators) {
@@ -286,7 +324,7 @@ void LDSS::move_gen_to_front_of_both_start_priority_lists(Asset_Generator* gen_t
  * Makes the given generator the highest priority to stop next for both dynamic and static priority lists.
  * Triggered by the user pressing the "Stop Next" button.
  */
-void LDSS::move_gen_to_front_of_both_stop_priority_lists(Asset_Generator* gen_to_stop_next) {
+void LDSS_Internal::move_gen_to_front_of_both_stop_priority_lists(Asset_Generator* gen_to_stop_next) {
     int old_dynamic_priority = gen_to_stop_next->get_dynamic_stop_priority();
     int old_static_priority = gen_to_stop_next->get_static_stop_priority();
     for (auto gen : generators) {
@@ -308,7 +346,7 @@ void LDSS::move_gen_to_front_of_both_stop_priority_lists(Asset_Generator* gen_to
  * Moves a generator that has just finished warming up to the back of the dynamic stop priority list.
  * @param warmed_up_gen Pointer to gen that just finished warming up.
  */
-void LDSS::move_gen_to_back_of_dynamic_stop_priority_list(Asset_Generator* warmed_up_gen) {
+void LDSS_Internal::move_gen_to_back_of_dynamic_stop_priority_list(Asset_Generator* warmed_up_gen) {
     int max_priority = 0;
     for (auto gen : generators) {
         max_priority = std::max(max_priority, gen->get_dynamic_stop_priority());
@@ -321,7 +359,7 @@ void LDSS::move_gen_to_back_of_dynamic_stop_priority_list(Asset_Generator* warme
  * Moves a generator that has just finished cooling down to the back of the dynamic start priority list.
  * @param cooled_down_gen Pointer to gen that just finished cooling down.
  */
-void LDSS::move_gen_to_back_of_dynamic_start_priority_list(Asset_Generator* cooled_down_gen) {
+void LDSS_Internal::move_gen_to_back_of_dynamic_start_priority_list(Asset_Generator* cooled_down_gen) {
     int max_priority = 0;
     for (auto gen : generators) {
         if (gen->get_dynamic_start_priority() > max_priority && gen != cooled_down_gen)
@@ -333,14 +371,14 @@ void LDSS::move_gen_to_back_of_dynamic_start_priority_list(Asset_Generator* cool
 /**
  * Resets the Start Generator Countdown to the beginning value.
  */
-void LDSS::reset_start_gen_countdown() {
+void LDSS_Internal::reset_start_gen_countdown() {
     start_gen_countdown = start_gen_time;
 }
 
 /**
  * Resets the Stop Generator Countdown to the beginning value.
  */
-void LDSS::reset_stop_gen_countdown() {
+void LDSS_Internal::reset_stop_gen_countdown() {
     stop_gen_countdown = stop_gen_time;
 }
 
@@ -348,7 +386,7 @@ void LDSS::reset_stop_gen_countdown() {
  * Decides if it has been long enough since the last LDSS check for a new LDSS check.
  * @return True if LDSS should be checked, false if not.
  */
-bool LDSS::is_time_for_check() {
+bool LDSS_Internal::is_time_for_check() {
     static bool first_check = true;
     static timespec last_check_time;
     timespec current_time;
@@ -376,7 +414,7 @@ bool LDSS::is_time_for_check() {
  * Starts the next generator in the start priority list.
  * @return True if there is a gen available to be started and the start cmd successfully goes through. False otherwise.
  */
-bool LDSS::start_generator() {
+bool LDSS_Internal::start_generator() {
     Asset_Generator* gen_to_start = get_gen_to_start();
     if (gen_to_start == NULL)
         return false;
@@ -401,7 +439,7 @@ bool LDSS::start_generator() {
 /**
  * Stops the next generator in the stop priority list.
  */
-void LDSS::stop_generator() {
+void LDSS_Internal::stop_generator() {
     Asset_Generator* gen_to_stop = get_gen_to_stop();
     if (gen_to_stop == NULL)
         return;
@@ -424,7 +462,7 @@ void LDSS::stop_generator() {
  * start priorities, depending on the LDSS priority setting.
  * @return Pointer to the next gen that should be started, or NULL if there are no startable gens.
  */
-Asset_Generator* LDSS::get_gen_to_start(void) {
+Asset_Generator* LDSS_Internal::get_gen_to_start(void) {
     int min_priority = INT_MAX;
     Asset_Generator* gen_to_start = NULL;
 
@@ -459,7 +497,7 @@ Asset_Generator* LDSS::get_gen_to_start(void) {
  * stop priorities, depending on the LDSS priority setting.
  * @return Pointer to the next gen that should be stopped, or NULL if there are no stoppable gens.
  */
-Asset_Generator* LDSS::get_gen_to_stop(void) {
+Asset_Generator* LDSS_Internal::get_gen_to_stop(void) {
     int min_priority = INT_MAX;
     Asset_Generator* gen_to_stop = NULL;
 
@@ -493,7 +531,7 @@ Asset_Generator* LDSS::get_gen_to_stop(void) {
  * Counts how many generators are controllable.
  * @return Number of generators that are controllable.
  */
-int LDSS::get_num_controllable() {
+int LDSS_Internal::get_num_controllable() {
     int num_controllable = 0;
     for (auto gen : generators) {
         if (gen->is_controllable())

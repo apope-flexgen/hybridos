@@ -25,6 +25,10 @@ enum load_compensation {
     LOAD_MINIMUM      // Only increase discharge if load is not met
 };
 
+/**
+ * An Asset_Cmd_Object is a mutable representation of the site's state, which
+ * is modified in calculations to determine what the new state should be.
+ */
 struct Asset_Cmd_Object {
 public:
     struct Asset_Cmd_Data {

@@ -16,6 +16,25 @@
 #include <macros.h>
 #include <Asset_Generator.h>
 #include <ESS_Manager.h>
+#include <Features/Feature.h>
+
+/**
+ * Load-Dependent Start-Stop (LDSS) is a feature that monitors how much load generators have
+ * to provide and starts or stops generators based on maximum and minimum limits.
+ *
+ * This class provides the FIMS interface and configuration for the feature.
+ */
+class features::LDSS : public Feature {
+public:
+    LDSS();
+
+    Fims_Object ldss_priority_setting;  // static or dynamic priorities
+    Fims_Object ldss_max_load_threshold_percent, ldss_min_load_threshold_percent;
+    Fims_Object ldss_warmup_time, ldss_cooldown_time, ldss_start_gen_time, ldss_stop_gen_time;  // LDSS timers
+    Fims_Object ldss_enable_soc_threshold, ldss_max_soc_threshold_percent, ldss_min_soc_threshold_percent;
+
+    void handle_fims_set(std::string uri_endpoint, const cJSON& msg_value) override;
+};
 
 /**
  * @param enabled LDSS feature enable flag.
@@ -47,7 +66,13 @@ struct LDSS_Settings {
 
 class Asset_Generator;
 
-class LDSS {
+/**
+ * Load-Dependent Start-Stop (LDSS) is a feature that monitors how much load generators have
+ * to provide and starts or stops generators based on maximum and minimum limits.
+ *
+ * This class provides the implementation for the feature's execution.
+ */
+class LDSS_Internal {
 private:
     // check() helper functions
     void check_start_generator(int num_controllable, float max_load_threshold_kw, float target_kw);
@@ -76,7 +101,7 @@ public:
     float max_soc_percent;
     ESS_Manager* pEss;
 
-    LDSS();
+    LDSS_Internal();
     bool configure_priorities(std::vector<Asset_Generator*> const& pg, cJSON* static_run_priorities);
     void update_settings(LDSS_Settings& settings);
     void enable(bool flag);

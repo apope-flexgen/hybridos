@@ -45,7 +45,7 @@ protected:
 
     std::vector<Asset_Generator*> pGens;
 
-    LDSS ldss;
+    LDSS_Internal ldss;
 
 public:
     Generator_Manager();

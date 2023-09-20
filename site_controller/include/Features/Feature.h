@@ -12,7 +12,7 @@
 #include <Fims_Object.h>
 
 struct Feature {
-    std::vector<Fims_Object*> feature_vars;                          // All feature-specific variables
+    std::vector<Fims_Object*> feature_vars;                          // All feature-specific variables (except the enable_flag)
     std::vector<Fims_Object*> summary_vars;                          // Feature-specific variables that should be displayed in feature summary
     Fims_Object enable_flag;                                         // True if this feature is currently being executed in algorithms
     bool available = false;                                          // True if this feature is available to the customer to turn on
@@ -20,7 +20,9 @@ struct Feature {
 
     void add_feature_vars_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL);
     void add_summary_vars_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL);
-    void toggle_ui_enabled(bool);
+
+    // set the ui_enabled field of all feature variables
+    virtual void toggle_ui_enabled(bool flag);
 
     /**
      * @brief Parses a cJSON object for the feature's configuration data.
@@ -57,10 +59,20 @@ class Constant_Power_Factor;
 
 // Runmode 1 Standalone Power Features
 class Active_Power_Closed_Loop_Control;
+class Active_Power_POI_Limits;
+class Reactive_Power_POI_Limits;
+class PFR;
+class Watt_Watt;
+class LDSS;  // Also a Runmode 2 Standalone Power Feature
+class ESS_Discharge_Prevention;
+class Aggregated_Asset_Limit;
+class Reactive_Power_Closed_Loop_Control;
 
 // Runmode 2 Active Power Features
 // Runmode 2 Reactive Power Features
 // Runmode 2 Standalone Power Features
+class Load_Shed;
+class Solar_Shed;
 }  // namespace features
 
 #endif /* FEATURE_H_ */

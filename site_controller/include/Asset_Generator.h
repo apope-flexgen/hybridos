@@ -14,9 +14,9 @@
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
 #include <Asset.h>
-#include <LDSS.h>
+#include <Features/LDSS.h>
 
-class LDSS;
+class LDSS_Internal;
 
 class Asset_Generator : public Asset {
 public:
@@ -150,7 +150,7 @@ public:
     //
     // configuration
     //
-    LDSS* ldss;
+    LDSS_Internal* ldss;
 
 protected:
     // flags
