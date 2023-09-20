@@ -72,13 +72,8 @@ Site_Manager::Site_Manager(Version* release_version) {
     num_path_faults = 0;
     num_path_alarms = 0;
 
-    watchdog_old_pet = 0;
-
     clock_gettime(CLOCK_MONOTONIC, &current_time);
     clock_gettime(CLOCK_MONOTONIC, &exit_target_time);
-    clock_gettime(CLOCK_MONOTONIC, &heartbeat_timer);
-    clock_gettime(CLOCK_MONOTONIC, &watchdog_timeout);
-    increment_timespec_ms(watchdog_timeout, watchdog_duration_ms.value.value_int);
     clock_gettime(CLOCK_MONOTONIC, &time_to_clear_fault_status_flags);
 
     clear_fault_status_flags = false;
@@ -128,20 +123,9 @@ void Site_Manager::configure_feature_objects(void) {
     //
     // Charge features
     //
-    // Charge Dispatch
-    charge_dispatch.feature_vars = {
-        &charge_dispatch_kW_command,  // include in this list as a status is required for the feature to display
-        &charge_dispatch_solar_enable_flag,
-        &charge_dispatch_gen_enable_flag,
-        &charge_dispatch_feeder_enable_flag,
-    };
     charge_dispatch.available = true;  // charge dispatch is a special case in that it should always be enabled
     charge_dispatch.enable_flag.value.value_bool = true;
     charge_dispatch.toggle_ui_enabled(true);
-    // Charge Control
-    charge_control.feature_vars = {
-        &ess_charge_control_kW_request, &ess_charge_control_target_soc, &ess_charge_control_kW_limit, &ess_charge_control_charge_disable, &ess_charge_control_discharge_disable,
-    };
 
     //
     // Run Mode 1 Reactive Power Features
@@ -163,13 +147,6 @@ void Site_Manager::configure_feature_objects(void) {
     //
     // Site Operation Features
     //
-    // Watchdog
-    watchdog_feature.feature_vars = {
-        &watchdog_duration_ms,
-        &watchdog_pet,
-        &heartbeat_counter,
-        &heartbeat_duration_ms,
-    };
 }
 
 // gets called just when the user clicks the Features tab. publish_all() subsequently updates the values
@@ -879,6 +856,11 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                     for (auto feature : runmode2_kW_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
+                    // charge control feature variables appear under the active power uri
+                    for (auto feature : charge_features_list) {
+                        feature->handle_fims_set(msg->pfrags[2], msg_value);
+                    }
+
                     valid_set = true;
                 } else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0) {
                     runmode1_kVAR_mode_cmd.set_fims_masked_int(msg->pfrags[2], msg_value.valueint, available_runmode1_kVAR_features_mask);
@@ -902,7 +884,18 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                     for (auto feature : site_operation_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
+                    if (msg_value.type == cJSON_False || msg_value.type == cJSON_True) {
+                        power_priority_flag.set_fims_bool(msg->pfrags[2], body_bool);
+                        allow_ess_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
+                        allow_solar_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
+                        allow_gen_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
+                    }
+
                     valid_set = true;
+                    if (msg_value.type == cJSON_Number) {
+                        // watchdog_pet only invalid cops writeout endpoint, all others true
+                        valid_set = (strcmp(msg->pfrags[2], "watchdog_pet") != 0);
+                    }
                 }
             }
             // TODO: remove the following if blocks when all features have fims handler functions
@@ -951,20 +944,9 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         if (body_float >= 0 && body_float <= 100) {
                             ess_calibration_min_soc_limit.set_fims_float(msg->pfrags[2], body_float);
                             ess_calibration_max_soc_limit.set_fims_float(msg->pfrags[2], body_float);
-                            ess_charge_control_target_soc.set_fims_float(msg->pfrags[2], body_float);
                         }
 
-                        // Charge Control
-                        ess_charge_control_kW_limit.set_fims_float(msg->pfrags[2], fabsf(body_float));
-
                         valid_set = true;
-                    } else if (strncmp(msg->pfrags[1], "site_operation", strlen("site_operation")) == 0) {
-                        watchdog_pet.set_fims_int(msg->pfrags[2], fabsf(body_int));
-                        // UI configured timer duration
-                        watchdog_duration_ms.set_fims_int(msg->pfrags[2], fabsf(body_int));
-
-                        // watchdog_pet only invalid cops writeout endpoint, all others true
-                        valid_set = (strcmp(msg->pfrags[2], "watchdog_pet") != 0);
                     }
                 } else if (uType == site_uri)  // all numeric sets for /site
                 {
@@ -996,24 +978,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         frequency_response.handle_fims_set(*msg);
                         ess_calibration_soc_limits_enable.set_fims_bool(msg->pfrags[2], body_bool);
                         ess_calibration_voltage_limits_enable.set_fims_bool(msg->pfrags[2], body_bool);
-                        // Charge Control
-                        ess_charge_control_charge_disable.set_fims_bool(msg->pfrags[2], body_bool);
-                        ess_charge_control_discharge_disable.set_fims_bool(msg->pfrags[2], body_bool);
-                        // Charge Dispatch
-                        charge_dispatch_solar_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
-                        charge_dispatch_gen_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
-                        charge_dispatch_feeder_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
-                        valid_set = true;
-                    } else if (strncmp(msg->pfrags[1], "site_operation", strlen("site_operation")) == 0) {
-                        // Feature enable flags
-                        for (auto feature : site_operation_features_list)
-                            if (feature->available)
-                                feature->enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
 
-                        power_priority_flag.set_fims_bool(msg->pfrags[2], body_bool);
-                        allow_ess_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
-                        allow_solar_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
-                        allow_gen_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
                         valid_set = true;
                     }
                 } else if (uType == site_uri)  // all /site boolean set here
@@ -1343,7 +1308,7 @@ void Site_Manager::get_values() {
     get_ess_calibration_variables();
 
     // bidirectional function call (get charge_control_kW_request and send target_soc to algorithm)
-    ess_charge_control_kW_request.value.set(pAssets->charge_control(ess_charge_control_target_soc.value.value_float, ess_charge_control_charge_disable.value.value_bool, ess_charge_control_discharge_disable.value.value_bool));
+    charge_control.kW_request.value.set(pAssets->charge_control(charge_control.target_soc.value.value_float, charge_control.charge_disable.value.value_bool, charge_control.discharge_disable.value.value_bool));
 }
 
 // set all interface variables (to asset manager, FIMS)
@@ -1550,8 +1515,8 @@ void Site_Manager::ui_configuration(void) {
     runmode2_kVAR_mode_cmd.ui_enabled = true;
     active_power_poi_limits.enable_flag.ui_enabled = true;
     watchdog_feature.enable_flag.ui_enabled = true;
-    watchdog_duration_ms.ui_enabled = watchdog_feature.enable_flag.value.value_bool;
-    ess_charge_control_kW_limit.ui_enabled = true;
+    watchdog_feature.watchdog_duration_ms.ui_enabled = watchdog_feature.enable_flag.value.value_bool;
+    charge_control.kW_limit.ui_enabled = true;
 
     // disable clear faults button if no faults or alarms
     clear_faults_flag.ui_enabled = fault_status_flag.value.value_bool || alarm_status_flag.value.value_bool || num_path_faults != 0 || num_path_alarms != 0;
@@ -2419,8 +2384,11 @@ void Site_Manager::process_state(void) {
     }
 
     // confirm connection with master controller (if this feature is enabled)
-    if (watchdog_feature.enable_flag.value.value_bool)
-        watchdog();
+    if (watchdog_feature.enable_flag.value.value_bool) {
+        if (watchdog_feature.should_bark(current_time)) {
+            dogbark();
+        }
+    }
 
     // determine which state to run
     check_state();
@@ -2564,7 +2532,7 @@ void Site_Manager::runmode1_state(void) {
 
     // if the currently selected runmode1 kW feature uses charge control, set asset_cmd internal ess charge kW request variable (and limit it)
     if (charge_control.enable_flag.value.value_bool)
-        asset_cmd.ess_data.kW_request = range_check(ess_charge_control_kW_request.value.value_float, ess_charge_control_kW_limit.value.value_float, -1 * ess_charge_control_kW_limit.value.value_float);
+        asset_cmd.ess_data.kW_request = range_check(charge_control.kW_request.value.value_float, charge_control.kW_limit.value.value_float, -1 * charge_control.kW_limit.value.value_float);
 
     // Active Power Features
 
@@ -2592,7 +2560,7 @@ void Site_Manager::runmode1_state(void) {
     asset_cmd.preserve_uncorrected_site_kW_demand();
 
     // reinit internal debug value
-    charge_dispatch_kW_command.value.set(0.0f);
+    charge_dispatch.kW_command.value.set(0.0f);
 
     // adjust power request to account for transformer losses at the poi
     if (watt_watt.enable_flag.value.value_bool)
@@ -2969,14 +2937,14 @@ void Site_Manager::dispatch_active_power(int asset_priority) {
         aggregate_dispatch += asset_cmd.dispatch_site_kW_discharge_cmd(asset_priority, asset_cmd.site_kW_load, LOAD);
 
     // Process and dispatch charge production
-    aggregate_dispatch += asset_cmd.dispatch_site_kW_charge_cmd(asset_priority, charge_dispatch_solar_enable_flag.value.value_bool, charge_dispatch_gen_enable_flag.value.value_bool, charge_dispatch_feeder_enable_flag.value.value_bool);
+    aggregate_dispatch += asset_cmd.dispatch_site_kW_charge_cmd(asset_priority, charge_dispatch.solar_enable_flag.value.value_bool, charge_dispatch.gen_enable_flag.value.value_bool, charge_dispatch.feeder_enable_flag.value.value_bool);
 
     // Process and dispatch remaining discharge production to each asset type
     aggregate_dispatch += asset_cmd.dispatch_site_kW_discharge_cmd(asset_priority, asset_cmd.site_kW_discharge_production, REQUESTS);
     aggregate_dispatch += asset_cmd.dispatch_site_kW_discharge_cmd(asset_priority, asset_cmd.site_kW_discharge_production, DEMAND);
 
     // set internal debug value to power from charge control
-    charge_dispatch_kW_command.value.set(aggregate_dispatch);
+    charge_dispatch.kW_command.value.set(aggregate_dispatch);
 }
 
 /**
@@ -3033,27 +3001,6 @@ void Site_Manager::set_ess_calibration_variables() {
     // Write through the feature setpoint as well so we have a reference of whether it's being met for each asset
     settings.raw_feature_setpoint = ess_calibration_kW_cmd.value.value_float;
     pAssets->set_ess_calibration_vars(settings);
-}
-
-// Checks for watchdog timeout and increments heartbeat counter
-void Site_Manager::watchdog() {
-    // If the watchdog has received a new pet from the master controller
-    if (watchdog_old_pet != watchdog_pet.value.value_int) {
-        watchdog_old_pet = watchdog_pet.value.value_int;                                // Update old pet
-        clock_gettime(CLOCK_MONOTONIC, &watchdog_timeout);                              // Get current time
-        increment_timespec_ms(watchdog_timeout, watchdog_duration_ms.value.value_int);  // Reset watchdog expiration time
-    }
-    // If no new pet and the watchdog has timed out
-    else if (check_expired_time(current_time, watchdog_timeout)) {
-        dogbark();  // Execute watchdog failure responses
-    }
-
-    // If it is time for the heart to send out another beat (signaling to master controller that site_controller is still operational)
-    if (check_expired_time(current_time, heartbeat_timer)) {
-        ++heartbeat_counter.value.value_int;                                            // Update counter that will be published for master controller
-        clock_gettime(CLOCK_MONOTONIC, &heartbeat_timer);                               // Get current time
-        increment_timespec_ms(heartbeat_timer, heartbeat_duration_ms.value.value_int);  // Reset heartbeat timer
-    }
 }
 
 // Executes watchdog failure reponses

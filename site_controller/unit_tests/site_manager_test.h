@@ -1279,9 +1279,9 @@ TEST_F(site_manager_test, apply_active_power_poi_limits) {
         asset_cmd.gen_data.max_potential_kW = test.asset_maxes;  // be satisfied by other assets, therefore not falling on the POI
         asset_cmd.ess_data.min_potential_kW = -1.0f * test.feed_max;
         asset_cmd.solar_data.max_potential_kW = test.asset_maxes;
-        charge_dispatch_feeder_enable_flag.value.set(true);
-        charge_dispatch_gen_enable_flag.value.set(!test.feed_only);
-        charge_dispatch_solar_enable_flag.value.set(!test.feed_only);
+        charge_dispatch.feeder_enable_flag.value.set(true);
+        charge_dispatch.gen_enable_flag.value.set(!test.feed_only);
+        charge_dispatch.solar_enable_flag.value.set(!test.feed_only);
         asset_cmd.site_kW_demand = test.site_demand;
         asset_cmd.feature_kW_demand = test.site_demand;
 
@@ -1355,7 +1355,7 @@ TEST_F(site_manager_test, apply_poi_limits_soc) {
         active_power_poi_limits.soc_low_max_kW.value.set(array[i].under_max);
         active_power_poi_limits.soc_high_min_kW.value.set(array[i].over_min);
         active_power_poi_limits.soc_high_max_kW.value.set(array[i].over_max);
-        charge_dispatch_feeder_enable_flag.value.set(true);
+        charge_dispatch.feeder_enable_flag.value.set(true);
         active_power_poi_limits.execute(asset_cmd, soc_avg_running.value.value_float, asset_priority_runmode1.value.value_int, total_site_kW_charge_limit.value.value_float, total_site_kW_discharge_limit.value.value_float);
 
         // failure conditions

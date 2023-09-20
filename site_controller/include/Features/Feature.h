@@ -73,6 +73,13 @@ class Reactive_Power_Closed_Loop_Control;
 // Runmode 2 Standalone Power Features
 class Load_Shed;
 class Solar_Shed;
+
+// Site Operation Features
+class Watchdog;
+
+// Charge Control Features
+class Charge_Dispatch;
+class Charge_Control;
 }  // namespace features
 
 #endif /* FEATURE_H_ */

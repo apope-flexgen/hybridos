@@ -11,6 +11,8 @@ OBJECTS += Active_Power_Setpoint.o Frequency_Response.o Energy_Arbitrage.o Freq_
 OBJECTS += Active_Voltage_Regulation.o Watt_Var.o Reactive_Setpoint.o Direct_Power_Factor.o Constant_Power_Factor.o
 OBJECTS += Active_Power_Closed_Loop_Control.o Active_Power_POI_Limits.o Reactive_Power_POI_Limits.o PFR.o Watt_Watt.o LDSS.o ESS_Discharge_Prevention.o Aggregated_Asset_Limit.o Reactive_Power_Closed_Loop_Control.o
 OBJECTS += Load_Shed.o Solar_Shed.o
+OBJECTS += Watchdog.o
+OBJECTS += Charge_Dispatch.o Charge_Control.o
 OBJECTS += ESS_Manager.o Feeder_Manager.o Generator_Manager.o Solar_Manager.o Site_Controller_Utils.o Data_Endpoint.o Type_Manager.o 
 OBJECTS += version.o git_build.o git_commit.o git_tag.o Configurator.o Input_Sources.o Logger.o
 

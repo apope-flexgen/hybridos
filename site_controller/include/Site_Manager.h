@@ -46,6 +46,9 @@
 #include <Features/ESS_Discharge_Prevention.h>
 #include <Features/Aggregated_Asset_Limit.h>
 #include <Features/Reactive_Power_Closed_Loop_Control.h>
+#include <Features/Watchdog.h>
+#include <Features/Charge_Dispatch.h>
+#include <Features/Charge_Control.h>
 
 class Site_Manager {
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -381,20 +384,11 @@ public:
         &charge_dispatch,
         &charge_control,
     };
+    // Charge Dispatch - Always enabled
+    features::Charge_Dispatch charge_dispatch;
 
-    Empty_Feature charge_dispatch;
-    Fims_Object charge_dispatch_kW_command;          // actual kW output from charge control algorithm
-    Fims_Object charge_dispatch_solar_enable_flag;   // when true, use solar as a source for ESS charge
-    Fims_Object charge_dispatch_gen_enable_flag;     // when true, use gen as a source for ESS charge
-    Fims_Object charge_dispatch_feeder_enable_flag;  // when true, use the feeder as a source for ESS charge
-
-    void check_charge_control(void);
-    Empty_Feature charge_control;
-    Fims_Object ess_charge_control_kW_request;  // charge kW request from control algorithm
-    Fims_Object ess_charge_control_target_soc;  // control for target state of charge in charge control algorithm
-    Fims_Object ess_charge_control_kW_limit;    // kW limit for ESS, applied to both charge and discharge
-    Fims_Object ess_charge_control_charge_disable;
-    Fims_Object ess_charge_control_discharge_disable;
+    // Charge Control - Enabled based on active power feature charge_control mask
+    features::Charge_Control charge_control;
 
     ////////////////////////////////////////////////////////////////////////////////////////
     //                           RUN MODE 1 REACTIVE POWER FEATURES                       //
@@ -495,16 +489,11 @@ protected:
     std::vector<Feature*> site_operation_features_list = {
         &watchdog_feature,
     };
-
-    Empty_Feature watchdog_feature;
-    void watchdog();
+    //
+    // Watchdog Feature
+    //
+    features::Watchdog watchdog_feature;
     void dogbark();
-    int watchdog_old_pet;
-    timespec heartbeat_timer, watchdog_timeout;
-    Fims_Object watchdog_duration_ms;
-    Fims_Object watchdog_pet;
-    Fims_Object heartbeat_counter;
-    Fims_Object heartbeat_duration_ms;
 
     ////////////////////////////////////////////////////////////////////////
     //                              VARIABLE IDs                          //
@@ -619,17 +608,6 @@ protected:
         { &energy_arb_obj.max_charge_2, "max_charge_2" },
         { &energy_arb_obj.max_dischg_1, "max_dischg_1" },
         { &energy_arb_obj.max_dischg_2, "max_dischg_2" },
-        { &charge_dispatch.enable_flag, "_charge_dispatch_enable_flag" },
-        { &charge_dispatch_kW_command, "charge_dispatch_kW_command" },
-        { &charge_dispatch_gen_enable_flag, "charge_dispatch_gen_enable_flag" },
-        { &charge_dispatch_solar_enable_flag, "charge_dispatch_solar_enable_flag" },
-        { &charge_dispatch_feeder_enable_flag, "charge_dispatch_feeder_enable_flag" },
-        { &charge_control.enable_flag, "_ess_charge_control_enable_flag" },
-        { &ess_charge_control_kW_request, "ess_charge_control_kW_request" },
-        { &ess_charge_control_kW_limit, "ess_charge_control_kW_limit" },
-        { &ess_charge_control_target_soc, "ess_charge_control_target_soc" },
-        { &ess_charge_control_charge_disable, "ess_charge_control_charge_disable" },
-        { &ess_charge_control_discharge_disable, "ess_charge_control_discharge_disable" },
         { &manual_power_mode.enable_flag, "manual_mode_enable_flag" },
         { &manual_solar_kW_cmd, "manual_solar_kW_cmd" },
         { &manual_ess_kW_cmd, "manual_ess_kW_cmd" },
@@ -676,11 +654,6 @@ protected:
         { &runmode1_kVAR_mode_cmd, "runmode1_kVAR_mode_cmd" },
         { &runmode1_kVAR_mode_status, "runmode1_kVAR_mode_status" },
         { &start_first_gen_soc, "start_first_gen_soc" },
-        { &watchdog_feature.enable_flag, "watchdog_enable" },
-        { &watchdog_duration_ms, "watchdog_duration_ms" },
-        { &watchdog_pet, "watchdog_pet" },
-        { &heartbeat_counter, "heartbeat_counter" },
-        { &heartbeat_duration_ms, "heartbeat_duration_ms" },
     };
 };
 
