@@ -50,6 +50,10 @@ class Target_SOC;
 
 // Runmode 1 Reactive Power Features
 class Active_Voltage_Regulation;
+class Watt_Var;
+class Reactive_Setpoint;
+class Direct_Power_Factor;
+class Constant_Power_Factor;
 
 // Runmode 1 Standalone Power Features
 class Active_Power_Closed_Loop_Control;

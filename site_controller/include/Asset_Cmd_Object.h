@@ -64,8 +64,6 @@ public:
     void manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd, float manual_gen_kW_cmd, Slew_Object* ess_slew_rate, Slew_Object* solar_slew_rate, Slew_Object* gen_slew_rate);
     void ess_calibration_mode(float ess_calibration_kW_cmd, int num_ess_controllable);
     void dispatch_reactive_power();
-    void reactive_setpoint_mode(Slew_Object* reactive_setpoint_slew, float reactive_setpoint_kVAR_cmd);
-    void constant_power_factor_mode(float power_factor_setpoint, bool power_factor_direction);
 
     bool get_site_kW_load_inclusion();
 

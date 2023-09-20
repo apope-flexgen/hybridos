@@ -9,6 +9,8 @@
 #include "frequency_response_test.h"
 #include <Features/Active_Power_Setpoint.h>
 #include <Features/Active_Voltage_Regulation.h>
+#include <Features/Watt_Var.h>
+#include <Features/Reactive_Setpoint.h>
 
 class site_manager_test : public Site_Manager, public testing::Test {
 public:
@@ -730,8 +732,7 @@ TEST_F(site_manager_test, active_power_setpoint_2) {
         active_power_setpoint_mode.maximize_solar_flag.value.value_bool = array[i].prioritize_solar;
         active_power_setpoint_mode.execute(asset_cmd);
         bool failure = (asset_cmd.site_kW_demand != array[i].expected_site_demand || asset_cmd.get_site_kW_load_inclusion() != true ||  // always tracks load
-                            asset_cmd.solar_data.kW_request,
-                        array[i].expected_solar_kW_request);
+                        asset_cmd.solar_data.kW_request != array[i].expected_solar_kW_request);
         EXPECT_EQ(asset_cmd.site_kW_demand, array[i].expected_site_demand);
         EXPECT_TRUE(asset_cmd.get_site_kW_load_inclusion());
         EXPECT_EQ(asset_cmd.solar_data.kW_request, array[i].expected_solar_kW_request);
@@ -741,6 +742,36 @@ TEST_F(site_manager_test, active_power_setpoint_2) {
         // Print the test id if failure
         if (failure)
             std::cout << errorLog.str() << std::endl;
+    }
+}
+
+// Reactive power setpoint
+// Ensure that reactive setpoint is followed and is limited by total potential reactive power
+TEST_F(site_manager_test, reactive_setpoint) {
+    // struct that has variables to configure for each test case
+    struct test_struct {
+        float reactive_setpoint_kVAR_cmd;
+        float total_potential_kVAR;
+        float expected_site_kVAR_demand;
+    };
+
+    std::vector<test_struct> tests = {
+        { 0.0f, 1000.0f, 0.0f }, { 500.0f, 1000.0f, 500.0f }, { 1000.0f, 1000.0f, 1000.0f }, { 1500.0f, 1000.0f, 1000.0f }, { -500.0f, 1000.0f, -500.0f }, { -1000.0f, 1000.0f, -1000.0f }, { -1500.0f, 1000.0f, -1000.0f },
+    };
+
+    // iterate through each test case and get results
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("reactive_power_setpoint", test_id++, tests.size());
+        reactive_setpoint.kVAR_cmd_slew.set_slew_rate(std::pow(10, 9));  // extremely high to simulate instant
+        usleep(10);
+        reactive_setpoint.kVAR_cmd_slew.update_slew_target(test.reactive_setpoint_kVAR_cmd);
+        reactive_setpoint.kVAR_cmd.value.value_float = test.reactive_setpoint_kVAR_cmd;
+        asset_cmd.total_potential_kVAR = test.total_potential_kVAR;
+        reactive_setpoint.execute(asset_cmd, asset_pf_flag);
+
+        t_log.float_results.push_back({ test.expected_site_kVAR_demand, asset_cmd.site_kVAR_demand, "site kVAR demand" });
+        t_log.check_solution();
     }
 }
 
@@ -880,27 +911,23 @@ TEST_F(site_manager_test, active_voltage_mode) {
 
 // watt-var test - curve 1 (8 points)
 TEST_F(site_manager_test, watt_var_mode_curve_1) {
-    int const num_tests = 3;  // total number of test cases
     float points_array[] = { -500, 200, 0, 200, 1000, -500, 1500, 500 };
     // struct that has variables to configure for each test case
-    struct tests {
+    struct test_struct {
         float actual_kW;
         float result_site_kVAR_demand;
     };
 
-    tests array[num_tests];  // an array with an element for each test case
-    // configure variables each test case
-    array[0] = { -800, 200 };  // low power
-    array[1] = { 800, -360 };  // mid power
-    array[2] = { 1600, 700 };  // high power
+    std::vector<test_struct> tests = {
+        { -800, 200 },  // low power
+        { 800, -360 },  // mid power
+        { 1600, 700 },  // high power
+    };
 
     // iterate through each test case and get results
-    for (int i = 0; i < num_tests; i++) {
-        // Only print messages to log if a test fails
-        bool failure = false;
-        std::stringstream errorLog;
-        // Capture any prints within site controller that might be present in debug mode
-        capture_stdout();
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("watt_var_mode curve 1", test_id++, tests.size());
 
         int array_size = sizeof(points_array) / 4;
         std::vector<Value_Object> options_value(array_size);
@@ -909,55 +936,43 @@ TEST_F(site_manager_test, watt_var_mode_curve_1) {
             options_value[j].set(points_array[j]);
         }
 
-        Fims_Object fims_object;
-        fims_object.options_value = options_value;
-        fims_object.num_options = array_size;
-        set_curve_points(&fims_object, watt_var_curve);
-        errorLog << "watt_var_mode() curve 1 test " << i + 1 << " of " << num_tests << std::endl;
+        watt_var.watt_var_points.options_value = options_value;
+        watt_var.watt_var_points.num_options = array_size;
+        watt_var.init_curve();
+
         for (int j = 0; j < array_size; j += 2) {
-            // failure conditions
-            failure = watt_var_curve[j / 2].first != options_value[j].value_float || watt_var_curve[j / 2].second != options_value[j + 1].value_float;
             // test set_curve_points plots correctly
-            EXPECT_EQ(watt_var_curve[j / 2].first, options_value[j].value_float);
-            EXPECT_EQ(watt_var_curve[j / 2].second, options_value[j + 1].value_float);
+            t_log.float_results.push_back({ options_value[j].value_float, watt_var.watt_var_curve[j / 2].first, "curve point " + std::to_string(j / 2) + " watt component" });
+            t_log.float_results.push_back({ options_value[j + 1].value_float, watt_var.watt_var_curve[j / 2].second, "curve point " + std::to_string(j / 2) + " var component" });
         }
 
         // test watt_var_mode provides correct site kVAR demand output
-        watt_var_mode(array[i].actual_kW, watt_var_curve);
-        failure = failure || asset_cmd.site_kVAR_demand != array[i].result_site_kVAR_demand;
-        EXPECT_EQ(asset_cmd.site_kVAR_demand, array[i].result_site_kVAR_demand);
+        watt_var.execute(asset_cmd, test.actual_kW, asset_pf_flag);
 
-        // Release stdout so we can write again
-        release_stdout(failure);
-        // Print the test id if failure
-        if (failure)
-            std::cout << errorLog.str() << std::endl;
+        t_log.float_results.push_back({ test.result_site_kVAR_demand, asset_cmd.site_kVAR_demand, "site kVAR demand" });
+        t_log.check_solution();
     }
 }
 
 // watt-var test - curve 2 (6 points)
 TEST_F(site_manager_test, watt_var_mode_curve_2) {
-    int const num_tests = 3;  // total number of test cases
     float points_array[] = { -500, 500, 0, 200, 1000, 500 };
     // struct that has variables to configure for each test case
-    struct tests {
+    struct test_struct {
         float actual_kW;
         float result_site_kVAR_demand;
     };
 
-    tests array[num_tests];  // an array with an element for each test case
-    // configure variables each test case
-    array[0] = { -800, 680 };  // low power
-    array[1] = { 800, 440 };   // mid power
-    array[2] = { 1500, 650 };  // high power
+    std::vector<test_struct> tests = {
+        { -800, 680 },  // low power
+        { 800, 440 },   // mid power
+        { 1500, 650 },  // high power
+    };
 
     // iterate through each test case and get results
-    for (int i = 0; i < num_tests; i++) {
-        // Only print messages to log if a test fails
-        bool failure = false;
-        std::stringstream errorLog;
-        // Capture any prints within site controller that might be present in debug mode
-        capture_stdout();
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("watt_var_mode curve 2", test_id++, tests.size());
 
         int array_size = sizeof(points_array) / 4;
         std::vector<Value_Object> options_value(array_size);
@@ -966,29 +981,20 @@ TEST_F(site_manager_test, watt_var_mode_curve_2) {
             options_value[j].set(points_array[j]);
         }
 
-        Fims_Object fims_object;
-        fims_object.options_value = options_value;
-        fims_object.num_options = array_size;
-        set_curve_points(&fims_object, watt_var_curve);
-        errorLog << "watt_var_mode() curve 1 test " << i + 1 << " of " << num_tests << std::endl;
+        watt_var.watt_var_points.options_value = options_value;
+        watt_var.watt_var_points.num_options = array_size;
+        watt_var.init_curve();
         for (int j = 0; j < array_size; j += 2) {
-            // failure conditions
-            failure = watt_var_curve[j / 2].first != options_value[j].value_float || watt_var_curve[j / 2].second != options_value[j + 1].value_float;
             // test set_curve_points plots correctly
-            EXPECT_EQ(watt_var_curve[j / 2].first, options_value[j].value_float);
-            EXPECT_EQ(watt_var_curve[j / 2].second, options_value[j + 1].value_float);
+            t_log.float_results.push_back({ options_value[j].value_float, watt_var.watt_var_curve[j / 2].first, "curve point " + std::to_string(j / 2) + " watt component" });
+            t_log.float_results.push_back({ options_value[j + 1].value_float, watt_var.watt_var_curve[j / 2].second, "curve point " + std::to_string(j / 2) + " var component" });
         }
 
         // test watt_var_mode provides correct site kVAR demand output
-        watt_var_mode(array[i].actual_kW, watt_var_curve);
-        failure = failure || asset_cmd.site_kVAR_demand != array[i].result_site_kVAR_demand;
-        EXPECT_EQ(asset_cmd.site_kVAR_demand, array[i].result_site_kVAR_demand);
+        watt_var.execute(asset_cmd, test.actual_kW, asset_pf_flag);
 
-        // Release stdout so we can write again
-        release_stdout(failure);
-        // Print the test id if failure
-        if (failure)
-            std::cout << errorLog.str() << std::endl;
+        t_log.float_results.push_back({ test.result_site_kVAR_demand, asset_cmd.site_kVAR_demand, "site kVAR demand" });
+        t_log.check_solution();
     }
 }
 
@@ -1703,18 +1709,18 @@ TEST_F(site_manager_test, constant_power_factor) {
     for (auto test : tests) {
         test_logger t_log("constant_power_factor", test_id++, tests.size());
         // Set CPF values
-        constant_power_factor_absolute_mode.value.set(test.absolute_mode);
-        constant_power_factor_lagging_direction.value.set(test.direction_flag);
-        constant_power_factor_lagging_limit.value.set(test.lagging_limit);
-        constant_power_factor_leading_limit.value.set(test.leading_limit);
-        constant_power_factor_setpoint.value.set(test.pf_setpoint);
+        constant_power_factor.absolute_mode.value.set(test.absolute_mode);
+        constant_power_factor.lagging_direction.value.set(test.direction_flag);
+        constant_power_factor.lagging_limit.value.set(test.lagging_limit);
+        constant_power_factor.leading_limit.value.set(test.leading_limit);
+        constant_power_factor.power_factor_setpoint.value.set(test.pf_setpoint);
         // Setup Asset Cmd Obj inputs
         asset_cmd.site_kW_demand = test.demand_kW;
         asset_cmd.preserve_uncorrected_site_kW_demand();
         asset_cmd.ess_data.potential_kVAR = test.potential_kVAR;
         asset_cmd.calculate_total_potential_kVAR();
-        execute_constant_power_factor();
-        t_log.float_results.push_back({ test.expected_pf, constant_power_factor_setpoint.value.value_float, "PF Setpoint" });
+        constant_power_factor.execute(asset_cmd, asset_pf_flag);
+        t_log.float_results.push_back({ test.expected_pf, constant_power_factor.power_factor_setpoint.value.value_float, "PF Setpoint" });
         t_log.range_results.push_back({ test.expected_kVAR, 0.05f, asset_cmd.site_kVAR_demand, "CPF Demand" });
         t_log.check_solution();
     }

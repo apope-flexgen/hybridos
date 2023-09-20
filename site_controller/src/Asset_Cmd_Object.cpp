@@ -403,39 +403,6 @@ void Asset_Cmd_Object::dispatch_reactive_power() {
     gen_data.kVAR_cmd = percent_cmd * gen_data.potential_kVAR;
 }
 
-// reactive setpoint mode algorithm
-void Asset_Cmd_Object::reactive_setpoint_mode(Slew_Object* reactive_setpoint_slew, float reactive_setpoint_kVAR_cmd) {
-    float kVAR_request = reactive_setpoint_slew->get_slew_target(reactive_setpoint_kVAR_cmd);
-
-    site_kVAR_demand = std::min(total_potential_kVAR, fabsf(kVAR_request));
-    site_kVAR_demand *= (std::signbit(kVAR_request)) ? -1 : 1;
-}
-
-/**
- * Constant Power Factor mode algorithm.
- * Calculates site_kVAR_demand based on active power (site_kW_demand without POI corrections) and
- * power factor setpoint received
- * @param power_factor_setpoint The power factor setpoint to follow
- * @param set_lagging_direction The direction of the power factor setpoint: True is negative aka lagging, and false is positive aka leading
- */
-void Asset_Cmd_Object::constant_power_factor_mode(float power_factor_setpoint, bool set_lagging_direction) {
-    // Calculate magnitude of reactive power
-    if (power_factor_setpoint != 0.0f) {
-        // Dispatch Q based on P and pf
-        // Equation derived from power factor equation:
-        //    power factor = active power / apparent power
-        //    apparent power = sqrt(active power^2 + reactive power^2)
-        site_kVAR_demand = uncorrected_site_kW_demand * std::sqrt(1 / std::pow(power_factor_setpoint, 2) - 1);
-        // Limit by total potential for small power factor setpoints
-        site_kVAR_demand = std::min(std::abs(site_kVAR_demand), std::abs(total_potential_kVAR));
-    } else
-        // Dispatch full reactive power capability (and no active power) when pf is 0
-        site_kVAR_demand = std::abs(total_potential_kVAR);
-
-    // Apply configured sign (true is negative, false is positive)
-    site_kVAR_demand = set_lagging_direction ? -1.0f * site_kVAR_demand : site_kVAR_demand;
-}
-
 // return ess_kW_cmd limited by min and max potential KW from asset manager
 float Asset_Cmd_Object::get_limited_ess_kW_cmd() {
     return range_check(ess_data.kW_cmd, ess_data.max_potential_kW, ess_data.min_potential_kW);

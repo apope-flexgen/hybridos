@@ -57,7 +57,6 @@ Site_Manager::Site_Manager(Version* release_version) {
     prev_ess_kVAR_cmd = 0.0;
     prev_gen_kVAR_cmd = 0.0;
     prev_solar_kVAR_cmd = 0.0;
-    prev_asset_pf_cmd = 0.0;
     asset_pf_flag = false;
     prev_asset_pf_flag = true;
     current_runmode1_kW_feature = -1;
@@ -148,16 +147,7 @@ void Site_Manager::configure_feature_objects(void) {
     //
     // Run Mode 1 Reactive Power Features
     //
-    // Watt-Var Mode
-    watt_var.feature_vars = { &watt_var_points };
-    // Reactive Setpoint Mode
-    reactive_setpoint.feature_vars = { &reactive_setpoint_kVAR_cmd, &reactive_setpoint_kVAR_slew_rate };
-    // Power Factor Mode
-    power_factor.feature_vars = { &power_factor_cmd };
-    // Constant Power Factor Mode
-    constant_power_factor.feature_vars = {
-        &constant_power_factor_setpoint, &constant_power_factor_lagging_limit, &constant_power_factor_leading_limit, &constant_power_factor_absolute_mode, &constant_power_factor_lagging_direction,
-    };
+    //
     // Disable all features as part of initial configuration in case any are accidentally enabled
     for (auto feature : runmode1_kVAR_features_list)
         feature->enable_flag.value.set(false);
@@ -942,6 +932,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                     }
                     valid_set = true;
                 } else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0) {
+                    runmode1_kVAR_mode_cmd.set_fims_masked_int(msg->pfrags[2], msg_value.valueint, available_runmode1_kVAR_features_mask);
                     for (auto feature : runmode1_kVAR_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
@@ -1013,15 +1004,6 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         // Charge Control
                         ess_charge_control_kW_limit.set_fims_float(msg->pfrags[2], fabsf(body_float));
 
-                        valid_set = true;
-                    } else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0) {
-                        runmode1_kVAR_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode1_kVAR_features_mask);
-                        reactive_setpoint_kVAR_cmd.set_fims_float(msg->pfrags[2], body_float);
-                        reactive_setpoint_kVAR_slew_rate.set_fims_int(msg->pfrags[2], body_int);
-                        power_factor_cmd.set_fims_float(msg->pfrags[2], zero_check(body_float > 1 ? 1 : body_float));
-                        constant_power_factor_setpoint.set_fims_float(msg->pfrags[2], body_float);
-                        constant_power_factor_lagging_limit.set_fims_float(msg->pfrags[2], body_float);
-                        constant_power_factor_leading_limit.set_fims_float(msg->pfrags[2], body_float);
                         valid_set = true;
                     } else if (strncmp(msg->pfrags[1], "standalone_power", strlen("standalone_power")) == 0) {
                         // poi limits
@@ -1107,9 +1089,6 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         charge_dispatch_gen_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         charge_dispatch_feeder_enable_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         valid_set = true;
-                    } else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0) {
-                        constant_power_factor_absolute_mode.set_fims_bool(msg->pfrags[2], body_bool);
-                        constant_power_factor_lagging_direction.set_fims_bool(msg->pfrags[2], body_bool);
                     } else if (strncmp(msg->pfrags[1], "standalone_power", strlen("standalone_power")) == 0) {
                         // Feature enable flags
                         for (auto feature : standalone_power_features_list)
@@ -1357,7 +1336,7 @@ void Site_Manager::get_values() {
     potential_gen_kVAR.value.set(pAssets->get_gen_total_potential_reactive_power());
     potential_solar_kVAR.value.set(pAssets->get_solar_total_potential_reactive_power());
 
-    reactive_setpoint_kVAR_cmd_slew.set_slew_rate(reactive_setpoint_kVAR_slew_rate.value.value_int);
+    reactive_setpoint.kVAR_cmd_slew.set_slew_rate(reactive_setpoint.kVAR_slew_rate.value.value_int);
 
     // Update LDSS values
     set_ldss_variables();
@@ -1525,10 +1504,10 @@ void Site_Manager::set_values() {
         pAssets->set_solar_target_reactive_power(solar_kVAR_cmd.value.value_float);
         prev_solar_kVAR_cmd = solar_kVAR_cmd.value.value_float;
     }
-    if (prev_asset_pf_cmd != power_factor_cmd.value.value_float) {
-        pAssets->set_ess_target_power_factor(power_factor_cmd.value.value_float);
-        pAssets->set_solar_target_power_factor(power_factor_cmd.value.value_float);
-        prev_asset_pf_cmd = power_factor_cmd.value.value_float;
+    if (power_factor.prev_asset_pf_cmd != power_factor.power_factor_cmd.value.value_float) {
+        pAssets->set_ess_target_power_factor(power_factor.power_factor_cmd.value.value_float);
+        pAssets->set_solar_target_power_factor(power_factor.power_factor_cmd.value.value_float);
+        power_factor.prev_asset_pf_cmd = power_factor.power_factor_cmd.value.value_float;
     }
     if (prev_asset_pf_flag != asset_pf_flag) {
         prev_asset_pf_flag = asset_pf_flag;
@@ -1631,7 +1610,7 @@ void Site_Manager::remove_reactive_poi_corrections_from_slew_targets() {
     if (reactive_power_closed_loop.enable_flag.value.value_bool)
         slew_target -= reactive_power_closed_loop_total_correction.value.value_float;
     // Reset feature slews
-    reactive_setpoint_kVAR_cmd_slew.update_slew_target(slew_target);
+    reactive_setpoint.kVAR_cmd_slew.update_slew_target(slew_target);
 }
 
 /**
@@ -2620,10 +2599,10 @@ void Site_Manager::init_state(void) {
     gen_kVAR_cmd_slew.reset_slew_target();
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
-    reactive_setpoint_kVAR_cmd_slew.reset_slew_target();
+    reactive_setpoint.kVAR_cmd_slew.reset_slew_target();
 
     // initialize watt_var points
-    set_curve_points(&watt_var_points, watt_var_curve);
+    watt_var.init_curve();
     // initialize watt_watt points
     set_curve_points(&watt_watt_points, watt_watt_curve);
 
@@ -2919,7 +2898,7 @@ void Site_Manager::shutdown_state(void) {
     gen_kVAR_cmd_slew.reset_slew_target();
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
-    reactive_setpoint_kVAR_cmd_slew.reset_slew_target();
+    reactive_setpoint.kVAR_cmd_slew.reset_slew_target();
 
     // Reset load shed value to max
     load_shed_calculator.offset = load_shed_calculator.max_offset;
@@ -3095,31 +3074,20 @@ void Site_Manager::process_runmode1_kVAR_feature() {
     // WATT-VAR MODE sets kVAr command based on where actual active power sits on watt_var_points curve
     else if (watt_var.enable_flag.value.value_bool) {
         // watt-var function
-        watt_var_mode(ess_kW_cmd.value.value_float + solar_kW_cmd.value.value_float + gen_kW_cmd.value.value_float, watt_var_curve);
-
-        // this mode does not use power factor control
-        asset_pf_flag = false;
+        watt_var.execute(asset_cmd, ess_kW_cmd.value.value_float + solar_kW_cmd.value.value_float + gen_kW_cmd.value.value_float, asset_pf_flag);
     }
     // REACTIVE POWER SETPOINT MODE takes a single reactive power setpoint and passes it on for asset distribution
     else if (reactive_setpoint.enable_flag.value.value_bool) {
-        asset_cmd.reactive_setpoint_mode(&reactive_setpoint_kVAR_cmd_slew, reactive_setpoint_kVAR_cmd.value.value_float);
-
-        // this mode does not use power factor control
-        asset_pf_flag = false;
+        reactive_setpoint.execute(asset_cmd, asset_pf_flag);
     }
 
     // POWER FACTOR MODE = tbd
     else if (power_factor.enable_flag.value.value_bool) {
-        asset_cmd.site_kVAR_demand = 0;
-
-        // this mode does uses power factor control
-        asset_pf_flag = true;
+        power_factor.execute(asset_cmd, asset_pf_flag);
     }
     // Constant Power Factor Mode
     else if (constant_power_factor.enable_flag.value.value_bool) {
-        execute_constant_power_factor();
-        // this mode does not use power factor control (it will if it is ever implemented)
-        asset_pf_flag = false;
+        constant_power_factor.execute(asset_cmd, asset_pf_flag);
     } else  // TODO:use another feature to set
     {
         asset_cmd.site_kVAR_demand = 0;
@@ -3130,34 +3098,6 @@ void Site_Manager::process_runmode1_kVAR_feature() {
 
     // set UI/FIMS var equal to internal calculation for site demand
     site_kVAR_demand.value.set(asset_cmd.site_kVAR_demand);
-}
-
-// Helper function for executing constant power factor mode
-void Site_Manager::execute_constant_power_factor() {
-    // Ensure limits are bounded
-    constant_power_factor_lagging_limit.value.set(range_check(-1.0f * std::abs(constant_power_factor_lagging_limit.value.value_float), 0.0f, -1.0f));
-    constant_power_factor_leading_limit.value.set(range_check(std::abs(constant_power_factor_leading_limit.value.value_float), 1.0f, 0.0f));
-    // Establish command direction
-    bool cpf_direction;
-    // If direction flag is enabled, use it to determine direction
-    if (constant_power_factor_absolute_mode.value.value_bool)
-        cpf_direction = constant_power_factor_lagging_direction.value.value_bool;
-    else
-        cpf_direction = std::signbit(constant_power_factor_setpoint.value.value_float);
-
-    // Apply the appropriate limit based on direction (negative is lagging)
-    if (cpf_direction) {
-        // Explicitly set direction of the setpoint
-        constant_power_factor_setpoint.value.set(-1.0f * std::abs(constant_power_factor_setpoint.value.value_float));
-        // Bound the setpoint using lagging limit, -1.0 < pf < lagging limit
-        constant_power_factor_setpoint.value.set(range_check(constant_power_factor_setpoint.value.value_float, constant_power_factor_lagging_limit.value.value_float, -1.0f));
-    } else {
-        // Explicitly set direction of the setpoint
-        constant_power_factor_setpoint.value.set(std::abs(constant_power_factor_setpoint.value.value_float));
-        // Bound the setpoint using leading limit < pf < 1.0
-        constant_power_factor_setpoint.value.set(range_check(constant_power_factor_setpoint.value.value_float, 1.0f, constant_power_factor_leading_limit.value.value_float));
-    }
-    asset_cmd.constant_power_factor_mode(constant_power_factor_setpoint.value.value_float, cpf_direction);
 }
 
 /**
@@ -3262,15 +3202,6 @@ void Site_Manager::set_asset_power_commands() {
     ess_kVAR_cmd.value.set(ess_kVAR_cmd_slew.get_slew_target(asset_cmd.ess_data.kVAR_cmd));
     gen_kVAR_cmd.value.set(gen_kVAR_cmd_slew.get_slew_target(asset_cmd.gen_data.kVAR_cmd));
     solar_kVAR_cmd.value.set(solar_kVAR_cmd_slew.get_slew_target(asset_cmd.solar_data.kVAR_cmd));
-}
-
-// W-VAr mode function
-void Site_Manager::watt_var_mode(float active_power, std::vector<std::pair<float, float>>& curve) {
-    float reference_site_demand = asset_cmd.site_kVAR_demand;
-    float new_site_demand = get_curve_cmd(active_power, curve);
-    watt_var_correction = new_site_demand - reference_site_demand;
-
-    asset_cmd.site_kVAR_demand = new_site_demand;
 }
 
 void Site_Manager::primary_frequency_response(float kW_cmd) {

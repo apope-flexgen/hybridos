@@ -32,6 +32,10 @@
 #include <Features/Active_Voltage_Regulation.h>
 #include <Features/Active_Power_Closed_Loop_Control.h>
 #include <Features/Target_SOC.h>
+#include <Features/Watt_Var.h>
+#include <Features/Reactive_Setpoint.h>
+#include <Features/Direct_Power_Factor.h>
+#include <Features/Constant_Power_Factor.h>
 
 class Site_Manager {
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -290,26 +294,18 @@ protected:
     float total_asset_kW_discharge_limit;       // Maximum total discharge production allowed by assets;
     Fims_Object total_site_kW_charge_limit;     // Minimum total charge production allowed by the site based on available power and feature limitations
     Fims_Object total_site_kW_discharge_limit;  // Maximum total discharge production allowed by the site based on available power and feature limitations
-    //
-    // Energy Arbitrage
-    //
+
 public:
     Energy_Arbitrage energy_arb_obj;
 
 protected:
     Empty_Feature energy_arbitrage_feature;
     void energy_arbitrage_helper();
-    //
-    // Target SOC Mode
-    //
+
     features::Target_SOC target_soc;
-    //
-    // Active Power Setpoint Mode
-    //
+
     features::Active_Power_Setpoint active_power_setpoint_mode;
-    //
-    // Manual Power Mode
-    //
+
     Empty_Feature manual_power_mode;
 
 public:
@@ -324,17 +320,13 @@ protected:
     Fims_Object manual_solar_kW_slew_rate;
     Fims_Object manual_ess_kW_slew_rate;
     Fims_Object manual_gen_kW_slew_rate;
-    //
-    // Frequency Response Mode
-    //
+
 protected:
     Frequency_Response frequency_response;
     Empty_Feature frequency_response_feature;
     void execute_frequency_response_feature();
     Fims_Object frequency_response_enabled;  // boolean flag indicating if the Frequency Response active power mode is currently enabled
-    //
-    // ESS Calibration Mode
-    //
+
 public:
     Empty_Feature ess_calibration;
     void get_ess_calibration_variables();
@@ -366,9 +358,7 @@ public:
     std::vector<Feature*> runmode2_kW_features_list = {
         &generator_charge,
     };
-    //
-    // Generator Charge
-    //
+
     Empty_Feature generator_charge;
     void run_generator_charge();
     Fims_Object generator_charge_additional_buffer;  // Additional buffer that reduces generator output
@@ -381,17 +371,13 @@ public:
         &charge_dispatch,
         &charge_control,
     };
-    //
-    // Charge Dispatch - Always enabled
-    //
+
     Empty_Feature charge_dispatch;
     Fims_Object charge_dispatch_kW_command;          // actual kW output from charge control algorithm
     Fims_Object charge_dispatch_solar_enable_flag;   // when true, use solar as a source for ESS charge
     Fims_Object charge_dispatch_gen_enable_flag;     // when true, use gen as a source for ESS charge
     Fims_Object charge_dispatch_feeder_enable_flag;  // when true, use the feeder as a source for ESS charge
-    //
-    // Charge Control - Enabled based on active power feature charge_control mask
-    //
+
     void check_charge_control(void);
     Empty_Feature charge_control;
     Fims_Object ess_charge_control_kW_request;  // charge kW request from control algorithm
@@ -421,45 +407,17 @@ public:
         &active_voltage_regulation, &watt_var, &reactive_setpoint, &power_factor, &constant_power_factor,
     };
     float prev_reactive_power_feature_cmd;  // Previous kVAR demand set by the reactive power feature, used to track how much the demand is changing
-    //
-    // Watt-VAR Mode
-    //
-    Empty_Feature watt_var;
 
-public:
-    void watt_var_mode(float active_power, std::vector<std::pair<float, float>>& watt_var_curve);
-    std::vector<std::pair<float, float>> watt_var_curve;
+    features::Watt_Var watt_var;
 
 protected:
-    Fims_Object watt_var_points;
-    float watt_var_correction;  // Internal variable tracking the amount of correction applied by watt_var
-    //
-    // Reactive Power Setpoint Mode
-    //
-    Empty_Feature reactive_setpoint;
-    Slew_Object reactive_setpoint_kVAR_cmd_slew;
-    Fims_Object reactive_setpoint_kVAR_cmd;
-    Fims_Object reactive_setpoint_kVAR_slew_rate;
-    //
-    // Power Factor Mode
-    //
-    Empty_Feature power_factor;
-    float prev_asset_pf_cmd;
+    features::Reactive_Setpoint reactive_setpoint;
+
+    features::Direct_Power_Factor power_factor;
     bool asset_pf_flag, prev_asset_pf_flag;  // track the change to/from any mode that uses power factor cmds to enable assets to follow them
-    Fims_Object power_factor_cmd;            // pf-setpoint
-    //
-    // Constant Power Factor Mode
-    //
-    Empty_Feature constant_power_factor;
-    void execute_constant_power_factor();                 // Feature function
-    Fims_Object constant_power_factor_setpoint;           // Power Factor setpoint. Sign is used if bidirectional mode, only magnitude in absolute mode
-    Fims_Object constant_power_factor_lagging_limit;      // -1.0 < pf < lagging_limit for negative commands
-    Fims_Object constant_power_factor_leading_limit;      //  1.0 > pf > leading_limit for positive commands
-    Fims_Object constant_power_factor_absolute_mode;      // Absolute value mode, with sign determined by the direction flag:
-    Fims_Object constant_power_factor_lagging_direction;  // Direction flag. True is negative aka lagging, and false is positive aka leading
-    //
-    // Active Voltage Mode
-    //
+
+    features::Constant_Power_Factor constant_power_factor;
+
     features::Active_Voltage_Regulation active_voltage_regulation;
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -491,10 +449,7 @@ protected:
     std::vector<Feature*> standalone_power_features_list = {
         &active_power_poi_limits, &pfr, &watt_watt, &ldss, &load_shed, &solar_shed, &ess_discharge_prevention, &agg_asset_limit, &active_power_closed_loop, &reactive_power_closed_loop, &reactive_power_poi_limits,
     };
-    //
-    // POI Limits
-    // When on, site demand and ess charge/discharge requests will be limited so POI does not exceed its rated limit
-    //
+
     Empty_Feature active_power_poi_limits;
     void apply_active_power_poi_limits();
     Fims_Object active_power_poi_limits_max_kW;           // max POI kW value allowed when POI Limits enabled
@@ -506,18 +461,11 @@ protected:
     Fims_Object active_power_soc_poi_limits_high_min_kW;  // min POI limit when soc <= soc_poi_target_soc
     Fims_Object active_power_soc_poi_limits_high_max_kW;  // max POI limit when soc <= soc_poi_target_soc
 
-    //
-    // Reactive Power POI Limits
-    // When on, site kVAR demand will be limited so POI does not exceed its rated limit
-    //
     Empty_Feature reactive_power_poi_limits;
     void apply_reactive_power_poi_limits();
     Fims_Object reactive_power_poi_limits_min_kVAR;  // min POI kVAR value allowed when POI Limits enabled
     Fims_Object reactive_power_poi_limits_max_kVAR;  // max POI kVAR value allowed when POI Limits enabled
 
-    //
-    // PFR
-    //
     Empty_Feature pfr;
     void primary_frequency_response(float kW_cmd);
     Fims_Object pfr_deadband;         // deadband in Hz for pfr algorithm
@@ -528,26 +476,20 @@ protected:
     Fims_Object pfr_limits_max_kW;    // max PFR kW scaler used during a frequency event
     Fims_Object pfr_site_nominal_hz;  // frequency value that site should be at in ideal conditions
     Fims_Object pfr_offset_hz;        // test input that gets added to site frequency to simulate frequency deviation events
-    //
-    // Watt-Watt
-    //
+
     Empty_Feature watt_watt;
     void watt_watt_poi_adjustment(void);
     std::vector<std::pair<float, float>> watt_watt_curve;
     Fims_Object watt_watt_points;
     float watt_watt_correction;  // Internal variable tracking the amount of correction applied by watt_watt
-    //
-    // LDSS
-    //
+
     Empty_Feature ldss;
     void set_ldss_variables();
     Fims_Object ldss_priority_setting;  // static or dynamic priorities
     Fims_Object ldss_max_load_threshold_percent, ldss_min_load_threshold_percent;
     Fims_Object ldss_warmup_time, ldss_cooldown_time, ldss_start_gen_time, ldss_stop_gen_time;  // LDSS timers
     Fims_Object ldss_enable_soc_threshold, ldss_max_soc_threshold_percent, ldss_min_soc_threshold_percent;
-    //
-    // Load Shed
-    //
+
     Empty_Feature load_shed;
     void calculate_load_shed();
     Variable_Regulator load_shed_calculator;       // Used to hold and calculate the load shed value
@@ -562,9 +504,7 @@ protected:
     Fims_Object load_shed_increase_display_timer;  // load_shed_increase_timer_ms converted to a MIN:SEC display string
     Fims_Object load_shed_decrease_display_timer;  // load_shed_decrease_timer_ms converted to a MIN:SEC display string
     Fims_Object load_shed_spare_ess_kw;            // ess dischargeable kw - ess current discharging kw, AKA how much more discharge power the ess can handle
-    //
-    // Solar Shed
-    //
+
     Empty_Feature solar_shed;
     void calculate_solar_shed();
     Variable_Regulator solar_shed_calculator;       // Used to hold and calculate the solar shed value
@@ -579,25 +519,17 @@ protected:
     Fims_Object solar_shed_increase_display_timer;  // solar_shed_increase_timer_ms converted to a MIN:SEC display string
     Fims_Object solar_shed_decrease_display_timer;  // solar_shed_decrease_timer_ms converted to a MIN:SEC display string
     Fims_Object solar_shed_spare_ess_kw;            // ess chargeable kw - ess current charging kw, AKA how much more charge power the ess can handle
-    //
-    // ESS Discharge Prevention
-    //
+
     Empty_Feature ess_discharge_prevention;
     void prevent_ess_discharge();
     Fims_Object edp_soc;  // target soc at or below which the ess will not be able to discharge
-    //
-    // Aggregated Asset Limit (solar-dependent ess discharge limit)
-    //
+
     Empty_Feature agg_asset_limit;
     void apply_aggregated_asset_limit(float uncontrolled_ess_kw, float uncontrolled_solar_kw);
     Fims_Object agg_asset_limit_kw;
-    //
-    // Active Power Closed Loop Control
-    //
+
     features::Active_Power_Closed_Loop_Control active_power_closed_loop;
-    //
-    // Reactive Power Closed Loop Control
-    //
+
     Empty_Feature reactive_power_closed_loop;
     void calculate_reactive_power_closed_loop_offset();
     Variable_Regulator reactive_power_closed_loop_regulator;          // Used to hold and calculate the offset value
@@ -625,9 +557,7 @@ protected:
     std::vector<Feature*> site_operation_features_list = {
         &watchdog_feature,
     };
-    //
-    // Watchdog Feature
-    //
+
     Empty_Feature watchdog_feature;
     void watchdog();
     void dogbark();
@@ -807,19 +737,6 @@ protected:
         { &available_features_runmode1_kVAR_mode, "available_features_runmode1_kVAR_mode" },
         { &runmode1_kVAR_mode_cmd, "runmode1_kVAR_mode_cmd" },
         { &runmode1_kVAR_mode_status, "runmode1_kVAR_mode_status" },
-        { &reactive_setpoint.enable_flag, "reactive_setpoint_mode_enable_flag" },
-        { &reactive_setpoint_kVAR_cmd, "reactive_setpoint_kVAR_cmd" },
-        { &reactive_setpoint_kVAR_slew_rate, "reactive_setpoint_kVAR_slew_rate" },
-        { &power_factor.enable_flag, "power_factor_mode_enable_flag" },
-        { &power_factor_cmd, "power_factor_cmd" },
-        { &constant_power_factor.enable_flag, "constant_power_factor_mode_enable_flag" },
-        { &constant_power_factor_setpoint, "constant_power_factor_setpoint" },
-        { &constant_power_factor_lagging_limit, "constant_power_factor_lagging_limit" },
-        { &constant_power_factor_leading_limit, "constant_power_factor_leading_limit" },
-        { &constant_power_factor_absolute_mode, "constant_power_factor_absolute_mode" },
-        { &constant_power_factor_lagging_direction, "constant_power_factor_lagging_direction" },
-        { &watt_var.enable_flag, "watt_var_mode_enable_flag" },
-        { &watt_var_points, "watt_var_points" },
         { &start_first_gen_soc, "start_first_gen_soc" },
         { &pfr.enable_flag, "pfr_enable_flag" },
         { &pfr_deadband, "pfr_deadband" },
