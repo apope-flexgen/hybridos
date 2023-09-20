@@ -129,7 +129,7 @@ void Asset_Cmd_Object::calculate_site_kW_load() {
  * After the Active Power Feature has set its optional asset requests and demand, aggregate the total discharge requested
  * and determine if any additional discharge is needed for load compensation
  */
-float Asset_Cmd_Object::calculate_additional_load_compensation() {
+float asset_cmd_utils::calculate_additional_load_compensation(load_compensation load_method, float site_kW_load, float site_kW_demand, float ess_kW_request, float gen_kW_request, float solar_kW_request) {
     // Load is outside of site control, so additional compensation is unneeded
     if (load_method == NO_COMPENSATION)
         return 0.0f;
@@ -140,7 +140,7 @@ float Asset_Cmd_Object::calculate_additional_load_compensation() {
 
     // Load is a minimum. Reduce the amount of additional discharge needed by the amount already being produced
     // Take the aggregate of the demand (generic discharge) and any additional asset discharge requests as the total discharge
-    float feature_discharge_request = zero_check(site_kW_demand) + zero_check(ess_data.kW_request) + zero_check(gen_data.kW_request) + zero_check(solar_data.kW_request);
+    float feature_discharge_request = zero_check(site_kW_demand) + zero_check(ess_kW_request) + zero_check(gen_kW_request) + zero_check(solar_kW_request);
     // Return the amount of additional discharge needed to handle load
     return zero_check(site_kW_load - feature_discharge_request);
 }
@@ -154,36 +154,38 @@ float Asset_Cmd_Object::calculate_additional_load_compensation() {
 void Asset_Cmd_Object::track_unslewed_load(load_compensation method_of_compensation) {
     load_method = load_compensation(method_of_compensation);
     // Calculate if any additional load compensation is needed from the site
-    additional_load_compensation = calculate_additional_load_compensation();
+    additional_load_compensation = asset_cmd_utils::calculate_additional_load_compensation(load_method, site_kW_load, site_kW_demand, ess_data.kW_request, gen_data.kW_request, solar_data.kW_request);
     site_kW_demand += additional_load_compensation;
 }
 
 /**
  * Extract load from demand based on the method of compensation provided. This method should only be used for active power features
  * that utilize their own slew rates. This is because these features already track load manually as part of their slewed input,
- * producing a variable output that is not necessarily equal to the measured load. Export Target is the only feature meeting this
+ * producing a variable output that is not necessarily equal to the measured load. Active Power Setpoint is the only feature meeting this
  * criteria currently.
- * @param method_of_compensation The method of load compensation
+ * @param load_method The method of load compensation
+ * @param site_kW_demand The site active power demand
  * @param unslewed_demand The aggregate (unslewed) demand entered into the feature slew
- * @param additional_load Additional (unslewed) load that was required of the feature
+ * @param additional_load_compensation Additional (unslewed) load that was required of the feature
  * @param feature_slew The slew object used by the feature
+ * @return The new additional load compensation value after slewed load is taken into account
  */
-void Asset_Cmd_Object::track_slewed_load(load_compensation method_of_compensation, float unslewed_demand, float additional_load, Slew_Object& feature_slew) {
-    load_method = load_compensation(method_of_compensation);
+float asset_cmd_utils::track_slewed_load(load_compensation load_method, float site_kW_demand, float unslewed_demand, float additional_load_compensation, const Slew_Object& feature_slew) {
     // No additional compensation was added
     if (load_method == NO_COMPENSATION)
-        return;
+        return additional_load_compensation;
 
     // Handle the case where compensation and charge cancelled out
     if (site_kW_demand == 0.0f) {
         // In this case we can simply assume that charge = slew min and demand = slew max
-        additional_load_compensation = std::min(additional_load, feature_slew.get_max_target());
+        additional_load_compensation = std::min(additional_load_compensation, feature_slew.get_max_target());
     } else {
         // Calculate how much the slew divided the demand
         float slew_divisor = std::abs(unslewed_demand / site_kW_demand);
         // Divide load by this value to get the slewed load compensation
-        additional_load_compensation = additional_load / slew_divisor;
+        additional_load_compensation = additional_load_compensation / slew_divisor;
     }
+    return additional_load_compensation;
 }
 
 /**
@@ -345,23 +347,6 @@ float Asset_Cmd_Object::dispatch_site_kW_discharge_cmd(int asset_priority, float
     return received_cmd - cmd;
 }
 
-// this function will reduce ess command to shift load off of POI when an asset cannot ramp down fast enough
-float Asset_Cmd_Object::ess_overload_support(float grid_target_kW_cmd) {
-    float temp_ess_kW = ess_data.kW_cmd;  // used to calculate delta change
-    // calculate the amount of power that is overloaded
-    // TODO: change to solve load formula for feeder instead, then determine if beyond poi limits?
-    float overload_kW = gen_data.min_potential_kW + solar_data.min_potential_kW + ess_data.kW_cmd - zero_check(site_kW_load - grid_target_kW_cmd);
-
-    // calculate unused ess charge kW
-    float unused_ess_kW = ess_data.kW_cmd - ess_data.min_potential_kW;
-    // if overloaded, charge ess as much as possible to support
-    if (overload_kW > 0.0f && unused_ess_kW > 0.0f)
-        ess_data.kW_cmd -= std::min(overload_kW, unused_ess_kW);
-
-    // FPS_DEBUG_LOG("OVERLOAD: %f, UNUSED: %f, DELTA: %f", overload_kW, unused_ess_kW, ess_data.kW_cmd - temp_ess_kW);
-    return ess_data.kW_cmd - temp_ess_kW;
-}
-
 /**
  * TARGET SOC MODE passes through the charge control request (ess_data.kW_request) received from asset manager
  * If solar is present, a portion is set aside to satisfy the charge control request
@@ -375,40 +360,6 @@ void Asset_Cmd_Object::target_soc_mode(bool load_requirement) {
     track_unslewed_load(load_compensation(load_requirement * LOAD_MINIMUM));
 }
 
-/**
- * ACTIVE POWER SETPOINT MODE takes a single power command (the total site production, ignoring load) that is distributed to assets.
- * Positive commands are distributed to to all assets as needed, with priority based on the configured asset priority.
- * Negative commands are distributed to ESS as available.
- * If load is not taken into account, the value at the POI will fluctuate as load changes.
- * Load must be handled manually by this feature due to its feature level slew
- * kW_cmd can be sent using `absolute_mode` and `direction` to determine sign. false by default.
- * @param kW_cmd Single power command to be distributed to assets
- * @param slew_rate Slew rate for the feature
- * @param load_method Whether site production should handle load compensation minimum, offset, or not at all.
- * @param absolute_mode_flag Flag determining whether kW_cmd should be interpreted as absolute value.
- * @param direction_flag Flag used if absolute mode == true; kW_cmd is negative if true, positive if false.
- * @param maximize_solar Flag used to maximize solar kW_cmd always.
- */
-void Asset_Cmd_Object::active_power_setpoint(float kW_cmd, Slew_Object* slew_rate, load_compensation load_strategy, bool absolute_mode_flag, bool direction_flag, bool maximize_solar) {
-    if (absolute_mode_flag) {
-        kW_cmd = fabsf(kW_cmd) * (direction_flag ? -1 : 1);
-    }
-
-    // Uncurtailed solar
-    if (maximize_solar) {
-        solar_data.kW_request = solar_data.max_potential_kW;
-    }
-
-    // Setup desired command at the POI
-    poi_cmd = kW_cmd;
-
-    load_method = load_strategy;
-    // Load must be included in the reference command and routed through the slewed target
-    additional_load_compensation = calculate_additional_load_compensation();
-    kW_cmd += additional_load_compensation;
-    site_kW_demand = slew_rate->get_slew_target(kW_cmd);
-    track_slewed_load(load_method, kW_cmd, additional_load_compensation, *slew_rate);
-}
 /**
  * MANUAL MODE takes a solar kW cmd, ESS kW cmd, generator kW cmd, solar slew rate,
  * ESS slew rate, and generator slew rate and routes those commands through dispatch and charge control

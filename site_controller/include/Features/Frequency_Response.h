@@ -13,7 +13,7 @@
 /* External Dependencies */
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
-#include <Freq_Resp_Component.h>
+#include <Features/Freq_Resp_Component.h>
 
 class Frequency_Response {
 public:

@@ -35,7 +35,7 @@ void Slew_Object::update_slew_target(float target_value) {
 }
 
 // this function will take a target value and return the value after checking against the slew
-float Slew_Object::get_slew_target(float target_value) {
+float Slew_Object::get_slew_target(float target_value) const {
     if (target_value > current_value) {
         return (target_value > slew_max_value) ? slew_max_value : target_value;
     }
@@ -62,14 +62,14 @@ void Slew_Object::set_slew_rate(int rate) {
     slew_rate = rate;
 }
 
-int Slew_Object::get_slew_rate(void) {
+int Slew_Object::get_slew_rate(void) const {
     return slew_rate;
 }
 
-float Slew_Object::get_max_target(void) {
+float Slew_Object::get_max_target(void) const {
     return slew_max_value;
 }
 
-float Slew_Object::get_min_target(void) {
+float Slew_Object::get_min_target(void) const {
     return slew_min_value;
 }

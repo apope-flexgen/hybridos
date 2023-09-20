@@ -11,7 +11,7 @@
 /* System Internal Dependencies */
 #include <fims/fps_utils.h>
 /* Local Internal Dependencies */
-#include <Freq_Resp_Component.h>
+#include <Features/Freq_Resp_Component.h>
 #include <Site_Controller_Utils.h>
 
 /**

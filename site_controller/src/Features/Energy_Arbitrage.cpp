@@ -12,7 +12,7 @@
 /* Local Internal Dependencies */
 #include <Site_Manager.h>
 #include <Asset_Cmd_Object.h>
-#include <Energy_Arbitrage.h>
+#include <Features/Energy_Arbitrage.h>
 #include <Site_Controller_Utils.h>
 
 /**

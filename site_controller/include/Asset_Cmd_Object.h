@@ -56,18 +56,14 @@ public:
 
     float calculate_net_poi_export();
     void calculate_site_kW_load();
-    float calculate_additional_load_compensation();
     void track_unslewed_load(load_compensation method_of_compensation);
-    void track_slewed_load(load_compensation method_of_compensation, float unslewed_demand, float additional_load, Slew_Object& feature_slew);
     void calculate_feature_kW_demand(int asset_priority);
     void calculate_total_potential_kVAR();
     void calculate_site_kW_production_limits();
     bool determine_ess_load_requirement(int asset_priority);
     float dispatch_site_kW_discharge_cmd(int asset_priority, float cmd, discharge_type command_type);
     float dispatch_site_kW_charge_cmd(int asset_priority, bool solar_source_flag, bool gen_source_flag, bool feeder_source_flag);
-    float ess_overload_support(float grid_target_kW_cmd);
     void target_soc_mode(bool load_requirement);
-    void active_power_setpoint(float kw_cmd, Slew_Object* slew_rate, load_compensation load_strategy, bool absolute_mode_flag, bool direction_flag, bool maximize_solar);
     void manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd, float manual_gen_kW_cmd, Slew_Object* ess_slew_rate, Slew_Object* solar_slew_rate, Slew_Object* gen_slew_rate);
     void ess_calibration_mode(float ess_calibration_kW_cmd, int num_ess_controllable);
     void dispatch_reactive_power();
@@ -118,5 +114,10 @@ private:
     void remove_asset_types(std::vector<Asset_Cmd_Data*>& data_list, std::vector<Asset_Cmd_Data*> asset_types);
     float aggregate_unused_kW(std::vector<Asset_Cmd_Data*> const& data_list);
 };
+
+namespace asset_cmd_utils {
+float track_slewed_load(load_compensation load_method, float site_kW_demand, float unslewed_demand, float additional_load_compensation, const Slew_Object& feature_slew);
+float calculate_additional_load_compensation(load_compensation load_method, float site_kW_load, float site_kW_demand, float ess_kW_request, float gen_kW_request, float solar_kW_request);
+}  // namespace asset_cmd_utils
 
 #endif /* INCLUDE_ASSET_CMD_OBJECT_H_ */

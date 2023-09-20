@@ -19,24 +19,16 @@
 #include <Input_Sources.h>
 #include <Slew_Object.h>
 #include <Variable_Regulator.h>
-#include <Frequency_Response.h>
+#include <Features/Frequency_Response.h>
 #include <Asset_Cmd_Object.h>
 #include <Fims_Object.h>
-#include <Energy_Arbitrage.h>
+#include <Features/Energy_Arbitrage.h>
 #include <Sequence.h>
 #include <macros.h>
 #include <version.h>
-
-struct Feature {
-    Feature();
-    std::vector<Fims_Object*> feature_vars;  // all variables associated with this feature
-    std::vector<Fims_Object*> summary_vars;  // only variables that are desired to be displayed in summary
-    Fims_Object* enable_flag;                // true if this feature is currently being executed in algorithms
-    bool available;                          // true if this feature is available to the customer to turn on
-    void add_feature_vars_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL);
-    void add_summary_vars_to_JSON_buffer(fmt::memory_buffer& buf, const char* const var = NULL);
-    void toggle_ui_enabled(bool);
-};
+#include <Features/Feature.h>
+#include <Features/Empty_Feature.h>
+#include <Features/Active_Power_Setpoint.h>
 
 class Site_Manager {
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -283,7 +275,9 @@ protected:
     int current_runmode1_kW_feature;  // follows the Fims_Object runmode1_kW_mode_cmd to identify when it gets changed
     uint64_t available_runmode1_kW_features_mask;
     uint64_t runmode1_kW_features_charge_control_mask = 2;  // Mask indicating which active power features utilize charge control
-    std::vector<Feature*> runmode1_kW_features_list;
+    std::vector<Feature*> runmode1_kW_features_list = std::vector<Feature*>{
+        &energy_arbitrage_feature, &target_soc, &active_power_setpoint_mode, &manual_power_mode, &frequency_response_feature, &ess_calibration,
+    };
     float prev_active_power_feature_cmd;
     Fims_Object feature_kW_demand;
     Fims_Object site_kW_charge_production;      // Charge up to this amount during dispatch
@@ -301,36 +295,21 @@ public:
     Energy_Arbitrage energy_arb_obj;
 
 protected:
-    Feature energy_arbitrage_feature;
+    Empty_Feature energy_arbitrage_feature;
     void energy_arbitrage_helper();
-    Fims_Object energy_arb_enable_flag;
     //
     // Target SOC Mode
     //
-    Feature target_soc;
-    Fims_Object target_soc_mode_enable_flag;
+    Empty_Feature target_soc;
     Fims_Object target_soc_load_enable_flag;
     //
     // Active Power Setpoint Mode
     //
-    Feature active_power_setpoint_mode;
-
-public:
-    Slew_Object active_power_setpoint_kW_slew;
-
-protected:
-    Fims_Object active_power_setpoint_mode_enable_flag;
-    Fims_Object active_power_setpoint_kW_cmd;
-    Fims_Object active_power_setpoint_load_method;
-    Fims_Object active_power_setpoint_kW_slew_rate;
-    Fims_Object active_power_setpoint_absolute_mode_flag;
-    Fims_Object active_power_setpoint_direction_flag;
-    Fims_Object active_power_setpoint_maximize_solar_flag;
-    Fims_Object ess_charge_support_enable_flag;  // this enables ESS to charge to support underloaded grid - only available in runmode1 (active power setpoint)
+    features::Active_Power_Setpoint active_power_setpoint_mode;
     //
     // Manual Power Mode
     //
-    Feature manual_power_mode;
+    Empty_Feature manual_power_mode;
 
 public:
     Slew_Object manual_solar_kW_slew;
@@ -338,7 +317,6 @@ public:
     Slew_Object manual_gen_kW_slew;
 
 protected:
-    Fims_Object manual_mode_enable_flag;
     Fims_Object manual_solar_kW_cmd;  // manual setpoint for solar kW
     Fims_Object manual_ess_kW_cmd;    // manual setpoint for ess kW
     Fims_Object manual_gen_kW_cmd;    // manual setpoint for gen kW
@@ -350,17 +328,16 @@ protected:
     //
 protected:
     Frequency_Response frequency_response;
-    Feature frequency_response_feature;
+    Empty_Feature frequency_response_feature;
     void execute_frequency_response_feature();
     Fims_Object frequency_response_enabled;  // boolean flag indicating if the Frequency Response active power mode is currently enabled
     //
     // ESS Calibration Mode
     //
 public:
-    Feature ess_calibration;
+    Empty_Feature ess_calibration;
     void get_ess_calibration_variables();
     void set_ess_calibration_variables();
-    Fims_Object ess_calibration_enable_flag;
     Fims_Object ess_calibration_kW_cmd;
     Fims_Object ess_calibration_soc_limits_enable;
     Fims_Object ess_calibration_min_soc_limit;
@@ -389,9 +366,8 @@ public:
     //
     // Generator Charge
     //
-    Feature generator_charge;
+    Empty_Feature generator_charge;
     void run_generator_charge();
-    Fims_Object generator_charge_enable;
     Fims_Object generator_charge_additional_buffer;  // Additional buffer that reduces generator output
 
     ///////////////////////////////////////////////////////////////////
@@ -401,8 +377,7 @@ public:
     //
     // Charge Dispatch - Always enabled
     //
-    Feature charge_dispatch;
-    Fims_Object _charge_dispatch_enable_flag;
+    Empty_Feature charge_dispatch;
     Fims_Object charge_dispatch_kW_command;          // actual kW output from charge control algorithm
     Fims_Object charge_dispatch_solar_enable_flag;   // when true, use solar as a source for ESS charge
     Fims_Object charge_dispatch_gen_enable_flag;     // when true, use gen as a source for ESS charge
@@ -411,8 +386,7 @@ public:
     // Charge Control - Enabled based on active power feature charge_control mask
     //
     void check_charge_control(void);
-    Feature charge_control;
-    Fims_Object _ess_charge_control_enable_flag;
+    Empty_Feature charge_control;
     Fims_Object ess_charge_control_kW_request;  // charge kW request from control algorithm
     Fims_Object ess_charge_control_target_soc;  // control for target state of charge in charge control algorithm
     Fims_Object ess_charge_control_kW_limit;    // kW limit for ESS, applied to both charge and discharge
@@ -441,38 +415,34 @@ public:
     //
     // Watt-VAR Mode
     //
-    Feature watt_var;
+    Empty_Feature watt_var;
 
 public:
     void watt_var_mode(float active_power, std::vector<std::pair<float, float>>& watt_var_curve);
     std::vector<std::pair<float, float>> watt_var_curve;
 
 protected:
-    Fims_Object watt_var_mode_enable_flag;
     Fims_Object watt_var_points;
     float watt_var_correction;  // Internal variable tracking the amount of correction applied by watt_var
     //
     // Reactive Power Setpoint Mode
     //
-    Feature reactive_setpoint;
+    Empty_Feature reactive_setpoint;
     Slew_Object reactive_setpoint_kVAR_cmd_slew;
-    Fims_Object reactive_setpoint_mode_enable_flag;
     Fims_Object reactive_setpoint_kVAR_cmd;
     Fims_Object reactive_setpoint_kVAR_slew_rate;
     //
     // Power Factor Mode
     //
-    Feature power_factor;
+    Empty_Feature power_factor;
     float prev_asset_pf_cmd;
     bool asset_pf_flag, prev_asset_pf_flag;  // track the change to/from any mode that uses power factor cmds to enable assets to follow them
-    Fims_Object power_factor_mode_enable_flag;
-    Fims_Object power_factor_cmd;  // pf-setpoint
+    Fims_Object power_factor_cmd;            // pf-setpoint
     //
     // Constant Power Factor Mode
     //
-    Feature constant_power_factor;
+    Empty_Feature constant_power_factor;
     void execute_constant_power_factor();                 // Feature function
-    Fims_Object constant_power_factor_mode_enable_flag;   // Enable flag
     Fims_Object constant_power_factor_setpoint;           // Power Factor setpoint. Sign is used if bidirectional mode, only magnitude in absolute mode
     Fims_Object constant_power_factor_lagging_limit;      // -1.0 < pf < lagging_limit for negative commands
     Fims_Object constant_power_factor_leading_limit;      //  1.0 > pf > leading_limit for positive commands
@@ -481,8 +451,7 @@ protected:
     //
     // Active Voltage Mode
     //
-    Feature active_voltage;
-    Fims_Object active_voltage_mode_enable_flag;
+    Empty_Feature active_voltage;
     Fims_Object active_voltage_deadband;       // deadband within which algorithm wont respond
     Fims_Object active_voltage_droop_percent;  // percent of rated to apply per v deviation
     Fims_Object active_voltage_cmd;            // nominal voltage target
@@ -521,9 +490,8 @@ protected:
     // POI Limits
     // When on, site demand and ess charge/discharge requests will be limited so POI does not exceed its rated limit
     //
-    Feature active_power_poi_limits;
+    Empty_Feature active_power_poi_limits;
     void apply_active_power_poi_limits();
-    Fims_Object active_power_poi_limits_enable;
     Fims_Object active_power_poi_limits_max_kW;           // max POI kW value allowed when POI Limits enabled
     Fims_Object active_power_poi_limits_min_kW;           // min POI kW value allowed when POI Limits enabled
     Fims_Object active_power_soc_poi_limits_enable;       // ESS specific, soc-based POI limits
@@ -537,18 +505,16 @@ protected:
     // Reactive Power POI Limits
     // When on, site kVAR demand will be limited so POI does not exceed its rated limit
     //
-    Feature reactive_power_poi_limits;
+    Empty_Feature reactive_power_poi_limits;
     void apply_reactive_power_poi_limits();
-    Fims_Object reactive_power_poi_limits_enable;
     Fims_Object reactive_power_poi_limits_min_kVAR;  // min POI kVAR value allowed when POI Limits enabled
     Fims_Object reactive_power_poi_limits_max_kVAR;  // max POI kVAR value allowed when POI Limits enabled
 
     //
     // PFR
     //
-    Feature pfr;
+    Empty_Feature pfr;
     void primary_frequency_response(float kW_cmd);
-    Fims_Object pfr_enable_flag;
     Fims_Object pfr_deadband;         // deadband in Hz for pfr algorithm
     Fims_Object pfr_droop_percent;    // droop percentage for pfr algorithm
     Fims_Object pfr_status_flag;      // boolean indicates if pfr is actively changing system power output
@@ -560,18 +526,16 @@ protected:
     //
     // Watt-Watt
     //
-    Feature watt_watt;
+    Empty_Feature watt_watt;
     void watt_watt_poi_adjustment(void);
     std::vector<std::pair<float, float>> watt_watt_curve;
-    Fims_Object watt_watt_adjustment_enable_flag;
     Fims_Object watt_watt_points;
     float watt_watt_correction;  // Internal variable tracking the amount of correction applied by watt_watt
     //
     // LDSS
     //
-    Feature ldss;
+    Empty_Feature ldss;
     void set_ldss_variables();
-    Fims_Object ldss_enable_flag;
     Fims_Object ldss_priority_setting;  // static or dynamic priorities
     Fims_Object ldss_max_load_threshold_percent, ldss_min_load_threshold_percent;
     Fims_Object ldss_warmup_time, ldss_cooldown_time, ldss_start_gen_time, ldss_stop_gen_time;  // LDSS timers
@@ -579,10 +543,9 @@ protected:
     //
     // Load Shed
     //
-    Feature load_shed;
+    Empty_Feature load_shed;
     void calculate_load_shed();
-    Variable_Regulator load_shed_calculator;  // Used to hold and calculate the load shed value
-    Fims_Object load_shed_enable;
+    Variable_Regulator load_shed_calculator;       // Used to hold and calculate the load shed value
     Fims_Object load_shed_value;                   // Contains write uri for load shedder
     Fims_Object load_shed_max_value;               // Max load shed value
     Fims_Object load_shed_min_value;               // Min load shed value
@@ -597,10 +560,9 @@ protected:
     //
     // Solar Shed
     //
-    Feature solar_shed;
+    Empty_Feature solar_shed;
     void calculate_solar_shed();
-    Variable_Regulator solar_shed_calculator;  // Used to hold and calculate the solar shed value
-    Fims_Object solar_shed_enable;
+    Variable_Regulator solar_shed_calculator;       // Used to hold and calculate the solar shed value
     Fims_Object solar_shed_value;                   // Current solar shed value
     Fims_Object solar_shed_max_value;               // Max solar shed value
     Fims_Object solar_shed_min_value;               // Min solar shed value
@@ -615,24 +577,21 @@ protected:
     //
     // ESS Discharge Prevention
     //
-    Feature ess_discharge_prevention;
+    Empty_Feature ess_discharge_prevention;
     void prevent_ess_discharge();
-    Fims_Object edp_enable;  // ess discharge prevention enable
-    Fims_Object edp_soc;     // target soc at or below which the ess will not be able to discharge
+    Fims_Object edp_soc;  // target soc at or below which the ess will not be able to discharge
     //
     // Aggregated Asset Limit (solar-dependent ess discharge limit)
     //
-    Feature agg_asset_limit;
+    Empty_Feature agg_asset_limit;
     void apply_aggregated_asset_limit(float uncontrolled_ess_kw, float uncontrolled_solar_kw);
-    Fims_Object agg_asset_limit_enable;
     Fims_Object agg_asset_limit_kw;
     //
     // Active Power Closed Loop Control
     //
-    Feature active_power_closed_loop;
+    Empty_Feature active_power_closed_loop;
     void calculate_active_power_closed_loop_offset();
-    Variable_Regulator active_power_closed_loop_regulator;  // Used to hold and calculate the offset value
-    Fims_Object active_power_closed_loop_enable;
+    Variable_Regulator active_power_closed_loop_regulator;          // Used to hold and calculate the offset value
     Fims_Object active_power_closed_loop_default_offset;            // Default offset
     Fims_Object active_power_closed_loop_min_offset;                // Min offset
     Fims_Object active_power_closed_loop_max_offset;                // Max offset
@@ -647,10 +606,9 @@ protected:
     //
     // Reactive Power Closed Loop Control
     //
-    Feature reactive_power_closed_loop;
+    Empty_Feature reactive_power_closed_loop;
     void calculate_reactive_power_closed_loop_offset();
-    Variable_Regulator reactive_power_closed_loop_regulator;  // Used to hold and calculate the offset value
-    Fims_Object reactive_power_closed_loop_enable;
+    Variable_Regulator reactive_power_closed_loop_regulator;          // Used to hold and calculate the offset value
     Fims_Object reactive_power_closed_loop_default_offset;            // Default offset
     Fims_Object reactive_power_closed_loop_min_offset;                // Min offset
     Fims_Object reactive_power_closed_loop_max_offset;                // Max offset
@@ -676,12 +634,11 @@ protected:
     //
     // Watchdog Feature
     //
-    Feature watchdog_feature;
+    Empty_Feature watchdog_feature;
     void watchdog();
     void dogbark();
     int watchdog_old_pet;
     timespec heartbeat_timer, watchdog_timeout;
-    Fims_Object watchdog_enable;
     Fims_Object watchdog_duration_ms;
     Fims_Object watchdog_pet;
     Fims_Object heartbeat_counter;
@@ -762,20 +719,6 @@ protected:
         { &runmode2_kVAR_mode_cmd, "runmode2_kVAR_mode_cmd" },
         { &runmode2_kVAR_mode_status, "runmode2_kVAR_mode_status" },
         { &configured_primary, "configured_primary" },
-        { &energy_arb_enable_flag, "energy_arb_enable_flag" },
-        { &_charge_dispatch_enable_flag, "_charge_dispatch_enable_flag" },
-        { &_ess_charge_control_enable_flag, "_ess_charge_control_enable_flag" },
-        { &target_soc_mode_enable_flag, "target_soc_mode_enable_flag" },
-        { &manual_mode_enable_flag, "manual_mode_enable_flag" },
-        { &active_power_setpoint_mode_enable_flag, "active_power_setpoint_mode_enable_flag" },
-        { &ess_calibration_enable_flag, "ess_calibration_enable_flag" },
-        { &generator_charge_enable, "generator_charge_enable" },
-        { &reactive_setpoint_mode_enable_flag, "reactive_setpoint_mode_enable_flag" },
-        { &active_voltage_mode_enable_flag, "active_voltage_mode_enable_flag" },
-        { &power_factor_mode_enable_flag, "power_factor_mode_enable_flag" },
-        { &constant_power_factor_mode_enable_flag, "constant_power_factor_mode_enable_flag" },
-        { &watt_var_mode_enable_flag, "watt_var_mode_enable_flag" },
-        { &frequency_response_enabled, "fr_mode_enable_flag" },
         { &ess_kW_cmd, "ess_kW_cmd" },
         { &gen_kW_cmd, "gen_kW_cmd" },
         { &solar_kW_cmd, "solar_kW_cmd" },
@@ -801,11 +744,8 @@ protected:
         { &max_potential_feeder_kW, "max_potential_feeder_kW" },
         { &min_potential_feeder_kW, "min_potential_feeder_kW" },
         { &rated_feeder_kW, "rated_feeder_kW" },
-        { &pfr_limits_min_kW, "pfr_limits_min_kW" },
-        { &pfr_limits_max_kW, "pfr_limits_max_kW" },
-        { &pfr_site_nominal_hz, "pfr_site_nominal_hz" },
-        { &pfr_offset_hz, "pfr_offset_hz" },
-        { &ess_charge_support_enable_flag, "ess_charge_support_enable_flag" },
+        { &frequency_response_enabled, "fr_mode_enable_flag" },
+        { &energy_arbitrage_feature.enable_flag, "energy_arb_enable_flag" },
         { &energy_arb_obj.price, "price" },
         { &energy_arb_obj.threshold_charge_1, "threshold_charge_1" },
         { &energy_arb_obj.threshold_charge_2, "threshold_charge_2" },
@@ -817,28 +757,27 @@ protected:
         { &energy_arb_obj.max_charge_2, "max_charge_2" },
         { &energy_arb_obj.max_dischg_1, "max_dischg_1" },
         { &energy_arb_obj.max_dischg_2, "max_dischg_2" },
+        { &charge_dispatch.enable_flag, "_charge_dispatch_enable_flag" },
         { &charge_dispatch_kW_command, "charge_dispatch_kW_command" },
         { &charge_dispatch_gen_enable_flag, "charge_dispatch_gen_enable_flag" },
         { &charge_dispatch_solar_enable_flag, "charge_dispatch_solar_enable_flag" },
         { &charge_dispatch_feeder_enable_flag, "charge_dispatch_feeder_enable_flag" },
+        { &charge_control.enable_flag, "_ess_charge_control_enable_flag" },
         { &ess_charge_control_kW_request, "ess_charge_control_kW_request" },
         { &ess_charge_control_kW_limit, "ess_charge_control_kW_limit" },
         { &ess_charge_control_target_soc, "ess_charge_control_target_soc" },
         { &ess_charge_control_charge_disable, "ess_charge_control_charge_disable" },
         { &ess_charge_control_discharge_disable, "ess_charge_control_discharge_disable" },
+        { &target_soc.enable_flag, "target_soc_mode_enable_flag" },
         { &target_soc_load_enable_flag, "target_soc_load_enable_flag" },
+        { &manual_power_mode.enable_flag, "manual_mode_enable_flag" },
         { &manual_solar_kW_cmd, "manual_solar_kW_cmd" },
         { &manual_ess_kW_cmd, "manual_ess_kW_cmd" },
         { &manual_gen_kW_cmd, "manual_gen_kW_cmd" },
         { &manual_solar_kW_slew_rate, "manual_solar_kW_slew_rate" },
         { &manual_ess_kW_slew_rate, "manual_ess_kW_slew_rate" },
         { &manual_gen_kW_slew_rate, "manual_gen_kW_slew_rate" },
-        { &active_power_setpoint_kW_cmd, "active_power_setpoint_kW_cmd" },
-        { &active_power_setpoint_load_method, "active_power_setpoint_load_method" },
-        { &active_power_setpoint_kW_slew_rate, "active_power_setpoint_kW_slew_rate" },
-        { &active_power_setpoint_absolute_mode_flag, "active_power_setpoint_absolute_mode_flag" },
-        { &active_power_setpoint_direction_flag, "active_power_setpoint_direction_flag" },
-        { &active_power_setpoint_maximize_solar_flag, "active_power_setpoint_maximize_solar_flag" },
+        { &ess_calibration.enable_flag, "ess_calibration_enable_flag" },
         { &ess_calibration_kW_cmd, "ess_calibration_kW_cmd" },
         { &ess_calibration_soc_limits_enable, "ess_calibration_soc_limits_enable" },
         { &ess_calibration_min_soc_limit, "ess_calibration_min_soc_limit" },
@@ -849,6 +788,7 @@ protected:
         { &ess_calibration_num_setpoint, "ess_calibration_num_setpoint" },
         { &ess_calibration_num_limited, "ess_calibration_num_limited" },
         { &ess_calibration_num_zero, "ess_calibration_num_zero" },
+        { &generator_charge.enable_flag, "generator_charge_enable" },
         { &generator_charge_additional_buffer, "generator_charge_additional_buffer" },
         { &available_features_runmode1_kW_mode, "available_features_runmode1_kW_mode" },
         { &runmode1_kW_mode_cmd, "runmode1_kW_mode_cmd" },
@@ -875,30 +815,39 @@ protected:
         { &available_features_runmode1_kVAR_mode, "available_features_runmode1_kVAR_mode" },
         { &runmode1_kVAR_mode_cmd, "runmode1_kVAR_mode_cmd" },
         { &runmode1_kVAR_mode_status, "runmode1_kVAR_mode_status" },
+        { &reactive_setpoint.enable_flag, "reactive_setpoint_mode_enable_flag" },
         { &reactive_setpoint_kVAR_cmd, "reactive_setpoint_kVAR_cmd" },
         { &reactive_setpoint_kVAR_slew_rate, "reactive_setpoint_kVAR_slew_rate" },
+        { &active_voltage.enable_flag, "active_voltage_mode_enable_flag" },
         { &active_voltage_deadband, "active_voltage_deadband" },
         { &active_voltage_droop_percent, "active_voltage_droop_percent" },
         { &active_voltage_cmd, "active_voltage_cmd" },
         { &active_voltage_actual_volts, "active_voltage_actual_volts" },
         { &active_voltage_status_flag, "active_voltage_status_flag" },
         { &active_voltage_rated_kVAR, "active_voltage_rated_kVAR" },
+        { &power_factor.enable_flag, "power_factor_mode_enable_flag" },
         { &power_factor_cmd, "power_factor_cmd" },
+        { &constant_power_factor.enable_flag, "constant_power_factor_mode_enable_flag" },
         { &constant_power_factor_setpoint, "constant_power_factor_setpoint" },
         { &constant_power_factor_lagging_limit, "constant_power_factor_lagging_limit" },
         { &constant_power_factor_leading_limit, "constant_power_factor_leading_limit" },
         { &constant_power_factor_absolute_mode, "constant_power_factor_absolute_mode" },
         { &constant_power_factor_lagging_direction, "constant_power_factor_lagging_direction" },
+        { &watt_var.enable_flag, "watt_var_mode_enable_flag" },
         { &watt_var_points, "watt_var_points" },
         { &start_first_gen_soc, "start_first_gen_soc" },
-        { &pfr_enable_flag, "pfr_enable_flag" },
+        { &pfr.enable_flag, "pfr_enable_flag" },
         { &pfr_deadband, "pfr_deadband" },
         { &pfr_droop_percent, "pfr_droop_percent" },
         { &pfr_status_flag, "pfr_status_flag" },
         { &pfr_nameplate_kW, "pfr_nameplate_kW" },
-        { &watt_watt_adjustment_enable_flag, "watt_watt_adjustment_enable_flag" },
+        { &pfr_limits_min_kW, "pfr_limits_min_kW" },
+        { &pfr_limits_max_kW, "pfr_limits_max_kW" },
+        { &pfr_site_nominal_hz, "pfr_site_nominal_hz" },
+        { &pfr_offset_hz, "pfr_offset_hz" },
+        { &watt_watt.enable_flag, "watt_watt_adjustment_enable_flag" },
         { &watt_watt_points, "watt_watt_points" },
-        { &active_power_poi_limits_enable, "active_power_poi_limits_enable" },
+        { &active_power_poi_limits.enable_flag, "active_power_poi_limits_enable" },
         { &active_power_poi_limits_max_kW, "active_power_poi_limits_max_kW" },
         { &active_power_poi_limits_min_kW, "active_power_poi_limits_min_kW" },
         { &active_power_soc_poi_limits_enable, "active_power_soc_poi_limits_enable" },
@@ -907,10 +856,10 @@ protected:
         { &active_power_soc_poi_limits_low_max_kW, "active_power_soc_poi_limits_low_max_kW" },
         { &active_power_soc_poi_limits_high_min_kW, "active_power_soc_poi_limits_high_min_kW" },
         { &active_power_soc_poi_limits_high_max_kW, "active_power_soc_poi_limits_high_max_kW" },
-        { &reactive_power_poi_limits_enable, "reactive_power_poi_limits_enable" },
+        { &reactive_power_poi_limits.enable_flag, "reactive_power_poi_limits_enable" },
         { &reactive_power_poi_limits_min_kVAR, "reactive_power_poi_limits_min_kVAR" },
         { &reactive_power_poi_limits_max_kVAR, "reactive_power_poi_limits_max_kVAR" },
-        { &ldss_enable_flag, "ldss_enable_flag" },
+        { &ldss.enable_flag, "ldss_enable_flag" },
         { &ldss_priority_setting, "ldss_priority_setting" },
         { &ldss_start_gen_time, "ldss_start_gen_time" },
         { &ldss_stop_gen_time, "ldss_stop_gen_time" },
@@ -921,7 +870,7 @@ protected:
         { &ldss_enable_soc_threshold, "ldss_enable_soc_threshold" },
         { &ldss_max_soc_threshold_percent, "ldss_max_soc_threshold_percent" },
         { &ldss_min_soc_threshold_percent, "ldss_min_soc_threshold_percent" },
-        { &load_shed_enable, "load_shed_enable" },
+        { &load_shed.enable_flag, "load_shed_enable" },
         { &load_shed_value, "load_shed_value" },
         { &load_shed_max_value, "load_shed_max_value" },
         { &load_shed_min_value, "load_shed_min_value" },
@@ -933,7 +882,7 @@ protected:
         { &load_shed_increase_display_timer, "load_shed_increase_display_timer" },
         { &load_shed_decrease_display_timer, "load_shed_decrease_display_timer" },
         { &load_shed_spare_ess_kw, "load_shed_spare_ess_kw" },
-        { &solar_shed_enable, "solar_shed_enable" },
+        { &solar_shed.enable_flag, "solar_shed_enable" },
         { &solar_shed_value, "solar_shed_value" },
         { &solar_shed_max_value, "solar_shed_max_value" },
         { &solar_shed_min_value, "solar_shed_min_value" },
@@ -945,7 +894,7 @@ protected:
         { &solar_shed_increase_display_timer, "solar_shed_increase_display_timer" },
         { &solar_shed_decrease_display_timer, "solar_shed_decrease_display_timer" },
         { &solar_shed_spare_ess_kw, "solar_shed_spare_ess_kw" },
-        { &active_power_closed_loop_enable, "active_power_closed_loop_enable" },
+        { &active_power_closed_loop.enable_flag, "active_power_closed_loop_enable" },
         { &active_power_closed_loop_default_offset, "active_power_closed_loop_default_offset" },
         { &active_power_closed_loop_min_offset, "active_power_closed_loop_min_offset" },
         { &active_power_closed_loop_max_offset, "active_power_closed_loop_max_offset" },
@@ -957,7 +906,7 @@ protected:
         { &active_power_closed_loop_decrease_timer_ms, "active_power_closed_loop_decrease_timer_ms" },
         { &active_power_closed_loop_increase_timer_ms, "active_power_closed_loop_increase_timer_ms" },
         { &_active_power_closed_loop_manual_offset_kW, "_active_power_closed_loop_manual_offset_kW" },
-        { &reactive_power_closed_loop_enable, "reactive_power_closed_loop_enable" },
+        { &reactive_power_closed_loop.enable_flag, "reactive_power_closed_loop_enable" },
         { &reactive_power_closed_loop_default_offset, "reactive_power_closed_loop_default_offset" },
         { &reactive_power_closed_loop_min_offset, "reactive_power_closed_loop_min_offset" },
         { &reactive_power_closed_loop_max_offset, "reactive_power_closed_loop_max_offset" },
@@ -968,11 +917,11 @@ protected:
         { &reactive_power_closed_loop_update_rate_ms, "reactive_power_closed_loop_update_rate_ms" },
         { &reactive_power_closed_loop_decrease_timer_ms, "reactive_power_closed_loop_decrease_timer_ms" },
         { &reactive_power_closed_loop_increase_timer_ms, "reactive_power_closed_loop_increase_timer_ms" },
-        { &edp_enable, "ess_discharge_prevention_enable" },
+        { &ess_discharge_prevention.enable_flag, "ess_discharge_prevention_enable" },
         { &edp_soc, "ess_discharge_prevention_soc" },
-        { &agg_asset_limit_enable, "agg_asset_limit_enable" },
+        { &agg_asset_limit.enable_flag, "agg_asset_limit_enable" },
         { &agg_asset_limit_kw, "agg_asset_limit_kw" },
-        { &watchdog_enable, "watchdog_enable" },
+        { &watchdog_feature.enable_flag, "watchdog_enable" },
         { &watchdog_duration_ms, "watchdog_duration_ms" },
         { &watchdog_pet, "watchdog_pet" },
         { &heartbeat_counter, "heartbeat_counter" },

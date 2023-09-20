@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <Freq_Resp_Component.h>
+#include <Features/Freq_Resp_Component.h>
 #include <test_tools.h>
 
 typedef struct pfr_state {

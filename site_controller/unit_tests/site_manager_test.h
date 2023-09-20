@@ -7,6 +7,7 @@
 #include "Types.h"
 #include <test_tools.h>
 #include "frequency_response_test.h"
+#include <Features/Active_Power_Setpoint.h>
 
 class site_manager_test : public Site_Manager, public testing::Test {
 public:
@@ -120,13 +121,13 @@ TEST_F(site_manager_test, track_slewed_load) {
     for (auto test : tests) {
         test_logger t_log("track_slewed_load", test_id++, tests.size());
         // Setup feature slew object at starting demand
-        active_power_setpoint_kW_slew.reset_slew_target(10000);
-        active_power_setpoint_kW_slew.update_slew_target(test.starting_demand);
+        active_power_setpoint_mode.kW_slew.reset_slew_target(10000);
+        active_power_setpoint_mode.kW_slew.update_slew_target(test.starting_demand);
         usleep(10000);  // wait one iteration
-        active_power_setpoint_kW_slew.set_slew_rate(test.slew_rate);
-        active_power_setpoint_kW_slew.update_slew_target(test.starting_demand);
-        asset_cmd.site_kW_demand = active_power_setpoint_kW_slew.get_slew_target(test.new_demand);
-        asset_cmd.track_slewed_load(test.load_method, test.new_demand, test.additional_load, active_power_setpoint_kW_slew);
+        active_power_setpoint_mode.kW_slew.set_slew_rate(test.slew_rate);
+        active_power_setpoint_mode.kW_slew.update_slew_target(test.starting_demand);
+        asset_cmd.site_kW_demand = active_power_setpoint_mode.kW_slew.get_slew_target(test.new_demand);
+        asset_cmd.additional_load_compensation = asset_cmd_utils::track_slewed_load(test.load_method, asset_cmd.site_kW_demand, test.new_demand, test.additional_load, active_power_setpoint_mode.kW_slew);
         t_log.range_results.push_back({ test.expected_load, 0.1f, asset_cmd.additional_load_compensation, "additional_load_compensation" });
         t_log.check_solution();
     }
@@ -577,10 +578,10 @@ TEST_F(site_manager_test, active_power_setpoint_1) {
     array[3] = { LOAD_OFFSET, 2000.0f, LOAD_OFFSET, 2000.0f };
 
     // increment export target cmd slew prior to test
-    active_power_setpoint_kW_slew.set_slew_rate(1000000);  // 1000MW/s
-    active_power_setpoint_kW_slew.update_slew_target(0);   // call once to set time vars
-    usleep(10000);                                         // wait 10ms (total range +/-10MW)
-    active_power_setpoint_kW_slew.update_slew_target(0);   // call again to get delta time for non-zero slew range
+    active_power_setpoint_mode.kW_slew.set_slew_rate(1000000);  // 1000MW/s
+    active_power_setpoint_mode.kW_slew.update_slew_target(0);   // call once to set time vars
+    usleep(10000);                                              // wait 10ms (total range +/-10MW)
+    active_power_setpoint_mode.kW_slew.update_slew_target(0);   // call again to get delta time for non-zero slew range
 
     // iterate through each test case and get results
     for (int i = 0; i < num_tests; i++) {
@@ -590,7 +591,12 @@ TEST_F(site_manager_test, active_power_setpoint_1) {
         // Capture any prints within site controller that might be present in debug mode
         capture_stdout();
 
-        asset_cmd.active_power_setpoint(array[i].export_target_cmd, &active_power_setpoint_kW_slew, array[i].load_strategy, false, false, false);
+        active_power_setpoint_mode.kW_cmd.value.value_float = array[i].export_target_cmd;
+        active_power_setpoint_mode.load_method.value.value_int = array[i].load_strategy;
+        active_power_setpoint_mode.absolute_mode_flag.value.value_bool = false;
+        active_power_setpoint_mode.direction_flag.value.value_bool = false;
+        active_power_setpoint_mode.maximize_solar_flag.value.value_bool = false;
+        active_power_setpoint_mode.execute(asset_cmd);
         errorLog << "active_power_setpoint_1() test #" << i + 1 << " of " << num_tests << std::endl;
         // failure conditions
         failure = asset_cmd.site_kW_demand != array[i].expected_site_demand || asset_cmd.get_site_kW_load_inclusion() != array[i].expected_load_strategy;
@@ -696,12 +702,17 @@ TEST_F(site_manager_test, active_power_setpoint_2) {
         capture_stdout();
 
         errorLog << "active_power_setpoint_2() test #" << i + 1 << " of " << num_tests << std::endl;
-        active_power_setpoint_kW_slew.set_slew_rate(std::pow(1000, 3));  // extremely high to simulate instant
-        active_power_setpoint_kW_slew.update_slew_target(array[i].kW_cmd);
+        active_power_setpoint_mode.kW_slew.set_slew_rate(std::pow(1000, 3));  // extremely high to simulate instant
+        active_power_setpoint_mode.kW_slew.update_slew_target(array[i].kW_cmd);
         asset_cmd.site_kW_load = array[i].site_load;
         asset_cmd.solar_data.kW_request = 0.0;
         asset_cmd.solar_data.max_potential_kW = 300.0;
-        asset_cmd.active_power_setpoint(array[i].kW_cmd, &active_power_setpoint_kW_slew, LOAD_OFFSET, array[i].absolute_mode, array[i].absolute_direction, array[i].prioritize_solar);
+        active_power_setpoint_mode.kW_cmd.value.value_float = array[i].kW_cmd;
+        active_power_setpoint_mode.load_method.value.value_int = LOAD_OFFSET;
+        active_power_setpoint_mode.absolute_mode_flag.value.value_bool = array[i].absolute_mode;
+        active_power_setpoint_mode.direction_flag.value.value_bool = array[i].absolute_direction;
+        active_power_setpoint_mode.maximize_solar_flag.value.value_bool = array[i].prioritize_solar;
+        active_power_setpoint_mode.execute(asset_cmd);
         bool failure = (asset_cmd.site_kW_demand != array[i].expected_site_demand || asset_cmd.get_site_kW_load_inclusion() != true ||  // always tracks load
                             asset_cmd.solar_data.kW_request,
                         array[i].expected_solar_kW_request);
