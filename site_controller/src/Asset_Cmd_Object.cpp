@@ -337,54 +337,6 @@ float Asset_Cmd_Object::dispatch_site_kW_discharge_cmd(int asset_priority, float
     return received_cmd - cmd;
 }
 
-/**
- * MANUAL MODE takes a solar kW cmd, ESS kW cmd, generator kW cmd, solar slew rate,
- * ESS slew rate, and generator slew rate and routes those commands through dispatch and charge control
- * Any site load should be offloaded to the feeder to guarantee the manual kW commands
- * @param manual_ess_kW_cmd Command to be dispatched to ESS
- * @param manual_solar_kW_cmd Command to be dispatched to Solar
- * @param manual_gen_kW_cmd Command to be dispatched to Generator
- * @param ess_slew_rate Slew rate for ESS
- * @param solar_slew_rate Slew rate for Solar
- * @param gen_slew_rate Slew rate for Generator
- */
-void Asset_Cmd_Object::manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd, float manual_gen_kW_cmd, Slew_Object* ess_slew_rate, Slew_Object* solar_slew_rate, Slew_Object* gen_slew_rate) {
-    // Assign ess request, passing off limits check to dispatch
-    ess_data.kW_request = ess_slew_rate->get_slew_target(manual_ess_kW_cmd);
-    // Ensure that any extra available ESS is not used to service the site demand
-    ess_data.max_potential_kW = std::min(ess_data.max_potential_kW, zero_check(ess_data.kW_request));
-
-    // Assign positive solar request, passing off limits check to dispatch
-    solar_data.kW_request = solar_slew_rate->get_slew_target(zero_check(manual_solar_kW_cmd));
-    // Ensure that any extra available solar is not used to service the site demand
-    solar_data.max_potential_kW = std::min(solar_data.max_potential_kW, solar_data.kW_request);
-
-    // Assign positive generator request, passing off limits check to dispatch
-    gen_data.kW_request = gen_slew_rate->get_slew_target(zero_check(manual_gen_kW_cmd));
-    // Ensure that any extra available generator power is not used to service the site demand
-    gen_data.max_potential_kW = std::min(gen_data.max_potential_kW, gen_data.kW_request);
-
-    // No load compensation
-}
-
-/**
- * ESS Calibration Mode routes a single ess cmd value equally to every ESS, with power distribution and soc-balancing
- * disabled to ensure that the value commanded by the feature is the value of each ESS.
- * @param ess_calibration_cmd Command to be routed to each ESS
- * @param num_ess_controllable The number of ESS available within Site Manager
- */
-void Asset_Cmd_Object::ess_calibration_mode(float ess_calibration_kW_cmd, int num_ess_controllable) {
-    // Multiple by the number of ESS available to get the total power that should be distributed
-    float total_feature_cmd = ess_calibration_kW_cmd * num_ess_controllable;
-    // Provide at least enough potential to meet the command, as the potentials can limit the command due to a shared slew target but unbalanced SoCs
-    // Commands will still be limited safely by the amount of (dis)chargeable power available
-    ess_data.max_potential_kW = (std::max(total_feature_cmd, ess_data.max_potential_kW));
-    ess_data.min_potential_kW = (std::min(total_feature_cmd, ess_data.min_potential_kW));
-
-    ess_data.kW_request = total_feature_cmd;
-    // This feature does not track load
-}
-
 // dispatch reactive power cmds
 void Asset_Cmd_Object::dispatch_reactive_power() {
     // no kVAR cmds if not potential or demanded

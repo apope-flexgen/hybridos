@@ -19,15 +19,12 @@
 #include <Input_Sources.h>
 #include <Slew_Object.h>
 #include <Variable_Regulator.h>
-#include <Features/Frequency_Response.h>
 #include <Asset_Cmd_Object.h>
 #include <Fims_Object.h>
-#include <Features/Energy_Arbitrage.h>
 #include <Sequence.h>
 #include <macros.h>
 #include <version.h>
 #include <Features/Feature.h>
-#include <Features/Empty_Feature.h>
 #include <Features/Active_Power_Setpoint.h>
 #include <Features/Active_Voltage_Regulation.h>
 #include <Features/Active_Power_Closed_Loop_Control.h>
@@ -49,6 +46,11 @@
 #include <Features/Watchdog.h>
 #include <Features/Charge_Dispatch.h>
 #include <Features/Charge_Control.h>
+#include <Features/Energy_Arbitrage.h>
+#include <Features/Frequency_Response.h>
+#include <Features/ESS_Calibration.h>
+#include <Features/Generator_Charge.h>
+#include <Features/Manual.h>
 
 class Site_Manager {
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -296,7 +298,7 @@ protected:
     uint64_t available_runmode1_kW_features_mask;
     uint64_t runmode1_kW_features_charge_control_mask = 2;  // Mask indicating which active power features utilize charge control
     std::vector<Feature*> runmode1_kW_features_list = std::vector<Feature*>{
-        &energy_arbitrage_feature, &target_soc, &active_power_setpoint_mode, &manual_power_mode, &frequency_response_feature, &ess_calibration,
+        &energy_arbitrage, &target_soc, &active_power_setpoint_mode, &manual_power_mode, &frequency_response, &ess_calibration,
     };
     Fims_Object feature_kW_demand;
     Fims_Object site_kW_charge_production;      // Charge up to this amount during dispatch
@@ -308,52 +310,21 @@ protected:
     Fims_Object total_site_kW_charge_limit;     // Minimum total charge production allowed by the site based on available power and feature limitations
     Fims_Object total_site_kW_discharge_limit;  // Maximum total discharge production allowed by the site based on available power and feature limitations
 
-public:
-    Energy_Arbitrage energy_arb_obj;
-
 protected:
-    Empty_Feature energy_arbitrage_feature;
-    void energy_arbitrage_helper();
+    features::Energy_Arbitrage energy_arbitrage;
 
     features::Target_SOC target_soc;
 
     features::Active_Power_Setpoint active_power_setpoint_mode;
 
-    Empty_Feature manual_power_mode;
+    features::Manual manual_power_mode;
+
+    features::Frequency_Response frequency_response;
 
 public:
-    Slew_Object manual_solar_kW_slew;
-    Slew_Object manual_ess_kW_slew;
-    Slew_Object manual_gen_kW_slew;
-
-protected:
-    Fims_Object manual_solar_kW_cmd;  // manual setpoint for solar kW
-    Fims_Object manual_ess_kW_cmd;    // manual setpoint for ess kW
-    Fims_Object manual_gen_kW_cmd;    // manual setpoint for gen kW
-    Fims_Object manual_solar_kW_slew_rate;
-    Fims_Object manual_ess_kW_slew_rate;
-    Fims_Object manual_gen_kW_slew_rate;
-
-protected:
-    Frequency_Response frequency_response;
-    Empty_Feature frequency_response_feature;
-    void execute_frequency_response_feature();
-    Fims_Object frequency_response_enabled;  // boolean flag indicating if the Frequency Response active power mode is currently enabled
-
-public:
-    Empty_Feature ess_calibration;
+    features::ESS_Calibration ess_calibration;
     void get_ess_calibration_variables();
     void set_ess_calibration_variables();
-    Fims_Object ess_calibration_kW_cmd;
-    Fims_Object ess_calibration_soc_limits_enable;
-    Fims_Object ess_calibration_min_soc_limit;
-    Fims_Object ess_calibration_max_soc_limit;
-    Fims_Object ess_calibration_voltage_limits_enable;
-    Fims_Object ess_calibration_min_voltage_limit;
-    Fims_Object ess_calibration_max_voltage_limit;
-    Fims_Object ess_calibration_num_setpoint;
-    Fims_Object ess_calibration_num_limited;
-    Fims_Object ess_calibration_num_zero;
 
     ////////////////////////////////////////////////////////////////////////////////////
     //                          RUN MODE 2 ACTIVE POWER FEATURES                      //
@@ -372,9 +343,7 @@ public:
         &generator_charge,
     };
 
-    Empty_Feature generator_charge;
-    void run_generator_charge();
-    Fims_Object generator_charge_additional_buffer;  // Additional buffer that reduces generator output
+    features::Generator_Charge generator_charge;
 
     ///////////////////////////////////////////////////////////////////
     //                          CHARGE FEATURES                      //
@@ -489,9 +458,7 @@ protected:
     std::vector<Feature*> site_operation_features_list = {
         &watchdog_feature,
     };
-    //
-    // Watchdog Feature
-    //
+
     features::Watchdog watchdog_feature;
     void dogbark();
 
@@ -595,39 +562,6 @@ protected:
         { &max_potential_feeder_kW, "max_potential_feeder_kW" },
         { &min_potential_feeder_kW, "min_potential_feeder_kW" },
         { &rated_feeder_kW, "rated_feeder_kW" },
-        { &frequency_response_enabled, "fr_mode_enable_flag" },
-        { &energy_arbitrage_feature.enable_flag, "energy_arb_enable_flag" },
-        { &energy_arb_obj.price, "price" },
-        { &energy_arb_obj.threshold_charge_1, "threshold_charge_1" },
-        { &energy_arb_obj.threshold_charge_2, "threshold_charge_2" },
-        { &energy_arb_obj.threshold_dischg_1, "threshold_dischg_1" },
-        { &energy_arb_obj.threshold_dischg_2, "threshold_dischg_2" },
-        { &energy_arb_obj.soc_min_limit, "soc_min_limit" },
-        { &energy_arb_obj.soc_max_limit, "soc_max_limit" },
-        { &energy_arb_obj.max_charge_1, "max_charge_1" },
-        { &energy_arb_obj.max_charge_2, "max_charge_2" },
-        { &energy_arb_obj.max_dischg_1, "max_dischg_1" },
-        { &energy_arb_obj.max_dischg_2, "max_dischg_2" },
-        { &manual_power_mode.enable_flag, "manual_mode_enable_flag" },
-        { &manual_solar_kW_cmd, "manual_solar_kW_cmd" },
-        { &manual_ess_kW_cmd, "manual_ess_kW_cmd" },
-        { &manual_gen_kW_cmd, "manual_gen_kW_cmd" },
-        { &manual_solar_kW_slew_rate, "manual_solar_kW_slew_rate" },
-        { &manual_ess_kW_slew_rate, "manual_ess_kW_slew_rate" },
-        { &manual_gen_kW_slew_rate, "manual_gen_kW_slew_rate" },
-        { &ess_calibration.enable_flag, "ess_calibration_enable_flag" },
-        { &ess_calibration_kW_cmd, "ess_calibration_kW_cmd" },
-        { &ess_calibration_soc_limits_enable, "ess_calibration_soc_limits_enable" },
-        { &ess_calibration_min_soc_limit, "ess_calibration_min_soc_limit" },
-        { &ess_calibration_max_soc_limit, "ess_calibration_max_soc_limit" },
-        { &ess_calibration_voltage_limits_enable, "ess_calibration_voltage_limits_enable" },
-        { &ess_calibration_min_voltage_limit, "ess_calibration_min_voltage_limit" },
-        { &ess_calibration_max_voltage_limit, "ess_calibration_max_voltage_limit" },
-        { &ess_calibration_num_setpoint, "ess_calibration_num_setpoint" },
-        { &ess_calibration_num_limited, "ess_calibration_num_limited" },
-        { &ess_calibration_num_zero, "ess_calibration_num_zero" },
-        { &generator_charge.enable_flag, "generator_charge_enable" },
-        { &generator_charge_additional_buffer, "generator_charge_additional_buffer" },
         { &available_features_runmode1_kW_mode, "available_features_runmode1_kW_mode" },
         { &runmode1_kW_mode_cmd, "runmode1_kW_mode_cmd" },
         { &runmode1_kW_mode_status, "runmode1_kW_mode_status" },

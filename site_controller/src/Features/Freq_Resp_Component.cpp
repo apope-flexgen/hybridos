@@ -278,12 +278,11 @@ bool Freq_Resp_Component::parse_json_config(cJSON* JSON_config, bool* p_flag, In
  * @param JSON_body JSON containing the SET's value.
  * @param variable_id ID of the target variable to be edited.
  */
-void Freq_Resp_Component::handle_fims_set(cJSON* JSON_body, const char* variable_id) {
+void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* variable_id) {
     // extract value
-    cJSON* body_value = cJSON_GetObjectItem(JSON_body, "value");
-    int body_type = (body_value) ? body_value->type : JSON_body->type;
-    float body_float = (body_value) ? body_value->valuedouble : JSON_body->valuedouble;
-    int body_int = (body_value) ? body_value->valueint : JSON_body->valueint;
+    int body_type = JSON_body->type;
+    float body_float = JSON_body->valuedouble;
+    int body_int = JSON_body->valueint;
     bool body_bool = (body_type == cJSON_False) ? false : true;
 
     // find matching endpoint and handle SET

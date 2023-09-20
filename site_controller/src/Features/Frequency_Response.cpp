@@ -14,6 +14,21 @@
 #include <Features/Frequency_Response.h>
 #include <Site_Controller_Utils.h>
 
+features::Frequency_Response::Frequency_Response() {
+    // feature_vars and summary_vars are set after configuration is parsed
+
+    variable_ids = {
+        // inputs
+        { &enable_mask, "fr_enable_mask" },
+        { &baseload_cmd_kw, "fr_baseload_cmd_kw" },
+        { &target_freq_hz, "fr_target_freq_hz" },
+        { &freq_offset_hz, "fr_freq_offset_hz" },
+        // outputs
+        { &enable_flag, "fr_mode_enable_flag" },
+        { &total_output_kw, "fr_total_output_kw" },
+    };
+}
+
 /**
  * @brief Parses a cJSON object for the Frequency Response feature's configuration data.
  * @param JSON_config cJSON object containing configuration data.
@@ -24,10 +39,19 @@
  * if any of Frequency Response's inputs are configured to be Multiple Input Command Variables.
  * @returns True if parsing is successful or false if parsing failed.
  */
-bool Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults, std::vector<Fims_Object*>& multiple_inputs) {
+bool features::Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults, std::vector<Fims_Object*>& multiple_inputs) {
+    cJSON* JSON_frequency_response = cJSON_GetObjectItem(JSON_config, "frequency_response");
+    if (JSON_frequency_response == NULL) {
+        FPS_ERROR_LOG("No frequency_response found in variables file.\n");
+        return false;
+    }
+
     // parse high-level variables from variables.json
     for (auto& variable_id_pair : variable_ids) {
-        cJSON* JSON_variable = cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str());
+        cJSON* JSON_variable = NULL;
+        // the enable flag is a top-level variable, all others are members of the frequency response object
+        JSON_variable = variable_id_pair.first == &enable_flag ? cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str()) : cJSON_GetObjectItem(JSON_frequency_response, variable_id_pair.second.c_str());
+
         if (JSON_variable == NULL) {
             FPS_ERROR_LOG("Could not find variable %s in frequency_response object in variables.json.", variable_id_pair.second.c_str());
             return false;
@@ -39,7 +63,7 @@ bool Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p_flag, Inp
     }
 
     // extract response components array
-    cJSON* JSON_fr_components = cJSON_GetObjectItem(JSON_config, "components");
+    cJSON* JSON_fr_components = cJSON_GetObjectItem(JSON_frequency_response, "components");
     if (JSON_fr_components == NULL) {
         FPS_ERROR_LOG("Could not find components in frequency_response object of variables.json.");
         return false;
@@ -70,46 +94,46 @@ bool Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p_flag, Inp
 }
 
 /**
- * @brief Handles FIMS SETs to URIs belonging to the Frequency Response active power feature.
- * @param msg The FIMS message containing the SET.
+ * @brief Loads the given vector with pointers to all Frequency Response parameters that
+ * an external interface should know about.
+ * @param var_list List of variable pointers that will be published periodically.
  */
-void Frequency_Response::handle_fims_set(const fims_message& msg) {
-    // extra target endpoint and value
-    std::string uri_endpoint = msg.pfrags[msg.nfrags - 1];
-    cJSON* JSON_body = cJSON_Parse(msg.body);
-    if (JSON_body == NULL) {
-        FPS_ERROR_LOG("FIMS message body is NULL or incorrectly formatted: (%s)", JSON_body->valuestring);
-        return;
+void features::Frequency_Response::get_feature_vars(std::vector<Fims_Object*>& var_list) {
+    var_list.push_back(&target_freq_hz);
+    var_list.push_back(&freq_offset_hz);
+    var_list.push_back(&enable_mask);
+    var_list.push_back(&baseload_cmd_kw);
+    var_list.push_back(&total_output_kw);
+
+    for (auto curr_freq_resp_comp : response_components) {
+        curr_freq_resp_comp->get_feature_vars(var_list);
     }
-    defer { cJSON_Delete(JSON_body); };
+}
 
-    cJSON* body_value = cJSON_GetObjectItem(JSON_body, "value");
-    float body_float = (body_value) ? body_value->valuedouble : JSON_body->valuedouble;
-    int body_int = (body_value) ? body_value->valueint : JSON_body->valueint;
+/**
+ * @brief Loads the given vector with pointers to only the Frequency Response parameters
+ * that have been requested by Commissioning/Integration/etc. teams to be displayed in
+ * Site Controller's features summary.
+ * @param var_list List of variable pointers that will be included in the features summary
+ * object.
+ */
+void features::Frequency_Response::get_summary_vars(std::vector<Fims_Object*>& var_list) {
+    var_list.push_back(&baseload_cmd_kw);
+}
 
-    // check if target endpoint matches any Frequency Response high-level endpoints and handle the SET if so
-    if (enable_mask.set_fims_int(uri_endpoint.c_str(), body_int))
-        return;
-    if (baseload_cmd_kw.set_fims_float(uri_endpoint.c_str(), body_float))
-        return;
-    if (freq_offset_hz.set_fims_float(uri_endpoint.c_str(), body_float))
-        return;
-
-    // check if target endpoint is prefixed with any response component IDs. if so, pass it to that response component for it to handle the SET
-    // take the longest match in the case of two matches e.g. uf_ffr and uf_ffrs
-    size_t longest_match = 0;
-    std::shared_ptr<Freq_Resp_Component> matched_comp = NULL;
-    for (auto resp_comp : response_components) {
-        if (uri_endpoint.compare(0, resp_comp->component_id.value.value_string.length(), resp_comp->component_id.value.value_string) == 0) {
-            if (resp_comp->component_id.value.value_string.length() > longest_match) {
-                longest_match = resp_comp->component_id.value.value_string.length();
-                matched_comp = resp_comp;
-            }
-        }
-    }
-    // If a frequency endpoint was matched, check its component variables
-    if (matched_comp)
-        matched_comp->handle_fims_set(JSON_body, uri_endpoint.c_str());
+void features::Frequency_Response::execute(Asset_Cmd_Object& asset_cmd, float ess_total_rated_active_power, float site_frequency, timespec current_time) {
+    // get inputs
+    Frequency_Response_Inputs ins{ asset_cmd.ess_data.max_potential_kW, asset_cmd.ess_data.min_potential_kW, ess_total_rated_active_power, site_frequency, current_time };
+    // call frequency response algorithm
+    Frequency_Response_Outputs outs = aggregate_response_components(ins);
+    // set outputs
+    asset_cmd.ess_data.max_potential_kW = outs.ess_max_potential;
+    asset_cmd.ess_data.min_potential_kW = outs.ess_min_potential;
+    asset_cmd.site_kW_demand = outs.output_kw;
+    // Fully curtail solar. Even if configured to be larger, the UF response will not exceed the ESS (and gen) output and will not request from solar
+    asset_cmd.solar_data.max_potential_kW = 0;
+    // This feature does not track load
+    asset_cmd.set_load_compensation_method(NO_COMPENSATION);
 }
 
 /**
@@ -120,7 +144,7 @@ void Frequency_Response::handle_fims_set(const fims_message& msg) {
  * @returns Struct containing the output requests of the Frequency Response algorithm.
  * See definition of Frequency_Response_Outputs for details.
  */
-Frequency_Response_Outputs Frequency_Response::aggregate_response_components(Frequency_Response_Inputs input_settings) {
+Frequency_Response_Outputs features::Frequency_Response::aggregate_response_components(Frequency_Response_Inputs input_settings) {
     Frequency_Response_Outputs aggregate_values{
         baseload_cmd_kw.value.value_float,
         input_settings.ess_max_potential,
@@ -155,29 +179,32 @@ Frequency_Response_Outputs Frequency_Response::aggregate_response_components(Fre
 }
 
 /**
- * @brief Loads the given vector with pointers to all Frequency Response parameters that
- * an external interface should know about.
- * @param var_list List of variable pointers that will be published periodically.
+ * @brief Handles FIMS SETs to URIs belonging to the Frequency Response active power feature.
+ * @param uri_endpoint The endpoint parsed from the uri.
+ * @param msg_value The new value given by the FIMS message SET.
  */
-void Frequency_Response::get_feature_vars(std::vector<Fims_Object*>& var_list) {
-    var_list.push_back(&target_freq_hz);
-    var_list.push_back(&freq_offset_hz);
-    var_list.push_back(&enable_mask);
-    var_list.push_back(&baseload_cmd_kw);
-    var_list.push_back(&total_output_kw);
+void features::Frequency_Response::handle_fims_set(std::string uri_endpoint, const cJSON& msg_value) {
+    // check if target endpoint matches any Frequency Response high-level endpoints and handle the SET if so
+    if (enable_mask.set_fims_int(uri_endpoint.c_str(), msg_value.valueint))
+        return;
+    if (baseload_cmd_kw.set_fims_float(uri_endpoint.c_str(), msg_value.valueint))
+        return;
+    if (freq_offset_hz.set_fims_float(uri_endpoint.c_str(), msg_value.valueint))
+        return;
 
-    for (auto curr_freq_resp_comp : response_components) {
-        curr_freq_resp_comp->get_feature_vars(var_list);
+    // check if target endpoint is prefixed with any response component IDs. if so, pass it to that response component for it to handle the SET
+    // take the longest match in the case of two matches e.g. uf_ffr and uf_ffrs
+    size_t longest_match = 0;
+    std::shared_ptr<Freq_Resp_Component> matched_comp = NULL;
+    for (auto resp_comp : response_components) {
+        if (strncmp(uri_endpoint.c_str(), resp_comp->component_id.value.value_string.c_str(), resp_comp->component_id.value.value_string.length()) == 0) {
+            if (resp_comp->component_id.value.value_string.length() > longest_match) {
+                longest_match = resp_comp->component_id.value.value_string.length();
+                matched_comp = resp_comp;
+            }
+        }
     }
-}
-
-/**
- * @brief Loads the given vector with pointers to only the Frequency Response parameters
- * that have been requested by Commissioning/Integration/etc. teams to be displayed in
- * Site Controller's features summary.
- * @param var_list List of variable pointers that will be included in the features summary
- * object.
- */
-void Frequency_Response::get_summary_vars(std::vector<Fims_Object*>& var_list) {
-    var_list.push_back(&baseload_cmd_kw);
+    // If a frequency endpoint was matched, check its component variables
+    if (matched_comp)
+        matched_comp->handle_fims_set(&msg_value, uri_endpoint.c_str());
 }

@@ -65,8 +65,6 @@ public:
     bool determine_ess_load_requirement(int asset_priority);
     float dispatch_site_kW_discharge_cmd(int asset_priority, float cmd, discharge_type command_type);
     float dispatch_site_kW_charge_cmd(int asset_priority, bool solar_source_flag, bool gen_source_flag, bool feeder_source_flag);
-    void manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd, float manual_gen_kW_cmd, Slew_Object* ess_slew_rate, Slew_Object* solar_slew_rate, Slew_Object* gen_slew_rate);
-    void ess_calibration_mode(float ess_calibration_kW_cmd, int num_ess_controllable);
     void dispatch_reactive_power();
 
     bool get_site_kW_load_inclusion();

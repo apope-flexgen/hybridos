@@ -82,28 +82,17 @@ Site_Manager::Site_Manager(Version* release_version) {
     cops_heartbeat.set_variable_id("cops_heartbeat");
 }
 
+// Perform any initialization of feature objects which must occur after configuration is parsed
 void Site_Manager::configure_feature_objects(void) {
     //
     // Run Mode 1 Active Power Features
     //
-    // Energy Arbitrage
-    energy_arbitrage_feature.feature_vars = {
-        &energy_arb_obj.price,         &energy_arb_obj.threshold_charge_1, &energy_arb_obj.threshold_charge_2, &energy_arb_obj.threshold_dischg_1, &energy_arb_obj.threshold_dischg_2, &energy_arb_obj.soc_min_limit,
-        &energy_arb_obj.soc_max_limit, &energy_arb_obj.max_charge_1,       &energy_arb_obj.max_charge_2,       &energy_arb_obj.max_dischg_1,       &energy_arb_obj.max_dischg_2,
-    };
-    energy_arbitrage_feature.summary_vars = {
-        &energy_arb_obj.threshold_charge_2, &energy_arb_obj.threshold_charge_1, &energy_arb_obj.threshold_dischg_1, &energy_arb_obj.threshold_dischg_2, &energy_arb_obj.price,
-    };
-    // Manual Power Mode
-    manual_power_mode.feature_vars = { &manual_solar_kW_cmd, &manual_ess_kW_cmd, &manual_gen_kW_cmd, &manual_solar_kW_slew_rate, &manual_ess_kW_slew_rate, &manual_gen_kW_slew_rate };
     // Frequency Response Mode
-    frequency_response.get_feature_vars(frequency_response_feature.feature_vars);
-    frequency_response.get_summary_vars(frequency_response_feature.summary_vars);
+    // frequency response feature vars must be loaded after configuration parsing to
+    // properly load all frequency response component feature vars
+    frequency_response.get_feature_vars(frequency_response.feature_vars);
+    frequency_response.get_summary_vars(frequency_response.summary_vars);
 
-    ess_calibration.feature_vars = {
-        &ess_calibration_kW_cmd,       &ess_calibration_soc_limits_enable, &ess_calibration_min_soc_limit, &ess_calibration_max_soc_limit, &ess_calibration_voltage_limits_enable, &ess_calibration_min_voltage_limit, &ess_calibration_max_voltage_limit,
-        &ess_calibration_num_setpoint, &ess_calibration_num_limited,       &ess_calibration_num_zero
-    };
     // Copy SoC balancing factor to be preserved in Site Manager and overwritten in Asset Manager when this feature is enabled
     ess_soc_balancing_factor = pAssets->get_soc_balancing_factor();
     // Disable all features as part of initial configuration in case any are accidentally enabled
@@ -113,8 +102,6 @@ void Site_Manager::configure_feature_objects(void) {
     //
     // Run Mode 2 Active Power Features
     //
-    // Generator Charge
-    generator_charge.feature_vars = { &generator_charge_additional_buffer };
 
     // Disable all features as part of initial configuration in case any are accidentally enabled
     for (auto feature : runmode2_kW_features_list)
@@ -697,18 +684,6 @@ bool Site_Manager::parse_variables(cJSON* object) {
         }
     }
 
-    // TODO: once frequency response is a subclass of Feature, remove this special configuration function call
-    // parse frequency_response object
-    cJSON* JSON_frequency_response = cJSON_GetObjectItem(JSON_flat_vars, "frequency_response");
-    if (JSON_frequency_response == NULL) {
-        FPS_ERROR_LOG("No frequency_response found in variables file.\n");
-        return false;
-    }
-    if (!frequency_response.parse_json_config(JSON_frequency_response, is_primary, &input_sources, default_vals, multi_input_command_vars)) {
-        FPS_ERROR_LOG("Failed to parse frequency_response object.");
-        return false;
-    }
-
     // parse all Site_Manager-owned variables.json variables
     for (auto& variable_id_pair : variable_ids) {
         cJSON* JSON_variable = cJSON_GetObjectItem(JSON_flat_vars, variable_id_pair.second.c_str());
@@ -750,7 +725,8 @@ bool Site_Manager::parse_variables(cJSON* object) {
 }
 
 /**
- * @brief Parses the organized variables in variables.json into a flattened JSON object with all variables at the same level.
+ * @brief Parses the organized variables in variables.json into a flattened JSON object with all variables at the same level
+ * (there are specific hardcoded variables which require subobjects and won't be flattened completely).
  *
  * @param JSON_object The unflattened JSON variables object
  * @param JSON_flat_vars The JSON object which will receive the resulting flattened variables as cJSON references
@@ -831,13 +807,9 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
             FPS_ERROR_LOG("fims message body is NULL or incorrectly formatted: (%s) \n", msg->body);
             return;
         }
-        cJSON* body_value = cJSON_GetObjectItem(body_JSON, "value");
-        int body_type = (body_value) ? body_value->type : body_JSON->type;
-        float body_float = (body_value) ? body_value->valuedouble : body_JSON->valuedouble;  // float type for body value
-        int body_int = (body_value) ? body_value->valueint : body_JSON->valueint;
-        bool body_bool = (body_type == cJSON_False) ? false : true;
 
-        // TODO: once all set handling uses the below msg_value, remove the above body_float, body_int, body_bool declarations
+        // Parse the value from the message
+        cJSON* body_value = cJSON_GetObjectItem(body_JSON, "value");
         cJSON* p_msg_value = body_value ? body_value : body_JSON;
         if (p_msg_value == NULL) {
             FPS_ERROR_LOG("Failed to parse a value from fims message body: (%s) \n", msg->body);
@@ -845,11 +817,19 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
         }
         cJSON msg_value = *p_msg_value;
 
+        int body_type = msg_value.type;
+        float body_float = msg_value.valuedouble;  // float type for body value
+        int body_int = msg_value.valueint;
+        bool body_bool = (body_type == cJSON_False) ? false : true;
+
         if (msg->nfrags == 3)  // This is where you would allow user to set parameters
         {
-            if (uType == features_uri)  // all /feature sets for features with handler functions here
+            if (uType == features_uri)  // all /features sets here
             {
                 if (strncmp(msg->pfrags[1], "active_power", strlen("active_power")) == 0) {
+                    runmode1_kW_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode1_kW_features_mask);
+                    runmode2_kW_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode2_kW_features_mask);
+
                     for (auto feature : runmode1_kW_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
@@ -861,29 +841,38 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
 
+                    asset_priority_runmode1.set_fims_int(msg->pfrags[2], range_check(body_int, NUM_ASSET_PRIORITIES, 0));
+                    asset_priority_runmode2.set_fims_int(msg->pfrags[2], range_check(body_int, NUM_ASSET_PRIORITIES, 0));
+                    site_kW_load_interval_ms.set_fims_int(msg->pfrags[2], range_check(body_int, 1, 60000));  // Interval between 1ms and 60s
+
                     valid_set = true;
                 } else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0) {
                     runmode1_kVAR_mode_cmd.set_fims_masked_int(msg->pfrags[2], msg_value.valueint, available_runmode1_kVAR_features_mask);
+
                     for (auto feature : runmode1_kVAR_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
                     for (auto feature : runmode2_kVAR_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
+
                     valid_set = true;
                 } else if (strncmp(msg->pfrags[1], "standalone_power", strlen("standalone_power")) == 0) {
                     for (auto feature : standalone_power_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
-                    // included as a standalone_power variable for LDSS
+
+                    // start_first_gen_soc is included as a standalone_power variable due to LDSS
                     if (msg_value.type == cJSON_Number) {
                         start_first_gen_soc.set_fims_float(msg->pfrags[2], range_check(msg_value.valuedouble, 100.0f, 0.0f));
                     }
+
                     valid_set = true;
                 } else if (strncmp(msg->pfrags[1], "site_operation", strlen("site_operation")) == 0) {
                     for (auto feature : site_operation_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
+
                     if (msg_value.type == cJSON_False || msg_value.type == cJSON_True) {
                         power_priority_flag.set_fims_bool(msg->pfrags[2], body_bool);
                         allow_ess_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
@@ -897,58 +886,9 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         valid_set = (strcmp(msg->pfrags[2], "watchdog_pet") != 0);
                     }
                 }
-            }
-            // TODO: remove the following if blocks when all features have fims handler functions
-            if (body_type == cJSON_Number)  // process all numeric sets here
+            } else if (body_type == cJSON_Number)  // process all numeric sets here
             {
-                if (uType == features_uri)  // all /feature numeric sets here
-                {
-                    if (strncmp(msg->pfrags[1], "active_power", strlen("active_power")) == 0) {
-                        frequency_response.handle_fims_set(*msg);
-
-                        runmode1_kW_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode1_kW_features_mask);
-                        runmode2_kW_mode_cmd.set_fims_masked_int(msg->pfrags[2], body_int, available_runmode2_kW_features_mask);
-                        asset_priority_runmode1.set_fims_int(msg->pfrags[2], range_check(body_int, NUM_ASSET_PRIORITIES, 0));
-                        asset_priority_runmode2.set_fims_int(msg->pfrags[2], range_check(body_int, NUM_ASSET_PRIORITIES, 0));
-                        site_kW_load_interval_ms.set_fims_int(msg->pfrags[2], range_check(body_int, 1, 60000));  // Interval between 1ms and 60s
-
-                        // Manual Mode
-                        manual_solar_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
-                        manual_ess_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
-                        manual_gen_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
-                        // Update slew rates
-                        if (manual_solar_kW_slew_rate.set_fims_int(msg->pfrags[2], range_check(body_int, 100000000, 1)))
-                            manual_solar_kW_slew.set_slew_rate(manual_solar_kW_slew_rate.value.value_int);
-                        if (manual_ess_kW_slew_rate.set_fims_int(msg->pfrags[2], range_check(body_int, 100000000, 1)))
-                            manual_ess_kW_slew.set_slew_rate(manual_ess_kW_slew_rate.value.value_int);
-                        if (manual_gen_kW_slew_rate.set_fims_int(msg->pfrags[2], range_check(body_int, 100000000, 1)))
-                            manual_gen_kW_slew.set_slew_rate(manual_gen_kW_slew_rate.value.value_int);
-
-                        // Energy_Arbitrage
-                        energy_arb_obj.threshold_charge_1.set_fims_float(msg->pfrags[2], body_float);
-                        energy_arb_obj.threshold_charge_2.set_fims_float(msg->pfrags[2], body_float);
-                        energy_arb_obj.threshold_dischg_1.set_fims_float(msg->pfrags[2], body_float);
-                        energy_arb_obj.threshold_dischg_2.set_fims_float(msg->pfrags[2], body_float);
-                        energy_arb_obj.max_charge_1.set_fims_float(msg->pfrags[2], body_float);
-                        energy_arb_obj.max_charge_2.set_fims_float(msg->pfrags[2], body_float);
-                        energy_arb_obj.max_dischg_1.set_fims_float(msg->pfrags[2], body_float);
-                        energy_arb_obj.max_dischg_2.set_fims_float(msg->pfrags[2], body_float);
-                        energy_arb_obj.price.set_fims_float(msg->pfrags[2], body_float);
-
-                        // ESS Calibration
-                        ess_calibration_min_voltage_limit.set_fims_float(msg->pfrags[2], fabsf(body_float));
-                        ess_calibration_max_voltage_limit.set_fims_float(msg->pfrags[2], fabsf(body_float));
-                        ess_calibration_kW_cmd.set_fims_float(msg->pfrags[2], body_float);
-
-                        // write if valid % range
-                        if (body_float >= 0 && body_float <= 100) {
-                            ess_calibration_min_soc_limit.set_fims_float(msg->pfrags[2], body_float);
-                            ess_calibration_max_soc_limit.set_fims_float(msg->pfrags[2], body_float);
-                        }
-
-                        valid_set = true;
-                    }
-                } else if (uType == site_uri)  // all numeric sets for /site
+                if (uType == site_uri)  // all numeric sets for /site
                 {
                     // addition from NULL
                     if (strncmp(msg->pfrags[1], "cops", strlen("cops")) == 0) {
@@ -972,16 +912,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                 }
             } else if (body_type == cJSON_False || body_type == cJSON_True)  // process all boolean sets here
             {
-                if (uType == features_uri)  // all /features boolean sets here
-                {
-                    if (strncmp(msg->pfrags[1], "active_power", strlen("active_power")) == 0) {
-                        frequency_response.handle_fims_set(*msg);
-                        ess_calibration_soc_limits_enable.set_fims_bool(msg->pfrags[2], body_bool);
-                        ess_calibration_voltage_limits_enable.set_fims_bool(msg->pfrags[2], body_bool);
-
-                        valid_set = true;
-                    }
-                } else if (uType == site_uri)  // all /site boolean set here
+                if (uType == site_uri)  // all /site boolean set here
                 {
                     if ((strncmp(msg->pfrags[1], "operation", strlen("operation")) == 0)) {
                         // Check is_primary status (not a Fims_Object, set here)
@@ -1336,9 +1267,9 @@ void Site_Manager::set_values() {
     solar_kVAR_cmd_slew.update_slew_target(solar_kVAR_cmd.value.value_float);
     remove_active_poi_corrections_from_slew_targets();
     remove_reactive_poi_corrections_from_slew_targets();
-    manual_solar_kW_slew.update_slew_target(solar_kW_cmd.value.value_float);
-    manual_ess_kW_slew.update_slew_target(ess_kW_cmd.value.value_float);
-    manual_gen_kW_slew.update_slew_target(gen_kW_cmd.value.value_float);
+    manual_power_mode.manual_solar_kW_slew.update_slew_target(solar_kW_cmd.value.value_float);
+    manual_power_mode.manual_ess_kW_slew.update_slew_target(ess_kW_cmd.value.value_float);
+    manual_power_mode.manual_gen_kW_slew.update_slew_target(gen_kW_cmd.value.value_float);
 
     pAssets->set_reactive_power_priority(power_priority_flag.value.value_bool);
 
@@ -1578,12 +1509,12 @@ void Site_Manager::update_power_feature_selections() {
     }
     // One-off logic to disable soc and voltage based limits variables unless their enable flags are true
     if (runmode1_kW_features_list[current_runmode1_kW_feature] == &ess_calibration) {
-        bool soc_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration_soc_limits_enable.value.value_bool;
-        ess_calibration_min_soc_limit.ui_enabled = soc_limits_enabled;
-        ess_calibration_max_soc_limit.ui_enabled = soc_limits_enabled;
-        bool voltage_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration_voltage_limits_enable.value.value_bool;
-        ess_calibration_min_voltage_limit.ui_enabled = voltage_limits_enabled;
-        ess_calibration_max_voltage_limit.ui_enabled = voltage_limits_enabled;
+        bool soc_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.soc_limits_enable.value.value_bool;
+        ess_calibration.min_soc_limit.ui_enabled = soc_limits_enabled;
+        ess_calibration.max_soc_limit.ui_enabled = soc_limits_enabled;
+        bool voltage_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.voltage_limits_enable.value.value_bool;
+        ess_calibration.min_voltage_limit.ui_enabled = voltage_limits_enabled;
+        ess_calibration.max_voltage_limit.ui_enabled = voltage_limits_enabled;
     }
 
     // if runmode2 active power feature command has changed, switch runmode2 active power features
@@ -2448,9 +2379,9 @@ void Site_Manager::init_state(void) {
     gen_kVAR_cmd.value.set(0.0f);
     solar_kVAR_cmd.value.set(0.0f);
     active_power_setpoint_mode.kW_slew.reset_slew_target();
-    manual_solar_kW_slew.reset_slew_target();
-    manual_ess_kW_slew.reset_slew_target();
-    manual_gen_kW_slew.reset_slew_target();
+    manual_power_mode.manual_solar_kW_slew.reset_slew_target();
+    manual_power_mode.manual_ess_kW_slew.reset_slew_target();
+    manual_power_mode.manual_gen_kW_slew.reset_slew_target();
     gen_kVAR_cmd_slew.reset_slew_target();
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
@@ -2489,9 +2420,9 @@ void Site_Manager::init_state(void) {
 
     // initialize internal variables with config vars
     active_power_setpoint_mode.kW_slew.set_slew_rate(active_power_setpoint_mode.kW_slew_rate.value.value_int);
-    manual_solar_kW_slew.set_slew_rate(manual_solar_kW_slew_rate.value.value_int);
-    manual_ess_kW_slew.set_slew_rate(manual_ess_kW_slew_rate.value.value_int);
-    manual_gen_kW_slew.set_slew_rate(manual_gen_kW_slew_rate.value.value_int);
+    manual_power_mode.manual_solar_kW_slew.set_slew_rate(manual_power_mode.manual_solar_kW_slew_rate.value.value_int);
+    manual_power_mode.manual_ess_kW_slew.set_slew_rate(manual_power_mode.manual_ess_kW_slew_rate.value.value_int);
+    manual_power_mode.manual_gen_kW_slew.set_slew_rate(manual_power_mode.manual_gen_kW_slew_rate.value.value_int);
     ess_kVAR_cmd_slew.set_slew_rate(ess_kVAR_slew_rate.value.value_int);
     gen_kVAR_cmd_slew.set_slew_rate(gen_kVAR_slew_rate.value.value_int);
     solar_kVAR_cmd_slew.set_slew_rate(solar_kVAR_slew_rate.value.value_int);
@@ -2712,9 +2643,9 @@ void Site_Manager::shutdown_state(void) {
     gen_kVAR_cmd.value.set(0.0f);
     solar_kVAR_cmd.value.set(0.0f);
     active_power_setpoint_mode.kW_slew.reset_slew_target();
-    manual_solar_kW_slew.reset_slew_target();
-    manual_ess_kW_slew.reset_slew_target();
-    manual_gen_kW_slew.reset_slew_target();
+    manual_power_mode.manual_solar_kW_slew.reset_slew_target();
+    manual_power_mode.manual_ess_kW_slew.reset_slew_target();
+    manual_power_mode.manual_gen_kW_slew.reset_slew_target();
     gen_kVAR_cmd_slew.reset_slew_target();
     ess_kVAR_cmd_slew.reset_slew_target();
     solar_kVAR_cmd_slew.reset_slew_target();
@@ -2770,63 +2701,24 @@ void Site_Manager::process_runmode1_kW_feature() {
     }
     // MANUAL MODE takes an ESS kW cmd, solar kW cmd, generator kW cmd, ESS slew rate, solar slew rate, and generator slew rate and routes those commands through dispatch and charge control
     else if (manual_power_mode.enable_flag.value.value_bool) {
-        asset_cmd.manual_mode(manual_ess_kW_cmd.value.value_float, manual_solar_kW_cmd.value.value_float, manual_gen_kW_cmd.value.value_float, &manual_ess_kW_slew, &manual_solar_kW_slew, &manual_gen_kW_slew);
+        manual_power_mode.execute(asset_cmd);
     }
     // FR MODE (frequency response) - output or absorb additional power if frequency deviates by a set amount
-    else if (frequency_response_feature.enable_flag.value.value_bool) {
-        execute_frequency_response_feature();
+    else if (frequency_response.enable_flag.value.value_bool) {
+        frequency_response.execute(asset_cmd, get_ess_total_rated_active_power(), site_frequency.value.value_float, current_time);
     }
     // ENERGY ARBITRAGE MODE determines storage charge/discharge based on current price and thresholds
-    else if (energy_arbitrage_feature.enable_flag.value.value_bool) {
-        energy_arbitrage_helper();
+    else if (energy_arbitrage.enable_flag.value.value_bool) {
+        if (!energy_arbitrage.execute(asset_cmd, soc_avg_running.value.value_float, active_alarm_array)) {
+            set_alarms(energy_arbitrage.alarm_index);
+        }
     }
     // ESS Calibration Mode takes an ESS kW_cmd and routes it to each ESS without balancing, and with optional soc and voltage limits
     else if (ess_calibration.enable_flag.value.value_bool) {
-        asset_cmd.ess_calibration_mode(ess_calibration_kW_cmd.value.value_float, pAssets->get_num_ess_controllable());
+        ess_calibration.execute(asset_cmd, pAssets->get_num_ess_controllable());
     }
 
     asset_cmd.calculate_feature_kW_demand(asset_priority_runmode1.value.value_int);
-}
-
-// run frequency response algorithm
-void Site_Manager::execute_frequency_response_feature() {
-    // get inputs
-    Frequency_Response_Inputs ins{
-        asset_cmd.ess_data.max_potential_kW, asset_cmd.ess_data.min_potential_kW, get_ess_total_rated_active_power(), site_frequency.value.value_float, current_time,
-    };
-    // call frequency response algorithm
-    Frequency_Response_Outputs outs = frequency_response.aggregate_response_components(ins);
-    // set outputs
-    asset_cmd.ess_data.max_potential_kW = outs.ess_max_potential;
-    asset_cmd.ess_data.min_potential_kW = outs.ess_min_potential;
-    asset_cmd.site_kW_demand = outs.output_kw;
-    // Fully curtail solar. Even if configured to be larger, the UF response will not exceed the ESS (and gen) output and will not request from solar
-    asset_cmd.solar_data.max_potential_kW = 0;
-    // This feature does not track load
-    asset_cmd.set_load_compensation_method(NO_COMPENSATION);
-}
-
-void Site_Manager::energy_arbitrage_helper() {
-    Energy_Arbitrage_Inputs Energy_Arbitrage_Parameters{
-        soc_avg_running.value.value_float,
-        asset_cmd.solar_data.max_potential_kW,
-    };
-
-    Energy_Arbitrage_Output outputs = energy_arb_obj.energy_arbitrage(Energy_Arbitrage_Parameters);
-    if (!active_alarm_array[3] && outputs.error_code == 1) {
-        set_alarms(3);
-    } else {
-        asset_cmd.solar_data.max_potential_kW = outputs.solar_max_potential_kW;
-        // Feature output assigned to ESS
-        asset_cmd.ess_data.kW_request = outputs.ess_kW_power;
-        // Solar fully uncurtailed, but reserve a portion equal to ESS charge request (negative feature output) if present
-        asset_cmd.solar_data.kW_request = outputs.solar_kW_request;
-    }
-    // This feature tracks load at a minimum
-    asset_cmd.load_method = LOAD_MINIMUM;
-    asset_cmd.additional_load_compensation = asset_cmd_utils::calculate_additional_load_compensation(asset_cmd.load_method, asset_cmd.site_kW_load, asset_cmd.site_kW_demand, asset_cmd.ess_data.kW_request, asset_cmd.gen_data.kW_request,
-                                                                                                     asset_cmd.solar_data.kW_request);
-    asset_cmd.site_kW_demand += asset_cmd.additional_load_compensation;
 }
 
 /**
@@ -2851,29 +2743,9 @@ void Site_Manager::process_runmode2_kW_feature() {
 
     // Feature selection. Currently, only Generator Charge is offered
     if (generator_charge.enable_flag.value.value_bool)
-        run_generator_charge();
+        generator_charge.execute(asset_cmd, solar_shed, max_potential_gen_kW.value.value_float);
 
     asset_cmd.calculate_feature_kW_demand(asset_priority_runmode2.value.value_float);
-}
-
-/**
- * Calculate a generator command based on the current ESS active power and solar shedding buffers.
- * This feature is entirely coupled with solar shedding and LDSS
- */
-void Site_Manager::run_generator_charge() {
-    // ESS should be controlled by Solar + Gen, leaving enough room for solar to always increase (high threshold) if it wants
-    // Determine if solar needs room to increase (remember min_offset = no shedding = full solar output)
-    float solar_additional_buffer = (solar_shed.solar_shed_calculator.offset == solar_shed.solar_shed_calculator.min_offset) ? 0.0f : solar_shed.solar_shed_high_threshold.value.value_float;
-    // Determine how much solar power will actually go to the ESS, and not load
-    float actual_solar_compensation = asset_cmd.solar_data.max_potential_kW - asset_cmd.site_kW_load;
-    // Determine the ESS's unsatisfied charge capability that can be handled by the generator
-    float available_ess_after_solar = zero_check(zero_check(-1.0f * asset_cmd.ess_data.min_potential_kW) - actual_solar_compensation);
-    // Further reduce this value by the buffers
-    float calc_gen_limit = zero_check(available_ess_after_solar - solar_additional_buffer - generator_charge_additional_buffer.value.value_float);
-    // Take the final value as the command, and make sure gen power does not exceed this value
-    float max_gen_limit = std::min(calc_gen_limit, asset_cmd.gen_data.max_potential_kW);
-    asset_cmd.gen_data.max_potential_kW = max_gen_limit;
-    max_potential_gen_kW.value.set(max_gen_limit);
 }
 
 /**
@@ -2974,9 +2846,9 @@ bool Site_Manager::synchronize_ess() {
  */
 void Site_Manager::get_ess_calibration_variables() {
     std::vector<int> ess_setpoint_statuses = pAssets->get_ess_setpoint_statuses();
-    ess_calibration_num_setpoint.value.set(ess_setpoint_statuses[ACCEPTED]);
-    ess_calibration_num_limited.value.set(ess_setpoint_statuses[LIMITED]);
-    ess_calibration_num_zero.value.set(ess_setpoint_statuses[ZERO]);
+    ess_calibration.num_setpoint.value.set(ess_setpoint_statuses[ACCEPTED]);
+    ess_calibration.num_limited.value.set(ess_setpoint_statuses[LIMITED]);
+    ess_calibration.num_zero.value.set(ess_setpoint_statuses[ZERO]);
 }
 
 /**
@@ -2992,14 +2864,14 @@ void Site_Manager::set_ess_calibration_variables() {
     settings.power_dist_flag = !ess_calibration.enable_flag.value.value_bool;
     // limits override always enabled in this mode
     settings.limits_override = ess_calibration.enable_flag.value.value_bool;
-    settings.soc_limits_flag = ess_calibration_soc_limits_enable.value.value_bool;
-    settings.min_soc_limit = ess_calibration_min_soc_limit.value.value_float;
-    settings.max_soc_limit = ess_calibration_max_soc_limit.value.value_float;
-    settings.voltage_limits = ess_calibration_voltage_limits_enable.value.value_bool;
-    settings.min_voltage_limit = ess_calibration_min_voltage_limit.value.value_float;
-    settings.max_voltage_limit = ess_calibration_max_voltage_limit.value.value_float;
+    settings.soc_limits_flag = ess_calibration.soc_limits_enable.value.value_bool;
+    settings.min_soc_limit = ess_calibration.min_soc_limit.value.value_float;
+    settings.max_soc_limit = ess_calibration.max_soc_limit.value.value_float;
+    settings.voltage_limits = ess_calibration.voltage_limits_enable.value.value_bool;
+    settings.min_voltage_limit = ess_calibration.min_voltage_limit.value.value_float;
+    settings.max_voltage_limit = ess_calibration.max_voltage_limit.value.value_float;
     // Write through the feature setpoint as well so we have a reference of whether it's being met for each asset
-    settings.raw_feature_setpoint = ess_calibration_kW_cmd.value.value_float;
+    settings.raw_feature_setpoint = ess_calibration.kW_cmd.value.value_float;
     pAssets->set_ess_calibration_vars(settings);
 }
 

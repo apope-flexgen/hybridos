@@ -658,21 +658,24 @@ TEST_F(site_manager_test, manual_mode) {
     for (auto test : tests) {
         test_logger t_log("manual_mode", test_id++, tests.size());
         // Increment export target cmd slew prior to test
-        manual_solar_kW_slew.set_slew_rate(test.solar_slew_rate);
-        manual_ess_kW_slew.set_slew_rate(test.ess_slew_rate);
-        manual_gen_kW_slew.set_slew_rate(test.gen_slew_rate);
-        manual_solar_kW_slew.update_slew_target(0);  // call once for each asset to set time vars
-        manual_ess_kW_slew.update_slew_target(0);
-        manual_gen_kW_slew.update_slew_target(0);
-        usleep(10000);                               // wait 10ms (total range +/-10MW)
-        manual_solar_kW_slew.update_slew_target(0);  // call again to get delta time for non-zero slew range
-        manual_ess_kW_slew.update_slew_target(0);
-        manual_gen_kW_slew.update_slew_target(0);
+        manual_power_mode.manual_solar_kW_slew.set_slew_rate(test.solar_slew_rate);
+        manual_power_mode.manual_ess_kW_slew.set_slew_rate(test.ess_slew_rate);
+        manual_power_mode.manual_gen_kW_slew.set_slew_rate(test.gen_slew_rate);
+        manual_power_mode.manual_solar_kW_slew.update_slew_target(0);  // call once for each asset to set time vars
+        manual_power_mode.manual_ess_kW_slew.update_slew_target(0);
+        manual_power_mode.manual_gen_kW_slew.update_slew_target(0);
+        usleep(10000);                                                 // wait 10ms (total range +/-10MW)
+        manual_power_mode.manual_solar_kW_slew.update_slew_target(0);  // call again to get delta time for non-zero slew range
+        manual_power_mode.manual_ess_kW_slew.update_slew_target(0);
+        manual_power_mode.manual_gen_kW_slew.update_slew_target(0);
         // Set potentials to some abritrary nonzero value to ensure they are modified appropriately
         asset_cmd.solar_data.max_potential_kW = 5000;
         asset_cmd.ess_data.max_potential_kW = 2500;
         asset_cmd.gen_data.max_potential_kW = 5000;
-        asset_cmd.manual_mode(test.ess_cmd, test.solar_cmd, test.gen_cmd, &manual_ess_kW_slew, &manual_solar_kW_slew, &manual_gen_kW_slew);
+        manual_power_mode.manual_ess_kW_cmd.value.set(test.ess_cmd);
+        manual_power_mode.manual_solar_kW_cmd.value.set(test.solar_cmd);
+        manual_power_mode.manual_gen_kW_cmd.value.set(test.gen_cmd);
+        manual_power_mode.execute(asset_cmd);
         t_log.float_results.push_back({ test.expected_ess_charge_kW_request, asset_cmd.ess_data.kW_request, "ESS kW Request" });
         t_log.float_results.push_back({ test.expected_solar_kW_request, asset_cmd.solar_data.kW_request, "Solar kW Request" });
         t_log.float_results.push_back({ test.expected_gen_kW_request, asset_cmd.gen_data.kW_request, "Generator kW Request" });
@@ -1564,16 +1567,7 @@ TEST_F(site_manager_test, set_fims_masked_int) {
     }
 }
 
-class EA_Mock : public Energy_Arbitrage {
-public:
-};
-class energy_arbitrage_test : public testing::Test {
-public:
-    EA_Mock ea_mock;
-    virtual void SetUp() {}
-    virtual void TearDown() {}
-};
-TEST_F(energy_arbitrage_test, energy_arbitrage) {
+TEST_F(site_manager_test, energy_arbitrage) {
     int const num_tests = 13;  // total number of test cases
 
     // struct that has variables to configure for each test case
@@ -1618,24 +1612,27 @@ TEST_F(energy_arbitrage_test, energy_arbitrage) {
         std::stringstream errorLog;
         // Capture any prints within site controller that might be present in debug mode
         capture_stdout();
-        ea_mock.price.value.value_float = array[i].price;
-        ea_mock.threshold_charge_2.value.value_float = array[i].threshold_charge_2;
-        ea_mock.threshold_charge_1.value.value_float = array[i].threshold_charge_1;
-        ea_mock.threshold_dischg_1.value.value_float = array[i].threshold_dischg_1;
-        ea_mock.threshold_dischg_2.value.value_float = array[i].threshold_dischg_2;
-        ea_mock.max_charge_2.value.value_float = array[i].max_charge_2;
-        ea_mock.max_charge_1.value.value_float = array[i].max_charge_1;
-        ea_mock.max_dischg_1.value.value_float = array[i].max_dischg_1;
-        ea_mock.max_dischg_2.value.value_float = array[i].max_dischg_2;
-        ea_mock.soc_min_limit.value.value_float = array[i].min_soc_limit;
-        ea_mock.soc_max_limit.value.value_float = array[i].max_soc_limit;
+        energy_arbitrage.price.value.value_float = array[i].price;
+        energy_arbitrage.threshold_charge_2.value.value_float = array[i].threshold_charge_2;
+        energy_arbitrage.threshold_charge_1.value.value_float = array[i].threshold_charge_1;
+        energy_arbitrage.threshold_dischg_1.value.value_float = array[i].threshold_dischg_1;
+        energy_arbitrage.threshold_dischg_2.value.value_float = array[i].threshold_dischg_2;
+        energy_arbitrage.max_charge_2.value.value_float = array[i].max_charge_2;
+        energy_arbitrage.max_charge_1.value.value_float = array[i].max_charge_1;
+        energy_arbitrage.max_dischg_1.value.value_float = array[i].max_dischg_1;
+        energy_arbitrage.max_dischg_2.value.value_float = array[i].max_dischg_2;
+        energy_arbitrage.soc_min_limit.value.value_float = array[i].min_soc_limit;
+        energy_arbitrage.soc_max_limit.value.value_float = array[i].max_soc_limit;
 
-        Energy_Arbitrage_Inputs in{ array[i].avg_running_soc, array[i].solar_max_potential };
-        auto out = ea_mock.energy_arbitrage(in);
+        soc_avg_running.value.set(array[i].avg_running_soc);
+        asset_cmd.solar_data.max_potential_kW = array[i].solar_max_potential;
+
+        energy_arbitrage.execute(asset_cmd, soc_avg_running.value.value_float, active_alarm_array);
+
         errorLog << "energy_arbitrage() test " << i + 1 << " of " << num_tests << std::endl;
-        bool failure = out.ess_kW_power != array[i].expected_ess_kW_request || out.solar_kW_request != array[i].expected_solar_kW_request;
-        EXPECT_EQ(out.ess_kW_power, array[i].expected_ess_kW_request);
-        EXPECT_EQ(out.solar_kW_request, array[i].expected_solar_kW_request);
+        bool failure = asset_cmd.ess_data.kW_request != array[i].expected_ess_kW_request || asset_cmd.solar_data.kW_request != array[i].expected_solar_kW_request;
+        EXPECT_EQ(asset_cmd.ess_data.kW_request, array[i].expected_ess_kW_request);
+        EXPECT_EQ(asset_cmd.solar_data.kW_request, array[i].expected_solar_kW_request);
 
         // Release stdout so we can write again
         release_stdout(failure);

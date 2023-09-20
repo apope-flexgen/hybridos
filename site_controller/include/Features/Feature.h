@@ -44,11 +44,14 @@ struct Feature {
 };
 
 // Namespace of all feature subclasses
-// TODO: as features get their own feature subclasses, add them to the namespace until they are all accounted for
 namespace features {
 // Runmode 1 Active Power Features
 class Active_Power_Setpoint;
 class Target_SOC;
+class Energy_Arbitrage;
+class Frequency_Response;
+class ESS_Calibration;
+class Manual;
 
 // Runmode 1 Reactive Power Features
 class Active_Voltage_Regulation;
@@ -69,7 +72,11 @@ class Aggregated_Asset_Limit;
 class Reactive_Power_Closed_Loop_Control;
 
 // Runmode 2 Active Power Features
+class Generator_Charge;
+
 // Runmode 2 Reactive Power Features
+// (There are no runmode 2 reactive power features)
+
 // Runmode 2 Standalone Power Features
 class Load_Shed;
 class Solar_Shed;

@@ -4,8 +4,8 @@
  * Created: Summer 2022
  */
 
-#ifndef INCLUDE_FREQUENCY_OBJECT_H_
-#define INCLUDE_FREQUENCY_OBJECT_H_
+#ifndef FEATURES_FREQUENCY_OBJECT_H_
+#define FEATURES_FREQUENCY_OBJECT_H_
 
 /* C Standard Library Dependencies */
 /* C++ Standard Library Dependencies */
@@ -37,7 +37,7 @@ public:
 
     bool initialize_state(float grid_target_freq_hz);
     bool parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults, std::vector<Fims_Object*>& multiple_inputs);
-    void handle_fims_set(cJSON* JSON_body, const char* variable_id);
+    void handle_fims_set(const cJSON* JSON_body, const char* variable_id);
     void get_feature_vars(std::vector<Fims_Object*>& var_list);
     void clear_outputs();
 
@@ -112,4 +112,4 @@ protected:
     bool is_within_instant_recovery(float freq);
 };
 
-#endif /* INCLUDE_FREQUENCY_OBJECT_H_ */
+#endif /* FEATURES_FREQUENCY_OBJECT_H_ */
