@@ -8,6 +8,7 @@
 #include <test_tools.h>
 #include "frequency_response_test.h"
 #include <Features/Active_Power_Setpoint.h>
+#include <Features/Active_Voltage_Regulation.h>
 
 class site_manager_test : public Site_Manager, public testing::Test {
 public:
@@ -195,7 +196,12 @@ TEST_F(site_manager_test, calculate_feature_kW_demand) {
         asset_cmd.solar_data.kW_request = test.solar_request;
         asset_cmd.set_load_compensation_method(test.load_inclusion);
         asset_cmd.site_kW_load = test.load;
-        asset_cmd.track_unslewed_load(test.load_inclusion);
+
+        asset_cmd.load_method = test.load_inclusion;
+        asset_cmd.additional_load_compensation = asset_cmd_utils::calculate_additional_load_compensation(asset_cmd.load_method, asset_cmd.site_kW_load, asset_cmd.site_kW_demand, asset_cmd.ess_data.kW_request, asset_cmd.gen_data.kW_request,
+                                                                                                         asset_cmd.solar_data.kW_request);
+        asset_cmd.site_kW_demand += asset_cmd.additional_load_compensation;
+
         asset_cmd.calculate_feature_kW_demand(0);
         t_log.float_results.push_back({ asset_cmd.feature_kW_demand, test.expected_feature_demand, "feature" });
         t_log.float_results.push_back({ asset_cmd.site_kW_demand, test.expected_feature_demand, "demand" });
@@ -281,7 +287,10 @@ TEST_F(site_manager_test, calculate_site_kW_production_limits) {
         asset_cmd.solar_data.kW_request = array[i].solar_request;
         asset_cmd.set_load_compensation_method(LOAD_MINIMUM);
         asset_cmd.additional_load_compensation = array[i].load_inclusion * array[i].additional_load;
-        asset_cmd.calculate_site_kW_production_limits();
+        asset_cmd_utils::site_kW_production_limits site_kW_prod_limits = asset_cmd_utils::calculate_site_kW_production_limits(asset_cmd.ess_data.kW_request, asset_cmd.gen_data.kW_request, asset_cmd.solar_data.kW_request, asset_cmd.load_method,
+                                                                                                                              asset_cmd.additional_load_compensation, asset_cmd.feature_kW_demand, asset_cmd.site_kW_demand);
+        asset_cmd.site_kW_charge_production = site_kW_prod_limits.site_kW_charge_production;
+        asset_cmd.site_kW_discharge_production = site_kW_prod_limits.site_kW_discharge_production;
         errorLog << "calculate_site_kW_production_limits() test " << i + 1 << " of " << num_tests << std::endl;
         // failure conditions
         failure = asset_cmd.site_kW_charge_production != array[i].expected_charge_production || asset_cmd.site_kW_discharge_production != array[i].expected_discharge_production;
@@ -521,16 +530,19 @@ TEST_F(site_manager_test, target_soc) {
         bool expected_load_inclusion;
         float expected_ess_request;
         float expected_solar_request;
+        float expected_site_kW_demand;
+        float expected_additional_load_compensation;
     };
 
     tests array[num_tests];  // an array with an element for each test case
 
     // configure variables each test case
-    array[0] = { true, 0.0f, 2500.0f, 0.0f, true, 2500.0f, 0.0f };            // Ess discharge only
-    array[1] = { false, 0.0f, -2500.0f, 0.0f, false, -2500.0f, 0.0f };        // Ess charge only
-    array[2] = { true, 0.0f, -2500.0f, 2500.0f, true, -2500.0f, 2500.0f };    // Ess charge from solar potential, solar = ess
-    array[3] = { false, 0.0f, -2500.0f, 1500.0f, false, -2500.0f, 1500.0f };  // Ess charge from solar potential, solar < ess
-    array[4] = { false, 0.0f, -2500.0f, 5000.0f, false, -2500.0f, 5000.0f };  // Ess charge from solar potential, solar > ess
+    array[0] = { true, 0.0f, 2500.0f, 0.0f, true, 2500.0f, 0.0f, 0.0f, 0.0f };            // Ess discharge only
+    array[1] = { false, 0.0f, -2500.0f, 0.0f, false, -2500.0f, 0.0f, 0.0f, 0.0f };        // Ess charge only
+    array[2] = { true, 0.0f, -2500.0f, 2500.0f, true, -2500.0f, 2500.0f, 0.0f, 0.0f };    // Ess charge from solar potential, solar = ess
+    array[3] = { false, 0.0f, -2500.0f, 1500.0f, false, -2500.0f, 1500.0f, 0.0f, 0.0f };  // Ess charge from solar potential, solar < ess
+    array[4] = { false, 0.0f, -2500.0f, 5000.0f, false, -2500.0f, 5000.0f, 0.0f, 0.0f };  // Ess charge from solar potential, solar > ess
+    array[5] = { true, 5000.0f, 2500.0f, 0.0f, true, 2500.0f, 0.0f, 2500.0f, 2500.0f };   // Check site_kW_demand is modified to account for load
 
     // iterate through each test case and get results
     for (int i = 0; i < num_tests; i++) {
@@ -541,12 +553,16 @@ TEST_F(site_manager_test, target_soc) {
 
         asset_cmd.ess_data.kW_request = array[i].ess_kW_request;
         asset_cmd.solar_data.max_potential_kW = array[i].solar_max_potential;
-        asset_cmd.target_soc_mode(array[i].load_enable);
+        target_soc.load_enable_flag.value.value_bool = array[i].load_enable;
+        target_soc.execute(asset_cmd);
         errorLog << "target_soc() test " << i + 1 << " of " << num_tests << std::endl;
-        bool failure = asset_cmd.ess_data.kW_request != array[i].expected_ess_request || asset_cmd.solar_data.kW_request != array[i].expected_solar_request || asset_cmd.get_site_kW_load_inclusion() != array[i].expected_load_inclusion;
+        bool failure = asset_cmd.ess_data.kW_request != array[i].expected_ess_request || asset_cmd.solar_data.kW_request != array[i].expected_solar_request || asset_cmd.get_site_kW_load_inclusion() != array[i].expected_load_inclusion ||
+                       asset_cmd.site_kW_demand != array[i].expected_site_kW_demand || asset_cmd.additional_load_compensation != array[i].expected_additional_load_compensation;
         EXPECT_EQ(asset_cmd.ess_data.kW_request, array[i].expected_ess_request);
         EXPECT_EQ(asset_cmd.solar_data.kW_request, array[i].expected_solar_request);
         EXPECT_EQ(asset_cmd.get_site_kW_load_inclusion(), array[i].expected_load_inclusion);
+        EXPECT_EQ(asset_cmd.site_kW_demand, array[i].expected_site_kW_demand);
+        EXPECT_EQ(asset_cmd.additional_load_compensation, array[i].expected_additional_load_compensation);
 
         // Release stdout so we can write again
         release_stdout(failure);
@@ -797,7 +813,7 @@ TEST_F(site_manager_test, active_voltage_mode) {
         float solar_potential_kVAR;
         float ess_potential_kVAR;
         float gen_potential_kVAR;
-        float actual_voltage;
+        float actual_volts;
         float result_site_kVAR_demand;
         float result_solar_kVAR_cmd;
         float result_ess_kVAR_cmd;
@@ -837,7 +853,12 @@ TEST_F(site_manager_test, active_voltage_mode) {
         asset_cmd.gen_data.kVAR_cmd = 0;
 
         asset_cmd.calculate_total_potential_kVAR();
-        asset_cmd.active_voltage_mode(deadband, cmd, array[i].actual_voltage, droop_percent, rated_kVAR);
+        active_voltage_regulation.deadband.value.value_float = deadband;
+        active_voltage_regulation.voltage_cmd.value.value_float = cmd;
+        active_voltage_regulation.actual_volts.value.value_float = array[i].actual_volts;
+        active_voltage_regulation.droop_percent.value.value_float = droop_percent;
+        active_voltage_regulation.rated_kVAR.value.value_float = rated_kVAR;
+        active_voltage_regulation.execute(asset_cmd, asset_pf_flag);
         asset_cmd.dispatch_reactive_power();
 
         errorLog << "active_voltage_mode() test " << i + 1 << " of " << num_tests << std::endl;

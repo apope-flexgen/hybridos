@@ -29,6 +29,9 @@
 #include <Features/Feature.h>
 #include <Features/Empty_Feature.h>
 #include <Features/Active_Power_Setpoint.h>
+#include <Features/Active_Voltage_Regulation.h>
+#include <Features/Active_Power_Closed_Loop_Control.h>
+#include <Features/Target_SOC.h>
 
 class Site_Manager {
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -278,7 +281,6 @@ protected:
     std::vector<Feature*> runmode1_kW_features_list = std::vector<Feature*>{
         &energy_arbitrage_feature, &target_soc, &active_power_setpoint_mode, &manual_power_mode, &frequency_response_feature, &ess_calibration,
     };
-    float prev_active_power_feature_cmd;
     Fims_Object feature_kW_demand;
     Fims_Object site_kW_charge_production;      // Charge up to this amount during dispatch
     Fims_Object site_kW_discharge_production;   // Discharge up to this amount during dispatch
@@ -300,8 +302,7 @@ protected:
     //
     // Target SOC Mode
     //
-    Empty_Feature target_soc;
-    Fims_Object target_soc_load_enable_flag;
+    features::Target_SOC target_soc;
     //
     // Active Power Setpoint Mode
     //
@@ -362,7 +363,9 @@ public:
     Fims_Object runmode2_kW_mode_status;
     int current_runmode2_kW_feature;  // follows the Fims_Object runmode2_kW_mode_cmd to identify when it gets changed
     uint64_t available_runmode2_kW_features_mask;
-    std::vector<Feature*> runmode2_kW_features_list;
+    std::vector<Feature*> runmode2_kW_features_list = {
+        &generator_charge,
+    };
     //
     // Generator Charge
     //
@@ -373,7 +376,11 @@ public:
     ///////////////////////////////////////////////////////////////////
     //                          CHARGE FEATURES                      //
     ///////////////////////////////////////////////////////////////////
-    std::vector<Feature*> charge_features_list;  // Separate list for charge dispatch and charge control allowing them to be enabled in parallel
+    std::vector<Feature*> charge_features_list = {
+        // Separate list for charge dispatch and charge control allowing them to be enabled in parallel
+        &charge_dispatch,
+        &charge_control,
+    };
     //
     // Charge Dispatch - Always enabled
     //
@@ -410,7 +417,9 @@ public:
     Fims_Object runmode1_kVAR_mode_status;
     int current_runmode1_kVAR_feature;  // follows the Fims_Object runmode1_kVAR_mode_cmd to identify when it gets changed
     uint64_t available_runmode1_kVAR_features_mask;
-    std::vector<Feature*> runmode1_kVAR_features_list;
+    std::vector<Feature*> runmode1_kVAR_features_list = {
+        &active_voltage_regulation, &watt_var, &reactive_setpoint, &power_factor, &constant_power_factor,
+    };
     float prev_reactive_power_feature_cmd;  // Previous kVAR demand set by the reactive power feature, used to track how much the demand is changing
     //
     // Watt-VAR Mode
@@ -451,13 +460,7 @@ protected:
     //
     // Active Voltage Mode
     //
-    Empty_Feature active_voltage;
-    Fims_Object active_voltage_deadband;       // deadband within which algorithm wont respond
-    Fims_Object active_voltage_droop_percent;  // percent of rated to apply per v deviation
-    Fims_Object active_voltage_cmd;            // nominal voltage target
-    Fims_Object active_voltage_actual_volts;   // actual voltage to calculated deviation with
-    Fims_Object active_voltage_status_flag;    // true flag when response is nonzero
-    Fims_Object active_voltage_rated_kVAR;     // rated kVAR for calculating response kVAR
+    features::Active_Voltage_Regulation active_voltage_regulation;
 
     ///////////////////////////////////////////////////////////////////////////////////
     //                       RUN MODE 2 REACTIVE POWER FEATURES                      //
@@ -485,7 +488,9 @@ protected:
     Fims_Object available_features_standalone_power;
     uint64_t available_standalone_power_features_mask;
     bool configure_standalone_power_features();
-    std::vector<Feature*> standalone_power_features_list;
+    std::vector<Feature*> standalone_power_features_list = {
+        &active_power_poi_limits, &pfr, &watt_watt, &ldss, &load_shed, &solar_shed, &ess_discharge_prevention, &agg_asset_limit, &active_power_closed_loop, &reactive_power_closed_loop, &reactive_power_poi_limits,
+    };
     //
     // POI Limits
     // When on, site demand and ess charge/discharge requests will be limited so POI does not exceed its rated limit
@@ -589,20 +594,7 @@ protected:
     //
     // Active Power Closed Loop Control
     //
-    Empty_Feature active_power_closed_loop;
-    void calculate_active_power_closed_loop_offset();
-    Variable_Regulator active_power_closed_loop_regulator;          // Used to hold and calculate the offset value
-    Fims_Object active_power_closed_loop_default_offset;            // Default offset
-    Fims_Object active_power_closed_loop_min_offset;                // Min offset
-    Fims_Object active_power_closed_loop_max_offset;                // Max offset
-    Fims_Object active_power_closed_loop_step_size_kW;              // Step size (in kW) multiplied against offset to get the total correction to apply
-    Fims_Object active_power_closed_loop_total_correction;          // Total correction applied by active closed loop control
-    Fims_Object active_power_closed_loop_steady_state_deadband_kW;  // If difference in commands deviates beyond this value, reset to default value
-    Fims_Object active_power_closed_loop_regulation_deadband_kW;    // Deadband threshold based on feeder rated power (in kW) outside which POI values are inaccurate
-    Fims_Object active_power_closed_loop_update_rate_ms;            // Number of timer updates per second
-    Fims_Object active_power_closed_loop_decrease_timer_ms;         // Time above regulation deadband before decreasing offset value
-    Fims_Object active_power_closed_loop_increase_timer_ms;         // Time below regulation deadband before increasing offset value
-    Fims_Object _active_power_closed_loop_manual_offset_kW;         // Internal debug offset used only for testing
+    features::Active_Power_Closed_Loop_Control active_power_closed_loop;
     //
     // Reactive Power Closed Loop Control
     //
@@ -630,7 +622,9 @@ protected:
     uint64_t available_site_operation_features_mask;
     bool configure_site_operation_features();
     void configure_persistent_settings_pairs();
-    std::vector<Feature*> site_operation_features_list;
+    std::vector<Feature*> site_operation_features_list = {
+        &watchdog_feature,
+    };
     //
     // Watchdog Feature
     //
@@ -768,8 +762,6 @@ protected:
         { &ess_charge_control_target_soc, "ess_charge_control_target_soc" },
         { &ess_charge_control_charge_disable, "ess_charge_control_charge_disable" },
         { &ess_charge_control_discharge_disable, "ess_charge_control_discharge_disable" },
-        { &target_soc.enable_flag, "target_soc_mode_enable_flag" },
-        { &target_soc_load_enable_flag, "target_soc_load_enable_flag" },
         { &manual_power_mode.enable_flag, "manual_mode_enable_flag" },
         { &manual_solar_kW_cmd, "manual_solar_kW_cmd" },
         { &manual_ess_kW_cmd, "manual_ess_kW_cmd" },
@@ -818,13 +810,6 @@ protected:
         { &reactive_setpoint.enable_flag, "reactive_setpoint_mode_enable_flag" },
         { &reactive_setpoint_kVAR_cmd, "reactive_setpoint_kVAR_cmd" },
         { &reactive_setpoint_kVAR_slew_rate, "reactive_setpoint_kVAR_slew_rate" },
-        { &active_voltage.enable_flag, "active_voltage_mode_enable_flag" },
-        { &active_voltage_deadband, "active_voltage_deadband" },
-        { &active_voltage_droop_percent, "active_voltage_droop_percent" },
-        { &active_voltage_cmd, "active_voltage_cmd" },
-        { &active_voltage_actual_volts, "active_voltage_actual_volts" },
-        { &active_voltage_status_flag, "active_voltage_status_flag" },
-        { &active_voltage_rated_kVAR, "active_voltage_rated_kVAR" },
         { &power_factor.enable_flag, "power_factor_mode_enable_flag" },
         { &power_factor_cmd, "power_factor_cmd" },
         { &constant_power_factor.enable_flag, "constant_power_factor_mode_enable_flag" },
@@ -894,18 +879,6 @@ protected:
         { &solar_shed_increase_display_timer, "solar_shed_increase_display_timer" },
         { &solar_shed_decrease_display_timer, "solar_shed_decrease_display_timer" },
         { &solar_shed_spare_ess_kw, "solar_shed_spare_ess_kw" },
-        { &active_power_closed_loop.enable_flag, "active_power_closed_loop_enable" },
-        { &active_power_closed_loop_default_offset, "active_power_closed_loop_default_offset" },
-        { &active_power_closed_loop_min_offset, "active_power_closed_loop_min_offset" },
-        { &active_power_closed_loop_max_offset, "active_power_closed_loop_max_offset" },
-        { &active_power_closed_loop_step_size_kW, "active_power_closed_loop_step_size_kW" },
-        { &active_power_closed_loop_total_correction, "active_power_closed_loop_total_correction" },
-        { &active_power_closed_loop_steady_state_deadband_kW, "active_power_closed_loop_steady_state_deadband_kW" },
-        { &active_power_closed_loop_regulation_deadband_kW, "active_power_closed_loop_regulation_deadband_kW" },
-        { &active_power_closed_loop_update_rate_ms, "active_power_closed_loop_update_rate_ms" },
-        { &active_power_closed_loop_decrease_timer_ms, "active_power_closed_loop_decrease_timer_ms" },
-        { &active_power_closed_loop_increase_timer_ms, "active_power_closed_loop_increase_timer_ms" },
-        { &_active_power_closed_loop_manual_offset_kW, "_active_power_closed_loop_manual_offset_kW" },
         { &reactive_power_closed_loop.enable_flag, "reactive_power_closed_loop_enable" },
         { &reactive_power_closed_loop_default_offset, "reactive_power_closed_loop_default_offset" },
         { &reactive_power_closed_loop_min_offset, "reactive_power_closed_loop_min_offset" },

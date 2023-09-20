@@ -146,19 +146,6 @@ float asset_cmd_utils::calculate_additional_load_compensation(load_compensation 
 }
 
 /**
- * Add load to demand based on the method of compensation provided. This method should only be used for active power features
- * that do not utilize their own slew rates. This is because adding the load to the demand after slewing can cause a runaway
- * effect. Export Target is the only feature with this issue currently.
- * @param method_of_compensation The method of load compensation
- */
-void Asset_Cmd_Object::track_unslewed_load(load_compensation method_of_compensation) {
-    load_method = load_compensation(method_of_compensation);
-    // Calculate if any additional load compensation is needed from the site
-    additional_load_compensation = asset_cmd_utils::calculate_additional_load_compensation(load_method, site_kW_load, site_kW_demand, ess_data.kW_request, gen_data.kW_request, solar_data.kW_request);
-    site_kW_demand += additional_load_compensation;
-}
-
-/**
  * Extract load from demand based on the method of compensation provided. This method should only be used for active power features
  * that utilize their own slew rates. This is because these features already track load manually as part of their slewed input,
  * producing a variable output that is not necessarily equal to the measured load. Active Power Setpoint is the only feature meeting this
@@ -214,18 +201,20 @@ void Asset_Cmd_Object::calculate_total_potential_kVAR() {
  * To avoid double counting the effects of standalone features, which will modify the base site_kW_demand,
  * the net change of the standalone features is also taken and applied only to the appropriate side
  */
-void Asset_Cmd_Object::calculate_site_kW_production_limits() {
+asset_cmd_utils::site_kW_production_limits asset_cmd_utils::calculate_site_kW_production_limits(float ess_kW_request, float gen_kW_request, float solar_kW_request, load_compensation load_method, float additional_load_compensation,
+                                                                                                float feature_kW_demand, float site_kW_demand) {
+    site_kW_production_limits outputs{ 0, 0 };
     // The asset requests and load were added into the feature demand, so make this step of extraction reference that demand
     // First find all sources of discharge, including load compensation if it must be met at a MINIMUM only
     // TODO: for the OFFSET use case we would need to look at the potentials to determine whether to reduce charge or increase discharge
     // Instead this assumes that the assets have already requested to discharge as much as they want (Solar)
-    float requested_discharge = zero_check(ess_data.kW_request) + zero_check(gen_data.kW_request) + zero_check(solar_data.kW_request);
+    float requested_discharge = zero_check(ess_kW_request) + zero_check(gen_kW_request) + zero_check(solar_kW_request);
     if (load_method == LOAD_MINIMUM)
         requested_discharge += additional_load_compensation;
     // Charge production from removing all sources of discharge
-    site_kW_charge_production = less_than_zero_check(feature_kW_demand - requested_discharge);
+    outputs.site_kW_charge_production = less_than_zero_check(feature_kW_demand - requested_discharge);
     // Discharge production from removing all sources of charge
-    site_kW_discharge_production = zero_check(feature_kW_demand - site_kW_charge_production);
+    outputs.site_kW_discharge_production = zero_check(feature_kW_demand - outputs.site_kW_charge_production);
 
     // Isolate demand modification from standalone features
     float standalone_modification = site_kW_demand - feature_kW_demand;
@@ -234,17 +223,18 @@ void Asset_Cmd_Object::calculate_site_kW_production_limits() {
     // Apply the standalone modification to the appropriate production limit
     // Ensure that magnitude changes but sign is preserved
     if (feature_kW_demand < 0.0f || (feature_kW_demand == 0.0f && standalone_modification < 0.0f)) {
-        sign_change = zero_check(site_kW_charge_production + standalone_modification);
-        site_kW_charge_production = less_than_zero_check(site_kW_charge_production + standalone_modification);
+        sign_change = zero_check(outputs.site_kW_charge_production + standalone_modification);
+        outputs.site_kW_charge_production = less_than_zero_check(outputs.site_kW_charge_production + standalone_modification);
     } else {
-        sign_change = less_than_zero_check(site_kW_discharge_production + standalone_modification);
-        site_kW_discharge_production = zero_check(site_kW_discharge_production + standalone_modification);
+        sign_change = less_than_zero_check(outputs.site_kW_discharge_production + standalone_modification);
+        outputs.site_kW_discharge_production = zero_check(outputs.site_kW_discharge_production + standalone_modification);
     }
     // Apply any leftover sign change to the opposite production
     if (sign_change < 0.0f)
-        site_kW_charge_production += sign_change;
+        outputs.site_kW_charge_production += sign_change;
     else if (sign_change > 0.0f)
-        site_kW_discharge_production += sign_change;
+        outputs.site_kW_discharge_production += sign_change;
+    return outputs;
 }
 
 /**
@@ -348,19 +338,6 @@ float Asset_Cmd_Object::dispatch_site_kW_discharge_cmd(int asset_priority, float
 }
 
 /**
- * TARGET SOC MODE passes through the charge control request (ess_data.kW_request) received from asset manager
- * If solar is present, a portion is set aside to satisfy the charge control request
- * @param load_requirement Whether load should be taken into account by site demand
- */
-void Asset_Cmd_Object::target_soc_mode(bool load_requirement) {
-    // Solar uncurtailed
-    solar_data.kW_request = solar_data.max_potential_kW;
-
-    // Track load as a demand minimum if appropriate
-    track_unslewed_load(load_compensation(load_requirement * LOAD_MINIMUM));
-}
-
-/**
  * MANUAL MODE takes a solar kW cmd, ESS kW cmd, generator kW cmd, solar slew rate,
  * ESS slew rate, and generator slew rate and routes those commands through dispatch and charge control
  * Any site load should be offloaded to the feeder to guarantee the manual kW commands
@@ -457,29 +434,6 @@ void Asset_Cmd_Object::constant_power_factor_mode(float power_factor_setpoint, b
 
     // Apply configured sign (true is negative, false is positive)
     site_kVAR_demand = set_lagging_direction ? -1.0f * site_kVAR_demand : site_kVAR_demand;
-}
-
-// active voltage regulation mode algorithm
-void Asset_Cmd_Object::active_voltage_mode(float deadband, float cmd, float actual_volts, float droop_percent, float rated_kVAR) {
-    // calculate the requested power due to voltage deviation
-    // get correct reference_volts for overvolts or undervolts event (nominal volts + or - deadband)
-    float reference_volts = (actual_volts > cmd) ? cmd + deadband : cmd - deadband;
-
-    float delta_volts;  // delta voltage deviation
-
-    // delta calculation for overvoltage event (negative delta)
-    if (actual_volts > cmd)
-        delta_volts = (actual_volts > reference_volts) ? reference_volts - actual_volts : 0;
-
-    // delta calculation for undervoltage event (positive delta)
-    else
-        delta_volts = (actual_volts < reference_volts) ? reference_volts - actual_volts : 0;
-
-    // delta voltage deviation scaled by percent slope and nominal frequency
-    float kVAR_request = (delta_volts / cmd) / (.01 * droop_percent) * rated_kVAR;
-
-    site_kVAR_demand = std::min(total_potential_kVAR, fabsf(kVAR_request));
-    site_kVAR_demand *= (std::signbit(kVAR_request)) ? -1 : 1;
 }
 
 // return ess_kW_cmd limited by min and max potential KW from asset manager
@@ -685,7 +639,11 @@ float Asset_Cmd_Object::aggregate_unused_kW(std::vector<Asset_Cmd_Object::Asset_
  * @return True if ESS is required to handle load
  */
 bool Asset_Cmd_Object::determine_ess_load_requirement(int asset_priority) {
-    calculate_site_kW_production_limits();
+    asset_cmd_utils::site_kW_production_limits site_kW_prod_limits = asset_cmd_utils::calculate_site_kW_production_limits(ess_data.kW_request, gen_data.kW_request, solar_data.kW_request, load_method, additional_load_compensation, feature_kW_demand,
+                                                                                                                          site_kW_demand);
+    site_kW_charge_production = site_kW_prod_limits.site_kW_charge_production;
+    site_kW_discharge_production = site_kW_prod_limits.site_kW_discharge_production;
+
     if (load_method != LOAD_MINIMUM || (ess_data.kW_request >= 0 && site_kW_charge_production >= 0))
         return false;
 
@@ -701,7 +659,10 @@ bool Asset_Cmd_Object::determine_ess_load_requirement(int asset_priority) {
         // The ESS is responsible for discharging
         if (asset_data == &ess_data) {
             // Determine the amount of charge included in the demand and remove it
-            calculate_site_kW_production_limits();
+            asset_cmd_utils::site_kW_production_limits site_kW_prod_limits = asset_cmd_utils::calculate_site_kW_production_limits(ess_data.kW_request, gen_data.kW_request, solar_data.kW_request, load_method, additional_load_compensation,
+                                                                                                                                  feature_kW_demand, site_kW_demand);
+            site_kW_charge_production = site_kW_prod_limits.site_kW_charge_production;
+            site_kW_discharge_production = site_kW_prod_limits.site_kW_discharge_production;
             feature_kW_demand -= less_than_zero_check(site_kW_charge_production);
             site_kW_demand -= less_than_zero_check(site_kW_charge_production);
             ess_data.kW_request = 0.0f;

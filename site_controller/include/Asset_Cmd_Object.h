@@ -56,20 +56,16 @@ public:
 
     float calculate_net_poi_export();
     void calculate_site_kW_load();
-    void track_unslewed_load(load_compensation method_of_compensation);
     void calculate_feature_kW_demand(int asset_priority);
     void calculate_total_potential_kVAR();
-    void calculate_site_kW_production_limits();
     bool determine_ess_load_requirement(int asset_priority);
     float dispatch_site_kW_discharge_cmd(int asset_priority, float cmd, discharge_type command_type);
     float dispatch_site_kW_charge_cmd(int asset_priority, bool solar_source_flag, bool gen_source_flag, bool feeder_source_flag);
-    void target_soc_mode(bool load_requirement);
     void manual_mode(float manual_ess_kW_cmd, float manual_solar_kW_cmd, float manual_gen_kW_cmd, Slew_Object* ess_slew_rate, Slew_Object* solar_slew_rate, Slew_Object* gen_slew_rate);
     void ess_calibration_mode(float ess_calibration_kW_cmd, int num_ess_controllable);
     void dispatch_reactive_power();
     void reactive_setpoint_mode(Slew_Object* reactive_setpoint_slew, float reactive_setpoint_kVAR_cmd);
     void constant_power_factor_mode(float power_factor_setpoint, bool power_factor_direction);
-    void active_voltage_mode(float deadband, float cmd, float actual_volts, float droop_percent, float rated_kVAR);
 
     bool get_site_kW_load_inclusion();
 
@@ -118,6 +114,12 @@ private:
 namespace asset_cmd_utils {
 float track_slewed_load(load_compensation load_method, float site_kW_demand, float unslewed_demand, float additional_load_compensation, const Slew_Object& feature_slew);
 float calculate_additional_load_compensation(load_compensation load_method, float site_kW_load, float site_kW_demand, float ess_kW_request, float gen_kW_request, float solar_kW_request);
+
+struct site_kW_production_limits {
+    float site_kW_charge_production;
+    float site_kW_discharge_production;
+};
+site_kW_production_limits calculate_site_kW_production_limits(float ess_kW_request, float gen_kW_request, float solar_kW_request, load_compensation load_method, float additional_load_compensation, float feature_kW_demand, float site_kW_demand);
 }  // namespace asset_cmd_utils
 
 #endif /* INCLUDE_ASSET_CMD_OBJECT_H_ */
