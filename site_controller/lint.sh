@@ -21,14 +21,14 @@ tidy() {
     fi
 
     if [ "$1" = "all" ]; then
-        printf '\n=== Running clang-tidy on ALL files ===\n'
+        printf '\n=== Running clang-tidy on ALL .cpp and .h files ===\n'
         cpp_files=$(find src -type f | grep "\.cpp")
         h_files=$(find include -type f | grep "\.h")
     else
         printf '\n=== Running clang-tidy on all changed files ===\n'
         # Regexes designed to only find .ccp and .h files which exist inside of the hybridos/site_controller directory and which contain changes compared to dev.
-        cpp_files=$(git diff --name-only dev | grep -oP '(?<=^site_controller\/).*\.cpp')
-        h_files=$(git diff --name-only dev | grep -oP '(?<=^site_controller\/).*\.h')
+        cpp_files=$(git diff --name-status dev | grep -oP '(?<=[AM]\tsite_controller\/).*\.(c|cpp)\b')
+        h_files=$(git diff --name-status dev | grep -oP '(?<=[AM]\tsite_controller\/).*\.(h|hpp)\b')
     fi
 
     failures=""
