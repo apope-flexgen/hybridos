@@ -51,12 +51,17 @@ void Asset_Solar::set_required_variables(void) {
 }
 
 bool Asset_Solar::start() {
-    return send_to_comp_uri(start_value, uri_start);
+    if (start_command_throttle.command_trigger())
+        return send_to_comp_uri(start_value, uri_start);
+    return false;
 }
 
 bool Asset_Solar::stop() {
-    inStandby = false;
-    return (send_to_comp_uri(stop_value, uri_stop));
+    if (stop_command_throttle.command_trigger()) {
+        inStandby = false;
+        return (send_to_comp_uri(stop_value, uri_stop));
+    }
+    return false;
 }
 
 bool Asset_Solar::enter_standby(void) {
@@ -85,8 +90,11 @@ float Asset_Solar::get_power_factor_setpoint(void) {
 }
 
 bool Asset_Solar::send_active_power_setpoint(void) {
-    if (round(active_power_setpoint.component_control_value.value_float) != round(active_power_setpoint.value.value_float))
-        return active_power_setpoint.send_to_component(false, true);
+    if (active_power_setpoint_throttle.setpoint_trigger(active_power_setpoint.component_control_value.value_float)) {
+        if (round(active_power_setpoint.component_control_value.value_float) != round(active_power_setpoint.value.value_float)) {
+            return active_power_setpoint.send_to_component(false, true);
+        }
+    }
     return false;
 }
 
@@ -96,8 +104,11 @@ void Asset_Solar::set_active_power_setpoint(float setpoint) {
 }
 
 bool Asset_Solar::send_reactive_power_setpoint(void) {
-    if (round(reactive_power_setpoint.component_control_value.value_float) != round(reactive_power_setpoint.value.value_float))
-        return reactive_power_setpoint.send_to_component(false, true);
+    if (reactive_power_setpoint_throttle.setpoint_trigger(reactive_power_setpoint.component_control_value.value_float)) {
+        if (round(reactive_power_setpoint.component_control_value.value_float) != round(reactive_power_setpoint.value.value_float)) {
+            return reactive_power_setpoint.send_to_component(false, true);
+        }
+    }
     return false;
 }
 

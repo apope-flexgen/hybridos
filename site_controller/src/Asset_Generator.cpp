@@ -63,26 +63,32 @@ void Asset_Generator::set_required_variables(void) {
 }
 
 bool Asset_Generator::start(void) {
-    // isStarting is set to true when start command is sent, and is set to false once gen reports it is Running
-    isStarting = true;
-    isStopping = false;
-    reset_warmup_timer();
-    warming_up = true;
-    block_ldss_static_starts = true;
+    if (start_command_throttle.command_trigger()) {
+        // isStarting is set to true when start command is sent, and is set to false once gen reports it is Running
+        isStarting = true;
+        isStopping = false;
+        reset_warmup_timer();
+        warming_up = true;
+        block_ldss_static_starts = true;
 
-    return send_to_comp_uri(start_value, uri_start);
+        return send_to_comp_uri(start_value, uri_start);
+    }
+    return false;
 }
 
 bool Asset_Generator::stop(void) {
-    isStarting = false;
-    // isStopping is set to true while a generator is ramped down (done when in grid following mode)
-    // but once stop command is sent, generator is considered stopped
-    isStopping = false;
-    reset_cooldown_timer();
-    cooling_down = true;
-    block_ldss_static_stops = true;
+    if (stop_command_throttle.command_trigger()) {
+        isStarting = false;
+        // isStopping is set to true while a generator is ramped down (done when in grid following mode)
+        // but once stop command is sent, generator is considered stopped
+        isStopping = false;
+        reset_cooldown_timer();
+        cooling_down = true;
+        block_ldss_static_stops = true;
 
-    return send_to_comp_uri(stop_value, uri_stop);
+        return send_to_comp_uri(stop_value, uri_stop);
+    }
+    return false;
 }
 
 bool Asset_Generator::is_starting(void) const {
@@ -106,8 +112,11 @@ void Asset_Generator::set_balanced(bool flag) {
 }
 
 bool Asset_Generator::send_active_power_setpoint(void) {
-    if (round(active_power_setpoint.component_control_value.value_float) != round(active_power_setpoint.value.value_float))
-        return active_power_setpoint.send_to_component(false, true);
+    if (active_power_setpoint_throttle.setpoint_trigger(active_power_setpoint.component_control_value.value_float)) {
+        if (round(active_power_setpoint.component_control_value.value_float) != round(active_power_setpoint.value.value_float)) {
+            return active_power_setpoint.send_to_component(false, true);
+        }
+    }
     return false;
 }
 
@@ -135,9 +144,12 @@ void Asset_Generator::process_potential_active_power(void)  // overriden from th
 }
 
 bool Asset_Generator::send_reactive_power_setpoint(void) {
-    if (round(reactive_power_setpoint.component_control_value.value_float) != round(reactive_power_setpoint.value.value_float))
-        return reactive_power_setpoint.send_to_component(false, true);
-    return true;
+    if (reactive_power_setpoint_throttle.setpoint_trigger(reactive_power_setpoint.component_control_value.value_float)) {
+        if (round(reactive_power_setpoint.component_control_value.value_float) != round(reactive_power_setpoint.value.value_float)) {
+            return reactive_power_setpoint.send_to_component(false, true);
+        }
+    }
+    return false;
 }
 
 void Asset_Generator::set_reactive_power_setpoint(float setpoint) {

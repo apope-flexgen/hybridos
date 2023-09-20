@@ -60,11 +60,6 @@ Asset_ESS::Asset_ESS() {
     dischgSocBegin = 0.0;
     dischgSocEnd = 0.0;
 
-    active_power_setpoint_throttle.reset();
-    reactive_power_setpoint_throttle.reset();
-    start_command_throttle.reset();
-    stop_command_throttle.reset();
-
     set_required_variables();
 }
 
@@ -493,11 +488,6 @@ bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configura
     if (object)
         grid_following_value = object->valueint;
 
-    // TODO: this need to be more intelligent, but throttle_timeout and throttle_deadband_percentage are base class
-    active_power_setpoint_throttle.configure(throttle_timeout_fast_ms, rated_active_power_kw, throttle_deadband_percentage);
-    reactive_power_setpoint_throttle.configure(throttle_timeout_fast_ms, rated_reactive_power_kvar, throttle_deadband_percentage);
-    start_command_throttle.configure(throttle_timeout_slow_ms);
-    stop_command_throttle.configure(throttle_timeout_slow_ms);
     return true;
 }
 

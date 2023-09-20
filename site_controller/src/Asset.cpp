@@ -417,6 +417,11 @@ bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator
     if (deadband_percent != NULL)
         throttle_deadband_percentage = deadband_percent->valuedouble;
 
+    active_power_setpoint_throttle.configure(throttle_timeout_fast_ms, rated_active_power_kw, throttle_deadband_percentage);
+    reactive_power_setpoint_throttle.configure(throttle_timeout_fast_ms, rated_reactive_power_kvar, throttle_deadband_percentage);
+    start_command_throttle.configure(throttle_timeout_slow_ms);
+    stop_command_throttle.configure(throttle_timeout_slow_ms);
+
     cJSON* wd_enable = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "watchdog_enable");
     watchdog_enable = (wd_enable == NULL) ? false : (wd_enable->type == cJSON_True);
 

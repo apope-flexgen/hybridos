@@ -63,6 +63,29 @@ void build_open_option(fmt::memory_buffer&);
 void build_reset_option(fmt::memory_buffer&);
 std::string build_uri(std::string comp, char* reg);
 
+class Write_Rate_Throttle {
+public:
+    Write_Rate_Throttle();
+    virtual ~Write_Rate_Throttle();
+
+    void reset(void);
+    void configure(long timeout, float rated = 0, float deadband = 0);
+
+    bool command_trigger(void);            // time throttle
+    bool setpoint_trigger(float control);  // time and deadband throttle
+    long current_timestamp(void);
+
+private:
+    // configuration
+    float rated_power;
+    long throttle_timeout;
+    float deadband_percentage;
+
+    // previous iteration variables
+    long status_time;
+    float control_feedback;
+};
+
 class Asset {
 public:
     Asset();
@@ -223,6 +246,10 @@ protected:
     double throttle_timeout_fast_ms;
     double throttle_timeout_slow_ms;
     double throttle_deadband_percentage;
+    Write_Rate_Throttle active_power_setpoint_throttle;
+    Write_Rate_Throttle reactive_power_setpoint_throttle;
+    Write_Rate_Throttle start_command_throttle;
+    Write_Rate_Throttle stop_command_throttle;
 
     const char* asset_type_id = "";
     asset_type asset_type_value;
@@ -308,29 +335,6 @@ protected:
     friend class Feeder_Manager_Mock;
     friend class Generator_Manager_Mock;
     friend class Solar_Manager_Mock;
-};
-
-class Write_Rate_Throttle {
-public:
-    Write_Rate_Throttle();
-    virtual ~Write_Rate_Throttle();
-
-    void reset(void);
-    void configure(long timeout, float rated = 0, float deadband = 0);
-
-    bool command_trigger(void);            // time throttle
-    bool setpoint_trigger(float control);  // time and deadband throttle
-    long current_timestamp(void);
-
-private:
-    // configuration
-    float rated_power;
-    long throttle_timeout;
-    float deadband_percentage;
-
-    // previous iteration variables
-    long status_time;
-    float control_feedback;
 };
 
 #endif /* ASSET_H_ */

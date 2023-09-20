@@ -143,11 +143,6 @@ protected:
     fimsCtl open_dc_contactors_ctl;
     fimsCtl close_dc_contactors_ctl;
 
-    Write_Rate_Throttle active_power_setpoint_throttle;
-    Write_Rate_Throttle reactive_power_setpoint_throttle;
-    Write_Rate_Throttle start_command_throttle;
-    Write_Rate_Throttle stop_command_throttle;
-
     // status
     bool energy_configured;  // Flag to indicate whether chargeable/dischargeable_energy was configured
 
