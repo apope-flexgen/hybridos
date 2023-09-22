@@ -200,6 +200,11 @@ int Type_Manager::get_num_running(void) {
     return numRunning;
 }
 
+// Return the number of assets with components that are in local control mode
+int Type_Manager::get_num_in_local_mode(void) {
+    return num_in_local_mode;
+}
+
 // Sends one PUB for each asset instance and one PUB for the asset type summary data.
 // If there are no configured instances for this asset type, the summary will not be published.
 // The passed type must match the Type_Manager's asset type.

@@ -166,7 +166,7 @@ bool Generator_Manager::aggregate_gen_data(void) {
     numAvail = 0;
     numRunning = 0;
     numGenControllable = 0;
-    numGenControllable = 0;
+    num_in_local_mode = 0;
 
     genTotalActivePowerkW = 0.0;
     genTotalReactivePowerkVAR = 0.0;
@@ -214,6 +214,9 @@ bool Generator_Manager::aggregate_gen_data(void) {
                 genTotalUncontrollableActivePowerkW += pGens[i]->get_active_power();
             }
         }
+
+        if (pGens[i]->is_in_local_mode())
+            num_in_local_mode++;
     }
 
     return false;
@@ -226,6 +229,8 @@ void Generator_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf
     bufJSON_AddStringCheckVar(buf, "name", "Generator Summary", var);
     bufJSON_AddNumberCheckVar(buf, "num_gen_available", numAvail, var);
     bufJSON_AddNumberCheckVar(buf, "num_gen_running", numRunning, var);
+    bufJSON_AddNumberCheckVar(buf, "num_gen_controllable", numGenControllable, var);
+    bufJSON_AddNumberCheckVar(buf, "num_gen_in_local_mode", num_in_local_mode, var);
 
     Asset_Generator* pGenStart = ldss.get_gen_to_start();
     Asset_Generator* pGenStop = ldss.get_gen_to_stop();

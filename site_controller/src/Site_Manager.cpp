@@ -1995,7 +1995,7 @@ void Site_Manager::build_active_faults() {
         if (active_fault_array[i]) {
             active_faults.options_name[i] = faults.options_name[i];
             active_faults.options_value[i].set(faults.options_value[i].value_int);
-            active_faults.value.value_bit_field |= 1 << i;
+            active_faults.value.value_bit_field |= uint64_t(1) << i;
             count++;
         }
     }
@@ -2010,7 +2010,7 @@ void Site_Manager::build_active_alarms() {
         if (active_alarm_array[i]) {
             active_alarms.options_name[i] = alarms.options_name[i];
             active_alarms.options_value[i].set(alarms.options_value[i].value_int);
-            active_alarms.value.value_bit_field |= 1 << i;
+            active_alarms.value.value_bit_field |= uint64_t(1) << i;
             count++;
         }
     }

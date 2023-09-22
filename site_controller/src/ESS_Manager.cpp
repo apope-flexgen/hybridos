@@ -360,6 +360,7 @@ bool ESS_Manager::aggregate_ess_data(void) {
     numEssControllable = 0;
     numEssStartable = 0;
     numEssStandby = 0;
+    num_in_local_mode = 0;
 
     parsedEssMaxSoc = 0.0;
     controllableEssMaxSoc = 0.0;
@@ -458,6 +459,9 @@ bool ESS_Manager::aggregate_ess_data(void) {
                 essTotalUncontrollableActivePowerkW += pEss[i]->get_active_power();
             }
         }
+
+        if (pEss[i]->is_in_local_mode())
+            num_in_local_mode++;
     }
 
     FPS_DEBUG_LOG("ESS_Manager::aggregate_ess_data essTotalActivePowerkW: %f essTotalMaxPotentialActivePower: %f essTotalMinPotentialActivePower: %f\n", essTotalActivePowerkW, essTotalMaxPotentialActivePower, essTotalMinPotentialActivePower);
@@ -480,6 +484,7 @@ void ESS_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, cons
     bufJSON_AddNumberCheckVar(buf, "num_ess_available", numAvail, var);
     bufJSON_AddNumberCheckVar(buf, "num_ess_running", numRunning, var);
     bufJSON_AddNumberCheckVar(buf, "num_ess_controllable", numEssControllable, var);
+    bufJSON_AddNumberCheckVar(buf, "num_ess_in_local_mode", num_in_local_mode, var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_active_power", essTotalActivePowerkW, var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_reactive_power", essTotalReactivePowerkVAR, var);
     bufJSON_AddNumberCheckVar(buf, "ess_total_apparent_power", essTotalApparentPowerkVA, var);

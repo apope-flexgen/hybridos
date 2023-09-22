@@ -184,6 +184,7 @@ bool Solar_Manager::aggregate_solar_data(void) {
     numSolarControllable = 0;
     numSolarStartable = 0;
     numSolarStandby = 0;
+    num_in_local_mode = 0;
 
     solarTotalActivePowerkW = 0.0;
     solarTotalReactivePowerkVAR = 0.0;
@@ -250,6 +251,9 @@ bool Solar_Manager::aggregate_solar_data(void) {
                 solarTotalUncontrollableActivePowerkW += pSolar[i]->get_active_power();
             }
         }
+
+        if (pSolar[i]->is_in_local_mode())
+            num_in_local_mode++;
     }
 
     return false;
@@ -262,6 +266,8 @@ void Solar_Manager::generate_asset_type_summary_json(fmt::memory_buffer& buf, co
     bufJSON_AddStringCheckVar(buf, "name", "Solar Summary", var);
     bufJSON_AddNumberCheckVar(buf, "num_solar_available", numAvail, var);
     bufJSON_AddNumberCheckVar(buf, "num_solar_running", numRunning, var);
+    bufJSON_AddNumberCheckVar(buf, "num_solar_controllable", numSolarControllable, var);
+    bufJSON_AddNumberCheckVar(buf, "num_solar_in_local_mode", num_in_local_mode, var);
     bufJSON_AddNumberCheckVar(buf, "solar_total_active_power", solarTotalActivePowerkW, var);
     bufJSON_AddNumberCheckVar(buf, "solar_total_reactive_power", solarTotalReactivePowerkVAR, var);
     bufJSON_AddNumberCheckVar(buf, "solar_total_apparent_power", solarTotalApparentPowerkVA, var);

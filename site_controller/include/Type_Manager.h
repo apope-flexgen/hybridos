@@ -28,6 +28,7 @@ protected:
     int numRunning;
     int numAvail;
     int numParsed;
+    int num_in_local_mode;
     const char* asset_type_id;
 
     fmt::memory_buffer send_FIMS_buf;  // Reusable and resizable string buffer used to send FIMS messages
@@ -63,6 +64,7 @@ public:
     int get_num_avail(void);
     int get_num_parsed(void);
     int get_num_running(void);
+    int get_num_in_local_mode(void);
 
     void publish_assets(asset_type type);
     void send_to_components(void);

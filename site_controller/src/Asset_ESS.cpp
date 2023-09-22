@@ -912,7 +912,7 @@ void Asset_ESS::process_asset() {
         // Check that the bit in the position given by the status value is valid
         // e.g. valid standby states: 4, 5; mask (binary): 110000 (start counting from 0)
         // for status value 4, verify: 110000 & 010000
-        inStandby = standby_status_mask & (1 << internal_status);
+        inStandby = standby_status_mask & (uint64_t(1) << internal_status);
 }
 
 void Asset_ESS::update_asset(void) {

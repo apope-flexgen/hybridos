@@ -105,6 +105,7 @@ public:
     bool is_controllable(void);
     bool in_maint_mode(void);
     bool in_standby(void);
+    bool is_in_local_mode(void);
 
     uint64_t get_status(void) const;
 
@@ -150,6 +151,7 @@ public:
     virtual void set_raw_status() = 0;
     virtual const char* get_status_string() const = 0;
     bool process_watchdog_status();
+    void process_local_mode_status();
 
     // pure virtual functions that child classes must implement
     virtual void update_asset() = 0;        // update outgoing component data
@@ -178,6 +180,7 @@ protected:
                                    const char* var_name = "", const char* var_units = "", int var_scaler = 1);
     void update_fims_var(Fims_Object* fims_var, valueType type, float default_float, int default_int, bool default_bool, const char* var_id = "", const char* var_name = "", const char* var_units = "", int var_scaler = 1);
     bool configure_watchdog_vars();
+    bool configure_component_local_mode_vars(Type_Configurator* configurator);
     void add_dynamic_variables_to_maps(Type_Configurator* configurator);
     virtual bool configure_typed_asset_fims_vars(Type_Configurator* configurator) = 0;
     /**
@@ -217,6 +220,10 @@ protected:
     Fims_Object watchdog_heartbeat;
     Fims_Object component_connected;
     Fims_Object watchdog_status;
+    bool local_mode_configured;         // Whether local mode has been fully configured. False unless both mask and signal are configured
+    statusType local_mode_status_type;  // local mode status type is not required for the local mode feature to be used
+    Fims_Object local_mode_signal;
+    Fims_Object local_mode_status;
 
     std::vector<std::string> compNames;
 
@@ -225,6 +232,7 @@ protected:
     uint64_t running_status_mask;
     uint64_t standby_status_mask;  // Mask indicating the standby status value
     uint64_t stopped_status_mask;
+    uint64_t local_mode_status_mask;  // Mask indicating whether the component is in local control mode
 
     int prev_watchdog_heartbeat;
     int watchdog_timeout_ms;
@@ -326,6 +334,7 @@ protected:
     // newly_faulted is true for a single iteration when an asset goes from not having any faults to having at least one fault
     bool newly_faulted;
     Fims_Object watchdog_fault;
+    Fims_Object local_mode_alarm;
     Fims_Object is_faulted;
     Fims_Object is_alarmed;
 

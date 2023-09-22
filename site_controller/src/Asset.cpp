@@ -59,6 +59,8 @@ Asset::Asset() {
     numAssetComponents = 0;
 
     status_type = invalid;
+    local_mode_status_type = invalid;
+    local_mode_configured = false;
 
     internal_status = 0;
     raw_status = 0;
@@ -331,6 +333,16 @@ bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator
     cJSON* item = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "status_type");
     status_type = (item != NULL && strcmp(item->valuestring, "random_enum") == 0) ? random_enum : bit_field;
 
+    // Set local mode status type to use existing status type, unless it has been manually configured
+    cJSON* parsed_local_status_type = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "local_mode_status_type");
+    if (parsed_local_status_type && parsed_local_status_type->valuestring)
+        local_mode_status_type = strcmp(parsed_local_status_type->valuestring, "random_enum") == 0 ? random_enum : bit_field;
+    else {
+        local_mode_status_type = status_type;
+        if (asset_type_value != FEEDERS)
+            FPS_INFO_LOG("Asset %s reusing status_type %s for local_mode_status_type", name, local_mode_status_type ? "random_enum" : "bit_field");
+    }
+
     cJSON* runMask = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "running_status_mask");
     // If the mask is NULL and is not a feeder, throw an error
     if (runMask == NULL && strcmp(get_asset_type(), "feeders") != 0 && configurator->config_validation)  // Not required for feeders
@@ -376,6 +388,26 @@ bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator
         FPS_ERROR_LOG("Asset %s received an invalid input type instead of a hexadecimal string for the running_status_mask.", name);
         return false;
     }
+
+    cJSON* parsed_local_mask = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "local_mode_status_mask");
+    // if the mask isn't NULL and is a hex string, try to parse it
+    if (parsed_local_mask && parsed_local_mask->valuestring) {
+        try {
+            // Casts the provided hex string as an unsigned int64
+            local_mode_status_mask = (uint64_t)std::stoul(parsed_local_mask->valuestring, NULL, 16);
+        } catch (...) {
+            // Could not parse the provided mask
+            FPS_ERROR_LOG("Asset %s received an invalid local_mode_status_mask\n", name);
+            return false;
+        }
+        local_mode_configured = true;
+    }
+    // If the mask isn't null and isn't a hex string, throw an error
+    else if (parsed_local_mask != NULL) {
+        FPS_ERROR_LOG("Asset %s received an invalid input type instead of a hexadecimal string for the local_mode_status_mask.", name);
+        return false;
+    } else if (asset_type_value != FEEDERS)
+        FPS_INFO_LOG("Asset %s optional local_mode_status_mask was not provided in configuration. Will not be able to read component level local/remote control", name);
 
     cJSON* rated_active_pwr_kw = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "rated_active_power_kw");
     if (rated_active_pwr_kw == NULL) {
@@ -551,7 +583,9 @@ bool Asset::configure_common_asset_fims_vars(Type_Configurator* configurator) {
            configure_single_fims_var(&component_connected, "component_connected", configurator, Bool) && configure_single_fims_var(&is_faulted, "is_faulted", configurator, Bool, 0, 0, false, false, "Is Faulted") &&
            configure_single_fims_var(&is_alarmed, "is_alarmed", configurator, Bool, 0, 0, false, false, "Is Alarmed") &&
            // Configure watchdog variables if the feature is enabled
-           configure_watchdog_vars();
+           configure_watchdog_vars() &&
+           // Configure local/remote status of the component
+           configure_component_local_mode_vars(configurator);
 }
 
 // Helper function used by configure_single_fims_var. Could maybe be moved into the Fims_Object class
@@ -693,6 +727,42 @@ bool Asset::configure_watchdog_vars() {
     watchdog_fault.options_name.insert(watchdog_fault.options_name.begin(), "Watchdog Component Disconnected");
     watchdog_fault.options_value.insert(watchdog_fault.options_value.begin(), 0);
     latched_faults[watchdog_fault.get_variable_id()] = 0;
+    return true;
+}
+
+/**
+ * Configure Local/Remote mode variables, including the status of the component and the alarm notifying the
+ * user of this status
+ *
+ * @return true if the local mode variables were successfully configured
+ * @return false if the local mode variables were not successfully configured
+ */
+bool Asset::configure_component_local_mode_vars(Type_Configurator* configurator) {
+    // Configure variables for tracking local/remote mode status of the component
+    bool hardcoded_vars_configured = configure_single_fims_var(&local_mode_signal, "local_mode_signal", configurator, Int) && configure_single_fims_var(&local_mode_status, "local_mode_status", NULL, Bool, 0, 0, false, false, "Local Mode Status") &&
+                                     configure_single_fims_var(&local_mode_alarm, "local_mode_alarm", NULL, Int, 0, 0, false, false, "Component Local Mode Alarm");
+    if (!hardcoded_vars_configured) {
+        local_mode_configured = false;
+        FPS_ERROR_LOG("Asset %s failed to configure registers for component local/remote status tracking", name);
+        return false;
+    }
+    // Warn the user if no valid source of component local/remote signal has been provided
+    if (!local_mode_signal.get_component_uri()) {
+        local_mode_configured = false;
+        if (asset_type_value != FEEDERS)
+            FPS_INFO_LOG("Asset %s optional local_mode_signal was not provided in configuration. Will not be able to read component level local/remote control", name);
+    }
+
+    // Create a local mode alarm Fims_Object if the local mode variabels were configured successfully
+    std::string assets_uri = build_asset_variable_uri("local_mode_alarm");
+
+    // Manually configure additional local mode alarm fields
+    local_mode_alarm.set_ui_type("alarm");
+    local_mode_alarm.set_value_type(Int);
+    local_mode_alarm.num_options = 1;
+    local_mode_alarm.options_name.insert(local_mode_alarm.options_name.begin(), "Component is in local mode");
+    local_mode_alarm.options_value.insert(local_mode_alarm.options_value.begin(), 0);
+    saved_alarms[local_mode_alarm.get_variable_id()] = 0;
     return true;
 }
 
@@ -1053,6 +1123,42 @@ bool Asset::process_watchdog_status() {
 }
 
 /**
+ * process local mode status of the component, alarming if the component is in local mode and no longer controllable.
+ *
+ * @return True on success, false on failure.
+ */
+void Asset::process_local_mode_status() {
+    if (!local_mode_configured)
+        return;
+
+    // Set the bool value based on the int value received over modbus
+    if (local_mode_status_type == random_enum)
+        local_mode_status.value.value_bool = uint64_t(local_mode_signal.value.value_int) == local_mode_status_mask;
+    else if (local_mode_status_type == bit_field)
+        // Check that the bit in the position given by the signal is valid
+        // e.g. valid local mode states: 4, 5; mask (binary): 110000 (start counting from 0)
+        // for status value 4, verify: 110000 & 010000
+        local_mode_status.value.value_bool = (local_mode_status_mask & (uint64_t(1) << local_mode_signal.value.value_int));
+    // Update internal alarm register to reflect the value of the component register
+    local_mode_alarm.value.value_bit_field = local_mode_status.value.value_bool;
+
+    char event_msg[MEDIUM_MSG_LEN];
+    // Make sure local mode alarm is configured
+    auto alarm_it = saved_alarms.find("local_mode_alarm");
+    if (alarm_it == saved_alarms.end()) {
+        // Map initialized incorrectly when processing configuration
+        FPS_ERROR_LOG("Alarm value undefined for local_mode_alarm in %s process_asset()", get_id());
+        // Only use saved alarms to track new changes in the local/remote value
+    } else if (alarm_it->second == 0 && local_mode_status.value.value_bool) {
+        alarm_it->second = 1;
+        snprintf(event_msg, MEDIUM_MSG_LEN, "alarm received: %s, asset: %s", local_mode_alarm.options_name[0].c_str(), name.c_str());
+        emit_event("Assets", event_msg, ALARM_ALERT);
+    } else if (alarm_it->second == 1 && !local_mode_status.value.value_bool) {
+        alarm_it->second = 0;
+    }
+}
+
+/**
  * @brief Process asset and look for faults, alarms, and status updates
  *
  * @return True on success, false on failure.
@@ -1065,6 +1171,9 @@ void Asset::process_asset(void) {
         clear_fault_registers_flag = false;
         send_to_comp_uri(false, uri_clear_faults);  // End clear faults pulse to component
     }
+
+    // Process component level local mode status
+    process_local_mode_status();
 
     // Process component fault registers
     bool previously_no_faults = get_num_active_faults() == 0;
@@ -1156,8 +1265,8 @@ void Asset::process_asset(void) {
         }
     }
 
-    // Availability logic, including watchdog status if the feature is enabled
-    isAvail = (get_num_active_faults() == 0) && !inMaintenance && process_watchdog_status();
+    // Availability logic, including local mode status and watchdog status if the feature is enabled
+    isAvail = (get_num_active_faults() == 0) && !inMaintenance && !local_mode_status.value.value_bool && process_watchdog_status();
 
     // Process running status
     if (status_type == random_enum)
@@ -1166,7 +1275,7 @@ void Asset::process_asset(void) {
         // Check that the bit in the position given by the status value is valid
         // e.g. valid running states: 4, 5; mask (binary): 110000 (start counting from 0)
         // for status value 4, verify: 110000 & 010000
-        isRunning = (running_status_mask & (1 << internal_status));
+        isRunning = (running_status_mask & (uint64_t(1) << internal_status));
 
     // Process potential power values
     process_potential_active_power();
@@ -1200,6 +1309,11 @@ bool Asset::in_maint_mode(void) {
 
 bool Asset::in_standby(void) {
     return inStandby;
+}
+
+// Whether the component is in local mode and ignoring sets from site_controller
+bool Asset::is_in_local_mode(void) {
+    return local_mode_status.value.value_bool;
 }
 
 std::string Asset::get_name() {

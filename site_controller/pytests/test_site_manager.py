@@ -21,6 +21,7 @@ from pytests.cases.agt_runmode1 import test_agt_runmode1
 from pytests.cases.manual_mode import test_manual_solar_slew_rate_1, test_manual_solar_slew_rate_2, test_manual_ess_slew_rate_1, test_manual_ess_slew_rate_2, test_manual_ess_slew_rate_3, test_manual_gen_slew_rate_1, test_manual_gen_slew_rate_2, test_manual_gen_slew_rate_3
 from pytests.cases.templating_revamp import test_ranged, test_traditional
 from pytests.cases.persistent_settings import test_persistent_contactors, test_persistent_autobalancing, test_persistent_setpoint
+from pytests.cases.assets_state import test_default_local_mode, test_asset_bit_field_local_mode, test_local_bit_field_local_mode
 
 
 # Test runner AKA main() for each individual test
@@ -40,6 +41,9 @@ from pytests.cases.persistent_settings import test_persistent_contactors, test_p
     test_maint_active_power_rounding,
     test_maint_reactive_power_rounding,
     test_alerts,
+    test_default_local_mode,
+    test_asset_bit_field_local_mode,
+    test_local_bit_field_local_mode,
     test_ldss,
     test_init,
     test_num_ess_transitions,

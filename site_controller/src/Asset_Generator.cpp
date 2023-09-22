@@ -440,7 +440,7 @@ void Asset_Generator::process_asset(void) {
         // Check that the bit in the position given by the status value is valid
         // e.g. valid stopped states: 0, 1, 2; mask (binary): 0111
         // for status value 2, verify: 0111 & 0100
-        isStopped = stopped_status_mask & (1 << internal_status);
+        isStopped = stopped_status_mask & (uint64_t(1) << internal_status);
 }
 
 bool Asset_Generator::is_stopped(void) {
