@@ -2,12 +2,16 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"net"
+	"os"
 	"path"
+	"strconv"
 	"time"
 
+	"github.com/flexgen-power/go_flexgen/cfgfetch"
 	log "github.com/flexgen-power/go_flexgen/logger"
-	"github.com/flexgen-power/go_flexgen/parsemap"
 )
 
 var cfgDir = "/usr/local/etc/config/cops"
@@ -17,229 +21,299 @@ type configurationError struct {
 	err error
 }
 
-// cfg is the struct to unmarshal cops.json into
-type cfg struct {
-	controllerName          string
-	heartbeatFrequencyMS    int
-	patrolFrequencyMS       int
-	briefingFrequencyMS     int
-	c2cMsgFrequencyMS       int
-	temperatureSource       string
-	enableRedundantFailover bool
-	primaryIP               []string
-	primaryNetworkInterface []string
-	thisCtrlrStaticIP       string
-	otherCtrlrStaticIP      string
-	pduIP                   string
-	pduOutletEndpoint       string
-	otherCtrlrOutlet        string
-	processList             []processConfig
+// Config is the struct to unmarshal cops.json into
+type Config struct {
+	Name                    string    `json:"controllerName"`
+	HeartbeatFrequencyMS    int       `json:"heartbeatFrequencyMS"`
+	PatrolFrequencyMS       int       `json:"patrolFrequencyMS"`
+	BriefingFrequencyMS     int       `json:"briefingFrequencyMS"`
+	C2cMsgFrequencyMS       int       `json:"c2cMsgFrequencyMS"`
+	TemperatureSource       string    `json:"temperatureSource"`
+	EnableRedundantFailover bool      `json:"enableRedundantFailover"`
+	PrimaryIP               []string  `json:"primaryIP,omitempty"`
+	PrimaryNetworkInterface []string  `json:"primaryNetworkInterface,omitempty"`
+	ThisCtrlrStaticIP       string    `json:"thisCtrlrStaticIP,omitempty"`
+	OtherCtrlrStaticIP      string    `json:"otherCtrlrStaticIP,omitempty"`
+	PduIP                   string    `json:"pduIP,omitempty"`
+	PduOutletEndpoint       string    `json:"pduOutletEndpoint"`
+	OtherCtrlrOutlet        string    `json:"otherCtrlrOutlet"`
+	ProcessList             []Process `json:"processList"`
 }
 
-// Static information about each process that must be read from the config json and loaded into processInfo struct
-type processConfig struct {
-	name                     string
-	uri                      string
-	writeOutC2C              []string
-	killOnHang               bool
-	requiredForHealthyStatus bool
-	hangTimeAllowanceMS      int
-	configRestart            bool
+type Process struct {
+	Name                     string   `json:"name"`
+	Uri                      string   `json:"uri"`
+	WriteOutC2C              []string `json:"writeOutC2C"`
+	KillOnHang               bool     `json:"killOnHang"`
+	RequiredForHealthyStatus bool     `json:"requiredForHealthyStatus"`
+	HangTimeAllowanceMS      int      `json:"hangTimeAllowanceMS"`
+	ConfigRestart            bool     `json:"configRestart"`
+	replyToURI               string
+	heartbeat                uint
+	pid                      int
+	processPtr               *os.Process
+	alive                    bool
+	healthStats              processHealthStats
+	version                  processVersion
 }
 
-// Handles configuring COPS with a map that contains configuration data
-func handleConfiguration(body map[string]interface{}) error {
-	// Define config struct with default values to fall back on in the case of parsing errors
-	// Only variables with established default values are provided, else the variable is required and has no fallback
-	config := cfg{
-		heartbeatFrequencyMS:    1000,
-		patrolFrequencyMS:       1000,
-		briefingFrequencyMS:     5000,
-		c2cMsgFrequencyMS:       50,
-		enableRedundantFailover: false,
-	}
+// Generate an empty configuration.
+func newConfig() Config {
+	config := Config{}
+	return config
+}
 
-	// Validate each configuration field
-	heartbeatFreqInterface, err := parsemap.ExtractAsInt(body, "heartbeatFrequencyMS")
-	// If error, use default value
-	if err == nil {
-		config.heartbeatFrequencyMS = heartbeatFreqInterface
-	} else {
-		log.Warnf("failed to extract heartbeatFrequencyMS from configuration, default value %d used.", config.heartbeatFrequencyMS)
-	}
-
-	patrolFreqInterface, err := parsemap.ExtractAsInt(body, "patrolFrequencyMS")
-	// If error, use default value
-	if err == nil {
-		config.patrolFrequencyMS = patrolFreqInterface
-	} else {
-		log.Warnf("failed to extract patrolFrequencyMS from configuration, default value %d used.", config.patrolFrequencyMS)
-	}
-
-	briefingFreqInterface, err := parsemap.ExtractAsInt(body, "briefingFrequencyMS")
-	// If error, use default value
-	if err == nil {
-		config.briefingFrequencyMS = briefingFreqInterface
-	} else {
-		log.Warnf("failed to extract briefingFrequencyMS from configuration, default value %d used.", config.briefingFrequencyMS)
-	}
-
-	cscMsgFreqInterface, err := parsemap.ExtractAsInt(body, "c2cMsgFrequencyMS")
-	// If error, use default value
-	if err == nil {
-		config.c2cMsgFrequencyMS = cscMsgFreqInterface
-	} else {
-		log.Warnf("failed to extract c2cMsgFrequencyMS from configuration, default value %d used.", config.c2cMsgFrequencyMS)
-	}
-
-	tempInterface, err := parsemap.ExtractValueWithType(body, "temperatureSource", parsemap.STRING)
-	// If error, unused and do not report
-	if err == nil {
-		config.temperatureSource = tempInterface.(string)
-	}
-
-	failoverInterface, err := parsemap.ExtractValueWithType(body, "enableRedundantFailover", parsemap.BOOL)
-	// If error, use default value
-	if err == nil {
-		config.enableRedundantFailover = failoverInterface.(bool)
-	} else {
-		log.Warnf("failed to extract enableRedundantFailover from configuration, default value %t used.", config.enableRedundantFailover)
-	}
-
-	if err = configureFailover(body, &config); err != nil {
-		return fmt.Errorf("failover configuration error: %w", err)
-	}
-
-	processListInterface, err := parsemap.ExtractValueWithType(body, "processList", parsemap.INTERFACE_SLICE)
-	// Process list most be provided and include at least one entry
+// Pretty print the config to stdout for debugging purposes.
+func printConfig(config Config) error {
+	cfgJSON, err := json.MarshalIndent(config, "", "  ")
 	if err != nil {
-		return fmt.Errorf("failed to extract processList from configuration: %w", err)
+		return fmt.Errorf("pretty formatting json: %w", err)
 	}
-	processList := processListInterface.([]interface{})
-	if len(processList) == 0 {
-		return fmt.Errorf("extracted empty process list from configuration")
+	log.Infof("config: %+v", string(cfgJSON))
+	return nil
+}
+
+// Handle a configuration body received from DBI.
+func handleConfigBody(m map[string]interface{}) error {
+	config := newConfig()
+
+	// Marshal the map to JSON
+	bytes, err := json.Marshal(m)
+	if err != nil {
+		return fmt.Errorf("marshaling config map: %w", err)
 	}
-	config.processList = make([]processConfig, 0, len(processList))
-	for procId, process := range processList {
-		procObj, ok := process.(map[string]interface{})
-		if !ok {
-			return fmt.Errorf("process object with ID %d was expected to be a map[string]interface{}, but actual type was %T", procId, procObj)
-		}
 
-		// Default process struct, skipping fields without established defaults
-		procEntry := processConfig{
-			killOnHang:               true,
-			requiredForHealthyStatus: true,
-			hangTimeAllowanceMS:      3000,
-			configRestart:            true,
-		}
+	// Unmarshal bytes into config struct
+	if err := json.Unmarshal(bytes, &config); err != nil {
+		return fmt.Errorf("unmarshaling config body to struct: %w", err)
+	}
 
-		procNameInterface, err := parsemap.ExtractValueWithType(procObj, "name", parsemap.STRING)
-		if err != nil {
-			return fmt.Errorf("failed to extract name from process %d object configuration: %w", procId, err)
-		}
-		procEntry.name = procNameInterface.(string)
-
-		procUriInterface, err := parsemap.ExtractValueWithType(procObj, "uri", parsemap.STRING)
-		if err != nil {
-			return fmt.Errorf("failed to extract uri from process %d object configuration: %w", procId, err)
-		}
-		procEntry.uri = procUriInterface.(string)
-
-		procHangInterface, err := parsemap.ExtractValueWithType(procObj, "killOnHang", parsemap.BOOL)
-		// If error, use default value
-		if err == nil {
-			procEntry.killOnHang = procHangInterface.(bool)
-		} else {
-			log.Warnf("failed to extract killOnHang from process %d object configuration, default value %t used.", procId, procEntry.killOnHang)
-		}
-
-		procHealthInterface, err := parsemap.ExtractValueWithType(procObj, "requiredForHealthyStatus", parsemap.BOOL)
-		// If error, use default value
-		if err == nil {
-			procEntry.requiredForHealthyStatus = procHealthInterface.(bool)
-		} else {
-			log.Warnf("failed to extract requiredForHealthyStatus from process %d object configuration, default value %t used.", procId, procEntry.requiredForHealthyStatus)
-		}
-
-		procHangTimeInterface, err := parsemap.ExtractAsInt(procObj, "hangTimeAllowanceMS")
-		// If error, use default value
-		if err == nil {
-			procEntry.hangTimeAllowanceMS = procHangTimeInterface
-		} else {
-			log.Warnf("failed to extract hangTimeAllowanceMS from process %d object configuration, default value %d used.", procId, procEntry.hangTimeAllowanceMS)
-		}
-
-		procRestartInterface, err := parsemap.ExtractValueWithType(procObj, "configRestart", parsemap.BOOL)
-		// If error, use default value
-		if err == nil {
-			procEntry.configRestart = procRestartInterface.(bool)
-		} else {
-			log.Warnf("failed to extract configRestart from process %d object configuration, default value %t used.", procId, procEntry.configRestart)
-		}
-
-		writeOutInterface, err := parsemap.ExtractValueWithType(procObj, "writeOutC2C", parsemap.INTERFACE_SLICE)
-		if err != nil {
-			return fmt.Errorf("failed to extract writeOutC2C list from process %d object configuration: %w", procId, err)
-		}
-		procEntry.writeOutC2C = make([]string, 0, len(writeOutInterface.([]interface{})))
-		for _, uriInterface := range writeOutInterface.([]interface{}) {
-			if uri, ok := uriInterface.(string); ok {
-				procEntry.writeOutC2C = append(procEntry.writeOutC2C, uri)
-			} else {
-				return fmt.Errorf("failed to extract writeOutC2C uri from process %d object configuration", procId)
-			}
-		}
-		config.processList = append(config.processList, procEntry)
+	if err := config.validate(); err != nil {
+		return fmt.Errorf("validating new dbi config: %w", err)
 	}
 
 	return configureCOPS(config)
 }
 
+// Parse config.json in an appropriate struct and validate it.
+func parse(cfgSource string) error {
+
+	if cfgSource == "dbi" {
+		// Handle config from dbi
+		cfg, err := cfgfetch.Retrieve(processName, cfgSource)
+		if err != nil {
+			return fmt.Errorf("retrieving dbi config body: %w", err)
+		}
+
+		if err := handleConfigBody(cfg); err != nil {
+			return fmt.Errorf("handling DBI config body: %w", err)
+		}
+
+	} else if cfgSource != "" {
+		// Handle config from file input
+		c := newConfig()
+
+		log.Infof("Retrieving config from: %s", cfgSource)
+		configBytes, err := os.ReadFile(cfgSource)
+		if err != nil {
+			return fmt.Errorf("reading config file: %w", err)
+		}
+
+		if err := json.Unmarshal(configBytes, &c); err != nil {
+			return fmt.Errorf("unmarshaling config: %w", err)
+		}
+
+		// Configure cops with the provided json file
+		if err := configureCOPS(c); err != nil {
+			return fmt.Errorf("Configuring COPS: %w", err)
+		}
+	}
+
+	return nil
+}
+
+// Validate the configuration - verify required fields exist. Populate optional fields with defaults if applicable.
+func (c *Config) validate() error {
+	defaultHeartBeatMS := 1000
+	defaultPatrolMS := 1000
+	defaultBriefingMS := 5000
+	defaultC2CmsgMS := 50
+
+	// Use hostname as name if no name provided and redundant failover is not enabled
+	if c.Name == "" && !c.EnableRedundantFailover {
+		name, err := os.Hostname()
+		if err != nil {
+			log.Errorf("No controller name provided. Could not obtain default host name: %v", err)
+		}
+
+		log.Infof("No controller name provided. Using default: %v. ", name)
+		c.Name = name
+	}
+
+	// Verify we have appropriate timer frequencies
+	if c.HeartbeatFrequencyMS == 0 {
+		log.Infof("Using default heartbeat frequency value: %v.", defaultHeartBeatMS)
+		c.HeartbeatFrequencyMS = defaultHeartBeatMS
+	}
+
+	if c.PatrolFrequencyMS == 0 {
+		log.Infof("Using default patrol frequency value: %v.", defaultPatrolMS)
+		c.PatrolFrequencyMS = defaultPatrolMS
+	}
+
+	if c.BriefingFrequencyMS == 0 {
+		log.Infof("Using default briefing frequency value: %v.", defaultBriefingMS)
+		c.BriefingFrequencyMS = defaultBriefingMS
+	}
+
+	if c.C2cMsgFrequencyMS == 0 {
+		log.Infof("Using default c2c messaging frequency value: %v.", defaultC2CmsgMS)
+		c.C2cMsgFrequencyMS = defaultC2CmsgMS
+	}
+
+	// Validate process list
+	for key, process := range c.ProcessList {
+		if err := process.validate(); err != nil {
+			return fmt.Errorf("process %v: %w", key, err)
+		}
+	}
+
+	return c.validateFailoverConfig()
+}
+
+// Validate a given process from configuration.
+func (p Process) validate() error {
+
+	// Validate each process provided in the list
+	if p.Name == "" {
+		return fmt.Errorf("process name not provided.")
+	}
+
+	if p.Uri == "" {
+		return fmt.Errorf("process uri not provided.")
+	}
+
+	if p.HangTimeAllowanceMS == 0 {
+		p.HangTimeAllowanceMS = 3000
+	}
+
+	return nil
+}
+
+// Further validate failover configuration.
+func (config *Config) validateFailoverConfig() error {
+	defaultServerName := "cops_server"
+	defaultClientName := "cops_client"
+
+	// Don't worry about validation if not enabled
+	if !config.EnableRedundantFailover {
+		return nil
+	}
+
+	// Handle encryption and failover validation
+	if err := config.handleEncryptionConfig(); err != nil {
+		return fmt.Errorf("encryption config: %w", err)
+	}
+
+	if len(config.PrimaryIP) < 1 {
+		return fmt.Errorf("at least one primary IP address must be provided when failover is enabled")
+	}
+	for _, ip := range config.PrimaryIP {
+		if net.ParseIP(ip) == nil {
+			return fmt.Errorf("invalid primary IP address provided: %s", ip)
+		}
+	}
+	if len(config.PrimaryNetworkInterface) != len(config.PrimaryIP) {
+		return fmt.Errorf("a network interface must be provided for each ip given when failover is enabled. Got %d ips and %d interfaces.", len(config.PrimaryIP), len(config.PrimaryNetworkInterface))
+	}
+	for i, netInterface := range config.PrimaryNetworkInterface {
+		if netInterface == "" {
+			return fmt.Errorf("no primary network interface provided, entry number %d", i)
+		}
+	}
+	if net.ParseIP(config.ThisCtrlrStaticIP) == nil {
+		return fmt.Errorf("invalid static IP provided for this controller: %s.", config.ThisCtrlrStaticIP)
+	}
+	if net.ParseIP(config.OtherCtrlrStaticIP) == nil {
+		return fmt.Errorf("invalid static IP provided for other controller: %s.", config.OtherCtrlrStaticIP)
+	}
+	if net.ParseIP(config.PduIP) == nil {
+		return fmt.Errorf("invalid pdu IP provided: %s.", config.PduIP)
+	}
+	if config.PduOutletEndpoint == "" {
+		// SNMP endpoint for PDU outlet control. Should be the same for all PDU models in the field (AP7901b)
+		defaultPduOutletEndpoint := ".1.3.6.1.4.1.318.1.1.4.4.2.1.3."
+		log.Infof("Setting default PDU outlet endpoint: %v", defaultPduOutletEndpoint)
+		config.PduOutletEndpoint = defaultPduOutletEndpoint
+	}
+	otherOutletInt, err := strconv.Atoi(config.OtherCtrlrOutlet)
+	if err != nil {
+		return fmt.Errorf("outlet value: %s for the other controller should be able to be parsed as an integer", config.OtherCtrlrOutlet)
+	}
+	// TODO: currently only 8 outlets supported, but could be up to 24 in the future with different models
+	if otherOutletInt < 1 || otherOutletInt > 8 {
+		return fmt.Errorf("outlet value for the other controller is out of range, should be [1 - 8] but got %d", otherOutletInt)
+	}
+
+	// Generate controller name based on whether this is server/client if no name provided
+	if config.Name == "" {
+		// return True if this is the server (this ip < other ip)
+		if compareIPAddrs(config.ThisCtrlrStaticIP, config.OtherCtrlrStaticIP) {
+			log.Infof("Setting controller name to default server name: %v.", defaultServerName)
+			config.Name = defaultServerName
+		} else {
+			log.Infof("Setting controller name to default client name: %v.", defaultClientName)
+			config.Name = defaultClientName
+		}
+	}
+
+	return nil
+}
+
 // Configure internal variables
-func configureCOPS(config cfg) error {
+func configureCOPS(config Config) error {
 	beginningTime = time.Now()
 
-	controllerName = config.controllerName
-	if enableRedundantFailover = config.enableRedundantFailover; enableRedundantFailover {
+	controllerName = config.Name
+	if enableRedundantFailover = config.EnableRedundantFailover; enableRedundantFailover {
 		// Store the IP addresses of the primary
-		for _, ip := range config.primaryIP {
+		for _, ip := range config.PrimaryIP {
 			primaryIP = append(primaryIP, ip)
 		}
-		for _, netInterface := range config.primaryNetworkInterface {
+		for _, netInterface := range config.PrimaryNetworkInterface {
 			primaryNetworkInterface = append(primaryNetworkInterface, netInterface)
 		}
 
 		// Store the IP of the PDU
-		pduIP = config.pduIP
-		pduOutletEndpoint = config.pduOutletEndpoint
-		otherCtrlrOutlet = config.otherCtrlrOutlet
+		pduIP = config.PduIP
+		pduOutletEndpoint = config.PduOutletEndpoint
+		otherCtrlrOutlet = config.OtherCtrlrOutlet
 	}
 
-	tempSource = config.temperatureSource
+	tempSource = config.TemperatureSource
 
 	// Set process variables
 	processJurisdiction = make(map[string]*processInfo)
-	for _, process := range config.processList {
+	for _, process := range config.ProcessList {
 		var processEntry processInfo
-		processEntry.name = process.name
-		processEntry.uri = process.uri
-		processEntry.writeOutC2C = process.writeOutC2C
-		processEntry.killOnHang = process.killOnHang
-		processEntry.requiredForHealthyStatus = process.requiredForHealthyStatus
-		processEntry.hangTimeAllowance = time.Duration(process.hangTimeAllowanceMS) * time.Millisecond
-		processEntry.configRestart = process.configRestart
+		processEntry.name = process.Name
+		processEntry.uri = process.Uri
+		processEntry.writeOutC2C = process.WriteOutC2C
+		processEntry.killOnHang = process.KillOnHang
+		processEntry.requiredForHealthyStatus = process.RequiredForHealthyStatus
+		processEntry.hangTimeAllowance = time.Duration(process.HangTimeAllowanceMS) * time.Millisecond
+		processEntry.configRestart = process.ConfigRestart
 		// Set default initial values
-		processEntry.replyToURI = path.Join("/cops/heartbeat/", process.name)
+		processEntry.replyToURI = path.Join("/cops/heartbeat/", process.Name)
 		processEntry.alive = true
 		processEntry.healthStats.lastConfirmedAlive = beginningTime
 		processEntry.healthStats.lastRestart = beginningTime
 		processEntry.healthStats.totalRestarts = -1 // First startup will increment this to zero
 		processEntry.healthStats.copsRestarts = 0
-		processJurisdiction[process.name] = &processEntry
+		processJurisdiction[process.Name] = &processEntry
 	}
 
-	dr.configure(float64(config.heartbeatFrequencyMS))
+	dr.configure(float64(config.HeartbeatFrequencyMS))
 	if enableRedundantFailover {
 		err := configureC2C(config)
 		if err != nil {
@@ -255,10 +329,10 @@ func configureCOPS(config cfg) error {
 }
 
 // Returns all COPS tickers when given their frequencies
-func startAllTickers(config cfg) (heartRate, patrolRate, briefingRate, statsUpdateRate *time.Ticker) {
-	heartRate = startTicker(config.heartbeatFrequencyMS)
-	patrolRate = startTicker(config.patrolFrequencyMS)
-	briefingRate = startTicker(config.briefingFrequencyMS)
+func startAllTickers(config Config) (heartRate, patrolRate, briefingRate, statsUpdateRate *time.Ticker) {
+	heartRate = startTicker(config.HeartbeatFrequencyMS)
+	patrolRate = startTicker(config.PatrolFrequencyMS)
+	briefingRate = startTicker(config.BriefingFrequencyMS)
 	statsUpdateRate = startTicker(3000)
 	return
 }

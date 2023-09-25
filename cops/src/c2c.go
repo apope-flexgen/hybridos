@@ -135,10 +135,10 @@ func concatIPFrags(ipFrags [5]int) uint64 {
 }
 
 // Called at the beginning of COPS to configure important C2C variables and begin listening for new connection requests
-func configureC2C(config cfg) error {
+func configureC2C(config Config) error {
 	c2c.connected = false
-	thisCtrlrStaticIP = config.thisCtrlrStaticIP + ":8000"
-	otherCtrlrStaticIP = config.otherCtrlrStaticIP + ":8000"
+	thisCtrlrStaticIP = config.ThisCtrlrStaticIP + ":8000"
+	otherCtrlrStaticIP = config.OtherCtrlrStaticIP + ":8000"
 	c2c.amServerNotClient = compareIPAddrs(thisCtrlrStaticIP, otherCtrlrStaticIP)
 	if c2c.amServerNotClient {
 		log.Infof("Running as TCP server")

@@ -17,7 +17,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"net"
 	"os"
 	"os/exec"
 	"path"
@@ -28,7 +27,6 @@ import (
 	fp "path/filepath"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
-	"github.com/flexgen-power/go_flexgen/parsemap"
 
 	"github.com/gosnmp/gosnmp"
 )
@@ -138,7 +136,7 @@ func startControllerModeNegotiation() {
 }
 
 // Handle configuration for SNMP encryption
-func handleEncryptionConfig(config *cfg) error {
+func (config *Config) handleEncryptionConfig() error {
 	// Configure hashed passwords and decryption key from their hard-coded locations as well
 	pduHashedAuth, err := os.ReadFile(pduHashedAuthPath)
 	if err != nil {
@@ -173,67 +171,22 @@ func handleEncryptionConfig(config *cfg) error {
 	return nil
 }
 
-// Further validate failover configuration
-func validateFailoverConfig(config *cfg) error {
-	if config.controllerName == "" {
-		return fmt.Errorf("no controller name provided")
-	}
-	if len(config.primaryIP) < 1 {
-		return fmt.Errorf("at least one primary IP address must be provided when failover is enabled")
-	}
-	for _, ip := range config.primaryIP {
-		if net.ParseIP(ip) == nil {
-			return fmt.Errorf("invalid primary IP address provided: %s", ip)
-		}
-	}
-	if len(config.primaryNetworkInterface) != len(config.primaryIP) {
-		return fmt.Errorf("a network interface must be provided for each ip given when failover is enabled. Got %d ips and %d interfaces.", len(config.primaryIP), len(config.primaryNetworkInterface))
-	}
-	for i, netInterface := range config.primaryNetworkInterface {
-		if netInterface == "" {
-			return fmt.Errorf("no primary network interface provided, entry number %d", i)
-		}
-	}
-	if net.ParseIP(config.thisCtrlrStaticIP) == nil {
-		return fmt.Errorf("invalid static IP provided for this controller: %s", config.thisCtrlrStaticIP)
-	}
-	if net.ParseIP(config.otherCtrlrStaticIP) == nil {
-		return fmt.Errorf("invalid static IP provided for other controller: %s", config.otherCtrlrStaticIP)
-	}
-	if net.ParseIP(config.pduIP) == nil {
-		return fmt.Errorf("invalid pdu IP provided: %s", config.pduIP)
-	}
-	if config.pduOutletEndpoint == "" {
-		return fmt.Errorf("no pdu outlet endpoint provided")
-	}
-	otherOutletInt, err := strconv.Atoi(config.otherCtrlrOutlet)
-	if err != nil {
-		return fmt.Errorf("outlet value: %s for the other controller should be able to be parsed as an integer", config.otherCtrlrOutlet)
-	}
-	// TODO: currently only 8 outlets supported, but could be up to 24 in the future with different models
-	if otherOutletInt < 1 || otherOutletInt > 8 {
-		return fmt.Errorf("outlet value for the other controller is out of range, should be [1 - 8] but got %d", otherOutletInt)
-	}
-
-	return nil
-}
-
-func configureFailover(body map[string]interface{}, config *cfg) error {
-	if !config.enableRedundantFailover {
+/* func configureFailover(body map[string]interface{}, config *Config) error {
+	if !config.EnableRedundantFailover {
 		return nil
 	}
 	// Controller name is required when failover is enabled, but optional otherwise
 	controllerNameInterface, err := parsemap.ExtractValueWithType(body, "controllerName", parsemap.STRING)
 	if err != nil {
 		// Controller name is optional if failover is disabled
-		if !config.enableRedundantFailover {
+		if !config.EnableRedundantFailover {
 			log.Warnf("Failed to extract controllerName from configuration, will not be published")
 			return nil
 		}
 		// Controller name is required if failover is enabled
 		return fmt.Errorf("failed to extract controllerName from configuration: %w", err)
 	}
-	config.controllerName = controllerNameInterface.(string)
+	config.Name = controllerNameInterface.(string)
 
 	primaryIPInterface, err := parsemap.ExtractValueWithType(body, "primaryIP", parsemap.INTERFACE_SLICE)
 	if err != nil {
@@ -315,7 +268,7 @@ func configureFailover(body map[string]interface{}, config *cfg) error {
 
 	// Validate failover configuration
 	return validateFailoverConfig(config)
-}
+} */
 
 // Claim the virtual interface and add the Primary IP to it
 func setupPrimaryIP() error {

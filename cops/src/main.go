@@ -35,11 +35,11 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/flexgen-power/go_flexgen/cfgfetch"
 	log "github.com/flexgen-power/go_flexgen/logger"
 )
 
 // Global variables
+var processName = "cops"
 var processJurisdiction map[string]*processInfo // Map of processes that will be checked to see if they are up and running
 var f fims.Fims                                 // FIMS connection
 var beginningTime time.Time                     // Timestamp of when COPS started running
@@ -60,15 +60,9 @@ func main() {
 	// Configuration & initialization
 	fimsReceive := configureFIMS()
 
-	log.Infof("Retrieving configuration from %s...", cfgSource)
-	configuration, err := cfgfetch.Retrieve("cops", cfgSource)
-	if err != nil {
-		log.Fatalf("Error retrieving configuration data: %v.", err)
-	}
-	log.Infof("Retrieved the following configuration data: %+v.", configuration)
-
-	if err = handleConfiguration(configuration); err != nil {
-		log.Fatalf("Error handling configuration: %v.", err)
+	// Read in config file
+	if err := parse(cfgSource); err != nil {
+		log.Fatalf("Parsing new config: %v", err)
 	}
 
 	getDBIUpdateModeStatus()

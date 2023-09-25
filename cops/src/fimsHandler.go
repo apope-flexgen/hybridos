@@ -123,7 +123,7 @@ func handleSet(msg fims.FimsMsg) error {
 		if len(body) == 0 {
 			return &configurationError{fmt.Errorf("expected DBI configuration document, but it was empty")}
 		}
-		return &configurationError{handleConfiguration(body)}
+		return &configurationError{handleConfigBody(body)}
 	// Check for DBI update response first
 	// Check uri is one of /cops/<process_name>/dbi_update_complete or <writeouturi>/dbi_update
 	case msg.Nfrags == 3 && strings.HasSuffix(msg.Uri, "dbi_update_complete"):
