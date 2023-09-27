@@ -565,6 +565,7 @@ struct Connection_Info
     char parity;
     u8 data_bits;
     u8 stop_bits;
+    u8 connection_timeout;
 
     String_Storage_Handle name;
     String_Storage_Handle ip_serial_str; // NOTE(WALKER): This requires size + 1 characters (modbus uses c strings -> '\0' termination)
@@ -1031,6 +1032,8 @@ is c_str:              {}
         conn_workspace.conn_info.type = curr_config_client.connection.conn_type;
         // tcp stuff:
         conn_workspace.conn_info.port = static_cast<u16>(curr_config_client.connection.port);
+        conn_workspace.conn_info.connection_timeout = static_cast<u16>(curr_config_client.connection.connection_timeout);
+
         // rtu stuff:
         conn_workspace.conn_info.baud_rate = static_cast<s32>(curr_config_client.connection.baud_rate);
         conn_workspace.conn_info.parity    = curr_config_client.connection.parity;

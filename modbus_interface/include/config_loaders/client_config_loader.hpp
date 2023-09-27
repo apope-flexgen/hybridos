@@ -128,6 +128,7 @@ struct Connection
     s64 frequency = 0;
     u64 device_id = 255; // aka: "slave_address"
     s64 debounce = 0;
+    u64 connection_timeout = 2;
 
     // derived information:
     Conn_Types conn_type;
@@ -160,6 +161,10 @@ struct Connection
         // we still need a port at the moment but we may use a service.
         if (!get_val(connection, "port", port, err_loc, Get_Type::Optional)) return false;
         if (!check_port(err_loc)) return false;
+
+        // we still need a port at the moment but we may use a service.
+        if (!get_val(connection, "connection_timeout", connection_timeout, err_loc, Get_Type::Optional)) return false;
+        if (!check_connection_timeout(err_loc)) return false;
 
         if (!get_val(connection, "service", service, err_loc, Get_Type::Optional)) return false;
         if (!service.empty()) { service_to_port(service, port); }
@@ -235,6 +240,17 @@ struct Connection
         {
             err_loc.err_msg = "baud_rate must be greater than 0";
             return false;
+        }
+        return true;
+    }
+
+    bool check_connection_timeout(Error_Location& err_loc)
+    {
+        // TODO(WALKER): What is a good check for baud_rate?
+        if (connection_timeout < 1 || connection_timeout > 10 )
+        {
+            err_loc.err_msg = fmt::format(R"(connection_timeout  (currently: \"{}\") resetting to 2)", connection_timeout);
+            connection_timeout = 2;
         }
         return true;
     }

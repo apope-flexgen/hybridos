@@ -428,6 +428,8 @@ static bool listener_thread(const u8 client_idx) noexcept
     // listener variables:
     auto& my_workspace     = *main_workspace.client_workspaces[client_idx];
     const auto client_name = main_workspace.string_storage.get_str(my_workspace.conn_workspace.conn_info.name);
+    const auto connection_timeout = my_workspace.conn_workspace.conn_info.connection_timeout;
+
     auto& fims_gateway     = my_workspace.fims_gateway;
     auto& receiver_bufs    = my_workspace.receiver_bufs;
     auto& meta_data        = receiver_bufs.meta_data;
@@ -444,14 +446,17 @@ static bool listener_thread(const u8 client_idx) noexcept
 
     // setup the timeout to be 2 seconds (so we can stop listener thread without it spinning infinitely on errors):
     struct timeval tv;
-    tv.tv_sec  = 2;
+
+    tv.tv_sec  = connection_timeout;
     tv.tv_usec = 0;
     if (setsockopt(fims_gateway.get_socket(), SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv)) == -1)
     {
-        NEW_FPS_ERROR_PRINT("listener for \"{}\": could not set socket timeout to 2 seconds. Exiting\n", client_name);
+        NEW_FPS_ERROR_PRINT("listener for \"{}\": could not set socket timeout to {} seconds. Exiting\n", client_name, connection_timeout);
         return false;
     }
 
+    if(connection_timeout != 2)
+        NEW_FPS_ERROR_PRINT("listener for \"{}\": set socket connection timeout to {} seconds\n", client_name, connection_timeout);
     // main loop:
     while (my_workspace.keep_running)
     {
