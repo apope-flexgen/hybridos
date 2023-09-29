@@ -49,3 +49,37 @@ Checks: 'clang-diagnostic-*,clang-analyzer-*,-clang-analyzer-optin.performance.P
 ```
 
 In general we are including all of the diagnostic and analyzer checks, then ignoring a couple other ones.
+
+## Making it happen automatically (format on save)
+1. First ensure that you have run `./lint.sh` inside of this repo once, to install the tooling.
+
+2. Next add the following to your `.bashrc` or `.bash_profile`:
+```
+source /opt/rh/llvm-toolset-7/enable
+```
+3. Then install the vscode extension [RunOnSave](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) in vscode.
+
+4. Next open preferences (ctrl+shift+P) and select `Preferences: Open User Settings (JSON)`
+
+5. Last, append the following items to the JSON:
+```
+"emeraldwalk.runonsave": {
+    "commands": [
+        {
+            "match": "\\.(h\b|hpp\b|c\b|cpp\b)",
+            "cmd": "clang-format ${file}"
+        }
+    ]
+},
+"[cpp]": {
+    "editor.wordBasedSuggestions": false,
+    "editor.suggest.insertMode": "replace",
+    "editor.semanticHighlighting.enabled": true,
+    "editor.defaultFormatter": "xaver.clang-format"
+    "editor.formatOnSave": true
+},
+```
+
+Note: Ensure you don't have another entry for `[cpp]`. If you do, you could upsert the properties into what you already have.
+
+After this, anytime you save a file with extension .c, .h, .cpp, or .hpp it should automatically format.
