@@ -745,23 +745,6 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
     maint_mode.enabled = !inLockdown;
     goodBody = maint_mode.makeJSONObject(buf, var, true) && goodBody;
 
-    // Start only if running (not standby)
-    start_ctl.enabled = (inMaintenance && !isRunning && !inStandby && valid_contactors_state);
-    goodBody = start_ctl.makeJSONObject(buf, var, true) && goodBody;
-
-    // Stop if in running or standby, no contactor restriction
-    stop_ctl.enabled = (inMaintenance && (isRunning || inStandby));
-    goodBody = stop_ctl.makeJSONObject(buf, var, true) && goodBody;
-
-    // Enter standby only if running and not in standby and contactors closed
-    // TODO: setpoint requirements? Require the user to set them to 0 or set them to 0 automatically?
-    enter_standby_ctl.enabled = (inMaintenance && (isRunning && !inStandby) && (active_power_setpoint.value.value_float == 0) && (reactive_power_setpoint.value.value_float == 0) && valid_contactors_state);
-    goodBody = enter_standby_ctl.makeJSONObject(buf, var, true) && goodBody;
-
-    // Exit standby only if in standby and contactors closed
-    exit_standby_ctl.enabled = (inMaintenance && inStandby && valid_contactors_state);
-    goodBody = exit_standby_ctl.makeJSONObject(buf, var, true) && goodBody;
-
     // TODO: make clear faults in base class
     clear_faults_ctl.enabled = (get_num_active_faults() != 0 || get_num_active_alarms() != 0);
     goodBody = clear_faults_ctl.makeJSONObject(buf, var, true) && goodBody;
@@ -769,26 +752,43 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
     limits_override_ctl.enabled = inMaintenance;
     goodBody = limits_override_ctl.makeJSONObject(buf, var, true) && goodBody;
 
+    // Start only if running (not standby)
+    start_ctl.enabled = (inMaintenance && !isRunning && !inStandby && valid_contactors_state && !is_in_local_mode());
+    goodBody = start_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    // Stop if in running or standby, no contactor restriction
+    stop_ctl.enabled = (inMaintenance && (isRunning || inStandby) && !is_in_local_mode());
+    goodBody = stop_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    // Enter standby only if running and not in standby and contactors closed
+    // TODO: setpoint requirements? Require the user to set them to 0 or set them to 0 automatically?
+    enter_standby_ctl.enabled = (inMaintenance && (isRunning && !inStandby) && (active_power_setpoint.value.value_float == 0) && (reactive_power_setpoint.value.value_float == 0) && valid_contactors_state && !is_in_local_mode());
+    goodBody = enter_standby_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    // Exit standby only if in standby and contactors closed
+    exit_standby_ctl.enabled = (inMaintenance && inStandby && valid_contactors_state && !is_in_local_mode());
+    goodBody = exit_standby_ctl.makeJSONObject(buf, var, true) && goodBody;
+
     // Autobalancing will work in any state we track (running, standby, stopped)
-    autobalancing_enable_ctl.enabled = inMaintenance && !autobalancing_status.value.value_bool;
+    autobalancing_enable_ctl.enabled = inMaintenance && !autobalancing_status.value.value_bool && !is_in_local_mode();
     goodBody = autobalancing_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // Autobalancing will work in any state we track (running, standby, stopped)
-    autobalancing_disable_ctl.enabled = inMaintenance && autobalancing_status.value.value_bool;
+    autobalancing_disable_ctl.enabled = inMaintenance && autobalancing_status.value.value_bool && !is_in_local_mode();
     goodBody = autobalancing_disable_ctl.makeJSONObject(buf, var, true) && goodBody;
 
-    maint_active_power_setpoint_ctl.enabled = inMaintenance && isRunning;
+    maint_active_power_setpoint_ctl.enabled = inMaintenance && isRunning && !is_in_local_mode();
     goodBody = maint_active_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
-    maint_reactive_power_setpoint_ctl.enabled = inMaintenance && isRunning;
+    maint_reactive_power_setpoint_ctl.enabled = inMaintenance && isRunning && !is_in_local_mode();
     goodBody = maint_reactive_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // Open contactors only if stopped (not faulted) and contactors are closed
-    open_dc_contactors_ctl.enabled = inMaintenance && !isRunning && !inStandby && dc_contactors_closed.value.value_bool;
+    open_dc_contactors_ctl.enabled = inMaintenance && !isRunning && !inStandby && dc_contactors_closed.value.value_bool && !is_in_local_mode();
     goodBody = open_dc_contactors_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // Close contactors only if stopped (not faulted) and contactors are not closed
-    close_dc_contactors_ctl.enabled = inMaintenance && !isRunning && !inStandby && !dc_contactors_closed.value.value_bool;
+    close_dc_contactors_ctl.enabled = inMaintenance && !isRunning && !inStandby && !dc_contactors_closed.value.value_bool && !is_in_local_mode();
     goodBody = close_dc_contactors_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     return (goodBody);
@@ -925,6 +925,9 @@ void Asset_ESS::update_asset(void) {
 }
 
 void Asset_ESS::send_to_components(void) {
+    if (is_in_local_mode())
+        return;
+
     if ((get_num_active_faults() != 0) && isRunning)
         stop();
 

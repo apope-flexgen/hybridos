@@ -1837,7 +1837,8 @@ bool fimsCtl::configure(cJSON* cfg_json, jsonBuildOption build_option, void* dis
 }
 
 /**
- * @brief      Sends a json object over fims.
+ * @brief      Sends a json object over fims. Will not send and return true if the controller
+ *             is secondary or the component receiving the message is in local mode
  *
  * @param      value: The value to send
  * @param      uri: The uri to send to
@@ -1845,8 +1846,8 @@ bool fimsCtl::configure(cJSON* cfg_json, jsonBuildOption build_option, void* dis
  * @return     True on success, False otherwise.
  */
 bool Asset::json_object_send(std::string& value, const std::string& uri) {
-    // Disable publish if second controller (shadow mode)
-    if (!*is_primary)
+    // Disable response if the controller is secondary or the component is unavailable (local control only)
+    if (!*is_primary || is_in_local_mode())
         return true;
 
     if (value.empty() || (uri.empty())) {

@@ -301,24 +301,24 @@ bool Asset_Solar::generate_asset_ui(fmt::memory_buffer& buf, const char* const v
     goodBody = clear_faults_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // add the start button
-    start_ctl.enabled = (!isRunning && inMaintenance);
+    start_ctl.enabled = (!isRunning && inMaintenance) && !is_in_local_mode();
     goodBody = start_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // add the stop button
-    stop_ctl.enabled = (isRunning && inMaintenance);
+    stop_ctl.enabled = (isRunning && inMaintenance) && !is_in_local_mode();
     goodBody = stop_ctl.makeJSONObject(buf, var, true) && goodBody;
 
-    enter_standby_ctl.enabled = (isRunning && inMaintenance && !inStandby && (active_power_setpoint.value.value_float == 0.0) && (reactive_power_setpoint.value.value_float == 0.0));
+    enter_standby_ctl.enabled = (isRunning && inMaintenance && !inStandby && (active_power_setpoint.value.value_float == 0.0) && (reactive_power_setpoint.value.value_float == 0.0)) && !is_in_local_mode();
     goodBody = enter_standby_ctl.makeJSONObject(buf, var) && goodBody;
 
-    exit_standby_ctl.enabled = (isRunning && inMaintenance && inStandby);
+    exit_standby_ctl.enabled = (isRunning && inMaintenance && inStandby) && !is_in_local_mode();
     goodBody = exit_standby_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     // now add the rest of the controls
-    maint_active_power_setpoint_ctl.enabled = (inMaintenance && isRunning && !inStandby);
+    maint_active_power_setpoint_ctl.enabled = (inMaintenance && isRunning && !inStandby) && !is_in_local_mode();
     goodBody = maint_active_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
-    maint_reactive_power_setpoint_ctl.enabled = (inMaintenance && isRunning && !inStandby);
+    maint_reactive_power_setpoint_ctl.enabled = (inMaintenance && isRunning && !inStandby) && !is_in_local_mode();
     goodBody = maint_reactive_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     return (goodBody);
@@ -418,6 +418,9 @@ void Asset_Solar::update_asset(void) {
 }
 
 void Asset_Solar::send_to_components(void) {
+    if (is_in_local_mode())
+        return;
+
     send_active_power_setpoint();
     send_reactive_power_setpoint();
     send_power_factor_setpoint();
