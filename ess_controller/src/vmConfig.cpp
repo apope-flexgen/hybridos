@@ -293,7 +293,7 @@ bool checkcFile(varsmap &vmap, VarMapUtils* vm, cJSON* cjsi, const char* cfile)
 
     }
 
-    if(!ret) if(1) FPS_PRINT_INFO(" seeking [{}]", cfile);
+    if(!ret) if(0) FPS_PRINT_INFO(" seeking [{}]", cfile);
     return ret;
 }
 // use this for all files that are not templates
@@ -425,7 +425,7 @@ bool checkLoad(varsmap &vmap, VarMapUtils* vm, cJSON* cjsi, const char* tmpl)
         }
     }
 
-    if(!ret) if(1)FPS_PRINT_INFO(" seeking [{}]", tmpl);
+    if(!ret) if(0)FPS_PRINT_INFO(" seeking [{}]", tmpl);
     return ret;
 }
 
@@ -579,7 +579,7 @@ int requestFfile(varsmap &vmap, VarMapUtils*vm, const char*final)
     {
         auto fs = fmt::format("{}{}", dbifs, final);
         auto fr = fmt::format("/{}/cfg/cfile/{}/{}",aname, aname, final);
-        if(0)FPS_PRINT_INFO(" fims send [{}] reply [{}] cfile [{}]"
+        if(1)FPS_PRINT_INFO(" fims send [{}] reply [{}] cfile [{}]"
                 , fs.c_str()
                 , fr.c_str()
                 , final
@@ -618,21 +618,20 @@ int requestTmpl(varsmap &vmap, VarMapUtils*vm, assetVar* av)
     if (!aname)
         aname = vm->getSysName(vmap);
 
-    if(1)FPS_PRINT_INFO(" fims send fname [{}] simdbi [{}] aname [{}]", cstr{fname}, vm->simdbi, cstr{aname});
+    if(0)FPS_PRINT_INFO(" fims send fname [{}] simdbi [{}] aname [{}]", cstr{fname}, vm->simdbi, cstr{aname});
     if(fname && aname)
     {
         auto fr = fmt::format("/{}/cfg/ctmpl/{}/{}",aname, aname, fname);
-        if(1)FPS_PRINT_INFO(" fims reply [{}] cfile [{}] dbifs [{}]"
+        if(0)FPS_PRINT_INFO(" fims reply [{}] cfile [{}] dbifs [{}]"
                 , fr.c_str()
                 , fname
                 , dbifs
                 );
         auto fs = fmt::format("{}{}", dbifs, fname);
-        if(1)FPS_PRINT_INFO(" fims send 1 [{}] cfile [{}]"
+        if(0)FPS_PRINT_INFO(" fims send 1 [{}] cfile [{}]"
                 , fs
                 , fname
                 );
-
         if (vm->autoLoad && strstr(fname, "std_")){
             int single = 0;
             auto uri = fmt::format("/cfg/ctmpl/{}/{}", aname, fname);
@@ -651,16 +650,12 @@ int requestTmpl(varsmap &vmap, VarMapUtils*vm, assetVar* av)
             removeWhitespaceOutsideQuotes(body);
             vm->handleCfile(vmap, nullptr, "set", uri.c_str(), single, body.c_str(), nullptr, nullptr, nullptr);
         }
-        
-
         else if(!vm->simdbi)
         {
-
-            if(1)FPS_PRINT_INFO(" fims send 1a [{}] cfile [{}]"
+            if(0)FPS_PRINT_INFO(" fims send 1a [{}] cfile [{}]"
                         , fs
                         , fname
                     );
-
             if (vm->p_fims)
                 vm->p_fims->Send("get",fs.c_str(),fr.c_str(),nullptr);
         }
@@ -669,10 +664,7 @@ int requestTmpl(varsmap &vmap, VarMapUtils*vm, assetVar* av)
             if(1)FPS_PRINT_INFO(" fims send 1b fname [{}]"
                 , fname
                 );
-
-
             auto xname = vm->getFileName(fname);
-
             if(0)FPS_PRINT_ERROR(" getFileName possibly  no xname [{}]"
                     , xname?xname:"no xname"
                 );
@@ -693,11 +685,9 @@ int requestTmpl(varsmap &vmap, VarMapUtils*vm, assetVar* av)
                     , xname?xname:"no xname"
                 );
             }
-
-
         } 
     }
-    if(1)FPS_PRINT_INFO("{}", " >>>>>> done");
+    if(0)FPS_PRINT_INFO(" >>>>>> done");
     return 0;
 }
 
@@ -1345,6 +1335,7 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
         , av->getdVal() 
         );
     bool nofiles = true;
+    bool getsFailed = false;
     if(vmap.find("/config/cfile") != vmap.end())
     {
         nofiles = false;
@@ -1371,7 +1362,7 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
                 if (tNow > avx->getdParam("reqTimeout"))
                 {   
                     int ccount = avx->getiParam("reqCount");
-                    if(ccount< MAX_CONFIG_REQUESTS)
+                    if(ccount < MAX_CONFIG_REQUESTS)
                     {
                         if(1)FPS_PRINT_INFO(" requesting cfile [{}] "
                             , xx.first
@@ -1382,7 +1373,15 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
                         double dval = tNow + 5.0;
                         avx->setParam("reqTimeout", dval);
                     }
-
+                    else
+                    {
+                        FPS_PRINT_ERROR("Failed to receive cfile [{}] after {} tries"
+                            , xx.first
+                            , ccount);
+                        getsFailed = true;
+                        // Stop running runConfig()
+                        am->amap["runConfig"]->setParam("endTime", 1);
+                    }
                 }
             }
             // if false and timed out resend the request
@@ -1394,50 +1393,63 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
     if(vmap.find("/config/ctmpl") != vmap.end())
     {
         nofiles = false;
-        for ( auto xx : vmap["/config/ctmpl"])
+        for (auto xx = vmap["/config/ctmpl"].begin(); xx != vmap["/config/ctmpl"].end(); ++xx)
         {
             if(0)FPS_PRINT_INFO(" found tmpl #0 [{}] "
-                    , xx.first
+                    , xx->first
                     );
 
-            if((xx.first == "name") || (xx.first == "notes"))
+            if((xx->first == "name") || (xx->first == "notes"))
                 continue;
 
-            assetVar* avx = vmap["/config/ctmpl"][xx.first];
+            assetVar* avx = vmap["/config/ctmpl"][xx->first];
             if(!avx)
             {
                 if(0)FPS_PRINT_INFO("No avx  [{}] moving on..."
-                    , xx.first
+                    , xx->first
                     );
                 continue;
 
             }
             if(0)FPS_PRINT_INFO(" found tmpl #1 [{}]  av [{}] value [{}]"
-                    , xx.first
+                    , xx->first
                     , avx->getfName()
                     , avx->getbVal()
                     );
             if(!avx->getbVal())
             {
                 if(0)FPS_PRINT_INFO(" found tmpl #2 [{}]  av [{}] value [{}]"
-                    , xx.first
+                    , xx->first
                     , avx->getfName()
                     , avx->getbVal()
                     );
                 if (tNow > avx->getdParam("reqTimeout"))
                 {
                     int ccount = avx->getiParam("reqCount");
-                    if(ccount< MAX_CONFIG_REQUESTS)
+                    if(ccount < MAX_CONFIG_REQUESTS)
                     {
-                        if(1)FPS_PRINT_INFO(" requesting ctmpl [{}] ", xx.first);
+                        if(1)FPS_PRINT_INFO(" requesting ctmpl [{}] try number [{}] ", xx->first, ccount+1);
                         requestTmpl(vmap, vm, avx);
-                        if(1)FPS_PRINT_INFO(" requested  ctmpl [{}] ", xx.first);
+                        if(0)FPS_PRINT_INFO(" requested  ctmpl [{}] ", xx->first);
                         ccount++;
                         avx->setParam("reqCount", ccount);
                         double dval = tNow + 5.0;
                         avx->setParam("reqTimeout", dval);
                     }
+                    else
+                    {
+                        FPS_PRINT_ERROR("Failed to receive tmpl file [{}] after {} tries"
+                            , xx->first
+                            , ccount);
+                        getsFailed = true;
+                    }
                 }
+            }
+            if (std::next(xx) == vmap["/config/ctmpl"].end() && getsFailed)
+            {
+                FPS_PRINT_ERROR("Failed to receive 1 or more template files");
+                // Stop running runConfig()
+                am->amap["runConfig"]->setParam("endTime", 1);
             }
         }
     }
@@ -1651,7 +1663,7 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
                     cJSON* cjtmpls  = cJSON_GetObjectItem(cjsi, "tmpls");
                     if (cjtmpls)
                     {
-                        FPS_PRINT_INFO("tmpls field is found in avx [{}]. Requests for template files will be made for tmpls instead of tmpl", avx->getfName());
+                        if(0)FPS_PRINT_INFO("tmpls field is found in avx [{}]. Requests for template files will be made for tmpls instead of tmpl", avx->getfName());
                         if(optionsComplete)
                         {
                             cJSON* currTmpl = NULL;
@@ -1712,7 +1724,7 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
             // but will be set false after the load while waitingfor the final file.
             if(!optionsComplete)
             {
-                if(1)FPS_PRINT_INFO(" LOAD >>> Still Waiting for files for  [{}] in /config/load", xx.first);
+                if(0)FPS_PRINT_INFO(" LOAD >>> Still Waiting for files for  [{}] in /config/load", xx.first);
                 continue;
             }
 
@@ -1732,7 +1744,6 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
                     if(1)FPS_PRINT_INFO(" All files loaded for loader [{}] ready to run av [{}] load"
                             , xx.first
                             , avx->getfName()
- 
                             );
                     // we got all the options run the loader
                     // once processed 
@@ -1755,7 +1766,7 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
 
                         if(final)
                         {
-                            if(0)FPS_PRINT_INFO(" After load, requesing final [{}]", final);
+                            if(0)FPS_PRINT_INFO(" After load, requesting final [{}]", final);
                             bval =  false;
                             assetVar* avff = vm->getVar(vmap,"/config/cfile", final);
                             if(!avff)
@@ -1768,14 +1779,14 @@ int runConfig(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, asse
                             if(!bval)
                             {
                                 requestFfile(vmap, vm, final);
-                                if(0)FPS_PRINT_INFO(" After requestFfile, requesing final [{}]", final);
- 
+                                if(1)FPS_PRINT_INFO(" After requestFfile, requesting final [{}]", final);
+                                // Stop running runConfig()
+                                am->amap["runConfig"]->setParam("endTime", 1);
                             } 
                         }
                     }
                 }
                 if(0)FPS_PRINT_INFO(" After load, requested final");
-
             }
             // this is the end of this load xx.first
         }

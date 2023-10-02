@@ -783,7 +783,7 @@ void print_help(VarMapUtils *vm,  const char* fdir, const char* fname, const cha
                               " -h   print help\n"
                               " -v   print version info\n"
                               " -x   disabled cfg dbi auto load\n"
-                              " -a   auto load in the stdcfg files with a specified config file \n"
+                              " -a   load the compiled-in stdcfg files, and initial config file \n"
                               " -s   sets the subs list <:/ess:/components:/site:>\n"
                               " -c   initial dbi config file <ess_config_risen_sungrow>\n"
                               " -n   sets the default name <ess>\n"
@@ -827,20 +827,18 @@ void load_config_file(const char* cfile)
     // but it may be here
     if (!ok)
     {
+        FPS_PRINT_ERROR("Initial config file [{}] not found, using default", fname.c_str());
         fname = FlexDir;
         fname += "/";
         fname += cfile;
         fname +=".json";
         ok =  vm.checkFileName(fname.c_str());
-
-
     }
     if (!ok)
     {
         // not found so revert to the -c option
         FlexConfig = cfile;
         useArgs = true;
-
     }
     else
     {
