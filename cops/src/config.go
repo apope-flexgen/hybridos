@@ -258,7 +258,12 @@ func (config *Config) validateFailoverConfig() error {
 	// Generate controller name based on whether this is server/client if no name provided
 	if config.Name == "" {
 		// return True if this is the server (this ip < other ip)
-		if compareIPAddrs(config.ThisCtrlrStaticIP, config.OtherCtrlrStaticIP) {
+		cmp, err := isIPLessThan(config.ThisCtrlrStaticIP, config.OtherCtrlrStaticIP)
+		if err != nil {
+			return fmt.Errorf("comparing thisCtrlrStaticIP, otherCtrlrStaticIP: %w", err)
+		}
+
+		if cmp {
 			log.Infof("Setting controller name to default server name: %v.", defaultServerName)
 			config.Name = defaultServerName
 		} else {

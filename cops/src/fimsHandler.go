@@ -21,20 +21,24 @@ func parsePID(body interface{}) (receivedPID int, errorMsg string) {
 }
 
 // Configure FIMS connection
-func configureFIMS() (fimsReceive chan fims.FimsMsg) {
+func configureFIMS() (chan fims.FimsMsg, error) {
 	var err error
 	// Connect to FIMS
 	f, err = fims.Connect("COPS")
-	fatalErrorCheck(err, "Unable to connect to FIMS server")
+	if err != nil {
+		return nil, fmt.Errorf("unable to connect to FIMS server: %w", err)
+	}
 
 	// Subscribe to messages targeted at COPS
 	err = f.Subscribe("/cops")
-	fatalErrorCheck(err, "Unable to subscribe to FIMS")
+	if err != nil {
+		return nil, fmt.Errorf("unable to subsribe to /cops URI on FIMS: %w", err)
+	}
 
 	// Start a FIMS Receive channel that will be used to accept responses to GET requests
-	fimsReceive = make(chan fims.FimsMsg)
+	fimsReceive := make(chan fims.FimsMsg)
 	go f.ReceiveChannel(fimsReceive)
-	return
+	return fimsReceive, nil
 }
 
 // Starting point for handling any and all incoming FIMS messages

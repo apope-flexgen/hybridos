@@ -3,16 +3,19 @@ package main
 import (
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-// compareIPAddrs function unit test
+// isIPLessThan function unit test
 var passedTest bool = false
 
-func TestCompareIPAddrs(t *testing.T) {
+func TestIsIPLessThan(t *testing.T) {
+	var err error
 	// test same IP address, first port is lower
 	input1 := "127.0.0.1:8000"
 	input2 := "127.0.0.1:8001"
-	result := compareIPAddrs(input1, input2)
+	result, _ := isIPLessThan(input1, input2)
 	if result != true {
 		t.Errorf("compareIPAddrs(%v,%v) failed, expected true, got %v", input1, input2, result)
 	}
@@ -20,7 +23,7 @@ func TestCompareIPAddrs(t *testing.T) {
 	// test same IP address, first port is higher
 	input1 = "127.0.0.1:8001"
 	input2 = "127.0.0.1:8000"
-	result = compareIPAddrs(input1, input2)
+	result, _ = isIPLessThan(input1, input2)
 	if result != false {
 		t.Errorf("compareIPAddrs(%v,%v) failed, expected false, got %v", input1, input2, result)
 	}
@@ -28,7 +31,7 @@ func TestCompareIPAddrs(t *testing.T) {
 	// test first IP address is lower
 	input1 = "127.0.0.0:8001"
 	input2 = "127.0.0.1:8000"
-	result = compareIPAddrs(input1, input2)
+	result, _ = isIPLessThan(input1, input2)
 	if result != true {
 		t.Errorf("compareIPAddrs(%v,%v) failed, expected true, got %v", input1, input2, result)
 	}
@@ -36,7 +39,7 @@ func TestCompareIPAddrs(t *testing.T) {
 	// test first IP address is higher
 	input1 = "127.0.0.1:8000"
 	input2 = "127.0.0.0:8001"
-	result = compareIPAddrs(input1, input2)
+	result, _ = isIPLessThan(input1, input2)
 	if result != false {
 		t.Errorf("compareIPAddrs(%v,%v) failed, expected false, got %v", input1, input2, result)
 	}
@@ -44,29 +47,26 @@ func TestCompareIPAddrs(t *testing.T) {
 	// test invalid IP address
 	input1 = "127.0.1:8001"
 	input2 = "127.0.0.1:8000"
-	compareIPAddrsInvalidInput(input1, input2)
-	if !passedTest {
-		t.Errorf("compareIPAddrs(%v,%v) failed, expected panic, returned normally", input1, input2)
-	}
-	passedTest = false
+	expectedError := "formatting is invalid"
+	result, err = isIPLessThan(input1, input2)
+	assert.Containsf(t, err.Error(), expectedError,
+		"Expected error: %q. Actual error: %s,", expectedError, err)
 
 	// test no port given
 	input1 = "127.0.0.1:8000"
 	input2 = "127.0.0.1"
-	compareIPAddrsInvalidInput(input1, input2)
-	if !passedTest {
-		t.Errorf("compareIPAddrs(%v,%v) failed, expected panic, returned normally", input1, input2)
-	}
-	passedTest = false
+	expectedError = "formatting is invalid"
+	result, err = isIPLessThan(input1, input2)
+	assert.Containsf(t, err.Error(), expectedError,
+		"Expected error: %q. Actual error: %s,", expectedError, err)
 
 	// test identical IP addresses and ports
 	input1 = "127.0.0.1:8000"
 	input2 = "127.0.0.1:8000"
-	compareIPAddrsInvalidInput(input1, input2)
-	if !passedTest {
-		t.Errorf("compareIPAddrs(%v,%v) failed, expected panic, returned normally", input1, input2)
-	}
-	passedTest = false
+	expectedError = "identical"
+	result, err = isIPLessThan(input1, input2)
+	assert.Containsf(t, err.Error(), expectedError,
+		"Expected error: %q. Actual error: %s,", expectedError, err)
 }
 
 // fimsToC2c unit test
@@ -107,15 +107,4 @@ func TestParseSetpointsMsg(t *testing.T) {
 	} else if !reflect.DeepEqual(expectedBody, actualBody) {
 		t.Errorf("TestFimsToC2C failed, body mismatch, expected: %v, actual %v", expectedBody, actualBody)
 	}
-}
-
-// helper function to test invalid input to function compareIPAddrs and recover from the expected panic
-func compareIPAddrsInvalidInput(input1, input2 string) bool {
-	defer func() {
-		if r := recover(); r != nil {
-			passedTest = true
-		}
-	}()
-	result := compareIPAddrs(input1, input2)
-	return result
 }

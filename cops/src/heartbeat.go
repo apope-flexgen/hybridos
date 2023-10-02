@@ -61,7 +61,11 @@ func handleHeartbeatReply(msg fims.FimsMsg, process *processInfo) error {
 	if errMsg != "" {
 		return fmt.Errorf("error in parsePID: when calling function handleHeartbeatReply. %s", errMsg)
 	}
-	process.updatePID(readPID)
+
+	if err := process.updatePID(readPID); err != nil {
+		return fmt.Errorf("updating process PID: %w", err)
+	}
+
 	readVersionTag, errMsg := parseStringFromMap("version_tag", msg.Body)
 	if errMsg != "" {
 		return fmt.Errorf("error in parseStringFromMap: when calling function handleHeartbeatReply. %s", errMsg)

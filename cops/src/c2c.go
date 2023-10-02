@@ -55,6 +55,7 @@ const waitUntilNextRead = time.Second // Wait this long before the next attempt 
 const serverKeyPairPath = "/usr/local/etc/config/cops/"
 const serverCrtPath = serverKeyPairPath + "c2c_server.crt"
 const serverKeyPath = serverKeyPairPath + "c2c_server.key"
+const C2CPort = ":8000"
 
 // Error wrapper to distinguish connection errors
 type connectionError struct {
@@ -107,42 +108,48 @@ func (c2c *C2C) handleConnectionError() {
 }
 
 // Verifies an IP address has 4 fields and ends with a port number
-func checkIPAddrFormat(ip string) {
+func checkIPAddrFormat(ip string) error {
 	if strings.Count(ip, ":") != 1 {
-		panic("Port formatting is invalid. Expected format: #.#.#.#:Port#")
+		return fmt.Errorf("port formatting is invalid. Expected format: #.#.#.#:Port#")
 	}
 	if net.ParseIP(ip[:strings.Index(ip, ":")]) == nil {
-		panic("IP address formatting is invalid. Expected format: #.#.#.#:Port#")
+		return fmt.Errorf("IP address formatting is invalid. Expected format: #.#.#.#:Port#")
 	}
+	return nil
 }
 
-// Returns true if the first IP address & port is less than the second IP address & port. Panics if identical addresses/ports
-func compareIPAddrs(ip1Str, ip2Str string) bool {
-	ip1 := numberfyIP(ip1Str)
-	ip2 := numberfyIP(ip2Str)
+// Returns true if the first IP address & port is less than the second IP address & port.
+func isIPLessThan(thisCtrlrIP, otherCtrlrIP string) (bool, error) {
+	ip1, err := numberfyIP(thisCtrlrIP)
+	if err != nil {
+		return false, fmt.Errorf("converting thisCtrlrStaticIP to a number: %w", err)
+	}
+
+	ip2, err := numberfyIP(otherCtrlrIP)
+	if err != nil {
+		return false, fmt.Errorf("converting otherCtrlrStaticIP to a number: %w", err)
+	}
+
 	if ip1 == ip2 {
-		panic("Identical IP addresses given. Primary and secondary controllers must be separate instances")
+		return false, fmt.Errorf("IP addresses are identical.")
 	}
-	return ip1 < ip2
-}
 
-// Concatenates an array of IP address fields into a standardized format for comparison with another IP address
-func concatIPFrags(ipFrags [5]int) uint64 {
-	ipConcatenatedString := fmt.Sprintf("%03d%03d%03d%03d%06d", ipFrags[0], ipFrags[1], ipFrags[2], ipFrags[3], ipFrags[4])
-	ipConcatenatedNumber, err := strconv.ParseUint(ipConcatenatedString, 10, 64)
-	fatalErrorCheck(err, "Error converting IP address to number")
-	return ipConcatenatedNumber
+	return ip1 < ip2, nil
 }
 
 // Called at the beginning of COPS to configure important C2C variables and begin listening for new connection requests
 func configureC2C(config Config) error {
+	var err error
 	c2c.connected = false
-	thisCtrlrStaticIP = config.ThisCtrlrStaticIP + ":8000"
-	otherCtrlrStaticIP = config.OtherCtrlrStaticIP + ":8000"
-	c2c.amServerNotClient = compareIPAddrs(thisCtrlrStaticIP, otherCtrlrStaticIP)
+	thisCtrlrStaticIP = config.ThisCtrlrStaticIP + C2CPort
+	otherCtrlrStaticIP = config.OtherCtrlrStaticIP + C2CPort
+	c2c.amServerNotClient, err = isIPLessThan(thisCtrlrStaticIP, otherCtrlrStaticIP)
+	if err != nil {
+		return fmt.Errorf("comparing thisCtrlrStaticIP, otherCtrlrStaticIP: %w", err)
+	}
+
 	if c2c.amServerNotClient {
 		log.Infof("Running as TCP server")
-		var err error
 		c2c.tcpListener, err = listenToLocalPort(thisCtrlrStaticIP)
 		if err != nil {
 			return fmt.Errorf("error listening to local port: %w", err)
@@ -219,10 +226,25 @@ func listenToLocalPort(localAddr string) (net.Listener, error) {
 }
 
 // Converts an IP address with the format #.#.#.#:Port# to a concatenated 18-digit number for comparison with another IP address
-func numberfyIP(ip string) uint64 {
-	checkIPAddrFormat(ip)
-	ipFrags := splitIPAddr(ip)
-	return concatIPFrags(ipFrags)
+func numberfyIP(ip string) (uint64, error) {
+	if err := checkIPAddrFormat(ip); err != nil {
+		return 0, fmt.Errorf("checking IP address format: %w", err)
+	}
+
+	ipFrags, err := splitIPAddr(ip)
+	if err != nil {
+		return 0, fmt.Errorf("splitting IP address: %w", err)
+	}
+
+	// Concatenate the IP string
+	ipConcatenatedString := fmt.Sprintf("%03d%03d%03d%03d%06d", ipFrags[0], ipFrags[1], ipFrags[2], ipFrags[3], ipFrags[4])
+	ipConcatenatedNumber, err := strconv.ParseUint(ipConcatenatedString, 10, 64)
+	if err != nil {
+		return 0, fmt.Errorf("error converting IP address to number")
+	}
+
+	return ipConcatenatedNumber, nil
+
 }
 
 // Read a c2c message
@@ -334,16 +356,21 @@ func sendC2CMsg(msgBody string) {
 }
 
 // Splits an IP address string into five integer parts: 4 IP address fields and its port number
-func splitIPAddr(ip string) (ipFrags [5]int) {
+func splitIPAddr(ip string) (ipFrags [5]int, err error) {
+
 	f := func(c rune) bool {
 		return !unicode.IsNumber(c)
 	}
+
 	for i, ipFragStr := range strings.FieldsFunc(ip, f) {
 		ipFrag, err := strconv.Atoi(ipFragStr)
-		fatalErrorCheck(err, "Error parsing number from IP address")
+		if err != nil {
+			return ipFrags, fmt.Errorf("parsing number from IP address: %w", err)
+		}
+
 		ipFrags[i] = ipFrag
 	}
-	return
+	return ipFrags, nil
 }
 
 // Convert a fims message (uri, body) to a single string that can be sent via C2C

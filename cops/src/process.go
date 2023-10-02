@@ -66,17 +66,20 @@ func getProcess(name string) *processInfo {
 }
 
 // Update the process pointer if a new PID is received. Record restart data
-func (process *processInfo) updatePID(readPID int) {
+func (process *processInfo) updatePID(readPID int) error {
+	var err error
 	if process.pid != readPID {
-		var err error
 		process.pid = readPID
 		process.processPtr, err = os.FindProcess(readPID)
-		fatalErrorCheck(err, "Error updating process pointer for "+process.name)
+		if err != nil {
+			return fmt.Errorf("error updating process pointer for %v: %w", process.name, err)
+		}
 		process.recordRestart()
 		if controllerMode == Primary {
 			process.sendPrimaryFlag(true)
 		}
 	}
+	return nil
 }
 
 // Sends a system kill command targeting the passed-in process
