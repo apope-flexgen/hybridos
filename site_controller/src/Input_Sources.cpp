@@ -148,16 +148,16 @@ std::string Input_Source::get_ui_type_of_var(std::string var_id) {
  * @brief Parses the JSON array of input source configuration data into the input_sources vector.
  *
  * @param JSON_input_sources Pointer to the cJSON array of input sources configuration data.
- * @returns How many input sources were parsed from the JSON array.
- * @throws runtime_error on parsing failure.
+ * @returns A result describing whether or not the config is valid
  */
-void Input_Source_List::parse_json_obj(cJSON* JSON_input_sources) {
+Config_Validation_Result Input_Source_List::parse_json_obj(cJSON* JSON_input_sources) {
     if (!cJSON_IsArray(JSON_input_sources)) {
-        throw std::runtime_error("parsed input_sources object is not an array");
+        return Config_Validation_Result(false, "parsed input_sources object is not an array");
     }
 
     if (cJSON_GetArraySize(JSON_input_sources) == 0) {
-        throw std::runtime_error("input_sources array was found but is empty. Please add entries or remove object");
+        // allow an empty array to indicate no input sources list
+        return Config_Validation_Result(true);
     }
 
     cJSON* JSON_input_source = NULL;
@@ -171,7 +171,7 @@ void Input_Source_List::parse_json_obj(cJSON* JSON_input_sources) {
         // verify uri_suffix is not a duplicate
         for (auto existing_source : input_sources) {
             if (existing_source->uri_suffix == new_source->uri_suffix) {
-                throw std::runtime_error("input source " + existing_source->name + " and input source " + new_source->name + " have the same uri_suffix " + new_source->uri_suffix);
+                return Config_Validation_Result(false, "input source " + existing_source->name + " and input source " + new_source->name + " have the same uri_suffix " + new_source->uri_suffix);
             }
         }
 
@@ -191,6 +191,8 @@ void Input_Source_List::parse_json_obj(cJSON* JSON_input_sources) {
             selected_input_source_index = i;
         }
     }
+
+    return Config_Validation_Result(true);
 }
 
 /**

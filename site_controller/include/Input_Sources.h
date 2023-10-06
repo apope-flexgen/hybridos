@@ -19,6 +19,7 @@
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
 #include <Types.h>
+#include <Config_Validation_Result.h>
 
 struct Input_Source {
     Input_Source(bool init_enabled = false);
@@ -39,7 +40,7 @@ class Input_Source_List {
     uint selected_input_source_index;
 
 public:
-    void parse_json_obj(cJSON*);
+    Config_Validation_Result parse_json_obj(cJSON*);
     void add_to_JSON_buffer(fmt::memory_buffer&, const char* const var = NULL);
     size_t get_num_sources();
     std::string set_source_enable_flag(std::string source_id, bool enable_flag);

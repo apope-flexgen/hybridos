@@ -42,4 +42,12 @@ public:
     bool value_bool;
 };
 
+// Creates a Value_Object of the specified type using the given value
+template <class T>
+Value_Object create_Value_Object(T value) {
+    Value_Object obj;
+    obj.set(value);
+    return obj;
+}
+
 #endif /* INCLUDE_VALUE_OBJECT_H_ */

@@ -15,6 +15,7 @@
 #include <string>
 #include <limits>
 #include <vector>
+#include <set>
 /* External Dependencies */
 /* System Internal Dependencies */
 #include <Logger.h>
@@ -24,6 +25,7 @@
 #include <Site_Manager.h>
 #include <Data_Endpoint.h>
 #include <Site_Controller_Utils.h>
+#include <Reference_Configs.h>
 
 extern Data_Endpoint* data_endpoint;
 
@@ -83,7 +85,7 @@ Site_Manager::Site_Manager(Version* release_version) {
 }
 
 // Perform any initialization of feature objects which must occur after configuration is parsed
-void Site_Manager::configure_feature_objects(void) {
+void Site_Manager::post_configure_initialize_features(void) {
     //
     // Run Mode 1 Active Power Features
     //
@@ -110,7 +112,7 @@ void Site_Manager::configure_feature_objects(void) {
     //
     // Charge features
     //
-    charge_dispatch.available = true;  // charge dispatch is a special case in that it should always be enabled
+    // charge dispatch is a special case in that it should always be available and enabled
     charge_dispatch.enable_flag.value.value_bool = true;
     charge_dispatch.toggle_ui_enabled(true);
 
@@ -130,10 +132,20 @@ void Site_Manager::configure_feature_objects(void) {
     //
     // Standalone Power Features
     //
+    // Disable all features as part of initial configuration in case any are accidentally enabled
+    for (auto feature : standalone_power_features_list) {
+        feature->enable_flag.value.set(false);
+    }
+    // send Generator Manager the initial LDSS settings
+    set_ldss_variables();
 
     //
     // Site Operation Features
     //
+    // Disable all features as part of initial configuration in case any are accidentally enabled
+    for (auto feature : site_operation_features_list) {
+        feature->enable_flag.value.set(false);
+    }
 }
 
 // gets called just when the user clicks the Features tab. publish_all() subsequently updates the values
@@ -527,6 +539,12 @@ bool Site_Manager::configure(Asset_Manager* man, fims* fim, cJSON* sequenceRoot,
         return false;
     }
 
+    // input_source_status string should be programmatically set based on the name of the currently selected input source.
+    // initial value of input_source_status in variables.json is not actually used since it is too easy for configurator to forget to match it with the initially selected input source.
+    // it is only present to satisfy parser
+    if (input_sources.get_num_sources() > 0)
+        input_source_status.value.set(input_sources.get_name_of_input(input_sources.get_selected_input_source_index()));
+
     // alarm options were configured into alarms variable. allocate memory in active_alarms to handle all alarm types
     active_alarms.options_name.resize(alarms.options_name.size());
     active_alarms.options_value.resize(alarms.options_value.size());
@@ -535,38 +553,9 @@ bool Site_Manager::configure(Asset_Manager* man, fims* fim, cJSON* sequenceRoot,
     active_faults.options_name.resize(faults.options_name.size());
     active_faults.options_value.resize(faults.options_value.size());
 
-    // Point feature objects at their owned variables
-    configure_feature_objects();
-    // Read which active power features are available for runmode1 and configure them on the UI
-    if (!configure_runmode1_kW_features()) {
-        FPS_ERROR_LOG("Site_Manager::configure ~ Error configuring runmode1 active power features!\n");
-        return false;
-    }
-    // Read which active power features are available for runmode2 and configure them on the UI
-    if (!configure_runmode2_kW_features()) {
-        FPS_ERROR_LOG("Site_Manager::configure ~ Error configuring runmode2 active power features!\n");
-        return false;
-    }
-    // Read which reactive power features are available for runmode1 and configure them on the UI
-    if (!configure_runmode1_kVAR_features()) {
-        FPS_ERROR_LOG("Site_Manager::configure ~ Error configuring runmode1 reactive power features!\n");
-        return false;
-    }
-    // Read which reactive power features are available for runmode2 and configure them on the UI
-    if (!configure_runmode2_kVAR_features()) {
-        FPS_ERROR_LOG("Site_Manager::configure ~ Error configuring runmode2 reactive power features!\n");
-        return false;
-    }
-    // Read which standalone power features are available and configure them on the UI
-    if (!configure_standalone_power_features()) {
-        FPS_ERROR_LOG("Site_Manager::configure ~ Error configuring standalone power features!\n");
-        return false;
-    }
-    // Read which site operation features are available and configure them on the UI
-    if (!configure_site_operation_features()) {
-        FPS_ERROR_LOG("Site_Manager::configure ~ Error configuring site operation features!\n");
-        return false;
-    }
+    // post-configuration initialization of features
+    post_configure_initialize_features();
+
     configure_persistent_settings_pairs();
 
     // Record the PID
@@ -578,126 +567,239 @@ bool Site_Manager::configure(Asset_Manager* man, fims* fim, cJSON* sequenceRoot,
     return true;
 }
 
-void Site_Manager::parse_default_vals(cJSON* JSON_defaults, Fims_Object& default_vals) {
+/**
+ * @brief Parses the field defaults object in variables.json which contains default configuration at the level of
+ * fields within a variable's configuration. For example, we might use the field defaults to specify that the
+ * variables with unspecified var_type will default to Float.
+ *
+ * @param JSON_defaults The field defaults JSON object
+ * @return A pair of <defaults_object, validation_result> where validation_result describes whether or not the config was valid
+ */
+std::pair<Fims_Object, Config_Validation_Result> Site_Manager::parse_field_defaults(cJSON* JSON_defaults) {
+    Fims_Object field_defaults;
+
     cJSON* name = cJSON_GetObjectItem(JSON_defaults, "name");
     if (name == NULL || name->valuestring == NULL)
-        throw std::runtime_error("did not find name field");
-    default_vals.set_name(name->valuestring);
+        return std::make_pair(field_defaults, Config_Validation_Result(false, "did not find name field"));
+    field_defaults.set_name(name->valuestring);
 
     cJSON* unit = cJSON_GetObjectItem(JSON_defaults, "unit");
     if (unit == NULL || unit->valuestring == NULL)
-        throw std::runtime_error("did not find unit field");
-    default_vals.set_unit(unit->valuestring);
+        return std::make_pair(field_defaults, Config_Validation_Result(false, "did not find unit field"));
+    field_defaults.set_unit(unit->valuestring);
 
     cJSON* ui_type = cJSON_GetObjectItem(JSON_defaults, "ui_type");
     if (ui_type == NULL || ui_type->valuestring == NULL)
-        throw std::runtime_error("did not find ui_type field");
-    default_vals.set_ui_type(ui_type->valuestring);
+        return std::make_pair(field_defaults, Config_Validation_Result(false, "did not find ui_type field"));
+    field_defaults.set_ui_type(ui_type->valuestring);
 
     cJSON* type = cJSON_GetObjectItem(JSON_defaults, "type");
     if (type == NULL || type->valuestring == NULL)
-        throw std::runtime_error("did not find type field");
-    default_vals.set_type(type->valuestring);
+        return std::make_pair(field_defaults, Config_Validation_Result(false, "did not find type field"));
+    field_defaults.set_type(type->valuestring);
 
     cJSON* var_type = cJSON_GetObjectItem(JSON_defaults, "var_type");
     cJSON* value = cJSON_GetObjectItem(JSON_defaults, "value");
     if (var_type == NULL || value == NULL || var_type->valuestring == NULL)
-        throw std::runtime_error("did not find var_type and/or value fields");
+        return std::make_pair(field_defaults, Config_Validation_Result(false, "did not find var_type and/or value fields"));
 
     if (strcmp(var_type->valuestring, "Float") == 0)
-        default_vals.value.set((float)value->valuedouble);
+        field_defaults.value.set((float)value->valuedouble);
     else if (strcmp(var_type->valuestring, "Bool") == 0)
-        default_vals.value.set(value->type == cJSON_True);
+        field_defaults.value.set(value->type == cJSON_True);
     else if (strcmp(var_type->valuestring, "String") == 0)
-        default_vals.value.set(value->valuestring);
+        field_defaults.value.set(value->valuestring);
     else if (strcmp(var_type->valuestring, "Int") == 0)
-        default_vals.value.set(value->valueint);
+        field_defaults.value.set(value->valueint);
     else
-        throw std::runtime_error("invalid var_type field");
+        return std::make_pair(field_defaults, Config_Validation_Result(false, "invalid var_type field"));
 
     cJSON* scaler = cJSON_GetObjectItem(JSON_defaults, "scaler");
     if (scaler == NULL || scaler->type != cJSON_Number)
-        throw std::runtime_error("did not find scaler field");
-    default_vals.scaler = scaler->valueint;
+        return std::make_pair(field_defaults, Config_Validation_Result(false, "did not find scaler field"));
+    field_defaults.scaler = scaler->valueint;
 
     cJSON* ui_enabled = cJSON_GetObjectItem(JSON_defaults, "ui_enabled");
     if (ui_enabled == NULL || ui_enabled->type > cJSON_True)
-        throw std::runtime_error("did not find ui_enabled field");
-    default_vals.ui_enabled = (ui_enabled->type == cJSON_True);
+        return std::make_pair(field_defaults, Config_Validation_Result(false, "did not find ui_enabled field"));
+    field_defaults.ui_enabled = (ui_enabled->type == cJSON_True);
 
     cJSON* multiple_inputs = cJSON_GetObjectItem(JSON_defaults, "multiple_inputs");
     if (multiple_inputs == NULL || multiple_inputs->type > cJSON_True)
-        throw std::runtime_error("did not find multiple_inputs field");
-    default_vals.multiple_inputs = (multiple_inputs->type == cJSON_True);
+        return std::make_pair(field_defaults, Config_Validation_Result(false, "did not find multiple_inputs field"));
+    field_defaults.multiple_inputs = (multiple_inputs->type == cJSON_True);
 
     // optional std::string can handle being unconfigured
     cJSON* write_uri = cJSON_GetObjectItem(JSON_defaults, "write_uri");
     if (write_uri != NULL && write_uri->valuestring != NULL)
-        default_vals.write_uri = write_uri->valuestring;
+        field_defaults.write_uri = write_uri->valuestring;
 
     // default options not supported
-    default_vals.num_options = 0;
+    field_defaults.num_options = 0;
+
+    return std::make_pair(field_defaults, Config_Validation_Result(true));
 }
 
-// all variables to be set via variables.json
-bool Site_Manager::parse_variables(cJSON* object) {
-    cJSON* JSON_variable_object = cJSON_GetObjectItem(object, "variables");
+// Configure variables based on the given variables.json configuration object
+bool Site_Manager::parse_variables(cJSON* variables_config_object) {
+    Config_Validation_Result validation_result;
+    validation_result.is_valid_config = true;
+
+    std::set<std::string> unrecognized_variable_ids;  // filled with all variable ids in configuration, ids are removed as they are recognized
+
+    // get the default variables.json configuration reference
+    Reference_Configs reference_configs;
+    cJSON* JSON_default_config_variable_object = cJSON_GetObjectItem(reference_configs.variables_json_defaults, "variables");  // Reference_Configs ensures "variables" object exists
+    std::pair<cJSON*, Config_Validation_Result> JSON_flat_default_parse_result = parse_flatten_vars(JSON_default_config_variable_object);
+    cJSON* JSON_flat_default_config = JSON_flat_default_parse_result.first;
+    if (!JSON_flat_default_parse_result.second.is_valid_config || JSON_flat_default_config == NULL) {
+        FPS_ERROR_LOG("There is something wrong with this build. We failed to flatten the static default variables.json: " + JSON_flat_default_parse_result.second.brief);
+        exit(1);
+    }
+
+    // get the base variables object
+    cJSON* JSON_variable_object = cJSON_GetObjectItem(variables_config_object, "variables");
     if (JSON_variable_object == NULL) {
-        FPS_ERROR_LOG("variable object is missing from file! \n");
+        FPS_ERROR_LOG("variable object is missing from file!");
         return false;
     }
 
-    // Create a cJSON object for a flattened variables object with the variables as top-level items
-    // This way, variables aren't stuck to a particular category
-    cJSON* JSON_flat_vars = cJSON_CreateObject();
-    try {
-        parse_flatten_vars(JSON_variable_object, JSON_flat_vars);
-    } catch (std::exception& ex) {
-        FPS_ERROR_LOG(ex.what());
+    // create a cJSON object for a flattened variables object with the variables as top-level items;
+    // this way, variables aren't stuck to a particular category
+    std::pair<cJSON*, Config_Validation_Result> JSON_flat_vars_parse_result = parse_flatten_vars(JSON_variable_object);
+    cJSON* JSON_flat_vars = JSON_flat_vars_parse_result.first;
+    if (!JSON_flat_vars_parse_result.second.is_valid_config) {
+        FPS_ERROR_LOG("Failed to flatten variables.json: %s", JSON_flat_vars_parse_result.second.brief);
         return false;
     }
 
-    // extract defaults JSON object
-    cJSON* JSON_defaults = cJSON_GetObjectItem(JSON_flat_vars, "defaults");
-    if (JSON_defaults == NULL) {
-        FPS_ERROR_LOG("No defaults found in variables file.\n");
-        return false;
+    // store the ids of all of the variables that have been configured
+    cJSON* var;
+    cJSON_ArrayForEach(var, JSON_flat_vars) { unrecognized_variable_ids.insert(var->string); }
+
+    // extract field defaults JSON object
+    unrecognized_variable_ids.erase("defaults");
+    cJSON* JSON_field_defaults = cJSON_GetObjectItem(JSON_flat_vars, "defaults");
+    bool is_default_JSON_field_defaults = false;
+    if (JSON_field_defaults == NULL) {
+        JSON_field_defaults = cJSON_GetObjectItem(JSON_flat_default_config, "defaults");
+        if (JSON_field_defaults == NULL) {
+            FPS_ERROR_LOG("No \"defaults\" variable found in variables.json configuration or static default configuration.");
+            // we cannot try to configure the rest of the variables if we have no field defaults
+            // we should never hit this error, since field defaults should have valid default configuration
+            return false;
+        } else {
+            is_default_JSON_field_defaults = true;
+        }
     }
 
-    // parse defaults JSON object into Fims_Object
-    Fims_Object default_vals;
-    try {
-        parse_default_vals(JSON_defaults, default_vals);
-    } catch (const std::exception& e) {
-        FPS_ERROR_LOG("Failed to parse variable defaults from variables.json: %s \n", e.what());
+    std::pair<Fims_Object, Config_Validation_Result> JSON_field_defaults_parse_result = parse_field_defaults(JSON_field_defaults);
+    Fims_Object field_defaults = JSON_field_defaults_parse_result.first;
+    if (!JSON_field_defaults_parse_result.second.is_valid_config) {
+        FPS_ERROR_LOG("Failed to parse variable defaults from variables.json: %s", JSON_field_defaults_parse_result.second.brief);
         return false;
+    }
+    if (is_default_JSON_field_defaults) {
+        validation_result.INFO_details.push_back(fmt::format("Defaulting missing variable \"defaults\" in variables.json configuration to: value: {}, ui_type: {}.", field_defaults.value.print(), field_defaults.get_ui_type()));
     }
 
     // parse input_sources array
+    unrecognized_variable_ids.erase("input_sources");
     cJSON* JSON_input_sources = cJSON_GetObjectItem(JSON_flat_vars, "input_sources");
-    if (JSON_input_sources != NULL) {
-        try {
-            input_sources.parse_json_obj(JSON_input_sources);
-        } catch (const std::exception& e) {
-            FPS_ERROR_LOG("Failed to parse input_sources array: %s \n", e.what());
+    bool is_default_JSON_input_sources = false;
+    if (JSON_input_sources == NULL) {
+        JSON_input_sources = cJSON_GetObjectItem(JSON_flat_default_config, "input_sources");
+        if (JSON_input_sources == NULL) {
+            FPS_ERROR_LOG("No \"input_sources\" variable found in variables.json configuration or static default configuration.");
+            // we cannot try to configure the rest of the variables if we don't know what the input sources list should be (even if it should be empty)
+            // we should never hit this error, since input sources should have valid default configuration
             return false;
+        } else {
+            is_default_JSON_input_sources = true;
         }
     }
+    Config_Validation_Result JSON_input_sources_parse_result = input_sources.parse_json_obj(JSON_input_sources);
+    if (!JSON_input_sources_parse_result.is_valid_config) {
+        FPS_ERROR_LOG("Failed to parse input_sources array: %s", JSON_input_sources_parse_result.brief);
+        return false;
+    }
+    if (is_default_JSON_input_sources) {
+        std::string default_input_sources_description = "[";
+        for (uint i = 0; i < input_sources.get_num_sources(); i++) {
+            default_input_sources_description += input_sources.get_name_of_input(i) + (i < input_sources.get_num_sources() - 1 ? ", " : "");
+        }
+        default_input_sources_description += "]";
+        validation_result.INFO_details.push_back(fmt::format("Defaulting missing variable \"input_sources\" in variables.json configuration to: {}.", default_input_sources_description));
+    }
 
-    // parse all Site_Manager-owned variables.json variables
+    // parse all feature-independent variables.json variables
     for (auto& variable_id_pair : variable_ids) {
-        cJSON* JSON_variable = cJSON_GetObjectItem(JSON_flat_vars, variable_id_pair.second.c_str());
+        std::string id = variable_id_pair.second;
+        unrecognized_variable_ids.erase(id);
+        bool is_default_JSON_variable = false;
+
+        cJSON* JSON_variable = cJSON_GetObjectItem(JSON_flat_vars, id.c_str());
         if (JSON_variable == NULL) {
-            FPS_ERROR_LOG("Could not find variable with ID %s in variables.json", variable_id_pair.second.c_str());
-            return false;
+            JSON_variable = cJSON_GetObjectItem(JSON_flat_default_config, id.c_str());
+            if (JSON_variable == NULL) {
+                validation_result.ERROR_details.push_back(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", id));
+                validation_result.is_valid_config = false;
+                continue;
+            } else {
+                is_default_JSON_variable = true;
+            }
         }
-        if (!variable_id_pair.first->configure(variable_id_pair.second, is_primary, &input_sources, JSON_variable, default_vals, multi_input_command_vars)) {
-            FPS_ERROR_LOG("Failed to parse variable with ID %s", variable_id_pair.second.c_str());
-            return false;
+        if (!variable_id_pair.first->configure(variable_id_pair.second, is_primary, &input_sources, JSON_variable, field_defaults, multi_input_command_vars)) {
+            validation_result.ERROR_details.push_back(fmt::format("Failed to parse variable with ID {}", variable_id_pair.second));
+            validation_result.is_valid_config = false;
+        }
+        if (is_default_JSON_variable) {
+            validation_result.INFO_details.push_back(fmt::format("Defaulting missing variable \"{}\" in variables.json configuration to: value: {}, ui_type: {}.", id, variable_id_pair.first->value.print(), variable_id_pair.first->get_ui_type()));
         }
     }
 
-    // parse feature-owned variables for all features
+    bool has_valid_available_features_config = true;
+    // determine which features are available
+    // read which active power features are available for runmode1 and configure them on the UI
+    if (!configure_available_runmode1_kW_features_list()) {
+        validation_result.ERROR_details.push_back("Error configuring available runmode1 active power features!");
+        validation_result.is_valid_config = false;
+        has_valid_available_features_config = false;
+    }
+    // read which active power features are available for runmode2 and configure them on the UI
+    if (!configure_available_runmode2_kW_features_list()) {
+        validation_result.ERROR_details.push_back("Error configuring available runmode2 active power features!");
+        validation_result.is_valid_config = false;
+        has_valid_available_features_config = false;
+    }
+    // read which reactive power features are available for runmode1 and configure them on the UI
+    if (!configure_available_runmode1_kVAR_features_list()) {
+        validation_result.ERROR_details.push_back("Error configuring available runmode1 reactive power features!");
+        validation_result.is_valid_config = false;
+        has_valid_available_features_config = false;
+    }
+    // read which reactive power features are available for runmode2 and configure them on the UI
+    if (!configure_available_runmode2_kVAR_features_list()) {
+        validation_result.ERROR_details.push_back("Error configuring available runmode2 reactive power features!");
+        validation_result.is_valid_config = false;
+        has_valid_available_features_config = false;
+    }
+    // read which standalone power features are available and configure them on the UI
+    if (!configure_available_standalone_power_features_list()) {
+        validation_result.ERROR_details.push_back("Error configuring available standalone power features!");
+        validation_result.is_valid_config = false;
+        has_valid_available_features_config = false;
+    }
+    // read which site operation features are available and configure them on the UI
+    if (!configure_available_site_operation_features_list()) {
+        validation_result.ERROR_details.push_back("Error configuring available site operation features!");
+        validation_result.is_valid_config = false;
+        has_valid_available_features_config = false;
+    }
+    // charge dispatch should always be available
+    charge_dispatch.available = true;
+
+    // parse feature-owned variables for all available features
     for (auto features_list : {
              &runmode1_kW_features_list,
              &runmode2_kW_features_list,
@@ -708,18 +810,35 @@ bool Site_Manager::parse_variables(cJSON* object) {
              &site_operation_features_list,
          }) {
         for (auto feature : *features_list) {
-            if (!feature->parse_json_config(JSON_flat_vars, is_primary, &input_sources, default_vals, multi_input_command_vars)) {
-                return false;
+            // we still mark recognized variables for features that are not available
+            for (auto id : feature->get_variable_ids_list()) {
+                unrecognized_variable_ids.erase(id);
             }
+
+            if (!has_valid_available_features_config || !feature->available) {
+                continue;
+            }
+            Config_Validation_Result feature_validation_result = feature->parse_json_config(JSON_flat_vars, is_primary, &input_sources, field_defaults, multi_input_command_vars);
+            validation_result.absorb(feature_validation_result);
         }
     }
 
     cJSON_Delete(JSON_flat_vars);
+    cJSON_Delete(JSON_flat_default_config);
 
-    // input_source_status string should be programmatically set based on the name of the currently selected input source.
-    // initial value of input_source_status in variables.json is not actually used since it is too easy for configurator to forget to match it with the initially selected input source.
-    // it is only present to satisfy parser
-    input_source_status.value.set(input_sources.get_name_of_input(input_sources.get_selected_input_source_index()));
+    // add a warning message for all variables that weren't recognized
+    if (!unrecognized_variable_ids.empty()) {
+        for (auto unrecognized_var : unrecognized_variable_ids) {
+            validation_result.WARNING_details.push_back(fmt::format("Encountered unrecognized variable \"{}\" in variables.json configuration.", unrecognized_var));
+        }
+    }
+
+    // report the per-variable results of configuration parsing if there weren't more pressing errors that resulted in an early return
+    LOG_DETAILS_OF_CONFIG_VALIDATION_RESULT(validation_result);
+
+    if (!validation_result.is_valid_config) {
+        return false;
+    }
 
     return true;
 }
@@ -729,58 +848,64 @@ bool Site_Manager::parse_variables(cJSON* object) {
  * (there are specific hardcoded variables which require subobjects and won't be flattened completely).
  *
  * @param JSON_object The unflattened JSON variables object
- * @param JSON_flat_vars The JSON object which will receive the resulting flattened variables as cJSON references
- * @throw std::runtime_error if a duplicate variable is encountered
+ * @return A pair of <flattened_object, validation_result> where validation_result describes whether or not the config was valid
  */
-void Site_Manager::parse_flatten_vars(cJSON* JSON_object, cJSON* JSON_flat_vars) {
-    // Recursively search through the json and add all variables to JSON_flat_vars
-    cJSON* var_candidate;
-    cJSON_ArrayForEach(var_candidate, JSON_object) {
-        // input_sources is an array of special config data, as opposed to all other variables which follow the same exact format
-        // handle input_sources separately
-        if (var_candidate == NULL || var_candidate->string == NULL) {
-            throw std::runtime_error("Unlabeled object found in variables.json");
-        } else if (strcmp(var_candidate->string, "frequency_response") == 0) {
-            if (!cJSON_HasObjectItem(JSON_flat_vars, var_candidate->string)) {
-                cJSON_AddItemReferenceToObject(JSON_flat_vars, var_candidate->string, var_candidate);
-            } else {
-                throw std::runtime_error("Duplicate variable " + std::string(var_candidate->string) + " found in variables.json.\n");
-            }
-        } else if (strcmp(var_candidate->string, "input_sources") == 0) {
-            if (!cJSON_HasObjectItem(JSON_flat_vars, var_candidate->string)) {
-                cJSON_AddItemReferenceToObject(JSON_flat_vars, var_candidate->string, var_candidate);
-            } else {
-                throw std::runtime_error("Duplicate variable " + std::string(var_candidate->string) + " found in variables.json.\n");
-            }
-        } else {
-            // Variables are identified as objects without any subobjects as items
-            bool hasObjectitem = false;
-            cJSON* item;
-            cJSON_ArrayForEach(item, var_candidate) {
-                if (cJSON_IsObject(item)) {
-                    hasObjectitem = true;
-                    break;
-                }
-            }
-            if (!hasObjectitem) {
-                // Check for duplicates and add the variable to the flattened object
-                if (!cJSON_HasObjectItem(JSON_flat_vars, var_candidate->string))
+std::pair<cJSON*, Config_Validation_Result> Site_Manager::parse_flatten_vars(cJSON* JSON_object) {
+    cJSON* JSON_flat_vars = cJSON_CreateObject();
+
+    // recursively search through the json and add all variables to JSON_flat_vars
+    std::function<Config_Validation_Result(cJSON*, cJSON*)> flatten_vars_recursive_lambda;
+    flatten_vars_recursive_lambda = [&flatten_vars_recursive_lambda](cJSON* JSON_object, cJSON* JSON_flat_vars) -> Config_Validation_Result {
+        cJSON* var_candidate;
+        cJSON_ArrayForEach(var_candidate, JSON_object) {
+            // input_sources is an array of special config data, as opposed to all other variables which follow the same exact format
+            // handle input_sources separately
+            if (var_candidate == NULL || var_candidate->string == NULL) {
+                return Config_Validation_Result(false, "Unlabeled object found in variables.json");
+            } else if (strcmp(var_candidate->string, "frequency_response") == 0) {
+                if (!cJSON_HasObjectItem(JSON_flat_vars, var_candidate->string)) {
                     cJSON_AddItemReferenceToObject(JSON_flat_vars, var_candidate->string, var_candidate);
-                else
-                    throw std::runtime_error("Duplicate variable " + std::string(var_candidate->string) + " found in variables.json.\n");
-            }
-            // If not a variable, it's a category and we recurse
-            else {
-                try {
-                    parse_flatten_vars(var_candidate, JSON_flat_vars);
+                } else {
+                    return Config_Validation_Result(false, "Duplicate variable " + std::string(var_candidate->string) + " found in variables.json.");
                 }
-                // rethrow any exception
-                catch (std::exception& ex) {
-                    throw;
+            } else if (strcmp(var_candidate->string, "input_sources") == 0) {
+                if (!cJSON_HasObjectItem(JSON_flat_vars, var_candidate->string)) {
+                    cJSON_AddItemReferenceToObject(JSON_flat_vars, var_candidate->string, var_candidate);
+                } else {
+                    return Config_Validation_Result(false, "Duplicate variable " + std::string(var_candidate->string) + " found in variables.json.");
+                }
+            } else {
+                // Variables are identified as objects without any subobjects as items
+                bool hasObjectitem = false;
+                cJSON* item;
+                cJSON_ArrayForEach(item, var_candidate) {
+                    if (cJSON_IsObject(item)) {
+                        hasObjectitem = true;
+                        break;
+                    }
+                }
+                if (!hasObjectitem) {
+                    // Check for duplicates and add the variable to the flattened object
+                    if (!cJSON_HasObjectItem(JSON_flat_vars, var_candidate->string))
+                        cJSON_AddItemReferenceToObject(JSON_flat_vars, var_candidate->string, var_candidate);
+                    else
+                        return Config_Validation_Result(false, "Duplicate variable " + std::string(var_candidate->string) + " found in variables.json.");
+                }
+                // If not a variable, it's a category and we recurse
+                else {
+                    Config_Validation_Result recursive_result = flatten_vars_recursive_lambda(var_candidate, JSON_flat_vars);
+                    // propagate up any error
+                    if (!recursive_result.is_valid_config) {
+                        return recursive_result;
+                    }
                 }
             }
         }
-    }
+        return Config_Validation_Result(true);
+    };
+    Config_Validation_Result validation_result = flatten_vars_recursive_lambda(JSON_object, JSON_flat_vars);
+
+    return std::make_pair(JSON_flat_vars, validation_result);
 }
 
 // If the hybridOS controller discover that a message was sent to /features uri this will handle those messages
@@ -1572,8 +1697,9 @@ void Site_Manager::update_power_feature_selections() {
     runmode2_kVAR_mode_status.value.set(available_features_runmode2_kVAR_mode.options_name[runmode2_kVAR_mode_cmd.value.value_int]);
 }
 
-// Read which runmode1 kW features are available and configure them on the UI
-bool Site_Manager::configure_runmode1_kW_features(void) {
+// Read which runmode1 kW features are available and configure them on the UI.
+// Also configures the availability of Charge Control
+bool Site_Manager::configure_available_runmode1_kW_features_list(void) {
     // add only the runmode1 kW features covered by the available_features_runmode1_kW_mode mask
     bool initial_gc_kW_feature_found = false;
     int num_features = (int)runmode1_kW_features_list.size();
@@ -1607,9 +1733,6 @@ bool Site_Manager::configure_runmode1_kW_features(void) {
             // Set charge control available if utilized by any feature
             if (runmode1_kW_features_charge_control_mask & ((uint64_t)1) << i)
                 charge_control.available = true;
-        } else {
-            if (i != num_features)
-                runmode1_kW_features_list[i]->enable_flag.value.set(false);
         }
     }
 
@@ -1632,7 +1755,7 @@ bool Site_Manager::configure_runmode1_kW_features(void) {
 }
 
 // Read which runmode2 active power features are available and configure them on the UI
-bool Site_Manager::configure_runmode2_kW_features(void) {
+bool Site_Manager::configure_available_runmode2_kW_features_list(void) {
     // add only the runmode2 kW features covered by the available_features_runmode2_kW_mode mask
     bool initial_runmode2_kW_feature_found = false;
     int num_features = (int)runmode2_kW_features_list.size();
@@ -1662,9 +1785,6 @@ bool Site_Manager::configure_runmode2_kW_features(void) {
             runmode2_kW_mode_cmd.options_name.push_back(available_features_runmode2_kW_mode.options_name[i]);
             runmode2_kW_mode_cmd.options_value.push_back(Value_Object(i));
             runmode2_kW_mode_cmd.num_options++;
-        } else {
-            if (i != num_features)
-                runmode2_kW_features_list[i]->enable_flag.value.set(false);
         }
     }
 
@@ -1684,7 +1804,7 @@ bool Site_Manager::configure_runmode2_kW_features(void) {
 }
 
 // Read which runmode1 kVAR features are available and configure them on the UI
-bool Site_Manager::configure_runmode1_kVAR_features(void) {
+bool Site_Manager::configure_available_runmode1_kVAR_features_list(void) {
     // add only the runmode1 kVAR features covered by the available_features_runmode1_kVAR_mode mask
     bool initial_gc_kVAR_feature_found = false;
     int num_features = (int)runmode1_kVAR_features_list.size();
@@ -1714,9 +1834,6 @@ bool Site_Manager::configure_runmode1_kVAR_features(void) {
             runmode1_kVAR_mode_cmd.options_name.push_back(available_features_runmode1_kVAR_mode.options_name[i]);
             runmode1_kVAR_mode_cmd.options_value.push_back(Value_Object(i));
             runmode1_kVAR_mode_cmd.num_options++;
-        } else {
-            if (i != num_features)
-                runmode1_kVAR_features_list[i]->enable_flag.value.set(false);
         }
     }
 
@@ -1735,7 +1852,7 @@ bool Site_Manager::configure_runmode1_kVAR_features(void) {
 }
 
 // Read which runmode2 kVAR features are available and configure them on the UI
-bool Site_Manager::configure_runmode2_kVAR_features(void) {
+bool Site_Manager::configure_available_runmode2_kVAR_features_list(void) {
     // add only the runmode2 kVAR features covered by the available_features_runmode2_kVAR_mode mask
     bool initial_gc_kVAR_feature_found = false;
     int num_features = (int)runmode2_kVAR_features_list.size();
@@ -1765,9 +1882,6 @@ bool Site_Manager::configure_runmode2_kVAR_features(void) {
             runmode2_kVAR_mode_cmd.options_name.push_back(available_features_runmode2_kVAR_mode.options_name[i]);
             runmode2_kVAR_mode_cmd.options_value.push_back(Value_Object(i));
             runmode2_kVAR_mode_cmd.num_options++;
-        } else {
-            if (i != num_features)
-                runmode2_kVAR_features_list[i]->enable_flag.value.set(false);
         }
     }
 
@@ -1789,7 +1903,7 @@ bool Site_Manager::configure_runmode2_kVAR_features(void) {
  * Read which standalone power features are available and configure them on the UI.
  * @return True if configuration was successful, false if not.
  */
-bool Site_Manager::configure_standalone_power_features(void) {
+bool Site_Manager::configure_available_standalone_power_features_list(void) {
     int num_features = (int)standalone_power_features_list.size();
     if (available_features_standalone_power.num_options != num_features) {
         FPS_ERROR_LOG("available_features_standalone_power does not have all modes listed. Expected %d, got %d.\n", num_features, available_features_standalone_power.num_options);
@@ -1806,13 +1920,9 @@ bool Site_Manager::configure_standalone_power_features(void) {
         if (available_standalone_power_features_mask & ((uint64_t)1) << i) {
             // mark feature as available to customer
             standalone_power_features_list[i]->available = true;
-        } else {
-            standalone_power_features_list[i]->enable_flag.value.set(false);
         }
     }
 
-    // send Generator Manager the initial LDSS settings
-    set_ldss_variables();
     return true;
 }
 
@@ -1820,7 +1930,7 @@ bool Site_Manager::configure_standalone_power_features(void) {
  * Read which site operation features are available and configure them on the UI.
  * @return True if configuration was successful, false if not.
  */
-bool Site_Manager::configure_site_operation_features(void) {
+bool Site_Manager::configure_available_site_operation_features_list(void) {
     int num_features = (int)site_operation_features_list.size();
     if (available_features_site_operation.num_options != num_features) {
         FPS_ERROR_LOG("available_features_site_operation does not have all modes listed. Expected %d, got %d.\n", num_features, available_features_site_operation.num_options);
@@ -1837,8 +1947,6 @@ bool Site_Manager::configure_site_operation_features(void) {
         if (available_site_operation_features_mask & ((uint64_t)1) << i) {
             // mark feature as available to customer
             site_operation_features_list[i]->available = true;
-        } else {
-            site_operation_features_list[i]->enable_flag.value.set(false);
         }
     }
     return true;

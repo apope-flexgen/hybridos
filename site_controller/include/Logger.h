@@ -1,3 +1,6 @@
+#ifndef LOGGER_H
+#define LOGGER_H
+
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/bundled/printf.h>
 #include <iostream>
@@ -5,9 +8,6 @@
 #include <chrono>
 #include <unordered_map>
 #include <map>
-
-#ifndef LOGGER_H
-#define LOGGER_H
 
 #define MIN_LOG_LEVEL -1
 #define MAX_LOG_LEVEL 5

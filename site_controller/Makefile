@@ -14,7 +14,7 @@ OBJECTS += Load_Shed.o Solar_Shed.o
 OBJECTS += Watchdog.o
 OBJECTS += Charge_Dispatch.o Charge_Control.o
 OBJECTS += ESS_Manager.o Feeder_Manager.o Generator_Manager.o Solar_Manager.o Site_Controller_Utils.o Data_Endpoint.o Type_Manager.o 
-OBJECTS += version.o git_build.o git_commit.o git_tag.o Configurator.o Input_Sources.o Logger.o
+OBJECTS += version.o git_build.o git_commit.o git_tag.o Configurator.o Input_Sources.o Logger.o Reference_Configs.o Config_Validation_Result.o
 
 BIN_DIR = /usr/local/bin/
 INCLUDES_DIR = /usr/local/include/

@@ -1,0 +1,248 @@
+{
+    "variables": {
+        "internal": {
+            "unrecognized_variable": {
+                "name": "???",
+                "value": true
+            },
+            "asset_priority_runmode1": {
+                "name": "Asset Priority - Run Mode 1",
+                "ui_type": "control",
+                "var_type": "Int",
+                "value": 0
+            },
+            "available_features_standalone_power": {
+                "name": "Available Features - Standalone Power",
+                "ui_type": "none",
+                "type": "string",
+                "var_type": "String",
+                "value": "0x0",
+                "options": [
+                    {
+                        "name": "POI Limits",
+                        "value": 0
+                    },
+                    {
+                        "name": "PFR",
+                        "value": 1
+                    },
+                    {
+                        "name": "Watt-Watt",
+                        "value": 2
+                    },
+                    {
+                        "name": "LDSS",
+                        "value": 3
+                    },
+                    {
+                        "name": "Load Shed",
+                        "value": 4
+                    },
+                    {
+                        "name": "Solar Shed",
+                        "value": 5
+                    },
+                    {
+                        "name": "ESS Discharge Prevention",
+                        "value": 6
+                    },
+                    {
+                        "name": "Aggregated Asset Limit",
+                        "value": 7
+                    },
+                    {
+                        "name": "Active Closed Loop Control",
+                        "value": 8
+                    },
+                    {
+                        "name": "Reactive Closed Loop Control",
+                        "value": 9
+                    },
+                    {
+                        "name": "Reactive Power POI Limits",
+                        "value": 10
+                    }
+                ]
+            },
+            "available_features_site_operation": {
+                "name": "Available Features - Site Operation",
+                "ui_type": "none",
+                "type": "string",
+                "var_type": "String",
+                "value": "0x0",
+                "options": [
+                    {
+                        "name": "Watchdog",
+                        "value": 0
+                    }
+                ]
+            }
+        },
+        "features": {
+            "summary": {
+                "_charge_dispatch_enable_flag": {
+                    "name": "Charge Dispatch Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options": [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Charge Dispatch Enabled",
+                            "value": true
+                        }
+                    ]
+                }
+            },
+            "active_power": {
+                "available_features_runmode1_kW_mode": {
+                    "name": "Available Feature Modes - Run Mode 1 Active Power",
+                    "ui_type": "none",
+                    "type": "string",
+                    "var_type": "String",
+                    "value": "0x40",
+                    "options": [
+                        {
+                            "name": "Energy Arbitrage",
+                            "value": 0
+                        },
+                        {
+                            "name": "Target SOC",
+                            "value": 1
+                        },
+                        {
+                            "name": "Active Power Setpoint",
+                            "value": 2
+                        },
+                        {
+                            "name": "Manual",
+                            "value": 3
+                        },
+                        {
+                            "name": "Frequency Response",
+                            "value": 4
+                        },
+                        {
+                            "name": "ESS Calibration",
+                            "value": 5
+                        },
+                        {
+                            "name": "Disabled",
+                            "value": 6
+                        }
+                    ]
+                },
+                "runmode1_kW_mode_cmd": {
+                    "name": "Mode Select - Run Mode 1 Active Power",
+                    "ui_type": "control",
+                    "type": "enum",
+                    "var_type": "Int",
+                    "value": 6
+                },
+                "charge_dispatch_kW_command": {
+                    "name": "Charge Dispatch Power Command",
+                    "ui_type": "status",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "charge_dispatch_gen_enable_flag": {
+                    "name": "Gen Source Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options": [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Gen Source Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "charge_dispatch_solar_enable_flag": {
+                    "name": "Solar Source Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options": [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Solar Source Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "charge_dispatch_feeder_enable_flag": {
+                    "name": "Grid Source Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options": [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Feeder Source Enable",
+                            "value": true
+                        }
+                    ]
+                }
+            },
+            "reactive_power": {
+                "available_features_runmode1_kVAR_mode": {
+                    "name": "Available Feature Modes - Run Mode 1 Reactive Power",
+                    "ui_type": "none",
+                    "type": "string",
+                    "var_type": "String",
+                    "value": "0x20",
+                    "options": [
+                        {
+                            "name": "Active Voltage Regulation",
+                            "value": 0
+                        },
+                        {
+                            "name": "Watt-VAR",
+                            "value": 1
+                        },
+                        {
+                            "name": "Reactive Power Setpoint",
+                            "value": 2
+                        },
+                        {
+                            "name": "Power Factor",
+                            "value": 3
+                        },
+                        {
+                            "name": "Constant Power Factor",
+                            "value": 4
+                        },
+                        {
+                            "name": "Disabled",
+                            "value": 5
+                        }
+                    ]
+                },
+                "runmode1_kVAR_mode_cmd": {
+                    "name": "Mode Select - Run Mode 1 Reactive Power",
+                    "ui_type": "control",
+                    "type": "enum",
+                    "var_type": "Int",
+                    "value": 5
+                }
+            }
+        }
+    }
+}

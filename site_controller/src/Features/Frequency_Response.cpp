@@ -17,6 +17,8 @@
 features::Frequency_Response::Frequency_Response() {
     // feature_vars and summary_vars are set after configuration is parsed
 
+    // Note: Frequency Response is a special case because all of these variables are actually sub-variables
+    // of a top-level frequency_response variable, rather than being top-level variables themselves
     variable_ids = {
         // inputs
         { &enable_mask, "fr_enable_mask" },
@@ -37,13 +39,16 @@ features::Frequency_Response::Frequency_Response() {
  * @param defaults Reference to default
  * @param multiple_inputs Mutable list of Multiple Input Command Variables that may need to be added to
  * if any of Frequency Response's inputs are configured to be Multiple Input Command Variables.
- * @returns True if parsing is successful or false if parsing failed.
+ * @returns Result detailing whether or not the config is valid
  */
-bool features::Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults, std::vector<Fims_Object*>& multiple_inputs) {
+Config_Validation_Result features::Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p_flag, Input_Source_List* inputs, const Fims_Object& defaults, std::vector<Fims_Object*>& multiple_inputs) {
+    Config_Validation_Result result;
+
     cJSON* JSON_frequency_response = cJSON_GetObjectItem(JSON_config, "frequency_response");
     if (JSON_frequency_response == NULL) {
-        FPS_ERROR_LOG("No frequency_response found in variables file.\n");
-        return false;
+        result.ERROR_details.push_back(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", "frequency_response"));
+        result.is_valid_config = false;
+        return result;
     }
 
     // parse high-level variables from variables.json
@@ -53,24 +58,28 @@ bool features::Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p
         JSON_variable = variable_id_pair.first == &enable_flag ? cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str()) : cJSON_GetObjectItem(JSON_frequency_response, variable_id_pair.second.c_str());
 
         if (JSON_variable == NULL) {
-            FPS_ERROR_LOG("Could not find variable %s in frequency_response object in variables.json.", variable_id_pair.second.c_str());
-            return false;
+            result.ERROR_details.push_back(fmt::format("Could not find variable \"{}\" in frequency_response object in variables.json.", variable_id_pair.second.c_str()));
+            result.is_valid_config = false;
+            return result;
         }
         if (!variable_id_pair.first->configure(variable_id_pair.second, p_flag, inputs, JSON_variable, defaults, multiple_inputs)) {
-            FPS_ERROR_LOG("Failed to configure frequency response variable %s.", variable_id_pair.second.c_str());
-            return false;
+            result.ERROR_details.push_back(fmt::format("Failed to configure frequency response variable \"{}\".", variable_id_pair.second.c_str()));
+            result.is_valid_config = false;
+            return result;
         }
     }
 
     // extract response components array
     cJSON* JSON_fr_components = cJSON_GetObjectItem(JSON_frequency_response, "components");
     if (JSON_fr_components == NULL) {
-        FPS_ERROR_LOG("Could not find components in frequency_response object of variables.json.");
-        return false;
+        result.ERROR_details.push_back("Could not find components in frequency_response object of variables.json.");
+        result.is_valid_config = false;
+        return result;
     }
     if (!cJSON_IsArray(JSON_fr_components)) {
-        FPS_ERROR_LOG("Parsed components object in frequency_response is not an array.");
-        return false;
+        result.ERROR_details.push_back("Parsed components object in frequency_response is not an array.");
+        result.is_valid_config = false;
+        return result;
     }
     FPS_INFO_LOG("Found %d response components in frequency response components array.", cJSON_GetArraySize(JSON_fr_components));
 
@@ -81,16 +90,26 @@ bool features::Frequency_Response::parse_json_config(cJSON* JSON_config, bool* p
         auto new_source = std::make_shared<Freq_Resp_Component>();
         if (!new_source->parse_json_config(JSON_fr_component, p_flag, inputs, defaults, multiple_inputs)) {
             FPS_ERROR_LOG("Failed to parse frequency response component with index %d.", i);
-            return false;
+            result.is_valid_config = false;
+            return result;
         }
         if (!new_source->initialize_state(target_freq_hz.value.value_float)) {
             FPS_ERROR_LOG("Could not initialize state for frequency response component with index %d.", i);
-            return false;
+            result.is_valid_config = false;
+            return result;
         }
         response_components.push_back(new_source);
         i++;
     }
-    return true;
+    result.is_valid_config = true;
+    return result;
+}
+
+/**
+ * @brief Returns a list of only the top-level frequency response variable ids
+ */
+std::vector<std::string> features::Frequency_Response::get_variable_ids_list() const {
+    return { "frequency_response", "fr_mode_enable_flag" };
 }
 
 /**

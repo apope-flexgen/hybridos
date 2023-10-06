@@ -12,45 +12,7 @@
 #include "feeder_manager_test.h"
 #include "generator_manager_test.h"
 #include "solar_manager_test.h"
-
-#include <iostream>
-#include <fstream>
-
-/**
- * Parses the config cJSON from storage given the configuration type (Assets/Sequences/Variables)
- */
-cJSON* parseJSONConfig(std::string file_path) {
-    // open the file
-    std::ifstream file;
-    try {
-        file.open(file_path);
-    } catch (std::ifstream::failure e) {
-        std::cerr << "Exception opening/reading file" << std::endl;
-        return NULL;
-    }
-    if (!file.is_open()) {
-        std::cerr << "Failed to open file" << std::endl;
-        return NULL;
-    }
-    // get number of chars in file
-    file.seekg(0, std::ios::end);
-    int length = file.tellg();
-    file.seekg(0, std::ios::beg);
-    // read file into buffer
-    char* buffer = new char[length + 1];
-    file.read(buffer, length);
-    file.close();
-    buffer[length] = '\0';
-    // parse buffer into cJSON
-    cJSON* config = cJSON_Parse(buffer);
-    if (config == NULL) {
-        std::cerr << "Failed to parse config file" << std::endl;
-        return NULL;
-    }
-    // close file and free buffer
-    delete[] buffer;
-    return config;
-}
+#include "config_test.h"
 
 class Asset_Manager_Mock : public Asset_Manager {
 public:

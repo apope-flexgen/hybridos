@@ -1,3 +1,6 @@
+#ifndef SITE_MANAGER_TEST_H_
+#define SITE_MANAGER_TEST_H_
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <Logger.h>
@@ -1838,3 +1841,5 @@ TEST_F(site_manager_test, ess_discharge_prevention) {
         t_log.check_solution();
     }
 }
+
+#endif /* SITE_MANAGER_TEST_H_ */

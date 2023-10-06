@@ -35,7 +35,9 @@ public:
     // outputs
     Fims_Object total_output_kw;
 
-    bool parse_json_config(cJSON* JSON_config, bool* primary_flag, Input_Source_List* inputs, const Fims_Object& field_defaults, std::vector<Fims_Object*>& multiple_inputs) override;
+    Config_Validation_Result parse_json_config(cJSON* JSON_config, bool* primary_flag, Input_Source_List* inputs, const Fims_Object& field_defaults, std::vector<Fims_Object*>& multiple_inputs) override;
+
+    std::vector<std::string> get_variable_ids_list() const override;
 
     void get_feature_vars(std::vector<Fims_Object*>& var_list);
     void get_summary_vars(std::vector<Fims_Object*>& var_list);

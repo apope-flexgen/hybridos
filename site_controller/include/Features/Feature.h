@@ -10,6 +10,7 @@
 #include <fims/libfims.h>
 /* Local Internal Dependencies */
 #include <Fims_Object.h>
+#include <Site_Controller_Utils.h>
 
 struct Feature {
     std::vector<Fims_Object*> feature_vars;                          // All feature-specific variables (except the enable_flag)
@@ -31,9 +32,14 @@ struct Feature {
      * @param inputs Pointer to the list of input sources for Multiple Input control variables.
      * @param field_defaults Reference to default values for JSON fields.
      * @param multiple_inputs Mutable list of Multiple Input Command Variables that may be appended to.
-     * @returns True if parsing is successful or false if parsing failed.
+     * @returns Result detailing whether or not the config is valid
      */
-    virtual bool parse_json_config(cJSON* JSON_config, bool* primary_flag, Input_Source_List* inputs, const Fims_Object& field_defaults, std::vector<Fims_Object*>& multiple_inputs);
+    virtual Config_Validation_Result parse_json_config(cJSON* JSON_config, bool* primary_flag, Input_Source_List* inputs, const Fims_Object& field_defaults, std::vector<Fims_Object*>& multiple_inputs);
+
+    /**
+     * @brief Returns a list of the top-level variable ids recognized by the feature
+     */
+    virtual std::vector<std::string> get_variable_ids_list() const;
 
     /**
      * @brief Handles FIMS SETs to URIs belonging to the feature.

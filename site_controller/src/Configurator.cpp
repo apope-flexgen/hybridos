@@ -1,6 +1,6 @@
 /**
  * Configurator.cpp
- * Contains variables and functions relevant to configuration
+ * Contains variables and functions relevant to asset and asset type configuration
  *
  * Created on March 31, 2021
  *      Author: Jack Timothy (jtimothy)

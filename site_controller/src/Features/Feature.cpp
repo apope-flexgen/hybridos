@@ -21,17 +21,28 @@ void Feature::toggle_ui_enabled(bool flag) {
     }
 }
 
-bool Feature::parse_json_config(cJSON* JSON_config, bool* primary_flag, Input_Source_List* inputs, const Fims_Object& field_defaults, std::vector<Fims_Object*>& multiple_inputs) {
+Config_Validation_Result Feature::parse_json_config(cJSON* JSON_config, bool* primary_flag, Input_Source_List* inputs, const Fims_Object& field_defaults, std::vector<Fims_Object*>& multiple_inputs) {
+    Config_Validation_Result result;
+    result.is_valid_config = true;
     for (auto& variable_id_pair : variable_ids) {
         cJSON* JSON_variable = cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str());
         if (JSON_variable == NULL) {
-            FPS_ERROR_LOG("Could not find variable with ID %s in variables.json", variable_id_pair.second.c_str());
-            return false;
+            result.ERROR_details.push_back(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", variable_id_pair.second));
+            result.is_valid_config = false;
+            continue;
         }
         if (!variable_id_pair.first->configure(variable_id_pair.second, primary_flag, inputs, JSON_variable, field_defaults, multiple_inputs)) {
-            FPS_ERROR_LOG("Failed to parse variable with ID %s", variable_id_pair.second.c_str());
-            return false;
+            result.ERROR_details.push_back(fmt::format("Failed to parse variable with ID \"{}\"", variable_id_pair.second));
+            result.is_valid_config = false;
         }
     }
-    return true;
+    return result;
+}
+
+std::vector<std::string> Feature::get_variable_ids_list() const {
+    std::vector<std::string> ids_list;
+    for (auto pair : variable_ids) {
+        ids_list.push_back(pair.second);
+    }
+    return ids_list;
 }

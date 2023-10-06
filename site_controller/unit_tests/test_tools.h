@@ -44,12 +44,19 @@ typedef struct int_result {
     std::string id;
 } int_result;
 
+typedef struct string_result {
+    std::string expected;
+    std::string actual;
+    std::string id;
+} string_result;
+
 typedef struct test_logger {
     std::stringstream ss;
     std::vector<float_result> float_results;
     std::vector<range_result> range_results;
     std::vector<bool_result> bool_results;
     std::vector<int_result> int_results;
+    std::vector<string_result> string_results;
     test_logger(const char* tn, int ctn, int tnt);
     void check_solution();
 } test_logger;
@@ -71,6 +78,9 @@ void test_logger::check_solution(void) {
         ss << result.id.data() << " = " << (result.expected ? "true" : "false") << std::endl;
     }
     for (auto& result : float_results) {
+        ss << result.id.data() << " = " << result.expected << std::endl;
+    }
+    for (auto& result : string_results) {
         ss << result.id.data() << " = " << result.expected << std::endl;
     }
     for (auto& result : range_results) {
@@ -97,6 +107,12 @@ void test_logger::check_solution(void) {
             failure = true;
         }
     }
+    for (auto& result : string_results) {
+        ss << result.id.data() << " = " << result.actual << std::endl;
+        if (result.expected != result.actual) {
+            failure = true;
+        }
+    }
     for (auto& result : range_results) {
         ss << result.id.data() << " = " << result.actual << std::endl;
         if (result.actual < result.get_lower_limit() || result.actual > result.get_upper_limit()) {
@@ -115,6 +131,9 @@ void test_logger::check_solution(void) {
     }
     for (auto& result : float_results) {
         EXPECT_FLOAT_EQ(result.actual, result.expected);
+    }
+    for (auto& result : string_results) {
+        EXPECT_EQ(result.actual, result.expected);
     }
     for (auto& result : range_results) {
         EXPECT_NEAR(result.actual, result.expected, fabs(result.tolerance * (result.expected == 0.0f ? 1.0f : result.expected)));

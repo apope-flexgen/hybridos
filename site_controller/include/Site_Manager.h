@@ -24,6 +24,7 @@
 #include <Sequence.h>
 #include <macros.h>
 #include <version.h>
+#include <Config_Validation_Result.h>
 #include <Features/Feature.h>
 #include <Features/Active_Power_Setpoint.h>
 #include <Features/Active_Voltage_Regulation.h>
@@ -62,9 +63,9 @@ public:
 
 protected:
     bool parse_variables(cJSON* object);
-    void parse_default_vals(cJSON* JSON_defaults, Fims_Object& default_vals);
-    void parse_flatten_vars(cJSON* JSON_object, cJSON* JSON_flat_vars);
-    void configure_feature_objects();
+    std::pair<Fims_Object, Config_Validation_Result> parse_field_defaults(cJSON* JSON_defaults);
+    std::pair<cJSON*, Config_Validation_Result> parse_flatten_vars(cJSON* JSON_object);
+    void post_configure_initialize_features();
 
     ////////////////////////////////////////////////////////////////////////////////////////
     //                              PUBLISHING & FIMS MANAGEMENT                          //
@@ -286,7 +287,7 @@ protected:
     // Feature selection
     //
     void process_runmode1_kW_feature();
-    bool configure_runmode1_kW_features();
+    bool configure_available_runmode1_kW_features_list();
     void set_asset_cmd_variables();
     void set_volatile_asset_cmd_variables();
     void calculate_total_site_kW_limits();
@@ -333,7 +334,7 @@ public:
     // Feature selection
     //
     void process_runmode2_kW_feature();
-    bool configure_runmode2_kW_features();
+    bool configure_available_runmode2_kW_features_list();
     Fims_Object available_features_runmode2_kW_mode;
     Fims_Object runmode2_kW_mode_cmd;
     Fims_Object runmode2_kW_mode_status;
@@ -366,7 +367,7 @@ public:
     // Feature selection
     //
     void process_runmode1_kVAR_feature();
-    bool configure_runmode1_kVAR_features();
+    bool configure_available_runmode1_kVAR_features_list();
     void remove_reactive_poi_corrections_from_slew_targets();
     Fims_Object available_features_runmode1_kVAR_mode;
     // TODO: make these Fims Objects so they can be configured and exposed on fims
@@ -398,7 +399,7 @@ protected:
     //
     // Feature selection
     //
-    bool configure_runmode2_kVAR_features();
+    bool configure_available_runmode2_kVAR_features_list();
     Fims_Object available_features_runmode2_kVAR_mode;
     Fims_Object runmode2_kVAR_mode_cmd;
     Fims_Object runmode2_kVAR_mode_status;
@@ -417,7 +418,7 @@ protected:
     //
     Fims_Object available_features_standalone_power;
     uint64_t available_standalone_power_features_mask;
-    bool configure_standalone_power_features();
+    bool configure_available_standalone_power_features_list();
     std::vector<Feature*> standalone_power_features_list = {
         &active_power_poi_limits, &pfr, &watt_watt, &ldss, &load_shed, &solar_shed, &ess_discharge_prevention, &agg_asset_limit, &active_power_closed_loop, &reactive_power_closed_loop, &reactive_power_poi_limits,
     };
@@ -453,7 +454,7 @@ protected:
     //
     Fims_Object available_features_site_operation;
     uint64_t available_site_operation_features_mask;
-    bool configure_site_operation_features();
+    bool configure_available_site_operation_features_list();
     void configure_persistent_settings_pairs();
     std::vector<Feature*> site_operation_features_list = {
         &watchdog_feature,

@@ -67,7 +67,7 @@ enum displayType {
 enum accessType { readWrite = 0, readOnly, writeOnly };
 
 enum valueType {
-    Int,        // integer
+    Int = 0,    // integer
     Float,      // float
     Bool,       // bool
     Bit_Field,  // bit_field status
@@ -75,6 +75,11 @@ enum valueType {
     String,
     Status,
     Invalid
+};
+
+// array of strings for displaying value type names as strings
+const std::string VALUE_TYPE_NAMES[] = {
+    "Int", "Float", "Bool", "Bit_Field", "Random_Enum", "String", "Status", "Invalid",
 };
 
 enum asset_type { ESS, FEEDERS, GENERATORS, SOLAR, NUM_ASSET_TYPES };
