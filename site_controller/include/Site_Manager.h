@@ -520,7 +520,7 @@ protected:
         { &allow_gen_auto_restart, "allow_gen_auto_restart" },
         { &start_first_ess_kW, "start_first_ess_kW" },
         { &allow_ess_auto_restart, "allow_ess_auto_restart" },
-        { &start_first_solar_kW, "start_first_ess_kW" },
+        { &start_first_solar_kW, "start_first_solar_kW" },
         { &allow_solar_auto_restart, "allow_solar_auto_restart" },
         { &soc_min_all, "soc_min_all" },
         { &soc_max_all, "soc_max_all" },
