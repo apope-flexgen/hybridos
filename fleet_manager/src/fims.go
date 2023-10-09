@@ -15,29 +15,6 @@ import (
 // f points to the FIMS connection struct.
 var f *fims.Fims
 
-// configureFims configures a connection to the FIMS server
-func configureFims() (chan fims.FimsMsg, error) {
-	// Connect to FIMS
-	fimsObj, err := fims.Connect("fleet_manager")
-	if err != nil {
-		return nil, fmt.Errorf("unable to connect to FIMS server: %w", err)
-	}
-	f = &fimsObj
-
-	// Subscribe to messages targeted at Fleet Manager and messages from sites about statuses
-	err = f.Subscribe("/fleet", "/sites")
-	if err != nil {
-		return nil, fmt.Errorf("failed to subscribe to /fleet and/or /components URIs on FIMS: %w", err)
-	}
-
-	fims.ConfigureVerification(5, nil)
-
-	// Start a FIMS Receive channel that will be used to hold incoming FIMS messages
-	fimsReceive := make(chan fims.FimsMsg)
-	go f.ReceiveChannel(fimsReceive)
-	return fimsReceive, nil
-}
-
 // handleFimsMsg is the starting point for handling any and all incoming FIMS messages.
 func handleFimsMsg(msg fims.FimsMsg) error {
 	// need to subscribe to /sites to get PUBs, but do not want to process any other messages sent to /sites

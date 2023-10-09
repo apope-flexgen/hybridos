@@ -57,11 +57,15 @@ func main() {
 		os.Exit(-1)
 	}
 
-	// Configure fims to connect to cops process and uri
-	fimsReceive, err := configureFIMS()
+	// Configuration fims connection
+	f, err = fims.Configure("COPS", "/cops")
 	if err != nil {
-		log.Fatalf("Error configuring FIMS: %v", err)
+		log.Fatalf("Error configuring FIMS: %v.", err)
 	}
+
+	// Start a FIMS channel that will recieve FIMS requests.
+	fimsReceive := make(chan fims.FimsMsg)
+	go f.ReceiveChannel(fimsReceive)
 
 	// Read in config file
 	if err := parse(cfgSource); err != nil {

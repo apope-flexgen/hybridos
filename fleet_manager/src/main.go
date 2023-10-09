@@ -11,6 +11,7 @@
 package main
 
 import (
+	"fims"
 	"flag"
 	"fmt"
 	"os"
@@ -32,17 +33,25 @@ func main() {
 	log.Infof("fleet_manager starting.")
 	defer log.Infof("fleet_manager stopping.")
 
-	// must be called before configureFims to avoid overlapping FIMS connections
+	// Must be called before fims.Configure() to avoid overlapping FIMS connections.
 	masterCfg, err = retrieveConfig(cfgSource)
 	if err != nil {
 		log.Fatalf("Error retrieving configuration: %v.", err)
 	}
 	log.Infof("fleet_manager configured with: %+v.", masterCfg)
 
-	fimsReceive, err := configureFims()
+	// Configure connection to FIMS for service fleet_manager.
+	fims.ConfigureVerification(5, nil) // Configure FIMS timeout verification.
+	fimsConn, err := fims.Configure("fleet_manager", "/fleet", "/sites")
 	if err != nil {
 		log.Fatalf("Error configuring FIMS: %v.", err)
 	}
+	// Assign our connection to the global pointer
+	f = &fimsConn
+
+	// Start a FIMS channel that will recieve FIMS requests.
+	fimsReceive := make(chan fims.FimsMsg)
+	go f.ReceiveChannel(fimsReceive)
 
 	getDbiData()
 

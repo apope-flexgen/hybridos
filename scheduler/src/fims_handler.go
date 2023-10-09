@@ -24,27 +24,6 @@ var copsHeartbeat uint
 
 var ErrInvalidUri = errors.New("invalid URI")
 
-// configureFims configures a FIMS connection
-func configureFims() (fimsReceive chan fims.FimsMsg, err error) {
-	// Connect to FIMS
-	fimsObj, err := fims.Connect("scheduler")
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to the FIMS server: %w", err)
-	}
-	f = &fimsObj
-
-	// Subscribe to messages targeted at Scheduler
-	baseUri := "/scheduler"
-	if err = f.Subscribe(baseUri); err != nil {
-		return nil, fmt.Errorf("failed to subscribe to FIMS server with URI %s: %w", baseUri, err)
-	}
-
-	// Start a FIMS Receive channel that will be used to hold incoming FIMS messages
-	fimsReceive = make(chan fims.FimsMsg)
-	go f.ReceiveChannel(fimsReceive)
-	return fimsReceive, nil
-}
-
 // Used to streamline building an error response and sending it.
 func sendErrorResponse(replyToUri, errMsg string) {
 	sendReply(replyToUri, map[string]string{

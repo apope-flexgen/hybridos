@@ -14,6 +14,7 @@ package main
 
 import (
 	"encoding/json"
+	"fims"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -84,13 +85,19 @@ func main() {
 		}
 	}
 
-	// configure the fims connection to be used for the rest of runtime. must do this after using docfetch since
-	// it establishes its own fims conn each process can only have one fims conn at a time
-	fimsReceive, err := configureFims()
+	// Configure the FIMS connection to be used for the rest of runtime.
+	// Must do this after using docfetch since it establishes its own FIMS
+	// connection; each process can only have one FIMS connection at a time.
+	fimsConn, err := fims.Configure("scheduler", "/scheduler")
 	if err != nil {
-		log.Errorf("Error configuring FIMS: %v.", err)
-		return
+		log.Fatalf("Error configuring FIMS: %v.", err)
 	}
+	// Assign our connection to the global pointer
+	f = &fimsConn
+
+	// Start a FIMS channel that will recieve FIMS requests.
+	fimsReceive := make(chan fims.FimsMsg)
+	go f.ReceiveChannel(fimsReceive)
 
 	if err = initializeScheduler(initializationDocs, fimsReceive); err != nil {
 		log.Errorf("Error initializing Scheduler: %v.", err)

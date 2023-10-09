@@ -302,6 +302,25 @@ type Sub_Info struct {
 	Str_size uint8
 }
 
+// Configure a FIMS channel for a given service and subscribe to a provided list of URIs.
+func Configure(service string, uris ...string) (Fims, error) {
+	var conn Fims
+
+	// Connect to FIMS.
+	conn, err := Connect(service)
+	if err != nil {
+		return Fims{}, fmt.Errorf("failed to connect with service %v to FIMS server: %w", service, err)
+	}
+
+	// Subscribe to messages published to a provided list of URIs.
+	err = conn.Subscribe(uris...)
+	if err != nil {
+		return Fims{}, fmt.Errorf("failed to subscribe to %v uris: %w", uris, err)
+	}
+
+	return conn, nil
+}
+
 // with pub_only set to false:
 func (f *Fims) Subscribe(uris ...string) error {
 	return f.internalSubscribe(false, uris)
@@ -458,7 +477,7 @@ func (f *Fims) SendRaw(msg FimsMsgRaw) (int, error) {
 	}
 
 	// send it out:
-	return new_send_bytes(f.fd, msg.Method, msg.Uri, msg.Replyto, msg.ProcessName, msg.Username, msg.Body, f.aes_key)	
+	return new_send_bytes(f.fd, msg.Method, msg.Uri, msg.Replyto, msg.ProcessName, msg.Username, msg.Body, f.aes_key)
 }
 
 // SendSet sends a SET message via FIMS
@@ -678,7 +697,6 @@ func (f *Fims) ReceiveRaw() (FimsMsgRaw, error) {
 	recv_bufs.Data_buf = make([]byte, f.max_expected_Data_len)
 	return f.ReceiveRawBufDynamic(&recv_bufs)
 }
-
 
 func (f *Fims) ReceiveBufDynamic(recv_bufs *Receiver_Bufs_Dynamic) (FimsMsg, error) {
 	var msg FimsMsg

@@ -1,4 +1,4 @@
-module github.com/flexgen-power/fims
+module github.com/flexgen-power/hybridos/fims/go_fims
 
 go 1.16
 

@@ -36,32 +36,6 @@ var fimsVerificationRateSecs int
 // How long to wait (in minutes) before considering the set to have failed and resending it
 var fimsVerificationFailureTimeoutMins int
 
-// Configure FIMS connection
-func configureFIMS() (chan fims.FimsMsg, error) {
-	// Connect to FIMS
-	// Start a FIMS Receive channel that will be used to hold incoming FIMS messages
-	fimsReceive := make(chan fims.FimsMsg)
-
-	fimsObj, err := fims.Connect("WASHER")
-	if err != nil {
-		log.Println("unable to connect to FIMS: ", err)
-		return nil, err
-	}
-	f = &fimsObj
-
-	// Subscribe to messages targeted at Scheduler
-	err = f.Subscribe("/washer")
-	if err != nil {
-		log.Println("unable to subscribe to FIMS: ", err)
-		return nil, err
-	}
-
-	// Start a configuration channel that will be used to determine when config has been read successfully from DBI
-	configurationReceived = make(chan bool, 1)
-	go f.ReceiveChannel(fimsReceive)
-	return fimsReceive, nil
-}
-
 // Main fims handling routine
 func handleFims(msg fims.FimsMsg) {
 	// put a recover here as insurance in case a FIMS message comes through that unexpectedly causes seg fault.

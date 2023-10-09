@@ -38,10 +38,23 @@ func main() {
 	// Complete configuration not dependent on DBI
 	log.SetPrefix("Washer: ")
 
-	fimsReceive, err := configureFIMS()
+	// Returns a valid FIMS connection via channel
+	// to service Washer and subscribes to uri "/washer".
+	fimsConn, err := fims.Configure("WASHER", "/washer")
 	if err != nil {
-		return
+		log.Fatalf("Error configuring FIMS: %v.", err)
 	}
+	// Assign our connection to the global pointer
+	f = &fimsConn
+
+	// Start a FIMS channel that will recieve FIMS requests.
+	fimsReceive := make(chan fims.FimsMsg)
+	go f.ReceiveChannel(fimsReceive)
+
+	// Start a configuration channel that will be used to determine
+	// when a config has been read successfully from DBI.
+	configurationReceived = make(chan bool, 1)
+
 	getDbiData()
 
 	err = configureInterface()
