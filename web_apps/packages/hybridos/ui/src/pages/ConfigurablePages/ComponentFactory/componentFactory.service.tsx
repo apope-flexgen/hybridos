@@ -142,6 +142,7 @@ const organizeProps = (
     props.color = enabled ? 'secondary' : 'primary';
   } else if (component === 'NumericInput') {
     props.value = value;
+    props.placeholder = 0.00;
     props.endTextAdornment = props.unit === '' ? ' ' : props.unit;
     props.showStepper = false;
     props.size = 'small';
