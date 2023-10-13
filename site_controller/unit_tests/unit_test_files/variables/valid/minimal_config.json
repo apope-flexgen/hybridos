@@ -206,7 +206,7 @@
                     "value": "0x20",
                     "options": [
                         {
-                            "name": "Active Voltage Regulation",
+                            "name": "Automatic Voltage Regulation",
                             "value": 0
                         },
                         {

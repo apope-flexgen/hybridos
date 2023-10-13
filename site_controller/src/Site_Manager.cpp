@@ -123,6 +123,8 @@ void Site_Manager::post_configure_initialize_features(void) {
     // Disable all features as part of initial configuration in case any are accidentally enabled
     for (auto feature : runmode1_kVAR_features_list)
         feature->enable_flag.value.set(false);
+    // AVR feature_vars depend on configuration, so initialize feature_vars now
+    avr.initialize_feature_vars();
 
     //
     // Run Mode 2 Reactive Power Features
@@ -138,6 +140,8 @@ void Site_Manager::post_configure_initialize_features(void) {
     }
     // send Generator Manager the initial LDSS settings
     set_ldss_variables();
+    // PFR feature_vars depend on configuration, so initialize feature_vars now
+    pfr.initialize_feature_vars();
 
     //
     // Site Operation Features
@@ -1292,12 +1296,12 @@ void Site_Manager::get_values() {
     feeder_actual_kVAR.value.set((invert_poi_kW.value.value_bool ? -1.0f : 1.0f) * pAssets->get_feeder_reactive_power(pAssets->get_poi_id().c_str()));
     feeder_actual_pf.value.set(pAssets->get_poi_power_factor());
 
-    // frequency response values needed
-    pfr.nameplate_kW.value.set(pAssets->get_ess_total_nameplate_active_power());
+    // automatic voltage variables set
+    avr.actual_volts.value.set(pAssets->get_poi_gridside_avg_voltage());
+    avr.status_flag.value.set(false);
 
-    // active voltage variables set
-    active_voltage_regulation.actual_volts.value.set(pAssets->get_poi_gridside_avg_voltage());
-    active_voltage_regulation.rated_kVAR.value.set(pAssets->get_ess_total_nameplate_reactive_power() + pAssets->get_solar_total_nameplate_reactive_power());
+    // standalone pfr status flag set
+    pfr.status_flag.value.set(false);
 
     num_ess_available = pAssets->get_num_ess_avail();
     num_ess_running = pAssets->get_num_ess_running();
@@ -1453,7 +1457,6 @@ void Site_Manager::set_values() {
     build_active_alarms();
 
     // update vars as needed
-    active_voltage_regulation.status_flag.value.set(false);
     load_shed.load_shed_increase_display_timer.value.set(load_shed.load_shed_calculator.get_increase_display_timer());
     load_shed.load_shed_decrease_display_timer.value.set(load_shed.load_shed_calculator.get_decrease_display_timer());
     solar_shed.solar_shed_increase_display_timer.value.set(solar_shed.solar_shed_calculator.get_increase_display_timer());
@@ -2861,10 +2864,10 @@ void Site_Manager::process_runmode2_kW_feature() {
  * of all aggregated assets and modify variables such as site_kVAR_demand.
  */
 void Site_Manager::process_runmode1_kVAR_feature() {
-    // ACTIVE VOLTAGE REGULATION MODE will sink or supply power based on voltage deviation
-    if (active_voltage_regulation.enable_flag.value.value_bool) {
-        // active voltage regulation function
-        active_voltage_regulation.execute(asset_cmd, asset_pf_flag);
+    // AUTOMATIC VOLTAGE REGULATION MODE will sink or supply power based on voltage deviation
+    if (avr.enable_flag.value.value_bool) {
+        // automatic voltage regulation function
+        avr.execute(asset_cmd, asset_pf_flag);
     }
     // WATT-VAR MODE sets kVAr command based on where actual active power sits on watt_var_points curve
     else if (watt_var.enable_flag.value.value_bool) {

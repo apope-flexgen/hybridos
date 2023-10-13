@@ -60,7 +60,7 @@ class ESS_Calibration;
 class Manual;
 
 // Runmode 1 Reactive Power Features
-class Active_Voltage_Regulation;
+class AVR;
 class Watt_Var;
 class Reactive_Setpoint;
 class Direct_Power_Factor;

@@ -22,6 +22,8 @@ from pytests.cases.manual_mode import test_manual_solar_slew_rate_1, test_manual
 from pytests.cases.templating_revamp import test_ranged, test_traditional
 from pytests.cases.persistent_settings import test_persistent_contactors, test_persistent_autobalancing, test_persistent_setpoint
 from pytests.cases.assets_state import test_default_local_mode, test_asset_bit_field_local_mode, test_local_bit_field_local_mode
+from pytests.cases.avr import test_avr_overvoltage_symmetric, test_avr_undervoltage_symmetric, test_avr_overvoltage_asymmetric, test_avr_undervoltage_asymmetric, test_avr_positive_poi_limits, test_avr_negative_poi_limits
+from pytests.cases.standalone_pfr import test_pfr_untracked_load, test_pfr_offset_load, test_pfr_minimum_load, test_pfr_untracked_load_poi_lim, test_pfr_offset_load_poi_lim, test_pfr_minimum_load_poi_lim, test_pfr_asymmetric_configs
 
 
 # Test runner AKA main() for each individual test
@@ -63,10 +65,24 @@ from pytests.cases.assets_state import test_default_local_mode, test_asset_bit_f
     test_traditional,
     test_persistent_setpoint,
     test_persistent_contactors,
-    test_persistent_autobalancing
+    test_persistent_autobalancing,
+    test_avr_overvoltage_symmetric,
+    test_avr_undervoltage_symmetric,
+    test_avr_overvoltage_asymmetric,
+    test_avr_undervoltage_asymmetric,
+    test_avr_positive_poi_limits,
+    test_avr_negative_poi_limits,
+    test_pfr_untracked_load,
+    test_pfr_offset_load,
+    test_pfr_minimum_load,
+    test_pfr_untracked_load_poi_lim,
+    test_pfr_offset_load_poi_lim,
+    test_pfr_minimum_load_poi_lim,
+    test_pfr_asymmetric_configs
 ])
 def test_site_manager(request: pytest.FixtureRequest, current_test: Steps):
     # Extract the pytest id
     Site_Controller_Instance.get_instance()  # Lazy initialization
-    current_id = request.node.name[request.node.name.find("[")+1:request.node.name.find("]")]
+    current_id = request.node.name[request.node.name.find(
+        "[")+1:request.node.name.find("]")]
     current_test.run_steps(current_id)

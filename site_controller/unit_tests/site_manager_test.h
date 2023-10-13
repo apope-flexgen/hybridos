@@ -11,7 +11,7 @@
 #include <test_tools.h>
 #include "frequency_response_test.h"
 #include <Features/Active_Power_Setpoint.h>
-#include <Features/Active_Voltage_Regulation.h>
+#include <Features/AVR.h>
 #include <Features/Watt_Var.h>
 #include <Features/Reactive_Setpoint.h>
 
@@ -825,77 +825,64 @@ TEST_F(site_manager_test, dispatch_reactive_power) {
     }
 }
 
-// active_voltage_mode test
-TEST_F(site_manager_test, active_voltage_mode) {
-    int const num_tests = 5;  // total number of test cases
-
+// automatic_voltage_mode test
+TEST_F(site_manager_test, automatic_voltage_mode) {
     // struct that has variables to configure for each test case
-    struct tests {
+    struct avr_test {
         float solar_potential_kVAR;
         float ess_potential_kVAR;
         float gen_potential_kVAR;
         float actual_volts;
-        float result_site_kVAR_demand;
-        float result_solar_kVAR_cmd;
-        float result_ess_kVAR_cmd;
-        float result_gen_kVAR_cmd;
+        float voltage_cmd;
+        float over_deadband;
+        float over_droop;
+        float over_rated_kVAR;
+        float under_deadband;
+        float under_droop;
+        float under_rated_kVAR;
+        float expected_site_kVAR_demand;
+        float expected_solar_kVAR_cmd;
+        float expected_ess_kVAR_cmd;
+        float expected_gen_kVAR_cmd;
     };
 
-    tests array[num_tests];  // an array with an element for each test case
+    std::vector<avr_test> tests = {
+        { 800, 400, 200, 400, 400, 50, 20, 1000, 100, 50, 500, 0, 0, 0, 0 },             // zero
+        { 800, 400, 200, 500, 400, 50, 20, 700, 100, 50, 500, -700, -400, -200, -100 },  // overvoltage limited
+        { 500, 400, 100, 460, 400, 50, 20, 1000, 100, 50, 500, -500, -250, -200, -50 },  // overvoltage less potential
+        { 800, 400, 200, 300, 400, 100, 50, 500, 50, 20, 700, 700, 400, 200, 100 },      // undervoltage limited
+        { 500, 400, 100, 340, 400, 100, 50, 500, 50, 20, 1000, 500, 250, 200, 50 }       // undervoltage less potential
+    };
 
-    // constant variables for every test
-    float deadband = 50;
-    float cmd = 400;
-    float droop_percent = 5;
-    float rated_kVAR = 1000;
-
-    // configure variables each test case
-    array[0] = { 800, 400, 200, 400, 0, 0, 0, 0 };               // zero
-    array[1] = { 800, 400, 200, 500, -1400, -800, -400, -200 };  // overvoltage limited
-    array[2] = { 500, 400, 100, 460, -500, -250, -200, -50 };    // overvoltage less potential
-    array[3] = { 800, 400, 200, 300, 1400, 800, 400, 200 };      // undervoltage limited
-    array[4] = { 500, 400, 100, 340, 500, 250, 200, 50 };        // undervoltage less potential
-
-    // iterate through each test case and get results
-    for (int i = 0; i < num_tests; i++) {
-        // Only print messages to log if a test fails
-        bool failure = false;
-        std::stringstream errorLog;
-        // Capture any prints within site controller that might be present in debug mode
-        capture_stdout();
-
-        asset_cmd.solar_data.potential_kVAR = array[i].solar_potential_kVAR;
-        asset_cmd.ess_data.potential_kVAR = array[i].ess_potential_kVAR;
-        asset_cmd.gen_data.potential_kVAR = array[i].gen_potential_kVAR;
-
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("avr", test_id++, tests.size());
         // reset cmds each iteration (will exit on 0 demand or potential)
         asset_cmd.solar_data.kVAR_cmd = 0;
         asset_cmd.ess_data.kVAR_cmd = 0;
         asset_cmd.gen_data.kVAR_cmd = 0;
-
+        // set potential kVAR for each asset
+        asset_cmd.solar_data.potential_kVAR = test.solar_potential_kVAR;
+        asset_cmd.ess_data.potential_kVAR = test.ess_potential_kVAR;
+        asset_cmd.gen_data.potential_kVAR = test.gen_potential_kVAR;
         asset_cmd.calculate_total_potential_kVAR();
-        active_voltage_regulation.deadband.value.value_float = deadband;
-        active_voltage_regulation.voltage_cmd.value.value_float = cmd;
-        active_voltage_regulation.actual_volts.value.value_float = array[i].actual_volts;
-        active_voltage_regulation.droop_percent.value.value_float = droop_percent;
-        active_voltage_regulation.rated_kVAR.value.value_float = rated_kVAR;
-        active_voltage_regulation.execute(asset_cmd, asset_pf_flag);
+        // set avr variables
+        avr.symmetric_variables = false;
+        avr.over_deadband.value.value_float = test.over_deadband;
+        avr.over_droop.value.value_float = test.over_droop;
+        avr.over_rated_kVAR.value.value_float = test.over_rated_kVAR;
+        avr.under_deadband.value.value_float = test.under_deadband;
+        avr.under_droop.value.value_float = test.under_droop;
+        avr.under_rated_kVAR.value.value_float = test.under_rated_kVAR;
+        avr.voltage_cmd.value.value_float = test.voltage_cmd;
+        avr.actual_volts.value.value_float = test.actual_volts;
+        avr.execute(asset_cmd, asset_pf_flag);
         asset_cmd.dispatch_reactive_power();
-
-        errorLog << "active_voltage_mode() test " << i + 1 << " of " << num_tests << std::endl;
-        // failure conditions
-        failure = asset_cmd.site_kVAR_demand != array[i].result_site_kVAR_demand || asset_cmd.solar_data.kVAR_cmd != array[i].result_solar_kVAR_cmd || asset_cmd.ess_data.kVAR_cmd != array[i].result_ess_kVAR_cmd ||
-                  asset_cmd.gen_data.kVAR_cmd != array[i].result_gen_kVAR_cmd;
-        EXPECT_EQ(asset_cmd.site_kVAR_demand, array[i].result_site_kVAR_demand);
-        EXPECT_EQ(asset_cmd.solar_data.kVAR_cmd, array[i].result_solar_kVAR_cmd);
-        EXPECT_EQ(asset_cmd.ess_data.kVAR_cmd, array[i].result_ess_kVAR_cmd);
-        EXPECT_EQ(asset_cmd.gen_data.kVAR_cmd, array[i].result_gen_kVAR_cmd);
-
-        // Release stdout so we can write again
-        release_stdout(failure);
-        // Print the test id if failure
-        if (failure)
-            std::cout << errorLog.str() << std::endl;
+        t_log.float_results.push_back({ test.expected_site_kVAR_demand, asset_cmd.site_kVAR_demand, "Site kVAR Demand" });
+        t_log.float_results.push_back({ test.expected_solar_kVAR_cmd, asset_cmd.solar_data.kVAR_cmd, "Solar kVAR Command" });
+        t_log.float_results.push_back({ test.expected_ess_kVAR_cmd, asset_cmd.ess_data.kVAR_cmd, "ESS kVAR Command" });
+        t_log.float_results.push_back({ test.expected_gen_kVAR_cmd, asset_cmd.gen_data.kVAR_cmd, "Generator kVAR Command" });
+        t_log.check_solution();
     }
 }
 
@@ -1630,80 +1617,60 @@ TEST_F(site_manager_test, energy_arbitrage) {
     }
 }
 
-// Target SoC Demand mode
+// Standalone Primary Frequency Response and Target SoC Demand mode
 TEST_F(site_manager_test, pfr) {
-    int const num_tests = 31;  // total number of test cases
-
     // struct that has variables to configure for each test case
-    struct tests {
+    struct pfr_test {
+        float nominal_hz;
+        float over_deadband;
+        float over_droop;
+        float max_rated_kW;
+        float under_deadband;
+        float under_droop;
+        float min_rated_kW;
         float kW_cmd;
         float site_hz;
-        float pfr_min;
-        float pfr_max;
-        float expected_demand;  // Original demand + limited response modifier
+        float expected_demand;  // original demand + limited response modifier
     };
 
-    tests array[num_tests];  // an array with an element for each test case
+    std::vector<pfr_test> tests = {
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -10.0f, 63.5f, -15.0f },  // large charge, OF hits min limit
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -10.0f, 61.817f, -15.0f }, { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -10.0f, 60.005f, -10.0f },
+        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -10.0f, 59.995f, -10.0f }, { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -10.0f, 58.183f, -1.0f },
+        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -10.0f, 56.5f, 0.0f },     { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -5.0f, 63.5f, -15.0f },  // small charge, OF within limit
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -5.0f, 61.817f, -14.0f },                                                                               // UF hits 0 and doesn't change sign
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -5.0f, 60.005f, -5.0f },   { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -5.0f, 59.995f, -5.0f },
+        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -5.0f, 58.183f, 0.0f },    { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -5.0f, 56.5f, 0.0f },
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 0.0f, 63.5f, -15.0f },  // 0 and command can change sign, plenty of room
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 0.0f, 61.817f, -9.0f },    { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 0.0f, 60.005f, 0.0f },
+        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 0.0f, 59.995f, 0.0f },     { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 0.0f, 58.183f, 9.0f },
+        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 0.0f, 56.5f, 15.0f },      { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 5.0f, 63.5f, 0.0f },  // small discharge, UF within limit
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 5.0f, 61.817f, 0.0f },                                                                               // OF hits 0 and doesn't change sign
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 5.0f, 60.005f, 5.0f },     { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 5.0f, 59.995f, 5.0f },
+        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 5.0f, 58.183f, 14.0f },    { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 5.0f, 56.5f, 15.0f },
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 63.5f, 0.0f },  // large discharge, UF hits max limit
+        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 61.817f, 1.0f },    { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 60.005f, 10.0f },
+        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 10.0f, 59.995f, 10.0f },   { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 10.0f, 58.183f, 15.0f },
+        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 10.0f, 56.5f, 15.0f },     { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 60.0f, 10.0f }  // frequency is exactly nominal
+    };
 
-    // configure variables each test case
-    // Expected request/demand comes from x = response_percent * pfr_min/max, solve for response percent to get delta hz then add deadband
-    array[0] = { -10.0f, 63.5f, -15.0f, 15.0f, -15.0f };  // Large charge, OF hits min limit
-    array[1] = { -10.0f, 61.817f, -15.0f, 15.0f, -15.0f };
-    array[2] = { -10.0f, 60.005f, -15.0f, 15.0f, -10.0f };
-    array[3] = { -10.0f, 59.995f, -15.0f, 15.0f, -10.0f };
-    array[4] = { -10.0f, 58.183f, -15.0f, 15.0f, -1.0f };
-    array[5] = { -10.0f, 56.5f, -15.0f, 15.0f, 0.0f };
-    array[6] = { -5.0f, 63.5f, -15.0f, 15.0f, -15.0f };    // Small charge, OF within limit
-    array[7] = { -5.0f, 61.817f, -15.0f, 15.0f, -14.0f };  // UF hits 0 and doesn't change sign
-    array[8] = { -5.0f, 60.005f, -15.0f, 15.0f, -5.0f };
-    array[9] = { -5.0f, 59.995f, -15.0f, 15.0f, -5.0f };
-    array[10] = { -5.0f, 58.183f, -15.0f, 15.0f, 0.0f };
-    array[11] = { -5.0f, 56.5f, -15.0f, 15.0f, 0.0f };
-    array[12] = { 0.0f, 63.5f, -15.0f, 15.0f, -15.0f };  // 0 and command can change sign, plenty of room
-    array[13] = { 0.0f, 61.817f, -15.0f, 15.0f, -9.0f };
-    array[14] = { 0.0f, 60.005f, -15.0f, 15.0f, 0.0f };
-    array[15] = { 0.0f, 59.995f, -15.0f, 15.0f, 0.0f };
-    array[16] = { 0.0f, 58.183f, -15.0f, 15.0f, 9.0f };
-    array[17] = { 0.0f, 56.5f, -15.0f, 15.0f, 15.0f };
-    array[18] = { 5.0f, 63.5f, -15.0f, 15.0f, 0.0f };    // Small discharge, UF within limit
-    array[19] = { 5.0f, 61.817f, -15.0f, 15.0f, 0.0f };  // OF hits 0 and doesn't change sign
-    array[20] = { 5.0f, 60.005f, -15.0f, 15.0f, 5.0f };
-    array[21] = { 5.0f, 59.995f, -15.0f, 15.0f, 5.0f };
-    array[22] = { 5.0f, 58.183f, -15.0f, 15.0f, 14.0f };
-    array[23] = { 5.0f, 56.5f, -15.0f, 15.0f, 15.0f };
-    array[24] = { 10.0f, 63.5f, -15.0f, 15.0f, 0.0f };  // Large discharge, UF hits max limit
-    array[25] = { 10.0f, 61.817f, -15.0f, 15.0f, 1.0f };
-    array[26] = { 10.0f, 60.005f, -15.0f, 15.0f, 10.0f };
-    array[27] = { 10.0f, 59.995f, -15.0f, 15.0f, 10.0f };
-    array[28] = { 10.0f, 58.183f, -15.0f, 15.0f, 15.0f };
-    array[29] = { 10.0f, 56.5f, -15.0f, 15.0f, 15.0f };
-    array[30] = { 10.0f, 60.0f, -15.0f, 15.0f, 10.0f };  // Frequency is exactly nominal
-    // iterate through each test case and get results
-    for (int i = 0; i < num_tests; i++) {
-        // Only print messages to log if a test fails
-        std::stringstream errorLog;
-        // Capture any prints within site controller that might be present in debug mode
-        capture_stdout();
-
-        // Apply PFR
-        asset_cmd.site_kW_demand = array[i].kW_cmd;
-        site_frequency.value.set(array[i].site_hz);
-        pfr.site_nominal_hz.value.set(60.0f);
-        pfr.deadband.value.set(0.017f);
-        pfr.limits_min_kW.value.set(array[i].pfr_min);
-        pfr.limits_max_kW.value.set(array[i].pfr_max);
-        pfr.droop_percent.value.set(5.0f);
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("primary_frequency_response", test_id++, tests.size());
+        // set pfr variables
+        asset_cmd.site_kW_demand = test.kW_cmd;
+        site_frequency.value.set(test.site_hz);
+        pfr.symmetric_variables = false;
+        pfr.site_nominal_hz.value.set(test.nominal_hz);
+        pfr.over_deadband.value.set(test.over_deadband);
+        pfr.over_droop.value.set(test.over_droop);
+        pfr.under_deadband.value.set(test.under_deadband);
+        pfr.under_droop.value.set(test.under_droop);
+        pfr.max_rated_kW.value.set(test.max_rated_kW);
+        pfr.min_rated_kW.value.set(test.min_rated_kW);
         pfr.execute(asset_cmd, site_frequency.value.value_float, total_site_kW_charge_limit.value.value_float, total_site_kW_discharge_limit.value.value_float);
-
-        errorLog << "primary_frequency_response() demand test " << i + 1 << " of " << num_tests << std::endl;
-        bool failure = !near(asset_cmd.site_kW_demand, array[i].expected_demand, 0.001);
-        EXPECT_NEAR(asset_cmd.site_kW_demand, array[i].expected_demand, 0.001);
-
-        // Release stdout so we can write again
-        release_stdout(failure);
-        // Print the test id if failure
-        if (failure)
-            std::cout << errorLog.str() << std::endl;
+        t_log.range_results.push_back({ test.expected_demand, 0.001, asset_cmd.site_kW_demand, "Site kW Demand" });
+        t_log.check_solution();
     }
 }
 

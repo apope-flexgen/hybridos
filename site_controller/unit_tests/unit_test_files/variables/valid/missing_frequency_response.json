@@ -880,19 +880,21 @@
                         }
                     ]
                 },
-                "active_voltage_mode_enable_flag": {
-                    "name": "Active Voltage Regulation Mode Enable",
+                "avr_enable_flag":
+                {
+                    "name": "Automatic Voltage Regulation Mode Enable",
                     "ui_type": "none",
                     "type": "enum_slider",
                     "var_type": "Bool",
                     "value": false,
-                    "options": [
+                    "options":
+                    [
                         {
                             "name": "False Case Not Used",
                             "value": false
                         },
                         {
-                            "name": "Active Voltage Regulation Mode Enable",
+                            "name": "Automatic Voltage Regulation Mode Enable",
                             "value": true
                         }
                     ]
@@ -1200,20 +1202,6 @@
                     "name": "Feeder Rated Active Power",
                     "ui_type": "none",
                     "unit": "kW",
-                    "scaler": 1
-                },
-                "pfr_limits_min_kW": {
-                    "name": "Minimum PFR Power Limit",
-                    "unit": "kW",
-                    "ui_type": "control",
-                    "value": -5600,
-                    "scaler": 1
-                },
-                "pfr_limits_max_kW": {
-                    "name": "Maximum PFR Power Limit",
-                    "unit": "kW",
-                    "ui_type": "control",
-                    "value": 6800,
                     "scaler": 1
                 },
                 "charge_dispatch_kW_command": {
@@ -1603,7 +1591,7 @@
                     "value": "0x34",
                     "options": [
                         {
-                            "name": "Active Voltage Regulation",
+                            "name": "Automatic Voltage Regulation",
                             "value": 0
                         },
                         {
@@ -1655,41 +1643,54 @@
                     "var_type": "Int",
                     "value": 1000
                 },
-                "active_voltage_deadband": {
+                "avr_over_deadband_volts":
+                {
                     "name": "Deadband",
                     "ui_type": "control",
                     "unit": "V",
-                    "value": 10
+                    "value": 50
                 },
-                "active_voltage_droop_percent": {
-                    "name": "Droop Percent",
-                    "ui_type": "control",
-                    "unit": "%",
-                    "value": 5
-                },
-                "active_voltage_cmd": {
-                    "name": "Active Voltage Setpoint",
+                "avr_over_droop_volts":
+                {
+                    "name": "Droop",
                     "ui_type": "control",
                     "unit": "V",
-                    "value": 12470
+                    "value": 20
                 },
-                "active_voltage_actual_volts": {
+                "avr_over_rated_kVAR":
+                {
+                    "name": "Rated Power",
+                    "ui_type": "control",
+                    "unit": "VAR",
+                    "scaler": 1000,
+                    "value": 1000
+                },
+                "avr_cmd_volts":
+                {
+                    "name": "Automatic Voltage Setpoint",
+                    "ui_type": "control",
+                    "unit": "V",
+                    "value": 400
+                },
+                "avr_actual_volts":
+                {
                     "name": "Measured Voltage",
                     "ui_type": "status",
-                    "unit": "V",
-                    "value": 12470
+                    "unit": "V"
                 },
-                "active_voltage_status_flag": {
-                    "name": "Active Voltage Regulation Status",
+                "avr_status_flag":
+                {
+                    "name": "Automatic Voltage Regulation Status",
                     "ui_type": "status",
                     "type": "enum",
                     "var_type": "Bool",
                     "value": false
                 },
-                "active_voltage_rated_kVAR": {
-                    "name": "Active Voltage Regulation Rated Power",
-                    "unit": "VAR",
+                "avr_request_kVAR":
+                {
+                    "name": "AVR Reactive Power Request",
                     "ui_type": "none",
+                    "unit": "VAR",
                     "scaler": 1000
                 },
                 "power_factor_cmd": {
@@ -1805,49 +1806,64 @@
                     "unit": "%",
                     "value": 20
                 },
-                "pfr_enable_flag": {
+                "pfr_enable_flag":
+                {
                     "name": "PFR Enable",
                     "ui_type": "control",
                     "type": "enum_slider",
                     "var_type": "Bool",
                     "value": false
                 },
-                "pfr_deadband": {
-                    "name": "PFR Deadband",
-                    "unit": "Hz",
+                "pfr_over_deadband_hz":
+                {
+                    "name": "Deadband",
                     "ui_type": "control",
+                    "unit": "Hz",
                     "value": 0.017
                 },
-                "pfr_droop_percent": {
-                    "name": "PFR Droop Percent",
-                    "unit": "%",
-                    "value": 5,
-                    "ui_type": "control"
+                "pfr_over_droop_hz":
+                {
+                    "name": "Droop",
+                    "ui_type": "control",
+                    "unit": "Hz",
+                    "value": 3
                 },
-                "pfr_status_flag": {
+                "pfr_max_rated_kW":
+                {
+                    "name": "Rated Power",
+                    "ui_type": "control",
+                    "unit": "kW",
+                    "value": 7000,
+                    "scaler": 1
+                },
+                "pfr_site_nominal_hz":
+                {
+                    "name": "Site Nominal Frequency",
+                    "unit": "Hz",
+                    "ui_type": "control",
+                    "value": 60.0
+                },
+                "pfr_status_flag":
+                {
                     "name": "PFR Status",
                     "ui_type": "none",
                     "type": "enum",
                     "var_type": "Bool",
                     "value": false
                 },
-                "pfr_nameplate_kW": {
-                    "name": "PFR Nameplate Power",
-                    "unit": "kW",
+                "pfr_request_kW":
+                {
+                    "name": "PFR Power Request",
                     "ui_type": "none",
-                    "value": 0,
+                    "unit": "kW",
                     "scaler": 1
                 },
-                "pfr_site_nominal_hz": {
-                    "name": "PFR Site Nominal Frequency",
-                    "unit": "Hz",
-                    "ui_type": "none",
-                    "value": 60.0
-                },
-                "pfr_offset_hz": {
+                "pfr_offset_hz":
+                {
                     "name": "PFR Frequency Offset",
+                    "ui_type": "none",
                     "unit": "Hz",
-                    "ui_type": "control"
+                    "value": 0
                 },
                 "watt_watt_adjustment_enable_flag": {
                     "name": "Watt-Watt Adjustment Enable",

@@ -27,7 +27,7 @@
 #include <Config_Validation_Result.h>
 #include <Features/Feature.h>
 #include <Features/Active_Power_Setpoint.h>
-#include <Features/Active_Voltage_Regulation.h>
+#include <Features/AVR.h>
 #include <Features/Active_Power_Closed_Loop_Control.h>
 #include <Features/Target_SOC.h>
 #include <Features/Watt_Var.h>
@@ -378,7 +378,7 @@ public:
     int current_runmode1_kVAR_feature;  // follows the Fims_Object runmode1_kVAR_mode_cmd to identify when it gets changed
     uint64_t available_runmode1_kVAR_features_mask;
     std::vector<Feature*> runmode1_kVAR_features_list = {
-        &active_voltage_regulation, &watt_var, &reactive_setpoint, &power_factor, &constant_power_factor,
+        &avr, &watt_var, &reactive_setpoint, &power_factor, &constant_power_factor,
     };
 
     features::Watt_Var watt_var;
@@ -391,7 +391,7 @@ protected:
 
     features::Constant_Power_Factor constant_power_factor;
 
-    features::Active_Voltage_Regulation active_voltage_regulation;
+    features::AVR avr;
 
     ///////////////////////////////////////////////////////////////////////////////////
     //                       RUN MODE 2 REACTIVE POWER FEATURES                      //
