@@ -16,7 +16,11 @@
 /* Local Internal Dependencies */
 #include <Slew_Object.h>
 
-enum discharge_type { LOAD, REQUESTS, DEMAND };
+enum discharge_type {
+    LOAD,      // Discharging to account for load
+    REQUESTS,  // Discharging to account for specific asset type requests
+    DEMAND,    // Discharging to account for remaining demanded discharge
+};
 
 // Types of load compensation available
 enum load_compensation {

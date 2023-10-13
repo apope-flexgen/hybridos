@@ -393,20 +393,17 @@ def test_fr_clc(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", -9000)
         ]
     ),
-    # TODO: ESS is already at its requested limit, but technically could give more power, so CLC increases the offset
-    # However, it falls on the POI now because the ESS request is fully satisfied
-    # This means the value at the POI does not change for this use case
-    # Will require a more complicated solution to look ahead at which asset will handle the CLC discharge
-    # Steps(
-    #     {
-    #         "/features/standalone_power/active_power_closed_loop_enable": True
-    #     },
-    #     [
-    #         Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 11000, wait_secs=30),
-    #         # CLC closes in on the commanded value
-    #         Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", -10000)
-    #     ]
-    # ),
+    # ESS output is maxed by the CLC correction
+    Steps(
+        {
+            "/features/standalone_power/active_power_closed_loop_enable": True
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 11000, wait_secs=30),
+            # CLC closes in on the commanded value
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", -10000)
+        ]
+    ),
     # Same tests, negative inaccuracy
     Steps(
         {
@@ -559,20 +556,16 @@ def test_ess_tsoc_clc(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", -14000)
         ]
     ),
-    # TODO: ESS is already at its requested limit, but technically could give more power, so CLC increases the offset
-    # However, it falls on the POI now because the ESS request is fully satisfied
-    # This means the value at the POI does not change for this use case
-    # Will require a more complicated solution to look ahead at which asset will handle the CLC discharge
-    # Steps(
-    #     {
-    #         "/features/standalone_power/active_power_closed_loop_enable": True
-    #     },
-    #     [
-    #         Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 16000, wait_secs=30),
-    #         # CLC closes in on the commanded value
-    #         Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", -15000)
-    #     ]
-    # ),
+    Steps(
+        {
+            "/features/standalone_power/active_power_closed_loop_enable": True
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 16000, wait_secs=30),
+            # CLC closes in on the commanded value
+            Flex_Assertion(Assertion_Type.approx_eq, "/components/shared_poi/active_power", -15000)
+        ]
+    ),
     # Same tests, negative inaccuracy
     Steps(
         {

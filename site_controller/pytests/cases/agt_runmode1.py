@@ -10,6 +10,7 @@ from ..pytest_steps import Setup, Steps, Teardown
     Setup(
         "agt_runmode1",
         {
+            "/features/standalone_power/active_power_poi_limits_enable": True,
             "/features/active_power/runmode1_kW_mode_cmd": 1,
         },
         [

@@ -318,6 +318,11 @@ float Asset_Cmd_Object::dispatch_site_kW_discharge_cmd(int asset_priority, float
 
     // Then calculate the active power contribution of each asset type
     for (auto it : asset_list) {
+        // prevent feeder from being used as a source of discharge if there is no load to receive the discharge
+        if (it == &feeder_data && command_type != LOAD) {
+            continue;
+        }
+
         // Contribute to kW_request and subtract it from the command received
         if (command_type == REQUESTS) {
             // Only contribute power from this asset if it has a discharge request

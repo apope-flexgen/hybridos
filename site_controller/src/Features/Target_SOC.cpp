@@ -17,7 +17,7 @@ features::Target_SOC::Target_SOC() {
 }
 
 void features::Target_SOC::execute(Asset_Cmd_Object& asset_cmd) {
-    External_Inputs inputs = External_Inputs{ asset_cmd.solar_data.max_potential_kW, asset_cmd.site_kW_load, asset_cmd.site_kW_demand, asset_cmd.ess_data.kW_request, asset_cmd.solar_data.kW_request };
+    External_Inputs inputs = External_Inputs{ asset_cmd.solar_data.max_potential_kW, asset_cmd.site_kW_load, asset_cmd.site_kW_demand, asset_cmd.ess_data.kW_request };
     External_Outputs outputs = execute_helper(inputs);
     asset_cmd.solar_data.kW_request = outputs.solar_kW_request;
     asset_cmd.load_method = outputs.load_method;
@@ -33,7 +33,7 @@ features::Target_SOC::External_Outputs features::Target_SOC::execute_helper(cons
     load_compensation new_load_method = load_compensation(load_enable_flag.value.value_bool * LOAD_MINIMUM);
     float new_additional_load_compensation = asset_cmd_utils::calculate_additional_load_compensation(new_load_method, inputs.site_kW_load, inputs.site_kW_demand, inputs.ess_kW_request,
                                                                                                      0.0f,  // there will never be a gen request when using this feature
-                                                                                                     inputs.solar_kW_request);
+                                                                                                     new_solar_kW_request);
     float new_site_kW_demand = inputs.site_kW_demand + new_additional_load_compensation;
 
     return External_Outputs{

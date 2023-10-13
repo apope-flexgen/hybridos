@@ -354,10 +354,8 @@ TEST_F(site_manager_test, determine_ess_load_requirement) {
 
 // ess charge
 TEST_F(site_manager_test, dispatch_site_kW_charge_cmd) {
-    int const num_tests = 22;  // total number of test cases
-
     // struct that has variables to configure for each test case
-    struct tests {
+    struct test_struct {
         float ess_min_potential_kW;
         float ess_kW_cmd;
         float charge_production;
@@ -374,42 +372,38 @@ TEST_F(site_manager_test, dispatch_site_kW_charge_cmd) {
         float expected_discharge_production;  // Confirm that discharge production used to compensate is reduced
     };
 
-    tests array[num_tests];  // an array with an element for each test case
-
-    // configure variables each test case, source order based on priority, discharge production should reduce for all site production used for charge (not feed)
-    array[0] = { -700.0f, 0.0f, 0.0f, 0.0f, 0, true, true, true, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };                            // no request
-    array[1] = { -700.0f, 0.0f, 500.0f, 600.0f, 0, true, true, true, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 600.0f };                      // positive request
-    array[2] = { -700.0f, 100.0f, -500.0f, 600.0f, 0, true, true, true, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 600.0f };                 // blocked by discharge
-    array[3] = { -700.0f, 0.0f, -500.0f, 600.0f, 0, false, false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 100.0f };                  // no source, reduce discharge
-    array[4] = { -700.0f, 0.0f, -800.0f, 800.0f, 0, true, true, true, -700.0f, 0.0f, 0.0f, 700.0f, -700.0f, 100.0f };             // exceeds potential, limited
-    array[5] = { -700.0f, -500.0f, -500.0f, 600.0f, 0, true, true, true, -700.0f, 0.0f, 0.0f, 200.0f, -200.0f, 400.0f };          // exceeds potential - cmd, limited
-    array[6] = { -700.0f, 0.0f, -500.0f, 600.0f, 0, false, false, true, -500.0f, 0.0f, 0.0f, 500.0f, -500.0f, 100.0f };           // 1st source
-    array[7] = { -700.0f, 0.0f, -500.0f, 600.0f, 0, false, true, false, -500.0f, 0.0f, 500.0f, 0.0f, -500.0f, 100.0f };           // 1st disabled, 2nd source
-    array[8] = { -700.0f, 0.0f, -500.0f, 600.0f, 0, true, false, false, -500.0f, 500.0f, 0.0f, 0.0f, -500.0f, 100.0f };           // first two disabled, 3rd source
-    array[9] = { -1500.0f, 0.0f, -1500.0f, 1500.0f, 0, true, true, true, -1500.0f, 0.0f, 500.0f, 1000.0f, -1500.0f, 0.0f };       // request requires 2 sources
-    array[10] = { -3500.0f, 0.0f, -3500.0f, 3500.0f, 0, true, true, true, -3000.0f, 1000.0f, 1000.0f, 1000.0f, -3000.0f, 0.0f };  // request exceeds 3 sources, reduce discharge
-    array[11] = { -700.0f, 0.0f, 0.0f, 0.0f, 2, true, true, true, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };                           // Same tests different priority
-    array[12] = { -700.0f, 0.0f, 500.0f, 600.0f, 2, true, true, true, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 600.0f };
-    array[13] = { -700.0f, 100.0f, -500.0f, 600.0f, 2, true, true, true, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 600.0f };
-    array[14] = { -700.0f, 0.0f, -500.0f, 600.0f, 2, false, false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 100.0f };
-    array[15] = { -700.0f, 0.0f, -800.0f, 800.0f, 2, true, true, true, -700.0f, 0.0f, 700.0f, 0.0f, -700.0f, 100.0f };
-    array[16] = { -700.0f, -500.0f, -500.0f, 600.0f, 2, true, true, true, -700.0f, 0.0f, 200.0f, 0.0f, -200.0f, 400.0f };
-    array[17] = { -700.0f, 0.0f, -500.0f, 600.0f, 2, false, true, false, -500.0f, 0.0f, 500.0f, 0.0f, -500.0f, 100.0f };
-    array[18] = { -700.0f, 0.0f, -500.0f, 600.0f, 2, false, false, true, -500.0f, 0.0f, 0.0f, 500.0f, -500.0f, 100.0f };
-    array[19] = { -700.0f, 0.0f, -500.0f, 600.0f, 2, true, false, false, -500.0f, 500.0f, 0.0f, 0.0f, -500.0f, 100.0f };
-    array[20] = { -1500.0f, 0.0f, -1500.0f, 1500.0f, 2, true, true, true, -1500.0f, 0.0f, 1000.0f, 500.0f, -1500.0f, 0.0f };
-    array[21] = { -3500.0f, 0.0f, -3500.0f, 3500.0f, 2, true, true, true, -3000.0f, 1000.0f, 1000.0f, 1000.0f, -3000.0f, 0.0f };
+    std::vector<test_struct> tests = {
+        { -700.0f, 0.0f, 0.0f, 0.0f, 0, true, true, true, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },                           // no request
+        { -700.0f, 0.0f, 500.0f, 600.0f, 0, true, true, true, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 600.0f },                     // positive request
+        { -700.0f, 100.0f, -500.0f, 600.0f, 0, true, true, true, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 600.0f },                // blocked by discharge
+        { -700.0f, 0.0f, -500.0f, 600.0f, 0, false, false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 100.0f },                 // no source, reduce discharge
+        { -700.0f, 0.0f, -800.0f, 800.0f, 0, true, true, true, -700.0f, 0.0f, 0.0f, 700.0f, -700.0f, 100.0f },            // exceeds potential, limited
+        { -700.0f, -500.0f, -500.0f, 600.0f, 0, true, true, true, -700.0f, 0.0f, 0.0f, 200.0f, -200.0f, 400.0f },         // exceeds potential - cmd, limited
+        { -700.0f, 0.0f, -500.0f, 600.0f, 0, false, false, true, -500.0f, 0.0f, 0.0f, 500.0f, -500.0f, 100.0f },          // 1st source
+        { -700.0f, 0.0f, -500.0f, 600.0f, 0, false, true, false, -500.0f, 0.0f, 500.0f, 0.0f, -500.0f, 100.0f },          // 1st disabled, 2nd source
+        { -700.0f, 0.0f, -500.0f, 600.0f, 0, true, false, false, -500.0f, 500.0f, 0.0f, 0.0f, -500.0f, 100.0f },          // first two disabled, 3rd source
+        { -1500.0f, 0.0f, -1500.0f, 1500.0f, 0, true, true, true, -1500.0f, 0.0f, 500.0f, 1000.0f, -1500.0f, 0.0f },      // request requires 2 sources
+        { -3500.0f, 0.0f, -3500.0f, 3500.0f, 0, true, true, true, -3000.0f, 1000.0f, 1000.0f, 1000.0f, -3000.0f, 0.0f },  // request exceeds 3 sources, reduce discharge
+        { -700.0f, 0.0f, 0.0f, 0.0f, 2, true, true, true, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },                           // Same tests different priority
+        { -700.0f, 0.0f, 500.0f, 600.0f, 2, true, true, true, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 600.0f },
+        { -700.0f, 100.0f, -500.0f, 600.0f, 2, true, true, true, 100.0f, 0.0f, 0.0f, 0.0f, 0.0f, 600.0f },
+        { -700.0f, 0.0f, -500.0f, 600.0f, 2, false, false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 100.0f },
+        { -700.0f, 0.0f, -800.0f, 800.0f, 2, true, true, true, -700.0f, 0.0f, 700.0f, 0.0f, -700.0f, 100.0f },
+        { -700.0f, -500.0f, -500.0f, 600.0f, 2, true, true, true, -700.0f, 0.0f, 200.0f, 0.0f, -200.0f, 400.0f },
+        { -700.0f, 0.0f, -500.0f, 600.0f, 2, false, true, false, -500.0f, 0.0f, 500.0f, 0.0f, -500.0f, 100.0f },
+        { -700.0f, 0.0f, -500.0f, 600.0f, 2, false, false, true, -500.0f, 0.0f, 0.0f, 500.0f, -500.0f, 100.0f },
+        { -700.0f, 0.0f, -500.0f, 600.0f, 2, true, false, false, -500.0f, 500.0f, 0.0f, 0.0f, -500.0f, 100.0f },
+        { -1500.0f, 0.0f, -1500.0f, 1500.0f, 2, true, true, true, -1500.0f, 0.0f, 1000.0f, 500.0f, -1500.0f, 0.0f },
+        { -3500.0f, 0.0f, -3500.0f, 3500.0f, 2, true, true, true, -3000.0f, 1000.0f, 1000.0f, 1000.0f, -3000.0f, 0.0f },
+    };
 
     // iterate through each test case and get results
-    for (int i = 0; i < num_tests; i++) {
-        // Only print messages to log if a test fails
-        bool failure = false;
-        std::stringstream errorLog;
-        // Capture any prints within site controller that might be present in debug mode
-        capture_stdout();
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("dispatch_site_kW_charge_cmd", test_id++, tests.size());
 
-        asset_cmd.ess_data.min_potential_kW = array[i].ess_min_potential_kW;
-        asset_cmd.ess_data.kW_cmd = array[i].ess_kW_cmd;
+        asset_cmd.ess_data.min_potential_kW = test.ess_min_potential_kW;
+        asset_cmd.ess_data.kW_cmd = test.ess_kW_cmd;
         // Hard coded potentials/cmds (0) to simplify tests as there are already a significant number of cases
         asset_cmd.gen_data.max_potential_kW = 1000.0f;
         asset_cmd.gen_data.kW_cmd = 0.0f;
@@ -417,37 +411,29 @@ TEST_F(site_manager_test, dispatch_site_kW_charge_cmd) {
         asset_cmd.solar_data.kW_cmd = 0.0f;
         asset_cmd.feeder_data.max_potential_kW = 1000.0f;
         asset_cmd.feeder_data.kW_cmd = 0.0f;
-        asset_cmd.site_kW_charge_production = array[i].charge_production;
-        asset_cmd.site_kW_discharge_production = array[i].discharge_production;
-        float result = asset_cmd.dispatch_site_kW_charge_cmd(array[i].priority, array[i].solar_source, array[i].gen_source, array[i].feeder_source);
-        errorLog << "dispatch_site_kW_charge_cmd() test " << i + 1 << " of " << num_tests << std::endl;
-        // failure conditions
-        failure = asset_cmd.ess_data.kW_cmd != array[i].expected_ess_kW_cmd || asset_cmd.feeder_data.kW_cmd != array[i].expected_feeder_kW_cmd || asset_cmd.gen_data.kW_cmd != array[i].expected_gen_kW_cmd ||
-                  asset_cmd.solar_data.kW_cmd != array[i].expected_solar_kW_cmd || result != array[i].expected_charge_production || asset_cmd.site_kW_discharge_production != array[i].expected_discharge_production;
-        EXPECT_EQ(asset_cmd.ess_data.kW_cmd, array[i].expected_ess_kW_cmd);
-        EXPECT_EQ(asset_cmd.feeder_data.kW_cmd, array[i].expected_feeder_kW_cmd);
-        EXPECT_EQ(asset_cmd.gen_data.kW_cmd, array[i].expected_gen_kW_cmd);
-        EXPECT_EQ(asset_cmd.solar_data.kW_cmd, array[i].expected_solar_kW_cmd);
-        EXPECT_EQ(result, array[i].expected_charge_production);
-        EXPECT_EQ(asset_cmd.site_kW_discharge_production, array[i].expected_discharge_production);
+        asset_cmd.site_kW_charge_production = test.charge_production;
+        asset_cmd.site_kW_discharge_production = test.discharge_production;
+        float result = asset_cmd.dispatch_site_kW_charge_cmd(test.priority, test.solar_source, test.gen_source, test.feeder_source);
 
-        // Release stdout so we can write again
-        release_stdout(failure);
-        // Print the test id if failure
-        if (failure)
-            std::cout << errorLog.str() << std::endl;
+        t_log.float_results.push_back({ test.expected_ess_kW_cmd, asset_cmd.ess_data.kW_cmd, "ESS kW cmd" });
+        t_log.float_results.push_back({ test.expected_feeder_kW_cmd, asset_cmd.feeder_data.kW_cmd, "Feeder kW cmd" });
+        t_log.float_results.push_back({ test.expected_gen_kW_cmd, asset_cmd.gen_data.kW_cmd, "Gen kW cmd" });
+        t_log.float_results.push_back({ test.expected_solar_kW_cmd, asset_cmd.solar_data.kW_cmd, "Solar kW cmd" });
+        t_log.float_results.push_back({ test.expected_charge_production, result, "Charge production" });
+        t_log.float_results.push_back({ test.expected_discharge_production, asset_cmd.site_kW_discharge_production, "Discharge production" });
+        t_log.bool_results.push_back({ false, asset_cmd.feeder_data.kW_cmd > 0 && asset_cmd.ess_data.kW_cmd >= 0, "Check there is never feeder discharge if the power has no consumer" });
+        t_log.check_solution();
     }
 }
 
 // Verify discharge dispatch used for load and additional site discharge
 TEST_F(site_manager_test, dispatch_site_kW_discharge_cmd) {
-    int const num_tests = 20;  // total number of test cases
-
     // struct that has variables to configure for each test case
-    struct tests {
+    struct test_struct {
         float discharge_production;
         float cmd;
         int priority;
+        discharge_type command_type;
         float ess_kW_request;
         float gen_kW_request;
         float solar_kW_request;
@@ -458,66 +444,64 @@ TEST_F(site_manager_test, dispatch_site_kW_discharge_cmd) {
         float expected_solar_kW_cmd;
     };
 
-    tests array[num_tests];  // an array with an element for each test case
-
-    // configure variables each test case
-    array[0] = { 1000.0f, -500.0f, 0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };              // negative cmd
-    array[1] = { 0.0f, 1000.0f, 0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };                 // 0 dispatch available
-    array[2] = { 800.0f, 800.0f, 0, 0.0f, 0.0f, 0.0f, 800.0f, 0.0f, 0.0f, 0.0f, 800.0f };            // fully met by solar (start priority 0)
-    array[3] = { 1300.0f, 1300.0f, 0, 0.0f, 0.0f, 0.0f, 1300.0f, 0.0f, 0.0f, 500.0f, 800.0f };       // met by solar + gen
-    array[4] = { 2100.0f, 2100.0f, 0, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f };     // met by solar + gen + ess
-    array[5] = { 3000.0f, 3000.0f, 0, 0.0f, 0.0f, 0.0f, 3000.0f, 600.0f, 900.0f, 700.0f, 800.0f };   // met by solar + gen + ess + feed
-    array[6] = { 3100.0f, 3100.0f, 0, 0.0f, 0.0f, 0.0f, 3000.0f, 600.0f, 900.0f, 700.0f, 800.0f };   // partially met (exceeds unused)
-    array[7] = { 3100.0f, 1600.0f, 0, 0.0f, 0.0f, 0.0f, 1600.0f, 100.0f, 0.0f, 700.0f, 800.0f };     // additional production is not met, only input cmd
-    array[8] = { 700.0f, 700.0f, 2, 0.0f, 0.0f, 0.0f, 700.0f, 0.0f, 0.0f, 700.0f, 0.0f };            // fully met by gen (start priority 2)
-    array[9] = { 1300.0f, 1300.0f, 2, 0.0f, 0.0f, 0.0f, 1300.0f, 600.0f, 0.0f, 700.0f, 0.0f };       // met by gen + ess
-    array[10] = { 2100.0f, 2100.0f, 2, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f };    // met by gen + ess + solar
-    array[11] = { 3000.0f, 3000.0f, 2, 0.0f, 0.0f, 0.0f, 3000.0f, 600.0f, 900.0f, 700.0f, 800.0f };  // met by gen + ess + solar + feed
-    array[12] = { 3100.0f, 3000.0f, 2, 0.0f, 0.0f, 0.0f, 3000.0f, 600.0f, 900.0f, 700.0f, 800.0f };  // partially met (exceeds unused)
-    array[13] = { 3000.0f, 1600.0f, 2, 0.0f, 0.0f, 0.0f, 1600.0f, 600.0f, 0.0f, 700.0f, 300.0f };    // additional production is not met, only cmd
-    array[14] = { 600.0f, 600.0f, 4, 0.0f, 0.0f, 0.0f, 600.0f, 600.0f, 0.0f, 0.0f, 0.0f };           // fully met by ess (new ess first priority)
-    array[15] = { 1400.0f, 1400.0f, 4, 0.0f, 0.0f, 0.0f, 1400.0f, 600.0f, 0.0f, 0.0f, 800.0f };      // met by ess + solar
-    array[16] = { 2100.0f, 2100.0f, 4, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f };    // met by ess + solar + gen
-    array[17] = { 3000.0f, 3000.0f, 4, 0.0f, 0.0f, 0.0f, 3000.0f, 600.0f, 900.0f, 700.0f, 800.0f };  // met by ess + solar + gen + feed
-    array[18] = { 3100.0f, 3000.0f, 4, 0.0f, 0.0f, 0.0f, 3000.0f, 600.0f, 900.0f, 700.0f, 800.0f };  // partially met (exceeds unused)
-    array[19] = { 3000.0f, 1600.0f, 4, 0.0f, 0.0f, 0.0f, 1600.0f, 600.0f, 0.0f, 200.0f, 800.0f };    // additional production is not met, only cmd
+    std::vector<test_struct> tests = {
+        { 1000.0f, -500.0f, 0, DEMAND, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },           // negative cmd
+        { 0.0f, 1000.0f, 0, DEMAND, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },              // 0 dispatch available
+        { 800.0f, 800.0f, 0, DEMAND, 0.0f, 0.0f, 0.0f, 800.0f, 0.0f, 0.0f, 0.0f, 800.0f },         // fully met by solar (start priority 0)
+        { 1300.0f, 1300.0f, 0, DEMAND, 0.0f, 0.0f, 0.0f, 1300.0f, 0.0f, 0.0f, 500.0f, 800.0f },    // met by solar + gen
+        { 2100.0f, 2100.0f, 0, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // met by solar + gen + ess
+        { 3000.0f, 3000.0f, 0, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // partially met, feeder can't discharge
+        { 3100.0f, 3100.0f, 0, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // partially met (exceeds unused)
+        { 3100.0f, 1600.0f, 0, DEMAND, 0.0f, 0.0f, 0.0f, 1600.0f, 100.0f, 0.0f, 700.0f, 800.0f },  // additional production is not met, only input cmd
+        { 700.0f, 700.0f, 2, DEMAND, 0.0f, 0.0f, 0.0f, 700.0f, 0.0f, 0.0f, 700.0f, 0.0f },         // fully met by gen (start priority 2)
+        { 1300.0f, 1300.0f, 2, DEMAND, 0.0f, 0.0f, 0.0f, 1300.0f, 600.0f, 0.0f, 700.0f, 0.0f },    // met by gen + ess
+        { 2100.0f, 2100.0f, 2, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // met by gen + ess + solar
+        { 3000.0f, 3000.0f, 2, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // partially met, feeder can't discharge
+        { 3100.0f, 3000.0f, 2, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // partially met (exceeds unused)
+        { 3000.0f, 1600.0f, 2, DEMAND, 0.0f, 0.0f, 0.0f, 1600.0f, 600.0f, 0.0f, 700.0f, 300.0f },  // additional production is not met, only cmd
+        { 600.0f, 600.0f, 4, DEMAND, 0.0f, 0.0f, 0.0f, 600.0f, 600.0f, 0.0f, 0.0f, 0.0f },         // fully met by ess (new ess first priority)
+        { 1400.0f, 1400.0f, 4, DEMAND, 0.0f, 0.0f, 0.0f, 1400.0f, 600.0f, 0.0f, 0.0f, 800.0f },    // met by ess + solar
+        { 2100.0f, 2100.0f, 4, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // met by ess + solar + gen
+        { 3000.0f, 3000.0f, 4, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // partially met, feeder can't discharge
+        { 3100.0f, 3000.0f, 4, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // partially met (exceeds unused)
+        { 3000.0f, 1600.0f, 4, DEMAND, 0.0f, 0.0f, 0.0f, 1600.0f, 600.0f, 0.0f, 200.0f, 800.0f },  // additional production is not met, only cmd
+        { 800.0f, 800.0f, 1, LOAD, 0.0f, 0.0f, 0.0f, 800.0f, 0.0f, 0.0f, 0.0f, 800.0f },           // account for load with solar
+        { 1700.0f, 1700.0f, 1, LOAD, 0.0f, 0.0f, 0.0f, 1700.0f, 0.0f, 900.0f, 0.0f, 800.0f },      // account for load with solar + feeder
+        { 2300.0f, 2300.0f, 1, LOAD, 0.0f, 0.0f, 0.0f, 2300.0f, 600.0f, 900.0f, 0.0f, 800.0f },    // account for load with solar + feeder + ess
+        { 3000.0f, 3000.0f, 1, LOAD, 0.0f, 0.0f, 0.0f, 3000.0f, 600.0f, 900.0f, 700.0f, 800.0f },  // account for load with solar + feeder + ess + gen
+        { 3100.0f, 3100.0f, 1, LOAD, 0.0f, 0.0f, 0.0f, 3000.0f, 600.0f, 900.0f, 700.0f, 800.0f },  // load partially met
+        { 800.0f, 800.0f, 1, DEMAND, 0.0f, 0.0f, 0.0f, 800.0f, 0.0f, 0.0f, 0.0f, 800.0f },         // fully met by solar (asset priority 1)
+        { 1400.0f, 1400.0f, 1, DEMAND, 0.0f, 0.0f, 0.0f, 1400.0f, 600.0f, 0.0f, 0.0f, 800.0f },    // met by solar + ess (feeder skipped)
+        { 2100.0f, 2100.0f, 1, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // met by solar + ess + gen (feeder skipped)
+        { 2200.0f, 2200.0f, 1, DEMAND, 0.0f, 0.0f, 0.0f, 2100.0f, 600.0f, 0.0f, 700.0f, 800.0f },  // partially met, feeder can't discharge
+    };
 
     // iterate through each test case and get results
-    for (int i = 0; i < num_tests; i++) {
-        // Only print messages to log if a test fails
-        bool failure = false;
-        std::stringstream errorLog;
-        // Capture any prints within site controller that might be present in debug mode
-        capture_stdout();
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("dispatch_site_kW_discharge_cmd", test_id++, tests.size());
 
         asset_cmd.ess_data.max_potential_kW = 600.0f;
-        asset_cmd.ess_data.kW_request = array[i].ess_kW_request;
+        asset_cmd.ess_data.kW_request = test.ess_kW_request;
         asset_cmd.ess_data.kW_cmd = 0.0f;
         asset_cmd.gen_data.max_potential_kW = 700.0f;
-        asset_cmd.gen_data.kW_request = array[i].gen_kW_request;
+        asset_cmd.gen_data.kW_request = test.gen_kW_request;
         asset_cmd.gen_data.kW_cmd = 0.0f;
         asset_cmd.solar_data.max_potential_kW = 800.0f;
-        asset_cmd.solar_data.kW_request = array[i].solar_kW_request;
+        asset_cmd.solar_data.kW_request = test.solar_kW_request;
         asset_cmd.solar_data.kW_cmd = 0.0f;
         asset_cmd.feeder_data.max_potential_kW = 900.0f;
         asset_cmd.feeder_data.kW_cmd = 0.0f;
-        asset_cmd.site_kW_discharge_production = array[i].discharge_production;
-        float actual_dispatch = asset_cmd.dispatch_site_kW_discharge_cmd(array[i].priority, array[i].cmd, DEMAND);
-        errorLog << "dispatch_site_kW_discharge_cmd() test " << i + 1 << " of " << num_tests << std::endl;
+        asset_cmd.site_kW_discharge_production = test.discharge_production;
+        float actual_dispatch = asset_cmd.dispatch_site_kW_discharge_cmd(test.priority, test.cmd, test.command_type);
         // failure conditions
-        failure = !near(actual_dispatch, array[i].expected_dispatch, 0.001) || !near(asset_cmd.ess_data.kW_cmd, array[i].expected_ess_kW_cmd, 0.001) || !near(asset_cmd.gen_data.kW_cmd, array[i].expected_gen_kW_cmd, 0.001) ||
-                  !near(asset_cmd.solar_data.kW_cmd, array[i].expected_solar_kW_cmd, 0.001) || !near(asset_cmd.feeder_data.kW_cmd, array[i].expected_feeder_kW_cmd, 0.001);
-        EXPECT_NEAR(actual_dispatch, array[i].expected_dispatch, 0.001);
-        EXPECT_NEAR(asset_cmd.ess_data.kW_cmd, array[i].expected_ess_kW_cmd, 0.001);
-        EXPECT_NEAR(asset_cmd.gen_data.kW_cmd, array[i].expected_gen_kW_cmd, 0.001);
-        EXPECT_NEAR(asset_cmd.solar_data.kW_cmd, array[i].expected_solar_kW_cmd, 0.001);
-        EXPECT_NEAR(asset_cmd.feeder_data.kW_cmd, array[i].expected_feeder_kW_cmd, 0.001);
-
-        // Release stdout so we can write again
-        release_stdout(failure);
-        // Print the test id if failure
-        if (failure)
-            std::cout << errorLog.str() << std::endl;
+        t_log.range_results.push_back({ test.expected_dispatch, 0.001, actual_dispatch, "Dispatch" });
+        t_log.range_results.push_back({ test.expected_ess_kW_cmd, 0.001, asset_cmd.ess_data.kW_cmd, "ESS kW cmd" });
+        t_log.range_results.push_back({ test.expected_gen_kW_cmd, 0.001, asset_cmd.gen_data.kW_cmd, "Gen kW cmd" });
+        t_log.range_results.push_back({ test.expected_solar_kW_cmd, 0.001, asset_cmd.solar_data.kW_cmd, "Solar kW cmd" });
+        t_log.range_results.push_back({ test.expected_feeder_kW_cmd, 0.001, asset_cmd.feeder_data.kW_cmd, "Feeder kW cmd" });
+        t_log.bool_results.push_back({ false, asset_cmd.feeder_data.kW_cmd > 0 && test.command_type != LOAD && asset_cmd.ess_data.kW_cmd >= 0, "Check there is never feeder discharge if the power has no consumer" });
+        t_log.check_solution();
     }
 }
 
@@ -1269,7 +1253,8 @@ TEST_F(site_manager_test, apply_active_power_poi_limits) {
         { true, LOAD_OFFSET, 600.0f, 200.0f, false, -200.0f, 390.0f, -485, 485, 0, 485, 285 },      // Load exporting, demand exporting, limited
         { true, LOAD_OFFSET, 600.0f, 200.0f, false, -200.0f, -490.0f, -485, 485, 0, 485, -490 },    // Load exporting, demand importing, gives extra headroom
         { true, LOAD_OFFSET, 600.0f, 200.0f, false, 200.0f, 490.0f, -485, 485, 1, 485, 490 },       // Load importing, demand exporting with different asset priority
-        // {true,  LOAD_OFFSET,     600.0f, 200.0f, false,  300.0f, -490.0f, -485,  485, 1, 485, -475},  // Load importing, demand importing, some load on feeder -> limited
+        // (commented until poi limits handles all cases to satisfaction; the listed expected emand may be incorrect)
+        // { true, LOAD_OFFSET, 600.0f, 200.0f, false, 300.0f, -490.0f, -485, 485, 1, 485, -475 },     // Load importing, demand importing, some load on feeder -> limited
         { true, LOAD_MINIMUM, 200.0f, 200.0f, false, 500.0f, 0.0f, -200, 200, 1, 200, 500 },  // Load importing, demand wants to import but ESS must help with load
     };
 
@@ -1298,8 +1283,8 @@ TEST_F(site_manager_test, apply_active_power_poi_limits) {
         active_power_poi_limits.execute(asset_cmd, soc_avg_running.value.value_float, asset_priority_runmode1.value.value_int, total_site_kW_charge_limit.value.value_float, total_site_kW_discharge_limit.value.value_float);
 
         // Check results
-        t_log.float_results.push_back({ asset_cmd.site_kW_demand, test.expected_site_demand, "demand" });
-        t_log.float_results.push_back({ asset_cmd.feeder_data.max_potential_kW, test.expected_feed_max, "feed_max" });
+        t_log.float_results.push_back({ test.expected_site_demand, asset_cmd.site_kW_demand, "demand" });
+        t_log.float_results.push_back({ test.expected_feed_max, asset_cmd.feeder_data.max_potential_kW, "feed_max" });
         t_log.check_solution();
     }
 }

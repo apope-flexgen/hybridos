@@ -29,7 +29,6 @@ private:
         float site_kW_load;
         float site_kW_demand;
         float ess_kW_request;
-        float solar_kW_request;
     };
     struct External_Outputs {
         float solar_kW_request;
