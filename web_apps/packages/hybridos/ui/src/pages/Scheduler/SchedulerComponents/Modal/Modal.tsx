@@ -30,7 +30,6 @@ const SchedulerModal: React.FC<SchedulerModalProps> = ({
     <Modal
       actions={modalActions}
       description={labels[state.type].description}
-      onBackdropClick={state.onClose}
       onClose={state.onClose}
       open={open}
       title={labels[state.type].title}

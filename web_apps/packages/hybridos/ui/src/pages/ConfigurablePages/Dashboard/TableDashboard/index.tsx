@@ -83,7 +83,7 @@ const TableDashboard = () => {
 
   const renderedDataTables = Object.entries(dataTables).map(([dataTableName, dataTableInfo]) => (
     <Box key={dataTableName} sx={{ width: '100%' }}>
-      <CardContainer flexDirection='column' styleOverrides={{ paddingTop: '12px', width: '100%' }}>
+      <CardContainer direction='column' styleOverrides={{ paddingTop: '12px', width: '100%' }}>
         <CardRow>
           <Typography text={dataTableName} variant='headingS' />
         </CardRow>

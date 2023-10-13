@@ -256,7 +256,7 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
   return (
     <Box sx={containerBoxSx}>
       <PageLoadingIndicator isLoading={isLoading} type="primary" />
-      <CardContainer flexDirection="column" styleOverrides={cardContainerOverrides}>
+      <CardContainer direction="column" styleOverrides={cardContainerOverrides}>
         <Typography text={variableOverrideLabels.siteSelectorTitle} variant="headingS" />
         <Select
           label={variableOverrideLabels.siteSelectorLabel}
@@ -267,7 +267,7 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
           value={selectedSiteName}
         />
       </CardContainer>
-      <CardContainer flexDirection="column" styleOverrides={{ gap: '12px' }}>
+      <CardContainer direction="column" styleOverrides={{ gap: '12px' }}>
         <Box sx={titleBoxSx}>
           <Typography text={variableOverrideLabels.pageLabel} variant="headingS" />
         </Box>

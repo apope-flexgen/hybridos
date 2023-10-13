@@ -16,7 +16,7 @@ const UIConfig = ({ product }: PageProps) => {
   return (
     <Container>
       <Typography text="UI Settings" variant="headingL" />
-      <CardContainer flexDirection="column" styleOverrides={CardContainerSX}>
+      <CardContainer direction="column" styleOverrides={CardContainerSX}>
         <Box sx={BoxSX}>
           <CardRow>
             <Tabs onChange={(_, tab) => setSelectedTab(tab as string)} value={selectedTab}>

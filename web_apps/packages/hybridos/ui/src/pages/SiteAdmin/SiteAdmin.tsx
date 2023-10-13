@@ -184,7 +184,7 @@ const SiteAdmin = () => {
         </Box>
       </Box>
       <CardContainer
-        flexDirection="row"
+        direction="row"
         styleOverrides={{
           backgroundColor: theme.fgd.primary.main_4p,
           height: ' calc(100% - 72px)',

@@ -245,7 +245,7 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
 
   return (
     <ThemeProvider theme={muiOverrides}>
-      <Dialog PaperProps={{ sx: dialogSx }} onBackdropClick={onClose} onClose={onClose} open={open}>
+      <Dialog PaperProps={{ sx: dialogSx }} onClose={onClose} open={open}>
         <DialogContent>
           <Box sx={titleBoxSx}>
             <Typography variant='h5'>{modalTitle}</Typography>

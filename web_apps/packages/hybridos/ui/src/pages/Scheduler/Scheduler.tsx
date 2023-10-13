@@ -120,7 +120,7 @@ const Scheduler: React.FunctionComponent<PageProps> = ({ currentUser, product }:
           width: '100%',
         }}
       >
-        <CardContainer flexDirection="column">
+        <CardContainer direction="column">
           <Box sx={{ width: '100%' }}>
             {displayTabs && (
               <Tabs
@@ -145,7 +145,7 @@ const Scheduler: React.FunctionComponent<PageProps> = ({ currentUser, product }:
             <TabContent
               configured={configured}
               schedulerTab={schedulerTab}
-              schedulerType={schedulerType}
+              schedulerType={schedulerType || null}
               setIsLoading={setIsLoading}
             />
           </Box>

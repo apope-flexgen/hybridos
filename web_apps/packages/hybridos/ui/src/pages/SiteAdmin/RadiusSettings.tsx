@@ -83,7 +83,7 @@ const RadiusSettingsFields: FunctionComponent<RadiusSettingsProps> = ({
           }}
           >
             <CardContainer
-              flexDirection="column"
+              direction="column"
               styleOverrides={{ padding: '16px', gap: '16px', boxSizing: 'border-box' }}
             >
               <Typography text={siteAdminLabels.radiusRequirementsTitle} variant="bodyMBold" />
@@ -130,7 +130,7 @@ const RadiusSettingsFields: FunctionComponent<RadiusSettingsProps> = ({
               </Box>
             </CardContainer>
             <CardContainer
-              flexDirection="column"
+              direction="column"
               styleOverrides={{ padding: '16px', boxSizing: 'border-box', gap: '16px' }}
             >
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>

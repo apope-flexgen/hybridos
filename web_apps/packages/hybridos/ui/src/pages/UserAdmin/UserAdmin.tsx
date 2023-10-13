@@ -100,7 +100,7 @@ const UserAdmin: React.FunctionComponent<PageProps> = ({ currentUser }: PageProp
       <Box sx={titleBoxSx}>
         <Typography text='User Admin' variant='headingL' />
       </Box>
-      <CardContainer flexDirection='row'>
+      <CardContainer direction='row'>
         <Box sx={dataTableSx}>
           <Box sx={nonDataTableSx}>
             <Typography text='MANAGE USERS' variant='headingS' />

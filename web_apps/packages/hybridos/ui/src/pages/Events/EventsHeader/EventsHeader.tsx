@@ -83,7 +83,7 @@ const EventsHeader: FC<EventsProps> = ({
         <CardRow>
           <Typography text={cardHeading} variant="headingS" />
         </CardRow>
-        <CardContainer flexDirection="row" styleOverrides={{ boxShadow: 'none' }}>
+        <CardContainer styleOverrides={{ boxShadow: 'none' }}>
           <CardRow>
             <EventDateTime filters={filters} setFilters={setFilters} />
             <EventSeverities filters={filters} setFilters={setFilters} />

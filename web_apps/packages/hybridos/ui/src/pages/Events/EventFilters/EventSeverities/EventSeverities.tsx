@@ -33,7 +33,7 @@ const EventSeverities: FC<EventSeveritiesProps> = ({
   };
 
   return (
-    <Box>
+    <Box sx={{display: 'flex', flexDirection: 'row', gap: '8px'}}>
       {Object.entries(severitiesProperties).map(([key, value]) => {
         const severity = key as keyof SeveritiesStateObject;
         return (
