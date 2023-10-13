@@ -40,7 +40,7 @@ const StatusPointsDisplay = ({ statusComponents }: { statusComponents: ReactElem
         <Divider orientation="horizontal" variant="fullWidth" />
       </Box>
       {statusComponents.length > 0 ? (
-        <Grid container columns={numColumns} spacing={1} alignItems="flex-end">
+        <Grid container columns={numColumns} spacing={1} columnSpacing={3} alignItems="flex-end">
           {statusComponents}
         </Grid>
       ) : (

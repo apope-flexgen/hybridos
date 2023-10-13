@@ -29,7 +29,7 @@ const AssetControl = ({
     componentFunctions !== undefined
       ? componentFunctions.controlFunctions.map((child) => <>{child(assetState)}</>)
       : [];
-
+  
   return (
     <Box sx={getControlOuterBoxSx(theme)}>
       <Box sx={{ margin: '5px' }}>
@@ -43,7 +43,7 @@ const AssetControl = ({
               ? componentFunctions?.displayName
                 ? `${componentFunctions.displayName.toUpperCase()} CONTROLS`
                 : 'ASSET CONTROLS'
-              : 'NO CONTROLS'
+              : 'NO CONTROLS CONFIGURED'
           }
           color='secondary'
         />

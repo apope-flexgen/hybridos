@@ -66,6 +66,26 @@ export const alertContainerSx = {
   marginTop: '1rem',
 };
 
+export const tabsContainerSx = (theme: ThemeType) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  width: 'min-content',
+  backgroundColor: theme.fgd.primary.main_12p,
+  height: '100%',
+});
+
+export const tabsAndStatusContainerSx = {
+  display: 'flex', flexDirection: 'row', height: '100%', padding: '1.5rem',
+};
+
+export const internalTabsAndStatusContainerSx = {
+  display: 'flex',
+  flexDirection: 'row',
+  height: '1px',
+  minHeight: '100%',
+  width: '100%',
+};
+
 export const viewEventsButtonBoxSx = { flexGrow: 1, display: 'flex', flexDirection: 'row-reverse' };
 
 export const expandButtonBoxSx = {
@@ -77,10 +97,9 @@ export const expandButtonBoxSx = {
 
 export const getControlOuterBoxSx = (theme: ThemeType) => ({
   overflowY: 'auto',
-  width: '20%',
+  width: '100%',
   height: '100%',
   backgroundColor: theme.fgd.primary.main_12p,
-  position: 'absolute',
   top: 0,
   right: 0,
   padding: '15px',
@@ -89,7 +108,7 @@ export const getControlOuterBoxSx = (theme: ThemeType) => ({
 export const getControlInnerBoxSx = (theme: ThemeType) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: '10px',
+  gap: '12px',
   backgroundColor: theme.fgd.background.paper,
   padding: '12px',
   borderRadius: '2px',
@@ -99,8 +118,8 @@ export const statusOuterBoxSx = {
   width: '100%',
   minHeight: '100%',
   display: 'flex',
+  padding: '2rem',
   flexDirection: 'column',
-  overflow: 'auto',
 };
 
 export const getAllControlsBoxSx = (theme: ThemeType) => ({
@@ -108,19 +127,19 @@ export const getAllControlsBoxSx = (theme: ThemeType) => ({
   backgroundColor: theme.fgd.background.paper,
   padding: '8px 16px 8px 16px',
   borderRadius: '2px',
-})
+});
 
-export const getAllControlsHeaderBoxSx = (theme: ThemeType) => ({
+export const getAllControlsHeaderBoxSx = () => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-})
+});
 
-export const getAllControlsInnerBoxSx = (theme: ThemeType) => ({
+export const getAllControlsInnerBoxSx = () => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: '10px'
-})
+  gap: '10px',
+});
 
 export const statusPointsDisplayOuterBoxSx = { display: 'flex', flexDirection: 'column' };
 

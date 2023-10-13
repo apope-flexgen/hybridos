@@ -1,5 +1,7 @@
 // TODO: figure out what's wrong with eslint
-import { CardContainer, Tabs, ThemeType } from '@flexgen/storybook';
+import {
+  CardContainer, ResizableContainer, Tabs, ThemeType,
+} from '@flexgen/storybook';
 import { Box } from '@mui/material';
 import {
   AlertState,
@@ -9,6 +11,7 @@ import {
 import { useTheme } from 'styled-components';
 import AssetControl from './AssetControl';
 import AssetStatus from './AssetStatus';
+import { tabsAndStatusContainerSx, tabsContainerSx, internalTabsAndStatusContainerSx, } from './assetsPage.styles';
 
 export type AssetsPageLayoutProps = {
   tabValue: string;
@@ -27,7 +30,7 @@ const Window = ({ children }: { children: React.ReactNode }) => (
       display: 'flex',
       flexDirection: 'column',
       flexGrow: 1,
-      padding: '2rem',
+      overflow: 'auto',
     }}
   >
     {children}
@@ -44,15 +47,7 @@ const TabsColumn = ({ tabComponents, handleTabChange, tabValue }: TabsColumnProp
   const theme = useTheme() as ThemeType;
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minWidth: '15%',
-        backgroundColor: theme.fgd.primary.main_12p,
-        height: '100%',
-      }}
-    >
+    <Box sx={tabsContainerSx(theme)}>
       <Tabs onChange={handleTabChange} orientation="vertical" value={tabValue} variant="scrollable">
         {tabComponents}
       </Tabs>
@@ -75,44 +70,40 @@ const AssetsPageLayout = (props: AssetsPageLayoutProps) => {
   const alertsToDisplay = alertState || { faultInformation: [], alarmInformation: [] };
 
   return (
-    <>
-      <Box sx={{ display: 'flex', flexDirection: 'row', width: '80%' }}>
-        <CardContainer>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              height: '1px',
-              minHeight: '100%',
-              width: '100%',
-              overflow: 'auto',
-            }}
-          >
-            <TabsColumn
-              tabComponents={tabComponents}
-              handleTabChange={handleTabChange}
-              tabValue={tabValue}
-            />
-            <Window>
-              <AssetStatus
-                assetName={componentFunctions?.displayName || 'Asset'}
-                statusChildren={componentFunctions?.statusFunctions || []}
-                assetState={assetState}
-                alertState={alertsToDisplay}
+    <ResizableContainer
+      reactiveContent={(
+        <Box sx={tabsAndStatusContainerSx}>
+          <CardContainer>
+            <Box sx={internalTabsAndStatusContainerSx}>
+              <TabsColumn
+                tabComponents={tabComponents}
+                handleTabChange={handleTabChange}
+                tabValue={tabValue}
               />
-            </Window>
-          </Box>
-        </CardContainer>
-      </Box>
-      <Box sx={{ width: '20%', flexShrink: 0 }}>
+              <Window>
+                <AssetStatus
+                  assetName={componentFunctions?.displayName || 'Asset'}
+                  statusChildren={componentFunctions?.statusFunctions || []}
+                  assetState={assetState}
+                  alertState={alertsToDisplay}
+                />
+              </Window>
+            </Box>
+          </CardContainer>
+        </Box>
+      )}
+      draggableContent={(
         <AssetControl
           componentFunctions={componentFunctions}
           assetState={assetState}
           allControlsState={allControlsState}
           currentUser={currentUser}
         />
-      </Box>
-    </>
+      )}
+      maxWidth="50%"
+      minWidth="15%"
+      defaultWidth="20%"
+    />
   );
 };
 

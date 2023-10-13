@@ -128,21 +128,28 @@ const organizeProps = (
   const [value, enabled] =
     typeof stateInfo === 'object' ? [stateInfo.value, stateInfo.enabled] : [stateInfo, true];
 
+  props.disabled = !enabled;
+
   if (component === 'TextField') {
+    props.disabled = false;
+    props.bold = enabled;
     props.value = value;
     props.adornment = 'end';
-    props.helperText = props.helperText ?? props.label;
-    props.label = '';
     props.type = 'text';
     props.TextAdornment = props.unit === '' ? ' ' : props.unit;
-    props.size = 'medium';
+    props.helperTextSize = 'small';
+    props.size = 'small';
+    props.color = enabled ? 'secondary' : 'primary';
   } else if (component === 'NumericInput') {
     props.value = value;
-    props.helperText = props.helperText ?? props.label;
-    props.label = '';
     props.endTextAdornment = props.unit === '' ? ' ' : props.unit;
     props.showStepper = false;
-    props.size = 'medium';
+    props.size = 'small';
+    props.validationRegEx = 'floats',
+    props.bold = enabled;
+    props.helperTextSize = 'small';
+    props.color = enabled ? 'secondary' : 'primary';
+    props.disabled = false;
   } else if (component === 'Switch') {
     props.labelPlacement = 'right'
     props.value = value;
@@ -164,7 +171,6 @@ const organizeProps = (
       props.value = String(value);
     }
   }
-  props.disabled = !enabled;
 
   if (component === 'MuiButton') {
     props.size = 'large';
@@ -189,7 +195,6 @@ const organizeProps = (
     props.value = String(value).charAt(0);
     props.menuItems = props.extraProps.options;
     props.fullWidth = true;
-    props.helperText = props.label;
   }
 
   return props;

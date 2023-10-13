@@ -120,7 +120,7 @@ const generateBatteryViewReactComponentFunction: (
       props: {
         label: staticData.label,
         showPercentage: true,
-        orientation: 'horizontal'
+        orientation: 'horizontal',
       },
     },
     displayGroupID,
