@@ -151,16 +151,16 @@ const organizeProps = (
     props.color = enabled ? 'secondary' : 'primary';
     props.disabled = false;
   } else if (component === 'Switch') {
-    props.labelPlacement = 'right'
+    props.labelPlacement = 'right';
+    props.color = 'primary';
     props.value = value;
     props.autoLayout = true;
   } else if (component === 'MaintModeSlider') {
     props.autoLayout = true;
     props.value = value;
-
+    props.color = 'primary';
     const { extraProps } = stateInfo as ControlComponentStateInfo;
     const { lockMode } = extraProps || {};
-
     props.disabledLock = !(lockMode?.lockModeButtonEnabled ?? true);
     props.lockUsername = lockMode?.username;
     props.isLocked = lockMode?.isLocked;
