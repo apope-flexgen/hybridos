@@ -1,5 +1,6 @@
 import logging
 import time
+import os
 from .fims import fims_set, fims_threaded_pub
 from .assertion_framework import Flex_Assertion
 from .pytest_report import close_report, setup_report, report_id, report_steps, report_expected
@@ -36,7 +37,8 @@ class Steps():
         # Run and report steps
         kill_commands = []
         for uri, value in self.set_steps.items():
-            fims_set(uri, value)
+            set_reply = fims_set(uri, value, reply_to='/pytest')
+            assert set_reply == value
         for uri, value in self.pub_steps.items():
             kill_commands.append(fims_threaded_pub(uri, value))
         report_steps(self.set_steps)

@@ -5,7 +5,8 @@ from typing import Union
 from pytest import approx
 import logging
 from .pytest_report import report_actual
-from .fims import fims_get
+from .fims import fims_get, fims_set
+import os
 
 
 class Tolerance_Type(Enum):
@@ -37,7 +38,8 @@ class Flex_Assertion():
     # pattern: eg."active_faults.options", only used in Assertion_type.obj_eq
     # duration_secs: how long to poll for the value. 0 means to poll once, else poll once per second up to the value given
     #                the expected value must be met for every poll in order to pass
-    def __init__(self, type: Assertion_Type, uri: str, value: Union[int, float, bool, str], wait_secs=3, tolerance_type=Tolerance_Type.rel, tolerance=0.05, max_limit=None, pattern=None, duration_secs=0):
+    # fims_method: fims method to use when retrieving actual value
+    def __init__(self, type: Assertion_Type, uri: str, value: Union[int, float, bool, str], wait_secs=3, tolerance_type=Tolerance_Type.rel, tolerance=0.05, max_limit=None, pattern=None, duration_secs=0, fims_method='get'):
         self.type = type
         self.uri = uri
         self.value = value
@@ -47,6 +49,7 @@ class Flex_Assertion():
         self.wait = wait_secs
         self.pattern = pattern
         self.duration = duration_secs
+        self.fims_method = fims_method
 
     # Less than comparison of this class against other value
     def __lt__(self, other):
@@ -195,7 +198,11 @@ class Flex_Assertion():
     # Get the actual value
     # TODO: Possibly move the get_asset_agg logic here as well to aggregate multiple uris as needed
     def get_actual(self):
-        response = fims_get(self.uri)
+        if self.fims_method == 'get':
+            response = fims_get(self.uri)
+        elif self.fims_method == 'set':
+            # If asserting with a set, use our value as the set value and request a reply
+            response = fims_set(self.uri, self.value, reply_to='/pytest')
         # Extract clothed value
         if isinstance(response, dict) and len(response.keys()) == 1:
             response = response[list(response.keys())[0]]  # Flatten if == 1 key

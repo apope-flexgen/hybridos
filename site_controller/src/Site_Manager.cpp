@@ -929,7 +929,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
 
     if (strcmp(msg->method, "set") == 0) {
         // First ensure the set is valid before echoing it to the storage db module
-        bool valid_set = false;
+        bool should_writeout_setpoint = false;
         // Message to writeout for setpoint if valid
         cJSON* body_JSON = cJSON_Parse(msg->body);
         if (body_JSON == NULL) {
@@ -974,7 +974,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                     asset_priority_runmode2.set_fims_int(msg->pfrags[2], range_check(body_int, NUM_ASSET_PRIORITIES, 0));
                     site_kW_load_interval_ms.set_fims_int(msg->pfrags[2], range_check(body_int, 1, 60000));  // Interval between 1ms and 60s
 
-                    valid_set = true;
+                    should_writeout_setpoint = true;
                 } else if (strncmp(msg->pfrags[1], "reactive_power", strlen("reactive_power")) == 0) {
                     runmode1_kVAR_mode_cmd.set_fims_masked_int(msg->pfrags[2], msg_value.valueint, available_runmode1_kVAR_features_mask);
 
@@ -985,7 +985,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
                     }
 
-                    valid_set = true;
+                    should_writeout_setpoint = true;
                 } else if (strncmp(msg->pfrags[1], "standalone_power", strlen("standalone_power")) == 0) {
                     for (auto feature : standalone_power_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
@@ -996,7 +996,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         start_first_gen_soc.set_fims_float(msg->pfrags[2], range_check(msg_value.valuedouble, 100.0f, 0.0f));
                     }
 
-                    valid_set = true;
+                    should_writeout_setpoint = true;
                 } else if (strncmp(msg->pfrags[1], "site_operation", strlen("site_operation")) == 0) {
                     for (auto feature : site_operation_features_list) {
                         feature->handle_fims_set(msg->pfrags[2], msg_value);
@@ -1009,10 +1009,10 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         allow_gen_auto_restart.set_fims_bool(msg->pfrags[2], body_bool);
                     }
 
-                    valid_set = true;
+                    should_writeout_setpoint = true;
                     if (msg_value.type == cJSON_Number) {
                         // watchdog_pet only invalid cops writeout endpoint, all others true
-                        valid_set = (strcmp(msg->pfrags[2], "watchdog_pet") != 0);
+                        should_writeout_setpoint = (strcmp(msg->pfrags[2], "watchdog_pet") != 0);
                     }
                 }
             } else if (body_type == cJSON_Number)  // process all numeric sets here
@@ -1031,11 +1031,11 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         reserved_float_6.set_fims_float(msg->pfrags[2], body_float);
                         reserved_float_7.set_fims_float(msg->pfrags[2], body_float);
                         reserved_float_8.set_fims_float(msg->pfrags[2], body_float);
-                        valid_set = true;
+                        should_writeout_setpoint = true;
                     } else if (strcmp(msg->pfrags[1], "debug") == 0) {
                         if ((strcmp(msg->pfrags[2], "state") == 0) && (static_cast<states>(body_int) != current_state)) {
                             set_state(static_cast<states>(body_int));
-                            valid_set = true;
+                            should_writeout_setpoint = true;
                         }
                     }
                 }
@@ -1069,12 +1069,12 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                             clear_faults_flag.set_fims_bool(msg->pfrags[2], body_bool);
                             // Support everything except clear faults
                             if (strncmp(msg->pfrags[2], "clear_faults_flag", strlen("clear_faults_flag")) != 0)
-                                valid_set = true;
+                                should_writeout_setpoint = true;
                         }
                     } else if (strncmp(msg->pfrags[1], "input_sources", strlen("input_sources")) == 0) {
                         std::string new_selected_input = input_sources.set_source_enable_flag(msg->pfrags[2], body_bool);
                         input_source_status.value.set(new_selected_input);
-                        valid_set = true;
+                        should_writeout_setpoint = true;
                     } else if ((strncmp(msg->pfrags[1], "configuration", strlen("configuration")) == 0)) {
                         invert_poi_kW.set_fims_bool(msg->pfrags[2], body_bool);
                         reserved_bool_1.set_fims_bool(msg->pfrags[2], body_bool);
@@ -1093,7 +1093,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                         reserved_bool_14.set_fims_bool(msg->pfrags[2], body_bool);
                         reserved_bool_15.set_fims_bool(msg->pfrags[2], body_bool);
                         reserved_bool_16.set_fims_bool(msg->pfrags[2], body_bool);
-                        valid_set = true;
+                        should_writeout_setpoint = true;
                     } else if ((strncmp(msg->pfrags[1], "debug", strlen("debug")) == 0)) {
                         if (strcmp(msg->pfrags[2], "fault") == 0) {
                             if (body_bool)
@@ -1105,15 +1105,22 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
                 }
             } else
                 FPS_WARNING_LOG("features set message body type not expected. type: %d \n", body_type);
-        } else
-            FPS_WARNING_LOG("site manager set message error, null body found");
+        } else {
+            FPS_WARNING_LOG("site manager set message error, unexpected number of fragments %d instead of 3.", msg->nfrags);
+            if (msg->replyto != NULL)
+                p_fims->Send("set", msg->replyto, NULL, "Invalid URI");
+        }
 
         // Write out if the set matched one of the above categories
-        if (valid_set) {
+        if (should_writeout_setpoint) {
             std::string uri = "/" + std::string(msg->pfrags[0]);
             // All site/feature settings that are valid are persistent currently
             data_endpoint->setpoint_writeout(uri, msg->pfrags[2], &body_JSON);
         }
+
+        if (msg->replyto != NULL)
+            pFims->Send("set", msg->replyto, NULL, msg->body);
+
         cJSON_Delete(body_JSON);
     } else if (strcmp(msg->method, "get") == 0) {
         if (msg->replyto == NULL)
@@ -1129,7 +1136,7 @@ void Site_Manager::fims_data_parse(fims_message* msg) {
     }
 }
 
-void Site_Manager::send_FIMS(const char* method, const char* uri, const char* replyto, const char* body) {
+void Site_Manager::send_FIMS(const char* method, const char* uri, const char* replyto, const char* body_retrieval_uri) {
     // Clear buffer for use
     send_FIMS_buf.clear();
 
@@ -1143,8 +1150,8 @@ void Site_Manager::send_FIMS(const char* method, const char* uri, const char* re
     unsigned int nfrags = 0;
     int count = 0;
     int offset[MAX_URI_DEPTH];
-    for (int i = 0; body[i] != '\0' && count < MAX_URI_DEPTH; i++) {
-        if (body[i] == '/') {
+    for (int i = 0; body_retrieval_uri[i] != '\0' && count < MAX_URI_DEPTH; i++) {
+        if (body_retrieval_uri[i] == '/') {
             offset[count] = i;
             count++;
         }
@@ -1157,7 +1164,7 @@ void Site_Manager::send_FIMS(const char* method, const char* uri, const char* re
         return;
     }
     for (int i = 0; i < count; i++)
-        pfrags[i] = body + (offset[i] + 1);
+        pfrags[i] = body_retrieval_uri + (offset[i] + 1);
 
     if (nfrags == 1)  // get 1 fragment object
     {
@@ -1205,7 +1212,7 @@ void Site_Manager::send_FIMS(const char* method, const char* uri, const char* re
 
     if (string_body.empty())  // no match, print error and return
     {
-        FPS_ERROR_LOG("Site Manager FIMS message error - URI not matched %s\n", body);
+        FPS_ERROR_LOG("Site Manager FIMS message error - URI not matched %s\n", body_retrieval_uri);
         return;
     }
 

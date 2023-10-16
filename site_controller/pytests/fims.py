@@ -13,11 +13,14 @@ def fims(params: str) -> Dict:
     try:
         response = run(fims_cmd, universal_newlines=True, stdout=PIPE, stderr=sys.stderr, shell=True, check=True)
     except CalledProcessError:
-        return response_dict
+        return None
 
     if len(response.stdout) > 0:
         response.stdout.strip().splitlines()
-        response_dict = json.loads(response.stdout)
+        try:
+            response_dict = json.loads(response.stdout)
+        except json.decoder.JSONDecodeError:
+            return None
     return response_dict
 
 
@@ -27,16 +30,18 @@ def fims_get(uri: str) -> Dict:
     return response_dict
 
 
-def fims_set(uri: str, value: Any):
+def fims_set(uri: str, value: Any, reply_to: str = None) -> Dict:
     if isinstance(value, bool):
         my_value = str(value).lower()
     elif isinstance(value, dict) or isinstance(value, list):
         my_value = f"'{json.dumps(value)}'"
     else:
         my_value = value
-    # TODO: allow an optional reply-to uri
-    params = f"-m set -u {uri} -- {my_value}"
-    fims(params)
+    if reply_to == None:
+        params = f"-m set -u {uri} -- {my_value}"
+    else:
+        params = f"-m set -u {uri} -r {reply_to} -- {my_value}"
+    return fims(params)
 
 
 def fims_del(uri: str):
