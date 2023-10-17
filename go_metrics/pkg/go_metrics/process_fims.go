@@ -19,6 +19,9 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 		//check to see if the value is something we care about
 		_, isEchoOutputRegister := echoOutputToInputNum[msg.Uri]
 		_, isEchoPublishUri := echoPublishUristoEchoNum[msg.Uri]
+		if !isEchoOutputRegister {
+			_, isEchoOutputRegister = echoPublishUristoEchoNum[GetParentUri(msg.Uri)]
+		}
 		if _, ok := UriElements[msg.Uri]; ok || isEchoOutputRegister || isEchoPublishUri {
 			// if so, unmarshal the message body
 			var err error
@@ -176,7 +179,7 @@ func ProcessFims(msg fims.FimsMsgRaw) {
 // note that multiple options are possible
 func handleNakedMessage(msg *fims.FimsMsgRaw) {
 	var err error
-	//check if the uri has a corresponding echo input uri
+	// check if the uri has a corresponding echo input uri
 	// (if it's naked, it must be a single variable)
 	if echoObj, ok := uriToEchoObjectInputMap[GetParentUri((*msg).Uri)]; ok {
 
@@ -198,7 +201,7 @@ func handleNakedMessage(msg *fims.FimsMsgRaw) {
 
 	}
 
-	//check if the uri has a corresponding echo output
+	// check if the uri has a corresponding echo output
 	if (*msg).Method == "set" {
 		echoMutex.Lock()
 		if inputNum, ok := echoOutputToInputNum[(*msg).Uri]; ok {
@@ -210,6 +213,16 @@ func handleNakedMessage(msg *fims.FimsMsgRaw) {
 				err = json.Unmarshal((*msg).Body, &elementValue)
 				if err == nil {
 					f.Send(fims.FimsMsg{Method: "set", Uri: echoInputUri, Replyto: "", Body: elementValue})
+				}
+				elementValueMutex.Unlock()
+			}
+		} else if echoNum, ok := echoPublishUristoEchoNum[GetParentUri((*msg).Uri)]; ok {
+			_, ok := MetricsConfig.Echo[echoPublishUristoEchoNum[GetParentUri((*msg).Uri)]].Echo[GetUriElement((*msg).Uri)]
+			if ok {
+				elementValueMutex.Lock()
+				err = json.Unmarshal((*msg).Body, &elementValue)
+				if err == nil {
+					MetricsConfig.Echo[echoNum].Echo[GetUriElement((*msg).Uri)] = elementValue
 				}
 				elementValueMutex.Unlock()
 			}
@@ -547,6 +560,7 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 			}
 		} else if echoIndex, ok := echoPublishUristoEchoNum[(*msg).Uri]; ok {
 			echoMap := make(map[string]interface{}, 0)
+			sentAsSet := make(map[string]bool, 0)
 			err := json.Unmarshal((*msg).Body, &echoMap)
 			if err == nil {
 				echoMsgBodyMutex.Lock()
@@ -558,6 +572,7 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 						if oldName, ok := MetricsConfig.Echo[echoIndex].Inputs[inputIndex].Registers[newName]; ok {
 							echoMsgBody[oldName] = value
 							containsOneValue = true
+							sentAsSet[newName] = true
 						}
 					}
 					if containsOneValue {
@@ -565,10 +580,35 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 					}
 				}
 				echoMsgBodyMutex.Unlock()
+				for newName, value := range echoMap {
+					_, isEchoRegister := MetricsConfig.Echo[echoIndex].Echo[newName]
+					if isEchoRegister {
+						if _, sent := sentAsSet[newName]; !sent {
+							echoMutex.RUnlock()
+							echoMutex.Lock()
+							MetricsConfig.Echo[echoIndex].Echo[newName] = value
+							echoMutex.Unlock()
+							echoMutex.RLock()
+						}
+					}
+				}
+			}
+		} else if echoNum, ok := echoPublishUristoEchoNum[GetParentUri((*msg).Uri)]; ok {
+			_, ok := MetricsConfig.Echo[echoPublishUristoEchoNum[GetParentUri((*msg).Uri)]].Echo[GetUriElement((*msg).Uri)]
+			if ok {
+				elementValueMutex.Lock()
+				err := json.Unmarshal((*msg).Body, &elementValue)
+				if err == nil {
+					echoMutex.RUnlock()
+					echoMutex.Lock()
+					MetricsConfig.Echo[echoNum].Echo[GetUriElement((*msg).Uri)] = elementValue
+					echoMutex.Unlock()
+					echoMutex.RLock()
+				}
+				elementValueMutex.Unlock()
 			}
 		}
 		echoMutex.RUnlock()
-
 	}
 }
 
