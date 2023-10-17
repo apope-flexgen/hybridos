@@ -23,7 +23,7 @@
         },
         "qmax": {
             "default": 100000,
-            "expression": [{"MAX":["$child.Qlim", "$child.Qhigh", "$child.Sn"]}, "*", "$child",  "*", 1.2],
+            "expression": [{"MAX":["$child.Qlim", "$child.Qhigh", "$child.Sn", "$child.Qmax"]}, "*", "$child",  "*", 1.2],
             "units": "kVAR",
             "note0": "numChildren * MAX(childrenQlim)"
         },
@@ -193,7 +193,7 @@
             "default": []
         }
     },
-    "gens": {
+    "gen": {
         "Oncmd": {
             "default": true
         },
@@ -932,6 +932,29 @@
             "default": false,
             "note0": "Signals that ramp rates are measured in absolute value of power per second instead of percentage of maximum power per second"
         }
+    },
+    "dcbus": {
+        "Plim": {
+            "expression": [{"MAX": ["$parent.Slim", "$Parent.Plim", "$Parent.Pmax"]}, "*", 1.2, "*", "$child"],
+            "default": 8000.0,
+            "units": "kW"
+        },
+        "Vnom": {
+            "expression": [{"AVG": ["$child.Vnom"]}],
+            "default": 1330,
+            "units": "kW"
+        }
+    },
+    "dcdc": {
+        "Plim": {
+            "expression": [{"MAX": ["$parent.Slim", "$Parent.Plim", "$Parent.Pmax"]}, "*", "$child"],
+            "default": 8000.0,
+            "units": "kW"
+        },
+        "Vnom": {
+            "expression": [{"AVG": ["$child.Vnom"]}],
+            "default": 1330,
+            "units": "kW"
+        }
     }
 }
-
