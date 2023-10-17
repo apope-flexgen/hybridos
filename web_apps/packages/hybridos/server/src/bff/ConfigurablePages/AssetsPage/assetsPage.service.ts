@@ -139,10 +139,11 @@ export class AssetsPageService {
     let extension = individualMetadata.info.extension ?? '';
     const maybeNumber = Number(individualMetadata.info.numberOfItems);
     const numItems = isNaN(maybeNumber) ? -1 : maybeNumber;
+    const range = individualMetadata.info.range
     const baseName = individualMetadata.info.name ?? '';
     const itemName = individualMetadata.info.itemName ?? '';
 
-    numItems < 0 &&
+    (numItems < 0 && (range === undefined || range.length < 1))&&
       console.warn(
         `numberOfItems for ${queryUri} is not configured, getting initial data will fail`,
       );
@@ -156,13 +157,42 @@ export class AssetsPageService {
       return '';
     })();
 
-    for (let i = 1; i <= numItems; i++) {
-      const assetID = `${extension}${i < 10 ? leadingZero : ''}${i}`.substring(1);
-
-      initialRawData[assetID] = {
-        name: `${baseName} ${itemName} ${i}`,
-        ...this.getClothedBodyFieldsForConfiguredAsset(individualMetadata),
-      };
+    if (range) {
+      let numericExtensions = []
+      range.forEach((rangeItem) => {
+        if (typeof rangeItem === 'string' && rangeItem.includes('..')) {
+            const arrayOfRange = rangeItem.split('..')
+            const startNumber = Number(arrayOfRange[0]);
+            const endNumber = Number(arrayOfRange[1]);
+            if (startNumber > endNumber || Number.isNaN(startNumber) || Number.isNaN(endNumber)) {
+              console.warn(
+                `received an invalid string within range array for ${queryUri}, getting initial data will fail`,
+              );
+            }
+            for (var i = startNumber; i < endNumber + 1; i++) {
+              numericExtensions.push(i)
+            }
+        } else {
+          numericExtensions.push(Number(rangeItem))
+        }
+      })
+      numericExtensions.forEach((rangeItem) => {
+        const assetID = `${extension}${rangeItem < 10 ? leadingZero : ''}${rangeItem}`.substring(1);
+  
+        initialRawData[assetID] = {
+          name: `${baseName} ${itemName} ${rangeItem}`,
+          ...this.getClothedBodyFieldsForConfiguredAsset(individualMetadata),
+        };
+      })
+    } else {
+      for (let i = 1; i <= numItems; i++) {
+        const assetID = `${extension}${i < 10 ? leadingZero : ''}${i}`.substring(1);
+  
+        initialRawData[assetID] = {
+          name: `${baseName} ${itemName} ${i}`,
+          ...this.getClothedBodyFieldsForConfiguredAsset(individualMetadata),
+        };
+      }
     }
 
     return initialRawData;

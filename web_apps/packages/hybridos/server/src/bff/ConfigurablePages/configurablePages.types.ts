@@ -41,6 +41,7 @@ export interface metadataFromDBI {
     faultFields: string[];
     extension?: string;
     numberOfItems?: string | number;
+    range?: (string | number)[]
   };
   statuses: statusDataFromNakedBody[];
   summary: {
