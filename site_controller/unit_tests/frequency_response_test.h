@@ -41,8 +41,10 @@ public:
     void reset_slews(int diff) { slew_cmd_kw.reset_slew_target(diff); };
     bool get_in_recov() { return in_recovery.value.value_bool; };
     bool get_in_cooldown() { return in_cooldown.value.value_bool; };
+    float get_active_cmd_kw() { return active_cmd_kw.value.value_float; }
     // group setters
     void set_pfr_state(pfr_state);
+    void set_freeze_kw_cmd_flag(bool);
     void set_frrs_state(frrs_state, float active_cmd, float inactive_cmd);
     void set_ffr_state(ffr_state);
 };
@@ -102,6 +104,57 @@ TEST_F(frequency_response_test, pfr) {
         t_log.float_results.push_back({ test.output_power, actual_result.output_kw, "output_kw" });
         t_log.float_results.push_back({ 11.0F, actual_result.ess_max_potential, "ess max potential" });
         t_log.float_results.push_back({ 9.0F, actual_result.ess_min_potential, "ess min potential" });
+        t_log.check_solution();
+    }
+}
+
+// PFR #2 - PFRC latch
+TEST_F(frequency_response_test, pfr_2) {
+    typedef struct pfr_test {
+        int id;
+        pfr_state state;
+        float input_frequency;
+        float output_power;
+        bool freeze_kw_cmd;
+        bool set_should_apply;
+    } pfr_test;
+
+    //        state name             active_cmd     trig_freq   droop_freq      droop_limit
+    pfr_state uf_droop_limited = { 10.0F, 59.0F, 58.0F, true };
+
+    std::vector<pfr_test> tests = {
+        //  ID   state name             input_freq  out_pow freeze_kw_cmd set_should_apply
+        { 1, uf_droop_limited, 59.0F, 0.0F, false, true },  // latching disabled
+        { 2, uf_droop_limited, 59.0F, 0.0F, true, true },   // apply set because there is no deviation, despite latching enabled.
+        { 3, uf_droop_limited, 58.5F, 5.0F, false, true },  // latching disabled
+        { 4, uf_droop_limited, 58.5F, 5.0F, true, false },  // don't apply b/c there is an active incident
+    };
+    for (auto& test : tests) {
+        // log test identifier
+        test_logger t_log("pfr", test.id, tests.size());
+        // set state
+        fr_comp_mock.set_pfr_state(test.state);
+        fr_comp_mock.set_freeze_kw_cmd_flag(test.freeze_kw_cmd);
+        // set input. ess slew limits / rated power not used for calculations so they can be constant inputs
+        Frequency_Response_Inputs input = { 11.0F, 9.0F, 15.0F, test.input_frequency, { 1, 0 } };
+        // run test #1
+        Frequency_Response_Outputs actual_result = fr_comp_mock.frequency_response(input);
+        // append results. ess limits should never change in pfr
+        t_log.float_results.push_back({ test.output_power, actual_result.output_kw, "output_kw" });
+        t_log.float_results.push_back({ 11.0F, actual_result.ess_max_potential, "ess max potential" });
+        t_log.float_results.push_back({ 9.0F, actual_result.ess_min_potential, "ess min potential" });
+        // test #2 - if a SET to active_cmd_kw has effect due to freq_latch && active incident
+        float pre_pfrc = fr_comp_mock.get_active_cmd_kw();  // check initial pfrc
+        cJSON* to_set = cJSON_Parse("{}");
+        float arbitrary_kw_value = 42.0F;
+        cJSON_SetNumberValue(to_set, arbitrary_kw_value);
+        fr_comp_mock.handle_fims_set(to_set, "active_cmd_kw");
+        float post_pfrc = fr_comp_mock.get_active_cmd_kw();  // check pfrc after attempted set
+        if (test.set_should_apply) {
+            t_log.float_results.push_back({ arbitrary_kw_value, post_pfrc, "new kw value" });
+        } else {
+            t_log.float_results.push_back({ pre_pfrc, post_pfrc, "unchanged kw value" });
+        }
         t_log.check_solution();
     }
 }
@@ -235,7 +288,12 @@ void FR_Comp_Mock::set_pfr_state(pfr_state state) {
     output_kw.value.set(0.0F);
     // init
     ASSERT_EQ(initialize_state(60.0F), true);
-    reset_slews(1);  // called after initialize_state to override the slew reset that happened there
+    reset_slews(1);                                  // called after initialize_state to override the slew reset that happened there
+    active_cmd_kw.set_variable_id("active_cmd_kw");  // required for fims set
+}
+
+void FR_Comp_Mock::set_freeze_kw_cmd_flag(bool freeze_kw_cmd) {
+    freeze_active_cmd_flag.value.set(freeze_kw_cmd);
 }
 
 void FR_Comp_Mock::set_frrs_state(frrs_state state, float active_cmd, float inactive_cmd) {

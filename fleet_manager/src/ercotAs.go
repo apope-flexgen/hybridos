@@ -32,10 +32,11 @@ type fleetPoints struct {
 	baseloadCmdMw                 float64 // baseload MW cmd before limitation by defined range
 
 	// constants
-	baseloadCmdMinLimitMw float64
-	baseloadCmdMaxLimitMw float64
-	inactiveCmdMinLimitMw float64
-	inactiveCmdMaxLimitMw float64
+	baseloadCmdMinLimitMw    float64
+	baseloadCmdMaxLimitMw    float64
+	inactiveCmdMinLimitMw    float64
+	inactiveCmdMaxLimitMw    float64
+	pfrEnableRevisedCapacity bool
 
 	// site status monitoring
 	loadPseudoSwitchStatus muxBool
@@ -184,21 +185,33 @@ func (fPoints *fleetPoints) calculateBaseloadCmd(ffrRequirement float64) (baselo
 // Calculates a site's automatic PFR over-frequency command based on the site's chargeable power
 func (fPoints *fleetPoints) calculateAutoPfrDownCmd(s *site) (autoPfrDownCmd float64) {
 	siteMaxChargeLimit := fPoints.genMaxCharge.getSelect()
-	return math.Max(
-		siteMaxChargeLimit,
-		0,
-	)
+	pfrDownCmd := siteMaxChargeLimit
+	if fPoints.pfrEnableRevisedCapacity {
+		pfrDownCmd += math.Max(
+			fPoints.updatedBasepoint.load.getSelect(),
+			0,
+		)
+	}
+
+	return math.Max(pfrDownCmd, 0)
 }
 
 // Calculates a site's automatic PFR under-frequency command based on the minimum value of site's dischargeable power and the site's dischargeable power
 // minus the RRS-FFR responsibility
 func (fPoints *fleetPoints) calculateAutoPfrUpCmd(s *site) (autoPfrUpCmd float64) {
 	siteMaxDischargeLimit := fPoints.genMaxDischarge.getSelect()
+	pfrUpCmd := math.Min(
+		siteMaxDischargeLimit,
+		siteMaxDischargeLimit-s.freqResp.rrsFfrCmd.control.(float64),
+	)
+	if fPoints.pfrEnableRevisedCapacity {
+		pfrUpCmd += math.Max(
+			fPoints.updatedBasepoint.gen.getSelect(),
+			0,
+		)
+	}
 	return math.Max(
-		math.Min(
-			siteMaxDischargeLimit,
-			siteMaxDischargeLimit-s.freqResp.rrsFfrCmd.control.(float64),
-		),
+		pfrUpCmd,
 		0,
 	)
 }
@@ -527,6 +540,7 @@ func (fp *fleetPoints) buildObj() map[string]interface{} {
 	obj["baseload_cmd_max_limit_mw"] = fp.baseloadCmdMaxLimitMw
 	obj["inactive_cmd_min_limit_mw"] = fp.inactiveCmdMinLimitMw
 	obj["inactive_cmd_max_limit_mw"] = fp.inactiveCmdMaxLimitMw
+	obj["pfr_enable_revised_capacity"] = fp.pfrEnableRevisedCapacity
 	// monitoring
 	obj["updated_basepoint_sced"] = fp.updatedBasepointCompensatedMw
 	obj["baseload_cmd_mw"] = fp.baseloadCmdMw
@@ -655,6 +669,12 @@ func parseFleetPoints(cfgInterface interface{}) (*fleetPoints, error) {
 		return nil, fmt.Errorf("error retrieving inactive_cmd_max_limit_mw: %w", err)
 	}
 	fp.inactiveCmdMaxLimitMw = newFloat.(float64)
+
+	newBool, err := fg.ExtractValueWithType(cfg, "pfr_enable_revised_capacity", fg.BOOL)
+	if err != nil {
+		return nil, fmt.Errorf("error retrieving pfr_enable_revised_capacity: %w", err)
+	}
+	fp.pfrEnableRevisedCapacity = newBool.(bool)
 
 	fp.emergencyDownRamp = parseGLMuxFloat(cfg, "emergency_down_ramp_rate")
 	fp.emergencyUpRamp = parseGLMuxFloat(cfg, "emergency_up_ramp_rate")

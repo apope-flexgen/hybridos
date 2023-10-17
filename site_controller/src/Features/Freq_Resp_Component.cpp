@@ -164,6 +164,7 @@ void Freq_Resp_Component::end_active_response() {
     clock_gettime(CLOCK_MONOTONIC, &cooldown_over_time);
     cooldown_over_time.tv_sec += cooldown_duration_sec.value.value_int;
     in_cooldown.value.value_bool = true;
+    active_cmd_kw.value.value_float = latest_active_cmd_kw_received;
 }
 
 /**
@@ -286,8 +287,15 @@ void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* va
     bool body_bool = (body_type == cJSON_False) ? false : true;
 
     // find matching endpoint and handle SET
-    if (active_cmd_kw.set_fims_float(variable_id, body_float))
+    if (strcmp(variable_id, "active_cmd_kw") == 0) {
+        latest_active_cmd_kw_received = body_float;
+        if (!freeze_active_cmd_flag.value.value_bool || !active_response_status.value.value_bool) {
+            // Only allow SET to active_cmd_kw if latching disabled || no active response
+            active_cmd_kw.set_fims_float(variable_id, body_float);
+        }
         return;
+    }
+
     if (trigger_duration_sec.set_fims_int(variable_id, body_int))
         return;
     if (droop_limit_flag.set_fims_bool(variable_id, body_bool))
@@ -305,6 +313,8 @@ void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* va
     if (recovery_duration_sec.set_fims_int(variable_id, body_int))
         return;
     if (recovery_latch.set_fims_bool(variable_id, body_bool))
+        return;
+    if (freeze_active_cmd_flag.set_fims_bool(variable_id, body_bool))
         return;
 
     FPS_ERROR_LOG("FIMS SET with endpoint %s did not match any frequency response component endpoints.", variable_id);

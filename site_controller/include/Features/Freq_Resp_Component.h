@@ -62,12 +62,12 @@ protected:
     Fims_Object slew_rate_kw;
     int prev_slew_rate_kw;
     Fims_Object ess_slew_override;
+    Fims_Object freeze_active_cmd_flag;
     // outputs
     Fims_Object active_response_status;
     Fims_Object in_cooldown;
     Fims_Object in_recovery;
     Fims_Object output_kw;
-
     std::vector<std::pair<Fims_Object*, std::string>> variable_ids = {
         // inputs
         { &active_cmd_kw, "active_cmd_kw" },
@@ -84,6 +84,7 @@ protected:
         { &cooldown_duration_sec, "cooldown_duration_sec" },
         { &slew_rate_kw, "slew_rate_kw" },
         { &ess_slew_override, "ess_slew_override" },
+        { &freeze_active_cmd_flag, "freeze_active_cmd_flag" },
         // outputs
         { &active_response_status, "active_response_status" },
         { &in_cooldown, "in_cooldown" },
@@ -96,8 +97,9 @@ protected:
     timespec recovery_over_time;       // Clock time designating end of recovery countdown
     timespec cooldown_over_time;       // Clock time when next trigger event is allowed to happen
     std::vector<std::pair<float, float>> droop_curve;
-    Slew_Object slew_cmd_kw;     // rate-limits the output
-    float signed_active_cmd_kw;  // tracks the Fims_Object but + for UF responses and - for OF responses, whereas Fims_Object is always +
+    Slew_Object slew_cmd_kw;              // rate-limits the output
+    float signed_active_cmd_kw;           // tracks the Fims_Object but + for UF responses and - for OF responses, whereas Fims_Object is always +
+    float latest_active_cmd_kw_received;  // Tracks latest active_cmd_kw, used for unlatching when event is resolved.
 
     void sync_active_cmd_kw();
     void build_droop_curve();
