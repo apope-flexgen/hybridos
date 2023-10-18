@@ -1083,6 +1083,14 @@
                                 "name": "Response Component Output",
                                 "unit": "kW",
                                 "ui_type": "status"
+                            },
+                            "freeze_active_cmd_flag":
+                            {
+                                "name": "Freeze kW Command During Incident",
+                                "ui_type": "none",
+                                "type": "enum_slider",
+                                "var_type": "Bool",
+                                "value": false
                             }
                         },
                         {
@@ -1202,6 +1210,14 @@
                                 "name": "Response Component Output",
                                 "unit": "kW",
                                 "ui_type": "status"
+                            },
+                            "freeze_active_cmd_flag":
+                            {
+                                "name": "Freeze kW Command During Incident",
+                                "ui_type": "none",
+                                "type": "enum_slider",
+                                "var_type": "Bool",
+                                "value": false
                             }
                         },
                         {
@@ -1321,6 +1337,14 @@
                                 "name": "Response Component Output",
                                 "unit": "kW",
                                 "ui_type": "status"
+                            },
+                            "freeze_active_cmd_flag":
+                            {
+                                "name": "Freeze kW Command During Incident",
+                                "ui_type": "none",
+                                "type": "enum_slider",
+                                "var_type": "Bool",
+                                "value": false
                             }
                         }
                     ]
