@@ -103,8 +103,8 @@ export default function useScheduler(currentUser: { role: string }, product: str
 
   const updateTimeZoneData = useCallback(
     (data: any) => {
-      const siteTimeZones = siteId ? [data[siteId] as TimeZones] : [];
-      setTimezones(siteTimeZones);
+      const siteTimeZoneArr = siteId ? [data[siteId] as TimeZones] : [];
+      setTimezones(siteTimeZoneArr);
     },
     [siteId],
   );

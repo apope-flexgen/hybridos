@@ -111,7 +111,6 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
       {mappedVariables}
       <Box sx={{ width: '100%', display: 'flex', gap: '8px' }}>
         <DatePicker
-          disablePast
           disabled={disableDateField || disableAllFields || pastEvent || activeEvent}
           fullWidth
           label={addEventLabels.startDate.label}
@@ -121,7 +120,6 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
           value={state.date}
         />
         <MinuteTimePicker
-          disablePast={state.date && state.date.isSame(dayjs(), 'day')}
           disabled={disableAllFields || pastEvent || activeEvent}
           width='small'
           onHourChange={(e) => {
@@ -138,7 +136,6 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
       </Box>
       <Box sx={{ width: '100%', display: 'flex', gap: '8px' }}>
         <DatePicker
-          disablePast
           disabled={disableDateField || disableAllFields || pastEvent}
           fullWidth
           label={addEventLabels.endDate.label}
@@ -148,7 +145,6 @@ const InitialOptions: React.FunctionComponent<InitialOptionsProps> = ({
           value={state.endDate}
         />
         <MinuteTimePicker
-          disablePast={state.endDate && state.endDate.isSame(dayjs(), 'day')}
           disabled={disableAllFields || pastEvent}
           width='small'
           onHourChange={(e) => {

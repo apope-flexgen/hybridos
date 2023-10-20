@@ -1,6 +1,6 @@
 // TODO: fix lint
 /* eslint-disable max-lines */
-import { ThemeType } from '@flexgen/storybook';
+import { ThemeType, Timezones } from '@flexgen/storybook';
 import { createTheme, Theme } from '@mui/material/styles';
 import dayjs from 'dayjs';
 import { SchedulerEvent, schedulerEventForAPI } from 'shared/types/dtos/scheduler.dto';
@@ -54,7 +54,10 @@ export const checkIfStartBeforeEnd = (state: EditEventState): boolean => {
   );
 };
 
-export const checkIfStartOrEndInPast = (state: EditEventState): boolean => {
+export const checkIfStartOrEndInPast = (
+  state: EditEventState,
+  timezone: Timezones
+): boolean => {
   if (
     state.date === null
     || state.endDate === null
@@ -63,16 +66,16 @@ export const checkIfStartOrEndInPast = (state: EditEventState): boolean => {
     || state.endMinutes === ''
     || state.endHours === ''
   ) return false;
-  const startTimeOfNewEvent = dayjs(`${state.date?.format('YYYY-MM-DD')} ${state.startTime}`);
-  const endTimeOfNewEvent = dayjs(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`);
-  const now = dayjs().subtract(1, 'minute');
+  const startTimeOfNewEvent = dayjs.tz(`${state.date?.format('YYYY-MM-DD')} ${state.startTime}`, timezone);
+  const endTimeOfNewEvent = dayjs.tz(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`, timezone);
+  const now = dayjs().tz(timezone).subtract(1, 'minute');
   return startTimeOfNewEvent.isBefore(now) || endTimeOfNewEvent.isBefore(now);
 };
 
-export const checkIfEndInPast = (state: EditEventState): boolean => {
+export const checkIfEndInPast = (state: EditEventState, timezone: Timezones): boolean => {
   if (state.endDate === null || state.endMinutes === '' || state.endHours === '') return false;
-  const endTimeOfNewEvent = dayjs(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`);
-  const now = dayjs().subtract(1, 'minute');
+  const endTimeOfNewEvent = dayjs.tz(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`, timezone);
+  const now = dayjs().tz(timezone).subtract(1, 'minute');
   return endTimeOfNewEvent.isBefore(now);
 };
 

@@ -1,22 +1,27 @@
 /* eslint-disable max-lines */
+import { TimeZones, Timezones } from '@flexgen/storybook';
 import dayjs from 'dayjs';
 import { SchedulerEvent } from 'shared/types/dtos/scheduler.dto';
 import { VariableValues, DaysSelected } from 'src/pages/Scheduler/SchedulerTypes';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const setUpVariablesValues = (event: SchedulerEvent, dispatch: React.Dispatch<any>) => {
   const tempVariableValues: VariableValues[] = [];
   if (!event.variables) return;
   Object.keys(event.variables).forEach((key) => {
-    tempVariableValues.push({
-      name: key,
-      // TODO: fix lint
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      value:
-        typeof event.variables[key] === 'string'
+    if (event.variables) {
+      tempVariableValues.push({
+        name: key,
+        value:
+          typeof event.variables?.[key] === 'string'
           ? event.variables[key]
-          : event.variables[key].toString(),
-    });
+          : event.variables?.[key].toString() || "",
+      });
+    }
   });
   dispatch({ type: 'setVariableValues', payload: tempVariableValues });
 };
@@ -73,12 +78,19 @@ export const applyChangesRadios = [
 
 export function padStart(num: number, size: number) {
   const s = `000000${num}`;
-  return s.substr(s.length - size);
+  return s.substring(s.length - size);
 }
 
-export const getNewStartDate = (startTime: string, repeatStart: string): string => {
-  const date = dayjs(repeatStart).format('MM-DD-YYYY');
-  return dayjs(`${date} ${startTime}`).format();
+export const getNewStartDate = (
+  startTime: string, 
+  repeatStart: string, 
+  timezone?: TimeZones
+): string => {
+  dayjs.tz.setDefault(timezone)
+  const hour = Number(startTime.split(":")[0])
+  const minute = Number(startTime.split(":")[1])
+  const date = dayjs.tz(repeatStart, timezone).set('hour', hour).set('minute', minute)
+  return date.format();
 };
 
 export const initializeEventRepeat = (event: SchedulerEvent, dispatch: React.Dispatch<any>) => {
@@ -135,8 +147,8 @@ export const initializeEventRepeat = (event: SchedulerEvent, dispatch: React.Dis
   }
 };
 
-export const checkIfEventInPast = (event: SchedulerEvent) => {
-  const startTimeFromEvent = dayjs(event.start_time);
+export const checkIfEventInPast = (event: SchedulerEvent, timezone: Timezones) => {
+  const startTimeFromEvent = dayjs(event.start_time, timezone);
   // 10 seconds is subtracted from event end time to alleviate issue where fims message that event has ended is
   // sent a few seconds prior to the actual minute being completed
   const endTimeFromEvent = startTimeFromEvent
@@ -158,35 +170,37 @@ export const initializeEditModal = (
   event: SchedulerEvent,
   dispatch: React.Dispatch<any>,
   modeIds: { name: string | undefined; id: string | undefined }[],
+  timezone: TimeZones,
 ) => {
   const mode = modeIds.find((m) => m.id === event.mode);
-  const endTime = dayjs(event.start_time).add(event.duration, 'm');
+  const startTime =  event.start_time ? dayjs(event.start_time).tz(timezone) : null;
+  const endTime = startTime ?  startTime.add(event.duration, 'm') : null;
   dispatch({
     type: 'setStartTime',
-    payload: dayjs(event.start_time).format('HH:mm'),
+    payload: startTime?.format('HH:mm') || '',
   });
   dispatch({
     type: 'setStartHours',
-    payload: dayjs(event.start_time).format('HH'),
+    payload: startTime?.format('HH') || '',
   });
   dispatch({
     type: 'setStartMinutes',
-    payload: dayjs(event.start_time).format('mm'),
+    payload: startTime?.format('mm') || '',
   });
   dispatch({
     type: 'setEndTime',
-    payload: dayjs(event.start_time).add(event.duration, 'minutes').format('HH:mm'),
+    payload:  startTime?.add(event.duration, 'minutes').format('HH:mm') || '',
   });
   dispatch({
     type: 'setEndHours',
-    payload: dayjs(event.start_time).add(event.duration, 'minutes').format('HH'),
+    payload:  startTime?.add(event.duration, 'minutes').format('HH') || '',
   });
   dispatch({
     type: 'setEndMinutes',
-    payload: dayjs(event.start_time).add(event.duration, 'minutes').format('mm'),
+    payload: startTime?.add(event.duration, 'minutes').format('mm') || '',
   });
-  dispatch({ type: 'setDate', payload: dayjs(event.start_time) });
-  dispatch({ type: 'setEndDate', payload: dayjs(endTime) });
+  dispatch({ type: 'setDate', payload: startTime });
+  dispatch({ type: 'setEndDate', payload: endTime });
   dispatch({ type: 'setMode', payload: mode?.name });
   dispatch({ type: 'setModeId', payload: mode?.id });
   setUpVariablesValues(event, dispatch);

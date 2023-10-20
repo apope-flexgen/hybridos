@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { Timezones } from '@flexgen/storybook';
 import { SelectChangeEvent } from '@mui/material';
 import dayjs from 'dayjs';
 import {
@@ -73,16 +74,17 @@ export const mapModesToVariables = (
 export const isOverlappingStartTime = (
   state: EditEventState,
   events: SchedulerEvent[],
+  timezone: Timezones,
   editEvent?: SchedulerEvent,
 ) => {
   let overlapping = false;
   if (state.startTime !== '' && state.endTime !== '') {
-    const startTimeOfNewEvent = dayjs(`${state.date?.format('YYYY-MM-DD')} ${state.startTime}`);
-    const endTimeOfNewEvent = dayjs(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`);
+    const startTimeOfNewEvent = dayjs.tz(`${state.date?.format('YYYY-MM-DD')} ${state.startTime}`, timezone);
+    const endTimeOfNewEvent = dayjs.tz(`${state.endDate?.format('YYYY-MM-DD')} ${state.endTime}`, timezone);
 
     events.map((existingEvent) => {
-      const startTimeOfExistingEvent = dayjs(existingEvent.start_time);
-      const endTimeOfExistingEvent = dayjs(existingEvent.start_time).add(
+      const startTimeOfExistingEvent = dayjs(existingEvent.start_time).tz(timezone);
+      const endTimeOfExistingEvent = startTimeOfExistingEvent.add(
         existingEvent.duration,
         'm',
       );

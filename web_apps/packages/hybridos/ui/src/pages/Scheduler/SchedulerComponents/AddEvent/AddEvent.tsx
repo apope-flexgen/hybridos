@@ -50,7 +50,7 @@ const AddEvent: React.FC = () => {
 
   const [state, dispatch] = useReducer(reducer, initialEditState);
 
-  const { modes, disableAllFields } = useSchedulerContext();
+  const { modes, disableAllFields, timezone } = useSchedulerContext();
   const { addEvent, eventsForUi } = useEventSchedulerContext();
 
   const theme = useTheme() as ThemeType;
@@ -95,10 +95,10 @@ const AddEvent: React.FC = () => {
   }, [state]);
 
   const addDisabled = useMemo(() => (
-    isOverlappingStartTime(state, eventsForUi)
+    isOverlappingStartTime(state, eventsForUi, timezone[0])
       || isDurationOver24Hours(state)
       || checkIfStartBeforeEnd(state)
-      || checkIfStartOrEndInPast(state)
+      || checkIfStartOrEndInPast(state, timezone[0])
   ), [state, eventsForUi]);
 
   const handleClear = () => {
@@ -113,6 +113,7 @@ const AddEvent: React.FC = () => {
       state.startTime,
       state.endTime,
       state.endDate,
+      timezone[0],
     );
     const repeat = createRepeatObject(state, state.exceptions);
     const typedVariableValues = handleVariableValues(state.variableValues, state.modeId, modes);
@@ -177,14 +178,14 @@ const AddEvent: React.FC = () => {
           handleAddEvent={handleAddEvent}
           handleClear={handleClear}
         />
-        {addDisabled && isOverlappingStartTime(state, eventsForUi) && (
+        {addDisabled && isOverlappingStartTime(state, eventsForUi, timezone[0]) && (
           <Typography
             text={addEventLabels.cannotOverlapError.label}
             variant="labelS"
             color="error"
           />
         )}
-        {addDisabled && checkIfStartOrEndInPast(state) && (
+        {addDisabled && checkIfStartOrEndInPast(state, timezone[0]) && (
           <Typography
             text={addEventLabels.startOrEndInPastError.label}
             variant="labelS"

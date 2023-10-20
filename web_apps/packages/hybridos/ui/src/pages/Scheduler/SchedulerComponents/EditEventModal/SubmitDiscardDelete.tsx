@@ -46,14 +46,14 @@ const SubmitDiscardDelete: React.FunctionComponent<SubmitDiscardDeleteProps> = (
   const [deleteEventClicked, setDeleteEventClicked] = useState(false);
   const [deleteSeriesClicked, setDeleteSeriesClicked] = useState(false);
 
-  const { disableAllFields } = useSchedulerContext();
+  const { disableAllFields, timezone } = useSchedulerContext();
   const { eventsForUi } = useEventSchedulerContext();
 
   const saveDisabled = useMemo(() => {
     return (
       isDurationOver24Hours(state) ||
-      isOverlappingStartTime(state, eventsForUi, event) ||
-      checkIfEndInPast(state) ||
+      isOverlappingStartTime(state, eventsForUi, timezone[0] || 'America/New_York', event) ||
+      checkIfEndInPast(state, timezone[0]) ||
       checkIfStartBeforeEnd(state)
     );
   }, [state]);
@@ -126,10 +126,10 @@ const SubmitDiscardDelete: React.FunctionComponent<SubmitDiscardDeleteProps> = (
             onClick={handleSave}
           />
         </Box>
-        {saveDisabled && checkIfEndInPast(state) && !pastEvent && (
+        {saveDisabled && checkIfEndInPast(state, timezone[0]) && !pastEvent && (
           <Typography text={addEventLabels.endInPastError.label} variant='labelS' color='error' />
         )}
-        {saveDisabled && isOverlappingStartTime(state, eventsForUi, event) && (
+        {saveDisabled && isOverlappingStartTime(state, eventsForUi, timezone[0] || 'America/New_York', event) && (
           <Typography
             text={addEventLabels.cannotOverlapError.label}
             variant='labelS'

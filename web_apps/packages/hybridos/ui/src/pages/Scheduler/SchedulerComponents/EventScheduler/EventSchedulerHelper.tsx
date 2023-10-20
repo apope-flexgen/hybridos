@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable no-param-reassign */
-import { Views } from '@flexgen/storybook';
+import { Timezones, Views } from '@flexgen/storybook';
 import dayjs, { Dayjs, ManipulateType, OpUnitType } from 'dayjs';
 import { ApiMode, RepeatForAPI, SchedulerEvent } from 'shared/types/dtos/scheduler.dto';
 import {
@@ -10,6 +10,11 @@ import {
   VariableValues,
 } from 'src/pages/Scheduler/SchedulerTypes';
 import { v4 as uuid } from 'uuid';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const schedulerURLS = {
   getEvents: '/scheduler/events' as SchedulerUrls,
@@ -32,23 +37,28 @@ export const views = {
   minute: 'minutes',
 };
 
-export const getStartAndEndTimeFrame = (value: Dayjs | null, view: Views) => {
-  let startTime: Dayjs = dayjs(value).subtract(48, 'h');
-  let endTime: Dayjs = dayjs(value).add(48, 'h');
+export const getStartAndEndTimeFrame = (
+  value: Dayjs | null, 
+  view: Views,
+  timezone: Timezones
+) => {
+  dayjs.tz.setDefault(timezone)
+  let startTime: Dayjs = dayjs.tz(value).subtract(48, 'h');
+  let endTime: Dayjs = dayjs.tz(value).add(48, 'h');
 
   if (view === (views.month as Views) || view === (views.twoWeeks as Views)) {
-    startTime = dayjs(value)
+    startTime = dayjs.tz(value)
       .startOf(views.week as OpUnitType)
       .subtract(48, 'h');
-    const endOfMonth = dayjs(value).endOf(views.month as OpUnitType);
-    endTime = dayjs(endOfMonth)
+    const endOfMonth = dayjs.tz(value).endOf(views.month as OpUnitType);
+    endTime = dayjs.tz(endOfMonth)
       .add(1, views.day as ManipulateType)
       .endOf(views.month as OpUnitType);
   } else if (view === (views.week as Views)) {
-    startTime = dayjs(value)
+    startTime = dayjs.tz(value)
       .startOf(views.week as OpUnitType)
       .subtract(48, 'h');
-    endTime = dayjs(value).endOf(views.week as OpUnitType);
+    endTime = dayjs.tz(value).endOf(views.week as OpUnitType);
   }
 
   return { startTime, endTime };

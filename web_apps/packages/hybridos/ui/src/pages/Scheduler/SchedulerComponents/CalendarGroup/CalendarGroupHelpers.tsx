@@ -1,7 +1,12 @@
-import { IconList, Views } from '@flexgen/storybook';
+import { IconList, Timezones, Views } from '@flexgen/storybook';
 import Calendar from '@toast-ui/calendar';
 import dayjs, { Dayjs } from 'dayjs';
 import { Tab } from 'src/pages/Scheduler/SchedulerTypes';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone)
 
 const handleWeekDisplay = (rangeStart: any, rangeEnd: any) => {
   const date = rangeStart.getDate();
@@ -95,9 +100,10 @@ export const formatStartTime = (
   startTime: string,
   endTime: string,
   endDate: Dayjs | null,
+  timezone: Timezones
 ) => {
-  const startTimeAsDayJs = dayjs(`${date?.format('YYYY-MM-DD')} ${startTime}`);
-  const endTimeAsDayJs = dayjs(`${endDate?.format('YYYY-MM-DD')} ${endTime}`);
+  const startTimeAsDayJs = dayjs.tz(`${date?.format('YYYY-MM-DD')} ${startTime}`, timezone);
+  const endTimeAsDayJs = dayjs.tz(`${endDate?.format('YYYY-MM-DD')} ${endTime}`, timezone);
   const duration = endTimeAsDayJs.diff(startTimeAsDayJs, 'minute');
   const startUTC = startTimeAsDayJs.format();
 

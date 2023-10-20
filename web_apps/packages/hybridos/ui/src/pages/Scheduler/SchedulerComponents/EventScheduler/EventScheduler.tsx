@@ -81,12 +81,11 @@ const EventScheduler = ({ setIsLoading, schedulerType }: EventSchedulerProps) =>
   const { siteId, timezone, events, modes, fmSites, setSiteId, connected } = useSchedulerContext();
 
   const axiosInstance = useAxiosWebUIInstance();
-  const theme = useTheme() as ThemeType;
 
   // get all events that will occur within the time frame displayed
   const getEventsWithinTimeFrame = useCallback(() => {
     setIsLoading(true);
-    const { startTime, endTime } = getStartAndEndTimeFrame(value, view);
+    const { startTime, endTime } = getStartAndEndTimeFrame(value, view, timezone[0]);
 
     const eventsFromAPI = events === null || events[siteId] === undefined ? [] : events[siteId];
 

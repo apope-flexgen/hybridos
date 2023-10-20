@@ -17,6 +17,11 @@ import { Mode, ModeColors } from 'src/pages/Scheduler/SchedulerTypes';
 import { useTheme } from 'styled-components';
 import { initialEventObject, recurringString } from './CalendarGroupHelpers';
 import ViewDisplay from './ViewDisplay';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone)
 
 const CalendarGroup: React.FC = () => {
   const [displayEvents, setDisplayEvents] = useState<any[] | undefined>([]);
@@ -78,7 +83,7 @@ const CalendarGroup: React.FC = () => {
     // eslint-disable-next-line array-callback-return
     eventsForUi.map((event: any, index: any) => {
       const modeName = getModeName(event);
-      const startTime = dayjs(event.start_time);
+      const startTime = dayjs(event.start_time).tz(timezone[0]);
       const endTime = startTime.add(event.duration, views.minute as ManipulateType);
       tempDisplayEvents.push({
         id: index,
@@ -89,8 +94,14 @@ const CalendarGroup: React.FC = () => {
             ? ['task']
             : undefined,
         isReadOnly: true,
-        start: startTime.toDate(),
-        end: endTime.toDate(),
+        start: 
+          view === (views.twoWeeks as Views) || view === (views.month as Views) 
+          ? new Date(startTime.format('YYYY-MM-DD HH:mm:ss')) 
+          : startTime.toDate(),
+        end: 
+          view === (views.twoWeeks as Views) || view === (views.month as Views) 
+          ? new Date(endTime.format('YYYY-MM-DD HH:mm:ss'))
+          : endTime.toDate(),
         recurrenceRule: event.repeat.end_count === 1 ? '' : recurringString,
         customStyle: {
           border:

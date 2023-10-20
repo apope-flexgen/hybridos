@@ -49,7 +49,6 @@ import {
 import { editEventLabels } from 'src/pages/Scheduler/SchedulerLabels';
 import { EventVariables } from 'src/pages/Scheduler/SchedulerTypes';
 import { useTheme } from 'styled-components';
-import dayjs from 'dayjs';
 
 export interface EditEventModalProps {
   // Whether or not the modal is open
@@ -84,7 +83,7 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
   const [pastEvent, setPastEvent] = useState<boolean>(false);
   const [activeEvent, setActiveEvent] = useState<boolean>(false);
 
-  const { modes, events, disableAllFields } = useSchedulerContext();
+  const { modes, events, disableAllFields, timezone } = useSchedulerContext();
   const { siteId, addException, updateEvent, addEvent } = useEventSchedulerContext();
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -105,8 +104,8 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
         : undefined;
     const recurringDateWithNewStart =
       parentEvent && parentEvent.start_time
-        ? getNewStartDate(state.startTime, parentEvent.start_time)
-        : getNewStartDate(state.startTime, startUTC);
+        ? getNewStartDate(state.startTime, parentEvent.start_time, timezone[0])
+        : getNewStartDate(state.startTime, startUTC, timezone[0]);
     const typedVariableValues = handleVariableValues(state.variableValues, state.modeId, modes);
 
     if (applyChangesTo.allInSeries) {
@@ -142,6 +141,7 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
       state.startTime,
       state.endTime,
       state.endDate,
+      timezone[0] || 'America/New_York'
     );
     const typedVariableValues = handleVariableValues(state.variableValues, state.modeId, modes);
 
@@ -200,7 +200,7 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
 
   // load edit modal with inital values from the event passed in
   useEffect(() => {
-    setPastEvent(checkIfEventInPast(event));
+    setPastEvent(checkIfEventInPast(event, timezone[0] || 'America/New_York'));
     setActiveEvent(checkIfEventIsActive(event));
 
     const tempModeIds: { name: string | undefined; id: string | undefined }[] = [];
@@ -214,7 +214,7 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
     setEditRecurring(false);
     setApplyChangesTo(initialApplyChangesTo);
 
-    initializeEditModal(event, dispatch, tempModeIds);
+    initializeEditModal(event, dispatch, tempModeIds, timezone[0] || 'America/New_York');
   }, [event, discardClicked, modes, events]);
 
   // if the user changes the mode, update the varaibles
@@ -236,7 +236,7 @@ const EditEventModal: React.FunctionComponent<EditEventModalProps> = ({
   const onClose = () => {
     setDiscardClicked(true);
     setEditModalOpen(false);
-    initializeEditModal(event, dispatch, modeIds);
+    initializeEditModal(event, dispatch, modeIds, timezone[0]);
   };
 
   let modalTitle = editEventLabels.title.eventLabel;
