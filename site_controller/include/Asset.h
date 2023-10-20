@@ -28,6 +28,7 @@
 #include <Fims_Object.h>
 #include <macros.h>
 #include <Types.h>
+#include <Config_Validation_Result.h>
 class Type_Configurator;
 
 struct statusData {
@@ -40,7 +41,7 @@ struct fimsCtl {
     fimsCtl();
     ~fimsCtl();
     bool makeJSONObject(fmt::memory_buffer& buf, const char* const var = NULL, bool configurable_asset = false);
-    bool configure(cJSON* varJson, jsonBuildOption cJoption, void* display, valueType numType, displayType uitype, bool varEnabled = true, bool boolStr = false);
+    Config_Validation_Result configure(cJSON* varJson, jsonBuildOption cJoption, void* display, valueType numType, displayType uitype, bool varEnabled = true, bool boolStr = false);
     void* pDisplay;
     char* varName;
     char* unit;
@@ -92,7 +93,7 @@ public:
     virtual ~Asset() = default;
 
     // configuration
-    bool configure(Type_Configurator* configurator);
+    Config_Validation_Result configure(Type_Configurator* configurator);
 
     // status
     std::string get_name(void);
@@ -169,27 +170,27 @@ protected:
     // Indicates whether this is the primary controller (true) or running in shadow mode (false)
     bool* is_primary;
     // configuration
-    bool parse_variable(cJSON* var_json, std::string comp_id);
+    Config_Validation_Result parse_variable(cJSON* var_json, std::string comp_id);
     void var_maps_insert(Fims_Object* variable, std::map<std::string, std::vector<Fims_Object*>>* const component_var_map);
     std::string build_asset_variable_uri(const char* var);
-    bool validate_config();
-    bool configure_common_asset_instance_vars(Type_Configurator* configurator);
-    bool configure_component_vars(Type_Configurator* configurator);
-    bool configure_common_asset_fims_vars(Type_Configurator* configurator);
-    bool configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type = Float, float default_float = 0.0, int default_int = 0, bool default_bool = false, bool comes_from_component = true,
-                                   const char* var_name = "", const char* var_units = "", int var_scaler = 1);
+    Config_Validation_Result validate_config();
+    Config_Validation_Result configure_common_asset_instance_vars(Type_Configurator* configurator);
+    Config_Validation_Result configure_component_vars(Type_Configurator* configurator);
+    Config_Validation_Result configure_common_asset_fims_vars(Type_Configurator* configurator);
+    Config_Validation_Result configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type = Float, float default_float = 0.0, int default_int = 0, bool default_bool = false,
+                                                       bool comes_from_component = true, const char* var_name = "", const char* var_units = "", int var_scaler = 1);
     void update_fims_var(Fims_Object* fims_var, valueType type, float default_float, int default_int, bool default_bool, const char* var_id = "", const char* var_name = "", const char* var_units = "", int var_scaler = 1);
-    bool configure_watchdog_vars();
-    bool configure_component_local_mode_vars(Type_Configurator* configurator);
+    Config_Validation_Result configure_watchdog_vars();
+    Config_Validation_Result configure_component_local_mode_vars(Type_Configurator* configurator);
     void add_dynamic_variables_to_maps(Type_Configurator* configurator);
-    virtual bool configure_typed_asset_fims_vars(Type_Configurator* configurator) = 0;
+    virtual Config_Validation_Result configure_typed_asset_fims_vars(Type_Configurator* configurator) = 0;
     /**
      * Here is where the connection between asset and component var maps is severed, so that the raw values will still be sourced from
      * components, while the calculated values will be sourced from the asset's calculated variables
      */
-    virtual bool replace_typed_raw_fims_vars() { return true; };
-    virtual bool configure_typed_asset_instance_vars(Type_Configurator* configurator) = 0;
-    virtual bool configure_ui_controls(Type_Configurator* configurator) = 0;
+    virtual Config_Validation_Result replace_typed_raw_fims_vars() { return Config_Validation_Result(true, ""); };
+    virtual Config_Validation_Result configure_typed_asset_instance_vars(Type_Configurator* configurator) = 0;
+    virtual Config_Validation_Result configure_ui_controls(Type_Configurator* configurator) = 0;
     std::string name;
     std::string asset_id;
     std::list<const char*> required_variables;

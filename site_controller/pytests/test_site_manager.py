@@ -83,6 +83,5 @@ from pytests.cases.standalone_pfr import test_pfr_untracked_load, test_pfr_offse
 def test_site_manager(request: pytest.FixtureRequest, current_test: Steps):
     # Extract the pytest id
     Site_Controller_Instance.get_instance()  # Lazy initialization
-    current_id = request.node.name[request.node.name.find(
-        "[")+1:request.node.name.find("]")]
+    current_id = request.node.name[request.node.name.find("[")+1:request.node.name.find("]")]
     current_test.run_steps(current_id)

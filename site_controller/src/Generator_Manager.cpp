@@ -484,7 +484,8 @@ void Generator_Manager::configure_base_class_list() {
 Asset* Generator_Manager::build_new_asset(void) {
     Asset_Generator* asset = new Asset_Generator;
     if (asset == NULL) {
-        FPS_ERROR_LOG("Generator_Manager::build_new_asset ~ Generator %ld: Memory allocation error.\n", pGens.size() + 1);
+        FPS_ERROR_LOG("There is something wrong with this build. Generator %zu: Memory allocation error.", pGens.size() + 1);
+        exit(1);
     }
     numParsed++;
     return asset;
@@ -495,7 +496,9 @@ void Generator_Manager::append_new_asset(Asset* asset) {
 }
 
 // After configuring individual asset instances, this function finishes configuring the Generator Manager
-bool Generator_Manager::configure_type_manager(Type_Configurator* configurator) {
+Config_Validation_Result Generator_Manager::configure_type_manager(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     cJSON* gen_root = configurator->asset_type_root;
 
     // give each asset a pointer to the LDSS object so it can reference the state variables
@@ -505,16 +508,16 @@ bool Generator_Manager::configure_type_manager(Type_Configurator* configurator) 
     // parse LDSS static run priorities out of assets.json
     cJSON* ldss_static_run_priorities = cJSON_HasObjectItem(gen_root, "ldss_static_run_priorities") ? cJSON_GetObjectItem(gen_root, "ldss_static_run_priorities") : NULL;
     if (ldss_static_run_priorities == NULL) {
-        FPS_ERROR_LOG("Failed to find ldss_static_run_priorities in generator variables section of assets.json.\n");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to find ldss_static_run_priorities in generator variables section of assets.json.", configurator->p_manager->get_asset_type_id())));
     }
 
     // pass static run priorities to LDSS for feature configuration
     if (!ldss.configure_priorities(pGens, ldss_static_run_priorities)) {
-        FPS_ERROR_LOG("Failed to configure LDSS.\n");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: Failed to configure LDSS.", configurator->p_manager->get_asset_type_id())));
     }
 
-    return true;
+    return validation_result;
 }
 /****************************************************************************************/

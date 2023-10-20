@@ -25,24 +25,18 @@ void Config_Validation_Result::absorb(const Config_Validation_Result& other) {
     ERROR_details.insert(ERROR_details.end(), other.ERROR_details.begin(), other.ERROR_details.end());
 }
 
-/**
- * @brief Helper function for log details macro (Do not call this function directly). Logs details in order of
- * severity (most severe appearing last) with logs noting the given function call location.
- * @param file will be filled in by file macro
- * @param func will be filled in by func macro
- * @param line will be filled in by line macro
- */
-void Config_Validation_Result::log_details_helper(const char* file, const char* func, const int line) const {
-    for (std::string msg : INFO_details) {
+// Log details in order of severity (most severe appearing last)
+void Config_Validation_Result::log_details() const {
+    for (Result_Details details : INFO_details) {
         // inlined FPS_INFO_LOG with function call location modified
-        ::Logging::log_msg(spdlog::level::info, ::Logging::pre_string(file, func, line), ::Logging::msg_string(msg), ::Logging::post_string());
+        MANUAL_FPS_INFO_LOG(details.file, details.function, details.line, details.details);
     }
-    for (std::string msg : WARNING_details) {
+    for (Result_Details details : WARNING_details) {
         // inlined FPS_WARNING_LOG with function call location modified
-        ::Logging::log_msg(spdlog::level::warn, ::Logging::pre_string(file, func, line), ::Logging::msg_string(msg), ::Logging::post_string());
+        MANUAL_FPS_WARNING_LOG(details.file, details.function, details.line, details.details);
     }
-    for (std::string msg : ERROR_details) {
+    for (Result_Details details : ERROR_details) {
         // inlined FPS_ERROR_LOG with function call location modified
-        ::Logging::log_msg(spdlog::level::err, ::Logging::pre_string(file, func, line), ::Logging::msg_string(msg), ::Logging::post_string());
+        MANUAL_FPS_ERROR_LOG(details.file, details.function, details.line, details.details);
     }
 }

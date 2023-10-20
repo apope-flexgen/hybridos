@@ -362,7 +362,14 @@ void Asset_ESS::set_voltage_slew_setpoint(float setpoint) {
     voltage_slew_setpoint.component_control_value.value_float = setpoint;
 }
 
-bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
+/**
+ * Configure ESS-specific variables that are provided for the asset instance level
+ * @param configurator The Type_Configurator used to configure this asset
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+Config_Validation_Result Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     Asset_Configurator* asset_config = &configurator->asset_config;
 
     // Set flag if component will be providing chargeable/dischargeable energy values via Modbus
@@ -379,8 +386,8 @@ bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configura
     if (object) {
         rated_capacity = object->valuedouble;
     } else if (configurator->config_validation) {
-        FPS_ERROR_LOG("Asset %s contains no rated_capacity\n", name);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: contains no rated_capacity.", name)));
     }
 
     object = cJSON_GetObjectItem(asset_config->asset_instance_root, "nominal_voltage");
@@ -409,19 +416,20 @@ bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configura
 
     object = cJSON_GetObjectItem(asset_config->asset_instance_root, "standby_status_mask");
     // if the mask isn't NULL and is a hex string, try to parse it
-    if (object && object->valuestring)
+    if (object && object->valuestring) {
         try {
             // Casts the provided hex string as an unsigned int64
             standby_status_mask = (uint64_t)std::stoul(object->valuestring, NULL, 16);
         } catch (...) {
             // Could not parse the provided mask
-            FPS_ERROR_LOG("Asset %s received an invalid standby_status_mask\n", name);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: received an invalid standby_status_mask.", name)));
         }
+    }
     // if the mask isn't null and isn't a hex string, throw an error
     else if (object) {
-        FPS_ERROR_LOG("Asset %s received an invalid input type instead of a hexadecimal string for the running_status_mask\n", name);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: received an invalid input type instead of a hexadecimal string for the running_status_mask.", name)));
     }
 
     object = cJSON_GetObjectItem(asset_config->asset_instance_root, "DC_contactor_closed");
@@ -488,23 +496,32 @@ bool Asset_ESS::configure_typed_asset_instance_vars(Type_Configurator* configura
     if (object)
         grid_following_value = object->valueint;
 
-    return true;
+    return validation_result;
 }
 
-bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator) {
+/**
+ * Configure ui_controls provided in the asset's components array
+ * @param configurator The Type_Configurator used to configure this asset
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
     cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
-        FPS_ERROR_LOG("Components array is NULL.");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: components control array is NULL.", name)));
+        return validation_result;
     }
 
     // for each component in the components array, parse out the UI control variables. other component variables are handled by the base class configure function
     for (uint i = 0; i < numAssetComponents; i++) {
         cJSON* component = cJSON_GetArrayItem(components_array, i);
         if (component == NULL) {
-            FPS_ERROR_LOG("Component with index %d has NULL configuration.", i);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: component control array entry {} is invalid or undefined.", name, i + 1)));
+            continue;
         }
 
         // UI controls are optional
@@ -512,128 +529,182 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator) {
         if (ui_controls == NULL)
             continue;
 
+        Config_Validation_Result control_result;
+
         // when adding a new UI control, make sure to add it to the list of valid UI controls in Asset_Manager.cpp
         cJSON* ctrl_obj;
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_mode");
-        if (ctrl_obj != NULL && !maint_mode.configure(ctrl_obj, yesNoOption, &inMaintenance, Bool, sliderStr, true)) {
-            FPS_ERROR_LOG("Failed to configure maint_mode UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = maint_mode.configure(ctrl_obj, yesNoOption, &inMaintenance, Bool, sliderStr, true);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_mode UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "lock_mode");
-        if (ctrl_obj != NULL && !lock_mode.configure(ctrl_obj, yesNoOption, &inLockdown, Bool, sliderStr, true)) {
-            FPS_ERROR_LOG("Failed to configure lock_mode UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = lock_mode.configure(ctrl_obj, yesNoOption, &inLockdown, Bool, sliderStr, true);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure lock_mode UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "clear_faults");
         if (ctrl_obj != NULL) {
-            if (!clear_faults_ctl.configure(ctrl_obj, resetOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure clear_faults UI control.");
-                return false;
+            control_result = clear_faults_ctl.configure(ctrl_obj, resetOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure clear_faults UI control.", name)));
+            } else {
+                uri_clear_faults = build_uri(compNames[i], clear_faults_ctl.reg_name);
             }
-            uri_clear_faults = build_uri(compNames[i], clear_faults_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "start");
         if (ctrl_obj != NULL) {
-            if (!start_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure start asset UI control.");
-                return false;
+            control_result = start_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure start asset UI control.", name)));
+            } else {
+                uri_start = build_uri(compNames[i], start_ctl.reg_name);
             }
-            uri_start = build_uri(compNames[i], start_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "stop");
         if (ctrl_obj != NULL) {
-            if (!stop_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure stop asset UI control.");
-                return false;
+            control_result = stop_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure stop asset UI control.", name)));
+            } else {
+                uri_stop = build_uri(compNames[i], stop_ctl.reg_name);
             }
-            uri_stop = build_uri(compNames[i], stop_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "enter_standby");
         if (ctrl_obj != NULL) {
-            if (!enter_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure enter_standby UI control.");
-                return false;
+            control_result = enter_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure enter_standby UI control.", name)));
+            } else {
+                uri_enter_standby = build_uri(compNames[i], enter_standby_ctl.reg_name);
             }
-            uri_enter_standby = build_uri(compNames[i], enter_standby_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "exit_standby");
         if (ctrl_obj != NULL) {
-            if (!exit_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure exit_standby UI control.");
-                return false;
+            control_result = exit_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure exit_standby UI control.", name)));
+            } else {
+                uri_exit_standby = build_uri(compNames[i], exit_standby_ctl.reg_name);
             }
-            uri_exit_standby = build_uri(compNames[i], exit_standby_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "limits_override");
-        if (ctrl_obj != NULL && !limits_override_ctl.configure(ctrl_obj, onOffOption, &limits_override_flag, Bool, sliderStr, false)) {
-            FPS_ERROR_LOG("Failed to configure limits_override UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = limits_override_ctl.configure(ctrl_obj, onOffOption, &limits_override_flag, Bool, sliderStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure limits_override UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "autobalancing_enable");
-        if (ctrl_obj != NULL) {
-            if (!autobalancing_enable_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure autobalancing_enable UI control.");
-                return false;
-            }
-            // single uri used for both registers
-            uri_set_autobalancing = build_uri(compNames[i], autobalancing_enable_ctl.reg_name);
+        // If one of the autobalancing controls is provided, the other must be provided as well
+        cJSON* enable_ctrl_obj = cJSON_GetObjectItem(ui_controls, "autobalancing_enable");
+        cJSON* disable_ctrl_obj = cJSON_GetObjectItem(ui_controls, "autobalancing_disable");
+        if ((enable_ctrl_obj != NULL) != (disable_ctrl_obj != NULL)) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: only received one autobalancing control: {}. Either remove this control or provide {} as well.", name,
+                                                                                 enable_ctrl_obj ? "autobalancing_enable" : "autobalancing_disable", enable_ctrl_obj ? "autobalancing_disable" : "autobalancing_enable")));
         }
-
-        // TODO: should there be a check that requires autobalancing_enable and autobalancing_disable to either BOTH be configured or NEITHER is configured?
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "autobalancing_disable");
-        if (ctrl_obj != NULL) {
-            if (!autobalancing_disable_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure autobalancing_disable UI control.");
-                return false;
+        if (enable_ctrl_obj != NULL) {
+            control_result = autobalancing_enable_ctl.configure(enable_ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure autobalancing_enable UI control.", name)));
+            } else {
+                // single uri used for both registers
+                uri_set_autobalancing = build_uri(compNames[i], autobalancing_enable_ctl.reg_name);
             }
-            std::string autobalancing_uri_confirmation = build_uri(compNames[i], autobalancing_disable_ctl.reg_name);
-            // ensure that the enable and disable uris match, as they should be writing to the same register
-            if (autobalancing_uri_confirmation.compare(uri_set_autobalancing) != 0) {
-                FPS_ERROR_LOG("Mismatch between URIs for autobalancing_enable and autobalancing_disable. The enable URI is %s but the disable URI is %s.", uri_set_autobalancing, autobalancing_uri_confirmation.c_str());
-                return false;
+            validation_result.absorb(control_result);
+        }
+        if (disable_ctrl_obj != NULL) {
+            control_result = autobalancing_disable_ctl.configure(disable_ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure autobalancing_disable UI control.", name)));
             }
+            if (enable_ctrl_obj != NULL) {
+                // If both autobalancing registers were provided, ensure that their names match, as they should be writing to the same register
+                if (strcmp(autobalancing_enable_ctl.reg_name, autobalancing_disable_ctl.reg_name) != 0) {
+                    validation_result.is_valid_config = false;
+                    validation_result.ERROR_details.push_back(
+                        Result_Details(fmt::format("{}: mismatch between register names for autobalancing_enable and autobalancing_disable. The controls must write to the same register. Received enable register: {}, and disable register: {}", name,
+                                                   autobalancing_enable_ctl.reg_name, autobalancing_disable_ctl.reg_name)));
+                }
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_active_power_setpoint");
-        if (ctrl_obj != NULL && !maint_active_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_active_power_setpoint, Float, numberStr, false)) {
-            FPS_ERROR_LOG("Failed to configure maint_active_power_setpoint UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = maint_active_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_active_power_setpoint, Float, numberStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_active_power_setpoint UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_reactive_power_setpoint");
-        if (ctrl_obj != NULL && !maint_reactive_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_reactive_power_setpoint, Float, numberStr, false)) {
-            FPS_ERROR_LOG("Failed to configure maint_reactive_power_setpoint UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = maint_reactive_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_reactive_power_setpoint, Float, numberStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_reactive_power_setpoint UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "open_dc_contactors");
         if (ctrl_obj != NULL) {
-            if (!open_dc_contactors_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure open_dc_contactors UI control.");
-                return false;
+            control_result = open_dc_contactors_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure open_dc_contactors UI control.", name)));
+            } else {
+                uri_open_dc_contacts = build_uri(compNames[i], open_dc_contactors_ctl.reg_name);
             }
-            uri_open_dc_contacts = build_uri(compNames[i], open_dc_contactors_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "close_dc_contactors");
         if (ctrl_obj != NULL) {
-            if (!close_dc_contactors_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure close_dc_contactors UI control.");
-                return false;
+            control_result = close_dc_contactors_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure close_dc_contactors UI control.", name)));
+            } else {
+                uri_close_dc_contacts = build_uri(compNames[i], close_dc_contactors_ctl.reg_name);
             }
-            uri_close_dc_contacts = build_uri(compNames[i], close_dc_contactors_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
     }
-    return true;
+    return validation_result;
 }
 
 /**
@@ -646,29 +717,49 @@ bool Asset_ESS::configure_ui_controls(Type_Configurator* configurator) {
  * Ex: `dischargeable_power_raw` must be configured here, and `dischargeable_power` must be configured in the
  * associated replace_raw_fims_vars() function
  */
-bool Asset_ESS::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
-    return configure_single_fims_var(&power_factor_setpoint, "power_factor_setpoint", configurator) && configure_single_fims_var(&voltage_slew_setpoint, "voltage_slew_setpoint", configurator) &&
-           configure_single_fims_var(&voltage_setpoint, "voltage_setpoint", configurator) && configure_single_fims_var(&frequency_setpoint, "frequency_setpoint", configurator) &&
-           configure_single_fims_var(&pcs_a_nominal_voltage_setpoint, "pcs_a_nominal_voltage_setting", configurator) && configure_single_fims_var(&pcs_b_nominal_voltage_setpoint, "pcs_b_nominal_voltage_setting", configurator) &&
-           configure_single_fims_var(&soc_raw, "soc", configurator) && configure_single_fims_var(&soh, "soh", configurator, Float, 100) && configure_single_fims_var(&max_temp, "max_temp", configurator) &&
-           configure_single_fims_var(&min_temp, "min_temp", configurator) && configure_single_fims_var(&chargeable_power_raw, "system_chargeable_power", configurator) &&
-           configure_single_fims_var(&dischargeable_power_raw, "system_dischargeable_power", configurator) && configure_single_fims_var(&chargeable_energy_raw, "system_chargeable_energy", configurator) &&
-           configure_single_fims_var(&dischargeable_energy_raw, "system_dischargeable_energy", configurator) && configure_single_fims_var(&grid_mode_setpoint, "grid_mode", configurator, Int, 0.0, FOLLOWING) &&
-           configure_single_fims_var(&power_mode_setpoint, "reactive_power_mode", configurator, Int, 0, REACTIVEPWR) && configure_single_fims_var(&racks_in_service, "racks_in_service", configurator, Int) &&
-           configure_single_fims_var(&dc_contactors_closed, "dc_contactors_closed", configurator, Bool) && configure_single_fims_var(&autobalancing_status, "autobalancing_status", configurator, Bool) &&
-           configure_single_fims_var(&voltage_min, "voltage_min", configurator, Bool) && configure_single_fims_var(&voltage_max, "voltage_max", configurator, Bool) && configure_single_fims_var(&status, "status", configurator, Status);
+Config_Validation_Result Asset_ESS::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    validation_result.absorb(configure_single_fims_var(&power_factor_setpoint, "power_factor_setpoint", configurator));
+    validation_result.absorb(configure_single_fims_var(&voltage_slew_setpoint, "voltage_slew_setpoint", configurator));
+    validation_result.absorb(configure_single_fims_var(&voltage_setpoint, "voltage_setpoint", configurator));
+    validation_result.absorb(configure_single_fims_var(&frequency_setpoint, "frequency_setpoint", configurator));
+    validation_result.absorb(configure_single_fims_var(&pcs_a_nominal_voltage_setpoint, "pcs_a_nominal_voltage_setting", configurator));
+    validation_result.absorb(configure_single_fims_var(&pcs_b_nominal_voltage_setpoint, "pcs_b_nominal_voltage_setting", configurator));
+    validation_result.absorb(configure_single_fims_var(&soc_raw, "soc", configurator));
+    validation_result.absorb(configure_single_fims_var(&soh, "soh", configurator, Float, 100));
+    validation_result.absorb(configure_single_fims_var(&max_temp, "max_temp", configurator));
+    validation_result.absorb(configure_single_fims_var(&min_temp, "min_temp", configurator));
+    validation_result.absorb(configure_single_fims_var(&chargeable_power_raw, "system_chargeable_power", configurator));
+    validation_result.absorb(configure_single_fims_var(&dischargeable_power_raw, "system_dischargeable_power", configurator));
+    validation_result.absorb(configure_single_fims_var(&chargeable_energy_raw, "system_chargeable_energy", configurator));
+    validation_result.absorb(configure_single_fims_var(&dischargeable_energy_raw, "system_dischargeable_energy", configurator));
+    validation_result.absorb(configure_single_fims_var(&grid_mode_setpoint, "grid_mode", configurator, Int, 0.0, FOLLOWING));
+    validation_result.absorb(configure_single_fims_var(&power_mode_setpoint, "reactive_power_mode", configurator, Int, 0, REACTIVEPWR));
+    validation_result.absorb(configure_single_fims_var(&racks_in_service, "racks_in_service", configurator, Int));
+    validation_result.absorb(configure_single_fims_var(&dc_contactors_closed, "dc_contactors_closed", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&autobalancing_status, "autobalancing_status", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&voltage_min, "voltage_min", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&voltage_max, "voltage_max", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&status, "status", configurator, Status));
+
+    return validation_result;
 }
 
 /**
  * Here is where the connection between asset and component var maps is severed, so that the raw values will still be sourced from
  * components, while the calculated values will be sourced from the asset's calculated variables
  */
-bool Asset_ESS::replace_typed_raw_fims_vars() {
-    return configure_single_fims_var(&soc, "soc", NULL, Float, 0, 0, false, false, "State of Charge", "%") &&
-           configure_single_fims_var(&chargeable_power, "system_chargeable_power", NULL, Float, 0, 0, false, false, "System Chargeable Power", "W", 1000) &&
-           configure_single_fims_var(&dischargeable_power, "system_dischargeable_power", NULL, Float, 0, 0, false, false, "System Dischargeable Power", "W", 1000) &&
-           configure_single_fims_var(&chargeable_energy, "system_chargeable_energy", NULL, Float, 0, 0, false, false, "System Chargeable Energy", "Wh", 1000) &&
-           configure_single_fims_var(&dischargeable_energy, "system_dischargeable_energy", NULL, Float, 0, 0, false, false, "System Dischargeable Energy", "Wh", 1000);
+Config_Validation_Result Asset_ESS::replace_typed_raw_fims_vars() {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    validation_result.absorb(configure_single_fims_var(&soc, "soc", NULL, Float, 0, 0, false, false, "State of Charge", "%"));
+    validation_result.absorb(configure_single_fims_var(&chargeable_power, "system_chargeable_power", NULL, Float, 0, 0, false, false, "System Chargeable Power", "W", 1000));
+    validation_result.absorb(configure_single_fims_var(&dischargeable_power, "system_dischargeable_power", NULL, Float, 0, 0, false, false, "System Dischargeable Power", "W", 1000));
+    validation_result.absorb(configure_single_fims_var(&chargeable_energy, "system_chargeable_energy", NULL, Float, 0, 0, false, false, "System Chargeable Energy", "Wh", 1000));
+    validation_result.absorb(configure_single_fims_var(&dischargeable_energy, "system_dischargeable_energy", NULL, Float, 0, 0, false, false, "System Dischargeable Energy", "Wh", 100));
+
+    return validation_result;
 }
 
 // Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case.

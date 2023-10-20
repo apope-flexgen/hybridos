@@ -14,6 +14,7 @@
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
 #include <Asset.h>
+#include <Reference_Configs.h>
 
 class Asset_ESS : public Asset {
 public:
@@ -81,10 +82,10 @@ public:
 protected:
     // configuration
     void set_required_variables(void);
-    bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
-    bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(Type_Configurator* configurator);
-    bool replace_typed_raw_fims_vars() override;
+    Config_Validation_Result configure_typed_asset_instance_vars(Type_Configurator* configurator) override;
+    Config_Validation_Result configure_ui_controls(Type_Configurator* configurator) override;
+    Config_Validation_Result configure_typed_asset_fims_vars(Type_Configurator* configurator) override;
+    Config_Validation_Result replace_typed_raw_fims_vars() override;
     int start_value;
     int stop_value;
     int enter_standby_value;

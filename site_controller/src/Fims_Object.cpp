@@ -97,6 +97,14 @@ void Fims_Object::set_type(const char* _type) {
     type = _type;
 }
 
+/**
+ * If the uri endpoint given matches this object's variable id, this function will update the value of the object with the
+ * float value received. Will set both numeric registers, value_int and value_float. If this object has multiple inputs,
+ * will set the value of the associated input instead.
+ * @param uri_endpoint variable id of the input to be set
+ * @param body_float float value to set
+ * @return whether the value was set
+ */
 bool Fims_Object::set_fims_float(const char* uri_endpoint, float body_float) {
     if (multiple_inputs) {
         // if the endpoint does not match this variable's ID, the edit is meant for another variable
@@ -121,6 +129,14 @@ bool Fims_Object::set_fims_float(const char* uri_endpoint, float body_float) {
     }
 }
 
+/**
+ * If the uri endpoint given matches this object's variable id, this function will update the value of the object with the
+ * int value received. Will set both numeric registers, value_float and value_int. If this object has multiple inputs,
+ * will set the value of the associated input instead.
+ * @param uri_endpoint variable id of the input to be set
+ * @param body_int integer value to set
+ * @return whether the value was set
+ */
 bool Fims_Object::set_fims_int(const char* uri_endpoint, int body_int) {
     if (multiple_inputs) {
         // if the endpoint does not match this variable's ID, the edit is meant for another variable

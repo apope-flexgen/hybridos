@@ -17,6 +17,7 @@
 /* Local Internal Dependencies */
 #include <Asset_Solar.h>
 #include <Type_Manager.h>
+#include <Config_Validation_Result.h>
 
 enum solar_curtailment_states { no_curtailment, partial_curtailment, full_curtailment };
 const char curtailment_strings[][20] = {
@@ -78,7 +79,7 @@ public:
 
     // Configuration functions
     void configure_base_class_list(void) override;
-    bool configure_type_manager(Type_Configurator* configurator) override;
+    Config_Validation_Result configure_type_manager(Type_Configurator* configurator) override;
     Asset* build_new_asset(void) override;
     void append_new_asset(Asset*) override;
 

@@ -19,6 +19,7 @@
 #include <Types.h>
 #include <macros.h>
 #include <Type_Manager.h>
+#include <Config_Validation_Result.h>
 
 enum SOC_State { OnTarget, BelowTarget, FarBelowTarget, AboveTarget, FarAboveTarget };
 
@@ -90,7 +91,7 @@ public:
 
     // Internal configuration functions
     void configure_base_class_list(void) override;
-    bool configure_type_manager(Type_Configurator* configurator) override;
+    Config_Validation_Result configure_type_manager(Type_Configurator* configurator) override;
     Asset* build_new_asset(void) override;
     void append_new_asset(Asset*) override;
 

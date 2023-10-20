@@ -21,6 +21,7 @@
 #include <Value_Object.h>
 #include <Fims_Object.h>
 #include <Types.h>
+#include <Reference_Configs.h>
 class Type_Manager;
 
 class Asset_Configurator {
@@ -48,28 +49,31 @@ class Type_Configurator {
 public:
     // functions
     Type_Configurator(Type_Manager* pMan, std::map<std::string, std::vector<Fims_Object*>>* pCVM, bool* pc);
-    bool create_assets(void);
+    Config_Validation_Result create_assets(void);
     // variables
     cJSON* asset_type_root;
     Asset_Configurator asset_config;
     Type_Manager* p_manager;
     std::map<std::string, std::vector<Fims_Object*>>* pCompVarMap;
     bool* p_is_primary_controller;
-    bool config_validation;  // flag to improve readability. removing config validation allows only necessary components to be configured in unit tests
+    std::string current_asset_name;  // holds the id of the asset currently being configured
+    std::string current_asset_id;    // holds the name of the asset currently being configured
+    bool config_validation;          // flag to improve readability. removing config validation allows only necessary components to be configured in unit tests
 private:
     // functions
+    Config_Validation_Result check_name_and_id(int index, cJSON* array_entry);
     int extract_num_asset_instances_represented(cJSON* asset_array_entry);
-    std::vector<int> generate_list_of_asset_instances_represented(cJSON* asset_array_entry);
+    std::pair<std::vector<int>, Config_Validation_Result> generate_list_of_asset_instances_represented(cJSON* asset_array_entry);
     int range_provided(cJSON* asset_array_entry);
-    int count_num_asset_instances(cJSON* asset_array);
-    bool configure_asset_array_entry(cJSON* arrEntry);
-    bool configure_traditional_templated_asset(void);
-    bool configure_ranged_templated_asset(void);
-    int gather_assets(cJSON* asset_array);
+    std::pair<int, Config_Validation_Result> count_num_asset_instances(cJSON* asset_array);
+    Config_Validation_Result configure_asset_array_entry(int index, cJSON* array_entry);
+    Config_Validation_Result configure_traditional_templated_asset();
+    Config_Validation_Result configure_ranged_templated_asset();
+    std::pair<int, Config_Validation_Result> gather_assets(cJSON* asset_array);
     int count_traditional_templated_assets(cJSON* entry);
-    int count_ranged_templated_assets(cJSON* entry);
-    int entry_is_template(cJSON* asset_array_entry);
-    bool configure_single_asset(void);
+    std::pair<int, Config_Validation_Result> count_ranged_templated_assets(cJSON* array_entry);
+    std::pair<int, Config_Validation_Result> entry_is_template(cJSON* asset_array_entry);
+    Config_Validation_Result configure_single_asset(void);
 };
 
 #endif /* CONFIGURATOR_H_ */

@@ -33,7 +33,7 @@ Config_Validation_Result features::PFR::parse_json_config(cJSON* JSON_config, bo
         cJSON* JSON_variable = cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str());
         if (JSON_variable == NULL) {
             if (underfrequency_variables_found.find(variable_id_pair.second) == underfrequency_variables_found.end()) {
-                result.ERROR_details.push_back(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", variable_id_pair.second));
+                result.ERROR_details.push_back(Result_Details(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", variable_id_pair.second)));
                 result.is_valid_config = false;
                 continue;
             }
@@ -45,14 +45,14 @@ Config_Validation_Result features::PFR::parse_json_config(cJSON* JSON_config, bo
             }
         }
         if (!variable_id_pair.first->configure(variable_id_pair.second, primary_flag, inputs, JSON_variable, field_defaults, multiple_inputs)) {
-            result.ERROR_details.push_back(fmt::format("Failed to parse variable with ID \"{}\"", variable_id_pair.second));
+            result.ERROR_details.push_back(Result_Details(fmt::format("Failed to parse variable with ID \"{}\"", variable_id_pair.second)));
             result.is_valid_config = false;
         }
     }
     if (!symmetric_variables) {
         for (auto& variable : underfrequency_variables_found) {
             if (!variable.second) {
-                result.ERROR_details.push_back(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", variable.first));
+                result.ERROR_details.push_back(Result_Details(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", variable.first)));
                 result.is_valid_config = false;
             }
         }

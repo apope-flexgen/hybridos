@@ -734,7 +734,8 @@ void ESS_Manager::configure_base_class_list() {
 Asset* ESS_Manager::build_new_asset(void) {
     Asset_ESS* asset = new Asset_ESS;
     if (asset == NULL) {
-        FPS_ERROR_LOG("ESS_Manager::build_new_asset ~ Ess %ld: Memory allocation error.\n", pEss.size() + 1);
+        FPS_ERROR_LOG("There is something wrong with this build. Ess %zu: Memory allocation error.", pEss.size() + 1);
+        exit(1);
     }
     numParsed++;
     return asset;
@@ -745,13 +746,15 @@ void ESS_Manager::append_new_asset(Asset* asset) {
 }
 
 // After configuring individual asset instances, this function finishes configuring the ESS Manager
-bool ESS_Manager::configure_type_manager(Type_Configurator* configurator) {
+Config_Validation_Result ESS_Manager::configure_type_manager(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     cJSON* essRoot = configurator->asset_type_root;
 
     cJSON* object = cJSON_HasObjectItem(essRoot, "soc_balancing_factor") ? cJSON_GetObjectItem(essRoot, "soc_balancing_factor") : NULL;
     if (object == NULL) {
-        FPS_ERROR_LOG("ESS_Manager::configure_type_manager ~ Failed to find soc_balancing_factor in config.\n");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to find soc_balancing_factor in config.", configurator->p_manager->get_asset_type_id())));
     }
     socBalancingFactor = (float)object->valuedouble;
 
@@ -772,6 +775,6 @@ bool ESS_Manager::configure_type_manager(Type_Configurator* configurator) {
     if (object != NULL)
         charge_control_divisor = (float)object->valuedouble;
 
-    return true;
+    return validation_result;
 }
 /****************************************************************************************/

@@ -20,6 +20,7 @@
 /* Local Internal Dependencies */
 #include <macros.h>
 #include <Types.h>
+#include <Config_Validation_Result.h>
 class Type_Configurator;
 class Asset;
 
@@ -51,7 +52,7 @@ public:
     // configuration functions
     void print_alarm_fault_map();
     virtual void configure_base_class_list(void) = 0;
-    virtual bool configure_type_manager(Type_Configurator* configurator) = 0;
+    virtual Config_Validation_Result configure_type_manager(Type_Configurator* configurator) = 0;
     virtual Asset* build_new_asset(void) = 0;
     virtual void append_new_asset(Asset*) = 0;
 

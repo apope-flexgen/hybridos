@@ -548,7 +548,8 @@ void Solar_Manager::configure_base_class_list() {
 Asset* Solar_Manager::build_new_asset(void) {
     Asset_Solar* asset = new Asset_Solar;
     if (asset == NULL) {
-        FPS_ERROR_LOG("Solar_Manager::build_new_asset ~ Solar %ld: Memory allocation error.\n", pSolar.size() + 1);
+        FPS_ERROR_LOG("There is something wrong with this build. Solar %zu: Memory allocation error.", pSolar.size() + 1);
+        exit(1);
     }
     numParsed++;
     return asset;
@@ -559,15 +560,17 @@ void Solar_Manager::append_new_asset(Asset* asset) {
 }
 
 // After configuring individual asset instances, this function finishes configuring the Solar Manager
-bool Solar_Manager::configure_type_manager(Type_Configurator* configurator) {
+Config_Validation_Result Solar_Manager::configure_type_manager(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     cJSON* solarRoot = configurator->asset_type_root;
     // Parse deadband percent for solar curtailment
     cJSON* object = cJSON_HasObjectItem(solarRoot, "deadband_percentage") ? cJSON_GetObjectItem(solarRoot, "deadband_percentage") : NULL;
     if (object == NULL) {
-        FPS_ERROR_LOG("Solar_Manager::configure_type_manager ~ Failed to find deadband_percentage in config.\n");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to find deadband_percentage in config.", configurator->p_manager->get_asset_type_id())));
     }
     curtailment_deadband_percentage = (float)object->valuedouble;
 
-    return true;
+    return validation_result;
 }

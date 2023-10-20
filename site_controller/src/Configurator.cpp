@@ -36,22 +36,26 @@ Type_Configurator::Type_Configurator(Type_Manager* pMan, std::map<std::string, s
 /**
  * @brief Extracts asset type variables for this type and configures all asset instances of this type
  *
- * @return true if configuration was successful
- * @return false if configuration was unsuccessful
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Type_Configurator::create_assets(void) {
+Config_Validation_Result Type_Configurator::create_assets(void) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     // The "asset_instances" array in assets.json is a mix of concrete asset instances and template-defined asset instances
     cJSON* assetInstanceArray = cJSON_GetObjectItem(asset_type_root, "asset_instances");
+    int numInstances = 0;
     if (assetInstanceArray == NULL) {
-        FPS_ERROR_LOG("Type_Configurator::create_assets ~ Failed to find asset_instances in config.");
-        return false;
-    }
-
-    // Count the number of asset instances, including multiple instances contained within one template
-    int numInstances = count_num_asset_instances(assetInstanceArray);
-    if (numInstances > MAX_NUM_ASSETS) {
-        FPS_ERROR_LOG("Type_Configurator::create_assets ~ Exceeded maximum number of asset instances, limit is %d, config file has %d.", MAX_NUM_ASSETS, numInstances);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to find asset_instances in config.", p_manager->get_asset_type_id())));
+    } else {
+        // Count the number of asset instances, including multiple instances contained within one template
+        std::pair<int, Config_Validation_Result> instance_config_result = count_num_asset_instances(assetInstanceArray);
+        numInstances = instance_config_result.first;
+        if (numInstances > MAX_NUM_ASSETS) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: exceeded maximum number of asset instances, limit is {}, config file has {}.", MAX_NUM_ASSETS, numInstances, p_manager->get_asset_type_id())));
+        }
+        validation_result.absorb(instance_config_result.second);
     }
 
     // Proceed with configuration if there are asset instance objects found in assets.json
@@ -59,27 +63,33 @@ bool Type_Configurator::create_assets(void) {
     if (numInstances > 0) {
         int numArrayEntries = cJSON_GetArraySize(assetInstanceArray);
         // Iterate through the asset array to configure all instances represented by each entry
-        for (int i = 0; i < numArrayEntries; ++i) {
+        // If there are too many assets provided, at least report any errors encountered up to the maximum number we're able to process
+        for (int i = 0; i < numArrayEntries && i < MAX_NUM_ASSETS; ++i) {
             cJSON* array_entry = cJSON_GetArrayItem(assetInstanceArray, i);
             if (array_entry == NULL) {
-                FPS_ERROR_LOG("Type_Configurator::create_assets ~ Asset array entry %d, Invalid or NULL entry.", i);
-                return false;
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: asset array entry {} is invalid or undefined", p_manager->get_asset_type_id(), i + 1)));
+                continue;
             }
-            if (!configure_asset_array_entry(array_entry)) {
-                FPS_ERROR_LOG("Type_Configurator::create_assets ~ Failed to configure asset array entry %d, error in assets.json.", i);
-                return false;
+            Config_Validation_Result entry_config_result = configure_asset_array_entry(i, array_entry);
+            if (!entry_config_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure asset array entry {}, error in assets.json.", p_manager->get_asset_type_id(), i + 1)));
             }
+            validation_result.absorb(entry_config_result);
         }
     } else {
-        FPS_ERROR_LOG("Type_Configurator::create_assets ~ Error with asset instance count. Expected positive integer, got %d.", numInstances);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error with asset instance count. Expected positive integer, but got {}.", p_manager->get_asset_type_id(), numInstances)));
     }
 
     // Carry out any configuration actions unique to the derived asset type managers
-    if (!p_manager->configure_type_manager(this)) {
-        FPS_ERROR_LOG("Type_Configurator::create_assets ~ Error configuring asset type. Asset Type is: %s", p_manager->get_asset_type_id());
-        return false;
+    Config_Validation_Result type_config_result = p_manager->configure_type_manager(this);
+    if (!type_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error configuring asset type.", p_manager->get_asset_type_id())));
     }
+    validation_result.absorb(type_config_result);
 
     // Give base class functions access to asset instance pointers
     p_manager->configure_base_class_list();
@@ -87,7 +97,36 @@ bool Type_Configurator::create_assets(void) {
     // Used for testing
     // p_manager->print_alarm_fault_map(p_asset_var_map);
 
-    return true;
+    return validation_result;
+}
+
+/**
+ * Helper that ensures the name and id are defined. If they are missing, a nontemplated placeholder name or id will be inserted into the cJSON object.
+ * Many subsequent functions make the assumption that these values are valid so they must be defined for configuration to continue.
+ * @param index index in the asset entry array
+ * @param array_entry the asset entry parsed from configuration
+ */
+Config_Validation_Result Type_Configurator::check_name_and_id(int index, cJSON* array_entry) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    cJSON* asset_name = cJSON_GetObjectItem(array_entry, "name");
+    cJSON* asset_id = cJSON_GetObjectItem(array_entry, "id");
+    // If the name or id are not defined, try to continue on with a placeholder name to check for other config errors
+    if (!asset_name || !asset_name->valuestring) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: name is missing for asset entry {}.", p_manager->get_asset_type_id(), index)));
+        current_asset_name = fmt::format("{}_{}", p_manager->get_asset_type_id(), index);
+    } else {
+        current_asset_name = asset_name->valuestring;
+    }
+    if (!asset_id || !asset_id->valuestring) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: id is missing for asset entry {}.", p_manager->get_asset_type_id(), index)));
+        current_asset_id = fmt::format("{}_{}", p_manager->get_asset_type_id(), index);
+    } else {
+        current_asset_id = asset_id->valuestring;
+    }
+    return validation_result;
 }
 
 /**
@@ -95,131 +134,158 @@ bool Type_Configurator::create_assets(void) {
  * Calls configuration functions based on the result.
  *
  * @param array_entry: Pointer to the asset array entry
- * @return true if configuration was successful
- * @return false if configuration was unsuccessful
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Type_Configurator::configure_asset_array_entry(cJSON* array_entry) {
+Config_Validation_Result Type_Configurator::configure_asset_array_entry(int index, cJSON* array_entry) {
+    // Struct to aggregate and report on all asset type configuration issues
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    asset_config.asset_instance_root = array_entry;
+    validation_result.absorb(check_name_and_id(index, array_entry));
+
     asset_config.asset_instance_root = array_entry;  // Set the asset instance root to the array entry
-    int is_template = entry_is_template(asset_config.asset_instance_root);
-    if (is_template == -1) {
-        FPS_ERROR_LOG("Type_Configurator::configure_asset_array_entry ~ Error within entry_is_template().");
-        return false;
+    std::pair<int, Config_Validation_Result> template_config_result = entry_is_template(asset_config.asset_instance_root);
+    if (template_config_result.first == TEMPLATING_ERROR) {
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error processing templating", p_manager->get_asset_type_id())));
     }
+    validation_result.absorb(template_config_result.second);
 
-    cJSON* asset_name = cJSON_GetObjectItem(asset_config.asset_instance_root, "name");
-    cJSON* asset_id = cJSON_GetObjectItem(asset_config.asset_instance_root, "id");
+    asset_config.asset_name_to_asset_number_map.insert(std::pair<std::string, std::map<int, bool>>(current_asset_name, std::map<int, bool>()));
+    asset_config.asset_id_to_asset_number_map.insert(std::pair<std::string, std::map<int, bool>>(current_asset_id, std::map<int, bool>()));
 
-    asset_config.asset_id_to_asset_number_map.insert(std::pair<std::string, std::map<int, bool>>(asset_id->valuestring, std::map<int, bool>()));
-    asset_config.asset_name_to_asset_number_map.insert(std::pair<std::string, std::map<int, bool>>(asset_name->valuestring, std::map<int, bool>()));
-
-    switch (is_template) {
+    Config_Validation_Result asset_config_result = Config_Validation_Result(true);
+    switch (template_config_result.first) {
         case NON_TEMPLATE:
-            return configure_single_asset();
-        case TRADITIONAL:
-            return configure_traditional_templated_asset();
-        case RANGED:
-            return configure_ranged_templated_asset();
         case TEMPLATING_ERROR:
-            FPS_ERROR_LOG("Type_Configurator::configure_asset_array_entry ~ Error within entry_is_template().");
-            return false;
+            asset_config_result = configure_single_asset();
+            break;
+        case TRADITIONAL:
+            asset_config_result = configure_traditional_templated_asset();
+            break;
+        case RANGED:
+            asset_config_result = configure_ranged_templated_asset();
+            break;
         default:
-            FPS_ERROR_LOG("Error within configure_asset_array_entry(). In default case.");
-            return false;
+            asset_config_result.is_valid_config = false;
+            asset_config_result.ERROR_details.push_back(Result_Details(fmt::format("{}: got invalid asset template type", current_asset_name)));
+            break;
     }
+    validation_result.absorb(asset_config_result);
+    return validation_result;
 }
 
 /**
  * @brief Traditional templating: get the num of instances represented by the template and configure each instance
  * TODO: There is now two types of templating. They don't play well together. Which is intentional.
  *     If you want to configure assets non-sequentially, use the new templating method.
- *     Should we make them more cohabitatable?
+ *     Should we make them more cohabitable?
+ * @param id the id received from configuration. If not defined, a placeholder id will be passed in the form <asset type>_<asset index> i.e. ess_1
+ * @param id the name received from configuration. If not defined, a placeholder id will be passed in the form <asset type>_<asset index> i.e. ess_1
  *
- * @return true if configuration was successful
- * @return false if configuration was unsuccessful
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Type_Configurator::configure_traditional_templated_asset(void) {
-    cJSON* asset_name = cJSON_GetObjectItem(asset_config.asset_instance_root, "name");
-    cJSON* asset_id = cJSON_GetObjectItem(asset_config.asset_instance_root, "id");
+Config_Validation_Result Type_Configurator::configure_traditional_templated_asset() {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
 
     int num_instances_represented = extract_num_asset_instances_represented(asset_config.asset_instance_root);
     if (num_instances_represented >= 1) {
         for (int j = 0; j < num_instances_represented; ++j) {
             // Insert number into range map
-            auto check_id = (&asset_config.asset_id_to_asset_number_map[asset_id->valuestring])->insert(std::pair<int, bool>(j + 1, false));
-            auto check_name = (&asset_config.asset_name_to_asset_number_map[asset_name->valuestring])->insert(std::pair<int, bool>(j + 1, false));
+            auto check_name = (&asset_config.asset_name_to_asset_number_map[current_asset_name])->insert(std::pair<int, bool>(j + 1, false));
+            auto check_id = (&asset_config.asset_id_to_asset_number_map[current_asset_id])->insert(std::pair<int, bool>(j + 1, false));
 
             if (!check_id.second || !check_name.second) {
-                FPS_ERROR_LOG("Type_Configurator::configure_traditional_templated_asset ~ Duplicate asset ID or Name found in assets.json.");
-                return false;
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: template entry {} with index {} overlaps with existing entries.", p_manager->get_asset_type_id(), current_asset_name, j + 1)));
+                // This is a templated entry where all values are the same for each asset,
+                // so only try to configure a single asset when overlapping entries are found
+                if (j > 0) {
+                    break;
+                }
             }
             asset_config.asset_num = j + 1;
-            if (!configure_single_asset()) {
-                FPS_ERROR_LOG("Type_Configurator::configure_asset_array_entry ~ configure_single_asset() failure.");
-                return false;
+
+            Config_Validation_Result asset_config_result = configure_single_asset();
+            if (!asset_config_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure template entry {}.", current_asset_name, j + 1)));
             }
+            validation_result.absorb(asset_config_result);
         }
     } else {
-        FPS_ERROR_LOG("Type_Configurator::configure_asset_array_entry ~ Mistake in configuration of number_of_instances for an asset array entry, expected positive integer.");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid number_of_instances provided for templated asset. Expected positive integer, but got {}.", current_asset_name, num_instances_represented)));
     }
-    return true;
+    return validation_result;
 }
 
 /**
  * @brief A ranged template is passed a range of strings or numbers and creates an asset instance for each string or number in the range
  * A string comprises 2 numbers and a delimiter(..) that represents a range of numbers
  * TODO: There is now two types of templating. They don't play well together. Which is intentional.
- *      Should we make them more cohabitatable?
+ *      Should we make them more cohabitable?
  *
- * @return true if configuration was successful
- * @return false if configuration was unsuccessful
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Type_Configurator::configure_ranged_templated_asset(void) {
-    cJSON* asset_name = cJSON_GetObjectItem(asset_config.asset_instance_root, "name");
-    cJSON* asset_id = cJSON_GetObjectItem(asset_config.asset_instance_root, "id");
-    std::vector<int> asset_list = generate_list_of_asset_instances_represented(asset_config.asset_instance_root);
+Config_Validation_Result Type_Configurator::configure_ranged_templated_asset() {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    std::pair<std::vector<int>, Config_Validation_Result> instance_config_result = generate_list_of_asset_instances_represented(asset_config.asset_instance_root);
 
     // Insert all asset instances into map.
-    for (const auto& asset_num : asset_list) {
+    for (const auto& asset_num : instance_config_result.first) {
         asset_config.asset_num = asset_num;
-        auto check_id = asset_config.asset_id_to_asset_number_map[asset_id->valuestring].insert(std::pair<int, bool>(asset_config.asset_num, false));
-        auto check_name = asset_config.asset_name_to_asset_number_map[asset_name->valuestring].insert(std::pair<int, bool>(asset_config.asset_num, false));
+        auto check_name = asset_config.asset_name_to_asset_number_map[current_asset_name].insert(std::pair<int, bool>(asset_config.asset_num, false));
+        auto check_id = asset_config.asset_id_to_asset_number_map[current_asset_id].insert(std::pair<int, bool>(asset_config.asset_num, false));
+        // This means you are trying to re-configure ess_02 twice for example.
         if (!check_id.second || !check_name.second) {
-            // This means you are trying to re-configure ess_02 twice for example.
-            FPS_ERROR_LOG("Duplicate asset ID found in assets.json. Asset_id: %s Asset_num: %d.", asset_id->valuestring, asset_num);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: template entry {} with index {} overlaps with existing entries.", p_manager->get_asset_type_id(), current_asset_name, asset_num)));
+
+            // This is a templated entry where all values are the same for each asset,
+            // so only try to configure a single asset when overlapping entries are found
+            if (asset_num > instance_config_result.first[0]) {
+                break;
+            }
         }
-        if (!configure_single_asset()) {
-            FPS_ERROR_LOG("Type_Configurator::configure_asset_array_entry ~ configure_single_asset() failure.");
-            return false;
+
+        Config_Validation_Result asset_config_result = configure_single_asset();
+        if (!asset_config_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure template entry {}.", current_asset_name, asset_num)));
         }
+        validation_result.absorb(asset_config_result);
     }
-    if (asset_list.empty()) {
-        FPS_ERROR_LOG("Type_Configurator::configure_ranged_templated_asset ~ No asset instances represented by this template see range field in asset template.");
+    if (instance_config_result.first.empty()) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid range provided for templated asset. Expected a positive number of assets, but got zero.", current_asset_name)));
     }
-    return asset_list.empty() ? false : true;
+    return validation_result;
 }
 
 /**
  * @brief Allocates memory for new asset, configures that individual asset, then adds new asset to the list of assets.
  *
- * @return true if configuration was successful
- * @return false if configuration was unsuccessful
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Type_Configurator::configure_single_asset(void) {
+Config_Validation_Result Type_Configurator::configure_single_asset(void) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     Asset* asset = p_manager->build_new_asset();
     if (asset == NULL) {
-        FPS_ERROR_LOG("Type_Configurator::configure_single_asset ~ Error allocating memory for new asset instance.");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error allocating memory for new asset instance.", p_manager->get_asset_type_id())));
     }
 
-    if (!asset->configure(this)) {
-        FPS_ERROR_LOG("Type_Configurator::configure_single_asset ~ Failed to configure asset.");
-        return false;
+    Config_Validation_Result asset_config_result = asset->configure(this);  // progress
+    if (!asset_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure asset.", p_manager->get_asset_type_id())));
     }
+    validation_result.absorb(asset_config_result);
 
     p_manager->append_new_asset(asset);
-    return true;
+    return validation_result;
 }
 
 /**
@@ -227,14 +293,19 @@ bool Type_Configurator::configure_single_asset(void) {
  * including multiple instances contained within one template.
  *
  * @param asset_array: The array of assets of a given type in assets.json
- * @return int The number of asset instances represented.
+ * @return Pair containing the number of instances as well as a
+ * Config_Validation_Result struct indicating whether counting was successful and any errors that occurred
  */
-int Type_Configurator::count_num_asset_instances(cJSON* asset_array) {
+std::pair<int, Config_Validation_Result> Type_Configurator::count_num_asset_instances(cJSON* asset_array) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     int asset_array_size = cJSON_GetArraySize(asset_array);
     if (asset_array_size == 0) {
-        FPS_WARNING_LOG("Type_Configurator::asset_count_num_asset_instances ~ Asset array is empty.");
+        validation_result.WARNING_details.push_back(Result_Details(fmt::format("{}: Asset array is empty.", p_manager->get_asset_type_id())));
+        return std::make_pair(0, validation_result);
     }
-    return asset_array_size > 0 ? gather_assets(asset_array) : 0;
+
+    return gather_assets(asset_array);
 }
 
 /**
@@ -243,36 +314,50 @@ int Type_Configurator::count_num_asset_instances(cJSON* asset_array) {
  * if not a template, returns 1
  *
  * @param asset_array: The array of assets of a given type in assets.json
- * @return int The number of asset instances represented.
+ * @return Pair containing the number of instances as well as a
+ * Config_Validation_Result struct indicating whether counting was successful and any errors that occurred
  */
-int Type_Configurator::gather_assets(cJSON* asset_array) {
+std::pair<int, Config_Validation_Result> Type_Configurator::gather_assets(cJSON* asset_array) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     int num_asset_instances = 0;
     int asset_array_size = cJSON_GetArraySize(asset_array);
     for (int i = 0; i < asset_array_size; ++i) {
         int instances = -1;
         cJSON* entry = cJSON_GetArrayItem(asset_array, i);
         if (entry == NULL) {
-            FPS_ERROR_LOG("Type_Configurator::asset_count_num_asset_instances ~ Asset array entry %d, Invalid or NULL entry.", i + 1);
-            return -1;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: asset array entry {}, Invalid or NULL entry.", p_manager->get_asset_type_id(), i + 1)));
+            return std::make_pair(0, validation_result);
         }
 
-        switch (entry_is_template(entry)) {
+        validation_result.absorb(check_name_and_id(i, entry));
+
+        std::pair<int, Config_Validation_Result> template_config_result = entry_is_template(entry);
+        std::pair<int, Config_Validation_Result> count_result = std::make_pair(0, Config_Validation_Result(true));
+        switch (template_config_result.first) {
             case TRADITIONAL:
                 instances = count_traditional_templated_assets(entry);
                 break;
             case RANGED:
-                instances = count_ranged_templated_assets(entry);
+                count_result = count_ranged_templated_assets(entry);
+                instances = count_result.first;
                 break;
             case NON_TEMPLATE:
                 instances = 1;
                 break;
             default:
-                FPS_ERROR_LOG("Type_Configurator::asset_count_num_asset_instances ~ Invalid template type.");
-                return -1;
+                instances = 1;
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid template type when gathering assets.", p_manager->get_asset_type_id())));
+                validation_result.absorb(template_config_result.second);
         }
         num_asset_instances += instances;
+        validation_result.absorb(template_config_result.second);
+        validation_result.absorb(count_result.second);
     }
-    return num_asset_instances;
+
+    return std::make_pair(num_asset_instances, validation_result);
 }
 
 /**
@@ -290,11 +375,15 @@ int Type_Configurator::count_traditional_templated_assets(cJSON* entry) {
  * @brief Parse ranges and return a vector.size().
  *
  * @param entry: The asset array entry that is a ranged template.
- * @return int The number of asset instances represented.
- * @return -1 if range is invalid.
+ * @return Pair containing the int representation of the template type (see the template_type enum) as well as a
+ * Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-int Type_Configurator::count_ranged_templated_assets(cJSON* entry) {
-    return range_provided(entry) ? generate_list_of_asset_instances_represented(entry).size() : -1;
+std::pair<int, Config_Validation_Result> Type_Configurator::count_ranged_templated_assets(cJSON* entry) {
+    if (range_provided(entry)) {
+        std::pair<std::vector<int>, Config_Validation_Result> instances_config_result = generate_list_of_asset_instances_represented(entry);
+        return std::make_pair(instances_config_result.first.size(), instances_config_result.second);
+    }
+    return std::make_pair(-1, Config_Validation_Result(false));
 }
 
 /**
@@ -303,9 +392,13 @@ int Type_Configurator::count_ranged_templated_assets(cJSON* entry) {
  * if neither field is there, then array entry is not a template and is a concrete representation of a single asset instance
  *
  * @param asset_array_entry: The asset array entry to be tested for template status
- * @return int The template type (see the template_type enum)
+ * @return Pair containing the int representation of the template type (see the template_type enum) as well as a
+ * Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-int Type_Configurator::entry_is_template(cJSON* asset_array_entry) {
+std::pair<int, Config_Validation_Result> Type_Configurator::entry_is_template(cJSON* asset_array_entry) {
+    // Struct to aggregate and report on all asset type configuration issues
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     int ranged_template = false;
     asset_config.is_template_flag = false;
     // If number_of_instances field does not exist, this is a concrete entry and only represents one asset instance
@@ -313,71 +406,66 @@ int Type_Configurator::entry_is_template(cJSON* asset_array_entry) {
     cJSON* range = cJSON_GetObjectItem(asset_array_entry, "range");
     // If no templating variables are provided, then this is a concrete asset
     if (num_instances_obj == NULL && range == NULL) {
-        return NON_TEMPLATE;
+        return std::make_pair(NON_TEMPLATE, validation_result);
     }
     // Make sure only one style of templating is being used
     if (num_instances_obj != NULL && range != NULL) {
-        FPS_ERROR_LOG("Cannot configure a templated asset with both 'number_of_instances' and 'range' fields.");
-        return TEMPLATING_ERROR;
-    }
-
-    cJSON* asset_name = cJSON_GetObjectItem(asset_array_entry, "name");
-    if (asset_name == NULL) {
-        FPS_ERROR_LOG("Error parsing asset: 'name' field not found.");
-        return TEMPLATING_ERROR;
-    }
-
-    cJSON* asset_id = cJSON_GetObjectItem(asset_array_entry, "id");
-    if (asset_id == NULL) {
-        FPS_ERROR_LOG("Error parsing asset: 'id' field not found.");
-        return TEMPLATING_ERROR;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: cannot configure a templated asset with both 'number_of_instances' and 'range' fields.", p_manager->get_asset_type_id())));
     }
 
     if (num_instances_obj != NULL) {
-        if (num_instances_obj && num_instances_obj->valueint < 1) {
-            FPS_ERROR_LOG("Error parsing asset %s: 'number_of_instances' must be a positive integer.", asset_name->valuestring);
-            return TEMPLATING_ERROR;
+        if (num_instances_obj->valueint < 1) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error parsing asset {}: 'number_of_instances' must be a positive integer.", p_manager->get_asset_type_id(), current_asset_name)));
         }
     } else if (range != NULL) {
         if (range->type != cJSON_Array) {
-            FPS_ERROR_LOG("Error parsing asset %s: 'range' must be an array.", asset_name->valuestring);
-            return TEMPLATING_ERROR;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error parsing asset {}: 'range' must be an array.", p_manager->get_asset_type_id(), current_asset_name)));
         }
         int array_size = cJSON_GetArraySize(range);
         for (int i = 0; i < array_size; ++i) {
             cJSON* range_entry = cJSON_GetArrayItem(range, i);
             if (range_entry->type != cJSON_String && range_entry->type != cJSON_Number) {
-                FPS_ERROR_LOG("Error parsing asset %s: 'range' array must contain only numbers or strings.", asset_name->valuestring);
-                return TEMPLATING_ERROR;
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error parsing asset {}: 'range' array must contain only numbers or strings.", p_manager->get_asset_type_id(), current_asset_name)));
             }
         }
         ranged_template = true;
     }
 
-    std::string name = asset_name->valuestring;
-    std::string id = asset_id->valuestring;
-    bool name_has_wildcard = name.find('#') != std::string::npos;
-    bool id_has_wildcard = id.find('#') != std::string::npos;
+    // If the name or id are not defined, try to continue on with placeholders to check for other config errors
+    bool name_has_wildcard = current_asset_name.find('#') != std::string::npos;
+    bool id_has_wildcard = current_asset_id.find('#') != std::string::npos;
 
     // ID having wildcard is the absolute sign that an asset entry must be a template
     if (id_has_wildcard) {
         // An asset entry being a template means the name must have a wildcard
         if (!name_has_wildcard) {
-            FPS_ERROR_LOG("Error parsing asset with ID %s and name %s: templates must have wildcard character in asset name.", asset_id->valuestring, asset_name->valuestring);
-            return TEMPLATING_ERROR;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(
+                Result_Details(fmt::format("{}: error parsing asset with ID {} and name {}: templates must have wildcard character in asset name.", p_manager->get_asset_type_id(), current_asset_id, current_asset_name)));
         }
         // Both ID and name have wildcards and number_of_instances >= 1, so safe to return non-zero for entry being template
         asset_config.is_template_flag = true;
-        return ranged_template ? RANGED : TRADITIONAL;
+        if (validation_result.is_valid_config) {
+            return std::make_pair(ranged_template ? RANGED : TRADITIONAL, validation_result);
+        }
+        // If ID is missing wildcard, the entry may pass as a concrete asset instance as long as number_of_instances is exactly 1
+    } else {
+        if (num_instances_obj->valueint == 1) {
+            if (validation_result.is_valid_config) {
+                return std::make_pair(NON_TEMPLATE, validation_result);
+            }
+        } else {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(
+                Result_Details(fmt::format("{}: error parsing asset with ID {} and name {}: if 'number_of_instances' is greater than 1, the asset entry is considered templated and must have a wildcard character in the ID and name.",
+                                           p_manager->get_asset_type_id(), current_asset_id, current_asset_name)));
+        }
     }
-
-    // If ID is missing wildcard, the entry may pass as a concrete asset instance as long as number_of_instances is exactly 1
-    if (num_instances_obj->valueint != 1) {
-        FPS_ERROR_LOG("Error parsing asset with ID %s and name %s: if 'number_of_instances' is greater than 1, the asset entry is considered templated and must have a wildcard character in the ID and name.", asset_id->valuestring,
-                      asset_name->valuestring);
-        return TEMPLATING_ERROR;
-    }
-    return NON_TEMPLATE;
+    return std::make_pair(TEMPLATING_ERROR, validation_result);
 }
 
 /**
@@ -401,36 +489,41 @@ int Type_Configurator::extract_num_asset_instances_represented(cJSON* asset_arra
  * @param asset_array_entry: The range entry to be parsed
  * @return vector<int> The list of asset instances represented by the range
  * @return vector<int> Empty vector if error
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::vector<int> Type_Configurator::generate_list_of_asset_instances_represented(cJSON* asset_array_entry) {
+std::pair<std::vector<int>, Config_Validation_Result> Type_Configurator::generate_list_of_asset_instances_represented(cJSON* asset_array_entry) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     std::vector<int> asset_instance_list;
     if (!asset_array_entry) {
-        FPS_ERROR_LOG("Error parsing asset: asset_array_entry is NULL.");
-        return std::vector<int>();
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: no asset instance array provided.", p_manager->get_asset_type_id())));
+        return std::make_pair(std::vector<int>(), validation_result);
     }
 
     auto range = cJSON_GetObjectItem(asset_array_entry, "range");
     if (!range) {
-        FPS_ERROR_LOG("Error parsing asset 'range' field not found.");
-        return std::vector<int>();
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: asset 'range' field not found.", p_manager->get_asset_type_id())));
+        return std::make_pair(std::vector<int>(), validation_result);
     }
 
     for (int i = 0; i < cJSON_GetArraySize(range); ++i) {
         auto range_entry = cJSON_GetArrayItem(range, i);
         if (!range_entry) {
-            FPS_ERROR_LOG("Error parsing asset 'range' array entry is NULL.");
-            return std::vector<int>();
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: asset 'range' array entry is empty.", p_manager->get_asset_type_id())));
+            return std::make_pair(std::vector<int>(), validation_result);
         }
         // String case (e.g. "1..3")
         if (range_entry->type == cJSON_String) {
             // Make sure there is only one ..
             std::string range_entry_str = range_entry->valuestring;
             if (range_entry_str.find("..") != range_entry_str.rfind("..")) {
-                FPS_ERROR_LOG(
-                    "Error parsing asset %s: 'range' array must contain only numbers or strings \
-                        and strings must be in the format (\"x .. y\").",
-                    cJSON_GetObjectItem(asset_array_entry, "name")->valuestring);
-                return std::vector<int>();
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(
+                    Result_Details(fmt::format("{}: 'range' array must contain only numbers or strings and strings must be in the format (\"x .. y\").", cJSON_GetObjectItem(asset_array_entry, "name")->valuestring)));
+                return std::make_pair(std::vector<int>(), validation_result);
             } else {
                 try {
                     // Split off delimiter(..)
@@ -442,25 +535,22 @@ std::vector<int> Type_Configurator::generate_list_of_asset_instances_represented
                         asset_instance_list.push_back(i);
                     }
                 } catch (std::invalid_argument& e) {
-                    FPS_ERROR_LOG(
-                        "Error parsing asset %s: 'range' array must contain only numbers or strings \
-                            and strings must be in the format (\"x .. y\").",
-                        cJSON_GetObjectItem(asset_array_entry, "name")->valuestring);
-                    return std::vector<int>();
+                    validation_result.is_valid_config = false;
+                    validation_result.ERROR_details.push_back(
+                        Result_Details(fmt::format("{}: 'range' array must contain only numbers or strings and strings must be in the format (\"x .. y\").", cJSON_GetObjectItem(asset_array_entry, "name")->valuestring)));
+                    return std::make_pair(std::vector<int>(), validation_result);
                 }
             }
         } else if (range_entry->type == cJSON_Number)  // Number case (e.g. 5)
         {
             asset_instance_list.push_back(range_entry->valueint);
         } else {
-            FPS_ERROR_LOG(
-                "Error parsing asset %s: 'range' array must contain only numbers or \
-            strings.",
-                cJSON_GetObjectItem(asset_array_entry, "name")->valuestring);
-            return std::vector<int>();
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: 'range' array must contain only numbers or strings.", cJSON_GetObjectItem(asset_array_entry, "name")->valuestring)));
+            return std::make_pair(std::vector<int>(), validation_result);
         }
     }
-    return asset_instance_list;
+    return std::make_pair(asset_instance_list, validation_result);
 }
 
 /**

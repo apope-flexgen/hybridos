@@ -46,7 +46,7 @@ Config_Validation_Result features::Frequency_Response::parse_json_config(cJSON* 
 
     cJSON* JSON_frequency_response = cJSON_GetObjectItem(JSON_config, "frequency_response");
     if (JSON_frequency_response == NULL) {
-        result.ERROR_details.push_back(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", "frequency_response"));
+        result.ERROR_details.push_back(Result_Details(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", "frequency_response")));
         result.is_valid_config = false;
         return result;
     }
@@ -58,12 +58,12 @@ Config_Validation_Result features::Frequency_Response::parse_json_config(cJSON* 
         JSON_variable = variable_id_pair.first == &enable_flag ? cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str()) : cJSON_GetObjectItem(JSON_frequency_response, variable_id_pair.second.c_str());
 
         if (JSON_variable == NULL) {
-            result.ERROR_details.push_back(fmt::format("Could not find variable \"{}\" in frequency_response object in variables.json.", variable_id_pair.second.c_str()));
+            result.ERROR_details.push_back(Result_Details(fmt::format("Could not find variable \"{}\" in frequency_response object in variables.json.", variable_id_pair.second.c_str())));
             result.is_valid_config = false;
             return result;
         }
         if (!variable_id_pair.first->configure(variable_id_pair.second, p_flag, inputs, JSON_variable, defaults, multiple_inputs)) {
-            result.ERROR_details.push_back(fmt::format("Failed to configure frequency response variable \"{}\".", variable_id_pair.second.c_str()));
+            result.ERROR_details.push_back(Result_Details(fmt::format("Failed to configure frequency response variable \"{}\".", variable_id_pair.second.c_str())));
             result.is_valid_config = false;
             return result;
         }
@@ -72,12 +72,12 @@ Config_Validation_Result features::Frequency_Response::parse_json_config(cJSON* 
     // extract response components array
     cJSON* JSON_fr_components = cJSON_GetObjectItem(JSON_frequency_response, "components");
     if (JSON_fr_components == NULL) {
-        result.ERROR_details.push_back("Could not find components in frequency_response object of variables.json.");
+        result.ERROR_details.push_back(Result_Details("Could not find components in frequency_response object of variables.json."));
         result.is_valid_config = false;
         return result;
     }
     if (!cJSON_IsArray(JSON_fr_components)) {
-        result.ERROR_details.push_back("Parsed components object in frequency_response is not an array.");
+        result.ERROR_details.push_back(Result_Details("Parsed components object in frequency_response is not an array."));
         result.is_valid_config = false;
         return result;
     }

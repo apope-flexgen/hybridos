@@ -66,9 +66,21 @@ extern spdlog::level::level_enum severity_to_level(int severity);
 }  // namespace Logging
 
 #define FPS_INFO_LOG(...) ::Logging::log_msg(spdlog::level::info, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+// Manually provide the file, function, and line number as arguments for the message to be logged
+#define MANUAL_FPS_INFO_LOG(file, function, line, ...) ::Logging::log_msg(spdlog::level::info, ::Logging::pre_string(file, function, line), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+
 #define FPS_DEBUG_LOG(...) ::Logging::log_msg(spdlog::level::debug, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+// Manually provide the file, function, and line number as arguments for the message to be logged
+#define MANUAL_FPS_DEBUG_LOG(file, function, line, ...) ::Logging::log_msg(spdlog::level::debug, ::Logging::pre_string(file, function, line), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+
 #define FPS_WARNING_LOG(...) ::Logging::log_msg(spdlog::level::warn, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+// Manually provide the file, function, and line number as arguments for the message to be logged
+#define MANUAL_FPS_WARNING_LOG(file, function, line, ...) ::Logging::log_msg(spdlog::level::warn, ::Logging::pre_string(file, function, line), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+
 #define FPS_ERROR_LOG(...) ::Logging::log_msg(spdlog::level::err, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+// Manually provide the file, function, and line number as arguments for the message to be logged
+#define MANUAL_FPS_ERROR_LOG(file, function, line, ...) ::Logging::log_msg(spdlog::level::err, ::Logging::pre_string(file, function, line), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
+
 #define FPS_TEST_LOG(...) ::Logging::log_test(spdlog::level::err, ::Logging::pre_string(__FILE__, __FUNCTION__, __LINE__), ::Logging::msg_string(__VA_ARGS__), ::Logging::post_string())
 
 #endif  // header guard

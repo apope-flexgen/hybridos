@@ -39,14 +39,24 @@ void Value_Object::set(bool value) {
     value_bool = value;
 }
 
+/**
+ * Sets all numeric values to the integer received and updates this objects type to int
+ * @param value the integer value to set
+ */
 void Value_Object::set(int value) {
     type = Int;
     value_int = value;
+    value_float = value;
 }
 
+/**
+ * Sets all numeric values to the float received and updates this objects type to float
+ * @param value the float value to set
+ */
 void Value_Object::set(float value) {
     type = Float;
     value_float = value;
+    value_int = value;
 }
 
 void Value_Object::set(uint64_t value) {
@@ -71,9 +81,11 @@ void Value_Object::set(Value_Object& new_value) {
             break;
         case Int:
             value_int = new_value.value_int;
+            value_float = new_value.value_int;
             break;
         case Float:
             value_float = new_value.value_float;
+            value_int = new_value.value_float;
             break;
         case Bit_Field:
             value_bit_field = new_value.value_bit_field;

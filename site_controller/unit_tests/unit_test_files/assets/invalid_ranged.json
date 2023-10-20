@@ -653,13 +653,6 @@
 							"component_id": "ess_twins_#",
 							"variables":
 							{
-								"active_power_setpoint":
-								{
-									"name": "Active Power Setpoint",
-									"register_id": "active_power_setpoint",
-									"scaler": 1000,
-									"unit": "W"
-								},
 								"reactive_power_setpoint":
 								{
 									"name": "Reactive Power Setpoint",

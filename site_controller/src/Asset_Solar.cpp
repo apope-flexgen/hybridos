@@ -143,7 +143,12 @@ void Asset_Solar::set_power_mode(powerMode mode) {
         FPS_ERROR_LOG("Asset_Solar::set_power_mode received invalid mode.\n");
 }
 
-bool Asset_Solar::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
+/**
+ * Configure solar-specific variables that are provided for the asset instance level
+ * @param configurator The Type_Configurator used to configure this asset
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+Config_Validation_Result Asset_Solar::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
     Asset_Configurator* asset_config = &configurator->asset_config;
 
     cJSON* object = cJSON_GetObjectItem(asset_config->asset_instance_root, "start_value");
@@ -170,23 +175,32 @@ bool Asset_Solar::configure_typed_asset_instance_vars(Type_Configurator* configu
     if (object)
         power_factor_mode_value = object->valueint;
 
-    return true;
+    return Config_Validation_Result(true);
 }
 
-bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator) {
+/**
+ * Configure ui_controls provided in the asset's components array
+ * @param configurator The Type_Configurator used to configure this asset
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+Config_Validation_Result Asset_Solar::configure_ui_controls(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
     cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
-        FPS_ERROR_LOG("Components array is NULL.");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: components control array is NULL.", name)));
+        return validation_result;
     }
 
     // for each component in the components array, parse out the UI control variables. other component variables are handled by the base class configure function
     for (uint i = 0; i < numAssetComponents; i++) {
         cJSON* component = cJSON_GetArrayItem(components_array, i);
         if (component == NULL) {
-            FPS_ERROR_LOG("Component with index %d has NULL configuration.", i);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: component control array entry {} is invalid or undefined.", name, i + 1)));
+            continue;
         }
 
         // UI controls are optional
@@ -194,78 +208,111 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator) {
         if (ui_controls == NULL)
             continue;
 
+        Config_Validation_Result control_result;
+
         // when adding a new UI control, make sure to add it to the list of valid UI controls in Asset_Manager.cpp
         cJSON* ctrl_obj;
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_mode");
-        if (ctrl_obj != NULL && !maint_mode.configure(ctrl_obj, yesNoOption, &inMaintenance, Bool, sliderStr, true)) {
-            FPS_ERROR_LOG("Failed to configure maint_mode UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = maint_mode.configure(ctrl_obj, yesNoOption, &inMaintenance, Bool, sliderStr, true);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_mode UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "lock_mode");
-        if (ctrl_obj != NULL && !lock_mode.configure(ctrl_obj, yesNoOption, &inLockdown, Bool, sliderStr, true)) {
-            FPS_ERROR_LOG("Failed to configure lock_mode UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = lock_mode.configure(ctrl_obj, yesNoOption, &inLockdown, Bool, sliderStr, true);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure lock_mode UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "clear_faults");
         if (ctrl_obj != NULL) {
-            if (!clear_faults_ctl.configure(ctrl_obj, resetOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure clear_faults UI control.");
-                return false;
+            control_result = clear_faults_ctl.configure(ctrl_obj, resetOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure clear_faults UI control.", name)));
+            } else {
+                uri_clear_faults = build_uri(compNames[i], clear_faults_ctl.reg_name);
             }
-            uri_clear_faults = build_uri(compNames[i], clear_faults_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "start");
         if (ctrl_obj != NULL) {
-            if (!start_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure start asset UI control.");
-                return false;
+            control_result = start_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure start asset UI control.", name)));
+            } else {
+                uri_start = build_uri(compNames[i], start_ctl.reg_name);
             }
-            uri_start = build_uri(compNames[i], start_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "stop");
         if (ctrl_obj != NULL) {
-            if (!stop_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure stop asset UI control.");
-                return false;
+            control_result = stop_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure stop asset UI control.", name)));
+            } else {
+                uri_stop = build_uri(compNames[i], stop_ctl.reg_name);
             }
-            uri_stop = build_uri(compNames[i], stop_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "enter_standby");
         if (ctrl_obj != NULL) {
-            if (!enter_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure enter_standby UI control.");
-                return false;
+            control_result = enter_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure enter_standby UI control.", name)));
+            } else {
+                uri_enter_standby = build_uri(compNames[i], enter_standby_ctl.reg_name);
             }
-            uri_enter_standby = build_uri(compNames[i], enter_standby_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "exit_standby");
         if (ctrl_obj != NULL) {
-            if (!exit_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure exit_standby UI control.");
-                return false;
+            control_result = exit_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure exit_standby UI control.", name)));
+            } else {
+                uri_exit_standby = build_uri(compNames[i], exit_standby_ctl.reg_name);
             }
-            uri_exit_standby = build_uri(compNames[i], exit_standby_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_active_power_setpoint");
-        if (ctrl_obj != NULL && !maint_active_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_active_power_setpoint, Float, numberStr, false)) {
-            FPS_ERROR_LOG("Failed to configure maint_active_power_setpoint UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = maint_active_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_active_power_setpoint, Float, numberStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_active_power_setpoint UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_reactive_power_setpoint");
-        if (ctrl_obj != NULL && !maint_reactive_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_reactive_power_setpoint, Float, numberStr, false)) {
-            FPS_ERROR_LOG("Failed to configure maint_reactive_power_setpoint UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = maint_reactive_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_reactive_power_setpoint, Float, numberStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_reactive_power_setpoint UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
     }
-    return true;
+    return validation_result;
 }
 
 /**
@@ -280,9 +327,14 @@ bool Asset_Solar::configure_ui_controls(Type_Configurator* configurator) {
  *
  * Raw values are currently unused for this Asset type
  */
-bool Asset_Solar::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
-    return configure_single_fims_var(&power_mode_setpoint, "reactive_power_mode", configurator, Int, 0, REACTIVEPWR) && configure_single_fims_var(&power_factor_setpoint, "power_factor_setpoint", configurator) &&
-           configure_single_fims_var(&status, "status", configurator, Status);
+Config_Validation_Result Asset_Solar::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    validation_result.absorb(configure_single_fims_var(&power_mode_setpoint, "reactive_power_mode", configurator, Int, 0, REACTIVEPWR));
+    validation_result.absorb(configure_single_fims_var(&power_factor_setpoint, "power_factor_setpoint", configurator));
+    validation_result.absorb(configure_single_fims_var(&status, "status", configurator, Status));
+
+    return validation_result;
 }
 
 // Variable map moved to ESS_Manager

@@ -591,12 +591,6 @@
 									"register_id": "equalization_control",
 									"type": "Bool"
 								},
-								"autobalancing_disable":
-								{
-									"name": "Disable Auto-Balancing",
-									"register_id": "equalization_control",
-									"type": "Bool"
-								},
 								"maint_active_power_setpoint":
 								{
 									"name": "Active Power Setpoint",
@@ -957,12 +951,6 @@
 									"name": "Limits Override",
 									"type": "Bool",
 									"ui_type": "none"
-								},
-								"autobalancing_enable":
-								{
-									"name": "Enable Auto-Balancing",
-									"register_id": "equalization_control",
-									"type": "Bool"
 								},
 								"autobalancing_disable":
 								{

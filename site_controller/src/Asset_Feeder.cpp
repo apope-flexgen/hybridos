@@ -91,7 +91,12 @@ void Asset_Feeder::set_active_power_setpoint(float setpoint) {
     active_power_setpoint.component_control_value.value_float = setpoint;
 }
 
-bool Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
+/**
+ * Configure feeder-specific variables that are provided for the asset instance level
+ * @param configurator The Type_Configurator used to configure this asset
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+Config_Validation_Result Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* configurator) {
     Asset_Configurator* asset_config = &configurator->asset_config;
 
     cJSON* object = cJSON_GetObjectItem(asset_config->asset_instance_root, "value_open");
@@ -114,23 +119,32 @@ bool Asset_Feeder::configure_typed_asset_instance_vars(Type_Configurator* config
     if (object)
         reset_value = object->valueint;
 
-    return true;
+    return Config_Validation_Result(true);
 }
 
-bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator) {
+/**
+ * Configure ui_controls provided in the asset's components array
+ * @param configurator The Type_Configurator used to configure this asset
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+Config_Validation_Result Asset_Feeder::configure_ui_controls(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
     cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
-        FPS_ERROR_LOG("Components array is NULL.");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: components control array is NULL.", name)));
+        return validation_result;
     }
 
     // for each component in the components array, parse out the UI control variables. other component variables are handled by the base class configure function
     for (uint i = 0; i < numAssetComponents; i++) {
         cJSON* component = cJSON_GetArrayItem(components_array, i);
         if (component == NULL) {
-            FPS_ERROR_LOG("Component with index %d has NULL configuration.", i);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: component control array entry {} is invalid or undefined.", name, i + 1)));
+            continue;
         }
 
         // UI controls are optional
@@ -138,66 +152,91 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator) {
         if (ui_controls == NULL)
             continue;
 
+        Config_Validation_Result control_result;
+
         // when adding a new UI control, make sure to add it to the list of valid UI controls in Asset_Manager.cpp
         cJSON* ctrl_obj;
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_mode");
-        if (ctrl_obj != NULL && !maint_mode.configure(ctrl_obj, yesNoOption, &inMaintenance, Bool, sliderStr, true)) {
-            FPS_ERROR_LOG("Failed to configure maint_mode UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = maint_mode.configure(ctrl_obj, yesNoOption, &inMaintenance, Bool, sliderStr, true);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_mode UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "lock_mode");
-        if (ctrl_obj != NULL && !lock_mode.configure(ctrl_obj, yesNoOption, &inLockdown, Bool, sliderStr, true)) {
-            FPS_ERROR_LOG("Failed to configure lock_mode UI control.");
-            return false;
+        if (ctrl_obj != NULL) {
+            control_result = lock_mode.configure(ctrl_obj, yesNoOption, &inLockdown, Bool, sliderStr, true);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure lock_mode UI control.", name)));
+            }
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_close");
         if (ctrl_obj != NULL) {
-            if (!breaker_close_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure breaker_close UI control.");
-                return false;
+            control_result = breaker_close_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure breaker_close UI control.", name)));
+            } else {
+                uri_breaker_close = build_uri(compNames[i], breaker_close_ctl.reg_name);
             }
-            uri_breaker_close = build_uri(compNames[i], breaker_close_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_close_permissive");
         if (ctrl_obj != NULL) {
-            if (!breaker_close_perm_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure breaker_close_permissive UI control.");
-                return false;
+            control_result = breaker_close_perm_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure breaker_close_permissive UI control.", name)));
+            } else {
+                uri_breaker_close_permissive = build_uri(compNames[i], breaker_close_perm_ctl.reg_name);
             }
-            uri_breaker_close_permissive = build_uri(compNames[i], breaker_close_perm_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_close_permissive_remove");
         if (ctrl_obj != NULL) {
-            if (!breaker_close_perm_remove_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure breaker_close_permissive_remove UI control.");
-                return false;
+            control_result = breaker_close_perm_remove_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure breaker_close_permissive_remove UI control.", name)));
+            } else {
+                uri_breaker_close_permissive_remove = build_uri(compNames[i], breaker_close_perm_remove_ctl.reg_name);
             }
-            uri_breaker_close_permissive_remove = build_uri(compNames[i], breaker_close_perm_remove_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_open");
         if (ctrl_obj != NULL) {
-            if (!breaker_open_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure breaker_open UI control.");
-                return false;
+            control_result = breaker_open_ctl.configure(ctrl_obj, onOffOption, NULL, Int, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure breaker_open UI control.", name)));
+            } else {
+                uri_breaker_open = build_uri(compNames[i], breaker_open_ctl.reg_name);
             }
-            uri_breaker_open = build_uri(compNames[i], breaker_open_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
 
         ctrl_obj = cJSON_GetObjectItem(ui_controls, "breaker_reset");
         if (ctrl_obj != NULL) {
-            if (!breaker_reset_ctl.configure(ctrl_obj, resetOption, NULL, Int, buttonStr, false)) {
-                FPS_ERROR_LOG("Failed to configure breaker_reset UI control.");
-                return false;
+            control_result = breaker_reset_ctl.configure(ctrl_obj, resetOption, NULL, Int, buttonStr, false);
+            if (!control_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure breaker_reset UI control.", name)));
+            } else {
+                uri_breaker_reset = build_uri(compNames[i], breaker_reset_ctl.reg_name);
             }
-            uri_breaker_reset = build_uri(compNames[i], breaker_reset_ctl.reg_name);
+            validation_result.absorb(control_result);
         }
     }
-    return true;
+    return validation_result;
 }
 
 /**
@@ -212,36 +251,47 @@ bool Asset_Feeder::configure_ui_controls(Type_Configurator* configurator) {
  *
  * Raw values are currently unused for this Asset type
  */
-bool Asset_Feeder::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
-    return configure_single_fims_var(&breaker_status, "breaker_status", configurator, Bool) && configure_single_fims_var(&utility_status, "utility_status", configurator, Bool) &&
-           configure_single_fims_var(&grid_voltage_l1, "grid_voltage_l1", configurator) && configure_single_fims_var(&grid_voltage_l2, "grid_voltage_l2", configurator) && configure_single_fims_var(&grid_voltage_l3, "grid_voltage_l3", configurator) &&
-           configure_single_fims_var(&grid_frequency, "grid_frequency", configurator);
+Config_Validation_Result Asset_Feeder::configure_typed_asset_fims_vars(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    validation_result.absorb(configure_single_fims_var(&breaker_status, "breaker_status", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&utility_status, "utility_status", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&grid_voltage_l1, "grid_voltage_l1", configurator));
+    validation_result.absorb(configure_single_fims_var(&grid_voltage_l2, "grid_voltage_l2", configurator));
+    validation_result.absorb(configure_single_fims_var(&grid_voltage_l3, "grid_voltage_l3", configurator));
+    validation_result.absorb(configure_single_fims_var(&grid_frequency, "grid_frequency", configurator));
+
+    return validation_result;
 }
 
-bool Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configurator) {
+Config_Validation_Result Asset_Feeder::validate_poi_feeder_configuration(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     // if config validation flag is false, no need to validate
     if (!configurator->config_validation) {
-        return true;
+        return validation_result;
     }
 
     // does config validation that was not done earlier since we did not know which feeder was POI at the time
-    if (!validate_config()) {
-        FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder failed base Asset validate config check\n");
-        return false;
+    Config_Validation_Result base_config_result = validate_config();
+    if (!base_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: POI feeder failed base Asset validate config check.", name)));
     }
+    validation_result.absorb(base_config_result);
 
     // checks to make sure required base class vars were configured. other assets had these checked in configure_base function
     cJSON* obj = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "rated_active_power_kw");
     if (obj == NULL) {
-        FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder missing required rated_active_power_kw variable\n");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: POI feeder missing required rated_active_power_kw variable.", name)));
     }
     obj = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "slew_rate");
     if (obj == NULL) {
-        FPS_ERROR_LOG("Asset_Feeder::validate_poi_feeder_configuration ~ POI feeder missing required slew_rate variable\n");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: POI feeder missing required slew_rate variable.", name)));
     }
-    return true;
+    return validation_result;
 }
 
 // Todo: This function has a strange unconventional fims hierarchy. Usually there is 2 layers (body->value) this one has 3("metabody"->body->value). Might should figure out and change why this is the case.

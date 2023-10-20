@@ -118,9 +118,12 @@ fimsCtl::~fimsCtl() {
  *
  * @param templated_string: The string to replace the wildcard character in
  * @param replacement_number: The number to replace the wildcard character with
- * @return The templated string with the wildcard character replaced with the number
+ * @param type: The type of entry being processed. Either an asset type specifier or component id specifier
+ * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::string replace_wildcard_with_number(std::string templated_string, int replacement_number) {
+std::pair<std::string, Config_Validation_Result> replace_wildcard_with_number(std::string templated_string, int replacement_number, std::string type) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     const char* wildcard_character("#");
     std::stringstream ss;
     ss << std::setw(2) << std::setfill('0') << replacement_number;
@@ -129,11 +132,12 @@ std::string replace_wildcard_with_number(std::string templated_string, int repla
     auto wildcard_location = templated_string.find(wildcard_character);
     std::string copy = templated_string;
     if (wildcard_location == std::string::npos) {
-        FPS_ERROR_LOG("Wildcard character %s not found in string %s.", wildcard_character, templated_string.c_str());
-        return std::string("");
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{} wildcard character {} not found in string {}.", type, wildcard_character, templated_string.c_str())));
+        return std::make_pair("", validation_result);
     }
     copy.replace(wildcard_location, strlen(wildcard_character), new_number);
-    return copy;
+    return std::make_pair(copy, validation_result);
 }
 
 /**
@@ -142,12 +146,16 @@ std::string replace_wildcard_with_number(std::string templated_string, int repla
  *
  * @param templated_string: The string to replace the wildcard character in
  * @param asset_range_map: The map of asset numbers and bools indicating whether they have been used yet
- * @return The templated string with the wildcard character replaced with the number
+ * @param type: The type of entry being processed. Either an asset type specifier or component id specifier
+ * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::string replace_wildcard_with_number(std::string templated_string, std::map<int, bool>& asset_range_map) {
+std::pair<std::string, Config_Validation_Result> find_next_asset_to_replace_wildcard(std::string templated_string, std::map<int, bool>& asset_range_map, std::string type) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     if (asset_range_map.empty()) {
-        FPS_ERROR_LOG("Asset range map is empty");
-        return std::string("");
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: internal configuration map is empty.", type)));
+        return std::make_pair("", validation_result);
     }
 
     // Iterate through map until you find a false (aka not used yet)
@@ -161,58 +169,99 @@ std::string replace_wildcard_with_number(std::string templated_string, std::map<
     }
 
     if (replacement_number == -1) {
-        FPS_ERROR_LOG("Failed to configure an asset using a templated range. All assets in range already configured.");
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure using a templated range. All entries in internal configuration map already configured.", type)));
         if (asset_range_map.size() == 0)
-            FPS_ERROR_LOG("Asset range map is empty.");
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: internal configuration map is empty.", type)));
         else
-            FPS_ERROR_LOG("Asset range map size: %d.", asset_range_map.size());
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: internal configuration map size: {}.", type, asset_range_map.size())));
         std::string map_string;
         for (auto& it : asset_range_map) {
             map_string += std::to_string(it.first) + ":" + std::to_string(it.second) + ", ";
         }
-        FPS_ERROR_LOG("Asset range map: %s", map_string.c_str());
-        return std::string("");
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: internal configuration map: {}.", type, map_string.c_str())));
+        return std::make_pair("", validation_result);
     }
 
-    return replace_wildcard_with_number(templated_string, replacement_number);
+    std::pair<std::string, Config_Validation_Result> replaced_result = replace_wildcard_with_number(templated_string, replacement_number, type);
+    validation_result.absorb(replaced_result.second);
+    return std::make_pair(replaced_result.first, validation_result);
 }
 
 /**
- * @brief Call replace_wildcard_with_number() for each templated asset_id in the cJSON array.
+ * @brief Call find_next_asset_to_replace_wildcard() for each templated asset_id in the cJSON array.
  * Make sure that the provided replacement is yet to be used.
  *
  * @param map: <asset_id, <asset_number, used>>
  * @param validation: std::set of asset_ids that have been used
  * @param id: templated asset_id
- * @return The templated string with the wildcard character replaced with the number
+ * @param type: the type of entry being processed. Either an asset type specifier or component id specifier
+ * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::string handle_templated_replace_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, cJSON* id) {
-    if (id == NULL) {
-        FPS_ERROR_LOG("Asset_id is NULL.");
-        return std::string("");
-    }
-    if (id->type != cJSON_String) {
-        FPS_ERROR_LOG("Asset_id is not a string.");
-        return std::string("");
+std::pair<std::string, Config_Validation_Result> handle_templated_replace_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, std::string id, std::string type) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+    if (id.empty()) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: templated string is not defined.", type)));
+        return std::make_pair("", validation_result);
     }
 
-    std::string replaced = replace_wildcard_with_number(std::string(id->valuestring), map[id->valuestring]);
-    if (replaced == "") {
-        FPS_ERROR_LOG("Failed to expand templated asset_id %s.", id->valuestring);
-        return std::string("");
+    std::pair<std::string, Config_Validation_Result> replaced_result = find_next_asset_to_replace_wildcard(id, map[id], type);
+    if (replaced_result.first == "") {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to expand templated string {}.", type, id)));
+        validation_result.absorb(replaced_result.second);
+        return std::make_pair("duplicate", validation_result);
     } else {
-        const char* id_with_replaced_wildcard = replaced.c_str();
-        auto check = validation.insert(std::string(id_with_replaced_wildcard));
+        auto check = validation.insert(replaced_result.first);
         if (check.second == false) {
-            FPS_ERROR_LOG(
-                "Failed to insert asset_id %s into validation map, it already exists. \
-                Attempt to configure asset twice.",
-                id_with_replaced_wildcard);
-            return std::string("");
-        } else {
-            return std::string(id_with_replaced_wildcard);
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to insert string {}: already exists in map", type, replaced_result.first)));
         }
     }
+    validation_result.absorb(replaced_result.second);
+    return std::make_pair(replaced_result.first, validation_result);
+}
+
+/**
+ * @brief Call find_next_asset_to_replace_wildcard() for each templated asset_id in the cJSON array.
+ * Make sure that the provided replacement is yet to be used.
+ *
+ * @param map: <asset_id, <asset_number, used>>
+ * @param validation: std::set of asset_ids that have been used
+ * @param id: templated asset_id
+ * @param type: the type of entry being processed. Either an asset type specifier or component id specifier
+ * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+std::pair<std::string, Config_Validation_Result> handle_templated_replace_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, cJSON* id, std::string type) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+    if (id == NULL) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: templated string is not defined.", type)));
+        return std::make_pair("", validation_result);
+    }
+    if (id->type != cJSON_String) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: templated string is not a string.", type)));
+        return std::make_pair("", validation_result);
+    }
+
+    std::pair<std::string, Config_Validation_Result> replaced_result = find_next_asset_to_replace_wildcard(std::string(id->valuestring), map[id->valuestring], type);
+    if (replaced_result.first == "") {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to expand templated string {}.", type, id->valuestring)));
+        validation_result.absorb(replaced_result.second);
+        replaced_result.first = fmt::format("duplicate", id->valuestring);
+    } else {
+        auto check = validation.insert(replaced_result.first);
+        if (check.second == false) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to insert string {}: already exists in map", type, replaced_result.first)));
+            replaced_result.first = fmt::format("duplicate", id->valuestring);
+        }
+    }
+    validation_result.absorb(replaced_result.second);
+    return std::make_pair(replaced_result.first, validation_result);
 }
 
 /**
@@ -220,114 +269,171 @@ std::string handle_templated_replace_check_for_duplicate(std::map<std::string, s
  *
  * @param validation: std::set of asset_ids that have been used
  * @param id: non templated asset_id
- * @return the id if it is yet to be used, otherwise an empty string
+ * @return Pair containing the template replaced id if it has yet to be used
+ * and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::string no_replace_check_for_duplicate(std::set<std::string>& validation, cJSON* id) {
+std::pair<std::string, Config_Validation_Result> no_replace_check_for_duplicate(std::set<std::string>& validation, std::string id, std::string type) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    if (id.empty()) {
+        validation_result.is_valid_config = true;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: id is not defined", type)));
+        return std::make_pair("", validation_result);
+    }
+    auto check = validation.insert(std::string(id));
+    if (check.second == false) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to insert entry {}: already exists in map.", type, id)));
+        return std::make_pair("duplicate", validation_result);
+    }
+    return std::make_pair(id, validation_result);
+}
+
+/**
+ * @brief Make sure this non templated asset is yet to be used.
+ *
+ * @param validation: std::set of asset_ids that have been used
+ * @param id: non templated asset_id
+ * @return Pair containing the template replaced id if it has yet to be used
+ * and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+std::pair<std::string, Config_Validation_Result> no_replace_check_for_duplicate(std::set<std::string>& validation, cJSON* id, std::string type) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     if (id == NULL) {
-        FPS_ERROR_LOG("Asset_id is NULL.");
-        return std::string("");
+        validation_result.is_valid_config = true;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: id is not defined", type)));
+        return std::make_pair("", validation_result);
     }
     if (id->type != cJSON_String) {
-        FPS_ERROR_LOG("Asset_id is not a string.");
-        return std::string("");
+        validation_result.is_valid_config = true;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: id is not a string.", type)));
+        return std::make_pair("", validation_result);
     }
     auto check = validation.insert(std::string(id->valuestring));
     if (check.second == false) {
-        FPS_ERROR_LOG(
-            "Failed to insert asset_id %s into ValidationMap, it already exists. \
-            Attempt to configure asset twice.",
-            id->valuestring);
-        return std::string("");
-    } else {
-        return std::string(id->valuestring);
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to insert entry {}: already exists in map.", type, id->valuestring)));
+        return std::make_pair("duplicate", validation_result);
     }
+    return std::make_pair(id->valuestring, validation_result);
 }
 
 /**
  * @brief Configure an asset.
  *
  * @param configurator: The configurator object
- * @return true if successful, false otherwise
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Asset::configure(Type_Configurator* configurator) {
+Config_Validation_Result Asset::configure(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     is_primary = configurator->p_is_primary_controller;  // This is a pointer to a broader controller status flag - neither an asset instance var nor a component var
 
-    if (!configure_common_asset_instance_vars(configurator)) {
-        FPS_ERROR_LOG("Failed to configure common asset instance vars.");
-        return false;
+    Config_Validation_Result variables_config_result = configure_common_asset_instance_vars(configurator);
+    if (!variables_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure common asset instance vars.", name)));
     }
+    validation_result.absorb(variables_config_result);
 
-    if (!configure_component_vars(configurator)) {
-        FPS_ERROR_LOG("Failed to configure component vars.");
-        return false;
+    variables_config_result = configure_component_vars(configurator);
+    if (!variables_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure component vars", name)));
     }
+    validation_result.absorb(variables_config_result);
 
-    if (!configure_common_asset_fims_vars(configurator)) {
-        FPS_ERROR_LOG("Failed to configure common FIMS setpoints.");
-        return false;
+    variables_config_result = configure_common_asset_fims_vars(configurator);
+    if (!variables_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure common FIMS setpoints.", name)));
     }
+    validation_result.absorb(variables_config_result);
 
-    if (!configure_typed_asset_fims_vars(configurator)) {
-        FPS_ERROR_LOG("Failed to configure typed asset FIMS setpoints.");
-        return false;
+    variables_config_result = configure_typed_asset_fims_vars(configurator);
+    if (!variables_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure typed asset FIMS setpoints.", name)));
     }
+    validation_result.absorb(variables_config_result);
 
-    if (!replace_typed_raw_fims_vars()) {
-        FPS_ERROR_LOG("Failed to replace typed asset FIMS setpoints.");
-        return false;
+    variables_config_result = replace_typed_raw_fims_vars();
+    if (!variables_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to replace typed asset FIMS setpoints.", name)));
     }
+    validation_result.absorb(variables_config_result);
 
     add_dynamic_variables_to_maps(configurator);
 
-    if (!configure_typed_asset_instance_vars(configurator)) {
-        FPS_ERROR_LOG("Failed to configure typed asset instance vars.");
-        return false;
+    variables_config_result = configure_typed_asset_instance_vars(configurator);
+    if (!variables_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure typed asset instance vars.", name)));
     }
+    validation_result.absorb(variables_config_result);
 
-    if (!configure_ui_controls(configurator)) {
-        FPS_ERROR_LOG("Failed to configure UI controls.");
-        return false;
+    variables_config_result = configure_ui_controls(configurator);
+    if (!variables_config_result.is_valid_config) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure UI controls.", name)));
     }
+    validation_result.absorb(variables_config_result);
 
     // Check configured component variables against list of required component variables to ensure all were found and configured
     // non-POI feeders don't have any required variables. POI feeder does but it will be checked separately
-    if (strcmp(get_asset_type(), "feeders") != 0 && configurator->config_validation) {
-        return validate_config();
+    // Duplicate assets do not need any additional config validation as the configuration will have been checked in the first entry
+    if (strcmp(get_asset_type(), "feeders") != 0 && configurator->config_validation && !(name == "duplicate" || asset_id == "duplicate")) {
+        validation_result.absorb(validate_config());
     }
 
-    return true;
+    return validation_result;
 }
 
 /**
  * @brief Configure common asset instance variables.
  *
  * @param configurator: The configurator object
- * @return true if successful, false otherwise
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator) {
-    // The asset id represents the asset instance. Typically is <asset_type>_<2-digit number> E.g. ess_04, gen_03, solar_02, feed_01, etc. The asset id is required
-    cJSON* id = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "id");
-    // The asset name is a string and is what will be displayed on the UI. It can be verbose and descriptive. The asset name is required
-    cJSON* asset_name = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "name");
-    if (id == NULL || asset_name == NULL) {
-        FPS_ERROR_LOG("Failed to find ID or name in config.");
-        return false;
-    }
+Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
 
     // If this asset instance was configured from a template, replace wildcard character `#` with template_index
     // else, just copy the id/name string
     // make sure the asset id/name is unique
+    std::pair<std::string, Config_Validation_Result> id_result;
+    std::pair<std::string, Config_Validation_Result> name_result;
     if ((&configurator->asset_config)->is_template_flag) {
-        asset_id = handle_templated_replace_check_for_duplicate((&configurator->asset_config)->asset_id_to_asset_number_map, (&configurator->asset_config)->asset_id_collision_set, id);
-        name = handle_templated_replace_check_for_duplicate((&configurator->asset_config)->asset_name_to_asset_number_map, (&configurator->asset_config)->asset_name_collision_set, asset_name);
+        id_result = handle_templated_replace_check_for_duplicate((&configurator->asset_config)->asset_id_to_asset_number_map, (&configurator->asset_config)->asset_id_collision_set, configurator->current_asset_id, asset_type_id);
+        name_result = handle_templated_replace_check_for_duplicate((&configurator->asset_config)->asset_name_to_asset_number_map, (&configurator->asset_config)->asset_name_collision_set, configurator->current_asset_name, asset_type_id);
     } else {
-        asset_id = no_replace_check_for_duplicate((&configurator->asset_config)->asset_id_collision_set, id);
-        name = no_replace_check_for_duplicate((&configurator->asset_config)->asset_name_collision_set, asset_name);
+        id_result = no_replace_check_for_duplicate((&configurator->asset_config)->asset_id_collision_set, configurator->current_asset_id, asset_type_id);
+        name_result = no_replace_check_for_duplicate((&configurator->asset_config)->asset_name_collision_set, configurator->current_asset_name, asset_type_id);
     }
+    asset_id = id_result.first;
+    name = name_result.first;
 
-    if (asset_id == "" || name == "") {
-        FPS_ERROR_LOG("Failed to configure asset_id or asset_name.");
-        return false;
+    if (asset_id.empty()) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure asset id.", asset_type_id)));
+        // Give placeholder names so configuration can continue and report further errors
+        asset_id = asset_type_id;
+    }
+    if (name.empty()) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure asset name.", asset_type_id)));
+        // Give placeholder names so configuration can continue and report further errors
+        name = asset_type_id;
+    }
+    validation_result.absorb(id_result.second);
+    validation_result.absorb(name_result.second);
+
+    // Don't try to continue configuration if the asset has already been configured
+    if (asset_id == "duplicate" || name == "duplicate") {
+        validation_result.is_valid_config = false;
+        return validation_result;
     }
 
     cJSON* item = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "status_type");
@@ -340,53 +446,31 @@ bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator
     else {
         local_mode_status_type = status_type;
         if (asset_type_value != FEEDERS)
-            FPS_INFO_LOG("Asset %s reusing status_type %s for local_mode_status_type", name, local_mode_status_type ? "random_enum" : "bit_field");
+            validation_result.INFO_details.push_back(Result_Details(fmt::format("Asset {}: reusing status_type {} for local_mode_status_type", name, local_mode_status_type ? "random_enum" : "bit_field")));
     }
 
     cJSON* runMask = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "running_status_mask");
     // If the mask is NULL and is not a feeder, throw an error
     if (runMask == NULL && strcmp(get_asset_type(), "feeders") != 0 && configurator->config_validation)  // Not required for feeders
     {
-        FPS_ERROR_LOG("Failed to find running_status_mask in config: %s.", asset_id);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: failed to find running_status_mask in config.", name)));
     }
     // If the mask isn't NULL and is a hex string, try to parse it
-    else if (runMask != NULL && runMask->valuestring != NULL)
+    else if (runMask != NULL && runMask->valuestring != NULL) {
         try {
             // Casts the provided hex string as an unsigned int64
             running_status_mask = (uint64_t)std::stoul(runMask->valuestring, NULL, 16);
         } catch (...) {
             // Could not parse the provided mask
-            FPS_ERROR_LOG("Asset %s received an invalid running_status_mask.", name);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: received an invalid running_status_mask.", name)));
         }
+    }
     // If the mask isn't null and isn't a hex string, throw an error
     else if (runMask != NULL) {
-        FPS_ERROR_LOG("Asset %s received an invalid input type instead of a hexadecimal string for the running_status_mask.", name);
-        return false;
-    }
-
-    cJSON* stoppedMask = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "stopped_status_mask");
-    // If the mask is NULL and is not a feeder, throw an error
-    if (stoppedMask == NULL && strcmp(get_asset_type(), "feeders") != 0 && configurator->config_validation)  // Not required for feeders
-    {
-        FPS_ERROR_LOG("Failed to find stopped_status_mask in config: %s.", asset_id);
-        return false;
-    }
-    // If the mask isn't NULL and is a hex string, try to parse it
-    else if (stoppedMask != NULL && stoppedMask->valuestring != NULL)
-        try {
-            // Casts the provided hex string as an unsigned int64
-            stopped_status_mask = (uint64_t)std::stoul(stoppedMask->valuestring, NULL, 16);
-        } catch (...) {
-            // Could not parse the provided mask
-            FPS_ERROR_LOG("Asset %s received an invalid stopped_status_mask.", name);
-            return false;
-        }
-    // If the mask isn't null and isn't a hex string, throw an error
-    else if (stoppedMask != NULL) {
-        FPS_ERROR_LOG("Asset %s received an invalid input type instead of a hexadecimal string for the running_status_mask.", name);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: received an invalid input type instead of a hexadecimal string for the running_status_mask.", name)));
     }
 
     cJSON* parsed_local_mask = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "local_mode_status_mask");
@@ -397,24 +481,24 @@ bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator
             local_mode_status_mask = (uint64_t)std::stoul(parsed_local_mask->valuestring, NULL, 16);
         } catch (...) {
             // Could not parse the provided mask
-            FPS_ERROR_LOG("Asset %s received an invalid local_mode_status_mask\n", name);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: received an invalid local_mode_status_mask.", name)));
         }
         local_mode_configured = true;
     }
     // If the mask isn't null and isn't a hex string, throw an error
     else if (parsed_local_mask != NULL) {
-        FPS_ERROR_LOG("Asset %s received an invalid input type instead of a hexadecimal string for the local_mode_status_mask.", name);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: received an invalid input type instead of a hexadecimal string for the local_mode_status_mask.", name)));
     } else if (asset_type_value != FEEDERS)
-        FPS_INFO_LOG("Asset %s optional local_mode_status_mask was not provided in configuration. Will not be able to read component level local/remote control", name);
+        validation_result.INFO_details.push_back(Result_Details(fmt::format("Asset {}: optional local_mode_status_mask was not provided in configuration. Will not be able to read component level local/remote control.", name)));
 
     cJSON* rated_active_pwr_kw = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "rated_active_power_kw");
     if (rated_active_pwr_kw == NULL) {
         // rated_active_pwr_kw not required if asset is a non-POI feeder. POI feeder will be checked for rated_active_power_kw later
         if ((strcmp(get_asset_type(), "feeders") != 0) && configurator->config_validation) {
-            FPS_ERROR_LOG("Failed to find rated_active_pwr_kw in config: %s.", asset_id);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: failed to find rated_active_pwr_kw in config.", name)));
         }
     } else
         rated_active_power_kw = rated_active_pwr_kw->valuedouble;
@@ -431,8 +515,8 @@ bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator
     if (slew_rate == NULL) {
         // slew_rate not required if asset is a non-POI feeder. POI feeder will be checked for slew_rate later
         if ((strcmp(get_asset_type(), "feeders") != 0) && configurator->config_validation) {
-            FPS_ERROR_LOG("Failed to find slew_rate in config: %s.", asset_id);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: failed to find slew_rate in config.", name)));
         }
     } else
         active_power_slew.set_slew_rate(slew_rate->valueint);
@@ -460,8 +544,8 @@ bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator
     if (watchdog_enable) {  // Only look for watchdog timeout if watchdog feature is enabled
         cJSON* wd_timeout_ms = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "watchdog_timeout_ms");
         if (wd_timeout_ms == NULL) {
-            FPS_ERROR_LOG("Failed to find watchdog timeout ms in config.");
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: watchdog feature is enabled but failed to find watchdog timeout ms in config.", name)));
         }
         watchdog_timeout_ms = wd_timeout_ms->valueint;
     }
@@ -477,50 +561,55 @@ bool Asset::configure_common_asset_instance_vars(Type_Configurator* configurator
         } else if (strcmp("Manual", d_ctrl->valuestring) == 0) {
             assetControl = Manual;
         } else {
-            FPS_ERROR_LOG("Unrecognized demand control type %s.", d_ctrl->valuestring);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: unrecognized demand control type {}.", name, d_ctrl->valuestring)));
         }
     } else {
-        FPS_ERROR_LOG("Asset %s contains no demand_control variable.", name);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: contains no demand_control variable.", name)));
     }
-    return true;
+    return validation_result;
 }
 
 /**
  * @brief Configures the component variables for each component in the asset
  *
  * @param configurator: The configurator object that contains the asset configuration
- * @return true if the component variables were successfully configured
- * @return false if the component variables were not successfully configured
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Asset::configure_component_vars(Type_Configurator* configurator) {
+Config_Validation_Result Asset::configure_component_vars(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     // Asset instances are data aggregators for one or many components, described in the "components" array. This array is required for any asset instance
     cJSON* comp_array = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "components");
     if (comp_array == NULL && configurator->config_validation) {
-        FPS_ERROR_LOG("Asset %s contains NULL components array.", name);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: missing a components array.", name)));
+        return validation_result;
     }
 
     // There can be one or many components
     numAssetComponents = cJSON_GetArraySize(comp_array);
     if (numAssetComponents > MAX_COMPS) {
-        FPS_ERROR_LOG("Too many components included for %s.", name);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: exceeded maximum number of component entries, limit is {}, config file has {}.", name, MAX_COMPS, numAssetComponents)));
+        return validation_result;
     }
 
     // For each component, configure its component variables
     for (size_t i = 0; i < numAssetComponents; i++) {
         cJSON* comp = cJSON_GetArrayItem(comp_array, i);
         if (comp == NULL) {
-            FPS_ERROR_LOG("Invalid or NULL component #%d of %s.", i, name);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: component array entry {} is invalid or undefined.", name, i + 1)));
+            continue;
         }
         cJSON* comp_id = cJSON_GetObjectItem(comp, "component_id");
         cJSON* variables = cJSON_GetObjectItem(comp, "variables");
         if (variables == NULL || comp_id == NULL || comp_id->valuestring == NULL) {
-            FPS_ERROR_LOG("NULL variables or component_id for %d of %s .", i, name);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: component array entry {}: variables or component_id are invalid or undefined", name, i + 1)));
+            continue;
         }
         if (!(&configurator->asset_config)->asset_component_to_asset_number_map.count(comp_id->valuestring)) {
             // New component insert
@@ -528,22 +617,24 @@ bool Asset::configure_component_vars(Type_Configurator* configurator) {
         }
         auto check = (&configurator->asset_config)->asset_component_to_asset_number_map[comp_id->valuestring].insert(std::pair<int, bool>((&configurator->asset_config)->asset_num, false));
         if (!check.second) {
-            FPS_ERROR_LOG(
-                "Failed to insert component %d for asset %s. \
-                    Component was already configured.",
-                (&configurator->asset_config)->asset_num, comp_id->valuestring);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: component {} with id {} was already configured for another asset.", name, (&configurator->asset_config)->asset_num, comp_id->valuestring)));
         }
 
+        std::pair<std::string, Config_Validation_Result> component_id_result;
         if ((&configurator->asset_config)->is_template_flag) {
-            compNames[i] = handle_templated_replace_check_for_duplicate((&configurator->asset_config)->asset_component_to_asset_number_map, (&configurator->asset_config)->asset_component_collision_set, comp_id);
+            component_id_result = handle_templated_replace_check_for_duplicate((&configurator->asset_config)->asset_component_to_asset_number_map, (&configurator->asset_config)->asset_component_collision_set, comp_id, asset_type_id);
         } else {
-            compNames[i] = no_replace_check_for_duplicate((&configurator->asset_config)->asset_component_collision_set, comp_id);
+            component_id_result = no_replace_check_for_duplicate((&configurator->asset_config)->asset_component_collision_set, comp_id, asset_type_id);
         }
+        compNames[i] = component_id_result.first;
+        validation_result.absorb(component_id_result.second);
 
         // verify that the component name is not empty
-        if (compNames[i] == "") {
-            return false;
+        if (compNames[i] == "" || compNames[i] == "duplicate") {
+            validation_result.is_valid_config = false;
+            // Give a placeholder template name so we can continue checking for config errors
+            compNames[i] = fmt::format("{}_component_{}", asset_type_id, i);
         }
 
         // Iterate through each variable in this component and insert its information into a FIMS_Object
@@ -552,15 +643,17 @@ bool Asset::configure_component_vars(Type_Configurator* configurator) {
         while (component_variable)                     // Iterate until there is not a new variable object to deal with
         {
             // Insert the variable information into the FIMS_Object. Add any hard-coded variables to the asset and component maps as well
-            if (!parse_variable(component_variable, compNames[i].c_str())) {
-                FPS_ERROR_LOG("Insertion into component variables map failed.");
-                return false;
+            Config_Validation_Result component_config_result = parse_variable(component_variable, compNames[i].c_str());
+            if (!component_config_result.is_valid_config) {
+                validation_result.is_valid_config = false;
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: insertion into component variable map failed.", name)));
             }
+            validation_result.absorb(component_config_result);
             // Get the next variable object in this component
             component_variable = component_variable->next;
         }
     }
-    return true;
+    return validation_result;
 }
 
 /**
@@ -573,19 +666,34 @@ bool Asset::configure_component_vars(Type_Configurator* configurator) {
  * Ex: `dischargeable_power_raw` must be configured here, and `dischargeable_power` must be configured in the
  * associated replace_raw_fims_vars() function
  */
-bool Asset::configure_common_asset_fims_vars(Type_Configurator* configurator) {
-    return configure_single_fims_var(&active_power_setpoint, "active_power_setpoint", configurator) && configure_single_fims_var(&reactive_power_setpoint, "reactive_power_setpoint", configurator) &&
-           configure_single_fims_var(&active_power, "active_power", configurator) && configure_single_fims_var(&reactive_power, "reactive_power", configurator) && configure_single_fims_var(&apparent_power, "apparent_power", configurator) &&
-           configure_single_fims_var(&voltage_l1_n, "voltage_l1_n", configurator) && configure_single_fims_var(&voltage_l2_n, "voltage_l2_n", configurator) && configure_single_fims_var(&voltage_l3_n, "voltage_l3_n", configurator) &&
-           configure_single_fims_var(&voltage_l1_l2, "voltage_l1_l2", configurator) && configure_single_fims_var(&voltage_l2_l3, "voltage_l2_l3", configurator) && configure_single_fims_var(&voltage_l3_l1, "voltage_l3_l1", configurator) &&
-           configure_single_fims_var(&current_l1, "current_l1", configurator) && configure_single_fims_var(&current_l2, "current_l2", configurator) && configure_single_fims_var(&current_l3, "current_l3", configurator) &&
-           configure_single_fims_var(&power_factor, "power_factor", configurator) && configure_single_fims_var(&watchdog_heartbeat, "watchdog_heartbeat", configurator, Int) &&
-           configure_single_fims_var(&component_connected, "component_connected", configurator, Bool) && configure_single_fims_var(&is_faulted, "is_faulted", configurator, Bool, 0, 0, false, false, "Is Faulted") &&
-           configure_single_fims_var(&is_alarmed, "is_alarmed", configurator, Bool, 0, 0, false, false, "Is Alarmed") &&
-           // Configure watchdog variables if the feature is enabled
-           configure_watchdog_vars() &&
-           // Configure local/remote status of the component
-           configure_component_local_mode_vars(configurator);
+Config_Validation_Result Asset::configure_common_asset_fims_vars(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
+    validation_result.absorb(configure_single_fims_var(&active_power_setpoint, "active_power_setpoint", configurator));
+    validation_result.absorb(configure_single_fims_var(&reactive_power_setpoint, "reactive_power_setpoint", configurator));
+    validation_result.absorb(configure_single_fims_var(&active_power, "active_power", configurator));
+    validation_result.absorb(configure_single_fims_var(&reactive_power, "reactive_power", configurator));
+    validation_result.absorb(configure_single_fims_var(&apparent_power, "apparent_power", configurator));
+    validation_result.absorb(configure_single_fims_var(&voltage_l1_n, "voltage_l1_n", configurator));
+    validation_result.absorb(configure_single_fims_var(&voltage_l2_n, "voltage_l2_n", configurator));
+    validation_result.absorb(configure_single_fims_var(&voltage_l3_n, "voltage_l3_n", configurator));
+    validation_result.absorb(configure_single_fims_var(&voltage_l1_l2, "voltage_l1_l2", configurator));
+    validation_result.absorb(configure_single_fims_var(&voltage_l2_l3, "voltage_l2_l3", configurator));
+    validation_result.absorb(configure_single_fims_var(&voltage_l3_l1, "voltage_l3_l1", configurator));
+    validation_result.absorb(configure_single_fims_var(&current_l1, "current_l1", configurator));
+    validation_result.absorb(configure_single_fims_var(&current_l2, "current_l2", configurator));
+    validation_result.absorb(configure_single_fims_var(&current_l3, "current_l3", configurator));
+    validation_result.absorb(configure_single_fims_var(&power_factor, "power_factor", configurator));
+    validation_result.absorb(configure_single_fims_var(&watchdog_heartbeat, "watchdog_heartbeat", configurator, Int));
+    validation_result.absorb(configure_single_fims_var(&component_connected, "component_connected", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&is_faulted, "is_faulted", configurator, Bool, 0, 0, false, false, "Is Faulted"));
+    validation_result.absorb(configure_single_fims_var(&is_alarmed, "is_alarmed", configurator, Bool, 0, 0, false, false, "Is Alarmed"));
+    // Configure watchdog variables if the feature is enabled
+    validation_result.absorb(configure_watchdog_vars());
+    // Configure local/remote status of the component
+    validation_result.absorb(configure_component_local_mode_vars(configurator));
+
+    return validation_result;
 }
 
 // Helper function used by configure_single_fims_var. Could maybe be moved into the Fims_Object class
@@ -654,11 +762,13 @@ void Asset::update_fims_var(Fims_Object* fims_var, valueType type, float default
  *                                  soc_raw in component_var_map to access the input coming from the component. We take soc_raw out of
  *                                  asset_var_map and replace it with soc, using the same URI.
  */
-bool Asset::configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type, float default_float, int default_int, bool default_bool, bool comes_from_component, const char* var_name,
-                                      const char* var_units, int var_scaler) {
+Config_Validation_Result Asset::configure_single_fims_var(Fims_Object* fims_var, const char* var_id, Type_Configurator* configurator, valueType type, float default_float, int default_int, bool default_bool, bool comes_from_component,
+                                                          const char* var_name, const char* var_units, int var_scaler) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     if (fims_var == NULL) {
-        FPS_ERROR_LOG("variable passed to function is NULL.");
-        return false;
+        FPS_ERROR_LOG("%s: there is something wrong with this build. Single fims variable passed is NULL.", name);
+        exit(1);
     }
 
     // Set primary flag for all variables regardless of type
@@ -667,8 +777,8 @@ bool Asset::configure_single_fims_var(Fims_Object* fims_var, const char* var_id,
     if (comes_from_component) {
         // Check if the variable has been provided in configuration. If not, it will not be used so it does not need to be configured
         if (dynamic_variables.find(var_id) == dynamic_variables.end()) {
-            FPS_INFO_LOG("variable %s was not provided in configuration. Leaving it out of the variable map.", var_id);
-            return true;
+            validation_result.INFO_details.push_back(Result_Details(fmt::format("{}: variable {} was not provided in configuration. Leaving it out of the variable map.", name, var_id)));
+            return validation_result;
         }
 
         // The variable was found in configuration and stored in the dynamic variables map
@@ -677,9 +787,9 @@ bool Asset::configure_single_fims_var(Fims_Object* fims_var, const char* var_id,
         dynamic_variables.erase(var_id);
 
         if (!configurator || !configurator->pCompVarMap) {
-            FPS_ERROR_LOG("Component map passed to function is NULL. Cannot insert variable.");
+            FPS_ERROR_LOG("%s: there is something wrong with this build. Component map passed to function is NULL. Cannot insert variable.", name);
+            exit(1);
         }
-
         (*configurator->pCompVarMap)[fims_var->get_component_uri()].push_back(fims_var);
     } else {
         // Update the variable with the provided fields
@@ -692,29 +802,30 @@ bool Asset::configure_single_fims_var(Fims_Object* fims_var, const char* var_id,
     // This will replace any existing variable such as replacing _raw variables with their calculated counterparts
     asset_var_map[variable_uri] = fims_var;
 
-    return true;
+    return validation_result;
 }
 
 /**
  * @brief Configure watchdog specific variables.
  *
  * @param asset_var_map: The map of asset variables
- * @return true if the watchdog variables were successfully configured
- * @return false if the watchdog variables were not successfully configured
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Asset::configure_watchdog_vars() {
+Config_Validation_Result Asset::configure_watchdog_vars() {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     if (!watchdog_enable)
-        return true;
+        return validation_result;
 
     // Startup connected as true, else it will cause a fault on startup before it reads the modbus value
     component_connected.value.set(true);
 
     // Create a watchdog status Fims_Object if the watchdog timer is enabled
-    bool watchdog_status_configured = configure_single_fims_var(&watchdog_status, "watchdog_status", NULL, Bool, 0, 0, false, false, "Watchdog Status") &&
-                                      configure_single_fims_var(&watchdog_fault, "watchdog_fault", NULL, Int, 0, 0, false, false, "Watchdog Connection Fault");
-    if (!watchdog_status_configured) {
-        FPS_ERROR_LOG("Failed to configure watchdog_status register for watchdog feature");
-        return false;
+    validation_result.absorb(configure_single_fims_var(&watchdog_status, "watchdog_status", NULL, Bool, 0, 0, false, false, "Watchdog Status"));
+    validation_result.absorb(configure_single_fims_var(&watchdog_fault, "watchdog_fault", NULL, Int, 0, 0, false, false, "Watchdog Connection Fault"));
+    if (!validation_result.is_valid_config) {
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure watchdog_status register for watchdog feature.", name)));
+        return validation_result;
     }
 
     // Create a watchdog fault Fims_Object if the watchdog timer is enabled and watchdog_status was configured successfully
@@ -727,30 +838,32 @@ bool Asset::configure_watchdog_vars() {
     watchdog_fault.options_name.insert(watchdog_fault.options_name.begin(), "Watchdog Component Disconnected");
     watchdog_fault.options_value.insert(watchdog_fault.options_value.begin(), 0);
     latched_faults[watchdog_fault.get_variable_id()] = 0;
-    return true;
+    return validation_result;
 }
 
 /**
  * Configure Local/Remote mode variables, including the status of the component and the alarm notifying the
  * user of this status
  *
- * @return true if the local mode variables were successfully configured
- * @return false if the local mode variables were not successfully configured
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Asset::configure_component_local_mode_vars(Type_Configurator* configurator) {
+Config_Validation_Result Asset::configure_component_local_mode_vars(Type_Configurator* configurator) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     // Configure variables for tracking local/remote mode status of the component
-    bool hardcoded_vars_configured = configure_single_fims_var(&local_mode_signal, "local_mode_signal", configurator, Int) && configure_single_fims_var(&local_mode_status, "local_mode_status", NULL, Bool, 0, 0, false, false, "Local Mode Status") &&
-                                     configure_single_fims_var(&local_mode_alarm, "local_mode_alarm", NULL, Int, 0, 0, false, false, "Component Local Mode Alarm");
-    if (!hardcoded_vars_configured) {
+    validation_result.absorb(configure_single_fims_var(&local_mode_signal, "local_mode_signal", configurator, Int));
+    validation_result.absorb(configure_single_fims_var(&local_mode_status, "local_mode_status", NULL, Bool, 0, 0, false, false, "Local Mode Status"));
+    validation_result.absorb(configure_single_fims_var(&local_mode_alarm, "local_mode_alarm", NULL, Int, 0, 0, false, false, "Component Local Mode Alarm"));
+    if (!validation_result.is_valid_config) {
         local_mode_configured = false;
-        FPS_ERROR_LOG("Asset %s failed to configure registers for component local/remote status tracking", name);
-        return false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure registers for component local/remote status tracking.", name)));
+        return validation_result;
     }
     // Warn the user if no valid source of component local/remote signal has been provided
     if (!local_mode_signal.get_component_uri()) {
         local_mode_configured = false;
         if (asset_type_value != FEEDERS)
-            FPS_INFO_LOG("Asset %s optional local_mode_signal was not provided in configuration. Will not be able to read component level local/remote control", name);
+            validation_result.INFO_details.push_back(Result_Details(fmt::format("{} optional local_mode_signal was not provided in configuration. Will not be able to read component level local/remote control.", name)));
     }
 
     // Create a local mode alarm Fims_Object if the local mode variabels were configured successfully
@@ -763,7 +876,7 @@ bool Asset::configure_component_local_mode_vars(Type_Configurator* configurator)
     local_mode_alarm.options_name.insert(local_mode_alarm.options_name.begin(), "Component is in local mode");
     local_mode_alarm.options_value.insert(local_mode_alarm.options_value.begin(), 0);
     saved_alarms[local_mode_alarm.get_variable_id()] = 0;
-    return true;
+    return validation_result;
 }
 
 /**
@@ -781,10 +894,11 @@ void Asset::add_dynamic_variables_to_maps(Type_Configurator* configurator) {
  * each of the derived classes Asset_ESS, Asset_Feeder, Asset_Generator, and Asset_Solar.
  *
  * @param asset_var_map: The map of asset variables
- * @return true if all required variables were found in the asset_var_map
- * @return false if any required variables were not found in the asset_var_map
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Asset::validate_config() {
+Config_Validation_Result Asset::validate_config() {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     std::vector<const char*> missing_variables;
 
     // Iterate through the list of required variables
@@ -799,16 +913,14 @@ bool Asset::validate_config() {
     }
 
     // Were any required variables not found and added to the missing variables list?
-    if (missing_variables.empty()) {
-        // If no missing variables, configuration was successful
-        return true;
-    } else {
+    if (!missing_variables.empty()) {
         // If there are missing variables, print out which ones are missing and return false to kill HybridOS
         for (auto it = missing_variables.begin(); it != missing_variables.end(); ++it) {
-            FPS_ERROR_LOG("CONFIG FAILURE - Variable %s of asset %s is missing or misconfigured.", *it, asset_id);
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: variable {} is missing or misconfigured.", name, *it)));
         }
-        return false;
     }
+    return validation_result;
 }
 
 /**
@@ -1586,9 +1698,11 @@ std::string Asset::build_asset_variable_uri(const char* var) {
  * of creating a new one.
  * @param var_json The JSON representation of the variable received from configuration
  * @param comp_id Component id of the variable
- * @return true if inserted successfully
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool Asset::parse_variable(cJSON* var_json, std::string comp_id) {
+Config_Validation_Result Asset::parse_variable(cJSON* var_json, std::string comp_id) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     // The variable string is the name of the component variable object in assets.json. Also is what UI expects in pubs
     char* variable_string = var_json->string;
     // build_asset_variable_uri prepends "/assets/<asset_type>/"
@@ -1607,22 +1721,25 @@ bool Asset::parse_variable(cJSON* var_json, std::string comp_id) {
     // The "name" field is a very succinct description of the variable that can be multiple words with spaces, capital letters, etc->
     cJSON* variable_name = cJSON_HasObjectItem(var_json, "name") ? cJSON_GetObjectItem(var_json, "name") : NULL;
     if (variable_name == NULL || variable_name->valuestring == NULL) {  // The variable name is required
-        FPS_ERROR_LOG("Variable name is NULL for component %s variable %s.", comp_id, variable_string);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: name is undefined for component variable {}.", comp_id, variable_string)));
+    } else {
+        component_variable->set_name(variable_name->valuestring);
     }
-    component_variable->set_name(variable_name->valuestring);
 
     // Asset Manager should expect to receive updates from the component as pubs
     // The register id is what the component will use in its body when it pubs
     if (!cJSON_HasObjectItem(var_json, "register_id")) {  // If a component variable object does not have a register id, then it doesn't belong in the component variables map
-        return true;
+        return validation_result;
     }
+
     cJSON* register_id = cJSON_GetObjectItem(var_json, "register_id");
     if (register_id == NULL || register_id->valuestring == NULL) {
-        FPS_ERROR_LOG("register_id is NULL for component %s variable %s.", comp_id, variable_string);
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: register_id is undefined for for component variable {}", comp_id, variable_string)));
+    } else {
+        component_variable->set_register_id(register_id->valuestring);
     }
-    component_variable->set_register_id(register_id->valuestring);
 
     // The "ui_type" field tells the UI how to display the variable: status, control, fault, alarm, ...
     cJSON* ui_type = cJSON_HasObjectItem(var_json, "ui_type") ? cJSON_GetObjectItem(var_json, "ui_type") : NULL;
@@ -1637,10 +1754,11 @@ bool Asset::parse_variable(cJSON* var_json, std::string comp_id) {
         }
         // Set to valid ui_type or float if invalid
         if (!valid) {
-            FPS_ERROR_LOG("Invalid ui_type provided %s variable %s.", ui_type->valuestring, variable_string);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid ui_type {} provided for variable {}", comp_id, ui_type->valuestring, variable_string)));
+        } else {
+            component_variable->set_ui_type(ui_type->valuestring);
         }
-        component_variable->set_ui_type(ui_type->valuestring);
     } else {  // If no ui_type given, default is "status"
         component_variable->set_ui_type("status");
     }
@@ -1653,12 +1771,16 @@ bool Asset::parse_variable(cJSON* var_json, std::string comp_id) {
             strcmp(type->valuestring, "Status") == 0) {
             component_variable->set_type(type->valuestring);
         } else {
-            FPS_ERROR_LOG("Invalid type given for component %s variable %s.", comp_id, variable_string);
-            return false;
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid type {} provided for variable {}", comp_id, type->valuestring, variable_string)));
         }
     } else {  // If no type given, default is "Float"
         component_variable->set_type("Float");
     }
+
+    // The rest of the configuration is optional and does not report errors, so we can return early at this point
+    if (!validation_result.is_valid_config)
+        return validation_result;
 
     // The "scaler" field is used for displaying the variable correctly on the UI
     cJSON* scaler = cJSON_HasObjectItem(var_json, "scaler") ? cJSON_GetObjectItem(var_json, "scaler") : NULL;
@@ -1731,7 +1853,7 @@ bool Asset::parse_variable(cJSON* var_json, std::string comp_id) {
 
     // For dynamic variables, the list must be static before references can be taken. The variables will be inserted
     // into the other maps once all of them have been parsed
-    return true;
+    return validation_result;
 }
 
 /**
@@ -1789,26 +1911,31 @@ void Asset::var_maps_insert(Fims_Object* variable, std::map<std::string, std::ve
  * @param      enabled_cfg:      The enabled configuration
  * @param      is_bool_string:   Indicates if boolean string
  *
- * @return     True if configured, False otherwise.
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-bool fimsCtl::configure(cJSON* cfg_json, jsonBuildOption build_option, void* display, valueType value_type_cfg, displayType display_type_cfg, bool enabled_cfg, bool is_bool_string) {
-    if (configured == true) {
-        FPS_ERROR_LOG("UI control object configured more than once.");
-        return false;
-    }
+Config_Validation_Result fimsCtl::configure(cJSON* cfg_json, jsonBuildOption build_option, void* display, valueType value_type_cfg, displayType display_type_cfg, bool enabled_cfg, bool is_bool_string) {
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
 
-    if (cfg_json == NULL) {
-        FPS_ERROR_LOG("NULL configuration object given for UI control.");
-        return false;
+    if (cfg_json == NULL && !configured) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details("Empty configuration object given for UI control."));
+        return validation_result;
     }
     obj_name = strdup(cfg_json->string);
 
+    if (configured == true) {
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: UI control object configured more than once.", obj_name)));
+        return validation_result;
+    }
+
     cJSON* control_name_json;
     if ((control_name_json = cJSON_GetObjectItem(cfg_json, "name")) == NULL || (control_name_json->valuestring == NULL)) {
-        FPS_ERROR_LOG("No 'name' field given in UI control configuration object.");
-        return false;
+        validation_result.is_valid_config = false;
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: no 'name' field given in UI control configuration object.", obj_name)));
+    } else {
+        varName = strdup(control_name_json->valuestring);
     }
-    varName = strdup(control_name_json->valuestring);
 
     cJSON* register_id_json = cJSON_GetObjectItem(cfg_json, "register_id");
     if (register_id_json != NULL && register_id_json->valuestring != NULL)
@@ -1833,7 +1960,7 @@ bool fimsCtl::configure(cJSON* cfg_json, jsonBuildOption build_option, void* dis
     boolString = is_bool_string;
     pDisplay = display;
     configured = true;
-    return true;
+    return validation_result;
 }
 
 /**

@@ -646,8 +646,7 @@ std::pair<Fims_Object, Config_Validation_Result> Site_Manager::parse_field_defau
 
 // Configure variables based on the given variables.json configuration object
 bool Site_Manager::parse_variables(cJSON* variables_config_object) {
-    Config_Validation_Result validation_result;
-    validation_result.is_valid_config = true;
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
 
     std::set<std::string> unrecognized_variable_ids;  // filled with all variable ids in configuration, ids are removed as they are recognized
 
@@ -704,7 +703,7 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
         return false;
     }
     if (is_default_JSON_field_defaults) {
-        validation_result.INFO_details.push_back(fmt::format("Defaulting missing variable \"defaults\" in variables.json configuration to: value: {}, ui_type: {}.", field_defaults.value.print(), field_defaults.get_ui_type()));
+        validation_result.INFO_details.push_back(Result_Details(fmt::format("Defaulting missing variable \"defaults\" in variables.json configuration to: value: {}, ui_type: {}.", field_defaults.value.print(), field_defaults.get_ui_type())));
     }
 
     // parse input_sources array
@@ -733,7 +732,7 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
             default_input_sources_description += input_sources.get_name_of_input(i) + (i < input_sources.get_num_sources() - 1 ? ", " : "");
         }
         default_input_sources_description += "]";
-        validation_result.INFO_details.push_back(fmt::format("Defaulting missing variable \"input_sources\" in variables.json configuration to: {}.", default_input_sources_description));
+        validation_result.INFO_details.push_back(Result_Details(fmt::format("Defaulting missing variable \"input_sources\" in variables.json configuration to: {}.", default_input_sources_description)));
     }
 
     // parse all feature-independent variables.json variables
@@ -746,7 +745,7 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
         if (JSON_variable == NULL) {
             JSON_variable = cJSON_GetObjectItem(JSON_flat_default_config, id.c_str());
             if (JSON_variable == NULL) {
-                validation_result.ERROR_details.push_back(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", id));
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", id)));
                 validation_result.is_valid_config = false;
                 continue;
             } else {
@@ -754,11 +753,12 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
             }
         }
         if (!variable_id_pair.first->configure(variable_id_pair.second, is_primary, &input_sources, JSON_variable, field_defaults, multi_input_command_vars)) {
-            validation_result.ERROR_details.push_back(fmt::format("Failed to parse variable with ID {}", variable_id_pair.second));
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Failed to parse variable with ID {}", variable_id_pair.second)));
             validation_result.is_valid_config = false;
         }
         if (is_default_JSON_variable) {
-            validation_result.INFO_details.push_back(fmt::format("Defaulting missing variable \"{}\" in variables.json configuration to: value: {}, ui_type: {}.", id, variable_id_pair.first->value.print(), variable_id_pair.first->get_ui_type()));
+            validation_result.INFO_details.push_back(
+                Result_Details(fmt::format("Defaulting missing variable \"{}\" in variables.json configuration to: value: {}, ui_type: {}.", id, variable_id_pair.first->value.print(), variable_id_pair.first->get_ui_type())));
         }
     }
 
@@ -766,37 +766,37 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
     // determine which features are available
     // read which active power features are available for runmode1 and configure them on the UI
     if (!configure_available_runmode1_kW_features_list()) {
-        validation_result.ERROR_details.push_back("Error configuring available runmode1 active power features!");
+        validation_result.ERROR_details.push_back(Result_Details("Error configuring available runmode1 active power features!"));
         validation_result.is_valid_config = false;
         has_valid_available_features_config = false;
     }
     // read which active power features are available for runmode2 and configure them on the UI
     if (!configure_available_runmode2_kW_features_list()) {
-        validation_result.ERROR_details.push_back("Error configuring available runmode2 active power features!");
+        validation_result.ERROR_details.push_back(Result_Details("Error configuring available runmode2 active power features!"));
         validation_result.is_valid_config = false;
         has_valid_available_features_config = false;
     }
     // read which reactive power features are available for runmode1 and configure them on the UI
     if (!configure_available_runmode1_kVAR_features_list()) {
-        validation_result.ERROR_details.push_back("Error configuring available runmode1 reactive power features!");
+        validation_result.ERROR_details.push_back(Result_Details("Error configuring available runmode1 reactive power features!"));
         validation_result.is_valid_config = false;
         has_valid_available_features_config = false;
     }
     // read which reactive power features are available for runmode2 and configure them on the UI
     if (!configure_available_runmode2_kVAR_features_list()) {
-        validation_result.ERROR_details.push_back("Error configuring available runmode2 reactive power features!");
+        validation_result.ERROR_details.push_back(Result_Details("Error configuring available runmode2 reactive power features!"));
         validation_result.is_valid_config = false;
         has_valid_available_features_config = false;
     }
     // read which standalone power features are available and configure them on the UI
     if (!configure_available_standalone_power_features_list()) {
-        validation_result.ERROR_details.push_back("Error configuring available standalone power features!");
+        validation_result.ERROR_details.push_back(Result_Details("Error configuring available standalone power features!"));
         validation_result.is_valid_config = false;
         has_valid_available_features_config = false;
     }
     // read which site operation features are available and configure them on the UI
     if (!configure_available_site_operation_features_list()) {
-        validation_result.ERROR_details.push_back("Error configuring available site operation features!");
+        validation_result.ERROR_details.push_back(Result_Details("Error configuring available site operation features!"));
         validation_result.is_valid_config = false;
         has_valid_available_features_config = false;
     }
@@ -833,12 +833,12 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
     // add a warning message for all variables that weren't recognized
     if (!unrecognized_variable_ids.empty()) {
         for (auto unrecognized_var : unrecognized_variable_ids) {
-            validation_result.WARNING_details.push_back(fmt::format("Encountered unrecognized variable \"{}\" in variables.json configuration.", unrecognized_var));
+            validation_result.WARNING_details.push_back(Result_Details(fmt::format("Encountered unrecognized variable \"{}\" in variables.json configuration.", unrecognized_var)));
         }
     }
 
     // report the per-variable results of configuration parsing if there weren't more pressing errors that resulted in an early return
-    LOG_DETAILS_OF_CONFIG_VALIDATION_RESULT(validation_result);
+    validation_result.log_details();
 
     if (!validation_result.is_valid_config) {
         return false;

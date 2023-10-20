@@ -15,6 +15,7 @@
 /* Local Internal Dependencies */
 #include <Asset.h>
 #include <Features/LDSS.h>
+#include <Reference_Configs.h>
 
 class LDSS_Internal;
 
@@ -66,9 +67,9 @@ public:
 protected:
     // configuration
     void set_required_variables(void);
-    bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
-    bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(Type_Configurator* configurator);
+    Config_Validation_Result configure_typed_asset_instance_vars(Type_Configurator* configurator) override;
+    Config_Validation_Result configure_ui_controls(Type_Configurator* configurator) override;
+    Config_Validation_Result configure_typed_asset_fims_vars(Type_Configurator* configurator) override;
     uint64_t starting_status_mask;
     uint64_t stopping_status_mask;
 

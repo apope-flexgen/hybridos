@@ -134,4 +134,41 @@ TEST_F(Asset_Mock, handle_generic_asset_controls_lockdown_set) {
     }
 }
 
+// Ensure that the set_fims_<type>() functions used by pub processing set both numeric value registers so either type can be used as an input
+TEST_F(Asset_Mock, numeric_register_parsing) {
+    soc_raw.set_variable_id("soc");
+    maxRawSoc = 100;
+    minRawSoc = 0;
+    grid_mode_setpoint.set_variable_id("grid_mode");
+
+    // Floating point tests using soc as a typical hard-coded floating point example
+    test_logger t_log("Numeric register parsing", 1, 4);
+    soc_raw.set_type("Float");
+    soc_raw.set_fims_float("soc", 50.0f);
+    soc.value.value_float = process_soc(soc_raw.value.value_float);
+    t_log.float_results.push_back({ 50.0f, soc.value.value_float, "processed float as float" });
+    t_log.check_solution();
+
+    test_logger t_log_2("Numeric register parsing", 2, 4);
+    soc_raw.set_type("Int");
+    soc_raw.set_fims_int("soc", 75);
+    soc.value.value_float = process_soc(soc_raw.value.value_float);
+    t_log_2.float_results.push_back({ 75.0f, soc.value.value_float, "processed int as float" });
+    t_log_2.check_solution();
+
+    // Integer tests using grid_mode_setpoint as a typical hard-coded integer example
+    test_logger t_log_3("Numeric register parsing", 3, 4);
+    grid_mode_setpoint.set_type("Int");
+    grid_mode_setpoint.set_fims_int("grid_mode", 1);
+    // No processing functional available for int examples. Just check that the internal value was set
+    t_log_3.int_results.push_back({ 1, grid_mode_setpoint.value.value_int, "processed int as int" });
+    t_log_3.check_solution();
+
+    test_logger t_log_4("Numeric register parsing", 4, 4);
+    grid_mode_setpoint.set_type("Float");
+    grid_mode_setpoint.set_fims_float("grid_mode", 2);
+    // No processing functional available for int examples. Just check that the internal value was set
+    t_log_4.int_results.push_back({ 2, grid_mode_setpoint.value.value_int, "processed float as int" });
+    t_log_4.check_solution();
+}
 #endif /* ASSET_TEST_H */

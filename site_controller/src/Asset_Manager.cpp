@@ -404,53 +404,75 @@ bool Asset_Manager::asset_create(cJSON* pJsonRoot, bool* primary_controller) {
     is_primary = primary_controller;
 
     if (!build_configurators()) {
-        FPS_ERROR_LOG("Asset_Manager::asset_create ~ Error when allocating memory for Type Configurators. Failing configuration.\n");
-        return false;
+        FPS_ERROR_LOG("There is something wrong with this build. Error when allocating memory for Type Configurators");
+        exit(1);
     }
 
     // Extract the large "assets" cJSON object
     cJSON* jsonAssets = cJSON_GetObjectItem(pJsonRoot, "assets");
     if (jsonAssets == NULL) {
-        FPS_ERROR_LOG("Failed to get object item 'assets' in JSON.\n");
+        FPS_ERROR_LOG("Failed to get object item 'assets' in JSON");
         return false;
     }
 
+    // Struct to aggregate and report on all asset type configuration issues
+    Config_Validation_Result validation_result = Config_Validation_Result(true);
+
     // Extract the "generators" cJSON object and pass it to Generator Manager for configuration
     generator_configurator->asset_type_root = cJSON_GetObjectItem(jsonAssets, "generators");
-    if (generator_configurator->asset_type_root != NULL && !generator_configurator->create_assets()) {
-        FPS_ERROR_LOG("Asset_Manager::asset_create ~ Failed to configure generators.\n");
-        return false;
+    if (generator_configurator->asset_type_root != NULL) {
+        Config_Validation_Result gen_config_result = generator_configurator->create_assets();
+        if (!gen_config_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details("Failed to configure generators."));
+        }
+        validation_result.absorb(gen_config_result);
     }
 
     // Extract the "feeders" cJSON object and pass it to Feeder Manager for configuration
     feeder_configurator->asset_type_root = cJSON_GetObjectItem(jsonAssets, "feeders");
-    if (feeder_configurator->asset_type_root != NULL && !feeder_configurator->create_assets()) {
-        FPS_ERROR_LOG("Asset_Manager::asset_create ~ Failed to configure feeders.\n");
-        return false;
+    if (feeder_configurator->asset_type_root != NULL) {
+        Config_Validation_Result feed_config_result = feeder_configurator->create_assets();
+        if (!feed_config_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details("Failed to configure feeders."));
+        }
+        validation_result.absorb(feed_config_result);
     }
 
     // Extract the "ess" cJSON object and pass it to ESS Manager for configuration
     ess_configurator->asset_type_root = cJSON_GetObjectItem(jsonAssets, "ess");
-    if (ess_configurator->asset_type_root != NULL && !ess_configurator->create_assets()) {
-        FPS_ERROR_LOG("Asset_Manager::asset_create ~ Failed to configure ESSs.\n");
-        return false;
+    if (ess_configurator->asset_type_root != NULL) {
+        Config_Validation_Result ess_config_result = ess_configurator->create_assets();
+        if (!ess_config_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details("Failed to configure ESS."));
+        }
+        validation_result.absorb(ess_config_result);
     }
 
     // Extract the "solar" cJSON object and pass it to Solar Manager for configuration
     solar_configurator->asset_type_root = cJSON_GetObjectItem(jsonAssets, "solar");
-    if (solar_configurator->asset_type_root != NULL && !solar_configurator->create_assets()) {
-        FPS_ERROR_LOG("Asset_Manager::asset_create ~ Failed to configure solar.\n");
-        return false;
+    if (solar_configurator->asset_type_root != NULL) {
+        Config_Validation_Result solar_config_result = solar_configurator->create_assets();
+        if (!solar_config_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details("Failed to configure solar."));
+        }
+        validation_result.absorb(solar_config_result);
     }
 
-        // Print variable maps to terminal (optional)
-        // print_component_var_map();
-        // print_asset_var_map();
+    // Report on any/all configuration issues
+    validation_result.log_details();
+
+    // Print variable maps to terminal (optional)
+    // print_component_var_map();
+    // print_asset_var_map();
 
 #ifndef FPS_TEST_MODE
     emit_event("Assets", "Assets initialized", INFO_ALERT);
 #endif
-    return true;
+    return validation_result.is_valid_config;
 }
 
 bool Asset_Manager::build_configurators(void) {
@@ -460,7 +482,6 @@ bool Asset_Manager::build_configurators(void) {
     solar_configurator = new Type_Configurator(solar_manager, &component_var_map, is_primary);
 
     if (!ess_configurator || !feeder_configurator || !generator_configurator || !solar_configurator) {
-        FPS_ERROR_LOG("Asset_Manager::build_configurators ~ Error when allocating memory for Type Configurators. Failing configuration.\n");
         return false;
     }
     return true;

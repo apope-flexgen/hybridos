@@ -213,7 +213,7 @@ void Solar_Manager_Mock::configure_solar_manager(int numParse, bool* primary_con
     Type_Configurator* solar_configurator = new Type_Configurator(this, component_var_map, primary_controller);
     solar_configurator->asset_type_root = solarRoot;
     solar_configurator->config_validation = false;
-    bool configure_success = solar_configurator->create_assets();
+    bool configure_success = solar_configurator->create_assets().is_valid_config;
     ASSERT_TRUE(configure_success);
 }
 

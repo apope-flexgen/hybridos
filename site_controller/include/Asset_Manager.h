@@ -24,6 +24,7 @@
 #include <Value_Object.h>
 #include <Fims_Object.h>
 #include <Types.h>
+#include <Reference_Configs.h>
 
 class Asset_Manager {
 public:

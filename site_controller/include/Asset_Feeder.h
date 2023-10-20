@@ -14,13 +14,14 @@
 /* System Internal Dependencies */
 /* Local Internal Dependencies */
 #include <Asset.h>
+#include <Reference_Configs.h>
 
 class Asset_Feeder : public Asset {
 public:
     Asset_Feeder();
 
     // configuration
-    bool validate_poi_feeder_configuration(Type_Configurator* configurator);
+    Config_Validation_Result validate_poi_feeder_configuration(Type_Configurator* configurator);
 
     // control
     bool breaker_open(void);
@@ -51,9 +52,9 @@ public:
 protected:
     // configuration
     void set_required_variables(void);
-    bool configure_typed_asset_instance_vars(Type_Configurator* configurator);
-    bool configure_ui_controls(Type_Configurator* configurator);
-    bool configure_typed_asset_fims_vars(Type_Configurator* configurator);
+    Config_Validation_Result configure_typed_asset_instance_vars(Type_Configurator* configurator) override;
+    Config_Validation_Result configure_ui_controls(Type_Configurator* configurator) override;
+    Config_Validation_Result configure_typed_asset_fims_vars(Type_Configurator* configurator) override;
     int open_value;
     int close_value;
     int close_permissive_value;

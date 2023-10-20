@@ -89,7 +89,7 @@ TEST_F(ess_manager_test, calculate_ess_active_power) {
         Type_Configurator ess_configurator(&ess_mgr, &component_var_map, &primary_controller);
         ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
-        bool configure_success = ess_configurator.create_assets();
+        bool configure_success = ess_configurator.create_assets().is_valid_config;
         ASSERT_TRUE(configure_success);
 
         // set test state
@@ -153,7 +153,7 @@ TEST_F(ess_manager_test, calculate_ess_reactive_power) {
         Type_Configurator ess_configurator(&ess_mgr, &component_var_map, &primary_controller);
         ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
-        bool configure_success = ess_configurator.create_assets();
+        bool configure_success = ess_configurator.create_assets().is_valid_config;
         ASSERT_TRUE(configure_success);
 
         // set test state
@@ -310,7 +310,7 @@ TEST_F(ess_manager_test, calculate_ess_active_power_with_reactive_power_priority
         Type_Configurator ess_configurator(&ess_mgr, &component_var_map, &primary_controller);
         ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
-        bool configure_success = ess_configurator.create_assets();
+        bool configure_success = ess_configurator.create_assets().is_valid_config;
         ASSERT_TRUE(configure_success);
 
         // set test state

@@ -27,12 +27,12 @@ Config_Validation_Result Feature::parse_json_config(cJSON* JSON_config, bool* pr
     for (auto& variable_id_pair : variable_ids) {
         cJSON* JSON_variable = cJSON_GetObjectItem(JSON_config, variable_id_pair.second.c_str());
         if (JSON_variable == NULL) {
-            result.ERROR_details.push_back(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", variable_id_pair.second));
+            result.ERROR_details.push_back(Result_Details(fmt::format("Required variable \"{}\" is missing from variables.json configuration.", variable_id_pair.second)));
             result.is_valid_config = false;
             continue;
         }
         if (!variable_id_pair.first->configure(variable_id_pair.second, primary_flag, inputs, JSON_variable, field_defaults, multiple_inputs)) {
-            result.ERROR_details.push_back(fmt::format("Failed to parse variable with ID \"{}\"", variable_id_pair.second));
+            result.ERROR_details.push_back(Result_Details(fmt::format("Failed to parse variable with ID \"{}\"", variable_id_pair.second)));
             result.is_valid_config = false;
         }
     }
