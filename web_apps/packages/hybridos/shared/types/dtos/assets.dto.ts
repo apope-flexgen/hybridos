@@ -25,6 +25,7 @@ export class Info {
   baseURI?: string
   customRegex?: string
   extension?: string
+  range?: string[]
   faultFields?: string[]
   hasAllControls?: boolean
   hasSummary?: boolean

@@ -10,6 +10,7 @@ export const ALARM_FIELDS = 'Alarm Fields';
 export const SOURCE_URI = 'Source URI';
 export const BASE_URI = 'Base URI';
 export const EXTENSION = 'Extension';
+export const RANGE = 'Range';
 export const FAULT_FIELDS = 'Fault Fields';
 export const HAS_SUMMARY = 'Has Summary';
 export const ENABLE_SUMMARY = 'Enable Summary';

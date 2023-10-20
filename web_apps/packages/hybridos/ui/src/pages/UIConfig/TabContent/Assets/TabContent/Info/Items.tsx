@@ -22,6 +22,7 @@ import {
   NAME,
   NAME_HELPER_TEXT,
   SOURCE_URI,
+  RANGE,
 } from './helpers/constants';
 import { ColumnLeft, Row } from './styles';
 
@@ -190,6 +191,19 @@ const Items = () => {
           label={EXTENSION}
           onChange={handleTextFieldChange}
           value={selectedAsset?.info.extension || ''}
+        />
+      </Row>
+      <Divider orientation="horizontal" variant="fullWidth" />
+      <Row>
+        <ColumnLeft>
+          <Typography text={RANGE} variant="bodyL" />
+        </ColumnLeft>
+        <TextField
+          disableLabelAnimation
+          id="range"
+          label={RANGE}
+          onChange={handleTextFieldCommaSeparatedChange}
+          value={selectedAsset?.info.range?.join(',') || ''}
         />
       </Row>
       <Divider orientation="horizontal" variant="fullWidth" />
