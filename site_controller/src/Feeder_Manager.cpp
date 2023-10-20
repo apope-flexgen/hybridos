@@ -292,7 +292,7 @@ Config_Validation_Result Feeder_Manager::configure_type_manager(Type_Configurato
             validation_result.is_valid_config = false;
             validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: validation of POI feeder configuration failed. Failing config.", configurator->p_manager->get_asset_type_id())));
         }
-        poi_config_result.absorb(poi_config_result);
+        validation_result.absorb(poi_config_result);
     }
 
     /************************* asset type variables ******************************/

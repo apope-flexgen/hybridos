@@ -250,7 +250,6 @@
 					"rated_capacity": 500,
 					"rated_active_power_kw": 250.0,
 					"rated_reactive_power_kvar": 250.0,
-					"rated_apparent_power_kva": 250.0,
 					"slew_rate":125000,
 					"throttle_timeout_fast_ms": 150,
 					"throttle_timeout_slow_ms": 2000,

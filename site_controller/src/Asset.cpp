@@ -405,12 +405,12 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
     // make sure the asset id/name is unique
     std::pair<std::string, Config_Validation_Result> id_result;
     std::pair<std::string, Config_Validation_Result> name_result;
-    if ((&configurator->asset_config)->is_template_flag) {
-        id_result = handle_templated_replace_check_for_duplicate((&configurator->asset_config)->asset_id_to_asset_number_map, (&configurator->asset_config)->asset_id_collision_set, configurator->current_asset_id, asset_type_id);
-        name_result = handle_templated_replace_check_for_duplicate((&configurator->asset_config)->asset_name_to_asset_number_map, (&configurator->asset_config)->asset_name_collision_set, configurator->current_asset_name, asset_type_id);
+    if (configurator->asset_config.is_template_flag) {
+        id_result = handle_templated_replace_check_for_duplicate(configurator->asset_config.asset_id_to_asset_number_map, configurator->asset_config.asset_id_collision_set, configurator->current_asset_id, asset_type_id);
+        name_result = handle_templated_replace_check_for_duplicate(configurator->asset_config.asset_name_to_asset_number_map, configurator->asset_config.asset_name_collision_set, configurator->current_asset_name, asset_type_id);
     } else {
-        id_result = no_replace_check_for_duplicate((&configurator->asset_config)->asset_id_collision_set, configurator->current_asset_id, asset_type_id);
-        name_result = no_replace_check_for_duplicate((&configurator->asset_config)->asset_name_collision_set, configurator->current_asset_name, asset_type_id);
+        id_result = no_replace_check_for_duplicate(configurator->asset_config.asset_id_collision_set, configurator->current_asset_id, asset_type_id);
+        name_result = no_replace_check_for_duplicate(configurator->asset_config.asset_name_collision_set, configurator->current_asset_name, asset_type_id);
     }
     asset_id = id_result.first;
     name = name_result.first;
@@ -436,11 +436,11 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
         return validation_result;
     }
 
-    cJSON* item = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "status_type");
+    cJSON* item = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "status_type");
     status_type = (item != NULL && strcmp(item->valuestring, "random_enum") == 0) ? random_enum : bit_field;
 
     // Set local mode status type to use existing status type, unless it has been manually configured
-    cJSON* parsed_local_status_type = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "local_mode_status_type");
+    cJSON* parsed_local_status_type = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "local_mode_status_type");
     if (parsed_local_status_type && parsed_local_status_type->valuestring)
         local_mode_status_type = strcmp(parsed_local_status_type->valuestring, "random_enum") == 0 ? random_enum : bit_field;
     else {
@@ -449,7 +449,7 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
             validation_result.INFO_details.push_back(Result_Details(fmt::format("Asset {}: reusing status_type {} for local_mode_status_type", name, local_mode_status_type ? "random_enum" : "bit_field")));
     }
 
-    cJSON* runMask = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "running_status_mask");
+    cJSON* runMask = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "running_status_mask");
     // If the mask is NULL and is not a feeder, throw an error
     if (runMask == NULL && strcmp(get_asset_type(), "feeders") != 0 && configurator->config_validation)  // Not required for feeders
     {
@@ -473,7 +473,7 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: received an invalid input type instead of a hexadecimal string for the running_status_mask.", name)));
     }
 
-    cJSON* parsed_local_mask = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "local_mode_status_mask");
+    cJSON* parsed_local_mask = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "local_mode_status_mask");
     // if the mask isn't NULL and is a hex string, try to parse it
     if (parsed_local_mask && parsed_local_mask->valuestring) {
         try {
@@ -493,25 +493,47 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
     } else if (asset_type_value != FEEDERS)
         validation_result.INFO_details.push_back(Result_Details(fmt::format("Asset {}: optional local_mode_status_mask was not provided in configuration. Will not be able to read component level local/remote control.", name)));
 
-    cJSON* rated_active_pwr_kw = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "rated_active_power_kw");
-    if (rated_active_pwr_kw == NULL) {
+    cJSON* rated_active_pwr_kw = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "rated_active_power_kw");
+    if (rated_active_pwr_kw == NULL || rated_active_pwr_kw->valuedouble == 0.0) {
         // rated_active_pwr_kw not required if asset is a non-POI feeder. POI feeder will be checked for rated_active_power_kw later
         if ((strcmp(get_asset_type(), "feeders") != 0) && configurator->config_validation) {
             validation_result.is_valid_config = false;
-            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: failed to find rated_active_pwr_kw in config.", name)));
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: must provide a nonzero rated_active_power_kw in config.", name)));
         }
     } else
         rated_active_power_kw = rated_active_pwr_kw->valuedouble;
 
-    cJSON* rated_reactive_pwr_kvar = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "rated_reactive_power_kvar");
-    if (rated_reactive_pwr_kvar != NULL)
+    cJSON* rated_reactive_pwr_kvar = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "rated_reactive_power_kvar");
+    if (rated_reactive_pwr_kvar == NULL || rated_reactive_pwr_kvar->valuedouble == 0.0) {
+        // rated_reactive_pwr_kvar not required if asset is a feeder
+        if ((strcmp(get_asset_type(), "feeders") != 0) && configurator->config_validation) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: must provide a nonzero rated_reactive_power_kvar in config.", name)));
+        }
+    } else
         rated_reactive_power_kvar = rated_reactive_pwr_kvar->valuedouble;
 
-    cJSON* rated_apparent_pwr_kva = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "rated_apparent_power_kva");
-    if (rated_apparent_pwr_kva != NULL)
+    cJSON* rated_apparent_pwr_kva = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "rated_apparent_power_kva");
+    if (rated_apparent_pwr_kva == NULL || rated_apparent_pwr_kva->valuedouble == 0.0) {
+        // rated_apparent_pwr_kva not required if asset is a feeder
+        if ((strcmp(get_asset_type(), "feeders") != 0) && configurator->config_validation) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: must provide a nonzero rated_apparent_power_kva in config.", name)));
+        }
+    } else
         rated_apparent_power_kva = rated_apparent_pwr_kva->valuedouble;
 
-    cJSON* slew_rate = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "slew_rate");
+    // Validate apparent power is at least as large as active and reactive so each can reach their rated value
+    // The power factor relationship apparent^2 = active^2 + reactive^2 will be enforced by reducing one of active or reactive as need based
+    // on the power_priority flag configured in variables.json. This will happen later on when processing active power
+    if ((strcmp(get_asset_type(), "feeders") != 0) && configurator->config_validation) {
+        if (rated_apparent_power_kva < rated_active_power_kw || rated_apparent_power_kva < rated_reactive_power_kvar) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: invalid power factor triangle. rated_apparent_power_kva must be at least as large as rated_active_power_kw and rated_reactive_power_kvar.", name)));
+        }
+    }
+
+    cJSON* slew_rate = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "slew_rate");
     if (slew_rate == NULL) {
         // slew_rate not required if asset is a non-POI feeder. POI feeder will be checked for slew_rate later
         if ((strcmp(get_asset_type(), "feeders") != 0) && configurator->config_validation) {
@@ -521,15 +543,15 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
     } else
         active_power_slew.set_slew_rate(slew_rate->valueint);
 
-    cJSON* throttle_timeout_fast = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "throttle_timeout_fast_ms");
+    cJSON* throttle_timeout_fast = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "throttle_timeout_fast_ms");
     if (throttle_timeout_fast != NULL)
         throttle_timeout_fast_ms = throttle_timeout_fast->valuedouble;
 
-    cJSON* throttle_timeout_slow = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "throttle_timeout_slow_ms");
+    cJSON* throttle_timeout_slow = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "throttle_timeout_slow_ms");
     if (throttle_timeout_slow != NULL)
         throttle_timeout_slow_ms = throttle_timeout_slow->valuedouble;
 
-    cJSON* deadband_percent = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "deadband_percent");
+    cJSON* deadband_percent = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "deadband_percent");
     if (deadband_percent != NULL)
         throttle_deadband_percentage = deadband_percent->valuedouble;
 
@@ -538,11 +560,11 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
     start_command_throttle.configure(throttle_timeout_slow_ms);
     stop_command_throttle.configure(throttle_timeout_slow_ms);
 
-    cJSON* wd_enable = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "watchdog_enable");
+    cJSON* wd_enable = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "watchdog_enable");
     watchdog_enable = (wd_enable == NULL) ? false : (wd_enable->type == cJSON_True);
 
     if (watchdog_enable) {  // Only look for watchdog timeout if watchdog feature is enabled
-        cJSON* wd_timeout_ms = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "watchdog_timeout_ms");
+        cJSON* wd_timeout_ms = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "watchdog_timeout_ms");
         if (wd_timeout_ms == NULL) {
             validation_result.is_valid_config = false;
             validation_result.ERROR_details.push_back(Result_Details(fmt::format("Asset {}: watchdog feature is enabled but failed to find watchdog timeout ms in config.", name)));
@@ -550,7 +572,7 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
         watchdog_timeout_ms = wd_timeout_ms->valueint;
     }
 
-    cJSON* d_ctrl = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "demand_control");
+    cJSON* d_ctrl = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "demand_control");
     if (d_ctrl != NULL) {
         if (strcmp("Uncontrolled", d_ctrl->valuestring) == 0) {
             assetControl = Uncontrolled;
@@ -581,7 +603,7 @@ Config_Validation_Result Asset::configure_component_vars(Type_Configurator* conf
     Config_Validation_Result validation_result = Config_Validation_Result(true);
 
     // Asset instances are data aggregators for one or many components, described in the "components" array. This array is required for any asset instance
-    cJSON* comp_array = cJSON_GetObjectItem((&configurator->asset_config)->asset_instance_root, "components");
+    cJSON* comp_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (comp_array == NULL && configurator->config_validation) {
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: missing a components array.", name)));
@@ -611,21 +633,21 @@ Config_Validation_Result Asset::configure_component_vars(Type_Configurator* conf
             validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: component array entry {}: variables or component_id are invalid or undefined", name, i + 1)));
             continue;
         }
-        if (!(&configurator->asset_config)->asset_component_to_asset_number_map.count(comp_id->valuestring)) {
+        if (!configurator->asset_config.asset_component_to_asset_number_map.count(comp_id->valuestring)) {
             // New component insert
-            (&configurator->asset_config)->asset_component_to_asset_number_map.insert(std::pair<std::string, std::map<int, bool>>(comp_id->valuestring, std::map<int, bool>()));
+            configurator->asset_config.asset_component_to_asset_number_map.insert(std::pair<std::string, std::map<int, bool>>(comp_id->valuestring, std::map<int, bool>()));
         }
-        auto check = (&configurator->asset_config)->asset_component_to_asset_number_map[comp_id->valuestring].insert(std::pair<int, bool>((&configurator->asset_config)->asset_num, false));
+        auto check = configurator->asset_config.asset_component_to_asset_number_map[comp_id->valuestring].insert(std::pair<int, bool>(configurator->asset_config.asset_num, false));
         if (!check.second) {
             validation_result.is_valid_config = false;
-            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: component {} with id {} was already configured for another asset.", name, (&configurator->asset_config)->asset_num, comp_id->valuestring)));
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: component {} with id {} was already configured for another asset.", name, configurator->asset_config.asset_num, comp_id->valuestring)));
         }
 
         std::pair<std::string, Config_Validation_Result> component_id_result;
-        if ((&configurator->asset_config)->is_template_flag) {
-            component_id_result = handle_templated_replace_check_for_duplicate((&configurator->asset_config)->asset_component_to_asset_number_map, (&configurator->asset_config)->asset_component_collision_set, comp_id, asset_type_id);
+        if (configurator->asset_config.is_template_flag) {
+            component_id_result = handle_templated_replace_check_for_duplicate(configurator->asset_config.asset_component_to_asset_number_map, configurator->asset_config.asset_component_collision_set, comp_id, asset_type_id);
         } else {
-            component_id_result = no_replace_check_for_duplicate((&configurator->asset_config)->asset_component_collision_set, comp_id, asset_type_id);
+            component_id_result = no_replace_check_for_duplicate(configurator->asset_config.asset_component_collision_set, comp_id, asset_type_id);
         }
         compNames[i] = component_id_result.first;
         validation_result.absorb(component_id_result.second);

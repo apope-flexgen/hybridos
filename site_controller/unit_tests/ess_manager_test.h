@@ -90,7 +90,7 @@ TEST_F(ess_manager_test, calculate_ess_active_power) {
         ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
         bool configure_success = ess_configurator.create_assets().is_valid_config;
-        ASSERT_TRUE(configure_success);
+        EXPECT_TRUE(configure_success);
 
         // set test state
         ess_mgr.set_ess_all_dischargeable_powers(test.rated_kw);
@@ -154,7 +154,7 @@ TEST_F(ess_manager_test, calculate_ess_reactive_power) {
         ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
         bool configure_success = ess_configurator.create_assets().is_valid_config;
-        ASSERT_TRUE(configure_success);
+        EXPECT_TRUE(configure_success);
 
         // set test state
         ess_mgr.set_ess_total_rated_reactive_power(test.total_rated_kvar);
@@ -311,7 +311,7 @@ TEST_F(ess_manager_test, calculate_ess_active_power_with_reactive_power_priority
         ess_configurator.asset_type_root = ess_config;
         ess_configurator.config_validation = false;
         bool configure_success = ess_configurator.create_assets().is_valid_config;
-        ASSERT_TRUE(configure_success);
+        EXPECT_TRUE(configure_success);
 
         // set test state
         ess_mgr.set_ess_all_dischargeable_powers(test.rated_kw);
@@ -485,11 +485,11 @@ cJSON* ESS_Manager_Mock::generate_calculatePower_essRoot(int numParse, float rat
     std::stringstream ss;
     // Insert the array header and first ESS instance since it doesn't have a comma at the beginning
     ss << "{\"soc_balancing_factor\":4,\"asset_instances\":[{\"id\":\"ess_01\",\"name\":\"BESS Inverter Block 01\",\"slew_rate\":12500,\"rated_active_power_kw\":" << ratedActivePower << ",\"rated_reactive_power_kvar\":" << ratedReactivePower
-       << ",\"demand_control\":\"Direct\",\"components\":[]}";
+       << ",\"rated_apparent_power_kva\":" << ratedActivePower << ",\"demand_control\":\"Direct\",\"components\":[]}";
     // Insert any additional ESS instances
     for (int i = 1; i < numParse; ++i) {
         ss << ",{\"id\":\"ess_0" << i + 1 << "\",\"name\":\"BESS Inverter Block 0" << i + 1 << "\",\"slew_rate\":12500,\"rated_active_power_kw\":" << ratedActivePower << ",\"rated_reactive_power_kvar\":" << ratedReactivePower
-           << ",\"demand_control\":\"Direct\",\"components\":[]}";
+           << ",\"rated_apparent_power_kva\":" << ratedActivePower << ",\"demand_control\":\"Direct\",\"components\":[]}";
     }
     // Close the array
     ss << "]}";
@@ -523,14 +523,16 @@ cJSON* ESS_Manager_Mock::generate_power_essRoot(int numParse, float soc) {
     std::stringstream ss;
     // Insert the array header and first ESS instance since it doesn't have a comma at the beginning
     ss << "{\"soc_balancing_factor\":4,\"asset_instances\":[{\"id\":\"ess_01\",\"name\":\"BESS Inverter Block "
-          "01\",\"min_raw_soc\":0,\"max_raw_soc\":100,\"chg_soc_begin\":95.0,\"chg_soc_end\":101.0,\"dischg_soc_begin\":5.0,\"dischg_soc_end\":-1.0,\"status_type\":\"random_enum\",\"rated_active_power_kw\":2750,\"running_status_mask\":\"FFFE\","
+          "01\",\"min_raw_soc\":0,\"max_raw_soc\":100,\"chg_soc_begin\":95.0,\"chg_soc_end\":101.0,\"dischg_soc_begin\":5.0,\"dischg_soc_end\":-1.0,\"status_type\":\"random_enum\",\"rated_active_power_kw\":2750,\"rated_reactive_power_kvar\":2750,"
+          "\"rated_apparent_power_kva\":2750,\"running_status_mask\":\"FFFE\","
           "\"demand_control\":\"Direct\",\"components\":[{\"component_id\":\"clou_ess_01\",\"variables\":{\"soc\":{\"name\":\"State of "
           "Charge\",\"register_id\":\"bms_soc\",\"value\":"
        << soc << "}}}]}";
     // Insert any additional ESS instances
     for (int i = 1; i < numParse; ++i) {
         ss << ",{\"id\":\"ess_0" << i + 1 << "\",\"name\":\"BESS Inverter Block 0" << i + 1
-           << "\",\"min_raw_soc\":0,\"max_raw_soc\":100,\"chg_soc_begin\":95.0,\"chg_soc_end\":101.0,\"dischg_soc_begin\":5.0,\"dischg_soc_end\":-1.0,\"status_type\":\"random_enum\",\"rated_active_power_kw\":2750,\"running_status_mask\":\"FFFE\","
+           << "\",\"min_raw_soc\":0,\"max_raw_soc\":100,\"chg_soc_begin\":95.0,\"chg_soc_end\":101.0,\"dischg_soc_begin\":5.0,\"dischg_soc_end\":-1.0,\"status_type\":\"random_enum\",\"rated_active_power_kw\":2750,,\"rated_reactive_power_kvar\":2750,"
+              "\"rated_apparent_power_kva\":2750,\"running_status_mask\":\"FFFE\","
               "\"demand_control\":\"Direct\",\"components\":[{\"component_id\":\"clou_ess_0"
            << i + 1 << "\",\"variables\":{\"soc\":{\"name\":\"State of Charge\",\"register_id\":\"bms_soc\",\"value\":" << soc << "}}}]}";
     }
@@ -545,12 +547,15 @@ cJSON* ESS_Manager_Mock::generate_power_essRoot(int numParse, float soc) {
 cJSON* ESS_Manager_Mock::generate_running_mask_root(uint64_t mask, int numParse) {
     std::stringstream ss;
     // Insert the array header and first ESS instance since it doesn't have a comma at the beginning
-    ss << "{\"soc_balancing_factor\":4,\"asset_instances\":[{\"id\":\"ess_1\",\"name\":\"BESS Inverter Block 01\",\"status_type\":\"random_enum\",\"rated_active_power_kw\":2750,\"running_status_mask\":\"" << std::hex << mask
-       << "\",\"demand_control\":\"Direct\",\"components\":[{\"component_id\":\"clou_ess_1\",\"variables\":{\"soc\":{\"name\":\"State of Charge\",\"register_id\":\"bms_soc\",\"value\":50}}}]}";
+    ss << "{\"soc_balancing_factor\":4,\"asset_instances\":[{\"id\":\"ess_1\",\"name\":\"BESS Inverter Block "
+          "01\",\"status_type\":\"random_enum\",\"rated_active_power_kw\":2750,,\"rated_reactive_power_kvar\":2750,\"rated_apparent_power_kva\":2750,\"running_status_mask\":\""
+       << std::hex << mask << "\",\"demand_control\":\"Direct\",\"components\":[{\"component_id\":\"clou_ess_1\",\"variables\":{\"soc\":{\"name\":\"State of Charge\",\"register_id\":\"bms_soc\",\"value\":50}}}]}";
     // Insert any additional ESS instances
     for (int i = 1; i < numParse; ++i) {
-        ss << ",{\"id\":\"ess_" << i + 1 << "\",\"name\":\"BESS Inverter Block 0" << i + 1 << "\",\"status_type\":\"random_enum\",\"rated_active_power_kw\":2750,\"running_status_mask\":\"" << std::hex << mask
-           << "\",\"demand_control\":\"Direct\",\"components\":[{\"component_id\":\"clou_ess_" << i + 1 << "\",\"variables\":{\"soc\":{\"name\":\"State of Charge\",\"register_id\":\"bms_soc\",\"value\":50}}}]}";
+        ss << ",{\"id\":\"ess_" << i + 1 << "\",\"name\":\"BESS Inverter Block 0" << i + 1
+           << "\",\"status_type\":\"random_enum\",\"rated_active_power_kw\":2750,,\"rated_reactive_power_kvar\":2750,"
+              "\"rated_apparent_power_kva\":2750,\"running_status_mask\":\""
+           << std::hex << mask << "\",\"demand_control\":\"Direct\",\"components\":[{\"component_id\":\"clou_ess_" << i + 1 << "\",\"variables\":{\"soc\":{\"name\":\"State of Charge\",\"register_id\":\"bms_soc\",\"value\":50}}}]}";
     }
     // Close the array
     ss << "]}";

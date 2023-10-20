@@ -287,7 +287,7 @@ void FR_Comp_Mock::set_pfr_state(pfr_state state) {
     slew_rate_kw.value.set(INT_MAX);
     output_kw.value.set(0.0F);
     // init
-    ASSERT_EQ(initialize_state(60.0F), true);
+    EXPECT_EQ(initialize_state(60.0F), true);
     reset_slews(1);                                  // called after initialize_state to override the slew reset that happened there
     active_cmd_kw.set_variable_id("active_cmd_kw");  // required for fims set
 }
@@ -320,7 +320,7 @@ void FR_Comp_Mock::set_frrs_state(frrs_state state, float active_cmd, float inac
     active_response_status.value.set(state.in_trig);
     trigger_over_time = state.trig_over;
     // init
-    ASSERT_EQ(initialize_state(60.0F), true);
+    EXPECT_EQ(initialize_state(60.0F), true);
     reset_slews(state.slew_time);  // called after initialize_state to override the slew reset that happened there
 }
 
@@ -348,6 +348,6 @@ void FR_Comp_Mock::set_ffr_state(ffr_state state) {
     in_cooldown.value.set(state.in_cool);
     cooldown_over_time = state.cool_over;
     // init
-    ASSERT_EQ(initialize_state(60.0F), true);
+    EXPECT_EQ(initialize_state(60.0F), true);
     reset_slews(1);  // called after initialize_state to override the slew reset that happened there
 }

@@ -96,9 +96,9 @@ TEST_F(solar_manager_test, solar_curtailment) {
         if (sumActivePowers != it->totalActivePower || it->numInverters != (int)it->inverterActivePowers.size() || it->numInverters != (int)it->expectedActivePowerSetpoints.size()) {
             FPS_TEST_LOG("Test %d misconfigured\n", testIndex);
         }
-        ASSERT_EQ(sumActivePowers, it->totalActivePower);
-        ASSERT_EQ(it->numInverters, it->inverterActivePowers.size());
-        ASSERT_EQ(it->numInverters, it->expectedActivePowerSetpoints.size());
+        EXPECT_EQ(sumActivePowers, it->totalActivePower);
+        EXPECT_EQ(it->numInverters, it->inverterActivePowers.size());
+        EXPECT_EQ(it->numInverters, it->expectedActivePowerSetpoints.size());
 
         // Set test state
         solarMgr->set_numSolarControllable(it->numInverters);
@@ -214,7 +214,7 @@ void Solar_Manager_Mock::configure_solar_manager(int numParse, bool* primary_con
     solar_configurator->asset_type_root = solarRoot;
     solar_configurator->config_validation = false;
     bool configure_success = solar_configurator->create_assets().is_valid_config;
-    ASSERT_TRUE(configure_success);
+    EXPECT_TRUE(configure_success);
 }
 
 /*
@@ -289,9 +289,9 @@ TEST_F(solar_manager_test, full_curtailment_command_moving_up)
         // Get & check result
         solar_curtailment_states result = solarMgr->get_solar_curtailment_state();
         if (i < DEADBAND*2+1)
-            ASSERT_EQ(full_curtailment, result);
+            EXPECT_EQ(full_curtailment, result);
         else
-            ASSERT_EQ(partial_curtailment, result);
+            EXPECT_EQ(partial_curtailment, result);
     }
 
     TearDown();
@@ -318,7 +318,7 @@ TEST_F(solar_manager_test, no_curtailment_power_reduction)
         solarMgr->find_next_curtailment_state();
         // Get & check result
         solar_curtailment_states result = solarMgr->get_solar_curtailment_state();
-        ASSERT_EQ(no_curtailment, result);
+        EXPECT_EQ(no_curtailment, result);
     }
 
     // Iterate through second set of test cases
@@ -331,7 +331,7 @@ TEST_F(solar_manager_test, no_curtailment_power_reduction)
         solarMgr->find_next_curtailment_state();
         // Get & check result
         solar_curtailment_states result = solarMgr->get_solar_curtailment_state();
-        ASSERT_EQ(no_curtailment, result);
+        EXPECT_EQ(no_curtailment, result);
     }
 
     TearDown();

@@ -101,6 +101,8 @@ TEST_F(asset_manager_test, asset_create) {
     test_cases[1].expected_ess_result.ERROR_details.push_back(Result_Details("ess: failed to expand templated string ess_#."));
     test_cases[1].expected_ess_result.ERROR_details.push_back(Result_Details("ess: failed to configure using a templated range. All entries in internal configuration map already configured."));
     test_cases[1].expected_ess_result.ERROR_details.push_back(Result_Details("ess: internal configuration map size: 3."));
+    // Check power factor triangle. This case is for insufficient apparent power
+    test_cases[1].expected_ess_result.ERROR_details.push_back(Result_Details("invalid power factor triangle. rated_apparent_power_kva must be at least as large as rated_active_power_kw and rated_reactive_power_kvar."));
 
     // B overlaps with every entry provided in the range of A (1, 3, 5). Components are missing for B so configuration must stop there
     // Solar is also missing name/id but a placeholder is provided so the config can continue. Only the first of the templated entries is checked
@@ -115,19 +117,21 @@ TEST_F(asset_manager_test, asset_create) {
     test_cases[2].expected_ess_result.ERROR_details.push_back(Result_Details("ess: internal configuration map size: 3."));
     test_cases[2].expected_ess_result.ERROR_details.push_back(Result_Details("BESS Inverter Block B 01: components control array is NULL."));
     test_cases[2].expected_ess_result.ERROR_details.push_back(Result_Details("BESS Inverter Block B 02: components control array is NULL."));
+    // Check power factor triangle. This case is for missing apparent power
+    test_cases[2].expected_ess_result.ERROR_details.push_back(Result_Details("invalid power factor triangle. rated_apparent_power_kva must be at least as large as rated_active_power_kw and rated_reactive_power_kvar."));
     test_cases[2].expected_solar_result.ERROR_details.push_back(Result_Details("solar: name is missing for asset entry 0."));
     test_cases[2].expected_solar_result.ERROR_details.push_back(Result_Details("solar: id is missing for asset entry 0."));
     test_cases[2].expected_solar_result.ERROR_details.push_back(
         Result_Details("solar: error parsing asset with ID solar_0 and name solar_0: if 'number_of_instances' is greater than 1, the asset entry is considered templated and must have a wildcard character in the ID and name."));
-    test_cases[2].expected_solar_result.ERROR_details.push_back(Result_Details("solar_0: failed to find rated_active_pwr_kw in config."));
+    test_cases[2].expected_solar_result.ERROR_details.push_back(Result_Details("solar_0: must provide a nonzero rated_active_power_kw in config."));
     // Errors that should not appear
     test_cases[2].ess_errors_not_present.push_back("BESS Inverter Block B 03: components control array is NULL.");
     test_cases[2].solar_errors_not_present.push_back("solar: name is missing for asset entry 1.");
     test_cases[2].solar_errors_not_present.push_back("solar: id is missing for asset entry 1.");
-    test_cases[2].solar_errors_not_present.push_back("solar_1: failed to find rated_active_pwr_kw in config.");
+    test_cases[2].solar_errors_not_present.push_back("solar_1: must provide a nonzero rated_active_power_kw in config.");
 
     // All ESS entries overlap, but only configuration issues from the first overlap are reported
-    test_cases.push_back({ "unit_tests/unit_test_files/assets/invalid_number_of_instances.json", Config_Validation_Result(false), Config_Validation_Result(true), Config_Validation_Result(true), Config_Validation_Result(true), {}, {}, {}, {} });
+    test_cases.push_back({ "unit_tests/unit_test_files/assets/invalid_number_of_instances.json", Config_Validation_Result(false), Config_Validation_Result(true), Config_Validation_Result(false), Config_Validation_Result(true), {}, {}, {}, {} });
     test_cases[3].expected_ess_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));
     test_cases[3].expected_ess_result.INFO_details.push_back(Result_Details("optional local_mode_signal was not provided in configuration"));
     test_cases[3].expected_solar_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));
@@ -138,6 +142,7 @@ TEST_F(asset_manager_test, asset_create) {
     test_cases[3].expected_ess_result.ERROR_details.push_back(Result_Details("ess: internal configuration map size: 5."));
     test_cases[3].expected_ess_result.ERROR_details.push_back(Result_Details("BESS Inverter Block A 05: only received one autobalancing control: autobalancing_enable. Either remove this control or provide autobalancing_disable as well."));
     test_cases[3].expected_ess_result.ERROR_details.push_back(Result_Details("BESS Inverter Block B 01: only received one autobalancing control: autobalancing_disable. Either remove this control or provide autobalancing_enable as well."));
+    test_cases[3].expected_gen_result.ERROR_details.push_back(Result_Details("must provide a nonzero rated_reactive_power_kvar in config."));
     // Errors that should not appear
     test_cases[3].ess_errors_not_present.push_back("BESS Inverter Block B 02: only received one autobalancing control: autobalancing_disable. Either remove this control or provide autobalancing_ensable as well.");
 

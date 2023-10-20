@@ -282,15 +282,17 @@ Config_Validation_Result Asset_Feeder::validate_poi_feeder_configuration(Type_Co
 
     // checks to make sure required base class vars were configured. other assets had these checked in configure_base function
     cJSON* obj = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "rated_active_power_kw");
-    if (obj == NULL) {
+    if (obj == NULL || obj->valuedouble == 0.0) {
         validation_result.is_valid_config = false;
-        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: POI feeder missing required rated_active_power_kw variable.", name)));
+        validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: POI must provide a nonzero rated_active_power_kw in config.", name)));
     }
+
     obj = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "slew_rate");
     if (obj == NULL) {
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: POI feeder missing required slew_rate variable.", name)));
     }
+
     return validation_result;
 }
 

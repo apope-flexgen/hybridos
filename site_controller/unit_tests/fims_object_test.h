@@ -64,7 +64,7 @@ TEST_F(fims_object_test, multiple_inputs_alt_ui_types) {
     std::string expected_output_p3 = R"("dummy_var_remote":{"value":true,"name":"Dummy Var: Remote","unit":"","scaler":1,"enabled":true,"type":"enum","ui_type":"status","options":[]},)";
     std::string expected_output = expected_output_p1 + expected_output_p2 + expected_output_p3;
 
-    ASSERT_EQ(to_string(buff), expected_output);
+    EXPECT_EQ(to_string(buff), expected_output);
 }
 
 #endif /* FIMS_OBJECT_TEST_H_ */

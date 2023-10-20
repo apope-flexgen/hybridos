@@ -45,14 +45,14 @@ TEST_F(Asset_Mock, add_variable_to_buffer) {
                            test_buf);
 
     // the intent is to test that the variable "start" will fallthrough and be registered as a UI control rather than colliding with the variable "start_stop" from the variables map.
-    ASSERT_EQ("\"start\":{\"enabled\":false,\"options\":[{\"name\":\"No\",\"return_value\":false},{\"name\":\"Yes\",\"return_value\":true}]}", to_string(test_buf));
+    EXPECT_EQ("\"start\":{\"enabled\":false,\"options\":[{\"name\":\"No\",\"return_value\":false},{\"name\":\"Yes\",\"return_value\":true}]}", to_string(test_buf));
 
     prepare_buffer(variable_id_2, test_buf);
     add_variable_to_buffer(variable_id_2,          // uri
                            variable_id_2.c_str(),  // variable_id
                            test_buf);
 
-    ASSERT_EQ("",  // Naked therefore has no value
+    EXPECT_EQ("",  // Naked therefore has no value
               to_string(test_buf));
 }
 
