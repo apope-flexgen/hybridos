@@ -6,8 +6,8 @@ from pytest_cases import parametrize
 
 from pytests.pytest_framework import Site_Controller_Instance
 from pytests.pytest_steps import Steps
-from pytests.cases.active_clc import test_fr_clc, test_ess_tsoc_clc, test_solar_tsoc_clc
-from pytests.cases.reactive_clc import test_reactive_setpoint_clc
+from pytests.cases.active_clc import test_fr_clc, test_ess_tsoc_clc, test_solar_tsoc_clc, test_active_clc_zero_bypass
+from pytests.cases.reactive_clc import test_reactive_setpoint_clc, test_reactive_clc_zero_bypass
 from pytests.cases.reactive_power_poi_lims import test_reactive_poi_lims
 from pytests.cases.constant_power_factor import test_constant_power_factor
 from pytests.cases.active_power_poi_lims import test_fr_poi_lims, test_ess_tsoc_poi_lims
@@ -36,8 +36,10 @@ from pytests.cases.standalone_pfr import test_pfr_untracked_load, test_pfr_offse
     test_fr_clc,
     test_ess_tsoc_clc,
     test_solar_tsoc_clc,
+    test_active_clc_zero_bypass,
     test_agt_runmode1,
     test_reactive_setpoint_clc,
+    test_reactive_clc_zero_bypass,
     test_ess_chargeable_derate,
     test_ess_dischargeable_derate,
     test_maint_active_power_rounding,

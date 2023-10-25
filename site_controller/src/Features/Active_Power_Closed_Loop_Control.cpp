@@ -8,7 +8,8 @@
 
 features::Active_Power_Closed_Loop_Control::Active_Power_Closed_Loop_Control() {
     feature_vars = {
-        &step_size_kW, &default_offset, &min_offset, &max_offset, &total_correction, &steady_state_deadband_kW, &regulation_deadband_kW, &update_rate_ms, &decrease_timer_ms, &increase_timer_ms, &_manual_offset_kW,
+        &step_size_kW,           &default_offset, &min_offset,        &max_offset,        &total_correction,  &zero_bypass_enable, &zero_bypass_deadband_kW, &steady_state_deadband_kW,
+        &regulation_deadband_kW, &update_rate_ms, &decrease_timer_ms, &increase_timer_ms, &_manual_offset_kW,
     };
 
     variable_ids = {
@@ -18,6 +19,8 @@ features::Active_Power_Closed_Loop_Control::Active_Power_Closed_Loop_Control() {
         { &max_offset, "active_power_closed_loop_max_offset" },
         { &step_size_kW, "active_power_closed_loop_step_size_kW" },
         { &total_correction, "active_power_closed_loop_total_correction" },
+        { &zero_bypass_enable, "active_power_closed_loop_zero_bypass_enable" },
+        { &zero_bypass_deadband_kW, "active_power_closed_loop_zero_bypass_deadband_kW" },
         { &steady_state_deadband_kW, "active_power_closed_loop_steady_state_deadband_kW" },
         { &regulation_deadband_kW, "active_power_closed_loop_regulation_deadband_kW" },
         { &update_rate_ms, "active_power_closed_loop_update_rate_ms" },
@@ -62,6 +65,23 @@ features::Active_Power_Closed_Loop_Control::External_Outputs features::Active_Po
     // Always invert POI, using the convention that positive power flows into the site and negative power flows out of the site at the POI
     float poi_value = -1.0f * inputs.feeder_actual_kW;
 
+    // Determine site charge and discharge production limits
+    asset_cmd_utils::site_kW_production_limits site_kW_prod_limits = asset_cmd_utils::calculate_site_kW_production_limits(inputs.ess_kW_request, inputs.gen_kW_request, inputs.solar_kW_request, inputs.load_method, inputs.additional_load_compensation,
+                                                                                                                          inputs.feature_kW_demand, inputs.site_kW_demand);
+    float new_site_kW_charge_production = site_kW_prod_limits.site_kW_charge_production;
+    float new_site_kW_discharge_production = site_kW_prod_limits.site_kW_discharge_production;
+
+    // If zero bypass is enabled and command is within deadband, reset regulator offset and do not apply any closed loop control correction
+    if (zero_bypass_enable.value.value_bool && fabsf(current_cmd) <= fabsf(zero_bypass_deadband_kW.value.value_float)) {
+        regulator.offset = 0;
+        float new_total_correction = 0.0;
+        float new_site_kW_demand = inputs.site_kW_demand;
+        float new_feeder_max_potential_kW = std::max(inputs.feeder_max_potential_kW, current_cmd);
+        return External_Outputs{
+            new_site_kW_charge_production, new_site_kW_discharge_production, new_total_correction, new_site_kW_demand, new_feeder_max_potential_kW,
+        };
+    }
+
     // Make sure a step size is configured to prevent divide by zero -> NaN
     if (step_size_kW.value.value_float == 0.0f)
         step_size_kW.value.value_float = 1.0f;
@@ -70,10 +90,6 @@ features::Active_Power_Closed_Loop_Control::External_Outputs features::Active_Po
     regulator.max_offset = max_offset.value.value_int;
 
     // Determine min and max correction limits based on available power and the currently requested production
-    asset_cmd_utils::site_kW_production_limits site_kW_prod_limits = asset_cmd_utils::calculate_site_kW_production_limits(inputs.ess_kW_request, inputs.gen_kW_request, inputs.solar_kW_request, inputs.load_method, inputs.additional_load_compensation,
-                                                                                                                          inputs.feature_kW_demand, inputs.site_kW_demand);
-    float new_site_kW_charge_production = site_kW_prod_limits.site_kW_charge_production;
-    float new_site_kW_discharge_production = site_kW_prod_limits.site_kW_discharge_production;
     // First calculate remaining available power for negative corrections
     float negative_charge_increase = less_than_zero_check(inputs.total_site_kW_rated_charge - new_site_kW_charge_production);
     float negative_discharge_decrease = std::min(inputs.total_site_kW_rated_discharge, new_site_kW_discharge_production);
@@ -122,11 +138,14 @@ void features::Active_Power_Closed_Loop_Control::handle_fims_set(std::string uri
         min_offset.set_fims_int(uri_endpoint.c_str(), -1 * fabs(msg_value.valueint));
         max_offset.set_fims_int(uri_endpoint.c_str(), fabs(msg_value.valueint));
         step_size_kW.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
+        zero_bypass_deadband_kW.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
         steady_state_deadband_kW.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
         regulation_deadband_kW.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
     } else if (msg_value.type == cJSON_True || msg_value.type == cJSON_False) {
         bool value_bool = msg_value.type != cJSON_False;
-        if (available)
+        if (available) {
             enable_flag.set_fims_bool(uri_endpoint.c_str(), value_bool);
+            zero_bypass_enable.set_fims_bool(uri_endpoint.c_str(), value_bool);
+        }
     }
 }

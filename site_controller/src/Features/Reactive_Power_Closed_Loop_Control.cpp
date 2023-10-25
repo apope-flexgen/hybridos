@@ -8,7 +8,7 @@
 
 features::Reactive_Power_Closed_Loop_Control::Reactive_Power_Closed_Loop_Control() {
     feature_vars = {
-        &step_size_kW, &default_offset, &min_offset, &max_offset, &total_correction, &steady_state_deadband_kW, &regulation_deadband_kW, &update_rate_ms, &decrease_timer_ms, &increase_timer_ms,
+        &step_size_kW, &default_offset, &min_offset, &max_offset, &total_correction, &zero_bypass_enable, &zero_bypass_deadband_kVAR, &steady_state_deadband_kW, &regulation_deadband_kW, &update_rate_ms, &decrease_timer_ms, &increase_timer_ms,
     };
 
     variable_ids = {
@@ -18,6 +18,8 @@ features::Reactive_Power_Closed_Loop_Control::Reactive_Power_Closed_Loop_Control
         { &max_offset, "reactive_power_closed_loop_max_offset" },
         { &step_size_kW, "reactive_power_closed_loop_step_size_kW" },
         { &total_correction, "reactive_power_closed_loop_total_correction" },
+        { &zero_bypass_enable, "reactive_power_closed_loop_zero_bypass_enable" },
+        { &zero_bypass_deadband_kVAR, "reactive_power_closed_loop_zero_bypass_deadband_kVAR" },
         { &steady_state_deadband_kW, "reactive_power_closed_loop_steady_state_deadband_kW" },
         { &regulation_deadband_kW, "reactive_power_closed_loop_regulation_deadband_kW" },
         { &update_rate_ms, "reactive_power_closed_loop_update_rate_ms" },
@@ -63,6 +65,14 @@ features::Reactive_Power_Closed_Loop_Control::External_Outputs features::Reactiv
     float poi_value = -1.0f * inputs.feeder_actual_kVAR;
     float current_cmd = inputs.site_kVAR_demand;
 
+    // If zero bypass is enabled and command is within deadband, reset regulator offset and do not apply any closed loop control correction
+    if (zero_bypass_enable.value.value_bool && fabsf(current_cmd) <= fabsf(zero_bypass_deadband_kVAR.value.value_float)) {
+        regulator.offset = 0;
+        total_correction.value.set(0.0f);
+        float new_site_kVAR_demand = inputs.site_kVAR_demand;
+        return External_Outputs{ new_site_kVAR_demand };
+    }
+
     // Make sure a step size is configured to prevent divide by zero -> NaN
     if (step_size_kW.value.value_float == 0.0f)
         step_size_kW.value.value_float = 1.0f;
@@ -102,9 +112,7 @@ features::Reactive_Power_Closed_Loop_Control::External_Outputs features::Reactiv
     if (command_accepted)
         prev_reactive_power_feature_cmd = current_cmd;
 
-    return External_Outputs{
-        new_site_kVAR_demand,
-    };
+    return External_Outputs{ new_site_kVAR_demand };
 }
 
 void features::Reactive_Power_Closed_Loop_Control::handle_fims_set(std::string uri_endpoint, const cJSON& msg_value) {
@@ -112,11 +120,14 @@ void features::Reactive_Power_Closed_Loop_Control::handle_fims_set(std::string u
         min_offset.set_fims_int(uri_endpoint.c_str(), -1 * fabs(msg_value.valueint));
         max_offset.set_fims_int(uri_endpoint.c_str(), fabs(msg_value.valueint));
         step_size_kW.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
+        zero_bypass_deadband_kVAR.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
         steady_state_deadband_kW.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
         regulation_deadband_kW.set_fims_float(uri_endpoint.c_str(), fabsf(msg_value.valuedouble));
     } else if (msg_value.type == cJSON_True || msg_value.type == cJSON_False) {
         bool value_bool = msg_value.type != cJSON_False;
-        if (available)
+        if (available) {
             enable_flag.set_fims_bool(uri_endpoint.c_str(), value_bool);
+            zero_bypass_enable.set_fims_bool(uri_endpoint.c_str(), value_bool);
+        }
     }
 }
