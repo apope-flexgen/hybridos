@@ -1,0 +1,15 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/dnp3_server",
+			"args": [ "/usr/local/etc/config/dnp3_server/dnp3_server_hoth.json" ],
+			"max_restarts": -1
+        },
+		{
+			"name":"/usr/local/bin/dnp3_server",
+			"args": [ "/usr/local/etc/config/dnp3_server/dnp3_server_gargantua.json" ],
+			"max_restarts": -1
+        }
+    ]
+}

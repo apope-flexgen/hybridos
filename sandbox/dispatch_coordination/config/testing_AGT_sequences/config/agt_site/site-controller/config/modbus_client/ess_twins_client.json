@@ -1,0 +1,320 @@
+{
+    "connection":
+    {
+        "name": "ess_twins",
+        "ip_address": "172.3.27.2",
+        "port": 10004,
+		"device_id": 1
+    },
+    "components": [
+        {
+            "id": "ess_twins",
+            "frequency": 200,
+            "offset_time": 0,
+            "add_timings":false,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "map": [
+                        {
+                            "id": "start_stop",
+                            "offset": 10100,
+                            "name": "Start/Stop",
+                            "echo_id": "/components/twins_ess_1/ctrlword1"
+                        },
+                        {
+                            "id": "clear_faults",
+                            "offset": 10101,
+                            "name": "Clear Faults"
+                        },
+                        {
+                            "id": "on_off_grid_mode",
+                            "offset": 10102,
+                            "name": "Grid Mode",
+                            "echo_id": "/components/twins_ess_1/ctrlword3"
+                        },
+                        {
+                            "id": "active_power_setpoint",
+                            "offset": 10103,
+                            "name": "Active Power Setpoint",
+                            "float": true,
+                            "size": 2,
+                            "echo_id": "/components/twins_ess_1/pcmd"
+                        },
+                        {
+                            "id": "reactive_power_setpoint",
+                            "offset": 10105,
+                            "name": "Reactive Power Setpoint",
+                            "float": true,
+                            "size": 2,
+                            "echo_id": "/components/twins_ess_1/qcmd"
+                        },
+                        {
+                            "id": "voltage_setpoint",
+                            "offset": 10107,
+                            "name": "Voltage Setpoint",
+                            "float": true,
+                            "size": 2,
+                            "echo_id": "/components/twins_ess_1/vcmd"
+                        },
+                        {
+                            "id": "frequency_setpoint",
+                            "offset": 10109,
+                            "name": "Frequency Setpoint",
+                            "float": true,
+                            "size": 2,
+                            "echo_id": "/components/twins_ess_1/fcmd"
+                        },
+                        {
+                            "id": "equalization_control",
+                            "offset": 10111,
+                            "name": "Equalization Control"
+                        },
+                        {
+                            "id": "bms_soc",
+                            "offset": 10112,
+                            "size": 2,
+                            "float": true,
+                            "name": "BMS SOC",
+                            "echo_id": "/components/twins_ess_1/soc"
+                        },
+                        {
+                            "id": "local_mode_signal",
+                            "offset": 10114,
+                            "name": "In Local Mode"
+                        }
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "map": [
+                        {
+                            "id": "com_status",
+                            "offset": 20000,
+                            "name": "Communication Status",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "PCS1 Communication Offline",
+                                "PCS2 Communication Offline",
+                                "BMS1 Communication Offline",
+                                "BMS2 Communication Offline",
+                                "EMMU1 Communication Offline",
+                                "EMMU2 Communication Offline"
+                            ]
+                        },
+                        {
+                            "id": "alarms",
+                            "offset": 20001,
+                            "name": "Test Alarms",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Test Alarm 1",
+                                "Test Alarm 2",
+                                "Test Alarm 3"
+                            ]
+                        },
+                        {
+                            "id": "faults",
+                            "offset": 20002,
+                            "name": "Test Faults",
+                            "bit_field": true,
+                            "bit_strings": [
+                                "Test Fault 1",
+                                "Test Fault 2",
+                                "Test Fault 3"
+                            ]
+                        },
+                        {
+                            "id": "chargeable_energy",
+                            "offset": 20003,
+                            "float": true,
+                            "size": 2,
+                            "name": "Chargeable Energy"
+                        },
+                        {
+                            "id": "chargeable_power",
+                            "offset": 20005,
+                            "float": true,
+                            "size": 2,
+                            "scale": -1,
+                            "name": "chargeable_power",
+                            "echo_id": "/components/twins_ess_1/plow"
+                        },
+                        {
+                            "id": "dischargeable_energy",
+                            "offset": 20007,
+                            "float": true,
+                            "size": 2,
+                            "name": "Dischargeable Energy"
+                        },
+                        {
+                            "id": "dischargeable_power",
+                            "offset": 20009,
+                            "float": true,
+                            "size": 2,
+                            "name": "Dischargeable Power",
+                            "echo_id": "/components/twins_ess_1/phigh"
+                        },
+                        {
+                            "id": "bms_fault",
+                            "offset": 20011,
+                            "name": "BMS Fault"
+                        },
+                        {
+                            "id": "emmu_fault",
+                            "offset": 20012,
+                            "name": "Emmu Fault"
+                        },
+                        {
+                            "id": "pcs_voltage_l1_l2",
+                            "offset": 20013,
+                            "float": true,
+                            "size": 2,
+                            "name": "PCS Voltage AB",
+                            "echo_id": "/components/twins_ess_1/v"
+                        },
+                        {
+                            "id": "pcs_voltage_l2_l3",
+                            "offset": 20015,
+                            "float": true,
+                            "size": 2,
+                            "name": "PCS Voltage BC"
+                        },
+                        {
+                            "id": "pcs_voltage_l3_l1",
+                            "offset": 20017,
+                            "float": true,
+                            "size": 2,
+                            "name": "PCS Voltage CA"
+                        },
+                        {
+                            "id": "pcs_current_l1",
+                            "offset": 20019,
+                            "name": "PCS Current L1",
+                            "float": true,
+                            "size": 2,
+                            "echo_id": "/components/twins_ess_1/i"
+                        },
+                        {
+                            "id": "pcs_current_l2",
+                            "offset": 20021,
+                            "name": "PCS Current L2",
+                            "float": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "pcs_current_l3",
+                            "offset": 20023,
+                            "name": "PCS Current L3",
+                            "size": 2,
+                            "float": true
+                        },
+                        {
+                            "id": "pcs_frequency",
+                            "offset": 20025,
+                            "float": true,
+                            "size": 2,
+                            "name": "PCS Frequency",
+                            "echo_id": "/components/twins_ess_1/f"
+                        },
+                        {
+                            "id": "pcs_active_power",
+                            "offset": 20027,
+                            "size": 2,
+                            "name": "PCS Active Power",
+                            "float": true,
+                            "echo_id": "/components/twins_ess_1/p"
+                        },
+                        {
+                            "id": "pcs_reactive_power",
+                            "offset": 20029,
+                            "size": 2,
+                            "name": "PCS Reactive Power",
+                            "float": true,
+                            "echo_id": "/components/twins_ess_1/q"
+                        },
+                        {
+                            "id": "pcs_apparent_power",
+                            "offset": 20031,
+                            "name": "PCS Apparent Power",
+                            "float": true,
+                            "size": 2,
+                            "echo_id": "/components/twins_ess_1/s"
+                        },
+                        {
+                            "id": "pcs_voltage_dc",
+                            "offset": 20033,
+                            "size": 2,
+                            "float": true,
+                            "name": "PCS DC Voltage",
+                            "echo_id": "/components/twins_ess_1/vdc"
+                        },
+                        {
+                            "id": "pcs_current_dc",
+                            "offset": 20035,
+                            "size": 2,
+                            "name": "PCS DC Current",
+                            "float": true,
+                            "echo_id": "/components/twins_ess_1/idc"
+                        },
+                        {
+                            "id": "pcs_working_state",
+                            "offset": 20037,
+                            "name": "PCS Working State",
+                            "bool": true,
+                            "enum": true,
+                            "bit_strings": [
+                                "Stopped",
+                                "Running"
+                            ],
+                            "echo_id": "/components/twins_ess_1/on"
+                        },
+                        {
+                            "id": "bms_max_cell_temp",
+                            "offset": 20038,
+                            "name": "BMS Maximum Cell Temperature",
+                            "float": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "bms_min_cell_temp",
+                            "offset": 20040,
+                            "name": "BMS Minimum Cell Temperature",
+                            "float": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "bms_soh",
+                            "offset": 20044,
+                            "size": 2,
+                            "float": true,
+                            "name": "BMS SOH"
+                        },
+                        {
+                            "id": "bms_num_racks_online",
+                            "offset": 20046,
+                            "name": "BMS Number of Racks Online",
+                            "echo_id": "/components/twins_ess_1/racksinservice"
+                        },
+                        {
+                            "id": "dc_contactors_closed",
+                            "offset": 20047,
+                            "name": "DC Contactors Closed",
+                            "echo_id": "/components/twins_ess_1/dccontactor"
+                        },
+                        {
+                            "id": "modbus_heartbeat",
+                            "offset": 20048,
+                            "name": "Modbus Heartbeat"
+                        },
+                        {
+                            "id": "component_connected",
+                            "offset": 20049,
+                            "name": "Component Connected"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

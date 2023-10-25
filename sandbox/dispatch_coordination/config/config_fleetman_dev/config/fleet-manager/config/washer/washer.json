@@ -1,0 +1,44 @@
+{
+    "iso": "caiso",
+    "serverIP": "Placeholder IP",
+    "serverPort": "443",
+    "apiEndpoint": "/ADS/APIWebService/APIWebService_v8.wsdl",
+    "serverQueryRateSecs": 30,
+    "fimsVerificationRateSecs": 10,
+    "fimsVerificationFailureTimeoutMins": 3,
+    "maxConnectionAttempts": 3,
+    "parsingRules":
+    [
+        {
+            "fimsUri": "/fleet/caiso/dispatchBatch",
+            "batchTypes":
+            [
+                {
+                    "id": "fiveMinDispatch",
+                    "batchValue": 0
+                },
+                {
+                    "id": "hourlyPredispatch",
+                    "batchValue": 1
+                }
+            ],
+            "variables":
+            [
+                {
+                    "id": "id",
+                    "parseUri": "/DispatchBatch/instructions/instruction/batchUID"
+                },
+                {
+                    "id": "start_time",
+                    "parseUri": "/DispatchBatch/instructions/instruction/startTime",
+                    "dataType": "time"
+                },
+                {
+                    "id": "target_soc",
+                    "parseUri": "/DispatchBatch/instructions/instruction/detail/instructionDetail segNo=\"3\"/mw",
+                    "dataType": "float"
+                }
+            ]
+        }
+    ]
+}

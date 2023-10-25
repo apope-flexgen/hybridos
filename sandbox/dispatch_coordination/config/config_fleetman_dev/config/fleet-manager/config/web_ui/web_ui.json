@@ -1,0 +1,22 @@
+{
+    "timezone": "America/New_York",
+    "fleet_manager_dashboard": true,
+    "met_station": false,
+    "tracker": false,
+    "features": false,
+    "events": true,
+    "product": "FM",
+    "scheduler": true,
+    "units": {
+        "W": "M",
+        "Wh": "M",
+        "VAR": "M",
+        "VARh": "M",
+        "VA": "M",
+        "VAh": "M",
+        "W/s": "M"
+    },
+    "inspectorComponentsName": "test_controller",
+    "fleet_manager": true,
+    "fleet_name": "ERCOT"
+}

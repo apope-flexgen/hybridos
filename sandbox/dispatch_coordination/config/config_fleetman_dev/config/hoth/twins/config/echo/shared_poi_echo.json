@@ -1,0 +1,33 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/shared_poi",
+			"publishRate": 500,
+			"inputs": [
+				{
+					"uri": "/components/twins_shared_poi",
+					"registers": {
+						"active_power": "p",
+						"apparent_power": "s",
+						"breaker_control": "ctrlword1",
+						"breaker_status": "closed",
+						"current_l1": "i",
+						"frequency": "f1",
+						"grid_voltage_l1": "v1",
+						"power_factor": "pf",
+						"reactive_power": "q"
+					}
+				}
+			],
+			"echo": {
+				"current_l2": 0,
+				"current_l3": 0,
+				"grid_voltage_l2": 0,
+				"grid_voltage_l3": 0,
+				"voltage_l1": 0,
+				"voltage_l2": 0,
+				"voltage_l3": 0
+			}
+		}
+	]
+}

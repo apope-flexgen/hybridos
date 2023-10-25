@@ -1,0 +1,451 @@
+{
+    "publishRate": 1000,
+    "listenRate": 2,
+    "publishUris": [
+        {
+            "uri": "/components/gargantua",
+            "naked": true,
+            "metrics": [
+                {
+                    "id": "gen_net_mw",
+                    "inputs": [
+                        {
+                            "uri": "/components/internal_gargantua",
+                            "id": "discharging_flag"
+                        },
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_line_flows_mw"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 0
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_net_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/components/internal_gargantua",
+                            "id": "discharging_flag"
+                        },
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_line_flows_mvar"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "falseCase": 0
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_net_mw",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_aux_mw"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_net_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_aux_mvar"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_aux_mw",
+                    "inputs": [
+                        {
+                            "uri": "/components/internal_gargantua",
+                            "id": "discharging_flag"
+                        },
+                        {
+                            "uri": "/components/internal_gargantua",
+                            "id": "gen_line_flows_mw_invert"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "trueCase": 0
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_aux_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/components/internal_gargantua",
+                            "id": "discharging_flag"
+                        },
+                        {
+                            "uri": "/components/internal_gargantua",
+                            "id": "gen_line_flows_mvar_invert"
+                        }
+                    ],
+                    "operation": "select",
+                    "param": {
+                        "trueCase": 0
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_gross_mw",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_net_mw"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_gross_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_net_mvar"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_basepoint_deviation",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_net_mw"
+                        },
+                        {
+                            "uri": "/components/internal_gargantua",
+                            "id": "gen_updated_basepoint_echo"
+                        }
+                    ],
+                    "operation": "sum",
+                    "param":{"operations":"+-"}
+                },
+                {
+                    "id": "load_basepoint_deviation",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "load_net_mw"
+                        },
+                        {
+                            "uri": "/components/internal_gargantua",
+                            "id": "load_updated_basepoint_echo"
+                        }
+                    ],
+                    "operation": "sum",
+                    "param":{"operations":"+-"}
+                },
+                {
+                    "id": "gen_max_operating_soc",
+                    "inputs": [
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "ess_num_available"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": 2.33
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_min_operating_soc",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_min_operating_soc"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_soc",
+                    "inputs": [
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "ess_average_soc"
+                        },
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "ess_num_available"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": 0.0248
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_line_flows_mw",
+                    "inputs": [
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "active_power"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": 0.001
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_line_flows_mvar",
+                    "inputs": [
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "reactive_power"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": 0.001
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_lmp",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_lmp"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_curtailment_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_curtailment_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "gen_scct_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_scct_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "gen_ns_deployed_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_ns_deployed_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_scheduled_mw",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_aux_mw"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_scheduled_mw_2hr",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "gen_aux_mw"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_curtailment_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "load_curtailment_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_scct_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "load_scct_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_ns_deployed_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "load_ns_deployed_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_rrs_deployed_flag",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "load_rrs_deployed_flag"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": false
+                },
+                {
+                    "id": "load_lmp",
+                    "inputs": [
+                        {
+                            "uri": "/components/gargantua",
+                            "id": "load_lmp"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_ds1_status",
+                    "inputs": [
+                        {
+                            "uri": "/fleet/sites/gargantua",
+                            "id": "average_voltage"
+                        }
+                    ],
+                    "operation": "compareor",
+                    "param": {
+                        "operation": "gt",
+                        "reference": 1
+                    }
+                },
+                {
+                    "id": "heartbeat_counter",
+                    "operation": "echo",
+                    "inputs": [
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "heartbeat_counter"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "watchdog_pet"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "uri": "/components/internal_gargantua",
+            "naked": true,
+            "metrics": [ 
+                {
+                    "id": "gen_line_flows_mw_invert",
+                    "inputs": [
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "active_power"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": -0.001
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_line_flows_mvar_invert",
+                    "inputs": [
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "reactive_power"
+                        }
+                    ],
+                    "operation": "product",
+                    "param": {
+                        "gain": -0.001
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "discharging_flag",
+                    "inputs": [
+                        {
+                            "uri": "/sites/gargantua",
+                            "id": "active_power"
+                        }
+                    ],
+                    "operation": "compareor",
+                    "param": {
+                        "reference": 0,
+                        "operation": "gt"
+                    },
+                    "initialInput": 0
+                },
+                {
+                    "id": "gen_updated_basepoint_echo",
+                    "inputs": [
+                        {
+                            "uri":"/fleet/features/ercotAs/gargantua",
+                            "id":"updated_basepoint_gen_select"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                },
+                {
+                    "id": "load_updated_basepoint_echo",
+                    "inputs": [
+                        {
+                            "uri":"/fleet/features/ercotAs/gargantua",
+                            "id":"updated_basepoint_load_select"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                }
+            ]
+        }
+    ]
+}

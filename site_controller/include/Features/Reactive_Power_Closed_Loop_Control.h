@@ -19,18 +19,18 @@ class features::Reactive_Power_Closed_Loop_Control : public Feature {
 public:
     Reactive_Power_Closed_Loop_Control();
 
-    Fims_Object default_offset;            // Default offset
-    Fims_Object min_offset;                // Min offset
-    Fims_Object max_offset;                // Max offset
-    Fims_Object step_size_kW;              // Step size (in kW) multiplied against offset to get the total correction to apply
-    Fims_Object total_correction;          // Total correction applied by reactive closed loop control
-    Fims_Object zero_bypass_enable;        // If enabled, no correction will be applied within the zero bypass deadband
-    Fims_Object zero_bypass_deadband_kVAR; // Within the deadband, if zero bypass is enabled, closed loop control will not apply a correction
-    Fims_Object steady_state_deadband_kW;  // If difference in commands deviates beyond this value, reset to default value
-    Fims_Object regulation_deadband_kW;    // Deadband threshold based on feeder rated power (in kW) outside which POI values are inaccurate
-    Fims_Object update_rate_ms;            // Number of timer updates per second
-    Fims_Object decrease_timer_ms;         // Time above regulation deadband before decreasing offset value
-    Fims_Object increase_timer_ms;         // Time below regulation deadband before increasing offset value
+    Fims_Object default_offset;             // Default offset
+    Fims_Object min_offset;                 // Min offset
+    Fims_Object max_offset;                 // Max offset
+    Fims_Object step_size_kW;               // Step size (in kW) multiplied against offset to get the total correction to apply
+    Fims_Object total_correction;           // Total correction applied by reactive closed loop control
+    Fims_Object zero_bypass_enable;         // If enabled, no correction will be applied within the zero bypass deadband
+    Fims_Object zero_bypass_deadband_kVAR;  // Within the deadband, if zero bypass is enabled, closed loop control will not apply a correction
+    Fims_Object steady_state_deadband_kW;   // If difference in commands deviates beyond this value, reset to default value
+    Fims_Object regulation_deadband_kW;     // Deadband threshold based on feeder rated power (in kW) outside which POI values are inaccurate
+    Fims_Object update_rate_ms;             // Number of timer updates per second
+    Fims_Object decrease_timer_ms;          // Time above regulation deadband before decreasing offset value
+    Fims_Object increase_timer_ms;          // Time below regulation deadband before increasing offset value
 
     Variable_Regulator regulator;  // Used to hold and calculate the offset value
 

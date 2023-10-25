@@ -1,0 +1,160 @@
+{
+	"connection":
+	{
+		"name": "shared_poi",
+		"ip_address": "172.3.27.2",
+		"port": 10002,
+		"off_by_one": false,
+		"device_id": 1,
+		"max_num_connections": 5
+	},
+	"components":
+	[
+		{
+			"id": "shared_poi",
+			"offset_time": 20,
+			"add_timings":false,
+			"frequency": 500,
+			"registers":
+			[
+				{
+					"type": "Holding Registers",
+					"map": [
+						{
+                            "id": "grid_voltage_l1",
+                            "offset": 1000,
+                            "name": "Grid Voltage L1",
+                            "echo_id": "/components/twins_shared_poi/v1",
+							"float": true,
+							"size": 2
+                        },
+                        {
+                            "id": "grid_voltage_l2",
+                            "offset": 1002,
+                            "name": "Grid Voltage L2",
+							"float": true,
+							"size": 2
+                        },
+                        {
+                            "id": "grid_voltage_l3",
+                            "offset": 1004,
+                            "name": "Grid Voltage L3",
+							"float": true,
+							"size": 2
+                        },
+						{
+                            "id": "frequency",
+                            "offset": 1006,
+                            "name": "Frequency",
+                            "echo_id": "/components/twins_shared_poi/f1",
+							"float": true,
+							"size": 2
+                        },
+						{
+                            "id": "current_l1",
+                            "offset": 1008,
+                            "name": "Current L1",
+                            "echo_id": "/components/twins_shared_poi/i",
+							"float": true,
+							"size": 2
+                        },
+                        {
+                            "id": "current_l2",
+                            "offset": 1010,
+                            "name": "Current L2",
+							"float": true,
+							"size": 2
+                        },
+                        {
+                            "id": "current_l3",
+                            "offset": 1012,
+                            "name": "Current L3",
+							"float": true,
+							"size": 2
+                        },
+						{
+                            "id": "voltage_l1",
+                            "offset": 1014,
+                            "name": "Voltage L1",
+							"float": true,
+							"size": 2
+                        },
+                        {
+                            "id": "voltage_l2",
+                            "offset": 1016,
+                            "name": "Voltage L2",
+							"float": true,
+							"size": 2
+                        },
+                        {
+                            "id": "voltage_l3",
+                            "offset": 1018,
+                            "name": "Voltage L3",
+							"float": true,
+							"size": 2
+                        },
+                        {
+							"id": "active_power",
+							"offset": 1020,
+							"name": "Active Power",
+							"echo_id": "/components/twins_shared_poi/p",
+							"float": true,
+							"size": 2
+						},
+						{
+							"id": "reactive_power",
+							"offset": 1022,
+							"name": "Reactive Power",
+							"echo_id": "/components/twins_shared_poi/q",
+							"float": true,
+							"size": 2
+						},
+						{
+							"id": "apparent_power",
+							"offset": 1024,
+							"name": "Apparent Power",
+							"echo_id": "/components/twins_shared_poi/s",
+							"float": true,
+							"size": 2
+						},
+						{
+							"id": "power_factor",
+							"offset": 1026,
+							"name": "Power Factor",
+							"echo_id": "/components/twins_shared_poi/pf",
+							"float": true,
+							"size": 2
+						},
+						{
+                            "id": "breaker_control",
+                            "offset": 1028,
+                            "name": "Breaker Control",
+                            "echo_id": "/components/twins_shared_poi/ctrlword1"
+                        }
+					]
+				},
+				{
+					"type": "Discrete Inputs",
+					"map": [
+						{
+                            "id": "breaker_status",
+                            "offset": 2000,
+                            "name": "Breaker Status",
+                            "echo_id": "/components/twins_shared_poi/closed"
+                        }
+					]
+				},
+				{
+					"type": "Coils",
+					"map": [
+						{
+                            "id": "utility_status",
+                            "offset": 3000,
+                            "name": "Utility Status"
+                        }
+					]
+				}
+			]
+		}
+	]
+}

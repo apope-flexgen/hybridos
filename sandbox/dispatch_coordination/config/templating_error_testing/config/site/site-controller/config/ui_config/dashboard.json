@@ -1,0 +1,399 @@
+{
+   "_doc":"dashboard",
+   "_id":"62068c710495564d92c4f05c",
+   "_version":"2022-02-11T14:39:45.147-05:00",
+   "data":[
+      {
+         "info":{
+            "baseURI":"/summary",
+            "batteryView":false,
+            "batteryViewSourceURI":null,
+            "batteryViewURI":"",
+            "isTemplate":true,
+            "items":[
+               {
+                  "name":"Site Summary",
+                  "uri":"/summary"
+               }
+            ],
+            "name":"Site Summary",
+            "sourceURIs":[
+               "/site"
+            ]
+         },
+         "status":[
+            {
+               "name":"Site Controller Status",
+               "scalar":null,
+               "sourceURI":"/site",
+               "units":"",
+               "uri":"/site_status"
+            },
+            {
+               "name":"ESS Active Power Setpoint",
+               "scalar":"1000",
+               "sourceURI":"/site",
+               "units":"kW",
+               "uri":"/ess_kW_cmd"
+            },
+            {
+               "name":"Solar Active Power Setpoint",
+               "scalar":"1000",
+               "sourceURI":"/site",
+               "units":"kW",
+               "uri":"/solar_kW_cmd"
+            },
+            {
+               "name":"Gen Active Power Setpoint",
+               "scalar":"1000",
+               "sourceURI":"/site",
+               "units":"kW",
+               "uri":"/gen_kW_cmd"
+            }
+         ]
+      },
+      {
+         "info":{
+            "baseURI":"/summary",
+            "batteryView":false,
+            "batteryViewSourceURI":null,
+            "batteryViewURI":"",
+            "isTemplate":true,
+            "items":[
+               {
+                  "name":"Features Summary",
+                  "uri":"/summary"
+               }
+            ],
+            "name":"Features Summary",
+            "sourceURIs":[
+               "/features"
+            ]
+         },
+         "status":[
+            {
+               "name":"Runmode 1 Active Power Mode",
+               "scalar":null,
+               "sourceURI":"/features",
+               "units":"",
+               "uri":"/runmode1_kW_mode_status"
+            },
+            {
+               "name":"Site Frequency",
+               "scalar":null,
+               "sourceURI":"/features",
+               "units":"Hz",
+               "uri":"/site_frequency"
+            },
+            {
+               "name":"POI Import Limit",
+               "scalar":null,
+               "sourceURI":"/features",
+               "units":"kW",
+               "uri":"/active_power_poi_limits_min_kW"
+            }
+         ]
+      },
+      {
+         "info":{
+            "baseURI":"/ess/summary",
+            "batteryView":false,
+            "batteryViewSourceURI":null,
+            "batteryViewURI":"",
+            "isTemplate":true,
+            "items":[
+               {
+                  "name":"Storage",
+                  "uri":"/ess/summary"
+               }
+            ],
+            "name":"Storage Summary",
+            "sourceURIs":[
+               "/assets"
+            ]
+         },
+         "status":[
+            {
+               "name":"Units Available",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/num_ess_available"
+            },
+            {
+               "name":"Units Running",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/num_ess_running"
+            },
+            {
+               "name":"Active Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"kW",
+               "uri":"/ess_total_active_power"
+            },
+            {
+               "name":"Reactive Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"kVAR",
+               "uri":"/ess_total_reactive_power"
+            },
+            {
+               "name":"Apparent Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"kVA",
+               "uri":"/ess_total_apparent_power"
+            },
+            {
+               "name":"Average State of Charge",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"%",
+               "uri":"/ess_average_soc"
+            },
+            {
+               "name":"Chargeable Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"W",
+               "uri":"/ess_chargeable_power"
+            },
+            {
+               "name":"Dischargeable Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"W",
+               "uri":"/ess_dischargeable_power"
+            },
+            {
+               "name":"Chargeable Energy",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"Wh",
+               "uri":"/ess_chargeable_energy"
+            },
+            {
+               "name":"Dischargeable Energy",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"Wh",
+               "uri":"/ess_dischargeable_energy"
+            },
+            {
+               "name":"Grid Forming Voltage Slew",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"%/s",
+               "uri":"/grid_forming_voltage_slew"
+            }
+         ]
+      },
+      {
+         "info":{
+            "baseURI":"/solar/summary",
+            "batteryView":false,
+            "batteryViewSourceURI":null,
+            "batteryViewURI":"",
+            "isTemplate":true,
+            "items":[
+               {
+                  "name":"Solar Summary",
+                  "uri":"/solar/summary"
+               }
+            ],
+            "name":"Solar Summary",
+            "sourceURIs":[
+               "/assets"
+            ]
+         },
+         "status":[
+            {
+               "name":"Units Available",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/num_solar_available"
+            },
+            {
+               "name":"Units Running",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/num_solar_running"
+            },
+            {
+               "name":"Active Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"kW",
+               "uri":"/solar_total_active_power"
+            },
+            {
+               "name":"Reactive Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"kVAR",
+               "uri":"/solar_total_reactive_power"
+            },
+            {
+               "name":"Apparent Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"kVA",
+               "uri":"/solar_total_apparent_power"
+            },
+            {
+               "name":"Curtailment Status",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/solar_curtailment_state"
+            }
+         ]
+      },
+      {
+         "info":{
+            "baseURI":"/feeders/summary",
+            "batteryView":false,
+            "batteryViewSourceURI":null,
+            "batteryViewURI":"",
+            "isTemplate":true,
+            "items":[
+               {
+                  "name":"Feeder Summary",
+                  "uri":"/feeders/summary"
+               }
+            ],
+            "name":"Feeder Summary",
+            "sourceURIs":[
+               "/assets"
+            ]
+         },
+         "status":[
+            {
+               "name":"Sync Feeder Status",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/sync_feeder_status"
+            },
+            {
+               "name":"POI Breaker Status",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/feed_1_breaker_status"
+            },
+            {
+               "name":"POI Active Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"kW",
+               "uri":"/feed_1_active_power"
+            },
+            {
+               "name":"POI Voltage",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"V",
+               "uri":"/feed_1_voltage"
+            },
+            {
+               "name":"BESS Aux Breaker Status",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/feed_2_breaker_status"
+            },
+            {
+               "name":"BESS Aux Active Power",
+               "scalar":"",
+               "sourceURI":"/assets",
+               "units":"kW",
+               "uri":"/feed_2_active_power"
+            },
+            {
+               "name":"BESS Aux Voltage",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"V",
+               "uri":"/feed_2_voltage"
+            },
+            {
+               "name":"PV Revenue (ION8650) Breaker Status",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/feed_3_breaker_status"
+            },
+            {
+               "name":"PV Revenue (ION8650) Active Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"kW",
+               "uri":"/feed_3_active_power"
+            },
+            {
+               "name":"PV Revenue (ION8650) Voltage",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"V",
+               "uri":"/feed_3_voltage"
+            }
+         ]
+      },
+      {
+         "info":{
+            "baseURI":"/generators/summary",
+            "batteryView":false,
+            "batteryViewSourceURI":null,
+            "batteryViewURI":"",
+            "isTemplate":true,
+            "items":[
+               {
+                  "name":"Generator Summary",
+                  "uri":"/generators/summary"
+               }
+            ],
+            "name":"Generator Summary",
+            "sourceURIs":[
+               "/assets"
+            ]
+         },
+         "status":[
+            {
+               "name":"Units Available",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/num_gen_available"
+            },
+            {
+               "name":"Units Running",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"",
+               "uri":"/num_gen_running"
+            },
+            {
+               "name":"Gen Countdown",
+               "scalar":null,
+               "sourceURI":"/assets",
+               "units":"min:sec",
+               "uri":"/start_gen_countdown"
+            },
+            {
+               "name":"Gen 1 Active Power",
+               "scalar":"1000",
+               "sourceURI":"/assets",
+               "units":"kW",
+               "uri":"/gen_1_active_power"
+            }
+         ]
+      }
+   ]
+}

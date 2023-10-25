@@ -9,6 +9,8 @@
 #include <iostream>
 #include <fstream>
 
+const std::string UNIT_TEST_FILES_PATH = "/home/hybridos/git/hybridos/sandbox/dispatch_coordination/unit_test_configs/site_controller/";
+
 /**
  * Parses the config cJSON from storage given the configuration type (Assets/Sequences/Variables)
  */
@@ -61,7 +63,7 @@ TEST_F(site_manager_test, variables_config_test) {
         std::vector<test_variable_check> variable_checks;
     };
     std::vector<test_struct> tests = {
-        test_struct{ "unit_tests/unit_test_files/variables/valid/full_config_active_power_setpoint.json",
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/valid/full_config_active_power_setpoint.json",
                      true,
                      {
                          test_variable_check{
@@ -71,10 +73,10 @@ TEST_F(site_manager_test, variables_config_test) {
                              active_power_setpoint_mode.kW_slew_rate.value,
                          },
                      } },
-        test_struct{ "unit_tests/unit_test_files/variables/valid/minimal_config.json", true, {} },
-        test_struct{ "unit_tests/unit_test_files/variables/invalid/missing_asset_priority_runmode1.json", false, {} },
-        test_struct{ "unit_tests/unit_test_files/variables/valid/missing_defaults.json", true, {} },
-        test_struct{ "unit_tests/unit_test_files/variables/valid/missing_runmode2_kW_mode_variables.json",
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/valid/minimal_config.json", true, {} },
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/invalid/missing_asset_priority_runmode1.json", false, {} },
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/valid/missing_defaults.json", true, {} },
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/valid/missing_runmode2_kW_mode_variables.json",
                      true,
                      {
                          test_variable_check{
@@ -96,12 +98,12 @@ TEST_F(site_manager_test, variables_config_test) {
                              runmode2_kW_mode_status.value,
                          },
                      } },
-        test_struct{ "unit_tests/unit_test_files/variables/invalid/missing_required_active_power_poi_limits_variables.json", false, {} },
-        test_struct{ "unit_tests/unit_test_files/variables/valid/unrecognized_variable.json", true, {} },
-        test_struct{ "unit_tests/unit_test_files/variables/valid/missing_frequency_response.json", true, {} },
-        test_struct{ "unit_tests/unit_test_files/variables/invalid/typo_start_first_gen_soc.json", false, {} },
-        test_struct{ "unit_tests/unit_test_files/variables/invalid/empty.json", false, {} },
-        test_struct{ "unit_tests/unit_test_files/variables/valid/minimal_config_with_1_feature_each_type.json",
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/invalid/missing_required_active_power_poi_limits_variables.json", false, {} },
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/valid/unrecognized_variable.json", true, {} },
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/valid/missing_frequency_response.json", true, {} },
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/invalid/typo_start_first_gen_soc.json", false, {} },
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/invalid/empty.json", false, {} },
+        test_struct{ UNIT_TEST_FILES_PATH + "variables/valid/minimal_config_with_1_feature_each_type.json",
                      true,
                      {
                          test_variable_check{

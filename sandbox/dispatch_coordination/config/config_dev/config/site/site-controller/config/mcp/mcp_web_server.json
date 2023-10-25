@@ -1,0 +1,10 @@
+{
+	"processes":
+	[
+		{
+			"name":"/usr/local/bin/web_server",
+			"args": [ "/usr/local/bin/web_ui/", "/usr/local/etc/config/web_ui", "/usr/local/etc/config/web_server" ],
+			"max_restarts": -1
+		}
+	]
+}

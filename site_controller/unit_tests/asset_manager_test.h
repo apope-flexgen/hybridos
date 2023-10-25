@@ -85,14 +85,14 @@ TEST_F(asset_manager_test, asset_create) {
     };
     std::vector<tests> test_cases;
 
-    test_cases.push_back({ "unit_tests/unit_test_files/assets/valid_mixed.json", Config_Validation_Result(true), Config_Validation_Result(true), Config_Validation_Result(true), Config_Validation_Result(true), {}, {}, {}, {} });
+    test_cases.push_back({ UNIT_TEST_FILES_PATH + "assets/valid_mixed.json", Config_Validation_Result(true), Config_Validation_Result(true), Config_Validation_Result(true), Config_Validation_Result(true), {}, {}, {}, {} });
     test_cases[0].expected_ess_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));
     test_cases[0].expected_ess_result.INFO_details.push_back(Result_Details("optional local_mode_signal was not provided in configuration"));
     test_cases[0].expected_solar_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));
     test_cases[0].expected_solar_result.INFO_details.push_back(Result_Details("optional local_mode_signal was not provided in configuration"));
 
     // Range for ESS blocks A and B overlap on entry 3, but B continues and still catches other configuration issues like missing required variable
-    test_cases.push_back({ "unit_tests/unit_test_files/assets/invalid_ranged.json", Config_Validation_Result(false), Config_Validation_Result(true), Config_Validation_Result(true), Config_Validation_Result(true), {}, {}, {}, {} });
+    test_cases.push_back({ UNIT_TEST_FILES_PATH + "assets/invalid_ranged.json", Config_Validation_Result(false), Config_Validation_Result(true), Config_Validation_Result(true), Config_Validation_Result(true), {}, {}, {}, {} });
     test_cases[1].expected_ess_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));
     test_cases[1].expected_ess_result.INFO_details.push_back(Result_Details("optional local_mode_signal was not provided in configuration"));
     test_cases[1].expected_solar_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));
@@ -106,7 +106,7 @@ TEST_F(asset_manager_test, asset_create) {
 
     // B overlaps with every entry provided in the range of A (1, 3, 5). Components are missing for B so configuration must stop there
     // Solar is also missing name/id but a placeholder is provided so the config can continue. Only the first of the templated entries is checked
-    test_cases.push_back({ "unit_tests/unit_test_files/assets/invalid_mixed.json", Config_Validation_Result(false), Config_Validation_Result(true), Config_Validation_Result(true), Config_Validation_Result(false), {}, {}, {}, {} });
+    test_cases.push_back({ UNIT_TEST_FILES_PATH + "assets/invalid_mixed.json", Config_Validation_Result(false), Config_Validation_Result(true), Config_Validation_Result(true), Config_Validation_Result(false), {}, {}, {}, {} });
     test_cases[2].expected_ess_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));
     test_cases[2].expected_ess_result.INFO_details.push_back(Result_Details("optional local_mode_signal was not provided in configuration"));
     test_cases[2].expected_solar_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));
@@ -131,7 +131,7 @@ TEST_F(asset_manager_test, asset_create) {
     test_cases[2].solar_errors_not_present.push_back("solar_1: must provide a nonzero rated_active_power_kw in config.");
 
     // All ESS entries overlap, but only configuration issues from the first overlap are reported
-    test_cases.push_back({ "unit_tests/unit_test_files/assets/invalid_number_of_instances.json", Config_Validation_Result(false), Config_Validation_Result(true), Config_Validation_Result(false), Config_Validation_Result(true), {}, {}, {}, {} });
+    test_cases.push_back({ UNIT_TEST_FILES_PATH + "assets/invalid_number_of_instances.json", Config_Validation_Result(false), Config_Validation_Result(true), Config_Validation_Result(false), Config_Validation_Result(true), {}, {}, {}, {} });
     test_cases[3].expected_ess_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));
     test_cases[3].expected_ess_result.INFO_details.push_back(Result_Details("optional local_mode_signal was not provided in configuration"));
     test_cases[3].expected_solar_result.INFO_details.push_back(Result_Details("reusing status_type random_enum for local_mode_status_type"));

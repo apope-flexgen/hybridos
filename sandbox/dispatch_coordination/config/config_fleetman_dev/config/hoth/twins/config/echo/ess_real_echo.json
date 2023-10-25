@@ -1,0 +1,75 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/ess_real_hs",
+			"publishRate": 100,
+			"heartbeat": "life_signal",
+			"inputs": [
+				{
+					"uri": "/components/twins_ess_2",
+					"registers": {
+						"active_power_setpoint": "pcmd",
+						"bms_dc_contactors": "ctrlword2",
+						"frequency_setpoint": "fcmd",
+						"on_off_grid_mode": "ctrlword3",
+						"reactive_power_setpoint": "qcmd",
+						"start_stop": "ctrlword1",
+						"voltage_setpoint": "vcmd"
+					}
+				}
+			],
+			"echo": {
+				"clear_faults": 0,
+				"life": 0,
+				"life_signal": 0,
+				"run_mode": 0
+			}
+		},
+		{
+			"uri": "/components/ess_real_ls",
+			"publishRate": 1000,
+			"inputs": [
+				{
+					"uri": "/components/twins_ess_2",
+					"registers": {
+						"active_power": "p",
+						"apparent_power": "s",
+						"bms_soc": "soc",
+						"chargeable_power": "plow",
+						"current_dc": "idc",
+						"current_l1": "i",
+						"dc_contactors_closed": "dccontactors",
+						"dischargeable_power": "phigh",
+						"frequency": "f",
+						"pf": "pf",
+						"racks_in_service": "racksinservice",
+						"reactive_power": "q",
+						"system_state": "on",
+						"voltage_dc": "vdc",
+						"voltage_l1_l2": "v"
+					}
+				}
+			],
+			"echo": {
+				"bms_average_cell_temperature": 0,
+				"bms_average_cell_voltage": 0,
+				"bms_maximum_cell_temperature": 0,
+				"bms_maximum_cell_voltage": 0,
+				"bms_minimum_cell_temperature": 0,
+				"bms_minimum_cell_voltage": 0,
+				"bms_soh": 0,
+				"chargeable_energy": 0,
+				"com_status": 0,
+				"component_connected": 0,
+				"current_l2": 0,
+				"current_l3": 0,
+				"dischargeable_energy": 0,
+				"ess_alarms": 0,
+				"ess_faults": 0,
+				"modbus_heartbeat": 0,
+				"voltage_l2_l3": 0,
+				"voltage_l3_l1": 0
+			}
+		}
+	]
+}

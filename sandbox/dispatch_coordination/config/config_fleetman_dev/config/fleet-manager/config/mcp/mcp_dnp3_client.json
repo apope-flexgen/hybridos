@@ -1,0 +1,15 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/dnp3_client",
+			"args": [ "/usr/local/etc/config/dnp3_client/site_1_client.json" ],
+			"max_restarts": -1
+        },
+		{
+			"name":"/usr/local/bin/dnp3_client",
+			"args": [ "/usr/local/etc/config/dnp3_client/site_2_client.json" ],
+			"max_restarts": -1
+        }
+    ]
+}

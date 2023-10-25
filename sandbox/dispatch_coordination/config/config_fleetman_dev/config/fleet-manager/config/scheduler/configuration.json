@@ -1,0 +1,27 @@
+{
+    "scheduler_type": "FM",
+    "web_sockets": {
+        "clients": [
+            {
+                "id": "hoth",
+                "name": "Hoth",
+                "ip": "172.3.27.101",
+                "port": 9000
+            },
+            {
+                "id": "gargantua",
+                "name": "Gargantua",
+                "ip": "172.3.27.102",
+                "port": 9000
+            }
+        ]
+    },
+    "scada": {
+        "stage_size": 1,
+        "max_num_events": 20,
+        "num_floats": 1,
+        "num_ints": 0,
+        "num_bools": 1,
+        "num_strings": 0
+    }
+}

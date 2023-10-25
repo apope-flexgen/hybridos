@@ -1,0 +1,15 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/metrics",
+			"args": [ "/usr/local/etc/config/metrics/metrics_hoth.json" ],
+			"max_restarts": -1
+        },
+		{
+			"name":"/usr/local/bin/metrics",
+			"args": [ "/usr/local/etc/config/metrics/metrics_gargantua.json" ],
+			"max_restarts": -1
+        }
+    ]
+}

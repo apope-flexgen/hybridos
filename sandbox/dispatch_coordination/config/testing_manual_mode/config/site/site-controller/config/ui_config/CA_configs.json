@@ -1,0 +1,715 @@
+{
+    "_doc": "assets",
+    "data": [
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/maint_mode"
+                }
+            ],
+            "controls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/maint_mode"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Start",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/start"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Stop",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/stop"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Enter Standby",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/enter_standby"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Exit Standby",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/exit_standby"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Clear Faults",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/clear_faults"
+                },
+                {
+                    "inputType": "switch",
+                    "name": "Limits Override",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/limits_override"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/maint_active_power_setpoint"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Reactive Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/maint_reactive_power_setpoint"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Close DC Contactors",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/close_dc_contactors"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Open DC Contactors",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/open_dc_contactors"
+                }
+            ],
+            "info": {
+                "alarmFields": [
+                    "alarms",
+                    "com_status",
+                    "ess_alarms",
+                    "local_mode_alarm"
+                ],
+                "assetKey": "ess_tab",
+                "baseURI": "/ess",
+                "extension": "/ess_",
+                "faultFields": [
+                    "faults",
+                    "bms_fault",
+                    "emmu_fault",
+                    "ess_faults",
+                    "watchdog_fault"
+                ],
+                "hasAllControls": true,
+                "hasSummary": false,
+                "itemName": "BESS Inverter Block",
+                "name": "ESS",
+                "numberOfItems": "2",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power_setpoint"
+                },
+                {
+                    "name": "Apparent Power",
+                    "scalar": "1000",
+                    "units": "MVA",
+                    "uri": "/apparent_power"
+                },
+                {
+                    "name": "Auto Balancing Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/autobalancing_status"
+                },
+                {
+                    "name": "Component Connection Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/component_connected"
+                },
+                {
+                    "name": "L1 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l1"
+                },
+                {
+                    "name": "L2 AC Current\t",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l2"
+                },
+                {
+                    "name": "L3 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l3"
+                },
+                {
+                    "name": "DC Contactors Closed",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/dc_contactors_closed"
+                },
+                {
+                    "name": "Frequency",
+                    "scalar": "1",
+                    "units": "Hz",
+                    "uri": "/frequency"
+                },
+                {
+                    "name": "Frequency Setpoint",
+                    "scalar": "1",
+                    "units": "Hz",
+                    "uri": "/frequency_setpoint"
+                },
+                {
+                    "name": "Grid_mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/grid_mode"
+                },
+                {
+                    "name": "Alarms Present",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/is_alarmed"
+                },
+                {
+                    "name": "Faults Present",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/is_faulted"
+                },
+                {
+                    "name": "Racks In Service\t",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/local_bms_status"
+                },
+                {
+                    "name": "Component in Local Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/local_mode_status"
+                },
+                {
+                    "name": "Current Highest Cell Temp\t",
+                    "scalar": "1",
+                    "units": "C",
+                    "uri": "/max_temp"
+                },
+                {
+                    "name": "Current Lowest Cell Temp\t",
+                    "scalar": "1",
+                    "units": "C",
+                    "uri": "/min_temp"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Reactive Power Setpoint\t",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/reactive_power_setpoint"
+                },
+                {
+                    "name": "State of Charge\t",
+                    "scalar": "1",
+                    "units": "%",
+                    "uri": "/soc"
+                },
+                {
+                    "name": "State of Health\t",
+                    "scalar": "1",
+                    "units": "%",
+                    "uri": "/soh"
+                },
+                {
+                    "name": "Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/status"
+                },
+                {
+                    "name": "System Chargeable Energy\t",
+                    "scalar": "1000",
+                    "units": "MWh",
+                    "uri": "/system_chargeable_energy"
+                },
+                {
+                    "name": "System Chargeable Power\t",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/system_chargeable_power"
+                },
+                {
+                    "name": "System Dischargeable Energy\t",
+                    "scalar": "1000",
+                    "units": "MWh",
+                    "uri": "/system_dischargeable_energy"
+                },
+                {
+                    "name": "System Dischargeable Power\t",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/system_dischargeable_power"
+                },
+                {
+                    "name": "L1-L2 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l1_l2"
+                },
+                {
+                    "name": "L2-L3 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l2_l3"
+                },
+                {
+                    "name": "L3-L1 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l3_l1"
+                },
+                {
+                    "name": "Maximum Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_max"
+                },
+                {
+                    "name": "Minimum Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_min"
+                },
+                {
+                    "name": "Voltage Setpoint",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_setpoint"
+                },
+                {
+                    "name": "Watchdog Heartbeat",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/watchdog_heartbeat"
+                },
+                {
+                    "name": "Watchdog Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/watchdog_status"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        },
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [],
+            "controls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/maint_mode"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Start",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/start"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Stop",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/stop"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Clear Faults",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/clear_faults"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/maint_active_power_setpoint"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Reactive Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/maint_reactive_power_setpoint"
+                }
+            ],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "gen_tab",
+                "baseURI": "/generators",
+                "extension": "/gen_",
+                "faultFields": [
+                    "faults",
+                    "watchdog_fault"
+                ],
+                "hasAllControls": false,
+                "hasSummary": false,
+                "itemName": "",
+                "name": "Generator",
+                "numberOfItems": "1",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power_setpoint"
+                },
+                {
+                    "name": "Apparent Power",
+                    "scalar": "1000",
+                    "units": "MVA",
+                    "uri": "/apparent_power"
+                },
+                {
+                    "name": "L1 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l1"
+                },
+                {
+                    "name": "Frequency",
+                    "scalar": "1",
+                    "units": "Hz",
+                    "uri": "/frequency"
+                },
+                {
+                    "name": "Grid Forming",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/grid_forming"
+                },
+                {
+                    "name": "Grid Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/grid_mode"
+                },
+                {
+                    "name": "Component in Local Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/local_mode_status"
+                },
+                {
+                    "name": "Alarms Present",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/is_alarmed"
+                },
+                {
+                    "name": "Faults Present",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/is_faulted"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Reactive Power Setpoint\t",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/reactive_power_setpoint"
+                },
+                {
+                    "name": "Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/status"
+                },
+                {
+                    "name": "L1-L2 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l1_l2"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        },
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/maint_mode"
+                }
+            ],
+            "controls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/maint_mode"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Start",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/start"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Stop",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/stop"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Enter Standby",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/enter_standby"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Exit Standby",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/exit_standby"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Clear Faults",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/clear_faults"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/maint_active_power_setpoint"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Reactive Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/maint_reactive_power_setpoint"
+                }
+            ],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "solar_tab",
+                "baseURI": "/solar",
+                "extension": "/solar_",
+                "faultFields": [
+                    "faults",
+                    "watchdog_fault"
+                ],
+                "hasAllControls": true,
+                "hasSummary": false,
+                "itemName": "",
+                "name": "Solar Inverter",
+                "numberOfItems": "2",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power_setpoint"
+                },
+                {
+                    "name": "Apparent Power",
+                    "scalar": "1000",
+                    "units": "MVA",
+                    "uri": "/apparent_power"
+                },
+                {
+                    "name": "L1 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l1"
+                },
+                {
+                    "name": "L2 AC Current\t",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l2"
+                },
+                {
+                    "name": "L3 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l3"
+                },
+                {
+                    "name": "Alarms Present",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/is_alarmed"
+                },
+                {
+                    "name": "Faults Present",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/is_faulted"
+                },
+                {
+                    "name": "Component in Local Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/local_mode_status"
+                },
+                {
+                    "name": "Power Factor",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/power_factor"
+                },
+                {
+                    "name": "Power Factor Setpoint",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/power_factor_setpoint"
+                },
+                {
+                    "name": "Reactive Power Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/reactive_power_mode"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Reactive Power Setpoint\t",
+                    "scalar": "1000",
+                    "units": "MVAR",
+                    "uri": "/reactive_power_setpoint"
+                },
+                {
+                    "name": "Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/status"
+                },
+                {
+                    "name": "L1-L2 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l1_l2"
+                },
+                {
+                    "name": "L1-N AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l1_n"
+                },
+                {
+                    "name": "L2-L3 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l2_l3"
+                },
+                {
+                    "name": "L2-N AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l2_n"
+                },
+                {
+                    "name": "L3-L1 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l3_l1"
+                },
+                {
+                    "name": "L3-N AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l3_n"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        }
+    ]
+}

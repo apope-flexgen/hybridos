@@ -1,0 +1,2439 @@
+{
+    "variables":
+    {
+        "internal":
+        {
+            "defaults":
+            {
+                "name": "Default Variable Types",
+                "unit": "",
+                "ui_type": "status",
+                "type": "number",
+                "var_type": "Float",
+                "value": 0.0,
+                "scaler": 1,
+                "ui_enabled": true,
+                "multiple_inputs": false,
+                "options": []
+            },
+            "faults":
+            {
+                "name": "Site Manager Fault List",
+                "ui_type": "fault",
+                "type": "enum",
+                "var_type": "Int",
+                "value": 0,
+                "options":
+                [
+                    {
+                        "name": "Site Debug Fault Message",
+                        "value": 0
+                    },
+                    {
+                        "name": "Site Sequence Fault Detected",
+                        "value": 1
+                    },
+                    {
+                        "name": "Site Sequence Step Timeout",
+                        "value": 2
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 3
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 4
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 5
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 6
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 7
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 8
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 9
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 10
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 11
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 12
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 13
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 14
+                    },
+                    {
+                        "name": "Uninitialized Fault",
+                        "value": 15
+                    },
+                    {
+                        "name": "UPS Low State of Charge",
+                        "value": 16
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 2",
+                        "value": 17
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 3",
+                        "value": 18
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 4",
+                        "value": 19
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 5",
+                        "value": 20
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 6",
+                        "value": 21
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 7",
+                        "value": 22
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 8",
+                        "value": 23
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 9",
+                        "value": 24
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 10",
+                        "value": 25
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 11",
+                        "value": 26
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 12",
+                        "value": 27
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 13",
+                        "value": 28
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 14",
+                        "value": 29
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 15",
+                        "value": 30
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Fault 16",
+                        "value": 31
+                    }
+                ]
+            },
+            "alarms":
+            {
+                "name": "Site Manager Alarm List",
+                "ui_type": "alarm",
+                "type": "enum",
+                "var_type": "Int",
+                "value": 0,
+                "options":
+                [
+                    {
+                        "name": "Site Debug Alarm Message",
+                        "value": 0
+                    },
+                    {
+                        "name": "Asset Alarm Detected",
+                        "value": 1
+                    },
+                    {
+                        "name": "Asset Fault Detected",
+                        "value": 2
+                    },
+                    {
+                        "name": "Price Thresholds Invalid",
+                        "value": 3
+                    },
+                    {
+                        "name": "Watchdog Timeout",
+                        "value": 4
+                    }
+                ]
+            },
+            "exit_timer":
+            {
+                "name": "Sequence Failure Exit Timer",
+                "unit": "ms",
+                "ui_type": "none",
+                "var_type": "Int",
+                "value": 90000
+            },
+            "asset_priority_runmode1":
+            {
+                "name": "Asset Priority - Run Mode 1",
+                "ui_type": "none",
+                "var_type": "Int",
+                "value": 6
+            },
+            "asset_priority_runmode2":
+            {
+                "name": "Asset Priority - Run Mode 2",
+                "ui_type": "none",
+                "var_type": "Int",
+                "value": 6
+            },
+            "start_first_gen_kW":
+            {
+                "name": "First Generator Start Power Threshold",
+                "ui_type": "none",
+                "unit": "kW",
+                "value": 720,
+                "scaler": 1
+            },
+            "allow_gen_auto_restart":
+            {
+                "name": "Allow Generator Autostart",
+		        "var_type": "Bool",
+		        "value": true
+            },
+            "start_first_ess_kW":
+            {
+                "name": "First ESS Start Power Threshold",
+                "ui_type": "none",
+                "unit": "kW",
+                "value": 10000,
+                "scaler": 1
+            },
+            "allow_ess_auto_restart":
+            {
+                "name": "Allow ESS Autostart",
+		        "var_type": "Bool",
+		        "value": true
+            },
+            "start_first_solar_kW":
+            {
+                "name": "First Solar Start Power Threshold",
+                "ui_type": "none",
+                "unit": "kW",
+                "value": 10000,
+                "scaler": 1
+            },
+            "allow_solar_auto_restart":
+            {
+                "name": "Allow Solar Autostart",
+		        "var_type": "Bool",
+		        "value": true
+            },
+            "soc_min_all":
+            {
+                "name": "Minimum State of Charge for All ESS",
+                "unit": "%"
+            },
+            "soc_max_all":
+            {
+                "name": "Maximum State of Charge for All ESS",
+                "unit": "%"
+            },
+            "soc_avg_all":
+            {
+                "name": "Average State of Charge for All ESS",
+                "unit": "%"
+            },
+            "soc_min_running":
+            {
+                "name": "Minimum State of Charge for Running ESS",
+                "unit": "%"
+            },
+            "soc_max_running":
+            {
+                "name": "Maximum State of Charge for Running ESS",
+                "unit": "%"
+            },
+            "soc_avg_running":
+            {
+                "name": "Average State of Charge for Running ESS",
+                "unit": "%"
+            },
+            "available_features_standalone_power":
+            {
+                "name": "Available Features - Standalone Power",
+                "ui_type": "none",
+                "type": "string",
+                "var_type": "String",
+                "value": "0x29",
+                "options":
+                [
+                    {
+                        "name": "POI Limits",
+                        "value": 0
+                    },
+                    {
+                        "name": "PFR",
+                        "value": 1
+                    },
+                    {
+                        "name": "Watt-Watt",
+                        "value": 2
+                    },
+                    {
+                        "name": "LDSS",
+                        "value": 3
+                    },
+                    {
+                        "name": "Load Shed",
+                        "value": 4
+                    },
+                    {
+                        "name": "Solar Shed",
+                        "value": 5
+                    },
+                    {
+                        "name": "ESS Discharge Prevention",
+                        "value": 6
+                    },
+                    {
+                        "name": "Aggregated Asset Limit",
+                        "value": 7
+                    },
+                    {
+                        "name": "Active Closed Loop Control",
+                        "value": 8
+                    },
+                    {
+                        "name": "Reactive Closed Loop Control",
+                        "value": 9
+                    },
+                    {
+                        "name": "Reactive Power POI Limits",
+                        "value": 10
+                    }
+                ]
+            },
+            "available_features_site_operation":
+            {
+                "name": "Available Features - Site Operation",
+                "ui_type": "none",
+                "type": "string",
+                "var_type": "String",
+                "value": "0x1",
+                "options":
+                [
+                    {
+                        "name": "Watchdog",
+                        "value": 0
+                    }
+                ]
+            },
+            "available_features_runmode2_kW_mode":
+            {
+                "name": "Available Feature Modes - Run Mode 2 Active Power",
+                "ui_type": "none",
+                "type": "string",
+                "var_type": "String",
+                "value": "0x3",
+                "options":
+                [
+                    {
+                        "name": "Generator Charge",
+                        "value": 0
+                    },
+                    {
+                        "name": "Disabled",
+                        "value": 1
+                    }
+                ]
+            },
+            "runmode2_kW_mode_cmd":
+            {
+                "name": "Mode Select - Run Mode 2 Active Power",
+                "ui_type": "control",
+                "type": "enum",
+                "var_type": "Int",
+                "value": 0
+            },
+            "runmode2_kW_mode_status":
+            {
+                "name": "Run Mode 2 Active Power Mode",
+                "type": "string",
+                "var_type": "String",
+                "value": "Disabled"
+            },
+            "available_features_runmode2_kVAR_mode":
+            {
+                "name": "Available Feature Modes - Run Mode 2 Reactive Power",
+                "ui_type": "none",
+                "type": "string",
+                "var_type": "String",
+                "value": "0x1",
+                "options":
+                [
+                    {
+                        "name": "Disabled",
+                        "value": 0
+                    }
+                ]
+            },
+            "runmode2_kVAR_mode_cmd":
+            {
+                "name": "Mode Select - Run Mode 2 Reactive Power",
+                "ui_type": "control",
+                "type": "enum",
+                "var_type": "Int",
+                "value": 0
+            },
+            "runmode2_kVAR_mode_status":
+            {
+                "name": "Run Mode 2 Reactive Power Mode",
+                "type": "string",
+                "ui_type": "none",
+                "var_type": "String",
+                "value": "Disabled"
+            },
+            "configured_primary":
+            {
+                "name": "Configured Primary Controller Status",
+                "ui_type": "none",
+                "type": "enum",
+                "var_type": "Bool",
+                "value": false
+            }
+        },
+        "site":
+        {
+            "input_sources": [
+                {
+                    "name": "UI",
+                    "uri_suffix": "ui",
+                    "ui_type": "control",
+                    "alt_ui_types": [],
+                    "enabled": true
+                },
+                {
+                    "name": "BRP DNP3",
+                    "uri_suffix": "dnp3",
+                    "ui_type": "status",
+                    "alt_ui_types": [],
+                    "enabled": false
+                },
+                {
+                    "name": "CAISO ADS Schedule",
+                    "uri_suffix": "remote",
+                    "ui_type": "status",
+                    "alt_ui_types": [],
+                    "enabled": false
+                },
+                {
+                    "name": "RIG",
+                    "uri_suffix": "local",
+                    "ui_type": "status",
+                    "alt_ui_types": []
+                }
+            ],
+            "configuration":
+            {
+                "input_source_status":
+                {
+                    "name": "Input Source Selection Status",
+                    "ui_type": "none",
+                    "type": "string",
+                    "var_type": "String",
+                    "value": "Unassigned"
+                },
+                "reserved_bool_1":
+                {
+                    "name": "FlexGen ESS CB1 Status",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "reserved_bool_2":
+                {
+                    "name": "Grid Start",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },        
+                "reserved_bool_3":
+                {
+                    "name": "BESS Disable",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },        
+                "reserved_bool_4":
+                {
+                    "name": "Clear BESS Fault",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },        
+                "reserved_bool_5":
+                {
+                    "name": "Auxiliary Start",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "reserved_bool_6":
+                {
+                    "name": "Charge Limits",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },        
+                "reserved_bool_7":
+                {
+                    "name": "SOC Maintenance",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },        
+                "reserved_bool_8":
+                {
+                    "name": "Bess Alarm Present",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },            
+                "reserved_bool_9":
+                {
+                    "name": "Bess Fault Present",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "reserved_bool_10":
+                {
+                    "name": "Start Energy Stored",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },        
+                "reserved_bool_11":
+                {
+                    "name": "Multiple Inputs: UI Controls Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },        
+                "reserved_bool_12":
+                {
+                    "name": "Multiple Inputs: BRP DNP3 Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },        
+                "reserved_bool_13":
+                {
+                    "name": "Multiple Inputs: CAISO ADS Schedule Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "reserved_bool_14":
+                {
+                    "name": "Multiple Inputs: RIG Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },        
+                "reserved_bool_15":
+                {
+                    "name": "Auto_restart",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true
+                },        
+                "reserved_bool_16":
+                {
+                    "name": "Reserved Boolean 16",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },                     
+                "reserved_float_1":
+                {
+                    "name": "Reserved Float 1",
+                    "ui_type": "none"
+                },
+                "reserved_float_2":
+                {
+                    "name": "Reserved Float 2",
+                    "ui_type": "none"
+                },        
+                "reserved_float_3":
+                {
+                    "name": "Reserved Float 3",
+                    "ui_type": "none"
+                },
+                "reserved_float_4":
+                {
+                    "name": "Reserved Float 4",
+                    "ui_type": "none"
+                },             
+                "reserved_float_5":
+                {
+                    "name": "Reserved Float 5",
+                    "ui_type": "none"
+                },
+                "reserved_float_6":
+                {
+                    "name": "Reserved Float 6",
+                    "ui_type": "none"
+                },        
+                "reserved_float_7":
+                {
+                    "name": "Reserved Float 7",
+                    "ui_type": "none"
+                },
+                "reserved_float_8":
+                {
+                    "name": "Reserved Float 8",
+                    "ui_type": "none"
+                },
+                "ess_kVAR_slew_rate":
+                {
+                    "name": "ESS kVAR Slew Rate",
+                    "unit": "kVAR/s",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "value": 2500
+                },
+                "gen_kVAR_slew_rate":
+                {
+                    "name": "Generator kVAR Slew Rate",
+                    "unit": "kVAR/s",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "value": 15
+                },
+                "solar_kVAR_slew_rate":
+                {
+                    "name": "Solar kVAR Slew Rate",
+                    "unit": "kVAR/s",
+                    "ui_type": "none",
+                    "var_type":"Int",
+                    "value": 150
+                },
+                "power_priority_flag":
+                {
+                    "name": "Reactive Power Priority Flag",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "invert_poi_kW":
+                {
+                    "name": "POI Invert kW",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                }
+            },
+            "operation":
+            {
+                "enable_flag":
+                {
+                    "name": "Start Site",
+                    "ui_type": "control",
+                    "type": "enum_button",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "Start Site",
+                            "value": true
+                        }
+                    ]
+                },
+                "disable_flag":
+                {
+                    "name": "Disable Site",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Disable Site",
+                            "value": true
+                        }
+                    ]
+                },
+                "standby_flag":
+                {
+                    "name": "Standby Site",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Standby Site",
+                            "value": true
+                        }
+                    ]
+                },
+                "clear_faults_flag":
+                {
+                    "name": "Clear Faults",
+                    "ui_type": "control",
+                    "type": "enum_button",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "Clear Faults",
+                            "value": true
+                        }
+                    ]
+                },
+                "active_faults":
+                {
+                    "name": "Site Manager Active Faults",
+                    "ui_type": "fault",
+                    "type": "enum",
+                    "var_type": "Int",
+                    "value": 0
+                },
+                "active_alarms":
+                {
+                    "name": "Site Manager Active Alarm",
+                    "ui_type": "alarm",
+                    "type": "enum",
+                    "var_type": "Int",
+                    "value": 0
+                },
+                "site_state":
+                {
+                    "name": "Site Controller State",
+                    "ui_type": "none",
+                    "type": "string",
+                    "var_type": "String",
+                    "value": "Init"
+                },
+                "site_state_enum":
+                {
+                    "name": "Site Controller State Enum",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Int",
+                    "value": 0
+                },
+                "site_status":
+                {
+                    "name": "Site Controller Status",
+                    "type": "string",
+                    "var_type": "String",
+                    "value": "Default Init Path: Default Init Path"
+                },
+                "running_status_flag":
+                {
+                    "name": "Running Status",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "alarm_status_flag":
+                {
+                    "name": "Alarm Status",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "fault_status_flag":
+                {
+                    "name": "Fault Status",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "var_type": "Bool",
+                    "value": false
+                }
+            },
+            "summary":
+            {
+                "ess_instant_discharge":
+                {
+                    "name": "ESS Instant Discharge",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "ess_instant_charge_grid":
+                {
+                    "name": "ESS Instant Charge from Grid",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "ess_instant_charge_pv":
+                {
+                    "name": "ESS Instant Charge from Solar",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                }
+            }
+        },
+        "features":
+        {
+            "summary":
+            {
+                "energy_arb_enable_flag":
+                {
+                    "name": "Energy Arbitrage Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "_charge_dispatch_enable_flag":
+                {
+                    "name": "Charge Dispatch Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Charge Dispatch Enabled",
+                            "value": true
+                        }
+                    ]
+                },
+                "_ess_charge_control_enable_flag":
+                {
+                    "name": "ESS Charge Control Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Charge Control Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "target_soc_mode_enable_flag":
+                {
+                    "name": "Target SOC Mode Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Target SOC Mode Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "manual_mode_enable_flag":
+                {
+                    "name": "Manual Mode Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Manual Mode Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "active_power_setpoint_mode_enable_flag":
+                {
+                    "name": "Active Power Setpoint Mode Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Active Power Setpoint Mode Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "ess_calibration_enable_flag":
+                {
+                    "name": "ESS Calibration Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "ESS Calibration Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "generator_charge_enable":
+                {
+                    "name": "Generator Charge Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "reactive_setpoint_mode_enable_flag":
+                {
+                    "name": "Reactive Power Setpoint Mode Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Reactive Power Setpoint Mode Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "power_factor_mode_enable_flag":
+                {
+                    "name": "Power Factor Mode Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Power Factor Mode Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "constant_power_factor_mode_enable_flag":
+                {
+                    "name": "Constant Power Factor Mode Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "watt_var_mode_enable_flag":
+                {
+                    "name": "Watt-VAR Mode Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Watt-VAR Mode Enable",
+                            "value": true
+                        }
+                    ]
+                }
+            },
+            "active_power":
+            {
+                "ess_kW_cmd":
+                {
+                    "name": "ESS Active Power Setpoint",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "gen_kW_cmd":
+                {
+                    "name": "Generator Active Power Setpoint",
+                    "ui_type": "status",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "solar_kW_cmd":
+                {
+                    "name": "Solar Active Power Setpoint",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "feeder_kW_cmd":
+                {
+                    "name": "POI Active Power Setpoint",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "site_kW_demand":
+                {
+                    "name": "Site Demand Active Power",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "feature_kW_demand":
+                {
+                    "name": "Feature Demand Active Power",
+                    "unit": "kW",
+                    "ui_type": "none",
+                    "scaler": 1
+                },
+                "site_kW_charge_production":
+                {
+                    "name": "Charge Production Active Power",
+                    "unit": "kW",
+                    "ui_type": "none",
+                    "scaler": 1
+                },
+                "site_kW_discharge_production":
+                {
+                    "name": "Discharge Production Active Power",
+                    "unit": "kW",
+                    "ui_type": "none",
+                    "scaler": 1
+                },
+                "total_site_kW_rated_charge":
+                {
+                    "name": "Total Rated Charge Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "total_site_kW_rated_discharge":
+                {
+                    "name": "Total Rated Discharge Active Power",
+                    "unit": "kW",
+                    "ui_type": "none",
+                    "scaler": 1
+                },
+                "total_site_kW_charge_limit":
+                {
+                    "name": "Minimum Total Site Charge",
+                    "ui_type": "none",
+                    "unit": "kW"
+                },
+                "total_site_kW_discharge_limit":
+                {
+                    "name": "Maximum Total Site Discharge",
+                    "ui_type": "none",
+                    "unit": "kW"
+                },
+                "site_kW_load":
+                {
+                    "name": "Site Load Active Power",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "site_kW_load_interval_ms":
+                {
+                    "name": "Duration of Site Load Rolling Average",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "unit": "ms",
+                    "value": 5000,
+                    "scaler": 1
+                },
+                "site_kW_load_inclusion":
+                {
+                    "name": "Site Load included in Feature",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "ess_charge_support_enable_flag":
+                {
+                    "name": "ESS Charge Support Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "ESS Charge Support Enable",
+                            "value": false
+                        }
+                    ]
+                },
+                "ess_actual_kW":
+                {
+                    "name": "ESS Actual Active Power",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "gen_actual_kW":
+                {
+                    "name": "Generator Actual Active Power",
+                    "ui_type": "status",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "solar_actual_kW":
+                {
+                    "name": "Solar Actual Active Power",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "feeder_actual_kW":
+                {
+                    "name": "POI Actual Active Power",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "price":
+                {
+                    "name": "Current Trading Price",
+                    "ui_type": "control",
+                    "unit": "$/MWh"
+                },
+                "threshold_charge_1":
+                {
+                    "name": "Normal Charge Threshold Price",
+                    "unit": "$/MWh",
+                    "ui_type": "control",
+                    "value": 10.0
+                },
+                "threshold_charge_2":
+                {
+                    "name": "Max Charge Threshold Price",
+                    "unit": "$/MWh",
+                    "ui_type": "control",
+                    "value": -10.0
+                },
+                "threshold_dischg_1":
+                {
+                    "name": "Normal Discharge Threshold Price",
+                    "unit": "$/MWh",
+                    "ui_type": "control",
+                    "value": 30.0
+                },
+                "threshold_dischg_2":
+                {
+                    "name": "Max Discharge Threshold Price",
+                    "unit": "$/MWh",
+                    "ui_type": "control",
+                    "value": 100.0
+                },
+                "soc_min_limit":
+                {
+                    "name": "Minimum State of Charge Limit for Running ESS",
+                    "unit": "%",
+                    "value": 15.0
+                },
+                "soc_max_limit":
+                {
+                    "name": "Maximum State of Charge Limit for Running ESS",
+                    "unit": "%",
+                    "value": 85.0
+                },
+                "max_charge_1":
+                {
+                    "name": "Normal Charge Limit",
+                    "unit": "kW",
+                    "value": -5000.0,
+                    "scaler": 1
+                },
+                "max_charge_2":
+                {
+                    "name": "Max Charge Limit",
+                    "unit": "kW",
+                    "value": -6000.0,
+                    "scaler": 1
+                },
+                "max_dischg_1":
+                {
+                    "name": "Normal Discharge Limit",
+                    "unit": "kW",
+                    "value": 5000.0,
+                    "scaler": 1
+                },
+                "max_dischg_2":
+                {
+                    "name": "Max Discharge Limit",
+                    "unit": "kW",
+                    "value": 6000.0,
+                    "scaler": 1
+                },
+                "max_potential_ess_kW":
+                {
+                    "name": "Max ESS Potential Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "min_potential_ess_kW":
+                {
+                    "name": "Min ESS Potential Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "rated_ess_kW":
+                {
+                    "name": "ESS Rated Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "max_potential_gen_kW":
+                {
+                    "name": "Max Generator Potential Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "min_potential_gen_kW":
+                {
+                    "name": "Min Generator Potential Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "rated_gen_kW":
+                {
+                    "name": "Gen Rated Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "max_potential_solar_kW":
+                {
+                    "name": "Max Solar Potential Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "min_potential_solar_kW":
+                {
+                    "name": "Min Solar Potential Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "rated_solar_kW":
+                {
+                    "name": "Solar Rated Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "max_potential_feeder_kW":
+                {
+                    "name": "Max POI Potential Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "min_potential_feeder_kW":
+                {
+                    "name": "Min POI Potential Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "rated_feeder_kW":
+                {
+                    "name": "Feeder Rated Active Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "charge_dispatch_kW_command":
+                {
+                    "name": "Charge Dispatch Power Command",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "charge_dispatch_gen_enable_flag":
+                {
+                    "name": "Gen Source Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Gen Source Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "charge_dispatch_solar_enable_flag":
+                {
+                    "name": "Solar Source Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Solar Source Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "charge_dispatch_feeder_enable_flag":
+                {
+                    "name": "Grid Source Enable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Feeder Source Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "ess_charge_control_kW_request":
+                {
+                    "name": "ESS Charge Control Power Request",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "ess_charge_control_kW_limit":
+                {
+                    "name": "ESS Charge Control Rate Limit",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "value": 10000,
+                    "scaler": 1
+                },
+                "ess_charge_control_target_soc":
+                {
+                    "name": "Target SOC Setpoint",
+                    "ui_type": "control",
+                    "unit": "%",
+                    "value": 90
+                },
+                "ess_charge_control_charge_disable":
+                {
+                    "name": "ESS Charge Control Charge Disable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "ess_charge_control_discharge_disable":
+                {
+                    "name": "ESS Charge Control Discharge Disable",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "target_soc_load_enable_flag":
+                {
+                    "name": "Target SOC Load Enable",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true
+                },
+                "manual_solar_kW_cmd":
+                {
+                    "name": "Manual Solar Active Power Setpoint",
+                    "ui_type": "control",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "manual_ess_kW_cmd":
+                {
+                    "name": "Manual ESS Active Power Setpoint",
+                    "ui_type": "control",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "manual_gen_kW_cmd":
+                {
+                    "name": "Manual Generator Active Power Setpoint",
+                    "ui_type": "control",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "manual_solar_kW_slew_rate":
+                {
+                    "name": "Manual Solar Active Power Setpoint Slew Rate",
+                    "ui_type": "control",
+                    "unit": "kW/s",
+                    "var_type": "Int",
+                    "value": 1000000
+                },
+                "manual_ess_kW_slew_rate":
+                {
+                    "name": "Manual ESS Active Power Setpoint Slew Rate",
+                    "ui_type": "control",
+                    "unit": "kW/s",
+                    "var_type": "Int",
+                    "value": 1000000
+                },
+                "manual_gen_kW_slew_rate":
+                {
+                    "name": "Manual Generator Active Power Setpoint Slew Rate",
+                    "ui_type": "control",
+                    "unit": "kW/s",
+                    "var_type": "Int",
+                    "value": 1000000
+                },
+                "active_power_setpoint_kW_cmd":
+                {
+                    "name": "Active Power Setpoint kW",
+                    "ui_type": "control",
+                    "unit": "kW",
+                    "scaler": 1
+                },
+                "active_power_setpoint_load_method":
+                {
+                    "name": "Active Power Setpoint Load Method",
+                    "ui_type": "control",
+                    "type": "enum",
+                    "var_type": "Int",
+                    "value": 0,
+                    "options":[
+                        {
+                            "name" : "NONE",
+                            "value": 0
+                        },
+                        {
+                            "name": "OFFSET",
+                            "value": 1
+                        },
+                        {
+                            "name": "MINIMUM",
+                            "value": 2
+                        }
+                    ]
+                },
+                "active_power_setpoint_kW_slew_rate":
+                {
+                    "name": "Active Power Setpoint Slew Rate",
+                    "unit": "kW/s",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "value": 1000000
+                },
+                "ess_calibration_kW_cmd":
+                {
+                    "name": "ESS Calibration Setpoint",
+                    "ui_type": "control",
+                    "unit": "kW"
+                },
+                "ess_calibration_soc_limits_enable":
+                {
+                    "name": "ESS Calibration SOC Limits Enable",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "ess_calibration_min_soc_limit":
+                {
+                    "name": "ESS Calibration Min SOC Limit",
+                    "ui_type": "control",
+                    "unit": "%"
+                },
+                "ess_calibration_max_soc_limit":
+                {
+                    "name": "ESS Calibration Max SOC Limit",
+                    "ui_type": "control",
+                    "unit": "%"
+                },
+                "ess_calibration_voltage_limits_enable":
+                {
+                    "name": "ESS Calibration Cell Voltage Limits Enable",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "ess_calibration_min_voltage_limit":
+                {
+                    "name": "ESS Calibration Min Cell Voltage Limit",
+                    "ui_type": "control",
+                    "unit": "V"
+                },
+                "ess_calibration_max_voltage_limit":
+                {
+                    "name": "ESS Calibration Max Cell Voltage Limit",
+                    "ui_type": "control",
+                    "unit": "V"
+                },
+                "ess_calibration_num_setpoint":
+                {
+                    "name": "# ESS at Full Power Setpoint",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 0
+                },
+                "ess_calibration_num_limited":
+                {
+                    "name": "# ESS Derating",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 0
+                },
+                "ess_calibration_num_zero":
+                {
+                    "name": "# ESS Limited to 0kW",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 0
+                },
+                "generator_charge_additional_buffer":
+                {
+                    "name": "Additional Buffer For Solar",
+                    "ui_type": "none",
+                    "var_type": "Float",
+                    "value": 25
+                },
+                "available_features_runmode1_kW_mode":
+                {
+                    "name": "Available Feature Modes - Run Mode 1 Active Power",
+                    "ui_type": "none",
+                    "type": "string",
+                    "var_type": "String",
+                    "value": "0x2",
+                    "options":
+                    [
+                        {
+                            "name": "Energy Arbitrage",
+                            "value": 0
+                        },
+                        {
+                            "name": "Target SOC",
+                            "value": 1
+                        },
+                        {
+                            "name": "Active Power Setpoint",
+                            "value": 2
+                        },
+                        {
+                            "name": "Manual",
+                            "value": 3
+                        },         
+                        {
+                            "name": "Frequency Response",
+                            "value": 4
+                        },
+                        {
+                            "name": "ESS Calibration",
+                            "value": 5
+                        },
+                        {
+                            "name": "Disabled",
+                            "value": 6
+                        }
+                    ]
+                },
+                "runmode1_kW_mode_cmd":
+                {
+                    "name": "Mode Select - Run Mode 1 Active Power",
+                    "ui_type": "control",
+                    "type": "enum",
+                    "var_type": "Int",
+                    "value": 1
+                },
+                "runmode1_kW_mode_status":
+                {
+                    "name": "Run Mode 1 Active Power Mode",
+                    "type": "string",
+                    "var_type": "String",
+                    "value": "Disabled"
+                },
+                "site_frequency":
+                {
+                    "name": "Site Frequency",
+                    "unit": "Hz"
+                },
+                "active_power_setpoint_absolute_mode_flag":
+                {
+                    "name": "Active Power Setpoint Absolute Mode Flag",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "active_power_setpoint_direction_flag":
+                {
+                    "name": "Active Power Setpoint Direction Flag",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "active_power_setpoint_maximize_solar_flag":
+                {
+                    "name": "Active Power Setpoint Maximize Solar",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                }
+            },
+            "reactive_power":
+            {
+                "ess_kVAR_cmd":
+                {
+                    "name": "ESS Reactive Power Setpoint",
+                    "ui_type": "status",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "gen_kVAR_cmd":
+                {
+                    "name": "Generator Reactive Power Setpoint",
+                    "ui_type": "none",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "solar_kVAR_cmd":
+                {
+                    "name": "Solar Reactive Power Setpoint",
+                    "ui_type": "none",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "site_kVAR_demand":
+                {
+                    "name": "Site Demand Reactive Power",
+                    "ui_type": "status",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "ess_actual_kVAR":
+                {
+                    "name": "ESS Actual Reactive Power",
+                    "ui_type": "status",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "gen_actual_kVAR":
+                {
+                    "name": "Generator Actual Reactive Power",
+                    "ui_type": "none",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "solar_actual_kVAR":
+                {
+                    "name": "Solar Actual Reactive Power",
+                    "ui_type": "none",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "feeder_actual_kVAR":
+                {
+                    "name": "POI Actual Reactive Power",
+                    "ui_type": "status",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "feeder_actual_pf":
+                {
+                    "name": "POI Actual Power Factor"
+                },
+                "potential_ess_kVAR":
+                {
+                    "name": "ESS Potential Reactive Power",
+                    "ui_type": "status",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "potential_gen_kVAR":
+                {
+                    "name": "Generator Potential Reactive Power",
+                    "ui_type": "none",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "potential_solar_kVAR":
+                {
+                    "name": "Solar Potential Reactive Power",
+                    "ui_type": "none",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "available_features_runmode1_kVAR_mode":
+                {
+                    "name": "Available Feature Modes - Run Mode 1 Reactive Power",
+                    "ui_type": "none",
+                    "type": "string",
+                    "var_type": "String",
+                    "value": "0x20",
+                    "options":
+                    [
+                        {
+                            "name": "Active Voltage Regulation",
+                            "value": 0
+                        },
+                        {
+                            "name": "Watt-VAR",
+                            "value": 1
+                        },
+                        {
+                            "name": "Reactive Power Setpoint",
+                            "value": 2
+                        },
+                        {
+                            "name": "Power Factor",
+                            "value": 3
+                        },
+                        {
+                            "name": "Constant Power Factor",
+                            "value": 4
+                        },
+                        {
+                            "name": "Disabled",
+                            "value": 5
+                        }
+                    ]
+                },
+                "runmode1_kVAR_mode_cmd":
+                {
+                    "name": "Mode Select - Run Mode 1 Reactive Power",
+                    "ui_type": "control",
+                    "type": "enum",
+                    "var_type": "Int",
+                    "value": 5
+                },
+                "runmode1_kVAR_mode_status":
+                {
+                    "name": "Run Mode 1 Reactive Power Mode",
+                    "type": "string",
+                    "ui_type": "none",
+                    "var_type": "String",
+                    "value": "Disabled"
+                },
+                "reactive_setpoint_kVAR_cmd":
+                {
+                    "name": "Reactive Power Setpoint",
+                    "ui_type": "control",
+                    "unit": "VAR",
+                    "scaler": 1000
+                },
+                "reactive_setpoint_kVAR_slew_rate":
+                {
+                    "name": "Reactive Power Setpoint Slew Rate",
+                    "unit": "kVAR/s",
+                    "ui_type": "control",
+                    "var_type": "Int",
+                    "value": 1000
+                },
+                "power_factor_cmd":
+                {
+                    "name": "Power Factor Setpoint",
+                    "ui_type": "control",
+                    "value": 1
+                },
+                "constant_power_factor_setpoint":
+                {
+                    "name": "Constant Power Factor Setpoint",
+                    "ui_type": "control",
+                    "value": 1.0
+                },
+                "constant_power_factor_lagging_limit":
+                {
+                    "name": "Constant Power Factor Lagging Limit",
+                    "ui_type": "control",
+                    "value": -1.0
+                },
+                "constant_power_factor_leading_limit":
+                {
+                    "name": "Constant Power Factor Leading Limit",
+                    "ui_type": "control",
+                    "value": 1.0
+                },
+                "constant_power_factor_absolute_mode":
+                {
+                    "name": "Constant Power Factor Absolute Mode Enable",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "constant_power_factor_lagging_direction":
+                {
+                    "name": "Constant Power Factor Lagging Direction",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "watt_var_points":
+                {
+                    "name": "Watt-VAr Points",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "options":
+                    [
+                        { "name": "p0", "value": -9750.0 },
+                        { "name": "q0", "value": -600.0 },
+                        { "name": "p1", "value": -7500 },
+                        { "name": "q1", "value":  -300.0 },
+                        { "name": "p2", "value": -5000.0 },
+                        { "name": "q2", "value":  -80.0 },
+                        { "name": "p3", "value": -2500.0 },
+                        { "name": "q3", "value":  0.0 },
+                        { "name": "p4", "value": 2500.0 },
+                        { "name": "q4", "value":  0.0 },
+                        { "name": "p5", "value": 5000.0 },
+                        { "name": "q5", "value":  -80.0 },
+                        { "name": "p6", "value": 7500.0 },
+                        { "name": "q6", "value":  -250.0 },
+                        { "name": "p7", "value": 9950.0 },
+                        { "name": "q7", "value":  -480.0 }
+                    ]
+                }
+            },
+            "standalone_power":
+            {
+                "start_first_gen_soc":
+                {
+                    "name": "First Generator Start Minimum SOC",
+                    "ui_type": "control",
+                    "unit": "%",
+                    "value": 20
+                },
+                "watt_watt_adjustment_enable_flag":
+                {
+                    "name": "Watt-Watt Adjustment Enable",
+                    "ui_type": "status",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Watt-Watt Adjustment Enable",
+                            "value": true
+                        }
+                    ]
+                },
+                "watt_watt_points":
+                {
+                    "name": "Watt-Watt Points",
+                    "ui_type": "none",
+                    "type": "enum",
+                    "options":
+                    [
+                        { "name": "command0", "value": -10000 },
+                        { "name": "response0", "value":  -9892.16 },
+                        { "name": "command1", "value": 0 },
+                        { "name": "response1", "value":  33.52 },
+                        { "name": "command2", "value": 10000 },
+                        { "name": "response2", "value":  10105.68 }
+                    ]
+                },
+                "active_power_poi_limits_enable":
+                {
+                    "name": "Enable POI Limit",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true
+                },
+                "active_power_poi_limits_max_kW":
+                {
+                    "name": "POI Backfeed Limit",
+                    "unit": "kW",
+                    "ui_type": "control",
+                    "value": 500,
+                    "scaler": 1
+                },
+                "active_power_poi_limits_min_kW":
+                {
+                    "name": "POI Import Limit",
+                    "unit": "kW",
+                    "ui_type": "control",
+                    "value": -200,
+                    "scaler": 1
+                },
+                "active_power_soc_poi_limits_enable":
+                {
+                    "name": "Enable SOC-based POI Limits",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "active_power_soc_poi_target_soc":
+                {
+                    "name": "SOC-based POI Limit SOC Threshold",
+                    "unit": "%",
+                    "value": 65,
+                    "ui_type": "none"
+                },
+                "active_power_soc_poi_limits_low_min_kW":
+                {
+                    "name": "Low SOC POI Import Limit",
+                    "unit": "kW",
+                    "ui_type": "none",
+                    "value": -1000,
+                    "scaler": 1
+                },
+                "active_power_soc_poi_limits_low_max_kW":
+                {
+                    "name": "Low SOC POI Backfeed Limit",
+                    "unit": "kW",
+                    "ui_type": "none",
+                    "value": 1000,
+                    "scaler": 1
+                },
+                "active_power_soc_poi_limits_high_min_kW":
+                {
+                    "name": "High SOC POI Import Limit",
+                    "unit": "kW",
+                    "ui_type": "none",
+                    "value": -2000,
+                    "scaler": 1
+                },
+                "active_power_soc_poi_limits_high_max_kW":
+                {
+                    "name": "High SOC POI Backfeed Limit",
+                    "unit": "kW",
+                    "ui_type": "none",
+                    "value": 2000,
+                    "scaler": 1
+                },
+                "reactive_power_poi_limits_enable":
+                {
+                    "name": "Enable Reactive Power POI Limit",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "POI Limit Protection",
+                            "value": true
+                        }
+                    ]
+                },
+                "reactive_power_poi_limits_min_kVAR":
+                {
+                    "name": "Minimum POI Reactive Power Limit",
+                    "unit": "VAR",
+                    "scaler": 1000,
+                    "ui_type": "control",
+                    "value": -10000
+                },
+                "reactive_power_poi_limits_max_kVAR":
+                {
+                    "name": "Maximum POI Reactive Power Limit",
+                    "unit": "VAR",
+                    "scaler": 1000,
+                    "ui_type": "control",
+                    "value": 10000
+                },
+                "ldss_enable_flag":
+                {
+                    "name": "Enable Generator LDSS",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "ldss_priority_setting":
+                {
+                    "name": "Generator Priority Setting",
+                    "ui_type": "status",
+                    "type": "enum",
+                    "var_type": "Int",
+                    "value": 0,
+                    "options":
+                    [
+                        {
+                            "name": "Static",
+                            "value": 0
+                        },
+                        {
+                            "name": "Dynamic",
+                            "value": 1
+                        }
+                    ]
+                },
+                "ldss_start_gen_time":
+                {
+                    "name": "Start Generator Time",
+                    "ui_type": "status",
+                    "unit": "s",
+                    "var_type": "Int",
+                    "value": 10
+                },
+                "ldss_stop_gen_time":
+                {
+                    "name": "Stop Generator Time",
+                    "ui_type": "status",
+                    "unit": "s",
+                    "var_type": "Int",
+                    "value": 10
+                },
+                "ldss_max_load_threshold_percent":
+                {
+                    "name": "LDSS Maximum Load Threshold",
+                    "ui_type": "control",
+                    "unit": "%",
+                    "value": 90
+                },
+                "ldss_min_load_threshold_percent":
+                {
+                    "name": "LDSS Minimum Load Threshold",
+                    "ui_type": "control",
+                    "unit": "%",
+                    "value": 0
+                },
+                "ldss_max_soc_threshold_percent":
+                {
+                    "name": "LDSS Max SoC Threshold",
+                    "ui_type": "none",
+                    "unit": "%",
+                    "value": 90
+                },
+                "ldss_min_soc_threshold_percent":
+                {
+                    "name": "LDSS Min SoC Threshold",
+                    "ui_type": "control",
+                    "unit": "%",
+                    "value": 10
+                },
+                "ldss_enable_soc_threshold":
+                {
+                    "name": "Enable LDSS SoC Thresholds",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "LDSS SoC Thresholds Disabled",
+                            "value": false
+                        },
+                        {
+                            "name": "LDSS SoC Thresholds Enabled",
+                            "value": true
+                        }
+                    ]
+                },
+                "ldss_warmup_time":
+                {
+                    "name": "LDSS Warmup Time",
+                    "unit": "s",
+                    "ui_type": "status",
+                    "var_type":"Int",
+                    "value": 1
+                },
+                "ldss_cooldown_time":
+                {
+                    "name": "LDSS Cooldown Time",
+                    "unit": "s",
+                    "ui_type": "status",
+                    "var_type":"Int",
+                    "value": 1
+                },
+                "load_shed_enable":
+                {
+                    "name": "Enable Load Shedding",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Load Shedding Enabled",
+                            "value": true
+                        }
+                    ]
+                },
+                "load_shed_value":
+                {
+                    "name": "Load Shed Value",
+                    "unit": "",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 0,
+                    "write_uri": "/example/load_shed_control"
+                },
+                "load_shed_max_value":
+                {
+                    "name": "Maximum Load Shed Value",
+                    "unit": "",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 4
+                },
+                "load_shed_min_value":
+                {
+                    "name": "Minimum Load Shed Value",
+                    "unit": "",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 0
+                },
+                "load_shed_max_shedding_threshold":
+                {
+                    "name": "SOC Triggering Max Load Shed",
+                    "unit": "%",
+                    "ui_type": "status",
+                    "value": 35
+                },
+                "load_shed_high_threshold":
+                {
+                    "name": "Reserve Threshold for Decreasing Load Shed Value (Larger Load)",
+                    "unit": "kW",
+                    "ui_type": "status",
+                    "value": 100,
+                    "scaler": 1
+                },
+                "load_shed_decrease_timer_ms":
+                {
+                    "name": "Timer for Decreasing Load Shed",
+                    "unit": "ms",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 10000
+                },
+                "load_shed_low_threshold":
+                {
+                    "name": "Reserve Threshold for Increasing Load Shed Value (Smaller Load)",
+                    "unit": "kW",
+                    "ui_type": "status",
+                    "value": 30,
+                    "scaler": 1
+                },
+                "load_shed_increase_timer_ms":
+                {
+                    "name": "Timer for Increasing Load Shed",
+                    "unit": "ms",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 1000
+                },
+                "load_shed_increase_display_timer":
+                {
+                    "name": "Increasing Load Shed Value In",
+                    "ui_type": "status",
+                    "var_type": "String",
+                    "value": "--:--"
+                },
+                "load_shed_decrease_display_timer":
+                {
+                    "name": "Decreasing Load Shed Value In",
+                    "ui_type": "status",
+                    "var_type": "String",
+                    "value": "--:--"
+                },
+                "load_shed_spare_ess_kw":
+                {
+                    "name": "Measured Load Shed Reserve Threshold",
+                    "unit": "kW"
+                },
+                "solar_shed_enable":
+                {
+                    "name": "Enable Solar Shedding",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": true,
+                    "options":
+                    [
+                        {
+                            "name": "False Case Not Used",
+                            "value": false
+                        },
+                        {
+                            "name": "Solar Shedding Enabled",
+                            "value": true
+                        }
+                    ]
+                },
+                "solar_shed_value":
+                {
+                    "name": "Solar Shed Value",
+                    "unit": "",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 0
+                },
+                "solar_shed_max_value":
+                {
+                    "name": "Maximum Solar Shed Value",
+                    "unit": "",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 4
+                },
+                "solar_shed_min_value":
+                {
+                    "name": "Minimum Solar Shed Value",
+                    "unit": "",
+                    "ui_type": "status",
+                    "var_type": "Int",
+                    "value": 0
+                },
+                "solar_shed_max_shedding_threshold":
+                {
+                    "name": "SOC Triggering Max Solar Shed",
+                    "unit": "%",
+                    "ui_type": "status",
+                    "value": 95
+                },
+                "solar_shed_high_threshold":
+                {
+                    "name": "Reserve Threshold for Decreasing Solar Shed Value (More Solar Power)",
+                    "unit": "kW",
+                    "ui_type": "status",
+                    "value": 25,
+                    "scaler": 1
+                },
+                "solar_shed_decrease_timer_ms":
+                {
+                    "name": "Timer for Decreasing Solar Shed",
+                    "unit": "ms",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "value": 5000
+                },
+                "solar_shed_low_threshold":
+                {
+                    "name": "Reserve Threshold for Increasing Solar Shed Value (Less Solar Power)",
+                    "unit": "kW",
+                    "ui_type": "status",
+                    "value": 10,
+                    "scaler": 1
+                },
+                "solar_shed_increase_timer_ms":
+                {
+                    "name": "Timer for Increasing Solar Shed",
+                    "unit": "ms",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "value": 1000
+                },
+                "solar_shed_increase_display_timer":
+                {
+                    "name": "Increasing Solar Shed Value In",
+                    "ui_type": "status",
+                    "var_type": "String",
+                    "value": "--:--"
+                },
+                "solar_shed_decrease_display_timer":
+                {
+                    "name": "Decreasing Solar Shed Value In",
+                    "ui_type": "status",
+                    "var_type": "String",
+                    "value": "--:--"
+                },
+                "solar_shed_spare_ess_kw":
+                {
+                    "name": "Measured Solar Shed Reserve Threshold",
+                    "unit": "kW"
+                },
+                "ess_discharge_prevention_enable":
+                {
+                    "name": "Enable ESS Discharge Prevention",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "ess_discharge_prevention_soc":
+                {
+                    "name": "ESS Discharge Prevention Target SOC",
+                    "unit": "%",
+                    "ui_type": "control",
+                    "value": 50.0
+                },
+                "agg_asset_limit_enable":
+                {
+                    "name": "Enable Aggregated Asset Limit",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "agg_asset_limit_kw":
+                {
+                    "name": "Aggregated Asset Limit (kW)",
+                    "unit": "kW",
+                    "ui_type": "none",
+                    "value": 1000.0
+                }
+            },
+            "site_operation":
+            {
+                "watchdog_enable":
+                {
+                    "name": "Enable Watchdog",
+                    "ui_type": "none",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "watchdog_duration_ms":
+                {
+                    "name": "Watchdog Timer Duration",
+                    "unit": "ms",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "value": 5000
+                },
+                "watchdog_pet":
+                {
+                    "name": "Watchdog Pet",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "value": 1
+                },
+                "heartbeat_counter":
+                {
+                    "name": "Heartbeat Counter",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "value": 1
+                },
+                "heartbeat_duration_ms":
+                {
+                    "name": "Heartbeat Duration",
+                    "unit": "ms",
+                    "ui_type": "none",
+                    "var_type": "Int",
+                    "value": 1
+                }
+            }
+        }
+    }
+}

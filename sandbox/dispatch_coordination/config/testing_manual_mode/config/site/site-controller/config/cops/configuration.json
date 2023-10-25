@@ -1,0 +1,48 @@
+{
+    "controllerName": "controller 1",
+    "heartbeatFrequencyMS": 1000,
+    "patrolFrequencyMS": 1000,
+    "briefingFrequencyMS": 5000,
+    "c2cMsgFrequencyMS": 50,
+    "statsPubFrequencySeconds": 1,
+    "enableRedundantFailover": false,
+    "primaryIP": ["192.168.1.1"],
+    "primaryNetworkInterface": ["eno10"],
+    "thisCtrlrStaticIP": "172.16.1.80",
+    "otherCtrlrStaticIP": "172.16.2.82",
+    "pduIP": "10.0.1.83",
+    "otherCtrlrOutlet": "2",
+    "processList": [
+        {
+            "name": "site_controller",
+            "uri": "/site",
+            "writeOutC2C":
+            [
+                "/cops/site_controller/assets",
+                "/cops/site_controller/sequences",
+                "/cops/site_controller/variables",
+                "/cops/site_controller/setpoints"
+            ],
+            "killOnHang": true,
+            "requiredForHealthyStatus": true,
+            "hangTimeAllowanceMS": 3000,
+            "configRestart": true
+        },
+        {
+            "name": "scheduler",
+            "uri": "/scheduler",
+            "writeOutC2C":
+            [
+                "/cops/scheduler/modes",
+                "/cops/scheduler/events",
+                "/cops/scheduler/configuration",
+                "/cops/scheduler/last_schedule_modification",
+                "/cops/scheduler/timezones"
+            ],
+            "killOnHang": true,
+            "requiredForHealthyStatus": true,
+            "hangTimeAllowanceMS": 3000,
+            "configRestart": true
+        }
+    ]
+}

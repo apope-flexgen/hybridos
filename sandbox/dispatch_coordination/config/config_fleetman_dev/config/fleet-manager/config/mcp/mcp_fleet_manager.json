@@ -1,0 +1,12 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/fleet_manager",
+			"args": [
+				"--logCfg=/usr/local/etc/config/logging/fleet_man/fleet_man.json"
+			],
+			"max_restarts": -1
+		}
+	]
+}

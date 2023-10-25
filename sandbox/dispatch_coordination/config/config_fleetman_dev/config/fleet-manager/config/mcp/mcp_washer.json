@@ -1,0 +1,10 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/washer",
+			"args": [],
+			"max_restarts": -1
+		}
+	]
+}

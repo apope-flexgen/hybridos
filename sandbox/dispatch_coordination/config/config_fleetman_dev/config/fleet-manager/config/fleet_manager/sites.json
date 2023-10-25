@@ -1,0 +1,10 @@
+{
+    "sites": {
+        "hoth": {
+            "name": "Hoth"
+        },
+        "gargantua": {
+            "name": "Gargantua"
+        }
+    }
+}

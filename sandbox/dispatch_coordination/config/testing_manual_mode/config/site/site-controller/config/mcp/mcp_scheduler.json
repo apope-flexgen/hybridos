@@ -1,0 +1,12 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/scheduler",
+			"args": [
+				"--logCfg=/usr/local/etc/config/logging/scheduler/scheduler_verbose.json"
+			],
+			"max_restarts": -1
+		}
+	]
+}

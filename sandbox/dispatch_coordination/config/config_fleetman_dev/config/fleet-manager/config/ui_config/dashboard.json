@@ -1,0 +1,132 @@
+{
+    "data": [
+      {
+        "info": {
+          "baseURI": "",
+          "batteryView": false,
+          "batteryViewSourceURI": null,
+          "batteryViewURI": "",
+          "isTemplate": true,
+          "items": [
+            {
+                "name": "Hoth",
+                "uri": "/hoth"
+            },
+            {
+                "name": "Gargantua",
+                "uri": "/gargantua"
+            }
+          ],
+          "name": "Site Controller",
+          "sourceURIs": [
+            "/sites"
+          ]
+        },
+        "status": [
+          {
+            "name": "Site Running",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "uri": "/running_status_flag"
+          },
+          {
+            "name": "Baseload Power Command",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "MW",
+            "uri": "/fr_baseload_cmd_mw_in"
+          },
+          {
+            "name": "POI Active Power",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "MW",
+            "uri": "/active_power"
+          },
+          {
+            "name": "POI Reactive Power",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "MVAR",
+            "uri": "/reactive_power"
+          },
+          {
+            "name": "POI Voltage",
+            "scalar": 1000,
+            "sourceURI": "/sites",
+            "units": "kV",
+            "uri": "/grid_voltage_l1_l2"
+          },
+          {
+            "name": "POI Frequency",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "Hz",
+            "uri": "/frequency"
+          },
+          {
+            "name": "POI Breaker Closed",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "uri": "/fr_gen_breaker_status"
+          },
+          {
+            "name": "ESS Active Power",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "MW",
+            "uri": "/ess_total_active_power"
+          },
+          {
+            "name": "ESS Reactive Power",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "MVAR",
+            "uri": "/ess_total_reactive_power"
+          },        
+          {
+            "name": "ESS State of Charge",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "%",
+            "uri": "/ess_average_soc"
+          },
+          {
+            "name": "ESS Chargeable Energy",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "MWh",
+            "uri": "/ess_chargeable_energy"
+          },
+          {
+            "name": "ESS Dischargeable Energy",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "MWh",
+            "uri": "/ess_dischargeable_energy"
+          },       
+          {
+            "name": "ESS Chargeable Power",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "MW",
+            "uri": "/ess_chargeable_power"
+          },
+          {
+            "name": "ESS Dischargeable Power",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "units": "MW",
+            "uri": "/ess_dischargeable_power"
+          },
+          {
+            "name": "Site Fault",
+            "scalar": null,
+            "sourceURI": "/sites",
+            "uri": "/fault_status_flag"
+          }
+        ]
+      }
+    ]
+  }
+  

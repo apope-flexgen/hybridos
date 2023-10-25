@@ -1,0 +1,79 @@
+{
+	"connection":
+	{
+		"name": "control_cabinet",
+		"ip_address": "172.3.27.201",
+		"port": 10001,
+		"device_id": 1
+	},
+	"components":
+	[
+		{
+			"id": "control_cabinet",
+			"frequency": 500,
+			"offset_time": 0,
+			"add_timings":false,
+			"registers": 
+			[
+				{
+					"type": "Holding Registers",
+					"starting_offset": 16384,
+					"number_of_registers": 14,
+					"map":
+					[
+						{
+							"id":"frequency",
+							"offset":16384,
+							"size":2,
+							"float":true,
+							"echo_id": "/components/twins_control_cabinet/f1"
+						},
+						{
+							"id":"voltage",
+							"offset":16386,
+							"size":2,
+							"float":true,
+							"echo_id": "/components/twins_control_cabinet/v1"
+						},
+						{
+							"id":"current",
+							"offset":16388,
+							"size":2,
+							"float":true,
+							"echo_id": "/components/twins_control_cabinet/i"
+						},
+						{
+							"id":"active_power",
+							"offset":16390,
+							"size":2,
+							"float":true,
+							"echo_id": "/components/twins_control_cabinet/p"
+						},
+						{
+							"id":"reactive_power",
+							"offset":16392,
+							"size":2,
+							"float":true,
+							"echo_id": "/components/twins_control_cabinet/q"
+						},
+						{
+							"id":"apparent_power",
+							"offset":16394,
+							"size":2,
+							"float":true,
+							"echo_id": "/components/twins_control_cabinet/s"
+						},
+						{
+							"id":"power_factor",
+							"offset":16396,
+							"size":2,
+							"float":true,
+							"echo_id": "/components/twins_control_cabinet/pf"
+						}
+					]
+				}
+			]
+		}
+	]
+}
+

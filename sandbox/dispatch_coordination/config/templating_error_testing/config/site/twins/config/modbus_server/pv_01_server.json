@@ -1,0 +1,150 @@
+{
+	"fileInfo":{},
+	"system":{
+		"device_id": 1,
+		"id": "pv_01",
+		"ip_address": "172.3.27.2",
+		"name": "pv_01",
+		"port": 10007
+	},
+	"registers":{
+		"holding_registers": [
+			{
+				"id": "start_stop",
+				"name": "Start/Stop",
+				"offset": 10100,
+				"uri": "/components/pv_01"
+			},
+			{
+				"id": "reactive_power_mode",
+				"name": "Reactive Power Mode",
+				"offset": 10101,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "ac_current_l1",
+				"offset": 10102,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "ac_current_l2",
+				"offset": 10104,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "ac_current_l3",
+				"offset": 10106,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "ac_voltage_l1",
+				"offset": 10108,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "ac_voltage_l2",
+				"offset": 10110,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "ac_voltage_l3",
+				"offset": 10112,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "active_power",
+				"offset": 10114,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "reactive_power",
+				"offset": 10116,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "apparent_power",
+				"offset": 10118,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "power_factor",
+				"offset": 10120,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "frequency",
+				"offset": 10122,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "dc_current",
+				"offset": 10124,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "dc_voltage",
+				"offset": 10126,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"bit_strings": [
+					"Stopped",
+					"Running"
+				],
+				"bool": true,
+				"enum": true,
+				"id": "status",
+				"name": "PV Status",
+				"offset": 10128,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "reactive_power_setpoint",
+				"offset": 10129,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "active_power_setpoint",
+				"offset": 10131,
+				"size": 2,
+				"uri": "/components/pv_01"
+			},
+			{
+				"float": true,
+				"id": "power_factor_setpoint",
+				"offset": 10133,
+				"size": 2,
+				"uri": "/components/pv_01"
+			}
+		]
+	}
+}
