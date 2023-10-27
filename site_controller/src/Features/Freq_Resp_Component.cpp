@@ -287,7 +287,7 @@ void Freq_Resp_Component::handle_fims_set(const cJSON* JSON_body, const char* va
     bool body_bool = (body_type == cJSON_False) ? false : true;
 
     // find matching endpoint and handle SET
-    if (strcmp(variable_id, "active_cmd_kw") == 0) {
+    if (strcmp(variable_id, active_cmd_kw.get_variable_id()) == 0) {
         latest_active_cmd_kw_received = body_float;
         if (!freeze_active_cmd_flag.value.value_bool || !active_response_status.value.value_bool) {
             // Only allow SET to active_cmd_kw if latching disabled || no active response
