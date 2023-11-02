@@ -67,6 +67,34 @@ type ess struct {
 	CtrlWord4Cfg        []ctrlwordcfg
 	Dactive             droop
 	Dreactive           droop
+	PRampRise           float64
+	PRampDrop           float64
+	PRampStart          float64
+	PRampStop           float64
+	PRampDropEnable     bool
+	PRampRiseEnable     bool
+	PRampStartEnable    bool
+	PRampStopEnable     bool
+	RampEnable          bool
+	QRampRise           float64
+	QRampDrop           float64
+	QRampStart          float64
+	QRampStop           float64
+	QRampDropEnable     bool
+	QRampRiseEnable     bool
+	QRampStartEnable    bool
+	QRampStopEnable     bool
+	targetPcmd          float64 // assign Pcmd to this variable in updateMode to avoid Pcmd changing during execution
+	targetQcmd          float64 // assign Qcmd to this varialbe in updateMode to avoid Qcmd changing during execution
+	onTransition        bool    // if true, signals a transition from an off state to an on state
+	offTransition       bool    // if true, signals a transition from an on state to an off state
+	PstartActive        bool    // enables PRampStart ramping if there is an on state transition
+	PstopActive         bool    // enables PRampStop ramping if there is an off state transition
+	Dt                  float64 // used for debugging, sets a DeltaT that can be used as needed
+	QstartActive        bool    // enables QRampStart ramping if there is an on state transition
+	QstopActive         bool    // enables QRampStop ramping if there is an off state transition
+	AbsRampRate         bool    // if true, signals that the ramp rates are measured in absolute values instead of percentage power per second
+
 }
 
 func (e *ess) Init() {
@@ -81,6 +109,7 @@ func (e *ess) Init() {
 	e.Dactive.slope, e.Dactive.offset = getSlope(e.Dactive.Percent, e.Dactive.YNom, e.Dactive.XNom)
 	e.Dreactive.slope, e.Dreactive.offset = getSlope(e.Dreactive.Percent, e.Dreactive.YNom, e.Dreactive.XNom)
 	// fmt.Println(e.ID, e.Dactive, e.Dreactive)
+	e.PstartActive, e.PstopActive = false, false
 }
 
 // ESS UpdateMode() processes commands either through control words or direct
@@ -124,19 +153,62 @@ func (e *ess) UpdateMode(input terminal) (output terminal) {
 		e.GridForming, e.GridFollowingCmd = false, false
 	}
 
+	e.onTransition, e.offTransition = false, false
+
 	// Turn on if conditions allow it
-	if e.Oncmd && (!e.On || e.Standby) && e.AcContactor && e.DcContactor {
+	if e.Oncmd && (!e.On || e.Standby) && e.AcContactor && e.DcContactor && !(e.PstopActive || e.QstopActive) {
 		e.On = true
 		e.Oncmd = false
 		e.Standby = false
-	} else if e.On && e.Offcmd {
+		e.onTransition = true
+		e.targetPcmd = e.Pcmd
+		e.targetQcmd = e.Qcmd
+	} else if (e.On || e.PstopActive || e.QstopActive) && e.Offcmd {
 		e.On = false
 		e.Offcmd = false
 		e.Standby = false
+		e.offTransition = true
+		e.targetPcmd = 0
+		e.targetQcmd = 0
 	}
+
+	// If Grid Following, set up flag to ensure that Ramping occurs when a power transition is present
 	if e.On && e.StandbyCmd {
 		e.Standby = true
 		e.StandbyCmd = false
+	}
+	// If Grid Following, set up flags to determine whether there should be onTransition ramping or offTransition ramping
+	if !e.GridForming {
+		if (e.offTransition || e.PstopActive) && (e.PRampStopEnable || e.RampEnable) {
+			e.PstopActive = true
+		}
+		if (!e.PRampStopEnable && !e.RampEnable) || e.onTransition || e.P == 0 {
+			e.PstopActive = false
+		}
+		if (e.onTransition || e.PstartActive) && (e.PRampStartEnable || e.RampEnable) {
+			e.PstartActive = true
+		}
+		if (e.Pcmd != e.targetPcmd && !e.onTransition) || (!e.PRampStartEnable && !e.RampEnable) || e.offTransition {
+			e.PstartActive = false
+		}
+
+		// Reactive power for setting up flags to determine whether there should be onTransition ramping or offTransition ramping
+		if (e.offTransition || e.QstopActive) && (e.QRampStopEnable || e.RampEnable) {
+			e.QstopActive = true
+		}
+		if (e.onTransition || e.QstartActive) && (e.QRampStartEnable || e.RampEnable) {
+			e.QstartActive = true
+		}
+		if (!e.QRampStopEnable && !e.RampEnable) || e.onTransition || e.Q == 0 {
+			e.QstopActive = false
+		}
+		if (e.Qcmd != e.targetQcmd && !e.onTransition) || (!e.QRampStartEnable && !e.RampEnable) || e.offTransition {
+			e.QstartActive = false
+		}
+	}
+	if !(e.PstopActive || e.QstopActive) {
+		e.targetPcmd = e.Pcmd // Guarentee that Pcmd used is constant at a given timestamp
+		e.targetQcmd = e.Qcmd // Guarentee that Qcmd used is constant at a given timestamp
 	}
 
 	return output // returning zero terminal, since ESS has no assets below it
@@ -144,7 +216,7 @@ func (e *ess) UpdateMode(input terminal) (output terminal) {
 
 // ESS GetLoadLines() returns droop parameters up the tree if grid forming
 func (e *ess) GetLoadLines(input terminal, dt float64) (output terminal) {
-	if e.GridForming && e.On {
+	if e.GridForming && (e.On || e.PstopActive || e.QstopActive) {
 		output.dHertz = e.Dactive   // Nominal rating is saved in dHertz, but
 		output.dHertz.XNom = e.Fcmd // commands can override
 		output.dVolts = e.Dreactive
@@ -165,9 +237,7 @@ func (e *ess) DistributeVoltage(input terminal) (output terminal) {
 		e.Standby, e.StandbyCmd = false, false
 	}
 	assetStatus := processBitfieldConfig(e, e.StatusCfg)
-	for i, v := range assetStatus {
-		e.Status[i] = v
-	}
+	copy(e.Status, assetStatus)
 	e.V, e.Ph, e.F = input.v, input.ph, input.f
 	return output // returning zero terminal, since ESS has no assets below it
 }
@@ -179,9 +249,80 @@ func (e *ess) CalculateState(input terminal, dt float64) (output terminal) {
 		return output
 	}
 	e.F, e.Ph = input.f, input.ph
+
+	pcmd := e.targetPcmd
+	qcmd := e.targetQcmd
+
+	// Implement Ramping Functions
+	activePRamp := 0.0
+	PrampActive := false
+	activeQRamp := 0.0
+	QrampActive := false
+
+	// Check which Active power ramp rate to implement and calculate the requested ramp rate
+	if e.PstartActive {
+		activePRamp = e.PRampStart
+		PrampActive = true
+	} else if e.PstopActive {
+		activePRamp = e.PRampStop
+	} else if (e.P < e.targetPcmd) && (e.PRampRiseEnable || e.RampEnable) {
+		activePRamp = e.PRampRise
+		PrampActive = true
+	} else if (e.P > e.targetPcmd) && (e.PRampDropEnable || e.RampEnable) {
+		activePRamp = e.PRampDrop
+		PrampActive = true
+	}
+
+	// Check which Reactive power ramp rate to implement and calculate the requested ramp rate
+	if e.QstartActive {
+		activeQRamp = e.QRampStart
+		QrampActive = true
+	} else if e.QstopActive {
+		activeQRamp = e.QRampStop
+	} else if (e.Q < e.targetQcmd) && (e.RampEnable || e.QRampRiseEnable) {
+		activeQRamp = e.QRampRise
+		QrampActive = true
+	} else if (e.Q > e.targetQcmd) && (e.RampEnable || e.QRampDropEnable) {
+		activeQRamp = e.QRampDrop
+		QrampActive = true
+	}
+
+	if !e.AbsRampRate {
+		activePRamp = (activePRamp / 100) * e.Phigh
+		activeQRamp = (activeQRamp / 100) * e.Qhigh
+	} else {
+		activePRamp = (activePRamp * 1000) / 60
+		activeQRamp = (activeQRamp * 1000) / 60
+	}
+
+	if PrampActive {
+		pcmd = getSlew(e.P, e.targetPcmd, activePRamp, dt)
+	}
+	if QrampActive {
+		qcmd = getSlew(e.Q, e.targetQcmd, activeQRamp, dt)
+	}
+
+	if e.PstopActive {
+		pcmd = getSlew(e.P, 0, activePRamp, dt)
+	}
+	if e.QstopActive {
+		qcmd = getSlew(e.Q, 0, activeQRamp, dt)
+	}
+
+	// Limit power command to inverter rated active power limit
+	if pcmd > e.Phigh {
+		pcmd = e.Phigh
+	} else if pcmd < -e.Phigh {
+		pcmd = -e.Phigh
+	}
+	// Limit power command to inverter rated reactive power limit
+	if qcmd > e.Qhigh {
+		qcmd = e.Qhigh
+	} else if qcmd < -e.Qhigh {
+		qcmd = -e.Qhigh
+	}
+
 	soc := e.Soc / 100.0
-	pcmd := e.Pcmd
-	qcmd := e.Qcmd
 	pchg, pdschg := e.Pcharge, e.Pdischarge
 	// Limit power command to charge and discharge limits
 	// Charge and discharge limits are currently hard limits (-> 0) when fully charged or discharged
@@ -197,12 +338,12 @@ func (e *ess) CalculateState(input terminal, dt float64) (output terminal) {
 	pcmd += powerNoise(e.Noise)
 	qcmd += powerNoise(e.Noise)
 	// TODO: add ramp
-	if e.On && !e.Standby {
+	if (e.On || e.PstopActive || e.QstopActive) && !e.Standby {
 		socloss := e.Idleloss + e.pesr*math.Pow(pcmd, 2)
 		// SOC output from getIntegral not used in CalculateState(), see UpdateState()
 		_, plimited, under, over := getIntegral(soc, -(pcmd+socloss)/e.Cap, dt/3600, 0, 1)
 		pchg = e.Phigh
-		pdschg = e.Plow
+		pdschg = e.Phigh
 		if over {
 			output.p = -plimited*e.Cap - socloss // limit power output for this tick to bring SOC to 100%
 			pchg = 0
@@ -239,11 +380,11 @@ func (e *ess) UpdateState(input terminal, dt float64) (output terminal) {
 		q = getY(input.v, e.Dreactive.slope, e.Dreactive.offset)
 	}
 
-	if e.On && !e.Standby {
+	if (e.On || e.PstopActive || e.QstopActive) && !e.Standby {
 		socloss := e.Idleloss + e.pesr*math.Pow(p, 2)
 		soc, plimited, under, over := getIntegral(e.Soc/100, -(p+socloss)/e.Cap, dt/3600, 0, 1)
 		e.Pcharge = e.Phigh
-		e.Pdischarge = e.Plow
+		e.Pdischarge = e.Phigh
 		if over {
 			p = -plimited*e.Cap - socloss // limit power output for this tick to bring SOC to 100%
 			e.Pcharge = 0

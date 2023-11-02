@@ -10,52 +10,52 @@ import (
 // TODO: need to add protection limits to PCS configuration
 type pcs struct {
 	// PCS Model Identification
-	ID      			string
-	Aliases []			string
+	ID      string
+	Aliases []string
 	// PCS physical parameters - limits, losses, etc
-	Plim     			float64 // Inverter max active power limit (constant)
-	Qlim     			float64 // Inverter max reactive power limit (constant)
-	Slim     			float64 // Inverter max apparent power limit (constant)
-	Noise    			float64 // level of kW noise on Pcmd and Qcmd following
-	Rte      			float64 // Round trip efficiency at full load
-	pesr     			float64 // power normalized ESR, see Init()
-	Idleloss 			float64 // Fixed losses across load
-	IvCurve  			float64 // not used
+	Plim     float64 // Inverter max active power limit (constant)
+	Qlim     float64 // Inverter max reactive power limit (constant)
+	Slim     float64 // Inverter max apparent power limit (constant)
+	Noise    float64 // level of kW noise on Pcmd and Qcmd following
+	Rte      float64 // Round trip efficiency at full load
+	pesr     float64 // power normalized ESR, see Init()
+	Idleloss float64 // Fixed losses across load
+	IvCurve  float64 // not used
 	// PCS Measured values
-	Vac     			float64
-	Vdc     			float64
-	Iac     			float64
-	Idc     			float64
-	Di      			float64 // Active power current
-	Qi      			float64 // Reactive power current
-	P       			float64 // AC side power
-	Pdc     			float64 // DC side power
-	Q       			float64
-	S       			float64
-	Pf      			float64
-	F       			float64 // Real frequency, after any adjustments made by pcs in gridforming mode
-	Ph      			float64 // phase angle
-	Fadjust 			float64 // Unadjusted frequency (frequency to adjust to). This is the frequency due to active power droop losses for gridforming mode
+	Vac     float64
+	Vdc     float64
+	Iac     float64
+	Idc     float64
+	Di      float64 // Active power current
+	Qi      float64 // Reactive power current
+	P       float64 // AC side power
+	Pdc     float64 // DC side power
+	Q       float64
+	S       float64
+	Pf      float64
+	F       float64 // Real frequency, after any adjustments made by pcs in gridforming mode
+	Ph      float64 // phase angle
+	Fadjust float64 // Unadjusted frequency (frequency to adjust to). This is the frequency due to active power droop losses for gridforming mode
 	// PCS Communications - includes configurable I/O
-	Heart        		hearttime
-	Heartbeat    		int
-	Time         		time.Time
-	Year         		float64
-	Month        		float64
-	Day          		float64
-	Hour         		float64
-	Minute       		float64
-	Second       		float64
-	Status       		[]bitfield
-	StatusCfg    		[]bitfieldcfg
-	CtrlWord1    		int
-	CtrlWord1Cfg 		[]ctrlwordcfg
-	CtrlWord2    		int
-	CtrlWord2Cfg 		[]ctrlwordcfg
-	CtrlWord3    		int
-	CtrlWord3Cfg 		[]ctrlwordcfg
-	CtrlWord4    		int
-	CtrlWord4Cfg 		[]ctrlwordcfg
+	Heart        hearttime
+	Heartbeat    int
+	Time         time.Time
+	Year         float64
+	Month        float64
+	Day          float64
+	Hour         float64
+	Minute       float64
+	Second       float64
+	Status       []bitfield
+	StatusCfg    []bitfieldcfg
+	CtrlWord1    int
+	CtrlWord1Cfg []ctrlwordcfg
+	CtrlWord2    int
+	CtrlWord2Cfg []ctrlwordcfg
+	CtrlWord3    int
+	CtrlWord3Cfg []ctrlwordcfg
+	CtrlWord4    int
+	CtrlWord4Cfg []ctrlwordcfg
 	// On, off, and contactor controls
 	On                  bool
 	Oncmd               bool
@@ -70,57 +70,57 @@ type pcs struct {
 	DcContactorOpenCmd  bool
 	DcContactorCloseCmd bool
 	// Feedback Control Modes and commands
-	PMode            	int     // sets type of real power control
-	QMode            	int     // sets type of reactive power control
-	Pcmd             	float64 // Inverter active power command
-	Qcmd             	float64 // Inverter reactive power command
-	Idcmd            	float64 // Inverter d-axis current command
-	Iqcmd            	float64 // Inverter q-axis current command
-	VACcmd           	float64 // Voltage setpoint in grid forming or voltage support reactive power control
-	VDCcmd           	float64 // DC voltage setpoint
-	Fcmd             	float64 // Freqency setpoint in grid forming
-	PfMode           	bool    // overrides Qcmd based on PfCmd
-	PfCmd            	float64 // Power factor command (-1-1)
-	GridForming      	bool    // Grid forming status
-	GridFormingCmd   	bool    // Grid forming command
-	GridFollowingCmd 	bool    // Grid following command
+	PMode            int     // sets type of real power control
+	QMode            int     // sets type of reactive power control
+	Pcmd             float64 // Inverter active power command
+	Qcmd             float64 // Inverter reactive power command
+	Idcmd            float64 // Inverter d-axis current command
+	Iqcmd            float64 // Inverter q-axis current command
+	VACcmd           float64 // Voltage setpoint in grid forming or voltage support reactive power control
+	VDCcmd           float64 // DC voltage setpoint
+	Fcmd             float64 // Freqency setpoint in grid forming
+	PfMode           bool    // overrides Qcmd based on PfCmd
+	PfCmd            float64 // Power factor command (-1-1)
+	GridForming      bool    // Grid forming status
+	GridFormingCmd   bool    // Grid forming command
+	GridFollowingCmd bool    // Grid following command
 	// PCS Ramping Behavior
-	PRampStartEnable 	bool    // enables real power ramping when inverter starts
-	PRampStart       	float64 // ramp rate for real power on inverter start
-	PRampRiseEnable  	bool    // enables ramping when inverter real power reference increases
-	PRampRise        	float64 // ramp rate for real power on power reference increase
-	PRampDropEnable  	bool    // enables ramping when inverter real power reference decreases
-	PRampDrop        	float64 // ramp rate for real power on power reference decrease
-	PRampStopEnable  	bool    // enables real power ramping when inverter stops
-	PRampStop        	float64 // ramp rate for real power on inverter stop
-	QRampStartEnable 	bool    // enables reactive power ramping when inverter starts
-	QRampStart       	float64 // ramp rate for reactive power on inverter start
-	QRampRiseEnable  	bool    // enables ramping when inverter reactive power reference increases
-	QRampRise        	float64 // ramp rate for reactive power on power reference increase
-	QRampDropEnable  	bool    // enables ramping when inverter reactive power reference decreases
-	QRampDrop        	float64 // ramp rate for reactive power on power reference decrease
-	QRampStopEnable  	bool    // enables reactive power ramping when inverter stops
-	QRampStop        	float64 // ramp rate for reactive power on inverter stop
-	RampEnable 		 	bool    // if true, enable all ramp functions
-	targetPcmd 		 	float64 // assign Pcmd to this variable in updateMode to avoid Pcmd changing during execution
-	targetQcmd 		 	float64 // assign Qcmd to this varialbe in updateMode to avoid Qcmd changing during execution
-	onTransition 	 	bool  	 // if true, signals a transition from an off state to an on state
-	offTransition 	 	bool 	 // if true, signals a transition from an on state to an off state
-	PstartActive 	 	bool 	 // enables PRampStart ramping if there is an on state transition
-	PstopActive 	 	bool 	 // enables PRampStop ramping if there is an off state transition
-	Dt			 	 	float64 // used for debugging, sets a DeltaT that can be used as needed
-	QstartActive	 	bool	 // enables QRampStart ramping if there is an on state transition
-	QstopActive		 	bool 	 // enables QRampStop ramping if there is an off state transition
-	AbsRampRate 	 	bool // if true, signals that the ramp rates are measured in absolute values instead of percentage power per second
+	PRampStartEnable bool    // enables real power ramping when inverter starts
+	PRampStart       float64 // ramp rate for real power on inverter start
+	PRampRiseEnable  bool    // enables ramping when inverter real power reference increases
+	PRampRise        float64 // ramp rate for real power on power reference increase
+	PRampDropEnable  bool    // enables ramping when inverter real power reference decreases
+	PRampDrop        float64 // ramp rate for real power on power reference decrease
+	PRampStopEnable  bool    // enables real power ramping when inverter stops
+	PRampStop        float64 // ramp rate for real power on inverter stop
+	QRampStartEnable bool    // enables reactive power ramping when inverter starts
+	QRampStart       float64 // ramp rate for reactive power on inverter start
+	QRampRiseEnable  bool    // enables ramping when inverter reactive power reference increases
+	QRampRise        float64 // ramp rate for reactive power on power reference increase
+	QRampDropEnable  bool    // enables ramping when inverter reactive power reference decreases
+	QRampDrop        float64 // ramp rate for reactive power on power reference decrease
+	QRampStopEnable  bool    // enables reactive power ramping when inverter stops
+	QRampStop        float64 // ramp rate for reactive power on inverter stop
+	RampEnable       bool    // if true, enable all ramp functions
+	targetPcmd       float64 // assign Pcmd to this variable in updateMode to avoid Pcmd changing during execution
+	targetQcmd       float64 // assign Qcmd to this varialbe in updateMode to avoid Qcmd changing during execution
+	onTransition     bool    // if true, signals a transition from an off state to an on state
+	offTransition    bool    // if true, signals a transition from an on state to an off state
+	PstartActive     bool    // enables PRampStart ramping if there is an on state transition
+	PstopActive      bool    // enables PRampStop ramping if there is an off state transition
+	Dt               float64 // used for debugging, sets a DeltaT that can be used as needed
+	QstartActive     bool    // enables QRampStart ramping if there is an on state transition
+	QstopActive      bool    // enables QRampStop ramping if there is an off state transition
+	AbsRampRate      bool    // if true, signals that the ramp rates are measured in absolute values instead of percentage power per second
 	// Droop parameters
-	Dactive          	droop
-	Dreactive        	droop
-	Dvoltage         	droop
-	DvoltageExternal 	droop
+	Dactive          droop
+	Dreactive        droop
+	Dvoltage         droop
+	DvoltageExternal droop
 	// Faults and fault handling
-	Fault    			bool    // Indicates a fault of any kind has occured. Causes the inverter to turn off and open both the AC and DC contactors.
-	Warning  			bool    // Indicates a warning of any kind has occured. No action is taken immediately by the inverter.
-	Watchdog 			float64 // Checks to make sure that the connection to the higher level controller is active. If it does not change regularly, it turns off the PCS. Not implemented.
+	Fault    bool    // Indicates a fault of any kind has occured. Causes the inverter to turn off and open both the AC and DC contactors.
+	Warning  bool    // Indicates a warning of any kind has occured. No action is taken immediately by the inverter.
+	Watchdog float64 // Checks to make sure that the connection to the higher level controller is active. If it does not change regularly, it turns off the PCS. Not implemented.
 }
 
 func (p *pcs) Init() {
@@ -143,9 +143,9 @@ func (p *pcs) Init() {
 	if p.Slim == 0 {
 		p.Slim = rss(p.Plim, p.Qlim)
 	}
-	if p.VDCcmd == 0 {
-		// TODO: throw an error?
-	}
+	// if p.VDCcmd == 0 {
+	// 	// TODO: throw an error?
+	// }
 
 	// DC droop settings need to model a "weak grid"
 	if p.VDCcmd > 0 {
@@ -198,14 +198,14 @@ func (p *pcs) UpdateMode(input terminal) (output terminal) {
 	}
 
 	// Turn on if conditions allow it
-	if p.Oncmd && (!p.On || p.Standby) && p.AcContactor && p.DcContactor {
+	if p.Oncmd && (!p.On || p.Standby) && p.AcContactor && p.DcContactor && !(p.PstopActive || p.QstopActive) {
 		p.On = true
 		p.Oncmd = false
 		p.Standby = false
 		p.onTransition = true
 		p.targetPcmd = p.Pcmd
 		p.targetQcmd = p.Qcmd
-	} else if p.On && p.Offcmd {
+	} else if (p.On || p.PstopActive || p.QstopActive) && p.Offcmd {
 		p.On = false
 		p.Offcmd = false
 		p.Standby = false
@@ -213,23 +213,23 @@ func (p *pcs) UpdateMode(input terminal) (output terminal) {
 		p.targetPcmd = 0
 		p.targetQcmd = 0
 	}
-	
-	// If Grid Following, set up flag to ensure that Ramping occurs when a power transition is present 
+
+	// If Grid Following, set up flag to ensure that Ramping occurs when a power transition is present
 	if p.On && p.StandbyCmd {
 		p.Standby = true
 		p.StandbyCmd = false
 	}
 	// If Grid Following, set up flags to determine whether there should be onTransition ramping or offTransition ramping
 	if !p.GridForming {
-		if (p.offTransition || p.PstopActive) && (p.PRampStopEnable || p.RampEnable ) {
+		if (p.offTransition || p.PstopActive) && (p.PRampStopEnable || p.RampEnable) {
 			p.PstopActive = true
 		}
-		if  (!p.PRampStopEnable && !p.RampEnable) || p.onTransition || p.Pdc == 0 {
+		if (!p.PRampStopEnable && !p.RampEnable) || p.onTransition || p.Pdc == 0 {
 			p.PstopActive = false
 		}
 		if (p.onTransition || p.PstartActive) && (p.PRampStartEnable || p.RampEnable) {
 			p.PstartActive = true
-		} 
+		}
 		if (p.Pcmd != p.targetPcmd && !p.onTransition) || (!p.PRampStartEnable && !p.RampEnable) || p.offTransition {
 			p.PstartActive = false
 		}
@@ -248,10 +248,10 @@ func (p *pcs) UpdateMode(input terminal) (output terminal) {
 			p.QstartActive = false
 		}
 	}
-	p.targetPcmd = p.Pcmd // Guarentee that Pcmd used is constant at a given timestamp
-	p.targetQcmd = p.Qcmd // Guarentee that Qcmd used is constant at a given timestamp
+	if !(p.PstopActive || p.QstopActive) {
+		p.targetPcmd = p.Pcmd // Guarentee that Pcmd used is constant at a given timestamp
+		p.targetQcmd = p.Qcmd // Guarentee that Qcmd used is constant at a given timestamp
 
-	if (!p.PstopActive && !p.QstopActive){
 		if p.Fault {
 			p.AcContactorOpenCmd, p.DcContactorOpenCmd = true, true
 		} else if !p.ContactorControl {
@@ -261,7 +261,7 @@ func (p *pcs) UpdateMode(input terminal) (output terminal) {
 				p.AcContactorOpenCmd, p.DcContactorOpenCmd = true, true
 			}
 		}
-		if !p.AcContactor && p.AcContactorCloseCmd { 
+		if !p.AcContactor && p.AcContactorCloseCmd {
 			p.AcContactor, p.AcContactorCloseCmd = true, false
 		} else if p.AcContactor && p.AcContactorOpenCmd {
 			p.AcContactor, p.AcContactorOpenCmd = false, false
@@ -278,10 +278,10 @@ func (p *pcs) UpdateMode(input terminal) (output terminal) {
 	// if PCS is on and contactors closed, pass information down
 	if (p.On || p.PstopActive || p.QstopActive) && p.AcContactor {
 		if p.GridForming {
-			p.P, p.Q, p.Vac = p.P, p.Q, p.VACcmd
+			p.Vac = p.VACcmd
 			p.F, p.Ph = input.f, input.ph
 		} else {
-			p.P, p.Q, p.Vac = input.p, p.Q, input.v
+			p.P, p.Vac = input.p, input.v
 			p.F, p.Ph = input.f, input.ph
 		}
 	} else {
@@ -340,9 +340,7 @@ func (p *pcs) DistributeVoltage(input terminal) (output terminal) {
 		p.Standby, p.StandbyCmd = false, false
 	}
 	assetStatus := processBitfieldConfig(p, p.StatusCfg)
-	for i, v := range assetStatus {
-		p.Status[i] = v
-	}
+	copy(p.Status, assetStatus)
 	// fmt.Println(p.Status)
 	// if p.GridForming && p.On {
 	// 	p.Vac, p.Ph, p.F = p.VACcmd, 0, p.Fcmd
@@ -384,11 +382,11 @@ func (p *pcs) CalculateState(input terminal, dt float64) (output terminal) {
 		PrampActive = true
 	} else if p.PstopActive {
 		activePRamp = p.PRampStop
-	} else if (p.Pdc < p.targetPcmd ) && (p.PRampRiseEnable || p.RampEnable ) {
+	} else if (p.Pdc < p.targetPcmd) && (p.PRampRiseEnable || p.RampEnable) {
 		activePRamp = p.PRampRise
 		PrampActive = true
-	} else if (p.Pdc > p.targetPcmd ) && (p.PRampDropEnable || p.RampEnable ) {
-		activePRamp = p.PRampDrop	
+	} else if (p.Pdc > p.targetPcmd) && (p.PRampDropEnable || p.RampEnable) {
+		activePRamp = p.PRampDrop
 		PrampActive = true
 	}
 
@@ -398,11 +396,11 @@ func (p *pcs) CalculateState(input terminal, dt float64) (output terminal) {
 		QrampActive = true
 	} else if p.QstopActive {
 		activeQRamp = p.QRampStop
-	} else if ( p.Q < p.targetQcmd) && ( p.RampEnable || p.QRampRiseEnable) {
+	} else if (p.Q < p.targetQcmd) && (p.RampEnable || p.QRampRiseEnable) {
 		activeQRamp = p.QRampRise
 		QrampActive = true
-	}else if ( p.Q > p.targetQcmd) && ( p.RampEnable || p.QRampDropEnable) {
-		activeQRamp = p.QRampDrop	
+	} else if (p.Q > p.targetQcmd) && (p.RampEnable || p.QRampDropEnable) {
+		activeQRamp = p.QRampDrop
 		QrampActive = true
 	}
 
@@ -469,7 +467,7 @@ func (p *pcs) CalculateState(input terminal, dt float64) (output terminal) {
 // CalculateState()
 func (p *pcs) DistributeLoad(input terminal) (output terminal) {
 	// TODO: implement losses here from AC power to DC power during conversion
-	if p.On{	
+	if p.On {
 		if p.GridForming {
 			p.Fadjust = input.f
 			output.p = getY(p.Fadjust, p.Dactive.slope, p.Dactive.offset) // send power down, because we return zero-terminal in CalculateState() in grid-forming TODO GB: should this be p.P?
@@ -480,7 +478,7 @@ func (p *pcs) DistributeLoad(input terminal) (output terminal) {
 			output.p = p.Pdc // still send power down, because we calculated PCS power at the end of CalculateState() in grid-following.
 			output.vdc = getX(p.P, p.DvoltageExternal.slope, p.DvoltageExternal.offset)
 		}
-		//Limit output to Plim to prevent assets below from being overpowered. This can happen especially in gridforming if the BMS power is particularly low. 
+		//Limit output to Plim to prevent assets below from being overpowered. This can happen especially in gridforming if the BMS power is particularly low.
 		if output.p > p.Plim {
 			output.p = p.Plim
 		} else if output.p < -p.Plim {
@@ -496,7 +494,6 @@ func (p *pcs) DistributeLoad(input terminal) (output terminal) {
 func (p *pcs) UpdateState(input terminal, dt float64) (output terminal) {
 	var active, reactive float64
 	if !p.GridForming {
-		active, reactive = p.targetPcmd, p.targetQcmd
 		active, reactive = p.Pdc, p.Q
 	} else {
 		// grid-forming mode, power commands are not available and must be calculated based on droop
