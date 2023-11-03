@@ -17,6 +17,7 @@
 #include "ESSLogger.hpp"
 #include "chrono_utils.hpp"
 #include "formatters.hpp"
+#include "InputHandler.hpp"
 
 #ifndef FPS_ERROR_FMT
 #define FPS_ERROR_FMT(...)     fmt::print(stderr,__VA_ARGS__)
@@ -2356,6 +2357,12 @@ void loadFlexFunc(varsmap & vmap, VarMapUtils*vm , const char* FlexName)
     vm->setFunc(vmap, FlexName, "Every1000mS",            (void*)&Every1000mS);
     vm->setFunc(vmap, FlexName, "Every100mSP1",            (void*)&Every100mSP1);
     vm->setFunc(vmap, FlexName, "runAllLocks",            (void*)&runAllLocks);
+    vm->setFunc(vmap, FlexName, "LocalStartBMS",        (void*)&InputHandler::LocalStartBMS);
+    vm->setFunc(vmap, FlexName, "LocalStopBMS",        (void*)&InputHandler::LocalStopBMS);
+    vm->setFunc(vmap, FlexName, "LocalStartPCS",        (void*)&InputHandler::LocalStartPCS);
+    vm->setFunc(vmap, FlexName, "LocalStopPCS",        (void*)&InputHandler::LocalStopPCS);
+    vm->setFunc(vmap, FlexName, "LocalStandbyPCS",        (void*)&InputHandler::LocalStandbyPCS);
+    vm->setFunc(vmap, FlexName, "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
 
 }
     
@@ -2449,4 +2456,3 @@ int RunMonitor(varsmap &vmap, varmap &amap, const char* aname, fims* p_fims, ass
 
     return 0;
 }
-

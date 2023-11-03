@@ -124,6 +124,8 @@ FUNC_OBJECTS += PubFuncs.o
 FUNC_OBJECTS += UpdateToDbi.o
 FUNC_OBJECTS += CheckValueChanged.o
 FUNC_OBJECTS += BalancePower.o
+FUNC_OBJECTS += InputHandler.o
+
 
 #$(FUNC_LIST)
 
@@ -140,6 +142,8 @@ ESS_OBJECTS += vmActions.o
 ESS_OBJECTS += vmConfig.o
 ESS_OBJECTS += dbi_funcs.o
 ESS_OBJECTS += AssetSetupUtility.o
+ESS_OBJECTS += FunctionUtility.o
+
 
 
 #ESS_OBJECTS += version.o git_build.o git_commit.o git_tag.o
@@ -280,6 +284,9 @@ $(OBJ_DIR)scheduler.o:	$(SRC_DIR)/scheduler.cpp
 	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
 $(OBJ_DIR)AssetSetupUtility.o:	$(SRC_DIR)/AssetSetupUtility.cpp 
+	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
+
+$(OBJ_DIR)FunctionUtility.o:	$(SRC_DIR)/FunctionUtility.cpp 
 	$(CXX) -c $(CPPFLAGS) -D_JUST_LIB -shared -fpic -o $@ $< $(INCLUDES_BUILD) -I$(INC_DIR)
 
 $(OBJ_DIR)ess_controller.o:	$(SRC_DIR)/ess_controller.cpp 

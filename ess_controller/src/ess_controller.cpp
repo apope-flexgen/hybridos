@@ -13,6 +13,7 @@
 #include "formatters.hpp"
 
 #include "gitinc.h"
+#include "InputHandler.hpp"
 
 asset_manager* ess_man = nullptr;
 int run_secs = 0;
@@ -388,6 +389,13 @@ void initFuncs(asset_manager* am)
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "HandleCmd",          (void*)&HandleCmd);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "UpdateToDbi",        (void*)&UpdateToDbi);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "BalancePower",        (void*)&BalancePower);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStartBMS",        (void*)&InputHandler::LocalStartBMS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStopBMS",        (void*)&InputHandler::LocalStopBMS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStartPCS",        (void*)&InputHandler::LocalStartPCS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStopPCS",        (void*)&InputHandler::LocalStopPCS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStandbyPCS",        (void*)&InputHandler::LocalStandbyPCS);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
+
 
         // Set func for asset instances
         for (auto& iy : amc->assetMap)
@@ -548,7 +556,7 @@ void schedThread(scheduler*sc, varsmap *vmap,  schlist *rreqs, asset_manager* am
         {
             if(msg)
             {
-                essPerf ePerf(am, (char*)am->name.c_str(), msg->uri, nullptr);
+                // essPerf ePerf(am, (char*)am->name.c_str(), msg->uri, nullptr);
                 sc->vm->schedaV = fimsav;
                 if(0)sc->fimsDebug1(*vmap, msg, am);
 
@@ -810,7 +818,7 @@ const char* StdDir = "ess_controller";
 
 // the first sub needs to be the FlexName
 const char* FlexSubs = ":/components:/assets:/system:/site:/reload:/misc2:";
-const char* FlexConfig = "ess_init"; //nullptr; //"flex_controller.json";
+const char* FlexConfig = nullptr; //"ess_init"; //nullptr; //"flex_controller.json";
 const char* FlexCfile = nullptr;  //"ess_config"; //nullptr; //"flex_controller.json";
 bool useOpts  = false;
 bool useArgs = false;
@@ -957,7 +965,7 @@ int main_test_new_ess(int argc, char *argv[])
         {
         case 'x':
             vm.simdbi = true;
-            useOpts = true;
+            useOpts = false;
             useArgs = true;
             FPS_PRINT_INFO(" >>>>>>>>>>>>>>>>>>>>>simdbi setup\n" );
             break;
@@ -1042,8 +1050,6 @@ int main_test_new_ess(int argc, char *argv[])
     {
         vm.setFname(FlexDir);  //**
     }
-    
-
     // vm.setRunLog(LOGDIR "/run_logs");
     vm.setRunCfg(LOGDIR "/run_configs");
 
@@ -1060,7 +1066,8 @@ int main_test_new_ess(int argc, char *argv[])
     essName = vm.getSysName(vmap);
 
     
-
+    if (useOpts)
+    {
     SetupEssSched(&sched, ess_man);
     vm.setFunc(vmap,  essName, "process_sys_alarm",  (void*)&process_sys_alarm);
     vm.setFunc(vmap,  essName, "process_sys_alarm",  (void*)&process_sys_alarm);
@@ -1072,6 +1079,7 @@ int main_test_new_ess(int argc, char *argv[])
     vm.setFunc(vmap,  essName, "SendDb",             (void*)&SendDb);
     vm.setFunc(vmap,  essName, "HandleCpuStats",     (void*)&HandleCpuStats);
     vm.setFunc(vmap,  essName, "runAllLocks",        (void*)&runAllLocks);
+    }
 
 
     if(!useArgs)        // run "ess_controller" to get into this block (crashes bc of filepath rn)
@@ -1292,6 +1300,12 @@ int main_test_new_ess(int argc, char *argv[])
     {
         int log_size = 64;
         logging_size_av = vm.makeVar(vmap, config_name.c_str(), "logging_size", log_size);
+    }
+
+    if (1)
+    {
+        bool close_contactors_dflt = false;
+        vm.makeVar(vmap, "/assets/bms/summary", "close_contactors", close_contactors_dflt);
     }
 
 

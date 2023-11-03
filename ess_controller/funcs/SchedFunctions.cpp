@@ -3,6 +3,7 @@
 #include "asset.h"
 #include "scheduler.h"
 #include "formatters.hpp"
+#include "InputHandler.hpp"
 
 
 /*
@@ -166,6 +167,13 @@ int SetupEssSched(scheduler* sched, asset_manager* am)
     am->vm->setFunc(*am->vmap, aname, "SetDbiDoc", (void*)&SetDbiDoc);
     am->vm->setFunc(*am->vmap, aname, "UpdateToDbi", (void*)&UpdateToDbi);
     am->vm->setFunc(*am->vmap, aname, "BalancePower", (void*)&BalancePower);
+    am->vm->setFunc(*am->vmap, aname, "LocalStartBMS",        (void*)&InputHandler::LocalStartBMS);
+    am->vm->setFunc(*am->vmap, aname, "LocalStopBMS",        (void*)&InputHandler::LocalStopBMS);
+    am->vm->setFunc(*am->vmap, aname, "LocalStartPCS",        (void*)&InputHandler::LocalStartPCS);
+    am->vm->setFunc(*am->vmap, aname, "LocalStopPCS",        (void*)&InputHandler::LocalStopPCS);
+    am->vm->setFunc(*am->vmap, aname, "LocalStandbyPCS",        (void*)&InputHandler::LocalStandbyPCS);
+    am->vm->setFunc(*am->vmap, aname, "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
+
     return 0;
 }
 
