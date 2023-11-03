@@ -246,16 +246,6 @@ func takeOverAsPrimary() {
 		if result != nil && result.Error != 0 {
 			log.Errorf("Failed to restart other outlet: %v\n", result.Error)
 		}
-
-		// This controller started up as secondary when it should have been primary, re-read latest setpoints from DBI
-		// Some data was not written out due to secondary status, and missed by components as a result
-		// Tell Site_Controller to read its latest settings from DBI again
-		if firstIteration {
-			firstIteration = false
-			for _, process := range processJurisdiction {
-				f.SendSet(path.Join(process.uri, "/operation/dbi_update"), "", true)
-			}
-		}
 	}
 }
 

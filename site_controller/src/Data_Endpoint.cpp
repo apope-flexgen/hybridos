@@ -34,11 +34,14 @@ void delayed_set(fims_message* msg) {
 }
 
 Data_Endpoint::Data_Endpoint() {
-    // Construct the setpoint pairs hash table
-    // Currently map is one-to-one, but could be one-to-many
+    // Construct the setpoint pairs hash table as a bidirection map, so that a maps to b and b maps to a
+    // Whenever whenever we receive a true value for the key, the associated value(s) will be set false
     opposite_setpoints.insert(std::make_pair(std::string("breaker_close"), std::vector<std::string>({ "breaker_open" })));
+    opposite_setpoints.insert(std::make_pair(std::string("breaker_open"), std::vector<std::string>({ "breaker_close" })));
     opposite_setpoints.insert(std::make_pair(std::string("breaker_close_permissive_remove"), std::vector<std::string>({ "breaker_close_permissive" })));
+    opposite_setpoints.insert(std::make_pair(std::string("breaker_close_permissive"), std::vector<std::string>({ "breaker_close_permissive_remove" })));
     opposite_setpoints.insert(std::make_pair(std::string("disable_flag"), std::vector<std::string>({ "enable_flag" })));
+    opposite_setpoints.insert(std::make_pair(std::string("enable_flag"), std::vector<std::string>({ "disable_flag" })));
 }
 
 /**
@@ -95,56 +98,46 @@ char* Data_Endpoint::get_from_uri(std::string uri, std::string replyto) {
 bool Data_Endpoint::setpoint_writeout(std::string uri, std::string endpoint, cJSON** valueObject) {
     // Temp variable that will be used when clothing naked sets
     if (p_fims == NULL) {
-        FPS_ERROR_LOG("Fims not configured\n");
+        FPS_ERROR_LOG("Fims not configured.");
         return false;
     }
 
-    // Create a list of uris to which the setpoint will be sent (DBI)
-    // Includes replacement for default setpoint pairs e.g. stop -> start
-    std::vector<std::string> uris = construct_writeout_uris(uri, endpoint);
-    if (uris.size() == 0 || valueObject == NULL) {
-        FPS_ERROR_LOG("Received invalid arguments for writeout Data_Endpoint::setpoint_writeout()\n");
-        return false;
-    }
-
-    // Now complete all invalidation after the setpoint has had a chance to be sent to the other controller
-    // Negate the value of the opposite setpoint in DBI
+    // Extract the value from the setpoint
     cJSON* parsed_value = cJSON_GetObjectItem(*valueObject, "value");
     if (parsed_value == NULL) {
         // cloth the value if Null do not throw an error
         FPS_DEBUG_LOG("In Data_Endpoint::setpoint_writeout() parsed_value was NULL causing a clothing sequence on valueObject.");
         *valueObject = clothe_naked_cJSON(*valueObject);
         parsed_value = cJSON_GetObjectItem(*valueObject, "value");
+        if (parsed_value == NULL) {
+            FPS_ERROR_LOG("Received NULL setpoint on %s, cannot writeout to dbi/cops.\n", uri.c_str());
+            return false;
+        }
     }
 
-    // Preserve the original value prior to its manipulation]
+    // Preserve the original value prior to its manipulation
     // std::string does not free the allocated memory properly
     char* original_value = cJSON_PrintUnformatted(*valueObject);
+    // Send along the current setpoint
+    std::string original_dbi_uri = "/dbi/site_controller/setpoints" + uri;
+    p_fims->Send("set", original_dbi_uri.c_str(), NULL, original_value);
 
+    // Create a list of uris to which the setpoint will be sent (DBI)
+    // Includes replacement for default setpoint pairs e.g. stop -> start
+    std::vector<std::string> uris;
+    bool should_invalidate = parsed_value->type == cJSON_True;
+    if (should_invalidate) {
+        uris = construct_writeout_uris(uri, endpoint);
+        parsed_value->type = cJSON_False;
+    }
+
+    // Invalidate any pairs associated with the current setpoint
     for (size_t i = 0; i < uris.size(); ++i) {
         if (uris[i].empty()) {
-            FPS_ERROR_LOG("Received NULL URI for writeout Data_Endpoint::setpoint_writeout()\n");
+            FPS_ERROR_LOG("Received NULL URI for writeout Data_Endpoint::setpoint_writeout().");
             return false;
         }
 
-        // Searched through our auxilliary list of setpoint pairs and found a default value match
-        if (opposite_setpoints.find(endpoint) != opposite_setpoints.end()) {
-            // There is an additional case to handle, which is if the secondary controller is currently running
-            // The majority of work done invalidates the setpoint in both DBs through negation, which is important for when either restarts
-            // Also handle the case where the secondary controller is still running and needs to perform the opposite action as well
-            if (uris[i].find("dbi") < uris[i].size()) {
-                // First send along the original setpoint
-                // e.g. stop: true, exit_standby:true, disable_site:true
-                std::string original_dbi_uri = "/dbi/site_controller/setpoints" + uri;
-                p_fims->Send("set", original_dbi_uri.c_str(), NULL, original_value);
-            }
-
-            // TODO: Is there any situation where we receive a value other than true?
-            //       Sets for these pairs coming from the UI should always be true (start: true, stop: true, etc)
-            //       On the next iteration this value will be false by our own modification which is expected
-            if (parsed_value->type == cJSON_True)
-                parsed_value->type = cJSON_False;
-        }
         // std::string does not free the allocated memory properly
         char* value_string = cJSON_PrintUnformatted(*valueObject);
         p_fims->Send("set", uris[i].c_str(), NULL, value_string);
@@ -279,9 +272,10 @@ bool Data_Endpoint::setpoint_readin() {
 }
 
 /**
- * Construct fims uris pointing to dbi for the setpoint itself and all associated setpoints contained in the map
+ * Construct fims uris pointing to dbi for all associated setpoints contained in the map
  * @param uri The base uri of the setpoint
- * @param endpoint the endpoint of the uri e.g. the logical setting
+ * @param endpoint The endpoint of the uri e.g. the logical setting
+ * @return The full list of setpoints to send to dbi
  */
 std::vector<std::string> Data_Endpoint::construct_writeout_uris(std::string uri, std::string endpoint) {
     // Base URIs (modules)
@@ -297,7 +291,7 @@ std::vector<std::string> Data_Endpoint::construct_writeout_uris(std::string uri,
     // breaker_close_permissive_remove -> negate breaker_close_permissive
     // This will effectively remove the setpoint from DBI, resetting the status register to its default value
     std::unordered_map<std::string, std::vector<std::string>>::iterator opposite_pair = opposite_setpoints.find(endpoint);
-    // Searched through our auxilliary list of setpoint pairs and found a default value match (examples above)
+    // Found an associated list of one or more opposites and should invalidate them
     if (opposite_pair != opposite_setpoints.end()) {
         for (size_t i = 0; i < opposite_pair->second.size(); ++i) {
             // Replace the endpoint in the uri: replace(<starting position>, <length>, <value>)
@@ -308,9 +302,7 @@ std::vector<std::string> Data_Endpoint::construct_writeout_uris(std::string uri,
             // Add the appropriate strings to the return array
             constructed_uris.push_back(dbi_uri + uri_copy);
         }
-    } else
-        // Add the appropriate strings to the return array
-        constructed_uris.push_back(dbi_uri + uri);
+    }
 
     return constructed_uris;
 }
