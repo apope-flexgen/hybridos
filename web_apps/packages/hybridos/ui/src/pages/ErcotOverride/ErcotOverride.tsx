@@ -234,8 +234,7 @@ const ErcotOverride: React.FunctionComponent<PageProps> = ({ currentUser }: Page
     fetchData();
   }, [fetchData]);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
       QueryService.cleanupSocket();
     },
     [],

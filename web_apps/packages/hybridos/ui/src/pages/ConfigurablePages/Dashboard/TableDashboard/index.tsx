@@ -1,7 +1,7 @@
 // TODO: fix lint
 /* eslint-disable */
 import { Box, CardContainer, CardRow, DataTable, Progress, Typography } from '@flexgen/storybook';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   ColumnData,
   TableDashboardDataTableDTO,
@@ -23,14 +23,7 @@ type DataTablesState = {
 const TableDashboard = () => {
   const [dataTables, setDataTables] = useState<DataTablesState>({});
 
-  useEffect(() => {
-    QueryService.getTableDashboard(handleDataFromSocket);
-    return () => {
-      QueryService.cleanupSocket();
-    };
-  }, []);
-
-  const handleDataFromSocket = (newDataFromSocket: TableDashboardDataTableDTO) => {
+  const handleDataFromSocket = useCallback((newDataFromSocket: TableDashboardDataTableDTO) => {
     setDataTables((prevDataTables) => {
       const newState = Object.values(newDataFromSocket).reduce(
         (acc, dataTableInfo) => {
@@ -79,8 +72,16 @@ const TableDashboard = () => {
 
       return newState;
     });
-  };
+  }, []);
 
+  useEffect(() => {
+    QueryService.getTableDashboard(handleDataFromSocket);
+
+    return () => {
+      QueryService.cleanupSocket();
+    };
+  }, []);
+  
   const renderedDataTables = Object.entries(dataTables).map(([dataTableName, dataTableInfo]) => (
     <Box key={dataTableName} sx={{ width: '100%' }}>
       <CardContainer direction='column' styleOverrides={{ paddingTop: '12px', width: '100%' }}>
@@ -115,7 +116,11 @@ const TableDashboard = () => {
     </Box>
   ));
 
-  return <Box sx={tableBoxSx}>{renderedDataTables}</Box>;
+  return (
+    <Box sx={tableBoxSx}>
+    {renderedDataTables}
+    </Box>
+  );
 };
 
 export default TableDashboard;

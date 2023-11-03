@@ -175,11 +175,13 @@ const BaseApp = (): JSX.Element => {
     if (siteConfiguration && siteConfiguration.product !== FLEET_MANAGER) {
       QueryService.getLayouts(handleNewMessage);
     }
+  }, [handleNewMessage, siteConfiguration]);
 
+  useEffect(() => {
     return () => {
       QueryService.cleanupSocket();
     };
-  }, [handleNewMessage, siteConfiguration]);
+  }, []);
 
   useEffect(() => {
     fetchData();
