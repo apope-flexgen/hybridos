@@ -1083,10 +1083,10 @@ void Asset_Manager::publish_assets() {
     if (!*is_primary)
         return;
 
-    ess_manager->publish_assets(ESS);
-    feeder_manager->publish_assets(FEEDERS);
-    generator_manager->publish_assets(GENERATORS);
-    solar_manager->publish_assets(SOLAR);
+    ess_manager->publish_assets();
+    feeder_manager->publish_assets();
+    generator_manager->publish_assets();
+    solar_manager->publish_assets();
     return;
 }
 

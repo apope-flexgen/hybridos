@@ -146,6 +146,12 @@ TEST_F(asset_manager_test, asset_create) {
     // Errors that should not appear
     test_cases[3].ess_errors_not_present.push_back("BESS Inverter Block B 02: only received one autobalancing control: autobalancing_disable. Either remove this control or provide autobalancing_ensable as well.");
 
+    // Check the # wildcard character placement
+    test_cases.push_back({ UNIT_TEST_FILES_PATH + "assets/invalid_wildcard.json", Config_Validation_Result(false), Config_Validation_Result(true), 
+            Config_Validation_Result(true), Config_Validation_Result(true), {}, {}, {}, {} });
+    test_cases[4].expected_ess_result.ERROR_details.push_back(Result_Details("ess: failed to expand templated string #ess_."));
+    test_cases[4].expected_ess_result.ERROR_details.push_back(Result_Details("ess wildcard character # not found at end of string #ess_."));
+
     build_configurators();
 
     for (auto test : test_cases) {

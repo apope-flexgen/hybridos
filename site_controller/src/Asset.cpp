@@ -119,9 +119,10 @@ fimsCtl::~fimsCtl() {
  * @param templated_string: The string to replace the wildcard character in
  * @param replacement_number: The number to replace the wildcard character with
  * @param type: The type of entry being processed. Either an asset type specifier or component id specifier
+ * @param is_asset_id: Whether the string being processed is an asset id or not
  * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::pair<std::string, Config_Validation_Result> replace_wildcard_with_number(std::string templated_string, int replacement_number, std::string type) {
+std::pair<std::string, Config_Validation_Result> replace_wildcard_with_number(std::string templated_string, int replacement_number, std::string type, bool is_asset_id = false) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
 
     const char* wildcard_character("#");
@@ -136,6 +137,16 @@ std::pair<std::string, Config_Validation_Result> replace_wildcard_with_number(st
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{} wildcard character {} not found in string {}.", type, wildcard_character, templated_string.c_str())));
         return std::make_pair("", validation_result);
     }
+    if (is_asset_id) {
+        // overwrite the # search as a reverse search for the last # in the string just in case there are multiple #s
+        wildcard_location = templated_string.rfind(wildcard_character);
+        // ensure that the # comes at the end of the string
+        if (wildcard_location != templated_string.length() - 1) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{} wildcard character {} not found at end of string {}.", type, wildcard_character, templated_string.c_str())));
+            return std::make_pair("", validation_result);
+        }
+    }
     copy.replace(wildcard_location, strlen(wildcard_character), new_number);
     return std::make_pair(copy, validation_result);
 }
@@ -147,9 +158,10 @@ std::pair<std::string, Config_Validation_Result> replace_wildcard_with_number(st
  * @param templated_string: The string to replace the wildcard character in
  * @param asset_range_map: The map of asset numbers and bools indicating whether they have been used yet
  * @param type: The type of entry being processed. Either an asset type specifier or component id specifier
+ * @param is_asset_id: Whether the string being processed is an asset id or not
  * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::pair<std::string, Config_Validation_Result> find_next_asset_to_replace_wildcard(std::string templated_string, std::map<int, bool>& asset_range_map, std::string type) {
+std::pair<std::string, Config_Validation_Result> find_next_asset_to_replace_wildcard(std::string templated_string, std::map<int, bool>& asset_range_map, std::string type, bool is_asset_id = false) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
 
     if (asset_range_map.empty()) {
@@ -183,7 +195,7 @@ std::pair<std::string, Config_Validation_Result> find_next_asset_to_replace_wild
         return std::make_pair("", validation_result);
     }
 
-    std::pair<std::string, Config_Validation_Result> replaced_result = replace_wildcard_with_number(templated_string, replacement_number, type);
+    std::pair<std::string, Config_Validation_Result> replaced_result = replace_wildcard_with_number(templated_string, replacement_number, type, is_asset_id);
     validation_result.absorb(replaced_result.second);
     return std::make_pair(replaced_result.first, validation_result);
 }
@@ -196,9 +208,10 @@ std::pair<std::string, Config_Validation_Result> find_next_asset_to_replace_wild
  * @param validation: std::set of asset_ids that have been used
  * @param id: templated asset_id
  * @param type: the type of entry being processed. Either an asset type specifier or component id specifier
+ * @param is_asset_id: Whether the string being processed is an asset id or not
  * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::pair<std::string, Config_Validation_Result> handle_templated_replace_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, std::string id, std::string type) {
+std::pair<std::string, Config_Validation_Result> handle_templated_replace_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, std::string id, std::string type, bool is_asset_id = false) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
     if (id.empty()) {
         validation_result.is_valid_config = false;
@@ -206,7 +219,7 @@ std::pair<std::string, Config_Validation_Result> handle_templated_replace_check_
         return std::make_pair("", validation_result);
     }
 
-    std::pair<std::string, Config_Validation_Result> replaced_result = find_next_asset_to_replace_wildcard(id, map[id], type);
+    std::pair<std::string, Config_Validation_Result> replaced_result = find_next_asset_to_replace_wildcard(id, map[id], type, is_asset_id);
     if (replaced_result.first == "") {
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to expand templated string {}.", type, id)));
@@ -231,9 +244,10 @@ std::pair<std::string, Config_Validation_Result> handle_templated_replace_check_
  * @param validation: std::set of asset_ids that have been used
  * @param id: templated asset_id
  * @param type: the type of entry being processed. Either an asset type specifier or component id specifier
+ * @param is_asset_id: Whether the string being processed is an asset id or not
  * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::pair<std::string, Config_Validation_Result> handle_templated_replace_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, cJSON* id, std::string type) {
+std::pair<std::string, Config_Validation_Result> handle_templated_replace_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, cJSON* id, std::string type, bool is_asset_id = false) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
     if (id == NULL) {
         validation_result.is_valid_config = false;
@@ -246,7 +260,7 @@ std::pair<std::string, Config_Validation_Result> handle_templated_replace_check_
         return std::make_pair("", validation_result);
     }
 
-    std::pair<std::string, Config_Validation_Result> replaced_result = find_next_asset_to_replace_wildcard(std::string(id->valuestring), map[id->valuestring], type);
+    std::pair<std::string, Config_Validation_Result> replaced_result = find_next_asset_to_replace_wildcard(std::string(id->valuestring), map[id->valuestring], type, is_asset_id);
     if (replaced_result.first == "") {
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to expand templated string {}.", type, id->valuestring)));
@@ -406,7 +420,8 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
     std::pair<std::string, Config_Validation_Result> id_result;
     std::pair<std::string, Config_Validation_Result> name_result;
     if (configurator->asset_config.is_template_flag) {
-        id_result = handle_templated_replace_check_for_duplicate(configurator->asset_config.asset_id_to_asset_number_map, configurator->asset_config.asset_id_collision_set, configurator->current_asset_id, asset_type_id);
+         // call with true because this is the asset id and the number has to be at the end of the string for the web ui
+        id_result = handle_templated_replace_check_for_duplicate(configurator->asset_config.asset_id_to_asset_number_map, configurator->asset_config.asset_id_collision_set, configurator->current_asset_id, asset_type_id, true);
         name_result = handle_templated_replace_check_for_duplicate(configurator->asset_config.asset_name_to_asset_number_map, configurator->asset_config.asset_name_collision_set, configurator->current_asset_name, asset_type_id);
     } else {
         id_result = no_replace_check_for_duplicate(configurator->asset_config.asset_id_collision_set, configurator->current_asset_id, asset_type_id);
@@ -1016,7 +1031,7 @@ bool Asset::handle_get(fims_message* pmsg) {
 
     // URI is /assets/<asset type>/<asset ID>
     if (pmsg->nfrags < 4) {
-        if (!add_asset_data_to_buffer(send_FIMS_buf, strcmp(asset_type_id, FEEDERS_TYPE_ID) == 0)) {
+        if (!add_asset_data_to_buffer(send_FIMS_buf)) {
             return false;
         }
         return send_buffer_to(pmsg->replyto, send_FIMS_buf);
@@ -1031,11 +1046,10 @@ bool Asset::handle_get(fims_message* pmsg) {
 
 /**
  * @brief Adds all data for this asset instance to the given buffer.
- * @param clothed: True if the asset is clothed, false otherwise.
  * @param buf Buffer to which the data must be added.
  * @return True if the data was added to the buffer successfully, or false if there was an error.
  */
-bool Asset::add_asset_data_to_buffer(fmt::memory_buffer& buf, bool clothed) {
+bool Asset::add_asset_data_to_buffer(fmt::memory_buffer& buf) {
     // Begin asset instance object with opening curly brace
     bufJSON_StartObject(buf);
 
@@ -1060,7 +1074,7 @@ bool Asset::add_asset_data_to_buffer(fmt::memory_buffer& buf, bool clothed) {
             return false;
         }
         // add asset variable
-        variable.second->add_to_JSON_buffer(buf, NULL, clothed);
+        variable.second->add_to_JSON_buffer(buf, NULL, false);
     }
 
     // End asset instance object with closing curly brace
@@ -1092,15 +1106,8 @@ bool Asset::add_variable_to_buffer(std::string uri, const char* variable_id, fmt
             return false;
         }
 
-        // Start clothed objects with an opening curly brace
-        bool clothed = strcmp(asset_type_id, FEEDERS_TYPE_ID) == 0;
-        if (clothed)
-            bufJSON_StartObject(buf);
         // Add the Fims_Object data
-        variable->second->add_to_JSON_buffer(buf, variable_id, clothed);
-        // End clothed objects with closing curly brace
-        if (clothed)
-            bufJSON_EndObjectNoComma(buf);
+        variable->second->add_to_JSON_buffer(buf, variable_id, false);
     }
     // Target variable was NOT found in asset var map. check if the request is for a UI control
     else {

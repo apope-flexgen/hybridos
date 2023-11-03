@@ -67,7 +67,7 @@ public:
     int get_num_running(void);
     int get_num_in_local_mode(void);
 
-    void publish_assets(asset_type type);
+    void publish_assets();
     void send_to_components(void);
 
     void set_clear_faults(void);
