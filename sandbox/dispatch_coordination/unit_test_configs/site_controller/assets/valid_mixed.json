@@ -226,6 +226,19 @@
 									"unit": "V"
 								}
 							}
+						},
+                                                {
+							"component_id": "shared_poi",
+							"variables":
+							{
+								"grid_frequency":
+								{
+									"name": "STOLEN Frequency from (735)",
+									"register_id": "frequency",
+									"scaler": 1,
+									"unit": "Hz"
+								}
+							}	
 						}
 					]
 				}
