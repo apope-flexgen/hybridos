@@ -1672,6 +1672,20 @@
                     "unit": "V",
                     "value": 400
                 },
+                "avr_cmd_volts_max":
+                {
+                    "name": "AVR Setpoint Maximum",
+                    "ui_type": "control",
+                    "unit": "V",
+                    "value": 425
+                },
+                "avr_cmd_volts_min":
+                {
+                    "name": "AVR Setpoint Minimum",
+                    "ui_type": "control",
+                    "unit": "V",
+                    "value": 375
+                },
                 "avr_actual_volts":
                 {
                     "name": "Measured Voltage",

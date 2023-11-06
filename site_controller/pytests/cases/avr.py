@@ -407,3 +407,61 @@ def test_avr_positive_poi_limits(test):
 ])
 def test_avr_negative_poi_limits(test):
     return test
+
+
+# Test voltage setpoint limits 
+@ fixture
+@ parametrize("test", [
+    # Preconditions 
+    Setup(
+        "avr_voltage_setpoint_limits",
+        {
+            "/features/reactive_power/runmode1_kVAR_mode_cmd": 0,
+            "/features/reactive_power/avr_cmd_volts_max": 425,
+            "/features/reactive_power/avr_cmd_volts_min": 375
+
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/runmode1_kVAR_mode_cmd", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/avr_cmd_volts_max", 425),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/avr_cmd_volts_min", 375)
+        ]
+    ),
+    Steps(
+        {
+            # Valid value 
+            "/features/reactive_power/avr_cmd_volts": 410
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/avr_cmd_volts", 410)
+        ]
+    ),
+    Steps(
+        {
+            # Invalid value (upper limit) -- make sure avr_cmd_volts doesn't change 
+            "/features/reactive_power/avr_cmd_volts": 450
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/avr_cmd_volts", 410)
+        ]
+    ),
+    Steps(
+        {
+            # Invalid value (lower limit) -- make sure avr_cmd_volts doesn't change 
+            "/features/reactive_power/avr_cmd_volts": 350
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/avr_cmd_volts", 410)
+        ]
+    ),
+    Teardown(
+        {
+            "/features/reactive_power/avr_cmd_volts": 400
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/reactive_power/avr_cmd_volts", 400)
+        ]
+    )
+])
+def test_avr_voltage_setpoint_limits(test):
+    return test

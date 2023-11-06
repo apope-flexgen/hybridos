@@ -834,6 +834,8 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
         float gen_potential_kVAR;
         float actual_volts;
         float voltage_cmd;
+        float voltage_cmd_max;
+        float voltage_cmd_min;
         float over_deadband;
         float over_droop;
         float over_rated_kVAR;
@@ -847,11 +849,11 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
     };
 
     std::vector<avr_test> tests = {
-        { 800, 400, 200, 400, 400, 50, 20, 1000, 100, 50, 500, 0, 0, 0, 0 },             // zero
-        { 800, 400, 200, 500, 400, 50, 20, 700, 100, 50, 500, -700, -400, -200, -100 },  // overvoltage limited
-        { 500, 400, 100, 460, 400, 50, 20, 1000, 100, 50, 500, -500, -250, -200, -50 },  // overvoltage less potential
-        { 800, 400, 200, 300, 400, 100, 50, 500, 50, 20, 700, 700, 400, 200, 100 },      // undervoltage limited
-        { 500, 400, 100, 340, 400, 100, 50, 500, 50, 20, 1000, 500, 250, 200, 50 }       // undervoltage less potential
+        { 800, 400, 200, 400, 400, 425, 375, 50, 20, 1000, 100, 50, 500, 0, 0, 0, 0 },             // zero
+        { 800, 400, 200, 500, 400, 425, 375, 50, 20, 700, 100, 50, 500, -700, -400, -200, -100 },  // overvoltage limited
+        { 500, 400, 100, 460, 400, 425, 375, 50, 20, 1000, 100, 50, 500, -500, -250, -200, -50 },  // overvoltage less potential
+        { 800, 400, 200, 300, 400, 425, 375, 100, 50, 500, 50, 20, 700, 700, 400, 200, 100 },      // undervoltage limited
+        { 500, 400, 100, 340, 400, 425, 375, 100, 50, 500, 50, 20, 1000, 500, 250, 200, 50 }       // undervoltage less potential
     };
 
     int test_id = 1;
@@ -874,6 +876,8 @@ TEST_F(site_manager_test, automatic_voltage_mode) {
         avr.under_deadband.value.value_float = test.under_deadband;
         avr.under_droop.value.value_float = test.under_droop;
         avr.under_rated_kVAR.value.value_float = test.under_rated_kVAR;
+        avr.voltage_cmd_max.value.value_float = test.voltage_cmd_max;
+        avr.voltage_cmd_min.value.value_float = test.voltage_cmd_min;
         avr.voltage_cmd.value.value_float = test.voltage_cmd;
         avr.actual_volts.value.value_float = test.actual_volts;
         avr.execute(asset_cmd, asset_pf_flag);
