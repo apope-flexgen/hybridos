@@ -236,3 +236,6 @@ GIT_*
 .config/
 __pycache__/
 .pyc
+
+# doxygen
+docs/doxygen/*
