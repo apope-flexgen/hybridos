@@ -5,7 +5,7 @@
     "solar": false,
     "met_station": false,
     "tracker": false,
-    "feeders": true,
+    "feeders": false,
     "features": true,
     "site": true,
     "events": true,

@@ -4,7 +4,8 @@
     {
       "info": {
         "key": "ess_tab",
-        "name": "ESS"
+        "name": "ESS",
+        "icon": "ViewModule"
       }
     },
     {
@@ -19,6 +20,13 @@
         "key": "solar_tab",
         "name": "Solar",
         "icon": "SpaceDashboard"
+      }
+    },
+    {
+      "info": {
+        "key": "feeders_tab",
+        "name": "Feeders",
+        "icon": "Feeders"
       }
     }
   ]
