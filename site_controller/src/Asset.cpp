@@ -260,7 +260,8 @@ std::pair<std::string, Config_Validation_Result> find_next_component_to_replace_
  * @param is_asset_id: Whether the string being processed is an asset id or not
  * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::pair<std::string, Config_Validation_Result> handle_templated_replace_of_id_or_name_and_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, std::string id, std::string type, bool is_asset_id = false) {
+std::pair<std::string, Config_Validation_Result> handle_templated_replace_of_id_or_name_and_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, std::string id, std::string type,
+                                                                                                                bool is_asset_id = false) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
     if (id.empty()) {
         validation_result.is_valid_config = false;
@@ -329,7 +330,8 @@ std::pair<std::string, Config_Validation_Result> handle_templated_replace_of_com
  * @param is_asset_id: Whether the string being processed is an asset id or not
  * @return Pair containing the template replaced id and Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
-std::pair<std::string, Config_Validation_Result> handle_templated_replace_of_id_or_name_and_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, cJSON* id, std::string type, bool is_asset_id = false) {
+std::pair<std::string, Config_Validation_Result> handle_templated_replace_of_id_or_name_and_check_for_duplicate(std::map<std::string, std::map<int, bool>>& map, std::set<std::string>& validation, cJSON* id, std::string type,
+                                                                                                                bool is_asset_id = false) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
     if (id == NULL) {
         validation_result.is_valid_config = false;
@@ -528,11 +530,11 @@ Config_Validation_Result Asset::configure_common_asset_instance_vars(Type_Config
     // make sure the asset id/name is unique
     std::pair<std::string, Config_Validation_Result> id_result;
     std::pair<std::string, Config_Validation_Result> name_result;
-    if (configurator->asset_config.is_template_flag) { // if an item is a template we need to replace the # with the template index
+    if (configurator->asset_config.is_template_flag) {  // if an item is a template we need to replace the # with the template index
         // call with true because this is the asset id and the number has to be at the end of the string for the web ui
         id_result = handle_templated_replace_of_id_or_name_and_check_for_duplicate(configurator->asset_config.asset_id_to_asset_number_map, configurator->asset_config.asset_id_collision_set, configurator->current_asset_id, asset_type_id, true);
         name_result = handle_templated_replace_of_id_or_name_and_check_for_duplicate(configurator->asset_config.asset_name_to_asset_number_map, configurator->asset_config.asset_name_collision_set, configurator->current_asset_name, asset_type_id);
-    } else { // otherwise there is nothing to replace
+    } else {  // otherwise there is nothing to replace
         id_result = no_replace_of_id_or_name_and_check_for_duplicate(configurator->asset_config.asset_id_collision_set, configurator->current_asset_id, asset_type_id);
         name_result = no_replace_of_id_or_name_and_check_for_duplicate(configurator->asset_config.asset_name_collision_set, configurator->current_asset_name, asset_type_id);
     }
@@ -772,8 +774,8 @@ Config_Validation_Result Asset::configure_component_vars(Type_Configurator* conf
 
         std::pair<std::string, Config_Validation_Result> component_id_result;
         if (configurator->asset_config.is_template_flag) {
-            component_id_result = handle_templated_replace_of_component_and_check_for_duplicate(configurator->asset_config.asset_component_to_asset_number_map, 
-                    configurator->asset_config.asset_component_collision_set, comp_id->valuestring, asset_type_id);
+            component_id_result = handle_templated_replace_of_component_and_check_for_duplicate(configurator->asset_config.asset_component_to_asset_number_map, configurator->asset_config.asset_component_collision_set, comp_id->valuestring,
+                                                                                                asset_type_id);
         } else {
             component_id_result = no_replace_of_component_and_check_for_duplicate(configurator->asset_config.asset_component_collision_set, comp_id->valuestring, asset_type_id);
         }

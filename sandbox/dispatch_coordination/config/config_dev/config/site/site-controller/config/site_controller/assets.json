@@ -641,12 +641,26 @@
 									"name": "Lockdown Mode",
 									"type": "Bool"
 								},
-								"limits_override":
-								{
-									"name": "Limits Override",
-									"type": "Bool",
-									"ui_type": "none"
-								},
+                                                                "limits_override":
+                                                                {
+                                                                    "name": "Enable Limits Override",
+                                                                    "type": "Bool"
+                                                                },
+                                                                "maint_soc_limits_enable":
+                                                                {
+                                                                    "name": "Enable Maintenance SoC limits",
+                                                                    "type": "Bool"
+                                                                },
+                                                                "maint_voltage_limits_enable":
+                                                                {
+                                                                    "name": "Enable Maintenance voltage limits",
+                                                                    "type": "Bool"
+                                                                },
+                                                                "maint_min_charge_discharge_enable":
+                                                                {
+                                                                    "name": "Enable Maintenance Min Charge/Discharge Power",
+                                                                    "type": "Bool"
+                                                                },
 								"autobalancing_enable":
 								{
 									"name": "Enable Auto-Balancing",
@@ -670,9 +684,45 @@
 									"name": "Reactive Power Setpoint",
 									"scaler": 1000,
 									"unit": "VAR"
-								}
+								},
+                                                                "maint_chargeable_min_limit":
+                                                                {
+                                                                    "name": "Chargeable Min Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "kW"
+                                                                },
+                                                                "maint_dischargeable_min_limit":
+                                                                {
+                                                                    "name": "Dischargeable Min Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "kW"
+                                                                },
+                                                                "maint_min_soc_limit":
+                                                                {
+                                                                    "name": "Minimum SOC Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "%"
+                                                                },
+                                                                "maint_max_soc_limit":
+                                                                {
+                                                                    "name": "Maximum SOC Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "%"
+                                                                },
+                                                                "maint_min_voltage_limit":
+                                                                {
+                                                                    "name": "Minimum Voltage Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "V"
+                                                                },
+                                                                "maint_max_voltage_limit":
+                                                                {
+                                                                    "name": "Maximum Voltage Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "V"
+                                                                }
 							}
-                        }
+                                                }
 					]
 				},
 				{
@@ -792,11 +842,37 @@
 									"name": "Lockdown Mode",
 									"type": "Bool"
 								},
-								"limits_override":
+                                                                "limits_override":
+                                                                {
+                                                                    "name": "Enable Limits Override",
+                                                                    "type": "Bool"
+                                                                },
+                                                                "maint_soc_limits_enable":
+                                                                {
+                                                                    "name": "Enable Maintenance SoC limits",
+                                                                    "type": "Bool"
+                                                                },
+                                                                "maint_voltage_limits_enable":
+                                                                {
+                                                                    "name": "Enable Maintenance voltage limits",
+                                                                    "type": "Bool"
+                                                                },
+                                                                "maint_min_charge_discharge_enable":
+                                                                {
+                                                                    "name": "Enable Maintenance Min Charge/Discharge Power",
+                                                                    "type": "Bool"
+                                                                },
+								"autobalancing_enable":
 								{
-									"name": "Limits Override",
-									"type": "Bool",
-									"ui_type": "none"
+									"name": "Enable Auto-Balancing",
+									"register_id": "equalization_control",
+									"type": "Bool"
+								},
+								"autobalancing_disable":
+								{
+									"name": "Disable Auto-Balancing",
+									"register_id": "equalization_control",
+									"type": "Bool"
 								},
 								"maint_active_power_setpoint":
 								{
@@ -809,7 +885,43 @@
 									"name": "Reactive Power Setpoint",
 									"scaler": 1000,
 									"unit": "VAR"
-								}
+								},
+                                                                "maint_chargeable_min_limit":
+                                                                {
+                                                                    "name": "Chargeable Min Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "kW"
+                                                                },
+                                                                "maint_dischargeable_min_limit":
+                                                                {
+                                                                    "name": "Dischargeable Min Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "kW"
+                                                                },
+                                                                "maint_min_soc_limit":
+                                                                {
+                                                                    "name": "Minimum SOC Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "%"
+                                                                },
+                                                                "maint_max_soc_limit":
+                                                                {
+                                                                    "name": "Maximum SOC Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "%"
+                                                                },
+                                                                "maint_min_voltage_limit":
+                                                                {
+                                                                    "name": "Minimum Voltage Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "V"
+                                                                },
+                                                                "maint_max_voltage_limit":
+                                                                {
+                                                                    "name": "Maximum Voltage Limit",
+                                                                    "scaler": 1,
+                                                                    "unit": "V"
+                                                                }
 							}
 						},
 						{

@@ -202,10 +202,9 @@ Config_Validation_Result Type_Configurator::configure_traditional_templated_asse
             auto check_name = (&asset_config.asset_name_to_asset_number_map[current_asset_name])->emplace(std::pair<int, bool>(j + 1, false));
             auto check_id = (&asset_config.asset_id_to_asset_number_map[current_asset_id])->emplace(std::pair<int, bool>(j + 1, false));
 
-            if (!check_id.second || !check_name.second) { // You just tried to insert a duplicate asset number which is not allowed
+            if (!check_id.second || !check_name.second) {  // You just tried to insert a duplicate asset number which is not allowed
                 validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: template entry {} with index {} overlaps with existing entries.", 
-                                p_manager->get_asset_type_id(), current_asset_name, j + 1)));
+                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: template entry {} with index {} overlaps with existing entries.", p_manager->get_asset_type_id(), current_asset_name, j + 1)));
                 // This is a templated entry where all values are the same for each asset,
                 // so only try to configure a single asset when overlapping entries are found
                 // this prevents the same error from being reported multiple times
@@ -224,7 +223,7 @@ Config_Validation_Result Type_Configurator::configure_traditional_templated_asse
             }
             validation_result.absorb(asset_config_result);
         }
-    } else { // Why are you configuring a template with no instances?
+    } else {  // Why are you configuring a template with no instances?
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid number_of_instances provided for templated asset. Expected positive integer, but got {}.", current_asset_name, num_instances_represented)));
     }
@@ -271,7 +270,7 @@ Config_Validation_Result Type_Configurator::configure_ranged_templated_asset() {
         }
         validation_result.absorb(asset_config_result);
     }
-    if (instance_config_result.first.empty()) { // broken range?
+    if (instance_config_result.first.empty()) {  // broken range?
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid range provided for templated asset. Expected a positive number of assets, but got zero.", current_asset_name)));
     }
@@ -293,7 +292,7 @@ Config_Validation_Result Type_Configurator::configure_single_asset(void) {
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: error allocating memory for new asset instance.", p_manager->get_asset_type_id())));
     }
 
-    Config_Validation_Result asset_config_result = asset->configure(this); // Call the asset's configure function different for each asset type
+    Config_Validation_Result asset_config_result = asset->configure(this);  // Call the asset's configure function different for each asset type
     if (!asset_config_result.is_valid_config) {
         validation_result.is_valid_config = false;
         validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure asset.", p_manager->get_asset_type_id())));
@@ -362,7 +361,7 @@ std::pair<int, Config_Validation_Result> Type_Configurator::gather_assets(cJSON*
             case NON_TEMPLATE:
                 instances = 1;
                 break;
-            default: // This is the TEMPLATING_ERROR case
+            default:  // This is the TEMPLATING_ERROR case
                 instances = 1;
                 validation_result.is_valid_config = false;
                 validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: invalid template type when gathering assets.", p_manager->get_asset_type_id())));

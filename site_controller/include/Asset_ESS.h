@@ -37,7 +37,6 @@ public:
     void set_active_power_setpoint(float setpoint, bool use_strict_limits);
     void set_reactive_power_setpoint(float);
     void set_power_factor_setpoint(float);
-
     void set_voltage_slew_setpoint(float);
     void set_voltage_setpoint(float);
     void set_frequency_setpoint(float);
@@ -69,6 +68,11 @@ public:
     setpoint_states get_setpoint_status(void);
 
     gridMode get_grid_mode(void);
+
+    // configuration
+    static void quick_config_numeric(const cJSON* json, std::string key_value, fimsCtl& control, float& float_var, std::string name_str, Config_Validation_Result& validation_result);
+    static void quick_config_slider(const cJSON* json, std::string key_value, fimsCtl& control, bool& flag, std::string name_str, Config_Validation_Result& validation_result);
+    static void quick_config_button(const cJSON* json, std::string key_value, fimsCtl& control, std::string compName, std::string& built_uri, std::string name_str, Config_Validation_Result& validation_result, bool useResetOption);
 
     // internal functions
     void process_asset();
@@ -114,11 +118,10 @@ protected:
     float rated_capacity;               // configurable battery base capacity
     bool calibration_flag;              // Flag indicating in calibration mode
     bool limits_override_flag;          // Bypass soc limits to publish raw value
-    bool maint_limits_override_flag;    // Flag tracking maint mode sets to limits override only, not sets from site manager features
+    bool voltage_limits_flag;           // Enable cell voltage-based limits on (dis)chargeable power
     bool soc_limits_flag;               // Enable soc-based limits on (dis)chargeable power
     float chargeable_soc_limit;         // Chargeable power set to 0 when above this soc
     float dischargeable_soc_limit;      // Dischargeable power set to 0 when below this soc
-    bool voltage_limits_flag;           // Enable voltage-based limits on (dis)chargeable power
     float chargeable_voltage_limit;     // Chargeable power set to chargeable_min_limit_kW when voltage_max above this limit
     float dischargeable_voltage_limit;  // Dischargeable power set to dischargeable_min_limit_kW when voltage_min below this limit
     float chargeable_min_limit_kW;      // Configurable floor for chargeable power. Derating will not go below this value
@@ -126,8 +129,18 @@ protected:
     float raw_calibration_setpoint;     // Calibration setpoint command by the feature, used as a reference for the setpoint status
 
     // control
-    float maint_active_power_setpoint;
-    float maint_reactive_power_setpoint;
+    bool maint_limits_override_flag;              // When in maintenance mode, override limits to publish raw value
+    bool maint_soc_limits_enable_flag;            // When in maintenance mode, enable soc-based limits on (dis)chargeable power
+    bool maint_voltage_limits_enable_flag;        // When in maintenance mode, enable cell voltage-based limits on (dis)chargeable power
+    bool maint_min_charge_discharge_enable_flag;  // When in maintenance mode, enable min charge/discharge limits
+    float maint_active_power_setpoint;            // Active power setpoint in maintenance mode
+    float maint_reactive_power_setpoint;          // Reactive power setpoint in maintenance mode
+    float maint_chargeable_min_limit;             // Configurable floor for chargeable power in maintenance mode. Derating will not go below this value until you fully derate to 0
+    float maint_dischargeable_min_limit;          // Configurable floor for dischargeable power in maintenance mode. Derating will not go below this value until you fully derate to 0
+    float maint_min_soc_limit;                    // Chargeable power set to 0 when below this soc in maintenance mode
+    float maint_max_soc_limit;                    // Dischargeable power set to 0 when above this soc in maintenance mode
+    float maint_min_voltage_limit;                // Chargeable power set to 0 when voltage_max below this limit in maintenance mode
+    float maint_max_voltage_limit;                // Dischargeable power set to 0 when voltage_min above this limit in maintenance mode
 
     fimsCtl start_ctl;
     fimsCtl stop_ctl;
@@ -135,14 +148,24 @@ protected:
     fimsCtl enter_standby_ctl;
     fimsCtl exit_standby_ctl;
     fimsCtl limits_override_ctl;
+    fimsCtl maint_soc_limits_enable_ctl;
+    fimsCtl maint_voltage_limits_enable_ctl;
+    fimsCtl maint_min_charge_discharge_enable_ctl;
     fimsCtl autobalancing_enable_ctl;
     fimsCtl autobalancing_disable_ctl;
-    fimsCtl maint_active_power_setpoint_ctl;
-    fimsCtl maint_reactive_power_setpoint_ctl;
     fimsCtl connected_ctl;
     fimsCtl disconnected_ctl;
     fimsCtl open_dc_contactors_ctl;
     fimsCtl close_dc_contactors_ctl;
+    fimsCtl maint_active_power_setpoint_ctl;
+    fimsCtl maint_reactive_power_setpoint_ctl;
+
+    fimsCtl maint_chargeable_min_limit_ctl;
+    fimsCtl maint_dischargeable_min_limit_ctl;
+    fimsCtl maint_min_soc_limit_ctl;
+    fimsCtl maint_max_soc_limit_ctl;
+    fimsCtl maint_min_voltage_limit_ctl;
+    fimsCtl maint_max_voltage_limit_ctl;
 
     // status
     bool energy_configured;  // Flag to indicate whether chargeable/dischargeable_energy was configured

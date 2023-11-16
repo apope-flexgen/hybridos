@@ -8,6 +8,8 @@
 /* C Standard Library Dependencies */
 #include <cmath>
 #include <cstring>
+#include <iterator>
+#include "Types.h"
 /* C++ Standard Library Dependencies */
 /* External Dependencies */
 /* System Internal Dependencies */
@@ -21,6 +23,17 @@
 Asset_ESS::Asset_ESS() {
     maint_active_power_setpoint = 0.0;
     maint_reactive_power_setpoint = 0.0;
+    maint_chargeable_min_limit = 0.0;
+    maint_dischargeable_min_limit = 0.0;
+    maint_min_soc_limit = 0.0;
+    maint_max_soc_limit = 0.0;
+    maint_limits_override_flag = false;              // this is the buffers at top and bottom soc
+    maint_soc_limits_enable_flag = false;            // this is toggling on changing those buffers in maint mode
+    maint_voltage_limits_enable_flag = false;        // this is toggling on voltage limits in maint mode
+    maint_min_charge_discharge_enable_flag = false;  // this is toggling on min charge/discharge limits in maint mode
+    maint_min_voltage_limit = 0.0;
+    maint_max_voltage_limit = 0.0;
+
     reactive_power_mode_value = 0;
     power_factor_mode_value = 0;
 
@@ -500,13 +513,90 @@ Config_Validation_Result Asset_ESS::configure_typed_asset_instance_vars(Type_Con
 }
 
 /**
+ * Quickly configure a control
+ * @param json (the json)
+ * @param key_value (the string to search for)
+ * @param control (the associated fimsCtl)
+ * @param flag (the associated bool)
+ * @param name_str (name of the component)
+ * @param validation_result (higher level config validation)
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+void Asset_ESS::quick_config_slider(const cJSON* json, const std::string key_value, fimsCtl& control, bool& flag, const std::string name_str, Config_Validation_Result& validation_result) {
+    cJSON* ctrl_obj;
+    Config_Validation_Result control_result;
+    ctrl_obj = cJSON_GetObjectItem(json, key_value.c_str());
+    if (ctrl_obj != NULL) {
+        control_result = control.configure(ctrl_obj, onOffOption, &flag, Bool, sliderStr, false);
+        if (!control_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure {} UI control.", name_str, key_value)));
+        }
+        validation_result.absorb(control_result);
+    }
+}
+
+/**
+ * Quickly configure a control
+ * @param json (the json)
+ * @param key_value (the string to search for)
+ * @param control (the associated fimsCtl)
+ * @param float_var (the associated float)
+ * @param name_str (name of the component)
+ * @param validation_result (higher level config validation)
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+void Asset_ESS::quick_config_numeric(const cJSON* json, std::string key_value, fimsCtl& control, float& float_var, std::string name_str, Config_Validation_Result& validation_result) {
+    cJSON* ctrl_obj;
+    Config_Validation_Result control_result;
+    ctrl_obj = cJSON_GetObjectItem(json, key_value.c_str());
+    if (ctrl_obj != NULL) {
+        control_result = control.configure(ctrl_obj, nullJson, &float_var, Float, numberStr, false);
+        if (!control_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure {} UI control.", name_str, key_value)));
+        }
+        validation_result.absorb(control_result);
+    }
+}
+
+/**
+ * Quickly configure a control
+ * @param json (the json)
+ * @param key_value (the string to search for)
+ * @param control (the associated fimsCtl)
+ * @param float_var (the associated float)
+ * @param name_str (name of the component)
+ * @param validation_result (higher level config validation)
+ * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
+ */
+void Asset_ESS::quick_config_button(const cJSON* json, std::string key_value, fimsCtl& control, std::string compName, std::string& built_uri, std::string name_str, Config_Validation_Result& validation_result, bool useResetOption = false) {
+    cJSON* ctrl_obj;
+    Config_Validation_Result control_result;
+    ctrl_obj = cJSON_GetObjectItem(json, key_value.c_str());
+    if (ctrl_obj != NULL) {
+        if (useResetOption) {
+            control_result = control.configure(ctrl_obj, resetOption, NULL, Bool, buttonStr, false);
+        } else {
+            control_result = control.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
+        }
+        if (!control_result.is_valid_config) {
+            validation_result.is_valid_config = false;
+            validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure {} UI control.", name_str, key_value)));
+        } else {
+            built_uri = build_uri(compName, control.reg_name);
+        }
+        validation_result.absorb(control_result);
+    }
+}
+
+/**
  * Configure ui_controls provided in the asset's components array
  * @param configurator The Type_Configurator used to configure this asset
  * @return Config_Validation_Result struct indicating whether configuration was successful and any errors that occurred
  */
 Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* configurator) {
     Config_Validation_Result validation_result = Config_Validation_Result(true);
-
     // asset instances are data aggregators for one or many components, described in the "components" array. this array is required for any asset instance
     cJSON* components_array = cJSON_GetObjectItem(configurator->asset_config.asset_instance_root, "components");
     if (components_array == NULL) {
@@ -526,102 +616,40 @@ Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* con
 
         // UI controls are optional
         cJSON* ui_controls = cJSON_GetObjectItem(component, "ui_controls");
-        if (ui_controls == NULL)
+        if (ui_controls == NULL) {
             continue;
+        }
 
         Config_Validation_Result control_result;
 
         // when adding a new UI control, make sure to add it to the list of valid UI controls in Asset_Manager.cpp
-        cJSON* ctrl_obj;
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_mode");
-        if (ctrl_obj != NULL) {
-            control_result = maint_mode.configure(ctrl_obj, yesNoOption, &inMaintenance, Bool, sliderStr, true);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_mode UI control.", name)));
-            }
-            validation_result.absorb(control_result);
-        }
+        // TODO: Move these all to the base class (quick_config_slider quick_config_numeric quick_config_button)
+        // SLIDERS
+        quick_config_slider(ui_controls, "maint_mode", maint_mode, inMaintenance, name, validation_result);
+        quick_config_slider(ui_controls, "lock_mode", lock_mode, inLockdown, name, validation_result);
+        quick_config_slider(ui_controls, "limits_override", limits_override_ctl, limits_override_flag, name, validation_result);
+        quick_config_slider(ui_controls, "maint_soc_limits_enable", maint_soc_limits_enable_ctl, maint_soc_limits_enable_flag, name, validation_result);
+        quick_config_slider(ui_controls, "maint_voltage_limits_enable", maint_voltage_limits_enable_ctl, maint_voltage_limits_enable_flag, name, validation_result);
+        quick_config_slider(ui_controls, "maint_min_charge_discharge_enable", maint_min_charge_discharge_enable_ctl, maint_min_charge_discharge_enable_flag, name, validation_result);
 
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "lock_mode");
-        if (ctrl_obj != NULL) {
-            control_result = lock_mode.configure(ctrl_obj, yesNoOption, &inLockdown, Bool, sliderStr, true);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure lock_mode UI control.", name)));
-            }
-            validation_result.absorb(control_result);
-        }
+        // NUMBERS
+        quick_config_numeric(ui_controls, "maint_active_power_setpoint", maint_active_power_setpoint_ctl, maint_active_power_setpoint, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_reactive_power_setpoint", maint_reactive_power_setpoint_ctl, maint_reactive_power_setpoint, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_chargeable_min_limit", maint_chargeable_min_limit_ctl, maint_chargeable_min_limit, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_dischargeable_min_limit", maint_dischargeable_min_limit_ctl, maint_dischargeable_min_limit, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_min_soc_limit", maint_min_soc_limit_ctl, maint_min_soc_limit, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_max_soc_limit", maint_max_soc_limit_ctl, maint_max_soc_limit, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_min_voltage_limit", maint_min_voltage_limit_ctl, maint_min_voltage_limit, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_max_voltage_limit", maint_max_voltage_limit_ctl, maint_max_voltage_limit, name, validation_result);
 
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "clear_faults");
-        if (ctrl_obj != NULL) {
-            control_result = clear_faults_ctl.configure(ctrl_obj, resetOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure clear_faults UI control.", name)));
-            } else {
-                uri_clear_faults = build_uri(compNames[i], clear_faults_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "start");
-        if (ctrl_obj != NULL) {
-            control_result = start_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure start asset UI control.", name)));
-            } else {
-                uri_start = build_uri(compNames[i], start_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "stop");
-        if (ctrl_obj != NULL) {
-            control_result = stop_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure stop asset UI control.", name)));
-            } else {
-                uri_stop = build_uri(compNames[i], stop_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "enter_standby");
-        if (ctrl_obj != NULL) {
-            control_result = enter_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure enter_standby UI control.", name)));
-            } else {
-                uri_enter_standby = build_uri(compNames[i], enter_standby_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "exit_standby");
-        if (ctrl_obj != NULL) {
-            control_result = exit_standby_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure exit_standby UI control.", name)));
-            } else {
-                uri_exit_standby = build_uri(compNames[i], exit_standby_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "limits_override");
-        if (ctrl_obj != NULL) {
-            control_result = limits_override_ctl.configure(ctrl_obj, onOffOption, &limits_override_flag, Bool, sliderStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure limits_override UI control.", name)));
-            }
-            validation_result.absorb(control_result);
-        }
+        // BUTTONS
+        quick_config_button(ui_controls, "clear_faults", clear_faults_ctl, compNames[i], uri_clear_faults, name, validation_result, true);  // use true here because resetOption
+        quick_config_button(ui_controls, "start", start_ctl, compNames[i], uri_start, name, validation_result);
+        quick_config_button(ui_controls, "stop", stop_ctl, compNames[i], uri_stop, name, validation_result);
+        quick_config_button(ui_controls, "enter_standby", enter_standby_ctl, compNames[i], uri_enter_standby, name, validation_result);
+        quick_config_button(ui_controls, "exit_standby", exit_standby_ctl, compNames[i], uri_exit_standby, name, validation_result);
+        quick_config_button(ui_controls, "open_dc_contactors", open_dc_contactors_ctl, compNames[i], uri_open_dc_contacts, name, validation_result);
+        quick_config_button(ui_controls, "close_dc_contactors", close_dc_contactors_ctl, compNames[i], uri_close_dc_contacts, name, validation_result);
 
         // If one of the autobalancing controls is provided, the other must be provided as well
         cJSON* enable_ctrl_obj = cJSON_GetObjectItem(ui_controls, "autobalancing_enable");
@@ -631,17 +659,11 @@ Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* con
             validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: only received one autobalancing control: {}. Either remove this control or provide {} as well.", name,
                                                                                  enable_ctrl_obj ? "autobalancing_enable" : "autobalancing_disable", enable_ctrl_obj ? "autobalancing_disable" : "autobalancing_enable")));
         }
-        if (enable_ctrl_obj != NULL) {
-            control_result = autobalancing_enable_ctl.configure(enable_ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure autobalancing_enable UI control.", name)));
-            } else {
-                // single uri used for both registers
-                uri_set_autobalancing = build_uri(compNames[i], autobalancing_enable_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
+
+        // can use quick config for only one side
+        quick_config_button(ui_controls, "autobalancing_enable", autobalancing_enable_ctl, compNames[i], uri_set_autobalancing, name, validation_result);
+
+        // leaving below logic explicit because it's a bit novel
         if (disable_ctrl_obj != NULL) {
             control_result = autobalancing_disable_ctl.configure(disable_ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
             if (!control_result.is_valid_config) {
@@ -656,50 +678,6 @@ Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* con
                         Result_Details(fmt::format("{}: mismatch between register names for autobalancing_enable and autobalancing_disable. The controls must write to the same register. Received enable register: {}, and disable register: {}", name,
                                                    autobalancing_enable_ctl.reg_name, autobalancing_disable_ctl.reg_name)));
                 }
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_active_power_setpoint");
-        if (ctrl_obj != NULL) {
-            control_result = maint_active_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_active_power_setpoint, Float, numberStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_active_power_setpoint UI control.", name)));
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "maint_reactive_power_setpoint");
-        if (ctrl_obj != NULL) {
-            control_result = maint_reactive_power_setpoint_ctl.configure(ctrl_obj, nullJson, &maint_reactive_power_setpoint, Float, numberStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure maint_reactive_power_setpoint UI control.", name)));
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "open_dc_contactors");
-        if (ctrl_obj != NULL) {
-            control_result = open_dc_contactors_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure open_dc_contactors UI control.", name)));
-            } else {
-                uri_open_dc_contacts = build_uri(compNames[i], open_dc_contactors_ctl.reg_name);
-            }
-            validation_result.absorb(control_result);
-        }
-
-        ctrl_obj = cJSON_GetObjectItem(ui_controls, "close_dc_contactors");
-        if (ctrl_obj != NULL) {
-            control_result = close_dc_contactors_ctl.configure(ctrl_obj, onOffOption, NULL, Bool, buttonStr, false);
-            if (!control_result.is_valid_config) {
-                validation_result.is_valid_config = false;
-                validation_result.ERROR_details.push_back(Result_Details(fmt::format("{}: failed to configure close_dc_contactors UI control.", name)));
-            } else {
-                uri_close_dc_contacts = build_uri(compNames[i], close_dc_contactors_ctl.reg_name);
             }
             validation_result.absorb(control_result);
         }
@@ -792,6 +770,21 @@ bool Asset_ESS::handle_set(std::string uri, cJSON& body) {
             maint_limits_override_flag = limits_override_flag;
             persistent_setpoint = true;
         }
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_limits_enable"))) {
+        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
+            maint_soc_limits_enable_flag = (bool)value->valueint;
+            persistent_setpoint = true;
+        }
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_voltage_limits_enable"))) {
+        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
+            maint_voltage_limits_enable_flag = (bool)value->valueint;
+            persistent_setpoint = true;
+        }
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_min_charge_discharge_enable"))) {
+        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
+            maint_min_charge_discharge_enable_flag = (bool)value->valueint;
+            persistent_setpoint = true;
+        }
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "autobalancing_enable")) && inMaintenance) {
         // Write the autobalancing status (enabled) to the component register
         // Since enable and disable share the same register, a single function will write for both controls
@@ -805,6 +798,24 @@ bool Asset_ESS::handle_set(std::string uri, cJSON& body) {
         persistent_setpoint = true;
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_reactive_power_setpoint"))) {
         maint_reactive_power_setpoint = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_chargeable_min_limit"))) {
+        maint_chargeable_min_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_dischargeable_min_limit"))) {
+        maint_dischargeable_min_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_soc_limit"))) {
+        maint_min_soc_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_soc_limit"))) {
+        maint_max_soc_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_voltage_limit"))) {
+        maint_min_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_voltage_limit"))) {
+        maint_max_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "open_dc_contactors"))) {
         open_bms_contactors();
@@ -843,6 +854,15 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
     limits_override_ctl.enabled = inMaintenance;
     goodBody = limits_override_ctl.makeJSONObject(buf, var, true) && goodBody;
 
+    maint_soc_limits_enable_ctl.enabled = inMaintenance;
+    goodBody = maint_soc_limits_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_voltage_limits_enable_ctl.enabled = inMaintenance;
+    goodBody = maint_voltage_limits_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_min_charge_discharge_enable_ctl.enabled = inMaintenance;
+    goodBody = maint_min_charge_discharge_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
+
     // Start only if running (not standby)
     start_ctl.enabled = (inMaintenance && !isRunning && !inStandby && valid_contactors_state && !is_in_local_mode());
     goodBody = start_ctl.makeJSONObject(buf, var, true) && goodBody;
@@ -873,6 +893,30 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
 
     maint_reactive_power_setpoint_ctl.enabled = inMaintenance && isRunning && !is_in_local_mode();
     goodBody = maint_reactive_power_setpoint_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    // lock these variables behind the maint_min_charge_discharge_enable_flag
+    maint_chargeable_min_limit_ctl.enabled = inMaintenance && maint_min_charge_discharge_enable_flag;
+    goodBody = maint_chargeable_min_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_dischargeable_min_limit_ctl.enabled = inMaintenance && maint_min_charge_discharge_enable_flag;
+    goodBody = maint_dischargeable_min_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+    // end lock
+
+    // lock these variables behind the maint_soc_limits_enable_flag
+    maint_min_soc_limit_ctl.enabled = inMaintenance && maint_soc_limits_enable_flag;
+    goodBody = maint_min_soc_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_max_soc_limit_ctl.enabled = inMaintenance && maint_soc_limits_enable_flag;
+    goodBody = maint_max_soc_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+    // end lock
+
+    // lock these variables behind the maint_voltage_limits_enable_flag
+    maint_min_voltage_limit_ctl.enabled = inMaintenance && maint_voltage_limits_enable_flag;
+    goodBody = maint_min_voltage_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_max_voltage_limit_ctl.enabled = inMaintenance && maint_voltage_limits_enable_flag;
+    goodBody = maint_max_voltage_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+    // end lock
 
     // Open contactors only if stopped (not faulted) and contactors are closed
     open_dc_contactors_ctl.enabled = inMaintenance && !isRunning && !inStandby && dc_contactors_closed.value.value_bool && !is_in_local_mode();
@@ -923,11 +967,16 @@ void Asset_ESS::process_asset() {
 
     // limit chargeable power as soc reaches high end of range
     if (greater_than_or_near(soc.value.value_float, chgSocBegin, 0.001f)) {
+        float max_limit = 0.0f;
+        if (inMaintenance && maint_min_charge_discharge_enable_flag)
+            max_limit = maint_chargeable_min_limit;
+        else
+            max_limit = chargeable_min_limit_kW;
         if (greater_than_or_near(soc.value.value_float, 100.0f, 0.001f) || greater_than_or_near(soc.value.value_float, chgSocEnd, 0.001f) || chgSocBegin >= chgSocEnd) {
-            chargeable_power.value.value_float = chargeable_min_limit_kW;
+            chargeable_power.value.value_float = max_limit;
         } else {
             // Ensure chargeable power is at least as large as its limit if derated or capped here
-            chargeable_power.value.value_float = std::max((chgSocEnd - soc.value.value_float) / (chgSocEnd - chgSocBegin) * rated_chargeable_power, chargeable_min_limit_kW);
+            chargeable_power.value.value_float = std::max((chgSocEnd - soc.value.value_float) / (chgSocEnd - chgSocBegin) * rated_chargeable_power, max_limit);
         }
         // Ensure it does not exceed the component limit
         chargeable_power.value.value_float = std::min(chargeable_power.value.value_float, fabsf(chargeable_power_raw.value.value_float));
@@ -936,11 +985,16 @@ void Asset_ESS::process_asset() {
 
     // limit dischargeable power as soc reaches low end of range
     if (less_than_or_near(soc.value.value_float, dischgSocBegin, 0.001f)) {
+        float min_limit = 0.0f;
+        if (inMaintenance && maint_min_charge_discharge_enable_flag)
+            min_limit = maint_dischargeable_min_limit;
+        else
+            min_limit = dischargeable_min_limit_kW;
         if (less_than_or_near(soc.value.value_float, 0.0f, 0.001f) || less_than_or_near(soc.value.value_float, dischgSocEnd, 0) || dischgSocBegin <= dischgSocEnd) {
-            dischargeable_power.value.value_float = dischargeable_min_limit_kW;
+            dischargeable_power.value.value_float = min_limit;
         } else {
             // Ensure dischargeable power is at least as large as its limit if derated or capped here
-            dischargeable_power.value.value_float = std::max((dischgSocEnd - soc.value.value_float) / (dischgSocEnd - dischgSocBegin) * rated_dischargeable_power, dischargeable_min_limit_kW);
+            dischargeable_power.value.value_float = std::max((dischgSocEnd - soc.value.value_float) / (dischgSocEnd - dischgSocBegin) * rated_dischargeable_power, min_limit);
         }
         // Ensure it does not exceed the component limit
         dischargeable_power.value.value_float = std::min(dischargeable_power.value.value_float, fabsf(dischargeable_power_raw.value.value_float));
@@ -954,18 +1008,32 @@ void Asset_ESS::process_asset() {
     // Apply calibration mode limits
     if (calibration_flag) {
         // Limit (dis)chargeable power to 0 if soc or voltage are beyond their acceptable thresholds
-        if ((soc_limits_flag && soc.value.value_float >= chargeable_soc_limit) || (voltage_limits_flag && voltage_max.value.value_float >= chargeable_voltage_limit))
+        if ((soc_limits_flag && soc.value.value_float >= chargeable_soc_limit) || (voltage_limits_flag && voltage_max.value.value_float >= chargeable_voltage_limit)) {
             chargeable_power.value.set(0.0f);
-        if ((soc_limits_flag && soc.value.value_float <= dischargeable_soc_limit) || (voltage_limits_flag && voltage_min.value.value_float <= dischargeable_voltage_limit))
+        }
+        if ((soc_limits_flag && soc.value.value_float <= dischargeable_soc_limit) || (voltage_limits_flag && voltage_min.value.value_float <= dischargeable_voltage_limit)) {
             dischargeable_power.value.set(0.0f);
+        }
 
         // Determine setpoint status based on intended command passed through from Site Manager and available (dis)chargeable power
-        if ((raw_calibration_setpoint < 0.0f && near(chargeable_power.value.value_float, 0.0f, 0.001)) || (raw_calibration_setpoint > 0.0f && near(dischargeable_power.value.value_float, 0.0f, 0.001)))
+        if ((raw_calibration_setpoint < 0.0f && near(chargeable_power.value.value_float, 0.0f, 0.001)) || (raw_calibration_setpoint > 0.0f && near(dischargeable_power.value.value_float, 0.0f, 0.001))) {
             setpoint_status = ZERO;
-        else if ((raw_calibration_setpoint < -1.0f * chargeable_power.value.value_float) || (raw_calibration_setpoint > dischargeable_power.value.value_float))
+        } else if ((raw_calibration_setpoint < -1.0f * chargeable_power.value.value_float) || (raw_calibration_setpoint > dischargeable_power.value.value_float)) {
             setpoint_status = LIMITED;
-        else
+        } else {
             setpoint_status = ACCEPTED;
+        }
+    }
+
+    // Use the maint_mode soc limits if inMaintenance and in use
+    if (inMaintenance) {
+        // Limit (dis)chargeable power to 0 if soc or voltage are beyond their acceptable thresholds
+        if ((maint_soc_limits_enable_flag && soc.value.value_float >= maint_max_soc_limit) || (maint_voltage_limits_enable_flag && voltage_max.value.value_float >= maint_max_voltage_limit)) {
+            chargeable_power.value.set(0.0f);
+        }
+        if ((maint_soc_limits_enable_flag && soc.value.value_float <= maint_min_soc_limit) || (maint_voltage_limits_enable_flag && voltage_min.value.value_float <= maint_min_voltage_limit)) {
+            dischargeable_power.value.set(0.0f);
+        }
     }
 
     // No component values provided, use old formula
@@ -1010,6 +1078,7 @@ void Asset_ESS::update_asset(void) {
     // override setpoints in maintenance mode
     if (inMaintenance) {
         set_power_mode(powerMode::REACTIVEPWR);  // only allow reactive power mode while in maintenance
+
         set_active_power_setpoint(maint_active_power_setpoint, true);
         set_reactive_power_setpoint(maint_reactive_power_setpoint);
     }

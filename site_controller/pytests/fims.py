@@ -6,8 +6,13 @@ from subprocess import PIPE, CalledProcessError, run
 from typing import Any, Dict
 
 
-def fims(params: str) -> Dict:
+def fims(params: str, container: str) -> Dict:
     fims_cmd = "fims_send " + params
+    if container!=None:
+        if fims_cmd.find("-m get ") != -1:
+            fims_cmd = "docker exec -it " + container + " " + fims_cmd
+        else:
+            fims_cmd = "docker exec -d " + container + " " + fims_cmd
     response = {}
     response_dict = {}
     try:
@@ -24,13 +29,13 @@ def fims(params: str) -> Dict:
     return response_dict
 
 
-def fims_get(uri: str) -> Dict:
+def fims_get(uri: str, destination: str = None) -> Dict:
     params = f"-m get -r /pytest -u {uri}"
-    response_dict = fims(params)
+    response_dict = fims(params, destination)
     return response_dict
 
 
-def fims_set(uri: str, value: Any, reply_to: str = None) -> Dict:
+def fims_set(uri: str, value: Any, reply_to: str = None, destination: str = None) -> Dict:
     if isinstance(value, bool):
         my_value = str(value).lower()
     elif isinstance(value, dict) or isinstance(value, list):
@@ -41,7 +46,7 @@ def fims_set(uri: str, value: Any, reply_to: str = None) -> Dict:
         params = f"-m set -u {uri} -- {my_value}"
     else:
         params = f"-m set -u {uri} -r {reply_to} -- {my_value}"
-    return fims(params)
+    return fims(params, destination)
 
 
 def fims_del(uri: str):

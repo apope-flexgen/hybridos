@@ -86,6 +86,26 @@ class Steps():
             "/assets/generators/gen_1/maint_mode": False
         }
 
+    @staticmethod
+    def place_assets_in_maint():
+        return {
+            "/assets/solar/solar_1/maint_mode": True,
+            "/assets/solar/solar_2/maint_mode": True,
+            "/assets/generators/gen_1/maint_mode": True,
+            "/assets/ess/ess_1/maint_mode": True,
+            "/assets/ess/ess_2/maint_mode": True,
+        }
+
+    @staticmethod
+    def remove_assets_from_maint():
+        return {
+            "/assets/solar/solar_1/maint_mode": False,
+            "/assets/solar/solar_2/maint_mode": False,
+            "/assets/generators/gen_1/maint_mode": False,
+            "/assets/ess/ess_1/maint_mode": False,
+            "/assets/ess/ess_2/maint_mode": False,
+        }
+
 
 # Child class for setup behavior
 class Setup(Steps):
