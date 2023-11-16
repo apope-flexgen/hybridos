@@ -99,7 +99,7 @@ func handleConfigBody(m map[string]interface{}) error {
 func parse(cfgSource string) error {
 
 	if cfgSource == "dbi" {
-		// Handle config from dbi
+		// Handle config from DBI.
 		cfg, err := cfgfetch.Retrieve(processName, cfgSource)
 		if err != nil {
 			return fmt.Errorf("retrieving dbi config body: %w", err)
@@ -110,7 +110,7 @@ func parse(cfgSource string) error {
 		}
 
 	} else if cfgSource != "" {
-		// Handle config from file input
+		// Handle configuration from file input.
 		c := newConfig()
 
 		log.Infof("Retrieving config from: %s", cfgSource)
@@ -123,7 +123,12 @@ func parse(cfgSource string) error {
 			return fmt.Errorf("unmarshaling config: %w", err)
 		}
 
-		// Configure cops with the provided json file
+		// Validate configuration file.
+		if err := c.validate(); err != nil {
+			return fmt.Errorf("validating config file: %w", err)
+		}
+
+		// Configure cops with the provided json file.
 		if err := configureCOPS(c); err != nil {
 			return fmt.Errorf("Configuring COPS: %w", err)
 		}
@@ -190,7 +195,7 @@ func (p Process) validate() error {
 	}
 
 	if p.Uri == "" {
-		return fmt.Errorf("process uri not provided.")
+		log.Warnf("URI for process %s not provided.", p.Name)
 	}
 
 	if p.HangTimeAllowanceMS == 0 {
@@ -312,7 +317,6 @@ func configureCOPS(config Config) error {
 		processEntry.replyToURI = path.Join("/cops/heartbeat/", process.Name)
 		processEntry.alive = true
 		processEntry.healthStats.lastConfirmedAlive = beginningTime
-		processEntry.healthStats.lastRestart = beginningTime
 		processEntry.healthStats.totalRestarts = -1 // First startup will increment this to zero
 		processEntry.healthStats.copsRestarts = 0
 		processJurisdiction[process.Name] = &processEntry

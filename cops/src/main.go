@@ -39,7 +39,7 @@ import (
 )
 
 // Global variables
-var processName = "cops"
+var processName = "cops"                        // Retrieve configuration from DBI using this process name
 var processJurisdiction map[string]*processInfo // Map of processes that will be checked to see if they are up and running
 var f fims.Fims                                 // FIMS connection
 var beginningTime time.Time                     // Timestamp of when COPS started running
@@ -47,29 +47,29 @@ var updatedProcesses []*processInfo
 var heartRate, patrolRate, briefingRate, statsUpdateTicker *time.Ticker // Tickers for main loop
 
 func main() {
-	// parse command line
+	// Parse command line arguments.
 	cfgSource := parseFlags()
 
-	// initialize logger config
+	// Initialize logger configuration.
 	err := log.InitConfig("cops").Init("cops")
 	if err != nil {
 		fmt.Printf("COPS log initialization failed with error: %v\n", err)
 		os.Exit(-1)
 	}
 
-	// Configuration fims connection
+	// Configure a new FIMS connection.
 	f, err = fims.Configure("COPS", "/cops")
 	if err != nil {
 		log.Fatalf("Error configuring FIMS: %v.", err)
 	}
 
-	// Start a FIMS channel that will recieve FIMS requests.
+	// Start a FIMS channel that will receive FIMS requests.
 	fimsReceive := make(chan fims.FimsMsg)
 	go f.ReceiveChannel(fimsReceive)
 
-	// Read in config file
+	// Read in configuration file from source.
 	if err := parse(cfgSource); err != nil {
-		log.Fatalf("Parsing new config: %v", err)
+		log.Fatalf("Parsing new config: %v.", err)
 	}
 
 	getDBIUpdateModeStatus()
@@ -82,7 +82,9 @@ func main() {
 		case <-heartRate.C:
 			manageHeartbeats()
 		case <-patrolRate.C:
-			patrolProcesses()
+			if err := patrolProcesses(); err != nil {
+				log.Errorf("Patrolling processes: %v.", err)
+			}
 		case <-briefingRate.C:
 			go publishBriefing()
 		case <-statsUpdateTicker.C:
@@ -91,6 +93,7 @@ func main() {
 	}
 }
 
+// Parse command line flags. Defaults to "dbi" as the configuration source if no flag provided.
 func parseFlags() (cfgSource string) {
 	// cops config file
 	cfgUsage := "Give a path to the config file or 'dbi' if config is stored in the database"
@@ -141,4 +144,20 @@ func extractMapStringInterfaceValue(i interface{}, fieldName string, fieldType r
 func timeTaken(t time.Time, name string) {
 	elapsed := time.Since(t)
 	log.Infof("TIME: %s took %s\n", name, elapsed)
+}
+
+// Helper function to convert a 64 bit uint to a Unix timestamp.
+// Unix timestamps are represented in seconds since the Unix epoch -
+// dividing the 64 bit integer by 10^6 provides seconds with a remainder of nanoseconds.
+func convertMicrosecondsToUnixTime(timeUint64 uint64) time.Time {
+	return time.Unix(int64(timeUint64)/1e6, int64(timeUint64)%1e6)
+}
+
+// Determine time elapsed from a provided unix Timestamp
+// and format it as: #w#d#h#m#s.
+func formatUnixDuration(unixTimestamp time.Time) string {
+	duration := time.Since(unixTimestamp)
+	durationInSeconds := duration.Truncate(time.Second)
+	durationString := fmt.Sprintf("%s", durationInSeconds.String())
+	return durationString
 }

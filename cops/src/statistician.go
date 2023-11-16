@@ -33,7 +33,8 @@ type processHealthStats struct {
 	avgCPUUsagePercent        float64
 	totalRestarts             int
 	copsRestarts              int
-	lastRestart               time.Time
+	timestampOfLastRestart    string
+	elapsedTimeSinceRestart   string
 	lastConfirmedAlive        time.Time
 	lastResponseTime          time.Duration
 	maxResponseTime           time.Duration
@@ -70,8 +71,11 @@ func (process processInfo) buildStatsReport() map[string]interface{} {
 	mu.Lock()
 	defer mu.Unlock()
 	healthParams["alive"] = process.alive
+	healthParams["service_status"] = process.serviceStatus
+	healthParams["unit_file_state"] = process.unitFileState
 	// the time format should be consistent with modbus_client (strftime "%m-%d-%Y %T.", i.e. 01-25-2023 11:16:12.396265)
-	healthParams["last_restart"] = process.healthStats.lastRestart.Format("01-02-2006 15:04:05.000000")
+	healthParams["last_restart"] = process.healthStats.timestampOfLastRestart
+	healthParams["elapsed_time"] = process.healthStats.elapsedTimeSinceRestart
 	healthParams["total_restarts"] = process.healthStats.totalRestarts
 	healthParams["cops_restarts"] = process.healthStats.copsRestarts
 	healthParams["last_response_time_ms"] = process.healthStats.lastResponseTime.Milliseconds()
@@ -159,8 +163,7 @@ func (process *processInfo) recordRestart() {
 	var mu sync.Mutex
 	mu.Lock() // make this an atomic operation so it does not overlap with building the stats report
 	defer mu.Unlock()
-	process.healthStats.lastRestart = time.Now()
-	process.healthStats.recentRestarts = append(process.healthStats.recentRestarts, process.healthStats.lastRestart)
+	process.healthStats.recentRestarts = append(process.healthStats.recentRestarts, time.Now())
 	process.healthStats.totalRestarts++
 }
 
