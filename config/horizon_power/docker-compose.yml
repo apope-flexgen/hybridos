@@ -88,10 +88,10 @@ services:
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
       - ftd-data:/home/hybridos/powercloud/archives
 
-  lima-twins-01:
-    image: flexgen/twins-snapshot:11.3.0.alpha.3
-    container_name: lima-twins-01
-    hostname: lima-twins-01
+  lima-psm-01:
+    image: flexgen/psm-snapshot:11.3.0.alpha.3
+    container_name: lima-psm-01
+    hostname: lima-psm-01
     ports:
       - 10003:9150
     networks:
@@ -101,9 +101,9 @@ services:
         ipv4_address: 192.168.10.250
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/twins/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/twins/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/twins/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/psm/config:/home/staging
+      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/psm/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/psm/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
 
   sudden_valley-site-controller-01:
@@ -146,10 +146,10 @@ services:
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
       - ftd-data:/home/hybridos/powercloud/archives
 
-  sudden_valley-twins-01:
-    image: flexgen/twins-snapshot:11.3.0.alpha.3
-    container_name: sudden_valley-twins-01
-    hostname: sudden_valley-twins-01
+  sudden_valley-psm-01:
+    image: flexgen/psm-snapshot:11.3.0.alpha.3
+    container_name: sudden_valley-psm-01
+    hostname: sudden_valley-psm-01
     ports:
       - 10006:9150
     networks:
@@ -159,9 +159,9 @@ services:
         ipv4_address: 192.168.12.250
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/twins/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/twins/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/twins/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/psm/config:/home/staging
+      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/psm/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/psm/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
 
   config-powercloud-01:
