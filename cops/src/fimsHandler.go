@@ -38,7 +38,9 @@ func processFIMS(msg fims.FimsMsg) error {
 			}
 		}
 	case "get":
-		handleGet(msg)
+		if err := handleGet(msg); err != nil {
+			return fmt.Errorf("handling FIMs get: %w", err)
+		}
 	default:
 		log.Warnf("Received FIMS message that was not a SET. No action taken.")
 	}
@@ -75,21 +77,28 @@ func getDBIUpdate() {
 }
 
 // Put all FIMS GET hooks here
-func handleGet(msg fims.FimsMsg) {
-	switch msg.Uri {
-	case "/cops/processStats":
+func handleGet(msg fims.FimsMsg) error {
+	switch {
+	case msg.Uri == "/cops/processStats":
 		f.SendSet(msg.Replyto, "", buildHealthStatsMap())
-	case "/cops/healthScore":
+	case msg.Uri == "/cops/stats":
+		f.SendSet(msg.Replyto, "", buildHealthStatsMap())
+	case msg.Uri == "/cops/healthScore":
 		f.SendSet(msg.Replyto, "", dr.healthCheckup())
-	case "/cops/status":
+	case msg.Uri == "/cops/status":
 		f.SendSet(msg.Replyto, "", statusNames[controllerMode])
-	case "/cops/controller_name":
+	case msg.Uri == "/cops/controller_name":
 		f.SendSet(msg.Replyto, "", controllerName)
-	case "/cops":
+	case msg.Uri == "/cops":
 		f.SendSet(msg.Replyto, "", buildBriefingReport())
+	case strings.HasPrefix(msg.Uri, "/cops/stats/"):
+		if err := handleGetStats(msg); err != nil {
+			return fmt.Errorf("getting cops stats: %w", err)
+		}
 	default:
-		log.Errorf("Error in handleSet: message URI doesn't match any known patterns. msg.uri: %s", msg.Uri)
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
 	}
+	return nil
 }
 
 // Put all FIMS SET hooks here
@@ -167,8 +176,215 @@ func handleSet(msg fims.FimsMsg) error {
 
 	default:
 		// If not caught by any of the above checks, then the set is invalid
-		log.Errorf("Error in handleSet: message URI doesn't match any known patterns. msg.uri: %s", msg.Uri)
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
 	}
+	return nil
+}
+
+// Expose gets on all stats.
+func handleGetStats(msg fims.FimsMsg) error {
+	switch {
+	case msg.Nfrags == 3:
+		// Get process info: /cops/stats/<process>
+		if err := handleGetProcess(msg); err != nil {
+			return fmt.Errorf("getting process: %w", err)
+		}
+	case msg.Nfrags > 3:
+		// Get process statistic: /cops/stats/<process>/<item>
+		if err := handleGetProcessItem(msg); err != nil {
+			return fmt.Errorf("getting process item: %w", err)
+		}
+	default:
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
+	}
+
+	return nil
+}
+
+// Handle URIs targeted at specific process stats.
+func handleGetProcessItem(msg fims.FimsMsg) error {
+	switch {
+	case msg.Nfrags == 4:
+		// Handle retrieval of statistics: /cops/stats/<process>/<item>
+		if err := handleGetProcessStatistic(msg); err != nil {
+			return fmt.Errorf("getting stat: %w", err)
+		}
+	case msg.Nfrags == 5 && strings.Contains(msg.Uri, "controls"):
+		// Get actions map: /cops/stats/<process>/controls/<action>
+		if err := handleGetProcessControlsAction(msg); err != nil {
+			return fmt.Errorf("getting controls: %w", err)
+		}
+	case msg.Nfrags == 6 && strings.Contains(msg.Uri, "controls"):
+		// Get actions enabled status: /cops/stats/<process>/controls/<action>/enabled
+		if err := handleGetProcessControl(msg); err != nil {
+			return fmt.Errorf("getting controls: %w", err)
+		}
+	default:
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
+	}
+
+	return nil
+}
+
+// Reply with a given process enabled status.
+func handleGetProcessControl(msg fims.FimsMsg) error {
+
+	// Determine which control to get.
+	switch {
+	case msg.Frags[5] == "value":
+		if err := handleGetProcessControlValue(msg); err != nil {
+			return fmt.Errorf("getting control value: %w", err)
+		}
+	case msg.Frags[5] == "enabled":
+		if err := handleGetProcessControlEnabled(msg); err != nil {
+			return fmt.Errorf("getting enabled status: %w", err)
+		}
+	default:
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
+	}
+
+	return nil
+}
+
+// Send a reply to with process information.
+func handleGetProcess(msg fims.FimsMsg) error {
+
+	// Get process name.
+	processName := msg.Frags[2]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Send reply to with stats report on proces
+	process := processJurisdiction[processName]
+
+	// Reply with designated process.
+	f.SendSet(msg.Replyto, "", process.buildStatsReport())
+	return nil
+}
+
+// Handle gets on controls for a process.
+func handleGetProcessStatistic(msg fims.FimsMsg) error {
+
+	// Get process name.
+	processName := msg.Frags[2]
+
+	// Get the item.
+	item := msg.Frags[3]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Retrieve stats pertaining to the process.
+	stats := processJurisdiction[processName].buildStatsReport()
+
+	// Verify the item exists in the statistics report.
+	if _, ok := stats[item]; !ok {
+		f.SendSet(msg.Replyto, "", "statistic does not exist.")
+		return fmt.Errorf("statistic: %s does not exist", item)
+	}
+
+	// Send reply with specified statistic.
+	f.SendSet(msg.Replyto, "", stats[item])
+	return nil
+}
+
+// Return map of a given action.
+func handleGetProcessControlsAction(msg fims.FimsMsg) error {
+	// /cops/stats/<process>/controls/<action>
+	processName := msg.Frags[2]
+	action := msg.Frags[4]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Retrieve controls pertaining to the process.
+	controlsMap := processJurisdiction[processName].generateControlsMap()
+
+	// Verify the action exists in the process controls.
+	if _, ok := controlsMap[action]; !ok {
+		f.SendSet(msg.Replyto, "", "action does not exist")
+		return fmt.Errorf("action: %s does not exist", action)
+	}
+
+	// Send reply with specified actions map.
+	f.SendSet(msg.Replyto, "", controlsMap[action])
+	return nil
+
+}
+
+// Return value of control enabled status.
+func handleGetProcessControlEnabled(msg fims.FimsMsg) error {
+	// /cops/stats/<process>/controls/<action>/enabled
+	processName := msg.Frags[2]
+	action := msg.Frags[4]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Get controls information.
+	controls := processJurisdiction[processName].enableControls
+
+	// Verify action is a valid action.
+	switch action {
+	case "start":
+		f.SendSet(msg.Replyto, "", controls.startEnabled)
+	case "stop":
+		f.SendSet(msg.Replyto, "", controls.stopEnabled)
+	case "restart":
+		f.SendSet(msg.Replyto, "", controls.restartEnabled)
+	default:
+		return fmt.Errorf("message URI: \"%s\" doesn't match any known patterns", msg.Uri)
+	}
+
+	return nil
+}
+
+// Retrieve the value of a given process control action.
+func handleGetProcessControlValue(msg fims.FimsMsg) error {
+	// /cops/stats/<process>/controls/<action>/value
+	processName := msg.Frags[2]
+	action := msg.Frags[4]
+	item := msg.Frags[5]
+
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[processName]; !ok {
+		f.SendSet(msg.Replyto, "", "process does not exist.")
+		return fmt.Errorf("process: %s does not exist", processName)
+	}
+
+	// Retrieve controls pertaining to the process.
+	controlsMap := processJurisdiction[processName].generateControlsMap()
+
+	// Verify the action exists in the process controls.
+	if _, ok := controlsMap[action]; !ok {
+		f.SendSet(msg.Replyto, "", "action does not exist")
+		return fmt.Errorf("action: %s does not exist", action)
+	}
+
+	// No need for check - will always be a map[string]interface{}
+	// as it's defined as such in generateControlsMap()
+	actionVals := controlsMap[action].(map[string]interface{})
+
+	// Verify the value exists in the process controls.
+	if _, ok := actionVals[item]; !ok {
+		f.SendSet(msg.Replyto, "", "value does not exist")
+		return fmt.Errorf("value does not exist")
+	}
+
+	f.SendSet(msg.Replyto, "", actionVals[item])
 	return nil
 }
 
