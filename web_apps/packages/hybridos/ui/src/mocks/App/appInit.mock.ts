@@ -13,6 +13,7 @@ const mockSiteConfig = {
   site: true,
   events: true,
   control_cabinet: true,
+  system_status: true,
   fleet_manager_dashboard: true,
   scheduler: true,
   units: {

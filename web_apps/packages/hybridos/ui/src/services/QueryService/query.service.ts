@@ -63,6 +63,13 @@ class QueryService {
     this.realTimeService.persistentListen(listenerFunction, 'sitestatus');
   };
 
+  getSystemStatus: (listenerFunction: (data: any) => void) => void = async (
+    listenerFunction: (data: any) => void,
+  ) => {
+    this.realTimeService.listen(listenerFunction, 'systemStatus');
+    this.realTimeService.send('systemStatus', '', 'systemStatus');
+  };
+
   getSchedulerPage: (URIs: string[], listenerFunction: (data: any) => void) => void = async (
     URIs: string[],
     listenerFunction: (data: any) => void,

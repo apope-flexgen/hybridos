@@ -47,6 +47,10 @@ export class AppConfig {
     @IsBoolean()
     site: boolean
 
+    @IsOptional()
+    @IsBoolean()
+    system_status: boolean
+
     @IsNotEmpty()
     @IsBoolean()
     events: boolean
@@ -117,6 +121,7 @@ export class AppConfig {
             events,
             control_cabinet,
             fleet_manager_dashboard,
+            system_status,
             scheduler,
             units,
             inspectorComponentsName,
@@ -145,6 +150,7 @@ export class AppConfig {
             inspectorComponentsName: string
             site_name: string
             fleet_name: string
+            system_status?: boolean,
             customer: {
                 name?: string,
                 server?: string
@@ -171,6 +177,7 @@ export class AppConfig {
             (this.inspectorComponentsName = inspectorComponentsName),
             (this.site_name = site_name),
             (this.fleet_name = fleet_name),
+            (this.system_status = system_status),
             (this.customer = customer)
     }
 }

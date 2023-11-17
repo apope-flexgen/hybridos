@@ -2229,6 +2229,42 @@
 				]
 			}
 		},
+		"/api/system-status": {
+			"get": {
+				"operationId": "getSystemStatus",
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ServiceStatusReponse"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"system-status"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
 		"/api/web-ui-config": {
 			"get": {
 				"operationId": "appInit",
@@ -3723,6 +3759,56 @@
 					"value"
 				]
 			},
+			"ServiceStatusReponse": {
+				"type": "object",
+				"properties": {
+					"dependencies": {
+						"description": "A list of services which depend upon this service",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"serviceName": {
+						"type": "string",
+						"description": "Name of the Service"
+					},
+					"serviceStatus": {
+						"type": "string",
+						"description": "Status of the Service - Active, Failed, Initialized, Stopped - may include a substatus"
+					},
+					"connectionStatus": {
+						"type": "string",
+						"description": "Connection Status for Service - Online or Offline"
+					},
+					"cpuUsage": {
+						"type": "number",
+						"description": "Number representing CPU usage of Service as Percentage"
+					},
+					"memoryUsage": {
+						"type": "number",
+						"description": "Number representing Memory usage of Service as Percentage"
+					},
+					"uptime": {
+						"type": "number",
+						"description": "Number representing the service uptime (time that the service has been running)"
+					},
+					"lastRestart": {
+						"type": "string",
+						"description": "Timestring representing the last time the service was restarted"
+					}
+				},
+				"required": [
+					"dependencies",
+					"serviceName",
+					"serviceStatus",
+					"connectionStatus",
+					"cpuUsage",
+					"memoryUsage",
+					"uptime",
+					"lastRestart"
+				]
+			},
 			"SiteConfigurationDetailedResponse": {
 				"type": "object",
 				"properties": {
@@ -3802,6 +3888,10 @@
 						"type": "boolean",
 						"description": "Whether or not to display the Site Status Bar component"
 					},
+					"system_status": {
+						"type": "boolean",
+						"description": "Whether or not to display the System Status page"
+					},
 					"customer": {
 						"type": "object",
 						"description": "Object containing information about the customer. Displayed on the login page of the UI.Contains sub fields for customer name and server name."
@@ -3827,6 +3917,7 @@
 					"site_name",
 					"fleet_name",
 					"site_status_bar",
+					"system_status",
 					"customer"
 				]
 			},

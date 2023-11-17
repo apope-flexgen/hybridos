@@ -36,7 +36,7 @@ const URIs = [
   '/metrics',
   '/sites',
   '/aggregate',
-
+  '/cops',
   '/fleet',
 ];
 const schedulerURIs = [

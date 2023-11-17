@@ -61,6 +61,9 @@ export class SiteConfigurationDetailedResponse {
     @ApiProperty({description: SiteConfigDescriptions.site_status_bar})
     @IsOptional()
     site_status_bar: boolean
+    @ApiProperty({description: SiteConfigDescriptions.system_status})
+    @IsOptional()
+    system_status: boolean
     @ApiProperty({description: SiteConfigDescriptions.customer})
     @IsOptional()
     customer: object

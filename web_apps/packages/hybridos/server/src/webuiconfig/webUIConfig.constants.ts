@@ -17,6 +17,7 @@ export const SiteConfigDescriptions = {
     feeders: 'Whether or not to display the Feeders page',
     features: 'Whether or not to display the Features page',
     site: 'Whether or not to display the Site page',
+    system_status: 'Whether or not to display the System Status page',
     events: 'Whether or not to display the Events page',
     scheduler: 'Whether or not to display the Scheduler page',
     units: 'An object containing the units to be used on the Configurable Asset Pages (generic) throughout the UI',

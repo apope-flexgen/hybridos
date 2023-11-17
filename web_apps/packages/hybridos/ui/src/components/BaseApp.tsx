@@ -34,6 +34,7 @@ import {
   UserAdmin,
   ErcotOverride,
   FleetManagerDashboard,
+  SystemStatus,
 } from 'src/pages';
 import QueryService from 'src/services/QueryService';
 import { ThemeProvider } from 'styled-components';
@@ -58,6 +59,7 @@ const PageDictionary = {
   SiteAdmin,
   UserAdmin,
   ErcotOverride,
+  SystemStatus,
 };
 
 export const SITE_CONTROLLER = 'SC';
