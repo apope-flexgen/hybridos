@@ -179,10 +179,8 @@ const BaseApp = (): JSX.Element => {
     }
   }, [handleNewMessage, siteConfiguration]);
 
-  useEffect(() => {
-    return () => {
-      QueryService.cleanupSocket();
-    };
+  useEffect(() => () => {
+    QueryService.cleanupSocket();
   }, []);
 
   useEffect(() => {

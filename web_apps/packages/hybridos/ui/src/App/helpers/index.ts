@@ -160,9 +160,12 @@ const getRoutes = (
       itemName: 'UI Config',
       path: '/ui-config',
     },
-    siteConfiguration.system_status && {
+    { showDivider: userRole === Roles.Admin || userRole === Roles.Developer ? true : false },
+    ((userRole === Roles.Admin || userRole === Roles.Developer) 
+      && siteConfiguration.system_status 
+    ) && {
       componentName: 'SystemStatus',
-      icon: 'DeveloperTools',
+      icon: 'SystemStatus',
       itemName: 'System Status',
       path: '/system-status',
     },

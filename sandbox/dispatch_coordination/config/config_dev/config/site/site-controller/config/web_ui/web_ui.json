@@ -24,5 +24,6 @@
         "VAR/s": "M"
     },
     "inspectorComponentsName": "test_controller",
-    "site_name": "Durham"
+    "site_name": "Durham",
+    "system_status": true
 }
