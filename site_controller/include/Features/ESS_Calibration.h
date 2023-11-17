@@ -26,9 +26,12 @@ public:
     Fims_Object soc_limits_enable;
     Fims_Object min_soc_limit;
     Fims_Object max_soc_limit;
-    Fims_Object voltage_limits_enable;
-    Fims_Object min_voltage_limit;
-    Fims_Object max_voltage_limit;
+    Fims_Object cell_voltage_limits_enable;
+    Fims_Object rack_voltage_limits_enable;
+    Fims_Object min_cell_voltage_limit;
+    Fims_Object max_cell_voltage_limit;
+    Fims_Object min_rack_voltage_limit;
+    Fims_Object max_rack_voltage_limit;
     Fims_Object num_setpoint;
     Fims_Object num_limited;
     Fims_Object num_zero;

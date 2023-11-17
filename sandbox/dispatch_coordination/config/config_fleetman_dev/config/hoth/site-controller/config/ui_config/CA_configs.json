@@ -56,7 +56,7 @@
           "name": "Limits Override",
           "scalar": "1",
           "units": "",
-          "uri": "/limits_override"
+          "uri": "/maint_soc_protection_buffers_disable"
         },
         {
           "inputType": "number",

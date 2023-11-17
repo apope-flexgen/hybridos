@@ -1,13 +1,10 @@
 {
-	"assets":
-	{
-		"feeders":
-		{
+	"assets": {
+		"feeders": {
 			"poi_feeder": 0,
 			"sync_feeder": 0,
 			"sync_frequency_offset": 0,
-			"asset_instances":
-			[
+			"asset_instances": [
 				{
 					"id": "feed_1",
 					"name": "POI",
@@ -17,171 +14,144 @@
 					"rated_active_power_kw": 31000,
 					"slew_rate": 5000000,
 					"demand_control": "Uncontrolled",
-					"components":
-					[
+					"components": [
 						{
 							"component_id": "shared_poi",
-							"variables":
-							{
-								"breaker_status":
-								{
+							"variables": {
+								"breaker_status": {
 									"name": "Breaker Status (735)",
 									"register_id": "breaker_status",
 									"type": "Bool"
 								},
-								"utility_status":
-								{
+								"utility_status": {
 									"name": "Utility Status (735)",
 									"register_id": "utility_status",
 									"type": "Bool"
 								},
-								"grid_voltage_l1":
-								{
+								"grid_voltage_l1": {
 									"name": "Grid AC Voltage L1 (735)",
 									"register_id": "grid_voltage_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"grid_voltage_l2":
-								{
+								"grid_voltage_l2": {
 									"name": "Grid AC Voltage L2 (735)",
 									"register_id": "grid_voltage_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"grid_voltage_l3":
-								{
+								"grid_voltage_l3": {
 									"name": "Grid AC Voltage L3 (735)",
 									"register_id": "grid_voltage_l3",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"grid_frequency":
-								{
+								"grid_frequency": {
 									"name": "Frequency (735)",
 									"register_id": "frequency",
 									"scaler": 1,
 									"unit": "Hz"
-								},						
-								"current_l1":
-								{
+								},
+								"current_l1": {
 									"name": "L1 AC Current (735)",
 									"register_id": "current_l1",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l2":
-								{
+								"current_l2": {
 									"name": "L2 AC Current (735)",
 									"register_id": "current_l2",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l3":
-								{
+								"current_l3": {
 									"name": "L3 AC Current (735)",
 									"register_id": "current_l3",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"voltage_l1_n":
-								{
+								"voltage_l1_n": {
 									"name": "L1-N AC Voltage (735)",
 									"register_id": "voltage_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_n":
-								{
+								"voltage_l2_n": {
 									"name": "L2-N AC Voltage (735)",
 									"register_id": "voltage_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_n":
-								{
+								"voltage_l3_n": {
 									"name": "L3-N AC Voltage (735)",
 									"register_id": "voltage_l3",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l1_l2":
-								{
+								"voltage_l1_l2": {
 									"name": "L1-L2 AC Voltage (735)",
 									"register_id": "voltage_l1_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_l3":
-								{
+								"voltage_l2_l3": {
 									"name": "L2-L3 AC Voltage (735)",
 									"register_id": "voltage_l2_l3",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_l1":
-								{
+								"voltage_l3_l1": {
 									"name": "L3-L1 AC Voltage (735)",
 									"register_id": "voltage_l3_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"active_power":
-								{
+								"active_power": {
 									"name": "AC Active Power (735)",
 									"register_id": "active_power",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"reactive_power":
-								{
+								"reactive_power": {
 									"name": "AC Reactive Power (735)",
 									"register_id": "reactive_power",
 									"scaler": 1000,
 									"unit": "VAR"
 								},
-								"apparent_power":
-								{
+								"apparent_power": {
 									"name": "AC Apparent Power (735)",
 									"register_id": "apparent_power",
 									"scaler": 1000,
 									"unit": "VA"
 								},
-								"power_factor":
-								{
+								"power_factor": {
 									"name": "Power Factor (735)",
 									"register_id": "power_factor",
 									"scaler": 1
 								}
 							},
-							"ui_controls":
-							{
-								"maint_mode":
-								{
+							"ui_controls": {
+								"maint_mode": {
 									"name": "Maintenance Mode",
 									"type": "Bool"
 								},
-								"lock_mode":
-								{
+								"lock_mode": {
 									"name": "Lockdown Mode",
 									"type": "Bool"
 								},
-								"breaker_close":
-								{
+								"breaker_close": {
 									"name": "Breaker Close",
 									"register_id": "breaker_control"
 								},
-								"breaker_open":
-								{
+								"breaker_open": {
 									"name": "Breaker Open",
 									"register_id": "breaker_control"
 								},
-								"breaker_reset":
-								{
+								"breaker_reset": {
 									"name": "Breaker Reset",
 									"register_id": "breaker_control"
 								}
-							}	
+							}
 						}
 					]
 				},
@@ -189,42 +159,35 @@
 					"id": "feed_2",
 					"name": "BESS Aux",
 					"demand_control": "Uncontrolled",
-					"components":
-					[
+					"components": [
 						{
 							"component_id": "bess_aux",
-							"variables":
-							{
-								"active_power":
-								{
+							"variables": {
+								"active_power": {
 									"name": "AC Active Power",
 									"register_id": "active_power",
 									"scaler": 1,
 									"unit": "kW"
 								},
-								"reactive_power":
-								{
+								"reactive_power": {
 									"name": "AC Reactive Power",
 									"register_id": "reactive_power",
 									"scaler": 1,
 									"unit": "kW"
 								},
-								"voltage_l1_l2":
-								{
+								"voltage_l1_l2": {
 									"name": "L1-N AC Voltage",
 									"register_id": "voltage_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_l3":
-								{
+								"voltage_l2_l3": {
 									"name": "L2-N AC Voltage",
 									"register_id": "voltage_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_l1":
-								{
+								"voltage_l3_l1": {
 									"name": "L3-N AC Voltage",
 									"register_id": "voltage_l3",
 									"scaler": 1,
@@ -240,42 +203,35 @@
 					"rated_active_power_kw": 1000,
 					"slew_rate": 5000000,
 					"demand_control": "Uncontrolled",
-					"components":
-					[
+					"components": [
 						{
 							"component_id": "control_cabinet",
-							"variables":
-							{
-								"active_power":
-								{
+							"variables": {
+								"active_power": {
 									"name": "AC Active Power",
 									"register_id": "active_power",
 									"scaler": 1,
 									"unit": "kW"
 								},
-								"reactive_power":
-								{
+								"reactive_power": {
 									"name": "AC Reactive Power",
 									"register_id": "reactive_power",
 									"scaler": 1,
 									"unit": "kW"
 								},
-								"voltage_l1_l2":
-								{
+								"voltage_l1_l2": {
 									"name": "L1-N AC Voltage",
 									"register_id": "voltage_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_l3":
-								{
+								"voltage_l2_l3": {
 									"name": "L2-N AC Voltage",
 									"register_id": "voltage_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_l1":
-								{
+								"voltage_l3_l1": {
 									"name": "L3-N AC Voltage",
 									"register_id": "voltage_l3",
 									"scaler": 1,
@@ -287,15 +243,13 @@
 				}
 			]
 		},
-		"ess":
-		{
+		"ess": {
 			"soc_balancing_factor": 4.0,
 			"entering_soc_range": 0.1,
 			"leaving_soc_range": 0.5,
 			"far_soc_range": 10.0,
 			"charge_control_divisor": 11.1,
-			"asset_instances":
-			[
+			"asset_instances": [
 				{
 					"id": "ess_1",
 					"name": "BESS Inverter Block 01",
@@ -306,7 +260,7 @@
 					"rated_active_power_kw": 5500.0,
 					"rated_reactive_power_kvar": 5500.0,
 					"rated_apparent_power_kva": 5500.0,
-					"slew_rate":125000,
+					"slew_rate": 125000,
 					"throttle_timeout_fast_ms": 150,
 					"throttle_timeout_slow_ms": 2000,
 					"deadband_percent": 0.1,
@@ -324,405 +278,361 @@
 					"chg_soc_end": 101.0,
 					"dischg_soc_begin": 5.0,
 					"dischg_soc_end": -1.0,
-					"min_raw_soc":4,
-					"max_raw_soc":97,
+					"min_raw_soc": 4,
+					"max_raw_soc": 97,
 					"chargeable_min_limit_kw": 100.0,
 					"dischargeable_min_limit_kw": 100.0,
-					"grid_follow_cmd":0,
-					"grid_form_cmd":1,
-					"components":
-					[
+					"grid_follow_cmd": 0,
+					"grid_form_cmd": 1,
+					"components": [
 						{
 							"component_id": "ess_twins",
-							"variables":
-							{
-								"active_power_setpoint":
-								{
+							"variables": {
+								"active_power_setpoint": {
 									"name": "Active Power Setpoint",
 									"register_id": "active_power_setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"reactive_power_setpoint":
-								{
+								"reactive_power_setpoint": {
 									"name": "Reactive Power Setpoint",
 									"register_id": "reactive_power_setpoint",
 									"scaler": 1000,
 									"unit": "VAR"
 								},
-								"voltage_setpoint":
-								{
+								"voltage_setpoint": {
 									"name": "Voltage Setpoint",
 									"register_id": "voltage_setpoint",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"frequency_setpoint":
-								{
+								"frequency_setpoint": {
 									"name": "Frequency Setpoint",
 									"register_id": "frequency_setpoint",
 									"scaler": 1,
 									"unit": "Hz"
 								},
-								"system_chargeable_power":
-								{
+								"system_chargeable_power": {
 									"name": "System Chargeable Power",
 									"register_id": "chargeable_power",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"system_dischargeable_power":
-								{
+								"system_dischargeable_power": {
 									"name": "System Dischargeable Power",
 									"register_id": "dischargeable_power",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"system_chargeable_energy":
-								{
+								"system_chargeable_energy": {
 									"name": "System Chargeable Energy",
 									"register_id": "chargeable_energy",
 									"scaler": 1000,
 									"unit": "Wh"
 								},
-								"system_dischargeable_energy":
-								{
+								"system_dischargeable_energy": {
 									"name": "System Dischargeable Energy",
 									"register_id": "dischargeable_energy",
 									"scaler": 1000,
 									"unit": "Wh"
 								},
-								"status":
-								{
+								"status": {
 									"name": "Status",
 									"register_id": "pcs_working_state",
 									"type": "Status"
 								},
-								"local_mode_signal":
-								{
+								"local_mode_signal": {
 									"name": "Component in Local Mode Signal",
 									"register_id": "local_mode_signal",
 									"type": "Int"
 								},
-								"bms_fault":
-								{
+								"bms_fault": {
 									"name": "bms_fault",
 									"register_id": "bms_fault",
 									"type": "Int",
 									"ui_type": "fault"
 								},
-								"emmu_fault":
-								{
+								"emmu_fault": {
 									"name": "EMMU Status",
 									"register_id": "emmu_fault",
 									"type": "Int",
 									"ui_type": "fault"
 								},
-								"com_status":
-								{
+								"com_status": {
 									"name": "Com Status",
 									"register_id": "com_status",
 									"type": "Int",
 									"ui_type": "alarm"
 								},
-								"alarms":
-								{
+								"alarms": {
 									"name": "Alarms",
 									"register_id": "alarms",
 									"type": "Int",
 									"ui_type": "alarm"
 								},
-								"voltage_l1_l2":
-								{
+								"voltage_l1_l2": {
 									"name": "L1-L2 AC Voltage",
 									"register_id": "pcs_voltage_l1_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_l3":
-								{
+								"voltage_l2_l3": {
 									"name": "L2-L3 AC Voltage",
 									"register_id": "pcs_voltage_l2_l3",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_l1":
-								{
+								"voltage_l3_l1": {
 									"name": "L3-L1 AC Voltage",
 									"register_id": "pcs_voltage_l3_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"current_l1":
-								{
+								"current_l1": {
 									"name": "L1 AC Current",
 									"register_id": "pcs_current_l1",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l2":
-								{
+								"current_l2": {
 									"name": "L2 AC Current",
 									"register_id": "pcs_current_l2",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l3":
-								{
+								"current_l3": {
 									"name": "L3 AC Current",
 									"register_id": "pcs_current_l3",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"frequency":
-								{
+								"frequency": {
 									"name": "Frequency",
 									"register_id": "pcs_frequency",
 									"scaler": 1,
 									"unit": "Hz"
 								},
-								"active_power":
-								{
+								"active_power": {
 									"name": "Active Power",
 									"register_id": "pcs_active_power",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"reactive_power":
-								{
+								"reactive_power": {
 									"name": "Reactive Power",
 									"register_id": "pcs_reactive_power",
 									"scaler": 1000,
 									"unit": "VAR"
 								},
-								"voltage_dc":
-								{
+								"voltage_dc": {
 									"name": "DC Voltage",
 									"register_id": "pcs_voltage_dc",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_min":
-								{
-									"name": "Minimum Voltage",
+								"min_cell_voltage": {
+									"name": "Minimum Cell Voltage",
 									"register_id": "bms_voltage_min",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_max":
-								{
-									"name": "Maximum Voltage",
+								"max_cell_voltage": {
+									"name": "Maximum Cell Voltage",
 									"register_id": "bms_voltage_max",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"faults":
-								{
+								"faults": {
 									"name": "Faults",
 									"register_id": "faults",
 									"type": "Int",
 									"ui_type": "fault"
 								},
-								"apparent_power":
-								{
+								"apparent_power": {
 									"name": "Apparent Power",
 									"register_id": "pcs_apparent_power",
 									"scaler": 1000,
 									"unit": "VA"
 								},
-								"local_bms_status":
-								{
+								"local_bms_status": {
 									"name": "Racks In Service",
 									"register_id": "bms_num_racks_online",
 									"type": "Int"
 								},
-								"dc_contactors_closed":
-								{
+								"dc_contactors_closed": {
 									"name": "DC Contactors Closed",
 									"register_id": "dc_contactors_closed",
 									"type": "Bool"
 								},
-								"autobalancing_status":
-								{
+								"autobalancing_status": {
 									"name": "Auto Balancing Status",
 									"register_id": "equalization_control",
 									"type": "Bool"
 								},
-								"soc":
-								{
+								"soc": {
 									"name": "State of Charge",
 									"register_id": "bms_soc",
 									"scaler": 1,
 									"unit": "%"
 								},
-								"soh":
-								{
+								"soh": {
 									"name": "State of Health",
 									"register_id": "bms_soh",
 									"scaler": 1,
 									"value": 100,
 									"unit": "%"
 								},
-								"max_temp":
-								{
+								"max_temp": {
 									"name": "Current Highest Cell Temp",
 									"register_id": "bms_max_cell_temp",
 									"scaler": 1,
 									"unit": "C"
 								},
-								"min_temp":
-								{
+								"min_temp": {
 									"name": "Current Lowest Cell Temp",
 									"register_id": "bms_min_cell_temp",
 									"scaler": 1,
 									"unit": "C"
 								},
-								"watchdog_heartbeat":
-								{
+								"watchdog_heartbeat": {
 									"name": "Watchdog Heartbeat",
 									"register_id": "modbus_heartbeat",
 									"type": "Int",
 									"ui_type": "none",
 									"scaler": 1
 								},
-								"component_connected":
-								{
+								"component_connected": {
 									"name": "Component Connection Status",
 									"register_id": "component_connected",
 									"type": "Bool"
 								},
-								"grid_mode":
-								{
+								"grid_mode": {
 									"name": "Grid Mode",
 									"register_id": "on_off_grid_mode",
 									"type": "Int",
 									"scaler": 1
 								}
 							},
-							"ui_controls":
-							{
-								"start":
-								{
+							"ui_controls": {
+								"start": {
 									"name": "Start",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"stop":
-								{
+								"stop": {
 									"name": "Stop",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"enter_standby":
-								{
+								"enter_standby": {
 									"name": "Enter Standby",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"exit_standby":
-								{
+								"exit_standby": {
 									"name": "Exit Standby",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"clear_faults":
-								{
+								"clear_faults": {
 									"name": "Clear Faults",
 									"register_id": "clear_faults",
 									"type": "Int"
 								},
-								"maint_mode":
-								{
+								"maint_mode": {
 									"name": "Maintenance Mode",
 									"type": "Bool"
 								},
-								"lock_mode":
-								{
+								"lock_mode": {
 									"name": "Lockdown Mode",
 									"type": "Bool"
 								},
-                                                                "limits_override":
-                                                                {
-                                                                    "name": "Enable Limits Override",
-                                                                    "type": "Bool"
-                                                                },
-                                                                "maint_soc_limits_enable":
-                                                                {
-                                                                    "name": "Enable Maintenance SoC limits",
-                                                                    "type": "Bool"
-                                                                },
-                                                                "maint_voltage_limits_enable":
-                                                                {
-                                                                    "name": "Enable Maintenance voltage limits",
-                                                                    "type": "Bool"
-                                                                },
-                                                                "maint_min_charge_discharge_enable":
-                                                                {
-                                                                    "name": "Enable Maintenance Min Charge/Discharge Power",
-                                                                    "type": "Bool"
-                                                                },
-								"autobalancing_enable":
-								{
+								"maint_soc_protection_buffers_disable": {
+									"name": "Enable Limits Override",
+									"type": "Bool"
+								},
+								"maint_soc_limits_enable": {
+									"name": "Enable Maintenance SoC limits",
+									"type": "Bool"
+								},
+								"maint_voltage_limits_enable": {
+									"name": "Enable Maintenance voltage limits",
+									"type": "Bool"
+								},
+								"maint_min_charge_discharge_enable": {
+									"name": "Enable Maintenance Min Charge/Discharge Power",
+									"type": "Bool"
+								},
+								"autobalancing_enable": {
 									"name": "Enable Auto-Balancing",
 									"register_id": "equalization_control",
 									"type": "Bool"
 								},
-								"autobalancing_disable":
-								{
+								"autobalancing_disable": {
 									"name": "Disable Auto-Balancing",
 									"register_id": "equalization_control",
 									"type": "Bool"
 								},
-								"maint_active_power_setpoint":
-								{
+								"maint_active_power_setpoint": {
 									"name": "Active Power Setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"maint_reactive_power_setpoint":
-								{
+								"maint_reactive_power_setpoint": {
 									"name": "Reactive Power Setpoint",
 									"scaler": 1000,
 									"unit": "VAR"
 								},
-                                                                "maint_chargeable_min_limit":
-                                                                {
-                                                                    "name": "Chargeable Min Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "kW"
-                                                                },
-                                                                "maint_dischargeable_min_limit":
-                                                                {
-                                                                    "name": "Dischargeable Min Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "kW"
-                                                                },
-                                                                "maint_min_soc_limit":
-                                                                {
-                                                                    "name": "Minimum SOC Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "%"
-                                                                },
-                                                                "maint_max_soc_limit":
-                                                                {
-                                                                    "name": "Maximum SOC Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "%"
-                                                                },
-                                                                "maint_min_voltage_limit":
-                                                                {
-                                                                    "name": "Minimum Voltage Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "V"
-                                                                },
-                                                                "maint_max_voltage_limit":
-                                                                {
-                                                                    "name": "Maximum Voltage Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "V"
-                                                                }
+								"maint_cell_voltage_limits_enable": {
+									"name": "Enable Maintenance Cell Voltage limits",
+									"type": "Bool"
+								},
+								"maint_rack_voltage_limits_enable": {
+									"name": "Enable Maintenance Rack voltage limits",
+									"type": "Bool"
+								},
+								"maint_chargeable_min_limit": {
+									"name": "Chargeable Min Limit",
+									"scaler": 1,
+									"unit": "kW"
+								},
+								"maint_dischargeable_min_limit": {
+									"name": "Dischargeable Min Limit",
+									"scaler": 1,
+									"unit": "kW"
+								},
+								"maint_min_soc_limit": {
+									"name": "Minimum SOC Limit",
+									"scaler": 1,
+									"unit": "%"
+								},
+								"maint_max_soc_limit": {
+									"name": "Maximum SOC Limit",
+									"scaler": 1,
+									"unit": "%"
+								},
+								"maint_min_cell_voltage_limit": {
+									"name": "Minimum Cell Voltage Limit",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"maint_max_cell_voltage_limit": {
+									"name": "Maximum Cell Voltage Limit",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"maint_min_rack_voltage_limit": {
+									"name": "Minimum Rack Voltage Limit",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"maint_max_rack_voltage_limit": {
+									"name": "Maximum Rack Voltage Limit",
+									"scaler": 1,
+									"unit": "V"
+								}
 							}
-                                                }
+						}
 					]
 				},
 				{
@@ -735,7 +645,7 @@
 					"rated_active_power_kw": 5500.0,
 					"rated_reactive_power_kvar": 5500.0,
 					"rated_apparent_power_kva": 5500.0,
-					"slew_rate":125000,
+					"slew_rate": 125000,
 					"throttle_timeout_fast_ms": 150,
 					"throttle_timeout_slow_ms": 2000,
 					"deadband_percent": 0.1,
@@ -752,1067 +662,929 @@
 					"chg_soc_end": 101.0,
 					"dischg_soc_begin": 5.0,
 					"dischg_soc_end": -1.0,
-					"min_raw_soc":4,
-					"max_raw_soc":97,
+					"min_raw_soc": 4,
+					"max_raw_soc": 97,
 					"chargeable_min_limit_kw": 100.0,
 					"dischargeable_min_limit_kw": 100.0,
-					"grid_follow_cmd":0,
-					"grid_form_cmd":1,
-					"components":
-					[
+					"grid_follow_cmd": 0,
+					"grid_form_cmd": 1,
+					"components": [
 						{
 							"component_id": "ess_real_hs",
-							"variables":
-							{
-								"active_power_setpoint":
-								{
+							"variables": {
+								"active_power_setpoint": {
 									"name": "Active Power Setpoint",
 									"register_id": "active_power_setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"reactive_power_setpoint":
-								{
+								"reactive_power_setpoint": {
 									"name": "Reactive Power Setpoint",
 									"register_id": "reactive_power_setpoint",
 									"scaler": 1000,
 									"unit": "VAR"
 								},
-								"grid_mode":
-								{
+								"grid_mode": {
 									"name": "Grid Mode",
 									"register_id": "on_off_grid_mode",
 									"type": "Int",
 									"scaler": 1
 								},
-								"voltage_setpoint":
-								{
+								"voltage_setpoint": {
 									"name": "Voltage Setpoint",
 									"register_id": "voltage_setpoint",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"frequency_setpoint":
-								{
+								"frequency_setpoint": {
 									"name": "Frequency Setpoint",
 									"register_id": "frequency_setpoint",
 									"scaler": 1,
 									"unit": "Hz"
 								}
 							},
-							"ui_controls":
-							{
-								"start":
-								{
+							"ui_controls": {
+								"start": {
 									"name": "Start",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"stop":
-								{
+								"stop": {
 									"name": "Stop",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"enter_standby":
-								{
+								"enter_standby": {
 									"name": "Enter Standby",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"exit_standby":
-								{
+								"exit_standby": {
 									"name": "Exit Standby",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"clear_faults":
-								{
+								"clear_faults": {
 									"name": "Clear Faults",
 									"register_id": "clear_faults",
 									"type": "Int"
 								},
-								"maint_mode":
-								{
+								"maint_mode": {
 									"name": "Maintenance Mode",
 									"type": "Bool"
 								},
-								"lock_mode":
-								{
+								"lock_mode": {
 									"name": "Lockdown Mode",
 									"type": "Bool"
 								},
-                                                                "limits_override":
-                                                                {
-                                                                    "name": "Enable Limits Override",
-                                                                    "type": "Bool"
-                                                                },
-                                                                "maint_soc_limits_enable":
-                                                                {
-                                                                    "name": "Enable Maintenance SoC limits",
-                                                                    "type": "Bool"
-                                                                },
-                                                                "maint_voltage_limits_enable":
-                                                                {
-                                                                    "name": "Enable Maintenance voltage limits",
-                                                                    "type": "Bool"
-                                                                },
-                                                                "maint_min_charge_discharge_enable":
-                                                                {
-                                                                    "name": "Enable Maintenance Min Charge/Discharge Power",
-                                                                    "type": "Bool"
-                                                                },
-								"autobalancing_enable":
-								{
+								"maint_soc_protection_buffers_disable": {
+									"name": "Enable Limits Override",
+									"type": "Bool"
+								},
+								"maint_soc_limits_enable": {
+									"name": "Enable Maintenance SoC limits",
+									"type": "Bool"
+								},
+								"maint_voltage_limits_enable": {
+									"name": "Enable Maintenance voltage limits",
+									"type": "Bool"
+								},
+								"maint_min_charge_discharge_enable": {
+									"name": "Enable Maintenance Min Charge/Discharge Power",
+									"type": "Bool"
+								},
+								"autobalancing_enable": {
 									"name": "Enable Auto-Balancing",
 									"register_id": "equalization_control",
 									"type": "Bool"
 								},
-								"autobalancing_disable":
-								{
+								"autobalancing_disable": {
 									"name": "Disable Auto-Balancing",
 									"register_id": "equalization_control",
 									"type": "Bool"
 								},
-								"maint_active_power_setpoint":
-								{
+								"maint_active_power_setpoint": {
 									"name": "Active Power Setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"maint_reactive_power_setpoint":
-								{
+								"maint_reactive_power_setpoint": {
 									"name": "Reactive Power Setpoint",
 									"scaler": 1000,
 									"unit": "VAR"
 								},
-                                                                "maint_chargeable_min_limit":
-                                                                {
-                                                                    "name": "Chargeable Min Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "kW"
-                                                                },
-                                                                "maint_dischargeable_min_limit":
-                                                                {
-                                                                    "name": "Dischargeable Min Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "kW"
-                                                                },
-                                                                "maint_min_soc_limit":
-                                                                {
-                                                                    "name": "Minimum SOC Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "%"
-                                                                },
-                                                                "maint_max_soc_limit":
-                                                                {
-                                                                    "name": "Maximum SOC Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "%"
-                                                                },
-                                                                "maint_min_voltage_limit":
-                                                                {
-                                                                    "name": "Minimum Voltage Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "V"
-                                                                },
-                                                                "maint_max_voltage_limit":
-                                                                {
-                                                                    "name": "Maximum Voltage Limit",
-                                                                    "scaler": 1,
-                                                                    "unit": "V"
-                                                                }
+								"maint_cell_voltage_limits_enable": {
+									"name": "Enable Maintenance Cell Voltage limits",
+									"type": "Bool"
+								},
+								"maint_rack_voltage_limits_enable": {
+									"name": "Enable Maintenance Rack voltage limits",
+									"type": "Bool"
+								},
+								"maint_chargeable_min_limit": {
+									"name": "Chargeable Min Limit",
+									"scaler": 1,
+									"unit": "kW"
+								},
+								"maint_dischargeable_min_limit": {
+									"name": "Dischargeable Min Limit",
+									"scaler": 1,
+									"unit": "kW"
+								},
+								"maint_min_soc_limit": {
+									"name": "Minimum SOC Limit",
+									"scaler": 1,
+									"unit": "%"
+								},
+								"maint_max_soc_limit": {
+									"name": "Maximum SOC Limit",
+									"scaler": 1,
+									"unit": "%"
+								},
+								"maint_min_cell_voltage_limit": {
+									"name": "Minimum Cell Voltage Limit",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"maint_max_cell_voltage_limit": {
+									"name": "Maximum Cell Voltage Limit",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"maint_min_rack_voltage_limit": {
+									"name": "Minimum Rack Voltage Limit",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"maint_max_rack_voltage_limit": {
+									"name": "Maximum Rack Voltage Limit",
+									"scaler": 1,
+									"unit": "V"
+								}
 							}
 						},
 						{
 							"component_id": "ess_real_ls",
-							"variables":
-							{
-								"system_chargeable_power":
-								{
+							"variables": {
+								"system_chargeable_power": {
 									"name": "System Chargeable Power",
 									"register_id": "chargeable_power",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"system_dischargeable_power":
-								{
+								"system_dischargeable_power": {
 									"name": "System Dischargeable Power",
 									"register_id": "dischargeable_power",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"system_chargeable_energy":
-								{
+								"system_chargeable_energy": {
 									"name": "System Chargeable Energy",
 									"register_id": "chargeable_energy",
 									"scaler": 1000,
 									"unit": "Wh"
 								},
-								"system_dischargeable_energy":
-								{
+								"system_dischargeable_energy": {
 									"name": "System Dischargeable Energy",
 									"register_id": "dischargeable_energy",
 									"scaler": 1000,
 									"unit": "Wh"
 								},
-								"status":
-								{
+								"status": {
 									"name": "Status",
 									"register_id": "system_state",
 									"type": "Status"
 								},
-								"com_status":
-								{
+								"com_status": {
 									"name": "Com Status",
 									"register_id": "com_status",
 									"type": "Int",
 									"ui_type": "alarm"
 								},
-								"alarms":
-								{
+								"alarms": {
 									"name": "Alarms",
 									"register_id": "alarms",
 									"type": "Int",
 									"ui_type": "alarm"
 								},
-								"faults":
-								{
+								"faults": {
 									"name": "Faults",
 									"register_id": "faults",
 									"type": "Int",
 									"ui_type": "fault"
 								},
-								"ess_alarms":
-								{
+								"ess_alarms": {
 									"name": "ESS Alarms",
 									"register_id": "ess_alarms",
 									"type": "Int",
 									"ui_type": "alarm"
 								},
-								"ess_faults":
-								{
+								"ess_faults": {
 									"name": "ESS Faults",
 									"register_id": "ess_faults",
 									"type": "Int",
 									"ui_type": "fault"
 								},
-								"voltage_l1_l2":
-								{
+								"voltage_l1_l2": {
 									"name": "L1-L2 AC Voltage",
 									"register_id": "voltage_l1_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_l3":
-								{
+								"voltage_l2_l3": {
 									"name": "L2-L3 AC Voltage",
 									"register_id": "voltage_l2_l3",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_l1":
-								{
+								"voltage_l3_l1": {
 									"name": "L3-L1 AC Voltage",
 									"register_id": "voltage_l3_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"current_l1":
-								{
+								"current_l1": {
 									"name": "L1 AC Current",
 									"register_id": "current_l1",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l2":
-								{
+								"current_l2": {
 									"name": "L2 AC Current",
 									"register_id": "current_l2",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l3":
-								{
+								"current_l3": {
 									"name": "L3 AC Current",
 									"register_id": "current_l3",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"frequency":
-								{
+								"frequency": {
 									"name": "Frequency",
 									"register_id": "frequency",
 									"scaler": 1,
 									"unit": "Hz"
 								},
-								"active_power":
-								{
+								"active_power": {
 									"name": "Active Power",
 									"register_id": "active_power",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"reactive_power":
-								{
+								"reactive_power": {
 									"name": "Reactive Power",
 									"register_id": "reactive_power",
 									"scaler": 1000,
 									"unit": "VAR"
 								},
-								"voltage_dc":
-								{
+								"voltage_dc": {
 									"name": "DC Voltage",
 									"register_id": "voltage_dc",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_min":
-								{
-									"name": "Minimum Voltage",
+								"min_cell_voltage": {
+									"name": "Minimum Cell Voltage",
 									"register_id": "bms_voltage_min",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_max":
-								{
-									"name": "Maximum Voltage",
+								"max_cell_voltage": {
+									"name": "Maximum Cell Voltage",
 									"register_id": "bms_voltage_max",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"apparent_power":
-								{
+								"apparent_power": {
 									"name": "Apparent Power",
 									"register_id": "apparent_power",
 									"scaler": 1000,
 									"unit": "VA"
 								},
-								"local_bms_status":
-								{
+								"local_bms_status": {
 									"name": "Racks In Service",
 									"register_id": "racks_in_service",
 									"type": "Int"
 								},
-								"dc_contactors_closed":
-								{
+								"dc_contactors_closed": {
 									"name": "DC Contactors Closed",
 									"register_id": "dc_contactors_closed",
 									"type": "Bool"
 								},
-								"autobalancing_status":
-								{
+								"autobalancing_status": {
 									"name": "Auto Balancing Status",
 									"register_id": "equalization_control",
 									"type": "Bool"
 								},
-								"soc":
-								{
+								"soc": {
 									"name": "State of Charge",
 									"register_id": "bms_soc",
 									"scaler": 1,
 									"unit": "%"
 								},
-								"soh":
-								{
+								"soh": {
 									"name": "State of Health",
 									"register_id": "bms_soh",
 									"scaler": 1,
 									"value": 100,
 									"unit": "%"
 								},
-								"max_temp":
-								{
+								"max_temp": {
 									"name": "Current Highest Cell Temp",
 									"register_id": "bms_maximum_cell_temperature",
 									"scaler": 1,
 									"unit": "C"
 								},
-								"min_temp":
-								{
+								"min_temp": {
 									"name": "Current Lowest Cell Temp",
 									"register_id": "bms_minimum_cell_temperature",
 									"scaler": 1,
 									"unit": "C"
 								},
-								"watchdog_heartbeat":
-								{
+								"watchdog_heartbeat": {
 									"name": "Watchdog Heartbeat",
 									"register_id": "modbus_heartbeat",
 									"type": "Int",
 									"ui_type": "none",
 									"scaler": 1
 								},
-								"component_connected":
-								{
+								"component_connected": {
 									"name": "Component Connection Status",
 									"register_id": "component_connected",
 									"type": "Bool"
 								}
 							}
-                        }
+						}
 					]
 				}
 			]
 		},
-		"generators": 
-		{ 
-			"ldss_static_run_priorities": [1], 
-			"asset_instances": 
-			[ 
-				{ 
-					"id": "gen_1", 
-					"name": "Cat CG170-16", 
-					"rated_active_power_kw": 10000.0, 
-					"rated_reactive_power_kvar": 10000.0, 
-					"rated_apparent_power_kva": 10000.0, 
-					"slew_rate": 5000, 
-					"stopped_status_mask":"0x00", 
-					"running_status_mask":"0x01", 
-					"starting_status_mask":"0x04", 
-					"stopping_status_mask":"0x40", 
-					"demand_control": "Direct", 
-					"start_value": 1467, 
-					"stop_value": 1749, 
-					"enter_standby_value": 1467, 
-					"exit_standby_value": 381, 
-					"status_type": "random_enum", 
-					"throttle_timeout_fast_ms": 150, 
-					"throttle_timeout_slow_ms": 2000, 
-					"deadband_percent": 0.1, 
-					"watchdog_enable": false, 
-					"watchdog_timeout_ms": 3000, 
-					"add_asset_timer_setpoint": 1800, 
-					"remove_asset_timer_setpoint": 300, 
-					"max_load_threshold": 90, 
-					"min_load_threshold": 40, 
-					"start_priority": 1, 
-					"stop_priority": 1, 
-					"run_time_setpoint": 60, 
-					"stop_time_setpoint": 60, 
-					"grid_form_cmd": 1, 
-					"grid_follow_cmd": 0, 
-					"components": 
-					[ 
-						{ 
-							"component_id": "easygen_3500xt", 
-							"variables": 
-							{ 
-								"status": 
-								{ 
-									"name": "Status", 
-									"register_id": "status", 
-									"type": "Status" 
+		"generators": {
+			"ldss_static_run_priorities": [
+				1
+			],
+			"asset_instances": [
+				{
+					"id": "gen_1",
+					"name": "Cat CG170-16",
+					"rated_active_power_kw": 10000.0,
+					"rated_reactive_power_kvar": 10000.0,
+					"rated_apparent_power_kva": 10000.0,
+					"slew_rate": 5000,
+					"stopped_status_mask": "0x00",
+					"running_status_mask": "0x01",
+					"starting_status_mask": "0x04",
+					"stopping_status_mask": "0x40",
+					"demand_control": "Direct",
+					"start_value": 1467,
+					"stop_value": 1749,
+					"enter_standby_value": 1467,
+					"exit_standby_value": 381,
+					"status_type": "random_enum",
+					"throttle_timeout_fast_ms": 150,
+					"throttle_timeout_slow_ms": 2000,
+					"deadband_percent": 0.1,
+					"watchdog_enable": false,
+					"watchdog_timeout_ms": 3000,
+					"add_asset_timer_setpoint": 1800,
+					"remove_asset_timer_setpoint": 300,
+					"max_load_threshold": 90,
+					"min_load_threshold": 40,
+					"start_priority": 1,
+					"stop_priority": 1,
+					"run_time_setpoint": 60,
+					"stop_time_setpoint": 60,
+					"grid_form_cmd": 1,
+					"grid_follow_cmd": 0,
+					"components": [
+						{
+							"component_id": "easygen_3500xt",
+							"variables": {
+								"status": {
+									"name": "Status",
+									"register_id": "status",
+									"type": "Status"
 								},
-								"active_power_setpoint": 
-								{ 
-									"name": "Active Power Setpoint", 
-									"register_id": "active_power_setpoint", 
-									"scaler": 1000, 
-									"unit": "W" 
-								}, 
-								"reactive_power_setpoint": 
-								{ 
-									"name": "Reactive Power Setpoint", 
-									"register_id": "reactive_power_setpoint", 
-									"scaler": 1000, 
-									"unit": "VAR" 
-								}, 
-								"faults": 
-								{ 
-									"name": "Faults", 
-									"register_id": "faults" 
-								}, 
-								"current_l1": 
-								{ 
-									"name": "L1 AC Current", 
-									"register_id": "ac_current_l1", 
-									"scaler": 1, 
-									"unit": "A" 
-								}, 
-								"voltage_l1_l2": 
-								{ 
-									"name": "L1-L2 AC Voltage", 
-									"register_id": "ac_voltage_l1_l2", 
-									"scaler": 1, 
-									"unit": "V" 
-								}, 
-								"frequency": 
-								{ 
-									"name": "Frequency Avg RMS", 
-									"register_id": "frequency", 
-									"scaler": 1, 
-									"unit": "Hz" 
-								}, 
-								"active_power": 
-								{ 
-									"name": "AC Active Power", 
-									"register_id": "active_power", 
-									"scaler": 1000, 
-									"unit": "W" 
-								}, 
-								"reactive_power": 
-								{ 
-									"name": "AC Reactive Power", 
-									"register_id": "reactive_power", 
-									"scaler": 1000, 
-									"unit": "VAR" 
-								}, 
-								"apparent_power": 
-								{ 
-									"name": "AC Apparent Power", 
-									"register_id": "apparent_power", 
-									"scaler": 1000, 
-									"unit": "VA" 
-								}, 
-								"disable": 
-								{ 
-									"name": "Disable", 
-									"register_id": "disable" 
-								}, 
-								"alarms": 
-								{ 
-									"name": "Alarms", 
-									"register_id": "alarms" 
-								}, 
-								"grid_mode": 
-								{ 
-									"name": "Grid Mode", 
+								"active_power_setpoint": {
+									"name": "Active Power Setpoint",
+									"register_id": "active_power_setpoint",
+									"scaler": 1000,
+									"unit": "W"
+								},
+								"reactive_power_setpoint": {
+									"name": "Reactive Power Setpoint",
+									"register_id": "reactive_power_setpoint",
+									"scaler": 1000,
+									"unit": "VAR"
+								},
+								"faults": {
+									"name": "Faults",
+									"register_id": "faults"
+								},
+								"current_l1": {
+									"name": "L1 AC Current",
+									"register_id": "ac_current_l1",
+									"scaler": 1,
+									"unit": "A"
+								},
+								"voltage_l1_l2": {
+									"name": "L1-L2 AC Voltage",
+									"register_id": "ac_voltage_l1_l2",
+									"scaler": 1,
+									"unit": "V"
+								},
+								"frequency": {
+									"name": "Frequency Avg RMS",
+									"register_id": "frequency",
+									"scaler": 1,
+									"unit": "Hz"
+								},
+								"active_power": {
+									"name": "AC Active Power",
+									"register_id": "active_power",
+									"scaler": 1000,
+									"unit": "W"
+								},
+								"reactive_power": {
+									"name": "AC Reactive Power",
+									"register_id": "reactive_power",
+									"scaler": 1000,
+									"unit": "VAR"
+								},
+								"apparent_power": {
+									"name": "AC Apparent Power",
+									"register_id": "apparent_power",
+									"scaler": 1000,
+									"unit": "VA"
+								},
+								"disable": {
+									"name": "Disable",
+									"register_id": "disable"
+								},
+								"alarms": {
+									"name": "Alarms",
+									"register_id": "alarms"
+								},
+								"grid_mode": {
+									"name": "Grid Mode",
 									"register_id": "on_off_grid_mode",
 									"type": "Int"
-								}, 
-								"grid_forming": 
-								{ 
-									"name": "Grid Forming", 
-									"register_id": "grid_forming" 
-									 
-								} 
-							}, 
-							"ui_controls": 
-							{ 
-								"start": 
-								{ 
-									"name": "Start", 
-									"register_id": "start_stop", 
-									"type": "Int" 
-								}, 
-								"stop": 
-								{ 
-									"name": "Stop", 
-									"register_id": "start_stop", 
-									"type": "Int" 
-								}, 
-								"enter_standby": 
-								{ 
-									"name": "Enter Standby", 
-									"register_id": "start_stop", 
-									"type": "Int" 
-								}, 
-								"exit_standby": 
-								{ 
-									"name": "Exit Standby", 
-									"register_id": "start_stop", 
-									"type": "Int" 
-								}, 
-								"clear_faults": 
-								{ 
-									"name": "Clear Faults", 
-									"register_id": "clear_faults", 
-									"type": "Int" 
-								}, 
-								"maint_mode": 
-								{ 
-									"name": "Maintenance Mode", 
-									"type": "Bool" 
-								}, 
-								"maint_active_power_setpoint": 
-								{ 
-									"name": "Active Power Setpoint", 
-									"scaler": 1000, 
-									"unit": "W" 
-								}, 
-								"maint_reactive_power_setpoint": 
-								{ 
-									"name": "Reactive Power Setpoint", 
-									"scaler": 1000, 
-									"unit": "VAR" 
-								} 
-							} 
-						} 
-					] 
-				} 
-			] 
-		}, 
-		"solar": 
-		{ 
-			"deadband_percentage": 0.01, 
-			"asset_instances": 
-			[ 
-				{ 
-					"id": "solar_1", 
-					"name": "Solar Inverter 1", 
-					"running_status_mask":"0x01", 
-					"stopped_status_mask":"0x00", 
-					"rated_active_power_kw": 2500.0, 
-					"slew_rate": 25000, 
-					"demand_control": "Indirect", 
-					"start_value": 1467, 
-					"stop_value": 1749, 
-					"enter_standby_value": 1467, 
-					"exit_standby_value": 381, 
-					"reactive_power_mode_q": 1072, 
-					"reactive_power_mode_pf": 1075, 
-					"status_type": "random_enum", 
-					"rated_reactive_power_kvar": 2500.0, 
-					"rated_apparent_power_kva": 2500.0, 
-					"throttle_timeout_fast_ms": 150, 
-					"throttle_timeout_slow_ms": 2000, 
-					"deadband_percent": 0.01, 
-					"watchdog_enable": false, 
-					"watchdog_timeout_ms": 3000, 
-					"components": 
-					[ 
+								},
+								"grid_forming": {
+									"name": "Grid Forming",
+									"register_id": "grid_forming"
+								}
+							},
+							"ui_controls": {
+								"start": {
+									"name": "Start",
+									"register_id": "start_stop",
+									"type": "Int"
+								},
+								"stop": {
+									"name": "Stop",
+									"register_id": "start_stop",
+									"type": "Int"
+								},
+								"enter_standby": {
+									"name": "Enter Standby",
+									"register_id": "start_stop",
+									"type": "Int"
+								},
+								"exit_standby": {
+									"name": "Exit Standby",
+									"register_id": "start_stop",
+									"type": "Int"
+								},
+								"clear_faults": {
+									"name": "Clear Faults",
+									"register_id": "clear_faults",
+									"type": "Int"
+								},
+								"maint_mode": {
+									"name": "Maintenance Mode",
+									"type": "Bool"
+								},
+								"maint_active_power_setpoint": {
+									"name": "Active Power Setpoint",
+									"scaler": 1000,
+									"unit": "W"
+								},
+								"maint_reactive_power_setpoint": {
+									"name": "Reactive Power Setpoint",
+									"scaler": 1000,
+									"unit": "VAR"
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		"solar": {
+			"deadband_percentage": 0.01,
+			"asset_instances": [
+				{
+					"id": "solar_1",
+					"name": "Solar Inverter 1",
+					"running_status_mask": "0x01",
+					"stopped_status_mask": "0x00",
+					"rated_active_power_kw": 2500.0,
+					"slew_rate": 25000,
+					"demand_control": "Indirect",
+					"start_value": 1467,
+					"stop_value": 1749,
+					"enter_standby_value": 1467,
+					"exit_standby_value": 381,
+					"reactive_power_mode_q": 1072,
+					"reactive_power_mode_pf": 1075,
+					"status_type": "random_enum",
+					"rated_reactive_power_kvar": 2500.0,
+					"rated_apparent_power_kva": 2500.0,
+					"throttle_timeout_fast_ms": 150,
+					"throttle_timeout_slow_ms": 2000,
+					"deadband_percent": 0.01,
+					"watchdog_enable": false,
+					"watchdog_timeout_ms": 3000,
+					"components": [
 						{
 							"component_id": "pv_1",
-							"variables":
-							{
-								"status":
-								{
+							"variables": {
+								"status": {
 									"name": "Status",
 									"register_id": "status",
 									"type": "Status"
 								},
-								"active_power_setpoint":
-								{
+								"active_power_setpoint": {
 									"name": "Active Power Setpoint",
 									"register_id": "active_power_setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"reactive_power_setpoint":
-								{
+								"reactive_power_setpoint": {
 									"name": "Reactive Power Setpoint",
 									"register_id": "reactive_power_setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"active_power":
-								{
+								"active_power": {
 									"name": "Active Power",
 									"register_id": "active_power",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"reactive_power":
-								{
+								"reactive_power": {
 									"name": "Reactive Power",
 									"register_id": "reactive_power",
 									"scaler": 1000,
 									"unit": "VAR"
 								},
-								"alarms":
-								{
+								"alarms": {
 									"name": "Alarms",
 									"register_id": "alarms",
 									"type": "Int",
 									"ui_type": "alarm"
 								},
-								"faults":
-								{
+								"faults": {
 									"name": "Faults",
 									"register_id": "faults",
 									"type": "Int",
 									"ui_type": "fault"
 								},
-								"reactive_power_mode":
-								{
+								"reactive_power_mode": {
 									"name": "Reactive Power Mode",
 									"register_id": "reactive_power_mode"
 								},
-								"power_factor_setpoint":
-								{
+								"power_factor_setpoint": {
 									"name": "Power Factor Setpoint",
 									"register_id": "power_factor_setpoint",
 									"unit": ""
 								},
-								"apparent_power":
-								{
+								"apparent_power": {
 									"name": "Apparent Power",
 									"register_id": "apparent_power",
 									"scaler": 1000,
 									"unit": "VA"
 								},
-								"voltage_l1_n":
-								{
+								"voltage_l1_n": {
 									"name": "L1 AC Voltage",
 									"register_id": "ac_voltage_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_n":
-								{
+								"voltage_l2_n": {
 									"name": "L2 AC Voltage",
 									"register_id": "ac_voltage_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_n":
-								{
+								"voltage_l3_n": {
 									"name": "L3 AC Voltage",
 									"register_id": "ac_voltage_l3",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l1_l2":
-								{
+								"voltage_l1_l2": {
 									"name": "L1-L2 AC Voltage",
 									"register_id": "ac_voltage_l1_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_l3":
-								{
+								"voltage_l2_l3": {
 									"name": "L2-L3 AC Voltage",
 									"register_id": "ac_voltage_l2_l3",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_l1":
-								{
+								"voltage_l3_l1": {
 									"name": "L3-L1 AC Voltage",
 									"register_id": "ac_voltage_l3_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"current_l1":
-								{
+								"current_l1": {
 									"name": "L1 AC Current",
 									"register_id": "ac_current_l1",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l2":
-								{
+								"current_l2": {
 									"name": "L2 AC Current",
 									"register_id": "ac_current_l2",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l3":
-								{
+								"current_l3": {
 									"name": "L3 AC Current",
 									"register_id": "ac_current_l3",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"power_factor":
-								{
+								"power_factor": {
 									"name": "Power Factor",
 									"register_id": "power_factor",
 									"scaler": 1,
 									"unit": ""
 								},
-								"watchdog_heartbeat":
-								{
+								"watchdog_heartbeat": {
 									"name": "Watchdog Heartbeat",
 									"register_id": "modbus_heartbeat",
 									"type": "Int",
 									"ui_type": "none",
 									"scaler": 1
 								},
-								"component_connected":
-								{
+								"component_connected": {
 									"name": "Component Connection Status",
 									"register_id": "component_connected",
 									"type": "Bool"
 								}
 							},
-							"ui_controls":
-							{
-								"start":
-								{
+							"ui_controls": {
+								"start": {
 									"name": "Start",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"stop":
-								{
+								"stop": {
 									"name": "Stop",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"enter_standby":
-								{
+								"enter_standby": {
 									"name": "Enter Standby",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"exit_standby":
-								{
+								"exit_standby": {
 									"name": "Exit Standby",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"clear_faults":
-								{
+								"clear_faults": {
 									"name": "Clear Faults",
 									"register_id": "clear_faults",
 									"type": "Int"
 								},
-								"maint_mode":
-								{
+								"maint_mode": {
 									"name": "Maintenance Mode",
 									"type": "Bool"
 								},
-								"maint_active_power_setpoint":
-								{
+								"maint_active_power_setpoint": {
 									"name": "Active Power Setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"maint_reactive_power_setpoint":
-								{
+								"maint_reactive_power_setpoint": {
 									"name": "Reactive Power Setpoint",
 									"scaler": 1000,
 									"unit": "VAR"
 								}
 							}
 						}
-					] 
+					]
 				},
-				{ 
-					"id": "solar_2", 
-					"name": "Solar Inverter 2", 
-					"running_status_mask":"0x01", 
-					"stopped_status_mask":"0x00", 
-					"rated_active_power_kw": 2500.0, 
-					"slew_rate": 25000, 
-					"demand_control": "Indirect", 
-					"start_value": 1467, 
-					"stop_value": 1749, 
-					"enter_standby_value": 1467, 
-					"exit_standby_value": 381, 
-					"reactive_power_mode_q": 1072, 
-					"reactive_power_mode_pf": 1075, 
-					"status_type": "random_enum", 
-					"rated_reactive_power_kvar": 2500.0, 
-					"rated_apparent_power_kva": 2500.0, 
-					"throttle_timeout_fast_ms": 150, 
-					"throttle_timeout_slow_ms": 2000, 
-					"deadband_percent": 0.01, 
-					"watchdog_enable": false, 
-					"watchdog_timeout_ms": 3000, 
-					"components": 
-					[ 
+				{
+					"id": "solar_2",
+					"name": "Solar Inverter 2",
+					"running_status_mask": "0x01",
+					"stopped_status_mask": "0x00",
+					"rated_active_power_kw": 2500.0,
+					"slew_rate": 25000,
+					"demand_control": "Indirect",
+					"start_value": 1467,
+					"stop_value": 1749,
+					"enter_standby_value": 1467,
+					"exit_standby_value": 381,
+					"reactive_power_mode_q": 1072,
+					"reactive_power_mode_pf": 1075,
+					"status_type": "random_enum",
+					"rated_reactive_power_kvar": 2500.0,
+					"rated_apparent_power_kva": 2500.0,
+					"throttle_timeout_fast_ms": 150,
+					"throttle_timeout_slow_ms": 2000,
+					"deadband_percent": 0.01,
+					"watchdog_enable": false,
+					"watchdog_timeout_ms": 3000,
+					"components": [
 						{
 							"component_id": "pv_2",
-							"variables":
-							{
-								"status":
-								{
+							"variables": {
+								"status": {
 									"name": "Status",
 									"register_id": "status",
 									"type": "Status"
 								},
-								"active_power_setpoint":
-								{
+								"active_power_setpoint": {
 									"name": "Active Power Setpoint",
 									"register_id": "active_power_setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"reactive_power_setpoint":
-								{
+								"reactive_power_setpoint": {
 									"name": "Reactive Power Setpoint",
 									"register_id": "reactive_power_setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"active_power":
-								{
+								"active_power": {
 									"name": "Active Power",
 									"register_id": "active_power",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"reactive_power":
-								{
+								"reactive_power": {
 									"name": "Reactive Power",
 									"register_id": "reactive_power",
 									"scaler": 1000,
 									"unit": "VAR"
 								},
-								"alarms":
-								{
+								"alarms": {
 									"name": "Alarms",
 									"register_id": "alarms",
 									"type": "Int",
 									"ui_type": "alarm"
 								},
-								"faults":
-								{
+								"faults": {
 									"name": "Faults",
 									"register_id": "faults",
 									"type": "Int",
 									"ui_type": "fault"
 								},
-								"reactive_power_mode":
-								{
+								"reactive_power_mode": {
 									"name": "Reactive Power Mode",
 									"register_id": "reactive_power_mode"
 								},
-								"power_factor_setpoint":
-								{
+								"power_factor_setpoint": {
 									"name": "Power Factor Setpoint",
 									"register_id": "power_factor_setpoint",
 									"unit": ""
 								},
-								"apparent_power":
-								{
+								"apparent_power": {
 									"name": "Apparent Power",
 									"register_id": "apparent_power",
 									"scaler": 1000,
 									"unit": "VA"
 								},
-								"voltage_l1_n":
-								{
+								"voltage_l1_n": {
 									"name": "L1 AC Voltage",
 									"register_id": "ac_voltage_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_n":
-								{
+								"voltage_l2_n": {
 									"name": "L2 AC Voltage",
 									"register_id": "ac_voltage_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_n":
-								{
+								"voltage_l3_n": {
 									"name": "L3 AC Voltage",
 									"register_id": "ac_voltage_l3",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l1_l2":
-								{
+								"voltage_l1_l2": {
 									"name": "L1-L2 AC Voltage",
 									"register_id": "ac_voltage_l1_l2",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l2_l3":
-								{
+								"voltage_l2_l3": {
 									"name": "L2-L3 AC Voltage",
 									"register_id": "ac_voltage_l2_l3",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_l3_l1":
-								{
+								"voltage_l3_l1": {
 									"name": "L3-L1 AC Voltage",
 									"register_id": "ac_voltage_l3_l1",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"current_l1":
-								{
+								"current_l1": {
 									"name": "L1 AC Current",
 									"register_id": "ac_current_l1",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l2":
-								{
+								"current_l2": {
 									"name": "L2 AC Current",
 									"register_id": "ac_current_l2",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"current_l3":
-								{
+								"current_l3": {
 									"name": "L3 AC Current",
 									"register_id": "ac_current_l3",
 									"scaler": 1,
 									"unit": "A"
 								},
-								"power_factor":
-								{
+								"power_factor": {
 									"name": "Power Factor",
 									"register_id": "power_factor",
 									"scaler": 1,
 									"unit": ""
 								},
-								"watchdog_heartbeat":
-								{
+								"watchdog_heartbeat": {
 									"name": "Watchdog Heartbeat",
 									"register_id": "modbus_heartbeat",
 									"type": "Int",
 									"ui_type": "none",
 									"scaler": 1
 								},
-								"component_connected":
-								{
+								"component_connected": {
 									"name": "Component Connection Status",
 									"register_id": "component_connected",
 									"type": "Bool"
 								}
 							},
-							"ui_controls":
-							{
-								"start":
-								{
+							"ui_controls": {
+								"start": {
 									"name": "Start",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"stop":
-								{
+								"stop": {
 									"name": "Stop",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"enter_standby":
-								{
+								"enter_standby": {
 									"name": "Enter Standby",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"exit_standby":
-								{
+								"exit_standby": {
 									"name": "Exit Standby",
 									"register_id": "start_stop",
 									"type": "Int"
 								},
-								"clear_faults":
-								{
+								"clear_faults": {
 									"name": "Clear Faults",
 									"register_id": "clear_faults",
 									"type": "Int"
 								},
-								"maint_mode":
-								{
+								"maint_mode": {
 									"name": "Maintenance Mode",
 									"type": "Bool"
 								},
-								"maint_active_power_setpoint":
-								{
+								"maint_active_power_setpoint": {
 									"name": "Active Power Setpoint",
 									"scaler": 1000,
 									"unit": "W"
 								},
-								"maint_reactive_power_setpoint":
-								{
+								"maint_reactive_power_setpoint": {
 									"name": "Reactive Power Setpoint",
 									"scaler": 1000,
 									"unit": "VAR"
 								}
 							}
 						}
-					] 
-				} 
-			] 
+					]
+				}
+			]
 		}
 	}
 }

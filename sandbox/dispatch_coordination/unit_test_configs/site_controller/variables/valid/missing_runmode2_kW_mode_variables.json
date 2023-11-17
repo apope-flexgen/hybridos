@@ -1756,58 +1756,88 @@
                     "var_type": "Int",
                     "value": 1000000
                 },
-                "ess_calibration_kW_cmd": {
+                "ess_calibration_kW_cmd":
+                {
                     "name": "ESS Calibration Setpoint",
                     "ui_type": "control",
                     "unit": "kW"
                 },
-                "ess_calibration_soc_limits_enable": {
+                "ess_calibration_soc_limits_enable":
+                {
                     "name": "ESS Calibration SOC Limits Enable",
                     "ui_type": "control",
                     "type": "enum_slider",
                     "var_type": "Bool",
                     "value": false
                 },
-                "ess_calibration_min_soc_limit": {
+                "ess_calibration_min_soc_limit":
+                {
                     "name": "ESS Calibration Min SOC Limit",
                     "ui_type": "control",
                     "unit": "%"
                 },
-                "ess_calibration_max_soc_limit": {
+                "ess_calibration_max_soc_limit":
+                {
                     "name": "ESS Calibration Max SOC Limit",
                     "ui_type": "control",
                     "unit": "%"
                 },
-                "ess_calibration_voltage_limits_enable": {
+                "ess_calibration_cell_voltage_limits_enable":
+                {
                     "name": "ESS Calibration Cell Voltage Limits Enable",
                     "ui_type": "control",
                     "type": "enum_slider",
                     "var_type": "Bool",
                     "value": false
                 },
-                "ess_calibration_min_voltage_limit": {
+                "ess_calibration_min_cell_voltage_limit":
+                {
                     "name": "ESS Calibration Min Cell Voltage Limit",
                     "ui_type": "control",
                     "unit": "V"
                 },
-                "ess_calibration_max_voltage_limit": {
+                "ess_calibration_max_cell_voltage_limit":
+                {
                     "name": "ESS Calibration Max Cell Voltage Limit",
                     "ui_type": "control",
                     "unit": "V"
                 },
-                "ess_calibration_num_setpoint": {
+                "ess_calibration_rack_voltage_limits_enable":
+                {
+                    "name": "ESS Calibration Rack Voltage Limits Enable",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "ess_calibration_min_rack_voltage_limit":
+                {
+                    "name": "ESS Calibration Min Rack Voltage Limit",
+                    "ui_type": "control",
+                    "unit": "V"
+                },
+                "ess_calibration_max_rack_voltage_limit":
+                {
+                    "name": "ESS Calibration Max Rack Voltage Limit",
+                    "ui_type": "control",
+                    "unit": "V"
+                },
+                "ess_calibration_num_setpoint":
+                {
                     "name": "# ESS at Full Power Setpoint",
                     "ui_type": "status",
                     "var_type": "Int",
                     "value": 0
                 },
-                "ess_calibration_num_limited": {
+                "ess_calibration_num_limited":
+                {
                     "name": "# ESS Derating",
                     "ui_type": "status",
                     "var_type": "Int",
                     "value": 0
                 },
-                "ess_calibration_num_zero": {
+                "ess_calibration_num_zero":
+                {
                     "name": "# ESS Limited to 0kW",
                     "ui_type": "status",
                     "var_type": "Int",

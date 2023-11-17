@@ -431,14 +431,14 @@
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_min": {
-									"name": "Minimum Voltage",
+								"min_cell_voltage": {
+									"name": "Minimum Cell Voltage",
 									"register_id": "bms_voltage_min",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_max": {
-									"name": "Maximum Voltage",
+								"max_cell_voltage": {
+									"name": "Maximum Cell Voltage",
 									"register_id": "bms_voltage_max",
 									"scaler": 1,
 									"unit": "V"
@@ -548,7 +548,7 @@
 									"name": "Lockdown Mode",
 									"type": "Bool"
 								},
-								"limits_override": {
+								"maint_soc_protection_buffers_disable": {
 									"name": "Limits Override",
 									"type": "Bool",
 									"ui_type": "none"
@@ -679,7 +679,7 @@
 									"name": "Lockdown Mode",
 									"type": "Bool"
 								},
-								"limits_override": {
+								"maint_soc_protection_buffers_disable": {
 									"name": "Limits Override",
 									"type": "Bool",
 									"ui_type": "none"
@@ -818,14 +818,14 @@
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_min": {
-									"name": "Minimum Voltage",
+								"min_cell_voltage": {
+									"name": "Minimum Cell Voltage",
 									"register_id": "bms_voltage_min",
 									"scaler": 1,
 									"unit": "V"
 								},
-								"voltage_max": {
-									"name": "Maximum Voltage",
+								"max_cell_voltage": {
+									"name": "Maximum Cell Voltage",
 									"register_id": "bms_voltage_max",
 									"scaler": 1,
 									"unit": "V"

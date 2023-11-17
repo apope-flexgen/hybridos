@@ -27,12 +27,15 @@ Asset_ESS::Asset_ESS() {
     maint_dischargeable_min_limit = 0.0;
     maint_min_soc_limit = 0.0;
     maint_max_soc_limit = 0.0;
-    maint_limits_override_flag = false;              // this is the buffers at top and bottom soc
-    maint_soc_limits_enable_flag = false;            // this is toggling on changing those buffers in maint mode
-    maint_voltage_limits_enable_flag = false;        // this is toggling on voltage limits in maint mode
-    maint_min_charge_discharge_enable_flag = false;  // this is toggling on min charge/discharge limits in maint mode
-    maint_min_voltage_limit = 0.0;
-    maint_max_voltage_limit = 0.0;
+    maint_soc_protection_buffers_disable_flag = false;  // this is the buffers at top and bottom soc
+    maint_soc_limits_enable_flag = false;               // this is toggling on changing those buffers in maint mode
+    maint_cell_voltage_limits_enable_flag = false;      // this is toggling on voltage limits in maint mode
+    maint_rack_voltage_limits_enable_flag = false;      // this is toggling on voltage limits in maint mode
+    maint_min_charge_discharge_enable_flag = false;     // this is toggling on min charge/discharge limits in maint mode
+    maint_min_cell_voltage_limit = 0.0;
+    maint_max_cell_voltage_limit = 0.0;
+    maint_min_rack_voltage_limit = 0.0;
+    maint_max_rack_voltage_limit = 0.0;
 
     reactive_power_mode_value = 0;
     power_factor_mode_value = 0;
@@ -66,8 +69,9 @@ Asset_ESS::Asset_ESS() {
     energy_configured = false;
     rated_dischargeable_power = 0;
 
-    limits_override_flag = false;
-    voltage_limits_flag = false;
+    soc_protection_buffers_disable_flag = false;
+    cell_voltage_limits_flag = false;
+    rack_voltage_limits_flag = false;
     chgSocBegin = 0.0;
     chgSocEnd = 0.0;
     dischgSocBegin = 0.0;
@@ -329,15 +333,19 @@ void Asset_ESS::set_calibration_vars(ESS_Calibration_Settings settings) {
     soc_limits_flag = settings.soc_limits_flag;
     dischargeable_soc_limit = settings.min_soc_limit;
     chargeable_soc_limit = settings.max_soc_limit;
-    voltage_limits_flag = settings.voltage_limits;
-    dischargeable_voltage_limit = settings.min_voltage_limit;
-    chargeable_voltage_limit = settings.max_voltage_limit;
+    cell_voltage_limits_flag = settings.cell_voltage_limits;
+    rack_voltage_limits_flag = settings.rack_voltage_limits;
+    dischargeable_cell_voltage_limit = settings.min_cell_voltage_limit;
+    chargeable_cell_voltage_limit = settings.max_cell_voltage_limit;
+    dischargeable_rack_voltage_limit = settings.min_rack_voltage_limit;
+    chargeable_rack_voltage_limit = settings.max_rack_voltage_limit;
     raw_calibration_setpoint = settings.raw_feature_setpoint;
-    // Set up limits override flag to follow the feature if true, or the last maint mode set otherwise
-    if (settings.limits_override && !inMaintenance)
-        limits_override_flag = true;
-    else
-        limits_override_flag = maint_limits_override_flag;
+
+    if (!inMaintenance) {
+        soc_protection_buffers_disable_flag = settings.soc_protection_buffers_disable;
+    } else {
+        soc_protection_buffers_disable_flag = maint_soc_protection_buffers_disable_flag;
+    }
 }
 
 bool Asset_ESS::close_bms_contactors(void) {
@@ -627,9 +635,11 @@ Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* con
         // SLIDERS
         quick_config_slider(ui_controls, "maint_mode", maint_mode, inMaintenance, name, validation_result);
         quick_config_slider(ui_controls, "lock_mode", lock_mode, inLockdown, name, validation_result);
-        quick_config_slider(ui_controls, "limits_override", limits_override_ctl, limits_override_flag, name, validation_result);
+        quick_config_slider(ui_controls, "maint_soc_protection_buffers_disable", maint_soc_protection_buffers_disable_ctl, maint_soc_protection_buffers_disable_flag, name, validation_result);
         quick_config_slider(ui_controls, "maint_soc_limits_enable", maint_soc_limits_enable_ctl, maint_soc_limits_enable_flag, name, validation_result);
-        quick_config_slider(ui_controls, "maint_voltage_limits_enable", maint_voltage_limits_enable_ctl, maint_voltage_limits_enable_flag, name, validation_result);
+        quick_config_slider(ui_controls, "maint_cell_voltage_limits_enable", maint_cell_voltage_limits_enable_ctl, maint_cell_voltage_limits_enable_flag, name, validation_result);
+        quick_config_slider(ui_controls, "maint_rack_voltage_limits_enable", maint_rack_voltage_limits_enable_ctl, maint_rack_voltage_limits_enable_flag, name, validation_result);
+
         quick_config_slider(ui_controls, "maint_min_charge_discharge_enable", maint_min_charge_discharge_enable_ctl, maint_min_charge_discharge_enable_flag, name, validation_result);
 
         // NUMBERS
@@ -639,8 +649,10 @@ Config_Validation_Result Asset_ESS::configure_ui_controls(Type_Configurator* con
         quick_config_numeric(ui_controls, "maint_dischargeable_min_limit", maint_dischargeable_min_limit_ctl, maint_dischargeable_min_limit, name, validation_result);
         quick_config_numeric(ui_controls, "maint_min_soc_limit", maint_min_soc_limit_ctl, maint_min_soc_limit, name, validation_result);
         quick_config_numeric(ui_controls, "maint_max_soc_limit", maint_max_soc_limit_ctl, maint_max_soc_limit, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_min_voltage_limit", maint_min_voltage_limit_ctl, maint_min_voltage_limit, name, validation_result);
-        quick_config_numeric(ui_controls, "maint_max_voltage_limit", maint_max_voltage_limit_ctl, maint_max_voltage_limit, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_min_cell_voltage_limit", maint_min_cell_voltage_limit_ctl, maint_min_cell_voltage_limit, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_max_cell_voltage_limit", maint_max_cell_voltage_limit_ctl, maint_max_cell_voltage_limit, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_min_rack_voltage_limit", maint_min_rack_voltage_limit_ctl, maint_min_rack_voltage_limit, name, validation_result);
+        quick_config_numeric(ui_controls, "maint_max_rack_voltage_limit", maint_max_rack_voltage_limit_ctl, maint_max_rack_voltage_limit, name, validation_result);
 
         // BUTTONS
         quick_config_button(ui_controls, "clear_faults", clear_faults_ctl, compNames[i], uri_clear_faults, name, validation_result, true);  // use true here because resetOption
@@ -717,8 +729,10 @@ Config_Validation_Result Asset_ESS::configure_typed_asset_fims_vars(Type_Configu
     validation_result.absorb(configure_single_fims_var(&racks_in_service, "racks_in_service", configurator, Int));
     validation_result.absorb(configure_single_fims_var(&dc_contactors_closed, "dc_contactors_closed", configurator, Bool));
     validation_result.absorb(configure_single_fims_var(&autobalancing_status, "autobalancing_status", configurator, Bool));
-    validation_result.absorb(configure_single_fims_var(&voltage_min, "voltage_min", configurator, Bool));
-    validation_result.absorb(configure_single_fims_var(&voltage_max, "voltage_max", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&min_cell_voltage, "min_cell_voltage", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&max_cell_voltage, "max_cell_voltage", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&min_rack_voltage, "min_rack_voltage", configurator, Bool));
+    validation_result.absorb(configure_single_fims_var(&max_rack_voltage, "max_rack_voltage", configurator, Bool));
     validation_result.absorb(configure_single_fims_var(&status, "status", configurator, Status));
 
     return validation_result;
@@ -764,10 +778,14 @@ bool Asset_ESS::handle_set(std::string uri, cJSON& body) {
         enter_standby();
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "exit_standby")) && inMaintenance) {
         exit_standby();
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "limits_override"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "soc_protection_buffers_disable"))) {
+        if ((value = cJSON_GetObjectItem(current_setpoint, "value"))) {
+            soc_protection_buffers_disable_flag = (bool)value->valueint;
+            persistent_setpoint = true;
+        }
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_protection_buffers_disable"))) {
         if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
-            limits_override_flag = (bool)value->valueint;
-            maint_limits_override_flag = limits_override_flag;
+            maint_soc_protection_buffers_disable_flag = (bool)value->valueint;
             persistent_setpoint = true;
         }
     } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_limits_enable"))) {
@@ -775,9 +793,24 @@ bool Asset_ESS::handle_set(std::string uri, cJSON& body) {
             maint_soc_limits_enable_flag = (bool)value->valueint;
             persistent_setpoint = true;
         }
-    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_voltage_limits_enable"))) {
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_cell_voltage_limits_enable"))) {
         if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
-            maint_voltage_limits_enable_flag = (bool)value->valueint;
+            maint_cell_voltage_limits_enable_flag = (bool)value->valueint;
+            persistent_setpoint = true;
+        }
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_rack_voltage_limits_enable"))) {
+        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
+            maint_rack_voltage_limits_enable_flag = (bool)value->valueint;
+            persistent_setpoint = true;
+        }
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_min_charge_discharge_enable"))) {
+        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
+            maint_min_charge_discharge_enable_flag = (bool)value->valueint;
+            persistent_setpoint = true;
+        }
+    } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_soc_limits_enable"))) {
+        if ((value = cJSON_GetObjectItem(current_setpoint, "value")) && inMaintenance) {
+            maint_soc_limits_enable_flag = (bool)value->valueint;
             persistent_setpoint = true;
         }
     } else if ((current_setpoint = grab_naked_or_clothed(body, current_setpoint, "maint_min_charge_discharge_enable"))) {
@@ -811,11 +844,17 @@ bool Asset_ESS::handle_set(std::string uri, cJSON& body) {
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_soc_limit"))) {
         maint_max_soc_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_voltage_limit"))) {
-        maint_min_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_cell_voltage_limit"))) {
+        maint_min_cell_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
-    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_voltage_limit"))) {
-        maint_max_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_cell_voltage_limit"))) {
+        maint_max_cell_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_min_rack_voltage_limit"))) {
+        maint_min_rack_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
+        persistent_setpoint = true;
+    } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_Number, "maint_max_rack_voltage_limit"))) {
+        maint_max_rack_voltage_limit = cJSON_GetObjectItem(current_setpoint, "value")->valuedouble;
         persistent_setpoint = true;
     } else if ((current_setpoint = grab_naked_or_clothed_and_check_type(body, current_setpoint, cJSON_True, "open_dc_contactors"))) {
         open_bms_contactors();
@@ -851,14 +890,23 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
     clear_faults_ctl.enabled = (get_num_active_faults() != 0 || get_num_active_alarms() != 0);
     goodBody = clear_faults_ctl.makeJSONObject(buf, var, true) && goodBody;
 
-    limits_override_ctl.enabled = inMaintenance;
-    goodBody = limits_override_ctl.makeJSONObject(buf, var, true) && goodBody;
+    maint_soc_protection_buffers_disable_ctl.enabled = inMaintenance;
+    goodBody = maint_soc_protection_buffers_disable_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     maint_soc_limits_enable_ctl.enabled = inMaintenance;
     goodBody = maint_soc_limits_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
 
-    maint_voltage_limits_enable_ctl.enabled = inMaintenance;
-    goodBody = maint_voltage_limits_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
+    maint_cell_voltage_limits_enable_ctl.enabled = inMaintenance;
+    goodBody = maint_cell_voltage_limits_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_rack_voltage_limits_enable_ctl.enabled = inMaintenance;
+    goodBody = maint_rack_voltage_limits_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_min_charge_discharge_enable_ctl.enabled = inMaintenance;
+    goodBody = maint_min_charge_discharge_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_soc_limits_enable_ctl.enabled = inMaintenance;
+    goodBody = maint_soc_limits_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
 
     maint_min_charge_discharge_enable_ctl.enabled = inMaintenance;
     goodBody = maint_min_charge_discharge_enable_ctl.makeJSONObject(buf, var, true) && goodBody;
@@ -910,12 +958,20 @@ bool Asset_ESS::generate_asset_ui(fmt::memory_buffer& buf, const char* const var
     goodBody = maint_max_soc_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
     // end lock
 
-    // lock these variables behind the maint_voltage_limits_enable_flag
-    maint_min_voltage_limit_ctl.enabled = inMaintenance && maint_voltage_limits_enable_flag;
-    goodBody = maint_min_voltage_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+    // lock these variables behind the maint_cell_voltage_limits_enable_flag
+    maint_min_cell_voltage_limit_ctl.enabled = inMaintenance && maint_cell_voltage_limits_enable_flag;
+    goodBody = maint_min_cell_voltage_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
 
-    maint_max_voltage_limit_ctl.enabled = inMaintenance && maint_voltage_limits_enable_flag;
-    goodBody = maint_max_voltage_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+    maint_max_cell_voltage_limit_ctl.enabled = inMaintenance && maint_cell_voltage_limits_enable_flag;
+    goodBody = maint_max_cell_voltage_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+    // end lock
+
+    // lock these variables behind the maint_rack_voltage_limits_enable_flag
+    maint_min_rack_voltage_limit_ctl.enabled = inMaintenance && maint_rack_voltage_limits_enable_flag;
+    goodBody = maint_min_rack_voltage_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
+
+    maint_max_rack_voltage_limit_ctl.enabled = inMaintenance && maint_rack_voltage_limits_enable_flag;
+    goodBody = maint_max_rack_voltage_limit_ctl.makeJSONObject(buf, var, true) && goodBody;
     // end lock
 
     // Open contactors only if stopped (not faulted) and contactors are closed
@@ -955,7 +1011,7 @@ void Asset_ESS::process_asset() {
     float _maxRawSoc = maxRawSoc;
 
     // Override soc if specified by the UI
-    if (limits_override_flag) {
+    if (soc_protection_buffers_disable_flag) {
         // Remove soc scaling
         _maxRawSoc = 100.0f;
         _minRawSoc = 0.0f;
@@ -1008,10 +1064,12 @@ void Asset_ESS::process_asset() {
     // Apply calibration mode limits
     if (calibration_flag) {
         // Limit (dis)chargeable power to 0 if soc or voltage are beyond their acceptable thresholds
-        if ((soc_limits_flag && soc.value.value_float >= chargeable_soc_limit) || (voltage_limits_flag && voltage_max.value.value_float >= chargeable_voltage_limit)) {
+        if ((soc_limits_flag && soc.value.value_float >= chargeable_soc_limit) || (cell_voltage_limits_flag && max_cell_voltage.value.value_float >= chargeable_cell_voltage_limit) ||
+            (rack_voltage_limits_flag && max_rack_voltage.value.value_float >= chargeable_rack_voltage_limit)) {
             chargeable_power.value.set(0.0f);
         }
-        if ((soc_limits_flag && soc.value.value_float <= dischargeable_soc_limit) || (voltage_limits_flag && voltage_min.value.value_float <= dischargeable_voltage_limit)) {
+        if ((soc_limits_flag && soc.value.value_float <= dischargeable_soc_limit) || (cell_voltage_limits_flag && min_cell_voltage.value.value_float <= dischargeable_cell_voltage_limit) ||
+            (rack_voltage_limits_flag && min_rack_voltage.value.value_float <= dischargeable_rack_voltage_limit)) {
             dischargeable_power.value.set(0.0f);
         }
 
@@ -1028,10 +1086,12 @@ void Asset_ESS::process_asset() {
     // Use the maint_mode soc limits if inMaintenance and in use
     if (inMaintenance) {
         // Limit (dis)chargeable power to 0 if soc or voltage are beyond their acceptable thresholds
-        if ((maint_soc_limits_enable_flag && soc.value.value_float >= maint_max_soc_limit) || (maint_voltage_limits_enable_flag && voltage_max.value.value_float >= maint_max_voltage_limit)) {
+        if ((maint_soc_limits_enable_flag && soc.value.value_float >= maint_max_soc_limit) || (maint_cell_voltage_limits_enable_flag && max_cell_voltage.value.value_float >= maint_max_cell_voltage_limit) ||
+            (maint_rack_voltage_limits_enable_flag && max_rack_voltage.value.value_float >= maint_max_rack_voltage_limit)) {
             chargeable_power.value.set(0.0f);
         }
-        if ((maint_soc_limits_enable_flag && soc.value.value_float <= maint_min_soc_limit) || (maint_voltage_limits_enable_flag && voltage_min.value.value_float <= maint_min_voltage_limit)) {
+        if ((maint_soc_limits_enable_flag && soc.value.value_float <= maint_min_soc_limit) || (maint_cell_voltage_limits_enable_flag && min_cell_voltage.value.value_float <= maint_min_cell_voltage_limit) ||
+            (maint_rack_voltage_limits_enable_flag && min_rack_voltage.value.value_float <= maint_min_rack_voltage_limit)) {
             dischargeable_power.value.set(0.0f);
         }
     }

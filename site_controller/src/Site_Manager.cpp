@@ -1624,9 +1624,12 @@ void Site_Manager::update_power_feature_selections() {
         bool soc_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.soc_limits_enable.value.value_bool;
         ess_calibration.min_soc_limit.ui_enabled = soc_limits_enabled;
         ess_calibration.max_soc_limit.ui_enabled = soc_limits_enabled;
-        bool voltage_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.voltage_limits_enable.value.value_bool;
-        ess_calibration.min_voltage_limit.ui_enabled = voltage_limits_enabled;
-        ess_calibration.max_voltage_limit.ui_enabled = voltage_limits_enabled;
+        bool cell_voltage_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.cell_voltage_limits_enable.value.value_bool;
+        ess_calibration.min_cell_voltage_limit.ui_enabled = cell_voltage_limits_enabled;
+        ess_calibration.max_cell_voltage_limit.ui_enabled = cell_voltage_limits_enabled;
+        bool rack_voltage_limits_enabled = ess_calibration.enable_flag.value.value_bool && ess_calibration.rack_voltage_limits_enable.value.value_bool;
+        ess_calibration.min_rack_voltage_limit.ui_enabled = rack_voltage_limits_enabled;
+        ess_calibration.max_rack_voltage_limit.ui_enabled = rack_voltage_limits_enabled;
     }
 
     // if runmode2 active power feature command has changed, switch runmode2 active power features
@@ -2958,13 +2961,16 @@ void Site_Manager::set_ess_calibration_variables() {
     // ESS power distribution balancing always disabled in this mode
     settings.power_dist_flag = !ess_calibration.enable_flag.value.value_bool;
     // limits override always enabled in this mode
-    settings.limits_override = ess_calibration.enable_flag.value.value_bool;
+    settings.soc_protection_buffers_disable = ess_calibration.enable_flag.value.value_bool;
     settings.soc_limits_flag = ess_calibration.soc_limits_enable.value.value_bool;
     settings.min_soc_limit = ess_calibration.min_soc_limit.value.value_float;
     settings.max_soc_limit = ess_calibration.max_soc_limit.value.value_float;
-    settings.voltage_limits = ess_calibration.voltage_limits_enable.value.value_bool;
-    settings.min_voltage_limit = ess_calibration.min_voltage_limit.value.value_float;
-    settings.max_voltage_limit = ess_calibration.max_voltage_limit.value.value_float;
+    settings.cell_voltage_limits = ess_calibration.cell_voltage_limits_enable.value.value_bool;
+    settings.min_cell_voltage_limit = ess_calibration.min_cell_voltage_limit.value.value_float;
+    settings.max_cell_voltage_limit = ess_calibration.max_cell_voltage_limit.value.value_float;
+    settings.rack_voltage_limits = ess_calibration.rack_voltage_limits_enable.value.value_bool;
+    settings.min_rack_voltage_limit = ess_calibration.min_rack_voltage_limit.value.value_float;
+    settings.max_rack_voltage_limit = ess_calibration.max_rack_voltage_limit.value.value_float;
     // Write through the feature setpoint as well so we have a reference of whether it's being met for each asset
     settings.raw_feature_setpoint = ess_calibration.kW_cmd.value.value_float;
     pAssets->set_ess_calibration_vars(settings);

@@ -92,8 +92,8 @@ class Steps():
             "/assets/solar/solar_1/maint_mode": True,
             "/assets/solar/solar_2/maint_mode": True,
             "/assets/generators/gen_1/maint_mode": True,
-            "/assets/ess/ess_1/maint_mode": True,
-            "/assets/ess/ess_2/maint_mode": True,
+            "/assets/ess/ess_01/maint_mode": True,
+            "/assets/ess/ess_02/maint_mode": True,
         }
 
     @staticmethod
@@ -102,8 +102,8 @@ class Steps():
             "/assets/solar/solar_1/maint_mode": False,
             "/assets/solar/solar_2/maint_mode": False,
             "/assets/generators/gen_1/maint_mode": False,
-            "/assets/ess/ess_1/maint_mode": False,
-            "/assets/ess/ess_2/maint_mode": False,
+            "/assets/ess/ess_01/maint_mode": False,
+            "/assets/ess/ess_02/maint_mode": False,
         }
 
 

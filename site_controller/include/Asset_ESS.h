@@ -109,47 +109,54 @@ protected:
     float rated_chargeable_power;
     float rated_dischargeable_power;
 
-    float chgSocBegin;                  // Beginning of high end SoC derating. Chargeable power is limited towards zero when above this value
-    float chgSocEnd;                    // End of high end SoC derating. Chargeable power is zero when at or above this value
-    float dischgSocBegin;               // Beginning of low end SoC derating. Dischargeable power is limited towards zero when below this value
-    float dischgSocEnd;                 // End of low end SoC derating. Dischargeable power is zero when at or below this value
-    float maxRawSoc;                    // Highest (raw) SoC value allowed based on configuration as part of derating. Typically 97 and disabled with 100
-    float minRawSoc;                    // Lowest (raw) SoC value allowed based on configuration as part of derating. Typically 4 and disabled with 0
-    float rated_capacity;               // configurable battery base capacity
-    bool calibration_flag;              // Flag indicating in calibration mode
-    bool limits_override_flag;          // Bypass soc limits to publish raw value
-    bool voltage_limits_flag;           // Enable cell voltage-based limits on (dis)chargeable power
-    bool soc_limits_flag;               // Enable soc-based limits on (dis)chargeable power
-    float chargeable_soc_limit;         // Chargeable power set to 0 when above this soc
-    float dischargeable_soc_limit;      // Dischargeable power set to 0 when below this soc
-    float chargeable_voltage_limit;     // Chargeable power set to chargeable_min_limit_kW when voltage_max above this limit
-    float dischargeable_voltage_limit;  // Dischargeable power set to dischargeable_min_limit_kW when voltage_min below this limit
-    float chargeable_min_limit_kW;      // Configurable floor for chargeable power. Derating will not go below this value
-    float dischargeable_min_limit_kW;   // Configurable floor for dischargeable power. Derating will not go below this value
-    float raw_calibration_setpoint;     // Calibration setpoint command by the feature, used as a reference for the setpoint status
+    float chgSocBegin;                         // Beginning of high end SoC derating. Chargeable power is limited towards zero when above this value
+    float chgSocEnd;                           // End of high end SoC derating. Chargeable power is zero when at or above this value
+    float dischgSocBegin;                      // Beginning of low end SoC derating. Dischargeable power is limited towards zero when below this value
+    float dischgSocEnd;                        // End of low end SoC derating. Dischargeable power is zero when at or below this value
+    float maxRawSoc;                           // Highest (raw) SoC value allowed based on configuration as part of derating. Typically 97 and disabled with 100
+    float minRawSoc;                           // Lowest (raw) SoC value allowed based on configuration as part of derating. Typically 4 and disabled with 0
+    float rated_capacity;                      // configurable battery base capacity
+    bool calibration_flag;                     // Flag indicating in calibration mode
+    bool soc_protection_buffers_disable_flag;  // Bypass soc limits to publish raw value
+    bool cell_voltage_limits_flag;             // Enable cell voltage-based limits on (dis)chargeable power
+    bool rack_voltage_limits_flag;             // Enable cell voltage-based limits on (dis)chargeable power
+    bool soc_limits_flag;                      // Enable soc-based limits on (dis)chargeable power
+    float chargeable_soc_limit;                // Chargeable power set to 0 when above this soc
+    float dischargeable_soc_limit;             // Dischargeable power set to 0 when below this soc
+    float chargeable_cell_voltage_limit;       // Chargeable power set to chargeable_min_limit_kW when max_cell_voltage above this limit
+    float dischargeable_cell_voltage_limit;    // Dischargeable power set to dischargeable_min_limit_kW when min_cell_voltage below this limit
+    float chargeable_rack_voltage_limit;       // Chargeable power set to chargeable_min_limit_kW when max_rack_voltage above this limit
+    float dischargeable_rack_voltage_limit;    // Dischargeable power set to dischargeable_min_limit_kW when min_rack_voltage below this limit
+    float chargeable_min_limit_kW;             // Configurable floor for chargeable power. Derating will not go below this value
+    float dischargeable_min_limit_kW;          // Configurable floor for dischargeable power. Derating will not go below this value
+    float raw_calibration_setpoint;            // Calibration setpoint command by the feature, used as a reference for the setpoint status
 
     // control
-    bool maint_limits_override_flag;              // When in maintenance mode, override limits to publish raw value
-    bool maint_soc_limits_enable_flag;            // When in maintenance mode, enable soc-based limits on (dis)chargeable power
-    bool maint_voltage_limits_enable_flag;        // When in maintenance mode, enable cell voltage-based limits on (dis)chargeable power
-    bool maint_min_charge_discharge_enable_flag;  // When in maintenance mode, enable min charge/discharge limits
-    float maint_active_power_setpoint;            // Active power setpoint in maintenance mode
-    float maint_reactive_power_setpoint;          // Reactive power setpoint in maintenance mode
-    float maint_chargeable_min_limit;             // Configurable floor for chargeable power in maintenance mode. Derating will not go below this value until you fully derate to 0
-    float maint_dischargeable_min_limit;          // Configurable floor for dischargeable power in maintenance mode. Derating will not go below this value until you fully derate to 0
-    float maint_min_soc_limit;                    // Chargeable power set to 0 when below this soc in maintenance mode
-    float maint_max_soc_limit;                    // Dischargeable power set to 0 when above this soc in maintenance mode
-    float maint_min_voltage_limit;                // Chargeable power set to 0 when voltage_max below this limit in maintenance mode
-    float maint_max_voltage_limit;                // Dischargeable power set to 0 when voltage_min above this limit in maintenance mode
+    bool maint_soc_protection_buffers_disable_flag;  // When in maintenance mode, override limits to publish raw value
+    bool maint_soc_limits_enable_flag;               // When in maintenance mode, enable soc-based limits on (dis)chargeable power
+    bool maint_cell_voltage_limits_enable_flag;      // When in maintenance mode, enable cell voltage-based limits on (dis)chargeable power
+    bool maint_rack_voltage_limits_enable_flag;      // When in maintenance mode, enable rack voltage-based limits on (dis)chargeable power
+    bool maint_min_charge_discharge_enable_flag;     // When in maintenance mode, enable min charge/discharge limits
+    float maint_active_power_setpoint;               // Active power setpoint in maintenance mode
+    float maint_reactive_power_setpoint;             // Reactive power setpoint in maintenance mode
+    float maint_chargeable_min_limit;                // Configurable floor for chargeable power in maintenance mode. Derating will not go below this value until you fully derate to 0
+    float maint_dischargeable_min_limit;             // Configurable floor for dischargeable power in maintenance mode. Derating will not go below this value until you fully derate to 0
+    float maint_min_soc_limit;                       // Chargeable power set to 0 when below this soc in maintenance mode
+    float maint_max_soc_limit;                       // Dischargeable power set to 0 when above this soc in maintenance mode
+    float maint_min_cell_voltage_limit;              // Chargeable power set to 0 when max_cell_voltage below this limit in maintenance mode
+    float maint_max_cell_voltage_limit;              // Dischargeable power set to 0 when min_cell_voltage above this limit in maintenance mode
+    float maint_min_rack_voltage_limit;              // Chargeable power set to 0 when max_rack_voltage below this limit in maintenance mode
+    float maint_max_rack_voltage_limit;              // Dischargeable power set to 0 when min_rack_voltage above this limit in maintenance mode
 
     fimsCtl start_ctl;
     fimsCtl stop_ctl;
     fimsCtl clear_faults_ctl;
     fimsCtl enter_standby_ctl;
     fimsCtl exit_standby_ctl;
-    fimsCtl limits_override_ctl;
+    fimsCtl maint_soc_protection_buffers_disable_ctl;
     fimsCtl maint_soc_limits_enable_ctl;
-    fimsCtl maint_voltage_limits_enable_ctl;
+    fimsCtl maint_cell_voltage_limits_enable_ctl;
+    fimsCtl maint_rack_voltage_limits_enable_ctl;
     fimsCtl maint_min_charge_discharge_enable_ctl;
     fimsCtl autobalancing_enable_ctl;
     fimsCtl autobalancing_disable_ctl;
@@ -164,8 +171,10 @@ protected:
     fimsCtl maint_dischargeable_min_limit_ctl;
     fimsCtl maint_min_soc_limit_ctl;
     fimsCtl maint_max_soc_limit_ctl;
-    fimsCtl maint_min_voltage_limit_ctl;
-    fimsCtl maint_max_voltage_limit_ctl;
+    fimsCtl maint_min_cell_voltage_limit_ctl;
+    fimsCtl maint_max_cell_voltage_limit_ctl;
+    fimsCtl maint_min_rack_voltage_limit_ctl;
+    fimsCtl maint_max_rack_voltage_limit_ctl;
 
     // status
     bool energy_configured;  // Flag to indicate whether chargeable/dischargeable_energy was configured
@@ -196,8 +205,10 @@ protected:
     Fims_Object racks_in_service;
     Fims_Object dc_contactors_closed;
     Fims_Object autobalancing_status;  // Status of the autobalancing register
-    Fims_Object voltage_min;
-    Fims_Object voltage_max;
+    Fims_Object min_cell_voltage;
+    Fims_Object max_cell_voltage;
+    Fims_Object min_rack_voltage;
+    Fims_Object max_rack_voltage;
     Fims_Object status;
 
     // uris

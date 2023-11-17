@@ -1552,7 +1552,7 @@
                     "ui_type": "control",
                     "unit": "%"
                 },
-                "ess_calibration_voltage_limits_enable":
+                "ess_calibration_cell_voltage_limits_enable":
                 {
                     "name": "ESS Calibration Cell Voltage Limits Enable",
                     "ui_type": "control",
@@ -1560,15 +1560,35 @@
                     "var_type": "Bool",
                     "value": false
                 },
-                "ess_calibration_min_voltage_limit":
+                "ess_calibration_min_cell_voltage_limit":
                 {
                     "name": "ESS Calibration Min Cell Voltage Limit",
                     "ui_type": "control",
                     "unit": "V"
                 },
-                "ess_calibration_max_voltage_limit":
+                "ess_calibration_max_cell_voltage_limit":
                 {
                     "name": "ESS Calibration Max Cell Voltage Limit",
+                    "ui_type": "control",
+                    "unit": "V"
+                },
+                "ess_calibration_rack_voltage_limits_enable":
+                {
+                    "name": "ESS Calibration Rack Voltage Limits Enable",
+                    "ui_type": "control",
+                    "type": "enum_slider",
+                    "var_type": "Bool",
+                    "value": false
+                },
+                "ess_calibration_min_rack_voltage_limit":
+                {
+                    "name": "ESS Calibration Min Rack Voltage Limit",
+                    "ui_type": "control",
+                    "unit": "V"
+                },
+                "ess_calibration_max_rack_voltage_limit":
+                {
+                    "name": "ESS Calibration Max Rack Voltage Limit",
                     "ui_type": "control",
                     "unit": "V"
                 },

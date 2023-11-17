@@ -592,7 +592,7 @@
 									"name": "Lockdown Mode",
 									"type": "Bool"
 								},
-								"limits_override":
+								"maint_soc_protection_buffers_disable":
 								{
 									"name": "Limits Override",
 									"type": "Bool",
@@ -965,7 +965,7 @@
 									"name": "Lockdown Mode",
 									"type": "Bool"
 								},
-								"limits_override":
+								"maint_soc_protection_buffers_disable":
 								{
 									"name": "Limits Override",
 									"type": "Bool",

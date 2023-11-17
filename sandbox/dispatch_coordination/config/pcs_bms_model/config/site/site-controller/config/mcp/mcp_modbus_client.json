@@ -1,0 +1,50 @@
+{
+	"processes":
+	[
+		{
+			"name":"/usr/local/bin/modbus_client",
+			"args": [ "/usr/local/etc/config/modbus_client/bess_aux_client.json" ],
+			"max_restarts": -1
+		},
+		{
+			"name":"/usr/local/bin/modbus_client",
+			"args": [ "/usr/local/etc/config/modbus_client/control_cabinet_client.json" ],
+			"max_restarts": -1
+		},
+		{
+			"name":"/usr/local/bin/modbus_client",
+			"args": [ "/usr/local/etc/config/modbus_client/ess_1_modbus_client.json" ],
+			"max_restarts": -1
+		},
+		{
+			"name":"/usr/local/bin/modbus_client",
+			"args": [ "/usr/local/etc/config/modbus_client/ess_2_modbus_client.json" ],
+			"max_restarts": -1
+		},
+		{
+			"name":"/usr/local/bin/modbus_client",
+			"args": [ "/usr/local/etc/config/modbus_client/shared_poi_client.json" ],
+			"max_restarts": -1
+		},
+		{
+			"name":"/usr/local/bin/modbus_client",
+			"args": [ "/usr/local/etc/config/modbus_client/split_feeder_client.json" ],
+			"max_restarts": -1
+		},
+		{
+			"name":"/usr/local/bin/modbus_client",
+			"args": [ "/usr/local/etc/config/modbus_client/pv_1_client.json" ],
+			"max_restarts": -1
+		},
+		{
+			"name":"/usr/local/bin/modbus_client",
+			"args": [ "/usr/local/etc/config/modbus_client/pv_2_client.json" ],
+			"max_restarts": -1
+		},
+		{
+			"name":"/usr/local/bin/modbus_client",
+			"args": [ "/usr/local/etc/config/modbus_client/easygen_3500xt_client.json" ],
+			"max_restarts": -1
+		}
+	]
+}

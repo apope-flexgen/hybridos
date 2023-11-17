@@ -91,7 +91,7 @@
                     "name": "Limits Override Enable",
                     "scalar": "1",
                     "units": "",
-                    "uri": "/limits_override"
+                    "uri": "/maint_soc_protection_buffers_disable"
                 },
                 {
                     "inputType": "switch",
@@ -1058,6 +1058,189 @@
                     "uri": "/voltage_l3_l1"
                 }
             ]
+        }
+        ,
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/maint_mode"
+                }
+            ],
+            "controls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/maint_mode"
+                },
+                {
+                    "inputType": "enum_button",
+                    "name": "Breaker Close",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/breaker_close"
+                },
+                {
+                    "inputType": "enum_button",
+                    "name": "Breaker Open",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/breaker_open"
+                },
+                {
+                    "inputType": "enum_button",
+                    "name": "Breaker Reset",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/breaker_reset"
+                }
+            ],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "feeders_tab",
+                "baseURI": "/feeders",
+                "extension": "/feed_1",
+                "faultFields": [
+                    "faults",
+                    "watchdog_fault"
+                ],
+                "hasAllControls": false,
+                "hasSummary": false,
+                "itemName": "POI Feeder",
+                "name": "Feeder",
+                "numberOfItems": "1",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        },
+        {
+            
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [],
+            "controls": [],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "feeders_tab",
+                "baseURI": "/feeders",
+                "extension": "/feed_3",
+                "faultFields": [
+                    "faults",
+                    "watchdog_fault"
+                ],
+                "hasAllControls": true,
+                "hasSummary": false,
+                "itemName": "Control Cabinet Feeder",
+                "name": "Feeder",
+                "numberOfItems": "1",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/reactive_power"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        },
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [],
+            "controls": [
+            ],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "feeders_tab",
+                "baseURI": "/feeders",
+                "extension": "/feed_",
+                "range": [
+                    2,
+                    4,
+                    5
+                ],
+                "faultFields": [
+                    "faults",
+                    "watchdog_fault"
+                ],
+                "hasAllControls": false,
+                "hasSummary": false,
+                "itemName": "",
+                "name": "Feeder",
+                "numberOfItems": "4",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Local Mode Status",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/local_mode_status"
+                },
+                {
+                    "name": "Is Alarmed",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/is_alarmed"
+                },
+                {
+                    "name": "Is Faulted",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/is_faulted"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
         }
         ,
         {
