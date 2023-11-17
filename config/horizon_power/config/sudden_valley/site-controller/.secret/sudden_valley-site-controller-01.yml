@@ -1,0 +1,26 @@
+version: 11.3.0.alpha.3
+
+dnp3_client: 
+  sel_411l_dnp3_client.json: { ip: 192.168.12.250, port: 502}
+  sel_487e_dnp3_client.json: { ip: 192.168.12.250, port: 503}
+
+modbus_client: 
+  apc_ups_modbus_client.json: { ip: 192.168.12.250, port: 504}
+  ess_1_modbus_client.json: { ip: 192.168.12.10, port: 502}
+  ess_10_modbus_client.json: { ip: 192.168.12.250, port: 505}
+  ess_11_modbus_client.json: { ip: 192.168.12.250, port: 506}
+  ess_12_modbus_client.json: { ip: 192.168.12.250, port: 507}
+  ess_2_modbus_client.json: { ip: 192.168.12.250, port: 510}
+  ess_3_modbus_client.json: { ip: 192.168.12.250, port: 511}
+  ess_4_modbus_client.json: { ip: 192.168.12.250, port: 512}
+  ess_5_modbus_client.json: { ip: 192.168.12.250, port: 513}
+  ess_6_modbus_client.json: { ip: 192.168.12.250, port: 514}
+  ess_7_modbus_client.json: { ip: 192.168.12.250, port: 515}
+  ess_8_modbus_client.json: { ip: 192.168.12.250, port: 516}
+  ess_9_modbus_client.json: { ip: 192.168.12.250, port: 517}
+  sel_351_1_modbus_client.json: { ip: 192.168.12.250, port: 519}
+  sel_351_2_modbus_client.json: { ip: 192.168.12.250, port: 520}
+  sel_735_modbus_client.json: { ip: 192.168.12.250, port: 521}
+
+dnp3_server: 
+  site_sudden_valley_dnp3_server.json: { ip: 0.0.0.0, port: 502}

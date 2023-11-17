@@ -1,0 +1,434 @@
+{
+  "_doc": "dashboard",
+  "_id": "63764cc4203a7c82abcbd293",
+  "_version": "2022-11-17T15:01:24.910777967Z",
+  "data": [
+    
+    {
+      "info": {
+        "baseURI": "",
+        "batteryView": false,
+        "batteryViewSourceURI": null,
+        "batteryViewURI": "",
+        "isTemplate": true,
+        "items": [
+          {
+            "name": "Sudden Valley",
+            "uri": "/sudden_valley"
+          },
+          {
+            "name": "Lima",
+            "uri": "/lima"
+          },
+          {
+            "name": "North Oakdale",
+            "uri": "/north_oakdale"
+          }
+        ],
+        "name": "Piedmont",
+        "sourceURIs": [
+          "/sites"
+        ]
+      },
+      "status": [
+        {
+          "name": "Site Running",
+          "scalar": null,
+          "sourceURI": "/sites",
+          "uri": "/running_status_flag"
+        },
+        {
+          "name": "Baseload Power Command",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/fr_baseload_cmd_mw_in"
+        },
+        {
+          "name": "POI Active Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/active_power"
+        },
+        {
+          "name": "POI Reactive Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MVAR",
+          "uri": "/reactive_power"
+        },
+        {
+          "name": "POI Voltage",
+          "scalar": 1000,
+          "sourceURI": "/sites",
+          "units": "kV",
+          "uri": "/grid_voltage_l1_l2"
+        },
+        {
+          "name": "POI Frequency",
+          "scalar": 1,
+          "sourceURI": "/sites",
+          "units": "Hz",
+          "uri": "/frequency"
+        },
+        {
+          "name": "POI Breaker Closed",
+          "scalar": null,
+          "sourceURI": "/sites",
+          "uri": "/breaker_status"
+        },
+        {
+          "name": "ESS Active Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/ess_total_active_power"
+        },
+        {
+          "name": "ESS Reactive Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MVAR",
+          "uri": "/ess_total_reactive_power"
+        },        
+        {
+          "name": "ESS State of Charge",
+          "scalar": 1,
+          "sourceURI": "/sites",
+          "units": "%",
+          "uri": "/ess_average_soc"
+        },
+        {
+          "name": "ESS Chargeable Energy",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MWh",
+          "uri": "/ess_chargeable_energy"
+        },
+        {
+          "name": "ESS Dischargeable Energy",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MWh",
+          "uri": "/ess_dischargeable_energy"
+        },       
+        {
+          "name": "ESS Chargeable Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/ess_chargeable_power"
+        },
+        {
+          "name": "ESS Dischargeable Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/ess_dischargeable_power"
+        },
+        {
+          "name": "Site Fault",
+          "scalar": null,
+          "sourceURI": "/sites",
+          "uri": "/fault_status_flag"
+        }
+      ]
+    },
+    {
+      "info": {
+        "baseURI": "",
+        "batteryView": false,
+        "batteryViewSourceURI": null,
+        "batteryViewURI": "",
+        "isTemplate": true,
+        "items": [
+
+          {
+            "name": "Paradise Gardens",
+            "uri": "/paradise_gardens"
+          },
+          {
+            "name": "Pleasantville",
+            "uri": "/pleasantville"
+          },
+          {
+            "name": "Willow Hallow",
+            "uri": "/willow_hallow"
+          },
+          {
+            "name": "Zeusburg",
+            "uri": "/zeusburg"
+          },
+          {
+            "name": "Riverside Village",
+            "uri": "/riverside_village"
+          }
+        ],
+        "name": "Panhandle",
+        "sourceURIs": [
+          "/sites"
+        ]
+      },
+      "status": [
+        {
+          "name": "Site Running",
+          "scalar": null,
+          "sourceURI": "/sites",
+          "uri": "/running_status_flag"
+        },
+        {
+          "name": "Baseload Power Command",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/fr_baseload_cmd_mw_in"
+        },
+        {
+          "name": "POI Active Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/active_power"
+        },
+        {
+          "name": "POI Reactive Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MVAR",
+          "uri": "/reactive_power"
+        },
+        {
+          "name": "POI Voltage",
+          "scalar": 1000,
+          "sourceURI": "/sites",
+          "units": "kV",
+          "uri": "/grid_voltage_l1_l2"
+        },
+        {
+          "name": "POI Frequency",
+          "scalar": 1,
+          "sourceURI": "/sites",
+          "units": "Hz",
+          "uri": "/frequency"
+        },
+        {
+          "name": "POI Breaker Closed",
+          "scalar": null,
+          "sourceURI": "/sites",
+          "uri": "/breaker_status"
+        },
+        {
+          "name": "ESS Active Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/ess_total_active_power"
+        },
+        {
+          "name": "ESS Reactive Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MVAR",
+          "uri": "/ess_total_reactive_power"
+        },        
+        {
+          "name": "ESS State of Charge",
+          "scalar": 1,
+          "sourceURI": "/sites",
+          "units": "%",
+          "uri": "/ess_average_soc"
+        },
+        {
+          "name": "ESS Chargeable Energy",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MWh",
+          "uri": "/ess_chargeable_energy"
+        },
+        {
+          "name": "ESS Dischargeable Energy",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MWh",
+          "uri": "/ess_dischargeable_energy"
+        },       
+        {
+          "name": "ESS Chargeable Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/ess_chargeable_power"
+        },
+        {
+          "name": "ESS Dischargeable Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/ess_dischargeable_power"
+        },
+        {
+          "name": "Site Fault",
+          "scalar": null,
+          "sourceURI": "/sites",
+          "uri": "/fault_status_flag"
+        }
+      ]
+    },
+    {
+      "info": {
+        "baseURI": "",
+        "batteryView": false,
+        "batteryViewSourceURI": null,
+        "batteryViewURI": "",
+        "isTemplate": true,
+        "items": [
+          {
+            "name": "Ashland",
+            "uri": "/ashland"
+          },
+          {
+            "name": "Easton",
+            "uri": "/easton"
+          },
+          {
+            "name": "Brightside Health Center ",
+            "uri": "/brightside_health_center"
+          },
+          {
+            "name": "Oceanside",
+            "uri": "/oceanside"
+          },
+          {
+            "name": "Fairview",
+            "uri": "/fairview"
+          },
+          {
+            "name": "Maplewood",
+            "uri": "/maplewood"
+          },
+          {
+            "name": "Gobias Industries",
+            "uri": "/gobias_industries"
+          },
+          {
+            "name": "Standpoor",
+            "uri": "/standpoor"
+          },
+          {
+            "name": "Cedar Valley",
+            "uri": "/cedar_valley"
+          }
+        ],
+        "name": "Foothills",
+        "sourceURIs": [
+          "/sites"
+        ]
+      },
+      "status": [
+        {
+          "name": "Site Running",
+          "scalar": null,
+          "sourceURI": "/sites",
+          "uri": "/running_status_flag"
+        },
+        {
+          "name": "Baseload Power Command",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/fr_baseload_cmd_mw_in"
+        },
+        {
+          "name": "POI Active Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/active_power"
+        },
+        {
+          "name": "POI Reactive Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MVAR",
+          "uri": "/reactive_power"
+        },
+        {
+          "name": "POI Voltage",
+          "scalar": 1000,
+          "sourceURI": "/sites",
+          "units": "kV",
+          "uri": "/grid_voltage_l1_l2"
+        },
+        {
+          "name": "POI Frequency",
+          "scalar": 1,
+          "sourceURI": "/sites",
+          "units": "Hz",
+          "uri": "/frequency"
+        },
+        {
+          "name": "POI Breaker Closed",
+          "scalar": null,
+          "sourceURI": "/sites",
+          "uri": "/breaker_status"
+        },
+        {
+          "name": "ESS Active Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/ess_total_active_power"
+        },
+        {
+          "name": "ESS Reactive Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MVAR",
+          "uri": "/ess_total_reactive_power"
+        },        
+        {
+          "name": "ESS State of Charge",
+          "scalar": 1,
+          "sourceURI": "/sites",
+          "units": "%",
+          "uri": "/ess_average_soc"
+        },
+        {
+          "name": "ESS Chargeable Energy",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MWh",
+          "uri": "/ess_chargeable_energy"
+        },
+        {
+          "name": "ESS Dischargeable Energy",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MWh",
+          "uri": "/ess_dischargeable_energy"
+        },       
+        {
+          "name": "ESS Chargeable Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/ess_chargeable_power"
+        },
+        {
+          "name": "ESS Dischargeable Power",
+          "scalar": 1000000,
+          "sourceURI": "/sites",
+          "units": "MW",
+          "uri": "/ess_dischargeable_power"
+        },
+        {
+          "name": "Site Fault",
+          "scalar": null,
+          "sourceURI": "/sites",
+          "uri": "/fault_status_flag"
+        }
+      ]
+    }
+  ]
+}

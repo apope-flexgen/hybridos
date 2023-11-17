@@ -1,0 +1,10 @@
+{
+    "sites": {
+       "sudden_valley": {
+           "name": "Sudden Valley"
+       },
+       "lima": {
+        "name": "Lima"
+       }
+   }
+}

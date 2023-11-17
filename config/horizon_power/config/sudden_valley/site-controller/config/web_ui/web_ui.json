@@ -1,0 +1,31 @@
+{
+    "control_cabinet": false,
+    "customer": {
+        "name": "Horizon Power",
+        "server": "Site Controller 1"
+    },
+    "ess": false,
+    "events": true,
+    "features": true,
+    "feeders": false,
+    "gen": false,
+    "inspectorComponentsName": "test_controller",
+    "met_station": false,
+    "product": "SC",
+    "scheduler": true,
+    "site": true,
+    "site_name": "Sudden Valley",
+    "site_status_bar": true,
+    "solar": false,
+    "timezone": "America/New_York",
+    "tracker": false,
+    "units": {
+        "VA": "M",
+        "VAR": "M",
+        "VARh": "M",
+        "VAh": "M",
+        "W": "M",
+        "W/s": "M",
+        "Wh": "M"
+    }
+}

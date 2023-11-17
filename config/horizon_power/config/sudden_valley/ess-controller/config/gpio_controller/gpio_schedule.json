@@ -1,0 +1,36 @@
+{
+"/sched/gpio":{
+    "gpioSystemInit":{ 
+        "value":    "GpioSystemInit",
+                      "uri":      "/sched/gpio:gpioSystemInit",
+                      "fcn":      "GpioSystemInit",
+                      "id":      "GpioSystemInit",
+                      "refTime":  0.200,
+                      "runAfter": 0.200,
+                      "repTime":  0.00,
+                      "endTime":  0.00
+    },
+    "gpioevery5mS":{ 
+        "value":    "GpioEvery5mS",
+            "uri":      "/sched/gpio:gpioevery5mS",
+            "fcn":      "GpioEvery5mS",
+            "id":      "GpioEvery5mS",
+            "refTime":  0.210,
+            "runAfter": 0.210,
+            "repTime":  0.005,
+            "endTime":  0.00
+    },
+    "gpioPub":{ 
+        "value":    "GpioPub",
+      "uri":      "/sched/gpio:gpioPub",
+      "fcn":      "GpioPub",
+      "id":       "GpioPub",
+      "amap": "gpio",
+      "refTime":  0.250,
+      "runAfter": 0.250,
+      "repTime":  0.100,
+      "endTime":  0.00
+    }
+
+  }
+}

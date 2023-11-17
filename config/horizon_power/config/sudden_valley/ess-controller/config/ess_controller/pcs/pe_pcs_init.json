@@ -1,0 +1,69 @@
+{
+    "/config/load": {
+        "pe_pcs_init": {
+            "aname": "pcs",
+            "file": "pe_pcs_init",
+            "new_options": [
+                {
+                    "amname": "pcs",
+                    "from": 1,
+                    "pname": "ess",
+                    "reps": [
+                        {
+                            "replace": "##PCS_ID##",
+                            "with": "pcs_{:01d}"
+                        },
+                        {
+                            "replace": "##PCS_NUM##",
+                            "with": "{:01d}"
+                        },
+                        {
+                            "replace": "##BMS_ID##",
+                            "with": "bms_{:01d}"
+                        },
+                        {
+                            "replace": "##ESS_ID##",
+                            "with": "ess_{:01d}"
+                        }
+                    ],
+                    "tmpls": [
+                        "pe_pcs_manager",
+                        "pe_pcs_manager_controls",
+                        "pe_pcs_manager_faults",
+                        "pe_pcs_manager_client_interface",
+                        "pe_pcs_manager_server_interface",
+                        "pe_pcs_manager_ui"
+                    ],
+                    "to": 1
+                },
+                {
+                    "ainame": "##MODULE_ID##",
+                    "from": 1,
+                    "pname": "pcs",
+                    "reps": [
+                        {
+                            "replace": "##MODULE_ID##",
+                            "with": "module_{:01d}"
+                        },
+                        {
+                            "replace": "##MODULE_NUM##",
+                            "with": "{:01d}"
+                        }
+                    ],
+                    "tmpls": [
+                        "pe_pcs_module",
+                        "pe_pcs_module_controls",
+                        "pe_pcs_module_faults",
+                        "pe_pcs_module_client_interface",
+                        "pe_pcs_module_server_interface",
+                        "pe_pcs_module_ui"
+                    ],
+                    "to": 6
+                }
+            ],
+            "note": "Loads pe_pcs_init first. Then, configs defined in new_options, if any, are loaded next",
+            "pname": "ess",
+            "value": false
+        }
+    }
+}

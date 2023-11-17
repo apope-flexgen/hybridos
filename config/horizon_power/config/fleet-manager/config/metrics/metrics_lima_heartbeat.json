@@ -1,0 +1,33 @@
+{
+    "publishRate": 1000,
+    "listenRate": 2,
+    "publishUris": [
+        {
+            "uri": "/metrics/internal_lima",
+            "naked": true,
+            "metrics": [ 
+                {
+                    "id": "lima_heartbeat",
+                    "inputs": [
+                        {
+                            "uri": "/sites/lima",
+                            "id": "heartbeat_counter"
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "uri": "/sites/lima",
+                            "id": "fm_timestamp"
+                        },
+                        {
+                            "uri": "/sites/lima",
+                            "id": "watchdog_pet"
+                        }
+                    ],
+                    "operation": "echo",
+                    "initialInput": 0
+                }
+            ]
+        }
+    ]
+}

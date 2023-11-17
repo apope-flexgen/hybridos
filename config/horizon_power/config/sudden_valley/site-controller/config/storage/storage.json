@@ -1,0 +1,379 @@
+{
+    "continuousQueries": [
+        {
+            "db": "sudden_valley",
+            "from": "components",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "components",
+            "name": "components_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "ess",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "ess",
+            "name": "ess_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "metrics",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "metrics",
+            "name": "metrics_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "feeders",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "feeders",
+            "name": "feeders_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "site",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "site",
+            "name": "site_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "features",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "features",
+            "name": "features_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "flexgen_ess_high_speed",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "flexgen_ess_high_speed",
+            "name": "flexgen_ess_high_speed_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "flexgen_ess_low_speed",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "flexgen_ess_low_speed",
+            "name": "flexgen_ess_low_speed_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "rtac",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "rtac",
+            "name": "rtac_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "meters",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "meters",
+            "name": "meters_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "cpustats",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "cpustats",
+            "name": "cpustats_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "memstats",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "memstats",
+            "name": "memstats_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "netstats",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "netstats",
+            "name": "netstats_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "diskstats",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "diskstats",
+            "name": "diskstats_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "processstats",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "processstats",
+            "name": "processstats_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "cops_stats",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "cops_stats",
+            "name": "cops_stats_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "cops_summary",
+            "groupBy": "time(1m), *",
+            "into": "sudden_valley",
+            "measurement": "cops_summary",
+            "name": "cops_summary_1min_cq",
+            "rp": "120_day_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "components",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "components",
+            "name": "components_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "ess",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "ess",
+            "name": "ess_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "metrics",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "metrics",
+            "name": "metrics_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "feeders",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "feeders",
+            "name": "feeders_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "site",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "site",
+            "name": "site_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "features",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "features",
+            "name": "features_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "flexgen_ess_high_speed",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "flexgen_ess_high_speed",
+            "name": "flexgen_ess_high_speed_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "flexgen_ess_low_speed",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "flexgen_ess_low_speed",
+            "name": "flexgen_ess_low_speed_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "rtac",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "rtac",
+            "name": "rtac_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "meters",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "meters",
+            "name": "meters_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "cpustats",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "cpustats",
+            "name": "cpustats_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "memstats",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "memstats",
+            "name": "memstats_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "netstats",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "netstats",
+            "name": "netstats_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "diskstats",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "diskstats",
+            "name": "diskstats_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "processstats",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "processstats",
+            "name": "processstats_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "cops_stats",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "cops_stats",
+            "name": "cops_stats_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        },
+        {
+            "db": "sudden_valley",
+            "from": "cops_summary",
+            "groupBy": "time(10m), *",
+            "into": "sudden_valley",
+            "measurement": "cops_summary",
+            "name": "cops_summary_10min_cq",
+            "rp": "infinite_rp",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)"
+        }
+    ],
+    "dbName": "sudden_valley",
+    "retentionPolicies": [
+        {
+            "_duration": "INF",
+            "default": false,
+            "duration": "0s",
+            "name": "autogen",
+            "replicaN": 1,
+            "shardGroupDuration": "168h0m0s"
+        },
+        {
+            "_duration": "INF",
+            "default": false,
+            "duration": "0s",
+            "name": "infinite_rp",
+            "replicaN": 1,
+            "shardGroupDuration": "168h0m0s"
+        },
+        {
+            "_duration": "30d",
+            "default": true,
+            "duration": "720h0m0s",
+            "name": "30_day_rp",
+            "replicaN": 1,
+            "shardGroupDuration": "24h0m0s"
+        },
+        {
+            "_duration": "120d",
+            "default": false,
+            "duration": "2880h0m0s",
+            "name": "120_day_rp",
+            "replicaN": 1,
+            "shardGroupDuration": "24h0m0s"
+        }
+    ]
+}

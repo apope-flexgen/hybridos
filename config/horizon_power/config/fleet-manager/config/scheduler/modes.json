@@ -1,0 +1,100 @@
+{
+  "charging": {
+    "name": "Charging",
+    "color_code": "lightGreen",
+    "icon": "ArrowUp",
+    "constants": [
+      {
+        "id": "active_power_feature_selection",
+        "name": "Active Power Feature Selection",
+        "type": "Int",
+        "unit": "",
+        "uri": "/features/active_power/runmode1_kW_mode_cmd",
+        "value": 5
+      }
+    ],
+    "variables": [
+      {
+        "id": "active_power_setpoint_kw",
+        "name": "Baseload kW Command",
+        "type": "Float",
+        "unit": "kW",
+        "uri": "/features/active_power/fr_baseload_cmd_kw_scheduler",
+        "value": -1000
+      }
+    ]
+  },"discharging": {
+    "name": "Dicharging",
+    "color_code": "red",
+    "icon": "ArrowDown",
+    "constants": [
+      {
+        "id": "active_power_feature_selection",
+        "name": "Active Power Feature Selection",
+        "type": "Int",
+        "unit": "",
+        "uri": "/features/active_power/runmode1_kW_mode_cmd",
+        "value": 5
+      }
+    ],
+    "variables": [
+      {
+        "id": "active_power_setpoint_kw",
+        "name": "Baseload kW Command",
+        "type": "Float",
+        "unit": "kW",
+        "uri": "/features/active_power/fr_baseload_cmd_kw_scheduler",
+        "value": 1000
+      }
+    ]
+  },
+  "active_power_command": {
+    "name": "Active Power Command",
+    "color_code": "red",
+    "icon": "Bolt",
+    "constants": [
+      {
+        "id": "active_power_feature_selection",
+        "name": "Active Power Feature Selection",
+        "type": "Int",
+        "unit": "",
+        "uri": "/features/active_power/runmode1_kW_mode_cmd",
+        "value": 5
+      }
+    ],
+    "variables": [
+      {
+        "id": "active_power_setpoint_kw",
+        "name": "Baseload kW Command",
+        "type": "Float",
+        "unit": "kW",
+        "uri": "/features/active_power/fr_baseload_cmd_kw_scheduler",
+        "value": 1000
+      }
+    ]
+  },
+  "default": {
+    "name": "Default",
+    "color_code": "gray",
+    "icon": "Build",
+    "constants": [
+      {
+        "id": "active_power_feature_selection",
+        "name": "Active Power Feature Selection",
+        "type": "Int",
+        "unit": "",
+        "uri": "/features/active_power/runmode1_kW_mode_cmd_scheduler",
+        "value": 8
+      },
+      {
+        "id": "active_power_setpoint_kw",
+        "name": "Baseload kW Command",
+        "type": "Float",
+        "unit": "kW",
+        "uri": "/features/active_power/fr_baseload_cmd_kw_scheduler",
+        "value": 0
+      }
+    ],
+    "variables": []
+  }
+}

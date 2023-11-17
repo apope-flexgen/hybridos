@@ -1,0 +1,242 @@
+{
+    "components": [
+        {
+            "device_id": 98,
+            "frequency": 100,
+            "id": "sel_735",
+            "offset_time": 20,
+            "registers": [
+                {
+                    "map": [
+                        {
+                            "echo_id": "/components/twins_sel_735/v1",
+                            "id": "voltage_l1",
+                            "name": null,
+                            "offset": 1000,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/v2",
+                            "id": "voltage_l2",
+                            "name": null,
+                            "offset": 1002,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/v3",
+                            "id": "voltage_l3",
+                            "name": null,
+                            "offset": 1004,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/i",
+                            "id": "current_l1",
+                            "name": null,
+                            "offset": 1006,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/i",
+                            "id": "current_l2",
+                            "name": null,
+                            "offset": 1008,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/i",
+                            "id": "current_l3",
+                            "name": null,
+                            "offset": 1010,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "current_n",
+                            "name": null,
+                            "offset": 1012,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/v1",
+                            "id": "voltage_l1_l2",
+                            "name": null,
+                            "offset": 1014,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/v1",
+                            "id": "voltage_l2_l3",
+                            "name": null,
+                            "offset": 1016,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/v1",
+                            "id": "voltage_l3_l1",
+                            "name": null,
+                            "offset": 1018,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/p",
+                            "id": "active_power",
+                            "name": null,
+                            "offset": 1020,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/q",
+                            "id": "reactive_power",
+                            "name": null,
+                            "offset": 1022,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/s",
+                            "id": "apparent_power",
+                            "name": null,
+                            "offset": 1024,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/f1",
+                            "id": "frequency",
+                            "name": null,
+                            "offset": 1026,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_sel_735/pf",
+                            "id": "power_factor",
+                            "name": null,
+                            "offset": 1028,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "kwh_delivered",
+                            "name": null,
+                            "offset": 1030,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "kwh_received",
+                            "name": null,
+                            "offset": 1032,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "kvarh_delivered",
+                            "name": null,
+                            "offset": 1034,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "kvarh_received",
+                            "name": null,
+                            "offset": 1036,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "thd_i_l1",
+                            "name": null,
+                            "offset": 1038,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "thd_i_l2",
+                            "name": null,
+                            "offset": 1040,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "thd_i_l3",
+                            "name": null,
+                            "offset": 1042,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "thd_v_l1",
+                            "name": null,
+                            "offset": 1044,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "thd_v_l2",
+                            "name": null,
+                            "offset": 1046,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        },
+                        {
+                            "id": "thd_v_l3",
+                            "name": null,
+                            "offset": 1048,
+                            "scale": 100,
+                            "signed": true,
+                            "size": 2
+                        }
+                    ],
+                    "number_of_registers": 50,
+                    "starting_offset": 1000,
+                    "type": "Input Registers"
+                }
+            ]
+        }
+    ],
+    "connection": {
+        "device id": 1,
+        "ip_address": "192.168.10.250",
+        "name": "SEL 735",
+        "port": 10003
+    },
+    "fileInfo": {
+        "outputFileCreated": "2022-10-04T19:22:40.203Z",
+        "outputFileName": "sel_735_client.json",
+        "outputFileType": "client",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModified": "2022-10-03T18:27:28.000Z",
+        "sourceFileLastModifiedBy": "Jasen Liu",
+        "sourceFileName": "sel_735_client.xlsx"
+    }
+}

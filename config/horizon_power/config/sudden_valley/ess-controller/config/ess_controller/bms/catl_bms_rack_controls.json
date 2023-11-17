@@ -1,0 +1,52 @@
+{
+    "/controls/##RACK_ID##": {
+        "ClearFaults": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##RACK_ID##",
+                                "func": "HandleCmd"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "checkCmdTimeout": 3,
+            "cmdVar": "",
+            "note": "TODO: If needed, add <component_uri>:<name> to cmdVar",
+            "value": 0
+        }
+    },
+    "/schedule/wake_monitor/##RACK_ID##": {
+        "/controls/##RACK_ID##:ClearFaults": {
+            "amap": "##RACK_ID##",
+            "func": "HandleCmd"
+        }
+    },
+    "/status/##RACK_ID##": {
+        "ClearFaultsSuccess": {
+            "actions": {
+                "onSet": [
+                    {
+                        "remap": [
+                            {
+                                "outValue": "Clear",
+                                "uri": "/faults/##RACK_ID##:clear_faults"
+                            },
+                            {
+                                "outValue": "Clear",
+                                "uri": "/alarms/##RACK_ID##:clear_alarms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##RACK_ID##:enable",
+            "ifChanged": false,
+            "note": "When this variable is set, /faults/##RACK_ID##:clear_faults and /alarms/##RACK_ID##:clear_alarms will be set to Clear",
+            "value": false
+        }
+    }
+}

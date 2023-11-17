@@ -1,0 +1,312 @@
+{
+    "connection": {
+        "name": "acuvim",
+        "device_id": 1,
+        "ip_address": "192.168.10.250",
+        "port": 10001
+    },
+    "components": [
+        {
+            "id": "acuvim",
+            "frequency": 500,
+            "offset_time": 0,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 16384,
+                    "number_of_registers": 80,
+                    "map": [
+                        {
+                            "id": "frequency",
+                            "offset": 16384,
+                            "size": 2,
+                            "name": "frequency",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/f1"
+                        },
+                        {
+                            "id": "voltage_l1",
+                            "offset": 16386,
+                            "size": 2,
+                            "name": "voltage_l1",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/v1"
+                        },
+                        {
+                            "id": "voltage_l2",
+                            "offset": 16388,
+                            "size": 2,
+                            "name": "voltage_l2",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/v1"
+                        },
+                        {
+                            "id": "voltage_l3",
+                            "offset": 16390,
+                            "size": 2,
+                            "name": "voltage_l3",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/v1"
+                        },
+                        {
+                            "id": "voltage_ln_rms",
+                            "offset": 16392,
+                            "size": 2,
+                            "name": "voltage_ln_rms",
+                            "float": true
+                        },
+                        {
+                            "id": "voltage_l1_l2",
+                            "offset": 16394,
+                            "size": 2,
+                            "name": "voltage_l1_l2",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/v1"
+                        },
+                        {
+                            "id": "voltage_l2_l3",
+                            "offset": 16396,
+                            "size": 2,
+                            "name": "voltage_l2_l3",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/v1"
+                        },
+                        {
+                            "id": "voltage_l3_l1",
+                            "offset": 16398,
+                            "size": 2,
+                            "name": "voltage_l3_l1",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/v1"
+                        },
+                        {
+                            "id": "voltage_ll_rms",
+                            "offset": 16400,
+                            "size": 2,
+                            "name": "voltage_ll_rms",
+                            "float": true
+                        },
+                        {
+                            "id": "current_l1",
+                            "offset": 16402,
+                            "size": 2,
+                            "name": "current_l1",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/i"
+                        },
+                        {
+                            "id": "current_l2",
+                            "offset": 16404,
+                            "size": 2,
+                            "name": "current_l2",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/i"
+                        },
+                        {
+                            "id": "current_l3",
+                            "offset": 16406,
+                            "size": 2,
+                            "name": "current_l3",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/i"
+                        },
+                        {
+                            "id": "current_rms",
+                            "offset": 16408,
+                            "size": 2,
+                            "name": "current_rms",
+                            "float": true
+                        },
+                        {
+                            "id": "current_n",
+                            "offset": 16410,
+                            "size": 2,
+                            "name": "current_n",
+                            "float": true
+                        },
+                        {
+                            "id": "active_power_l1",
+                            "offset": 16412,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "active_power_l1",
+                            "float": true
+                        },
+                        {
+                            "id": "active_power_l2",
+                            "offset": 16414,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "active_power_l2",
+                            "float": true
+                        },
+                        {
+                            "id": "active_power_l3",
+                            "offset": 16416,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "active_power_l3",
+                            "float": true
+                        },
+                        {
+                            "id": "active_power",
+                            "offset": 16418,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "active_power",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/p"
+                        },
+                        {
+                            "id": "reactive_power_l1",
+                            "offset": 16420,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "reactive_power_l1",
+                            "float": true
+                        },
+                        {
+                            "id": "reactive_power_l2",
+                            "offset": 16422,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "reactive_power_l2",
+                            "float": true
+                        },
+                        {
+                            "id": "reactive_power_l3",
+                            "offset": 16424,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "reactive_power_l3",
+                            "float": true
+                        },
+                        {
+                            "id": "reactive_power",
+                            "offset": 16426,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "reactive_power",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/q"
+                        },
+                        {
+                            "id": "apparent_power_l1",
+                            "offset": 16428,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "apparent_power_l1",
+                            "float": true
+                        },
+                        {
+                            "id": "apparent_power_l2",
+                            "offset": 16430,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "apparent_power_l2",
+                            "float": true
+                        },
+                        {
+                            "id": "apparent_power_l3",
+                            "offset": 16432,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "apparent_power_l3",
+                            "float": true
+                        },
+                        {
+                            "id": "apparent_power",
+                            "offset": 16434,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "apparent_power",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/s"
+                        },
+                        {
+                            "id": "power_factor_l1",
+                            "offset": 16436,
+                            "size": 2,
+                            "name": "power_factor_l1",
+                            "float": true
+                        },
+                        {
+                            "id": "power_factor_l2",
+                            "offset": 16438,
+                            "size": 2,
+                            "name": "power_factor_l2",
+                            "float": true
+                        },
+                        {
+                            "id": "power_factor_l3",
+                            "offset": 16440,
+                            "size": 2,
+                            "name": "power_factor_l3",
+                            "float": true
+                        },
+                        {
+                            "id": "power_factor",
+                            "offset": 16442,
+                            "size": 2,
+                            "name": "power_factor",
+                            "float": true,
+                            "echo_id": "/components/twins_acuvim/pf"
+                        },
+                        {
+                            "id": "active_power_demand",
+                            "offset": 16450,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "active_power_demand",
+                            "float": true
+                        },
+                        {
+                            "id": "reactive_power_demand",
+                            "offset": 16452,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "reactive_power_demand",
+                            "float": true
+                        },
+                        {
+                            "id": "apparent_power_demand",
+                            "offset": 16454,
+                            "size": 2,
+                            "scale": 1000,
+                            "name": "apparent_power_demand",
+                            "float": true
+                        },
+                        {
+                            "id": "kwh_received",
+                            "offset": 16456,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "kwh_received"
+                        },
+                        {
+                            "id": "kwh_delivered",
+                            "offset": 16458,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "kwh_delivered"
+                        },
+                        {
+                            "id": "kvarh_received",
+                            "offset": 16460,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "kvarh_received"
+                        },
+                        {
+                            "id": "kvarh_delivered",
+                            "offset": 16462,
+                            "size": 2,
+                            "scale": 10,
+                            "name": "kvarh_delivered"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

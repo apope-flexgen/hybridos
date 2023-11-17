@@ -1,0 +1,50 @@
+{
+	"outputs": [
+		{
+			"uri": "/components/sel_351_1",
+			"publishRate": 100,
+			"inputs": [
+				{
+					"uri": "/components/twins_sel_351_1",
+					"registers": {
+						"active_power": "p",
+						"breaker_status": "closed",
+						"current_l1": "i",
+						"current_l2": "i",
+						"current_l3": "i",
+						"current_n": "i",
+						"frequency": "f1",
+						"power_factor": "pf",
+						"reactive_power": "q",
+						"voltage_l1": "v1",
+						"voltage_l1_l2": "v1",
+						"voltage_l2": "v1",
+						"voltage_l2_l3": "v1",
+						"voltage_l3": "v1",
+						"voltage_l3_l1": "v1"
+					}
+				}
+			],
+			"echo": {
+				"active_settings_group": 0,
+				"current_angle_g": 0,
+				"current_angle_l1": 0,
+				"current_angle_l2": 0,
+				"current_angle_l3": 0,
+				"current_angle_n": 0,
+				"current_g": 0,
+				"power_factor_leading": 0,
+				"reactive_energy_delivered": 0,
+				"reactive_energy_received": 0,
+				"real_energy_delivered": 0,
+				"real_energy_received": 0,
+				"station_battery_voltage": 0,
+				"voltage_angle_l1": 0,
+				"voltage_angle_l2": 0,
+				"voltage_angle_l3": 0,
+				"voltage_synch": 0,
+				"voltage_synch_angle": 0
+			}
+		}
+	]
+}

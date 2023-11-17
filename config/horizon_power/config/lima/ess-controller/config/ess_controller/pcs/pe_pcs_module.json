@@ -1,0 +1,94 @@
+{
+    "/config/##MODULE_ID##": {
+        "AlarmDestination": "/assets/pcs/##MODULE_ID##:alarms",
+        "FaultDestination": "/assets/pcs/##MODULE_ID##:faults",
+        "NoAlarmMsg": "Normal",
+        "NoFaultMsg": "Normal",
+        "enable": false,
+        "enum_opt": false
+    },
+    "/sched/##MODULE_ID##": {
+        "pubAssets_##MODULE_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##MODULE_ID##",
+                                "func": "RunPub"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enable": "/config/##MODULE_ID##:enable",
+            "mode": "ui",
+            "note": "Publishes UI asset data (/assets/pcs/##MODULE_ID##)",
+            "table": "/assets/pcs/##MODULE_ID##",
+            "value": 1
+        },
+        "runMonitor_##MODULE_ID##": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##MODULE_ID##",
+                                "func": "RunMonitor"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "aname": "##MODULE_ID##",
+            "enable": "/config/##MODULE_ID##:enable",
+            "monitor": "wake_monitor",
+            "note": "Periodically runs functions for variables defined in /schedule/wake_monitor/##MODULE_ID##",
+            "value": 1
+        }
+    },
+    "/status/##MODULE_ID##": {
+        "Status": "INIT"
+    },
+    "/system/commands": {
+        "runOpts_module": {
+            "actions": {
+                "onSet": [
+                    {
+                        "func": [
+                            {
+                                "amap": "##MODULE_ID##",
+                                "func": "SchedItemOpts"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "enabled": false,
+            "note1": "Sets schedule variables (defined in /sched/##MODULE_ID##) to /system/commands:run",
+            "note2": "This allows the ESS Controller to kick off scheduled tasks based on the provided variables",
+            "options": [
+                {
+                    "aname": "##MODULE_ID##",
+                    "every": 1,
+                    "uri": "/sched/##MODULE_ID##:pubAssets_##MODULE_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##MODULE_ID##",
+                    "every": 0.1,
+                    "uri": "/sched/##MODULE_ID##:runMonitor_##MODULE_ID##",
+                    "value": 1
+                },
+                {
+                    "aname": "##MODULE_ID##",
+                    "every": 1,
+                    "uri": "/sched/##MODULE_ID##:checkInputs_##MODULE_ID##",
+                    "value": 1
+                }
+            ],
+            "targav": "/system/commands:run",
+            "value": false
+        }
+    }
+}

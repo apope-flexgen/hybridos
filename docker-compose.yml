@@ -1,20 +1,26 @@
-version: "3.3"
-
+version: '3'
 services:
-  hybridos_build:
-    image: flexgen/centos7:${DEVEL_TAG}
-    container_name: hybridos_build
-    entrypoint: /home/hybridos/entrypoint.sh
+  config-fleet-manager-01:
+    image: flexgen/fleet_manager:11.3.0.alpha.3
+    container_name: config-fleet-manager-01
+    hostname: config-fleet-manager-01
+    ports:
+      - 10000:9150
+      - 9000:443
     networks:
-      localnet:
-        ipv4_address: 172.16.1.81
+      config-fleet-net:
+        ipv4_address: 10.10.1.5
     tty: true
     volumes:
-      - ../hybridos/:/home/hybridos
+      - /home/hybridos/git/hybridos/config/horizon_power/config/fleet-manager/config:/home/staging
+      - /home/hybridos/git/hybridos/config/horizon_power/config/fleet-manager/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/horizon_power/config/fleet-manager/.secret:/home/secret
+      - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
 
 networks:
-  localnet:
+  config-fleet-net:
     ipam:
       driver: default
       config:
-        - subnet: 172.16.0.0/16
+        - subnet: 10.10.1.0/24
+
