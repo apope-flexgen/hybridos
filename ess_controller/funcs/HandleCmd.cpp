@@ -254,7 +254,8 @@ void sendCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, asset
         av->setParam("triggerCmd", false);
 
         // Immediately call check operation to see if the command value has been received
-        checkCmd(vmap, amap, aname, av);
+        if (av->getbParam("cmdSent")) 
+            checkCmd(vmap, amap, aname, av);
     }
 }
 
