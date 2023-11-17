@@ -12,6 +12,7 @@
     "otherCtrlrStaticIP": "172.16.2.82",
     "pduIP": "10.0.1.83",
     "otherCtrlrOutlet": "2",
+    "allowActions": true,
     "processList": [
         {
             "name": "site_controller",
@@ -24,6 +25,7 @@
                 "/cops/site_controller/setpoints"
             ],
             "killOnHang": true,
+            "allowActions": true,
             "requiredForHealthyStatus": true,
             "hangTimeAllowanceMS": 3000,
             "configRestart": true
@@ -40,6 +42,7 @@
                 "/cops/scheduler/timezones"
             ],
             "killOnHang": true,
+            "allowActions": true,
             "requiredForHealthyStatus": true,
             "hangTimeAllowanceMS": 3000,
             "configRestart": true

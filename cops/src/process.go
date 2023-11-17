@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	dbus "github.com/coreos/go-systemd/dbus"
@@ -17,10 +18,18 @@ type processVersion struct {
 	build  string
 }
 
+// Define enabled statuses for processes based on runtime state of process.
+type processControls struct {
+	startEnabled   bool
+	stopEnabled    bool
+	restartEnabled bool
+}
+
 // Information about each process used and updated by COPS
 type processInfo struct {
 	name                     string             // process name
 	uri                      string             // URI of the data structure holding the COPS info at the process
+	allowActions             bool               // Configurable value for whether or not actions can be taken on the process
 	replyToURI               string             // URI that heartbeat replies from this process to COPS will use
 	writeOutC2C              []string           // URIs that should be written out to C2C by primary to maintain data
 	heartbeat                uint               // Current COPS heartbeat value
@@ -35,6 +44,7 @@ type processInfo struct {
 	configRestart            bool               // Whether new configuration data requires the process to restart
 	healthStats              processHealthStats // statistics to be published about the process's health
 	version                  processVersion     // contains release version info about the process
+	enableControls           processControls    // defines bools for start,stop,restart commands depending on state of process
 }
 
 // Returns if process is hung or dead
@@ -85,6 +95,21 @@ func (process *processInfo) updatePID(readPID int) error {
 	return nil
 }
 
+// Update our process control booleans each time its status updates.
+func (process *processInfo) updateEnableControls(status string) {
+
+	// If active, set start enable to false.
+	if strings.Contains(status, "running") {
+		process.enableControls.startEnabled = false
+		process.enableControls.stopEnabled = true
+		process.enableControls.restartEnabled = true
+	} else if strings.Contains(status, "dead") {
+		process.enableControls.startEnabled = true
+		process.enableControls.stopEnabled = false
+		process.enableControls.restartEnabled = true
+	}
+}
+
 // Establish temporary connection to dbus and retrieve systemctl status info on a given process.
 // Update the service time since it was last restarted here, as we already establish a connection
 // to retrieve that value.
@@ -106,6 +131,9 @@ func (process *processInfo) updateStatus() error {
 	}
 	process.serviceStatus = status
 	process.unitFileState = unitFileState
+
+	// Update controls status based on process status
+	process.updateEnableControls(status)
 
 	// Update our process timestamp and elapsed time.
 	timeUint64, err := getUnitTime(conn, service)
@@ -193,4 +221,97 @@ func delayedkill(process *processInfo, delay int) {
 	if err != nil {
 		log.Errorf("Failed to send delayed kill signal to %s: %v", process.name, err)
 	}
+}
+
+// Validate a process is eligible to enact a systemctl action.
+func validateProcessControls(process string) error {
+	// Verify the process exists in COPS config file.
+	if _, ok := processJurisdiction[process]; !ok {
+		return fmt.Errorf("process %s not found in COPS configuration process list", process)
+	}
+
+	// Verify actions are permitted for the given service.
+	if !processJurisdiction[process].allowActions {
+		return fmt.Errorf("actions not enabled for process %s. Please enable actions on a per process level", process)
+	}
+	return nil
+}
+
+// Handles a given command to enact an action on a process via systemd.
+// Verifies current state of process first via checking the enabled status
+// on the process and action. Once verified, takes action.
+func handleSystemdCmd(action string, process string) error {
+	var enabled bool
+
+	// Select action to determine enabled flag.
+	switch action {
+	case "start":
+		// Check enabled status for action on given process
+		enabled = processJurisdiction[process].enableControls.startEnabled
+	case "stop":
+		// Check enabled status for action on given process
+		enabled = processJurisdiction[process].enableControls.stopEnabled
+	case "restart":
+		// Check enabled status for action on given process
+		enabled = processJurisdiction[process].enableControls.restartEnabled
+	default:
+		return fmt.Errorf("action: %s for process %s is unrecognized", action, process)
+	}
+
+	// Take action.
+	if enabled {
+		if err := takeAction(action, process); err != nil {
+			return fmt.Errorf("performing %s on %s: %w", action, process, err)
+		}
+	} else {
+		return fmt.Errorf("action: %s not enabled for process %s: action conflicts with process state", action, process)
+	}
+
+	return nil
+}
+
+// Establish dbus connection and take defined action
+func takeAction(action string, process string) error {
+	// Generate service string for sending to dbus.
+	service := fmt.Sprintf("%s.service", process)
+
+	// Establish dbus connection.
+	conn, err := dbus.New()
+	if err != nil {
+		return fmt.Errorf("failed to connect to systemd D-Bus: %w", err)
+	}
+	defer conn.Close()
+
+	// Define results channel for dbus connection to report on.
+	resultChan := make(chan string)
+
+	switch action {
+	case "start":
+		// Start our unit
+		log.Infof("Starting unit %s\n", service)
+		_, err := conn.StartUnit(service, "replace", resultChan)
+		if err != nil {
+			return fmt.Errorf("error starting unit: %w", err)
+		}
+	case "stop":
+		// Stop our unit
+		log.Infof("Stopping unit %s\n", service)
+		_, err := conn.StopUnit(service, "replace", resultChan)
+		if err != nil {
+			return fmt.Errorf("error stopping unit: %w", err)
+		}
+	case "restart":
+		// Restart unit
+		log.Infof("Restarting unit %s\n", service)
+		_, err := conn.RestartUnit(service, "replace", resultChan)
+		if err != nil {
+			return fmt.Errorf("error restarting unit: %w", err)
+		}
+	default:
+		return fmt.Errorf("action: %s for process %s is unrecognized", action, process)
+	}
+
+	job := <-resultChan
+	log.Infof("Performed %s on service %s. Result: %s\n", action, service, job)
+	return nil
 }

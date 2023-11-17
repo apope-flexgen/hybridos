@@ -21,7 +21,7 @@ func parsePID(body interface{}) (receivedPID int, errorMsg string) {
 }
 
 // Starting point for handling any and all incoming FIMS messages
-func processFIMS(msg fims.FimsMsg) {
+func processFIMS(msg fims.FimsMsg) error {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Errorf("Error processing FIMS message: %v", r)
@@ -34,7 +34,7 @@ func processFIMS(msg fims.FimsMsg) {
 			if configErr, ok := err.(*configurationError); ok {
 				log.Fatalf("Fatal error: %v", configErr)
 			} else {
-				log.Errorf("Error: %v", err)
+				return fmt.Errorf("handling set: %w", err)
 			}
 		}
 	case "get":
@@ -42,6 +42,8 @@ func processFIMS(msg fims.FimsMsg) {
 	default:
 		log.Warnf("Received FIMS message that was not a SET. No action taken.")
 	}
+
+	return nil
 }
 
 // Check if the controller was previously put into update mode
@@ -107,8 +109,20 @@ func handleSet(msg fims.FimsMsg) error {
 			return &configurationError{fmt.Errorf("expected DBI configuration document, but it was empty")}
 		}
 		return &configurationError{handleConfigBody(body)}
+
+	// Check URI is one of /cops/stats/<processName> to enact an action.
+	case msg.Nfrags == 5 && strings.Contains(msg.Uri, "controls"):
+		if config.AllowActions {
+			// TODO: Handle fims reply to for errors from handlecontorlMsg
+			return handleControlMsg(msg)
+		} else {
+			// TODO: convert to reply to message. tech debt ticket.
+			return fmt.Errorf("Received a FIMS set to take an action on process %s but actions are not allowed. %s",
+				msg.Frags[2], "Please configure the COPS JSON file to allow actions.")
+		}
+
 	// Check for DBI update response first
-	// Check uri is one of /cops/<process_name>/dbi_update_complete or <writeouturi>/dbi_update
+	// Check URI is one of /cops/<process_name>/dbi_update_complete or <writeouturi>/dbi_update
 	case msg.Nfrags == 3 && strings.HasSuffix(msg.Uri, "dbi_update_complete"):
 		_, processKnown := processJurisdiction[msg.Frags[1]]
 		if processKnown {
@@ -156,6 +170,75 @@ func handleSet(msg fims.FimsMsg) error {
 		log.Errorf("Error in handleSet: message URI doesn't match any known patterns. msg.uri: %s", msg.Uri)
 	}
 	return nil
+}
+
+// Handle sets on a control action for a defined process.
+// Function verifies process is defined in the COPS file, extracts
+// control value and process from the FIMS message, and checks
+// to make sure actions are allowed for the process.
+func handleControlMsg(msg fims.FimsMsg) error {
+	// Expected URI format: /cops/stats/[process]/controls/[action]
+	process := msg.Frags[2]
+
+	// Validate process exists and actions are enabled.
+	if err := validateProcessControls(process); err != nil {
+		return fmt.Errorf("validating controls message: %w", err)
+	}
+
+	// Extract action command type: start, stop, restart.
+	cmd, err := getSystemdCmd(msg)
+	if err != nil {
+		return fmt.Errorf("retrieving control type for process %s: %w", process, err)
+	}
+
+	// Handle the control type for the defined process.
+	if err := handleSystemdCmd(cmd, process); err != nil {
+		return fmt.Errorf("handling command \"%s\" for %s: %w", cmd, process, err)
+	}
+
+	return nil
+}
+
+// Extract control command from a FIMS body.
+// TODO: streamline getting the value from a naked set with how scheduler does it.
+func getSystemdCmd(msg fims.FimsMsg) (string, error) {
+	var value bool
+	var ok bool
+
+	// Expected command stored as URI fragment in 5th position:
+	// Example: /cops/stats/[process]/controls/[action]
+	action := msg.Frags[4]
+
+	// Handle the FIMS body whether it's a naked set or a map.
+	// This if statement is quite ugly. I'd like to find a better way to do this.
+	if _, ok = msg.Body.(bool); ok {
+		// Handle if FIMS set sends a single boolean value.
+		value = msg.Body.(bool)
+	} else if _, ok = msg.Body.(map[string]interface{}); ok {
+		// Handle FIMS set using a key value pair.
+		msgBody := msg.Body.(map[string]interface{})
+
+		// Return error on an empty body.
+		if len(msgBody) == 0 {
+			return "", fmt.Errorf("body of FIMS message is empty")
+		}
+
+		// Verify we received a value of true on the action.
+		value, ok = msgBody["value"].(bool)
+		if !ok {
+			return "", fmt.Errorf("command \"%s\" received non boolean value in FIMS set", action)
+		}
+	} else {
+		// Handle exception of incorrect set format.
+		return "", fmt.Errorf("invalid FIMS body. Expected body is key-value pair or boolean value")
+	}
+
+	// Verify our value is actually true for enacting the command.
+	if !value {
+		return "", fmt.Errorf("FIMS set command \"%s\" to false - no action taken", action)
+	}
+
+	return action, nil
 }
 
 // Handle a set to update mode coming from either ansible or dbi

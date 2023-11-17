@@ -85,7 +85,30 @@ func (process processInfo) buildStatsReport() map[string]interface{} {
 	healthParams["last_mem_usage_pct"] = process.healthStats.lastMemUsagePercent
 	healthParams["max_mem_usage_pct"] = process.healthStats.maxMemUsagePercent
 	healthParams["avg_mem_usage_pct"] = process.healthStats.avgMemUsagePercent
+	healthParams["controls"] = process.generateControlsMap()
 	return healthParams
+}
+
+// Generates a controls map that reports enabled/disabled statuses for each process.
+func (process *processInfo) generateControlsMap() map[string]interface{} {
+
+	// Build controls map.
+	controls := map[string]interface{}{
+		"start": map[string]interface{}{
+			"value":   false,
+			"enabled": process.enableControls.startEnabled,
+		},
+		"stop": map[string]interface{}{
+			"value":   false,
+			"enabled": process.enableControls.stopEnabled,
+		},
+		"restart": map[string]interface{}{
+			"value":   false,
+			"enabled": process.enableControls.restartEnabled,
+		},
+	}
+
+	return controls
 }
 
 // Splits the output of the Linux command "ps" into separate lines and deletes duplicate whitespace between words

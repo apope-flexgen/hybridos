@@ -50,6 +50,12 @@ func main() {
 	// Parse command line arguments.
 	cfgSource := parseFlags()
 
+	// TODO: temporary internal test suite until pytests are implemented.
+	if cfgSource == "test" {
+		runTests()
+		os.Exit(1)
+	}
+
 	// Initialize logger configuration.
 	err := log.InitConfig("cops").Init("cops")
 	if err != nil {
@@ -78,7 +84,9 @@ func main() {
 	for {
 		select {
 		case msg := <-fimsReceive:
-			processFIMS(msg)
+			if err := processFIMS(msg); err != nil {
+				log.Errorf("Processing FIMS message: %v.", err)
+			}
 		case <-heartRate.C:
 			manageHeartbeats()
 		case <-patrolRate.C:
@@ -99,9 +107,15 @@ func parseFlags() (cfgSource string) {
 	cfgUsage := "Give a path to the config file or 'dbi' if config is stored in the database"
 	flag.StringVar(&cfgSource, "c", "dbi", cfgUsage)
 	flag.StringVar(&cfgSource, "config", "dbi", cfgUsage)
+	testFlag := flag.Bool("test", false, "Internal use only - execute test suite.")
 	// logger config file
 	flag.StringVar(&log.ConfigFile, "logCfg", "", "If included default values will be overturned. Use this in tandem with the config file to print a specific severity/print to screen.")
 	flag.Parse()
+
+	// Catch-all for if tests are enabled.
+	if *testFlag {
+		cfgSource = "test"
+	}
 	return cfgSource
 }
 

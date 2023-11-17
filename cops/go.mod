@@ -10,4 +10,7 @@ require (
 
 require github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf
 
-require github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
+require (
+	github.com/flexgen-power/hybridos/fims/go_fims v0.0.0-20231114150536-664bc0e035f2
+	github.com/godbus/dbus v0.0.0-20190726142602-4481cbc300e2 // indirect
+)
