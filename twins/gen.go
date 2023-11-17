@@ -4,6 +4,7 @@ type gen struct {
 	ID               string
 	Aliases          []string
 	V                float64
+	VLN              float64
 	I                float64
 	Di               float64
 	Qi               float64
@@ -141,6 +142,7 @@ func (g *gen) UpdateState(input terminal, dt float64) (output terminal) {
 	g.S = rss(g.P, g.Q)
 	g.Pf = pf(g.P, g.Q, g.S)
 	g.I, g.Di, g.Qi = sToI(g.S, g.V), sToI(g.P, g.V), sToI(g.Q, g.V)
+	g.VLN = g.V / sqrt3
 	output.p, output.q, output.s = g.P, g.Q, g.S
 	// fmt.Printf("Generator %s: P: %.1f\tQ: %.1f\tS: %.1f\tV: %.1f\tF: %.1f\n", g.ID, g.P, g.Q, g.S, g.V, g.F)
 	return output

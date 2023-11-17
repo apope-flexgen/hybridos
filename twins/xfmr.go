@@ -19,7 +19,9 @@ type xfmr struct {
 	Sn        float64
 	Vn        float64
 	V1        float64
+	V1LN      float64
 	V2        float64
+	V2LN      float64
 	V         float64
 	N         float64 // Ratio of V1/V2
 	Zpu       float64
@@ -185,6 +187,8 @@ func (x *xfmr) UpdateState(input terminal, dt float64) (output terminal) {
 	}
 	x.S = rss(x.P, x.Q)
 	x.I, x.Di, x.Qi = sToI(x.S, x.V2), sToI(x.P, x.V2), sToI(x.Q, x.V2)
+	x.V1LN = x.V1 / sqrt3
+	x.V2LN = x.V2 / sqrt3
 	output.p, output.q, output.s = x.P, x.Q, x.S
 	return output
 }

@@ -8,6 +8,7 @@ type solar struct {
 	ID           string
 	Aliases      []string
 	V            float64
+	VLN          float64
 	I            float64
 	Di           float64
 	Qi           float64
@@ -113,6 +114,7 @@ func (pv *solar) UpdateState(input terminal, dt float64) (output terminal) {
 	pv.S = rss(pv.P, pv.Q)
 	pv.Pf = pf(pv.P, pv.Q, pv.S)
 	pv.I, pv.Di, pv.Qi = sToI(pv.S, pv.V), sToI(pv.P, pv.V), sToI(pv.Q, pv.V)
+	pv.VLN = pv.V / sqrt3
 	output.p, output.q, output.s = pv.P, pv.Q, pv.S
 	return output
 }

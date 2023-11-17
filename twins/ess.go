@@ -9,6 +9,7 @@ type ess struct {
 	Aliases             []string
 	Cap                 float64 // Capacity in kWh
 	V                   float64
+	VLN                 float64
 	I                   float64
 	Di                  float64 // Active power current
 	Qi                  float64 // Reactive power current
@@ -401,6 +402,7 @@ func (e *ess) UpdateState(input terminal, dt float64) (output terminal) {
 	e.S = rss(e.P, e.Q)
 	e.Pf = pf(e.P, e.Q, e.S)
 	e.I, e.Di, e.Qi = sToI(e.S, e.V), sToI(e.P, e.V), sToI(e.Q, e.V)
+	e.VLN = e.V / sqrt3
 	output.p, output.q, output.s = e.P, e.Q, e.S
 	// fmt.Printf("ESS %s: P: %.1f\tQ: %.1f\tS: %.1f\tV: %.1f\tF: %.1f\n", e.ID, e.P, e.Q, e.S, e.V, e.F)
 	return output

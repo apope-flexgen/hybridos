@@ -21,7 +21,9 @@ type feed struct {
 	Qmax            float64 // Bidirectional VAR trip threshold
 	Smax            float64 // VA trip threshold
 	V1              float64 // Voltage of node pointing up the tree
+	V1LN            float64
 	V2              float64 // Voltage of node pointing down the tree
+	V2LN            float64
 	V               float64
 	Polrev          bool // Reverses meter polarity (negative P means import rather than export)
 	Closed          bool
@@ -107,7 +109,7 @@ func (f *feed) DistributeVoltage(input terminal) (output terminal) {
 	for i, v := range assetStatus {
 		f.Status[i] = v
 	}
-	output.v, output.f, output.ph = f.V2, f.F2, f.Ph  //from GetLoadLines() step if !f.Closed
+	output.v, output.f, output.ph = f.V2, f.F2, f.Ph //from GetLoadLines() step if !f.Closed
 	return output
 }
 
@@ -171,8 +173,10 @@ func (f *feed) UpdateState(input terminal, dt float64) (output terminal) {
 		f.P, f.Q = -f.P, -f.Q
 	}
 	f.Pf = pf(f.P, f.Q, f.S)
-	//TODO GB: Why do these use f.V instead of f.V1? 
+	//TODO GB: Why do these use f.V instead of f.V1?
 	f.I, f.Di, f.Qi = sToI(f.S, f.V), sToI(f.P, f.V), sToI(f.Q, f.V)
+	f.V1LN = f.V1 / sqrt3
+	f.V2LN = f.V2 / sqrt3
 	// Return un-reversed polarity for solver
 	if f.Polrev {
 		output = terminal{p: -f.P, q: -f.Q, s: f.S}

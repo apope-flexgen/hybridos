@@ -23,6 +23,7 @@ type pcs struct {
 	IvCurve  float64 // not used
 	// PCS Measured values
 	Vac     float64
+	VacLN   float64
 	Vdc     float64
 	Iac     float64
 	Idc     float64
@@ -551,6 +552,7 @@ func (p *pcs) UpdateState(input terminal, dt float64) (output terminal) {
 	p.Pf = pf(p.P, p.Q, p.S)
 	p.Iac, p.Di, p.Qi = sToI(p.S, p.Vac), sToI(p.P, p.Vac), sToI(p.Q, p.Vac)
 	p.Idc = pToI(p.Pdc, p.Vdc)
+	p.VacLN = p.Vac / sqrt3
 	output.p, output.q, output.s = p.P, p.Q, p.S
 	//	p.Dvoltage.YNom = p.Pdc //set up DC droop for next execution.
 	if p.VDCcmd > 0 {
