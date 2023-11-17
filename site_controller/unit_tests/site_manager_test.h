@@ -582,6 +582,10 @@ TEST_F(site_manager_test, active_power_setpoint_1) {
     array[2] = { LOAD_OFFSET, -2000.0f, LOAD_OFFSET, -2000.0f };
     array[3] = { LOAD_OFFSET, 2000.0f, LOAD_OFFSET, 2000.0f };
 
+    // add potential to allow demand to inc/dec
+    asset_cmd.ess_data.min_potential_kW = -2000;
+    asset_cmd.gen_data.max_potential_kW = 2000;
+
     // increment export target cmd slew prior to test
     active_power_setpoint_mode.kW_slew.set_slew_rate(1000000);  // 1000MW/s
     active_power_setpoint_mode.kW_slew.update_slew_target(0);   // call once to set time vars
@@ -596,6 +600,7 @@ TEST_F(site_manager_test, active_power_setpoint_1) {
         // Capture any prints within site controller that might be present in debug mode
         capture_stdout();
 
+        usleep(10000);  // wait 10ms (total range +/-10MW)
         active_power_setpoint_mode.kW_cmd.value.value_float = array[i].export_target_cmd;
         active_power_setpoint_mode.load_method.value.value_int = array[i].load_strategy;
         active_power_setpoint_mode.absolute_mode_flag.value.value_bool = false;
@@ -701,6 +706,10 @@ TEST_F(site_manager_test, active_power_setpoint_2) {
     array[5] = { 500.0f, 1000.0f, 1500.0f, 0.0f, true, false, false };    // direction_flag = false. kw_cmd interpreted identically
     array[6] = { 500.0f, 1000.0f, -500.0f, 0.0f, true, true, false };     // direction_flag = true. kw_cmd interpreted as -1000.0
     array[7] = { 500.0f, 1000.0f, 1500.0f, 300.0f, false, false, true };  // maximize_solar = true. potential hardwired to 300.0
+
+    // add potential to allow demand to inc/dec
+    asset_cmd.ess_data.min_potential_kW = -1500;
+    asset_cmd.gen_data.max_potential_kW = 1500;
 
     // iterate through each test case and get results
     for (int i = 0; i < num_tests; i++) {

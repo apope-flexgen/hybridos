@@ -1401,7 +1401,6 @@ void Site_Manager::set_values() {
     ess_kVAR_cmd_slew.update_slew_target(ess_kVAR_cmd.value.value_float);
     gen_kVAR_cmd_slew.update_slew_target(gen_kVAR_cmd.value.value_float);
     solar_kVAR_cmd_slew.update_slew_target(solar_kVAR_cmd.value.value_float);
-    remove_active_poi_corrections_from_slew_targets();
     remove_reactive_poi_corrections_from_slew_targets();
     manual_power_mode.manual_solar_kW_slew.update_slew_target(solar_kW_cmd.value.value_float);
     manual_power_mode.manual_ess_kW_slew.update_slew_target(ess_kW_cmd.value.value_float);
@@ -1509,28 +1508,6 @@ void Site_Manager::set_volatile_asset_cmd_variables() {
     feature_kW_demand.value.set(asset_cmd.feature_kW_demand);
     site_kW_charge_production.value.set(asset_cmd.site_kW_charge_production);
     site_kW_discharge_production.value.set(asset_cmd.site_kW_discharge_production);
-}
-
-/**
- * The output of standalone features will be included in the asset commands. In the case of POI correction features,
- * this will throw off the slew target of active power features that utilize their own slew rates.
- *
- * Remove the corrections instead to get a clean slew target that's also limited by asset potentials. This function
- * handles the following active power feature slews: Export Target
- * by removing the following POI corrections: Active Power Closed Loop Control, Watt-Watt
- */
-void Site_Manager::remove_active_poi_corrections_from_slew_targets() {
-    // TODO: fix for mixed asset commands
-    // i.e. a -10MW charge cmd could produce asset cmds of -10MW ESS, +10MW Solar, resulting in a target of 0MW
-    // We would only get passed this with a sufficient slew rate that can reach -10MW from net 0MW
-    float slew_target = ess_kW_cmd.value.value_float + solar_kW_cmd.value.value_float + gen_kW_cmd.value.value_float;
-    // Remove corrections in reverse of the order they were dispatched
-    if (watt_watt.enable_flag.value.value_bool)
-        slew_target -= watt_watt.site_kW_demand_correction;
-    if (active_power_closed_loop.enable_flag.value.value_bool)
-        slew_target -= active_power_closed_loop.total_correction.value.value_float;
-    // Reset feature slews
-    active_power_setpoint_mode.kW_slew.update_slew_target(slew_target);
 }
 
 /**

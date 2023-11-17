@@ -2,6 +2,7 @@ import pytest
 import subprocess
 import time
 import math
+import statistics
 
 from .controls import start_site, toggle_solar_and_gen_maintenance_mode, run_twins_command
 from .fims import fims_set, fims_get, fims_del, poll_until_uri_is_at_value, parse_time_from_fims_trigger_output
@@ -120,7 +121,7 @@ slew_rate_test_cases = [
         'target_value': 60.5,
         'slew_rate': 1,
     },
-    # # Test cases that take longer than a minute are below
+    # Test cases that take longer than a minute are below
     # { # expected time: 5 min
     #     'target_value': 300.5,
     #     'slew_rate': 1,
@@ -268,7 +269,7 @@ def test_reactive_setpoint_slew_rate(setup_cleanup_test_slew_rate):
 
 def test_active_power_setpoint_slew_rate(setup_cleanup_test_slew_rate):
     """
-        Tests Site Export Target feature's slew rate variable, reactive_setpoint_kVAR_slew_rate.
+        Tests Active Power Setpoint feature's slew rate variable, active_power_setpoint_kW_slew_rate.
         Ensures it can be edited via FIMS, the new slew takes effect immediately, and the slew is
         followed.
 
@@ -353,3 +354,71 @@ def test_active_power_setpoint_slew_rate(setup_cleanup_test_slew_rate):
             ]))
             assert abs(actual - expected) < tolerance
         check_result(expected_slew_milliseconds, milliseconds_between_command_and_response, margin_of_error_milliseconds)
+
+
+def test_competing_asset_feature_slews(setup_cleanup_test_slew_rate):
+    """
+        Tests the case of asset slews competing with the top level setpoint slews, such that the two slew rates work in opposition and
+        settle at a point different than the setpoint under certain conditions.
+    """
+    test_competing_asset_cases = [
+        {
+            "setpoint":     4_000,  # charge 4MW
+            "slew_rate":    300_000  # slew small enough to expose bug
+        },
+        {
+            "setpoint":     -4_000, # discharge 4MW
+            "slew_rate":    300_000  # slew small enough to expose bug
+        }
+    ]
+    for test_case in test_competing_asset_cases:
+
+        # Start in Active Power Setpoint with 0 active and reactive power
+        # Also turn on ess, gen, and solar
+        fims_set('/features/active_power/runmode1_kW_mode_cmd', 2)
+        fims_set('/features/active_power/active_power_setpoint_kW_slew_rate', 1000_000_000)
+        fims_set('/features/active_power/active_power_setpoint_kW_cmd', 0)
+        fims_set('/features/reactive_power/runmode1_kVAR_mode_cmd', 2)
+        fims_set('/features/reactive_power/reactive_setpoint_kVAR_slew_rate', 1000_000_000)
+        fims_set('/features/reactive_power/reactive_setpoint_kVAR_cmd', 0)
+        toggle_solar_and_gen_maintenance_mode(False)
+        fims_set("/assets/ess/ess_1/maint_mode", False)
+
+        # wait for power setpoints to settle down
+        for uri in ['/assets/ess/ess_1/active_power_setpoint',   '/assets/ess/ess_2/active_power_setpoint',
+                    '/assets/ess/ess_1/reactive_power_setpoint', '/assets/ess/ess_2/reactive_power_setpoint']:
+            assert poll_until_uri_is_at_value(uri=uri, expected=0, tolerance=0.00001, timeout_seconds=1) == True
+                
+        # reset export target slew rate to 0 and wait for slew to update
+        fims_set('/features/active_power/active_power_setpoint_kW_slew_rate', 0)
+        time.sleep(0.1)
+
+        # Set the slew rate
+        fims_set('/features/active_power/active_power_setpoint_kW_slew_rate', test_case["slew_rate"])
+
+        # Send a command to kick-off the slew
+        fims_set('/features/active_power/active_power_setpoint_kW_cmd', test_case["setpoint"])
+
+        time.sleep(0.1) # This is more than enough time for it to reach the setpoint.
+
+        # Find average over 10 iterations
+        responses = []
+        for i in range(0, 10):
+            response = fims_get("/features/active_power/site_kW_demand")["value"]
+            responses.append(response)
+            time.sleep(.2)
+        
+        avg = statistics.mean(responses)
+        stdev = statistics.stdev(responses)
+
+        def check_result(expected: float, actual: float, tolerance: float) -> None:
+            LOGGER.info("\n".join([
+                f"Active power setpoint slew test: slew rate: {test_case['slew_rate']},"
+                f"actual: {actual},"
+                f"expected: {expected},"
+                f"error: {actual-expected},"
+                f"tolerance: {tolerance}"
+            ]))
+            assert abs(actual - expected) < tolerance
+        check_result(test_case["setpoint"], avg, 1)
+        check_result(0, stdev, .1)

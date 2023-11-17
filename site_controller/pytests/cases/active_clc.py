@@ -703,6 +703,57 @@ def test_solar_tsoc_clc(test):
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 100)
         ]
     ),
+    Steps(
+        {
+            # Reset for next test 
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+            "/features/active_power/active_power_setpoint_kW_slew_rate": 1000000
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_closed_loop_total_correction", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 550),        
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 0)
+        ]
+    ),
+    Steps(
+        {
+            # Negative active power command set to value outside zero bypass deadband, CLC applies as normal
+            "/features/active_power/active_power_setpoint_kW_cmd": -1000,
+            "/components/bess_aux/active_power_setpoint": 500
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", -1000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", -1450, wait_secs=10), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 1000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -1450)
+        ]
+    ),
+    Steps(
+        {
+            # Zero bypass and cmd of 0
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", 0, wait_secs=10), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 0, tolerance=50),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 0)
+        ]
+    ),
+    Steps(
+        {
+            # No zero bypass and cmd of 0
+            "/features/standalone_power/active_power_closed_loop_zero_bypass_enable": False,
+        },
+        [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/ess_actual_kW", -450, tolerance=50, wait_secs=10), 
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", 0, tolerance=50),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -450, tolerance=50)
+        ]
+    ),
     # Cleanup
     Teardown(
         {

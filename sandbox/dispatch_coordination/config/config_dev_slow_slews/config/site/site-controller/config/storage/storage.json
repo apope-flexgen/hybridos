@@ -1,0 +1,329 @@
+{
+    "dbName": "test_database",
+    "measurements": [
+        {
+            "baseUri": "/assets/ess",
+            "measurement": "ess"
+        },
+        {
+            "baseUri": "/assets/feeders",
+            "measurement": "feeders"
+        },
+        {
+            "source": 
+            [
+                "ess_twins"
+            ],
+            "baseUri": "/components",
+            "measurement": "ess_twins"
+        },
+        {
+            "source": 
+            [
+                "real_ess_hs"
+            ],
+            "baseUri": "/components",
+            "measurement": "real_ess_hs"
+        },
+        {
+            "source": 
+            [
+                "real_ess_ls"
+            ],
+            "baseUri": "/components",
+            "measurement": "real_ess_ls"
+        },
+        {
+            "source": 
+            [
+                "shared_poi"
+            ],
+            "baseUri": "/components",
+            "measurement": "shared_poi"
+        },
+        {
+            "source": 
+            [
+                "split_feeder", "bess_aux", "control_cabinet"
+            ],
+            "baseUri": "/components",
+            "measurement": "meters"
+        },
+        {
+            "baseUri": "/components",
+            "measurement": "components"
+        },
+        {
+            "baseUri": "/site",
+            "measurement": "site"
+        },
+        {
+            "baseUri": "/features",
+            "measurement": "features"
+        },
+        {
+            "baseUri": "/metrics",
+            "measurement": "metrics"
+        },
+        {
+            "baseUri": "/storage",
+            "measurement": null
+        }
+    ],
+    "retentionPolicies": [
+        {
+            "name": "autogen",
+            "duration": "0s",
+            "_duration": "INF",
+            "shardGroupDuration": "168h0m0s",
+            "replicaN": 1,
+            "default": false
+        },
+        {
+            "name": "infinite_rp",
+            "duration": "0s",
+            "_duration": "INF",
+            "shardGroupDuration": "168h0m0s",
+            "replicaN": 1,
+            "default": false
+        },
+        {
+            "name": "30_day_rp",
+            "duration": "720h0m0s",
+            "_duration": "30d",
+            "shardGroupDuration": "24h0m0s",
+            "replicaN": 1,
+            "default": true
+        },
+        {
+            "name": "120_day_rp",
+            "duration": "2880h0m0s",
+            "_duration": "120d",
+            "shardGroupDuration": "24h0m0s",
+            "replicaN": 1,
+            "default": false
+        }
+    ],
+    "continuousQueries": [
+        {
+            "name": "components_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "components",
+            "from": "components",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "ess_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "ess",
+            "from": "ess",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "metrics_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "metrics",
+            "from": "metrics",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "feeders_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "feeders",
+            "from": "feeders",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "site_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "site",
+            "from": "site",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "features_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "features",
+            "from": "features",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "ess_twins_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "ess_twins",
+            "from": "ess_twins",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "real_ess_hs_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "real_ess_hs",
+            "from": "real_ess_hs",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "real_ess_ls_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "real_ess_ls",
+            "from": "real_ess_ls",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "shared_poi_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "shared_poi",
+            "from": "shared_poi",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "meters_1min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "120_day_rp",
+            "measurement": "meters",
+            "from": "meters",
+            "groupBy": "time(1m), *"
+        },
+        {
+            "name": "components_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "components",
+            "from": "components",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "ess_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "ess",
+            "from": "ess",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "metrics_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "metrics",
+            "from": "metrics",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "feeders_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "feeders",
+            "from": "feeders",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "site_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "site",
+            "from": "site",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "features_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "features",
+            "from": "features",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "ess_twins_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "ess_twins",
+            "from": "ess_twins",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "real_ess_hs_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "real_ess_hs",
+            "from": "real_ess_hs",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "real_ess_ls_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "real_ess_ls",
+            "from": "real_ess_ls",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "shared_poi_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "shared_poi",
+            "from": "shared_poi",
+            "groupBy": "time(10m), *"
+        },
+        {
+            "name": "meters_10min_cq",
+            "db": "test_database",
+            "select": "MIN(*), MAX(*), MEAN(*), LAST(*)",
+            "into": "test_database",
+            "rp": "infinite_rp",
+            "measurement": "meters",
+            "from": "meters",
+            "groupBy": "time(10m), *"
+        }
+    ]
+}

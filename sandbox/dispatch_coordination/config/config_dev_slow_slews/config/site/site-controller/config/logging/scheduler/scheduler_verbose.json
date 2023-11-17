@@ -1,0 +1,5 @@
+{
+    "to_console": true,
+    "to_file": true,
+    "severity_threshold": 1
+}
