@@ -3845,7 +3845,7 @@ void VarMapUtils::processMsgSetPub(varsmap& vmap, const char* method, const char
             auto tmp = cJSON_Print(cjrx);
 
  
-            if(1) FPS_PRINT_INFO("Calling setValfromCj for [{}]", cjrx->string ? cjrx->string : " No String found");
+            if(0) FPS_PRINT_INFO("Calling setValfromCj for [{}]", cjrx->string ? cjrx->string : " No String found");
             av = setValfromCj(vmap, my.Uri, cjrx->string, cjrx, uiObject);
             if(0) FPS_PRINT_INFO("called setValfromCj uri [{}] name [{}]  cj [{}] ui [{}] av [{}]"
                 , my.Uri

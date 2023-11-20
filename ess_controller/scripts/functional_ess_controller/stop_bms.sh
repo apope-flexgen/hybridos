@@ -1,8 +1,8 @@
 # echo -e "\n\nset up run command."
 fims_send -m set -r /$$ -u /ess/system/commands '{"run":{"value":"test","ifChanged":false, "enabled":true, "actions":{"onSet":[{"func":[{"amap":"ess","func":"RunSched"}]}]}}}'
+stepThrough=false
 
-
-read -n1 -p "Press any key to continue - 1";echo
+$stepThrough && read -n1 -p "Press any key to continue - 1";echo
 
 # BMS status variables
 /usr/local/bin/fims_send -m set -r /$$ -u /ess/status/bms  '
@@ -16,7 +16,7 @@ read -n1 -p "Press any key to continue - 1";echo
 } '
 
 
-read -n1 -p "Press any key to continue - 2";echo
+$stepThrough && read -n1 -p "Press any key to continue - 2";echo
 
 # BMS UI variables
 /usr/local/bin/fims_send -m set -r /$$ -u /assets/bms/summary  '
@@ -67,6 +67,7 @@ read -n1 -p "Press any key to continue - 2";echo
         "aname": "bms",
         "uri":"/sched/bms:LocalStartBMS",
         "every":0.1,
+        "schedEvery":0.5,
         "offset":0,
         "debug":0,
         "actions":	{
@@ -121,28 +122,48 @@ read -n1 -p "Press any key to continue - 2";echo
 } '
 
 
-read -n1 -p "Press any key to continue - 3";echo
+$stepThrough && read -n1 -p "Press any key to continue - 3";echo
 
 /usr/local/bin/fims_send -m set -r /$$ -u /ess/controls/bms  '
 {
     "CloseContactors": {
-        "value": 0,
-        "cmdVar": "/components/bms:close_contactors",
-        "checkCmdTimeout": 3,
-        "sendCmdTimeout": 3,
-        "triggerCmd": false
+        "value": 2,
+        "cmdVar": "/components/catl_bms_1_controls:ems_cmd",
+        "triggerCmd": false,
+        "checkCmdTimeout": 5,
+        "checkCmdHoldTimeout": 5, 
+        "sendCmdTimeout": 5
     },
     "OpenContactors": {
-        "value": 0,
-        "cmdVar": "/components/bms:open_contactors",
+        "value": 3,
+        "cmdVar": "/components/catl_bms_1_controls:ems_cmd",
+        "triggerCmd": false,
         "checkCmdTimeout": 3,
-        "sendCmdTimeout": 3,
-        "triggerCmd": false
+        "checkCmdHoldTimeout": 3, 
+        "sendCmdTimeout": 3
+    },
+    "VerifyCloseContactors": {
+        "value": 0,
+        "enableAlert": false,
+        "sendCmdTimeout": 10,
+        "numVars": 1,
+        "variable1": "/status/bms:DCClosed",
+        "useExpr": true,
+        "expression": "{1}"
+    },
+    "VerifyOpenContactors": {
+        "value": 0,
+        "enableAlert": false,
+        "sendCmdTimeout": 10,
+        "numVars": 1,
+        "variable1": "/status/bms:DCClosed",
+        "useExpr": true,
+        "expression": "not {1}"
     }
 }'
 
 
-read -n1 -p "Press any key to continue - 4";echo
+$stepThrough && read -n1 -p "Press any key to continue - 4";echo
 
 # BMS config variables
 /usr/local/bin/fims_send -m set -r /$$ -u /ess/config/bms  '
@@ -151,7 +172,7 @@ read -n1 -p "Press any key to continue - 4";echo
 } '
 
 
-read -n1 -p "Press any key to continue - 5";echo
+$stepThrough && read -n1 -p "Press any key to continue - 5";echo
 
 # BMS status variables
 /usr/local/bin/fims_send -m set -r /$$ -u /ess/status/pcs  '
@@ -165,7 +186,28 @@ read -n1 -p "Press any key to continue - 5";echo
 } '
 
 
-read -n1 -p "Press any key to continue - 6";echo
+$stepThrough && read -n1 -p "Press any key to continue - 6";echo
+
+# BMS status variables
+/usr/local/bin/fims_send -m set -r /$$ -u /ess/components/catl_bms_1_info  '
+{
+    "bms_poweron":{
+        "value":0,
+        "actions":{ "onSet":[{ "enum":[ {"inValue":0, "outValue":false,  "uri": "/status/bms:DCClosed"},
+                                        {"inValue":1, "outValue":true,  "uri": "/status/bms:DCClosed"}
+                                        ]}]}
+    }
+} '
+
+# BMS control variables
+/usr/local/bin/fims_send -m set -r /$$ -u /ess/components/catl_bms_1_controls  '
+{
+    "ems_cmd":{
+        "value":0
+    }
+} '
+
+$stepThrough && read -n1 -p "Press any key to continue - 7";echo
 
 
 # Set up on scheduler
@@ -204,7 +246,7 @@ read -n1 -p "Press any key to continue - 6";echo
 } '
 
 
-read -n1 -p "Press any key to continue - 7";echo
+$stepThrough && read -n1 -p "Press any key to continue - 8";echo
 
 
 fims_send -m set -r /$$ -u /ess/system/commands '
@@ -249,30 +291,42 @@ fims_send -m set -r /$$ -u /ess/system/commands '
 }
 '
 
-read -n1 -p "Press any key to continue - 9 - fims_send -m set -r /$$ -u /ess/config/bms/enable true";echo
+$stepThrough && read -n1 -p "Press any key to continue - 9 - fims_send -m set -r /$$ -u /ess/config/bms/enable true";echo
 
 /usr/local/bin/fims_send -m set -r /$$ -u /ess/config/bms/enable true
 
-read -n1 -p "Press any key to continue - 9 - fims_send -m set -r /$$ -u /assets/bms/summary/open_contactors true";echo
+$stepThrough && read -n1 -p "Press any key to continue - 10 - fims_send -m set -r /$$ -u /assets/bms/summary/close_contactors true";echo
 
-/usr/local/bin/fims_send -m set -r /$$ -u /assets/bms/summary/open_contactors true
+/usr/local/bin/fims_send -m set -r /$$ -u /assets/bms/summary/close_contactors true
 
-read -n1 -p "Press any key to continue - 10 - fims_send -m set -r /$$ -u /assets/bms/summary/maint_mode true";echo
+$stepThrough && read -n1 -p "Press any key to continue - 11 - fims_send -m set -r /$$ -u /assets/bms/summary/maint_mode true";echo
 
 /usr/local/bin/fims_send -m set -r /$$ -u /assets/bms/summary/maint_mode true
 
-read -n1 -p "Press any key to continue - 11 - fims_send -m set -r /$$ -u /ess/status/bms/DCClosed true";echo
+read -n1 -p "Press any key to continue - 12 - fims_send -m set -r /$$ -u /assets/bms/summary/close_contactors true";echo
 
-/usr/local/bin/fims_send -m set -r /$$ -u /ess/status/bms/DCClosed true
+/usr/local/bin/fims_send -m set -r /$$ -u /assets/bms/summary/close_contactors true
 
-read -n1 -p "Press any key to continue - 12 - fims_send -m set -u /ess/status/pcs/SystemState '{"value": "Running"}'";echo
 
-/usr/local/bin/fims_send -m set -u /ess/status/pcs/SystemState '{"value": "Running"}'
 
-read -n1 -p "Press any key to continue - 13 - fims_send -m set -r /$$ -u /assets/bms/summary/open_contactors true";echo
+
+
+read -n1 -p "Press any key to continue - 10 - fims_send -m set -r /$$ -u /assets/bms/summary/open_contactors true";echo
 
 /usr/local/bin/fims_send -m set -r /$$ -u /assets/bms/summary/open_contactors true
 
-read -n1 -p "Press any key to continue - 14 - fims_send -m set -u /ess/status/bms/DCClosed false";echo
+read -n1 -p "Press any key to continue - 11 - fims_send -m set -r /$$ -u /assets/bms/summary/maint_mode true";echo
 
-/usr/local/bin/fims_send -m set -u /ess/status/bms/DCClosed false
+/usr/local/bin/fims_send -m set -r /$$ -u /assets/bms/summary/maint_mode true
+
+read -n1 -p "Press any key to continue - 12 - fims_send -m set -r /$$ -u /ess/status/bms/DCClosed true";echo
+
+/usr/local/bin/fims_send -m set -r /$$ -u /ess/status/bms/DCClosed true
+
+read -n1 -p "Press any key to continue - 13 - fims_send -m set -u /ess/status/pcs/SystemState '{"value": "Running"}'";echo
+
+/usr/local/bin/fims_send -m set -u /ess/status/pcs/SystemState '{"value": "Running"}'
+
+read -n1 -p "Press any key to continue - 14 - fims_send -m set -r /$$ -u /assets/bms/summary/open_contactors true";echo
+
+/usr/local/bin/fims_send -m set -r /$$ -u /assets/bms/summary/open_contactors true

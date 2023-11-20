@@ -9,6 +9,8 @@
 #include "assetVar.h"
 #include "formatters.hpp"
 #include "FunctionUtility.hpp"
+#include "OutputHandler.hpp"
+#include "InfoMessageUtility.hpp"
 
 
 
@@ -49,15 +51,22 @@ namespace InputHandler
         //Function has been called but the assets uri hasn't been updated so it shouldn't have been called
         if(!amap["close_contactors"]->getbVal()) return;
 
+        int returnValue = IN_PROGRESS;
+        std::string outputHandlerFunc = "";
+        std::string uiUri = "close_contactors";
+        std::string message = "";
 
         if (amap["maint_mode"]->getbVal() && !(amap["IsFaulted"]->getbVal())) {
-            // FunctionUtility::InputOutputResultHandler(OutputHandler::CloseContactors, vmap, amap, aname, p_fims, aV, __func__, __func__, "CloseContactors", "close_contactors");
-            if(0)FPS_PRINT_INFO("(maint_mode && !IsFaulted) == true", nullptr);
-            FunctionUtility::FunctionResultHandler(0, vmap, amap, aname, p_fims, aV, __func__, __func__, "CloseContactors", "close_contactors", "");
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::CloseContactors(vmap, amap, aname, p_fims, aV);
+            returnValue = returnObject.statusIndicator;
+            message += returnObject.message;
+            outputHandlerFunc += "CloseContactors";
         } else {
-            if(0)FPS_PRINT_INFO("(maint_mode && !IsFaulted) == false", nullptr);
-            FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, __func__, "", "close_contactors", "(maint_mode && !IsFaulted) == false");
+            returnValue = FAILURE;
+            message += InfoMessageUtility::logicCheckFail("(maint_mode && !IsFaulted)");
         }
+
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, __func__, outputHandlerFunc, uiUri.c_str(), message.c_str());
     }
 
     void LocalStopBMS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
@@ -66,10 +75,6 @@ namespace InputHandler
         if(0)FPS_PRINT_INFO("LOCAL STOP BMS", nullptr);
 
         asset_manager * am = aV->am;
-
-        if(0)FPS_PRINT_INFO("aname [{}]", cstr{aname});
-        if(0)FPS_PRINT_INFO("val [{}]", aV->getdVal());
-        if(0)FPS_PRINT_INFO("assetVar [{}] ", aV->getfName());
         VarMapUtils* vm = am->vm;
 
 
@@ -84,12 +89,23 @@ namespace InputHandler
         //Function has been called but the assets uri hasn't been updated so it shouldn't have been called
         if(!amap["open_contactors"]->getbVal()) return;
 
+        int returnValue = IN_PROGRESS;
+        std::string outputHandlerFunc = "";
+        std::string uiUri = "open_contactors";
+        std::string message = "";
+
         if (amap["maint_mode"]->getbVal()) {
-            // FunctionUtility::InputOutputResultHandler(OutputHandler::OpenContactors, vmap, amap, aname, p_fims, aV, __func__, __func__, "OpenContactors", "open_contactors");
-            FunctionUtility::FunctionResultHandler(0, vmap, amap, aname, p_fims, aV, __func__, __func__, "OpenContactors", "open_contactors", "");
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::OpenContactors(vmap, amap, aname, p_fims, aV);
+            returnValue = returnObject.statusIndicator;
+            message += returnObject.message;
+            outputHandlerFunc += "OpenContactors";
         } else {
-            FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, __func__, "", "open_contactors", "(maint_mode) == false");
+            returnValue = FAILURE;
+            message += InfoMessageUtility::logicCheckFail("(maint_mode)");
+
         }
+
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, __func__, outputHandlerFunc, uiUri.c_str(), message.c_str());
 
     }
 
@@ -152,14 +168,23 @@ namespace InputHandler
         if(0)FPS_PRINT_INFO("(dcClosed && maintMode && systemState && !isFaulted) = [{}]", (dcClosed && maintMode && systemState && !isFaulted));
 
 
+        int returnValue = IN_PROGRESS;
+        std::string outputHandlerFunc = "";
+        std::string uiUri = "start";
+        std::string message = "";
 
         // if (dcClosed && maintMode && systemState && !isFaulted) {
         if (dcClosed && maintMode && !isFaulted) {
-            // FunctionUtility::InputOutputResultHandler(OutputHandler::StartPCS, vmap, amap, aname, p_fims, aV, __func__, __func__, "StartPCS", "start");
-            FunctionUtility::FunctionResultHandler(0, vmap, amap, aname, p_fims, aV, __func__, __func__, "StartPCS", "start", "");
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StartPCS(vmap, amap, aname, p_fims, aV);
+            returnValue = returnObject.statusIndicator;
+            message += returnObject.message;
+            outputHandlerFunc += "StartPCS";
         } else {
-            FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, __func__, "", "start", "(dcClosed && maintMode && !isFaulted) == false");
+            returnValue = FAILURE;
+            message += InfoMessageUtility::logicCheckFail("(dcClosed && maintMode && !isFaulted)");
         }
+
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, __func__, outputHandlerFunc, uiUri.c_str(), message.c_str());
 
 
     }
@@ -172,19 +197,6 @@ namespace InputHandler
         asset_manager * am = aV->am;
         VarMapUtils* vm = am->vm;
 
-
-
-
-        // // /assets/pcs/summary/maint_mode
-        // assetVar* av = vm->getVar(vmap, "/assets/pcs/summary", "maint_mode");
-        // if (!av) av = vm->makeVar(vmap, "/assets/pcs/summary", "maint_mode", FunctionUtility::bval);
-        // amap["maint_mode"] = av;
-
-        
-        // // /status/pcs/SystemState
-        // av = vm->getVar(vmap, "/status/pcs", "SystemState");
-        // if (!av) av = vm->makeVar(vmap, "/status/pcs", "SystemState", FunctionUtility::cval);
-        // amap["SystemState"] = av;
 
         std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
             // /assets/pcs/summary/stop
@@ -219,13 +231,28 @@ namespace InputHandler
         if(0)FPS_PRINT_INFO("systemState = [{}]", systemState);
         if(0)FPS_PRINT_INFO("(maintMode && systemState) = [{}]", (maintMode && systemState));
 
+
+        int returnValue = IN_PROGRESS;
+        std::string outputHandlerFunc = "";
+        std::string uiUri = "stop";
+        std::string message = "";
+
+        // if (dcClosed && maintMode && systemState && !isFaulted) {
         // if (maintMode && systemState) {
         if (maintMode) {
-            // FunctionUtility::InputOutputResultHandler(OutputHandler::StopPCS, vmap, amap, aname, p_fims, aV, __func__, __func__, "StopPCS", "stop");
-            FunctionUtility::FunctionResultHandler(0, vmap, amap, aname, p_fims, aV, __func__, __func__, "StopPCS", "stop", "");
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StopPCS(vmap, amap, aname, p_fims, aV);
+            returnValue = returnObject.statusIndicator;
+            message += returnObject.message;
+            outputHandlerFunc += "StopPCS";
         } else {
-            FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, __func__, "", "stop", "(maintMode) == false");
+            returnValue = FAILURE;
+            message += InfoMessageUtility::logicCheckFail("(maintMode)");
+
         }
+
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, __func__, outputHandlerFunc, uiUri.c_str(), message.c_str());
+
+        
 
     }
 
@@ -270,13 +297,25 @@ namespace InputHandler
         if(0)FPS_PRINT_INFO("systemState = [{}]", systemState);
         if(0)FPS_PRINT_INFO("(dcClosed && maintMode && systemState) = [{}]", (dcClosed && maintMode && systemState));
 
+
+        int returnValue = IN_PROGRESS;
+        std::string outputHandlerFunc = "";
+        std::string uiUri = "standby";
+        std::string message = "";
+
         // if (dcClosed && maintMode && systemState) {
         if (dcClosed && maintMode) {
-            // FunctionUtility::InputOutputResultHandler(OutputHandler::StandbyPCS, vmap, amap, aname, p_fims, aV, __func__, __func__, "StandbyPCS", "standby");
-            FunctionUtility::FunctionResultHandler(0, vmap, amap, aname, p_fims, aV, __func__, __func__, "StandbyPCS", "standby", "");
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StandbyPCS(vmap, amap, aname, p_fims, aV);
+            returnValue = returnObject.statusIndicator;
+            message += returnObject.message;
+            outputHandlerFunc += "StandbyPCS";
         } else {
-            FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, __func__, "", "standby","(dcClosed && maintMode) == false");
+            returnValue = FAILURE;
+            message += InfoMessageUtility::logicCheckFail("(dcClosed && maintMode)");
         }
+
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, __func__, outputHandlerFunc, uiUri.c_str(), message.c_str());
+
 
     }
 
@@ -307,13 +346,16 @@ namespace InputHandler
             hpAv->setVal(reload);
         }
 
-        int returnValue = 0;
-        // returnValue = OutputHandler::CloseContactors(vmap, amap, aname, p_fims, aV);
+        int returnValue = 1; 
+
+        FunctionUtility::FunctionReturnObj returnObject = OutputHandler::CloseContactors(vmap, amap, aname, p_fims, aV);
+        returnValue = returnObject.statusIndicator;
         FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName, __func__, "CloseContactors", "close_contactors", "");
         if(returnValue == 1 || returnValue == -1) return returnValue;
 
 
-        // returnValue = OutputHandler::StartPCS(vmap, amap, aname, p_fims, aV);
+        returnObject = OutputHandler::StartPCS(vmap, amap, aname, p_fims, aV);
+        returnValue = returnObject.statusIndicator;
         FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName, __func__, "StartPCS", "start", "");
 
         return returnValue;
@@ -326,15 +368,17 @@ namespace InputHandler
        
         if(0)FPS_PRINT_INFO("RemoteStop", nullptr);
 
-        int returnValue = 0;
+        int returnValue = 1;
 
-        // returnValue = OutputHandler::StopPCS(vmap, amap, aname, p_fims, aV);
+        FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StopPCS(vmap, amap, aname, p_fims, aV);
+        returnValue = returnObject.statusIndicator;
         FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName, __func__, "StopPCS", "stop", "");
         if(returnValue == 1 || returnValue == -1) return returnValue;
 
 
-        // returnValue = OutputHandler::OpenContactors(vmap, amap, aname, p_fims, aV);
-        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName, __func__, "OpenContactors", "open_contactors", "");
+        returnObject = OutputHandler::OpenContactors(vmap, amap, aname, p_fims, aV);
+        returnValue = returnObject.statusIndicator;
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName, __func__, "OpenContactors", "open_contactors", (returnObject.message).c_str());
 
         return returnValue;
 
@@ -345,7 +389,7 @@ namespace InputHandler
        
         if(0)FPS_PRINT_INFO("RemoteStop", nullptr);
 
-        int returnValue = 0;
+        int returnValue = 1;
         asset_manager * am = aV->am;
         VarMapUtils* vm = am->vm;
 
@@ -369,17 +413,18 @@ namespace InputHandler
 
         if(systemState){
             
-            // returnValue = OutputHandler::StandbyPCS(vmap, amap, aname, p_fims, aV);
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StandbyPCS(vmap, amap, aname, p_fims, aV);
+            returnValue = returnObject.statusIndicator;
             FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName, __func__, "StandbyPCS", "standby", "");
 
 
         } else if(!dcClosed) {
-            // returnValue = OutputHandler::CloseContactors(vmap, amap, aname, p_fims, aV);
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::CloseContactors(vmap, amap, aname, p_fims, aV);
+            returnValue = returnObject.statusIndicator;
             FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, scheduledFuncName, __func__, "CloseContactors", "close_contactors", "");
 
         } else {
-            FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, scheduledFuncName, __func__, "", "", "SystemState != 'On' && DCClosed == true");
-            return -1;
+            FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, scheduledFuncName, __func__, "", "", "TODO: better message");
         }
 
         return returnValue;
@@ -412,9 +457,9 @@ namespace InputHandler
                 // /site/ess/start_stop
                 FunctionUtility::AssetVarInfo("/site/ess", "start_stop", assetVar::ATypes::AFLOAT),
                 // /assets/bms/summary/maint_mode
-                FunctionUtility::AssetVarInfoWithManagerId("/assets/bms/summary", "maint_mode", "maint_mode_BMS", assetVar::ATypes::ABOOL),
+                FunctionUtility::AssetVarInfo("/assets/bms/summary", "maint_mode", "maint_mode_BMS", assetVar::ATypes::ABOOL),
                 // /assets/pcs/summary/maint_mode
-                FunctionUtility::AssetVarInfoWithManagerId("/assets/pcs/summary", "maint_mode", "maint_mode_PCS", assetVar::ATypes::ABOOL),
+                FunctionUtility::AssetVarInfo("/assets/pcs/summary", "maint_mode", "maint_mode_PCS", assetVar::ATypes::ABOOL),
                 // /status/bms/IsFaulted
                 FunctionUtility::AssetVarInfo("/status/bms", "IsFaulted", assetVar::ATypes::ABOOL)
             };
@@ -468,7 +513,8 @@ namespace InputHandler
                 returnValue = -1;
         }
 
-        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, inputHandlerFuncName, "CloseContactors", "close_contactors", "");
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, inputHandlerFuncName, "", "", "");
+        //TODO message relevant to all of these cases
     }
 
 }

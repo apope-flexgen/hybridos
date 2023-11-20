@@ -1,0 +1,27 @@
+{
+    "meta": { "publishRate": 1000},
+    "inputs": {
+        "close_contactors": { "uri": "/components/catl_bms_1_controls/ems_cmd", "type": "int", "default": 0},
+        "conditions_met": { "uri": "/mecho/conditions_met", "type": "bool" },
+        "accept_commands": { "uri": "/mecho/accept_commands", "type": "bool" }
+    },
+    "outputs": {
+        "bms_poweron": { "uri": "/components/catl_bms_1_info" },
+        "close_contactors": { "uri": "/components/catl_bms_1_controls/ems_cmd", "flags": ["direct_set"] },
+        "ems_cmd": { "uri": "/components/catl_bms_1_controls", "flags": ["group1"] }
+    },
+    "metrics": [
+        {
+            "id": "close_contactors_out",
+            "type": "int", 
+            "outputs": [ "close_contactors", "ems_cmd" ],
+            "expression": "If(accept_commands, close_contactors, 0)"
+        },
+        {
+            "id": "status",
+            "type": "int", 
+            "outputs": "bms_poweron",
+            "expression": "If(conditions_met, If(close_contactors == 2, 1, If(close_contactors == 3, 0)))"
+        }
+    ]
+}
