@@ -8429,7 +8429,7 @@ packages:
     engines: {node: '>= 8.0.0'}
     dependencies:
       bluebird: 3.7.2
-      check-types: 11.3.0.alpha.3
+      check-types: 11.2.2
       hoopy: 0.1.4
       tryer: 1.0.1
     dev: false
@@ -8755,7 +8755,7 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /check-types/11.3.0.alpha.3:
+  /check-types/11.2.2:
     resolution: {integrity: sha512-HBiYvXvn9Z70Z88XKjz3AEKd4HJhBXsa3j7xFnITAzoS8+q6eIGi8qDB8FKPBAjtuxjI/zFpwuiCb8oDtKOYrA==}
     dev: false
 
