@@ -45,7 +45,7 @@ else
 	imageTag=`echo $imageTag | sed 's/devel/release/g'` # pull the correct release container tied to devel (release-10.3.0)
 fi
 
-products=("twins_meta" "ess_controller_meta" "site_controller_meta" "fleet_manager_meta")
+products=("psm_meta" "ess_controller_meta" "site_controller_meta" "fleet_manager_meta")
 for productName in "${products[@]}"; do
 	dockerName=`echo $productName | sed 's/_meta//g'`
 	docker build . --progress=plain --no-cache -t flexgen/"${dockerName}${suffix}":"${shortTag}" --build-arg imageName="${imageName}" --build-arg imageTag="${imageTag}" --build-arg productName="${productName}" --build-arg dockerName="${dockerName}" --build-arg verNum="${shortTag}" || error_trap "failed to build $productName container"
