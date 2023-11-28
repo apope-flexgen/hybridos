@@ -43,7 +43,7 @@ export class AppConfig {
     @IsBoolean()
     features: boolean
 
-    @IsOptional()
+    @IsNotEmpty()
     @IsBoolean()
     site: boolean
 
@@ -63,7 +63,7 @@ export class AppConfig {
     @IsBoolean()
     site_status_bar: boolean
 
-    @IsOptional()
+    @IsNotEmpty()
     @IsBoolean()
     fleet_manager_dashboard: boolean
 
@@ -169,12 +169,12 @@ export class AppConfig {
             (this.feeders = feeders ?? false),
             (this.features = features ?? false),
             (this.site = site ?? false),
-            (this.events = events),
+            (this.events = events ?? false),
             (this.control_cabinet = control_cabinet ?? false),
-            (this.fleet_manager_dashboard = fleet_manager_dashboard),
+            (this.fleet_manager_dashboard = fleet_manager_dashboard  ?? false),
             (this.scheduler = scheduler ?? false),
             (this.units = units),
-            (this.inspectorComponentsName = inspectorComponentsName),
+            (this.inspectorComponentsName = inspectorComponentsName ?? 'test_controller'),
             (this.site_name = site_name),
             (this.fleet_name = fleet_name),
             (this.system_status = system_status),
