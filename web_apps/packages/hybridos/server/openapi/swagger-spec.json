@@ -2265,6 +2265,144 @@
 				]
 			}
 		},
+		"/api/system-status/{serviceName}/start": {
+			"put": {
+				"operationId": "startService",
+				"parameters": [
+					{
+						"name": "serviceName",
+						"required": true,
+						"in": "path",
+						"description": "Name of the Service",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FimsMsg"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"system-status"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/system-status/{serviceName}/stop": {
+			"put": {
+				"operationId": "stopService",
+				"parameters": [
+					{
+						"name": "serviceName",
+						"required": true,
+						"in": "path",
+						"description": "Name of the Service",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FimsMsg"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"system-status"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
+		"/api/system-status/{serviceName}/restart": {
+			"put": {
+				"operationId": "restartService",
+				"parameters": [
+					{
+						"name": "serviceName",
+						"required": true,
+						"in": "path",
+						"description": "Name of the Service",
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FimsMsg"
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DefaultApiError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"system-status"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				]
+			}
+		},
 		"/api/web-ui-config": {
 			"get": {
 				"operationId": "appInit",
@@ -3796,6 +3934,13 @@
 					"lastRestart": {
 						"type": "string",
 						"description": "Timestring representing the last time the service was restarted"
+					},
+					"actions": {
+						"description": "Array of actions (start, stop, restart) that a user can use for this service",
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
 					}
 				},
 				"required": [
@@ -3806,7 +3951,40 @@
 					"cpuUsage",
 					"memoryUsage",
 					"uptime",
-					"lastRestart"
+					"lastRestart",
+					"actions"
+				]
+			},
+			"FimsMsg": {
+				"type": "object",
+				"properties": {
+					"method": {
+						"type": "string",
+						"description": "Method to use to send message - either “set”, “get”, “post”, “del”, or “pub”."
+					},
+					"uri": {
+						"type": "string",
+						"description": "The URI string associated with the message. All processes subscribed to this URI will receive the message."
+					},
+					"replyto": {
+						"type": "string",
+						"description": "Field containing another URI that receiver processes should send an acknowledgement message."
+					},
+					"body": {
+						"type": "object",
+						"description": "Body of the fims message; Typically either a single value or a stringified JSON object."
+					},
+					"username": {
+						"type": "string",
+						"description": "Typically username of user who sent the fims message"
+					}
+				},
+				"required": [
+					"method",
+					"uri",
+					"replyto",
+					"body",
+					"username"
 				]
 			},
 			"SiteConfigurationDetailedResponse": {

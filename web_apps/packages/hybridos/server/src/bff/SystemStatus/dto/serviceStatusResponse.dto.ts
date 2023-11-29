@@ -4,12 +4,13 @@ import {
     IsString,
     IsArray,
     IsOptional,
+    IsBoolean,
 } from 'class-validator'
 import { systemStatusDescriptions } from '../systemStatus.constants'
 
 // TODO: right now, all fields are optional since we aren't getting all
 // from backend. Update to remove optional validators once all data is flowing
-export class ServiceStatusReponse {
+export class ServiceStatusResponse {
     @ApiProperty({ 
         description: systemStatusDescriptions.dependencies 
     })
@@ -65,4 +66,27 @@ export class ServiceStatusReponse {
     @IsString()
     @IsOptional()
     lastRestart?: string
+    
+    @ApiProperty({
+        description: systemStatusDescriptions.actions,
+    })
+    @IsArray()
+    @IsOptional()
+    actions?: ServiceAction[]
+}
+
+export class ServiceAction {
+    @ApiProperty({ 
+        description: systemStatusDescriptions.actionEnabled 
+    })
+    @IsBoolean()
+    @IsOptional()
+    enabled?: boolean
+
+    @ApiProperty({
+        description: systemStatusDescriptions.actionTitle,
+    })
+    @IsString()
+    @IsOptional()
+    action?: 'start' | 'stop' | 'restart'
 }

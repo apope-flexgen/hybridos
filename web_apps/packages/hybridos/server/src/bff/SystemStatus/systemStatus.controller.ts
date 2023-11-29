@@ -2,6 +2,8 @@ import {
     Controller,
     Get,
     UseGuards,
+    Param,
+    Put,
 } from '@nestjs/common'
 import {
     ApiDefaultResponse,
@@ -14,8 +16,9 @@ import { SystemStatusService } from './systemStatus.service'
 import { ApprovedRoles } from '../../decorators/roles.decorator';
 import { Roles } from '../../../../shared/types/api/Users/Users.types';
 import { RolesGuard } from '../../auth/guards/roles.guard'
-import { ServiceStatusReponse } from './dto/serviceStatusResponse.dto';
-
+import { ServiceStatusResponse } from './dto/serviceStatusResponse.dto';
+import { FimsMsg } from 'src/fims/responses/fimsMsg.response';
+import { ServiceName } from './params/serviceName.params';
 @UseGuards(RolesGuard)
 @ApiTags('system-status')
 @ApiSecurity('bearerAuth')
@@ -23,13 +26,41 @@ import { ServiceStatusReponse } from './dto/serviceStatusResponse.dto';
 @Controller('system-status')
 export class SystemStatusController {
     constructor(private readonly systemStatusService: SystemStatusService) {}
-    // NOTE: Service method called below does not currently return data
-    // backend cops service will need to be updated
     @Get()
-    @ApiOkResponse({type: ServiceStatusReponse})
+    @ApiOkResponse({type: ServiceStatusResponse})
     @ApprovedRoles(Roles.Admin, Roles.Developer)
-    async getSystemStatus(): Promise<ServiceStatusReponse> {
+    async getSystemStatus(): Promise<ServiceStatusResponse[]> {
         const systemStatusResponse = await this.systemStatusService.getSystemStatus();
         return systemStatusResponse;
+    }
+
+    @Put('/:serviceName/start')
+    @ApiOkResponse({type: FimsMsg})
+    @ApprovedRoles(Roles.Admin, Roles.Developer)
+    async startService(
+        @Param() serviceName: ServiceName,
+    ): Promise<FimsMsg> {
+        const serviceStartResponse = await this.systemStatusService.doServiceAction(serviceName.serviceName, 'start');
+        return serviceStartResponse;
+    }
+
+    @Put('/:serviceName/stop')
+    @ApiOkResponse({type: FimsMsg})
+    @ApprovedRoles(Roles.Admin, Roles.Developer)
+    async stopService(
+        @Param() serviceName: ServiceName,
+    ): Promise<FimsMsg> {
+        const serviceStartResponse = await this.systemStatusService.doServiceAction(serviceName.serviceName, 'stop');
+        return serviceStartResponse;
+    }
+
+    @Put('/:serviceName/restart')
+    @ApiOkResponse({type: FimsMsg})
+    @ApprovedRoles(Roles.Admin, Roles.Developer)
+    async restartService(
+        @Param() serviceName: ServiceName,
+    ): Promise<FimsMsg> {
+        const serviceStartResponse = await this.systemStatusService.doServiceAction(serviceName.serviceName, 'restart');
+        return serviceStartResponse;
     }
 }

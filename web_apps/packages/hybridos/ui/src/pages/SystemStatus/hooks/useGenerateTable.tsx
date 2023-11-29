@@ -4,49 +4,77 @@ import {
 } from '@flexgen/storybook';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { statusColorMapping } from 'src/pages/SystemStatus/SystemStatus.constants';
+import useAxiosWebUIInstance from 'src/hooks/useAxios';
+import { SYSTEM_STATUS_URL, statusColorMapping } from 'src/pages/SystemStatus/SystemStatus.constants';
 import { formatServiceName, toTitleCase } from 'src/pages/SystemStatus/SystemStatus.helpers';
 import { iconSize, actionBoxSx } from 'src/pages/SystemStatus/SystemStatus.styles';
-import { SystemStatusObject, SystemStatusRow } from 'src/pages/SystemStatus/SystemStatus.types';
+import {
+  ServiceActionType, ServiceActionObject, SystemStatusObject, SystemStatusRow,
+} from 'src/pages/SystemStatus/SystemStatus.types';
 
 const useGenerateSystemStatusTable = () => {
   const [results, setResults] = useState<SystemStatusRow[]>([]);
+  const axiosInstance = useAxiosWebUIInstance();
 
   const generateActionButtons = (
-    actionArray: string[],
+    actionArray: ServiceActionObject[],
     serviceName: string,
   ) => {
-    const handleOnClick = (action: 'start' | 'stop' | 'restart') => {
-      const serviceActionURL = `cops/stats/${serviceName}/${action}`;
-      // TODO: send request to backend to actually complete request
-      console.log(serviceActionURL);
+    const handleOnClick = async (action: ServiceActionType) => {
+      const serviceActionURL = `${SYSTEM_STATUS_URL}/${serviceName}/${action}`;
+      axiosInstance.put(serviceActionURL);
     };
+
+    const availableActions = actionArray.map((serviceAction) => serviceAction.action);
+    let enabledStatuses: { [key: string ]: boolean } = {};
+    actionArray.forEach((serviceAction) => {
+      enabledStatuses = { ...enabledStatuses, [serviceAction.action]: serviceAction.enabled };
+    });
+
     const emptyIconBox = <Box sx={iconSize} />;
     return (
       <Box sx={actionBoxSx}>
         {
-          actionArray.includes('start')
+          availableActions.includes('start')
             ? (
               <Tooltip title="Start" arrow placement="bottom">
-                <IconButton icon="StartSystem" color="success" size="small" onClick={() => handleOnClick('start')} />
+                <IconButton
+                  icon="StartSystem"
+                  color="success"
+                  size="small"
+                  disabled={!enabledStatuses.start}
+                  onClick={() => handleOnClick('start')}
+                />
               </Tooltip>
             )
             : emptyIconBox
         }
         {
-          actionArray.includes('stop')
+          availableActions.includes('stop')
             ? (
               <Tooltip title="Stop" arrow placement="bottom">
-                <IconButton icon="Cancel" color="error" size="small" onClick={() => handleOnClick('stop')} />
+                <IconButton
+                  icon="Cancel"
+                  color="error"
+                  size="small"
+                  disabled={!enabledStatuses.stop}
+                  onClick={() => handleOnClick('stop')}
+                />
               </Tooltip>
             )
             : emptyIconBox
         }
         {
-          actionArray.includes('restart')
+          availableActions.includes('restart')
             ? (
               <Tooltip title="Restart" arrow placement="bottom">
-                <IconButton icon="RestartSystem" color="primary" size="small" onClick={() => handleOnClick('restart')} />
+                <IconButton
+                  icon="RestartSystem"
+                  color="primary"
+                  disabled={!enabledStatuses.restart}
+                  size="small"
+                  onClick={() => handleOnClick('restart')}
+                />
               </Tooltip>
             )
             : emptyIconBox

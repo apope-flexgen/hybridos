@@ -7,9 +7,14 @@ export interface SystemStatusObject {
   memoryUsage?: number,
   uptime?: number | string,
   lastRestart?: string,
-  actions?: string[],
+  actions?: ServiceActionObject[],
+}
+export interface ServiceActionObject {
+  enabled: boolean,
+  action: ServiceActionType,
 }
 
+export type ServiceActionType = 'start' | 'stop' | 'restart';
 export interface SystemStatusRow {
   id: string,
   dependencies: JSX.Element | null,

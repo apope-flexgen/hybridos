@@ -7,4 +7,7 @@ export const systemStatusDescriptions = {
     memoryUsage: 'Number representing Memory usage of Service as Percentage',
     serviceUptime: 'Number representing the service uptime (time that the service has been running)',
     lastRestart: 'Timestring representing the last time the service was restarted',
+    actionEnabled: 'Status representing whether an action button should be enabled/disabled',
+    actionTitle: 'Label for this action - Start, Stop, or Restart',
+    actions: 'Array of actions (start, stop, restart) that a user can use for this service'
 };

@@ -4,7 +4,7 @@ import { Server } from 'ws';
 import { SystemStatusService } from './systemStatus.service';
 import { UseWsFilters } from '../../decorators/ws.filters.decorator';
 import { UseWsInterceptors } from '../../decorators/ws.interceptors.decorator';
-import { ServiceStatusReponse } from './dto/serviceStatusResponse.dto';
+import { ServiceStatusResponse } from './dto/serviceStatusResponse.dto';
 
 @WebSocketGateway({
     cors: {
@@ -20,7 +20,7 @@ export class SystemStatusGateway {
 
   @SubscribeMessage('systemStatus')
   @UseWsInterceptors()
-  systemStatus(): Observable<ServiceStatusReponse> {
+  systemStatus(): Observable<ServiceStatusResponse> {
     const systemStatusDataStream = this.systemStatusService.subscribeToSystemStatus();
 
     return systemStatusDataStream;

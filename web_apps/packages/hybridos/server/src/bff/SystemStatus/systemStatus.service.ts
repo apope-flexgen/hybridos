@@ -3,7 +3,7 @@ import { FimsService } from '../../fims/fims.service'
 import { FIMS_SERVICE } from '../../fims/interfaces/fims.interface'
 import { Observable, map } from 'rxjs';
 import { FimsMsg } from 'src/fims/responses/fimsMsg.response';
-import { ServiceStatusReponse } from './dto/serviceStatusResponse.dto';
+import { ServiceAction, ServiceStatusResponse } from './dto/serviceStatusResponse.dto';
 
 @Injectable()
 export class SystemStatusService {
@@ -12,13 +12,14 @@ export class SystemStatusService {
         private readonly fimsService: FimsService
     ) {}
 
-    subscribeToSystemStatus = (): Observable<ServiceStatusReponse> => {
+    subscribeToSystemStatus = (): Observable<ServiceStatusResponse> => {
         const fimsSubscribe = this.fimsService.subscribe('/cops/stats')
 
-        const newObservable: Observable<ServiceStatusReponse> =
+        const newObservable: Observable<ServiceStatusResponse> =
             fimsSubscribe.pipe(
                 map((event) => {
-                    const parsedFimsData = this.parseSystemStatusDataFromFims(event)
+                    const serviceName = event.uri.split("/").pop()
+                    const parsedFimsData = this.parseSystemStatusData(event.body, serviceName)
                     return parsedFimsData
                 })
             )
@@ -26,31 +27,60 @@ export class SystemStatusService {
         return newObservable
     }
 
-    private parseSystemStatusDataFromFims = (data: FimsMsg): ServiceStatusReponse => {
-        const rawSystemStatusData = data.body;
+    private parseSystemStatusData = (rawSystemStatusData: any, serviceName: string): ServiceStatusResponse => {
+        const actions: ServiceAction[] = Object.keys(rawSystemStatusData.controls).map((controlKey) => ({
+            enabled: rawSystemStatusData.controls[controlKey].enabled as boolean,
+            action: controlKey.toLowerCase() as 'start' | 'stop' | 'restart',
+        }))
 
-        // parse the URI received to get the service name
-        // TODO: if service name is included as field in future, replace this
-        const indexOfLastSlash = data.uri.lastIndexOf('/')
-        const serviceName = data.uri.substring(indexOfLastSlash + 1)
-
-        const parsedData: ServiceStatusReponse = {
+        const parsedData: ServiceStatusResponse = {
             serviceName: serviceName || '',
             serviceStatus: rawSystemStatusData.service_status || '',
             memoryUsage: rawSystemStatusData.last_mem_usage_pct || -1,
             uptime: rawSystemStatusData.elapsed_time || -1,
             lastRestart: rawSystemStatusData.last_restart || '',
+            actions: actions
         }
 
         return parsedData
     }
 
-    // NOTE: This method does not currently work, backend support will need to be added for a get to /cops/stats
+    
+    private parseSystemStatusGetData = (data: FimsMsg): ServiceStatusResponse[] => {
+        const rawSystemStatusData = data.body.procStats;
+        const parsedData: ServiceStatusResponse[] = [];
+        rawSystemStatusData.forEach(
+            (serviceObject) => {
+                Object.keys(serviceObject).forEach(
+                    (serviceName) => {
+                        parsedData.push(this.parseSystemStatusData(serviceObject[serviceName], serviceName))
+                    }
+                )
+        })
+        return parsedData
+    }
+
+    async doServiceAction(
+        serviceName: string, 
+        action: 'start' | 'stop' | 'restart'
+    ): Promise<FimsMsg> {
+        const actionURI = `/cops/stats/${serviceName}/controls/${action}`;
+        const body = true
+
+        const message: FimsMsg = {
+            method: 'set',
+            uri: actionURI,
+            replyto: '/response',
+            body: body,
+            username: 'web_ui',
+        };
+
+        return await this.fimsService.send(message)
+    }
+
     async getSystemStatus() {
         const systemStatusResponse = await this.fimsService.get('/cops/stats')
         
-        const parsedSystemStatusResponse = this.parseSystemStatusDataFromFims(systemStatusResponse);
-
-        return parsedSystemStatusResponse
+        return this.parseSystemStatusGetData(systemStatusResponse);
     }
 }
