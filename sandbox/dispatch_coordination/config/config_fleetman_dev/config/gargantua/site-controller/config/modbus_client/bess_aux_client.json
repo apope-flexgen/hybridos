@@ -1,79 +1,74 @@
 {
-	"connection":
-	{
-		"name": "bess_aux",
-		"ip_address": "172.3.27.202",
-		"port": 10000,
-		"device_id": 1
-	},
-	"components":
-	[
-		{
-			"id": "bess_aux",
-			"frequency": 500,
-			"offset_time": 0,
-			"add_timings":false,
-			"registers": 
-			[
-				{
-					"type": "Holding Registers",
-					"starting_offset": 16384,
-					"number_of_registers": 14,
-					"map":
-					[
-						{
-							"id":"frequency",
-							"offset":16384,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_bess_aux/f1"
-						},
-						{
-							"id":"voltage",
-							"offset":16386,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_bess_aux/v1"
-						},
-						{
-							"id":"current",
-							"offset":16388,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_bess_aux/i"
-						},
-						{
-							"id":"active_power",
-							"offset":16390,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_bess_aux/p"
-						},
-						{
-							"id":"reactive_power",
-							"offset":16392,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_bess_aux/q"
-						},
-						{
-							"id":"apparent_power",
-							"offset":16394,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_bess_aux/s"
-						},
-						{
-							"id":"power_factor",
-							"offset":16396,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_bess_aux/pf"
-						}
-					]
-				}
-			]
-		}
-	]
+    "components": [
+        {
+            "add_timings": false,
+            "frequency": 500,
+            "id": "bess_aux",
+            "offset_time": 0,
+            "registers": [
+                {
+                    "map": [
+                        {
+                            "echo_id": "/components/twins_bess_aux/f1",
+                            "float": true,
+                            "id": "frequency",
+                            "offset": 16384,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_bess_aux/v1",
+                            "float": true,
+                            "id": "voltage",
+                            "offset": 16386,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_bess_aux/i",
+                            "float": true,
+                            "id": "current",
+                            "offset": 16388,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_bess_aux/p",
+                            "float": true,
+                            "id": "active_power",
+                            "offset": 16390,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_bess_aux/q",
+                            "float": true,
+                            "id": "reactive_power",
+                            "offset": 16392,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_bess_aux/s",
+                            "float": true,
+                            "id": "apparent_power",
+                            "offset": 16394,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_bess_aux/pf",
+                            "float": true,
+                            "id": "power_factor",
+                            "offset": 16396,
+                            "size": 2
+                        }
+                    ],
+                    "number_of_registers": 14,
+                    "starting_offset": 16384,
+                    "type": "Holding Registers"
+                }
+            ]
+        }
+    ],
+    "connection": {
+        "device_id": 1,
+        "ip_address": "172.3.27.202",
+        "name": "bess_aux",
+        "port": 10000
+    }
 }
-

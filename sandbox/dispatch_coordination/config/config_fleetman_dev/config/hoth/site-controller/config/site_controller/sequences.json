@@ -1,313 +1,260 @@
 {
-    "sequences":
-    {
-        "Init":
-        {
-            "sequence_name": "Init",
-            "paths":
-            [
+    "sequences": {
+        "Init": {
+            "paths": [
                 {
-                    "path_name": "Init",
-                    "return_id": "Init",
-                    "active_faults":
-                    [
+                    "active_faults": [
                         {
                             "name": "/bypass"
                         }
                     ],
-                    "steps":
-                    [
+                    "path_name": "Init",
+                    "return_id": "Init",
+                    "steps": [
                         {
-                            "step_name": "Set State Variables",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/bypass",
                                 "value": true
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
                                 "route": "/bypass",
-                                "value": true,
-                                "debounce_timer": 1000
-                            }
+                                "value": true
+                            },
+                            "step_name": "Set State Variables"
                         }
                     ]
                 }
-            ]
+            ],
+            "sequence_name": "Init"
         },
-        "Ready":
-        {
-            "sequence_name": "Ready",
-            "paths":
-            [
+        "Ready": {
+            "paths": [
                 {
-                    "path_name": "Ready",
-                    "return_id": "Ready",
-                    "active_faults":
-                    [
+                    "active_faults": [
                         {
                             "name": "/bypass"
                         }
                     ],
-                    "steps":
-                    [
+                    "path_name": "Ready",
+                    "return_id": "Ready",
+                    "steps": [
                         {
-                            "step_name": "Wait for Start Site Command",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/ess/synchronize_ess",
                                 "value": false
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
                                 "route": "/bypass",
-                                "value": true,
-                                "debounce_timer": 1000
-                            }
+                                "value": true
+                            },
+                            "step_name": "Wait for Start Site Command"
                         }
                     ]
                 }
-            ]
+            ],
+            "sequence_name": "Ready"
         },
-        "Startup":
-        {
-            "sequence_name": "Startup",
-            "paths":
-            [
+        "RunMode1": {
+            "paths": [
                 {
-                    "path_name": "Startup - Grid-Tied",
-                    "return_id": "RunMode1",
-                    "timeout": 45,
-                    "active_faults":
-                    [
+                    "active_faults": [
                         {
                             "name": "/bypass"
                         }
                     ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "Get POI Breaker Status",
-                            "path_switch": true,
-                            "next_path": 1,
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/feeder/get_poi_feeder_state",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Start ESS",
-                            "entry_actions":
-                            {
-                                "route": "/ess/start_all_ess",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/ess/get_num_ess_running",
-                                "value": 2,
-                                "tolerance": 10,
-                                "debounce_timer": 1000
-                            }
-                        }
-                    ]
-                },
-                {
-                    "path_name": "Startup - Islanded",
-                    "return_id": "RunMode2",
-                    "timeout": 45,
-                    "active_faults": 
-                    [
-                        {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [                        
-                        {
-                            "step_name": "Set ESSs to Grid-Forming Mode",
-                            "entry_actions": 
-                            {
-                                "route": "/ess/set_all_ess_grid_form",
-                                "value": true
-                            },
-                            "exit_conditions": 
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        },
-                        {
-                            "step_name": "Start ESS",
-                            "entry_actions": 
-                            {
-                                "route": "/ess/start_all_ess",
-                                "value": true
-                            },
-                            "exit_conditions": 
-                            {
-                                "route": "/ess/get_num_ess_running",
-                                "value": 2,
-                                "tolerance": 10,
-                                "debounce_timer": 1000
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        "RunMode1":
-        {
-            "sequence_name": "Running - Grid",
-            "paths":
-            [
-                {
                     "path_name": "Running - Grid-Tied",
                     "return_id": "RunMode1",
-                    "active_faults":
-                    [
+                    "steps": [
                         {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "RunMode1",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/features/reset_load_shed",
                                 "value": 4
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
                                 "route": "/bypass",
                                 "value": true
-                            }
+                            },
+                            "step_name": "RunMode1"
                         }
                     ]
                 }
-            ]
+            ],
+            "sequence_name": "Running - Grid"
         },
-        "RunMode2":
-        {
-            "sequence_name": "Running - Islanded",
-            "paths":
-            [
+        "RunMode2": {
+            "paths": [
                 {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
                     "path_name": "RunMode2",
                     "return_id": "RunMode2",
-                    "active_faults":
-                    [
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "RunMode2"
+                        }
+                    ]
+                }
+            ],
+            "sequence_name": "Running - Islanded"
+        },
+        "Shutdown": {
+            "paths": [
+                {
+                    "active_faults": [
                         {
                             "name": "/bypass"
                         }
                     ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "RunMode2",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        "Standby":
-        {
-            "sequence_name": "Standby",
-            "paths":
-            [
-                {
-                    "path_name": "Standby",
-                    "return_id": "Standby",
-                    "active_faults":
-                    [
-                        {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "Standby",
-                            "entry_actions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            },
-                            "exit_conditions":
-                            {
-                                "route": "/bypass",
-                                "value": true
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        "Shutdown":
-        {
-            "sequence_name": "Shutdown",
-            "paths":
-            [
-                {
                     "path_name": "Shutdown",
                     "return_id": "Ready",
-                    "active_faults":
-                    [
+                    "steps": [
                         {
-                            "name": "/bypass"
-                        }
-                    ],
-                    "steps":
-                    [
-                        {
-                            "step_name": "Set State Variables",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "bypass",
                                 "value": true
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
                                 "route": "/bypass",
-                                "value": true,
-                                "debounce_timer": 1000
-                            }
+                                "value": true
+                            },
+                            "step_name": "Set State Variables"
                         },
                         {
-                            "step_name": "Stop ESS",
-                            "entry_actions":
-                            {
+                            "entry_actions": {
                                 "route": "/ess/stop_all_ess",
                                 "value": true
                             },
-                            "exit_conditions":
-                            {
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
                                 "route": "/bypass",
-                                "value": true,
-                                "debounce_timer": 1000
-                            }
+                                "value": true
+                            },
+                            "step_name": "Stop ESS"
                         }
                     ]
                 }
-            ]
+            ],
+            "sequence_name": "Shutdown"
+        },
+        "Standby": {
+            "paths": [
+                {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "path_name": "Standby",
+                    "return_id": "Standby",
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Standby"
+                        }
+                    ]
+                }
+            ],
+            "sequence_name": "Standby"
+        },
+        "Startup": {
+            "paths": [
+                {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "path_name": "Startup - Grid-Tied",
+                    "return_id": "RunMode1",
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/feeder/get_poi_feeder_state",
+                                "value": true
+                            },
+                            "next_path": 1,
+                            "path_switch": true,
+                            "step_name": "Get POI Breaker Status"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/ess/start_all_ess",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/ess/get_num_ess_running",
+                                "tolerance": 10,
+                                "value": 2
+                            },
+                            "step_name": "Start ESS"
+                        }
+                    ],
+                    "timeout": 45
+                },
+                {
+                    "active_faults": [
+                        {
+                            "name": "/bypass"
+                        }
+                    ],
+                    "path_name": "Startup - Islanded",
+                    "return_id": "RunMode2",
+                    "steps": [
+                        {
+                            "entry_actions": {
+                                "route": "/ess/set_all_ess_grid_form",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "route": "/bypass",
+                                "value": true
+                            },
+                            "step_name": "Set ESSs to Grid-Forming Mode"
+                        },
+                        {
+                            "entry_actions": {
+                                "route": "/ess/start_all_ess",
+                                "value": true
+                            },
+                            "exit_conditions": {
+                                "debounce_timer": 1000,
+                                "route": "/ess/get_num_ess_running",
+                                "tolerance": 10,
+                                "value": 2
+                            },
+                            "step_name": "Start ESS"
+                        }
+                    ],
+                    "timeout": 45
+                }
+            ],
+            "sequence_name": "Startup"
         }
     }
 }

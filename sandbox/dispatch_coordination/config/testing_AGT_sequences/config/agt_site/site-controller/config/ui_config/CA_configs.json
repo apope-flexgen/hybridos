@@ -1,320 +1,320 @@
 {
-  "_doc": "assets",
-  "_id": "635c2cdefb38a1c1a7b5eb77",
-  "_version": "2022-11-03T13:33:56.067096213-04:00",
-  "data": [
-    {
-      "alarms": {
-        "alarmFields": [],
-        "faultFields": []
-      },
-      "allControls": [
+    "_doc": "assets",
+    "_id": "635c2cdefb38a1c1a7b5eb77",
+    "_version": "2022-11-03T13:33:56.067096213-04:00",
+    "data": [
         {
-          "inputType": "switch",
-          "name": "Maintenance Mode",
-          "scalar": "",
-          "units": "",
-          "uri": "/maint_mode"
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "",
+                    "units": "",
+                    "uri": "/maint_mode"
+                }
+            ],
+            "controls": [
+                {
+                    "inputType": "switch",
+                    "name": "Maintenance Mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/maint_mode"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Start",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/start"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Stop",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/stop"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Enter Standby",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/enter_standby"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Exit Standby",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/exit_standby"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Clear Faults",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/clear_faults"
+                },
+                {
+                    "inputType": "switch",
+                    "name": "Limits Override",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/maint_soc_protection_buffers_disable"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "kW",
+                    "uri": "/maint_active_power_setpoint"
+                },
+                {
+                    "inputType": "number",
+                    "name": "Reactive Power Setpoint",
+                    "scalar": "1000",
+                    "units": "kW",
+                    "uri": "/maint_reactive_power_setpoint"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Close DC Contactors",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/close_dc_contactors"
+                },
+                {
+                    "inputType": "button",
+                    "name": "Open DC Contactors",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/open_dc_contactors"
+                }
+            ],
+            "info": {
+                "alarmFields": [
+                    "alarms",
+                    "com_status",
+                    "ess_alarms"
+                ],
+                "assetKey": "ESS_tab",
+                "baseURI": "/ess",
+                "extension": "/ess_",
+                "faultFields": [
+                    "faults",
+                    "bms_fault",
+                    "emmu_fault",
+                    "ess_faults",
+                    "watchdog_fault"
+                ],
+                "hasAllControls": true,
+                "hasSummary": false,
+                "itemName": "BESS Inverter Block",
+                "name": "ESS_New",
+                "numberOfItems": "1",
+                "sourceURI": "/assets"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "kW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Active Power Setpoint",
+                    "scalar": "1000",
+                    "units": "kW",
+                    "uri": "/active_power_setpoint"
+                },
+                {
+                    "name": "Apparent Power",
+                    "scalar": "1000",
+                    "units": "kVA",
+                    "uri": "/apparent_power"
+                },
+                {
+                    "name": "Auto Balancing Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/autobalancing_status"
+                },
+                {
+                    "name": "Component Connection Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/component_connected"
+                },
+                {
+                    "name": "L1 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l1"
+                },
+                {
+                    "name": "L2 AC Current\t",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l2"
+                },
+                {
+                    "name": "L3 AC Current",
+                    "scalar": "1",
+                    "units": "A",
+                    "uri": "/current_l3"
+                },
+                {
+                    "name": "DC Contactors Closed",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/dc_contactors_closed"
+                },
+                {
+                    "name": "Frequency",
+                    "scalar": "1",
+                    "units": "Hz",
+                    "uri": "/frequency"
+                },
+                {
+                    "name": "Frequency Setpoint",
+                    "scalar": "1",
+                    "units": "Hz",
+                    "uri": "/frequency_setpoint"
+                },
+                {
+                    "name": "Grid_mode",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/grid_mode"
+                },
+                {
+                    "name": "Racks In Service\t",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/local_bms_status"
+                },
+                {
+                    "name": "Current Highest Cell Temp\t",
+                    "scalar": "1",
+                    "units": "C",
+                    "uri": "/max_temp"
+                },
+                {
+                    "name": "Current Lowest Cell Temp\t",
+                    "scalar": "1",
+                    "units": "C",
+                    "uri": "/min_temp"
+                },
+                {
+                    "name": "Reactive Power",
+                    "scalar": "1000",
+                    "units": "kVAR",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Reactive Power Setpoint\t",
+                    "scalar": "1000",
+                    "units": "kVAR",
+                    "uri": "/reactive_power_setpoint"
+                },
+                {
+                    "name": "State of Charge\t",
+                    "scalar": "1",
+                    "units": "%",
+                    "uri": "/soc"
+                },
+                {
+                    "name": "State of Health\t",
+                    "scalar": "1",
+                    "units": "%",
+                    "uri": "/soh"
+                },
+                {
+                    "name": "Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/status"
+                },
+                {
+                    "name": "System Chargeable Energy\t",
+                    "scalar": "1000",
+                    "units": "kWh",
+                    "uri": "/system_chargeable_energy"
+                },
+                {
+                    "name": "System Chargeable Power\t",
+                    "scalar": "1000",
+                    "units": "kW",
+                    "uri": "/system_chargeable_power"
+                },
+                {
+                    "name": "System Dischargeable Energy\t",
+                    "scalar": "1000",
+                    "units": "kWh",
+                    "uri": "/system_dischargeable_energy"
+                },
+                {
+                    "name": "System Dischargeable Power\t",
+                    "scalar": "1000",
+                    "units": "kW",
+                    "uri": "/system_dischargeable_power"
+                },
+                {
+                    "name": "L1-L2 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l1_l2"
+                },
+                {
+                    "name": "L2-L3 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l2_l3"
+                },
+                {
+                    "name": "L3-L1 AC Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_l3_l1"
+                },
+                {
+                    "name": "Maximum Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_max"
+                },
+                {
+                    "name": "Minimum Voltage",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_min"
+                },
+                {
+                    "name": "Voltage Setpoint",
+                    "scalar": "1",
+                    "units": "V",
+                    "uri": "/voltage_setpoint"
+                },
+                {
+                    "name": "Watchdog Heartbeat",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/watchdog_heartbeat"
+                },
+                {
+                    "name": "Watchdog Status",
+                    "scalar": "1",
+                    "units": "",
+                    "uri": "/watchdog_status"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
         }
-      ],
-      "controls": [
-        {
-          "inputType": "switch",
-          "name": "Maintenance Mode",
-          "scalar": "1",
-          "units": "",
-          "uri": "/maint_mode"
-        },
-        {
-          "inputType": "button",
-          "name": "Start",
-          "scalar": "1",
-          "units": "",
-          "uri": "/start"
-        },
-        {
-          "inputType": "button",
-          "name": "Stop",
-          "scalar": "1",
-          "units": "",
-          "uri": "/stop"
-        },
-        {
-          "inputType": "button",
-          "name": "Enter Standby",
-          "scalar": "1",
-          "units": "",
-          "uri": "/enter_standby"
-        },
-        {
-          "inputType": "button",
-          "name": "Exit Standby",
-          "scalar": "1",
-          "units": "",
-          "uri": "/exit_standby"
-        },
-        {
-          "inputType": "button",
-          "name": "Clear Faults",
-          "scalar": "1",
-          "units": "",
-          "uri": "/clear_faults"
-        },
-        {
-          "inputType": "switch",
-          "name": "Limits Override",
-          "scalar": "1",
-          "units": "",
-          "uri": "/maint_soc_protection_buffers_disable"
-        },
-        {
-          "inputType": "number",
-          "name": "Active Power Setpoint",
-          "scalar": "1000",
-          "units": "kW",
-          "uri": "/maint_active_power_setpoint"
-        },
-        {
-          "inputType": "number",
-          "name": "Reactive Power Setpoint",
-          "scalar": "1000",
-          "units": "kW",
-          "uri": "/maint_reactive_power_setpoint"
-        },
-        {
-          "inputType": "button",
-          "name": "Close DC Contactors",
-          "scalar": "1",
-          "units": "",
-          "uri": "/close_dc_contactors"
-        },
-        {
-          "inputType": "button",
-          "name": "Open DC Contactors",
-          "scalar": "1",
-          "units": "",
-          "uri": "/open_dc_contactors"
-        }
-      ],
-      "info": {
-        "alarmFields": [
-          "alarms",
-          "com_status",
-          "ess_alarms"
-        ],
-        "assetKey": "ESS_tab",
-        "baseURI": "/ess",
-        "extension": "/ess_",
-        "faultFields": [
-          "faults",
-          "bms_fault",
-          "emmu_fault",
-          "ess_faults",
-          "watchdog_fault"
-        ],
-        "hasAllControls": true,
-        "hasSummary": false,
-        "itemName": "BESS Inverter Block",
-        "name": "ESS_New",
-        "numberOfItems": "1",
-        "sourceURI": "/assets"
-      },
-      "statuses": [
-        {
-          "name": "Active Power",
-          "scalar": "1000",
-          "units": "kW",
-          "uri": "/active_power"
-        },
-        {
-          "name": "Active Power Setpoint",
-          "scalar": "1000",
-          "units": "kW",
-          "uri": "/active_power_setpoint"
-        },
-        {
-          "name": "Apparent Power",
-          "scalar": "1000",
-          "units": "kVA",
-          "uri": "/apparent_power"
-        },
-        {
-          "name": "Auto Balancing Status",
-          "scalar": "1",
-          "units": "",
-          "uri": "/autobalancing_status"
-        },
-        {
-          "name": "Component Connection Status",
-          "scalar": "1",
-          "units": "",
-          "uri": "/component_connected"
-        },
-        {
-          "name": "L1 AC Current",
-          "scalar": "1",
-          "units": "A",
-          "uri": "/current_l1"
-        },
-        {
-          "name": "L2 AC Current\t",
-          "scalar": "1",
-          "units": "A",
-          "uri": "/current_l2"
-        },
-        {
-          "name": "L3 AC Current",
-          "scalar": "1",
-          "units": "A",
-          "uri": "/current_l3"
-        },
-        {
-          "name": "DC Contactors Closed",
-          "scalar": "1",
-          "units": "",
-          "uri": "/dc_contactors_closed"
-        },
-        {
-          "name": "Frequency",
-          "scalar": "1",
-          "units": "Hz",
-          "uri": "/frequency"
-        },
-        {
-          "name": "Frequency Setpoint",
-          "scalar": "1",
-          "units": "Hz",
-          "uri": "/frequency_setpoint"
-        },
-        {
-          "name": "Grid_mode",
-          "scalar": "1",
-          "units": "",
-          "uri": "/grid_mode"
-        },
-        {
-          "name": "Racks In Service\t",
-          "scalar": "1",
-          "units": "",
-          "uri": "/local_bms_status"
-        },
-        {
-          "name": "Current Highest Cell Temp\t",
-          "scalar": "1",
-          "units": "C",
-          "uri": "/max_temp"
-        },
-        {
-          "name": "Current Lowest Cell Temp\t",
-          "scalar": "1",
-          "units": "C",
-          "uri": "/min_temp"
-        },
-        {
-          "name": "Reactive Power",
-          "scalar": "1000",
-          "units": "kVAR",
-          "uri": "/reactive_power"
-        },
-        {
-          "name": "Reactive Power Setpoint\t",
-          "scalar": "1000",
-          "units": "kVAR",
-          "uri": "/reactive_power_setpoint"
-        },
-        {
-          "name": "State of Charge\t",
-          "scalar": "1",
-          "units": "%",
-          "uri": "/soc"
-        },
-        {
-          "name": "State of Health\t",
-          "scalar": "1",
-          "units": "%",
-          "uri": "/soh"
-        },
-        {
-          "name": "Status",
-          "scalar": "1",
-          "units": "",
-          "uri": "/status"
-        },
-        {
-          "name": "System Chargeable Energy\t",
-          "scalar": "1000",
-          "units": "kWh",
-          "uri": "/system_chargeable_energy"
-        },
-        {
-          "name": "System Chargeable Power\t",
-          "scalar": "1000",
-          "units": "kW",
-          "uri": "/system_chargeable_power"
-        },
-        {
-          "name": "System Dischargeable Energy\t",
-          "scalar": "1000",
-          "units": "kWh",
-          "uri": "/system_dischargeable_energy"
-        },
-        {
-          "name": "System Dischargeable Power\t",
-          "scalar": "1000",
-          "units": "kW",
-          "uri": "/system_dischargeable_power"
-        },
-        {
-          "name": "L1-L2 AC Voltage",
-          "scalar": "1",
-          "units": "V",
-          "uri": "/voltage_l1_l2"
-        },
-        {
-          "name": "L2-L3 AC Voltage",
-          "scalar": "1",
-          "units": "V",
-          "uri": "/voltage_l2_l3"
-        },
-        {
-          "name": "L3-L1 AC Voltage",
-          "scalar": "1",
-          "units": "V",
-          "uri": "/voltage_l3_l1"
-        },
-        {
-          "name": "Maximum Voltage",
-          "scalar": "1",
-          "units": "V",
-          "uri": "/voltage_max"
-        },
-        {
-          "name": "Minimum Voltage",
-          "scalar": "1",
-          "units": "V",
-          "uri": "/voltage_min"
-        },
-        {
-          "name": "Voltage Setpoint",
-          "scalar": "1",
-          "units": "V",
-          "uri": "/voltage_setpoint"
-        },
-        {
-          "name": "Watchdog Heartbeat",
-          "scalar": "1",
-          "units": "",
-          "uri": "/watchdog_heartbeat"
-        },
-        {
-          "name": "Watchdog Status",
-          "scalar": "1",
-          "units": "",
-          "uri": "/watchdog_status"
-        }
-      ],
-      "summary": [],
-      "summaryControls": []
-    }
-  ]
+    ]
 }

@@ -1,26 +1,26 @@
 {
-    "timezone": "America/New_York",
-    "ess": false,
-    "gen": false,
-    "solar": false,
-    "met_station": false,
-    "tracker": false,
-    "feeders": true,
-    "features": true,
-    "site": true,
-    "events": true,
     "control_cabinet": true,
+    "ess": false,
+    "events": true,
+    "features": true,
+    "feeders": true,
     "fleet_manager_dashboard": true,
+    "gen": false,
+    "inspectorComponentsName": "test_controller",
+    "met_station": false,
     "scheduler": true,
+    "site": true,
+    "site_name": "Hoth",
+    "solar": false,
+    "timezone": "America/New_York",
+    "tracker": false,
     "units": {
-        "W": "M",
-        "Wh": "M",
+        "VA": "M",
         "VAR": "M",
         "VARh": "M",
-        "VA": "M",
         "VAh": "M",
-        "W/s": "M"
-    },
-    "inspectorComponentsName": "test_controller",
-    "site_name": "Hoth"
+        "W": "M",
+        "W/s": "M",
+        "Wh": "M"
+    }
 }

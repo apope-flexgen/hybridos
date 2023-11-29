@@ -1,77 +1,72 @@
 {
-	"connection":
-	{
-		"name": "split_feeder",
-		"ip_address": "172.3.27.2",
-		"port": 10003,
-		"device_id": 1
-	},
-	"components":
-	[
-		{
-			"id": "split_feeder",
-			"frequency": 500,
-			"offset_time": 0,
-			"add_timings":false,
-			"registers": 
-			[
-				{
-					"type": "Input Registers",
-					"map":
-					[
-						{
-							"id":"frequency",
-							"offset":16384,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_split_feeder/f1"
-						},
-						{
-							"id":"voltage",
-							"offset":16386,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_split_feeder/v1"
-						},
-						{
-							"id":"current",
-							"offset":16388,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_split_feeder/i"
-						},
-						{
-							"id":"active_power",
-							"offset":16390,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_split_feeder/p"
-						},
-						{
-							"id":"reactive_power",
-							"offset":16392,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_split_feeder/q"
-						},
-						{
-							"id":"apparent_power",
-							"offset":16394,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_split_feeder/s"
-						},
-						{
-							"id":"power_factor",
-							"offset":16396,
-							"size":2,
-							"float":true,
-							"echo_id": "/components/twins_split_feeder/pf"
-						}
-					]
-				}
-			]
-		}
-	]
+    "components": [
+        {
+            "add_timings": false,
+            "frequency": 500,
+            "id": "split_feeder",
+            "offset_time": 0,
+            "registers": [
+                {
+                    "map": [
+                        {
+                            "echo_id": "/components/twins_split_feeder/f1",
+                            "float": true,
+                            "id": "frequency",
+                            "offset": 16384,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_split_feeder/v1",
+                            "float": true,
+                            "id": "voltage",
+                            "offset": 16386,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_split_feeder/i",
+                            "float": true,
+                            "id": "current",
+                            "offset": 16388,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_split_feeder/p",
+                            "float": true,
+                            "id": "active_power",
+                            "offset": 16390,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_split_feeder/q",
+                            "float": true,
+                            "id": "reactive_power",
+                            "offset": 16392,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_split_feeder/s",
+                            "float": true,
+                            "id": "apparent_power",
+                            "offset": 16394,
+                            "size": 2
+                        },
+                        {
+                            "echo_id": "/components/twins_split_feeder/pf",
+                            "float": true,
+                            "id": "power_factor",
+                            "offset": 16396,
+                            "size": 2
+                        }
+                    ],
+                    "type": "Input Registers"
+                }
+            ]
+        }
+    ],
+    "connection": {
+        "device_id": 1,
+        "ip_address": "172.3.27.2",
+        "name": "split_feeder",
+        "port": 10003
+    }
 }
-

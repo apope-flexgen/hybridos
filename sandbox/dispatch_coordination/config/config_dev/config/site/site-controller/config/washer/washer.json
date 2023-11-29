@@ -1,11 +1,7 @@
 {
-    "publishUri": "/washer",
-    "publishFrequency": 500,
-    "parsingRules":
-    [
+    "parsingRules": [
         {
-            "batchTypes":
-            [
+            "batchTypes": [
                 {
                     "id": "5_min_dispatch",
                     "type": 0
@@ -15,8 +11,7 @@
                     "type": 1
                 }
             ],
-            "variables":
-            [
+            "variables": [
                 {
                     "id": "start_time",
                     "parseUri": "/DispatchBatch/Instructions/instruction/startTime"
@@ -26,10 +21,12 @@
                     "parseUri": "/DispatchBatch/Instructions/instruction/detail/instructionDetail segno=\"3\"/mw"
                 },
                 {
-                    "id": "duration",
-                    "defaultValue": 300
+                    "defaultValue": 300,
+                    "id": "duration"
                 }
             ]
         }
-    ]
+    ],
+    "publishFrequency": 500,
+    "publishUri": "/washer"
 }

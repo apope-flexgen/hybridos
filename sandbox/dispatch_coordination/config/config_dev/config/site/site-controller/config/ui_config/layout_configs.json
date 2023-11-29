@@ -1,33 +1,33 @@
 {
-  "_doc": "layout",
-  "data": [
-    {
-      "info": {
-        "key": "ess_tab",
-        "name": "ESS",
-        "icon": "ViewModule"
-      }
-    },
-    {
-      "info": {
-        "key": "gen_tab",
-        "name": "Gen",
-        "icon": "Storage"
-      }
-    },
-    {
-      "info": {
-        "key": "solar_tab",
-        "name": "Solar",
-        "icon": "SpaceDashboard"
-      }
-    },
-    {
-      "info": {
-        "key": "feeders_tab",
-        "name": "Feeders",
-        "icon": "Feeders"
-      }
-    }
-  ]
+    "_doc": "layout",
+    "data": [
+        {
+            "info": {
+                "icon": "ViewModule",
+                "key": "ess_tab",
+                "name": "ESS"
+            }
+        },
+        {
+            "info": {
+                "icon": "Storage",
+                "key": "gen_tab",
+                "name": "Gen"
+            }
+        },
+        {
+            "info": {
+                "icon": "SpaceDashboard",
+                "key": "solar_tab",
+                "name": "Solar"
+            }
+        },
+        {
+            "info": {
+                "icon": "Feeders",
+                "key": "feeders_tab",
+                "name": "Feeders"
+            }
+        }
+    ]
 }

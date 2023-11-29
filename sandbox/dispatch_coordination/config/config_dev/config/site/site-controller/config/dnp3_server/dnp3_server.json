@@ -1,440 +1,440 @@
 {
-    "system": {
-        "name": "FlexGen HybridOS",
-        "protocol": "DNP3",
-        "version": "0.2",
-        "debug": 0,
-        "ip_address": "0.0.0.0",
-        "local_uri": "/local_server",
-        "id": "dnp3_server",
-        "port": 20000,
-        "frequency": 5000
-    },
     "registers": [
         {
-            "type": "AnOPF32",
             "map": [
                 {
                     "id": "watchdog_pet",
-                    "offset": 0,
                     "name": "Watchdog Pet",
+                    "offset": 0,
                     "uri": "/site/operation"
-                },                
+                },
                 {
                     "id": "fr_enable_mask",
-                    "offset": 1,
                     "name": "Frequency Response Enable Word",
+                    "offset": 1,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "fr_baseload_cmd_kw",
-                    "offset": 2,
                     "name": "Baseload Power Command",
+                    "offset": 2,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "uf_ffr_inactive_cmd_kw",
-                    "offset": 3,
                     "name": "FFR Inactive Power Command",
+                    "offset": 3,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "FM_timestamp",
-                    "offset": 4,
                     "name": "Fleet Manager Metrics Timestamp",
+                    "offset": 4,
                     "uri": "/metrics/timestamp"
                 }
-            ]
+            ],
+            "type": "AnOPF32"
         },
         {
-            "type": "analog",
             "map": [
                 {
                     "id": "ess_total_active_power",
-                    "offset": 0,
-                    "variation": "Group30Var5",
                     "name": "Site - Active Power Total Gross",
-                    "uri": "/assets/ess/summary"
+                    "offset": 0,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "ess_total_reactive_power",
-                    "offset": 1,
-                    "variation": "Group30Var5",
                     "name": "Site - Reactive Power Total Gross",
-                    "uri": "/assets/ess/summary"
+                    "offset": 1,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "ess_total_apparent_power",
-                    "offset": 2,
-                    "variation": "Group30Var5",
                     "name": "Site - Apparent Power Total Gross",
-                    "uri": "/assets/ess/summary"
+                    "offset": 2,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "active_power",
-                    "offset": 3,
-                    "variation": "Group30Var5",
                     "name": "Site - Active Power Total Net",
-                    "uri": "/components/sel_735"
+                    "offset": 3,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "reactive_power",
-                    "offset": 4,
-                    "variation": "Group30Var5",
                     "name": "Site - Reactive Power Total Net",
-                    "uri": "/components/sel_735"
+                    "offset": 4,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "apparent_power",
-                    "offset": 5,
-                    "variation": "Group30Var5",
                     "name": "Site - Apparent Power Total Net",
-                    "uri": "/components/sel_735"
+                    "offset": 5,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "frequency",
-                    "offset": 6,
-                    "variation": "Group30Var5",
                     "name": "Site - Frequency",
-                    "uri": "/components/sel_735"
+                    "offset": 6,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "grid_voltage_l1_l2",
-                    "offset": 7,
-                    "variation": "Group30Var5",
                     "name": "Site - Voltage L1-L2",
-                    "uri": "/components/sel_651r"
+                    "offset": 7,
+                    "uri": "/components/sel_651r",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "grid_voltage_l2_l3",
-                    "offset": 8,
-                    "variation": "Group30Var5",
                     "name": "Site - Voltage L2-L3",
-                    "uri": "/components/sel_651r"
+                    "offset": 8,
+                    "uri": "/components/sel_651r",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "grid_voltage_l3_l1",
-                    "offset": 9,
-                    "variation": "Group30Var5",
                     "name": "Site - Voltage L3-L1",
-                    "uri": "/components/sel_651r"
+                    "offset": 9,
+                    "uri": "/components/sel_651r",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "ess_average_soc",
-                    "offset": 10,
-                    "variation": "Group30Var5",
                     "name": "Battery - State of Charge %",
-                    "uri": "/assets/ess/summary"
+                    "offset": 10,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "ess_chargeable_energy",
-                    "offset": 11,
-                    "variation": "Group30Var5",
                     "name": "Battery - Chargable energy kWh",
-                    "uri": "/metrics/ess"
+                    "offset": 11,
+                    "uri": "/metrics/ess",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "ess_dischargeable_energy",
-                    "offset": 12,
-                    "variation": "Group30Var5",
                     "name": "Battery - Dischargeable energy kWh",
-                    "uri": "/metrics/ess"
+                    "offset": 12,
+                    "uri": "/metrics/ess",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "ess_chargeable_power",
-                    "offset": 13,
-                    "variation": "Group30Var5",
                     "name": "Battery - Chargeable power",
-                    "uri": "/assets/ess/summary"
+                    "offset": 13,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "ess_dischargeable_power",
-                    "offset": 14,
-                    "variation": "Group30Var5",
                     "name": "Battery - Dischargeable power",
-                    "uri": "/assets/ess/summary"
+                    "offset": 14,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "available_ess_num",
-                    "offset": 15,
-                    "variation": "Group30Var5",
                     "name": "Battery - Number ESS Available",
-                    "uri": "/assets/ess/summary"
+                    "offset": 15,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "running_ess_num",
-                    "offset": 16,
-                    "variation": "Group30Var5",
                     "name": "Battery - Number ESS Online",
-                    "uri": "/assets/ess/summary"
+                    "offset": 16,
+                    "uri": "/assets/ess/summary",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "heartbeat_counter",
-                    "offset": 17,
-                    "variation": "Group30Var5",
                     "name": "Heartbeat Counter",
-                    "uri": "/site/operation"
+                    "offset": 17,
+                    "uri": "/site/operation",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "status",
-                    "offset": 18,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #1 System Mode",
-                    "uri": "/assets/ess/ess_1"
+                    "offset": 18,
+                    "uri": "/assets/ess/ess_1",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "soc",
-                    "offset": 19,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #1 System SOC",
-                    "uri": "/assets/ess/ess_1"
+                    "offset": 19,
+                    "uri": "/assets/ess/ess_1",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "racks",
-                    "offset": 20,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #1 Number of Active Racks",
-                    "uri": "/assets/ess/ess_1"
+                    "offset": 20,
+                    "uri": "/assets/ess/ess_1",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "status",
-                    "offset": 21,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #2 System Mode",
-                    "uri": "/assets/ess/ess_2"
+                    "offset": 21,
+                    "uri": "/assets/ess/ess_2",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "soc",
-                    "offset": 22,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #2 System SOC",
-                    "uri": "/assets/ess/ess_2"
+                    "offset": 22,
+                    "uri": "/assets/ess/ess_2",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "racks",
-                    "offset": 23,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #2 Number of Active Racks",
-                    "uri": "/assets/ess/ess_2"
+                    "offset": 23,
+                    "uri": "/assets/ess/ess_2",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "status",
-                    "offset": 24,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #3 System Mode",
-                    "uri": "/assets/ess/ess_3"
+                    "offset": 24,
+                    "uri": "/assets/ess/ess_3",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "soc",
-                    "offset": 25,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #3 System SOC",
-                    "uri": "/assets/ess/ess_3"
+                    "offset": 25,
+                    "uri": "/assets/ess/ess_3",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "racks",
-                    "offset": 26,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #3 Number of Active Racks",
-                    "uri": "/assets/ess/ess_3"
+                    "offset": 26,
+                    "uri": "/assets/ess/ess_3",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "status",
-                    "offset": 27,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #4 System Mode",
-                    "uri": "/assets/ess/ess_4"
+                    "offset": 27,
+                    "uri": "/assets/ess/ess_4",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "soc",
-                    "offset": 28,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #4 System SOC",
-                    "uri": "/assets/ess/ess_4"
+                    "offset": 28,
+                    "uri": "/assets/ess/ess_4",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "racks",
-                    "offset": 29,
-                    "variation": "Group30Var5",
                     "name": "BESS Container #4 Number of Active Racks",
-                    "uri": "/assets/ess/ess_4"
+                    "offset": 29,
+                    "uri": "/assets/ess/ess_4",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "kwh_delivered",
-                    "offset": 30,
-                    "variation": "Group30Var5",
                     "name": "Site - kWh Delivered",
-                    "uri": "/components/sel_735"
+                    "offset": 30,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "kwh_received",
-                    "offset": 31,
-                    "variation": "Group30Var5",
                     "name": "Site - kWh Received",
-                    "uri": "/components/sel_735"
+                    "offset": 31,
+                    "uri": "/components/sel_735",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "FM_timestamp",
-                    "offset": 32,
-                    "variation": "Group30Var5",
                     "name": "Fleet Manager Metrics Timestamp Response",
-                    "uri": "/metrics/timestamp"
+                    "offset": 32,
+                    "uri": "/metrics/timestamp",
+                    "variation": "Group30Var5"
                 },
                 {
                     "id": "fr_enable_mask",
-                    "offset": 33,
                     "name": "Frequency Response Enable Word",
+                    "offset": 33,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "fr_baseload_cmd_kw",
-                    "offset": 34,
                     "name": "Baseload Power Command",
+                    "offset": 34,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "uf_ffr_inactive_cmd_kw",
-                    "offset": 35,
                     "name": "FFR Inactive Power Command",
+                    "offset": 35,
                     "uri": "/features/active_power"
                 }
-            ]
+            ],
+            "type": "analog"
         },
         {
-            "type": "binary",
             "map": [
                 {
                     "id": "breaker_status",
-                    "offset": 0,
                     "name": "Main Breaker Closed",
+                    "offset": 0,
                     "uri": "/components/sel_651r"
                 },
                 {
                     "id": "running_status_flag",
-                    "offset": 1,
                     "name": "Running Status",
+                    "offset": 1,
                     "uri": "/site/operation"
                 },
                 {
                     "id": "alarm_status_flag",
-                    "offset": 2,
                     "name": "Alarm Status",
+                    "offset": 2,
                     "uri": "/site/operation"
                 },
                 {
                     "id": "fault_status_flag",
-                    "offset": 3,
                     "name": "Fault Status",
+                    "offset": 3,
                     "uri": "/site/operation"
                 },
                 {
                     "id": "ffr_uf_status_flag",
-                    "offset": 4,
                     "name": "FFR UF Response Status",
+                    "offset": 4,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "ffr_uf_cooldown_status",
-                    "offset": 5,
                     "name": "FFR UF Cooldown Status",
+                    "offset": 5,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "pfr_uf_status_flag",
-                    "offset": 6,
                     "name": "PFR UF Response Status",
+                    "offset": 6,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "pfr_uf_cooldown_status",
-                    "offset": 7,
                     "name": "PFR UF Cooldown Status",
+                    "offset": 7,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "pfr_of_status_flag",
-                    "offset": 8,
                     "name": "PFR OF Response Status",
+                    "offset": 8,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "pfr_of_cooldown_status",
-                    "offset": 9,
                     "name": "PFR OF Cooldown Status",
+                    "offset": 9,
                     "uri": "/features/active_power"
                 },
                 {
                     "id": "faults",
-                    "offset": 10,
                     "name": "BESS Container #1 Fault Flag",
+                    "offset": 10,
                     "uri": "/assets/ess/ess_1"
                 },
                 {
                     "id": "alarms",
-                    "offset": 11,
                     "name": "BESS Container #1 Alarm Flag",
+                    "offset": 11,
                     "uri": "/assets/ess/ess_1"
                 },
                 {
                     "id": "faults",
-                    "offset": 12,
                     "name": "BESS Container #2 Fault Flag",
+                    "offset": 12,
                     "uri": "/assets/ess/ess_2"
                 },
                 {
                     "id": "alarms",
-                    "offset": 13,
                     "name": "BESS Container #2 Alarm Flag",
+                    "offset": 13,
                     "uri": "/assets/ess/ess_2"
                 },
                 {
                     "id": "faults",
-                    "offset": 14,
                     "name": "BESS Container #3 Fault Flag",
+                    "offset": 14,
                     "uri": "/assets/ess/ess_3"
                 },
                 {
                     "id": "alarms",
-                    "offset": 15,
                     "name": "BESS Container #3 Alarm Flag",
+                    "offset": 15,
                     "uri": "/assets/ess/ess_3"
                 },
                 {
                     "id": "faults",
-                    "offset": 16,
                     "name": "BESS Container #4 Fault Flag",
+                    "offset": 16,
                     "uri": "/assets/ess/ess_4"
                 },
                 {
                     "id": "alarms",
-                    "offset": 17,
                     "name": "BESS Container #4 Alarm Flag",
+                    "offset": 17,
                     "uri": "/assets/ess/ess_4"
                 }
-            ]
+            ],
+            "type": "binary"
         },
         {
-            "type": "CROB",
             "map": [
                 {
                     "id": "remote_enable_flag",
-                    "offset": 0,
                     "name": "Start Site Command",
+                    "offset": 0,
                     "uri": "/site/operation"
                 },
                 {
                     "id": "remote_disable_flag",
-                    "offset": 1,
                     "name": "Disable Site Command",
+                    "offset": 1,
                     "uri": "/site/operation"
                 },
                 {
                     "id": "remote_clear_faults",
-                    "offset": 2,
                     "name": "Clear Faults Command",
+                    "offset": 2,
                     "uri": "/site/operation"
                 }
-            ]
+            ],
+            "type": "CROB"
         }
-    ]
+    ],
+    "system": {
+        "debug": 0,
+        "frequency": 5000,
+        "id": "dnp3_server",
+        "ip_address": "0.0.0.0",
+        "local_uri": "/local_server",
+        "name": "FlexGen HybridOS",
+        "port": 20000,
+        "protocol": "DNP3",
+        "version": "0.2"
+    }
 }

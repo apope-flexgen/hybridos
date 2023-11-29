@@ -757,8 +757,6 @@
                 "numberOfItems": "1",
                 "sourceURI": "/assets"
             },
-            "summary": [],
-            "summaryControls": [],
             "statuses": [
                 {
                     "name": "AC Active Power (735)",
@@ -874,7 +872,9 @@
                     "units": "",
                     "uri": "/utility_status"
                 }
-            ]
+            ],
+            "summary": [],
+            "summaryControls": []
         },
         {
             "alarms": {
@@ -901,8 +901,6 @@
                 "numberOfItems": "1",
                 "sourceURI": "/assets"
             },
-            "summary": [],
-            "summaryControls": [],
             "statuses": [
                 {
                     "name": "AC Active Power",
@@ -934,7 +932,9 @@
                     "units": "V",
                     "uri": "/voltage_l3_l1"
                 }
-            ]
+            ],
+            "summary": [],
+            "summaryControls": []
         },
         {
             "alarms": {
@@ -961,8 +961,6 @@
                 "numberOfItems": "1",
                 "sourceURI": "/assets"
             },
-            "summary": [],
-            "summaryControls": [],
             "statuses": [
                 {
                     "name": "AC Active Power",
@@ -994,7 +992,9 @@
                     "units": "V",
                     "uri": "/voltage_l3_l1"
                 }
-            ]
+            ],
+            "summary": [],
+            "summaryControls": []
         }
     ]
 }

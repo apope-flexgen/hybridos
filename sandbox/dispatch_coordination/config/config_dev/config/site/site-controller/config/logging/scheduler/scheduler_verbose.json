@@ -1,5 +1,5 @@
 {
+    "severity_threshold": 1,
     "to_console": true,
-    "to_file": true,
-    "severity_threshold": 1
+    "to_file": true
 }

@@ -1,155 +1,152 @@
 {
-    "connection":
-    {
-        "name": "pv_1",
-        "ip_address": "172.3.27.2",
-        "port": 10007,
-		"device_id": 1
-    },
     "components": [
         {
-            "id": "pv_1",
+            "add_timings": false,
             "frequency": 200,
+            "id": "pv_1",
             "offset_time": 0,
-            "add_timings":false,
-            "registers":
-            [
+            "registers": [
                 {
-                    "type": "Holding Registers",
-                    "map":
-                    [
+                    "map": [
                         {
+                            "echo_id": "/components/twins_pv_1/ctrlword1",
                             "id": "start_stop",
-                            "offset": 10100,
                             "name": "Start/Stop",
-                            "echo_id": "/components/twins_pv_1/ctrlword1"
+                            "offset": 10100
                         },
                         {
+                            "echo_id": "/components/twins_pv_1/ctrlword2",
                             "id": "reactive_power_mode",
-                            "offset": 10101,
                             "name": "Reactive Power Mode",
-                            "echo_id": "/components/twins_pv_1/ctrlword2"
+                            "offset": 10101
                         },
                         {
+                            "echo_id": "/components/twins_pv_1/i",
+                            "float": true,
                             "id": "ac_current_l1",
-                            "float": true,
-                            "size": 2,
                             "offset": 10102,
-                            "echo_id": "/components/twins_pv_1/i"
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "ac_current_l2",
-                            "float": true,
-                            "size": 2,
-                            "offset": 10104
+                            "offset": 10104,
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "ac_current_l3",
-                            "float": true,
-                            "size": 2,
-                            "offset": 10106
+                            "offset": 10106,
+                            "size": 2
                         },
                         {
+                            "echo_id": "/components/twins_pv_1/v1",
+                            "float": true,
                             "id": "ac_voltage_l1",
-                            "float": true,
-                            "size": 2,
                             "offset": 10108,
-                            "echo_id": "/components/twins_pv_1/v1"
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "ac_voltage_l2",
-                            "float": true,
-                            "size": 2,
-                            "offset": 10110
+                            "offset": 10110,
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "ac_voltage_l3",
-                            "float": true,
-                            "size": 2,
-                            "offset": 10112
+                            "offset": 10112,
+                            "size": 2
                         },
                         {
+                            "echo_id": "/components/twins_pv_1/p",
+                            "float": true,
                             "id": "active_power",
-                            "float": true,
-                            "size": 2,
                             "offset": 10114,
-                            "echo_id": "/components/twins_pv_1/p"
+                            "size": 2
                         },
                         {
+                            "echo_id": "/components/twins_pv_1/q",
+                            "float": true,
                             "id": "reactive_power",
-                            "float": true,
-                            "size": 2,
                             "offset": 10116,
-                            "echo_id": "/components/twins_pv_1/q"
+                            "size": 2
                         },
                         {
+                            "echo_id": "/components/twins_pv_1/s",
+                            "float": true,
                             "id": "apparent_power",
-                            "float": true,
-                            "size": 2,
                             "offset": 10118,
-                            "echo_id": "/components/twins_pv_1/s"
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "power_factor",
-                            "float": true,
-                            "size": 2,
-                            "offset": 10120
+                            "offset": 10120,
+                            "size": 2
                         },
                         {
+                            "echo_id": "/components/twins_pv_1/f",
+                            "float": true,
                             "id": "frequency",
-                            "float": true,
-                            "size": 2,
                             "offset": 10122,
-                            "echo_id": "/components/twins_pv_1/f"
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "dc_current",
-                            "float": true,
-                            "size": 2,
-                            "offset": 10124
+                            "offset": 10124,
+                            "size": 2
                         },
                         {
+                            "float": true,
                             "id": "dc_voltage",
-                            "float": true,
-                            "size": 2,
-                            "offset": 10126
+                            "offset": 10126,
+                            "size": 2
                         },
                         {
-                            "id": "status",
-                            "offset": 10128,
-                            "name": "PV Status",
-                            "bool": true,
-                            "enum": true,
                             "bit_strings": [
                                 "Stopped",
                                 "Running"
                             ],
-                            "echo_id": "/components/twins_pv_1/on"
+                            "bool": true,
+                            "echo_id": "/components/twins_pv_1/on",
+                            "enum": true,
+                            "id": "status",
+                            "name": "PV Status",
+                            "offset": 10128
                         },
                         {
+                            "echo_id": "/components/twins_pv_1/qcmd",
+                            "float": true,
                             "id": "reactive_power_setpoint",
-                            "float": true,
-                            "size": 2,
                             "offset": 10129,
-                            "echo_id": "/components/twins_pv_1/qcmd"
+                            "size": 2
                         },
                         {
+                            "echo_id": "/components/twins_pv_1/pcmd",
+                            "float": true,
                             "id": "active_power_setpoint",
-                            "float": true,
-                            "size": 2,
                             "offset": 10131,
-                            "echo_id": "/components/twins_pv_1/pcmd"
+                            "size": 2
                         },
                         {
-                            "id": "power_factor_setpoint",
+                            "echo_id": "/components/twins_pv_1/pfcmd",
                             "float": true,
-                            "size": 2,
+                            "id": "power_factor_setpoint",
                             "offset": 10133,
-                            "echo_id": "/components/twins_pv_1/pfcmd"
+                            "size": 2
                         }
-                    ]
+                    ],
+                    "type": "Holding Registers"
                 }
             ]
         }
-    ]
+    ],
+    "connection": {
+        "device_id": 1,
+        "ip_address": "172.3.27.2",
+        "name": "pv_1",
+        "port": 10007
+    }
 }
