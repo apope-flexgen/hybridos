@@ -1,5 +1,6 @@
 {
     "allowActions": true,
+    "syswatch" : true,
     "briefingFrequencyMS": 5000,
     "c2cMsgFrequencyMS": 50,
     "controllerName": "controller 1",

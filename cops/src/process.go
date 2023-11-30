@@ -107,6 +107,10 @@ func (process *processInfo) updateEnableControls(status string) {
 		process.enableControls.startEnabled = true
 		process.enableControls.stopEnabled = false
 		process.enableControls.restartEnabled = true
+	} else if strings.Contains(status, "failed") {
+		process.enableControls.startEnabled = true
+		process.enableControls.stopEnabled = false
+		process.enableControls.restartEnabled = true
 	}
 }
 

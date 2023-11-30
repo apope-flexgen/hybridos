@@ -38,6 +38,16 @@ import (
 	log "github.com/flexgen-power/go_flexgen/logger"
 )
 
+// Store runtime configuration options.
+// Add additional arguments here as applicable.
+// $ ./cops -syswatch -c=cfg/path -test -prof=[cpu, mem, trace]
+type Args struct {
+	cfgSource string // Stores source info for the configuration file. Defaults to DBI.
+	prof      string // Profiling argument for starting CPU, MEM, or trace profiling.
+	test      bool   // Indicate whether to run internal unit tests with systemd. Runs tests and exits.
+	syswatch  bool   // Indicate reporting additional statistics on the hardware controller itself.
+}
+
 // Global variables
 var processName = "cops"                        // Retrieve configuration from DBI using this process name
 var processJurisdiction map[string]*processInfo // Map of processes that will be checked to see if they are up and running
@@ -48,10 +58,10 @@ var heartRate, patrolRate, briefingRate, statsUpdateTicker *time.Ticker // Ticke
 
 func main() {
 	// Parse command line arguments.
-	cfgSource := parseFlags()
+	args := parseFlags()
 
 	// TODO: temporary internal test suite until pytests are implemented.
-	if cfgSource == "test" {
+	if args.test {
 		runTests()
 		os.Exit(1)
 	}
@@ -74,11 +84,16 @@ func main() {
 	go f.ReceiveChannel(fimsReceive)
 
 	// Read in configuration file from source.
-	if err := parse(cfgSource); err != nil {
+	if err := parse(args.cfgSource); err != nil {
 		log.Fatalf("Parsing new config: %v.", err)
 	}
 
 	getDBIUpdateModeStatus()
+
+	// Execute system hardware collection if enabled.
+	if args.syswatch || config.Syswatch {
+		go runCollectors(args.prof)
+	}
 
 	// Operating loop
 	for {
@@ -102,21 +117,25 @@ func main() {
 }
 
 // Parse command line flags. Defaults to "dbi" as the configuration source if no flag provided.
-func parseFlags() (cfgSource string) {
-	// cops config file
+func parseFlags() Args {
+	var args Args
+	// Initialize possible flag options.
 	cfgUsage := "Give a path to the config file or 'dbi' if config is stored in the database"
-	flag.StringVar(&cfgSource, "c", "dbi", cfgUsage)
-	flag.StringVar(&cfgSource, "config", "dbi", cfgUsage)
-	testFlag := flag.Bool("test", false, "Internal use only - execute test suite.")
-	// logger config file
-	flag.StringVar(&log.ConfigFile, "logCfg", "", "If included default values will be overturned. Use this in tandem with the config file to print a specific severity/print to screen.")
+	flag.StringVar(&args.cfgSource, "c", "dbi", cfgUsage)
+	flag.StringVar(&args.cfgSource, "config", "dbi", cfgUsage)
+	flag.BoolVar(&args.test, "test", false, "Internal use only - execute test suite.")
+
+	// Profiling flags can be one of the following in the array: -prof=["cpu", "mem", "trace"]
+	flag.StringVar(&args.prof, "prof", "", "enables profiling and specify 1 of 3 types: -prof=[\"cpu\", \"mem\", \"trace\"].")
+	flag.BoolVar(&args.syswatch, "syswatch", false, "Report system hardware statistics via FIMS.")
+
+	// Provide path to a logging configuration if desired.
+	flag.StringVar(&log.ConfigFile, "logCfg", "", "Use this in tandem with the config file to print a specific severity/print to screen. Overrides default values.")
+
+	// Parse command line arguments.
 	flag.Parse()
 
-	// Catch-all for if tests are enabled.
-	if *testFlag {
-		cfgSource = "test"
-	}
-	return cfgSource
+	return args
 }
 
 // Returns if an interface is a map with string keys and interface{} elements

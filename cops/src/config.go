@@ -30,6 +30,7 @@ type Config struct {
 	BriefingFrequencyMS     int       `json:"briefingFrequencyMS"`
 	C2cMsgFrequencyMS       int       `json:"c2cMsgFrequencyMS"`
 	TemperatureSource       string    `json:"temperatureSource"`
+	Syswatch                bool      `json:"syswatch"` // Enable system hardware stats reporting.
 	EnableRedundantFailover bool      `json:"enableRedundantFailover"`
 	PrimaryIP               []string  `json:"primaryIP,omitempty"`
 	PrimaryNetworkInterface []string  `json:"primaryNetworkInterface,omitempty"`

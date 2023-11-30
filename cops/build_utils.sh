@@ -19,6 +19,11 @@ function prebuild()
 
 function build() # build.sh passes build mode as $1
 {
+    # we need to explicitly tell package_utility to use go modules since we're using the monomodule go.mod, 
+    # so it won't find the go.mod in the expected location (same location as the build_utils.sh)
+    export GO111MODULE=on
+    go mod tidy
+    
     # Make sure cops source flies are in GO_PATH
     ln -sfn $(pwd)/src $GO_PATH/$name
 
