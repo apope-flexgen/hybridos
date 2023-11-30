@@ -368,8 +368,8 @@ func makeConfig(names map[string][]string) (map[string]interface{}) {
 func handleNames(inName string) string {
 	var outName string
 	switch inName { //handle "special" versions of asset tree naming
-	case "generator", "generators", "gen":
-		outName = "gens"
+	case "generator", "generators", "gens":
+		outName = "gen"
 	case "feeder", "feeders", "feed":
 		outName = "feeds"
 	case "photovoltaic":
