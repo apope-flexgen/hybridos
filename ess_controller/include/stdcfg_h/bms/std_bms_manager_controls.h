@@ -1,5 +1,3 @@
-#pragma once
-
 const char* std_bms_manager_controls_s = R"JSON(
 {
     "/status/pcs": {

@@ -1,12 +1,11 @@
-#pragma once
-
 const char* std_ess_controller_manager_s = R"JSON(
 {
     "/config/ess": {
         "FaultDestination": "/assets/ess/summary:faults",
         "AlarmDestination": "/assets/ess/summary:alarms",
         "EventSourceFormat": {"value": "assetName"},
-        "LogDir": "/var/log/ess_controller",
+        "LogDir": "/var/log/flexgen/ess_controller",
+        "logging_enabled": true,
         "NoAlarmMsg": "Normal",
         "NoFaultMsg": "Normal",
         "site_control_enable": false,
@@ -37,7 +36,11 @@ const char* std_ess_controller_manager_s = R"JSON(
         "curr_real_mem"              : -1.0 ,
         "peak_real_mem"              : -1.0 ,
         "site_control_enable"        : false,
+        "fire_fault"                 : false,
+        "door_alarm"                 : false,
+        "e_stop_fault"               : false,
         "clear_faults": {
+            "enable": "/config/ess:enable",
             "value": false,
             "enabled": false,
             "actions": {
@@ -157,7 +160,10 @@ const char* std_ess_controller_manager_s = R"JSON(
         "ui_time"                       : { "value": "/assets/ess/summary:time"                       , "vlink": "/status/ess:timeString"                },
         "ui_cpu_temp"                   : { "value": "/assets/ess/summary:cpu_temp"                   , "vlink": "/status/ess:system_temp"               },
         "ui_curr_real_mem"              : { "value": "/assets/ess/summary:curr_real_mem"              , "vlink": "/status/ess:currRealMem"               },
-        "ui_peak_real_mem"              : { "value": "/assets/ess/summary:peak_real_mem"              , "vlink": "/status/ess:peakRealMem"               }
+        "ui_peak_real_mem"              : { "value": "/assets/ess/summary:peak_real_mem"              , "vlink": "/status/ess:peakRealMem"               },
+        "ui_fire_fault"                 : { "value": "/assets/ess/summary:fire_fault"                 , "vlink": "/status/ess:FireFault"                 },
+        "ui_door_alarm"                 : { "value": "/assets/ess/summary:door_alarm"                 , "vlink": "/status/ess:DoorAlarm"                 },
+        "ui_e_stop_fault"               : { "value": "/assets/ess/summary:e_stop_fault"               , "vlink": "/status/ess:EStopFault"                }
     },
 
     "/schedule/wake_monitor/ess":{
@@ -167,11 +173,14 @@ const char* std_ess_controller_manager_s = R"JSON(
     },
 
     "/status/ess": {
-        "CommsOKStatus": "N/A",
-        "timeString"   : "N/A",
-        "system_temp"  : -1.0 ,
-        "currRealMem"  : -1.0 ,
-        "peakRealMem"  : -1.0 ,
+        "CommsOKStatus" : "N/A",
+        "timeString"    : "N/A",
+        "system_temp"   : -1.0 ,
+        "currRealMem"   : -1.0 ,
+        "peakRealMem"   : -1.0 ,
+        "FireFault"     : false,
+        "DoorAlarm"     : false,
+        "EStopFault"    : false,
         "CommsOK": {
             "value": false,
             "actions": {

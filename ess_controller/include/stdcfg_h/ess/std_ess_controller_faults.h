@@ -1,5 +1,3 @@
-#pragma once
-
 const char* std_ess_controller_faults_s = R"JSON(
 {
     "/faults/ess": {
@@ -13,7 +11,11 @@ const char* std_ess_controller_faults_s = R"JSON(
                     {"func": [{"func": "process_sys_alarm", "amap": "ess"}]},
                     {"remap":[
                         {"inValue": "Clear", "ifChanged": false, "uri":"/faults/site:fg_bess_comms_faults" , "outValue": 0},
-                        {"inValue": "Clear", "ifChanged": false, "uri":"/faults/site:fg_bess_faults"       , "outValue": 0}
+                        {"inValue": "Clear", "ifChanged": false, "uri":"/faults/site:fg_bess_faults"       , "outValue": 0},
+
+                        {"inValue": "Clear", "ifChanged": false, "uri":"/status/bms:CommsOK", "outValue": true},
+                        {"inValue": "Clear", "ifChanged": false, "uri":"/status/pcs:CommsOK", "outValue": true},
+                        {"inValue": "Clear", "ifChanged": false, "uri":"/status/ess:CommsOK", "outValue": true}
                     ]}
                 ]
             }
@@ -28,7 +30,7 @@ const char* std_ess_controller_faults_s = R"JSON(
             "actions": {
                 "onSet": [
                     {"func": [{"func": "process_sys_alarm", "amap": "ess"}]},
-                    {"remap":[{"inValue": "Clear", "ifChanged": false, "uri":"/faults/site:fg_bess_alarms" , "outValue": 0}]}
+                    {"remap":[{"inValue": "Clear", "ifChanged": false, "uri":"/alarms/site:fg_bess_alarms" , "outValue": 0}]}
                 ]
             }
         }
@@ -51,7 +53,6 @@ const char* std_ess_controller_faults_s = R"JSON(
                 "onSet":[{
                     "func": [{"func": "LogInfo"}],
                     "remap":[
-                        {"inValue": true, "ifChanged": false, "uri": "/controls/bms:OpenContactors" , "outValue": true},
                         {"inValue": true, "ifChanged": false, "uri": "/status/ess:FaultShutdown"    , "outValue": true}
                     ]
                 }]

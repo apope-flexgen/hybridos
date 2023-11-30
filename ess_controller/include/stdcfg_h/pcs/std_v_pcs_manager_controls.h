@@ -1,5 +1,3 @@
-#pragma once
-
 const char* std_v_pcs_manager_controls_s = R"JSON(
 {
     "/status/bms": {
@@ -261,7 +259,7 @@ const char* std_v_pcs_manager_controls_s = R"JSON(
             "useExpr": true,
             "numVars": 1,
             "variable1": "/controls/pcs:ActivePowerRampRate",
-            "expression": "{1} > 0",
+            "expression": "{1} >= 0",
             "actions": {
                 "onSet": [ {
                     "func": [ {"func": "HandleCmd", "amap": "pcs"} ]
@@ -286,7 +284,7 @@ const char* std_v_pcs_manager_controls_s = R"JSON(
             "useExpr": true,
             "numVars": 1,
             "variable1": "/controls/pcs:ReactivePowerRampRate",
-            "expression": "{1} > 0",
+            "expression": "{1} >= 0",
             "actions": {
                 "onSet": [ {
                     "func": [ {"func": "HandleCmd", "amap": "pcs"} ]
@@ -311,7 +309,7 @@ const char* std_v_pcs_manager_controls_s = R"JSON(
             "useExpr": true,
             "numVars": 1,
             "variable1": "/controls/pcs:OffGridFrequencySetpoint",
-            "expression": "{1} > 0",
+            "expression": "{1} >= 0",
             "actions": {
                 "onSet": [ {
                     "func": [ {"func": "HandleCmd", "amap": "pcs"} ]
@@ -337,7 +335,7 @@ const char* std_v_pcs_manager_controls_s = R"JSON(
             "useExpr": true,
             "numVars": 1,
             "variable1": "/controls/pcs:OffGridVoltageSetpoint",
-            "expression": "{1} > 0",
+            "expression": "{1} >= 0",
             "actions": {
                 "onSet": [ {
                     "func": [ {"func": "HandleCmd", "amap": "pcs"} ]
@@ -399,11 +397,10 @@ const char* std_v_pcs_manager_controls_s = R"JSON(
         "StopEnable": {
             "value": 0,
             "useExpr": true,
-            "numVars": 3,
+            "numVars": 2,
             "variable1": "/assets/pcs/summary:maint_mode",
             "variable2": "/status/pcs:SystemStateStatus",
-            "variable3": "/status/pcs:GridModeStatus",
-            "expression": "({1} and {2} != Stop) or {3} != FollowPQ",
+            "expression": "{1} and {2} != Stop",
             "actions": {
                 "onSet": [{
                     "remap": [

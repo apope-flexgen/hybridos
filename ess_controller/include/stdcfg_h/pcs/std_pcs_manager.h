@@ -1,5 +1,3 @@
-#pragma once
-
 const char* std_pcs_manager_s = R"JSON(
 {
     "/config/##PCS_ID##": {

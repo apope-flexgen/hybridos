@@ -1,5 +1,3 @@
-#pragma once
-
 const char* std_ess_controller_controls_s = R"JSON(
 {
     "/schedule/wake_monitor/ess":{

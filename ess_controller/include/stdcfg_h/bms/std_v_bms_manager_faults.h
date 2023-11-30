@@ -1,5 +1,3 @@
-#pragma once
-
 const char* std_v_bms_manager_faults_s = R"JSON(
 {
     "/faults/bms": {

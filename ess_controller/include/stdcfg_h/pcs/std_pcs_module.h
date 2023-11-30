@@ -1,5 +1,3 @@
-#pragma once
-
 const char* std_pcs_module_s = R"JSON(
 {
     "/config/##PCS_ID##_##MODULE_ID##": {

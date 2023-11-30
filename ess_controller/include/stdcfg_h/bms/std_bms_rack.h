@@ -1,5 +1,3 @@
-#pragma once
-
 const char* std_bms_rack_s = R"JSON(
 {
     "/config/##BMS_ID##_##RACK_ID##": {

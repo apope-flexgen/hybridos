@@ -1,5 +1,3 @@
-#pragma once
-
 const char* std_v_pcs_manager_s = R"JSON(
 {
     "/config/pcs": {
@@ -27,6 +25,7 @@ const char* std_v_pcs_manager_s = R"JSON(
         "alarms": {"name": "Alarms", "value": 0, "options":[],"enabled":true},
         "faults": {"name": "Faults", "value": 0, "options":[],"enabled":true},
         "maint_mode": {
+            "enable": "/config/pcs:enable",
             "name": "Maintenance Mode",
             "value": false,
             "enabled": true,
@@ -36,6 +35,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             ]
         },
         "start": {
+            "enable": "/config/pcs:enable",
             "value": false,
             "enabled": false,
             "actions": {
@@ -50,6 +50,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             ]
         },
         "standby": {
+            "enable": "/config/pcs:enable",
             "value": false,
             "enabled": false,
             "actions": {
@@ -64,6 +65,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             ]
         },
         "stop": {
+            "enable": "/config/pcs:enable",
             "value": false,
             "enabled": false,
             "actions": {
@@ -82,6 +84,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             ]
         },
         "grid_follow_pq": {
+            "enable": "/config/pcs:enable",
             "value": false,
             "enabled": false,
             "actions": {
@@ -96,6 +99,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             ]
         },
         "grid_form_vf": {
+            "enable": "/config/pcs:enable",
             "value": false,
             "enabled": false,
             "actions": {
@@ -110,6 +114,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             ]
         },
         "grid_form_vsg": {
+            "enable": "/config/pcs:enable",
             "value": false,
             "enabled": false,
             "actions": {
@@ -124,6 +129,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             ]
         },
         "active_power_setpoint": {
+            "enable": "/config/pcs:enable",
             "value": 0,
             "enabled": false,
             "actions": {
@@ -135,6 +141,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             "options": []
         },
         "reactive_power_setpoint": {
+            "enable": "/config/pcs:enable",
             "value": 0,
             "enabled": false,
             "actions": {
@@ -146,6 +153,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             "options": []
         },
         "active_power_ramp_rate": {
+            "enable": "/config/pcs:enable",
             "value": 0,
             "actions": {
                 "onSet": [{
@@ -159,6 +167,7 @@ const char* std_v_pcs_manager_s = R"JSON(
             "options": []
         },
         "reactive_power_ramp_rate": {
+            "enable": "/config/pcs:enable",
             "value": 0,
             "actions": {
                 "onSet": [{
@@ -172,28 +181,37 @@ const char* std_v_pcs_manager_s = R"JSON(
             "options": []
         },
         "off_grid_frequency_setpoint": {
+            "enable": "/config/pcs:enable",
             "value": 0,
-            "enabled": false,
+            "enabled": true,
             "actions": {
                 "onSet": [{
                     "func": [{"func": "LogInfo"}],
-                    "remap": [{"ifChanged": false, "uri": "/controls/pcs:OffGridFrequencySetpoint"}]
+                    "remap": [
+                        {"ifChanged": false, "uri": "/controls/pcs:OffGridFrequencySetpoint"},
+                        {"ifChanged": false, "uri": "/controls/pcs:OffGridFrequencySetpoint@triggerCmd", "outValue": true}
+                    ]
                 }]
             },
             "options": []
         },
         "off_grid_voltage_setpoint": {
+            "enable": "/config/pcs:enable",
             "value": 0,
-            "enabled": false,
+            "enabled": true,
             "actions": {
                 "onSet": [{
                     "func": [{"func": "LogInfo"}],
-                    "remap": [{"ifChanged": false, "uri": "/controls/pcs:OffGridVoltageSetpoint"}]
+                    "remap": [
+                        {"ifChanged": false, "uri": "/controls/pcs:OffGridVoltageSetpoint"},
+                        {"ifChanged": false, "uri": "/controls/pcs:OffGridVoltageSetpoint@triggerCmd", "outValue": true}
+                    ]
                 }]
             },
             "options": []
         },
         "clear_faults": {
+            "enable": "/config/pcs:enable",
             "value": false,
             "enabled": false,
             "actions": {
