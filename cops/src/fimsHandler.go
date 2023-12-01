@@ -123,7 +123,10 @@ func handleSet(msg fims.FimsMsg) error {
 	case msg.Nfrags == 5 && strings.Contains(msg.Uri, "controls"):
 		if config.AllowActions {
 			// TODO: Handle fims reply to for errors from handlecontorlMsg
-			return handleControlMsg(msg)
+			if err := handleControlMsg(msg); err != nil {
+				f.SendSet(msg.Replyto, "", fmt.Sprintf("error handling control set: %v", err))
+				return fmt.Errorf("handling control message: %v", err)
+			}
 		} else {
 			// TODO: convert to reply to message. tech debt ticket.
 			return fmt.Errorf("Received a FIMS set to take an action on process %s but actions are not allowed. %s",
@@ -408,7 +411,7 @@ func handleControlMsg(msg fims.FimsMsg) error {
 	}
 
 	// Handle the control type for the defined process.
-	if err := handleSystemdCmd(cmd, process); err != nil {
+	if err := handleSystemdCmd(cmd, msg); err != nil {
 		return fmt.Errorf("handling command \"%s\" for %s: %w", cmd, process, err)
 	}
 

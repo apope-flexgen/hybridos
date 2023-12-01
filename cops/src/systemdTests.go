@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fims"
 	"fmt"
 	"log"
 	"strings"
@@ -19,6 +20,13 @@ var margin = 10 * time.Second
 // against - providing a single static process.
 // Tests are ran under the assumption this unit exists in systemd.
 var testProcess = "fims"
+
+// Initialize a FIMS test message struct.
+var testMsg = fims.FimsMsg{
+	Uri:     fmt.Sprintf("/cops/stats/%s", testProcess),
+	Frags:   []string{"cops", "stats", testProcess},
+	Replyto: "cops",
+}
 
 // Catch all function to execute all internal tests involving systemd.
 // To execute test:
@@ -79,7 +87,7 @@ func testTimestamps(wg *sync.WaitGroup, result chan string) {
 	defer conn.Close()
 
 	// Restart test service.
-	if err := takeAction("restart", testProcess); err != nil {
+	if err := takeAction("restart", testMsg); err != nil {
 		log.Fatalf("performing restart on %s: %w", testProcess, err)
 	}
 
@@ -149,17 +157,18 @@ func testActions(wg *sync.WaitGroup, result chan string) {
 // Restart is always allowed.
 //handleSystemdCmd is our unit to test here
 func testActionRestrictions(wg *sync.WaitGroup, result chan string) {
+	defer wg.Done()
 
 	// Verify start is not allowed on a running process.
 	// Start our service first to enter a running state.
-	if err := takeAction("start", testProcess); err != nil {
+	if err := takeAction("start", testMsg); err != nil {
 		result <- fmt.Sprintf("FAIL: taking action: %s: %s", "start", err)
 	}
 	// Update internal process status.
 	updateTestStatuses()
 
 	// Verify we get expected error when attempting to start again during a run state.
-	err := handleSystemdCmd("start", testProcess)
+	err := handleSystemdCmd("start", testMsg)
 	expectedErr := "not enabled"
 
 	// Validate expected error.
@@ -170,7 +179,7 @@ func testActionRestrictions(wg *sync.WaitGroup, result chan string) {
 	}
 
 	// Stop our started unit to prepare for next test.
-	if err := takeAction("stop", testProcess); err != nil {
+	if err := takeAction("stop", testMsg); err != nil {
 		result <- fmt.Sprintf("FAIL: taking action: %s: %s", "start", err)
 	}
 
@@ -178,7 +187,7 @@ func testActionRestrictions(wg *sync.WaitGroup, result chan string) {
 	updateTestStatuses()
 
 	// Verify we get expected error when attempting to stop during a stopped state.
-	err = handleSystemdCmd("stop", testProcess)
+	err = handleSystemdCmd("stop", testMsg)
 	expectedErr = "not enabled"
 
 	// Validate expected error.
@@ -211,7 +220,7 @@ func testAction(action string, process string, beforeState, afterState string) e
 	// Verify dead status.
 	if strings.Contains(state, beforeState) {
 		// Test action
-		if err := takeAction(action, process); err != nil {
+		if err := takeAction(action, testMsg); err != nil {
 			return fmt.Errorf("taking action: %s: %w", action, err)
 		}
 	} else {

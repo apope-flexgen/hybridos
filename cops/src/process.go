@@ -2,6 +2,7 @@
 package main
 
 import (
+	"fims"
 	"fmt"
 	"os"
 	"strings"
@@ -244,7 +245,8 @@ func validateProcessControls(process string) error {
 // Handles a given command to enact an action on a process via systemd.
 // Verifies current state of process first via checking the enabled status
 // on the process and action. Once verified, takes action.
-func handleSystemdCmd(action string, process string) error {
+func handleSystemdCmd(action string, msg fims.FimsMsg) error {
+	process := msg.Frags[2]
 	var enabled bool
 
 	// Select action to determine enabled flag.
@@ -264,7 +266,7 @@ func handleSystemdCmd(action string, process string) error {
 
 	// Take action.
 	if enabled {
-		if err := takeAction(action, process); err != nil {
+		if err := takeAction(action, msg); err != nil {
 			return fmt.Errorf("performing %s on %s: %w", action, process, err)
 		}
 	} else {
@@ -275,7 +277,9 @@ func handleSystemdCmd(action string, process string) error {
 }
 
 // Establish dbus connection and take defined action
-func takeAction(action string, process string) error {
+func takeAction(action string, msg fims.FimsMsg) error {
+	process := msg.Frags[2]
+
 	// Generate service string for sending to dbus.
 	service := fmt.Sprintf("%s.service", process)
 
@@ -315,7 +319,13 @@ func takeAction(action string, process string) error {
 		return fmt.Errorf("action: %s for process %s is unrecognized", action, process)
 	}
 
-	job := <-resultChan
-	log.Infof("Performed %s on service %s. Result: %s\n", action, service, job)
+	// Report job result to FIMS and logs.
+	result := <-resultChan
+	log.Infof("Performed %s on service %s. Result: %s\n", action, service, result)
+
+	// Validate FIMS connection to reply on.
+	if f.Connected() {
+		f.SendSet(msg.Replyto, "", result)
+	}
 	return nil
 }
