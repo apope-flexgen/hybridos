@@ -157,9 +157,9 @@ const useGenerateSystemStatusTable = () => {
       service_name: formatServiceName(serviceData.serviceName || ''),
       service_status: serviceData.serviceStatus ? generateStatusTag(serviceData.serviceStatus) : '-',
       connection_status: serviceData.connectionStatus ? generateConnectionStatus(serviceData.connectionStatus) : '-',
-      cpu_usage: serviceData.cpuUsage ? `${serviceData.cpuUsage}%` : '-',
-      memory_usage: (serviceData.memoryUsage && serviceData.memoryUsage !== -1) ? `${serviceData.memoryUsage}%` : '-',
-      uptime: (serviceData.uptime && serviceData.uptime !== -1) ? serviceData.uptime : '-',
+      cpu_usage: (serviceData.cpuUsage !== -1) ? `${serviceData.cpuUsage}%` : '-',
+      memory_usage: (serviceData.memoryUsage !== -1) ? `${serviceData.memoryUsage}%` : '-',
+      uptime: (serviceData.uptime) ? serviceData.uptime : '-',
       last_restart: serviceData.lastRestart ? dayjs(serviceData.lastRestart).format() : '-',
       actions: generateActionButtons(serviceData.actions || [], serviceData.serviceName || ''),
     }));

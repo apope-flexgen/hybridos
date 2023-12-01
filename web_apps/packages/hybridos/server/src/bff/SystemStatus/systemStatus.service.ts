@@ -32,14 +32,15 @@ export class SystemStatusService {
             enabled: rawSystemStatusData.controls[controlKey].enabled as boolean,
             action: controlKey.toLowerCase() as 'start' | 'stop' | 'restart',
         }))
-
+        
         const parsedData: ServiceStatusResponse = {
             serviceName: serviceName || '',
             serviceStatus: rawSystemStatusData.service_status || '',
-            memoryUsage: rawSystemStatusData.last_mem_usage_pct || -1,
-            uptime: rawSystemStatusData.elapsed_time || -1,
-            lastRestart: rawSystemStatusData.last_restart || '',
-            actions: actions
+            uptime: rawSystemStatusData.elapsed_time || '',
+            lastRestart: rawSystemStatusData.last_restart,
+            cpuUsage: rawSystemStatusData.avg_cpu_usage_pct,
+            memoryUsage: rawSystemStatusData.avg_mem_usage_pct,
+            actions: actions,
         }
 
         return parsedData
