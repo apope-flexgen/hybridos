@@ -66,7 +66,7 @@ export class ServiceStatusResponse {
     @IsString()
     @IsOptional()
     lastRestart?: string
-    
+
     @ApiProperty({
         description: systemStatusDescriptions.actions,
     })

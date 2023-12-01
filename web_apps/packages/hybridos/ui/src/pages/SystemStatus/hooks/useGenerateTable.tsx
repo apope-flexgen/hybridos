@@ -2,19 +2,21 @@
 import {
   Box, Chip, Icon, IconButton, Tooltip, Typography,
 } from '@flexgen/storybook';
-import dayjs from 'dayjs';
-import { useState } from 'react';
+
+import { useContext, useState } from 'react';
+import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { SYSTEM_STATUS_URL, statusColorMapping } from 'src/pages/SystemStatus/SystemStatus.constants';
-import { formatServiceName, toTitleCase } from 'src/pages/SystemStatus/SystemStatus.helpers';
+import { toTitleCase } from 'src/pages/SystemStatus/SystemStatus.helpers';
 import { iconSize, actionBoxSx } from 'src/pages/SystemStatus/SystemStatus.styles';
 import {
-  ServiceActionType, ServiceActionObject, SystemStatusObject, SystemStatusRow,
+  ServiceActionObject, ServiceActionType, SystemStatusObject, SystemStatusRow,
 } from 'src/pages/SystemStatus/SystemStatus.types';
 
 const useGenerateSystemStatusTable = () => {
   const [results, setResults] = useState<SystemStatusRow[]>([]);
   const axiosInstance = useAxiosWebUIInstance();
+  const notifCtx = useContext<NotifContextType | null>(NotifContext);
 
   const generateActionButtons = (
     actionArray: ServiceActionObject[],
@@ -22,7 +24,10 @@ const useGenerateSystemStatusTable = () => {
   ) => {
     const handleOnClick = async (action: ServiceActionType) => {
       const serviceActionURL = `${SYSTEM_STATUS_URL}/${serviceName}/${action}`;
-      axiosInstance.put(serviceActionURL);
+      axiosInstance.put(serviceActionURL).then((res) => {
+        if (res.data.body === 'done') notifCtx?.notif('success', `Succesfully completed ${action} on ${serviceName}`);
+        else notifCtx?.notif('error', `Error completing ${action} on ${serviceName} - ${res.data.body}`);
+      });
     };
 
     const availableActions = actionArray.map((serviceAction) => serviceAction.action);
@@ -154,13 +159,13 @@ const useGenerateSystemStatusTable = () => {
     const returnData: SystemStatusRow[] = sortedArray.map((serviceData) => ({
       id: serviceData.serviceName || '',
       dependencies: generateDependencies(serviceData.dependencies || []),
-      service_name: formatServiceName(serviceData.serviceName || ''),
+      service_name: serviceData.serviceName || '',
       service_status: serviceData.serviceStatus ? generateStatusTag(serviceData.serviceStatus) : '-',
       connection_status: serviceData.connectionStatus ? generateConnectionStatus(serviceData.connectionStatus) : '-',
       cpu_usage: (serviceData.cpuUsage !== -1) ? `${serviceData.cpuUsage}%` : '-',
       memory_usage: (serviceData.memoryUsage !== -1) ? `${serviceData.memoryUsage}%` : '-',
       uptime: (serviceData.uptime) ? serviceData.uptime : '-',
-      last_restart: serviceData.lastRestart ? dayjs(serviceData.lastRestart).format() : '-',
+      last_restart: serviceData.lastRestart || '-',
       actions: generateActionButtons(serviceData.actions || [], serviceData.serviceName || ''),
     }));
 

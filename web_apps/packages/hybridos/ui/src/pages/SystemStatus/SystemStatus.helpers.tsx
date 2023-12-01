@@ -48,7 +48,7 @@ export const systemStatusColumns = (
   { id: 'connection_status', label: 'Connection Status', content: SortRow('Connection Status', 'connectionStatus', systemStatusData, generateRowsData) },
   { id: 'cpu_usage', label: 'CPU Usage', content: SortRow('CPU Usage', 'cpuUsage', systemStatusData, generateRowsData) },
   { id: 'memory_usage', label: 'Memory Usage', content: SortRow('Memory Usage', 'memoryUsage', systemStatusData, generateRowsData) },
-  { id: 'uptime', label: 'Service Uptime', content: SortRow('Uptime', 'uptime', systemStatusData, generateRowsData) },
+  { id: 'uptime', label: 'Time Since Last Restart', content: SortRow('Time Since Last Restart', 'uptime', systemStatusData, generateRowsData) },
   { id: 'last_restart', label: 'Last Restart', content: SortRow('Last Restart', 'lastRestart', systemStatusData, generateRowsData) },
   { id: 'actions', label: 'Actions' },
 ];
