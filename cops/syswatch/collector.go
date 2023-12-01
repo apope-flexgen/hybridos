@@ -24,7 +24,7 @@ type Collectors struct {
 }
 
 // Configure collection metrics to default settings for now.
-func configureDefaults() error {
+func configureDefaults(proccessList []string) error {
 	// override blank fields with defaults
 	// if name blank, set to system name
 	name, err := os.Hostname()
@@ -67,16 +67,15 @@ func configureDefaults() error {
 			IPs:        map[string]string{},
 			Stats:      []string{"wmem_max", "rmem_max"},
 		},
-		// TODO: DC-268 Configure default process list handling here - maybe input from cops config and default is nil
-		// Process: ProcessCollector{
-		// 	DataMan: defaultDataMan,
-		// 	Refresh: 10,
-		// 	//Processes: []string{"influxd", "mongod", "overwatch"},
-		// 	// Databases: map[string]string{
-		// 	// 	"influx": "localhost:8086",
-		// 	// 	"mongo":  "127.0.0.1:27017",
-		// 	// },
-		// },
+		Process: ProcessCollector{
+			DataMan:   defaultDataMan,
+			Refresh:   10,
+			Processes: proccessList,
+			// Databases: map[string]string{
+			// 	"influx": "localhost:8086",
+			// 	"mongo":  "127.0.0.1:27017",
+			// },
+		},
 	}
 
 	config = &defaultConf

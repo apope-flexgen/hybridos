@@ -26,7 +26,8 @@ var (
 // Initialize and run system hardware data collection.
 // Profiling flags can be one of the following in the array:
 // -prof=["cpu", "mem", "trace"]
-func Setup(prof string) {
+// Include a processList to specify list of processes to report on.
+func Setup(prof string, processList []string) {
 
 	// Profiling argument, only works if flags are in front of config file.
 	if prof == "cpu" {
@@ -48,8 +49,7 @@ func Setup(prof string) {
 	}
 
 	// Setup default configuration for collectors.
-	// TODO: alter this to handle configuration from cops file in future.
-	err := configureDefaults()
+	err := configureDefaults(processList)
 	if err != nil {
 		log.Fatalf("Config error: %v", err)
 	}
@@ -58,12 +58,11 @@ func Setup(prof string) {
 // Start all collection on all system level metrics.
 func StartCollectors() {
 	collectors := map[string]Collector{
-		"mem":  &config.Mem,
-		"cpu":  &config.CPU,
-		"disk": &config.Disk,
-		"net":  &config.Net,
-		// TODO: DC-268 enable configuring process stats
-		//"process": &config.Process,
+		"mem":     &config.Mem,
+		"cpu":     &config.CPU,
+		"disk":    &config.Disk,
+		"net":     &config.Net,
+		"process": &config.Process,
 	}
 
 	for name, collector := range collectors {
@@ -92,6 +91,11 @@ func PublishSystemStats(f fims.Fims) {
 		collector := fmt.Sprintf("%v", val)
 		delete(data, "collector")
 
+		// Don't publish process stats.
+		if collector == "process" {
+			continue
+		}
+
 		// Publish data
 		msg := fims.FimsMsg{
 			Method:  "pub",
@@ -105,7 +109,6 @@ func PublishSystemStats(f fims.Fims) {
 			continue
 		} else {
 			log.Tracef("Successfully sent!")
-
 		}
 	}
 }

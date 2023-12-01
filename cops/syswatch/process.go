@@ -16,7 +16,6 @@ import (
 	//mongo "github.com/flexgen-power/mongodb_client"
 )
 
-// TODO: DC-268 rearrange this appropriately to take process list from COPS config
 type ProcessCollector struct {
 	// configurable options
 	DataMan   DataManager `json:"collection"`
@@ -44,7 +43,6 @@ type ProcInfo struct {
 
 // === Collector funcs ===
 
-// TODO: DC-268 remove init function. unnecessary
 func (process *ProcessCollector) init() error {
 	if !process.DataMan.Active {
 		return fmt.Errorf("process is inactive")
@@ -56,8 +54,8 @@ func (process *ProcessCollector) init() error {
 	process.mutex = sync.Mutex{}
 	process.procInfos = make(map[string]ProcInfo)
 
-	// TODO: DC-268 get rid of the exec commands
 	// getconf to find clock ticks per sec (hz)
+	// EXEC command - one time ran only. This is ok for initialization.
 	out, err := exec.Command("getconf", "CLK_TCK").Output()
 	if err != nil {
 		return fmt.Errorf("could not get clock ticks per sec: %w", err)
@@ -86,40 +84,6 @@ func (process *ProcessCollector) init() error {
 		}
 		process.mem_totalKB = (int)(mt)
 	}
-
-	// TODO: in DC-268 deprecate this and handle from COPS configuration for process CPU/mem utilization
-	// add HybridOS process names using a MODIFIED tfc (tony's fancy command -- updated and maintained in github.com/flexgen-power/bootstrap)
-	// added in this version of tfc is the section: `awk 'NR > 1 {print $1}'`` which parses only the first column of info
-	// if process.HybridOS { // is enabled
-	// 	out, err := exec.Command("bash", "-c", "systemctl list-units | awk 'NR > 1 {print $1}' | grep -E 'fims|influxdb|mongod|grafana|dbi|fleet_manager|_controller|scheduler|cops|events|web_server|ftd|cloud_sync|dts|storage|overwatch|gpio|modbus|dnp3|metrics|echo|twins|UNIT' | grep -v '.slice'").Output()
-	// 	if err != nil {
-	// 		return fmt.Errorf("failed to find running/installed HybridOS services using tfc: %w", err)
-	// 	}
-
-	// 	s := bufio.NewScanner(bytes.NewReader(out))
-	// 	for s.Scan() {
-	// 		fields := strings.Fields(s.Text())
-	// 		if len(fields) == 0 {
-	// 			log.Errorf("could not parse HybridOS service information from tfc: no data")
-	// 			continue
-	// 		}
-	// 		if !strings.HasSuffix(fields[0], ".service") {
-	// 			log.Errorf("could not parse HybridOS service information from tfc: %s is not a service", fields[0])
-	// 		}
-
-	// 		name := strings.TrimSuffix(fields[0], ".service")
-	// 		if name == "influxdb" || name == "mongod" || name == "overwatch" {
-	// 			// do not want these names because they are already default and not the proper names for the pidof exec
-	// 			continue
-	// 		}
-
-	// 		if name == "fims" {
-	// 			name = "fims_server" // fims is known wrapper name for the fims_server binary it executes
-	// 		}
-
-	// 		process.Processes = append(process.Processes, name) // add trimmed name to process list
-	// 	}
-	// }
 
 	// init ProcInfo for each process name
 	for _, name := range process.Processes {
@@ -293,6 +257,58 @@ func (process *ProcessCollector) getProcessInfo() map[string]interface{} {
 
 // === Helper funcs ===
 
+// Read from writeCh and return
+// the cpu and mem % usage of the given process name.
+func GetProcessCollectorData() (data map[string]interface{}, err error) {
+
+	// Read from global data channel.
+	for data = range writeCh {
+		val, exists := data["collector"]
+		if !exists {
+			return nil, fmt.Errorf("unknown collection source for data: %v", data)
+		}
+
+		// Retrieve the process collector data map.
+		if fmt.Sprintf("%v", val) == "process" {
+			return data, nil
+		} else {
+			return nil, fmt.Errorf("process collector was not found")
+		}
+	}
+	return nil, fmt.Errorf("no data found on channel")
+}
+
+// Provide the process collector data and extract the cpu and mem for a given process name.
+func GetCPUandMemStats(data map[string]interface{}, processName string) (cpu, mem float64, err error) {
+	// Check to make sure process exists.
+	var found bool
+	for k, _ := range data {
+		if strings.Contains(k, processName) {
+			found = true
+		}
+	}
+
+	// Check if our process was found.
+	if !found {
+		return 0, 0, fmt.Errorf("process %s not found in syswatch data", processName)
+	}
+
+	// Parse out the CPU from the data.
+	for k, v := range data {
+		if strings.Contains(k, processName) {
+			// process_cpupct
+			if strings.Contains(k, "cpu") {
+				cpu = v.(float64)
+			}
+			// process_mempct
+			if strings.Contains(k, "mem") {
+				mem = v.(float64)
+			}
+		}
+	}
+	return cpu, mem, nil
+}
+
 func (process *ProcessCollector) refreshPID(name string, info ProcInfo) {
 	for {
 		method, pid, err := getPID(name, info.getPID_method)
@@ -334,6 +350,7 @@ func (process *ProcessCollector) safeWriteToProcessInfo(key string, p ProcInfo) 
 	process.mutex.Unlock()
 }
 
+// Retrieve the CPU usage for a given process given its PID and hz refresh rate.
 func (process *ProcessCollector) getCPUUsage(pid string) (float64, error) {
 	f, err := os.Open("/proc/" + pid + "/stat")
 	if err != nil {
@@ -371,7 +388,6 @@ func (process *ProcessCollector) getCPUUsage(pid string) (float64, error) {
 
 // receives a process name and the method (systemctl "s" or binary/pidof "b") and execs accordingly
 // returns the method, PID, then error
-// TODO: DC-268 get PID from systemd properties, deprecate this fcn
 func getPID(name, method string) (string, string, error) {
 	if method == "s" {
 		res, err := getPIDFromSystemctl(name)
@@ -395,7 +411,6 @@ func getPID(name, method string) (string, string, error) {
 	}
 }
 
-// TODO: DC-268 get PID from systemd properties, deprecate this fcn
 func getPIDFromName(name string) (string, error) {
 	// non-systemctl instance
 	index := 0
@@ -410,6 +425,9 @@ func getPIDFromName(name string) (string, error) {
 		index = (int)(i)
 	}
 
+	// TODO: Consider this for refreshing PID.
+	// Currently PID is refreshed via systemctl implementation.
+	// Remove this in future work and verify it does not effect PID refresh updates.
 	out, err := exec.Command("pidof", name).Output()
 	if err != nil {
 		return "", err
@@ -427,8 +445,9 @@ func getPIDFromName(name string) (string, error) {
 	return pid[:len(pid)-1], nil
 }
 
-// TODO: DC-268 get PID from systemd properties, deprecate this fcn
 func getPIDFromSystemctl(name string) (string, error) {
+	// TODO: change this to call from `coreos/systemd` package for obtaining PID.
+	// Want to remove all instances of exec command being repeatedly ran in place of coreos package.
 	out, err := exec.Command("bash", "-c", fmt.Sprintf("systemctl show -p MainPID %s | cut -d = -f2", name)).Output()
 	if err != nil {
 		return "", err

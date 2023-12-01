@@ -1,4 +1,5 @@
 // Implement syswatch package to collect hardware level statistics.
+// Interface original overwatch codebase as a package to work with COPS.
 package main
 
 import (
@@ -13,7 +14,7 @@ import (
 func runCollectors(prof string) {
 
 	// Setup profiling: -prof=["cpu", "mem", "trace"]
-	sys.Setup(prof)
+	sys.Setup(prof, generateProcessList(config.ProcessList))
 
 	// Start collection of system metrics.
 	sys.StartCollectors()
@@ -29,4 +30,16 @@ func runCollectors(prof string) {
 	} else {
 		select {}
 	}
+}
+
+// Create []string type of process list from COPS configuration.
+func generateProcessList(ps []Process) []string {
+	var list []string
+
+	// Concatenate list of process names.
+	for _, p := range ps {
+		list = append(list, p.Name)
+	}
+
+	return list
 }

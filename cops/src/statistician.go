@@ -22,6 +22,7 @@ import (
 	"time"
 
 	log "github.com/flexgen-power/go_flexgen/logger"
+	sys "github.com/flexgen-power/hybridos/cops/syswatch"
 )
 
 type processHealthStats struct {
@@ -111,6 +112,24 @@ func (process *processInfo) generateControlsMap() map[string]interface{} {
 	return controls
 }
 
+// Obtain process resource information based on process name.
+// Returns average cpu and mem usage statistics utilizing overwatch business logic
+func getProcessStats(processName string) (cpu, mem float64, err error) {
+	// Get process stats for CPU and Mem % usage.
+	data, err := sys.GetProcessCollectorData()
+	if err != nil {
+		return 0, 0, fmt.Errorf("get %s collector data: %v", processName, err)
+	}
+
+	// Extract cpu and memory from the process collection data.
+	cpu, mem, err = sys.GetCPUandMemStats(data, processName)
+	if err != nil {
+		return 0, 0, fmt.Errorf("get %s cpu and mem stats: %v", processName, err)
+	}
+
+	return cpu, mem, nil
+}
+
 // Splits the output of the Linux command "ps" into separate lines and deletes duplicate whitespace between words
 func cleanRawLinuxPSOutput(rawOutput []byte) (dataLines []string) {
 	dataLines = strings.Split(strings.Trim(string(rawOutput), "\n"), "\n")[1:]
@@ -148,6 +167,7 @@ func getResourceUsage(processQueries []int) (dataMap map[int]interface{}) {
 	for _, line := range systemResourceDataLines {
 		dataEntry := make(map[string]float64)
 		pid, cpuUsage, memUsage := parseProcessData(line)
+		//TODO: deprecate old method of retrieving CPU
 		dataEntry["CPU"] = cpuUsage
 		dataEntry["MEM"] = memUsage
 		dataMap[pid] = dataEntry
@@ -190,6 +210,7 @@ func (process *processInfo) recordRestart() {
 	process.healthStats.totalRestarts++
 }
 
+// TODO: Deprecate with DC-268 once merged
 // Runs the Linux command "ps" with the correct options to get CPU Usage % and Memory Usage % for processes in input PID list
 func runLinuxPS(processIDs []int) (rawOutput []byte) {
 	pidString := stringifyPIDs(processIDs)
@@ -202,17 +223,6 @@ func runLinuxPS(processIDs []int) (rawOutput []byte) {
 // Converts a slice of int PIDs to a string of space separated PIDs for input to Linux command option
 func stringifyPIDs(processIDs []int) string {
 	return strings.Trim(fmt.Sprint(processIDs), "[]")
-}
-
-// Uses the last read memory usage % value to update the average memory usage statistic
-func updateAvgMemUsage(process *processInfo) {
-	if len(process.healthStats.recentMemUsagePercents) >= 10 {
-		process.healthStats.sumRecentMemUsagePercents -= process.healthStats.recentMemUsagePercents[0]
-		process.healthStats.recentMemUsagePercents = process.healthStats.recentMemUsagePercents[1:]
-	}
-	process.healthStats.sumRecentMemUsagePercents += process.healthStats.lastMemUsagePercent
-	process.healthStats.recentMemUsagePercents = append(process.healthStats.recentMemUsagePercents, process.healthStats.lastMemUsagePercent)
-	process.healthStats.avgMemUsagePercent = process.healthStats.sumRecentMemUsagePercents / float64(len(process.healthStats.recentMemUsagePercents))
 }
 
 // Uses the last recorded response time to update the average response time statistic
@@ -234,6 +244,19 @@ func updateResourceUsageData() {
 			log.Errorf("Error with health statistics update: %v", r)
 		}
 	}()
+
+	// Obtain cpu and mem per process using overwatch's backend
+	for _, process := range processJurisdiction {
+		cpu, mem, err := getProcessStats(process.name)
+		if err != nil {
+			// Ignore errors if the stats are currently unavailable for a given poll. Maintain previous saved stats on a process
+			//log.Errorf("getting %s cpu and mem stats: %v", process.name, err)
+			continue
+		}
+		process.healthStats.avgCPUUsagePercent = cpu
+		process.healthStats.avgMemUsagePercent = mem
+	}
+
 	// Execute update
 	listofPIDs := createListOfPIDs()
 	// if no processes are alive, do not attempt to get resource data with empty list of PIDs
@@ -247,12 +270,10 @@ func updateResourceUsageData() {
 	for _, process := range processJurisdiction {
 		// resource usage data object will not have data for dead processes, so do not try to access those map keys
 		if _, ok := resourceUsageData[process.pid]; ok {
-			process.healthStats.avgCPUUsagePercent = resourceUsageData[process.pid].(map[string]float64)["CPU"]
 			process.healthStats.lastMemUsagePercent = resourceUsageData[process.pid].(map[string]float64)["MEM"]
 			if process.healthStats.lastMemUsagePercent > process.healthStats.maxMemUsagePercent {
 				process.healthStats.maxMemUsagePercent = process.healthStats.lastMemUsagePercent
 			}
-			updateAvgMemUsage(process)
 		}
 	}
 }
