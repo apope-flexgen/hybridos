@@ -325,9 +325,6 @@ func createClient(name string, cfg ClientConfig) (newClient *client, err error) 
 		if !ok {
 			return nil, fmt.Errorf("did not find server with name %s in server map", cleanedName)
 		}
-		if err = serv.initConnection(newClient); err != nil {
-			return nil, fmt.Errorf("failed to initialize connection to server %s for client %s: %w", serv.name, newClient.name, err)
-		}
 		newClient.sendRequestQsToServers[serv.name] = make(chan transferRequest)
 		newClient.retryRequestQsToServers[serv.name] = make(chan transferRequest)
 		newClient.connectedServers = append(newClient.connectedServers, serv)

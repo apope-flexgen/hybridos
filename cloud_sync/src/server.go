@@ -85,6 +85,38 @@ func createServer(name string, cfg ServerConfig) (*server, error) {
 	return newServer, nil
 }
 
+// Loads connection-specific configuration for the connection between a server and client.
+// Currently only loads SSH config data.
+func (serv *server) setupConnection(cl *client) error {
+	// connection is SSH if not local and not S3
+	if serv.config.IP != "" && serv.config.Bucket == "" {
+		buf, err := os.ReadFile(cl.config.Key)
+		if err != nil {
+			return fmt.Errorf("failed to read private key file: %w", err)
+		}
+
+		signer, err := ssh.ParsePrivateKey(buf)
+		if err != nil {
+			return fmt.Errorf("failed to parse private key: %w", err)
+		}
+
+		knownHostsCallback, err := knownhosts.New(cl.config.Knownhosts)
+		if err != nil {
+			return fmt.Errorf("could not create knownhost callback: %w", err)
+		}
+
+		sshConf := ssh.ClientConfig{
+			User:            serv.config.User,
+			Auth:            []ssh.AuthMethod{ssh.PublicKeys(signer)},
+			HostKeyCallback: knownHostsCallback,
+			Timeout:         time.Second * time.Duration(serv.config.Timeout),
+		}
+		serv.sshConfigs[cl.name] = &sshConf
+	}
+
+	return nil
+}
+
 // initializes the connection from the client to the server
 func (serv *server) initConnection(cl *client) error {
 	// S3 configuration
@@ -102,30 +134,7 @@ func (serv *server) initConnection(cl *client) error {
 	}
 
 	// if not local or S3, assume SSH >>>
-	buf, err := os.ReadFile(cl.config.Key)
-	if err != nil {
-		return fmt.Errorf("failed to read private key: %w", err)
-	}
-
-	signer, err := ssh.ParsePrivateKey(buf)
-	if err != nil {
-		return fmt.Errorf("failed to parse private key: %w", err)
-	}
-
-	knownHostsCallback, err := knownhosts.New(cl.config.Knownhosts)
-	if err != nil {
-		return fmt.Errorf("could not create knownhost callback: %w", err)
-	}
-
-	sshConf := ssh.ClientConfig{
-		User:            serv.config.User,
-		Auth:            []ssh.AuthMethod{ssh.PublicKeys(signer)},
-		HostKeyCallback: knownHostsCallback,
-		Timeout:         time.Second * time.Duration(serv.config.Timeout),
-	}
-	serv.sshConfigs[cl.name] = &sshConf
-
-	err = serv.createSSH(cl)
+	err := serv.createSSH(cl)
 	if err != nil {
 		return fmt.Errorf("could not create SSH tunnel from %s to %s: %w", cl.name, serv.name, err)
 	}
@@ -144,7 +153,8 @@ func (serv *server) createSSH(cl *client) error {
 	if oldClient := serv.sshClients[cl.name]; oldClient != nil {
 		err := oldClient.Close()
 		if err != nil {
-			log.Warnf("Error closing SSH client for server %s from client %s: %v.", serv.name, cl.name, err)
+			// this log is debug severity since it is expected that an error occur when closing a closed client
+			log.Debugf("Error closing SSH client for server %s from client %s: %v.", serv.name, cl.name, err)
 		}
 	}
 	sshCl, err := sshDialWithManagedConnection("tcp", net.JoinHostPort(serv.config.IP, serv.config.Port), serv.sshConfigs[cl.name], time.Second*time.Duration(serv.config.Timeout))

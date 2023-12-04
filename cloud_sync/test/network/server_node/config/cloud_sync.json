@@ -15,6 +15,6 @@
     },
     "db_directory" : "/home/.cloud_sync/db",
     "retry_limit" : 1,
-    "sleep_limit_seconds" : 1,
+    "sleep_limit_seconds" : 2,
     "buffer_size" : 100000
 }

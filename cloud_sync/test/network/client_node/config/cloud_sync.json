@@ -13,15 +13,15 @@
             "port": "22",
             "user": "root",
             "directory" : "/home/archives",
-            "timeout" : 10
+            "timeout" : 1
         },
         "local_consumer": {
             "directory" : "/home/local_consumer",
-            "timeout" : 10
+            "timeout" : 1
         }
     },
     "db_directory" : "/home/.cloud_sync/db",
     "retry_limit" : 1,
-    "sleep_limit_seconds" : 1,
+    "sleep_limit_seconds" : 2,
     "buffer_size" : 100000
 }

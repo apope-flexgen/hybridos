@@ -59,6 +59,14 @@ func (serv *server) transfer(cl *client, sendRequests <-chan transferRequest, re
 		connectionOkay = false
 		connectionReestablished = serv.asyncReestablishConnection(cl)
 	}
+
+	// initialize connection
+	err := serv.initConnection(cl)
+	if err != nil {
+		log.Errorf("Failed to initialize connection to server %s for client %s: %v", serv.name, cl.name, err)
+		enterBadConnectionMode()
+	}
+
 	// handle incoming requests
 	for {
 		var request transferRequest

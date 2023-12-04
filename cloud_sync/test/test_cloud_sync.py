@@ -1,3 +1,5 @@
+# TODO: move these tests to the test network pytest dir
+
 from http import server
 import json
 import os
