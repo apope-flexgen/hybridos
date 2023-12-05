@@ -32,7 +32,7 @@ type transferRequest struct {
 type transferResponse struct {
 	err            error // Any error encountered in transfer
 	retryable      bool  // If an err occurred, whether or not the err is due to a temporary connection issue and the transfer can be retried
-	connectionOkay bool  // Indicates whether or not the connection to the server was working at the time of the request
+	connectionOkay bool  // Indicates if the request was rejected because the connection was down
 }
 
 // Start a transfer stage
@@ -67,8 +67,21 @@ func (serv *server) transfer(cl *client, sendRequests <-chan transferRequest, re
 		enterBadConnectionMode()
 	}
 
-	// handle incoming requests
+	// loop for handling incoming requests
 	for {
+		// if connection is bad, reject or ignore requests until it is recreated
+		for !connectionOkay {
+			select {
+			case <-connectionReestablished:
+				connectionOkay = true
+				numFailures = 0
+			case request := <-sendRequests:
+				// all send requests are immediately rejected
+				request.responseChannel <- transferResponse{err: errors.New("connection is faulty"), retryable: true, connectionOkay: false}
+				// don't handle retry requests when connection is bad, they will be handled on reconnect
+			}
+		}
+
 		var request transferRequest
 		// wait on next request, prioritize send requests over retries
 		select {
@@ -106,33 +119,17 @@ func (serv *server) transfer(cl *client, sendRequests <-chan transferRequest, re
 			}
 		}
 
-		// lazy check, only check our connection status once we have a request
-		if !connectionOkay {
-			select {
-			case <-connectionReestablished:
-				connectionOkay = true
-				numFailures = 0
-			default:
-			}
-		}
+		// service request and respond to requester
+		err, retryable := serv.handleTransferRequest(cl, request)
+		request.responseChannel <- transferResponse{err: err, retryable: retryable, connectionOkay: true}
 
-		// handle requests depending on connection status
-		if connectionOkay {
-			// service request and respond to requester
-			err, retryable := serv.handleTransferRequest(cl, request)
-			request.responseChannel <- transferResponse{err: err, retryable: retryable, connectionOkay: true}
-
-			// check if we've had too many failures
-			if err != nil {
-				log.Errorf("Error transferring %s from %s to %s: %v.", request.fileName, cl.name, serv.name, err)
-				numFailures++
-				if numFailures >= config.RetryLimit {
-					enterBadConnectionMode()
-				}
+		// check if we've had too many failures
+		if err != nil {
+			log.Errorf("Error transferring %s from %s to %s: %v.", request.fileName, cl.name, serv.name, err)
+			numFailures++
+			if numFailures >= config.RetryLimit {
+				enterBadConnectionMode()
 			}
-		} else {
-			// immediately reject all requests
-			request.responseChannel <- transferResponse{err: errors.New("connection is faulty"), retryable: true, connectionOkay: false}
 		}
 	}
 }

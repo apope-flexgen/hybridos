@@ -8,4 +8,4 @@ The test/network/ subdirectories are as follows:
 * server_node/ contains the files specific to the server container
 * test_scripts/ contains scripts used to modify the running network for testing purposes
 
-As of right now, the test network relies on manual testing.
+You can run pytests on the test network by running the command `pytest -vv` in the test network directory while the docker compose is running.

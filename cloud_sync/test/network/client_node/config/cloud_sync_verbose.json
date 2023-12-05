@@ -1,6 +1,6 @@
 {
     "ToConsole": true,
     "ToFile": true,
-    "severityThreshold": 0,
-    "RedundantRateS": -1
+    "severityThreshold": 1,
+    "RedundantRateS": 0
 }

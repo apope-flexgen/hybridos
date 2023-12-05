@@ -232,10 +232,6 @@ func (cl *client) retry(serv *server) {
 				// if there was a retryable failure, add the file back to the retry queue
 				cl.retryQ[serv.name] <- fileName
 			}
-			// if the server connection was bad, wait some time before trying to send any more retry requests
-			if !resp.connectionOkay {
-				time.Sleep(time.Second * time.Duration(config.SleepLimitSeconds))
-			}
 			continue
 		}
 
