@@ -1,0 +1,26 @@
+{
+    "float1": 12.5,
+    "string1": "This string is valid",
+    "char1": ";",
+    "char2": "\t",
+    "mapslice":
+    [
+        {
+            "value": 0,
+            "string": ";"
+        },
+        {
+            "value": 1,
+            "string": "Valid string"
+        },
+        {
+            "value": 2,
+            "string": "\t"
+        },
+        {
+            "value": 42,
+            "string": "I haven't read Hitchhiker's guide"
+        }
+    ],
+    "bool1": false
+}

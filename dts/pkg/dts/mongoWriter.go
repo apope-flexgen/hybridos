@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	log "github.com/flexgen-power/go_flexgen/logger"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	mongo "github.com/flexgen-power/mongodb_client"
 	"golang.org/x/sync/errgroup"
 )

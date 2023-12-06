@@ -1,0 +1,6 @@
+# input/output files for test commands
+test/test-data-path/*
+!test/test-data-path/input-jsons
+!test/test-data-path/input-archives
+
+!example_metadata.txt

@@ -1,0 +1,21 @@
+{
+    "mapslice":
+    [
+        {
+            "value": "Hello I am a string",
+            "string": "STRING TYPE"
+        },
+        {
+            "value": true,
+            "string": "BOOL TYPE"
+        },
+        {
+            "value": 123.5,
+            "string": "NUMERIC TYPE"
+        }
+    ],
+    "empty_mapslice": [],
+    "string": "What is a string?: A miserable pile of secrets.",
+    "bool": false,
+    "numeric": 293940.12333e34
+}

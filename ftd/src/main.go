@@ -10,11 +10,12 @@ import (
 
 	"flag"
 
-	"github.com/flexgen-power/ftd/pkg/ftd"
-	flexgen "github.com/flexgen-power/go_flexgen"
-	build "github.com/flexgen-power/go_flexgen/buildinfo"
-	"github.com/flexgen-power/go_flexgen/cfgFetch"
-	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/flexgen-power/hybridos/ftd/pkg/ftd"
+	build "github.com/flexgen-power/hybridos/go_flexgen/buildinfo"
+	"github.com/flexgen-power/hybridos/go_flexgen/cfgfetch"
+	"github.com/flexgen-power/hybridos/go_flexgen/fileops"
+	"github.com/flexgen-power/hybridos/go_flexgen/flexservice"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -63,7 +64,7 @@ func configure() error {
 	}
 
 	// check if output directory exist. If not try creating one
-	if !flexgen.IsFileExist(ftd.GlobalConfig.ArchivePath) {
+	if !fileops.Exists(ftd.GlobalConfig.ArchivePath) {
 		log.Infof("%s doesnt exist. Creating directory", ftd.GlobalConfig.ArchivePath)
 		err := os.MkdirAll(ftd.GlobalConfig.ArchivePath, 0755)
 		if err != nil {
@@ -85,7 +86,7 @@ func parseFlags() (cfgSource string) {
 // Starts the UNIX socket server to accept and respond to flexCtl API requests.
 // flexCtl API endpoints are defined within this function as well.
 func configureFlexService() error {
-	serv := flexgen.GetService()
+	serv := flexservice.GetService()
 	curProcName := filepath.Base(os.Args[0])
 	err := serv.Init(true, curProcName)
 	if err != nil {
@@ -95,10 +96,10 @@ func configureFlexService() error {
 	log.Infof("Unix Server ready")
 
 	//register some of debugging APIs
-	err = serv.RegisterApi(flexgen.ApiCommand{
+	err = serv.RegisterApi(flexservice.ApiCommand{
 		ApiName: "show-uris",
 		ApiDesc: "displays all URIs received from fims server",
-		ApiCallback: flexgen.Callback(func(args []interface{}) (string, error) {
+		ApiCallback: flexservice.Callback(func(args []interface{}) (string, error) {
 			var retVal string = ""
 			for uriStr, obj := range pipeline.Collator.FimsMsgs {
 				responseLine := ""
@@ -120,10 +121,10 @@ func configureFlexService() error {
 		return fmt.Errorf("failed to register show-uris API: %w", err)
 	}
 
-	err = serv.RegisterApi(flexgen.ApiCommand{
+	err = serv.RegisterApi(flexservice.ApiCommand{
 		ApiName: "show-state",
 		ApiDesc: "displays the state of controller",
-		ApiCallback: flexgen.Callback(func(args []interface{}) (string, error) {
+		ApiCallback: flexservice.Callback(func(args []interface{}) (string, error) {
 			var my_state = "Secondary"
 			if ftd.ControllerStateIsPrimary() {
 				my_state = "Primary"
@@ -141,7 +142,7 @@ func configureFlexService() error {
 // Retrieves and reads in FTD configuration data.
 func retrieveAndReadConfiguration(cfgSource string) error {
 	// retrieve configuration from dbi or from file
-	configBody, err := cfgFetch.Retrieve("ftd", cfgSource)
+	configBody, err := cfgfetch.Retrieve("ftd", cfgSource)
 	if err != nil {
 		return fmt.Errorf("failed to retrieve configuration data: %w", err)
 	}

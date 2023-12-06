@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flexgen-power/fims_codec"
-	log "github.com/flexgen-power/go_flexgen/logger"
+	"github.com/flexgen-power/hybridos/fims_codec"
+	log "github.com/flexgen-power/hybridos/go_flexgen/logger"
 	"golang.org/x/sync/errgroup"
 )
 
