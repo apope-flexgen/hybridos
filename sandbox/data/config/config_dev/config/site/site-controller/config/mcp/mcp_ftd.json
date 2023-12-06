@@ -1,0 +1,13 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/ftd",
+			"args": [
+				"--c=/usr/local/etc/config/ftd/ftd.json",
+				"--logCfg=/usr/local/etc/config/logging/ftd/ftd_verbose.json"
+			],
+			"max_restarts": -1
+		}
+	]
+}

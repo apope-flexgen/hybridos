@@ -1,0 +1,10 @@
+{
+	"processes": 
+	[
+		{
+			"name":"/usr/local/bin/events",
+			"args": [ "/usr/local/etc/config/events/" ],
+			"max_restarts": -1
+		}
+    ]
+}

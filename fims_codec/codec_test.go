@@ -98,31 +98,31 @@ func TestEncodeDecodeFullArchive(t *testing.T) {
 	}
 }
 
-// // Test encoding and decoding more than max number of messages, will not pass until we have some sort of handling for this case
-// func TestEncodeDecodeOverfilledArchive(t *testing.T) {
-// 	testCases := map[string]codecTestCase{
-// 		"overmax_ess_msg": {"good-jsons/sample_ess_msg.json", "", false, false},
-// 	}
+// Test encoding and decoding more than max number of messages, will not pass until we have some sort of handling for this case
+func TestEncodeDecodeOverfilledArchive(t *testing.T) {
+	testCases := map[string]codecTestCase{
+		"overmax_ess_msg": {"good-jsons/sample_ess_msg.json", "", false, true},
+	}
 
-// 	for testCaseName, testCase := range testCases {
-// 		messageSubPath := testCase.messageSubPath
-// 		// max messages is uint16 max
-// 		overmax := math.MaxUint16 + 1
-// 		// load a bunch of references to the same message to avoid copying
-// 		testMessage := loadTestMessageFromJson(messageSubPath)
-// 		testMessages := make([]map[string]interface{}, overmax)
-// 		for i := 0; i < overmax; i++ {
-// 			testMessages[i] = testMessage
-// 		}
+	for testCaseName, testCase := range testCases {
+		messageSubPath := testCase.messageSubPath
+		// max messages is uint16 max
+		overmax := math.MaxUint16 + 1
+		// load a bunch of references to the same message to avoid copying
+		testMessage := loadTestMessageFromJson(messageSubPath)
+		testMessages := make([]map[string]interface{}, overmax)
+		for i := 0; i < overmax; i++ {
+			testMessages[i] = testMessage
+		}
 
-// 		expectedMessages := ([]map[string]interface{})(nil)
+		expectedMessages := ([]map[string]interface{})(nil)
 
-// 		err := checkEncodeDecode(testCaseName, testMessages, expectedMessages, testCase.encodeShouldPass, testCase.decodeShouldPass)
-// 		if err != nil {
-// 			t.Errorf("Test case %s failed with error: %v.", testCaseName, err)
-// 		}
-// 	}
-// }
+		err := checkEncodeDecode(testCaseName, testMessages, expectedMessages, testCase.encodeShouldPass, testCase.decodeShouldPass)
+		if err != nil {
+			t.Errorf("Test case %s failed with error: %v.", testCaseName, err)
+		}
+	}
+}
 
 // Test encoding and decoding data with randomized values
 func TestEncodeDecodeRandomvalues(t *testing.T) {

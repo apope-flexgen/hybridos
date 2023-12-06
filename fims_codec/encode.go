@@ -7,6 +7,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -64,6 +65,9 @@ const illegalChars = ";\t\n"
 // Used to mark an invalid string
 const invalidStringMarker = "[CODEC MARKED INVALID STRING]"
 
+// Max number of messages in an archive
+const MaxMessageCount = math.MaxUint16
+
 // Instantiates a new encoder with allocated memory and the given URI.
 func NewEncoder(uri string) *Encoder {
 	return &Encoder{
@@ -87,6 +91,9 @@ func CopyEncoder(sourceEncoder *Encoder) (newEncoder *Encoder) {
 // Encodes the given FIMS message body into the encoder buffer.
 // May log errors and continue processing if the error doesn't indicate a fully invalid msg.
 func (encoder *Encoder) Encode(bodyMap map[string]interface{}) error {
+	if encoder.numMessages == MaxMessageCount {
+		return fmt.Errorf("encoder has already reached max message count")
+	}
 	if len(bodyMap) == 0 {
 		return fmt.Errorf("body map is empty")
 	}
