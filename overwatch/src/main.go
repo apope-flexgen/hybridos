@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/flexgen-power/fims_codec"
 	log "github.com/flexgen-power/go_flexgen/logger"
 	influx "github.com/flexgen-power/influxdb_client/v1.7"
 
@@ -20,11 +21,12 @@ import (
 
 var (
 	// global vars
-	config  *Config
-	writeCh = make(chan map[string]interface{})
-	f       fims.Fims
-	conn    influx.InfluxConnector
-	dataDir string
+	config   *Config
+	writeCh  = make(chan map[string]interface{})
+	f        fims.Fims
+	conn     influx.InfluxConnector
+	encoders map[string]*fims_codec.Encoder
+	dataDir  string
 )
 
 func main() {
@@ -67,23 +69,45 @@ func main() {
 		log.Fatalf("Config error: %v", err)
 	}
 
-	if !config.Influx.Active {
-		log.Infof("destination set to FIMS")
+	switch config.Mode {
+	case "influx":
+		log.Infof("recording destination set to InfluxDB")
+		conn = influx.NewConnector(config.RecordSettings.Address, time.Duration(int(time.Second)*config.RecordSettings.Timeout), time.Duration(int(time.Second)*config.RecordSettings.HealthCheckDelay), false)
+		err := conn.Connect()
+		if err != nil {
+			log.Fatalf("could not connect to influx instance at %s: %v", config.RecordSettings.Address, err)
+		}
+
+		err = conn.CreateDatabase(config.RecordSettings.Db, nil)
+		if err != nil {
+			log.Fatalf("could not create influx db %s at %s: %v", config.RecordSettings.Db, config.RecordSettings.Address, err)
+		}
+	case "archives":
+		log.Infof("recording destination set to .tar.gz archives")
+
+		_, err := os.Stat(config.RecordSettings.Directory)
+		if os.IsNotExist(err) {
+			log.Infof("%s doesn't exist. Creating directory", config.RecordSettings.Directory)
+			err := os.MkdirAll(config.RecordSettings.Directory, 0755)
+			if err != nil {
+				log.Fatalf("failed to make directory for output archives: %v", err)
+			}
+		}
+
+		encoders = map[string]*fims_codec.Encoder{ // create fims_codec encoders for each measurement
+			"mem":     createEncoder("mem"),
+			"cpu":     createEncoder("cpu"),
+			"disk":    createEncoder("disk"),
+			"net":     createEncoder("net"),
+			"process": createEncoder("process"),
+			"device":  createEncoder("device"),
+		}
+
+	default:
+		log.Infof("publish destination set to FIMS")
 		f, err = fims.Connect("overwatch") // connect to fims
 		if err != nil {
 			log.Fatalf("could not connect to FIMS: %v", err)
-		}
-	} else {
-		log.Infof("destination set to InfluxDB")
-		conn = influx.NewConnector(config.Influx.Address, time.Duration(int(time.Second)*config.Influx.Timeout), time.Duration(int(time.Second)*config.Influx.HealthCheckDelay), false)
-		err := conn.Connect()
-		if err != nil {
-			log.Fatalf("could not connect to influx instance at %s: %v", config.Influx.Address, err)
-		}
-
-		err = conn.CreateDatabase(config.Influx.Db, nil)
-		if err != nil {
-			log.Fatalf("could not create influx db %s at %s: %v", config.Influx.Db, config.Influx.Address, err)
 		}
 	}
 
@@ -136,29 +160,16 @@ func write() {
 		collector := fmt.Sprintf("%v", val)
 		delete(data, "collector")
 
-		if !config.Influx.Active { // place body into FIMS message and send
-			msg := fims.FimsMsg{
-				Method:  "pub",
-				Uri:     "/systemstats/" + collector + "/" + config.Name,
-				Replyto: "",
-				Body:    data,
-			}
-			_, err := f.Send(msg)
-			if err != nil {
-				log.Errorf(err.Error())
-				continue
-			} else {
-				log.Tracef("Successfully sent!")
-			}
-		} else { // writes to underlying influx buffer writer
+		switch config.Mode {
+		case "influx": // writes to underlying influx buffer writer
 			bodies[collector] = append(bodies[collector], data)
 			times[collector] = append(times[collector], uint64(time.Now().UnixMicro()))
 
-			if time.Since(last) >= time.Duration(int(time.Second)*config.Influx.Interval) { // if time to write to influx
+			if time.Since(last) >= time.Duration(int(time.Second)*config.RecordSettings.Interval) { // if time to write to influx
 				last = time.Now()
 
 				for name, data := range bodies {
-					batches, err := conn.MakeBatches(config.Influx.Db, name+"stats", config.Name, times[name], data, map[string]interface{}{"messages": len(data)})
+					batches, err := conn.MakeBatches(config.RecordSettings.Db, name+"stats", config.Name, times[name], data, map[string]interface{}{"messages": len(data)})
 					if err != nil {
 						log.Errorf("failed to make %s batch: %v", name, err)
 					}
@@ -175,6 +186,48 @@ func write() {
 				// reset
 				bodies = make(map[string][]map[string]interface{})
 				times = make(map[string][]uint64)
+			}
+		case "archives": // writes to .tar.gz archives with fims_codec
+			encoders[collector].Encode(data)
+
+			if time.Since(last) >= time.Duration(int(time.Second)*config.RecordSettings.Interval) { // if time to write to influx
+				last = time.Now()
+
+				for name, enc := range encoders {
+					if enc.GetNumMessages() == 0 { // skip empty encoders
+						log.Debugf("encoder for %s has no data -- skipping...", name)
+						continue
+					}
+
+					// create archive
+					measurement, exist := enc.AdditionalData["measurement"]
+					if !exist {
+						log.Errorf("measurement does not exist in AdditionalData for encoder %s", name)
+					}
+
+					archivePrefix := config.RecordSettings.Db + "_" + measurement
+					_, _, err := enc.CreateArchive(config.RecordSettings.Directory, archivePrefix)
+					if err != nil {
+						log.Errorf("archive creation failed for %s with error: %s", name, err.Error())
+					}
+
+					// reset to empty encoder
+					encoders[name] = fims_codec.CopyEncoder(enc)
+				}
+			}
+		default: // publishes stats to fims
+			msg := fims.FimsMsg{
+				Method:  "pub",
+				Uri:     "/systemstats/" + collector + "/" + config.Name,
+				Replyto: "",
+				Body:    data,
+			}
+			_, err := f.Send(msg)
+			if err != nil {
+				log.Errorf(err.Error())
+				continue
+			} else {
+				log.Tracef("Successfully sent!")
 			}
 		}
 	}
@@ -230,4 +283,16 @@ func deepCopyMap(original map[string]interface{}) map[string]interface{} {
 	}
 
 	return deepCopy
+}
+
+func createEncoder(collector string) *fims_codec.Encoder {
+	enc := fims_codec.NewEncoder(fmt.Sprintf("/systemstats/%s/%s", collector, config.Name))
+	enc.AdditionalData = map[string]string{
+		"destination": "influx",
+		"database":    config.RecordSettings.Db,
+		"measurement": collector + "stats",
+		"site_state":  "primary",
+	}
+
+	return enc
 }
