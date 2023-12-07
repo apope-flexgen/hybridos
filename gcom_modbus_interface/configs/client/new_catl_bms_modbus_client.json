@@ -1,0 +1,478 @@
+{
+    "connection": {
+        "name": "CATL BMS",
+        "ip_address": "172.22.0.20",
+        "port": 5030
+    },
+    "components": [
+        {
+            "id": "catl_ems_bms_rw",
+            "device_id": 1,
+            "frequency": 1000,
+            "offset_time": 20,
+            "hex_start": "0x0380",
+            "xheartbeat_enabled": true,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 2000,
+            "component_heartbeat_timeout_ms": 2000,
+            "registers": [
+                {
+                    "type": "Holding",
+                    "starting_offset": 896,
+                    "number_of_registers": 13,
+                    "note": "EMS->BMS (write/read)",
+                    "map": [
+                        {
+                            "id": "ems_heartbeat",
+                            "offset": 896,
+                            "name": "MS heartbeat"
+                        },
+                        {
+                            "id": "ems_cmd",
+                            "offset": 897,
+                            "name": "MS_cmd",
+                            "enum": true,
+                            "bit_strings": [
+                                "Initial",
+                                "Stay Status",
+                                "Power on cmd",
+                                "Power off cmd"
+                            ]
+                        },
+                        {
+                            "id": "ems_status",
+                            "offset": 898,
+                            "name": "EMS_status"
+                        },
+                        {
+                            "id": "ems_rtc_year",
+                            "offset": 900,
+                            "name": "EMS_RTC_year"
+                        },
+                        {
+                            "id": "ems_rtc_month",
+                            "offset": 901,
+                            "name": "EMS_RTC_month"
+                        },
+                        {
+                            "id": "ems_rtc_day",
+                            "offset": 902,
+                            "name": "EMS_RTC_day"
+                        },
+                        {
+                            "id": "ems_rtc_hour",
+                            "offset": 903,
+                            "name": "EMS_RTC_hour"
+                        },
+                        {
+                            "id": "ems_rtc_minute",
+                            "offset": 904,
+                            "name": "EMS_RTC_minute"
+                        },
+                        {
+                            "id": "ems_rtc_second",
+                            "offset": 905,
+                            "name": "EMS_RTC_second"
+                        },
+                        {
+                            "id": "fault_clear_cmd",
+                            "offset": 908,
+                            "name": "Fault_Clear_cmd"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_mbmu_sum_r",
+            "frequency": 1000,
+            "offset_time": 2,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding",
+                    "starting_offset": 0,
+                    "number_of_registers": 4,
+                    "note": "MBMU Summary messages (read)",
+                    "map": [
+                        {
+                            "id": "mbmu_warning_1",
+                            "offset": 0,
+                            "name": "System warning (with degrees) Detailed in appendix Ⅰ",
+                            "note1": " 000000000000011: 0=norm, 1=cell OV warn 1, 2=cell OV warn2, 3= cell OV warn3",
+                            "note2": " 000000000001100: 0=norm, 1=cell UV warn 1, 2=cell UV warn2, 3= cell UV warn3",
+                            "note3": " 000000000110000: 0=norm, 1=cell OT warn 1, 2=cell OT warn2, 3= cell OT warn3",
+                            "note4": " 000000011000000: 0=norm, 1=cell UT warn 1, 2=cell UT warn2, 3= cell UT warn3",
+                            "note5": " 000001100000000: 0=norm, 1=cell Soc warn 1, 2=cell Soc  warn2, 3= cell Soc  warn3"
+                        },
+                        {
+                            "id": "mbmu_warning_21",
+                            "offset": 1,
+                            "name": "System warning (without degrees) Detailed in appendix Ⅱ"
+                        },
+                        {
+                            "id": "mbmu_warning_22",
+                            "offset": 2,
+                            "name": "System warning (without degrees) Detailed in appendix Ⅱ"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_mbmu_stat_r",
+            "frequency": 100,
+            "offset_time": 2,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding",
+                    "starting_offset": 16,
+                    "number_of_registers": 1,
+                    "note": "MBMU Status messages (read)",
+                    "map": [
+                        {
+                            "id": "mbmu_status",
+                            "offset": 16,
+                            "name": "System status"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_mbmu_summary_r",
+            "frequency": 100,
+            "offset_time": 4,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding",
+                    "starting_offset": 32,
+                    "number_of_registers": 12,
+                    "hex_offset": "0x0020",
+                    "note": "MBMU Status messages (read/write)",
+                    "map": [
+                        {
+                            "id": "mbmu_voltage",
+                            "offset": 32,
+                            "scale": 10,
+                            "name": "System voltage"
+                        },
+                        {
+                            "id": "mbmu_current",
+                            "offset": 33,
+                            "scale": 1,
+                            "signed": true,
+                            "name": "System Current"
+                        },
+                        {
+                            "id": "mbmu_soc",
+                            "offset": 34,
+                            "scale": 10,
+                            "name": "SOC"
+                        },
+                        {
+                            "id": "mbmu_soh",
+                            "offset": 35,
+                            "scale": 10,
+                            "name": "SOH"
+                        },
+                        {
+                            "id": "mbmu_max_cell_voltage",
+                            "offset": 36,
+                            "scale": 1000,
+                            "signed": true,
+                            "name": "Max cell voltage"
+                        },
+                        {
+                            "id": "mbmu_min_cell_voltage",
+                            "offset": 37,
+                            "scale": 1000,
+                            "signed": true,
+                            "name": "Min cell voltage"
+                        },
+                        {
+                            "id": "mbmu_avg_cell_voltage",
+                            "offset": 38,
+                            "scale": 1000,
+                            "signed": true,
+                            "name": "Avg. cell voltage"
+                        },
+                        {
+                            "id": "mbmu_max_cell_temperature",
+                            "offset": 39,
+                            "name": "Max cell temperature"
+                        },
+                        {
+                            "id": "mbmu_min_cell_temperature",
+                            "offset": 40,
+                            "name": "Min cell temperature"
+                        },
+                        {
+                            "id": "mbmu_avg_cell_temperature",
+                            "offset": 41,
+                            "name": "Avg. cell temperature"
+                        },
+                        {
+                            "id": "mbmu_max_charge_current",
+                            "offset": 42,
+                            "scale": -1,
+                            "name": "Max charge current allowed"
+                        },
+                        {
+                            "id": "mbmu_max_discharge_current",
+                            "offset": 43,
+                            "scale": 1,
+                            "name": "Max discharge current allowed"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_bms_ems_r",
+            "frequency": 1000,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding",
+                    "starting_offset": 768,
+                    "hex offset": "0x300",
+                    "number_of_registers": 125,
+                    "note": " BMS->EMS messages(read)",
+                    "map": [
+                        {
+                            "id": "bms_heartbeat",
+                            "offset": 768,
+                            "name": "BMS heartbeat"
+                        },
+                        {
+                            "id": "bms_poweron",
+                            "offset": 769,
+                            "name": "BMS_poweron",
+                            "xenum": true,
+                            "xbit_strings": [
+                                "Power off Ready",
+                                "Power on Ready",
+                                "Power on Fault",
+                                "Power off Fault"
+                            ]
+                        },
+                        {
+                            "id": "bms_status",
+                            "offset": 770,
+                            "name": "BMS_status"
+                        },
+                        {
+                            "id": "num_hv_subsystem",
+                            "offset": 772,
+                            "name": "Number of HV connected subsystem"
+                        },
+                        {
+                            "id": "bms_remain_charge_energy",
+                            "offset": 775,
+                            "scale": 10,
+                            "name": "System remain charge energy"
+                        },
+                        {
+                            "id": "bms_remain_discharge_energy",
+                            "offset": 776,
+                            "scale": 10,
+                            "name": "System remain discharge energy"
+                        },
+                        {
+                            "id": "bms_max_discharge_allowed",
+                            "offset": 783,
+                            "name": "Max system discharge power allowed"
+                        },
+                        {
+                            "id": "bms_max_charge_allowed",
+                            "offset": 784,
+                            "name": "Max system charge power allowed"
+                        },
+                        {
+                            "id": "bms_limit_charge_hv",
+                            "offset": 785,
+                            "name": "BMS_limit_charge_hv"
+                        },
+                        {
+                            "id": "bms_limit_discharge_hv",
+                            "offset": 786,
+                            "name": "BMS_limit_discharge_hv"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "catl_sbmu_##component_id##",
+            "component_offset_range": {
+                "begin": 1, "end": 9,
+                "step": 1024,
+                "replace": "##component_id##"
+            },
+            "frequency": 2000,
+            "device_id": 1,
+            "registers": [
+                {
+                    "type": "Holding",
+                    "map": [
+                        {
+                            "id": "sbmu_warning_1",
+                            "offset": 1024
+                        },
+                        {
+                            "id": "sbmu_warning_21",
+                            "offset": 1025
+                        },
+                        {
+                            "id": "sbmu_warning_22",
+                            "offset": 1026
+                        },
+                        {
+                            "id": "sbmu_warning_23",
+                            "offset": 1027
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding",
+                    "map": [
+                        {
+                            "id": "sbmu_precharge_status",
+                            "offset": 1040
+                        },
+                        {
+                            "id": "sbmu_master_positive",
+                            "offset": 1041
+                        },
+                        {
+                            "id": "sbmu_master_negative",
+                            "offset": 1042
+                        },
+                        {
+                            "id": "sbmu_balance_status",
+                            "offset": 1044
+                        }
+                    ]
+                },
+                {
+                    "type": "Holding",
+                    "map": [
+                        {
+                            "id": "sbmu_voltage",
+                            "offset": 1056,
+                            "scale": 10
+                        },
+                        {
+                            "id": "sbmu_current",
+                            "scale": 10,
+                            "offset": 1058
+                        },
+                        {
+                            "id": "sbmu_soc",
+                            "offset": 1059,
+                            "scale": 10
+                        },
+                        {
+                            "id": "sbmu_soh",
+                            "offset": 1060,
+                            "scale": 10
+                        },
+                        {
+                            "id": "sbmu_max_cell_voltage",
+                            "offset": 1061,
+                            "scale": 1000
+                        },
+                        {
+                            "id": "sbmu_min_cell_voltage",
+                            "offset": 1062,
+                            "scale": 1000
+                        },
+                        {
+                            "id": "sbmu_avg_cell_voltage",
+                            "offset": 1063,
+                            "scale": 1000
+                        },
+                        {
+                            "id": "sbmu_max_cell_temp",
+                            "offset": 1064
+                        },
+                        {
+                            "id": "sbmu_min_cell_temp",
+                            "offset": 1065
+                        },
+                        {
+                            "id": "sbmu_avg_cell_temp",
+                            "offset": 1066
+                        },
+                        {
+                            "id": "sbmu_max_charge_current",
+                            "scale": -10,
+                            "offset": 1067
+                        },
+                        {
+                            "id": "sbmu_max_discharge_current",
+                            "scale": 10,
+                            "offset": 1068
+                        },
+                        {
+                            "id": "sbmu_max_cell_voltage_position",
+                            "offset": 1072
+                        },
+                        {
+                            "id": "sbmu_min_cell_voltage_position",
+                            "offset": 1073
+                        },
+                        {
+                            "id": "sbmu_max_cell_temp_position",
+                            "offset": 1074
+                        },
+                        {
+                            "id": "sbmu_min_cell_temp_position",
+                            "offset": 1075
+                        },
+                        {
+                            "id": "sbmu_sum_cells",
+                            "offset": 1079
+                        },
+                        {
+                            "id": "sbmu_tms_mode_command",
+                            "offset": 1098
+                        },
+                        {
+                            "id": "sbmu_tms_temp_setting",
+                            "offset": 1099
+                        },
+                        {
+                            "id": "sbmu_tms_real_mode",
+                            "offset": 1100
+                        },
+                        {
+                            "id": "sbmu_ambient_temp",
+                            "offset": 1101
+                        },
+                        {
+                            "id": "sbmu_tms_demand_power",
+                            "offset": 1102
+                        },
+                        {
+                            "id": "sbmu_tms_fault_code",
+                            "offset": 1103
+                        },
+                        {
+                            "id": "sbmu_door_state",
+                            "offset": 1104
+                        },
+                        {
+                            "id": "sbmu_fan_in_box",
+                            "offset": 1105
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

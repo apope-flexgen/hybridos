@@ -1,0 +1,238 @@
+{
+	"system":
+	{
+		"id": "sel_351_1",
+		"ip_address": "192.168.114.60",
+		"port": 502,
+		"frequency": 100,
+		"byte_swap": false,
+		"off_by_one": true
+	},
+	"registers": 
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 0,
+			"number_of_registers": 43,
+			"map":
+			[
+				{
+					"id": "current_l1",
+					"offset": 0,
+					"size": 1,
+					"scale":1
+				},
+				{
+					"id": "current_angle_l1",
+					"offset": 1,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "current_l2",
+					"offset": 2,
+					"size": 1,
+					"scale":1
+				},
+				{
+					"id": "current_angle_l2",
+					"offset": 3,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "current_l3",
+					"offset": 4,
+					"size": 1,
+					"scale":1
+				},
+				{
+					"id": "current_angle_l3",
+					"offset": 5,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "current_g",
+					"offset": 6,
+					"size": 1,
+					"scale":1
+				},
+				{
+					"id": "current_angle_g",
+					"offset": 7,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "current_n",
+					"offset": 8,
+					"size": 1,
+					"scale":1
+				},
+				{
+					"id": "current_angle_n",
+					"offset": 9,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "voltage_l1",
+					"offset": 10,
+					"size": 2,
+					"scale":1
+				},
+				{
+					"id": "voltage_angle_l1",
+					"offset": 12,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "voltage_l2",
+					"offset": 13,
+					"size": 2,
+					"scale":1
+				},
+				{
+					"id": "voltage_angle_l2",
+					"offset": 15,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "voltage_l3",
+					"offset": 16,
+					"size": 2,
+					"scale":1
+				},
+				{
+					"id": "voltage_angle_l3",
+					"offset": 18,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "voltage_synch",
+					"offset": 19,
+					"size": 2,
+					"scale":1
+				},
+				{
+					"id": "voltage_synch_angle",
+					"offset": 21,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "active_power",
+					"offset": 22,
+					"size": 2,
+					"scale":1,
+					"signed": true
+				},
+				{
+					"id": "reactive_power",
+					"offset": 24,
+					"size": 2,
+					"scale":1,
+					"signed": true
+				},
+				{
+					"id": "power_factor",
+					"offset": 26,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "power_factor_leading",
+					"offset": 27,
+					"size": 1,
+					"scale":1,
+					"signed": true
+				},
+				{
+					"id": "frequency",
+					"offset": 28,
+					"size": 1,
+					"scale":100,
+					"signed": true
+				},
+				{
+					"id": "station_battery_voltage",
+					"offset": 29,
+					"size": 1,
+					"scale":10
+				},
+				{
+					"id": "real_energy_received",
+					"offset": 30,
+					"size": 2,
+					"scale":1000,
+					"signed": true
+				},
+				{
+					"id": "real_energy_delivered",
+					"offset": 32,
+					"size": 2,
+					"scale":1000,
+					"signed": true
+				},
+				{
+					"id": "reactive_energy_received",
+					"offset": 34,
+					"size": 2,
+					"scale":1000,
+					"signed": true
+				},
+				{
+					"id": "reactive_energy_delivered",
+					"offset": 36,
+					"size": 2,
+					"scale":1000,
+					"signed": true
+				},
+				{
+					"id": "active_settings_group",
+					"offset": 38,
+					"size": 1,
+					"scale":1
+				},
+				{
+					"id": "row_0 (trip on bit 1)",
+					"offset": 39,
+					"size": 1,
+					"scale":1
+				},
+				{
+					"id": "row_1 (reset status on bit 5, close on bit 6, lockout on bit 7)",
+					"offset": 40,
+					"size": 1,
+					"scale":1
+				},
+				{
+					"id": "row_35 (reset on bit 0, close on bit 1, lockout on bit 2)",
+					"offset": 41,
+					"size": 1,
+					"scale":1
+				},
+				{
+					"id": "row_37 (status on bit 5)",
+					"offset": 42,
+					"size": 1,
+					"scale":1
+				}
+			]
+		}
+	]
+}

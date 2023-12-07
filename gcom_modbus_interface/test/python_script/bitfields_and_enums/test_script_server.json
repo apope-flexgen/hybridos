@@ -1,0 +1,36 @@
+{
+   "system":
+   {   "name":"SEL-2440",
+       "protocol": "Modbus TCP",
+       "id": "SEL-2440",
+       "ip_address": "0.0.0.0",
+       "xserver_delay": 510, 
+       "port": 502, 
+       "device_id": 3, 
+       "bypass_init": false 
+   },
+    "registers":
+     {
+        "input_registers":
+        [
+            { "name": "input_7",        "id": "test_id",    "size":1,     "offset": 255,   "uri": "/components/sel_2440"  },
+            { "name": "enum_256_1",     "id": "enum_256_1",   "size":1,          "offset": 256,   "uri": "/components/sel_2440"  },
+            { "name": "enum_257_2",     "id": "enum_257_2",   "size":2,          "offset": 257,   "uri": "/components/sel_2440"  },
+            { "name": "enum_259_4",     "id": "enum_259_4",   "size":4,          "offset": 270,   "uri": "/components/sel_2440"  },
+            { "name": "bsinput_0",      "id": "bsinput_0_4",  "size":4,  "byte_swap":true,   "offset": 294,  "uri": "/components/sel_2440" },
+            { "name": "bsinput_1",      "id": "bsinput_1_4",  "size":4,  "byte_swap":true,   "offset": 298,  "uri": "/components/sel_2440"  },
+            { "name": "ibits_1000_1",    "id": "ibits_1000_1",  "size":1,   "offset": 1000,  "uri": "/components/sel_2440"  },
+
+            { "name": "ibits_2000_1",        "id": "ibits_2000_1",  "size":1,          "offset": 2000,  "uri": "/components/sel_2440"  },
+            { "name": "ibits_2001_2",        "id": "ibits_2001_2",  "size":2,          "offset": 2001,  "uri": "/components/sel_2440"  },
+            { "name": "ibits_2003_4",        "id": "ibits_2003_4",  "size":4,          "offset": 2003,  "uri": "/components/sel_2440"  },
+            { "name": "bf_2007_1",           "id": "bf_2007_1",     "size":1,          "offset": 2007,  "uri": "/components/sel_2440"  },
+            { "name": "bf_2008_2",           "id": "bf_2008_2",     "size":2,          "offset": 2008,  "uri": "/components/sel_2440"  },
+            { "name": "bf_2010_4",           "id": "bf_2010_4",     "size":4,          "offset": 2010,  "uri": "/components/sel_2440"  },
+            { "name": "pr_2014_1",           "id": "pr_2014_1",     "size":1,          "offset": 2014,  "uri": "/components/sel_2440"  },
+            { "name": "pr_2015_2",           "id": "pr_2015_2",     "size":2,          "offset": 2015,  "uri": "/components/sel_2440"  },
+            { "name": "pr_2017_4",           "id": "pr_2017_4",     "size":4,          "offset": 2017,  "uri": "/components/sel_2440"  },
+            { "name": "pack_1",              "id": "pack_1",        "size":1,          "offset": 2022,  "uri": "/components/sel_2440"  }
+            ]
+    }
+}

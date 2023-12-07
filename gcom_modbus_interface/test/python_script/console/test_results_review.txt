@@ -1,0 +1,1171 @@
+Branch: gcom_modbus_interface
+Latest Commit Hash: 565a1cad4b9dff4e81271151140abb69f97fa438
+Latest Commit Author: 'Phil Wilshire'
+Test date: 2023-12-04 16:11:02.850314
+Test Case 256:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":-480.66500656290026}"
+Exxpected: "discrete_normal_1":True  #incorrect expect False
+Got     : "discrete_normal_1":False
+# fixed
+
+Test Case 257:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":5.131599633270753}"
+Expected: "discrete_normal_1":True  # TODO failed   
+Got     : "discrete_normal_1":False
+# fixed
+Test Case 258:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":-327}"
+Exxpected: "discrete_normal_1":True #incorrect expect false
+Got     : "discrete_normal_1":False
+
+Test Case 259:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":275}"
+Expected: "discrete_normal_1":True # TODO failed 
+Got     : "discrete_normal_1":False
+# fixed
+
+Test Case 260: Pass
+Test Case 261: Pass
+Test Case 262: Pass
+Test Case 263: Pass
+Test Case 264:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":131072}"
+Expected: "discrete_normal_1":True # TODO failed
+Got     : "discrete_normal_1":False
+# fixed
+
+Test Case 265:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":-131072}"
+Exxpected: "discrete_normal_1":True #incorrect expect false 
+Got     : "discrete_normal_1":False
+# fixed
+
+Test Case 266:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":8589934592}"
+Expected: "discrete_normal_1":True # TODO failed 
+Got     : "discrete_normal_1":False
+
+Test Case 267:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":-8589934592}"
+Exxpected: "discrete_normal_1":True #incorrect expect false
+Got     : "discrete_normal_1":False
+
+Test Case 268:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":6.8056474e+38}"
+Expected: "discrete_normal_1":True
+Got     : "discrete_normal_1":False
+
+Test Case 269:  # TODO review
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":1.175494e-42}"
+Expected: "discrete_normal_1":True #TODO failed 
+Got     : "discrete_normal_1":False
+
+Test Case 270: # TODO review
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999}"
+
+Expected: "discrete_normal_1":True #TODO failed
+Got     : "discrete_normal_1":False
+
+Test Case 271: Pass
+Test Case 272: Pass
+Test Case 273: Pass
+Test Case 274: Pass
+Test Case 275: Pass
+Test Case 276:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_1\":0}"
+Expected: "discrete_scale_1":True  # TODO failed fix in cleint
+Got     : "discrete_scale_1":False
+# fixed
+
+Test Case 277:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_1\":1}"
+Expected: "discrete_scale_1":False # TODO failed fix in client
+Got     : "discrete_scale_1":True
+# fixed 
+
+Test Case 278:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_1\":false}"
+Expected: "discrete_scale_1":True # TODO failed fix in client
+Got     : "discrete_scale_1":False
+
+Test Case 279: Pass
+Test Case 280: Pass
+Test Case 281: Pass
+Test Case 282: Pass
+Test Case 283: Pass
+Test Case 284: Pass
+Test Case 285: Pass
+Test Case 286: Pass
+Test Case 287: Pass
+Test Case 288: Pass
+Test Case 289: Pass
+Test Case 290: Pass
+Test Case 291: Pass
+Test Case 292: Pass
+Test Case 293: Pass
+Test Case 294: Pass
+Test Case 295: Pass
+Test Case 296:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_1\":131072}"
+Expected: "input_normal_1":65535 # TODO failed
+Got     : "input_normal_1":0
+# fixed
+
+Test Case 297: Pass
+Test Case 298: Pass
+Test Case 299: Pass
+Test Case 300: Pass
+Test Case 301: Pass
+Test Case 302: Pass
+Test Case 303: Pass
+Test Case 304: Pass
+Test Case 305: Pass
+Test Case 306: Pass
+Test Case 307: Pass
+Test Case 308: Pass
+Test Case 309: Pass
+Test Case 310: Pass
+Test Case 311: Pass
+Test Case 312:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_signed_1\":131072}"
+Expected: "input_signed_1":32767.0000 # TODO failed 
+Got     : "input_signed_1":0.0
+# fixed
+
+Test Case 313:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_signed_1\":-131072}"
+Expected: "input_signed_1":-32768.0000
+Got     : "input_signed_1":0.0
+# fixed
+
+Test Case 314:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_signed_1\":8589934592}"
+Expected: "input_signed_1":32767
+Got     : "input_signed_1":-1.0
+# fixed
+
+Test Case 315:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_signed_1\":-8589934592}"
+Expected: "input_signed_1":-32768
+Got     : "input_signed_1":0.0
+# fixed
+
+Test Case 316:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_signed_1\":6.8056474e+38}"
+Expected: "input_signed_1":32767
+Got     : "input_signed_1":-1.0
+# fixed
+
+
+Test Case 317: Pass
+Test Case 318: Pass
+Test Case 319: Pass
+Test Case 320: Pass
+Test Case 321: Pass
+Test Case 322: Pass
+Test Case 323: Pass
+Test Case 324: Pass
+Test Case 325:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_1\":true}"
+#TODO fix server
+Expected: "input_scaled_1":1.0
+Got     : "input_scaled_1":0.0
+
+Test Case 326: Pass
+Test Case 327: Pass
+Test Case 328:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_1\":131072}"
+Expected: "input_scaled_1":655.35
+Got     : "input_scaled_1":0.0
+# TODO
+
+Test Case 329: Pass
+Test Case 330:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_1\":8589934592}"
+Expected: "input_scaled_1":655.35
+Got     : "input_scaled_1":0.0
+# TODO 
+
+Test Case 331: Pass
+Test Case 332:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_1\":6.8056474e+38}"
+Expected: "input_scaled_1":655.35
+Got     : "input_scaled_1":0.0
+# TODO
+
+Test Case 333: Pass
+Test Case 334: Pass
+Test Case 335: Pass
+Test Case 336: Pass
+Test Case 337: Pass
+Test Case 338: Pass
+Test Case 339: Pass
+Test Case 340: Pass
+Test Case 341:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_signed_1\":true}"
+Expected: "input_scaled_signed_1":1.0
+Got     : "input_scaled_signed_1":0.0
+# fixed 
+
+Test Case 342: Pass
+Test Case 343: Pass
+Test Case 344:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_signed_1\":131072}"
+Expected: "input_scaled_signed_1":327.67
+Got     : "input_scaled_signed_1":0.0
+# fixed 
+
+Test Case 345:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_signed_1\":-131072}"
+Expected: "input_scaled_signed_1":-327.68
+Got     : "input_scaled_signed_1":0.0
+# fixed
+Test Case 346:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_signed_1\":8589934592}"
+Expected: "input_scaled_signed_1":327.67
+Got     : "input_scaled_signed_1":0.0
+#fixed
+
+Test Case 347:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_signed_1\":-8589934592}"
+Expected: "input_scaled_signed_1":-327.68
+Got     : "input_scaled_signed_1":0.0
+#fixed 
+
+Test Case 348:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_signed_1\":6.8056474e+38}"
+Expected: "input_scaled_signed_1":327.67
+Got     : "input_scaled_signed_1":0.0
+# fixed
+
+Test Case 349: Pass
+Test Case 350: Pass
+Test Case 351: Pass
+Test Case 352: Pass
+Test Case 353: Pass
+Test Case 354: Pass
+Test Case 355: Pass
+Test Case 356: Pass
+Test Case 357: Pass
+Test Case 358: Pass
+Test Case 359: Pass
+Test Case 360: Pass
+Test Case 361: Pass
+#TODO 
+Test Case 362:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_2\":8589934592}"
+Expected: "input_normal_2":4294967295
+Got     : "input_normal_2":2147483647
+
+Test Case 363:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_2\":8589934592}"
+Expected: "input_normal_2":0
+Got     : "input_normal_2":2147483648
+
+Test Case 364:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_2\":6.8056474e+38}"
+Expected: "input_normal_2":4294967295
+Got     : "input_normal_2":2147483647
+
+Test Case 365: Pass
+Test Case 366: Pass
+Test Case 367: Pass
+Test Case 368: Pass
+Test Case 369:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_2\":138.18445938898253}"
+Exxpected: "input_float_2":138.184
+Got     : "input_float_2":138.1845
+
+Test Case 370: Pass
+Test Case 371: Pass
+Test Case 372: Pass
+Test Case 373:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_2\":true}"
+Expected: "input_float_2":1.0
+Got     : "input_float_2":0.0
+
+Test Case 374: Pass
+Test Case 375: Pass
+Test Case 376: Pass
+Test Case 377: Pass
+Test Case 378:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_2\":8589934592}"
+Exxpected: "input_float_2":8589930000.0
+Got     : "input_float_2":8589934592.0
+
+Test Case 379:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_2\":-8589934592}"
+Exxpected: "input_float_2":-8589930000.0
+Got     : "input_float_2":-8589934592.0
+
+Test Case 381: Pass
+Test Case 382: Pass
+Test Case 383: Pass
+Test Case 384: Pass
+Test Case 385: Pass
+Test Case 386: Pass
+Test Case 387: Pass
+Test Case 388: Pass
+Test Case 389: Pass
+Test Case 390: Pass
+Test Case 391: Pass
+Test Case 392: Pass
+Test Case 393: Pass
+Test Case 394: Pass
+Test Case 395: Pass
+Test Case 396: Pass
+Test Case 397: Pass
+Test Case 398: Pass
+Test Case 399: Pass
+Test Case 400: Pass
+Test Case 401: Pass
+Test Case 402: Pass
+Test Case 403: Pass
+Test Case 404: Pass
+Test Case 405:
+#TODO
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_2\":true}"
+Expected: "input_scaled_2":1.0
+Got     : "input_scaled_2":0.0
+
+Test Case 406: Pass
+Test Case 407: Pass
+Test Case 408: Pass
+Test Case 409: Pass
+Test Case 410:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_2\":8589934592}"
+Expected: "input_scaled_2":42949672.95
+Got     : "input_scaled_2":21474836.48
+
+Test Case 411:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_2\":-8589934592}"
+Expected: "input_scaled_2":0.0
+Got     : "input_scaled_2":21474836.48
+
+Test Case 412:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_2\":6.8056474e+38}"
+Expected: "input_scaled_2":42949672.95
+Got     : "input_scaled_2":21474836.48
+
+Test Case 413: Pass
+Test Case 414: Pass
+Test Case 415: Pass
+Test Case 416:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_2\":-225.91892758521595}"
+Exxpected: "input_scaled_float_2":-225.919    # this may be ok
+Got     : "input_scaled_float_2":-225.9189
+
+Test Case 417: Pass
+Test Case 418: Pass
+Test Case 419: Pass
+Test Case 420: Pass
+Test Case 421:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_2\":true}"
+Expected: "input_scaled_float_2":1.0
+Got     : "input_scaled_float_2":0.0
+
+Test Case 422: Pass
+Test Case 423: Pass
+Test Case 424: Pass
+Test Case 425: Pass
+Test Case 426:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_2\":8589934592}"
+Exxpected: "input_scaled_float_2":8589930000.0
+Got     : "input_scaled_float_2":8589934592.0
+
+Test Case 427:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_2\":-8589934592}"
+Exxpected: "input_scaled_float_2":-8589930000.0
+Got     : "input_scaled_float_2":-8589934592.0
+
+Test Case 429: Pass
+Test Case 430: Pass
+Test Case 431: Pass
+Test Case 432: Pass
+Test Case 433: Pass
+Test Case 434: Pass
+Test Case 435: Pass
+Test Case 436: Pass
+Test Case 437:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_signed_2\":true}"
+Expected: "input_scaled_signed_2":1.0
+Got     : "input_scaled_signed_2":0.0
+
+Test Case 438: Pass
+Test Case 439: Pass
+Test Case 440: Pass
+Test Case 441: Pass
+Test Case 442:
+#todo
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_signed_2\":8589934592}"
+Expected: "input_scaled_signed_2":21474836.47
+Got     : "input_scaled_signed_2":-21474836.48
+
+Test Case 443: Pass
+Test Case 444:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_signed_2\":6.8056474e+38}"
+Expected: "input_scaled_signed_2":21474836.47
+Got     : "input_scaled_signed_2":-21474836.48
+
+Test Case 445: Pass
+Test Case 446: Pass
+Test Case 447: Pass
+Test Case 448:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_4\":-432.3728345350539}"
+Expected: "input_normal_4":-432.373
+Got     : "input_normal_4":4294966864
+
+Test Case 449:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_4\":335.2733116127316}"
+Exxpected: "input_normal_4":335.273  # maybe ok
+Got     : "input_normal_4":335
+
+Test Case 450:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_4\":-198}"
+Expected: "input_normal_4":-198.0
+Got     : "input_normal_4":4294967098
+
+Test Case 451: Pass
+Test Case 452: Pass
+Test Case 453: Pass
+Test Case 454: Pass
+Test Case 455: Pass
+Test Case 456: Pass
+Test Case 457:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_4\":-131072}"
+Expected: "input_normal_4":-131072.0
+Got     : "input_normal_4":4294836224
+
+Test Case 458:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_4\":8589934592}"
+Expected: "input_normal_4":8589930000.0
+Got     : "input_normal_4":2147483647
+
+Test Case 459:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_4\":-8589934592}"
+Expected: "input_normal_4":-8589930000.0
+Got     : "input_normal_4":2147483648
+
+Test Case 460:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_4\":6.8056474e+38}"
+Expected: "input_normal_4":6.80565e+38
+Got     : "input_normal_4":2147483647
+
+Test Case 461:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_4\":1.175494e-42}"
+Expected: "input_normal_4":1.17549e-42
+Got     : "input_normal_4":0
+
+Test Case 462:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_4\":9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999}"
+
+Expected: "input_normal_4":1.17549e-42
+Got     : "input_normal_4":0
+
+Test Case 463: Pass
+
+Test Case 464: # may be ok
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_4\":-241.94766985125966}"
+Exxpected: "input_float_4":-241.948
+Got     : "input_float_4":-241.9477
+
+Test Case 465: # may be ok
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_4\":229.0650674889697}"
+Exxpected: "input_float_4":229.065
+Got     : "input_float_4":229.0651
+
+Test Case 466: Pass
+Test Case 467: Pass
+Test Case 468: Pass
+Test Case 469:
+Expected: "input_float_4":1.0
+Got     : "input_float_4":0.0
+
+Test Case 470: Pass
+Test Case 471: Pass
+Test Case 472: Pass
+Test Case 473: Pass
+Test Case 474:
+Exxpected: "input_float_4":8589930000.0
+Got     : "input_float_4":8589934592.0
+
+Test Case 475:
+Exxpected: "input_float_4":-8589930000.0
+Got     : "input_float_4":-8589934592.0
+
+Test Case 476:
+Exxpected: "input_float_4":6.80565e+38
+Got     : "input_float_4":6.8056474e+38
+
+Test Case 477:
+Expected: "input_float_4":1.17549e-42
+Got     : "input_float_4":0.0
+
+Test Case 478:
+Expected: "input_float_4":1.17549e-42
+Got     : "input_float_4":0.0
+
+Test Case 479: Pass
+Test Case 480:
+Expected: "input_signed_4":-363.709
+Got     : "input_signed_4":4294966933.0
+
+Test Case 481:
+Expected: "input_signed_4":469.152
+Got     : "input_signed_4":469.0
+
+Test Case 482:
+Expected: "input_signed_4":-333.0
+Got     : "input_signed_4":4294966963.0
+
+Test Case 483: Pass
+Test Case 484: Pass
+Test Case 485: Pass
+Test Case 486: Pass
+Test Case 487: Pass
+Test Case 488: Pass
+Test Case 489:
+Expected: "input_signed_4":-131072.0
+Got     : "input_signed_4":4294836224.0
+
+Test Case 490:
+Expected: "input_signed_4":8589930000.0
+Got     : "input_signed_4":2147483647.0
+
+Test Case 491:
+Expected: "input_signed_4":-8589930000.0
+Got     : "input_signed_4":2147483648.0
+
+Test Case 492:
+Expected: "input_signed_4":6.80565e+38
+Got     : "input_signed_4":2147483647.0
+
+Test Case 493:
+Expected: "input_signed_4":1.17549e-42
+Got     : "input_signed_4":0.0
+
+Test Case 494:
+Expected: "input_signed_4":1.17549e-42
+Got     : "input_signed_4":0.0
+
+Test Case 495: Pass
+Test Case 496:
+Expected: "input_scaled_4":-201.824
+Got     : "input_scaled_4":1.844674407370953e+17
+
+Test Case 497:
+Expected: "input_scaled_4":79.4112
+Got     : "input_scaled_4":79.41
+
+Test Case 498:
+Expected: "input_scaled_4":-177.0
+Got     : "input_scaled_4":1.8446744073709533e+17
+
+Test Case 499: Pass
+Test Case 500: Pass
+Test Case 501:
+Expected: "input_scaled_4":1.0
+Got     : "input_scaled_4":0.0
+
+Test Case 502: Pass
+Test Case 503: Pass
+Test Case 504: Pass
+Test Case 505:
+Expected: "input_scaled_4":-131072.0
+Got     : "input_scaled_4":1.8446744073696445e+17
+
+Test Case 506:
+Exxpected: "input_scaled_4":8589930000.0
+Got     : "input_scaled_4":8589934592.0
+
+Test Case 507:
+Expected: "input_scaled_4":-8589930000.0
+Got     : "input_scaled_4":1.8446743214716093e+17
+
+Test Case 508:
+Expected: "input_scaled_4":6.80565e+38
+Got     : "input_scaled_4":9.223372036854776e+16
+
+Test Case 509:
+Expected: "input_scaled_4":1.17549e-42
+Got     : "input_scaled_4":0.0
+
+Test Case 510:
+Expected: "input_scaled_4":1.17549e-42
+Got     : "input_scaled_4":0.0
+
+Test Case 511: Pass
+Test Case 512:
+Exxpected: "input_scaled_float_4":-256.367
+Got     : "input_scaled_float_4":-256.3673
+
+Test Case 513:
+Exxpected: "input_scaled_float_4":216.214
+Got     : "input_scaled_float_4":216.2142
+
+Test Case 514: Pass
+Test Case 515: Pass
+Test Case 516: Pass
+Test Case 517:
+Expected: "input_scaled_float_4":1.0
+Got     : "input_scaled_float_4":0.0
+
+Test Case 518: Pass
+Test Case 519: Pass
+Test Case 520: Pass
+Test Case 521: Pass
+Test Case 522:
+Exxpected: "input_scaled_float_4":8589930000.0
+Got     : "input_scaled_float_4":8589934592.0
+
+Test Case 523:
+Exxpected: "input_scaled_float_4":-8589930000.0
+Got     : "input_scaled_float_4":-8589934592.0
+
+Test Case 524:
+Exxpected: "input_scaled_float_4":6.80565e+38
+Got     : "input_scaled_float_4":6.8056474e+38
+
+Test Case 525:
+Expected: "input_scaled_float_4":1.17549e-42
+Got     : "input_scaled_float_4":0.0
+
+Test Case 526:
+Expected: "input_scaled_float_4":1.17549e-42
+Got     : "input_scaled_float_4":0.0
+
+Test Case 527: Pass
+Test Case 528: Pass
+Test Case 529:
+Exxpected: "input_scaled_signed_4":289.359
+Got     : "input_scaled_signed_4":289.35
+
+Test Case 530: Pass
+Test Case 531: Pass
+Test Case 532: Pass
+Test Case 533:
+Expected: "input_scaled_signed_4":1.0
+Got     : "input_scaled_signed_4":0.0
+
+Test Case 534: Pass
+Test Case 535: Pass
+Test Case 536: Pass
+Test Case 537: Pass
+Test Case 538:
+Exxpected: "input_scaled_signed_4":8589930000.0
+Got     : "input_scaled_signed_4":8589934592.0
+
+Test Case 539:
+Exxpected: "input_scaled_signed_4":-8589930000.0
+Got     : "input_scaled_signed_4":-8589934592.0
+
+Test Case 540:
+Expected: "input_scaled_signed_4":6.80565e+38
+Got     : "input_scaled_signed_4":-9.223372036854776e+16
+
+Test Case 541:
+Expected: "input_scaled_signed_4":1.17549e-42
+Got     : "input_scaled_signed_4":0.0
+
+Test Case 542:
+Expected: "input_scaled_signed_4":1.17549e-42
+Got     : "input_scaled_signed_4":0.0
+
+Test Case 543: Pass
+Test Case 0: Pass
+Test Case 1: Pass
+Test Case 2: Pass
+Test Case 3: Pass
+Test Case 4: Pass
+Test Case 5: Pass
+Test Case 6: Pass
+Test Case 7: Pass
+Test Case 8:
+Expected: "normal_1": 65535
+Got     : "normal_1": 0
+
+Test Case 9: Pass
+Test Case 10:
+Expected: "normal_1": 65535
+Got     : "normal_1": 0
+
+Test Case 11: Pass
+Test Case 12:
+Expected: "normal_1": 65535
+Got     : "normal_1": 0
+
+Test Case 13: Pass
+Test Case 14: Pass
+Test Case 15: Pass
+Test Case 16: Pass
+Test Case 17: Pass
+Test Case 18: Pass
+Test Case 19: Pass
+Test Case 20: Pass
+Test Case 21: Pass
+Test Case 22: Pass
+Test Case 23: Pass
+Test Case 24:
+Expected: "signed_1": 32767
+Got     : "signed_1": 0
+
+Test Case 25:
+Expected: "signed_1": -32768
+Got     : "signed_1": 0
+
+Test Case 26:
+Expected: "signed_1": 32767
+Got     : "signed_1": 0
+
+Test Case 27:
+Expected: "signed_1": -32768
+Got     : "signed_1": 0
+
+Test Case 28:
+Expected: "signed_1": 32767
+Got     : "signed_1": 0
+
+Test Case 29: Pass
+Test Case 30: Pass
+Test Case 31: Pass
+Test Case 32: Pass
+Test Case 33: Pass
+Test Case 34: Pass
+Test Case 35: Pass
+Test Case 36: Pass
+Test Case 37: Pass
+Test Case 38: Pass
+Test Case 39: Pass
+Test Case 40:
+Expected: "scaled_1": 655.35
+Got     : "scaled_1": 0
+
+Test Case 41: Pass
+Test Case 42:
+Expected: "scaled_1": 655.35
+Got     : "scaled_1": 0
+
+Test Case 43: Pass
+Test Case 44:
+Expected: "scaled_1": 655.35
+Got     : "scaled_1": 0
+
+Test Case 45: Pass
+Test Case 46: Pass
+Test Case 47: Pass
+Test Case 48: Pass
+Test Case 49: Pass
+Test Case 50: Pass
+Test Case 51: Pass
+Test Case 52: Pass
+Test Case 53: Pass
+Test Case 54: Pass
+Test Case 55: Pass
+Test Case 56:
+Expected: "scaled_signed_1": 327.67
+Got     : "scaled_signed_1": 0
+
+Test Case 57:
+Expected: "scaled_signed_1": -327.68
+Got     : "scaled_signed_1": 0
+
+Test Case 58:
+Expected: "scaled_signed_1": 327.67
+Got     : "scaled_signed_1": 0
+
+Test Case 59:
+Expected: "scaled_signed_1": -327.68
+Got     : "scaled_signed_1": 0
+
+Test Case 60:
+Expected: "scaled_signed_1": 327.67
+Got     : "scaled_signed_1": 0
+
+Test Case 61: Pass
+Test Case 62: Pass
+Test Case 63: Pass
+Test Case 64: Pass
+Test Case 65: Pass
+Test Case 66: Pass
+Test Case 67: Pass
+Test Case 68: Pass
+Test Case 69: Pass
+Test Case 70: Pass
+Test Case 71: Pass
+Test Case 72: Pass
+Test Case 73: Pass
+Test Case 74:
+Expected: "normal_2": 4294967295
+Got     : "normal_2": 0
+
+Test Case 75: Pass
+Test Case 76:
+Expected: "normal_2": 4294967295
+Got     : "normal_2": 0
+
+Test Case 77: Pass
+Test Case 78: Pass
+Test Case 79: Pass
+Test Case 80:
+Expected: "float_2": -112.328
+Got     : "float_2": -112.32840728759766
+
+Test Case 81:
+Expected: "float_2": 65.4838
+Got     : "float_2": 65.48383331298828
+
+Test Case 82: Pass
+Test Case 83: Pass
+Test Case 84: Pass
+Test Case 85: Pass
+Test Case 86: Pass
+Test Case 87: Pass
+Test Case 88: Pass
+Test Case 89: Pass
+Test Case 90:
+Expected: "float_2": 8589930000.0
+Got     : "float_2": 8589934592
+
+Test Case 91:
+Expected: "float_2": -8589930000.0
+Got     : "float_2": -8589934592
+
+Test Case 92:
+Expected: "float_2": 3.40282e+38
+Got     : "float_2": None
+
+Test Case 93:
+Expected: "float_2": 0.0
+Got     : "float_2": 1.1756894115685215e-42
+
+Test Case 94: Pass
+Test Case 95: Pass
+Test Case 96: Pass
+Test Case 97: Pass
+Test Case 98: Pass
+Test Case 99: Pass
+Test Case 100: Pass
+Test Case 101: Pass
+Test Case 102: Pass
+Test Case 103: Pass
+Test Case 104: Pass
+Test Case 105: Pass
+Test Case 106:
+Expected: "signed_2": 2147483647
+Got     : "signed_2": 0
+
+Test Case 107:
+Expected: "signed_2": -2147483648
+Got     : "signed_2": 0
+
+Test Case 108:
+Expected: "signed_2": 2147483647
+Got     : "signed_2": -2147483648
+
+Test Case 109: Pass
+Test Case 110: Pass
+Test Case 111: Pass
+Test Case 112: Pass
+Test Case 113: Pass
+Test Case 114: Pass
+Test Case 115: Pass
+Test Case 116: Pass
+Test Case 117: Pass
+Test Case 118: Pass
+Test Case 119: Pass
+Test Case 120: Pass
+Test Case 121: Pass
+Test Case 122:
+Expected: "scaled_2": 42949672.95
+Got     : "scaled_2": 0
+
+Test Case 123: Pass
+Test Case 124:
+Expected: "scaled_2": 42949672.95
+Got     : "scaled_2": 0
+
+Test Case 125: Pass
+Test Case 126: Pass
+Test Case 127: Pass
+Test Case 128:
+Expected: "scaled_float_2": -300.292
+Got     : "scaled_float_2": -300.29189453125
+
+Test Case 129:
+Expected: "scaled_float_2": 23.1233
+Got     : "scaled_float_2": 23.123330078125
+
+Test Case 130: Pass
+Test Case 131: Pass
+Test Case 132: Pass
+Test Case 133: Pass
+Test Case 134: Pass
+Test Case 135: Pass
+Test Case 136: Pass
+Test Case 137: Pass
+Test Case 138:
+Expected: "scaled_float_2": 8589930000.0
+Got     : "scaled_float_2": 8589934592
+
+Test Case 139:
+Expected: "scaled_float_2": -8589930000.0
+Got     : "scaled_float_2": -8589934592
+
+Test Case 140:
+Expected: "scaled_float_2": 3.40282e+36
+Got     : "scaled_float_2": None
+
+Test Case 141:
+Expected: "scaled_float_2": 0.0
+Got     : "scaled_float_2": 1.175493229783516e-42
+
+Test Case 142: Pass
+Test Case 143: Pass
+Test Case 144: Pass
+Test Case 145: Pass
+Test Case 146: Pass
+Test Case 147: Pass
+Test Case 148: Pass
+Test Case 149: Pass
+Test Case 150: Pass
+Test Case 151: Pass
+Test Case 152: Pass
+Test Case 153: Pass
+Test Case 154:
+Expected: "scaled_signed_2": 21474836.47
+Got     : "scaled_signed_2": -21474836.48
+
+Test Case 155: Pass
+Test Case 156:
+Expected: "scaled_signed_2": 21474836.47
+Got     : "scaled_signed_2": -21474836.48
+
+Test Case 157: Pass
+Test Case 158: Pass
+Test Case 159: Pass
+Test Case 160:
+Expected: "normal_4": -405.954
+Got     : "normal_4": 1.8446744073709552e+19
+
+Test Case 161:
+Expected: "normal_4": 70.7439
+Got     : "normal_4": 70
+
+Test Case 162:
+Expected: "normal_4": -413.0
+Got     : "normal_4": 1.8446744073709552e+19
+
+Test Case 163: Pass
+Test Case 164: Pass
+Test Case 165: Pass
+Test Case 166: Pass
+Test Case 167: Pass
+Test Case 168: Pass
+Test Case 169:
+Expected: "normal_4": -131072.0
+Got     : "normal_4": 1.844674407370942e+19
+
+Test Case 170:
+Expected: "normal_4": 8589930000.0
+Got     : "normal_4": 8589934592
+
+Test Case 171:
+Expected: "normal_4": -8589930000.0
+Got     : "normal_4": 1.8446744065119617e+19
+
+Test Case 172:
+Expected: "normal_4": 6.80565e+38
+Got     : "normal_4": 0
+
+Test Case 173:
+Expected: "normal_4": 1.17549e-42
+Got     : "normal_4": 0
+
+Test Case 174: Pass
+Test Case 175: Pass
+Test Case 176:
+Expected: "float_4": -259.548
+Got     : "float_4": -259.54808593312123
+
+Test Case 177:
+Expected: "float_4": 397.905
+Got     : "float_4": 397.9048312293012
+
+Test Case 178: Pass
+Test Case 179: Pass
+Test Case 180: Pass
+Test Case 181: Pass
+Test Case 182: Pass
+Test Case 183: Pass
+Test Case 184: Pass
+Test Case 185: Pass
+Test Case 186:
+Expected: "float_4": 8589930000.0
+Got     : "float_4": 8589934592
+
+Test Case 187:
+Expected: "float_4": -8589930000.0
+Got     : "float_4": -8589934592
+
+Test Case 188:
+Expected: "float_4": 6.80565e+38
+Got     : "float_4": 6.8056474e+38
+
+Test Case 189:
+Expected: "float_4": 1.17549e-42
+Got     : "float_4": 1.175494e-42
+
+Test Case 190: Pass
+Test Case 191: Pass
+Test Case 192:
+Expected: "signed_4": -0.215803
+Got     : "signed_4": 0
+
+Test Case 193:
+Expected: "signed_4": 199.757
+Got     : "signed_4": 199
+
+Test Case 194: Pass
+Test Case 195: Pass
+Test Case 196: Pass
+Test Case 197: Pass
+Test Case 198: Pass
+Test Case 199: Pass
+Test Case 200: Pass
+Test Case 201: Pass
+Test Case 202:
+Expected: "signed_4": 8589930000.0
+Got     : "signed_4": 8589934592
+
+Test Case 203:
+Expected: "signed_4": -8589930000.0
+Got     : "signed_4": -8589934592
+
+Test Case 204:
+Expected: "signed_4": 6.80565e+38
+Got     : "signed_4": -9.223372036854776e+18
+
+Test Case 205:
+Expected: "signed_4": 1.17549e-42
+Got     : "signed_4": 0
+
+Test Case 206: Pass
+Test Case 207: Pass
+Test Case 208:
+Expected: "scaled_4": -14.0736
+Got     : "scaled_4": 1.844674407370955e+17
+
+Test Case 209:
+Expected: "scaled_4": 103.665
+Got     : "scaled_4": 103.66
+
+Test Case 210:
+Expected: "scaled_4": -319.0
+Got     : "scaled_4": 1.844674407370952e+17
+
+Test Case 211: Pass
+Test Case 212: Pass
+Test Case 213: Pass
+Test Case 214: Pass
+Test Case 215: Pass
+Test Case 216: Pass
+Test Case 217:
+Expected: "scaled_4": -131072.0
+Got     : "scaled_4": 1.8446744073696445e+17
+
+Test Case 218:
+Expected: "scaled_4": 8589930000.0
+Got     : "scaled_4": 8589934592
+
+Test Case 219:
+Expected: "scaled_4": -8589930000.0
+Got     : "scaled_4": 1.8446743214716093e+17
+
+Test Case 220:
+Expected: "scaled_4": 6.80565e+38
+Got     : "scaled_4": 0
+
+Test Case 221:
+Expected: "scaled_4": 1.17549e-42
+Got     : "scaled_4": 0
+
+Test Case 222: Pass
+Test Case 223: Pass
+Test Case 224:
+Expected: "scaled_float_4": -183.338
+Got     : "scaled_float_4": -183.33805144390703
+
+Test Case 225:
+Expected: "scaled_float_4": 202.6
+Got     : "scaled_float_4": 202.60021891471922
+
+Test Case 226: Pass
+Test Case 227: Pass
+Test Case 228: Pass
+Test Case 229: Pass
+Test Case 230: Pass
+Test Case 231: Pass
+Test Case 232: Pass
+Test Case 233: Pass
+Test Case 234:
+Expected: "scaled_float_4": 8589930000.0
+Got     : "scaled_float_4": 8589934592
+
+Test Case 235:
+Expected: "scaled_float_4": -8589930000.0
+Got     : "scaled_float_4": -8589934592
+
+Test Case 236:
+Expected: "scaled_float_4": 6.80565e+38
+Got     : "scaled_float_4": 6.8056474e+38
+
+Test Case 237:
+Expected: "scaled_float_4": 1.17549e-42
+Got     : "scaled_float_4": 1.175494e-42
+
+Test Case 238: Pass
+Test Case 239: Pass
+Test Case 240:
+Expected: "scaled_signed_4": -178.339
+Got     : "scaled_signed_4": -178.33
+
+Test Case 241:
+Expected: "scaled_signed_4": 146.948
+Got     : "scaled_signed_4": 146.94
+
+Test Case 242: Pass
+Test Case 243: Pass
+Test Case 244: Pass
+Test Case 245: Pass
+Test Case 246: Pass
+Test Case 247: Pass
+Test Case 248: Pass
+Test Case 249: Pass
+Test Case 250:
+Expected: "scaled_signed_4": 8589930000.0
+Got     : "scaled_signed_4": 8589934592
+
+Test Case 251:
+Expected: "scaled_signed_4": -8589930000.0
+Got     : "scaled_signed_4": -8589934592
+
+Test Case 252:
+Expected: "scaled_signed_4": 6.80565e+38
+Got     : "scaled_signed_4": -92233720368547760
+
+Test Case 253:
+Expected: "scaled_signed_4": 1.17549e-42
+Got     : "scaled_signed_4": 0
+
+Test Case 254: Pass
+Test Case 255: Pass
+
+
+Passed: 366
+Failed: 176
+Failed: ]
+
+Complete messages: 0
+Incomplete messages: 0
+
+Time between pubs

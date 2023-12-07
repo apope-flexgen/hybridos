@@ -1,0 +1,103 @@
+{
+	"system":
+	{
+		"id": "sel_351_7a",
+		"ip_address": "10.239.2.26",
+		"port": 502,
+		"frequency": 100,
+		"byte_swap": false,
+		"off_by_one": true,
+		"device_id": 1
+	},
+	"registers":
+	[
+		{
+			"type": "Input Registers",
+			"starting_offset": 1,
+			"number_of_registers": 44,
+			"map":
+			[
+				{
+					"id": "ac_current_l1",
+					"size": 1,
+					"offset": 1,
+					"scale":10,
+					"signed": true
+				},
+				{
+					"id": "ac_current_l2",
+					"size": 1,
+					"offset": 3,
+					"scale":10,
+					"signed": true
+				},
+				{
+					"id": "ac_current_l3",
+					"size": 1,
+					"offset": 5,
+					"scale":10,
+					"signed": true
+				},
+				{
+					"id": "voltage_l1",
+					"offset": 11,
+					"size": 2
+				},
+				{
+					"id": "voltage_l2",
+					"offset": 14,
+					"size": 2
+				},
+				{
+					"id": "voltage_l3",
+					"offset": 17,
+					"size": 2
+				},
+				{
+					"id": "active_power",
+					"offset": 23,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "reactive_power",
+					"offset": 25,
+					"size": 2,
+					"signed": true
+				},
+				{
+					"id": "power_factor",
+					"offset": 27,
+					"size": 1,
+					"signed": true
+				},
+				{
+					"id": "grid_frequency",
+					"offset": 29,
+					"size": 1,
+					"scale": 100
+				},
+				{
+					"id": "status",
+					"offset": 43,
+					"individual_bits": true,
+					"bit_strings":
+					[
+						null,
+						null,
+						"breaker_status",
+						"breaker_status_backup",
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					]
+				}
+			]
+		}
+	]
+}

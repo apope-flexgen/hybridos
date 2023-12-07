@@ -1,0 +1,143 @@
+{
+	"system":
+	{
+		"id": "solar_trio_2",
+		"ip_address": "10.239.2.35",
+		"port": 502,
+		"frequency": 500,
+		"off_by_one": true,
+		"byte_swap": false
+	},
+	"registers":
+	[
+		{
+			"type": "Holding Registers",
+			"starting_offset": 40074,
+			"number_of_registers": 38,
+			"map":
+			[
+				{
+					"id": "ac_current_l1",
+					"scale": 10,
+					"offset": 40074
+				},
+				{
+					"id": "ac_current_l2",
+					"scale": 10,
+					"offset": 40075
+				},
+				{
+					"id": "ac_current_l3",
+					"scale": 10,
+					"offset": 40076
+				},
+				{
+					"id": "ac_voltage_l1",
+					"scale": 10,
+					"offset": 40081
+				},
+				{
+					"id": "ac_voltage_l2",
+					"scale": 10,
+					"offset": 40082
+				},
+				{
+					"id": "ac_voltage_l3",
+					"scale": 10,
+					"offset": 40083
+				},
+				{
+					"id": "active_power",
+					"scale": 100,
+					"offset": 40085
+				},
+				{
+					"id": "frequency",
+					"scale": 100,
+					"offset": 40087
+				},
+				{
+					"id": "reactive_power",
+					"scale": 100,
+					"offset": 40091
+				},
+				{
+					"id": "dc_current",
+					"scale": 10,
+					"offset": 40098
+				},
+				{
+					"id": "dc_voltage",
+					"scale": 10,
+					"offset": 40102
+				},
+				{
+					"id": "ambient_temp",
+					"scale": 10,
+					"offset": 40104
+				},
+				{
+					"id": "status",
+					"offset": 40109
+				},
+				{
+					"id": "status_verbose",
+					"offset": 40109,
+					"random_enum": true,
+					"bit_strings":
+					[
+						{"value": 1, "string": "Off"},
+						{"value": 2, "string": "Sleeping"},
+						{"value": 3, "string": "Starting"},
+						{"value": 4, "string": "MPPT"},
+						{"value": 5, "string": "Throttled"},
+						{"value": 6, "string": "Shutting Down"},
+						{"value": 7, "string": "Fault"},
+						{"value": 8, "string": "Standby"}
+					]
+				},
+				{
+					"id": "faults",
+					"offset": 40111,
+					"size": 2,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Ground Fault",
+						"DC Overvoltage",
+						"AC Disconnect Open",
+						"DC Disconnect Open",
+						"Grid Shutdown",
+						"Cabinet Open",
+						"Manual Shutdown",
+						"Overtemperature",
+						"Overfrequency",
+						"Underfrequency",
+						"AC Overvoltage",
+						"AC Undervoltage",
+						"Blown String Fuse on Input",
+						"Undertemperature",
+						"Memory or Communication Error",
+						"Hardware Test Failure"
+					]
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 40234,
+			"number_of_registers": 12,
+			"map":
+			[
+				{
+					"id": "reactive_power_setpoint",
+					"offset": 40234
+				},
+				{
+					"id": "active_power_setpoint",
+					"offset": 40245
+				}
+			]
+		}
+	]
+}

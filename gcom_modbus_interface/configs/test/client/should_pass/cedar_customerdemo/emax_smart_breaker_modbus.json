@@ -1,0 +1,164 @@
+{
+	"system":
+	{
+		"id": "emax_smart_breaker",
+		"ip_address": "10.239.2.30",
+		"port": 502,
+		"frequency": 500,
+		"byte_swap": true,
+		"device_id": 1
+	},
+	"registers":
+	[
+		{
+			"type": "Holding Registers",
+			"starting_offset": 0,
+			"number_of_registers": 2,
+			"map":
+			[
+				{
+					"id": "breaker_commands",
+					"offset": 0,
+					"size": 2
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 40,
+			"number_of_registers": 1,
+			"map":
+			[
+				{
+					"id": "status",
+					"offset": 40,
+					"individual_bits": true,
+					"bit_strings":
+					[
+						"breaker_status"
+					]
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 100,
+			"number_of_registers": 6,
+			"map":
+			[
+				{
+					"id": "ac_current_l1",
+					"offset": 100,
+					"size": 2,
+					"scale": 10
+				},
+				{
+					"id": "ac_current_l2",
+					"offset": 102,
+					"size": 2,
+					"scale": 10
+				},
+				{
+					"id": "ac_current_l3",
+					"offset": 104,
+					"size": 2,
+					"scale": 10
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 5220,
+			"number_of_registers": 5,
+			"map":
+			[
+				{
+					"id": "grid_voltage",
+					"offset": 5220,
+					"scale": 10
+				},
+				{
+					"id": "ess_voltage",
+					"offset": 5221,
+					"scale": 10
+				},
+				{
+					"id": "grid_frequency",
+					"offset": 5222,
+					"scale": 100
+				},
+				{
+					"id": "ess_frequency",
+					"offset": 5223,
+					"scale": 100
+				},
+				{
+					"id": "phase_angle_delta",
+					"offset": 5224,
+					"scale": 10,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 206,
+			"number_of_registers": 2,
+			"map":
+			[
+				{
+					"id": "active_power",
+					"offset": 206,
+					"size": 2,
+					"scale": 10,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 214,
+			"number_of_registers": 2,
+			"map":
+			[
+				{
+					"id": "reactive_power",
+					"offset": 214,
+					"size": 2,
+					"scale": 10,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 222,
+			"number_of_registers": 2,
+			"map":
+			[
+				{
+					"id": "apparent_power",
+					"offset": 222,
+					"size": 2,
+					"scale": 10,
+					"signed": true
+				}
+			]
+		},
+		{
+			"type": "Input Registers",
+			"starting_offset": 253,
+			"number_of_registers": 1,
+			"map":
+			[
+				{
+					"id": "power_factor",
+					"offset": 253,
+					"size": 1,
+					"scale": 1000,
+					"signed": true
+				}
+			]
+		}
+	]
+}

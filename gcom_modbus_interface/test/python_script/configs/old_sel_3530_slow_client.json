@@ -1,0 +1,101 @@
+{
+    "fileInfo": {
+        "sourceFileName": "sel_3530_client.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2022-12-06T16:51:00.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "Jasen Liu",
+        "outputFileName": "sel_3530_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2022-12-06T16:51:10.913Z"
+    },
+    "connection": {
+        "name": "SEL 3530 RTAC",
+        "ip_address": "172.17.0.3",
+        "port": 502,
+        "device_id": 1,
+        "max_num_connections": 1
+    },
+    "components": [
+        {
+            "id": "sel_3530_slow_rtac",
+            "frequency": 200,
+            "offset_time": 0,
+            "registers": [
+                {
+                    "type": "Holding",
+                    "starting_offset": 0,
+                    "map": [
+                        { "id": "normal_1", "name": "normal_1",                 "offset": 0, "size": 1 },
+            { "id": "signed_1", "name": "signed_1",                 "offset": 2, "size": 1, "signed":true },
+            { "id": "scaled_1", "name": "scaled_1",                 "offset": 3, "size": 1, "scale":100 },
+            { "id": "scaled_signed_1", "name": "scaled_signed_1",   "offset": 5, "size": 1, "signed":true, "scale": 100 },
+            { "id": "normal_2", "name": "normal_2",                 "offset": 6, "size": 2 },
+            { "id": "float_2", "name": "float_2",                   "offset": 8, "size": 2, "float":true },
+            { "id": "signed_2", "name": "signed_2",                 "offset": 10, "size": 2, "signed":true },
+            { "id": "scaled_2", "name": "scaled_2",                 "offset": 12, "size": 2, "scale":100 },
+            { "id": "scaled_float_2", "name": "scaled_float_2",     "offset": 14, "size": 2, "float":true, "scale": 100 },
+            { "id": "scaled_signed_2", "name": "scaled_signed_2",   "offset": 16, "size": 2, "signed":true, "scale": 100 },
+            { "id": "normal_4", "name": "normal_4",                 "offset": 18, "size": 4 },
+            { "id": "float_4", "name": "float_4",                   "offset": 22, "size": 4, "float":true },
+            { "id": "signed_4", "name": "signed_4",                 "offset": 26, "size": 4, "signed":true },
+            { "id": "scaled_4", "name": "scaled_4",                 "offset": 30, "size": 4, "scale":100 },
+            { "id": "scaled_float_4", "name": "scaled_float_4",     "offset": 34, "size": 4, "float":true, "scale": 100 },
+            { "id": "scaled_signed_4", "name": "scaled_signed_4",   "offset": 38, "size": 4, "signed":true, "scale": 100 },
+            { "id": "test_id", "name": "test",                      "offset": 42, "size": 2, "signed": true }
+        
+                    ]
+                },
+                {
+                    "type": "Discrete Inputs",
+                    "starting_offset": 0,
+                    "number_of_registers": 2,
+                    "map": [
+                        { "id": "discrete_normal_1", "name": "normal_1",                 "offset": 0 },
+            { "id": "discrete_scale_client_1", "name": "scale_1",                 "offset": 1,"scale": -1 },
+            { "id": "discrete_scale_server_1", "name": "scale_1",                 "offset": 2 },
+            { "id": "discrete_scale_both_1", "name": "scale_1",                 "offset": 3 ,"scale": -1}
+       
+                    ]
+                },
+                {
+                    "type": "Coil",
+                    "starting_offset": 0,
+                    "number_of_registers": 2,
+                    "map": [
+                        { "id": "coil_normal_1", "name": "normal_1",                 "offset": 0 },
+            { "id": "coil_scale_client_1", "name": "scale_1",                 "offset": 1,"scale": -1 },
+            { "id": "coil_scale_server_1", "name": "scale_1",                 "offset": 2 },
+            { "id": "coil_scale_both_1", "name": "scale_1",                 "offset": 3 ,"scale": -1}
+            
+                    ]
+                },
+                {
+                    "type": "Input Registers",
+                    "starting_offset": 0,
+                    "number_of_registers": 44,
+                    "map": [
+                        { "id": "input_normal_1", "name": "normal_1",                 "offset": 0, "size": 1 },
+            { "id": "input_signed_1", "name": "signed_1",                 "offset": 2, "size": 1, "signed":true },
+            { "id": "input_scaled_1", "name": "scaled_1",                 "offset": 3, "size": 1, "scale":100 },
+            { "id": "input_scaled_signed_1", "name": "scaled_signed_1",   "offset": 5, "size": 1, "signed":true, "scale": 100 },
+            { "id": "input_normal_2", "name": "normal_2",                 "offset": 6, "size": 2 },
+            { "id": "input_float_2", "name": "float_2",                   "offset": 8, "size": 2, "float":true },
+            { "id": "input_signed_2", "name": "signed_2",                 "offset": 10, "size": 2, "signed":true },
+            { "id": "input_scaled_2", "name": "scaled_2",                 "offset": 12, "size": 2, "scale":100 },
+            { "id": "input_scaled_float_2", "name": "scaled_float_2",     "offset": 14, "size": 2, "float":true, "scale": 100 },
+            { "id": "input_scaled_signed_2", "name": "scaled_signed_2",   "offset": 16, "size": 2, "signed":true, "scale": 100 },
+            { "id": "input_normal_4", "name": "normal_4",                 "offset": 18, "size": 4 },
+            { "id": "input_float_4", "name": "float_4",                   "offset": 22, "size": 4, "float":true },
+            { "id": "input_signed_4", "name": "signed_4",                 "offset": 26, "size": 4, "signed":true },
+            { "id": "input_scaled_4", "name": "scaled_4",                 "offset": 30, "size": 4, "scale":100 },
+            { "id": "input_scaled_float_4", "name": "scaled_float_4",     "offset": 34, "size": 4, "float":true, "scale": 100 },
+            { "id": "input_scaled_signed_4", "name": "scaled_signed_4",   "offset": 38, "size": 4, "signed":true, "scale": 100 },
+            { "id": "input_test_id", "name": "test",                      "offset": 42, "size": 2, "signed": true }
+        
+                    ]
+                }
+            ]
+        }
+    ]
+}

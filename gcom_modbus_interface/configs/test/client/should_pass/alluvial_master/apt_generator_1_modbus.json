@@ -1,0 +1,105 @@
+{
+	"system":
+	{
+		"id": "apt_generator_1",
+		"ip_address": "10.8.20.11",
+		"port": 502,
+		"frequency": 500,
+		"byte_swap": false,
+		"off_by_one": true
+	},
+	"registers":
+	[
+		{
+			"type": "Holding Registers",
+			"starting_offset": 177,
+			"number_of_registers": 5,
+			"map":
+			[
+				{
+					"id": "reactive_power_setpoint",
+					"offset": 177
+				},
+				{
+					"id": "active_power_setpoint",
+					"offset": 181
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 820,
+			"number_of_registers": 6,
+			"map":
+			[
+				{
+					"id": "status",
+					"offset": 820,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Reserved", "Reserved", "Reserved", "Reserved", "Reserved",
+						"Circuit Breaker Closed",
+						"Rerserved",
+						"Engine Running",
+						"Alarm",
+						"Parallel Mode",
+						"Intertie Protection Mode",
+						"Reserved", "Reserved", "Reserved",
+						"E-Stop",
+						"Reserved"
+					]
+				},
+				{
+					"id": "alarm",
+					"offset": 824,
+					"size": 2,
+					"bit_field": true,
+					"bit_strings":
+					[
+						"Genset Sudden Stop",
+						"Generator Undervoltage",
+						"Generator Overvoltage",
+						"Generator Underfrequency",
+						"Generator Overfrequency",
+						"Generator Overcurrent",
+						"Generator Current Unbalanced",
+						"Generator Reverse Power",
+						"Generator Reverse kVAR",
+						"Fail to Parallel",
+						"Utility Interconnection Trip",
+						"Bus Undervoltage Latched",
+						"Bus Overvoltage Latched",
+						"Bus Underfrequency Latched",
+						"Bus Overfrequency Latched",
+						"Reserved", "Reserved",
+						"Generator Power Sensor Failure",
+						"Bus Power Sensor Failure",
+						"Reserved", "Reserved", "Reserved", "Reserved",
+						"Reserved", "Reserved", "Reserved", "Reserved",
+						"Bus Undervoltage",
+						"Bus Overvoltage",
+						"Bus Underfrequency",
+						"Bus Overfrequency"
+					]
+				}
+			]
+		},
+		{
+			"type": "Holding Registers",
+			"starting_offset": 1501,
+			"number_of_registers": 2,
+			"map":
+			[
+				{
+					"id": "start",
+					"offset": 1501
+				},
+				{
+					"id": "stop",
+					"offset": 1502
+				}
+			]
+		}
+	]
+}

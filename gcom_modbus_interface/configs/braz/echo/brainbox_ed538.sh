@@ -1,0 +1,1 @@
+/usr/local/bin/fims_echo -u /components/brainbox_ed538 -b '{ "HVAC_normally_close":{"value":0}, "HVAC_normally_open":{"value":0}, "intrusion_detection":{"value":0}}'&

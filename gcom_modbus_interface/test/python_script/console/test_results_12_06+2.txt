@@ -1,0 +1,1183 @@
+Branch: gcom_modbus_interface
+Latest Commit Hash: 7ef03dd9947c5db06b86c05b824265c17b32d8bb
+Latest Commit Author: 'Phil Wilshire'
+Test date: 2023-12-06 15:45:45.270978
+Test Case 0: Pass
+Test Case 256: Pass
+Test Case 257: Pass
+Test Case 258: Pass
+Test Case 259: Pass
+Test Case 260: Pass
+Test Case 261: Pass
+Test Case 262: Pass
+Test Case 263: Pass
+Test Case 264: Pass
+Test Case 265: Pass
+Test Case 266: Pass
+Test Case 267: Pass
+Test Case 268: Pass
+Test Case 269:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":1.175494e-42}"
+Expected: "discrete_normal_1":True
+Got     : "discrete_normal_1":False
+
+Test Case 270:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_normal_1\":9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999}"
+Expected: "discrete_normal_1":True
+Got     : "discrete_normal_1":False
+
+Test Case 271: Pass
+Test Case 272: Pass
+Test Case 273: Pass
+Test Case 274: Pass
+Test Case 275: Pass
+Test Case 276: Pass
+Test Case 277: Pass
+Test Case 278: Pass
+Test Case 279: Pass
+Test Case 280: Pass
+Test Case 281: Pass
+Test Case 282: Pass
+Test Case 283: Pass
+Test Case 284: Pass
+Test Case 285:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_client_1\":1.175494e-42}"
+Expected: "discrete_scale_client_1":False
+Got     : "discrete_scale_client_1":True
+
+Test Case 286:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_client_1\":9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999}"
+Expected: "discrete_scale_client_1":False
+Got     : "discrete_scale_client_1":True
+
+Test Case 287:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_client_1\":0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000}"
+Expected: "discrete_scale_client_1":0
+Got     : "discrete_scale_client_1":True
+
+Test Case 288:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":-108.70182527602066}"
+Expected: "discrete_scale_server_1":True
+Got     : "discrete_scale_server_1":False
+
+Test Case 289:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":300.5614478025208}"
+Expected: "discrete_scale_server_1":False
+Got     : "discrete_scale_server_1":True
+
+Test Case 290:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":-173}"
+Expected: "discrete_scale_server_1":True
+Got     : "discrete_scale_server_1":False
+
+Test Case 291:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":171}"
+Expected: "discrete_scale_server_1":False
+Got     : "discrete_scale_server_1":True
+
+Test Case 292:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":0}"
+Expected: "discrete_scale_server_1":True
+Got     : "discrete_scale_server_1":False
+
+Test Case 293:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":true}"
+Expected: "discrete_scale_server_1":False
+Got     : "discrete_scale_server_1":True
+
+Test Case 294:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":false}"
+Expected: "discrete_scale_server_1":True
+Got     : "discrete_scale_server_1":False
+
+Test Case 295: Pass
+Test Case 296:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":131072}"
+Expected: "discrete_scale_server_1":False
+Got     : "discrete_scale_server_1":True
+
+Test Case 297:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":-131072}"
+Expected: "discrete_scale_server_1":True
+Got     : "discrete_scale_server_1":False
+
+Test Case 298:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":8589934592}"
+Expected: "discrete_scale_server_1":False
+Got     : "discrete_scale_server_1":True
+
+Test Case 299:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":-8589934592}"
+Expected: "discrete_scale_server_1":True
+Got     : "discrete_scale_server_1":False
+
+Test Case 300:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_server_1\":6.8056474e+38}"
+Expected: "discrete_scale_server_1":False
+Got     : "discrete_scale_server_1":True
+
+Test Case 301: Pass
+Test Case 302: Pass
+Test Case 303: Pass
+Test Case 304:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":-181.7419069801798}"
+Expected: "discrete_scale_both_1":False
+Got     : "discrete_scale_both_1":True
+
+Test Case 305:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":288.56788149397033}"
+Expected: "discrete_scale_both_1":True
+Got     : "discrete_scale_both_1":False
+
+Test Case 306:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":-261}"
+Expected: "discrete_scale_both_1":False
+Got     : "discrete_scale_both_1":True
+
+Test Case 307:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":253}"
+Expected: "discrete_scale_both_1":True
+Got     : "discrete_scale_both_1":False
+
+Test Case 308: Pass
+Test Case 309:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":true}"
+Expected: "discrete_scale_both_1":True
+Got     : "discrete_scale_both_1":False
+
+Test Case 310:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":false}"
+Expected: "discrete_scale_both_1":False
+Got     : "discrete_scale_both_1":True
+
+Test Case 311: Pass
+Test Case 312:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":131072}"
+Expected: "discrete_scale_both_1":True
+Got     : "discrete_scale_both_1":False
+
+Test Case 313:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":-131072}"
+Expected: "discrete_scale_both_1":False
+Got     : "discrete_scale_both_1":True
+
+Test Case 314:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":8589934592}"
+Expected: "discrete_scale_both_1":True
+Got     : "discrete_scale_both_1":False
+
+Test Case 315:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":-8589934592}"
+Expected: "discrete_scale_both_1":False
+Got     : "discrete_scale_both_1":True
+
+Test Case 316:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":6.8056474e+38}"
+Expected: "discrete_scale_both_1":True
+Got     : "discrete_scale_both_1":False
+
+Test Case 317: Pass
+Test Case 318: Pass
+Test Case 319:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"discrete_scale_both_1\":0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000}"
+Expected: "discrete_scale_both_1":0
+Got     : "discrete_scale_both_1":True
+
+Test Case 384:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_1\":-371.79879189012377}"
+Expected: "input_normal_1":0
+Got     : "input_normal_1":65165
+
+Test Case 385: Pass
+Test Case 386:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_1\":-269}"
+Expected: "input_normal_1":0
+Got     : "input_normal_1":65267
+
+Test Case 387: Pass
+Test Case 388: Pass
+Test Case 389: Pass
+Test Case 390: Pass
+Test Case 391: Pass
+Test Case 392:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_1\":131072}"
+Expected: "input_normal_1":65535
+Got     : "input_normal_1":0
+
+Test Case 393: Pass
+Test Case 394:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_1\":8589934592}"
+Expected: "input_normal_1":65535
+Got     : "input_normal_1":0
+
+Test Case 395: Pass
+Test Case 396:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_1\":6.8056474e+38}"
+Expected: "input_normal_1":65535
+Got     : "input_normal_1":0
+
+Test Case 397: Pass
+Test Case 398: Pass
+Test Case 399: Pass
+Test Case 400: Pass
+Test Case 401: Pass
+Test Case 402: Pass
+Test Case 403: Pass
+Test Case 404: Pass
+Test Case 405: Pass
+Test Case 406: Pass
+Test Case 407: Pass
+Test Case 408: Pass
+Test Case 409: Pass
+Test Case 410: Pass
+Test Case 411: Pass
+Test Case 412: Pass
+Test Case 413: Pass
+Test Case 414: Pass
+Test Case 415: Pass
+Test Case 416: Pass
+Test Case 417: Pass
+Test Case 418: Pass
+Test Case 419: Pass
+Test Case 420: Pass
+Test Case 421: Pass
+Test Case 422: Pass
+Test Case 423: Pass
+Test Case 424: Pass
+Test Case 425: Pass
+Test Case 426: Pass
+Test Case 427: Pass
+Test Case 428: Pass
+Test Case 429: Pass
+Test Case 430: Pass
+Test Case 431: Pass
+Test Case 432: Pass
+Test Case 433: Pass
+Test Case 434: Pass
+Test Case 435: Pass
+Test Case 436: Pass
+Test Case 437: Pass
+Test Case 438: Pass
+Test Case 439: Pass
+Test Case 440: Pass
+Test Case 441: Pass
+Test Case 442: Pass
+Test Case 443: Pass
+Test Case 444: Pass
+Test Case 445: Pass
+Test Case 446: Pass
+Test Case 447: Pass
+Test Case 448: Pass
+Test Case 449: Pass
+Test Case 450: Pass
+Test Case 451: Pass
+Test Case 452: Pass
+Test Case 453: Pass
+Test Case 454: Pass
+Test Case 455: Pass
+Test Case 456: Pass
+Test Case 457: Pass
+Test Case 458:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_2\":8589934592}"
+Expected: "input_normal_2":4294967295
+Got     : "input_normal_2":4294967294
+
+Test Case 459: Pass
+Test Case 460:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_normal_2\":6.8056474e+38}"
+Expected: "input_normal_2":4294967295
+Got     : "input_normal_2":4294967294
+
+Test Case 461: Pass
+Test Case 462: Pass
+Test Case 463: Pass
+Test Case 464:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_2\":-111.5729363861243}"
+Expected: "input_float_2":-111.5729363861243
+Got     : "input_float_2":-111.5729
+
+Test Case 465:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_2\":42.59424725699466}"
+Expected: "input_float_2":42.59424725699466
+Got     : "input_float_2":42.5942
+
+Test Case 466: Pass
+Test Case 467: Pass
+Test Case 468: Pass
+Test Case 469: Pass
+Test Case 470: Pass
+Test Case 471: Pass
+Test Case 472: Pass
+Test Case 473: Pass
+Test Case 474: Pass
+Test Case 475: Pass
+Test Case 476:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_2\":6.8056474e+38}"
+Expected: "input_float_2":3.4028237e+38
+Got     : "input_float_2":3.4028234663852886e+38
+
+Test Case 477: Pass
+Test Case 478: Pass
+Test Case 479: Pass
+Test Case 480: Pass
+Test Case 481: Pass
+Test Case 482: Pass
+Test Case 483: Pass
+Test Case 484: Pass
+Test Case 485: Pass
+Test Case 486: Pass
+Test Case 487: Pass
+Test Case 488: Pass
+Test Case 489: Pass
+Test Case 490: Pass
+Test Case 491:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_signed_2\":-8589934592}"
+Expected: "input_signed_2":-2147483648
+Got     : "input_signed_2":0.0
+
+Test Case 492: Pass
+Test Case 493: Pass
+Test Case 494: Pass
+Test Case 495: Pass
+Test Case 496: Pass
+Test Case 497: Pass
+Test Case 498: Pass
+Test Case 499: Pass
+Test Case 500: Pass
+Test Case 501: Pass
+Test Case 502: Pass
+Test Case 503: Pass
+Test Case 504: Pass
+Test Case 505: Pass
+Test Case 506:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_2\":8589934592}"
+Expected: "input_scaled_2":42949672.95
+Got     : "input_scaled_2":42949672.94
+
+Test Case 507: Pass
+Test Case 508:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_2\":6.8056474e+38}"
+Expected: "input_scaled_2":42949672.95
+Got     : "input_scaled_2":42949672.94
+
+Test Case 509: Pass
+Test Case 510: Pass
+Test Case 511: Pass
+Test Case 512:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_2\":-78.10796551189162}"
+Expected: "input_scaled_float_2":-78.10796551189162
+Got     : "input_scaled_float_2":-78.108
+
+Test Case 513:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_2\":252.32002944873597}"
+Expected: "input_scaled_float_2":252.32002944873594
+Got     : "input_scaled_float_2":252.32
+
+Test Case 514: Pass
+Test Case 515: Pass
+Test Case 516: Pass
+Test Case 517: Pass
+Test Case 518: Pass
+Test Case 519: Pass
+Test Case 520: Pass
+Test Case 521: Pass
+Test Case 522: Pass
+Test Case 523: Pass
+Test Case 524:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_2\":6.8056474e+38}"
+Expected: "input_scaled_float_2":3.4028237e+36
+Got     : "input_scaled_float_2":3.4028234663852885e+36
+
+Test Case 525: Pass
+Test Case 526: Pass
+Test Case 527: Pass
+Test Case 528: Pass
+Test Case 529: Pass
+Test Case 530: Pass
+Test Case 531: Pass
+Test Case 532: Pass
+Test Case 533: Pass
+Test Case 534: Pass
+Test Case 535: Pass
+Test Case 536: Pass
+Test Case 537: Pass
+Test Case 538: Pass
+Test Case 539: Pass
+Test Case 540: Pass
+Test Case 541: Pass
+Test Case 542: Pass
+Test Case 543: Pass
+Test Case 544: Pass
+Test Case 545: Pass
+Test Case 546: Pass
+Test Case 547: Pass
+Test Case 548: Pass
+Test Case 549: Pass
+Test Case 550: Pass
+Test Case 551: Pass
+Test Case 552: Pass
+Test Case 553: Pass
+Test Case 554: Pass
+Test Case 555: Pass
+Test Case 556: Pass
+Test Case 557: Pass
+Test Case 558: Pass
+Test Case 559: Pass
+Test Case 560:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_4\":-509.65910180870765}"
+Expected: "input_float_4":-509.65910180870765
+Got     : "input_float_4":-509.6591
+
+Test Case 561:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_4\":268.4938127397794}"
+Expected: "input_float_4":268.4938127397794
+Got     : "input_float_4":268.4938
+
+Test Case 562: Pass
+Test Case 563: Pass
+Test Case 564: Pass
+Test Case 565: Pass
+Test Case 566: Pass
+Test Case 567: Pass
+Test Case 568: Pass
+Test Case 569: Pass
+Test Case 570: Pass
+Test Case 571: Pass
+Test Case 572: Pass
+Test Case 573:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_4\":1.175494e-42}"
+Expected: "input_float_4":1.175494e-42
+Got     : "input_float_4":0.0
+
+Test Case 574:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_float_4\":9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999}"
+Expected: "input_float_4":1.175494e-42
+Got     : "input_float_4":0.0
+
+Test Case 575: Pass
+Test Case 576: Pass
+Test Case 577: Pass
+Test Case 578: Pass
+Test Case 579: Pass
+Test Case 580: Pass
+Test Case 581: Pass
+Test Case 582: Pass
+Test Case 583: Pass
+Test Case 584: Pass
+Test Case 585: Pass
+Test Case 586: Pass
+Test Case 587: Pass
+Test Case 588:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_signed_4\":6.8056474e+38}"
+Expected: "input_signed_4":9223372036854775807
+Got     : "input_signed_4":9.223372036854776e+18
+
+Test Case 589: Pass
+Test Case 590: Pass
+Test Case 591: Pass
+Test Case 592: Pass
+Test Case 593: Pass
+Test Case 594: Pass
+Test Case 595: Pass
+Test Case 596: Pass
+Test Case 597: Pass
+Test Case 598: Pass
+Test Case 599: Pass
+Test Case 600: Pass
+Test Case 601: Pass
+Test Case 602: Pass
+Test Case 603: Pass
+Test Case 604: Pass
+Test Case 605: Pass
+Test Case 606: Pass
+Test Case 607: Pass
+Test Case 608:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_4\":-192.92505855112074}"
+Expected: "input_scaled_float_4":-192.92505855112074
+Got     : "input_scaled_float_4":-192.9251
+
+Test Case 609:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_4\":157.71156453536975}"
+Expected: "input_scaled_float_4":157.71156453536975
+Got     : "input_scaled_float_4":157.7116
+
+Test Case 610: Pass
+Test Case 611: Pass
+Test Case 612: Pass
+Test Case 613: Pass
+Test Case 614: Pass
+Test Case 615: Pass
+Test Case 616: Pass
+Test Case 617: Pass
+Test Case 618: Pass
+Test Case 619: Pass
+Test Case 620: Pass
+Test Case 621:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_4\":1.175494e-42}"
+Expected: "input_scaled_float_4":1.175494e-42
+Got     : "input_scaled_float_4":0.0
+
+Test Case 622:
+fims_send -m pub -u /components/sel_3530_slow_rtac "{\"input_scaled_float_4\":9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999}"
+Expected: "input_scaled_float_4":1.175494e-42
+Got     : "input_scaled_float_4":0.0
+
+Test Case 623: Pass
+Test Case 624: Pass
+Test Case 625: Pass
+Test Case 626: Pass
+Test Case 627: Pass
+Test Case 628: Pass
+Test Case 629: Pass
+Test Case 630: Pass
+Test Case 631: Pass
+Test Case 632: Pass
+Test Case 633: Pass
+Test Case 634: Pass
+Test Case 635: Pass
+Test Case 636: Pass
+Test Case 637: Pass
+Test Case 638: Pass
+Test Case 639: Pass
+Test Case 0: Pass
+Test Case 1: Pass
+Test Case 2: Pass
+Test Case 3: Pass
+Test Case 4: Pass
+Test Case 5: Pass
+Test Case 6: Pass
+Test Case 7: Pass
+Test Case 8: Pass
+Test Case 9: Pass
+Test Case 10: Pass
+Test Case 11: Pass
+Test Case 12:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_1\":6.8056474e+38}"
+Expected: "normal_1": 65535
+Got     : "normal_1": 0
+
+Test Case 13: Pass
+Test Case 14: Pass
+Test Case 15: Pass
+Test Case 16:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_1\":-126.59397012916526}"
+Expected: "signed_1": -126
+Got     : "signed_1": 0
+
+Test Case 17: Pass
+Test Case 18: Pass
+Test Case 19: Pass
+Test Case 20: Pass
+Test Case 21: Pass
+Test Case 22: Pass
+Test Case 23: Pass
+Test Case 24:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_1\":131072}"
+Expected: "signed_1": 32767
+Got     : "signed_1": 0
+
+Test Case 25:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_1\":-131072}"
+Expected: "signed_1": -32768
+Got     : "signed_1": 0
+
+Test Case 26:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_1\":8589934592}"
+Expected: "signed_1": 32767
+Got     : "signed_1": 0
+
+Test Case 27:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_1\":-8589934592}"
+Expected: "signed_1": -32768
+Got     : "signed_1": 0
+
+Test Case 28:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_1\":6.8056474e+38}"
+Expected: "signed_1": 32767
+Got     : "signed_1": 0
+
+Test Case 29: Pass
+Test Case 30: Pass
+Test Case 31: Pass
+Test Case 32: Pass
+Test Case 33: Pass
+Test Case 34: Pass
+Test Case 35: Pass
+Test Case 36: Pass
+Test Case 37: Pass
+Test Case 38: Pass
+Test Case 39: Pass
+Test Case 40:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_1\":131072}"
+Expected: "scaled_1": 655.35
+Got     : "scaled_1": 0
+
+Test Case 41: Pass
+Test Case 42:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_1\":8589934592}"
+Expected: "scaled_1": 655.35
+Got     : "scaled_1": 0
+
+Test Case 43: Pass
+Test Case 44:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_1\":6.8056474e+38}"
+Expected: "scaled_1": 655.35
+Got     : "scaled_1": 0
+
+Test Case 45: Pass
+Test Case 46: Pass
+Test Case 47: Pass
+Test Case 48:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_1\":-44.693670252162235}"
+Expected: "scaled_signed_1": -44.69
+Got     : "scaled_signed_1": 0
+
+Test Case 49: Pass
+Test Case 50:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_1\":-288}"
+Expected: "scaled_signed_1": -288.0
+Got     : "scaled_signed_1": 0
+
+Test Case 51: Pass
+Test Case 52: Pass
+Test Case 53: Pass
+Test Case 54: Pass
+Test Case 55: Pass
+Test Case 56:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_1\":131072}"
+Expected: "scaled_signed_1": 327.67
+Got     : "scaled_signed_1": 0
+
+Test Case 57:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_1\":-131072}"
+Expected: "scaled_signed_1": -327.68
+Got     : "scaled_signed_1": 0
+
+Test Case 58:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_1\":8589934592}"
+Expected: "scaled_signed_1": 327.67
+Got     : "scaled_signed_1": 0
+
+Test Case 59:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_1\":-8589934592}"
+Expected: "scaled_signed_1": -327.68
+Got     : "scaled_signed_1": 0
+
+Test Case 60:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_1\":6.8056474e+38}"
+Expected: "scaled_signed_1": 327.67
+Got     : "scaled_signed_1": 0
+
+Test Case 61: Pass
+Test Case 62: Pass
+Test Case 63: Pass
+Test Case 64:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_2\":-334.1983963137083}"
+Expected: "normal_2": 0
+Got     : "normal_2": 4294966962
+
+Test Case 65: Pass
+Test Case 66:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_2\":-100}"
+Expected: "normal_2": 0
+Got     : "normal_2": 4294967196
+
+Test Case 67: Pass
+Test Case 68: Pass
+Test Case 69: Pass
+Test Case 70: Pass
+Test Case 71: Pass
+Test Case 72: Pass
+Test Case 73:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_2\":-131072}"
+Expected: "normal_2": 0
+Got     : "normal_2": 4294836224
+
+Test Case 74:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_2\":8589934592}"
+Expected: "normal_2": 4294967295
+Got     : "normal_2": 0
+
+Test Case 75: Pass
+Test Case 76:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_2\":6.8056474e+38}"
+Expected: "normal_2": 4294967295
+Got     : "normal_2": 0
+
+Test Case 77: Pass
+Test Case 78: Pass
+Test Case 79: Pass
+Test Case 80:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"float_2\":-263.07276776322414}"
+Expected: "float_2": -263.07276776322414
+Got     : "float_2": -263.07275390625
+
+Test Case 81:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"float_2\":50.17551917301972}"
+Expected: "float_2": 50.17551917301972
+Got     : "float_2": 50.17551803588867
+
+Test Case 82: Pass
+Test Case 83: Pass
+Test Case 84: Pass
+Test Case 85: Pass
+Test Case 86: Pass
+Test Case 87: Pass
+Test Case 88: Pass
+Test Case 89: Pass
+Test Case 90: Pass
+Test Case 91: Pass
+Test Case 92:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"float_2\":6.8056474e+38}"
+Expected: "float_2": 3.4028237e+38
+Got     : "float_2": None
+
+Test Case 93:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"float_2\":1.175494e-42}"
+Expected: "float_2": 0.0
+Got     : "float_2": 1.1756894115685215e-42
+
+Test Case 94: Pass
+Test Case 95: Pass
+Test Case 96: Pass
+Test Case 97: Pass
+Test Case 98: Pass
+Test Case 99: Pass
+Test Case 100: Pass
+Test Case 101: Pass
+Test Case 102: Pass
+Test Case 103: Pass
+Test Case 104: Pass
+Test Case 105: Pass
+Test Case 106:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_2\":8589934592}"
+Expected: "signed_2": 2147483647
+Got     : "signed_2": 0
+
+Test Case 107:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_2\":-8589934592}"
+Expected: "signed_2": -2147483648
+Got     : "signed_2": 0
+
+Test Case 108:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_2\":6.8056474e+38}"
+Expected: "signed_2": 2147483647
+Got     : "signed_2": -2147483648
+
+Test Case 109: Pass
+Test Case 110: Pass
+Test Case 111: Pass
+Test Case 112:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_2\":-265.25817714860676}"
+Expected: "scaled_2": 0.0
+Got     : "scaled_2": 42949407.71
+
+Test Case 113: Pass
+Test Case 114:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_2\":-129}"
+Expected: "scaled_2": 0.0
+Got     : "scaled_2": 42949543.96
+
+Test Case 115: Pass
+Test Case 116: Pass
+Test Case 117: Pass
+Test Case 118: Pass
+Test Case 119: Pass
+Test Case 120: Pass
+Test Case 121:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_2\":-131072}"
+Expected: "scaled_2": 0.0
+Got     : "scaled_2": 42818600.96
+
+Test Case 122:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_2\":8589934592}"
+Expected: "scaled_2": 42949672.95
+Got     : "scaled_2": 0
+
+Test Case 123: Pass
+Test Case 124:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_2\":6.8056474e+38}"
+Expected: "scaled_2": 42949672.95
+Got     : "scaled_2": 0
+
+Test Case 125: Pass
+Test Case 126: Pass
+Test Case 127: Pass
+Test Case 128:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_float_2\":-100.43624566804124}"
+Expected: "scaled_float_2": -100.43624566804122
+Got     : "scaled_float_2": -100.43625
+
+Test Case 129:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_float_2\":310.2266071561394}"
+Expected: "scaled_float_2": 310.2266071561394
+Got     : "scaled_float_2": 310.2266015625
+
+Test Case 130: Pass
+Test Case 131: Pass
+Test Case 132: Pass
+Test Case 133: Pass
+Test Case 134: Pass
+Test Case 135: Pass
+Test Case 136: Pass
+Test Case 137: Pass
+Test Case 138: Pass
+Test Case 139: Pass
+Test Case 140:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_float_2\":6.8056474e+38}"
+Expected: "scaled_float_2": 3.4028237e+36
+Got     : "scaled_float_2": None
+
+Test Case 141:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_float_2\":1.175494e-42}"
+Expected: "scaled_float_2": 0.0
+Got     : "scaled_float_2": 1.175493229783516e-42
+
+Test Case 142: Pass
+Test Case 143: Pass
+Test Case 144: Pass
+Test Case 145: Pass
+Test Case 146: Pass
+Test Case 147: Pass
+Test Case 148: Pass
+Test Case 149: Pass
+Test Case 150: Pass
+Test Case 151: Pass
+Test Case 152: Pass
+Test Case 153: Pass
+Test Case 154:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_2\":8589934592}"
+Expected: "scaled_signed_2": 21474836.47
+Got     : "scaled_signed_2": -21474836.48
+
+Test Case 155: Pass
+Test Case 156:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_2\":6.8056474e+38}"
+Expected: "scaled_signed_2": 21474836.47
+Got     : "scaled_signed_2": -21474836.48
+
+Test Case 157: Pass
+Test Case 158: Pass
+Test Case 159: Pass
+Test Case 160:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_4\":-391.05116136815747}"
+Expected: "normal_4": 0
+Got     : "normal_4": 1.8446744073709552e+19
+
+Test Case 161: Pass
+Test Case 162:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_4\":-201}"
+Expected: "normal_4": 0
+Got     : "normal_4": 1.8446744073709552e+19
+
+Test Case 163: Pass
+Test Case 164: Pass
+Test Case 165: Pass
+Test Case 166: Pass
+Test Case 167: Pass
+Test Case 168: Pass
+Test Case 169:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_4\":-131072}"
+Expected: "normal_4": 0
+Got     : "normal_4": 1.844674407370942e+19
+
+Test Case 170: Pass
+Test Case 171:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_4\":-8589934592}"
+Expected: "normal_4": 0
+Got     : "normal_4": 1.8446744065119617e+19
+
+Test Case 172:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"normal_4\":6.8056474e+38}"
+Expected: "normal_4": 18446744073709551615
+Got     : "normal_4": 0
+
+Test Case 173: Pass
+Test Case 174: Pass
+Test Case 175: Pass
+Test Case 176: Pass
+Test Case 177: Pass
+Test Case 178: Pass
+Test Case 179: Pass
+Test Case 180: Pass
+Test Case 181: Pass
+Test Case 182: Pass
+Test Case 183: Pass
+Test Case 184: Pass
+Test Case 185: Pass
+Test Case 186: Pass
+Test Case 187: Pass
+Test Case 188: Pass
+Test Case 189: Pass
+Test Case 190: Pass
+Test Case 191: Pass
+Test Case 192: Pass
+Test Case 193: Pass
+Test Case 194: Pass
+Test Case 195: Pass
+Test Case 196: Pass
+Test Case 197: Pass
+Test Case 198: Pass
+Test Case 199: Pass
+Test Case 200: Pass
+Test Case 201: Pass
+Test Case 202: Pass
+Test Case 203: Pass
+Test Case 204:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"signed_4\":6.8056474e+38}"
+Expected: "signed_4": 9223372036854775807
+Got     : "signed_4": -9.223372036854776e+18
+
+Test Case 205: Pass
+Test Case 206: Pass
+Test Case 207: Pass
+Test Case 208:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_4\":-135.41977273851904}"
+Expected: "scaled_4": 0.0
+Got     : "scaled_4": 1.8446744073709536e+17
+
+Test Case 209: Pass
+Test Case 210:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_4\":-264}"
+Expected: "scaled_4": 0.0
+Got     : "scaled_4": 1.8446744073709526e+17
+
+Test Case 211: Pass
+Test Case 212: Pass
+Test Case 213: Pass
+Test Case 214: Pass
+Test Case 215: Pass
+Test Case 216: Pass
+Test Case 217:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_4\":-131072}"
+Expected: "scaled_4": 0.0
+Got     : "scaled_4": 1.8446744073696445e+17
+
+Test Case 218: Pass
+Test Case 219:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_4\":-8589934592}"
+Expected: "scaled_4": 0.0
+Got     : "scaled_4": 1.8446743214716093e+17
+
+Test Case 220:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_4\":6.8056474e+38}"
+Expected: "scaled_4": 1.8446744073709552e+17
+Got     : "scaled_4": 0
+
+Test Case 221: Pass
+Test Case 222: Pass
+Test Case 223: Pass
+Test Case 224: Pass
+Test Case 225: Pass
+Test Case 226: Pass
+Test Case 227: Pass
+Test Case 228: Pass
+Test Case 229: Pass
+Test Case 230: Pass
+Test Case 231: Pass
+Test Case 232: Pass
+Test Case 233: Pass
+Test Case 234: Pass
+Test Case 235: Pass
+Test Case 236: Pass
+Test Case 237: Pass
+Test Case 238: Pass
+Test Case 239: Pass
+Test Case 240: Pass
+Test Case 241: Pass
+Test Case 242: Pass
+Test Case 243: Pass
+Test Case 244: Pass
+Test Case 245: Pass
+Test Case 246: Pass
+Test Case 247: Pass
+Test Case 248: Pass
+Test Case 249: Pass
+Test Case 250: Pass
+Test Case 251: Pass
+Test Case 252:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"scaled_signed_4\":6.8056474e+38}"
+Expected: "scaled_signed_4": 9.223372036854776e+16
+Got     : "scaled_signed_4": -92233720368547760
+
+Test Case 253: Pass
+Test Case 254: Pass
+Test Case 255: Pass
+Test Case 320: Pass
+Test Case 321: Pass
+Test Case 322: Pass
+Test Case 323: Pass
+Test Case 324: Pass
+Test Case 325: Pass
+Test Case 326: Pass
+Test Case 327: Pass
+Test Case 328: Pass
+Test Case 329: Pass
+Test Case 330: Pass
+Test Case 331: Pass
+Test Case 332: Pass
+Test Case 333: Pass
+Test Case 334: Pass
+Test Case 335: Pass
+Test Case 336: Pass
+Test Case 337: Pass
+Test Case 338: Pass
+Test Case 339: Pass
+Test Case 340: Pass
+Test Case 341: Pass
+Test Case 342: Pass
+Test Case 343: Pass
+Test Case 344: Pass
+Test Case 345: Pass
+Test Case 346: Pass
+Test Case 347: Pass
+Test Case 348: Pass
+Test Case 349: Pass
+Test Case 350: Pass
+Test Case 351: Pass
+Test Case 352:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":-116.78879390117402}"
+Expected: "coil_scale_server_1": True
+Got     : "coil_scale_server_1": False
+
+Test Case 353:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":506.0583527309741}"
+Expected: "coil_scale_server_1": False
+Got     : "coil_scale_server_1": True
+
+Test Case 354:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":-214}"
+Expected: "coil_scale_server_1": True
+Got     : "coil_scale_server_1": False
+
+Test Case 355:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":437}"
+Expected: "coil_scale_server_1": False
+Got     : "coil_scale_server_1": True
+
+Test Case 356:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":0}"
+Expected: "coil_scale_server_1": True
+Got     : "coil_scale_server_1": False
+
+Test Case 357:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":true}"
+Expected: "coil_scale_server_1": False
+Got     : "coil_scale_server_1": True
+
+Test Case 358:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":false}"
+Expected: "coil_scale_server_1": True
+Got     : "coil_scale_server_1": False
+
+Test Case 359: Pass
+Test Case 360:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":131072}"
+Expected: "coil_scale_server_1": False
+Got     : "coil_scale_server_1": True
+
+Test Case 361:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":-131072}"
+Expected: "coil_scale_server_1": True
+Got     : "coil_scale_server_1": False
+
+Test Case 362:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":8589934592}"
+Expected: "coil_scale_server_1": False
+Got     : "coil_scale_server_1": True
+
+Test Case 363:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":-8589934592}"
+Expected: "coil_scale_server_1": True
+Got     : "coil_scale_server_1": False
+
+Test Case 364:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":6.8056474e+38}"
+Expected: "coil_scale_server_1": False
+Got     : "coil_scale_server_1": True
+
+Test Case 365:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_server_1\":1.175494e-42}"
+Expected: "coil_scale_server_1": False
+Got     : "coil_scale_server_1": True
+
+Test Case 366: Pass
+Test Case 367: Pass
+Test Case 368:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":-144.08927759527506}"
+Expected: "coil_scale_both_1": False
+Got     : "coil_scale_both_1": True
+
+Test Case 369:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":253.24725342382044}"
+Expected: "coil_scale_both_1": True
+Got     : "coil_scale_both_1": False
+
+Test Case 370:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":-109}"
+Expected: "coil_scale_both_1": False
+Got     : "coil_scale_both_1": True
+
+Test Case 371:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":159}"
+Expected: "coil_scale_both_1": True
+Got     : "coil_scale_both_1": False
+
+Test Case 372:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":0}"
+Expected: "coil_scale_both_1": False
+Got     : "coil_scale_both_1": True
+
+Test Case 373:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":true}"
+Expected: "coil_scale_both_1": True
+Got     : "coil_scale_both_1": False
+
+Test Case 374:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":false}"
+Expected: "coil_scale_both_1": False
+Got     : "coil_scale_both_1": True
+
+Test Case 375: Pass
+Test Case 376:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":131072}"
+Expected: "coil_scale_both_1": True
+Got     : "coil_scale_both_1": False
+
+Test Case 377:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":-131072}"
+Expected: "coil_scale_both_1": False
+Got     : "coil_scale_both_1": True
+
+Test Case 378:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":8589934592}"
+Expected: "coil_scale_both_1": True
+Got     : "coil_scale_both_1": False
+
+Test Case 379:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":-8589934592}"
+Expected: "coil_scale_both_1": False
+Got     : "coil_scale_both_1": True
+
+Test Case 380:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":6.8056474e+38}"
+Expected: "coil_scale_both_1": True
+Got     : "coil_scale_both_1": False
+
+Test Case 381:
+fims_send -m set -u /components/sel_3530_slow_rtac "{\"coil_scale_both_1\":1.175494e-42}"
+Expected: "coil_scale_both_1": True
+Got     : "coil_scale_both_1": False
+
+Test Case 382: Pass
+Test Case 383: Pass
+
+
+Passed: 509
+Failed: 132
+Failed: ]
+
+Complete messages: 0
+Incomplete messages: 0
+
+Time between pubs

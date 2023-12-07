@@ -1,0 +1,269 @@
+{
+    "connection": {
+        "name": "Risen BMS",
+        "ip_address": "192.168.1.136",
+        "port": 502,
+        "frequency": 1000,
+        "device_id": 1
+    },
+    "components": [
+        {
+            "id": "ems_running_info",
+            "heartbeat_enabled": false,
+            "component_heartbeat_read_uri": "life_signal",
+            "component_heartbeat_write_uri": "life",
+            "modbus_heartbeat_timeout_ms": 1000,
+            "component_heartbeat_timeout_ms": 1000,
+            "add_timings":false,
+            "registers": [
+                {
+                    "type": "Holding",
+                    "map": [
+                        {"id": "year", "offset": 298, "name": "Year" },
+                        {"id": "month", "offset": 299, "name": "Month" },
+                        {"id": "day", "offset": 300, "name": "Day" },
+                        {"id": "hour", "offset": 301, "name": "Hour" },
+                        {"id": "minute", "offset": 302, "name": "Minute" },
+                        {"id": "second", "offset": 303, "name": "Second" },
+                        {"id": "batt_cabinet_air_conditioning_relay", "offset": 384, "name": "Battery Cabinet Air Conditioning Relay" },
+                        {"id": "bcp_cabinet_air_conditioning_relay", "offset": 385, "name": "BCP Cabinet Air Conditioning Relay" },
+                        {"id": "dc_load_switch_shunt_trip_ctrl", "offset": 391, "name": "Shunt Trip Control of DC Load Switch" }
+                    ]
+                },
+                {
+                    "type": "Holding",
+                    "map": [
+                        {"id": "soc_h2_alarm", "offset": 515, "name": "SOCH2 Alarm" },
+                        {"id": "soc_h2_recovery", "offset": 516, "name": "SOCH2 Recovery" },
+                        {"id": "soc_h1_alarm", "offset": 517, "name": "SOCH1 Alarm" },
+                        {"id": "soc_h1_recovery", "offset": 518, "name": "SOCH1 Recovery" },
+                        {"id": "soc_l1_recovery", "offset": 519, "name": "SOCL1 Recovery" },
+                        {"id": "soc_l1_alarm", "offset": 520, "name": "SOCL1 Alarm" },
+                        {"id": "soc_l2_recovery", "offset": 521, "name": "SOCL2 Recovery" },
+                        {"id": "soc_l2_alarm", "offset": 522, "name": "SOCL2 Alarm" },
+                        {"id": "ems_comms_loss_timeout_enable", "offset": 523, "name": "EMS Timeout of Loss of Communication" },
+                        {"id": "ems_comms_loss_timeout", "offset": 524, "name": "EMS Loss of Communication Timeout" }
+                    ]
+                },
+                {
+                    "type": "Input",
+                    "map": [
+                        {"id": "sys_status", "offset": 257, "name": "System Status" },
+                        {"id": "bms_alarms", "offset": 266, "name": "BMS Alarm" },
+                        {"id": "heartbeat", "offset": 278, "size": 2, "name": "Heartbeat" },
+                        {"id": "ems_comms_state", "offset": 280, "name": "EMS Communication State" },
+                        {"id": "bms_comms_state", "offset": 281, "name": "BMS Communication State" },
+                        {"id": "ac_comms_state_1", "offset": 283, "name": "AC Communication State 1" },
+                        {"id": "ac_comms_state_2", "offset": 284, "name": "AC Communication State 2" },
+                        {"id": "ac_comms_state_3", "offset": 285, "name": "AC Communication State 3" },
+                        {"id": "fss_comms_state", "offset": 287, "name": "FSS Communication State" },
+                        {"id": "env_alarms_1", "offset": 320, "name": "Environment Alarms 1" },
+                        {"id": "env_alarms_2", "offset": 321, "name": "Environment Alarms 2" },
+                        {"id": "env_alarms_3", "offset": 322, "name": "Environment Alarms 3" },
+                        {"id": "env_alarms_4", "offset": 323, "name": "Environment Alarms 4" },
+                        {"id": "env_alarms_5", "offset": 324, "name": "Environment Alarms 5" },
+                        {"id": "env_alarms_6", "offset": 325, "name": "Environment Alarms 6" },
+                        {"id": "env_alarms_7", "offset": 326, "name": "Environment Alarms 7" },
+                        {"id": "env_alarms_8", "offset": 327, "name": "Environment Alarms 8" },
+                        {"id": "env_alarms_9", "offset": 328, "name": "Environment Alarms 9" }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "hvac_info",
+            "registers": [
+                {
+                    "type": "Input",
+                    "decode_offset_range": {
+                        "begin": 1, "end": 37,
+                        "step": 32,
+                        "replace": "##decode_id##"
+                    },
+                    "map": [
+                        {"id": "hvac_##decode_id##_unit_running_status", "offset": 768, "name": "Unit Running Status" },
+                        {"id": "hvac_##decode_id##_internal_fan_status", "offset": 769, "name": "Internal Fan Status" },
+                        {"id": "hvac_##decode_id##_external_fan_status", "offset": 770, "name": "External Fan Status" },
+                        {"id": "hvac_##decode_id##_compressor_status", "offset": 771, "name": "Compressor Status" },
+                        {"id": "hvac_##decode_id##_inside_return_temp", "offset": 772, "scale": 10, "name": "Inside Return Temp", "signed": true },
+                        {"id": "hvac_##decode_id##_outside_temp", "offset": 774, "scale": 10, "name": "Outside Temp", "signed": true },
+                        {"id": "hvac_##decode_id##_condenser_temp", "offset": 775, "scale": 10, "name": "Condenser Temp", "signed": true },
+                        {"id": "hvac_##decode_id##_ac_input_voltage", "offset": 779, "name": "AC Input Voltage", "signed": true },
+                        {"id": "hvac_##decode_id##_emergency_air_fan_state", "offset": 782, "name": "Emergency Air Fan State" },
+                        {"id": "hvac_##decode_id##_heat_exchanger_coil_temp", "offset": 783, "scale": 10, "name": "Heat Exchanger Coil (Tubing) Temp", "signed": true },
+                        {"id": "hvac_##decode_id##_inside_return_humidity", "offset": 787, "scale": 10, "name": "Inside Return Humidity" },
+                        {"id": "hvac_##decode_id##_electrical_heating_running_status", "offset": 788, "name": "Electrical Heating Running Status" },
+                        {"id": "hvac_##decode_id##_alarms_1", "offset": 789, "name": "HVAC Alarms 1" },
+                        {"id": "hvac_##decode_id##_alarms_2", "offset": 790, "name": "HVAC Alarms 2" },
+                        {"id": "hvac_##decode_id##_alarms_3", "offset": 791, "name": "HVAC Alarms 3" }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "hvac_params",
+            "registers": [
+                {
+                    "type": "Holding",
+                    "decode_offset_range": {
+                        "begin": 1, "end": 37,
+                        "step": 32,
+                        "replace": "##decode_id##"
+                    },
+                    "map": [
+                        {"id": "hvac_##decode_id##_remote_ac_on", "offset": 2049, "name": "Remote AC On" },
+                        {"id": "hvac_##decode_id##_cooling_temp_setting", "offset": 2050, "scale": 10, "name": "Cooling Temp Setting" },
+                        {"id": "hvac_##decode_id##_cooling_setpoint_upper_limit", "offset": 2051, "scale": 10, "name": "Cooling Set-point Upper Limit" },
+                        {"id": "hvac_##decode_id##_ht_warning_setting", "offset": 2052, "scale": 10, "name": "HT Warning Setting" },
+                        {"id": "hvac_##decode_id##_lt_warning_setting", "offset": 2053, "scale": 10, "name": "LT Warning Setting" },
+                        {"id": "hvac_##decode_id##_interior_air_fan_stop_setting", "offset": 2054, "scale": 10, "name": "Interior Air Fan Stop Setting" },
+                        {"id": "hvac_##decode_id##_heating_temp_setting", "offset": 2059, "scale": 10, "name": "Heating Temp Setting" },
+                        {"id": "hvac_##decode_id##_heating_setpoint_lower_limit", "offset": 2060, "scale": 10, "name": "Heating Setpoint Lower Limit" },
+                        {"id": "hvac_##decode_id##_dehumidify_setting", "offset": 2061, "scale": 10, "name": "De-humidify Setting" }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "bms_info",
+            "registers": [
+                {
+                    "type": "Input",
+                    "map": [
+                        {"id": "connection_status", "offset": 4608, "name": "Status of Connection Process" },
+                        {"id": "rack_enable_status", "offset": 4609, "name": "Rack Enable Status" },
+                        {"id": "rack_request_step_in", "offset": 4610, "name": "Rack Request Step in" },
+                        {"id": "rack_request_quit_out", "offset": 4611, "name": "Rack Request Step out" },
+                        {"id": "rack_request_status", "offset": 4612, "name": "Allow Quit out Step in Status" },
+                        {"id": "system_operation_state", "offset": 4613, "name": "System Operation State" },
+                        {"id": "system_charge_state", "offset": 4614, "name": "System Charge State" },
+                        {"id": "bau_alarm_state", "offset": 4615, "name": "BAU Alarm State" },
+                        {"id": "rack_warning", "offset": 4616, "name": "Rack Warning" },
+                        {"id": "rack_alarm", "offset": 4617, "name": "Rack Alarm" },
+                        {"id": "rack_critical_alarm", "offset": 4618, "name": "Rack Critical Alarm" },
+                        {"id": "system_total_voltage", "offset": 4619, "scale": 10, "name": "System Total Voltage" },
+                        {"id": "system_total_current", "offset": 4620, "scale": 10, "name": "System Total Current", "signed": true },
+                        {"id": "system_soc", "offset": 4621, "scale": 10, "name": "System SOC" },
+                        {"id": "system_soh", "offset": 4622, "scale": 10, "name": "System SOH" },
+                        {"id": "system_insulation", "offset": 4623, "name": "System Insulation" },
+                        {"id": "system_enable_charge_energy", "offset": 4624, "name": "System Enable Charge Energy" },
+                        {"id": "system_enable_discharge_energy", "offset": 4625, "name": "System Enable Discharge Energy" },
+                        {"id": "system_max_charge_current", "offset": 4626, "scale": -10, "name": "System Enable Max Charge Current" },
+                        {"id": "system_max_discharge_current", "offset": 4627, "scale": 10, "name": "System Enable Max Discharge Current", "signed": true },
+                        {"id": "rack_current_difference", "offset": 4628, "scale": 10, "name": "Rack Current Difference", "signed": true },
+                        {"id": "rack_voltage_difference", "offset": 4629, "scale": 10, "name": "Rack Voltage Difference" },
+                        {"id": "system_max_volt_cell_rack_id", "offset": 4630, "name": "System Max Vol Cell Rack ID" },
+                        {"id": "system_max_volt_cell_module_id", "offset": 4631, "name": "System Max Vol Cell Slave ID" },
+                        {"id": "system_max_volt_cell_id", "offset": 4632, "name": "System Max Vol Cell ID" },
+                        {"id": "system_max_cell_voltage", "offset": 4633, "scale": 1000, "name": "System Max Cell Voltage" },
+                        {"id": "system_min_volt_cell_rack_id", "offset": 4634, "name": "System Min Vol Cell Rack ID" },
+                        {"id": "system_min_volt_cell_module_id", "offset": 4635, "name": "System Min Vol Cell Slave ID" },
+                        {"id": "system_min_volt_cell_id", "offset": 4636, "name": "System Min Vol Cell ID" },
+                        {"id": "system_min_cell_voltage", "offset": 4637, "scale": 1000, "name": "System Min Cell Voltage" },
+                        {"id": "system_avg_voltage", "offset": 4638, "scale": 1000, "name": "System Average voltage" },
+                        {"id": "system_max_temp_cell_rack_id", "offset": 4639, "name": "System Max Temp Cell Rack ID" },
+                        {"id": "system_max_temp_cell_module_id", "offset": 4640, "name": "System Max Temp Cell Slave ID" },
+                        {"id": "system_max_temp_cell_id", "offset": 4641, "name": "System Max Temp Cell ID" },
+                        {"id": "system_max_cell_temperature", "offset": 4642, "scale": 10, "name": "System Max Cell Temperature", "signed": true },
+                        {"id": "system_min_temp_cell_rack_id", "offset": 4643, "name": "System Min Temp Cell Rack ID" },
+                        {"id": "system_min_temp_cell_module_id", "offset": 4644, "name": "System Min Temp Cell Slave ID" },
+                        {"id": "system_min_temp_cell_id", "offset": 4645, "name": "System Min Temp Cell ID" },
+                        {"id": "system_min_cell_temperature", "offset": 4646, "scale": 10, "name": "System Min Cell Temperature", "signed": true },
+                        {"id": "system_avg_temperature", "offset": 4647, "scale": 10, "name": "System Average Temperature", "signed": true },
+                        {"id": "bau_bcu_comm_fault_alarm_1", "offset": 4648, "name": "BAU BCU Communication Fault Alarm 1" },
+                        {"id": "bau_bcu_comm_fault_alarm_2", "offset": 4649, "name": "BAU BCU Communication Fault Alarm 2" },
+                        {"id": "bau_output_dry_contact_status", "offset": 4650, "name": "BAU output dry contact status", "heartbeat_enabled": "", "component_heartbeat_read_uri": "", "offset_time": "0" },
+                        {"id": "rack_enable_status_2", "offset": 4651, "name": "Rack enable / disable  status 2\r\nRack Enable Status2" },
+                        {"id": "rack_request_step_in_2", "offset": 4652, "name": "Rack Request Step-in 2" },
+                        {"id": "rack_request_quit_in_2", "offset": 4653, "name": "RACK  request  quit-in 2\r\nRack Request Quit-out 2" },
+                        {"id": "rack_request_status_2", "offset": 4654, "name": "RACK xxxx step-in  quit-in  status2\r\nStatus of Allow Quit-out /Step-in 2" },
+                        {"id": "accumulation_charge_energy_msb", "offset": 4655, "name": "Accum Charge Energy MSB" },
+                        {"id": "accumulation_charge_energy_lsb", "offset": 4656, "name": "Accum Charge Energy LSB", "heartbeat_enabled": "" },
+                        {"id": "accumulation_discharge_energy_msb", "offset": 4657, "name": "Accum Discharge Energy MSB" },
+                        {"id": "accumulation_discharge_energy_lsb", "offset": 4658, "name": "Accum Discharge Energy LSB", "heartbeat_enabled": "" },
+                        {"id": "number_of_racks_in_service", "offset": 4659, "name": "Number of Racks in Service" },
+                        {"id": "number_of_racks_total", "offset": 4660, "name": "Number ot Total Racks", "heartbeat_enabled": "" },
+                        {"id": "min_number_of_parallel_racks", "offset": 4661, "name": "Min Number of Parallel Racks" },
+                        {"id": "max_discharge_power", "offset": 4662, "name": "Max discharge power", "heartbeat_enabled": "" },
+                        {"id": "max_charge_power", "offset": 4663, "name": "Max charge power" },
+                        {"id": "bms_heartbeat", "offset": 4664, "name": "BMS heart beat" }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "bms_controls",
+            "registers": [
+                {
+                    "type": "Holding",
+                    "map": [
+                        {"id": "start_connection", "offset": 4864, "name": "Start Connection" },
+                        {"id": "insulation_sampling_function_switch", "offset": 4865, "name": "Insulation sampling function switch" },
+                        {"id": "reset_pcs_control_fail_alarm", "offset": 4866, "name": "reset PCS control fail alarm" },
+                        {"id": "minimum_number_of_parallel_racks", "offset": 4867, "name": "Minimum number of parallel racks" }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "bms_rack_01_info",
+            "device_id_range": {
+                "begin": 11, "end": 28,
+                "replace": "##device_id##"
+            },
+            "registers": [
+                {
+                    "type": "Input",
+                    "map": [
+                        {"id": "rack_run_state", "offset": 0, "name": "Rack Run State" },
+                        {"id": "rack_precharge_phase", "offset": 1, "name": "Rack Precharge Phase" },
+                        {"id": "rack_connection_state", "offset": 2, "name": "Rack Connection State" },
+                        {"id": "rack_alarm_info", "offset": 3, "name": "Rack Alarm Info" },
+                        {"id": "rack_warning", "offset": 4, "name": "Rack Warning" },
+                        {"id": "rack_alarm", "offset": 5, "name": "Rack Alarm" },
+                        {"id": "rack_critical_alarm", "offset": 6, "name": "Rack Critical Alarm" },
+                        {"id": "rack_step_in_failure", "offset": 7, "name": "Reason of Rack 1 Step-in Failure" },
+                        {"id": "rack_precharge_total_vol", "offset": 9, "scale": 10, "name": "Precharge Total Voltage" },
+                        {"id": "rack_voltage", "offset": 10, "scale": 10, "name": "Rack Voltage" },
+                        {"id": "rack_current", "offset": 11, "scale": 10, "name": "Rack Current", "signed": true },
+                        {"id": "rack_state", "offset": 12, "name": "Rack Charge/Discharge State" },
+                        {"id": "rack_soc", "offset": 13, "scale": 10, "name": "Rack SOC" },
+                        {"id": "rack_soh", "offset": 14, "scale": 10, "name": "Rack SOH" },
+                        {"id": "rack_insulation", "offset": 15, "name": "Rack Insulation Value" },
+                        {"id": "rack_positive_insulation", "offset": 16, "name": "Rack Positive Insulation Value" },
+                        {"id": "rack_negative_insulation", "offset": 17, "name": "Rack Negative Insulation Value" },
+                        {"id": "rack_max_charge_current", "offset": 18, "scale": 10, "name": "Rack Max Charge Current" },
+                        {"id": "rack_max_discharge_current", "offset": 19, "scale": 10, "name": "Rack Max Discharge Current" },
+                        {"id": "rack_max_cell_id", "offset": 20, "name": "Rack Max Vol Cell ID" },
+                        {"id": "rack_max_cell_voltage", "offset": 21, "scale": 1000, "name": "Rack Max Cell Voltage" },
+                        {"id": "rack_min_cell_id", "offset": 22, "name": "Rack Min Vol Cell ID" },
+                        {"id": "rack_min_cell_voltage", "offset": 23, "scale": 1000, "name": "Rack Min Cell Voltage" },
+                        {"id": "rack_max_cell_temperature_id", "offset": 24, "name": "Rack Max Temperature Cell ID" },
+                        {"id": "rack_max_cell_temperature", "offset": 25, "scale": 10, "name": "Rack Max Cell Temperature", "signed": true },
+                        {"id": "rack_min_cell_temperature_id", "offset": 26, "name": "Rack Min Temperature Cell ID" },
+                        {"id": "rack_min_cell_temperature", "offset": 27, "scale": 10, "name": "Rack Min Cell Temperature", "signed": true },
+                        {"id": "rack_avg_voltage", "offset": 28, "scale": 1000, "name": "Rack Average Voltage" },
+                        {"id": "rack_avg_temperature", "offset": 29, "scale": 10, "name": "Rack Average Temperature", "signed": true }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "bms_rack_01_controls",
+            "device_id_range": {
+                "begin": 11, "end": 28,
+                "replace": "##device_id##"
+            },
+            "registers": [
+                {
+                    "type": "Holding",
+                    "map": [
+                        {"id": "rack_enable", "offset": 512, "name": "Rack Enable/Disable" },
+                        {"id": "close_contactor", "offset": 513, "name": "EMS Allow Rack Step-in" },
+                        {"id": "open_contactor", "offset": 514, "name": "EMS Allow Rack Quit-out" }
+                    ]
+                }
+            ]
+        }
+    ]
+}

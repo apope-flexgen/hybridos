@@ -1,0 +1,49 @@
+ 3349 root      20   0  287708 149036 148784 S  27.2  0.5   2645:32 systemd-journal
+13485 hybridos  20   0  924000  93952  13276 S  25.2  0.3   1668:10 storage
+ 5674 hybridos  20   0   52040   3608   2256 S  12.9  0.0   8332:01 hybridos_contro
+ 7035 root      20   0 1144400  50848   2680 S  12.9  0.2  11006:14 ftd
+ 7068 hybridos  20   0  200704   2452   1944 S  10.6  0.0   7258:41 modbus_client
+ 8208 root      20   0 1016832 166560   8140 S  10.6  0.5 894:17.54 web_server
+ 7061 hybridos  20   0  348564   2788   1944 S   6.0  0.0   3821:06 modbus_client
+13375 hybridos  20   0  702008 135204  13128 S   6.0  0.4 402:10.28 metrics
+25958 hybridos  20   0  348564   4108   1932 S   6.0  0.0   2360:48 modbus_client
+ 7063 hybridos  20   0  348560   3036   1932 S   5.3  0.0   3815:48 modbus_client
+13350 influxdb  20   0  205.3g 489508  23084 S   5.3  1.5 703:05.46 influxd
+ 7060 hybridos  20   0  348560   2804   1952 S   5.0  0.0   3811:15 modbus_client
+14669 hybridos  20   0 4971604   4.6g   4000 S   4.6 14.7 305:40.89 dnp3_server
+ 5627 hybridos  20   0 1943296  24668   1868 S   3.3  0.1   2094:13 fims_server
+ 7065 hybridos  20   0  200700   2476   1956 S   2.0  0.0   1116:32 modbus_client
+ 6917 hybridos  20   0  941088  71348   5724 S   1.7  0.2   1035:10 events
+ 7062 hybridos  20   0  200704   2464   1940 S   1.7  0.0   1172:10 modbus_client
+ 7067 hybridos  20   0  200700   2424   1944 S   1.7  0.0   1108:23 modbus_client
+23841 hybridos  20   0  200700   3496   1972 S   1.7  0.0 799:43.16 modbus_client
+ 5675 hybridos  20   0  137368   3064   2300 S   1.0  0.0 496:06.14 dnp3_client
+ 6476 mongod    20   0   13.6g  12.4g   3448 S   0.7 39.8 701:26.68 mongod
+ 4263 root      20   0       0      0      0 S   0.3  0.0  27:57.15 kworker/4:1
+13346 root      20   0       0      0      0 S   0.3  0.0   7:59.78 kworker/3:2
+18268 root      20   0       0      0      0 S   0.3  0.0   0:05.88 kworker/1:2
+18349 hybridos  20   0  162020   2348   1580 R   0.3  0.0   0:00.06 top
+    1 root      20   0  194076   5264   3252 S   0.0  0.0  10:34.80 systemd
+    2 root      20   0       0      0      0 S   0.0  0.0   0:00.42 kthreadd
+    3 root      20   0       0      0      0 S   0.0  0.0   6:44.13 ksoftirqd/0
+    5 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 kworker/0:0H
+    7 root      rt   0       0      0      0 S   0.0  0.0   0:01.61 migration/0
+    8 root      20   0       0      0      0 S   0.0  0.0   0:00.00 rcu_bh
+    9 root      20   0       0      0      0 S   0.0  0.0  74:16.51 rcu_sched
+   10 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 lru-add-drain
+   11 root      rt   0       0      0      0 S   0.0  0.0   0:28.41 watchdog/0
+   12 root      rt   0       0      0      0 S   0.0  0.0   0:28.05 watchdog/1
+y
+
+
+ 7060 ?        Ssl  3811:18 /usr/local/bin/modbus_interface/modbus_client /usr/local/etc/config/modbus_client/clou_ess_1.json
+ 7061 ?        Ssl  3821:08 /usr/local/bin/modbus_interface/modbus_client /usr/local/etc/config/modbus_client/clou_ess_2.json
+ 7062 ?        Ssl  1172:11 /usr/local/bin/modbus_interface/modbus_client /usr/local/etc/config/modbus_client/sel_735.json
+ 7063 ?        Ssl  3815:50 /usr/local/bin/modbus_interface/modbus_client /usr/local/etc/config/modbus_client/clou_ess_3.json
+ 7065 ?        Ssl  1116:33 /usr/local/bin/modbus_interface/modbus_client /usr/local/etc/config/modbus_client/brainbox_ed538.json
+ 7067 ?        Ssl  1108:23 /usr/local/bin/modbus_interface/modbus_client /usr/local/etc/config/modbus_client/sel_651r.json
+ 7068 ?        Ssl  7258:45 /usr/local/bin/modbus_interface/modbus_client /usr/local/etc/config/modbus_client/sel_3530.json
+18351 pts/2    S+     0:00 grep --color=auto modbus
+23841 ?        Ssl  799:43 /usr/local/bin/modbus_interface/modbus_client /usr/local/etc/config/modbus_client/apc_ups.json
+25958 ?        Ssl  2360:51 /usr/local/bin/modbus_interface/modbus_client /usr/local/etc/config/modbus_client/clou_ess_4.json
+

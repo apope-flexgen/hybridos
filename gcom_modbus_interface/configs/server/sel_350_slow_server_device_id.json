@@ -1,0 +1,50 @@
+{
+   "system":
+   {
+        "name": "SEL_3530_RTAC",
+
+        "protocol": "Modbus TCP",
+       "id": "SEL_3530_RTAC",
+       "ip_address": "0.0.0.0",
+       "xserver_delay": 510, 
+       "port": 1024, 
+       "device_id": 1, 
+       "bypass_init": true,
+       "low_debug": true 
+   },
+   "registers":
+    [
+        {
+            "device_id":10,
+            "holding_registers":[
+                {"id":"voltage_l1_l2","name":"Voltage AB","offset":0,"size":2, "uri":"/components/sel_3530_rtac_10"},
+                {"id":"voltage_l2_l3","name":"Voltage BC","offset":2,"size":2,"uri":"/components/sel_3530_rtac_10"},
+                {"id":"voltage_l3_l1","name":"Voltage CA","offset":4,"size":2,"uri":"/components/sel_3530_rtac_10"},
+                {"id":"active_power","name":"Active Power","offset":6,"size":2,"uri":"/components/sel_3530_rtac_10"},
+                {"id":"reactive_power","name":"Reactive Power","offset":8,"size":2,"uri":"/components/sel_3530_rtac_10"},
+                {"id":"heartbeat","name":"Modbus Heartbeat","offset":10,"size":1,"uri":"/components/sel_3530_rtac_10"},
+                {"id":"cpu_burden","name":"CPU Burden","offset":11,"uri":"/components/sel_3530_rtac_10"}
+            ],
+            "discrete_inputs":[
+                {"id":"status_735","name":"735 Status","offset":0,"uri":"/components/sel_3530_rtac_10"}
+            ]
+        }, 
+        {
+            "device_id":20,
+            "holding_registers":[
+                {"id":"voltage_l1_l2","name":"Voltage AB","offset":0,"size":2, "uri":"/components/sel_3530_rtac_20"},
+                {"id":"voltage_l2_l3","name":"Voltage BC","offset":2,"size":2,"uri":"/components/sel_3530_rtac_20"},
+                {"id":"voltage_l3_l1","name":"Voltage CA","offset":4,"size":2,"uri":"/components/sel_3530_rtac_20"},
+                {"id":"active_power","name":"Active Power","offset":6,"size":2,"uri":"/components/sel_3530_rtac_20"},
+                {"id":"reactive_power","name":"Reactive Power","offset":8,"size":2,"uri":"/components/sel_3530_rtac_20"},
+                {"id":"heartbeat","name":"Modbus Heartbeat","offset":10,"size":1,"uri":"/components/sel_3530_rtac_20"},
+                {"id":"cpu_burden","name":"CPU Burden","offset":11,"uri":"/components/sel_3530_rtac_20"}
+            ],
+            "discrete_inputs":[
+                {"id":"status_735","name":"735 Status","offset":0,"uri":"/components/sel_3530_rtac_20"}
+            ]
+        }
+
+    ]
+}
+

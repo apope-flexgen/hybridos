@@ -1,0 +1,104 @@
+{
+    "fileInfo": {
+        "sourceFileName": "sel_3530_client.xlsx",
+        "sourceFileCreated": "2019-10-06T17:35:21.000Z",
+        "sourceFileLastModified": "2022-12-06T16:51:00.000Z",
+        "sourceFileCreatedBy": "Tony Olivo",
+        "sourceFileLastModifiedBy": "Jasen Liu",
+        "outputFileName": "sel_3530_client.json",
+        "outputFileType": "client",
+        "outputFileCreated": "2022-12-06T16:51:10.913Z"
+    },
+    "connection": {
+        "name": "SEL 3530 RTAC",
+        "ip_address": "172.17.0.2",
+        "port": 1024,
+        "device_id": 1,
+        "max_num_connections": 1
+    },
+    "components": [
+        {
+            "id": "sel_3530_slow_rtac",
+            "heartbeat_enabled": true,
+            "component_heartbeat_read_uri": "heartbeat",
+            "component_heartbeat_timeout_ms": 3000,
+            "modbus_heartbeat_timeout_ms": 500,
+            "frequency": 200,
+            "offset_time": 0,
+            "registers": [
+                {
+                    "type": "Holding Registers",
+                    "starting_offset": 0,
+                    "map": [
+                        {
+                            "id": "voltage_l1_l2",
+                            "offset": 0,
+                            "size": 2,
+                            "scale" : 100,
+                            "name": "Voltage AB",
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l2_l3",
+                            "offset": 2,
+                            "size": 2,
+                            "scale" : 100,
+                            "name": "Voltage BC",
+                            "signed": true
+                        },
+                        {
+                            "id": "voltage_l3_l1",
+                            "offset": 4,
+                            "size": 2,
+                            "scale" : 100,
+                            "name": "Voltage CA",
+                            "signed": true
+                        },
+                        {
+                            "id": "active_power",
+                            "offset": 6,
+                            "size": 2,
+                            "scale" : 100,
+                            "name": "Active Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "reactive_power",
+                            "offset": 8,
+                            "size": 2,
+                            "scale" : 100,
+                            "name": "Reactive Power",
+                            "signed": true
+                        },
+                        {
+                            "id": "heartbeat",
+                            "offset": 10,
+                            "size": 1,
+                            "name": "Modbus Heartbeat",
+                            "signed": false
+                        },
+                        {
+                            "id": "cpu_burden",
+                            "offset": 11,
+                            "size": 1,
+                            "name": "CPU Burden",
+                            "signed": false
+                        }
+                    ]
+                },
+                {
+                    "type": "Discrete Inputs",
+                    "starting_offset": 0,
+                    "number_of_registers": 1,
+                    "map": [
+                        {
+                        "id": "status_735",
+                        "name": "735 Status",
+                        "offset": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

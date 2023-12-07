@@ -1,0 +1,12 @@
+{
+   "system":
+   {   "name":"foobar_##ip##",
+       "protocol": "Modbus TCP",
+       "id": "foobar_##ip##",
+       "ip_address": "192.168.114.##ip##",
+       "port": 502 
+   },
+    "registers":
+     {
+    }
+}
