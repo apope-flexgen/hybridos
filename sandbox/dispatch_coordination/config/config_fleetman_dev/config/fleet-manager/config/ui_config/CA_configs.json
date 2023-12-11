@@ -1,0 +1,227 @@
+{
+    "_doc": "assets",
+    "data": [
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [],
+            "controls": [],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "sites_tab",
+                "baseURI": "/sites",
+                "extension": "/hoth",
+                "faultFields": [],
+                "hasAllControls": false,
+                "hasSummary": false,
+                "itemName": "Hoth",
+                "name": "",
+                "numberOfItems": "1",
+                "sourceURI": "/fleet"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Average Voltage",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/average_voltage"
+                },
+                {
+                    "name": "Breaker Status",
+                    "sclar": "",
+                    "units": "",
+                    "uri": "/breaker_status"
+                },
+                {
+                    "name": "ESS Average SOC",
+                    "sclar": "",
+                    "units": "%",
+                    "uri": "/ess_average_soc"
+                },
+                {
+                    "name": "ESS Chargeable Power",
+                    "sclar": "",
+                    "units": "%",
+                    "uri": "/ess_chargeable_power"
+                },
+                {
+                    "name": "ESS Dischargeable Power",
+                    "sclar": "",
+                    "units": "%",
+                    "uri": "/ess_dischargeable_power"
+                },
+                {
+                    "name": "ESS Dischargeable Power",
+                    "sclar": "",
+                    "units": "%",
+                    "uri": "/ess_dischargeable_power"
+                },
+                {
+                    "name": "FR Baseload Command MW",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/fr_baseload_cmd_mw"
+                },
+                {
+                    "name": "FR FFR Active Command MW",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/fr_ffr_active_cmd_mw"
+                },
+                {
+                    "name": "FR FFR Active Command MW",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/fr_ffr_active_cmd_mw"
+                },
+                {
+                    "name": "Number of ESS Available",
+                    "sclar": "",
+                    "units": "",
+                    "uri": "/num_ess_available"
+                },
+                {
+                    "name": "Reactive Power",
+                    "sclar": "1000",
+                    "units": "MW",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Site Chargeable",
+                    "sclar": "1000",
+                    "units": "MW",
+                    "uri": "/site_chargeable_mw"
+                },
+                {
+                    "name": "Site Dischargeable",
+                    "sclar": "1000",
+                    "units": "MW",
+                    "uri": "/site_dischargeable_mw"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        },
+        {
+            "alarms": {
+                "alarmFields": [],
+                "faultFields": []
+            },
+            "allControls": [],
+            "controls": [],
+            "info": {
+                "alarmFields": [
+                    "alarms"
+                ],
+                "assetKey": "sites_tab",
+                "baseURI": "/sites",
+                "extension": "/gargantua",
+                "faultFields": [],
+                "hasAllControls": false,
+                "hasSummary": false,
+                "itemName": "Gargantua",
+                "name": "",
+                "numberOfItems": "1",
+                "sourceURI": "/fleet"
+            },
+            "statuses": [
+                {
+                    "name": "Active Power",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/active_power"
+                },
+                {
+                    "name": "Average Voltage",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/average_voltage"
+                },
+                {
+                    "name": "Breaker Status",
+                    "sclar": "",
+                    "units": "",
+                    "uri": "/breaker_status"
+                },
+                {
+                    "name": "ESS Average SOC",
+                    "sclar": "",
+                    "units": "%",
+                    "uri": "/ess_average_soc"
+                },
+                {
+                    "name": "ESS Chargeable Power",
+                    "sclar": "",
+                    "units": "%",
+                    "uri": "/ess_chargeable_power"
+                },
+                {
+                    "name": "ESS Dischargeable Power",
+                    "sclar": "",
+                    "units": "%",
+                    "uri": "/ess_dischargeable_power"
+                },
+                {
+                    "name": "ESS Dischargeable Power",
+                    "sclar": "",
+                    "units": "%",
+                    "uri": "/ess_dischargeable_power"
+                },
+                {
+                    "name": "FR Baseload Command MW",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/fr_baseload_cmd_mw"
+                },
+                {
+                    "name": "FR FFR Active Command MW",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/fr_ffr_active_cmd_mw"
+                },
+                {
+                    "name": "FR FFR Active Command MW",
+                    "scalar": "1000",
+                    "units": "MW",
+                    "uri": "/fr_ffr_active_cmd_mw"
+                },
+                {
+                    "name": "Number of ESS Available",
+                    "sclar": "",
+                    "units": "",
+                    "uri": "/num_ess_available"
+                },
+                {
+                    "name": "Reactive Power",
+                    "sclar": "1000",
+                    "units": "MW",
+                    "uri": "/reactive_power"
+                },
+                {
+                    "name": "Site Chargeable",
+                    "sclar": "1000",
+                    "units": "MW",
+                    "uri": "/site_chargeable_mw"
+                },
+                {
+                    "name": "Site Dischargeable",
+                    "sclar": "1000",
+                    "units": "MW",
+                    "uri": "/site_dischargeable_mw"
+                }
+            ],
+            "summary": [],
+            "summaryControls": []
+        }
+    ]
+}

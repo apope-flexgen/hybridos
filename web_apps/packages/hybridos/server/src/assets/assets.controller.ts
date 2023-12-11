@@ -49,17 +49,17 @@ export class AssetsController {
       if (!key.includes('_tab')) {
         key = `${key}_tab`;
       }
-      if (acc.some((item) => item.info.key === key)) {
-        key = `${key}_${index + 1}`;
+      // if objects with duplicate assetKeys, only add one object to layout.json for key
+      if (!acc.some((item) => item.info.key === key)) {
+        acc.push({
+          info: {
+            name: el.info.name,
+            icon: el.info.icon,
+            key,
+          },
+        });      
       }
       el.info.assetKey = key;
-      acc.push({
-        info: {
-          name: el.info.name,
-          icon: el.info.icon,
-          key,
-        },
-      });
       return acc;
     }, []);
 

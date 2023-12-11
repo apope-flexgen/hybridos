@@ -2239,7 +2239,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ServiceStatusReponse"
+									"$ref": "#/components/schemas/ServiceStatusResponse"
 								}
 							}
 						}
@@ -3897,7 +3897,7 @@
 					"value"
 				]
 			},
-			"ServiceStatusReponse": {
+			"ServiceStatusResponse": {
 				"type": "object",
 				"properties": {
 					"dependencies": {

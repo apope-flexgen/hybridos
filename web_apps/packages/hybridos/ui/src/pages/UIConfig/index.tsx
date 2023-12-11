@@ -8,7 +8,6 @@ import { BoxSX, CardContainerSX, Container } from './styles';
 
 const UIConfig = ({ product }: PageProps) => {
   const tabs = [<Tab label="ASSETS" value="assets" />, <Tab label="DASHBOARD" value="dashboard" />];
-  const filteredTabs = product === 'FM' ? tabs.filter((tab) => tab.props.value !== 'assets') : tabs;
 
   const initialTab = product === 'FM' ? 'dashboard' : 'assets';
   const [selectedTab, setSelectedTab] = useState(initialTab);
@@ -20,7 +19,7 @@ const UIConfig = ({ product }: PageProps) => {
         <Box sx={BoxSX}>
           <CardRow>
             <Tabs onChange={(_, tab) => setSelectedTab(tab as string)} value={selectedTab}>
-              {...filteredTabs}
+              {...tabs}
             </Tabs>
           </CardRow>
           <TabContent selectedTab={selectedTab} />
