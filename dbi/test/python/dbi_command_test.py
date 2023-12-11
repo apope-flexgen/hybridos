@@ -239,7 +239,7 @@ class TestDelete:
         # parse URI and determine how to check result
         frags = uri.split("/")[2:] # ignores "" and "dbi" from the split
         assert len(frags) > 0
-        assert type(response) != string # would only be a string if there was an error
+        assert type(response) != str # would only be a string if there was an error
 
         if len(frags) == 1: # collection
             assert type(response) is list
