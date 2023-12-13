@@ -198,6 +198,114 @@ const std::string Reference_Configs::variables_json_defaults_string = R"<raw-str
                     {
                         "name": "Watchdog Timeout",
                         "value": 4
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 5
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 6
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 7
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 8
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 9
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 10
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 11
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 12
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 13
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 14
+                    },
+                    {
+                        "name": "Uninitialized Alarm",
+                        "value": 15
+                    },
+                    {
+                        "name": "UPS Low State of Charge",
+                        "value": 16
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 2",
+                        "value": 17
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 3",
+                        "value": 18
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 4",
+                        "value": 19
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 5",
+                        "value": 20
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 6",
+                        "value": 21
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 7",
+                        "value": 22
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 8",
+                        "value": 23
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 9",
+                        "value": 24
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 10",
+                        "value": 25
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 11",
+                        "value": 26
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 12",
+                        "value": 27
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 13",
+                        "value": 28
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 14",
+                        "value": 29
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 15",
+                        "value": 30
+                    },
+                    {
+                        "name": "Uninitialized Reserved Bool Alarm 16",
+                        "value": 31
                     }
                 ]
             },

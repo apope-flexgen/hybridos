@@ -2,13 +2,13 @@ import sys
 import json
 import time
 from threading import Thread
-from subprocess import PIPE, CalledProcessError, run
+from subprocess import PIPE, TimeoutExpired, CalledProcessError, run
 from typing import Any, Dict
 
 
 def fims(params: str, container: str) -> Dict:
     fims_cmd = "fims_send " + params
-    if container!=None:
+    if container != None:
         if fims_cmd.find("-m get ") != -1:
             fims_cmd = "docker exec -it " + container + " " + fims_cmd
         else:
@@ -54,6 +54,20 @@ def fims_del(uri: str):
     return fims(params)
 
 
+# Listen to the given uri and return true if any sets were captured
+def no_fims_msgs(uri: str, method: str = "set", duration_secs=5) -> bool:
+    result = None
+
+    try:
+        result = run(["fims_listen", "-m", method, "-u", uri, "-n", "1"], stdout=PIPE,
+                     stderr=PIPE, timeout=duration_secs, universal_newlines=True)
+    except TimeoutExpired as result:
+        # output = stdout. Neither stdout nor stderr should have any output after the listen
+        assert not result.output and not result.stderr
+    else:
+        raise Exception(f"Test failed, received fims set: {result.stdout} when none was expected")
+
+
 def fims_threaded_pub(uri: str, value: Any, publish_frequency=.2, duration=30):
     """
         Starts a pub to be fired until kill_command (which is returned by this function) is executed.
@@ -93,7 +107,7 @@ def poll_until_uri_is_at_value(uri: str, expected: float, tolerance: float = 0, 
     actual = fims_get(uri)
     if abs(expected - actual) <= tolerance:
         return True
-    # poll periodically until expected is reached or we've hit the timeout, 
+    # poll periodically until expected is reached or we've hit the timeout,
     # ensure we poll at least 4 times
     period = min(timeout_seconds / 4, 1)
     time_passed = 0

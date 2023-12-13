@@ -1807,4 +1807,27 @@ TEST_F(site_manager_test, ess_discharge_prevention) {
     }
 }
 
+// Alarm/Fault tests
+TEST_F(site_manager_test, alarms_faults) {
+    // struct that has variables to configure for each test case
+    struct test_params {
+        int alarm_index;
+        int fault_index;
+    };
+
+    // Test a handful of the hardcoded alarm/fault numbers. Values up to 31 should be supported even with a default alarm range of only 6 entries
+    std::vector<test_params> tests = { { 0, 0 }, { 0, 7 }, { 7, 0 }, { 7, 15 }, { 15, 7 }, { 15, 31 }, { 31, 15 } };
+    int test_id = 1;
+    for (auto test : tests) {
+        test_logger t_log("alarms_faults", test_id++, tests.size());
+
+        set_alarms(test.alarm_index);
+        set_faults(test.fault_index);
+
+        t_log.bool_results.push_back({ true, active_alarm_array[test.alarm_index], "alarm set" });
+        t_log.bool_results.push_back({ true, active_fault_array[test.fault_index], "fault set" });
+        t_log.check_solution();
+    }
+}
+
 #endif /* SITE_MANAGER_TEST_H_ */

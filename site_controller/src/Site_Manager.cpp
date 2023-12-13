@@ -1986,28 +1986,47 @@ void Site_Manager::update_ess_kpi_values() {
     ess_instant_charge_pv.value.set(ess_pv_kW);
 }
 
+/**
+ * Track the fault with the given fault_number
+ * @param fault_number Index of the fault message within the faults options array
+ */
 void Site_Manager::set_faults(int fault_number) {
     char event_message[SHORT_MSG_LEN];
 
+    // Make sure the fault number is in range. The range of available options will be determined by the configuration received for faults
+    // TODO: make faults default to filling all 32 possible options values
+    std::string fault_message = "internal fault tracking error";
+    if (size_t(fault_number) < faults.options_name.size()) {
+        fault_message = faults.options_name[fault_number];
+    }
+
     active_fault_array[fault_number] = true;
-    snprintf(event_message, SHORT_MSG_LEN, "Fault: %s", faults.options_name[fault_number].c_str());
+    snprintf(event_message, SHORT_MSG_LEN, "Fault: %s", fault_message.c_str());
     FPS_ERROR_LOG("%s", event_message);
 
     emit_event("Site", event_message, FAULT_ALERT);
     fault_status_flag.value.value_bool = true;
 }
 
+/**
+ * Track the alarm with the given alarm_number
+ * @param alarm_number Index of the alarm message within the alarms options array
+ */
 void Site_Manager::set_alarms(int alarm_number) {
-    active_alarm_array[alarm_number] = true;
-
-#ifndef FPS_TEST_MODE
-    // Causes seg faults in test mode as options names undefined
     char event_message[SHORT_MSG_LEN];
-    snprintf(event_message, SHORT_MSG_LEN, "Alarm: %s", alarms.options_name[alarm_number].c_str());
-    FPS_ERROR_LOG("%s", event_message);
-    emit_event("Site", event_message, ALARM_ALERT);
-#endif
 
+    // Make sure the alarm number is in range. The range of available options will be determined by the configuration received for alarms
+    // TODO: make alarms default to filling all 32 possible options values
+    std::string alarm_message = "internal alarm tracking error";
+    if (size_t(alarm_number) < alarms.options_name.size()) {
+        alarm_message = alarms.options_name[alarm_number];
+    }
+
+    active_alarm_array[alarm_number] = true;
+    snprintf(event_message, SHORT_MSG_LEN, "Alarm: %s", alarm_message.c_str());
+    FPS_ERROR_LOG("%s", event_message);
+
+    emit_event("Site", event_message, ALARM_ALERT);
     alarm_status_flag.value.value_bool = true;
 }
 
@@ -2365,7 +2384,6 @@ bool Site_Manager::call_sequence_functions(const char* target_asset, const char*
 
 void Site_Manager::check_state(void) {
     Sequence current_sequence = sequences[current_state];
-    Path current_path = current_sequence.paths[current_sequence.current_path_index];
 
     // if faulted or shutdown cmd, enter shutdown state
     if (current_state != Init && (current_sequence.check_faults() || (disable_flag.value.value_bool)))
@@ -2373,6 +2391,8 @@ void Site_Manager::check_state(void) {
 
     // check if alarms are present
     current_sequence.check_alarms();
+
+    Path current_path = current_sequence.paths[current_sequence.current_path_index];
 
     // count number of asset faults and asset alarms
     num_path_faults = current_path.num_active_faults;
