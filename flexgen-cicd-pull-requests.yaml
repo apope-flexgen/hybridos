@@ -1,20 +1,10 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: "2010-09-09" 
 Description: HybridOS CI/CD Pipeline v1.0
 Parameters:
-  MajorReleaseVersion:
-    Type: String
-    Description: 'Format: vX.X, e.g. `v11.1`. This tells the pipeline which version of HybridOS to build and push when a tag is created.'
-    AllowedPattern: ^v(?:[1-9]|[1-2][0-9])\.(?:[0-9]|[1-2][0-9])$
-
   BuildImage:
     Type: String
     Description: 'The Docker image to use for building the components. Format: flexgen/<image>:<tag>'
     AllowedPattern: ^flexgen\/[^:]+:[^-]+(?:-.+)?$
-
-  ArtifactBucket:
-    Type: String
-    Description: 'The Artifact bucket where source is pulled from the GitHub repository and build artifacts are stored.'
-    Default: hybridos-cicd-release-tags
   
   GitHubRepo:
     Type: String
@@ -39,12 +29,6 @@ Parameters:
     Default: arn:aws:secretsmanager:us-east-1:625828042324:secret:dockerhub-q1Fhdb
     AllowedPattern: ^arn:aws:secretsmanager:[a-z]+-[a-z]+-[0-9]{1}:[0-9]{12}:secret:[^:]+$
 
-  ArtifactorySecretArn:
-    Type: String
-    Description: 'The ARN for the Secrets Manager secret that contains the credentials for Artifactory. The secret value must be in this format: {"username": "<username>", "password": "<password>"}'
-    Default: arn:aws:secretsmanager:us-east-1:625828042324:secret:artifactory-TtPaQ6
-    AllowedPattern: ^arn:aws:secretsmanager:[a-z]+-[a-z]+-[0-9]{1}:[0-9]{12}:secret:[^:]+$
-
   SshPrivateKeySecretArn:
     Type: String
     Description: The ARN for the Secrets Manager secret that contains a SSH private key that has permissions to pull code from the GitHub repository.
@@ -64,37 +48,34 @@ Metadata:
           default: Supply for each new stack
         Parameters:
           - BuildImage
-          - MajorReleaseVersion
       - Label:
           default: Default values generally OK
         Parameters:
-          - ArtifactBucket
           - GitHubRepo
           - LogsBucketArn
           - LogsBucketPath
           - DockerHubSecretArn
-          - ArtifactorySecretArn
           - SshPrivateKeySecretArn
           - SshPublicKeySecretArn
     ParameterLabels:
-      MajorReleaseVersion:
-        default: 'Major Release Version'
       BuildImage:
         default: 'Build Image'
-      ArtifactBucket:
-        default: 'Artifact S3 Bucket'
       GitHubRepo:
         default: 'GitHub Repo'
       DockerHubSecretArn:
         default: 'Docker Hub Secrets Manager Secret ARN'
-      ArtifactorySecretArn:
-        default: 'Artifactory Secrets Manager Secret ARN'
       SshPrivateKeySecretArn:
         default: 'SSH Private Key Secrets Manager Secret ARN'
       SshPublicKeySecretArn:
         default: 'SSH Public Key Secrets Manager Secret ARN'
 
 Resources:
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -129,7 +110,7 @@ Resources:
                   - s3:GetObjectVersion
                   - s3:GetBucketVersioning
               - Resource:
-                  - !Sub ${LogsBucketArn}/*
+                  - !Ref LogsBucketArn
                 Effect: Allow
                 Action:
                   - s3:PutObject
@@ -147,7 +128,6 @@ Resources:
                 Action:
                   - ecs:* # should scope this down to only necessary actions for `docker compose up`
               - Resource:
-                  - !Ref ArtifactorySecretArn
                   - !Ref DockerHubSecretArn
                   - !Ref SshPrivateKeySecretArn
                   - !Ref SshPublicKeySecretArn
@@ -158,11 +138,6 @@ Resources:
                 Effect: Allow
                 Action:
                   - ecr:GetAuthorizationToken
-              - Resource: "*"
-                Effect: Allow
-                Action:
-                  - ssm:GetParameter
-                  - ssm:GetParameters
 
   CodePipelineServiceRole:
     Type: AWS::IAM::Role
@@ -197,7 +172,7 @@ Resources:
                   - s3:GetBucketVersioning
                   - s3:ListBucket
               - Resource:
-                  - !Sub ${LogsBucketArn}/*
+                  - !Ref LogsBucketArn
                 Effect: Allow
                 Action:
                   - s3:PutObject
@@ -220,6 +195,37 @@ Resources:
                 Effect: Allow
                 Action:
                   - lambda:*
+
+  PullRequestTriggerProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub ${AWS::StackName}-pull-request-trigger
+      Source:
+        Type: GITHUB
+        Location: !Sub https://github.com/${GitHubRepo}.git
+        GitCloneDepth: 0 # 0 indicates full clone
+        BuildSpec: !Sub |
+          version: 0.1
+          phases:
+            build:
+              commands:
+                - ARTIFACT_S3_BUCKET=${ArtifactBucket} ARTIFACT_S3_KEY="pipeline-source/${AWS::StackName}/pull-request-build-pipeline/raw-source.zip" ./cicd-scripts/triggers/pull_request_trigger/build.sh
+      Triggers:
+        BuildType: BUILD
+        Webhook: True
+        FilterGroups:
+          - - Type: EVENT
+              Pattern: PULL_REQUEST_CREATED,PULL_REQUEST_UPDATED,PULL_REQUEST_REOPENED
+            - Type: BASE_REF
+              Pattern: !Sub ^refs/heads/.*$
+              ExcludeMatchedPattern: false
+      ServiceRole: !Ref CodeBuildServiceRole
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:6.0
 
   BuildProject:
     Type: AWS::CodeBuild::Project
@@ -283,7 +289,6 @@ Resources:
           Location: !Sub ${LogsBucketArn}/${LogsBucketPath}
           Status: ENABLED
 
-
   TestProject:
     Type: AWS::CodeBuild::Project
     Properties:
@@ -322,83 +327,10 @@ Resources:
           Location: !Sub ${LogsBucketArn}/${LogsBucketPath}
           Status: ENABLED
 
-  ArtifactoryProject:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Artifacts:
-        Type: "CODEPIPELINE"
-      Source:
-        Type: "CODEPIPELINE"
-        BuildSpec:
-          !Sub 
-            - |
-              version: 0.1
-              env:
-                secrets-manager:
-                  ARTIFACTORY_USERNAME: "${ArtifactorySecretArn}:username"
-                  ARTIFACTORY_PASSWORD: "${ArtifactorySecretArn}:password"
-              phases:
-                build:
-                  commands:
-                    - export ARTIFACTORY_USERNAME=$ARTIFACTORY_USERNAME
-                    - export ARTIFACTORY_PASSWORD=$ARTIFACTORY_PASSWORD
-                    - imageName=${ImageName} ./cicd-scripts/artifactory/build.sh
-            - ArtifactorySecretArn: !Ref ArtifactorySecretArn
-              ImageName: !Select [ 1, !Split [ "/", !Select [ 0, !Split [ ":", !Ref BuildImage ] ] ] ]
-      Environment:
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/standard:6.0
-        Type: LINUX_CONTAINER
-      Name: !Sub ${AWS::StackName}-artifactory
-      ServiceRole: !Ref CodeBuildServiceRole
-      LogsConfig:
-        S3Logs:
-          Location: !Sub ${LogsBucketArn}/${LogsBucketPath}
-          Status: ENABLED
-
-  DockerProject:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Artifacts:
-        Type: "CODEPIPELINE"
-      Source:
-        Type: "CODEPIPELINE"
-        BuildSpec: 
-          !Sub 
-            - |
-              version: 0.1
-              env:
-                secrets-manager:
-                  DOCKERHUB_USERNAME: "${DockerHubSecretArn}:username"
-                  DOCKERHUB_PASSWORD: "${DockerHubSecretArn}:password"
-              phases:
-                pre_build:
-                  commands:
-                    - export DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME
-                    - export DOCKERHUB_PASSWORD=$DOCKERHUB_PASSWORD
-                    - ./cicd-scripts/docker/pre_build.sh
-                build:
-                  commands:
-                    - imageName=${ImageName} imageTag=${ImageTag} ./cicd-scripts/docker/build.sh
-            - ImageName: !Select [ 1, !Split [ "/", !Select [ 0, !Split [ ":", !Ref BuildImage ] ] ] ]
-              ImageTag: !Select [ 1, !Split [ ":", !Ref BuildImage ] ]
-              DockerHubSecretArn: !Ref DockerHubSecretArn
-      Environment:
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/standard:6.0
-        PrivilegedMode: True
-        Type: LINUX_CONTAINER
-      Name: !Sub ${AWS::StackName}-docker
-      ServiceRole: !Ref CodeBuildServiceRole
-      LogsConfig:
-        S3Logs:
-          Location: !Sub ${LogsBucketArn}/${LogsBucketPath}
-          Status: ENABLED
-  
-  BuildAndPushPipeline:
+  BuildPipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
-      Name: !Sub ${AWS::StackName}-build-and-push
+      Name: !Sub ${AWS::StackName}-build
       RoleArn: !GetAtt CodePipelineServiceRole.Arn
       ArtifactStore:
         Type: S3
@@ -414,7 +346,7 @@ Resources:
                 Provider: S3
               Configuration:
                 S3Bucket: !Ref ArtifactBucket
-                S3ObjectKey: !Sub pipeline-source/${MajorReleaseVersion}/tag-trigger/raw-source.zip
+                S3ObjectKey: !Sub pipeline-source/${AWS::StackName}/pull-request-build-pipeline/raw-source.zip
                 PollForSourceChanges: true
               OutputArtifacts:
                 - Name: HybridOs
@@ -464,33 +396,4 @@ Resources:
               OutputArtifacts:
                 - Name: HybridOsTestResult
               RunOrder: 1
-        - Name: Artifactory
-          Actions:
-            - Name: Artifactory
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: "1"
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref ArtifactoryProject
-              InputArtifacts:
-                - Name: HybridOsPackage
-              OutputArtifacts:
-                - Name: HybridOsArtifactoryResult
-              RunOrder: 1
-        - Name: Docker
-          Actions:
-            - Name: Docker
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: "1"
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref DockerProject
-              InputArtifacts:
-                - Name: HybridOsPackage
-              OutputArtifacts:
-                - Name: HybridOsDockerResult
-              RunOrder: 1
+  

@@ -1,0 +1,150 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: HybridOS CI/CD Pipeline v1.0
+Parameters:
+  GitHubRepo:
+    Type: String
+    Description: The GitHub repository to monitor for changes.
+    Default: flexgen-power/hybridos
+    AllowedPattern: ^flexgen-power\/[^\/]+$
+
+  SshPrivateKeySecretArn:
+    Type: String
+    Description: The ARN for the Secrets Manager secret that contains a SSH private key that has permissions to pull code from the GitHub repository.
+    Default: arn:aws:secretsmanager:us-east-1:625828042324:secret:id_rsa-FeJwUO
+    AllowedPattern: ^arn:aws:secretsmanager:[a-z]+-[a-z]+-[0-9]{1}:[0-9]{12}:secret:[^:]+$
+
+  SshPublicKeySecretArn:
+    Type: String
+    Description: The ARN for the Secrets Manager secret that contains a SSH public key that has permissions to pull code from the GitHub repository.
+    Default: arn:aws:secretsmanager:us-east-1:625828042324:secret:id_rsa.pub-1gAdLQ
+    AllowedPattern: ^arn:aws:secretsmanager:[a-z]+-[a-z]+-[0-9]{1}:[0-9]{12}:secret:[^:]+$
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Default values generally OK
+        Parameters:
+          - GitHubRepo
+          - SshPrivateKeySecretArn
+          - SshPublicKeySecretArn
+    ParameterLabels:
+      GitHubRepo:
+        default: 'GitHub Repo'
+      SshPrivateKeySecretArn:
+        default: 'SSH Private Key Secrets Manager Secret ARN'
+      SshPublicKeySecretArn:
+        default: 'SSH Public Key Secrets Manager Secret ARN'
+
+Resources:
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      BucketName: "hybridos-cicd-release-tags"
+
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: code-build-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+              - Resource:
+                  - !Sub arn:${AWS::Partition}:s3:::${ArtifactBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                  - s3:ListObjects
+              - Resource: "*" # should scope this down if possible
+                Effect: Allow
+                Action:
+                  - ecs:* # should scope this down to only necessary actions for `docker compose up`
+              - Resource:
+                  - !Ref SshPrivateKeySecretArn
+                  - !Ref SshPublicKeySecretArn
+                Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+
+  TagTriggerProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub ${AWS::StackName}-tag-trigger
+      Source:
+        Type: GITHUB
+        Location: !Sub https://github.com/${GitHubRepo}.git
+        GitCloneDepth: 0 # 0 indicates full clone
+        BuildSpec: 
+          Fn::Join:
+              - "\n"
+              - - "version: 0.1"
+                - "phases:"
+                - "  build:"
+                - "    commands:"
+                - "      - |"
+                - "        # Fetching tags, retrieving version number, and saving source to S3"
+                - "        "
+                - "        # Retrieving the version number from the tag associated with the commit"
+                - "        associated_tag=$(git describe --tags ${CODEBUILD_RESOLVED_SOURCE_VERSION})"
+                - "        echo \"Associated tag: ${associated_tag}\"
+                - "        # Extract major and minor version numbers from the tag"
+                - "        major_version=$(echo ${associated_tag} | sed -n 's/^v\\([1-9][0-9]*\\)\\..*$/\\1/p')"
+                - "        minor_version=$(echo ${associated_tag} | sed -n 's/^v[1-9][0-9]*\\.\\([0-9][0-9]*\\).*$/\\1/p')"
+                - "        "
+                - "        # Transform version to the format vXX.X"
+                - "        version=\"v${major_version}.${minor_version}\""
+                - "        echo \"Version: ${version}\""
+                - "        "
+                - "        # Save source to S3"
+                - "        ARTIFACT_S3_BUCKET=${ARTIFACT_S3_BUCKET} ARTIFACT_S3_KEY=\"pipeline-source/${version}/tag-trigger/raw-source.zip\" ./cicd-scripts/triggers/tag_trigger/build.sh"
+
+      Triggers:
+        BuildType: BUILD
+        Webhook: True
+        FilterGroups:
+          - - Type: EVENT
+              Pattern: PUSH
+            - Type: HEAD_REF
+              Pattern: !Sub ^refs\/tags\/v(?:[1-9]|[1-2][0-9])\.(?:[0-9]|[1-2][0-9]).*$
+              ExcludeMatchedPattern: false
+      ServiceRole: !Ref CodeBuildServiceRole
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:6.0
+        EnvironmentVariables:
+          - Name: ARTIFACT_S3_BUCKET
+            Value: !Ref ArtifactBucket

@@ -25,4 +25,4 @@ zip -r ${local_file_name} . --quiet
 
 # upload zip file to s3 bucket
 echo "Uploading build artifacts to S3..."
-aws s3 cp ${local_file_name} s3://${ARTIFACT_S3_BUCKET}/${ARTIFACT_S3_KEY} --no-progress
+aws s3 cp ${local_file_name} s3://${ARTIFACT_S3_BUCKET}/${ARTIFACT_S3_KEY} --metadata "branch=${branch},tag=${tag},author_email=${author_email},commit_sha=${commit_sha}" --no-progress
