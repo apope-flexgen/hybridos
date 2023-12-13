@@ -49,7 +49,7 @@ test()
     res=`$get`
     echo $res
 
-    expect='{"bool_output1":false,"bool_output2":true,"bool_output3":false,"bool_output4":true,"bool_output5":null}'
+    expect='{"bool_output1":false,"bool_output2":true,"bool_output3":false,"bool_output4":true}'
     get="fims_send -m get -r /$$ -u /some/output"
     runget $expect $get
 
@@ -78,7 +78,7 @@ test()
     #res=`$get`
     #echo $res
 
-    expect='{"bool_output1":false,"bool_output2":true,"bool_output3":false,"bool_output4":true,"bool_output5":null}'
+    expect='{"bool_output1":false,"bool_output2":true,"bool_output3":false,"bool_output4":true}'
     get="fims_send -m get -r /$$ -u /some/output"
     runget $expect $get
 

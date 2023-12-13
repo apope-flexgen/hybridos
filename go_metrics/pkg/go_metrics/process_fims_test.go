@@ -18,13 +18,8 @@ func TestHandleDecodedMetricsInputValue(t *testing.T) {
 			Value: Union{tag: STRING, s: ""},
 		},
 	}
-	Scope = map[string][]Input{
-		"input1": []Input{
-			Input{
-				Name:  "input1",
-				Value: Union{tag: STRING, s: ""},
-			},
-		},
+	InputScope = map[string][]Union{
+		"input1": []Union{{tag: STRING, s: ""}},
 	}
 	inputToFilterExpression = map[string][]string{
 		"input1": []string{"filter1"},
@@ -39,11 +34,12 @@ func TestHandleDecodedMetricsInputValue(t *testing.T) {
 	}
 	elementValue = "some string"
 	handleDecodedMetricsInputValue("input1")
-	expectedInput1 := Input{Name: "input1", Value: Union{tag: STRING, s: "some string"}}
+	expectedInput1 := Input{Name: "input1", Value: Union{tag: STRING, s: ""}}
+	expectedScopeInput1 := Union{tag: STRING, s: "some string"}
 	if !compareInputs(MetricsConfig.Inputs["input1"], expectedInput1) {
 		t.Errorf("MetricsConfig.Input[%s] not as expected after handleDecodedMetricsInputValue(%s)", "input1", "input1")
 	}
-	if !compareInputs(Scope["input1"][0], expectedInput1) {
+	if InputScope["input1"][0] != expectedScopeInput1 {
 		t.Errorf("scope[%s] not as expected after handleDecodedMetricsInputValue(%s)", "input1", "input1")
 	}
 	if expressionNeedsEval[0] != true {
@@ -63,20 +59,9 @@ func TestHandleDecodedMetricsAttributeValue(t *testing.T) {
 			AttributesMap: map[string]string{"enabled": "input1@enabled"},
 		},
 	}
-	Scope = map[string][]Input{
-		"input1": []Input{
-			Input{
-				Name:          "input1",
-				Value:         Union{tag: STRING, s: ""},
-				Attributes:    []string{"enabled"},
-				AttributesMap: map[string]string{"enabled": "input1@enabled"},
-			},
-		},
-		"input1@enabled": []Input{
-			Input{
-				Value: Union{tag: BOOL, b: false},
-			},
-		},
+	InputScope = map[string][]Union{
+		"input1": []Union{{tag: STRING, s: ""}},
+		"input1@enabled": []Union{{tag: BOOL, b: false}},
 	}
 	inputToFilterExpression = map[string][]string{
 		"input1":         []string{"filter1"},
@@ -101,10 +86,10 @@ func TestHandleDecodedMetricsAttributeValue(t *testing.T) {
 	if !compareInputs(MetricsConfig.Inputs["input1"], expectedInput1) {
 		t.Errorf("MetricsConfig.Input[%s] not as expected after handleDecodedMetricsAttributeValue(%s, %s)", "input1", "input1", "input1@enabled")
 	}
-	if !compareInputs(Scope["input1"][0], expectedInput1) {
+	if InputScope["input1"][0] != expectedInput1.Value {
 		t.Errorf("scope[%s] not as expected after handleDecodedMetricsAttributeValue(%s, %s)", "input1", "input1", "input1@enabled")
 	}
-	if !compareInputs(Scope["input1@enabled"][0], expectedAttribute1) {
+	if InputScope["input1@enabled"][0] != expectedAttribute1.Value {
 		t.Errorf("scope[%s] not as expected after handleDecodedMetricsAttributeValue(%s, %s)", "input1@enabled", "input1", "input1@enabled")
 	}
 	for key, val := range expressionNeedsEval {
@@ -129,10 +114,10 @@ type ProcessFimsTest struct {
 	inputMsg                    fims.FimsMsgRaw
 	startingMetricsInputs       map[string]Input
 	startingEcho                EchoObject
-	startingScope               map[string][]Input
+	startingScope               map[string][]Union
 	startingExpressionNeedsEval map[int]bool
 	endingMetricsInputs         map[string]Input
-	endingScope                 map[string][]Input
+	endingScope                 map[string][]Union
 	endingExpressionNeedsEval   map[int]bool
 	endingEcho                  EchoObject
 }
@@ -195,14 +180,8 @@ var ProcessFimsTests = []ProcessFimsTest{
 				Value: Union{tag: INT, i: 0},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:  "input1",
-					Uri:   "/test/input1",
-					Value: Union{tag: INT, i: 0},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -212,17 +191,11 @@ var ProcessFimsTests = []ProcessFimsTest{
 			"input1": Input{
 				Name:  "input1",
 				Uri:   "/test/input1",
-				Value: Union{tag: INT, i: 5},
+				Value: Union{tag: INT, i: 0},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:  "input1",
-					Uri:   "/test/input1",
-					Value: Union{tag: INT, i: 5},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 5}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: true,
@@ -247,19 +220,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:  "input1",
-					Uri:   "/test/input1",
-					Value: Union{tag: INT, i: 0},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -278,19 +241,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:  "input1",
-					Uri:   "/test/input1",
-					Value: Union{tag: INT, i: 0},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{tag: FLOAT, f: 5},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{tag: FLOAT, f: 5}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -317,23 +270,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -352,23 +291,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{tag: FLOAT, f: 5},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{tag: FLOAT, f: 5}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -395,23 +320,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -430,23 +341,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{tag: FLOAT, f: 5},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{tag: FLOAT, f: 5}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -469,14 +366,8 @@ var ProcessFimsTests = []ProcessFimsTest{
 				Value: Union{tag: INT, i: 0},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:  "input1",
-					Uri:   "/test/input1",
-					Value: Union{tag: INT, i: 0},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -486,17 +377,11 @@ var ProcessFimsTests = []ProcessFimsTest{
 			"input1": Input{
 				Name:  "input1",
 				Uri:   "/test/input1",
-				Value: Union{tag: INT, i: 5},
+				Value: Union{tag: INT, i: 0},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:  "input1",
-					Uri:   "/test/input1",
-					Value: Union{tag: INT, i: 5},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 5}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: true,
@@ -521,23 +406,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -549,30 +420,16 @@ var ProcessFimsTests = []ProcessFimsTest{
 			"input1": Input{
 				Name:       "input1",
 				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 5},
+				Value:      Union{tag: INT, i: 0},
 				Attributes: []string{"attribute"},
 				AttributesMap: map[string]string{
 					"attribute": "input1@attribute",
 				},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 5},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{tag: INT, i: 5},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 5}},
+			"input1@attribute": []Union{{tag: INT, i: 5}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: true,
@@ -599,23 +456,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -634,23 +477,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{tag: INT, i: 5},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{tag: INT, i: 5}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -677,23 +506,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -712,23 +527,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{tag: INT, i: 5},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{tag: INT, i: 5}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -755,23 +556,9 @@ var ProcessFimsTests = []ProcessFimsTest{
 				},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -783,30 +570,16 @@ var ProcessFimsTests = []ProcessFimsTest{
 			"input1": Input{
 				Name:       "input1",
 				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 20},
+				Value:      Union{tag: INT, i: 0},
 				Attributes: []string{"attribute"},
 				AttributesMap: map[string]string{
 					"attribute": "input1@attribute",
 				},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 20},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{tag: INT, i: 20},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 20}},
+			"input1@attribute": []Union{{tag: INT, i: 20}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: true,
@@ -838,30 +611,10 @@ var ProcessFimsTests = []ProcessFimsTest{
 				Value: Union{tag: FLOAT, f: 0},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
-			"input2": []Input{
-				Input{
-					Name:  "input2",
-					Uri:   "/test/input2",
-					Value: Union{tag: FLOAT, f: 0},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{}},
+			"input2": []Union{{tag: FLOAT, f: 0}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -875,7 +628,7 @@ var ProcessFimsTests = []ProcessFimsTest{
 			"input1": Input{
 				Name:       "input1",
 				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 25},
+				Value:      Union{tag: INT, i: 0},
 				Attributes: []string{"attribute"},
 				AttributesMap: map[string]string{
 					"attribute": "input1@attribute",
@@ -884,33 +637,13 @@ var ProcessFimsTests = []ProcessFimsTest{
 			"input2": Input{
 				Name:  "input2",
 				Uri:   "/test/input2",
-				Value: Union{tag: FLOAT, f: 30},
+				Value: Union{tag: FLOAT, f: 0},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 25},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
-			"input2": []Input{
-				Input{
-					Name:  "input2",
-					Uri:   "/test/input2",
-					Value: Union{tag: FLOAT, f: 30},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 25}},
+			"input1@attribute": []Union{{}},
+			"input2": []Union{{tag: FLOAT, f: 30}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: true,
@@ -944,30 +677,10 @@ var ProcessFimsTests = []ProcessFimsTest{
 				Value: Union{tag: FLOAT, f: 0},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input2": []Input{
-				Input{
-					Name:  "input2",
-					Uri:   "/test/input2",
-					Value: Union{tag: FLOAT, f: 0},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input2": []Union{{tag: FLOAT, f: 0}},
+			"input1@attribute": []Union{{}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -981,7 +694,7 @@ var ProcessFimsTests = []ProcessFimsTest{
 			"input1": Input{
 				Name:       "input1",
 				Uri:        "/test/input1",
-				Value:      Union{tag: INT, i: 25},
+				Value:      Union{tag: INT, i: 0},
 				Attributes: []string{"attribute"},
 				AttributesMap: map[string]string{
 					"attribute": "input1@attribute",
@@ -990,33 +703,13 @@ var ProcessFimsTests = []ProcessFimsTest{
 			"input2": Input{
 				Name:  "input2",
 				Uri:   "/test/input2",
-				Value: Union{tag: FLOAT, f: 30},
+				Value: Union{tag: FLOAT, f: 0},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 25},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{tag: INT, i: 50},
-				},
-			},
-			"input2": []Input{
-				Input{
-					Name:  "input2",
-					Uri:   "/test/input2",
-					Value: Union{tag: FLOAT, f: 30},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 25}},
+			"input1@attribute": []Union{{tag: INT, i: 50}},
+			"input2": []Union{{tag: FLOAT, f: 30}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: true,
@@ -1050,30 +743,10 @@ var ProcessFimsTests = []ProcessFimsTest{
 				Value: Union{tag: FLOAT, f: 0},
 			},
 		},
-		startingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{},
-				},
-			},
-			"input2": []Input{
-				Input{
-					Name:  "input2",
-					Uri:   "/test/input2",
-					Value: Union{tag: FLOAT, f: 0},
-				},
-			},
+		startingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{}},
+			"input2": []Union{{tag: FLOAT, f: 0}},
 		},
 		startingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -1099,30 +772,10 @@ var ProcessFimsTests = []ProcessFimsTest{
 				Value: Union{tag: FLOAT, f: 0},
 			},
 		},
-		endingScope: map[string][]Input{
-			"input1": []Input{
-				Input{
-					Name:       "input1",
-					Uri:        "/test/input1",
-					Value:      Union{tag: INT, i: 0},
-					Attributes: []string{"attribute"},
-					AttributesMap: map[string]string{
-						"attribute": "input1@attribute",
-					},
-				},
-			},
-			"input1@attribute": []Input{
-				Input{
-					Value: Union{tag: INT, i: 55},
-				},
-			},
-			"input2": []Input{
-				Input{
-					Name:  "input2",
-					Uri:   "/test/input2",
-					Value: Union{tag: FLOAT, f: 0},
-				},
-			},
+		endingScope: map[string][]Union{
+			"input1": []Union{{tag: INT, i: 0}},
+			"input1@attribute": []Union{{tag: INT, i: 55}},
+			"input2": []Union{{tag: FLOAT, f: 0}},
 		},
 		endingExpressionNeedsEval: map[int]bool{
 			0: false,
@@ -1634,7 +1287,7 @@ func TestProcessFims(t *testing.T) {
 		uriToOutputNameMap = GlobalConstants.uriToOutputNameMap
 		MetricsConfig.Inputs = test.startingMetricsInputs
 		OutputUriElements = GlobalConstants.outputUriElements
-		Scope = test.startingScope
+		InputScope = test.startingScope
 		inputToFilterExpression = GlobalConstants.inputToFilterExpression
 		inputToMetricsExpression = GlobalConstants.inputToMetricsExpression
 		expressionNeedsEval = test.startingExpressionNeedsEval
@@ -1648,14 +1301,12 @@ func TestProcessFims(t *testing.T) {
 				}
 			}
 		}
-		for key, inputs := range Scope {
+		for key, inputs := range InputScope {
 			if expectedInputs, ok := test.endingScope[key]; !ok {
 				t.Errorf("%s: unexpected input '%s' in MetricsConfig.Inputs", testName, key)
 			} else {
 				for i, input := range inputs {
-					if !compareInputs(input, expectedInputs[i]) {
-						fmt.Println(input)
-						fmt.Println(expectedInputs[i])
+					if input != expectedInputs[i] {
 						t.Errorf("%s: resulting input '%d' in scope[%s] not as expected", testName, i, key)
 					}
 				}

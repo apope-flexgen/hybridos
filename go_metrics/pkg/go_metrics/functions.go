@@ -743,8 +743,7 @@ func Root(arg1, arg2 Union) (Union, error) {
 
 // raise arg1 to the power of arg2
 func Pow(arg1, arg2 Union) (Union, error) {
-	var resultType DataType
-	resultType = getResultType(arg1.tag, arg2.tag)
+	resultType := getResultType(arg1.tag, arg2.tag)
 	if resultType == STRING {
 		return Union{tag: STRING, s: ""}, fmt.Errorf("cannot raise a string to a power")
 	}
@@ -1000,7 +999,7 @@ func Float(args ...Union) ([]Union, error) {
 
 // convert union to string-type union
 func String(args ...Union) ([]Union, error) {
-	for i, _ := range args {
+	for i := range args {
 		castUnionType(&args[i], STRING)
 	}
 	return args, nil
@@ -1008,8 +1007,7 @@ func String(args ...Union) ([]Union, error) {
 
 // integrate the input over a timescale of 1 hour
 func Integrate(input, timescale, minuteReset, minuteOffset Union, state *map[string][]Union) (Union, error) {
-	var dataType DataType
-	dataType = input.tag
+	dataType := input.tag
 	err := castUnionType(&input, FLOAT)
 	if err != nil {
 		return Union{}, err
@@ -1041,11 +1039,11 @@ func Integrate(input, timescale, minuteReset, minuteOffset Union, state *map[str
 	}
 
 	prevValue := (*state)["value"]
-	if prevValue == nil || len(prevValue) == 0 {
+	if len(prevValue) == 0 {
 		prevValue = []Union{Union{tag: FLOAT, f: 0}}
 	}
 	state_minute := (*state)["minute"]
-	if state_minute == nil || len(state_minute) == 0 {
+	if len(state_minute) == 0 {
 		state_minute = make([]Union, 1)
 	}
 
@@ -1814,8 +1812,7 @@ func ValueChanged(input Union, state *map[string][]Union) (Union, error) {
 }
 
 func ValueChangedOverTimescale(input, timescale Union, state *map[string][]Union) (Union, error) {
-	var err error
-	err = castUnionType(&timescale, INT)
+	err := castUnionType(&timescale, INT)
 	if err != nil {
 		return Union{}, err
 	}
@@ -1865,7 +1862,7 @@ func ValueChangedOverTimescale(input, timescale Union, state *map[string][]Union
 		(*state)["values"] = append((*state)["values"], Union{})
 	}
 	// check if value has changed
-	for i, _ := range (*state)["values"][0:index] {
+	for i := range (*state)["values"][0:index] {
 		if (*state)["values"][i] != input {
 			return Union{tag: BOOL, b: true}, nil
 		}
@@ -1952,8 +1949,7 @@ func Runtime(chargeEnergy, dischargeEnergy, powerOutput, gain, upperLimit, minP,
 }
 
 func Unicompare(base, compare, balance Union) (Union, error) {
-	var resultType DataType
-	resultType = getResultType(base.tag, compare.tag)
+	resultType := getResultType(base.tag, compare.tag)
 	if resultType == STRING {
 		return Union{}, fmt.Errorf("cannot perform unicompare on strings")
 	}
@@ -1969,7 +1965,7 @@ func Unicompare(base, compare, balance Union) (Union, error) {
 
 	switch resultType {
 	case BOOL:
-		if base.b == false {
+		if !base.b {
 			return base, nil
 		} else if balance.b {
 			return Union{tag: BOOL, b: base.b && !compare.b}, nil
@@ -2022,4 +2018,13 @@ func Unicompare(base, compare, balance Union) (Union, error) {
 		return Union{}, fmt.Errorf("cannot perform unicompare on NIL unions")
 	}
 
+}
+
+func Count(argVals []Union) (Union, error) {
+	if len(argVals) == 1 {
+		if argVals[0].tag == NIL {
+			return Union{tag:UINT, ui:uint64(0)}, nil
+		}
+	}
+	return Union{tag:UINT, ui:uint64(len(argVals))}, nil
 }

@@ -32,12 +32,35 @@ func EvaluateDynamicFilter(node *ast.Node, inputs []string) (values []string, er
 func evaluateFilterIdent(node *ast.Ident, inputList []string) ([]string, error) {
 	outputs := make([]string, 0)
 	if stringInSlice(inputList, node.Name) {
-		for _, input := range Scope[node.Name] {
-			outputs = append(outputs, input.Name)
+		if _, ok := FilterScope[node.Name]; ok {
+			outputs = append(outputs, FilterScope[node.Name]...)
+		} else if _, ok := InputScope[node.Name]; ok {
+			outputs = append(outputs, node.Name)
+		}
+	} else if node.Name == "value"{
+		for _, inputName := range inputList {
+			if _, ok := FilterScope[inputName]; ok {
+				outputs = append(outputs, FilterScope[inputName]...)
+			} else if _, ok := InputScope[inputName]; ok {
+				outputs = append(outputs, inputName)
+			}
+		}
+	}else{
+		for _, inputName := range inputList {
+			if strings.Contains(inputName, "@"){
+				attrList := strings.Split(inputName, "@")
+				if len(attrList) > 1 && attrList[1] == node.Name {
+					if _, ok := FilterScope[inputName]; ok {
+						outputs = append(outputs, FilterScope[inputName]...)
+					} else if _, ok := InputScope[inputName]; ok {
+						outputs = append(outputs, inputName)
+					}
+				}
+			}
 		}
 	}
 
-	return inputList, nil
+	return outputs, nil
 }
 
 // evaluate the result of a binary operation
@@ -60,67 +83,87 @@ func evaluateFilterBinary(node *ast.BinaryExpr, inputList []string) ([]string, e
 	// I'm lazy so I'm just using the functions to perform binary operations between left and right operands
 	outputs := make([]string, 0)
 	for _, input := range lValues {
-		lValue := Union{}
-		scopeMutex.RLock()
-		if _, ok := Scope[input]; ok && len(Scope[input]) > 0 {
-			lValue = Scope[input][0].Value
+		intermediateOutputs, err := evaluateFilterBinaryComparison(node, input, rValue)
+		if err != nil {
+			return outputs, err
+		} else {
+			outputs = append(outputs, intermediateOutputs...)
 		}
-		scopeMutex.RUnlock()
+	}
+
+	return outputs, err
+}
+
+func evaluateFilterBinaryComparison(node *ast.BinaryExpr, inputName string, rValue Union) ([]string, error) {
+	outputs := make([]string, 0)
+	var err error
+	var lValue Union
+	if _, ok := InputScope[inputName]; ok && len(InputScope[inputName]) > 0 {
+		lValue = InputScope[inputName][0]
 		value := Union{}
 		switch node.Op {
 		case token.EQL:
 			value, err = Equal(lValue, rValue)
 			if err != nil {
-				continue
+				return outputs, err
 			}
 			if value.b {
-				outputs = append(outputs, input)
+				outputs = append(outputs, inputName)
 			}
 		case token.LSS:
 			value, err = LessThan(lValue, rValue)
 			if err != nil {
-				continue
+				return outputs, err
 			}
 			if value.b {
-				outputs = append(outputs, input)
+				outputs = append(outputs, inputName)
 			}
 		case token.GTR:
 			value, err = GreaterThan(lValue, rValue)
 			if err != nil {
-				continue
+				return outputs, err
 			}
 			if value.b {
-				outputs = append(outputs, input)
+				outputs = append(outputs, inputName)
 			}
 		case token.NEQ:
 			value, err = NotEqual(lValue, rValue)
 			if err != nil {
-				continue
+				return outputs, err
 			}
 			if value.b {
-				outputs = append(outputs, input)
+				outputs = append(outputs, inputName)
 			}
 		case token.LEQ:
 			value, err = LessThanOrEqual(lValue, rValue)
 			if err != nil {
-				continue
+				return outputs, err
 			}
 			if value.b {
-				outputs = append(outputs, input)
+				outputs = append(outputs, inputName)
 			}
 		case token.GEQ:
 			value, err = GreaterThanOrEqual(lValue, rValue)
 			if err != nil {
-				continue
+				return outputs, err
 			}
 			if value.b {
-				outputs = append(outputs, input)
+				outputs = append(outputs, inputName)
 			}
 		default:
 			err = fmt.Errorf("unsupported binary operation: %s", node.Op)
 		}
-	}
 
+	} else if _, ok := FilterScope[inputName]; ok && len(FilterScope[inputName]) > 0 {
+		for _, new_input := range FilterScope[inputName] {
+			intermediateOutputs, err := evaluateFilterBinaryComparison(node, new_input, rValue)
+			if err != nil {
+				return outputs, err
+			} else {
+				outputs = append(outputs, intermediateOutputs...)
+			}
+		}
+	}
 	return outputs, err
 }
 
@@ -159,6 +202,15 @@ func evaluateFilterCallExpr(node *ast.CallExpr, inputList []string) ([]string, e
 					return []string{}, fmt.Errorf("attribute %s does not exist in Scope", attributeName)
 				}
 				return outputs, nil
+			}
+		}
+		if strings.ToLower(id.Name) == "value" {
+			_, ok1 := node.Args[0].(*ast.BinaryExpr)
+			if ok1 {
+				_, ok1 = ast.Node(node.Args[0].(*ast.BinaryExpr).X).(*ast.Ident)
+			}
+			if ok1 {
+				return evaluateFilterBinary(node.Args[0].(*ast.BinaryExpr), inputList)
 			}
 		}
 	}

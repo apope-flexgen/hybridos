@@ -24,7 +24,7 @@ type JsonAccessor struct {
 
 func (e JsonAccessor) String() string {
 	if len(e.Key) > 0 {
-		return fmt.Sprintf("%s", e.Key)
+		return e.Key
 	} else {
 		return fmt.Sprintf("%d", e.Index)
 	}
@@ -71,7 +71,7 @@ func (e ErrorLocations) String() string {
 				}
 			default:
 				if len(accessor.Key) > 0 {
-					str += fmt.Sprintf("%s", accessor.Key)
+					str += accessor.Key
 				} else {
 					str += fmt.Sprintf("%d", accessor.Index)
 				}
@@ -104,7 +104,7 @@ func UnmarshalConfig(data []byte) {
 	}
 
 	// this is where the main config processing happens
-	err = pj.ForEach(func(i simdjson.Iter) error {
+	pj.ForEach(func(i simdjson.Iter) error {
 		wasError := false
 		if i.Type() != simdjson.TypeObject {
 			log.Fatalf("Unexpected JSON format for config. Must be a json object containing meta data, inputs, filters (optional), outputs, and expressions.")
@@ -248,7 +248,7 @@ func UnmarshalConfig(data []byte) {
 											if internal_err == nil {
 												template.Format, internal_err = element.Iter.StringCvt()
 												if internal_err != nil {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("Invalid format specifier %s; defaulting to %%d", template.Format))
+													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
 													wasError = true
 													template.Format = "%d"
 												}
@@ -262,7 +262,7 @@ func UnmarshalConfig(data []byte) {
 												}
 
 												if !valid {
-													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("Invalid format specifier %s; defaulting to %%d", template.Format))
+													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
 													wasError = true
 													template.Format = "%d"
 												}
@@ -355,7 +355,7 @@ func UnmarshalConfig(data []byte) {
 													if internal_err == nil {
 														template.Format, internal_err = element.Iter.StringCvt()
 														if internal_err != nil {
-															logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("Invalid format specifier %s; defaulting to %%d", template.Format))
+															logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
 															wasError = true
 															template.Format = "%d"
 														}
@@ -369,7 +369,7 @@ func UnmarshalConfig(data []byte) {
 														}
 
 														if !valid {
-															logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("Invalid format specifier %s; defaulting to %%d", template.Format))
+															logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid format specifier %s; defaulting to %%d", template.Format))
 															wasError = true
 															template.Format = "%d"
 														}
@@ -548,7 +548,7 @@ func UnmarshalConfig(data []byte) {
 								return
 							}
 						}
-						if input.Internal == false && len(input.Uri) == 0 {
+						if !input.Internal && len(input.Uri) == 0 {
 							// fatal error for input
 							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("key 'internal' is specified as false but 'uri' field is empty; need one or the other"))
 							wasError = true
@@ -805,6 +805,8 @@ func UnmarshalConfig(data []byte) {
 							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
 							wasError = true
 						}
+					} else {
+						output.Name = string(key)
 					}
 					currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "name"
 
@@ -837,9 +839,10 @@ func UnmarshalConfig(data []byte) {
 							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, internal_err)
 							wasError = true
 						} else {
-							attributesObj.ForEach(func(key []byte, objIter simdjson.Iter) {
+							attributesObj.ForEach(func(attributeKey []byte, objIter simdjson.Iter) {
 								// if an error occurs, I believe that key will just show up as null in the message body
-								output.Attributes[string(key)], _ = objIter.Interface()
+								output.Attributes[string(attributeKey)], _ = objIter.Interface()
+								OutputScope[string(key) + "@" + string(attributeKey)] = []Union{getUnionFromValue(output.Attributes[string(attributeKey)])}
 							}, nil)
 						}
 						currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // remove "attributes"
@@ -1467,13 +1470,12 @@ func UnmarshalConfig(data []byte) {
 										}
 
 										for key, value := range tempInterface { // echo input registers can be either strings or objects with "source" and "default"
-											switch value.(type) {
+											switch x := value.(type) {
 											case string:
-												echoInput.Registers[key], _ = value.(string)
+												echoInput.Registers[key] = x
 												echo.Echo[key] = null_value_default
 											case map[string]interface{}:
-												sourceDefaultMap, _ := value.(map[string]interface{})
-												source, okSource := sourceDefaultMap["source"]
+												source, okSource := x["source"]
 												currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: key, JType: simdjson.TypeObject})
 												currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "source", JType: simdjson.TypeString})
 												if !okSource {
@@ -1494,7 +1496,7 @@ func UnmarshalConfig(data []byte) {
 												}
 												currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1) // delete source
 												currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "default", JType: simdjson.TypeNone})
-												defaultVal, okDefault := sourceDefaultMap["default"]
+												defaultVal, okDefault := x["default"]
 												if !okDefault {
 													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("path not found"))
 													wasError = true
@@ -1514,7 +1516,7 @@ func UnmarshalConfig(data []byte) {
 											echo.Echo[echo.Heartbeat] = 0.0
 										}
 										for _, in := range echo.Inputs {
-											for key, _ := range in.Registers {
+											for key := range in.Registers {
 												if _, ok = echoInput.Registers[key]; ok {
 													logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("echo output key %v appears in more than one input register; excluding this input", key))
 													wasError = true
@@ -1606,7 +1608,7 @@ func UnmarshalConfig(data []byte) {
 	if err == nil {
 		bytesInterface, ok := bytesDat.(map[string]interface{})
 		if ok {
-			for key, _ := range bytesInterface {
+			for key := range bytesInterface {
 				if !stringInSlice([]string{"meta", "templates", "inputs", "filters", "outputs", "metrics", "echo"}, key) {
 					logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: configPathAndFile, JType: simdjson.TypeObject}}, fmt.Errorf("found unknown key '%s' in configuration document; ignoring config element", key))
 				}
@@ -1644,7 +1646,7 @@ func UnmarshalConfig(data []byte) {
 	Mdo.Meta["config"] = ConfigFileLoc
 	Mdo.Meta["timestamp"] = time.Now().Format(time.RFC3339)
 	Mdo.Inputs = make(map[string]map[string]interface{}, len(MetricsConfig.Inputs))
-	for key, _ := range MetricsConfig.Inputs {
+	for key := range MetricsConfig.Inputs {
 		Mdo.Inputs[key] = make(map[string]interface{}, 1+len(MetricsConfig.Inputs[key].Attributes))
 		Mdo.Inputs[key]["value"] = 0
 		for _, attribute := range MetricsConfig.Inputs[key].Attributes {
@@ -1652,7 +1654,7 @@ func UnmarshalConfig(data []byte) {
 		}
 	}
 	Mdo.Filters = make(map[string][]string, len(MetricsConfig.Filters))
-	for key, _ := range MetricsConfig.Filters {
+	for key := range MetricsConfig.Filters {
 		if len(dynamicFilterExpressions[key].DynamicInputs) > 0 {
 			Mdo.Filters[key] = make([]string, len(dynamicFilterExpressions[key].DynamicInputs[0]))
 		} else if len(staticFilterExpressions[key].DynamicInputs) > 0 {
@@ -1660,7 +1662,7 @@ func UnmarshalConfig(data []byte) {
 		}
 	}
 	Mdo.Outputs = make(map[string]map[string]interface{}, len(MetricsConfig.Outputs))
-	for key, _ := range MetricsConfig.Outputs {
+	for key := range MetricsConfig.Outputs {
 		Mdo.Outputs[key] = make(map[string]interface{}, 1+len(MetricsConfig.Outputs[key].Attributes))
 		Mdo.Outputs[key]["value"] = 0
 		for attribute, attributeVal := range MetricsConfig.Outputs[key].Attributes {
@@ -1668,12 +1670,12 @@ func UnmarshalConfig(data []byte) {
 		}
 	}
 	Mdo.Metrics = make(map[string]map[string]interface{}, len(MetricsConfig.Metrics))
-	for i, _ := range MetricsConfig.Metrics {
+	for i := range MetricsConfig.Metrics {
 		Mdo.Metrics[MetricsConfig.Metrics[i].Expression] = make(map[string]interface{}, 1)
 		Mdo.Metrics[MetricsConfig.Metrics[i].Expression]["value"] = 0
 	}
 	Mdo.Echo = make(map[string]map[string]interface{}, len(MetricsConfig.Echo))
-	for i, _ := range MetricsConfig.Echo {
+	for i := range MetricsConfig.Echo {
 		Mdo.Echo[MetricsConfig.Echo[i].PublishUri] = MetricsConfig.Echo[i].Echo
 	}
 	mdoBuf = new(bytes.Buffer)
@@ -1812,24 +1814,13 @@ func handleFiltersTemplates() {
 					}
 
 					// copy over the templated filter with any templates removed
-					switch filter.(type) {
+					switch x:= filter.(type) {
 					case string:
-						strFilter, ok := filter.(string)
-						if ok {
-							newStrFilter := strings.ReplaceAll(strFilter, template.Tok, replacement)
+							newStrFilter := strings.ReplaceAll(x, template.Tok, replacement)
 							MetricsConfig.Filters[newFilterName] = newStrFilter
-						} else {
-							logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "filters", JType: simdjson.TypeObject}, JsonAccessor{Key: newFilterName, JType: simdjson.TypeString}}, fmt.Errorf("could not convert filter to string"))
-							wasErr = true
-						}
 					case []interface{}:
-						filterArr, ok := filter.([]interface{})
-						if !ok {
-							logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "filters", JType: simdjson.TypeObject}, JsonAccessor{Key: newFilterName, JType: simdjson.TypeArray}}, fmt.Errorf("could not convert filter to []string"))
-							wasErr = true
-						}
 						newFilterArr := make([]interface{}, 0)
-						for filterIndex, subFilter := range filterArr {
+						for filterIndex, subFilter := range x {
 							strFilter, ok := subFilter.(string)
 							if ok {
 								newStrFilter := strings.ReplaceAll(strFilter, template.Tok, replacement)
@@ -1844,13 +1835,8 @@ func handleFiltersTemplates() {
 							MetricsConfig.Filters[newFilterName] = newFilterArr
 						}
 					case []string:
-						filterArr, ok := filter.([]string)
-						if !ok { // don't think I can technically get here, but it's for safety.
-							logError(&(configErrorLocs.ErrorLocs), []JsonAccessor{JsonAccessor{Key: "filters", JType: simdjson.TypeObject}, JsonAccessor{Key: newFilterName, JType: simdjson.TypeArray}}, fmt.Errorf("could not convert filter to []string"))
-							wasErr = true
-						}
 						newFilterArr := make([]string, 0)
-						for _, strFilter := range filterArr {
+						for _, strFilter := range x {
 							newStrFilter := strings.ReplaceAll(strFilter, template.Tok, replacement)
 							newFilterArr = append(newFilterArr, newStrFilter)
 						}
@@ -1890,14 +1876,14 @@ func handleOutputsTemplates() {
 						b, err := json.Marshal(output.Attributes)
 						if err == nil {
 							b2 := bytes.ReplaceAll(b, []byte(template.Tok), []byte(replacement))
-							err = json.Unmarshal(b2, &(newOutput.Attributes))
+							json.Unmarshal(b2, &(newOutput.Attributes))
 						}
 					}
 					if len(output.Enum) > 0 {
 						b, err := json.Marshal(output.Enum)
 						if err == nil {
 							b2 := bytes.ReplaceAll(b, []byte(template.Tok), []byte(replacement))
-							err = json.Unmarshal(b2, &(newOutput.Enum))
+							json.Unmarshal(b2, &(newOutput.Enum))
 						}
 					}
 
@@ -1905,7 +1891,7 @@ func handleOutputsTemplates() {
 						b, err := json.Marshal(output.Bitfield)
 						if err == nil {
 							b2 := bytes.ReplaceAll(b, []byte(template.Tok), []byte(replacement))
-							err = json.Unmarshal(b2, &(newOutput.Bitfield))
+							json.Unmarshal(b2, &(newOutput.Bitfield))
 						}
 					}
 
@@ -2012,9 +1998,9 @@ func handleEchoTemplates() {
 					for key, value := range echoObject.Echo {
 						newKey := strings.ReplaceAll(key, template.Tok, replacement)
 						var newValue interface{}
-						switch value.(type) {
+						switch x:= value.(type) {
 						case string:
-							newValue = strings.ReplaceAll(value.(string), template.Tok, replacement)
+							newValue = strings.ReplaceAll(x, template.Tok, replacement)
 						default:
 							newValue = value
 						}
@@ -2046,9 +2032,9 @@ func handleEchoTemplates() {
 								}
 								newKey := strings.ReplaceAll(key, template.Tok, replacement)
 								var newValue interface{}
-								switch value.(type) {
+								switch x:= value.(type) {
 								case string:
-									newValue = strings.ReplaceAll(value.(string), template.Tok, replacement)
+									newValue = strings.ReplaceAll(x, template.Tok, replacement)
 								default:
 									newValue = value
 								}
@@ -2081,9 +2067,9 @@ func handleEchoTemplates() {
 						for _, replacement := range template.List {
 							newKey := strings.ReplaceAll(key, template.Tok, replacement)
 							var newValue interface{}
-							switch value.(type) {
+							switch x:= value.(type) {
 							case string:
-								newValue = strings.ReplaceAll(value.(string), template.Tok, replacement)
+								newValue = strings.ReplaceAll(x, template.Tok, replacement)
 							default:
 								newValue = value
 							}
@@ -2101,13 +2087,13 @@ func handleEchoTemplates() {
 
 // first pass at generating the scope; excludes filters
 func generateScope() {
-	Scope = make(map[string][]Input, 0)
-	for key, input = range MetricsConfig.Inputs {
-		input.Name = key
-		Scope[key] = []Input{input}
+	InputScope = make(map[string][]Union, 0)
+	OutputScope = make(map[string][]Union, 0)
+	for key, input := range MetricsConfig.Inputs {
+		InputScope[key] = []Union{input.Value}
 		if len(input.Attributes) > 0 {
-			for attributeName, attributeLoc := range input.AttributesMap {
-				Scope[attributeLoc] = []Input{Input{Name: attributeName, Value: MetricsConfig.Attributes[attributeLoc].Value}}
+			for _, attributeLoc := range input.AttributesMap {
+				InputScope[attributeLoc] = []Union{MetricsConfig.Attributes[attributeLoc].Value}
 			}
 		}
 	}
@@ -2124,8 +2110,9 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 	if expressionNeedsEval == nil {
 		expressionNeedsEval = make(map[int]bool, len(MetricsConfig.Metrics))
 	}
-	if Scope == nil {
-		Scope = make(map[string][]Input, 0)
+	if InputScope == nil {
+		InputScope = make(map[string][]Union, 0)
+		OutputScope = make(map[string][]Union, 0)
 	}
 
 	exp, err := Parse((*metricsObject).Expression)
@@ -2196,8 +2183,9 @@ func getExpression(metricsObject *MetricsObject, internal_vars []string, netInde
 
 	metricsObject.State["value"] = []Union{outputUnion}
 	for _, outputVar := range (*metricsObject).Outputs { // metricsObject.Outputs is a list of output variable names
-		output = MetricsConfig.Outputs[outputVar] // MetricsConfig.Outputs is a map[string]Output of output variable names to Output objects
+		output := MetricsConfig.Outputs[outputVar] // MetricsConfig.Outputs is a map[string]Output of output variable names to Output objects
 		output.Value = outputUnion
+		OutputScope[outputVar] = []Union{outputUnion}
 		MetricsConfig.Outputs[outputVar] = output
 		if stringInSlice(MetricsConfig.Outputs[outputVar].Flags, "direct_set") {
 			for _, var_name := range exp.Vars {
@@ -2330,7 +2318,7 @@ func combineFlags(outputName string, output *Output) {
 
 }
 
-func checkMixedFlags(currentJsonLocation []JsonAccessor) {
+func checkMixedFlags(currentJsonLocation []JsonAccessor) []JsonAccessor {
 	uriGroup := ""
 	currentJsonLocation = append(currentJsonLocation, JsonAccessor{Key: "outputs", JType: simdjson.TypeObject})
 	for outputName, output := range MetricsConfig.Outputs {
@@ -2358,6 +2346,7 @@ func checkMixedFlags(currentJsonLocation []JsonAccessor) {
 		currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
 	}
 	currentJsonLocation = delete_at_index(currentJsonLocation, len(currentJsonLocation)-1)
+	return currentJsonLocation
 }
 
 func GetPubTickers() {
@@ -2442,11 +2431,11 @@ func GetPubTickers() {
 
 	// not directly related, but this will allow for multithreading with different metrics expressions
 	metricsMutex = make([]sync.RWMutex, len(MetricsConfig.Metrics))
-	for i, _ := range MetricsConfig.Metrics {
+	for i := range MetricsConfig.Metrics {
 		metricsMutex[i] = *new(sync.RWMutex)
 	}
 
-	for echoIndex, _ := range MetricsConfig.Echo {
+	for echoIndex := range MetricsConfig.Echo {
 		MetricsConfig.Echo[echoIndex].Ticker = time.NewTicker(time.Duration(MetricsConfig.Echo[echoIndex].PublishRate) * time.Millisecond)
 	}
 	EvaluateExpressions()
@@ -2484,7 +2473,7 @@ func GetSubscribeUris() {
 	// extract parent uris (so we know what to subscribe to)
 	// and also make an easy way to "fetch" data into our input Unions
 	uriToInputNameMap = make(map[string][]string, len(MetricsConfig.Inputs))
-	for key, input = range MetricsConfig.Inputs {
+	for key, input := range MetricsConfig.Inputs {
 		if len(input.Uri) > 0 {
 			SubscribeUris = append(SubscribeUris, GetParentUri(input.Uri))
 			if _, ok := uriToInputNameMap[input.Uri]; !ok {
@@ -2506,7 +2495,7 @@ func GetSubscribeUris() {
 					uriToEchoObjectInputMap[echoInput.Uri] = make(map[int]int, 0)
 				}
 				uriToEchoObjectInputMap[echoInput.Uri][echoIndex] = inputIndex
-				for echoRegister, _ := range echoInput.Registers {
+				for echoRegister := range echoInput.Registers {
 					echoOutputToInputNum[echoObject.PublishUri+"/"+echoRegister] = inputIndex
 				}
 			}
@@ -2519,7 +2508,7 @@ func GetSubscribeUris() {
 
 	// do the same for outputs so that we can respond to "gets"
 	uriToOutputNameMap = make(map[string]string, len(MetricsConfig.Outputs))
-	for outputName, output = range MetricsConfig.Outputs {
+	for outputName, output := range MetricsConfig.Outputs {
 		if len(output.Uri) > 0 {
 			if len(output.Name) > 0 {
 				uriToOutputNameMap[output.Uri+"/"+output.Name] = outputName // output.Name might be repeated, so we may overwrite another entry with this one
@@ -2558,13 +2547,13 @@ func GetSubscribeUris() {
 	// map each parent uri to its children components that we'll need to fetch
 	// from that parent uri
 	UriElements = make(map[string][][]string, 0)
-	for _, input = range MetricsConfig.Inputs {
+	for _, input := range MetricsConfig.Inputs {
 		uriFrags := strings.Split(input.Uri, "/")
 		for i := 1; i < len(uriFrags)-1; i++ {
 			if _, ok := UriElements[strings.Join(uriFrags[:i+1], "/")]; !ok {
 				UriElements[strings.Join(uriFrags[:i+1], "/")] = make([][]string, 0)
 			}
-			UriElements[strings.Join(uriFrags[:i+1], "/")] = append(UriElements[strings.Join(uriFrags[:i+1], "/")], uriFrags[i+1:len(uriFrags)])
+			UriElements[strings.Join(uriFrags[:i+1], "/")] = append(UriElements[strings.Join(uriFrags[:i+1], "/")], uriFrags[i+1:])
 		}
 		UriElements[input.Uri] = make([][]string, 0)
 		if len(input.Attributes) > 0 {
@@ -2592,7 +2581,7 @@ func GetSubscribeUris() {
 						if _, ok := UriElements[strings.Join(uriFrags2[:i+1], "/")]; !ok {
 							UriElements[strings.Join(uriFrags2[:i+1], "/")] = make([][]string, 0)
 						}
-						UriElements[strings.Join(uriFrags2[:i+1], "/")] = append(UriElements[strings.Join(uriFrags2[:i+1], "/")], uriFrags2[i+1:len(uriFrags2)])
+						UriElements[strings.Join(uriFrags2[:i+1], "/")] = append(UriElements[strings.Join(uriFrags2[:i+1], "/")], uriFrags2[i+1:])
 					}
 					UriElements[strings.Join(uriFrags2, "/")] = make([][]string, 0)
 				}
@@ -2604,7 +2593,7 @@ func GetSubscribeUris() {
 	// map each parent uri to its children components that we'll need to fetch
 	// from that parent uri
 	OutputUriElements = make(map[string][][]string, 0)
-	for outputName, output = range MetricsConfig.Outputs {
+	for outputName, output := range MetricsConfig.Outputs {
 		uriFrags := strings.Split(output.Uri, "/")
 		if len(output.Name) > 0 {
 			uriFrags = append(uriFrags, output.Name)
@@ -2615,16 +2604,16 @@ func GetSubscribeUris() {
 			if _, ok := OutputUriElements[strings.Join(uriFrags[:i+1], "/")]; !ok {
 				OutputUriElements[strings.Join(uriFrags[:i+1], "/")] = make([][]string, 0)
 			}
-			OutputUriElements[strings.Join(uriFrags[:i+1], "/")] = append(OutputUriElements[strings.Join(uriFrags[:i+1], "/")], uriFrags[i+1:len(uriFrags)])
+			OutputUriElements[strings.Join(uriFrags[:i+1], "/")] = append(OutputUriElements[strings.Join(uriFrags[:i+1], "/")], uriFrags[i+1:])
 		}
 		outputUri := strings.Join(uriFrags, "/")
 		OutputUriElements[outputUri] = make([][]string, 0)
 		if len(output.Attributes) > 0 {
-			for attributeName, _ := range output.Attributes {
+			for attributeName := range output.Attributes {
 				OutputUriElements[outputUri+"/"+attributeName] = make([][]string, 0)
 				OutputUriElements[outputUri+"@"+attributeName] = make([][]string, 0)
 			}
-			for attributeName, _ := range output.Attributes {
+			for attributeName := range output.Attributes {
 				if _, ok := OutputUriElements[outputUri+"/"+attributeName]; !ok {
 					OutputUriElements[strings.Join(uriFrags[:len(uriFrags)-1], "/")+"/"+attributeName] = make([][]string, 0)
 					OutputUriElements[strings.Join(uriFrags[:len(uriFrags)-1], "/")+"@"+attributeName] = make([][]string, 0)
@@ -2635,7 +2624,7 @@ func GetSubscribeUris() {
 
 	// //leaving this here in case we need it again (maybe a command-line option or query?)
 	// fmt.Println("Looking for elements:")
-	// for key, _ := range UriElements {
+	// for key := range UriElements {
 	// 	fmt.Printf("\t%s :", key)
 	// 	for _, element := range UriElements[key] {
 	// 		fmt.Printf("  %v", element)
@@ -2772,9 +2761,9 @@ func verifyOutputConfigLogging() {
 }
 
 func checkUnusedOutputs() {
-	for outputName, _ := range MetricsConfig.Outputs {
+	for outputName := range MetricsConfig.Outputs {
 		used := false
-		for i, _ := range MetricsConfig.Metrics {
+		for i := range MetricsConfig.Metrics {
 			if stringInSlice(MetricsConfig.Metrics[i].Outputs, outputName) {
 				used = true
 				break

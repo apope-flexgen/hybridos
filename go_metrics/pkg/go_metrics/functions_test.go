@@ -7341,7 +7341,7 @@ func TestFloor(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -7581,7 +7581,7 @@ func TestCeil(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -7827,7 +7827,7 @@ func TestSqrt(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range test.expectedOutputList {
+			for i := range test.expectedOutputList {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output[i], test.expectedOutputList[i])
 				}
@@ -8427,7 +8427,7 @@ func TestAbs(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -8673,7 +8673,7 @@ func TestRound(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -8793,7 +8793,7 @@ func TestBool(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -8913,7 +8913,7 @@ func TestInt(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -9039,7 +9039,7 @@ func TestUInt(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -9141,7 +9141,7 @@ func TestFloat(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -9213,7 +9213,7 @@ func TestString(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}
@@ -9269,7 +9269,7 @@ func TestIntegrate(t *testing.T) {
 	}
 
 	state := make(map[string][]Union, 0)
-	output, err = Integrate(Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 1.0 / (3600 * 1000)}, Union{tag: INT, i: -1}, Union{tag: INT, i: 0}, &state)
+	output, _ = Integrate(Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 1.0 / (3600 * 1000)}, Union{tag: INT, i: -1}, Union{tag: INT, i: 0}, &state)
 	state["value"] = []Union{output}
 	time.Sleep(100 * time.Millisecond)
 	output, err = Integrate(Union{tag: INT, i: 1}, Union{tag: FLOAT, f: 1.0 / (3600 * 1000)}, Union{tag: INT, i: -1}, Union{tag: INT, i: 0}, &state)
@@ -10443,7 +10443,7 @@ func TestCompare(t *testing.T) {
 		if len(output) != len(test.expectedOutputList) {
 			t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 		} else {
-			for i, _ := range output {
+			for i := range output {
 				if output[i] != test.expectedOutputList[i] {
 					t.Errorf("%s: output %v not equal to expected %v\n", test.testDescription, output, test.expectedOutputList)
 				}

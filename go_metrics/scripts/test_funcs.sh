@@ -18,17 +18,17 @@ fi
 #timeout=20
 #timeused=0
 
-dir=math
-if [ $# -gt 0 ] ; then 
-  dir=$1
-fi
+dir=logic
+# if [ $# -gt 0 ] ; then 
+#   dir=$1
+# fi
 
 cfgname=examples/$dir/$logname
 timeout=20
 timeused=0
 
 gitdir=$(cd `dirname $0` && cd .. && pwd)
-gitdir='/home/docker/git/go_metrics'
+gitdir='/home/docker/hybridos/go_metrics'
 echo "gitdir #2 is $gitdir"
 #. $gitdir/scripts/test_finctions.sh
 declare -a cmds

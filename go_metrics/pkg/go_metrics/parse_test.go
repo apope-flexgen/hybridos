@@ -1281,73 +1281,18 @@ var ParseTests = []ParseTest{
 }
 
 func TestParse(t *testing.T) {
-	Scope = map[string][]Input{
-		"bool1": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: true},
-			},
-		},
-		"bool2": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: true},
-			},
-		},
-		"uint1": []Input{
-			Input{
-				Type:  "uint",
-				Value: Union{tag: UINT, ui: 0},
-			},
-		},
-		"uint2": []Input{
-			Input{
-				Type:  "uint",
-				Value: Union{tag: UINT, ui: 0},
-			},
-		},
-		"int1": []Input{
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 0},
-			},
-		},
-		"int2": []Input{
-			Input{
-				Type:  "int",
-				Value: Union{tag: INT, i: 0},
-			},
-		},
-		"float1": []Input{
-			Input{
-				Type:  "float",
-				Value: Union{tag: FLOAT, f: 0},
-			},
-		},
-		"float2": []Input{
-			Input{
-				Type:  "float",
-				Value: Union{tag: FLOAT, f: 0},
-			},
-		},
-		"string1": []Input{
-			Input{
-				Type:  "string",
-				Value: Union{tag: STRING, s: ""},
-			},
-		},
-		"string2": []Input{
-			Input{
-				Type:  "string",
-				Value: Union{tag: STRING, s: ""},
-			},
-		},
-		"input1@enabled": []Input{
-			Input{
-				Type:  "bool",
-				Value: Union{tag: BOOL, b: true},
-			},
-		},
+	InputScope = map[string][]Union{
+		"bool1": []Union{{tag: BOOL, b: true}},
+		"bool2": []Union{{tag: BOOL, b: true}},
+		"uint1": []Union{{tag: UINT, ui: 0}},
+		"uint2": []Union{{tag: UINT, ui: 0}},
+		"int1": []Union{{tag: INT, i: 0}},
+		"int2": []Union{{tag: INT, i: 0}},
+		"float1": []Union{{tag: FLOAT, f: 0}},
+		"float2": []Union{{tag: FLOAT, f: 0}},
+		"string1": []Union{{tag: STRING, s: ""}},
+		"string2": []Union{{tag: STRING, s: ""}},
+		"input1@enabled": []Union{{tag: BOOL, b: true}},
 	}
 	allPossibleAttributes = make(map[string][]string, 0)
 	allPossibleAttributes["enabled"] = []string{"input1@enabled"}
@@ -1368,7 +1313,7 @@ func TestParse(t *testing.T) {
 		if len(output.Vars) != len(test.vars) {
 			t.Errorf("%s: output vars %v not equal to expected vars %v\n", test.equation, output.Vars, test.vars)
 		} else {
-			for i, _ := range output.Vars {
+			for i := range output.Vars {
 				if output.Vars[i] != test.vars[i] {
 					t.Errorf("%s: output var %v not equal to expected var %v\n", test.equation, output.Vars[i], test.vars[i])
 				}
