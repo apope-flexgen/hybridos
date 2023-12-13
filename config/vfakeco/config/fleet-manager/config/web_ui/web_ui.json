@@ -19,7 +19,7 @@
     "inspectorComponentsName": "test_controller",
     "fleet_name": "ERCOT",
     "customer": {
-        "name": "Horizon Power",
+        "name": "VFakeCo",
         "server": "Fleet Manager 1"
     }
 }

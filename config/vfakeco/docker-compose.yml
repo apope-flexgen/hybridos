@@ -42,9 +42,9 @@ services:
         ipv4_address: 10.10.1.5
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/fleet-manager/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/fleet-manager/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/fleet-manager/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
       - ftd-data:/home/hybridos/powercloud/owner/fleetman01/archives
 
@@ -62,9 +62,9 @@ services:
         ipv4_address: 192.168.10.5
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/site-controller/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/site-controller/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/site-controller/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/site-controller/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/site-controller/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/site-controller/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
       - ftd-data:/home/hybridos/powercloud/owner/lima/archives
 
@@ -82,14 +82,14 @@ services:
         ipv4_address: 192.168.11.10
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/ess-controller/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/ess-controller/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/ess-controller/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/ess-controller/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/ess-controller/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/ess-controller/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
       - ftd-data:/home/hybridos/powercloud/archives
 
   lima-psm-01:
-    image: flexgen/psm-snapshot:11.3.0.alpha.3
+    image: flexgen/twins-snapshot:11.3.0.alpha.3
     container_name: lima-psm-01
     hostname: lima-psm-01
     ports:
@@ -101,9 +101,9 @@ services:
         ipv4_address: 192.168.10.250
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/psm/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/psm/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/lima/psm/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/lima/psm/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
 
   sudden_valley-site-controller-01:
@@ -120,9 +120,9 @@ services:
         ipv4_address: 192.168.12.5
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/site-controller/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/site-controller/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/site-controller/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/site-controller/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/site-controller/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/site-controller/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
       - ftd-data:/home/hybridos/powercloud/owner/sudden_valley/archives
 
@@ -140,14 +140,14 @@ services:
         ipv4_address: 192.168.13.10
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/ess-controller/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/ess-controller/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/ess-controller/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/ess-controller/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/ess-controller/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/ess-controller/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
       - ftd-data:/home/hybridos/powercloud/archives
 
   sudden_valley-psm-01:
-    image: flexgen/psm-snapshot:11.3.0.alpha.3
+    image: flexgen/twins-snapshot:11.3.0.alpha.3
     container_name: sudden_valley-psm-01
     hostname: sudden_valley-psm-01
     ports:
@@ -159,9 +159,9 @@ services:
         ipv4_address: 192.168.12.250
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/psm/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/psm/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/sudden_valley/psm/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/psm/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/psm/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/sudden_valley/psm/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
 
   config-powercloud-01:
@@ -170,9 +170,9 @@ services:
     hostname: config-powercloud-01
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/powercloud/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/powercloud/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/powercloud/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/vfakeco/config/powercloud/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/powercloud/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/powercloud/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts/dts:/home/scripts
       - ftd-data:/home/hybridos/powercloud/inbox
       - dts-failed-validate:/home/hybridos/powercloud/validate_error

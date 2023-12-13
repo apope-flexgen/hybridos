@@ -5,21 +5,21 @@
                 "active_power_setpoint_absolute_mode_flag": {
                     "name": "Active Power Setpoint Absolute Mode Enable",
                     "type": "enum_slider",
-                    "ui_type": "control",
+                    "ui_type": "none",
                     "value": false,
                     "var_type": "Bool"
                 },
                 "active_power_setpoint_direction_flag": {
                     "name": "Active Power Setpoint Direction Flag",
                     "type": "enum_slider",
-                    "ui_type": "control",
+                    "ui_type": "none",
                     "value": false,
                     "var_type": "Bool"
                 },
                 "active_power_setpoint_kW_cmd": {
-                    "name": "Active Power Setpoint kW",
+                    "name": "Active Power Setpoint",
                     "scaler": 1000,
-                    "ui_type": "none",
+                    "ui_type": "control",
                     "unit": "W",
                     "value": 0
                 },
@@ -27,7 +27,7 @@
                     "name": "Active Power Setpoint Slew Rate",
                     "ui_type": "none",
                     "unit": "kW/s",
-                    "value": 250,
+                    "value": 250000,
                     "var_type": "Int"
                 },
                 "active_power_setpoint_load_method": {
@@ -54,7 +54,7 @@
                 "active_power_setpoint_maximize_solar_flag": {
                     "name": "Active Power Setpoint Maximize Solar",
                     "type": "enum_slider",
-                    "ui_type": "control",
+                    "ui_type": "none",
                     "value": false,
                     "var_type": "Bool"
                 },
@@ -93,7 +93,7 @@
                     ],
                     "type": "string",
                     "ui_type": "none",
-                    "value": "0x10",
+                    "value": "0x16",
                     "var_type": "String"
                 },
                 "charge_dispatch_feeder_enable_flag": {
@@ -232,9 +232,9 @@
                 "ess_charge_control_kW_limit": {
                     "name": "ESS Charge Control Rate Limit",
                     "scaler": 1000,
-                    "ui_type": "none",
+                    "ui_type": "control",
                     "unit": "W",
-                    "value": 150000
+                    "value": 20000
                 },
                 "ess_charge_control_kW_request": {
                     "name": "ESS Charge Control Power Request",
@@ -245,7 +245,7 @@
                 },
                 "ess_charge_control_target_soc": {
                     "name": "Target SOC Setpoint",
-                    "ui_type": "none",
+                    "ui_type": "control",
                     "unit": "%",
                     "value": 75
                 },
@@ -274,7 +274,7 @@
                 "feature_kW_demand": {
                     "name": "Feature Demand Active Power",
                     "scaler": 1000,
-                    "ui_type": "none",
+                    "ui_type": "status",
                     "unit": "W"
                 },
                 "feeder_actual_kW": {
@@ -690,7 +690,8 @@
                                 "name": "Active Response Command",
                                 "scaler": 1000,
                                 "ui_type": "status",
-                                "unit": "W"
+                                "unit": "W",
+                                "value": 50000
                             },
                             "active_response_status": {
                                 "name": "Active Response Status",
@@ -820,7 +821,8 @@
                                 "name": "Active Response Command",
                                 "scaler": 1000,
                                 "ui_type": "status",
-                                "unit": "W"
+                                "unit": "W",
+                                "value": 50000
                             },
                             "active_response_status": {
                                 "name": "Active Response Status",
@@ -948,7 +950,7 @@
                         "multiple_inputs": true,
                         "name": "FR Baseload Command",
                         "scaler": 1000,
-                        "ui_type": "status",
+                        "ui_type": "none",
                         "unit": "W"
                     },
                     "fr_enable_mask": {
@@ -1192,7 +1194,7 @@
                     "name": "Target SOC Load Enable",
                     "type": "enum_slider",
                     "ui_type": "none",
-                    "value": true,
+                    "value": false,
                     "var_type": "Bool"
                 },
                 "threshold_charge_1": {
@@ -1629,7 +1631,7 @@
                     "scalar": 1000,
                     "ui_type": "none",
                     "unit": "kW",
-                    "value": 10
+                    "value": 1000
                 },
                 "active_power_closed_loop_zero_bypass_enable":
                 {
@@ -1657,18 +1659,18 @@
                     "scalar": 1000,
                     "ui_type": "none",
                     "unit": "kW",
-                    "value": 50
+                    "value": 500
                 },
                 "active_power_closed_loop_total_correction": {
                     "name": "Active Power Closed Loop Control Total Correction",
-                    "ui_type": "none",
+                    "ui_type": "status",
                     "unit": "kW"
                 },
                 "active_power_closed_loop_update_rate_ms": {
                     "name": "Frequency of Active Closed Loop Control Algorithm",
                     "ui_type": "none",
                     "unit": "ms",
-                    "value": 10,
+                    "value": 30,
                     "var_type": "Int"
                 },
                 "active_power_poi_limits_enable": {
@@ -1953,6 +1955,14 @@
                     "unit": "Hz",
                     "value": 3
                 },
+                "pfr_max_rated_kW":
+                {
+                    "name": "Rated Power",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "value": 7000,
+                    "scaler": 1
+                },
                 "pfr_enable_flag": {
                     "name": "PFR Enable",
                     "type": "enum_slider",
@@ -1978,6 +1988,13 @@
                     "ui_type": "none",
                     "value": false,
                     "var_type": "Bool"
+                },
+                "pfr_request_kW":
+                {
+                    "name": "PFR Power Request",
+                    "ui_type": "none",
+                    "unit": "kW",
+                    "scaler": 1
                 },
                 "reactive_power_closed_loop_decrease_timer_ms": {
                     "name": "reactive Timer for Decreasing Closed Loop Control Offset",
@@ -2033,7 +2050,7 @@
                     "scaler": 1000,
                     "ui_type": "none",
                     "unit": "VAR",
-                    "value": 10
+                    "value": 1000
                 },
                 "reactive_power_closed_loop_zero_bypass_enable":
                 {
@@ -2061,11 +2078,11 @@
                     "scaler": 1000,
                     "ui_type": "none",
                     "unit": "VAR",
-                    "value": 5
+                    "value": 500
                 },
                 "reactive_power_closed_loop_total_correction": {
                     "name": "Reactive Power Closed Loop Control Total Correction",
-                    "ui_type": "none",
+                    "ui_type": "status",
                     "unit": "kVAR"
                 },
                 "reactive_power_closed_loop_update_rate_ms": {
@@ -2803,7 +2820,7 @@
             },
             "soc_avg_running": {
                 "name": "Average State of Charge for Running ESS",
-                "ui_type": "none",
+                "ui_type": "status",
                 "unit": "%"
             },
             "soc_max_all": {
@@ -2864,7 +2881,7 @@
                     "name": "Command Source Selection Status",
                     "type": "string",
                     "ui_type": "status",
-                    "value": "Horizon Power DNP3",
+                    "value": "VFakeCo DNP3",
                     "var_type": "String"
                 },
                 "invert_poi_kW": {
@@ -2903,7 +2920,7 @@
                     "var_type": "Bool"
                 },
                 "reserved_bool_12": {
-                    "name": "Multiple Inputs: Horizon Power DNP3 Enable",
+                    "name": "Multiple Inputs: VFakeCo DNP3 Enable",
                     "type": "enum_slider",
                     "ui_type": "none",
                     "value": false,
@@ -3044,7 +3061,8 @@
                 {
                     "alt_ui_types": [  
                         {"var_id": "uf_pfr_active_cmd_kw", "ui_type": "none"},
-                        {"var_id": "of_pfr_active_cmd_kw", "ui_type": "none"}],
+                        {"var_id": "of_pfr_active_cmd_kw", "ui_type": "none"}
+                    ],
                     "enabled": false,
                     "name": "Scheduler",
                     "ui_type": "status",
@@ -3053,7 +3071,7 @@
                 {
                     "alt_ui_types": [],
                     "enabled": true,
-                    "name": "Horizon Power DNP3",
+                    "name": "VFakeCo DNP3",
                     "ui_type": "status",
                     "uri_suffix": "dnp3"
                 }

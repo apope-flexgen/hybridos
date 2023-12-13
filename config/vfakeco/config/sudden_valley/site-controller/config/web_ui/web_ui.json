@@ -1,7 +1,7 @@
 {
     "control_cabinet": false,
     "customer": {
-        "name": "Horizon Power",
+        "name": "VFakeCo",
         "server": "Site Controller 1"
     },
     "ess": false,

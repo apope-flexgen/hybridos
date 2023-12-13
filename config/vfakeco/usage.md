@@ -1,6 +1,6 @@
-# Horizon Power 
+# VFakeCo 
 
-This Horizon Power reference design consists of a Fleet Manager, two Site Controllers (one for each site), and two ESS Controllers (one for each site).
+This VFakeCo reference design consists of a Fleet Manager, two Site Controllers (one for each site), and two ESS Controllers (one for each site).
 
 ## Sites
 ### Lima

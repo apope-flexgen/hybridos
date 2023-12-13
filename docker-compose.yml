@@ -12,9 +12,9 @@ services:
         ipv4_address: 10.10.1.5
     tty: true
     volumes:
-      - /home/hybridos/git/hybridos/config/horizon_power/config/fleet-manager/config:/home/staging
-      - /home/hybridos/git/hybridos/config/horizon_power/config/fleet-manager/scripts:/home/utility
-      - /home/hybridos/git/hybridos/config/horizon_power/config/fleet-manager/.secret:/home/secret
+      - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/config:/home/staging
+      - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/scripts:/home/utility
+      - /home/hybridos/git/hybridos/config/vfakeco/config/fleet-manager/.secret:/home/secret
       - /home/hybridos/git/hybridos/virtual_site/scripts:/home/override
 
 networks:
