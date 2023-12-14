@@ -134,22 +134,8 @@ void Site_Manager::post_configure_initialize_features(void) {
     //
     // Standalone Power Features
     //
-    // Disable all features as part of initial configuration in case any are accidentally enabled
-    for (auto feature : standalone_power_features_list) {
-        feature->enable_flag.value.set(false);
-    }
     // send Generator Manager the initial LDSS settings
     set_ldss_variables();
-    // PFR feature_vars depend on configuration, so initialize feature_vars now
-    pfr.initialize_feature_vars();
-
-    //
-    // Site Operation Features
-    //
-    // Disable all features as part of initial configuration in case any are accidentally enabled
-    for (auto feature : site_operation_features_list) {
-        feature->enable_flag.value.set(false);
-    }
 }
 
 // gets called just when the user clicks the Features tab. publish_all() subsequently updates the values
@@ -819,10 +805,18 @@ bool Site_Manager::parse_variables(cJSON* variables_config_object) {
                 unrecognized_variable_ids.erase(id);
             }
 
-            if (!has_valid_available_features_config || !feature->available) {
+            if (!has_valid_available_features_config) {
                 continue;
             }
             Config_Validation_Result feature_validation_result = feature->parse_json_config(JSON_flat_vars, is_primary, &input_sources, field_defaults, multi_input_command_vars);
+            if (!feature->available) {
+                // if a feature is not available AND enabled it is an error.
+                if (feature->enable_flag.value.value_bool == true) {
+                    validation_result.ERROR_details.push_back(Result_Details(fmt::format("Enable flag \"{}\" was set as true but the feature is not available.", feature->enable_flag.get_name())));
+                    validation_result.is_valid_config = false;
+                }
+                continue;
+            }
             validation_result.absorb(feature_validation_result);
         }
     }

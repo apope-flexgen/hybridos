@@ -1214,7 +1214,7 @@
                     ],
                     "type": "enum_slider",
                     "ui_type": "control",
-                    "value": true,
+                    "value": false,
                     "var_type": "Bool"
                 },
                 "load_shed_high_threshold": {
@@ -1432,7 +1432,7 @@
                     ],
                     "type": "enum_slider",
                     "ui_type": "control",
-                    "value": true,
+                    "value": false,
                     "var_type": "Bool"
                 },
                 "reactive_power_poi_limits_max_kVAR": {
@@ -1476,7 +1476,7 @@
                     ],
                     "type": "enum_slider",
                     "ui_type": "control",
-                    "value": true,
+                    "value": false,
                     "var_type": "Bool"
                 },
                 "solar_shed_high_threshold": {
@@ -1788,7 +1788,7 @@
                     ],
                     "type": "enum_slider",
                     "ui_type": "none",
-                    "value": true,
+                    "value": false,
                     "var_type": "Bool"
                 }
             }

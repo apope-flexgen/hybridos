@@ -26,6 +26,7 @@ from pytests.cases.avr import test_avr_overvoltage_symmetric, test_avr_undervolt
 from pytests.cases.standalone_pfr import test_pfr_untracked_load, test_pfr_offset_load, test_pfr_minimum_load, test_pfr_untracked_load_poi_lim, test_pfr_offset_load_poi_lim, test_pfr_minimum_load_poi_lim, test_pfr_asymmetric_configs
 from pytests.cases.maint_mode import test_min_charge_discharge, test_maint_soc_limits, test_maint_cell_volt_limits, test_maint_rack_volt_limits
 from pytests.cases.ess_calibration import test_ess_cali
+from pytests.cases.enable_flags import test_enable_flags
 
 # Test runner AKA main() for each individual test
 @ parametrize("current_test", [
@@ -85,6 +86,8 @@ from pytests.cases.ess_calibration import test_ess_cali
     test_maint_cell_volt_limits,
     test_maint_rack_volt_limits,
     test_ess_cali,
+    test_enable_flags,
+
     #
     # config_dev_slow_slews
     # TODO find a way to make these tests run automatically under different configs rather than just commenting out :(

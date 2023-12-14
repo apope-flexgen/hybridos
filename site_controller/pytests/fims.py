@@ -49,9 +49,9 @@ def fims_set(uri: str, value: Any, reply_to: str = None, destination: str = None
     return fims(params, destination)
 
 
-def fims_del(uri: str):
+def fims_del(uri: str, destination: str = None):
     params = f"-m del -r /pytest -u {uri}"
-    return fims(params)
+    return fims(params, destination)
 
 
 # Listen to the given uri and return true if any sets were captured
