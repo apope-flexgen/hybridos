@@ -1,8 +1,10 @@
+import { ConnectionStatus } from 'shared/types/dtos/systemStatus.dto';
+
 export interface SystemStatusObject {
   dependencies?: string[],
   serviceName?: string,
   serviceStatus?: string,
-  connectionStatus?: string,
+  connectionStatus?: ConnectionStatus,
   cpuUsage?: number,
   memoryUsage?: number,
   uptime?: number | string,

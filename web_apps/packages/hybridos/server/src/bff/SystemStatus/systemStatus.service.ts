@@ -4,6 +4,8 @@ import { FIMS_SERVICE } from '../../fims/interfaces/fims.interface'
 import { Observable, map } from 'rxjs';
 import { FimsMsg } from 'src/fims/responses/fimsMsg.response';
 import { ServiceAction, ServiceStatusResponse } from './dto/serviceStatusResponse.dto';
+import { systemStatusDescriptions } from './systemStatus.constants';
+import { ConnectionStatus } from 'shared/types/dtos/systemStatus.dto';
 
 @Injectable()
 export class SystemStatusService {
@@ -28,6 +30,12 @@ export class SystemStatusService {
     }
 
     private parseSystemStatusData = (rawSystemStatusData: any, serviceName: string): ServiceStatusResponse => {
+        const parseConnectionStatus = () => {
+            if (rawSystemStatusData.connectionStatus) return ConnectionStatus.Online;
+            else if (rawSystemStatusData.connectionStatus === false) return ConnectionStatus.Offline;
+            return null;
+        };
+        
         const actions: ServiceAction[] = Object.keys(rawSystemStatusData.controls).map((controlKey) => ({
             enabled: rawSystemStatusData.controls[controlKey].enabled as boolean,
             action: controlKey.toLowerCase() as 'start' | 'stop' | 'restart',
@@ -36,6 +44,7 @@ export class SystemStatusService {
         const parsedData: ServiceStatusResponse = {
             serviceName: serviceName || '',
             serviceStatus: rawSystemStatusData.service_status || '',
+            connectionStatus: parseConnectionStatus(),
             uptime: rawSystemStatusData.elapsed_time || '',
             lastRestart: rawSystemStatusData.last_restart,
             cpuUsage: rawSystemStatusData.avg_cpu_usage_pct,

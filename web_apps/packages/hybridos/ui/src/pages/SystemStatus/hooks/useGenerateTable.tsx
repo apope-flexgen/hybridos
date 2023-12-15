@@ -4,6 +4,7 @@ import {
 } from '@flexgen/storybook';
 
 import { useContext, useState } from 'react';
+import { ConnectionStatus } from 'shared/types/dtos/systemStatus.dto';
 import { NotifContextType, NotifContext } from 'src/contexts/NotifContext';
 import useAxiosWebUIInstance from 'src/hooks/useAxios';
 import { SYSTEM_STATUS_URL, statusColorMapping } from 'src/pages/SystemStatus/SystemStatus.constants';
@@ -121,9 +122,9 @@ const useGenerateSystemStatusTable = () => {
   );
 
   const generateConnectionStatus = (
-    connectionStatus: string,
+    connectionStatus: ConnectionStatus | null,
   ) => {
-    if (connectionStatus.toLowerCase() === 'online') {
+    if (connectionStatus === ConnectionStatus.Online) {
       return (
         <Box sx={actionBoxSx}>
           <Icon src="NetworkConnected" color="success" size="small" />
@@ -131,10 +132,17 @@ const useGenerateSystemStatusTable = () => {
         </Box>
       );
     }
+    if (connectionStatus === ConnectionStatus.Offline) {
+      return (
+        <Box sx={actionBoxSx}>
+          <Icon src="NetworkDisconnected" color="error" size="small" />
+          <Typography text="Offline" color="error" variant="bodyMBold" />
+        </Box>
+      );
+    }
     return (
       <Box sx={actionBoxSx}>
-        <Icon src="NetworkDisconnected" color="error" size="small" />
-        <Typography text="Offline" color="error" variant="bodyMBold" />
+        <Icon src="Remove" color="info" size="small" />
       </Box>
     );
   };
@@ -161,7 +169,7 @@ const useGenerateSystemStatusTable = () => {
       dependencies: generateDependencies(serviceData.dependencies || []),
       service_name: serviceData.serviceName || '',
       service_status: serviceData.serviceStatus ? generateStatusTag(serviceData.serviceStatus) : '-',
-      connection_status: serviceData.connectionStatus ? generateConnectionStatus(serviceData.connectionStatus) : '-',
+      connection_status: generateConnectionStatus(serviceData.connectionStatus || null),
       cpu_usage: (serviceData.cpuUsage !== -1) ? `${serviceData.cpuUsage}%` : '-',
       memory_usage: (serviceData.memoryUsage !== -1) ? `${serviceData.memoryUsage}%` : '-',
       uptime: (serviceData.uptime) ? serviceData.uptime : '-',

@@ -7,6 +7,7 @@ import {
     IsBoolean,
 } from 'class-validator'
 import { systemStatusDescriptions } from '../systemStatus.constants'
+import { ConnectionStatus } from '../../../../../shared/types/dtos/systemStatus.dto'
 
 // TODO: right now, all fields are optional since we aren't getting all
 // from backend. Update to remove optional validators once all data is flowing
@@ -35,9 +36,8 @@ export class ServiceStatusResponse {
     @ApiProperty({
         description: systemStatusDescriptions.connectionStatus,
     })
-    @IsString()
     @IsOptional()
-    connectionStatus?: string
+    connectionStatus?: ConnectionStatus
 
     @ApiProperty({
         description: systemStatusDescriptions.cpuUsage,
