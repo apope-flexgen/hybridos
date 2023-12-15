@@ -77,21 +77,17 @@
                             "value": 3
                         },
                         {
-                            "name": "Frequency Response",
+                            "name": "ESS Calibration",
                             "value": 4
                         },
                         {
-                            "name": "ESS Calibration",
-                            "value": 5
-                        },
-                        {
                             "name": "Disabled",
-                            "value": 6
+                            "value": 5
                         }
                     ],
                     "type": "string",
                     "ui_type": "none",
-                    "value": "0xFEF",
+                    "value": "0x3F",
                     "var_type": "String"
                 },
                 "charge_dispatch_feeder_enable_flag": {
@@ -1276,57 +1272,6 @@
                     "var_type": "Int",
                     "write_uri": "/example/load_shed_control"
                 },
-                "pfr_enable_flag": {
-                    "name": "PFR Enable",
-                    "type": "enum_slider",
-                    "ui_type": "control",
-                    "value": false,
-                    "var_type": "Bool"
-                },
-                "pfr_max_rated_kW": {
-                    "name": "Rated Power",
-                    "scaler": 1,
-                    "ui_type": "control",
-                    "unit": "kW",
-                    "value": 7000
-                },
-                "pfr_offset_hz": {
-                    "name": "PFR Frequency Offset",
-                    "ui_type": "none",
-                    "unit": "Hz",
-                    "value": 0
-                },
-                "pfr_over_deadband_hz": {
-                    "name": "Deadband",
-                    "ui_type": "control",
-                    "unit": "Hz",
-                    "value": 0.017
-                },
-                "pfr_over_droop_hz": {
-                    "name": "Droop",
-                    "ui_type": "control",
-                    "unit": "Hz",
-                    "value": 3
-                },
-                "pfr_request_kW": {
-                    "name": "PFR Power Request",
-                    "scaler": 1,
-                    "ui_type": "none",
-                    "unit": "kW"
-                },
-                "pfr_site_nominal_hz": {
-                    "name": "Site Nominal Frequency",
-                    "ui_type": "control",
-                    "unit": "Hz",
-                    "value": 60.0
-                },
-                "pfr_status_flag": {
-                    "name": "PFR Status",
-                    "type": "enum",
-                    "ui_type": "none",
-                    "value": false,
-                    "var_type": "Bool"
-                },
                 "reactive_power_closed_loop_decrease_timer_ms": {
                     "name": "Reactive Power Timer for Decreasing Closed Loop Control Offset",
                     "ui_type": "none",
@@ -1590,6 +1535,13 @@
                     ],
                     "type": "enum",
                     "ui_type": "none"
+                },
+                "fr_mode_enable_flag": {
+                    "name": "Enable Frequency Response",
+                    "type": "enum_slider",
+                    "ui_type": "control",
+                    "value": false,
+                    "var_type": "Bool"
                 }
             },
             "summary": {
@@ -1687,13 +1639,6 @@
                             "value": true
                         }
                     ],
-                    "type": "enum_slider",
-                    "ui_type": "none",
-                    "value": false,
-                    "var_type": "Bool"
-                },
-                "fr_mode_enable_flag": {
-                    "name": "Frequency Response Mode Enable",
                     "type": "enum_slider",
                     "ui_type": "none",
                     "value": false,
@@ -1901,7 +1846,7 @@
                         "value": 0
                     },
                     {
-                        "name": "PFR",
+                        "name": "Frequency Response",
                         "value": 1
                     },
                     {
@@ -1943,7 +1888,7 @@
                 ],
                 "type": "string",
                 "ui_type": "none",
-                "value": "0x7BB",
+                "value": "0x7B9",
                 "var_type": "String"
             },
             "configured_primary": {

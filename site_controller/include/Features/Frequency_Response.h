@@ -31,7 +31,6 @@ public:
     Fims_Object enable_mask;
     Fims_Object freq_offset_hz;
     Fims_Object target_freq_hz;
-    Fims_Object baseload_cmd_kw;
     // outputs
     Fims_Object total_output_kw;
 

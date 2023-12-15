@@ -77,21 +77,17 @@
                             "value": 3
                         },
                         {
-                            "name": "Frequency Response",
+                            "name": "ESS Calibration",
                             "value": 4
                         },
                         {
-                            "name": "ESS Calibration",
-                            "value": 5
-                        },
-                        {
                             "name": "Disabled",
-                            "value": 6
+                            "value": 5
                         }
                     ],
                     "type": "string",
                     "ui_type": "none",
-                    "value": "0xFFF",
+                    "value": "0x3F",
                     "var_type": "String"
                 },
                 "charge_dispatch_feeder_enable_flag": {
@@ -300,415 +296,6 @@
                     "scaler": 1,
                     "ui_type": "none",
                     "unit": "kW"
-                },
-                "frequency_response": {
-                    "components": [
-                        {
-                            "active_cmd_kw": {
-                                "name": "Active Response Command",
-                                "ui_type": "control",
-                                "unit": "kW",
-                                "value": 100.0
-                            },
-                            "active_response_status": {
-                                "name": "Active Response Status",
-                                "ui_type": "status",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "component_id": "uf_pfr",
-                            "component_name": "UF PFR",
-                            "cooldown_duration_sec": {
-                                "name": "Post-Response Cooldown Time",
-                                "ui_type": "none",
-                                "unit": "s",
-                                "value": 0,
-                                "var_type": "Int"
-                            },
-                            "droop_bypass_flag": {
-                                "name": "Droop Bypass",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "droop_freq_hz": {
-                                "name": "Full Response Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 58.0
-                            },
-                            "droop_limit_flag": {
-                                "name": "Limit Droop Response",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": true,
-                                "var_type": "Bool"
-                            },
-                            "ess_slew_override": {
-                                "name": "Slew Override",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "freeze_active_cmd_flag": {
-                                "name": "Freeze kW Command During Incident",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "in_cooldown": {
-                                "name": "Post-Response Cooldown Status",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "in_recovery": {
-                                "name": "In-Recovery Status",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "inactive_cmd_kw": {
-                                "name": "Inactive Command",
-                                "ui_type": "none",
-                                "unit": "kW"
-                            },
-                            "instant_recovery_freq_hz": {
-                                "name": "Instant Recovery Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 59.0
-                            },
-                            "output_kw": {
-                                "name": "Response Component Output",
-                                "ui_type": "status",
-                                "unit": "kW"
-                            },
-                            "recovery_duration_sec": {
-                                "name": "Recovery Duration",
-                                "ui_type": "none",
-                                "unit": "s",
-                                "value": 0,
-                                "var_type": "Int"
-                            },
-                            "recovery_freq_hz": {
-                                "name": "Begin Recovery Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 59.0
-                            },
-                            "recovery_latch": {
-                                "name": "Recovery Latch Control",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "slew_rate_kw": {
-                                "name": "Slew Rate",
-                                "scaler": 1000,
-                                "ui_type": "none",
-                                "unit": "W/s",
-                                "value": 10000000,
-                                "var_type": "Int"
-                            },
-                            "trigger_duration_sec": {
-                                "name": "Response Duration",
-                                "ui_type": "none",
-                                "unit": "s",
-                                "value": 86400,
-                                "var_type": "Int"
-                            },
-                            "trigger_freq_hz": {
-                                "name": "Trigger Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 59.0
-                            }
-                        },
-                        {
-                            "active_cmd_kw": {
-                                "name": "Active Response Command",
-                                "ui_type": "control",
-                                "unit": "kW",
-                                "value": 100.0
-                            },
-                            "active_response_status": {
-                                "name": "Active Response Status",
-                                "ui_type": "status",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "component_id": "of_pfr",
-                            "component_name": "OF PFR",
-                            "cooldown_duration_sec": {
-                                "name": "Post-Response Cooldown Time",
-                                "ui_type": "none",
-                                "unit": "s",
-                                "value": 0,
-                                "var_type": "Int"
-                            },
-                            "droop_bypass_flag": {
-                                "name": "Droop Bypass",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "droop_freq_hz": {
-                                "name": "Full Response Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 62.0
-                            },
-                            "droop_limit_flag": {
-                                "name": "Limit Droop Response",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": true,
-                                "var_type": "Bool"
-                            },
-                            "ess_slew_override": {
-                                "name": "Slew Override",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "freeze_active_cmd_flag": {
-                                "name": "Freeze kW Command During Incident",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "in_cooldown": {
-                                "name": "Post-Response Cooldown Status",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "in_recovery": {
-                                "name": "In-Recovery Status",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "inactive_cmd_kw": {
-                                "name": "Inactive Command",
-                                "ui_type": "none",
-                                "unit": "kW"
-                            },
-                            "instant_recovery_freq_hz": {
-                                "name": "Instant Recovery Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 61.0
-                            },
-                            "output_kw": {
-                                "name": "Response Component Output",
-                                "ui_type": "status",
-                                "unit": "kW"
-                            },
-                            "recovery_duration_sec": {
-                                "name": "Recovery Duration",
-                                "ui_type": "none",
-                                "unit": "s",
-                                "value": 0,
-                                "var_type": "Int"
-                            },
-                            "recovery_freq_hz": {
-                                "name": "Begin Recovery Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 61.0
-                            },
-                            "recovery_latch": {
-                                "name": "Recovery Latch Control",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "slew_rate_kw": {
-                                "name": "Slew Rate",
-                                "scaler": 1000,
-                                "ui_type": "none",
-                                "unit": "W/s",
-                                "value": 10000000,
-                                "var_type": "Int"
-                            },
-                            "trigger_duration_sec": {
-                                "name": "Response Duration",
-                                "ui_type": "none",
-                                "unit": "s",
-                                "value": 86400,
-                                "var_type": "Int"
-                            },
-                            "trigger_freq_hz": {
-                                "name": "Trigger Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 61.0
-                            }
-                        },
-                        {
-                            "active_cmd_kw": {
-                                "name": "Active Response Command",
-                                "ui_type": "control",
-                                "unit": "kW",
-                                "value": 100.0
-                            },
-                            "active_response_status": {
-                                "name": "Active Response Status",
-                                "ui_type": "status",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "component_id": "uf_ffr",
-                            "component_name": "UF FFR",
-                            "cooldown_duration_sec": {
-                                "name": "Post-Response Cooldown Time",
-                                "ui_type": "none",
-                                "unit": "s",
-                                "value": 0,
-                                "var_type": "Int"
-                            },
-                            "droop_bypass_flag": {
-                                "name": "Droop Bypass",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": true,
-                                "var_type": "Bool"
-                            },
-                            "droop_freq_hz": {
-                                "name": "Full Response Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 58.0
-                            },
-                            "droop_limit_flag": {
-                                "name": "Limit Droop Response",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": true,
-                                "var_type": "Bool"
-                            },
-                            "ess_slew_override": {
-                                "name": "Slew Override",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": true,
-                                "var_type": "Bool"
-                            },
-                            "freeze_active_cmd_flag": {
-                                "name": "Freeze kW Command During Incident",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "in_cooldown": {
-                                "name": "Post-Response Cooldown Status",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "in_recovery": {
-                                "name": "In-Recovery Status",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "inactive_cmd_kw": {
-                                "name": "Inactive Command",
-                                "ui_type": "control",
-                                "unit": "kW"
-                            },
-                            "instant_recovery_freq_hz": {
-                                "name": "Instant Recovery Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 59.0
-                            },
-                            "output_kw": {
-                                "name": "Response Component Output",
-                                "ui_type": "status",
-                                "unit": "kW"
-                            },
-                            "recovery_duration_sec": {
-                                "name": "Recovery Duration",
-                                "ui_type": "none",
-                                "unit": "s",
-                                "value": 0,
-                                "var_type": "Int"
-                            },
-                            "recovery_freq_hz": {
-                                "name": "Begin Recovery Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 59.0
-                            },
-                            "recovery_latch": {
-                                "name": "Recovery Latch Control",
-                                "type": "enum_slider",
-                                "ui_type": "none",
-                                "value": false,
-                                "var_type": "Bool"
-                            },
-                            "slew_rate_kw": {
-                                "name": "Slew Rate",
-                                "scaler": 1000,
-                                "ui_type": "none",
-                                "unit": "W/s",
-                                "value": 10000000,
-                                "var_type": "Int"
-                            },
-                            "trigger_duration_sec": {
-                                "name": "Response Duration",
-                                "ui_type": "none",
-                                "unit": "s",
-                                "value": 86400,
-                                "var_type": "Int"
-                            },
-                            "trigger_freq_hz": {
-                                "name": "Trigger Frequency",
-                                "ui_type": "none",
-                                "unit": "Hz",
-                                "value": 59.0
-                            }
-                        }
-                    ],
-                    "fr_baseload_cmd_kw": {
-                        "name": "FR Baseload Command",
-                        "ui_type": "control",
-                        "unit": "kW"
-                    },
-                    "fr_enable_mask": {
-                        "name": "FR Components Enable Bitfield",
-                        "ui_type": "status",
-                        "value": 65535,
-                        "var_type": "Int"
-                    },
-                    "fr_freq_offset_hz": {
-                        "name": "FR Test Frequency Offset",
-                        "ui_type": "control",
-                        "unit": "Hz"
-                    },
-                    "fr_target_freq_hz": {
-                        "name": "FR Target Frequency",
-                        "ui_type": "none",
-                        "unit": "Hz",
-                        "value": 60.0
-                    },
-                    "fr_total_output_kw": {
-                        "name": "Total FR Output",
-                        "ui_type": "status",
-                        "unit": "kW"
-                    }
                 },
                 "gen_actual_kW": {
                     "name": "Generator Actual Active Power",
@@ -1503,6 +1090,410 @@
                     "unit": "%",
                     "value": 50.0
                 },
+                "frequency_response": {
+                    "components": [
+                        {
+                            "active_cmd_kw": {
+                                "name": "Active Response Command",
+                                "ui_type": "control",
+                                "unit": "kW",
+                                "value": 100.0
+                            },
+                            "active_response_status": {
+                                "name": "Active Response Status",
+                                "ui_type": "status",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "component_id": "uf_pfr",
+                            "component_name": "UF PFR",
+                            "cooldown_duration_sec": {
+                                "name": "Post-Response Cooldown Time",
+                                "ui_type": "none",
+                                "unit": "s",
+                                "value": 0,
+                                "var_type": "Int"
+                            },
+                            "droop_bypass_flag": {
+                                "name": "Droop Bypass",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "droop_freq_hz": {
+                                "name": "Full Response Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 58.0
+                            },
+                            "droop_limit_flag": {
+                                "name": "Limit Droop Response",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": true,
+                                "var_type": "Bool"
+                            },
+                            "ess_slew_override": {
+                                "name": "Slew Override",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "freeze_active_cmd_flag": {
+                                "name": "Freeze kW Command During Incident",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "in_cooldown": {
+                                "name": "Post-Response Cooldown Status",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "in_recovery": {
+                                "name": "In-Recovery Status",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "inactive_cmd_kw": {
+                                "name": "Inactive Command",
+                                "ui_type": "none",
+                                "unit": "kW"
+                            },
+                            "instant_recovery_freq_hz": {
+                                "name": "Instant Recovery Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 59.0
+                            },
+                            "output_kw": {
+                                "name": "Response Component Output",
+                                "ui_type": "status",
+                                "unit": "kW"
+                            },
+                            "recovery_duration_sec": {
+                                "name": "Recovery Duration",
+                                "ui_type": "none",
+                                "unit": "s",
+                                "value": 0,
+                                "var_type": "Int"
+                            },
+                            "recovery_freq_hz": {
+                                "name": "Begin Recovery Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 59.0
+                            },
+                            "recovery_latch": {
+                                "name": "Recovery Latch Control",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "slew_rate_kw": {
+                                "name": "Slew Rate",
+                                "scaler": 1000,
+                                "ui_type": "none",
+                                "unit": "W/s",
+                                "value": 10000000,
+                                "var_type": "Int"
+                            },
+                            "trigger_duration_sec": {
+                                "name": "Response Duration",
+                                "ui_type": "none",
+                                "unit": "s",
+                                "value": 86400,
+                                "var_type": "Int"
+                            },
+                            "trigger_freq_hz": {
+                                "name": "Trigger Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 59.0
+                            }
+                        },
+                        {
+                            "active_cmd_kw": {
+                                "name": "Active Response Command",
+                                "ui_type": "control",
+                                "unit": "kW",
+                                "value": 100.0
+                            },
+                            "active_response_status": {
+                                "name": "Active Response Status",
+                                "ui_type": "status",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "component_id": "of_pfr",
+                            "component_name": "OF PFR",
+                            "cooldown_duration_sec": {
+                                "name": "Post-Response Cooldown Time",
+                                "ui_type": "none",
+                                "unit": "s",
+                                "value": 0,
+                                "var_type": "Int"
+                            },
+                            "droop_bypass_flag": {
+                                "name": "Droop Bypass",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "droop_freq_hz": {
+                                "name": "Full Response Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 62.0
+                            },
+                            "droop_limit_flag": {
+                                "name": "Limit Droop Response",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": true,
+                                "var_type": "Bool"
+                            },
+                            "ess_slew_override": {
+                                "name": "Slew Override",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "freeze_active_cmd_flag": {
+                                "name": "Freeze kW Command During Incident",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "in_cooldown": {
+                                "name": "Post-Response Cooldown Status",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "in_recovery": {
+                                "name": "In-Recovery Status",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "inactive_cmd_kw": {
+                                "name": "Inactive Command",
+                                "ui_type": "none",
+                                "unit": "kW"
+                            },
+                            "instant_recovery_freq_hz": {
+                                "name": "Instant Recovery Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 61.0
+                            },
+                            "output_kw": {
+                                "name": "Response Component Output",
+                                "ui_type": "status",
+                                "unit": "kW"
+                            },
+                            "recovery_duration_sec": {
+                                "name": "Recovery Duration",
+                                "ui_type": "none",
+                                "unit": "s",
+                                "value": 0,
+                                "var_type": "Int"
+                            },
+                            "recovery_freq_hz": {
+                                "name": "Begin Recovery Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 61.0
+                            },
+                            "recovery_latch": {
+                                "name": "Recovery Latch Control",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "slew_rate_kw": {
+                                "name": "Slew Rate",
+                                "scaler": 1000,
+                                "ui_type": "none",
+                                "unit": "W/s",
+                                "value": 10000000,
+                                "var_type": "Int"
+                            },
+                            "trigger_duration_sec": {
+                                "name": "Response Duration",
+                                "ui_type": "none",
+                                "unit": "s",
+                                "value": 86400,
+                                "var_type": "Int"
+                            },
+                            "trigger_freq_hz": {
+                                "name": "Trigger Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 61.0
+                            }
+                        },
+                        {
+                            "active_cmd_kw": {
+                                "name": "Active Response Command",
+                                "ui_type": "control",
+                                "unit": "kW",
+                                "value": 100.0
+                            },
+                            "active_response_status": {
+                                "name": "Active Response Status",
+                                "ui_type": "status",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "component_id": "uf_ffr",
+                            "component_name": "UF FFR",
+                            "cooldown_duration_sec": {
+                                "name": "Post-Response Cooldown Time",
+                                "ui_type": "none",
+                                "unit": "s",
+                                "value": 0,
+                                "var_type": "Int"
+                            },
+                            "droop_bypass_flag": {
+                                "name": "Droop Bypass",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": true,
+                                "var_type": "Bool"
+                            },
+                            "droop_freq_hz": {
+                                "name": "Full Response Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 58.0
+                            },
+                            "droop_limit_flag": {
+                                "name": "Limit Droop Response",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": true,
+                                "var_type": "Bool"
+                            },
+                            "ess_slew_override": {
+                                "name": "Slew Override",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": true,
+                                "var_type": "Bool"
+                            },
+                            "freeze_active_cmd_flag": {
+                                "name": "Freeze kW Command During Incident",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "in_cooldown": {
+                                "name": "Post-Response Cooldown Status",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "in_recovery": {
+                                "name": "In-Recovery Status",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "inactive_cmd_kw": {
+                                "name": "Inactive Command",
+                                "ui_type": "control",
+                                "unit": "kW"
+                            },
+                            "instant_recovery_freq_hz": {
+                                "name": "Instant Recovery Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 59.0
+                            },
+                            "output_kw": {
+                                "name": "Response Component Output",
+                                "ui_type": "status",
+                                "unit": "kW"
+                            },
+                            "recovery_duration_sec": {
+                                "name": "Recovery Duration",
+                                "ui_type": "none",
+                                "unit": "s",
+                                "value": 0,
+                                "var_type": "Int"
+                            },
+                            "recovery_freq_hz": {
+                                "name": "Begin Recovery Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 59.0
+                            },
+                            "recovery_latch": {
+                                "name": "Recovery Latch Control",
+                                "type": "enum_slider",
+                                "ui_type": "none",
+                                "value": false,
+                                "var_type": "Bool"
+                            },
+                            "slew_rate_kw": {
+                                "name": "Slew Rate",
+                                "scaler": 1000,
+                                "ui_type": "none",
+                                "unit": "W/s",
+                                "value": 10000000,
+                                "var_type": "Int"
+                            },
+                            "trigger_duration_sec": {
+                                "name": "Response Duration",
+                                "ui_type": "none",
+                                "unit": "s",
+                                "value": 86400,
+                                "var_type": "Int"
+                            },
+                            "trigger_freq_hz": {
+                                "name": "Trigger Frequency",
+                                "ui_type": "none",
+                                "unit": "Hz",
+                                "value": 59.0
+                            }
+                        }
+                    ],
+                    "fr_enable_mask": {
+                        "name": "FR Components Enable Bitfield",
+                        "ui_type": "status",
+                        "value": 65535,
+                        "var_type": "Int"
+                    },
+                    "fr_freq_offset_hz": {
+                        "name": "FR Test Frequency Offset",
+                        "ui_type": "control",
+                        "unit": "Hz"
+                    },
+                    "fr_target_freq_hz": {
+                        "name": "FR Target Frequency",
+                        "ui_type": "none",
+                        "unit": "Hz",
+                        "value": 60.0
+                    },
+                    "fr_total_output_kw": {
+                        "name": "Total FR Output",
+                        "ui_type": "status",
+                        "unit": "kW"
+                    }
+                },
                 "ldss_cooldown_time": {
                     "name": "LDSS Cooldown Time",
                     "ui_type": "control",
@@ -1684,57 +1675,6 @@
                     "value": 0,
                     "var_type": "Int",
                     "write_uri": "/example/load_shed_control"
-                },
-                "pfr_enable_flag": {
-                    "name": "PFR Enable",
-                    "type": "enum_slider",
-                    "ui_type": "control",
-                    "value": false,
-                    "var_type": "Bool"
-                },
-                "pfr_max_rated_kW": {
-                    "name": "Rated Power",
-                    "scaler": 1,
-                    "ui_type": "control",
-                    "unit": "kW",
-                    "value": 7000
-                },
-                "pfr_offset_hz": {
-                    "name": "PFR Frequency Offset",
-                    "ui_type": "none",
-                    "unit": "Hz",
-                    "value": 0
-                },
-                "pfr_over_deadband_hz": {
-                    "name": "Deadband",
-                    "ui_type": "control",
-                    "unit": "Hz",
-                    "value": 0.017
-                },
-                "pfr_over_droop_hz": {
-                    "name": "Droop",
-                    "ui_type": "control",
-                    "unit": "Hz",
-                    "value": 3
-                },
-                "pfr_request_kW": {
-                    "name": "PFR Power Request",
-                    "scaler": 1,
-                    "ui_type": "none",
-                    "unit": "kW"
-                },
-                "pfr_site_nominal_hz": {
-                    "name": "Site Nominal Frequency",
-                    "ui_type": "control",
-                    "unit": "Hz",
-                    "value": 60.0
-                },
-                "pfr_status_flag": {
-                    "name": "PFR Status",
-                    "type": "enum",
-                    "ui_type": "none",
-                    "value": false,
-                    "var_type": "Bool"
                 },
                 "reactive_power_closed_loop_decrease_timer_ms": {
                     "name": "Reactive Power Timer for Decreasing Closed Loop Control Offset",
@@ -1999,6 +1939,13 @@
                     ],
                     "type": "enum",
                     "ui_type": "none"
+                },
+                "fr_mode_enable_flag": {
+                    "name": "Enable Frequency Response",
+                    "type": "enum_slider",
+                    "ui_type": "control",
+                    "value": false,
+                    "var_type": "Bool"
                 }
             },
             "summary": {
@@ -2096,13 +2043,6 @@
                             "value": true
                         }
                     ],
-                    "type": "enum_slider",
-                    "ui_type": "none",
-                    "value": false,
-                    "var_type": "Bool"
-                },
-                "fr_mode_enable_flag": {
-                    "name": "Frequency Response Mode Enable",
                     "type": "enum_slider",
                     "ui_type": "none",
                     "value": false,
@@ -2293,7 +2233,7 @@
                         "value": 0
                     },
                     {
-                        "name": "PFR",
+                        "name": "Frequency Response",
                         "value": 1
                     },
                     {

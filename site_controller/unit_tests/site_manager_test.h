@@ -1630,63 +1630,6 @@ TEST_F(site_manager_test, energy_arbitrage) {
     }
 }
 
-// Standalone Primary Frequency Response and Target SoC Demand mode
-TEST_F(site_manager_test, pfr) {
-    // struct that has variables to configure for each test case
-    struct pfr_test {
-        float nominal_hz;
-        float over_deadband;
-        float over_droop;
-        float max_rated_kW;
-        float under_deadband;
-        float under_droop;
-        float min_rated_kW;
-        float kW_cmd;
-        float site_hz;
-        float expected_demand;  // original demand + limited response modifier
-    };
-
-    std::vector<pfr_test> tests = {
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -10.0f, 63.5f, -15.0f },  // large charge, OF hits min limit
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -10.0f, 61.817f, -15.0f }, { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -10.0f, 60.005f, -10.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -10.0f, 59.995f, -10.0f }, { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -10.0f, 58.183f, -1.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -10.0f, 56.5f, 0.0f },     { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -5.0f, 63.5f, -15.0f },  // small charge, OF within limit
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -5.0f, 61.817f, -14.0f },                                                                               // UF hits 0 and doesn't change sign
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, -5.0f, 60.005f, -5.0f },   { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -5.0f, 59.995f, -5.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -5.0f, 58.183f, 0.0f },    { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, -5.0f, 56.5f, 0.0f },
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 0.0f, 63.5f, -15.0f },  // 0 and command can change sign, plenty of room
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 0.0f, 61.817f, -9.0f },    { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 0.0f, 60.005f, 0.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 0.0f, 59.995f, 0.0f },     { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 0.0f, 58.183f, 9.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 0.0f, 56.5f, 15.0f },      { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 5.0f, 63.5f, 0.0f },  // small discharge, UF within limit
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 5.0f, 61.817f, 0.0f },                                                                               // OF hits 0 and doesn't change sign
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 5.0f, 60.005f, 5.0f },     { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 5.0f, 59.995f, 5.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 5.0f, 58.183f, 14.0f },    { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 5.0f, 56.5f, 15.0f },
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 63.5f, 0.0f },  // large discharge, UF hits max limit
-        { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 61.817f, 1.0f },    { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 60.005f, 10.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 10.0f, 59.995f, 10.0f },   { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 10.0f, 58.183f, 15.0f },
-        { 60.0f, 0.014f, 1.5f, 15.0f, 0.017f, 3.0f, -15.0f, 10.0f, 56.5f, 15.0f },     { 60.0f, 0.017f, 3.0f, 15.0f, 0.014f, 1.5f, -15.0f, 10.0f, 60.0f, 10.0f }  // frequency is exactly nominal
-    };
-
-    int test_id = 1;
-    for (auto test : tests) {
-        test_logger t_log("primary_frequency_response", test_id++, tests.size());
-        // set pfr variables
-        asset_cmd.site_kW_demand = test.kW_cmd;
-        site_frequency.value.set(test.site_hz);
-        pfr.symmetric_variables = false;
-        pfr.site_nominal_hz.value.set(test.nominal_hz);
-        pfr.over_deadband.value.set(test.over_deadband);
-        pfr.over_droop.value.set(test.over_droop);
-        pfr.under_deadband.value.set(test.under_deadband);
-        pfr.under_droop.value.set(test.under_droop);
-        pfr.max_rated_kW.value.set(test.max_rated_kW);
-        pfr.min_rated_kW.value.set(test.min_rated_kW);
-        pfr.execute(asset_cmd, site_frequency.value.value_float, total_site_kW_charge_limit.value.value_float, total_site_kW_discharge_limit.value.value_float);
-        t_log.range_results.push_back({ test.expected_demand, 0.001, asset_cmd.site_kW_demand, "Site kW Demand" });
-        t_log.check_solution();
-    }
-}
-
 // Constant Power Factor algorithm tests
 TEST_F(site_manager_test, constant_power_factor) {
     // struct that has variables to configure for each test case

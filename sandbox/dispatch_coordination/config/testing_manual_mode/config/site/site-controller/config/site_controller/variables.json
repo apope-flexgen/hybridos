@@ -77,21 +77,17 @@
                             "value": 3
                         },
                         {
-                            "name": "Frequency Response",
+                            "name": "ESS Calibration",
                             "value": 4
                         },
                         {
-                            "name": "ESS Calibration",
-                            "value": 5
-                        },
-                        {
                             "name": "Disabled",
-                            "value": 6
+                            "value": 5
                         }
                     ],
                     "type": "string",
                     "ui_type": "none",
-                    "value": "0x008",
+                    "value": "0x8",
                     "var_type": "String"
                 },
                 "charge_dispatch_feeder_enable_flag": {
@@ -1584,7 +1580,7 @@
                         "value": 0
                     },
                     {
-                        "name": "PFR",
+                        "name": "Frequency Response",
                         "value": 1
                     },
                     {
@@ -1626,7 +1622,7 @@
                 ],
                 "type": "string",
                 "ui_type": "none",
-                "value": "0x000",
+                "value": "0x0",
                 "var_type": "String"
             },
             "configured_primary": {

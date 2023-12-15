@@ -89,11 +89,6 @@ void Site_Manager::post_configure_initialize_features(void) {
     //
     // Run Mode 1 Active Power Features
     //
-    // Frequency Response Mode
-    // frequency response feature vars must be loaded after configuration parsing to
-    // properly load all frequency response component feature vars
-    frequency_response.get_feature_vars(frequency_response.feature_vars);
-    frequency_response.get_summary_vars(frequency_response.summary_vars);
 
     // Copy SoC balancing factor to be preserved in Site Manager and overwritten in Asset Manager when this feature is enabled
     ess_soc_balancing_factor = pAssets->get_soc_balancing_factor();
@@ -136,6 +131,11 @@ void Site_Manager::post_configure_initialize_features(void) {
     //
     // send Generator Manager the initial LDSS settings
     set_ldss_variables();
+
+    // Frequency Response Mode
+    // frequency response feature vars must be loaded after configuration parsing to
+    // properly load all frequency response component feature vars
+    frequency_response.get_feature_vars(frequency_response.feature_vars);
 }
 
 // gets called just when the user clicks the Features tab. publish_all() subsequently updates the values
@@ -1300,9 +1300,6 @@ void Site_Manager::get_values() {
     // automatic voltage variables set
     avr.actual_volts.value.set(pAssets->get_poi_gridside_avg_voltage());
     avr.status_flag.value.set(false);
-
-    // standalone pfr status flag set
-    pfr.status_flag.value.set(false);
 
     num_ess_available = pAssets->get_num_ess_avail();
     num_ess_running = pAssets->get_num_ess_running();
@@ -2591,9 +2588,10 @@ void Site_Manager::runmode1_state(void) {
     if (ess_discharge_prevention.enable_flag.value.value_bool)
         ess_discharge_prevention.execute(asset_cmd, soc_avg_running.value.value_float, max_potential_ess_kW.value.value_float, min_potential_ess_kW.value.value_float, pAssets->get_ess_total_kW_discharge_limit(), total_asset_kW_discharge_limit);
 
-    // call PFR to adjust site_kW_demand and ess_kW_request as needed
-    if (pfr.enable_flag.value.value_bool)
-        pfr.execute(asset_cmd, site_frequency.value.value_float, total_site_kW_charge_limit.value.value_float, total_site_kW_discharge_limit.value.value_float);
+    // FR MODE (frequency response) - output or absorb additional power if frequency deviates by a set amount
+    else if (frequency_response.enable_flag.value.value_bool) {
+        frequency_response.execute(asset_cmd, get_ess_total_rated_active_power(), site_frequency.value.value_float, current_time);
+    }
 
     // limit power values based on the amount of power that the POI can legally/physically handle
     if (active_power_poi_limits.enable_flag.value.value_bool)
@@ -2814,10 +2812,6 @@ void Site_Manager::process_runmode1_kW_feature() {
     // MANUAL MODE takes an ESS kW cmd, solar kW cmd, generator kW cmd, ESS slew rate, solar slew rate, and generator slew rate and routes those commands through dispatch and charge control
     else if (manual_power_mode.enable_flag.value.value_bool) {
         manual_power_mode.execute(asset_cmd);
-    }
-    // FR MODE (frequency response) - output or absorb additional power if frequency deviates by a set amount
-    else if (frequency_response.enable_flag.value.value_bool) {
-        frequency_response.execute(asset_cmd, get_ess_total_rated_active_power(), site_frequency.value.value_float, current_time);
     }
     // ENERGY ARBITRAGE MODE determines storage charge/discharge based on current price and thresholds
     else if (energy_arbitrage.enable_flag.value.value_bool) {

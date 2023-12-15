@@ -13,10 +13,11 @@ from ..pytest_steps import Setup, Steps, Teardown
         "fr_poi_lims",
         {
             **Steps.disable_solar_and_gen(),
-            "/features/active_power/runmode1_kW_mode_cmd": 4,
+            "/features/active_power/runmode1_kW_mode_cmd": 2,
+            "/features/standalone_power/fr_mode_enable_flag": True,
             "/features/active_power/asset_priority_runmode1": 0,
-            "/features/active_power/fr_enable_mask": 24,
-            "/features/active_power/fr_baseload_cmd_kw": 0,
+            "/features/standalone_power/fr_enable_mask": 24,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
             "/features/standalone_power/active_power_poi_limits_enable": True,
             "/features/standalone_power/active_power_poi_limits_min_kW": -11000,
             "/features/standalone_power/active_power_poi_limits_max_kW": 11000,
@@ -24,10 +25,11 @@ from ..pytest_steps import Setup, Steps, Teardown
             "/components/bess_aux/active_power_setpoint": 0  # No load
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 4),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/asset_priority_runmode1", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/fr_enable_mask", 24),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/fr_baseload_cmd_kw", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_enable_mask", 24),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -11000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 11000),
@@ -38,7 +40,7 @@ from ..pytest_steps import Setup, Steps, Teardown
     # within limit
     Steps(
         {
-            "/features/active_power/fr_baseload_cmd_kw": -5000
+            "/features/active_power/active_power_setpoint_kW_cmd": -5000
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", -5000),
@@ -82,7 +84,7 @@ from ..pytest_steps import Setup, Steps, Teardown
     Steps(
         {
             "/components/bess_aux/active_power_setpoint": 0,
-            "/features/active_power/fr_baseload_cmd_kw": 5000
+            "/features/active_power/active_power_setpoint_kW_cmd": 5000
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 5000),
@@ -125,16 +127,18 @@ from ..pytest_steps import Setup, Steps, Teardown
     Teardown(
         {
             **Steps.enable_solar_and_gen(),
-            "/features/active_power/fr_baseload_cmd_kw": 0,
+            "/features/active_power/active_power_setpoint_kW_cmd": 0,
             "/features/standalone_power/active_power_poi_limits_enable": False,
             "/features/standalone_power/active_power_poi_limits_min_kW": -10000,
             "/features/standalone_power/active_power_poi_limits_max_kW": 10000,
+            "/features/standalone_power/fr_mode_enable_flag": False
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/fr_baseload_cmd_kw", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_kW_cmd", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -10000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 10000)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 10000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False)
         ]
     )
 ])

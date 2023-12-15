@@ -39,21 +39,17 @@
                             "value": 3
                         },
                         {
-                            "name": "Frequency Response",
+                            "name": "ESS Calibration",
                             "value": 4
                         },
                         {
-                            "name": "ESS Calibration",
-                            "value": 5
-                        },
-                        {
                             "name": "Disabled",
-                            "value": 6
+                            "value": 5
                         }
                     ],
                     "type": "string",
                     "ui_type": "none",
-                    "value": "0x42",
+                    "value": "0x22",
                     "var_type": "String"
                 },
                 "available_features_runmode2_kW_mode": {
@@ -434,7 +430,7 @@
                         "value": 0
                     },
                     {
-                        "name": "PFR",
+                        "name": "Frequency Response",
                         "value": 1
                     },
                     {

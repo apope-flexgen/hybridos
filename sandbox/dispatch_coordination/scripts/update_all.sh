@@ -6,7 +6,8 @@ inside of unit_test_configs. This was used in pursuit of another ticket and is o
 having to ctrl-f and modify a ton of configs everytime there is a minor rename to anything more
 complicated such as a bit value being shifted.
 
-At present it is hardcoded to go from 11.3.0 to 11.4.0
+Usage:
+./scripts/update_all.sh -from=11.3.0 -to=12.1.0
 
 Impacted files:
 .
@@ -18,8 +19,17 @@ Impacted files:
 '
 
 # TODO add a dry run
-# TODO it might be useful to allow params for other versions.
 # TODO support more than just sitecontroller files.
+
+# Pushes -from={version} and -to={version} into $from and $to
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -from=*) from="${1#*=}";;
+    -to=*) to="${1#*=}";;
+    *) echo "Invalid option: $1"; exit 1;;
+  esac
+  shift
+done
 
 # vars
 update_path="/home/hybridos/git/update"
@@ -35,8 +45,8 @@ function runUpdate() {
             go run ${update_path}/cmd/server_update/main.go \
             -inputs=${config_path} \
             -outputs=${origin}/tmp/output \
-            -from=11.3.0 \
-            -to=11.4.0 \
+            -from=${from} \
+            -to=${to} \
             -product=sitecontroller \
         "
         output=$(eval $cmd 2>&1)

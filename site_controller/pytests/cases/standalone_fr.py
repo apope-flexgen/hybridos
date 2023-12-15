@@ -4,48 +4,50 @@ from pytests.fims import fims_set, fims_del
 from pytests.pytest_framework import Site_Controller_Instance
 from pytests.assertion_framework import Assertion_Type, Flex_Assertion
 from pytests.pytest_steps import Setup, Steps, Teardown
+from pytests.controls import run_twins_command
 
-# Test standalone PFR interactions with other features 
+# Test standalone FR interactions with other features. Adapted from original standalone PFR tests
 
 
 # Add underfrequency variables to config so that asymmetric underfrequency variable configuarion parsing can be tested
+uf_prefix = "/dbi/site_controller/variables/variables/features/standalone_power/components/0"
 def add_underfrequency_configs():
     new_variables = {
-        "pfr_under_deadband_hz": {
+        "trigger_freq_hz": {
             "name": "Underfrequency Deadband",
             "ui_type": "control",
             "unit": "Hz",
-            "value": 0.017
+            "value": 59.0
         },
-        "pfr_under_droop_hz": {
-            "name": "Underfrequency Droop",
-            "ui_type": "control",
+        "droop_freq_hz": {
+            "name": "Full Response Frequency",
+            "ui_type": "none",
             "unit": "Hz",
-            "value": 3
+            "value": 57.0,
         },
-        "pfr_min_rated_kW": {
-            "name": "Minimum Rated Power",
-            "ui_type": "control",
+        "active_cmd_kw": {
+            "name": "Active Cmd kW",
+            "ui_type": "none",
             "unit": "kW",
-            "value": -7000,
+            "value": -1000,
             "scaler": 1
         }
     }
-    fims_set("/dbi/site_controller/variables/variables/features/standalone_power/pfr_under_deadband_hz", new_variables["pfr_under_deadband_hz"])
-    fims_set("/dbi/site_controller/variables/variables/features/standalone_power/pfr_under_droop_hz", new_variables["pfr_under_droop_hz"])
-    fims_set("/dbi/site_controller/variables/variables/features/standalone_power/pfr_min_rated_kW", new_variables["pfr_min_rated_kW"])
+    fims_set("/features/standalone_power/uf_pfr_trigger_freq_hz", new_variables["trigger_freq_hz"])
+    fims_set("/features/standalone_power/uf_pfr_droop_freq_hz", new_variables["droop_freq_hz"])
+    fims_set("/features/standalone_power/uf_pfr_active_cmd_kw", new_variables["active_cmd_kw"])
     config_edits: list[dict] = [
         {
-            "uri": "/dbi/site_controller/variables/variables/features/standalone_power/pfr_under_deadband_hz",
-            "up": new_variables["pfr_under_deadband_hz"]
+            "uri": f"{uf_prefix}/trigger_freq_hz",
+            "up": new_variables["trigger_freq_hz"]
         },
         {
-            "uri": "/dbi/site_controller/variables/variables/features/standalone_power/pfr_under_droop_hz",
-            "up": new_variables["pfr_under_droop_hz"]
+            "uri": f"{uf_prefix}/droop_freq_hz",
+            "up": new_variables["droop_freq_hz"]
         },
         {
-            "uri": "/dbi/site_controller/variables/variables/features/standalone_power/pfr_min_rated_kW",
-            "up": new_variables["pfr_min_rated_kW"]
+            "uri": f"{uf_prefix}/active_cmd_kw",
+            "up": new_variables["active_cmd_kw"]
         }
     ]
     return config_edits
@@ -53,26 +55,28 @@ def add_underfrequency_configs():
 
 # Remove underfrequency variables from config to revert back to default 
 def remove_underfrequency_configs():
-    fims_del("/dbi/site_controller/variables/variables/features/standalone_power/pfr_under_deadband_hz")
-    fims_del("/dbi/site_controller/variables/variables/features/standalone_power/pfr_under_droop_hz")
-    fims_del("/dbi/site_controller/variables/variables/features/standalone_power/pfr_min_rated_kW")
+    fims_del(f"{uf_prefix}/trigger_freq_hz")
+    fims_del(f"{uf_prefix}/droop_freq_hz")
+    fims_del(f"{uf_prefix}/active_cmd_kw")
 
 
 # PFR + Active Power Setpoint mode (untracked load)
 @ fixture
 @ parametrize("test", [
-    # Preconditions 
+    # Preconditions
     Setup(
         "pfr_untracked_load",
         {
             "/features/active_power/runmode1_kW_mode_cmd": 2,
             "/features/active_power/active_power_setpoint_load_method": 0,
-            "/features/standalone_power/pfr_enable_flag": True
+            "/features/standalone_power/fr_mode_enable_flag": True,
+            "/features/standalone_power/uf_pfr_active_cmd_kw": 1000,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", True)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/uf_pfr_active_cmd_kw", 1000),
         ]
     ),
     Steps(
@@ -89,25 +93,34 @@ def remove_underfrequency_configs():
     ),
     Steps(
         {
-            # underfrequency event 
-            "/features/standalone_power/pfr_offset_hz": -3.5
+            # frequency -> 56.5 in pre_lambda 
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 7000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -6000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_request_kW", 8127)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 56.5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 6000, wait_secs=5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -5000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/uf_pfr_output_kw", 1000),
+            
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
         {
-            "/features/standalone_power/pfr_enable_flag": False,
-            "/features/standalone_power/pfr_offset_hz": 0,
-            "/features/active_power/active_power_setpoint_load_method": 0
+            "/features/active_power/active_power_setpoint_load_method": 0,
+            "/features/standalone_power/fr_mode_enable_flag": False,
+            "/features/standalone_power/uf_pfr_active_cmd_kw": 0,
+            # frequency -> 60 in pre_lambda 
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_offset_hz", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 60),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/uf_pfr_active_cmd_kw", 0),
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -124,12 +137,13 @@ def test_pfr_untracked_load(test):
         {
             "/features/active_power/runmode1_kW_mode_cmd": 2,
             "/features/active_power/active_power_setpoint_load_method": 1,
-            "/features/standalone_power/pfr_enable_flag": True
+            "/features/standalone_power/fr_mode_enable_flag": True,
+            "/features/standalone_power/uf_pfr_active_cmd_kw": 1000,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 1),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", True)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True),
         ]
     ),
     Steps(
@@ -147,24 +161,26 @@ def test_pfr_untracked_load(test):
     Steps(
         {
             # underfrequency event 
-            "/features/standalone_power/pfr_offset_hz": -3.5
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 7000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -6000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_request_kW", 8127)
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
         {
-            "/features/standalone_power/pfr_enable_flag": False,
-            "/features/standalone_power/pfr_offset_hz": 0,
+            "/features/standalone_power/fr_mode_enable_flag": False,
             "/features/active_power/active_power_setpoint_load_method": 0
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_offset_hz", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0)
+        ],
+                pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -181,12 +197,13 @@ def test_pfr_offset_load(test):
         {
             "/features/active_power/runmode1_kW_mode_cmd": 2,
             "/features/active_power/active_power_setpoint_load_method": 2,
-            "/features/standalone_power/pfr_enable_flag": True
+            "/features/standalone_power/fr_mode_enable_flag": True,
+            "/features/standalone_power/uf_pfr_active_cmd_kw": 1000,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 2),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", True)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True)
         ]
     ),
     Steps(
@@ -204,24 +221,28 @@ def test_pfr_offset_load(test):
     Steps(
         {
             # underfrequency event 
-            "/features/standalone_power/pfr_offset_hz": -3.5
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 7000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -6000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_request_kW", 8127)
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
         {
-            "/features/standalone_power/pfr_enable_flag": False,
-            "/features/standalone_power/pfr_offset_hz": 0,
+            "/features/standalone_power/fr_mode_enable_flag": False,
             "/features/active_power/active_power_setpoint_load_method": 0
+            # frequency -> 60 in pre_lambda 
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_offset_hz", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 60),
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -238,7 +259,8 @@ def test_pfr_minimum_load(test):
         {
             "/features/active_power/runmode1_kW_mode_cmd": 2,
             "/features/active_power/active_power_setpoint_load_method": 0,
-            "/features/standalone_power/pfr_enable_flag": True,
+            "/features/standalone_power/fr_mode_enable_flag": True,
+            "/features/standalone_power/uf_pfr_active_cmd_kw": 1000,
             "/features/standalone_power/active_power_poi_limits_enable": True,
             "/features/standalone_power/active_power_poi_limits_max_kW": 4000,
             "/features/standalone_power/active_power_poi_limits_min_kW": -4000
@@ -246,7 +268,7 @@ def test_pfr_minimum_load(test):
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 4000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -4000)
@@ -267,30 +289,36 @@ def test_pfr_minimum_load(test):
     Steps(
         {
             # underfrequency event 
-            "/features/standalone_power/pfr_offset_hz": -3.5
+            # frequency -> 56.5 in pre_lambda 
         },
         [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 56.5),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 4000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -3000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_request_kW", 8127)
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
         {
-            "/features/standalone_power/pfr_enable_flag": False,
-            "/features/standalone_power/pfr_offset_hz": 0,
+            # frequency -> 60 in pre_lambda 
+            "/features/standalone_power/fr_mode_enable_flag": False,
             "/features/active_power/active_power_setpoint_load_method": 0,
             "/features/standalone_power/active_power_poi_limits_enable": False,
             "/features/standalone_power/active_power_poi_limits_min_kW": -10000,
             "/features/standalone_power/active_power_poi_limits_max_kW": 10000
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_offset_hz", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 60),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -10000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 10000)
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -307,7 +335,8 @@ def test_pfr_untracked_load_poi_lim(test):
         {
             "/features/active_power/runmode1_kW_mode_cmd": 2,
             "/features/active_power/active_power_setpoint_load_method": 1,
-            "/features/standalone_power/pfr_enable_flag": True,
+            "/features/standalone_power/fr_mode_enable_flag": True,
+            "/features/standalone_power/uf_pfr_active_cmd_kw": 1000,
             "/features/standalone_power/active_power_poi_limits_enable": True,
             "/features/standalone_power/active_power_poi_limits_max_kW": 4000,
             "/features/standalone_power/active_power_poi_limits_min_kW": -4000
@@ -315,7 +344,7 @@ def test_pfr_untracked_load_poi_lim(test):
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 1),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 4000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -4000)
@@ -336,30 +365,36 @@ def test_pfr_untracked_load_poi_lim(test):
     Steps(
         {
             # underfrequency event 
-            "/features/standalone_power/pfr_offset_hz": -3.5
+            # frequency -> 56.5 in pre_lambda 
         },
         [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 56.5),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 5000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -4000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_request_kW", 8127)
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
         {
-            "/features/standalone_power/pfr_enable_flag": False,
-            "/features/standalone_power/pfr_offset_hz": 0,
+            # frequency -> 60 in pre_lambda 
+            "/features/standalone_power/fr_mode_enable_flag": False,
             "/features/active_power/active_power_setpoint_load_method": 0,
             "/features/standalone_power/active_power_poi_limits_enable": False,
             "/features/standalone_power/active_power_poi_limits_min_kW": -10000,
             "/features/standalone_power/active_power_poi_limits_max_kW": 10000
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_offset_hz", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 60),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -10000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 10000)
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -376,7 +411,8 @@ def test_pfr_offset_load_poi_lim(test):
         {
             "/features/active_power/runmode1_kW_mode_cmd": 2,
             "/features/active_power/active_power_setpoint_load_method": 2,
-            "/features/standalone_power/pfr_enable_flag": True,
+            "/features/standalone_power/fr_mode_enable_flag": True,
+            "/features/standalone_power/uf_pfr_active_cmd_kw": 1000,
             "/features/standalone_power/active_power_poi_limits_enable": True,
             "/features/standalone_power/active_power_poi_limits_max_kW": 4000,
             "/features/standalone_power/active_power_poi_limits_min_kW": -4000
@@ -384,7 +420,7 @@ def test_pfr_offset_load_poi_lim(test):
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 2),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", True),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", True),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 4000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -4000)
@@ -405,30 +441,36 @@ def test_pfr_offset_load_poi_lim(test):
     Steps(
         {
             # underfrequency event 
-            "/features/standalone_power/pfr_offset_hz": -3.5
+            # frequency -> 56.5 in pre_lambda 
         },
         [
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 56.5),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 5000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -4000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_request_kW", 8127)
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
         {
-            "/features/standalone_power/pfr_enable_flag": False,
-            "/features/standalone_power/pfr_offset_hz": 0,
+            # frequency -> 60 in pre_lambda 
+            "/features/standalone_power/fr_mode_enable_flag": False,
             "/features/active_power/active_power_setpoint_load_method": 0,
             "/features/standalone_power/active_power_poi_limits_enable": False,
             "/features/standalone_power/active_power_poi_limits_min_kW": -10000,
             "/features/standalone_power/active_power_poi_limits_max_kW": 10000
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_offset_hz", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 60),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_enable", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_min_kW", -10000),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/active_power_poi_limits_max_kW", 10000)
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
         ]
     )
 ])
@@ -444,13 +486,8 @@ def test_pfr_minimum_load_poi_lim(test):
         "pfr_asymmetric_configs",
         {},
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_site_nominal_hz", 60),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_over_deadband_hz", 0.017),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_over_droop_hz", 3),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_max_rated_kW", 7000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_under_deadband_hz", 0.017),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_under_droop_hz", 3),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_min_rated_kW", -7000)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/uf_pfr_droop_freq_hz", 57.0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/uf_pfr_trigger_freq_hz", 59.0),
         ],
         # Restart with asymmetric configs
         pre_lambda=[
@@ -462,12 +499,13 @@ def test_pfr_minimum_load_poi_lim(test):
         {
             "/features/active_power/runmode1_kW_mode_cmd": 2,
             "/features/active_power/active_power_setpoint_load_method": 0,
-            "/features/standalone_power/pfr_enable_flag": True
+            "/features/standalone_power/fr_mode_enable_flag": True,
+            "/features/standalone_power/uf_pfr_active_cmd_kw": 1000,
         },
         [
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/runmode1_kW_mode_cmd", 2),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", True)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", True)
         ]
     ),
     Steps(
@@ -485,31 +523,34 @@ def test_pfr_minimum_load_poi_lim(test):
     Steps(
         {
             # underfrequency event 
-            "/features/standalone_power/pfr_offset_hz": -3.5
+            # frequency -> 56.5 in pre_lambda 
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 7000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -6000),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_request_kW", 8127)
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 56.5),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_kW_demand", 6000),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/feeder_actual_kW", -5000),
+        ],
+        pre_lambda=[
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 56.5 -r /$$'),
         ]
     ),
     Teardown(
         {
-            "/features/standalone_power/pfr_enable_flag": False,
-            "/features/standalone_power/pfr_offset_hz": 0,
+            # frequency -> 60 in pre_lambda 
+            "/features/standalone_power/fr_mode_enable_flag": False,
             "/features/active_power/active_power_setpoint_load_method": 0
         },
         [
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_enable_flag", False),
-            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/pfr_offset_hz", 0),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/site_frequency", 60),
+            Flex_Assertion(Assertion_Type.approx_eq, "/features/standalone_power/fr_mode_enable_flag", False),
             Flex_Assertion(Assertion_Type.approx_eq, "/features/active_power/active_power_setpoint_load_method", 0)
         ],
-        # Revert to default configs
-        post_lambda=[
+        pre_lambda=[
             lambda: remove_underfrequency_configs(),
-            lambda: Site_Controller_Instance.get_instance().restart_site_controller(True)
-        ]
+            lambda: run_twins_command('fims_send -m set -u /components/grid/fcmd 60 -r /$$'),
+        ],
     )
 ])
+
 def test_pfr_asymmetric_configs(test):
     return test

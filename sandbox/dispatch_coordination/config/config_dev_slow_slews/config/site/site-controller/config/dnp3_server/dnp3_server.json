@@ -12,11 +12,11 @@
                     "id": "fr_enable_mask",
                     "name": "Frequency Response Enable Word",
                     "offset": 1,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
-                    "id": "fr_baseload_cmd_kw",
-                    "name": "Baseload Power Command",
+                    "id": "active_power_setpoint_kW_cmd",
+                    "name": "Active Power Setpoint",
                     "offset": 2,
                     "uri": "/features/active_power"
                 },
@@ -24,7 +24,7 @@
                     "id": "uf_ffr_inactive_cmd_kw",
                     "name": "FFR Inactive Power Command",
                     "offset": 3,
-                    "uri": "/features/active_power"
+                    "uri": "/features/standalone_power"
                 },
                 {
                     "id": "FM_timestamp",

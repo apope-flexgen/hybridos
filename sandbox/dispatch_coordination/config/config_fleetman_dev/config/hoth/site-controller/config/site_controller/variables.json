@@ -27,7 +27,6 @@
                 },
                 "available_features_runmode1_kW_mode": {
                     "name": "Available Feature Modes - Run Mode 1 Active Power",
-                    "num_options": 7,
                     "options": [
                         {
                             "name": "Energy Arbitrage",
@@ -38,7 +37,7 @@
                             "value": 1
                         },
                         {
-                            "name": "Site Export Target",
+                            "name": "Active Power Setpoint",
                             "value": 2
                         },
                         {
@@ -46,29 +45,17 @@
                             "value": 3
                         },
                         {
-                            "name": "Grid Target",
+                            "name": "ESS Calibration",
                             "value": 4
                         },
                         {
-                            "name": "Frequency Response",
-                            "value": 5
-                        },
-                        {
-                            "name": "Absolute ESS",
-                            "value": 6
-                        },
-                        {
-                            "name": "ESS Calibration",
-                            "value": 7
-                        },
-                        {
                             "name": "Disabled",
-                            "value": 8
+                            "value": 5
                         }
                     ],
                     "type": "string",
                     "ui_type": "none",
-                    "value": "0x120",
+                    "value": "0x10",
                     "var_type": "String"
                 },
                 "charge_dispatch_feeder_enable_flag": {
@@ -1141,11 +1128,6 @@
                             }
                         }
                     ],
-                    "fr_baseload_cmd_kw": {
-                        "name": "FR Baseload Command",
-                        "ui_type": "control",
-                        "unit": "kW"
-                    },
                     "fr_enable_mask": {
                         "name": "FR Components Enable Bitfield",
                         "ui_type": "control",
@@ -1275,20 +1257,6 @@
                     "ui_type": "none",
                     "unit": "W"
                 },
-                "pfr_limits_max_kW": {
-                    "name": "Maximum PFR Power Limit",
-                    "scaler": 1000,
-                    "ui_type": "control",
-                    "unit": "W",
-                    "value": 6800
-                },
-                "pfr_limits_min_kW": {
-                    "name": "Minimum PFR Power Limit",
-                    "scaler": 1000,
-                    "ui_type": "control",
-                    "unit": "W",
-                    "value": -5600
-                },
                 "price": {
                     "name": "Current Trading Price",
                     "ui_type": "control",
@@ -1322,7 +1290,7 @@
                     "name": "Mode Select - Run Mode 1 Active Power",
                     "type": "enum",
                     "ui_type": "control",
-                    "value": 5,
+                    "value": 4,
                     "var_type": "Int"
                 },
                 "runmode1_kW_mode_status": {
@@ -2115,61 +2083,6 @@
                     "var_type": "Int",
                     "write_uri": "/example/load_shed_control"
                 },
-                "pfr_actual_hz": {
-                    "name": "Measured Frequency",
-                    "ui_type": "none",
-                    "unit": "Hz",
-                    "value": 60
-                },
-                "pfr_deadband": {
-                    "name": "PFR Deadband",
-                    "unit": "Hz",
-                    "value": 0.017
-                },
-                "pfr_droop_percent": {
-                    "name": "PFR Droop Percent",
-                    "unit": "%",
-                    "value": 5
-                },
-                "pfr_enable_flag": {
-                    "name": "PFR Enable",
-                    "type": "enum_slider",
-                    "ui_type": "none",
-                    "value": false,
-                    "var_type": "Bool"
-                },
-                "pfr_nameplate_kW": {
-                    "name": "PFR Nameplate Power",
-                    "scaler": 1000,
-                    "ui_type": "none",
-                    "unit": "W",
-                    "value": 0
-                },
-                "pfr_nominal_hz": {
-                    "name": "Nominal Frequency",
-                    "ui_type": "none",
-                    "unit": "Hz",
-                    "value": 60
-                },
-                "pfr_offset_hz": {
-                    "name": "PFR Frequency Offset",
-                    "ui_type": "none",
-                    "unit": "Hz",
-                    "value": 0
-                },
-                "pfr_site_nominal_hz": {
-                    "name": "PFR Site Nominal Frequency",
-                    "ui_type": "none",
-                    "unit": "Hz",
-                    "value": 60.0
-                },
-                "pfr_status_flag": {
-                    "name": "PFR Status",
-                    "type": "enum",
-                    "ui_type": "none",
-                    "value": false,
-                    "var_type": "Bool"
-                },
                 "reactive_power_closed_loop_decrease_timer_ms": {
                     "name": "reactive Timer for Decreasing Closed Loop Control Offset",
                     "ui_type": "none",
@@ -2543,9 +2456,9 @@
                     "var_type": "Bool"
                 },
                 "fr_mode_enable_flag": {
-                    "name": "Frequency Response Mode Enable",
+                    "name": "Enable Frequency Response",
                     "type": "enum_slider",
-                    "ui_type": "none",
+                    "ui_type": "control",
                     "value": true,
                     "var_type": "Bool"
                 },
@@ -2743,7 +2656,7 @@
                         "value": 0
                     },
                     {
-                        "name": "PFR",
+                        "name": "Frequency Response",
                         "value": 1
                     },
                     {
