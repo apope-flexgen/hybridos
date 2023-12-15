@@ -25,7 +25,9 @@ func patrolProcesses() error {
 			log.Infof("Success: Process %s resurrected.", process.name)
 			process.alive = true
 			process.sendPrimaryFlag(controllerMode == Primary)
-		} else if process.isHungOrDead() {
+		} else if process.isHungOrDead() && process.requiredForHealthyStatus {
+			// Only handle failure actions for processes with heartbeats. Current expectation is that
+			// failure actions are only performed on COPS processes that have heartbeats.
 			takeFailureAction(process)
 		}
 

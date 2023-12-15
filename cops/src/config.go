@@ -49,7 +49,7 @@ type Process struct {
 	AllowActions             bool     `json:"allowActions"`
 	WriteOutC2C              []string `json:"writeOutC2C"`
 	KillOnHang               bool     `json:"killOnHang"`
-	RequiredForHealthyStatus bool     `json:"requiredForHealthyStatus"`
+	RequiredForHealthyStatus bool     `json:"requiredForHealthyStatus"` // Determines whether or not heartbeats are enabled for a process.
 	HangTimeAllowanceMS      int      `json:"hangTimeAllowanceMS"`
 	ConfigRestart            bool     `json:"configRestart"`
 	replyToURI               string
