@@ -50,6 +50,7 @@ export class SystemStatusService {
             cpuUsage: rawSystemStatusData.avg_cpu_usage_pct,
             memoryUsage: rawSystemStatusData.avg_mem_usage_pct,
             actions: actions,
+            dependencies: rawSystemStatusData.dependencies
         }
 
         return parsedData

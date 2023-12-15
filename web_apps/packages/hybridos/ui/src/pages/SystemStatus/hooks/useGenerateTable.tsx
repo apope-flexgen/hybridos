@@ -93,12 +93,8 @@ const useGenerateSystemStatusTable = () => {
     dependencies: string[],
   ) => {
     if (dependencies && dependencies.length > 0) {
-      let dependenciesMessage = 'This service has dependent services - ';
-      dependencies.forEach((dependency, index) => {
-        const dependencyInTitleCase = toTitleCase(dependency.replace(/_/g, ' '));
-        if (index === dependencies.length - 1) dependenciesMessage += dependencyInTitleCase;
-        else dependenciesMessage += `${dependencyInTitleCase}, `;
-      });
+      const dependenciesList = dependencies.map((dependency) => dependency.replace('.service', '')).join(', ');
+      const dependenciesMessage = `This service is dependent upon the following services: ${dependenciesList}`;
       return (
         <Tooltip title={dependenciesMessage} arrow placement="bottom">
           <Icon src="Connected" />
