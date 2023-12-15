@@ -9,7 +9,7 @@
 namespace InfoMessageUtility
 {
     std::string handleCmdTimedOutFail(const std::string& control, const std::string& controlSuccess);
-    std::string handleCmdInProgress(const std::string& control, const std::string& phase);
+    std::string handleCmdInProgress(const std::string& control);
     std::string controlSuccessMessage(const std::string& control, const std::string& aname);
     std::string controlAlarmMessage(const std::string& control, std::string& aname);
     std::string verifyControlAlarmMessage(const std::string& verify, std::string& aname);

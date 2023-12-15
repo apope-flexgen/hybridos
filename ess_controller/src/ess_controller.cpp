@@ -395,6 +395,13 @@ void initFuncs(asset_manager* am)
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStopPCS",        (void*)&InputHandler::LocalStopPCS);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "LocalStandbyPCS",        (void*)&InputHandler::LocalStandbyPCS);
         am->vm->setFunc(*am->vmap, amc->name.c_str(), "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "SiteBMSContactorControl",        (void*)&InputHandler::SiteBMSContactorControl);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "SitePCSStatusControl",        (void*)&InputHandler::SitePCSStatusControl);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "CloseContactorsEnable",        (void*)&InputHandler::CloseContactorsEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "OpenContactorsEnable",        (void*)&InputHandler::OpenContactorsEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StartEnable",        (void*)&InputHandler::StartEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StopEnable",        (void*)&InputHandler::StopEnable);
+        am->vm->setFunc(*am->vmap, amc->name.c_str(), "StandbyEnable",        (void*)&InputHandler::StandbyEnable);
 
 
         // Set func for asset instances

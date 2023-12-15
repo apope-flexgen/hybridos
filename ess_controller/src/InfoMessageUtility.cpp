@@ -15,8 +15,8 @@ namespace InfoMessageUtility
         return "HandleCmd for " + control + " has timed out and " + controlSuccess + " was still false.";
     }
 
-    std::string handleCmdInProgress(const std::string& control, const std::string& phase) {
-        return "HandleCmd for " + control + " is not complete yet | Current Phase: [" + phase + "]";
+    std::string handleCmdInProgress(const std::string& control) {
+        return "HandleCmd for " + control + " is not complete yet";
     }
 
     std::string controlSuccessMessage(const std::string& control, const std::string& aname) {

@@ -1,0 +1,44 @@
+{
+    "meta": { "publishRate": 1000},
+    "inputs": {
+        "close_contactors": { "uri": "/components/catl_bms_1_controls/ems_cmd", "type": "int", "default": 0},
+        "start_stop_standby": { "uri": "/components/sungrow_pcs_controls/state_cmd", "type": "int", "default": 0},
+        "accept_commands": { "uri": "/mecho/accept_commands", "type": "bool" },
+        "bms_conditions_met": { "uri": "/mecho/bms_conditions_met", "type": "bool" },
+        "pcs_conditions_met": { "uri": "/mecho/pcs_conditions_met", "type": "bool" }
+    },
+    "outputs": {
+        "bms_poweron": { "uri": "/components/catl_bms_1_info" },
+        "close_contactors": { "uri": "/components/catl_bms_1_controls/ems_cmd", "flags": ["direct_set"] },
+        "ems_cmd": { "uri": "/components/catl_bms_1_controls", "flags": ["group1"] },
+        "pcs_state": { "uri": "/components/sungrow_pcs_info" },
+        "start_stop_standby": { "uri": "/components/sungrow_pcs_controls/state_cmd", "flags": ["direct_set"] },
+        "state_cmd": { "uri": "/components/sungrow_pcs_controls", "flags": ["group1"] }
+    },
+    "metrics": [
+        {
+            "id": "close_contactors_out",
+            "type": "int", 
+            "outputs": [ "close_contactors", "ems_cmd" ],
+            "expression": "If(accept_commands, close_contactors, 0)"
+        },
+        {
+            "id": "bms_status",
+            "type": "int", 
+            "outputs": "bms_poweron",
+            "expression": "If(bms_conditions_met, If(close_contactors == 2, 1, If(close_contactors == 3, 0)))"
+        },
+        {
+            "id": "start_stop_standby_out",
+            "type": "int", 
+            "outputs": [ "start_stop_standby", "state_cmd" ],
+            "expression": "If(accept_commands, start_stop_standby, 0)"
+        },
+        {
+            "id": "pcs_status",
+            "type": "int", 
+            "outputs": "pcs_state",
+            "expression": "If(pcs_conditions_met, If(start_stop_standby == 5, 1, If(start_stop_standby == 6, 2, If(start_stop_standby == 7, 3))))"
+        }
+    ]
+}

@@ -19,7 +19,15 @@ char* strtime(const struct tm *timeptr);
 
 namespace OutputHandler {
 
-
+    /**
+    * @brief Internal function called by an InputHandler Function to OpenContactors
+    * 
+    * @param vmap the global data map shared by all assets/asset managers
+    * @param amap the local data map used by an asset/asset manager
+    * @param aname the name of the asset/asset manager
+    * @param p_fims the interface used for data interchange
+    * @param av the assetVar that contains the command value to send
+    */
     FunctionUtility::FunctionReturnObj OpenContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
@@ -47,10 +55,8 @@ namespace OutputHandler {
             bmsch = aV->getcParam("bms");
         }
 
-
         auto relname = fmt::format("{}_{}", __func__, bmsch).c_str() ;
         assetVar* cAv = amap[relname];
-
 
         if (!cAv || (reload = cAv->getiVal()) == 0)
         {
@@ -60,22 +66,16 @@ namespace OutputHandler {
 
         if (reload < 2)
         {
-
-
             linkVals(*vm, vmap, amap, bmsch, "/reload", reload, relname);
             cAv = amap[relname];
 
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
-                // /status/bms/DCClosed
-                FunctionUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
                 // /status/bms/OpenContactorsSuccess
                 FunctionUtility::AssetVarInfo("/status/bms", "OpenContactorsSuccess", assetVar::ATypes::ABOOL),
                 // /controls/bms/OpenContactors
                 FunctionUtility::AssetVarInfo("/controls/bms", "OpenContactors", assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyOpenContactors
                 FunctionUtility::AssetVarInfo("/controls/bms", "VerifyOpenContactors", assetVar::ATypes::AFLOAT),
-                // /status/pcs/SystemState
-                FunctionUtility::AssetVarInfo("/status/pcs", "SystemState", assetVar::ATypes::ASTRING),
                 // /alarms/bms:OpenContactors
                 FunctionUtility::AssetVarInfo("/alarms/bms", "OpenContactors", "OpenContactors_ALARM", assetVar::ATypes::ASTRING),
                 // /alarms/bms:VerifyOpenContactors
@@ -88,27 +88,11 @@ namespace OutputHandler {
 
             if (reload == 0)
             {
-
-                bool dcClosed = amap["DCClosed"]->getbVal();
-                char* systemStateStatus = amap["SystemState"]->getcVal();
-
-                bool systemState = false;
-
-                if(!(systemStateStatus == nullptr)){
-                    std::string compareString = systemStateStatus;
-                    systemState = (compareString == "Stop" || "Fault");
-                }
-
-                if(!systemState){
-                    returnObject.statusIndicator = FAILURE;
-                    returnObject.message = "To open contactors the SystemState of the PCS needs to be 'Stop' or 'Fault' but it was not";
-                    return returnObject;
-                }
-                if(!dcClosed){
-                    returnObject.statusIndicator = FAILURE;
-                    returnObject.message = "To open contactors DC Contactors need to be closed but they were open";
-                    return returnObject;                
-                }
+                // amap["OpenContactors"]->setcParam("expression", "{1} and ({2} == Stop or {2} == Fault)");
+                // amap["OpenContactors"]->setParam("numVars", 2);
+                // amap["OpenContactors"]->setParam("useExpr", true);
+                // amap["OpenContactors"]->setcParam("variable1", "/status/bms:DCClosed");
+                // amap["OpenContactors"]->setcParam("variable2", "/status/pcs:SystemState");
             }
 
             reload = 2;
@@ -117,12 +101,21 @@ namespace OutputHandler {
 
 
         amap = FunctionUtility::SharedAmapReset(amap, vm, "open_contactors", "OpenContactors", "VerifyOpenContactors");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, aname, p_fims, aV, "OpenContactors");
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, "OpenContactors");
 
         return returnObject;
 
     }
 
+    /**
+    * @brief Internal function called by an InputHandler Function to CloseContactors
+    * 
+    * @param vmap the global data map shared by all assets/asset managers
+    * @param amap the local data map used by an asset/asset manager
+    * @param aname the name of the asset/asset manager
+    * @param p_fims the interface used for data interchange
+    * @param av the assetVar that contains the command value to send
+    */
     FunctionUtility::FunctionReturnObj CloseContactors(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
@@ -132,7 +125,7 @@ namespace OutputHandler {
 
         if(0)FPS_PRINT_INFO("{}", __func__);
 
-
+ 
         FunctionUtility::FunctionReturnObj returnObject; 
 
         int reload = 0;
@@ -149,7 +142,6 @@ namespace OutputHandler {
 
         assetName = bmsch;
 
-
         auto relname = fmt::format("{}_{}", __func__, bmsch).c_str();
         assetVar* cAv = amap[relname];
         if (!cAv || (reload = cAv->getiVal()) == 0)
@@ -164,16 +156,12 @@ namespace OutputHandler {
             cAv = amap[relname];
 
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
-                // /status/bms/DCClosed
-                FunctionUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
                 // /status/bms/CloseContactorsSuccess
                 FunctionUtility::AssetVarInfo("/status/bms", "CloseContactorsSuccess", assetVar::ATypes::ABOOL),
                 // /controls/bms/CloseContactors
                 FunctionUtility::AssetVarInfo("/controls/bms", "CloseContactors", assetVar::ATypes::AFLOAT),
                 // /controls/bms:VerifyCloseContactors
                 FunctionUtility::AssetVarInfo("/controls/bms", "VerifyCloseContactors", assetVar::ATypes::AFLOAT),
-                // /status/pcs/SystemState
-                FunctionUtility::AssetVarInfo("/status/pcs", "SystemState", assetVar::ATypes::ASTRING),
                 // /alarms/bms:CloseContactors
                 FunctionUtility::AssetVarInfo("/alarms/bms", "CloseContactors", "CloseContactors_ALARM", assetVar::ATypes::ASTRING),
                 // /alarms/bms:VerifyCloseContactors
@@ -184,42 +172,36 @@ namespace OutputHandler {
 
             if (reload == 0)
             {
-
-                bool dcClosed = amap["DCClosed"]->getbVal();
-                char* systemStateStatus = amap["SystemState"]->getcVal();
-
-                bool systemState = false;
-
-                if(!(systemStateStatus == nullptr)){
-                    std::string compareString = systemStateStatus;
-                    systemState = (compareString == "Stop");
-                }
-
-                if(!systemState){
-                    returnObject.statusIndicator = FAILURE;
-                    returnObject.message = "To close contactors the SystemState of the PCS needs to be 'Stop' but it was not";
-                    return returnObject;
-                }
-                if(dcClosed){
-                    returnObject.statusIndicator = FAILURE;
-                    returnObject.message = "To close contactors DC Contactors need to be open but they were closed";
-                    return returnObject;                
-                }
+                // amap["CloseContactors"]->setcParam("expression", "not {1} and {2} == Stop and not {3}");
+                // amap["CloseContactors"]->setParam("numVars", 3);
+                // amap["CloseContactors"]->setParam("useExpr", true);
+                // amap["CloseContactors"]->setcParam("variable1", "/status/bms:DCClosed");
+                // amap["CloseContactors"]->setcParam("variable2", "/status/pcs:SystemState");
+                // amap["CloseContactors"]->setcParam("variable3", "/status/bms:IsFaulted");
             }
             cAv->setVal(2);
         }
 
 
         amap = FunctionUtility::SharedAmapReset(amap, vm, "close_contactors", "CloseContactors", "VerifyCloseContactors");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, aname, p_fims, aV, "CloseContactors");
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, bmsch, p_fims, aV, "CloseContactors");
 
         return returnObject;
     }
 
+    /**
+    * @brief Internal function called by an InputHandler Function to StartPCS
+    * 
+    * @param vmap the global data map shared by all assets/asset managers
+    * @param amap the local data map used by an asset/asset manager
+    * @param aname the name of the asset/asset manager
+    * @param p_fims the interface used for data interchange
+    * @param av the assetVar that contains the command value to send
+    */
     FunctionUtility::FunctionReturnObj StartPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(1)FPS_PRINT_INFO("StartPCS");
+        if(0)FPS_PRINT_INFO("{}", __func__);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -229,28 +211,13 @@ namespace OutputHandler {
         VarMapUtils* vm = am->vm;
         essPerf ePerf(am, aname, __func__);
 
-        // const char *bmsch = (const char*)"bms";
-        // const char *pcsch = (const char*)"pcs";
-        const char *essch = (const char*)"ess";
-        // if (aV->gotParam("bms"))
-        // {
-        //     bmsch = aV->getcParam("bms");
-        // }
-        // if (aV->gotParam("pcs"))
-        // {
-        //     pcsch = aV->getcParam("pcs");
-        // }
-        if (aV->gotParam("ess"))
+        const char *pcsch = (const char*)"pcs";
+        if (aV->gotParam("pcs"))
         {
-            essch = aV->getcParam("ess");
+            pcsch = aV->getcParam("pcs");
         }
-        // if (aV->gotParam("debug"))
-        // {
-        //     debug = aV->getbParam("debug");
-        // }
 
-
-        auto relname = fmt::format("{}_{}", __func__, essch).c_str();
+        auto relname = fmt::format("{}_{}", __func__, pcsch).c_str();
         assetVar* cAv = amap[relname];
         if (!cAv || (reload = cAv->getiVal()) == 0)
         {
@@ -260,14 +227,10 @@ namespace OutputHandler {
         if (reload < 2)
         {
 
-            linkVals(*vm, vmap, amap, essch, "/reload", reload, relname);
+            linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
 
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
-                // /status/bms/DCClosed
-                FunctionUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
-                // /status/pcs/SystemState
-                FunctionUtility::AssetVarInfo("/status/pcs", "SystemState", assetVar::ATypes::ASTRING),
                 // /status/pcs/StartSuccess
                 FunctionUtility::AssetVarInfo("/status/pcs", "StartSuccess", assetVar::ATypes::ABOOL),
                 // /controls/pcs/Start
@@ -284,43 +247,36 @@ namespace OutputHandler {
 
             if (reload == 0)
             {
-
-                bool dcClosed = amap["DCClosed"]->getbVal();
-                bool isFaulted = amap["IsFaulted"]->getbVal();
-                char* systemStateStatus = amap["SystemState"]->getcVal();
-
-                bool systemState = false;
-
-                if(!(systemStateStatus == nullptr)){
-                    std::string compareString = systemStateStatus;
-                    systemState = (compareString == "Stop" || compareString == "Standby");
-                }
-
-                // "expression": "({1} == Stop or {1} == Standby) and {2} and not {3}",
-                // "variable1": "/status/pcs:SystemState",
-                // "variable2": "/status/bms:DCClosed",
-                // "variable3": "/status/pcs:IsFaulted"
-
-                if(!systemState || !dcClosed || isFaulted) {
-                    returnObject.statusIndicator = FAILURE;
-                    returnObject.message = "";
-                    return returnObject;
-                }
+                // amap["Start"]->setcParam("expression", "({1} == Stop or {1} == Standby) and {2} and not {3}");
+                // amap["Start"]->setParam("numVars", 3);
+                // amap["Start"]->setParam("useExpr", true);
+                // amap["Start"]->setcParam("variable1", "/status/pcs:SystemState");
+                // amap["Start"]->setcParam("variable2", "/status/bms:DCClosed");
+                // amap["Start"]->setcParam("variable3", "/status/pcs:IsFaulted");
             }
             reload = 2;
             cAv->setVal(reload);
         }
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, "start", "Start", "");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, aname, p_fims, aV, "Start");
+        amap = FunctionUtility::SharedAmapReset(amap, vm, "start", "Start", "VerifyStart");
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Start");
 
         return returnObject;
     }
 
+    /**
+    * @brief Internal function called by an InputHandler Function to StopPCS
+    * 
+    * @param vmap the global data map shared by all assets/asset managers
+    * @param amap the local data map used by an asset/asset manager
+    * @param aname the name of the asset/asset manager
+    * @param p_fims the interface used for data interchange
+    * @param av the assetVar that contains the command value to send
+    */
     FunctionUtility::FunctionReturnObj StopPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(1)FPS_PRINT_INFO("StopPCS");
+        if(0)FPS_PRINT_INFO("{}", __func__);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -330,28 +286,14 @@ namespace OutputHandler {
         VarMapUtils* vm = am->vm;
         essPerf ePerf(am, aname, __func__);
 
-        // const char *bmsch = (const char*)"bms";
         const char *pcsch = (const char*)"pcs";
-        // const char *essch = (const char*)"ess";
-        // if (aV->gotParam("bms"))
-        // {
-        //     bmsch = aV->getcParam("bms");
-        // }
         if (aV->gotParam("pcs"))
         {
             pcsch = aV->getcParam("pcs");
         }
-        // if (aV->gotParam("ess"))
-        // {
-        //     essch = aV->getcParam("ess");
-        // }
-        // if (aV->gotParam("debug"))
-        // {
-        //     debug = aV->getbParam("debug");
-        // }
 
 
-        auto relname = fmt::format("{}_{}", __func__, pcsch).c_str() ;
+        auto relname = fmt::format("{}_{}", __func__, pcsch).c_str();
         assetVar* cAv = amap[relname];
         if (!cAv || (reload = cAv->getiVal()) == 0)
         {
@@ -360,17 +302,10 @@ namespace OutputHandler {
 
         if (reload < 2)
         {
-
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
 
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
-                // /status/bms/DCClosed
-                FunctionUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
-                // /status/bms/CurrentBeforeStopIsOK
-                FunctionUtility::AssetVarInfo("/status/bms", "CurrentBeforeStopIsOK", assetVar::ATypes::ABOOL),
-                // /status/pcs/SystemState
-                FunctionUtility::AssetVarInfo("/status/pcs", "SystemState", assetVar::ATypes::ASTRING),
                 // /status/pcs/StopSuccess
                 FunctionUtility::AssetVarInfo("/status/pcs", "StopSuccess", assetVar::ATypes::ABOOL),
                 // /controls/pcs/Stop
@@ -388,44 +323,37 @@ namespace OutputHandler {
             if (reload == 0)
             {
 
-                bool dcClosed = amap["DCClosed"]->getbVal();
-                bool currentIsOk = amap["CurrentBeforeStopIsOK"]->getbVal();
-                char* systemStateStatus = amap["SystemState"]->getcVal();
-
-                bool systemState = false;
-
-                if(!(systemStateStatus == nullptr)){
-                    std::string compareString = systemStateStatus;
-                    systemState = (compareString == "Standby" || "Run");
-                }
-
-                
-
-                if(!currentIsOk || !systemState || !dcClosed) {
-                    returnObject.statusIndicator = FAILURE;
-                    returnObject.message = "";
-                    return returnObject;
-                }
-
-                // "expression": "{1} and ({2} == Standby or {2} == Run) and {3}",
-                // "variable1": "/status/bms:CurrentBeforeStopIsOK",
-                // "variable2": "/status/pcs:SystemState",
-                // "variable3": "/status/bms:DCClosed"
+                // amap["Stop"]->setcParam("expression", "{1} and ({2} == Standby or {2} == Run) and {3}");
+                // amap["Stop"]->setParam("numVars", 3);
+                // amap["Stop"]->setParam("useExpr", true);
+                // amap["Stop"]->setcParam("variable1", "/status/bms:CurrentBeforeStopIsOK");
+                // amap["Stop"]->setcParam("variable2", "/status/pcs:SystemState");
+                // amap["Stop"]->setcParam("variable3", "/status/bms:DCClosed");
             }
             reload = 2;
             cAv->setVal(reload);
         }
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, "stop", "Stop", "");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, aname, p_fims, aV, "Stop");
+
+        amap = FunctionUtility::SharedAmapReset(amap, vm, "stop", "Stop", "VerifyStop");
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Stop");
 
         return returnObject;
     }
 
+    /**
+    * @brief Internal function called by an InputHandler Function to StandbyPCS
+    * 
+    * @param vmap the global data map shared by all assets/asset managers
+    * @param amap the local data map used by an asset/asset manager
+    * @param aname the name of the asset/asset manager
+    * @param p_fims the interface used for data interchange
+    * @param av the assetVar that contains the command value to send
+    */
     FunctionUtility::FunctionReturnObj StandbyPCS(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(1)FPS_PRINT_INFO("StandbyPCS");
+        if(0)FPS_PRINT_INFO("{}", __func__);
 
         FunctionUtility::FunctionReturnObj returnObject; 
 
@@ -435,28 +363,14 @@ namespace OutputHandler {
         VarMapUtils* vm = am->vm;
         essPerf ePerf(am, aname, __func__);
 
-        // const char *bmsch = (const char*)"bms";
         const char *pcsch = (const char*)"pcs";
-        // const char *essch = (const char*)"ess";
-        // if (aV->gotParam("bms"))
-        // {
-        //     bmsch = aV->getcParam("bms");
-        // }
         if (aV->gotParam("pcs"))
         {
             pcsch = aV->getcParam("pcs");
         }
-        // if (aV->gotParam("ess"))
-        // {
-        //     essch = aV->getcParam("ess");
-        // }
-        // if (aV->gotParam("debug"))
-        // {
-        //     debug = aV->getbParam("debug");
-        // }
 
 
-        auto relname = fmt::format("{}_{}", __func__, pcsch).c_str() ;
+        auto relname = fmt::format("{}_{}", __func__, pcsch).c_str();
         assetVar* cAv = amap[relname];
         if (!cAv || (reload = cAv->getiVal()) == 0)
         {
@@ -465,17 +379,10 @@ namespace OutputHandler {
 
         if (reload < 2)
         {
-
             linkVals(*vm, vmap, amap, pcsch, "/reload", reload, relname);
             cAv = amap[relname];
 
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
-                // /status/bms/DCClosed
-                FunctionUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
-                // /status/bms/CurrentBeforeStopIsOK
-                FunctionUtility::AssetVarInfo("/status/bms", "CurrentBeforeStopIsOK", assetVar::ATypes::ABOOL),
-                // /status/pcs/SystemState
-                FunctionUtility::AssetVarInfo("/status/pcs", "SystemState", assetVar::ATypes::ASTRING),
                 // /status/pcs/StandbySuccess
                 FunctionUtility::AssetVarInfo("/status/pcs", "StandbySuccess", assetVar::ATypes::ABOOL),
                 // /controls/pcs/Standby
@@ -493,35 +400,20 @@ namespace OutputHandler {
             
             if (reload == 0)
             {
-
-                bool dcClosed = amap["DCClosed"]->getbVal();
-                bool currentIsOk = amap["CurrentBeforeStopIsOK"]->getbVal();
-                char* systemStateStatus = amap["SystemState"]->getcVal();
-
-                bool systemState = false;
-
-                if(!(systemStateStatus == nullptr)){
-                    std::string compareString = systemStateStatus;
-                    systemState = (compareString == "Stop" || "Run");
-                }
-
-                if(!currentIsOk || !systemState || !dcClosed) {
-                    returnObject.statusIndicator = FAILURE;
-                    returnObject.message = "";
-                    return returnObject;
-                }
-
-                // "expression": "{1} and ({2} == Stop or {2} == Run) and {3}",
-                // "variable1": "/status/bms:CurrentBeforeStopIsOK",
-                // "variable2": "/status/pcs:SystemState",
-                // "variable3": "/status/bms:DCClosed"
+                // amap["Standby"]->setcParam("expression", "{1} and ({2} == Stop or {2} == Run) and {3}");
+                // amap["Standby"]->setParam("numVars", 3);
+                // amap["Standby"]->setParam("useExpr", true);
+                // amap["Standby"]->setcParam("variable1", "/status/bms:CurrentBeforeStopIsOK");
+                // amap["Standby"]->setcParam("variable2", "/status/pcs:SystemState");
+                // amap["Standby"]->setcParam("variable3", "/status/bms:DCClosed");
             }
             reload = 2;
             cAv->setVal(reload);
         }
 
-        amap = FunctionUtility::SharedAmapReset(amap, vm, "standby", "Standby", "");
-        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, aname, p_fims, aV, "Standby");
+
+        amap = FunctionUtility::SharedAmapReset(amap, vm, "standby", "Standby", "VerifyStandby");
+        returnObject = FunctionUtility::SharedHandleCmdProcess(vmap, amap, pcsch, p_fims, aV, "Standby");
 
         return returnObject;
     }

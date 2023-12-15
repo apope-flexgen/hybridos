@@ -2363,6 +2363,13 @@ void loadFlexFunc(varsmap & vmap, VarMapUtils*vm , const char* FlexName)
     vm->setFunc(vmap, FlexName, "LocalStopPCS",        (void*)&InputHandler::LocalStopPCS);
     vm->setFunc(vmap, FlexName, "LocalStandbyPCS",        (void*)&InputHandler::LocalStandbyPCS);
     vm->setFunc(vmap, FlexName, "SiteRunCmd",        (void*)&InputHandler::SiteRunCmd);
+    vm->setFunc(vmap, FlexName, "SiteBMSContactorControl",        (void*)&InputHandler::SiteBMSContactorControl);
+    vm->setFunc(vmap, FlexName, "SitePCSStatusControl",        (void*)&InputHandler::SitePCSStatusControl);
+    vm->setFunc(vmap, FlexName, "CloseContactorsEnable",        (void*)&InputHandler::CloseContactorsEnable);
+    vm->setFunc(vmap, FlexName, "OpenContactorsEnable",        (void*)&InputHandler::OpenContactorsEnable);
+    vm->setFunc(vmap, FlexName, "StartEnable",        (void*)&InputHandler::StartEnable);
+    vm->setFunc(vmap, FlexName, "StopEnable",        (void*)&InputHandler::StopEnable);
+    vm->setFunc(vmap, FlexName, "StandbyEnable",        (void*)&InputHandler::StandbyEnable);
 
 }
     
