@@ -318,6 +318,13 @@ func configureCOPS(config Config) error {
 		processJurisdiction[process.Name] = &processEntry
 	}
 
+	// Initialize dependency list for each process
+	for _, p := range processJurisdiction {
+		if err := p.updateDependencies(); err != nil {
+			return fmt.Errorf("updating %s dependency list: %w", p.name, err)
+		}
+	}
+
 	dr.configure(float64(config.HeartbeatFrequencyMS))
 	if enableRedundantFailover {
 		err := configureC2C(config)

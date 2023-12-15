@@ -87,6 +87,7 @@ func (process processInfo) buildStatsReport() map[string]interface{} {
 	healthParams["max_mem_usage_pct"] = process.healthStats.maxMemUsagePercent
 	healthParams["avg_mem_usage_pct"] = process.healthStats.avgMemUsagePercent
 	healthParams["controls"] = process.generateControlsMap()
+	healthParams["dependencies"] = process.dependencies
 	return healthParams
 }
 

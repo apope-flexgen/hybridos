@@ -43,6 +43,7 @@ type processInfo struct {
 	requiredForHealthyStatus bool               // if true, process is included in health checkup to determine if controller is healthy or unhealthy
 	hangTimeAllowance        time.Duration      // duration of time process can be missing the heartbeat before declared hung/dead
 	configRestart            bool               // Whether new configuration data requires the process to restart
+	dependencies             []string           // Lists the dependencies required for the process to run
 	healthStats              processHealthStats // statistics to be published about the process's health
 	version                  processVersion     // contains release version info about the process
 	enableControls           processControls    // defines bools for start,stop,restart commands depending on state of process
@@ -93,6 +94,46 @@ func (process *processInfo) updatePID(readPID int) error {
 			process.sendPrimaryFlag(true)
 		}
 	}
+	return nil
+}
+
+// Capture dependency list from systemd and update the list in a given process
+func (process *processInfo) updateDependencies() error {
+	procDeps := []string{}
+
+	// Open dbus connection.
+	conn, err := dbus.New()
+	if err != nil {
+		return fmt.Errorf("failed to connect to D-Bus: %w", err)
+	}
+	defer conn.Close()
+
+	// Generate service name.
+	service := fmt.Sprintf("%s.service", process.name)
+
+	// Update our process status.
+	stats, err := conn.GetAllProperties(service)
+	if err != nil {
+		return fmt.Errorf("getting service %v status: %w", service, err)
+	}
+
+	// Verify property field exists
+	// Assign the newly retrieved value to its process information.
+	if stats["After"] == nil {
+		return fmt.Errorf("%s dependency list is nil", service)
+	}
+
+	// Initialize and set our list of dependencies back to the process.
+	// Only select .service dependencies
+	dependencies := stats["After"].([]string)
+	for _, dep := range dependencies {
+		if strings.Contains(dep, "service") {
+			procDeps = append(procDeps, dep)
+		}
+	}
+
+	process.dependencies = procDeps
+
 	return nil
 }
 
