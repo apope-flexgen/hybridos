@@ -1,0 +1,108 @@
+{
+    "system": {
+        "name": "FlexGen HybridOS",
+        "protocol": "DNP3",
+        "version": "0.2",
+        "base_uri": "/sites",
+        "id": "dnp3_server",
+        "debug": 0,
+        "unsol": true,
+        "ip_address": "0.0.0.0",
+        "local_uri": "/local_server",
+        "port": 20000,
+        "stats_pub_uri": "/dnp3_server/stats",
+        "stats_pub_frequency": 1000,
+        "timeout": 4000
+    },
+    "registers": [
+        {
+            "type": "AnOPInt32",
+            "map": [
+                
+                    {   "id": "TestOPI32toSite", "offset": 0,  "name": "Test OUTPut To Site", "uri": "/testsrv/testop" },
+                    {   "id": "TestOP2",         "offset": 2,  "name": "Test OUTPut2 To Site", "uri": "/testsrv/testop" },
+                    {   "id": "TestOP3",         "offset": 3,  "name": "Test OUTPut3 To Site", "uri": "/testsrv/testop" },
+                    {   "id": "TestOP5",         "offset": 5,  "name": "Test OUTPut5 To Site", "uri": "/testsrv/testop" }
+                
+            ]
+        },
+        {
+            "type": "AnOPInt16",
+            "map": [
+                {
+                    "id": "TestOPI16toSite",
+                    "offset": 1,
+                    "name": "Test OUTPut To Site",
+                    "uri": "/testsrv/testop"
+                }
+            ]
+        },
+        {
+            "type": "AnOPF32",
+            "map": [
+                {
+                    "id": "TestOPF32toSite",
+                    "offset": 4,
+                    "name": "Test OUTPut F32 To Site",
+                    "uri": "/testsrv/testop"
+
+                }
+            ]
+        },
+        {
+            "type": "CROB",
+            "map": [
+                {
+                    "id": "breaker_close",
+                    "offset": 0,
+                    "name": "Main Breaker Close Command",
+                    "uri": "/testsrv/testop"
+                }
+            ]
+        },
+
+        {
+            "type": "binaryOS",
+            "map": [
+                {
+                    "id": "binaryOS_10v2",
+                    "offset": 1,
+                    "variation": "Group10Var2",
+                    "uri": "/sites/binaryOS",
+                    "name": "Binary Output Status"
+                }
+            ]
+        },
+        {
+            "type": "binary",
+            "map": [
+                { "id": "binary_1", "offset": 0, "uri": "/sites/binary", "name": "binary_1" },
+                { "id": "binary_2", "offset": 1, "uri": "/sites/binary", "name": "binary_2" },
+                { "id": "binary_3", "offset": 2, "uri": "/sites/binary", "name": "binary_3" },
+                { "id": "binary_7", "offset": 3, "uri": "/sites/binary", "name": "binary_7" },
+                { "id": "binary_8", "offset": 8, "uri": "/sites/binary", "name": "binary_8" }
+            ]
+        },
+        {
+            "type": "analog",
+            "map": [
+                {
+                    "id": "analog_1",
+                    "offset": 0,
+                    "variation": "Group30Var5",
+                    "evariation": "Group32Var5",
+                    "uri": "/sites/analog",
+                    "name": "analog_1"
+                },
+                {
+                    "id": "analog_6",
+                    "offset": 6,
+                    "variation": "Group30Var1",
+                    "evariation": "Group32Var1",
+                    "uri": "/sites/analog",
+                    "name": "analog_6"
+                }
+            ]
+        }
+    ]
+}

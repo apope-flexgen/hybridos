@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema elementFormDefault="unqualified" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://www.TriangleMicroWorks.com/TestHarness/Schemas/dnpdata" 
+  targetNamespace="http://www.TriangleMicroWorks.com/TestHarness/Schemas/dnpdata">
+
+  <!-- Define generic DNP3 flags applicable to all data points-->
+  <xs:complexType name="flagsType">
+    <xs:sequence>
+      <xs:element name="online" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="restart" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="commLost" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="remoteForced" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="localForced" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <!-- Define base class for all data points -->
+  <xs:complexType name="pointType">
+    <xs:sequence>
+      <xs:element name="pointNumber" type="xs:unsignedShort"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <!-- Future - name61850 define name of mapping to 61850 object -->
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Define base class for all input data points -->
+  <xs:complexType name="inputPointType">
+    <xs:complexContent>
+      <xs:extension base="pointType">
+        <xs:sequence>
+          <xs:element name="class1Events" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="class2Events" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="class3Events" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define base class for all output control data points -->
+  <xs:complexType name="outputControlPointType">
+    <xs:complexContent>
+      <xs:extension base="pointType">
+        <xs:sequence>
+          <xs:element name="supportSelectOperate" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportDirectOperate" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportDirectOperateNoAck" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define base class for all output status data points -->
+  <xs:complexType name="outputStatusPointType">
+    <xs:complexContent>
+      <xs:extension base="inputPointType">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define binary input point type -->
+  <xs:complexType name="binaryInputFlagsType">
+    <xs:complexContent>
+      <xs:extension base="flagsType">
+        <xs:sequence>
+          <xs:element name="chatterFilter" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="state" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="binaryInputType">
+    <xs:complexContent>
+      <xs:extension base="inputPointType">
+        <xs:sequence>
+          <xs:element name="flags" type="binaryInputFlagsType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <!-- Define double bit input point type -->
+  <xs:simpleType name="dpiType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="intermediate"/>
+      <xs:enumeration value="off"/>
+      <xs:enumeration value="on"/>
+      <xs:enumeration value="indeterminate"/>
+    </xs:restriction>
+  </xs:simpleType>  
+  
+  <xs:complexType name="doubleBitInputFlagsType">
+    <xs:complexContent>
+      <xs:extension base="flagsType">
+        <xs:sequence>
+          <xs:element name="chatterFilter" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="state" type="dpiType" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="doubleBitInputType">
+    <xs:complexContent>
+      <xs:extension base="inputPointType">
+        <xs:sequence>
+          <xs:element name="flags" type="doubleBitInputFlagsType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <!-- Define binary output point type -->
+  <xs:complexType name="binaryOutputFlagsType">
+    <xs:complexContent>
+      <xs:extension base="flagsType">
+        <xs:sequence>
+          <xs:element name="state" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="binaryOutputControlType">
+    <xs:complexContent>
+      <xs:extension base="outputControlPointType">
+        <xs:sequence>
+          <xs:element name="supportCount" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportPulseOn" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportPulseOff" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportLatchOn" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportLatchOff" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportTripClose" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportRaiseLower" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportQueue" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="supportClearQueue" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="binaryOutputStatusType">
+    <xs:complexContent>
+      <xs:extension base="outputStatusPointType">
+        <xs:sequence>
+          <xs:element name="flags" type="binaryOutputFlagsType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define base class for all counters -->
+  <xs:complexType name="counterFlagsType">
+    <xs:complexContent>
+      <xs:extension base="flagsType">
+        <xs:sequence>
+          <xs:element name="rollover" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="discontinuity" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="binaryCounterType">
+    <xs:complexContent>
+      <xs:extension base="inputPointType">
+        <xs:sequence>
+          <xs:element name="flags" type="counterFlagsType"/>
+          <xs:element name="value" type="xs:unsignedInt"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="frozenCounterType">
+    <xs:complexContent>
+      <xs:extension base="inputPointType">
+        <xs:sequence>
+          <xs:element name="flags" type="counterFlagsType"/>
+          <xs:element name="value" type="xs:unsignedInt"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define analog input point type -->
+  <xs:complexType name="analogInputFlagsType">
+    <xs:complexContent>
+      <xs:extension base="flagsType">
+        <xs:sequence>
+          <xs:element name="overRange" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="referenceCheck" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="analogInputType">
+    <xs:complexContent>
+      <xs:extension base="inputPointType">
+        <xs:sequence>
+          <xs:element name="flags" type="analogInputFlagsType"/>
+          <xs:element name="value" type="xs:double"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="analogInputDeadbandType">
+    <xs:complexContent>
+      <xs:extension base="pointType">
+        <xs:sequence>
+          <xs:element name="value" type="xs:double"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define analog output point type -->
+  <xs:complexType name="analogOutputFlagsType">
+    <xs:complexContent>
+      <xs:extension base="flagsType">
+        <xs:sequence>
+          <xs:element name="overRange" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="referenceCheck" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="analogOutputControlType">
+    <xs:complexContent>
+      <xs:extension base="outputControlPointType">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="analogOutputStatusType">
+    <xs:complexContent>
+      <xs:extension base="outputStatusPointType">
+        <xs:sequence>
+          <xs:element name="flags" type="analogOutputFlagsType"/>
+          <xs:element name="value" type="xs:double"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define string point type -->
+  <xs:complexType name="stringDataType">
+    <xs:complexContent>
+      <xs:extension base="inputPointType">
+        <xs:sequence>
+          <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define virtual terminal point type -->
+  <xs:complexType name="virtualTerminalType">
+    <xs:complexContent>
+      <xs:extension base="inputPointType">
+        <xs:sequence>
+          <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define base class for all object groups -->
+  <xs:complexType name="objectGroupType">
+    <xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Define base class for all input object groups -->
+  <xs:complexType name="inputGroupType">
+    <xs:complexContent>
+      <xs:extension base="objectGroupType">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define base class for all output control object groups -->
+  <xs:complexType name="outputControlGroupType">
+    <xs:complexContent>
+      <xs:extension base="objectGroupType">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define base class for all output object groups -->
+  <xs:complexType name="outputStatusGroupType">
+    <xs:complexContent>
+      <xs:extension base="objectGroupType">
+        <xs:sequence>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the binary input group type -->
+  <xs:complexType name="binaryInputGroupType">
+    <xs:complexContent>
+      <xs:extension base="inputGroupType">
+        <xs:sequence>
+          <xs:element name="binaryInput" type="binaryInputType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+   
+  <!-- Define the double bit input group type -->
+  <xs:complexType name="doubleBitInputGroupType">
+    <xs:complexContent>
+      <xs:extension base="inputGroupType">
+        <xs:sequence>
+          <xs:element name="doubleBitInput" type="doubleBitInputType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the binary output control group type -->
+  <xs:complexType name="binaryOutputControlGroupType">
+    <xs:complexContent>
+      <xs:extension base="outputControlGroupType">
+        <xs:sequence>
+          <xs:element name="binaryOutputControl" type="binaryOutputControlType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the binary output status group type -->
+  <xs:complexType name="binaryOutputStatusGroupType">
+    <xs:complexContent>
+      <xs:extension base="outputStatusGroupType">
+        <xs:sequence>
+          <xs:element name="binaryOutputStatus" type="binaryOutputStatusType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the binary counter group type -->
+  <xs:complexType name="binaryCounterGroupType">
+    <xs:complexContent>
+      <xs:extension base="objectGroupType">
+        <xs:sequence>
+          <xs:element name="binaryCounter" type="binaryCounterType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the frozen counter group type -->
+  <xs:complexType name="frozenCounterGroupType">
+    <xs:complexContent>
+      <xs:extension base="objectGroupType">
+        <xs:sequence>
+          <xs:element name="frozenCounter" type="frozenCounterType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the analog input group type -->
+  <xs:complexType name="analogInputGroupType">
+    <xs:complexContent>
+      <xs:extension base="inputGroupType">
+        <xs:sequence>
+          <xs:element name="analogInput" type="analogInputType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the analog input deadband group type -->
+  <xs:complexType name="analogInputDeadbandGroupType">
+    <xs:complexContent>
+      <xs:extension base="objectGroupType">
+        <xs:sequence>
+          <xs:element name="analogInputDeadband" type="analogInputDeadbandType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the analog output control group type -->
+  <xs:complexType name="analogOutputControlGroupType">
+    <xs:complexContent>
+      <xs:extension base="outputControlGroupType">
+        <xs:sequence>
+          <xs:element name="analogOutputControl" type="analogOutputControlType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the analog output status group type -->
+  <xs:complexType name="analogOutputStatusGroupType">
+    <xs:complexContent>
+      <xs:extension base="outputStatusGroupType">
+        <xs:sequence>
+          <xs:element name="analogOutputStatus" type="analogOutputStatusType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the string group type -->
+  <xs:complexType name="stringGroupType">
+    <xs:complexContent>
+      <xs:extension base="objectGroupType">
+        <xs:sequence>
+          <xs:element name="stringData" type="stringDataType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define the virtual terminal group type -->
+  <xs:complexType name="virtualTerminalGroupType">
+    <xs:complexContent>
+      <xs:extension base="objectGroupType">
+        <xs:sequence>
+          <xs:element name="virtualTerminal" type="virtualTerminalType" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- Define a DNP logical device -->
+  <xs:complexType name="deviceType">
+    <xs:sequence>
+      <xs:element name="binaryInputGroup" type="binaryInputGroupType" minOccurs="0"/>
+      <xs:element name="doubleBitInputGroup" type="doubleBitInputGroupType" minOccurs="0"/>
+      <xs:element name="binaryOutputControlGroup" type="binaryOutputControlGroupType" minOccurs="0"/>
+      <xs:element name="binaryOutputStatusGroup" type="binaryOutputStatusGroupType" minOccurs="0"/>
+      <xs:element name="binaryCounterGroup" type="binaryCounterGroupType" minOccurs="0"/>
+      <xs:element name="frozenCounterGroup" type="frozenCounterGroupType" minOccurs="0"/>
+      <xs:element name="analogInputGroup" type="analogInputGroupType" minOccurs="0"/>
+      <xs:element name="analogInputDeadbandGroup" type="analogInputDeadbandGroupType" minOccurs="0"/>
+      <xs:element name="analogOutputControlGroup" type="analogOutputControlGroupType" minOccurs="0"/>
+      <xs:element name="analogOutputStatusGroup" type="analogOutputStatusGroupType" minOccurs="0"/>
+      <xs:element name="stringGroup" type="stringGroupType" minOccurs="0"/>
+      <xs:element name="virtualTerminalGroup" type="virtualTerminalGroupType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Define root element for DNP3 Database Configuration File -->
+  <xs:element name="dnpdata">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="device" type="deviceType" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

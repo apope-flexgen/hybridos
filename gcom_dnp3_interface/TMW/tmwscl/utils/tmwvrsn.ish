@@ -1,0 +1,18 @@
+#define PRODUCT_VERSION "3.30.0.0";
+
+prototype LONG GetPrdBuildDate();
+prototype STRING GetPrdVersion();
+
+function GetPrdBuildDate()
+NUMBER prdBuildDate;
+begin
+  prdBuildDate = 1653404410;
+  return prdBuildDate;
+end;
+
+function STRING GetPrdVersion()
+    STRING prdVersion;
+begin
+  prdVersion = "3.30.0.0";
+  return prdVersion;
+end;

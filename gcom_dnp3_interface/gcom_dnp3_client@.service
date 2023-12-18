@@ -1,0 +1,13 @@
+[Unit]
+Description=HybridOS Gcom DNP3 Client - injest dpn3 traffic and route to FIMS
+Requires=fims.service
+After=fims.service
+
+[Service]
+User=hybridos
+ExecStart=/usr/local/bin/gcom_dnp3_client /usr/local/etc/config/gcom_dnp3_client/%I
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

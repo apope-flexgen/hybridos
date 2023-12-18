@@ -1,0 +1,79 @@
+
+{
+
+    "system": {
+        "name": "FlexGen HybridOS",
+        "protocol": "DNP3",
+        "mode": "client",
+
+        "version": "0.1",
+        "base_uri": "/sites",
+        "id": "alvin",
+        "debug": 1,
+        "ip_address": "*.*.*.*",
+        "local_uri": "/local",
+        "master_address":2,
+        "station_address":12,
+        "port": 20002,
+        "frequency": 5000
+    },
+    "registers": [
+        {
+            "dnp3_type": "analog",
+            "starting_offset": 100,
+            "number_of_registers": 1,
+            "map": [
+                   {
+                    "id": "gross_active_power",
+                    "idx": 100,
+                    "name": "Site - Active Power Total Gross",
+                    "float": true
+                    },
+                    {
+                    "id": "grid_voltage_l1",
+                    "idx": 101,
+                    "name": "Site - Grid Voltage L1",
+                    "float": true
+                    },
+                    {
+                    "id": "grid_voltage_l2",
+                    "idx": 102,
+                    "name": "Site - Grid Voltage L2",
+                    "float": true
+                    },
+                    {
+                    "id": "grid_voltage_l3",
+                    "idx": 103,
+                    "name": "Site - Grid Voltage L3",
+                    "float": true,
+                    "xuri": "/components/sel_651r"
+
+                   }
+            ]
+        },
+        {
+            "dnp3_type": "binary",
+            "starting_offset": 100,
+            "number_of_registers": 1,
+            "map": [
+                {
+                    "id": "breaker_closed",
+                    "idx": 100,
+                    "name": "Main Breaker Closed"
+                }
+            ]
+                },
+                {
+            "dnp3_type": "CROB",
+            "starting_offset": 100,
+            "number_of_registers": 1,
+            "map": [
+                {
+                    "id": "breaker_close",
+                    "idx": 100,
+                    "name": "Main Breaker Close Command"
+                                }
+                        ]
+                }
+        ]
+}
