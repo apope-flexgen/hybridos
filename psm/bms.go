@@ -50,11 +50,11 @@ type bms struct {
 	AvgCellTemp float64     // average cell temperature in the BMS
 	MinCellTemp measurement // minimum cell temperature in the BMS
 
-	SocChargeVec	[]float64
-	PChargeVec		[]float64
-	SocDischargeVec	[]float64
-	PDischargeVec	[]float64
-	DisableLUTs		bool 		//flag to disable look-up-table based power limiting from BMS.
+	SocChargeVec    []float64
+	PChargeVec      []float64
+	SocDischargeVec []float64
+	PDischargeVec   []float64
+	DisableLUTs     bool //flag to disable look-up-table based power limiting from BMS.
 
 	// BMS Communications - includes configurable I/O
 	Heart        hearttime
@@ -210,7 +210,7 @@ func (b *bms) Init() {
 		}
 		// All SBMUs are presumed to start with the same SOC and perfect state of health
 		b.Sbmu[i].Soc.Value = b.Soc.Value
-		b.Sbmu[i].Soh = 1.0
+		b.Sbmu[i].Soh = 100.0
 		// If not specified, NumCells is calculated using a presumed nominal cell voltage of 3.5 V, and rounds down
 		if b.Sbmu[i].NumCells <= 0 && b.Vnom > 0 {
 			b.Sbmu[i].NumCells = int(b.Vnom / 3.5)
@@ -309,7 +309,7 @@ func (b *bms) Init() {
 	b.CapMeas = capacitySum
 	b.AvgCellVolt = avgVoltSum / float64(b.NumSbmus)
 	b.AvgCellTemp = avgTempSum / float64(b.NumSbmus)
-	b.Soh = 1.0
+	b.Soh = 100.0
 
 	// Initialize fault thresholds for aggregate cell measurements// Max Cell Voltage
 	if b.MaxCellVolt.FaultHighThreshold <= cellVoltNom || b.MaxCellVolt.FaultHighThreshold > (1.15*cellVoltNom) {
@@ -353,8 +353,8 @@ func (b *bms) Init() {
 	b.Edischarge = b.Cap * b.Soc.Value / 100
 
 	//Droop parameters. BMS is modeled as a stiff source
-	if b.Pmax <= 0{
-		b.Pmax = 10000 //TODO GB: move this to default configs. 
+	if b.Pmax <= 0 {
+		b.Pmax = 10000 //TODO GB: move this to default configs.
 	}
 	b.Dvoltage.Percent = 0.001
 	b.Dvoltage.XNom = b.Vnom
@@ -591,7 +591,7 @@ func (b *bms) UpdateState(input terminal, dt float64) (output terminal) {
 		ChargePCT, tempFaultCharge = interpl(b.SocChargeVec, b.PChargeVec, b.Soc.Value)
 		DischargePCT, tempFaultDischarge = interpl(b.SocDischargeVec, b.PDischargeVec, b.Soc.Value)
 		b.Fault = b.Fault || tempFaultCharge || tempFaultDischarge
-		b.Pcharge = b.Pmax * ChargePCT * - 1
+		b.Pcharge = b.Pmax * ChargePCT * -1
 		b.Pdischarge = b.Pmax * DischargePCT
 	} else {
 		b.Pcharge = -1 * b.Pmax
