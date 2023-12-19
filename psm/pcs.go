@@ -367,7 +367,7 @@ func (p *pcs) CalculateState(input terminal, dt float64) (output terminal) {
 	if p.GridForming {
 		return output
 	}
-	p.F, p.Ph = input.f, input.ph //TODO GB: Why is PCS taking F and Ph from below (DC side?)
+
 	pcmd := p.targetPcmd
 	qcmd := p.targetQcmd
 

@@ -249,7 +249,6 @@ func (e *ess) CalculateState(input terminal, dt float64) (output terminal) {
 	if e.GridForming {
 		return output
 	}
-	e.F, e.Ph = input.f, input.ph
 
 	pcmd := e.targetPcmd
 	qcmd := e.targetQcmd
