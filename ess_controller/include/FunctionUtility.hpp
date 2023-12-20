@@ -100,6 +100,22 @@ namespace FunctionUtility
         // {"uri", assetVar::ATypes::ASTRING}
 
 
+
+
+        {"enable", assetVar::ATypes::ASTRING},
+        {"ifChanged", assetVar::ATypes::ABOOL},
+        // {"name", assetVar::ATypes::AINT},
+        {"note1", assetVar::ATypes::ASTRING},
+        {"size", assetVar::ATypes::AFLOAT},
+        // {"type", assetVar::ATypes::AFLOAT},
+        {"note2", assetVar::ATypes::ASTRING}
+        // {"aname", assetVar::ATypes::ASTRING},
+        // {"every", assetVar::ATypes::AINT},
+        // {"offset", assetVar::ATypes::AFLOAT},
+        // {"debug", assetVar::ATypes::ASTRING},
+        // {"uri", assetVar::ATypes::ASTRING}
+
+
         //actions
     };
 

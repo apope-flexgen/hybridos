@@ -222,7 +222,7 @@ namespace FunctionUtility
     varmap& PopulateAmapWithAv(varsmap& vmap, varmap& amap, VarMapUtils* vm, const AssetVarInfo* info)
     {
 
-        int ival= 0;
+        int ival= -1;
         double dval= 0.0;
         bool bval = false;
         char* cval = nullptr;

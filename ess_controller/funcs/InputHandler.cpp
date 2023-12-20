@@ -394,6 +394,8 @@ namespace InputHandler
             amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
             reload = 1;
+            essAv->setVal(reload);
+            return;
         }
 
         if (reload == 1)
@@ -445,7 +447,7 @@ namespace InputHandler
 
             if(amap["IsFaulted"]->getbVal()) {
                 std::string message = fmt::format(
-                    "Condition(s): [{}:{}] == true",
+                    "Condition(s): [{}:{}] == false",
                     amap["IsFaulted"]->getfName(), 
                     amap["IsFaulted"]->getbVal()
                 );
@@ -455,6 +457,7 @@ namespace InputHandler
 
 
             reload = 2;
+            essAv->setVal(reload);
             
         }
 
@@ -494,11 +497,9 @@ namespace InputHandler
                     pcsAv->setVal(0);
                 }
                 reload = 1;
+                essAv->setVal(reload);
             }
         }
-
-        essAv->setVal(reload);
-
     }
 
     /**
@@ -545,6 +546,8 @@ namespace InputHandler
             amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
             reload = 1;
+            essAv->setVal(reload);
+            return;
         }
 
         if (reload == 1)
@@ -556,7 +559,7 @@ namespace InputHandler
 
             if(amap["IsFaulted"]->getbVal()) {
                 std::string message = fmt::format(
-                    "Condition(s): [{}:{}] == true",
+                    "Condition(s): [{}:{}] == false",
                     amap["IsFaulted"]->getfName(), 
                     amap["IsFaulted"]->getbVal()
                 );
@@ -566,6 +569,7 @@ namespace InputHandler
 
 
             reload = 2;
+            essAv->setVal(reload);
             
         }
 
@@ -592,11 +596,9 @@ namespace InputHandler
 
             if(returnValue == SUCCESS || returnValue == FAILURE) {
                 reload = 1;
+                essAv->setVal(reload);
             }
         }
-
-        essAv->setVal(reload);
-
     }
 
     /**
@@ -643,6 +645,8 @@ namespace InputHandler
             amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
 
             reload = 1;
+            essAv->setVal(reload);
+            return;
         }
 
         if (reload == 1)
@@ -654,7 +658,7 @@ namespace InputHandler
 
             if(amap["IsFaulted"]->getbVal()) {
                 std::string message = fmt::format(
-                    "Condition(s): [{}:{}] == true",
+                    "Condition(s): [{}:{}] == false",
                     amap["IsFaulted"]->getfName(), 
                     amap["IsFaulted"]->getbVal()
                 );
@@ -664,12 +668,18 @@ namespace InputHandler
 
 
             reload = 2;
+            essAv->setVal(reload);
             
         }
 
         if(reload == 2){
+
+            FPS_PRINT_INFO("reload == 2");
         
             int stCommand = amap[siteUri.c_str()]->getiVal();
+
+            FPS_PRINT_INFO("start_stop_standby_command == {}", stCommand);
+
             int returnValue = 0;
 
             switch (stCommand) {
@@ -694,10 +704,9 @@ namespace InputHandler
 
             if(returnValue == SUCCESS || returnValue == FAILURE) {
                 reload = 1;
+                essAv->setVal(reload);
             }
         }
-
-        essAv->setVal(reload);
 
     }
 
@@ -977,6 +986,14 @@ namespace InputHandler
             amap["start"]->setParam("enabled", true);
             amap["StartEnabled"]->setVal(true);
         } else {
+
+            std::string systemStateVal = "";
+            if(amap["SystemState"]->getcVal() == nullptr) {
+                systemStateVal += "nullptr";
+            } else {
+                systemStateVal += amap["SystemState"]->getcVal();
+            }
+
             message += fmt::format(
                 "{} FALSE ---> Condition(s): [{}:{}] == true && [{}:{}] == true && [{}:{}] == (Stop or Standby) && [{}:{}] == false",
                 __func__,
@@ -985,7 +1002,7 @@ namespace InputHandler
                 amap["maint_mode"]->getfName(), 
                 amap["maint_mode"]->getbVal(),
                 amap["SystemState"]->getfName(), 
-                amap["SystemState"]->getcVal(),
+                systemStateVal,
                 amap["IsFaulted"]->getfName(), 
                 amap["IsFaulted"]->getbVal()
             );
@@ -1078,13 +1095,21 @@ namespace InputHandler
             amap["stop"]->setParam("enabled", true);
             amap["StopEnabled"]->setVal(true);
         } else {
+
+            std::string systemStateVal = "";
+            if(amap["SystemState"]->getcVal() == nullptr) {
+                systemStateVal += "nullptr";
+            } else {
+                systemStateVal += amap["SystemState"]->getcVal();
+            }
+
             message += fmt::format(
                 "{} FALSE ---> Condition(s): [{}:{}] == true && [{}:{}] != Stop",
                 __func__,
                 amap["maint_mode"]->getfName(), 
                 amap["maint_mode"]->getbVal(),
                 amap["SystemState"]->getfName(), 
-                amap["SystemState"]->getcVal()
+                systemStateVal
             );
             amap["stop"]->setParam("enabled", false);
             amap["StopEnabled"]->setVal(false);
@@ -1160,10 +1185,10 @@ namespace InputHandler
             cAv->setVal(reload);
         }
 
-
         char* systemStateStatus = amap["SystemState"]->getcVal();
 
         bool systemState = false;
+
 
         if(!(systemStateStatus == nullptr)){
             std::string compareString = systemStateStatus;
@@ -1172,11 +1197,20 @@ namespace InputHandler
 
         std::string message = "";
 
+
         if (amap["DCClosed"]->getbVal() && amap["maint_mode"]->getbVal() && (systemState)) {
             message += fmt::format("{} TRUE", __func__);
             amap["standby"]->setParam("enabled", true);
             amap["StandbyEnabled"]->setVal(true);
         } else {
+
+            std::string systemStateVal = "";
+            if(amap["SystemState"]->getcVal() == nullptr) {
+                systemStateVal += "nullptr";
+            } else {
+                systemStateVal += amap["SystemState"]->getcVal();
+            }
+
             message += fmt::format(
                 "{} FALSE ---> Condition(s): [{}:{}] == true && [{}:{}] == true && [{}:{}] == (Stop or Run)",
                 __func__,
@@ -1185,14 +1219,14 @@ namespace InputHandler
                 amap["maint_mode"]->getfName(), 
                 amap["maint_mode"]->getbVal(),
                 amap["SystemState"]->getfName(), 
-                amap["SystemState"]->getcVal()
+                systemStateVal
             );
+
             amap["standby"]->setParam("enabled", false);
             amap["StandbyEnabled"]->setVal(false);
         }
 
         if(0)FPS_PRINT_INFO("{}", message);
-
 
     }
 
