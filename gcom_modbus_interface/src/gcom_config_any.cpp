@@ -746,7 +746,7 @@ bool extract_components(std::map<std::string, std::any> jsonMapOfConfig, const s
             ok &= getItemFromMap(jsonComponentMap, "watchdog_enabled",               component->watchdog_enabled, false, true, true, debug);
             ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_read_uri",   component->component_heartbeat_read_uri, std::string(""), true, true, debug);
             ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_write_uri",  component->component_heartbeat_write_uri, std::string(""), true, true, debug);
-            ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_max_value",  component->component_heartbeat_max_value, 4096, true, true, debug);
+            ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_max_value",  component->component_heartbeat_max_value, 0, true, true, debug);
             ok &= getItemFromMap(jsonComponentMap, "modbus_heartbeat_timeout_ms",    component->modbus_heartbeat_timeout_ms, 0, true, true, debug);
             ok &= getItemFromMap(jsonComponentMap, "component_heartbeat_timeout_ms", component->component_heartbeat_timeout_ms, 0, true, true, debug);
 
@@ -782,7 +782,7 @@ bool extract_components(std::map<std::string, std::any> jsonMapOfConfig, const s
             {
                 component->format = myCfg.format;
             }
-            int ival = 0;
+            int ival = (int)(myCfg.syncPct * 100.0);
             ok &= getItemFromMap(jsonComponentMap, "sync_percent", ival, ival, true, true, false);
             if(0)FPS_INFO_LOG("component [%s] freq [%d] Sync Percent ival [%d]."
                     , component->id.c_str(), component->frequency, ival);
@@ -917,6 +917,170 @@ bool extract_register_groups(std::vector<std::shared_ptr<cfg::register_group_str
 }
 
 /**
+ * @brief Parse the information in an io_point (belonging to a single register group of a single
+ * component) into myCfg.
+ * 
+ * @param json_io_point an std::any struct representing one io_point from  a register_group
+ * @param register_group the register group struct that the point belongs to
+ * @param packed_io_point the parent io_point that contains packed registers within it. NULL if this is the parent io_point or if the io_point is not packed.
+ * @param new_point  bool value representing whether or not this is a new point if set to false this function can be used to update an existing point.
+ * @param myCfg config structure to load file data into
+ * @param debug bool value representing whether or not to print messages to help debug code
+*/
+bool extract_io_point( std::map<std::string, std::any>&json_io_point, std::shared_ptr<struct cfg::register_group_struct> &register_group, 
+                    std::shared_ptr<cfg::io_point_struct>&io_point, std::shared_ptr<cfg::io_point_struct>&packed_io_point, bool new_point, struct cfg &myCfg, bool debug)
+{
+    
+    std::shared_ptr<cfg::io_point_struct> parent_io_point = io_point;
+    if (packed_io_point)
+        parent_io_point = packed_io_point;
+    getItemFromMap(json_io_point, "id", io_point->id, std::string("Some_id"), new_point, new_point, debug);
+    getItemFromMap(json_io_point, "name", io_point->name, std::string("Some_name"), new_point, new_point, debug);
+    getItemFromMap(json_io_point, "offset", io_point->offset, parent_io_point->offset, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "size", io_point->size, parent_io_point->size, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "multi_write_op_code", io_point->multi_write_op_code, parent_io_point->multi_write_op_code, new_point, new_point, debug);
+    // getItemFromMap(json_io_point, "off_by_one",          io_point->off_by_one, myCfg.inherited_fields.off_by_one, new_point, new_point, debug);
+
+    // set up default
+    io_point->number_of_bits = io_point->size * 16;
+    getItemFromMap(json_io_point, "shift", io_point->shift, parent_io_point->shift, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "starting_bit_pos", io_point->starting_bit_pos, parent_io_point->starting_bit_pos, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "number_of_bits", io_point->number_of_bits, parent_io_point->number_of_bits, new_point, new_point, debug);
+    io_point->bit_mask = (io_point->number_of_bits * io_point->number_of_bits) - 1;
+    getItemFromMap(json_io_point, "scale", io_point->scale, parent_io_point->scale, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "normal_set", io_point->normal_set, parent_io_point->normal_set, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "signed", io_point->is_signed, parent_io_point->is_signed, new_point, new_point, debug);
+    std::string format_str;
+    getItemFromMap(json_io_point, "format", format_str, std::string(""), new_point, new_point, false);
+
+    if (format_str.compare("naked") == 0)
+    {
+        io_point->format = Fims_Format::Naked;
+    }
+    else if (format_str.compare("clothed") == 0)
+    {
+        io_point->format = Fims_Format::Clothed;
+    }
+    else if (format_str.compare("full") == 0)
+    {
+        io_point->format = Fims_Format::Full;
+    }
+    else
+    {
+        if (packed_io_point)
+        {
+            io_point->format = parent_io_point->format;
+        }
+        else
+        {
+            io_point->format = register_group->format;
+        }
+    }
+    io_point->invert_mask = 0;
+    io_point->care_mask = std::numeric_limits<u64>::max();
+    std::string invert_mask_str("0x0");
+    std::string default_invert_mask_str("0x0");
+    io_point->invert_mask = 0;
+    io_point->invert_mask = parent_io_point->invert_mask;
+    getItemFromMap(json_io_point, "invert_mask", invert_mask_str, default_invert_mask_str, new_point, new_point, debug);
+    if (invert_mask_str != "0x0")
+    {
+        uint64_t invmask = 0;
+        const char *istr = invert_mask_str.c_str();
+        if (invert_mask_str.length() > 1 && (istr[0] == '0') && (istr[1] == 'x'))
+        {
+            istr += 2;
+            invmask = strtoull(istr, NULL, 16);
+        }
+        else if ((invert_mask_str[0] == '0') && (invert_mask_str[1] == 'b'))
+        {
+            istr += 2;
+            invmask = strtoull(istr, NULL, 2);
+        }
+        io_point->invert_mask = invmask;
+    }
+    // Extract io_point details (like id, offset, name, etc.) here...
+    // Add to the io_point_map vector...
+    io_point->is_float = false;
+    io_point->is_byte_swap = false;
+    io_point->is_byte_swap = false;
+    getItemFromMap(json_io_point, "float", io_point->is_float, parent_io_point->is_float, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "word_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "word_order", io_point->word_order, parent_io_point->word_order, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "byte_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, new_point, new_point, debug);
+
+    // for the benefit of size 4 regs
+    // TODO remove word_swap
+    if (io_point->is_byte_swap)
+    {
+        io_point->byte_index[0] = 3;
+        io_point->byte_index[1] = 2;
+        io_point->byte_index[2] = 1;
+        io_point->byte_index[3] = 0;
+    }
+    else
+    {
+        io_point->byte_index[0] = 0;
+        io_point->byte_index[1] = 1;
+        io_point->byte_index[2] = 2;
+        io_point->byte_index[3] = 3;
+    }
+    // word_order is 1234 or 4321 or 1324 etc
+    if (io_point->word_order > 0)
+    {
+        io_point->byte_index[0] = (io_point->word_order / 1000) - 1;
+        io_point->byte_index[1] = ((io_point->word_order % 1000) / 100) - 1;
+        io_point->byte_index[2] = ((io_point->word_order % 100) / 10) - 1;
+        io_point->byte_index[3] = (io_point->word_order % 10) - 1;
+    }
+
+    io_point->is_enum = false;
+    io_point->is_random_enum = false;
+    io_point->is_individual_bits = false;
+    io_point->is_bit_field = false;
+    getItemFromMap(json_io_point, "enum", io_point->is_enum, parent_io_point->is_enum, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "random_enum", io_point->is_random_enum, parent_io_point->is_random_enum, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "individual_bits", io_point->is_individual_bits, parent_io_point->is_individual_bits, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "bit_field", io_point->is_bit_field, io_point->is_bit_field, new_point, new_point, debug);
+    double dval = 0.0;
+    io_point->debounce = dval;
+    io_point->deadband = dval;
+    io_point->use_bool = true;
+    getItemFromMap(json_io_point, "debounce", io_point->debounce, parent_io_point->debounce, new_point, new_point, debug);
+    getItemFromMap(json_io_point, "deadband", io_point->deadband, parent_io_point->deadband, new_point, new_point, debug);
+    if (io_point->debounce > 0.0)
+        io_point->use_debounce = true;
+    if (io_point->deadband > 0.0)
+        io_point->use_deadband = true;
+    getItemFromMap(json_io_point, "use_bool", io_point->use_bool, parent_io_point->use_bool, new_point, new_point, debug);
+    if ((io_point->is_enum) || (io_point->is_random_enum) || (io_point->is_individual_bits) || (io_point->is_bit_field)
+        /* maybe add more here */)
+    {
+        extract_bitstrings(io_point, json_io_point["bit_strings"]);
+    }
+    io_point->forced_val = 0;
+    io_point->raw_val = 0;
+    io_point->device_id = register_group->device_id;
+    io_point->packer = packed_io_point;
+    if (!packed_io_point)
+    {
+        register_group->io_point_map.push_back(io_point);
+        if (debug)
+            printf(" mapping register id [%s]\n", io_point->id.c_str());
+        auto &io_point_map = register_group->io_point_map.back();
+        // auto regshr = mymap->register_group.lock();
+        register_group->io_point_map_lookup[io_point_map->offset] = io_point_map;
+    }
+    else
+    {
+        if (debug)
+            printf(" packing register id [%s]\n", io_point->id.c_str());
+        packed_io_point->bit_ranges.push_back(io_point);
+    }
+    return true;
+}
+
+/**
  * @brief Parse the information in an io_point list (belonging to a single register group of a single
  * component) into myCfg.
  * 
@@ -947,152 +1111,157 @@ bool extract_io_point_map(std::shared_ptr<struct cfg::register_group_struct> reg
                 double scale = 0.0;
                 io_point->scale = scale;
                 io_point->register_type_str = register_group->register_type_str;
-                std::shared_ptr<cfg::io_point_struct> parent_io_point = io_point;
-                if (packed_io_point)
-                    parent_io_point = packed_io_point;
-                getItemFromMap(json_io_point, "id", io_point->id, std::string("Some_id"), true, true, debug);
-                getItemFromMap(json_io_point, "name", io_point->name, std::string("Some_name"), true, true, debug);
-                getItemFromMap(json_io_point, "offset", io_point->offset, parent_io_point->offset, true, true, debug);
-                getItemFromMap(json_io_point, "size", io_point->size, parent_io_point->size, true, true, debug);
-                getItemFromMap(json_io_point, "multi_write_op_code", io_point->multi_write_op_code, parent_io_point->multi_write_op_code, true, true, debug);
-                // getItemFromMap(json_io_point, "off_by_one",          io_point->off_by_one, myCfg.inherited_fields.off_by_one, true, true, debug);
+                extract_io_point(json_io_point, register_group, io_point, packed_io_point, true, myCfg, debug);
 
-                // set up default
-                io_point->number_of_bits = io_point->size * 16;
-                getItemFromMap(json_io_point, "shift", io_point->shift, parent_io_point->shift, true, true, debug);
-                getItemFromMap(json_io_point, "starting_bit_pos", io_point->starting_bit_pos, parent_io_point->starting_bit_pos, true, true, debug);
-                getItemFromMap(json_io_point, "number_of_bits", io_point->number_of_bits, parent_io_point->number_of_bits, true, true, debug);
-                io_point->bit_mask = (io_point->number_of_bits * io_point->number_of_bits) - 1;
-                getItemFromMap(json_io_point, "scale", io_point->scale, parent_io_point->scale, true, true, debug);
-                getItemFromMap(json_io_point, "normal_set", io_point->normal_set, parent_io_point->normal_set, true, true, debug);
-                getItemFromMap(json_io_point, "signed", io_point->is_signed, parent_io_point->is_signed, true, true, debug);
-                std::string format_str;
-                getItemFromMap(json_io_point, "format", format_str, std::string(""), true, true, false);
+                // bool extract_io_point(std::any&json_io_point, std::shared_ptr<cfg::io_point_struct>&io_point, std::shared_ptr<cfg::io_point_struct>&packed_io_point, struct cfg &myCfg)
+                // {
+                //     std::shared_ptr<cfg::io_point_struct> parent_io_point = io_point;
+                //     if (packed_io_point)
+                //         parent_io_point = packed_io_point;
+                //     getItemFromMap(json_io_point, "id", io_point->id, std::string("Some_id"), true, true, debug);
+                //     getItemFromMap(json_io_point, "name", io_point->name, std::string("Some_name"), true, true, debug);
+                //     getItemFromMap(json_io_point, "offset", io_point->offset, parent_io_point->offset, true, true, debug);
+                //     getItemFromMap(json_io_point, "size", io_point->size, parent_io_point->size, true, true, debug);
+                //     getItemFromMap(json_io_point, "multi_write_op_code", io_point->multi_write_op_code, parent_io_point->multi_write_op_code, true, true, debug);
+                //     // getItemFromMap(json_io_point, "off_by_one",          io_point->off_by_one, myCfg.inherited_fields.off_by_one, true, true, debug);
 
-                if (format_str.compare("naked") == 0)
-                {
-                    io_point->format = Fims_Format::Naked;
-                }
-                else if (format_str.compare("clothed") == 0)
-                {
-                    io_point->format = Fims_Format::Clothed;
-                }
-                else if (format_str.compare("full") == 0)
-                {
-                    io_point->format = Fims_Format::Full;
-                }
-                else
-                {
-                    if (packed_io_point)
-                    {
-                        io_point->format = parent_io_point->format;
-                    }
-                    else
-                    {
-                        io_point->format = register_group->format;
-                    }
-                }
-                io_point->invert_mask = 0;
-                io_point->care_mask = std::numeric_limits<u64>::max();
-                std::string invert_mask_str("0x0");
-                std::string default_invert_mask_str("0x0");
-                io_point->invert_mask = 0;
-                io_point->invert_mask = parent_io_point->invert_mask;
-                getItemFromMap(json_io_point, "invert_mask", invert_mask_str, default_invert_mask_str, true, true, debug);
-                if (invert_mask_str != "0x0")
-                {
-                    uint64_t invmask = 0;
-                    const char *istr = invert_mask_str.c_str();
-                    if (invert_mask_str.length() > 1 && (istr[0] == '0') && (istr[1] == 'x'))
-                    {
-                        istr += 2;
-                        invmask = strtoull(istr, NULL, 16);
-                    }
-                    else if ((invert_mask_str[0] == '0') && (invert_mask_str[1] == 'b'))
-                    {
-                        istr += 2;
-                        invmask = strtoull(istr, NULL, 2);
-                    }
-                    io_point->invert_mask = invmask;
-                }
-                // Extract io_point details (like id, offset, name, etc.) here...
-                // Add to the io_point_map vector...
-                io_point->is_float = false;
-                io_point->is_byte_swap = false;
-                io_point->is_byte_swap = false;
-                getItemFromMap(json_io_point, "float", io_point->is_float, parent_io_point->is_float, true, true, debug);
-                getItemFromMap(json_io_point, "word_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, true, true, debug);
-                getItemFromMap(json_io_point, "word_order", io_point->word_order, parent_io_point->word_order, true, true, debug);
-                getItemFromMap(json_io_point, "byte_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, true, true, debug);
+                //     // set up default
+                //     io_point->number_of_bits = io_point->size * 16;
+                //     getItemFromMap(json_io_point, "shift", io_point->shift, parent_io_point->shift, true, true, debug);
+                //     getItemFromMap(json_io_point, "starting_bit_pos", io_point->starting_bit_pos, parent_io_point->starting_bit_pos, true, true, debug);
+                //     getItemFromMap(json_io_point, "number_of_bits", io_point->number_of_bits, parent_io_point->number_of_bits, true, true, debug);
+                //     io_point->bit_mask = (io_point->number_of_bits * io_point->number_of_bits) - 1;
+                //     getItemFromMap(json_io_point, "scale", io_point->scale, parent_io_point->scale, true, true, debug);
+                //     getItemFromMap(json_io_point, "normal_set", io_point->normal_set, parent_io_point->normal_set, true, true, debug);
+                //     getItemFromMap(json_io_point, "signed", io_point->is_signed, parent_io_point->is_signed, true, true, debug);
+                //     std::string format_str;
+                //     getItemFromMap(json_io_point, "format", format_str, std::string(""), true, true, false);
 
-                // for the benefit of size 4 regs
-                // TODO remove word_swap
-                if (io_point->is_byte_swap)
-                {
-                    io_point->byte_index[0] = 3;
-                    io_point->byte_index[1] = 2;
-                    io_point->byte_index[2] = 1;
-                    io_point->byte_index[3] = 0;
-                }
-                else
-                {
-                    io_point->byte_index[0] = 0;
-                    io_point->byte_index[1] = 1;
-                    io_point->byte_index[2] = 2;
-                    io_point->byte_index[3] = 3;
-                }
-                // word_order is 1234 or 4321 or 1324 etc
-                if (io_point->word_order > 0)
-                {
-                    io_point->byte_index[0] = (io_point->word_order / 1000) - 1;
-                    io_point->byte_index[1] = ((io_point->word_order % 1000) / 100) - 1;
-                    io_point->byte_index[2] = ((io_point->word_order % 100) / 10) - 1;
-                    io_point->byte_index[3] = (io_point->word_order % 10) - 1;
-                }
+                //     if (format_str.compare("naked") == 0)
+                //     {
+                //         io_point->format = Fims_Format::Naked;
+                //     }
+                //     else if (format_str.compare("clothed") == 0)
+                //     {
+                //         io_point->format = Fims_Format::Clothed;
+                //     }
+                //     else if (format_str.compare("full") == 0)
+                //     {
+                //         io_point->format = Fims_Format::Full;
+                //     }
+                //     else
+                //     {
+                //         if (packed_io_point)
+                //         {
+                //             io_point->format = parent_io_point->format;
+                //         }
+                //         else
+                //         {
+                //             io_point->format = register_group->format;
+                //         }
+                //     }
+                //     io_point->invert_mask = 0;
+                //     io_point->care_mask = std::numeric_limits<u64>::max();
+                //     std::string invert_mask_str("0x0");
+                //     std::string default_invert_mask_str("0x0");
+                //     io_point->invert_mask = 0;
+                //     io_point->invert_mask = parent_io_point->invert_mask;
+                //     getItemFromMap(json_io_point, "invert_mask", invert_mask_str, default_invert_mask_str, true, true, debug);
+                //     if (invert_mask_str != "0x0")
+                //     {
+                //         uint64_t invmask = 0;
+                //         const char *istr = invert_mask_str.c_str();
+                //         if (invert_mask_str.length() > 1 && (istr[0] == '0') && (istr[1] == 'x'))
+                //         {
+                //             istr += 2;
+                //             invmask = strtoull(istr, NULL, 16);
+                //         }
+                //         else if ((invert_mask_str[0] == '0') && (invert_mask_str[1] == 'b'))
+                //         {
+                //             istr += 2;
+                //             invmask = strtoull(istr, NULL, 2);
+                //         }
+                //         io_point->invert_mask = invmask;
+                //     }
+                //     // Extract io_point details (like id, offset, name, etc.) here...
+                //     // Add to the io_point_map vector...
+                //     io_point->is_float = false;
+                //     io_point->is_byte_swap = false;
+                //     io_point->is_byte_swap = false;
+                //     getItemFromMap(json_io_point, "float", io_point->is_float, parent_io_point->is_float, true, true, debug);
+                //     getItemFromMap(json_io_point, "word_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, true, true, debug);
+                //     getItemFromMap(json_io_point, "word_order", io_point->word_order, parent_io_point->word_order, true, true, debug);
+                //     getItemFromMap(json_io_point, "byte_swap", io_point->is_byte_swap, parent_io_point->is_byte_swap, true, true, debug);
 
-                io_point->is_enum = false;
-                io_point->is_random_enum = false;
-                io_point->is_individual_bits = false;
-                io_point->is_bit_field = false;
-                getItemFromMap(json_io_point, "enum", io_point->is_enum, parent_io_point->is_enum, true, true, debug);
-                getItemFromMap(json_io_point, "random_enum", io_point->is_random_enum, parent_io_point->is_random_enum, true, true, debug);
-                getItemFromMap(json_io_point, "individual_bits", io_point->is_individual_bits, parent_io_point->is_individual_bits, true, true, debug);
-                getItemFromMap(json_io_point, "bit_field", io_point->is_bit_field, io_point->is_bit_field, true, true, debug);
-                double dval = 0.0;
-                io_point->debounce = dval;
-                io_point->deadband = dval;
-                io_point->use_bool = true;
-                getItemFromMap(json_io_point, "debounce", io_point->debounce, parent_io_point->debounce, true, true, debug);
-                getItemFromMap(json_io_point, "deadband", io_point->deadband, parent_io_point->deadband, true, true, debug);
-                if (io_point->debounce > 0.0)
-                    io_point->use_debounce = true;
-                if (io_point->deadband > 0.0)
-                    io_point->use_deadband = true;
-                getItemFromMap(json_io_point, "use_bool", io_point->use_bool, parent_io_point->use_bool, true, true, debug);
-                if ((io_point->is_enum) || (io_point->is_random_enum) || (io_point->is_individual_bits) || (io_point->is_bit_field)
-                    /* maybe add more here */)
-                {
-                    extract_bitstrings(io_point, json_io_point["bit_strings"]);
-                }
-                io_point->forced_val = 0;
-                io_point->raw_val = 0;
-                io_point->device_id = register_group->device_id;
-                io_point->packer = packed_io_point;
-                if (!packed_io_point)
-                {
-                    register_group->io_point_map.push_back(io_point);
-                    if (debug)
-                        printf(" mapping register id [%s]\n", io_point->id.c_str());
-                    auto &io_point_map = register_group->io_point_map.back();
-                    // auto regshr = mymap->register_group.lock();
-                    register_group->io_point_map_lookup[io_point_map->offset] = io_point_map;
-                }
-                else
-                {
-                    if (debug)
-                        printf(" packing register id [%s]\n", io_point->id.c_str());
-                    packed_io_point->bit_ranges.push_back(io_point);
-                }
+                //     // for the benefit of size 4 regs
+                //     // TODO remove word_swap
+                //     if (io_point->is_byte_swap)
+                //     {
+                //         io_point->byte_index[0] = 3;
+                //         io_point->byte_index[1] = 2;
+                //         io_point->byte_index[2] = 1;
+                //         io_point->byte_index[3] = 0;
+                //     }
+                //     else
+                //     {
+                //         io_point->byte_index[0] = 0;
+                //         io_point->byte_index[1] = 1;
+                //         io_point->byte_index[2] = 2;
+                //         io_point->byte_index[3] = 3;
+                //     }
+                //     // word_order is 1234 or 4321 or 1324 etc
+                //     if (io_point->word_order > 0)
+                //     {
+                //         io_point->byte_index[0] = (io_point->word_order / 1000) - 1;
+                //         io_point->byte_index[1] = ((io_point->word_order % 1000) / 100) - 1;
+                //         io_point->byte_index[2] = ((io_point->word_order % 100) / 10) - 1;
+                //         io_point->byte_index[3] = (io_point->word_order % 10) - 1;
+                //     }
+
+                //     io_point->is_enum = false;
+                //     io_point->is_random_enum = false;
+                //     io_point->is_individual_bits = false;
+                //     io_point->is_bit_field = false;
+                //     getItemFromMap(json_io_point, "enum", io_point->is_enum, parent_io_point->is_enum, true, true, debug);
+                //     getItemFromMap(json_io_point, "random_enum", io_point->is_random_enum, parent_io_point->is_random_enum, true, true, debug);
+                //     getItemFromMap(json_io_point, "individual_bits", io_point->is_individual_bits, parent_io_point->is_individual_bits, true, true, debug);
+                //     getItemFromMap(json_io_point, "bit_field", io_point->is_bit_field, io_point->is_bit_field, true, true, debug);
+                //     double dval = 0.0;
+                //     io_point->debounce = dval;
+                //     io_point->deadband = dval;
+                //     io_point->use_bool = true;
+                //     getItemFromMap(json_io_point, "debounce", io_point->debounce, parent_io_point->debounce, true, true, debug);
+                //     getItemFromMap(json_io_point, "deadband", io_point->deadband, parent_io_point->deadband, true, true, debug);
+                //     if (io_point->debounce > 0.0)
+                //         io_point->use_debounce = true;
+                //     if (io_point->deadband > 0.0)
+                //         io_point->use_deadband = true;
+                //     getItemFromMap(json_io_point, "use_bool", io_point->use_bool, parent_io_point->use_bool, true, true, debug);
+                //     if ((io_point->is_enum) || (io_point->is_random_enum) || (io_point->is_individual_bits) || (io_point->is_bit_field)
+                //         /* maybe add more here */)
+                //     {
+                //         extract_bitstrings(io_point, json_io_point["bit_strings"]);
+                //     }
+                //     io_point->forced_val = 0;
+                //     io_point->raw_val = 0;
+                //     io_point->device_id = register_group->device_id;
+                //     io_point->packer = packed_io_point;
+                //     if (!packed_io_point)
+                //     {
+                //         register_group->io_point_map.push_back(io_point);
+                //         if (debug)
+                //             printf(" mapping register id [%s]\n", io_point->id.c_str());
+                //         auto &io_point_map = register_group->io_point_map.back();
+                //         // auto regshr = mymap->register_group.lock();
+                //         register_group->io_point_map_lookup[io_point_map->offset] = io_point_map;
+                //     }
+                //     else
+                //     {
+                //         if (debug)
+                //             printf(" packing register id [%s]\n", io_point->id.c_str());
+                //         packed_io_point->bit_ranges.push_back(io_point);
+                //     }
+                // }
                 // we only want the root registers in the main dict
                 // if(!packed_io_point)
                 // this will also add the packed_io_point items to the io_point so that they can be found with sets or gets
@@ -1743,7 +1912,6 @@ int set_reg16_from_uint64(std::shared_ptr<cfg::io_point_struct> io_point, uint64
         }
     }
 
-    //TODO use word_order
     else if (io_point->size == 4)
     {
         if (!io_point->is_byte_swap)

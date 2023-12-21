@@ -71,7 +71,7 @@ int main(const int argc, const char *argv[]) noexcept
     bool debug = false;
     myCfg.use_dbi = false;
     int command_line_overrides_start = 2;
-    myCfg.filename = std::string("configs/client/gcom_test_client.json");
+    myCfg.filename = std::string("nofile");
     if (argc == 1) // just the name of the program
     {
         print_help();
@@ -95,6 +95,12 @@ int main(const int argc, const char *argv[]) noexcept
             }
         }
     }   
+    if (myCfg.filename == "nofile") // just the name of the program
+    {
+        print_help();
+        printf(" gcom_modbus_client :: No config file specified");
+        return 0;
+    }
 
     const char *filename =  myCfg.filename.c_str();
     {

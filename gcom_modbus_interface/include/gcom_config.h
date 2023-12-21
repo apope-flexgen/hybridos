@@ -267,7 +267,7 @@ struct cfg
         bool use_bool = true;
 
         cfg::heartbeat_struct* heartbeat = nullptr;
-        int  component_heartbeat_max_value = 4096;
+        int  component_heartbeat_max_value = 0;
         std::string component_heartbeat_read_uri;
         std::string component_heartbeat_write_uri;
         int  modbus_heartbeat_timeout_ms;
@@ -316,6 +316,7 @@ struct cfg
         //bool state_recovery;
 
         bool value_changed;
+        u64 num_changes = 0; 
         u64 value = 0; 
         u64 last_val = 0; 
         int count;
@@ -323,7 +324,7 @@ struct cfg
         int timeout;
         int offset_time=0;
         int device_id;
-        u64 max_value = 4096;
+        u64 max_value = 0;
         struct component_struct* component;
         std::string component_heartbeat_read_uri;
         std::string component_heartbeat_write_uri;

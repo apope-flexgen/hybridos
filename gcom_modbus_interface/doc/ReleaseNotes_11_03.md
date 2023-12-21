@@ -1,7 +1,7 @@
-###  Gcom Modbus Client Release Notes 11_03 11_26_2023
+###  Gcom Modbus Client Release Notes 11_03
 p. wilshire
 s. reynolds
-    11_15_2023
+    12_08_2023
 
 # overrides
 These are used for the command line to allow "temporary" adjustments to configs
@@ -35,6 +35,8 @@ pub_holding:false            turn on pub output for holding
 pub_input:true               turn pub output for input  ( this are normally turned on)
 pub_discrete:true            turn pub output for discrete inputs ( this are normally turned on)
 pub_sync:false               turn off pub sync (delays next pub request if current pub request takes too long)
+sync_percent:10              set pub sync threshold percent (delays next pub request if current pub request takes too long)
+
 
 ```
 
@@ -118,6 +120,24 @@ Pub requests sent to a sync'd pub  will have their base frequency diviced by two
 IE request 100 ms and , if no sync response is received that pub will be presented every 200 ms
 If a pub request completes before the config delay time ( say 50ms) then the next pub will be started at the next scheduled interval.
 If a pub request completes after the config delay time  the next pub request will be delayed.
+
+Config options to set this up are called:
+ "sync_percent":<int 20 - 80> 
+and "pub_sync": < bool true:false>
+```
+{
+"components": [
+        {
+            "id": "sel_3530_fast_rtac",
+            "frequency": 8,
+            "offset_time": 0,
+            "pub_sync": true,
+            "sync_percent": 60,
+         }
+         }
+]
+}
+```
 
 # Uri Requests
 

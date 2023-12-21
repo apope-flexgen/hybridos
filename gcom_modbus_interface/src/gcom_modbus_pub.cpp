@@ -92,6 +92,7 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
     int num_threads = GetNumThreads(mypub->cfg);
 
 
+    // Dont request pubs if there are no threads running.
     if(num_threads == 0)
     {
         if (mypub->cfg->pub_debug)
@@ -99,8 +100,8 @@ void pubCallback(std::shared_ptr<TimeObject>t, void *p)
             std::cout << "Callback for :" << t->name
                       << " Skipped : num_threads: " << num_threads
                       << std::endl;
-            }
-           //return;
+        }
+        //return;
     }
 
     if (mypub->cfg->pub_debug)

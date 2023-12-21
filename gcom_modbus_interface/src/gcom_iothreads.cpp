@@ -1713,6 +1713,7 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
 
             cfg::component_struct *component = pub_group.pub_struct->component;
             bool send_time = false;
+            std::string state_str; 
             if(1||myCfg.use_new_wdog)
             {
                 if (component->heartbeat_enabled && component->heartbeat){
@@ -1726,7 +1727,7 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                         string_stream << ",";
                     }
 
-                    std::string state_str = component->heartbeat->state_str;
+                    state_str = component->heartbeat->state_str;
                     string_stream << "\"heartbeat_state\":\"" << state_str <<"\"";
 
                     if (/*component->heartbeat->state_str == "INIT"||*/
@@ -1734,7 +1735,27 @@ void processGroupCallback(struct PubGroup &pub_group, struct cfg &myCfg)
                         state_str = "true";
                     else
                         state_str = "false";
+                    string_stream << ",\"modbus_heartbeat\":" << component->heartbeat->last_val << "";
                     string_stream << ",\"component_connected\":\"" << state_str << "\"";
+                }
+                else
+                {
+                    int num_threads = GetNumThreads(myCfg, threadControl);
+                     if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        string_stream << ",";
+                    }
+
+                    if (num_threads > 0)
+                        state_str = "true";
+                    else
+                        state_str = "false";
+                    string_stream << "\"component_connected\":\"" << state_str << "\"";
+
                 }
 
                 // CURRENTLY NOT BEING USED SO I COMMENTED IT OUT
@@ -2516,6 +2537,10 @@ double SetupModbusForThread(struct cfg &myCfg, std::shared_ptr<IO_Thread> io_thr
         }
 
         auto mberr = modbus_connect(ctx);
+        if(0)std::cout << std::dec 
+                    << " Connect modbus " << io_thread->ip 
+                    << "  port " << io_thread->port 
+                    << " Error mberr:" << mberr << std::endl;
 
         if (mberr != 0)
         {

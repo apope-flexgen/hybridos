@@ -9,17 +9,20 @@
 
 #include <version.h>
 
-// GIT_BUILD
-extern char _binary_GIT_BUILD_start;
-extern char _binary_GIT_BUILD_end;
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
 
-// GIT_COMMIT
-extern char _binary_GIT_COMMIT_start;
-extern char _binary_GIT_COMMIT_end;
+// // GIT_BUILD
+// extern char _binary_GIT_BUILD_start;
+// extern char _binary_GIT_BUILD_end;
 
-// GIT_TAG
-extern char _binary_GIT_TAG_start;
-extern char _binary_GIT_TAG_end;
+// // GIT_COMMIT
+// extern char _binary_GIT_COMMIT_start;
+// extern char _binary_GIT_COMMIT_end;
+
+// // GIT_TAG
+// extern char _binary_GIT_TAG_start;
+// extern char _binary_GIT_TAG_end;
 
 Version::Version ()
 {
@@ -28,17 +31,18 @@ Version::Version ()
     tag = NULL;
 }
 
+
 Version::~Version ()
 {
-    if (build != NULL) delete[] build;
-    if (commit != NULL) delete[] commit;
-    if (tag != NULL) delete[] tag;
+//     if (build != NULL) delete[] build;
+//     if (commit != NULL) delete[] commit;
+//     if (tag != NULL) delete[] tag;
 }
 
 void Version::init(void) {
-    build = extract(build, &_binary_GIT_BUILD_start, &_binary_GIT_BUILD_end);
-    commit = extract(commit, &_binary_GIT_COMMIT_start, &_binary_GIT_COMMIT_end);
-    tag = extract(tag, &_binary_GIT_TAG_start, &_binary_GIT_TAG_end);
+    build = (char*)TOSTRING(GITVERSION); 
+    commit = (char*)TOSTRING(GITCOMMIT);
+    tag = (char*)TOSTRING(GITTAG);
 }
 
 char* Version::extract(char* info, char* start, char* end)

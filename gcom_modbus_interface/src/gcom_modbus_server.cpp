@@ -263,7 +263,7 @@ int parse_system(cJSON *system, system_config *config)
         if(cJSON_IsString(serv))
         {
             config->service = strdup(serv->valuestring);
-            printf(" setting up service to [%s] \n", config->service);
+            //printf(" setting up service to [%s] \n", config->service);
         }
     }
     if (ip_addr != NULL)
@@ -610,6 +610,10 @@ server_data* create_register_map(cJSON* registers,  uint8_t device_id)
 
             cJSON* is_float = cJSON_GetObjectItem(current_variable_JSON, "float");
             data[i].register_map[j].floating_pt = cJSON_IsTrue(is_float);
+
+            cJSON* shift = cJSON_GetObjectItem(current_variable_JSON,"shift");
+            data[i].register_map[j].shift = cJSON_IsNumber(shift) ? shift->valueint : 0;
+
             data[i].register_map[j].sign |= data[i].register_map[j].floating_pt; // a float is signed by definition
             if (data[i].register_map[j].floating_pt && data[i].register_map[j].num_regs == 1) {
                 FPS_ERROR_PRINT("%s is declared a float and has size 1 which is not allowed for floats.\n", data[i].register_map[j].reg_name);
@@ -747,6 +751,10 @@ uint16_t json_to_uint16(maps* settings, cJSON* obj)
     // direct float: transmitted directly bit-for-bit
     else if(settings->floating_pt)
     {
+        if(settings->shift != 0) 
+        {
+            scaled_val -= settings->shift;
+        }
         scaled_val *=  (settings->scale == 0.0 ? 1.0 : settings->scale);
         memcpy(&encoded_val, &scaled_val, sizeof(encoded_val));
     }
@@ -754,6 +762,10 @@ uint16_t json_to_uint16(maps* settings, cJSON* obj)
     else if(settings->scale != 0.0)
     {
         //printf( "%s scaled_val %f x %f  scale %f \n", __func__, scaled_val, scaled_val * settings->scale, settings->scale);
+        if(settings->shift != 0) 
+        {
+            scaled_val -= settings->shift;
+        }
         scaled_val *= settings->scale;
         int16_t casted_val;
         uint16_t ucasted_val;
@@ -861,6 +873,11 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
     // direct float: transmitted directly bit-for-bit
     else if(settings->floating_pt)
     {
+        if(settings->shift != 0) 
+        {
+            scaled_val -= settings->shift;
+        }
+
         scaled_val *=  (settings->scale == 0.0 ? 1.0 : settings->scale);
         if (scaled_val > 3.4028235e+38)
             scaled_val = 3.4028235e+38;
@@ -874,6 +891,11 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
     // indirect float: scaled and truncated to int, then transmitted as int to be descaled on client side
     else if(settings->scale != 0.0)
     {
+        if(settings->shift != 0) 
+        {
+            scaled_val -= settings->shift;
+        }
+
         scaled_val *= settings->scale;
         if (settings->sign)
         {
@@ -898,6 +920,10 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
     // source value is either a signed or unsigned integer
     else
     {
+        if(settings->shift != 0) 
+        {
+            scaled_val -= settings->shift;
+        }
         if(settings->sign)
         {
             if (scaled_val > 2147483647)scaled_val = 2147483647.0;
@@ -917,6 +943,7 @@ uint32_t json_to_uint32(maps* settings, cJSON* obj)
         }
 
     }
+    //printf( "%s  enc %d .. %08x  \n", __func__, encoded_val, encoded_val);
     return encoded_val;
 }
 /**
@@ -969,12 +996,20 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
     // direct float: transmitted directly bit-for-bit
     else if(settings->floating_pt)
     {
+        if(settings->shift != 0) 
+        {
+            scaled_val -= settings->shift;
+        }
         scaled_val *= (settings->scale == 0.0 ? 1.0 : settings->scale);
         memcpy(&encoded_val, &scaled_val, sizeof(encoded_val));
     }
     // indirect float: scaled and truncated to int, then transmitted as int to be descaled on client side
     else if(settings->scale != 0.0)
     {
+        if(settings->shift != 0) 
+        {
+            scaled_val -= settings->shift;
+        }
         scaled_val *= settings->scale;
         if (settings->sign)
         {
@@ -1002,18 +1037,23 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
     // source value is either a signed or unsigned integer
     else
     {
+        if(settings->shift != 0) 
+        {
+            scaled_val -= settings->shift;
+        }
+
         if ((scaled_val > val32) || (scaled_val < val32))
         {
             if (settings->sign)
             {
-                printf( "%s scaled_val before  %f max %f\n", __func__, scaled_val, (double)0x7fffffffffffffff);
+                //printf( "%s scaled_val before  %f max %f\n", __func__, scaled_val, (double)0x7fffffffffffffff);
                 if (scaled_val > 0x7fffffffffffffff)
                     scaled_val = 0x7fffffffffffffff;            
                 if (scaled_val < -0x7fffffffffffffff)
                     scaled_val = -0x7fffffffffffffff;            
-                printf( "%s scaled_val after  %f \n", __func__, scaled_val);
+                //printf( "%s scaled_val after  %f \n", __func__, scaled_val);
                 encoded_val = static_cast<int64_t> (scaled_val);
-                printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
+                //printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
 
             }
             else
@@ -1023,7 +1063,7 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
                 if (scaled_val < 0)
                     scaled_val = 0;            
                 encoded_val = static_cast<uint64_t> (scaled_val);
-                printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
+                //printf( "%s scaled_val  %f  encoded_val %ld %08lx\n", __func__, scaled_val, encoded_val, encoded_val);
             }
 
         }
@@ -1038,9 +1078,9 @@ uint64_t json_to_uint64(maps* settings, cJSON* obj)
                 if (val32 < 0)
                     val32 = 0;            
             }
-            uint64_t uval = 0;//(uint64_t)(18446744073709551188);
+            //uint64_t uval = 0;//(uint64_t)(18446744073709551188);
             encoded_val = static_cast<uint64_t> (val32);
-            printf( "%s val32  %d  encoded_val %ld %08lx  uval %08lx\n", __func__, val32, encoded_val, encoded_val, uval);
+            //printf( "%s val32  %d  encoded_val %ld %08lx  uval %08lx\n", __func__, val32, encoded_val, encoded_val, uval);
         //memcpy(&encoded_val, &(val32), sizeof(encoded_val));
         }
     }
@@ -1163,8 +1203,8 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
     uint8_t  function = query[header_length];
     uint16_t offset = MODBUS_GET_INT16_FROM_INT8(query, header_length + 1);
     uint16_t num_regs = MODBUS_GET_INT16_FROM_INT8(query, header_length + 3);
-    // uint16_t slave_id = MODBUS_GET_INT16_FROM_INT8(query, header_length-1);
-    // printf(" slave %02x offset  [%02x] [%2d]\n", MODBUS_GET_HIGH_BYTE(slave_id), offset, offset);
+    //uint16_t slave_id = MODBUS_GET_INT16_FROM_INT8(query, header_length-1);
+    //printf(" slave %02x offset  [%02x] [%2d]\n", MODBUS_GET_HIGH_BYTE(slave_id), offset, offset);
     if(function == MODBUS_FC_WRITE_SINGLE_COIL)
     {
         if(bytes_read != header_length + (serial ? 7 : 5))
@@ -1192,7 +1232,7 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                 if(value == 0 || value == 0xFF00)
                 {
                     char uri[512];
-                    sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
+                    snprintf(uri, sizeof(uri), "%s/%s", reg->uri, reg->reg_name);
                     if (!invert)
                         cJSON_AddBoolToObject(send_body, "value", (value == 0xFF00) ? true : false);
                     else
@@ -1244,7 +1284,7 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                     if(send_body != NULL)
                     {
                         char uri[512];
-                        sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
+                        snprintf(uri, sizeof(uri), "%s/%s", reg->uri, reg->reg_name);
                         uint8_t value = (query[header_length + 6 + i] >> j) & 0x01;
                         if(invert)
                             cJSON_AddBoolToObject(send_body, "value", (value == 1) ? false : true);
@@ -1278,6 +1318,8 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
             }
             else
             {
+                //printf("#2   %s/%s  num %d shift  %d \n", reg->uri, reg->reg_name, reg->num_regs, reg->shift);
+
                 if(reg->num_regs != 1)
                 {
                     FPS_ERROR_PRINT("Wrote single register of Multi Register variable %s.\n", reg->reg_name);
@@ -1289,7 +1331,7 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                     if(send_body != NULL)
                     {
                         char uri[512];
-                        sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
+                        snprintf(uri, sizeof(uri), "%s/%s", reg->uri, reg->reg_name);
 
                         if(reg->is_bool)
                         {
@@ -1305,8 +1347,14 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                             else
                                 temp_reg = static_cast<double>(num_regs);
 
+                            //printf("#2.0   %s/%s  num %d shift  %d  temp_reg %f\n", reg->uri, reg->reg_name, reg->num_regs, reg->shift, temp_reg);
                             if(reg->scale != 0.0)
                                 temp_reg /= reg->scale;
+                            if (reg->shift != 0)
+                                temp_reg += reg->shift;
+                            //printf("#2.1   %s/%s  num %d shift  %d  temp_reg %f\n", reg->uri, reg->reg_name, reg->num_regs, reg->shift, temp_reg);
+
+
                             cJSON_AddNumberToObject(send_body, "value", temp_reg);
                         }
                         char* body_msg = cJSON_PrintUnformatted(send_body);
@@ -1391,7 +1439,7 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                 {
                     uint64_t temp_reg_int;
                     if ((config->byte_swap == true) || (reg->use_byte_swap && reg->byte_swap)) {
-                        printf( " got byte_swap \n");
+                       //printf( " got byte_swap \n");
                         temp_reg_int = ((static_cast<uint64_t>(MODBUS_GET_INT16_FROM_INT8(query, byte_offset)    )      ) +
                                         (static_cast<uint64_t>(MODBUS_GET_INT16_FROM_INT8(query, byte_offset + 2)) << 16) +
                                         (static_cast<uint64_t>(MODBUS_GET_INT16_FROM_INT8(query, byte_offset + 4)) << 32) +
@@ -1430,12 +1478,17 @@ bool process_modbus_message(int bytes_read, int header_length, system_config* co
                 //Only want to scale if scale value is present and not == 0.0
                 if (reg->scale != 0.0)
                     temp_reg /= reg->scale;
+                if (reg->shift != 0)
+                    temp_reg += reg->shift;
 
+
+
+                printf("#1   %s/%s   %d ", reg->uri, reg->reg_name, reg->shift);
                 cJSON* send_body = cJSON_CreateObject();
                 if(send_body != NULL)
                 {
                     char uri[512];
-                    sprintf(uri, "%s/%s", reg->uri, reg->reg_name);
+                    snprintf(uri, sizeof(uri), "%s/%s", reg->uri, reg->reg_name);
                     if(reg->is_bool)
                         cJSON_AddBoolToObject(send_body, "value", (temp_reg == 1));
                     else
@@ -1627,7 +1680,7 @@ bool initialize_map(server_data* server_map, system_config* sys_cfg, bool is_mai
     char replyto[256];
     for(uri_map::iterator it = uri_to_register.begin(); it != uri_to_register.end(); ++it)
     {
-        sprintf(replyto, "%s/reply%s", base_uri, it->first);
+        snprintf(replyto, sizeof(replyto), "%s/reply%s", base_uri, it->first);
         p_fims->Send("get", it->first, replyto, NULL);
         timespec current_time, timeout;
         clock_gettime(CLOCK_MONOTONIC, &timeout);
@@ -1735,6 +1788,7 @@ int main(int argc, char *argv[])
     signal(SIGINT, signal_handler);
 
     bool reload;
+    int argn = 2;    
 
     //server_data *server_map = NULL;
     // int header_length, serial_fd, fims_socket;
@@ -1808,7 +1862,7 @@ int main(int argc, char *argv[])
             int i = 0;
             cJSON_ArrayForEach(reg, registers) {
 
-                uint8_t device_id = 255;
+                uint8_t device_id = 255; // defaut to 255
                 auto dev_id = cJSON_GetObjectItem(reg, "device_id");
                 if (dev_id == NULL || !cJSON_IsNumber(dev_id)) {
                     FPS_ERROR_PRINT("Failed to get object item 'device_id' as a number in 'devices' array object #%d\n", i);
@@ -1848,17 +1902,17 @@ int main(int argc, char *argv[])
         // must be done after register map creation to get a count of how many unique URIs there are.
         //server_map->
         load_uri_array();
-        sys_cfg.debug = false;    
-
-
-        if(argc >= 3) {
-            if (strcmp(argv[2], "bypass") == 0)
+        sys_cfg.debug = false;
+        // a crude form of the options system
+        if(argc > argn) {
+            if (strcmp(argv[argn], "bypass_init:true") == 0)
             {
-               sys_cfg.bypass_init = true;                
+                argn++;
+                sys_cfg.bypass_init = true;                
             }
         }
-        if(argc == 4) {
-            if (strcmp(argv[3], "debug") == 0)
+        if(argc > argn) {
+            if (strcmp(argv[argn], "debug:true") == 0)
             {
                sys_cfg.debug = true;                
             }
@@ -1919,8 +1973,8 @@ int main(int argc, char *argv[])
 
         FPS_ERROR_PRINT("Map configured: Initializing data.\n");
         //todo this should be defined to a better length
-        char uri[100];
-        sprintf(uri,"/interfaces/%s", sys_cfg.name);
+        char uri[512];
+        snprintf(uri,sizeof(uri), "/interfaces/%s", sys_cfg.name);
         FPS_ERROR_PRINT("Map configured: Base Uri[%s] \n", uri );
         base_uri = uris[0] = uri;
         if(false == initialize_map(server_map, &sys_cfg, true))
@@ -1932,7 +1986,7 @@ int main(int argc, char *argv[])
                 goto cleanup;
             }
         }
-         for (auto& mapping : device_map) {
+        for (auto& mapping : device_map) {
             if (mapping.first != (uint8_t)255 && false == initialize_map(mapping.second, &sys_cfg, false))
             {
                 if(!sys_cfg.bypass_init)
@@ -2129,11 +2183,23 @@ int main(int argc, char *argv[])
                         const uint8_t device_id = query[header_length - 1];
                         auto device_mapping = device_map.find(device_id);
                         auto default_device_mapping = device_map.find(255);
+                        if(default_device_mapping== device_map.end())
+                        {
+                            default_device_mapping = device_map.find(sys_cfg.device_id);
+                        }
                         
                         auto current_server_map = device_mapping == device_map.end() ? default_device_mapping->second : device_mapping->second;
                         
                         process_modbus_message(rc, header_length, &sys_cfg, current_server_map, true, query);
-                        modbus_reply(sys_cfg.mb, query, rc, current_server_map->mb_mapping);
+                        if(!current_server_map) 
+                        {
+                            FPS_ERROR_PRINT("sending server exception ILLEGAL DATA.\n");
+                            modbus_reply_exception(sys_cfg.mb, query, MODBUS_EXCEPTION_ILLEGAL_DATA_VALUE);
+                        }
+                        else
+                        {
+                            modbus_reply(sys_cfg.mb, query, rc, current_server_map->mb_mapping);
+                        }
                     }
                     else if (rc  == -1)
                     {
@@ -2172,11 +2238,20 @@ int main(int argc, char *argv[])
                         const uint8_t device_id = query[header_length - 1];
                         auto device_mapping = device_map.find(device_id);
                         auto default_device_mapping = device_map.find(255);
-                        
+                        if(default_device_mapping == device_map.end())
+                        {
+                            default_device_mapping = device_map.find(sys_cfg.device_id);
+                        }
                         auto current_server_map = device_mapping == device_map.end() ? default_device_mapping->second : device_mapping->second;
                         //FPS_ERROR_PRINT("modbus_receive device_id %d server_map %p\n", device_id, (void *)current_server_map);
 
                         process_modbus_message(rc, header_length, &sys_cfg, current_server_map, false, query);
+                        if(!current_server_map) 
+                        {
+                            FPS_ERROR_PRINT("sending server exception ILLEGAL DATA.\n");
+                            modbus_reply_exception(sys_cfg.mb, query, MODBUS_EXCEPTION_ILLEGAL_DATA_VALUE);
+                            send_reply = false;
+                        }
 #if defined SERVER_DELAY
                         if(sys_cfg.connect_delay > 0) {
                             FPS_ERROR_PRINT("adding server connect delay %d ms.\n", sys_cfg.connect_delay);
@@ -2217,6 +2292,7 @@ int main(int argc, char *argv[])
                             sys_cfg.mdebug = -1;
                         }
 #endif
+
                         if(send_reply)modbus_reply(sys_cfg.mb, query, rc, current_server_map->mb_mapping);
                     }
                     else if (rc  == -1)

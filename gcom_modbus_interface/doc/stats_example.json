@@ -1,0 +1,80 @@
+09:36:11 2023 from 10.10.1.50
+[hybridos@test_ess ~]$ fims_send -m get -r /$$ -u /components/sel_3530_fast_rtac/_stats | jq
+{
+  "config_filename": "/home/hybridos/config/install/gcom_modbus_client/configs/client/sel_3530_fast_client.json",
+  "pid": 8401,
+  "git_build": "368",
+  "git_commit": "7c25b50",
+  "git_tag": "11.3.0-beta.1",
+  "thread_connection_info": [
+    {
+      "id": 0,
+      "num_jobs": 0,
+      "num_fails": 0
+    },
+    {
+      "id": 1,
+      "connected": true,
+      "ip_address": "10.10.1.205",
+      "port": 502,
+      "time_to_connect": "0.00148301 ms",
+      "modbus_read_times": {
+        "Max": 0.0284843,
+        "Min": 0.00104115,
+        "Avg": 0.00197485,
+        "Count": 38950952
+      },
+      "modbus_write_times": {
+        "Max": 0,
+        "Min": 0,
+        "Avg": 0,
+        "Count": 0
+      },
+      "num_jobs": 38950952,
+      "num_fails": 0
+    }
+  ],
+  "pub_time": {
+    "pub_components_sel_3530_fast_rtac": {
+      "Max": 0.015704,
+      "Min": 3.4128e-05,
+      "Avg": 0.00243795,
+      "Count": 38950798
+    }
+  },
+  "fims_message_stats": {
+    "Max": 0,
+    "Min": 0,
+    "Avg": 0,
+    "Count": 9
+  },
+  "fims_get_errors": 0,
+  "fims_set_errors": 0,
+  "fims_peu_errors": 0,
+  "timers": [
+    {
+      "name": "pub_components_sel_3530_fast_rtac",
+      "runTime": 519986,
+      "repeatTime": 0.008,
+      "runs": 38950952,
+      "lastRun": 519986,
+      "syncCount": 38942878,
+      "totalSyncTime": 96051.7,
+      "syncPct": 0.2
+    },
+    {
+      "name": "stats_pubs",
+      "runTime": 519986,
+      "repeatTime": 1,
+      "runs": 519980,
+      "lastRun": 519985,
+      "syncCount": 0,
+      "totalSyncTime": 0,
+      "syncPct": 0
+    }
+  ],
+  "heartbeat_values": {},
+  "heartbeat_stats": {},
+  "watchdog_states": {},
+  "watchdog_stats": {}
+}

@@ -31,6 +31,20 @@ CPPFLAGS += -Wall -Wpedantic -Werror
 CPPFLAGS += -DSPDLOG_COMPILED_LIB
 CPPFLAGS += -DSERVER_DELAY
 
+GITBRANCH  = $(shell git branch | grep \* | cut -d ' ' -f2)
+GITCOMMIT  = $(shell git log --pretty=format:'%h' -n 1)
+GITVERSION = $(shell git rev-list --count $(GITCOMMIT))
+GITTAG     = $(shell git describe --match v* --abbrev=0 --tags HEAD --always)
+$(info GITBRANCH = "$(GITBRANCH)")
+$(info GITCOMMIT = "$(GITCOMMIT)")
+$(info GITVERSION= "$(GITVERSION)")
+$(info GITTAG    = "$(GITTAG)")
+
+GITFLAGS += -DGITBRANCH="\"$(GITBRANCH)\""
+GITFLAGS += -DGITCOMMIT="\"$(GITCOMMIT)\""
+GITFLAGS += -DGITVERSION="\"$(GITVERSION)\""
+GITFLAGS += -DGITTAG="\"$(GITTAG)\""
+
 ifeq ($(BUILD_MODE),debug)
 	CPPFLAGS += -g -DFPS_DEBUG_MODE
 else ifeq ($(BUILD_MODE),test)
@@ -61,9 +75,6 @@ TEST_OBJS += $(OBJ_DIR)gcom_heartbeat.o
 TEST_OBJS += $(OBJ_DIR)gcom_watchdog.o
 TEST_OBJS += $(OBJ_DIR)gcom_utils.o
 TEST_OBJS += $(OBJ_DIR)version.o
-GIT_OBJS = git_build.o 
-GIT_OBJS += git_commit.o 
-GIT_OBJS += git_tag.o 
 
  
 #BUILD_OBJS += $(OBJ_DIR)gcom_modbus_client.o
@@ -98,17 +109,19 @@ $(BUILD_DIR)gcom_modbus_server_id: $(OBJ_DIR)gcom_modbus_server_id.o $(OBJ_DIR)g
 $(BUILD_DIR)modbus_client: $(OBJ_DIR)modbus_client.o
 	$(CXX) $^ $(INCLUDES) $(LIBS) -pthread -lsimdjson -lspdlog -o $@
 
-$(BUILD_DIR)gcom_modbus_client: $(OBJ_DIR)gcom_modbus_client.o $(BUILD_OBJS) git_build.o
-	$(CXX) $^ $(INCLUDES) git_commit.o git_tag.o $(LIBS) -pthread -lsimdjson -lspdlog -o $@ 
+$(BUILD_DIR)gcom_modbus_client: $(OBJ_DIR)gcom_modbus_client.o $(BUILD_OBJS)
+	$(CXX) $^ $(INCLUDES)  $(LIBS) -pthread -lsimdjson -lspdlog -o $@ 
 
-$(BUILD_DIR)gcom_modbus_test: $(TEST_OBJS) git_build.o
-	$(CXX) $^ $(INCLUDES) git_commit.o git_tag.o $(LIBS) -pthread -lsimdjson -lspdlog -o $@ 
+$(BUILD_DIR)gcom_modbus_test: $(TEST_OBJS) 
+	$(CXX) $^ $(INCLUDES)  $(LIBS) -pthread -lsimdjson -lspdlog -o $@ 
+
+$(OBJ_DIR)version.o : $(PROJECT_ROOT)src/version.cpp
+	$(CXX) -c $(CPPFLAGS) $(GITFLAGS) $(INCLUDES_BUILD) -pthread $< -o $@ 
+
 
 $(OBJ_DIR)%.o: $(PROJECT_ROOT)src/%.cpp
 	$(CXX) -c $(CPPFLAGS) $(INCLUDES_BUILD) -pthread $< -o $@ 
 
-git_build.o:
-	sh scripts/git_benv.sh
 
 
 # cp $(BUILD_DIR)modbus_server $(BUILD_DIR)modbus_client $(BIN_DIR)
@@ -119,11 +132,7 @@ build:
 
 .PHONY: clean
 clean:
-	rm -fr build $(GIT_OBJS)
-
-.PHONY: git
-git:
-	sh scripts/git_benv.sh
+	rm -fr build
 
 .PHONY: uninstall
 uninstall:

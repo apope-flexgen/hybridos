@@ -21,9 +21,9 @@ void get_stats(std::stringstream &ss, struct cfg &myCfg) {
     ss << "{";
     ss << "\"config_filename\":\"" << myCfg.filename << "\",";
     ss << "\"pid\":" << getpid() << ",";
-    ss << "\"git_build\":\"" << myCfg.git_version_info.get_build() << "\",";
-    ss << "\"git_commit\":\"" << myCfg.git_version_info.get_commit() << "\",";
-    ss << "\"git_tag\":\"" << myCfg.git_version_info.get_tag() << "\",";
+    ss << "\"git_build\":" << myCfg.git_version_info.get_build() << ",";
+    ss << "\"git_commit\":" << myCfg.git_version_info.get_commit() << ",";
+    ss << "\"git_tag\":" << myCfg.git_version_info.get_tag() << ",";
     getConnectTimes(ss, true);
     ss << ",";
 
@@ -52,7 +52,7 @@ void get_stats(std::stringstream &ss, struct cfg &myCfg) {
     ss << "\"fims_set_errors\":";
     ss << myCfg.fims_set_errors;
     ss << ",";
-    ss << "\"fims_peu_errors\":";
+    ss << "\"fims_pub_errors\":";
     ss << myCfg.fims_pub_errors;
     ss << ",";
     getTimerObjects(ss); 
@@ -72,49 +72,48 @@ void get_stats(std::stringstream &ss, struct cfg &myCfg) {
             ss << "\"DISABLED\"";
         }
     }
-    ss << "},";
-    ss << "\"heartbeat_stats\":{";
-    first = true;
-    for (std::pair<const std::string, std::shared_ptr<cfg::heartbeat_struct>> heartbeat_pair : myCfg.heartbeat_points){
-        if(first){
-            first = false;
-        } else {
-            ss << ",";
-        }
-        ss << "\"" << heartbeat_pair.first << "\":";
-        heartbeat_pair.second->heartbeatStats.showNum(ss);
-    }
-    
-    ss << "},";
-    ss << "\"watchdog_states\":{";
-    first = true;
-    for (std::pair<const std::string, std::shared_ptr<cfg::watchdog_struct>> watchdog_pair : myCfg.watchdog_points){
-        if(first){
-            first = false;
-        } else {
-            ss << ",";
-        }
-        ss << "\"" << watchdog_pair.first << "\":";
-        if (!watchdog_pair.second->enabled){
-            ss << "\"DISABLED\"";
-        }
-        else {
-            ss << "\"" << watchdog_pair.second->state_str << "\"";
-        }
-    }
-    ss << "},";
-    ss << "\"watchdog_stats\":{";
-    first = true;
-    for (std::pair<const std::string, std::shared_ptr<cfg::watchdog_struct>> watchdog_pair : myCfg.watchdog_points){
-        if(first){
-            first = false;
-        } else {
-            ss << ",";
-        }
-        ss << "\"" << watchdog_pair.first << "\":";
-        watchdog_pair.second->watchdogStats.showNum(ss);
-    }
+    // ss << "},";
+    // ss << "\"heartbeat_stats\":{";
+    // first = true;
+    // for (std::pair<const std::string, std::shared_ptr<cfg::heartbeat_struct>> heartbeat_pair : myCfg.heartbeat_points){
+    //     if(first){
+    //         first = false;
+    //     } else {
+    //         ss << ",";
+    //     }
+    //     ss << "\"" << heartbeat_pair.first << "\":";
+    //     heartbeat_pair.second->heartbeatStats.showNum(ss);
+    // }
     ss << "}";
+    // ss << "\"watchdog_states\":{";
+    // first = true;
+    // for (std::pair<const std::string, std::shared_ptr<cfg::watchdog_struct>> watchdog_pair : myCfg.watchdog_points){
+    //     if(first){
+    //         first = false;
+    //     } else {
+    //         ss << ",";
+    //     }
+    //     ss << "\"" << watchdog_pair.first << "\":";
+    //     if (!watchdog_pair.second->enabled){
+    //         ss << "\"DISABLED\"";
+    //     }
+    //     else {
+    //         ss << "\"" << watchdog_pair.second->state_str << "\"";
+    //     }
+    // }
+    // ss << "},";
+    // ss << "\"watchdog_stats\":{";
+    // first = true;
+    // for (std::pair<const std::string, std::shared_ptr<cfg::watchdog_struct>> watchdog_pair : myCfg.watchdog_points){
+    //     if(first){
+    //         first = false;
+    //     } else {
+    //         ss << ",";
+    //     }
+    //     ss << "\"" << watchdog_pair.first << "\":";
+    //     watchdog_pair.second->watchdogStats.showNum(ss);
+    // }
+    // ss << "}";
     ss << "}";
 }
 

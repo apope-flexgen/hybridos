@@ -153,6 +153,7 @@ void gcom_show_overrides()
     std::cout << "pub_holding:false      " << "       turn pub output for holding  "                          << std::endl;
     std::cout << "pub_input:true         " << "       turn pub output for input  "                            << std::endl;
     std::cout << "pub_sync:false         " << "       turn off pub sync  "                                    << std::endl;
+    std::cout << "sync_percent:50        " << "       set default pub sync percent "                          << std::endl;
     std::cout << "pub_discrete:true      " << "       turn pub output for disctete inputs  "                  << std::endl;
     std::cout << "pub_stats:false        " << "       turn off stats pub  "                                   << std::endl;
     std::cout << "max_num_connections:1  " << "       set up number of threads  "                             << std::endl;
@@ -263,6 +264,14 @@ bool gcom_load_overrides(struct cfg &myCfg, int next_arg, const int argc, const 
             else if (next_vec[0] == "pub_sync")
             {
                 myCfg.pub_sync = bval;
+            }
+            else if (next_vec[0] == "sync_percent")
+            {
+                int spc = atoi(next_vec[1].c_str());
+                if (spc >= 10 && spc <= 90)
+                    myCfg.syncPct  = (double) (spc / 100.0);//atoi(next_vec[1].c_str());
+                else
+                    ok = "value out of range (10 - 90)";    
             }
             else if (next_vec[0] == "pub_stats")
             {
