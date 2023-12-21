@@ -1069,6 +1069,13 @@ func evaluateCallExpr(node *ast.CallExpr, state *map[string][]Union) ([]Union, e
 			}
 		case "count":
 			result, err = Count(argVals)
+		case "combinebits":
+			result, err = CombineBits(argVals)
+		case "in":
+			if num_args < 2 {
+				return []Union{}, fmt.Errorf("incorrect number of arguments for In function")
+			}
+			result, err = In(argVals[0], argVals[1:])
 		default:
 			return []Union{}, fmt.Errorf("unrecognized function %v", id.Name)
 		}

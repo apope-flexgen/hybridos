@@ -597,6 +597,12 @@ func UnmarshalConfig(data []byte) {
 							input.Value.tag = INT
 						case "uint":
 							input.Value.tag = UINT
+						case "bitfield_int":
+							input.Value.tag = UINT
+						case "bitfield_string":
+							input.Value.tag = STRING
+						case "bitfield":
+							input.Value.tag = UINT
 						default:
 							// fatal error for input
 							logError(&(configErrorLocs.ErrorLocs), currentJsonLocation, fmt.Errorf("invalid data type %v specified for input; must be string, bool, float, int, or uint", input.Type))

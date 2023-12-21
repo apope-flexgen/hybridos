@@ -2028,3 +2028,29 @@ func Count(argVals []Union) (Union, error) {
 	}
 	return Union{tag:UINT, ui:uint64(len(argVals))}, nil
 }
+
+func CombineBits(argVals []Union) (Union, error) {
+	returnVal := Union{tag:UINT, ui:0}
+	for _, val := range argVals {
+		if val.tag == STRING || val.tag == NIL || val.f < 0 || val.i < 0 {
+			continue
+		}
+		castUnionType(&val, UINT)
+		if val.ui < 64 && (returnVal.ui < math.MaxUint64 - val.ui){
+			returnVal.ui += uint64(1 << val.ui)
+		}
+	}
+	return returnVal, nil
+}
+
+func In(compareVal Union, argVals []Union) (Union, error) {
+	if compareVal.tag == NIL{
+		return Union{}, fmt.Errorf("In() function requires the first argument to be a non-null entry")
+	}
+	for _, val := range argVals {
+		if compareVal == val{
+			return Union{tag:BOOL, b:true}, nil
+		}
+	}
+	return Union{tag:BOOL, b:false}, nil
+}

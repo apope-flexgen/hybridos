@@ -18,7 +18,7 @@ fi
 #timeout=20
 #timeused=0
 
-dir=logic
+dir=bit_manipulation
 # if [ $# -gt 0 ] ; then 
 #   dir=$1
 # fi

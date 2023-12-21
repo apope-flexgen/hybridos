@@ -961,6 +961,48 @@ var ParseTests = []ParseTest{
 		resultType:    NIL,
 	},
 	ParseTest{
+		equation:      "Count()",
+		vars:          []string{},
+		errorExpected: false,
+		resultType:    UINT,
+	},
+	ParseTest{
+		equation:      "Count(bool1, bool2)",
+		vars:          []string{"bool1", "bool2"},
+		errorExpected: false,
+		resultType:    UINT,
+	},
+	ParseTest{
+		equation:      "CombineBits(bool1, bool2)",
+		vars:          []string{"bool1", "bool2"},
+		errorExpected: false,
+		resultType:    UINT,
+	},
+	ParseTest{
+		equation:      "CombineBits()",
+		vars:          []string{},
+		errorExpected: false,
+		resultType:    UINT,
+	},
+	ParseTest{
+		equation:      "In(3, bool1)",
+		vars:          []string{"bool1"},
+		errorExpected: false,
+		resultType:    BOOL,
+	},
+	ParseTest{
+		equation:      "In()",
+		vars:          []string{},
+		errorExpected: true,
+		resultType:    NIL,
+	},
+	ParseTest{
+		equation:      "In(3)",
+		vars:          []string{},
+		errorExpected: true,
+		resultType:    NIL,
+	},
+	ParseTest{
 		equation:      "NotAFunction(bool1, bool2, int1)",
 		vars:          []string{"bool1", "bool2", "int1"},
 		errorExpected: true,

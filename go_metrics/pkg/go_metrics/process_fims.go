@@ -670,16 +670,47 @@ func handleJsonMessage(msg *fims.FimsMsgRaw) {
 // AND all expressions using the input
 func handleDecodedMetricsInputValue(inputName string) {
 	inputScopeMutex.RLock()
-	var union Union
-	if len(InputScope[inputName]) > 0 {
-		union = castValueToUnionType(elementValue, InputScope[inputName][0].tag)
-	}
-	if debug {
-		if stringInSlice(debug_inputs, inputName) {
-			log.Debugf("Received input [%s] value [%v]", inputName, elementValue)
+	var union_array []Union
+	switch elementValueCast := elementValue.(type){
+	case []interface{}:
+		if MetricsConfig.Inputs[inputName].Type == "bitfield"{
+			union_array = make([]Union, 2*len(elementValueCast))
+		} else {
+			union_array = make([]Union, len(elementValueCast))
+		}
+		for element_idx, elementValue := range elementValueCast{
+			elementValue, ok := elementValue.(map[string]interface{})
+			if ok {
+				if MetricsConfig.Inputs[inputName].Type == "bitfield"{
+					union_array[2*element_idx] = getUnionFromValue(elementValue["value"])
+					union_array[2*element_idx + 1] = getUnionFromValue(elementValue["string"])
+				} else if MetricsConfig.Inputs[inputName].Type == "bitfield_int"{
+					union_array[element_idx] = castValueToUnionType(elementValue["value"], UINT)
+				} else if MetricsConfig.Inputs[inputName].Type == "bitfield_string"{
+					union_array[element_idx] = castValueToUnionType(elementValue["string"], STRING)
+				} else {
+					union_array[element_idx] = castValueToUnionType(elementValue["value"], MetricsConfig.Inputs[inputName].Value.tag)
+				}
+			} else {
+				union_array[element_idx] = Union{}
+			}
+		}
+		if debug {
+			if stringInSlice(debug_inputs, inputName) {
+				log.Debugf("Received input [%s] value [%v]", inputName, elementValueCast)
+			}
+		}
+	default:
+		union_array = make([]Union, 1)
+		union_array[0] = castValueToUnionType(elementValue, MetricsConfig.Inputs[inputName].Value.tag)
+		if debug {
+			if stringInSlice(debug_inputs, inputName) {
+				log.Debugf("Received input [%s] value [%v]", inputName, elementValue)
+			}
 		}
 	}
-	if (len(InputScope[inputName]) == 0 || InputScope[inputName][0] != union) || containedInValChanged[inputName] || inputYieldsDirectSet[inputName] {
+	
+	if !unionListsMatch(InputScope[inputName], union_array) || containedInValChanged[inputName] || inputYieldsDirectSet[inputName] {
 		for _, filterName := range inputToFilterExpression[inputName] {
 			filterNeedsEvalMutex.Lock()
 			filterNeedsEval[filterName] = true
@@ -699,7 +730,7 @@ func handleDecodedMetricsInputValue(inputName string) {
 	inputScopeMutex.RUnlock()
 
 	inputScopeMutex.Lock()
-	InputScope[inputName] = []Union{union}
+	InputScope[inputName] = union_array
 	inputScopeMutex.Unlock()
 	if containedInValChanged[inputName] || inputYieldsDirectSet[inputName] {
 		inputScopeMutex.Lock()

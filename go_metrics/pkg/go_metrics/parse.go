@@ -695,6 +695,13 @@ func extractFunc(node *ast.CallExpr) ([]string, DataType, error) {
 			resultType = FLOAT
 		case "count":
 			resultType = UINT
+		case "combinebits":
+			resultType = UINT
+		case "in":
+			if len(node.Args) < 2 {
+				return stringArr, NIL, fmt.Errorf("received %v arguments for In function; need at least 2 arguments (the value to check for and the list of arguments to look through)", len(node.Args))
+			}
+			resultType = BOOL
 		default:
 			return stringArr, NIL, fmt.Errorf("unrecognized function %v", id.Name)
 		}
