@@ -15,17 +15,22 @@
 #include "fims/defer.hpp"
 #include "spdlog/fmt/fmt.h"
 
-void emit_event(fims* pFims, const char* source, const char* message, int severity)
+bool emit_event(fims* pFims, const char* source, const char* message, int severity)
 {
-    cJSON* body_object;
-    body_object = cJSON_CreateObject();
-    cJSON_AddStringToObject(body_object, "source", source);
-    cJSON_AddStringToObject(body_object, "message", message);
-    cJSON_AddNumberToObject(body_object, "severity", severity);
-    char* body = cJSON_PrintUnformatted(body_object);
-    pFims->Send("post", "/events", NULL, body);
-    free(body);
-    cJSON_Delete(body_object);
+    if(pFims->Connected())
+    {
+        cJSON* body_object;
+        body_object = cJSON_CreateObject();
+        cJSON_AddStringToObject(body_object, "source", source);
+        cJSON_AddStringToObject(body_object, "message", message);
+        cJSON_AddNumberToObject(body_object, "severity", severity);
+        char* body = cJSON_PrintUnformatted(body_object);
+        pFims->Send("post", "/events", NULL, body);
+        free(body);
+        cJSON_Delete(body_object);
+        return true;
+    }
+    return false;
 }
 
 cJSON* get_config_json(int argc, char* argv[])

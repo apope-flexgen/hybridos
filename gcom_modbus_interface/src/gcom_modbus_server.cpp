@@ -162,7 +162,7 @@ int establish_connection(system_config* config)
         //printf(" seeking service [%s]\n", config->service);
         ret = service_to_port(config->service, &sport);
         if (ret == 0) {
-           FPS_ERROR_PRINT(" found service [%s] port [%d]\n", config->service, sport);
+           FPS_RELEASE_PRINT(" found service [%s] port [%d]\n", config->service, sport);
            addr.sin_port = htons(sport);
            config->port = sport;
         } else {
@@ -447,7 +447,7 @@ server_data* create_register_map(cJSON* registers,  uint8_t device_id)
 
         // number of variables equates to number of starting registers. Note: each variable could possibly be made up of multiple registers
         int reg_cnt = data[i].map_size = cJSON_GetArraySize(register_array_JSON);
-        FPS_ERROR_PRINT("Count %d variables included in %s config object.\n", reg_cnt, reg_types[i]);
+        FPS_RELEASE_PRINT("Count %d variables included in %s config object.\n", reg_cnt, reg_types[i]);
         if(reg_cnt == 0)
         {
             FPS_ERROR_PRINT("No registers included in %s config object.\n", reg_types[i]);
@@ -2156,10 +2156,11 @@ int main(int argc, char *argv[])
                             // fims connection closed
                             FPS_ERROR_PRINT("Fims connection closed.\n");
                             FD_CLR(current_fd, &all_connections);
+                            running = false; 
                             break;
                         }
                         else
-                            FPS_ERROR_PRINT("No fims message. Select led us to a bad place.\n");
+                            FPS_ERROR_PRINT("No fims message received.\n");
                     }
                     else
                     {
