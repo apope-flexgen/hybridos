@@ -18,7 +18,7 @@ fi
 #timeout=20
 #timeused=0
 
-dir=bit_manipulation
+dir=unit_test
 # if [ $# -gt 0 ] ; then 
 #   dir=$1
 # fi

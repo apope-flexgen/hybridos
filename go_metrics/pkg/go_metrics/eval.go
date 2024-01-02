@@ -534,8 +534,8 @@ func EvaluateExpressions() {
 							}
 						}
 					}
-					InputScope[metricsObject.InternalOutput] = make([]Union, len(input))
-					copy(InputScope[metricsObject.InternalOutput], input)
+					InputScope[metricsObject.InternalOutput] = make([]Union, len(outputVals))
+					copy(InputScope[metricsObject.InternalOutput], outputVals)
 				}
 			}
 
