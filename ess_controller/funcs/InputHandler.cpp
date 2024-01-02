@@ -402,7 +402,10 @@ namespace InputHandler
         {
 
             //Hasn't been updated yet
-            if(amap[siteUri.c_str()]->getiVal() == -1) return;
+            if(amap[siteUri.c_str()]->getiVal() == -1) {
+                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
+                return;
+            }
 
             //If either the bms or the pcs are in maint_mode these methods can't be accessed
             if(amap["maint_mode_BMS"]->getbVal()) {
@@ -411,7 +414,7 @@ namespace InputHandler
                     amap["maint_mode_BMS"]->getfName(), 
                     amap["maint_mode_BMS"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
             if(amap["maint_mode_PCS"]->getbVal()) {
@@ -420,7 +423,7 @@ namespace InputHandler
                     amap["maint_mode_PCS"]->getfName(), 
                     amap["maint_mode_PCS"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
 
@@ -451,7 +454,7 @@ namespace InputHandler
                     amap["IsFaulted"]->getfName(), 
                     amap["IsFaulted"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
 
@@ -514,7 +517,7 @@ namespace InputHandler
     void SiteBMSContactorControl(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
     {
 
-        if(0)FPS_PRINT_INFO("{}", __func__);
+        if(1)FPS_PRINT_INFO("{}", __func__);
        
 
         int reload = 0;
@@ -535,6 +538,7 @@ namespace InputHandler
 
         if (reload == 0)
         {
+            FPS_PRINT_INFO("reload == 0");
             linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
             essAv = amap[relname];
             std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
@@ -550,11 +554,18 @@ namespace InputHandler
             return;
         }
 
+        FPS_PRINT_INFO("Right before reload == 1");
+        if(1)FunctionUtility::PrintAssetVar(amap[siteUri.c_str()], assetVar::ATypes::AINT);
+
         if (reload == 1)
         {
+            FPS_PRINT_INFO("reload == 1");
 
             //Hasn't been updated yet
-            if(amap[siteUri.c_str()]->getiVal() == 0) return;
+            if(amap[siteUri.c_str()]->getiVal() == 0) {
+                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
+                return;
+            }
 
 
             if(amap["IsFaulted"]->getbVal()) {
@@ -563,7 +574,7 @@ namespace InputHandler
                     amap["IsFaulted"]->getfName(), 
                     amap["IsFaulted"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
 
@@ -574,6 +585,8 @@ namespace InputHandler
         }
 
         if(reload == 2){
+            FPS_PRINT_INFO("reload == 2");
+
         
             int stCommand = amap[siteUri.c_str()]->getiVal();
             int returnValue = 0;
@@ -581,10 +594,12 @@ namespace InputHandler
             switch (stCommand) {
                 //CloseContactors
                 case 2:
+                    FPS_PRINT_INFO("2");
                     returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "CloseContactors");
                     break;
                 //OpenContactors
                 case 3:
+                    FPS_PRINT_INFO("3");
                     returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, __func__, "OpenContactors");
                     break;
                 default:
@@ -595,6 +610,7 @@ namespace InputHandler
 
 
             if(returnValue == SUCCESS || returnValue == FAILURE) {
+                FPS_PRINT_INFO("5");
                 reload = 1;
                 essAv->setVal(reload);
             }
@@ -653,7 +669,10 @@ namespace InputHandler
         {
 
             //Hasn't been updated yet
-            if(amap[siteUri.c_str()]->getiVal() == -1) return;
+            if(amap[siteUri.c_str()]->getiVal() == -1) {
+                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
+                return;
+            }
 
 
             if(amap["IsFaulted"]->getbVal()) {
@@ -662,7 +681,7 @@ namespace InputHandler
                     amap["IsFaulted"]->getfName(), 
                     amap["IsFaulted"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
 
