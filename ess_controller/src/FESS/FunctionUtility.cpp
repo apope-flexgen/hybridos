@@ -4,9 +4,9 @@
 #include "asset.h"
 #include "formatters.hpp"
 #include <iostream>
-#include "FunctionUtility.hpp"
-#include "InfoMessageUtility.hpp"
-#include "OutputHandler.hpp"
+#include "FESS/FunctionUtility.hpp"
+#include "FESS/InfoMessageUtility.hpp"
+#include "FESS/OutputHandler.hpp"
 
  extern "C++" {
     int HandleCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);

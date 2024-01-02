@@ -8,14 +8,19 @@
 #include "asset.h"
 #include "assetVar.h"
 #include "formatters.hpp"
-#include "FunctionUtility.hpp"
-#include "OutputHandler.hpp"
-#include "InfoMessageUtility.hpp"
+#include "FESS/FunctionUtility.hpp"
+#include "FESS/OutputHandler.hpp"
+#include "FESS/InfoMessageUtility.hpp"
+#include "FESS/SiteCommandUtility.hpp"
+
 
 
 
 namespace InputHandler
 {
+
+// ==================== BMS Functions ====================
+
     /**
     * @brief Function that can be put on the scheduler and is the first function in the chain of the process of CloseContactors for the/a BMS
     * 
@@ -47,6 +52,9 @@ namespace InputHandler
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
 
     }
+
+
+// ==================== PCS Functions ====================
 
     /**
     * @brief Function that can be put on the scheduler and is the first function in the chain of the process of Start for the/a PCS
@@ -96,232 +104,9 @@ namespace InputHandler
         FunctionUtility::SharedInputHandlerLocalFunction(vmap, amap, aname, p_fims, aV, __func__);
     }
 
-    /**
-    * @brief Internal function called by SiteRunCmd to Start a BESS block
-    * 
-    * @param vmap the global data map shared by all assets/asset managers
-    * @param amap the local data map used by an asset/asset manager
-    * @param aname the name of the asset/asset manager
-    * @param p_fims the interface used for data interchange
-    * @param av the assetVar that contains the command value to send
-    * @param scheduledFuncName the name of the function that RemoteStart was called by (currently only SiteRunCmd)
-    */
-    int RemoteStart(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* scheduledFuncName) 
-    {
-       
-        if(0)FPS_PRINT_INFO("{}", __func__);
 
 
-        int reload = 0;
-        asset_manager * am = aV->am;
-        VarMapUtils* vm = am->vm;
-
-        std::string siteUri = "site_status_control_command";
-
-        auto relname = fmt::format("{}_{}", __func__, "ess").c_str() ;
-        assetVar* hpAv = amap[relname];
-        if (!hpAv || (reload = hpAv->getiVal()) == 0)
-        {
-            reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
-        }
-
-
-        int returnValue = IN_PROGRESS; 
-
-        if(reload == 0){
-            linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
-            hpAv = amap[relname];
-            reload = 1;
-            if(0)FPS_PRINT_INFO("Completed Phase 0", nullptr);
-        }
-
-        if(reload == 1) {
-            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, "SiteRunCmd", "CloseContactors");
-            if(returnValue == SUCCESS) {
-                aV->setParam("endTime", 0);
-                reload = 2;
-                returnValue = IN_PROGRESS;
-            }
-        }
-
-        if(reload == 2){
-            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, "SiteRunCmd", "Start");
-            if(returnValue == SUCCESS) {
-                reload = 1;
-            }
-        }
-
-
-        hpAv->setVal(reload);
-        return returnValue;
-        
-
-    }
-
-    /**
-    * @brief Internal function called by SiteRunCmd to Stop a BESS block
-    * 
-    * @param vmap the global data map shared by all assets/asset managers
-    * @param amap the local data map used by an asset/asset manager
-    * @param aname the name of the asset/asset manager
-    * @param p_fims the interface used for data interchange
-    * @param av the assetVar that contains the command value to send
-    * @param scheduledFuncName the name of the function that RemoteStop was called by (currently only SiteRunCmd)
-    */
-    int RemoteStop(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* scheduledFuncName) 
-    {
-       
-        if(0)FPS_PRINT_INFO("{}", __func__);
-
-
-        int reload = 0;
-        asset_manager * am = aV->am;
-        VarMapUtils* vm = am->vm;
-
-        std::string siteUri = "site_status_control_command";
-
-
-        auto relname = fmt::format("{}_{}", __func__, "ess").c_str() ;
-        assetVar* hpAv = amap[relname];
-        if (!hpAv || (reload = hpAv->getiVal()) == 0)
-        {
-            reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
-        }
-
-
-        int returnValue = IN_PROGRESS; 
-
-        if(reload == 0){
-            linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
-            hpAv = amap[relname];
-            reload = 1;
-        }
-
-        if(reload == 1) {
-            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, "SiteRunCmd", "Stop");
-            if(returnValue == SUCCESS) {
-                aV->setParam("endTime", 0);
-                reload = 2;
-                returnValue = IN_PROGRESS;
-            }
-        }
-
-        if(reload == 2){
-            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, "SiteRunCmd", "OpenContactors");
-            if(returnValue == SUCCESS) {
-                reload = 1;
-            }
-        }
-
-        hpAv->setVal(reload);
-        return returnValue;
-
-    }
-
-    /**
-    * @brief Internal function called by SiteRunCmd to Standby a BESS block
-    * 
-    * @param vmap the global data map shared by all assets/asset managers
-    * @param amap the local data map used by an asset/asset manager
-    * @param aname the name of the asset/asset manager
-    * @param p_fims the interface used for data interchange
-    * @param av the assetVar that contains the command value to send
-    * @param scheduledFuncName the name of the function that RemoteStandby was called by (currently only SiteRunCmd)
-    */
-    int RemoteStandby(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV, const char* scheduledFuncName)
-    {
-       
-        if(0)FPS_PRINT_INFO("{}", __func__);
-
-        int reload = 0;
-        asset_manager * am = aV->am;
-        VarMapUtils* vm = am->vm;
-        essPerf ePerf(am, aname, __func__);
-
-        std::string siteUri = "site_status_control_command";
-
-
-        const char *essch = (const char*)"ess";
-        if (aV->gotParam("ess"))
-        {
-            essch = aV->getcParam("ess");
-        }
-
-        auto relname = fmt::format("{}_{}", __func__, essch).c_str();
-        assetVar* cAv = amap[relname];
-        if (!cAv || (reload = cAv->getiVal()) == 0)
-        {
-            reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
-        }
-
-        if (reload == 0) {
-
-            linkVals(*vm, vmap, amap, essch, "/reload", reload, relname);
-            cAv = amap[relname];
-
-            std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
-                // /status/bms/DCClosed
-                FunctionUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
-                // /status/pcs/SystemState
-                FunctionUtility::AssetVarInfo("/status/pcs", "SystemState", assetVar::ATypes::ASTRING)
-            };
-            amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
-
-            reload = 1;
-        }
-
-
-        if(reload == 1) {
-            bool dcClosed = amap["DCClosed"]->getbVal();
-            char* systemStateStatus = amap["SystemState"]->getcVal();
-            bool systemState = false;
-
-            if(!(systemStateStatus == nullptr)){
-                std::string compareString = systemStateStatus;
-                systemState = (compareString == "On");
-            }
-
-            if(systemState){
-                reload = 3;
-            } else if(!dcClosed) {
-                reload = 2;
-            } else {
-                reload = 3;
-            }
-
-        }
-
-
-        int returnValue = IN_PROGRESS;
-
-
-        if(reload == 2){
-            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, "SiteRunCmd", "CloseContactors");
-            if(returnValue == SUCCESS) {
-                aV->setParam("endTime", 0);
-                reload = 1;
-                returnValue = IN_PROGRESS;
-            }
-        }
-
-        if(reload == 3) {
-            returnValue = FunctionUtility::SharedInputHandlerRemoteFunction(vmap, amap, aname, p_fims, aV, siteUri, "SiteRunCmd", "Standby");
-            if(returnValue == SUCCESS) {
-                reload = 1;
-            }
-        }
-        
-
-        cAv->setVal(reload);
-
-        return returnValue;
-
-        
-    }
-
-
-
-
+// ==================== Site Level Functions ====================
 
     /**
     * @brief Function that can be put on the scheduler and is a command function to alter the state of a BESS block from the site level
@@ -402,7 +187,10 @@ namespace InputHandler
         {
 
             //Hasn't been updated yet
-            if(amap[siteUri.c_str()]->getiVal() == -1) return;
+            if(amap[siteUri.c_str()]->getiVal() == -1) {
+                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
+                return;
+            }
 
             //If either the bms or the pcs are in maint_mode these methods can't be accessed
             if(amap["maint_mode_BMS"]->getbVal()) {
@@ -411,7 +199,7 @@ namespace InputHandler
                     amap["maint_mode_BMS"]->getfName(), 
                     amap["maint_mode_BMS"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
             if(amap["maint_mode_PCS"]->getbVal()) {
@@ -420,7 +208,7 @@ namespace InputHandler
                     amap["maint_mode_PCS"]->getfName(), 
                     amap["maint_mode_PCS"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
 
@@ -451,7 +239,7 @@ namespace InputHandler
                     amap["IsFaulted"]->getfName(), 
                     amap["IsFaulted"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
 
@@ -503,7 +291,7 @@ namespace InputHandler
     }
 
     /**
-    * @brief Function that can be put on the scheduler and is a command function to alter the state of a BESS block from the site level
+    * @brief 
     * 
     * @param vmap the global data map shared by all assets/asset managers
     * @param amap the local data map used by an asset/asset manager
@@ -554,7 +342,10 @@ namespace InputHandler
         {
 
             //Hasn't been updated yet
-            if(amap[siteUri.c_str()]->getiVal() == 0) return;
+            if(amap[siteUri.c_str()]->getiVal() == 0) {
+                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
+                return;
+            }
 
 
             if(amap["IsFaulted"]->getbVal()) {
@@ -563,7 +354,7 @@ namespace InputHandler
                     amap["IsFaulted"]->getfName(), 
                     amap["IsFaulted"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
 
@@ -602,7 +393,7 @@ namespace InputHandler
     }
 
     /**
-    * @brief Function that can be put on the scheduler and is a command function to alter the state of a BESS block from the site level
+    * @brief 
     * 
     * @param vmap the global data map shared by all assets/asset managers
     * @param amap the local data map used by an asset/asset manager
@@ -653,7 +444,10 @@ namespace InputHandler
         {
 
             //Hasn't been updated yet
-            if(amap[siteUri.c_str()]->getiVal() == -1) return;
+            if(amap[siteUri.c_str()]->getiVal() == -1) {
+                FunctionUtility::PullOffScheduler(amap, aV, siteUri.c_str());
+                return;
+            }
 
 
             if(amap["IsFaulted"]->getbVal()) {
@@ -662,7 +456,7 @@ namespace InputHandler
                     amap["IsFaulted"]->getfName(), 
                     amap["IsFaulted"]->getbVal()
                 );
-                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, "", message.c_str());
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
                 return;
             }
 
@@ -711,7 +505,170 @@ namespace InputHandler
     }
 
 
+    /**
+    * @brief 
+    * 
+    * @param vmap the global data map shared by all assets/asset managers
+    * @param amap the local data map used by an asset/asset manager
+    * @param aname the name of the asset/asset manager
+    * @param p_fims the interface used for data interchange
+    * @param av the assetVar that contains the command value to send
+    */
+    void BatteryRackBalanceCoarse(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* aV)
+    {
 
+        if(0)FPS_PRINT_INFO("{}", __func__);
+       
+
+        int reload = 0;
+        asset_manager * am = aV->am;
+        VarMapUtils* vm = am->vm;
+
+        int returnValue = -1;
+        std::string message = "";
+
+
+        std::string siteUri = "battery_rack_balance_coarse";
+
+
+        auto relname = fmt::format("{}_{}", __func__, "ess").c_str() ;
+        assetVar* essAv = amap[relname];
+        if (!essAv || (reload = essAv->getiVal()) == 0)
+        {
+            reload = 0;  // complete reset  reload = 1 for remap ( links may have changed)
+        }
+
+        // Set up
+        if (reload == 0)
+        {
+            linkVals(*vm, vmap, amap, aname, "/reload", reload, relname);
+            essAv = amap[relname];
+            std::vector<FunctionUtility::AssetVarInfo> assetVarVector = {
+                // /site/ess/start_stop
+                FunctionUtility::AssetVarInfo("/assets/ess/summary", "battery_rack_balance_coarse", assetVar::ATypes::ABOOL),
+                // /status/bms/DCVoltage
+                FunctionUtility::AssetVarInfo("/status/bms", "DCVoltage", assetVar::ATypes::AFLOAT),
+                // /status/bms/SOC
+                FunctionUtility::AssetVarInfo("/status/bms", "SOC", assetVar::ATypes::AFLOAT),
+                // /status/bms/DCClosed
+                FunctionUtility::AssetVarInfo("/status/bms", "DCClosed", assetVar::ATypes::ABOOL),
+                // /status/bms/IsFaulted
+                FunctionUtility::AssetVarInfo("/status/bms", "IsFaulted", "IsFaulted_BMS", assetVar::ATypes::ABOOL),
+                // /status/pcs/IsFaulted
+                FunctionUtility::AssetVarInfo("/status/pcs", "IsFaulted", "IsFaulted_PCS", assetVar::ATypes::ABOOL)
+            };
+
+            // TODO populate all the /status/bms/rack_(1-x):IsConnected
+
+            amap = FunctionUtility::PopulateAmapWithManyAvs(vmap, amap, vm, assetVarVector);
+
+            reload = 1;
+            essAv->setVal(reload);
+            return;
+        }
+
+        // Fault Checking
+        if (reload == 1)
+        {
+
+
+            if(amap["IsFaulted_BMS"]->getbVal()) {
+                std::string message = fmt::format(
+                    "Condition(s): [{}:{}] == false",
+                    amap["IsFaulted_BMS"]->getfName(), 
+                    amap["IsFaulted_BMS"]->getbVal()
+                );
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
+                return;
+            }
+
+            if(amap["IsFaulted_PCS"]->getbVal()) {
+                std::string message = fmt::format(
+                    "Condition(s): [{}:{}] == false",
+                    amap["IsFaulted_PCS"]->getfName(), 
+                    amap["IsFaulted_PCS"]->getbVal()
+                );
+                FunctionUtility::FunctionResultHandler(-1, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
+                return;
+            }
+
+
+            reload = 2;
+            essAv->setVal(reload);
+            
+        }
+
+        //Start BMS
+        if(reload == 2){
+
+            amap[siteUri.c_str()]->setParam("every", aV->getdParam("every"));
+
+
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::CloseContactors(vmap, amap, aname, p_fims, aV);
+            returnValue = returnObject.statusIndicator;
+            message = returnObject.message;
+
+
+            if(returnValue == SUCCESS) {
+                aV->setParam("endTime", 0);
+                reload = 3;
+                returnValue = IN_PROGRESS;
+            }
+
+
+
+        }
+
+        //Start PCS
+        if(reload == 3){
+
+            amap[siteUri.c_str()]->setParam("every", aV->getdParam("every"));
+
+
+            FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StartPCS(vmap, amap, aname, p_fims, aV);
+            returnValue = returnObject.statusIndicator;
+            message = returnObject.message;
+
+
+            if(returnValue == SUCCESS) {
+                aV->setParam("endTime", 0);
+                reload = 4;
+                returnValue = IN_PROGRESS;
+            }
+
+
+
+        }
+
+        //Set Active Power Setpoint
+        // TODO make this function
+        if(reload == 5){
+
+            // amap[siteUri.c_str()]->setParam("every", aV->getdParam("every"));
+
+
+            // FunctionUtility::FunctionReturnObj returnObject = OutputHandler::StartPCS(vmap, amap, aname, p_fims, aV);
+            // returnValue = returnObject.statusIndicator;
+            // message = returnObject.message;
+
+
+            // if(returnValue == SUCCESS) {
+            //     aV->setParam("endTime", 0);
+            //     reload = 4;
+            //     returnValue = IN_PROGRESS;
+            // }
+
+
+
+        }
+
+        FunctionUtility::FunctionResultHandler(returnValue, vmap, amap, aname, p_fims, aV, __func__, siteUri.c_str(), message.c_str());
+
+    }
+
+
+
+// ==================== Enable Functions ====================
 
     /**
     * @brief Function that can be put on the scheduler and uses logic to enable /ess/controls/bms/CloseContactors

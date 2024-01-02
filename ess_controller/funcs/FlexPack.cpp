@@ -17,7 +17,7 @@
 #include "ESSLogger.hpp"
 #include "chrono_utils.hpp"
 #include "formatters.hpp"
-#include "InputHandler.hpp"
+#include "FESS/InputHandler.hpp"
 
 #ifndef FPS_ERROR_FMT
 #define FPS_ERROR_FMT(...)     fmt::print(stderr,__VA_ARGS__)

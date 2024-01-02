@@ -13,7 +13,7 @@
 #include "formatters.hpp"
 
 #include "gitinc.h"
-#include "InputHandler.hpp"
+#include "FESS/InputHandler.hpp"
 
 asset_manager* ess_man = nullptr;
 int run_secs = 0;
