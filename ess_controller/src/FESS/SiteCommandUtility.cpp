@@ -1,5 +1,5 @@
-#ifndef FUNCTIONUTILITY_CPP
-#define FUNCTIONUTILITY_CPP
+#ifndef SITECOMMANDUTILITY_CPP
+#define SITECOMMANDUTILITY_CPP
 
 #include "asset.h"
 #include "formatters.hpp"
