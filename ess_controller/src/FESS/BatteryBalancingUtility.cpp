@@ -10,10 +10,6 @@
 #include "FESS/BatteryBalancingUtility.hpp"
 
 
-extern "C++" {
-    int HandleCmd(varsmap& vmap, varmap& amap, const char* aname, fims* p_fims, assetVar* av);
-}
-
 namespace BatteryBalancingUtility
 {
 
@@ -28,8 +24,11 @@ namespace BatteryBalancingUtility
 
 // ==================== Closed Rack Check ====================
         std::vector<RackInfoObject> closedRacks;
-        std::copy_if(racks.begin(), racks.end(), std::back_inserter(closedRacks), 
-            [](const RackInfoObject& rack) { return rack.contactorStatus == ContactorStatus::CLOSED; });
+        for (const auto& rack : racks) {
+            if(rack.contactorStatus == ContactorStatus::CLOSED) {
+                closedRacks.push_back(rack);
+            }
+        } 
         //FAILURE CASE
         if(closedRacks.size() == 0){
             // TODO: add logic for failure
@@ -40,8 +39,11 @@ namespace BatteryBalancingUtility
 
 // ==================== Open Rack Check ====================
         std::vector<RackInfoObject> openRacks;
-        std::copy_if(racks.begin(), racks.end(), std::back_inserter(openRacks), 
-            [](const RackInfoObject& rack) { return rack.contactorStatus == ContactorStatus::OPEN; });
+        for (const auto& rack : racks) {
+            if(rack.contactorStatus == ContactorStatus::OPEN) {
+                openRacks.push_back(rack);
+            }
+        } 
         //NO BALANCING NEEDED
         if(openRacks.size() == 0){
             result.voltage = -1;
@@ -54,10 +56,11 @@ namespace BatteryBalancingUtility
 
 // ==================== Reduction to Open Racks Outside Deadband ====================
         std::vector<RackInfoObject> openRacksOutsideDeadband;
-        std::copy_if(openRacks.begin(), openRacks.end(), std::back_inserter(openRacksOutsideDeadband),
-            [closedVoltage, deadband](const RackInfoObject& rack) {
-                return std::abs(rack.voltage - closedVoltage) >= deadband;
-            });
+        for (const auto& rack : openRacks) {
+            if(std::abs(rack.voltage - closedVoltage) >= deadband){
+                openRacksOutsideDeadband.push_back(rack);
+            }
+        }
         //NO BALANCING NEEDED
         if(openRacksOutsideDeadband.size() == 0){
             result.voltage = -1;
@@ -91,10 +94,11 @@ namespace BatteryBalancingUtility
 
 // ==================== Average Voltage of Group from Optimal Choice and Return ====================
         std::vector<RackInfoObject> openRacksWithinTargetArea;
-        std::copy_if(openRacksOutsideDeadband.begin(), openRacksOutsideDeadband.end(), std::back_inserter(openRacksWithinTargetArea),
-            [bestVoltage, deadband](const RackInfoObject& rack) {
-                return std::abs(rack.voltage - bestVoltage) <= deadband;
-            });
+        for (const auto& rack : openRacksOutsideDeadband) {
+            if(std::abs(rack.voltage - bestVoltage) <= deadband){
+                openRacksWithinTargetArea.push_back(rack);
+            }
+        }
 
         double sum = 0.0;
        
