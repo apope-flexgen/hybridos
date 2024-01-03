@@ -46,7 +46,9 @@ $scripts_dir/dbi.sh $cfg_dir web_ui
 $bin_dir/psm $psm_dir/psm/psm.json &
 
 $bin_dir/echo $psm_dir/echo/ess_1_bms_modbus_echo.json &
-$bin_dir/echo $psm_dir/echo/ess_1_pcs_modbus_echo.json &
+# $bin_dir/echo $psm_dir/echo/ess_1_pcs_modbus_echo.json &
+$bin_dir/go_metrics $psm_dir/echo/ess_1_pcs_modbus_echo.json &
+
 
 $bin_dir/web_server $bin_dir/web_ui $cfg_dir/web_ui $cfg_dir/web_server &
 
