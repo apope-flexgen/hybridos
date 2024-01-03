@@ -71,42 +71,46 @@ namespace BatteryBalancingUtility
 
 
 // ==================== Find Least Extreme from Min and Max ====================
-        auto minVoltage = std::min_element(openRacksOutsideDeadband.begin(), openRacksOutsideDeadband.end(), [](const auto& a, const auto& b) {
-            return a.voltage < b.voltage;
-        });
+        std::vector<double> voltages;
+        for (const auto& rack : openRacksOutsideDeadband) {
+            voltages.push_back(rack.voltage);
+        }
 
-        auto maxVoltage = std::max_element(openRacksOutsideDeadband.begin(), openRacksOutsideDeadband.end(), [](const auto& a, const auto& b) {
-            return a.voltage < b.voltage;
-        });
+        auto minVoltage = std::min_element(voltages.begin(), voltages.end());
+
+        auto maxVoltage = std::max_element(voltages.begin(), voltages.end());
 
         double bestVoltage = 0.0;
 
-        double minVoltageDiffFromClosed = std::abs(closedVoltage - minVoltage->voltage);
-        double maxVoltageDiffFromClosed = std::abs(closedVoltage - maxVoltage->voltage);
+        double minVoltageDiffFromClosed = std::abs(closedVoltage - *minVoltage);
+        double maxVoltageDiffFromClosed = std::abs(closedVoltage - *maxVoltage);
 
         int min = std::min(minVoltageDiffFromClosed, maxVoltageDiffFromClosed);
         if(min == minVoltageDiffFromClosed) {
-            bestVoltage = minVoltage->voltage;
+            bestVoltage = *minVoltage;
         } else {
-            bestVoltage = maxVoltage->voltage;
+            bestVoltage = *maxVoltage;
         }
 
 
 // ==================== Average Voltage of Group from Optimal Choice and Return ====================
-        std::vector<RackInfoObject> openRacksWithinTargetArea;
-        for (const auto& rack : openRacksOutsideDeadband) {
-            if(std::abs(rack.voltage - bestVoltage) <= deadband){
-                openRacksWithinTargetArea.push_back(rack);
+        double sum = 0.0;
+        int count = 0;
+        for (const auto& voltage : voltages) {
+            if(std::abs(voltage - bestVoltage) <= deadband){
+                sum += voltage;
+                count++;
             }
         }
 
-        double sum = 0.0;
-       
-       for (const auto& rack : openRacksWithinTargetArea) {
-            sum += rack.voltage;
-        } 
+        if(sum == 0) {
+            result.voltage = -1;
+            result.balancingNeeded = false;
+            return;
+        }
 
-        double average = openRacksWithinTargetArea.empty() ? 0.0 : sum / openRacksWithinTargetArea.size();
+        double average = sum / count;
+
 
         result.voltage = average;
         result.balancingNeeded = true;
